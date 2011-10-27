@@ -18,7 +18,7 @@
  	 * @param nombre string Nombre del billete, valor en texto, "cincuenta", "cien", etc
  	 * @param id_moneda int Id de la moneda a la que pertenece el billete
  	 **/
-  function EditarBillete
+  static function EditarBillete
 	(
 		$id_billete, 
 		$valor = "", 
@@ -36,7 +36,7 @@
  	 *
  	 * @param id_billete int Id del billete a desactivar
  	 **/
-  function EliminarBillete
+  static function EliminarBillete
 	(
 		$id_billete
 	);  
@@ -52,7 +52,7 @@
  	 * @param activo bool Si este valor no es obtenido, se listaran tanto activos como inactivos, si es verdadero, se listaran solo los activos, si es falso, se listaran solo los inactivos
  	 * @return billetes json Lista de billetes
  	 **/
-  function ListaBillete
+  static function ListaBillete
 	(
 		$ordenar = "", 
 		$activo = ""
@@ -71,7 +71,7 @@
  	 * @param foto_billete string Url de la foto del billete
  	 * @return id_billete int Id del billete autogenerado
  	 **/
-  function NuevoBillete
+  static function NuevoBillete
 	(
 		$nombre, 
 		$valor, 
@@ -90,7 +90,7 @@
  	 * @param nombre string Nombre de la moneda
  	 * @param simbolo string Simbolo de la moneda
  	 **/
-  function EditarMoneda
+  static function EditarMoneda
 	(
 		$id_moneda, 
 		$nombre = "", 
@@ -106,7 +106,7 @@
  	 *
  	 * @param id_moneda int Id de la moneda a desactivar
  	 **/
-  function EliminarMoneda
+  static function EliminarMoneda
 	(
 		$id_moneda
 	);  
@@ -122,7 +122,7 @@
  	 * @param activo bool Si este valor no es recibido, se listaran tanto activos como inactivos, si es verdadero, se listaran solo los activos, si es falso, se listaran solo los inactivos.
  	 * @return monedas json Lista de monedas
  	 **/
-  function ListaMoneda
+  static function ListaMoneda
 	(
 		$orden = "", 
 		$activo = ""
@@ -139,7 +139,7 @@
  	 * @param simbolo string Simbolo de la moneda
  	 * @return id_moneda int Id de la moneda recien creada
  	 **/
-  function NuevaMoneda
+  static function NuevaMoneda
 	(
 		$nombre, 
 		$simbolo

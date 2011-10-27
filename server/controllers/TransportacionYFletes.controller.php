@@ -16,7 +16,7 @@ require_once("interfaces/TransportacionYFletes.interface.php");
  	 * @param id_carro int Id del carro a detallar
  	 * @return carro json Objeto que contendra los detalles y el historial del carro
  	 **/
-	public function Detalle
+	public static function Detalle
 	(
 		$id_carro
 	)
@@ -34,7 +34,7 @@ require_once("interfaces/TransportacionYFletes.interface.php");
  	 * @param orden json Valor que determinara el orden de la lista
  	 * @return carros json Lista de carros con datos generales.
  	 **/
-	public function Lista
+	public static function Lista
 	(
 		$id_empresa = null, 
 		$id_estado = null, 
@@ -63,7 +63,7 @@ require_once("interfaces/TransportacionYFletes.interface.php");
  	 * @param km_por_litro float numero de kilometros que puede trnasitar el vehiculo por un litro de combustible
  	 * @param ids_empresas json Los ids de las empresas a las que este vehiculo pertenece. Si este valor no se pasa, se tomara que el vehiculo pertenece a todas las empresas.
  	 **/
-	public function Nuevo
+	public static function Nuevo
 	(
 		$imagen, 
 		$id_estado, 
@@ -91,7 +91,7 @@ require_once("interfaces/TransportacionYFletes.interface.php");
  	 * @param productos json Objeto que contendra los id de productos como sus cantidades en las que son cargados al vehiculo
  	 * @param id_carro int Id del carro que sera cargado
  	 **/
-	public function Cargar
+	public static function Cargar
 	(
 		$productos, 
 		$id_carro
@@ -108,7 +108,7 @@ require_once("interfaces/TransportacionYFletes.interface.php");
  	 * @param id_carro int Id del carro que se descarga
  	 * @param productos json Objeto que contendra los productos con sus cantidades
  	 **/
-	public function Descargar
+	public static function Descargar
 	(
 		$id_carro, 
 		$productos
@@ -128,7 +128,7 @@ Se movera parcial o totalmente la carga?
  	 * @param id_carro_destino int Id del carro al que se mueve la carga
  	 * @param productos json Productos que se mueve de un carro a otros.
  	 **/
-	public function Transbordo
+	public static function Transbordo
 	(
 		$id_carro_origen, 
 		$id_carro_destino, 
@@ -148,7 +148,7 @@ Se movera parcial o totalmente la carga?
  	 * @param fecha_salida string Fecha en la que se planea que salga carro
  	 * @param fecha_llegada_tentativa string Fecha tentativa en la que se espera que el carro llegue a su destino.
  	 **/
-	public function Enrutar
+	public static function Enrutar
 	(
 		$id_carro, 
 		$id_sucursal_destino, 
@@ -167,10 +167,10 @@ Se movera parcial o totalmente la carga?
  	 * @param id_carro int Id del carro del cual se registra su llegada
  	 * @param fecha_llegada string Registra la fecha de llegada en caso de que haya pasado un retraso y no se haya  registrado a tiempo la llegada
  	 **/
-	public function Registrar_llegada
+	public static function Registrar_llegada
 	(
 		$id_carro, 
-		$fecha_llegada = null
+		$fecha_llegada = ""
 	)
 	{  
   
@@ -196,22 +196,22 @@ Se movera parcial o totalmente la carga?
  	 * @param id_tipo_carro int Id del tipo de carro (camioneta, coche, camion)
  	 * @param ids_empresas json Los ids de las empresas a las que este vehiculo pertenece. Si este valor no se pasa, se tomara que el vehiculo pertenece a todas las empresas.
  	 **/
-	public function Editar
+	public static function Editar
 	(
 		$id_carro, 
-		$km_por_litro = null, 
-		$combustible = null, 
-		$kilometros = null, 
-		$num_neumaticos = null, 
-		$codigo = null, 
-		$matricula = null, 
-		$imagen = null, 
-		$id_estado = null, 
-		$id_modelo_vehiculo = null, 
-		$id_localizacion = null, 
-		$id_marca_carro = null, 
-		$id_tipo_carro = null, 
-		$ids_empresas = null
+		$km_por_litro = "", 
+		$combustible = "", 
+		$kilometros = "", 
+		$num_neumaticos = "", 
+		$codigo = "", 
+		$matricula = "", 
+		$imagen = "", 
+		$id_estado = "", 
+		$id_modelo_vehiculo = "", 
+		$id_localizacion = "", 
+		$id_marca_carro = "", 
+		$id_tipo_carro = "", 
+		$ids_empresas = ""
 	)
 	{  
   
@@ -226,10 +226,10 @@ Se movera parcial o totalmente la carga?
  	 * @param activo bool SI este tipo de carro sera valido para seleccionarlo o no
  	 * @return id_tipo_carro int Id autogenerado por la insercion del tipo de carro
  	 **/
-	public function NuevoTipo
+	public static function NuevoTipo
 	(
 		$nombre_tipo, 
-		$activo = null
+		$activo = true
 	)
 	{  
   
@@ -244,11 +244,11 @@ Se movera parcial o totalmente la carga?
  	 * @param activo bool Si este carro va a estar activo para su seleccion
  	 * @param nombre_tipo_carro string Nombre del tipo de carro
  	 **/
-	public function EditarTipo
+	public static function EditarTipo
 	(
 		$id_tipo_carro, 
-		$activo = null, 
-		$nombre_tipo_carro = null
+		$activo = true, 
+		$nombre_tipo_carro = ""
 	)
 	{  
   
@@ -263,10 +263,10 @@ Se movera parcial o totalmente la carga?
  	 * @param activo bool Si el modelo estara activo para su seleccion
  	 * @return id_modelo int Id del modelo autogenerado por la insercion
  	 **/
-	public function NuevoModelo
+	public static function NuevoModelo
 	(
 		$nombre_modelo, 
-		$activo = null
+		$activo = true
 	)
 	{  
   
@@ -281,11 +281,11 @@ Se movera parcial o totalmente la carga?
  	 * @param nombre_modelo_carro string Nombre del modelo del carro ( 99,2010, etc)
  	 * @param activo bool Si el modelo sera activo para seleccionarse
  	 **/
-	public function EditarModelo
+	public static function EditarModelo
 	(
 		$id_modelo_carro, 
 		$nombre_modelo_carro, 
-		$activo = null
+		$activo = true
 	)
 	{  
   
@@ -300,10 +300,10 @@ Se movera parcial o totalmente la carga?
  	 * @param activo bool Si la marca estara disponible para su seleccion
  	 * @return id_marca_carro int Id autogenerado por la insercion de la nueva marca
  	 **/
-	public function NuevoMarca
+	public static function NuevoMarca
 	(
 		$nombre_marca, 
-		$activo = null
+		$activo = ""
 	)
 	{  
   
@@ -318,11 +318,11 @@ Se movera parcial o totalmente la carga?
  	 * @param activo bool Si la marca estara habilitada para su seleccion
  	 * @param nombre_marca string Nombre de la marca del  carro
  	 **/
-	public function EditarMarca
+	public static function EditarMarca
 	(
 		$id_marca_carro, 
-		$activo = null, 
-		$nombre_marca = null
+		$activo = true, 
+		$nombre_marca = ""
 	)
 	{  
   

@@ -15,7 +15,7 @@ require_once("interfaces/Reportes.interface.php");
  	 *
  	 * @return id_reporte int Id del reporte generado
  	 **/
-	public function Nuevo
+	public static function Nuevo
 	(
 	)
 	{  
@@ -29,7 +29,7 @@ require_once("interfaces/Reportes.interface.php");
  	 *
  	 * @param nuevo_reporte json JSON a analizar
  	 **/
-	public function Revisar_syntaxNuevo
+	public static function Revisar_syntaxNuevo
 	(
 		$nuevo_reporte
 	)
@@ -45,7 +45,7 @@ require_once("interfaces/Reportes.interface.php");
  	 * @param id_reporte int Id del reporte a revisar.
  	 * @return detalle_reporte json Objeto que contendrá la información del detalle.
  	 **/
-	public function Detalle
+	public static function Detalle
 	(
 		$id_reporte
 	)
@@ -63,11 +63,11 @@ require_once("interfaces/Reportes.interface.php");
  	 * @param orden json Valor que determinara el orden de la lista
  	 * @return reportes json Objeto que contendra la lista de reportes
  	 **/
-	public function Lista
+	public static function Lista
 	(
-		$id_empresa = null, 
-		$id_sucursal = null, 
-		$orden = null
+		$id_empresa = "", 
+		$id_sucursal = "", 
+		$orden = ""
 	)
 	{  
   
@@ -84,12 +84,12 @@ require_once("interfaces/Reportes.interface.php");
  	 * @param id_cliente int Id del cliente del cual se listaran sus productos.
  	 * @return Lista_productos_cliente json Objeto que contendrá la información de la lista.
  	 **/
-	public function ProductosCliente
+	public static function ProductosCliente
 	(
-		$id_sucursal = null, 
-		$id_empresa = null, 
-		$orden = null, 
-		$id_cliente = null
+		$id_sucursal = "", 
+		$id_empresa = "", 
+		$orden = "", 
+		$id_cliente = ""
 	)
 	{  
   
@@ -106,12 +106,12 @@ require_once("interfaces/Reportes.interface.php");
  	 * @param id_sucursal int Id de la sucursal de la cual se listaran los Servicios que han comprado los clientes
  	 * @return Lista_servicios_cliente json Objeto que contendra la lista de servicios y clientes que los han comprado.
  	 **/
-	public function Servicio_cliente
+	public static function Servicio_cliente
 	(
-		$id_cliente = null, 
-		$orden = null, 
-		$id_empresa = null, 
-		$id_sucursal = null
+		$id_cliente = "", 
+		$orden = "", 
+		$id_empresa = "", 
+		$id_sucursal = ""
 	)
 	{  
   

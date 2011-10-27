@@ -15,7 +15,7 @@
  	 * @param id_sucursal int Id de la sucursal de la cual se listaran sus compras
  	 * @return compras json Arreglo de objetos que tendrá las compras de la sucursal
  	 **/
-  function Compras_sucursal
+  static function Compras_sucursal
 	(
 		$id_sucursal
 	);  
@@ -25,7 +25,7 @@
   
 	/**
  	 *
- 	 *Ver la lista de productos y sus existencias, se puede filtrar por empresa, sucursal, almac? y lote.
+ 	 *Ver la lista de productos y sus existencias, se puede filtrar por empresa, sucursal, almac?n, y lote.
 Se puede ordenar por los atributos de producto. 
  	 *
  	 * @param existencia_mayor_que float Se regresaran los productos cuya existencia sea mayor a la especificada por este valor
@@ -38,7 +38,7 @@ Se puede ordenar por los atributos de producto.
  	 * @param id_lote int Id del lote del cual se veran los productos en existencia
  	 * @return existecias json Lista de existencias
  	 **/
-  function Existencias
+  static function Existencias
 	(
 		$existencia_mayor_que = null, 
 		$existencia_igual_que = null, 
@@ -62,7 +62,7 @@ Se puede ordenar por los atributos de producto.
  	 * @param id_lote_viejo int Id del lote donde se encontraba el producto
  	 * @param cantidad float Si solo se movera una cierta cantidad de producto al nuevo lote. Si este valor no es obtenido, se da por hecho que se movera toda la cantidad de ese producto al nuevo lote
  	 **/
-  function Procesar_producto
+  static function Procesar_producto
 	(
 		$id_lote_nuevo, 
 		$id_producto, 
@@ -78,7 +78,7 @@ Se puede ordenar por los atributos de producto.
  	 *ver transporte y fletes...
  	 *
  	 **/
-  function Terminar_cargamento_de_compra
+  static function Terminar_cargamento_de_compra
 	(
 	);  
   
@@ -92,7 +92,7 @@ Se puede ordenar por los atributos de producto.
  	 * @param id_sucursal int Id de la sucursal de la cual listaran sus ventas
  	 * @return ventas json Objeto que conendra la informacion de las ventas de esa sucursal
  	 **/
-  function Ventas_sucursal
+  static function Ventas_sucursal
 	(
 		$id_sucursal
 	);  

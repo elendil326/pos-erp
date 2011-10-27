@@ -11,7 +11,7 @@ require_once("interfaces/Servicios.interface.php");
   
 	/**
  	 *
- 	 *Edita la informaci?e una clasificaci?e servicio
+ 	 *Edita la informaci?n de una clasificaci?n de servicio
  	 *
  	 * @param id_clasificacion_servicio int Id de la clasificacion del servicio que se edita
  	 * @param retenciones json Retenciones que afectan a los servicios de esta clasificacion
@@ -22,16 +22,16 @@ require_once("interfaces/Servicios.interface.php");
  	 * @param garantia int Numero de meses que tiene la garantia de este tipo de servicios
  	 * @param nombre string Nombre de la clasificacion de servicio
  	 **/
-	public function EditarClasificacion
+	public static function EditarClasificacion
 	(
 		$id_clasificacion_servicio, 
-		$retenciones = null, 
-		$impuestos = null, 
-		$descuento = null, 
-		$margen_utilidad = null, 
-		$descripcion = null, 
-		$garantia = null, 
-		$nombre = null
+		$retenciones = "", 
+		$impuestos = "", 
+		$descuento = "", 
+		$margen_utilidad = "", 
+		$descripcion = "", 
+		$garantia = "", 
+		$nombre = ""
 	)
 	{  
   
@@ -44,7 +44,7 @@ require_once("interfaces/Servicios.interface.php");
  	 *
  	 * @param id_clasificacion_servicio int Id de la clasificacion de servicio
  	 **/
-	public function EliminarClasificacion
+	public static function EliminarClasificacion
 	(
 		$id_clasificacion_servicio
 	)
@@ -60,10 +60,10 @@ require_once("interfaces/Servicios.interface.php");
  	 * @param id_orden_de_servicio int Id de la orden del servicio a cancelar
  	 * @param motivo_cancelacion string Motivo de la cancelacion
  	 **/
-	public function CancelarOrden
+	public static function CancelarOrden
 	(
 		$id_orden_de_servicio, 
-		$motivo_cancelacion = null
+		$motivo_cancelacion = ""
 	)
 	{  
   
@@ -84,16 +84,16 @@ require_once("interfaces/Servicios.interface.php");
  	 * @param retenciones json Retenciones que afectana este tipo de servicio
  	 * @return id_clasificacion_servicio int Id de la clasificacion que se creo
  	 **/
-	public function NuevaClasificacion
+	public static function NuevaClasificacion
 	(
 		$nombre, 
-		$garantia = null, 
-		$descripcion = null, 
-		$margen_utilidad = null, 
-		$descuento = null, 
-		$activa = null, 
-		$impuestos = null, 
-		$retenciones = null
+		$garantia = "", 
+		$descripcion = "", 
+		$margen_utilidad = "", 
+		$descuento = "", 
+		$activa = 1, 
+		$impuestos = "", 
+		$retenciones = ""
 	)
 	{  
   
@@ -110,12 +110,12 @@ require_once("interfaces/Servicios.interface.php");
  	 * @param orden json Valor que determinara el orden de la lista
  	 * @return servicios json Objeto que contendra la lista de servicios
  	 **/
-	public function Lista
+	public static function Lista
 	(
 		$id_empresa = null, 
 		$id_sucursal = null, 
 		$activo = null, 
-		$orden = null
+		$orden = ""
 	)
 	{  
   
@@ -144,7 +144,7 @@ require_once("interfaces/Servicios.interface.php");
  	 * @param foto_servicio string La url de la foto del servicio
  	 * @return id_servicio int Id del servicio creado
  	 **/
-	public function Nuevo
+	public static function Nuevo
 	(
 		$costo_estandar, 
 		$metodo_costeo, 
@@ -157,7 +157,7 @@ require_once("interfaces/Servicios.interface.php");
 		$garantia = null, 
 		$retenciones = null, 
 		$impuestos = null, 
-		$activo = null, 
+		$activo = true, 
 		$clasificaciones = null, 
 		$margen_de_utilidad = null, 
 		$control_de_existencia = null, 
@@ -190,7 +190,7 @@ require_once("interfaces/Servicios.interface.php");
  	 * @param retenciones json Ids de retenciones que afectan este servicio
  	 * @param costo_estandar float Valor del costo estandar del servicio
  	 **/
-	public function Editar
+	public static function Editar
 	(
 		$id_servicio, 
 		$sucursales = null, 
@@ -225,12 +225,12 @@ require_once("interfaces/Servicios.interface.php");
  	 * @param fecha_hasta string fecha en que se entregara una orden
  	 * @return ordenes json Objeto que contendrá las ordenes.
  	 **/
-	public function ListaOrden
+	public static function ListaOrden
 	(
-		$id_empresa = null, 
-		$id_sucursal = null, 
-		$fecha_desde = null, 
-		$fecha_hasta = null
+		$id_empresa = "", 
+		$id_sucursal = "", 
+		$fecha_desde = "", 
+		$fecha_hasta = ""
 	)
 	{  
   
@@ -239,12 +239,12 @@ require_once("interfaces/Servicios.interface.php");
   
 	/**
  	 *
- 	 *Ver los detalles de una orden de servicio. Puede ordenarse por sus atributos. Los detalles de la orden de servicio son los seguimientos que tiene esa orden as?omo el estado y sus fechas de orden y de entrega.
+ 	 *Ver los detalles de una orden de servicio. Puede ordenarse por sus atributos. Los detalles de la orden de servicio son los seguimientos que tiene esa orden as? como el estado y sus fechas de orden y de entrega.
  	 *
  	 * @param id_orden int Id de la orden a revisar
  	 * @return detalle_orden json Objeto que contendra el detalle de la orden
  	 **/
-	public function DetalleOrden
+	public static function DetalleOrden
 	(
 		$id_orden
 	)
@@ -264,7 +264,7 @@ require_once("interfaces/Servicios.interface.php");
  	 * @param adelanto float Adelanto de la orden
  	 * @return id_orden int Id de la orden que se creo.
  	 **/
-	public function NuevaOrden
+	public static function NuevaOrden
 	(
 		$id_cliente, 
 		$id_servicio, 
@@ -285,7 +285,7 @@ require_once("interfaces/Servicios.interface.php");
  	 * @param id_localizacion int Id de la sucursal en la que se encuentra actualmente la orden, se usara un -1 para indicar que esta en movimiento
  	 * @param id_orden_de_servicio int Id de la orden a darle seguimiento
  	 **/
-	public function SeguimientoOrden
+	public static function SeguimientoOrden
 	(
 		$estado, 
 		$id_localizacion, 
@@ -302,7 +302,7 @@ require_once("interfaces/Servicios.interface.php");
  	 *
  	 * @param id_orden int Id de la orden a terminar
  	 **/
-	public function TerminarOrden
+	public static function TerminarOrden
 	(
 		$id_orden
 	)
@@ -317,7 +317,7 @@ require_once("interfaces/Servicios.interface.php");
  	 *
  	 * @param id_servicio int Id del servicio que será eliminado
  	 **/
-	public function Eliminar
+	public static function Eliminar
 	(
 		$id_servicio
 	)

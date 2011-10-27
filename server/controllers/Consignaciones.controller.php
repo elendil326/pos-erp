@@ -15,7 +15,7 @@ require_once("interfaces/Consignaciones.interface.php");
  	 *
  	 * @param id_cliente int Id del cliente a desactivar como consignatario
  	 **/
-	public function DesactivarConsignatario
+	public static function DesactivarConsignatario
 	(
 		$id_cliente
 	)
@@ -26,13 +26,13 @@ require_once("interfaces/Consignaciones.interface.php");
   
 	/**
  	 *
- 	 *Iniciar una orden de consignaci?La fecha sera tomada del servidor.
+ 	 *Iniciar una orden de consignaci?n. La fecha sera tomada del servidor.
  	 *
  	 * @param productos json Objeto que contendra los ids de los productos que se daran a consignacion a ese cliente con sus cantidades. Se incluira el id del almacen del cual seran tomados para determinar a que empresa pertenece esta consignacion
  	 * @param id_consignatario int Id del cliente al que se le hace la consignacion
  	 * @return id_consignacion int Id de la consignacion autogenerado por la insercion.
  	 **/
-	public function Nueva
+	public static function Nueva
 	(
 		$productos, 
 		$id_consignatario
@@ -49,7 +49,7 @@ require_once("interfaces/Consignaciones.interface.php");
  	 * @param id_cliente int Id del cliente que sera el consignatario
  	 * @return id_almacen int Id del almacen que se creo de la operacion
  	 **/
-	public function NuevoConsignatario
+	public static function NuevoConsignatario
 	(
 		$id_cliente
 	)
@@ -69,7 +69,7 @@ require_once("interfaces/Consignaciones.interface.php");
  	 * @param orden json Valor que determinara el orden de la lista
  	 * @return lista_consignaciones json Objeto que contendra la lista de consignaciones
  	 **/
-	public function Lista
+	public static function Lista
 	(
 		$id_empresa = null, 
 		$id_sucursal = null, 
@@ -93,7 +93,7 @@ require_once("interfaces/Consignaciones.interface.php");
  	 * @param producto_solicitado json Objeto que contendra los ids de los productos y sus cantidades que el cliente solicita, si este campo es obtenido, se editara la consignacion original agregando estos productos
  	 * @param producto_devuelto json Objeto que contendra los ids de los productos y sus cantidades que seran devueltos. Estos productos seran devueltos al almacen  de la sucursal de donde fueron extraidos.
  	 **/
-	public function RegistrarInspeccion
+	public static function RegistrarInspeccion
 	(
 		$productos_actuales, 
 		$id_inspeccion, 
@@ -114,7 +114,7 @@ require_once("interfaces/Consignaciones.interface.php");
  	 * @param id_consignacion int identifiacdor de consignacion
  	 * @param motivo string Motivo por el cual se termino la consignacion, por que el cliente no vendia, o a peticion del cliente, etc.
  	 **/
-	public function Terminar
+	public static function Terminar
 	(
 		$id_consignacion, 
 		$motivo = null
@@ -132,7 +132,7 @@ require_once("interfaces/Consignaciones.interface.php");
  	 * @param id_inspeccion int Id de la inspeccion
  	 * @param id_caja int Id de la caja a la que se le abona
  	 **/
-	public function AbonarInspeccion
+	public static function AbonarInspeccion
 	(
 		$monto, 
 		$id_inspeccion, 
@@ -152,7 +152,7 @@ require_once("interfaces/Consignaciones.interface.php");
  	 * @param id_inspector int Id del usuario al que se le asignara esta inspeccion
  	 * @return id_inspeccion int Id de la inspeccion creada
  	 **/
-	public function NuevaInspeccion
+	public static function NuevaInspeccion
 	(
 		$id_consignacion, 
 		$fecha_revision, 
@@ -170,7 +170,7 @@ require_once("interfaces/Consignaciones.interface.php");
  	 * @param id_inspeccion int Id de la inspeccion a cambiar de fecha
  	 * @param nueva_fecha string Nueva fecha en que se llevara acabo la inspeccion
  	 **/
-	public function Cambiar_fechaInspeccion
+	public static function Cambiar_fechaInspeccion
 	(
 		$id_inspeccion, 
 		$nueva_fecha
@@ -186,7 +186,7 @@ require_once("interfaces/Consignaciones.interface.php");
  	 *
  	 * @param id_inspeccion int Id de la inspeccion a cancelar
  	 **/
-	public function CancelarInspeccion
+	public static function CancelarInspeccion
 	(
 		$id_inspeccion
 	)
@@ -203,7 +203,7 @@ require_once("interfaces/Consignaciones.interface.php");
  	 * @param productos json Objeto que contendra los ids de los productos y sus cantidades que ahora tendra esta consignacion
  	 * @param agregar bool Si estos productos seran agregados a la consignacion o seran quitados de la misma.
  	 **/
-	public function Editar
+	public static function Editar
 	(
 		$id_consignacion, 
 		$productos, 

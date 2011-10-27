@@ -10,7 +10,7 @@
   
 	/**
  	 *
- 	 *Edita la informaci?e un abono
+ 	 *Edita la informaci?n de un abono
  	 *
  	 * @param id_abono int Id del abono a editar
  	 * @param motivo_cancelacion string Motivo por el cual se cancelo el abono
@@ -19,7 +19,7 @@
  	 * @param venta bool Si el abono a editar fue a una venta
  	 * @param prestamo bool Si el abono a editar fue a un prestamo
  	 **/
-  function EditarAbono
+  static function EditarAbono
 	(
 		$id_abono, 
 		$motivo_cancelacion = "", 
@@ -44,7 +44,7 @@
  	 * @param venta bool Si el abono a eliminar es a una venta o no
  	 * @param billetes json Si la caja que ha sido pasada para depositar el monto lleva un control de billetes, se necesitan pasar los billetes que seran almacenados en la misma
  	 **/
-  function EliminarAbono
+  static function EliminarAbono
 	(
 		$id_abono, 
 		$id_caja = null, 
@@ -82,7 +82,7 @@
  	 * @param monto_igual_a float Se listaran los abonos cuyo monto sea igual a este
  	 * @return abonos json Objeto que contendra la lista de abonos
  	 **/
-  function ListaAbono
+  static function ListaAbono
 	(
 		$compra, 
 		$venta, 
@@ -122,7 +122,7 @@
  	 * @param nota string Nota del abono
  	 * @return id_abono int El id autogenerado del abono de la sucursal
  	 **/
-  function NuevoAbono
+  static function NuevoAbono
 	(
 		$monto, 
 		$id_deudor, 
@@ -140,16 +140,16 @@
   
 	/**
  	 *
- 	 *Edita la informaci?e un concepto de gasto
+ 	 *Edita la informaci?n de un concepto de gasto
 
-Update : Se deber?de tomar de la sesi?l id del usuario que hiso la ultima modificaci? la fecha.
+Update : Se deber?a de tomar de la sesi?n el id del usuario que hiso la ultima modificaci?n y la fecha.
  	 *
  	 * @param id_concepto_gasto int Id del concepto de gasto a modificar
  	 * @param descripcion string Descripcion larga del concepto de gasto
  	 * @param nombre string Justificacion del concepto de gasto que aparecera despues de la leyenda "gasto por concepto de"
  	 * @param monto float monto fijo del concepto de gasto
  	 **/
-  function EditarConceptoGasto
+  static function EditarConceptoGasto
 	(
 		$id_concepto_gasto, 
 		$descripcion = null, 
@@ -163,11 +163,11 @@ Update : Se deber?de tomar de la sesi?l id del usuario que hiso la ultima modifi
 	/**
  	 *
  	 *Deshabilita un concepto de gasto
-Update :Se deber?de tomar tambi?de la sesi?l id del usuario y fecha de la ultima modificaci?
+Update :Se deber?a de tomar tambi?n de la sesi?n el id del usuario y fecha de la ultima modificaci?n
  	 *
  	 * @param id_concepto_gasto int Id del concepto que ser eliminado
  	 **/
-  function EliminarConceptoGasto
+  static function EliminarConceptoGasto
 	(
 		$id_concepto_gasto
 	);  
@@ -184,7 +184,7 @@ Update : Falta especificar los parametros y el ejemplo de envio.
  	 * @param activo bool Si este valo no es obtenido, se listaran tanto activos como inactivos. Si es verdadero, se listaran solo los activos, si es falso, se listaran solo los inactivos
  	 * @return conceptos_gasto json Arreglo que contendrá la información de conceptos de gasto.
  	 **/
-  function ListaConceptoGasto
+  static function ListaConceptoGasto
 	(
 		$orden = null, 
 		$activo = null
@@ -204,7 +204,7 @@ Update : En la respuesta basta con solo indicar success : true | false, y en cas
  	 * @param monto float Monto fijo del concepto de gasto
  	 * @return id_concepto_gasto int Id autogenerado por la inserción del nuevo gasto
  	 **/
-  function NuevoConceptoGasto
+  static function NuevoConceptoGasto
 	(
 		$nombre, 
 		$descripcion = null, 
@@ -226,7 +226,7 @@ Update :  Tambien se deberia de tomar  de la sesion el id del usuario qeu hiso a
  	 * @param nota string Informacion adicinal sobre el gasto
  	 * @param descripcion string Descripcion del gasto en caso de que no este en la lista de conceptos.
  	 **/
-  function EditarGasto
+  static function EditarGasto
 	(
 		$id_gasto, 
 		$id_concepto_gasto = null, 
@@ -248,7 +248,7 @@ Update :  Tambien se deberia de tomar  de la sesion el id del usuario qeu hiso a
  	 * @param id_caja int Id de la caja a la que regresara el dinero del gasto cancelado
  	 * @param billetes json Ids de los billetes con sus cantidades en caso de que la caja lleve control de los billetes
  	 **/
-  function EliminarGasto
+  static function EliminarGasto
 	(
 		$id_gasto, 
 		$motivo_cancelacion = "", 
@@ -277,7 +277,7 @@ Update :  Tambien se deberia de tomar  de la sesion el id del usuario qeu hiso a
  	 * @param cancelado bool Si este valor no es obtenido, se listaran los gastos tanto cancelados como no cancelados. Si es true, se listaran solo los gastos cancelados, si es false, se listaran solo los gastos que no han sido cancelados
  	 * @param fecha_actual bool Verdader si se listaran los gastos del di ade hoy
  	 **/
-  function ListaGasto
+  static function ListaGasto
 	(
 		$monto_maximo = "", 
 		$orden = null, 
@@ -299,9 +299,9 @@ Update :  Tambien se deberia de tomar  de la sesion el id del usuario qeu hiso a
   
 	/**
  	 *
- 	 *Registrar un gasto. El usuario y la sucursal que lo registran ser?tomados de la sesi?ctual.
+ 	 *Registrar un gasto. El usuario y la sucursal que lo registran ser?n tomados de la sesi?n actual.
 
-Update :Ademas deber?tambi?de tomar la fecha de ingreso del gasto del servidor y agregar tambi?como par?tro una fecha a la cual se deber?de aplicar el gasto. Por ejemplo si el d?09/09/11 (viernes) se tomo dinero para pagar la luz, pero resulta que ese d?se olvidaron de registrar el gasto y lo registran el 12/09/11 (lunes). Entonces tambien se deberia de tomar como parametro una fecha a la cual aplicar el gasto, tambien se deberia de enviar como parametro una nota
+Update :Ademas deber?a tambi?n de tomar la fecha de ingreso del gasto del servidor y agregar tambi?n como par?metro una fecha a la cual se deber?a de aplicar el gasto. Por ejemplo si el d?a 09/09/11 (viernes) se tomo dinero para pagar la luz, pero resulta que ese d?a se olvidaron de registrar el gasto y lo registran el 12/09/11 (lunes). Entonces tambien se deberia de tomar como parametro una fecha a la cual aplicar el gasto, tambien se deberia de enviar como parametro una nota
  	 *
  	 * @param fecha_gasto string Fecha del gasto
  	 * @param id_empresa int Id de la empresa a la que pertenece este gasto
@@ -315,7 +315,7 @@ Update :Ademas deber?tambi?de tomar la fecha de ingreso del gasto del servidor y
  	 * @param nota string Nota del gasto
  	 * @return id_gasto int Id generado por la inserción del nuevo gasto
  	 **/
-  function NuevoGasto
+  static function NuevoGasto
 	(
 		$fecha_gasto, 
 		$id_empresa, 
@@ -341,7 +341,7 @@ Update :Ademas deber?tambi?de tomar la fecha de ingreso del gasto del servidor y
  	 * @param monto float Si este concepto tiene un monto fijo, se debe mostrar aqui. Si no hay un monto fijo, dejar esto como null.
  	 * @param nombre string Justificacion que aparecera despues de la leyenda "ingreso por concepto de"
  	 **/
-  function EditarConceptoIngreso
+  static function EditarConceptoIngreso
 	(
 		$id_concepto_ingreso, 
 		$descripcion = null, 
@@ -356,11 +356,11 @@ Update :Ademas deber?tambi?de tomar la fecha de ingreso del gasto del servidor y
  	 *
  	 *Deshabilita un concepto de ingreso
 
-Update :Se deber?tambi?obtener de la sesi?l id del usuario y fecha de la ultima modificaci?
+Update :Se deber?a tambi?n obtener de la sesi?n el id del usuario y fecha de la ultima modificaci?n.
  	 *
  	 * @param id_concepto_ingreso int Id del ingreso a eliminar
  	 **/
-  function EliminarConceptoIngreso
+  static function EliminarConceptoIngreso
 	(
 		$id_concepto_ingreso
 	);  
@@ -372,12 +372,12 @@ Update :Se deber?tambi?obtener de la sesi?l id del usuario y fecha de la ultima 
  	 *
  	 *Lista los conceptos de ingreso, se puede ordenar por los atributos del concepto de ingreso.  
 
-Update :Falta especificar la estructura del JSON que se env?como parametro
+Update :Falta especificar la estructura del JSON que se env?a como parametro
  	 *
  	 * @param ordenar json Valor que indicar la forma en que se ordenar la lista
  	 * @return conceptos_ingreso json Arreglo que contendrá la información de los conceptos de ingreso
  	 **/
-  function ListaConceptoIngreso
+  static function ListaConceptoIngreso
 	(
 		$ordenar = null
 	);  
@@ -396,7 +396,7 @@ Update : En la respuesta basta con solo indicar success : true | false, y en cas
  	 * @param descripcion string Descripcion larga de este concepto de ingreso
  	 * @return id_concepto_ingreso int Id autogenerado por la creacion del nuevo concepto de ingreso
  	 **/
-  function NuevoConceptoIngreso
+  static function NuevoConceptoIngreso
 	(
 		$nombre, 
 		$monto = null, 
@@ -410,7 +410,7 @@ Update : En la respuesta basta con solo indicar success : true | false, y en cas
  	 *
  	 *Edita un ingreso
 
-Update :El usuario y la fecha de la ultima modificaci?e deber? de obtener de la sesi?
+Update :El usuario y la fecha de la ultima modificaci?n se deber?an de obtener de la sesi?n
  	 *
  	 * @param id_ingreso int Id del ingreso que se editar
  	 * @param folio string Folio de la factura generada por el ingreso
@@ -419,7 +419,7 @@ Update :El usuario y la fecha de la ultima modificaci?e deber? de obtener de la 
  	 * @param descripcion string Descripciond el ingreso en caso de que no se encentre en la lista de conceptos.
  	 * @param id_concepto_ingreso int Id del concepto del ingreso
  	 **/
-  function EditarIngreso
+  static function EditarIngreso
 	(
 		$id_ingreso, 
 		$folio = null, 
@@ -439,7 +439,7 @@ Update :El usuario y la fecha de la ultima modificaci?e deber? de obtener de la 
  	 * @param id_ingreso int Id del ingreso a cancelar
  	 * @param motivo_cancelacion string Motivo por el cual se realiza la cancelacion
  	 **/
-  function EliminarIngreso
+  static function EliminarIngreso
 	(
 		$id_ingreso, 
 		$motivo_cancelacion = ""
@@ -450,7 +450,7 @@ Update :El usuario y la fecha de la ultima modificaci?e deber? de obtener de la 
   
 	/**
  	 *
- 	 *Lista los ingresos, se puede filtrar de acuerdo a la empresa, la sucursal, el usuario que registra el ingreso, el concepto de ingreso, la caja que recibi? ingreso, de una fecha inicial a una final, por monto, por cancelacion, y se puede ordenar de acuerdo a sus atributos.
+ 	 *Lista los ingresos, se puede filtrar de acuerdo a la empresa, la sucursal, el usuario que registra el ingreso, el concepto de ingreso, la caja que recibi? el ingreso, de una fecha inicial a una final, por monto, por cancelacion, y se puede ordenar de acuerdo a sus atributos.
  	 *
  	 * @param id_empresa int Id de la empresa de la cual se listaran sus ingresos
  	 * @param fecha_final string Se listaran los ingresos cuya fecha de ingreso sea menor a este valor
@@ -465,7 +465,7 @@ Update :El usuario y la fecha de la ultima modificaci?e deber? de obtener de la 
  	 * @param fecha_actual bool verdaderi si solo se listaran los ingresos del dia de hoy
  	 * @param orden string Nombre de la columna mediante la cual se ordenara la lista
  	 **/
-  function ListaIngreso
+  static function ListaIngreso
 	(
 		$id_empresa = "", 
 		$fecha_final = "", 
@@ -500,7 +500,7 @@ Update :El usuario y la fecha de la ultima modificaci?e deber? de obtener de la 
  	 * @param billetes json Ids de los billetes con sus cantidades en las que ingresaran a la caja en caso de que la caja lleve control de billetes
  	 * @return id_ingreso int Id autogenerado por la insercion del ingreso
  	 **/
-  function NuevoIngreso
+  static function NuevoIngreso
 	(
 		$id_empresa, 
 		$fecha_ingreso, 

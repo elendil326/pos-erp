@@ -11,7 +11,7 @@ require_once("interfaces/Ventas.interface.php");
   
 	/**
  	 *
- 	 *Realiza una nueva venta por arpillas. Este m?do tiene que llamarse en conjunto con el metodo api/ventas/nueva.
+ 	 *Realiza una nueva venta por arpillas. Este m?todo tiene que llamarse en conjunto con el metodo api/ventas/nueva.
  	 *
  	 * @param peso_por_arpilla float Peso promedio por arpilla
  	 * @param merma_por_arpilla float La merma que resulto por arpilla
@@ -26,7 +26,7 @@ require_once("interfaces/Ventas.interface.php");
  	 * @param total_origen float Valor del embarque segun el origen
  	 * @return id_venta_arpilla int Id autogenerado por la insercion
  	 **/
-	public function Nueva_venta_arpillas
+	public static function Nueva_venta_arpillas
 	(
 		$peso_por_arpilla, 
 		$merma_por_arpilla, 
@@ -35,10 +35,10 @@ require_once("interfaces/Ventas.interface.php");
 		$fecha_origen, 
 		$peso_destino, 
 		$id_venta, 
-		$productor = null, 
-		$numero_de_viaje = null, 
-		$folio = null, 
-		$total_origen = null
+		$productor = "", 
+		$numero_de_viaje = "", 
+		$folio = "", 
+		$total_origen = ""
 	)
 	{  
   
@@ -53,7 +53,7 @@ require_once("interfaces/Ventas.interface.php");
  	 * @param ordenar json Valor que determina el orden de la lista
  	 * @return detalle_venta json Objeto que contiene el detalle de la venta.
  	 **/
-	public function Detalle
+	public static function Detalle
 	(
 		$id_venta, 
 		$ordenar
@@ -77,7 +77,7 @@ require_once("interfaces/Ventas.interface.php");
  	 * @param liquidados bool Si este valor no es obtenido, se listaran tanto las ventas liquidadas, como las no liquidadas, si es true, se listaran solo las ventas liquidadas, si es false, se listaran las ventas no liquidadas solamente.
  	 * @return ventas json Objeto que contendra la lista de ventas
  	 **/
-	public function Lista
+	public static function Lista
 	(
 		$canceladas, 
 		$ordenar, 
@@ -99,7 +99,7 @@ require_once("interfaces/Ventas.interface.php");
  	 *
  	 * @param id_venta string Id de la venta a cancelar
  	 **/
-	public function Cancelar
+	public static function Cancelar
 	(
 		$id_venta
 	)
@@ -115,7 +115,7 @@ require_once("interfaces/Ventas.interface.php");
  	 * @param id_venta int Id de la venta de la cual se listaran las ventas por arpilla
  	 * @return detalle_venta_arpilla json Objeto que contendra los detalles de las ventas por arpilla
  	 **/
-	public function Detalle_venta_arpilla
+	public static function Detalle_venta_arpilla
 	(
 		$id_venta
 	)
@@ -141,7 +141,7 @@ require_once("interfaces/Ventas.interface.php");
  	 * @param tipo_de_pago string Si la venta es pagada con tarjeta, con efectivo o con cheque
  	 * @return id_venta int Id autogenerado de la nueva venta
  	 **/
-	public function Nueva
+	public static function Nueva
 	(
 		$total, 
 		$retencion, 
@@ -152,7 +152,7 @@ require_once("interfaces/Ventas.interface.php");
 		$id_comprador_venta, 
 		$detalle_venta, 
 		$datos_cheque = null, 
-		$saldo = null, 
+		$saldo = 0, 
 		$tipo_de_pago = null
 	)
 	{  

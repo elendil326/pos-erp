@@ -18,7 +18,7 @@
  	 * @param descripcion string Descripcion de la clasificacion del proveedor
  	 * @param nombre string Nombre de la clasificacion del proveedor
  	 **/
-  function EditarClasificacion
+  static function EditarClasificacion
 	(
 		$id_clasificacion_proveedor, 
 		$retenciones = "", 
@@ -36,7 +36,7 @@
  	 *
  	 * @param id_clasificacion_proveedor int Id de la clasificacion de proveedor a desactivar
  	 **/
-  function EliminarClasificacion
+  static function EliminarClasificacion
 	(
 		$id_clasificacion_proveedor
 	);  
@@ -54,7 +54,7 @@
  	 * @param retenciones json Ids de retenciones que afecta esta clasificacion de proveedor
  	 * @return id_clasificacion_proveedor int Id de la clasificacion del proveedor
  	 **/
-  function NuevaClasificacion
+  static function NuevaClasificacion
 	(
 		$nombre, 
 		$descripcion = null, 
@@ -97,7 +97,7 @@
  	 * @param retenciones json Retenciones que afectan a este proveedor
  	 * @param codigo_proveedor string Codigo con el que se peude identificar al proveedor
  	 **/
-  function Editar
+  static function Editar
 	(
 		$id_proveedor, 
 		$limite_credito = null, 
@@ -137,7 +137,7 @@
  	 *
  	 * @param id_proveedor int Id del proveedor que sera eliminado
  	 **/
-  function Eliminar
+  static function Eliminar
 	(
 		$id_proveedor
 	);  
@@ -153,7 +153,7 @@
  	 * @param ordenar json Valor que determinara el orden de la lista.
  	 * @return proveedores json Objeto que contendra la lista de proveedores.
  	 **/
-  function Lista
+  static function Lista
 	(
 		$activo = null, 
 		$ordenar = null
@@ -194,7 +194,7 @@
  	 * @param telefono2 string Telefono 2 de la direccion del proveedor
  	 * @return id_proveedor int Id autogenerado por la inserción del nuevo proveedor.
  	 **/
-  function Nuevo
+  static function Nuevo
 	(
 		$id_tipo_proveedor, 
 		$password, 

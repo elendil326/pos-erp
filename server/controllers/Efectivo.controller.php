@@ -19,12 +19,12 @@ require_once("interfaces/Efectivo.interface.php");
  	 * @param foto_billete string Url de la foto del billete
  	 * @return id_billete int Id del billete autogenerado
  	 **/
-	public function NuevoBillete
+	public static function NuevoBillete
 	(
 		$nombre, 
 		$valor, 
 		$id_moneda, 
-		$foto_billete = null
+		$foto_billete = ""
 	)
 	{  
   
@@ -41,13 +41,13 @@ require_once("interfaces/Efectivo.interface.php");
  	 * @param nombre string Nombre del billete, valor en texto, "cincuenta", "cien", etc
  	 * @param id_moneda int Id de la moneda a la que pertenece el billete
  	 **/
-	public function EditarBillete
+	public static function EditarBillete
 	(
 		$id_billete, 
-		$valor = null, 
-		$foto_billete = null, 
-		$nombre = null, 
-		$id_moneda = null
+		$valor = "", 
+		$foto_billete = "", 
+		$nombre = "", 
+		$id_moneda = ""
 	)
 	{  
   
@@ -60,7 +60,7 @@ require_once("interfaces/Efectivo.interface.php");
  	 *
  	 * @param id_billete int Id del billete a desactivar
  	 **/
-	public function EliminarBillete
+	public static function EliminarBillete
 	(
 		$id_billete
 	)
@@ -77,10 +77,10 @@ require_once("interfaces/Efectivo.interface.php");
  	 * @param activo bool Si este valor no es obtenido, se listaran tanto activos como inactivos, si es verdadero, se listaran solo los activos, si es falso, se listaran solo los inactivos
  	 * @return billetes json Lista de billetes
  	 **/
-	public function ListaBillete
+	public static function ListaBillete
 	(
-		$ordenar = null, 
-		$activo = null
+		$ordenar = "", 
+		$activo = ""
 	)
 	{  
   
@@ -95,7 +95,7 @@ require_once("interfaces/Efectivo.interface.php");
  	 * @param simbolo string Simbolo de la moneda
  	 * @return id_moneda int Id de la moneda recien creada
  	 **/
-	public function NuevaMoneda
+	public static function NuevaMoneda
 	(
 		$nombre, 
 		$simbolo
@@ -113,11 +113,11 @@ require_once("interfaces/Efectivo.interface.php");
  	 * @param nombre string Nombre de la moneda
  	 * @param simbolo string Simbolo de la moneda
  	 **/
-	public function EditarMoneda
+	public static function EditarMoneda
 	(
 		$id_moneda, 
-		$nombre = null, 
-		$simbolo = null
+		$nombre = "", 
+		$simbolo = ""
 	)
 	{  
   
@@ -130,7 +130,7 @@ require_once("interfaces/Efectivo.interface.php");
  	 *
  	 * @param id_moneda int Id de la moneda a desactivar
  	 **/
-	public function EliminarMoneda
+	public static function EliminarMoneda
 	(
 		$id_moneda
 	)
@@ -147,10 +147,10 @@ require_once("interfaces/Efectivo.interface.php");
  	 * @param activo bool Si este valor no es recibido, se listaran tanto activos como inactivos, si es verdadero, se listaran solo los activos, si es falso, se listaran solo los inactivos.
  	 * @return monedas json Lista de monedas
  	 **/
-	public function ListaMoneda
+	public static function ListaMoneda
 	(
-		$orden = null, 
-		$activo = null
+		$orden = "", 
+		$activo = ""
 	)
 	{  
   

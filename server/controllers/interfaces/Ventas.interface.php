@@ -14,7 +14,7 @@
  	 *
  	 * @param id_venta string Id de la venta a cancelar
  	 **/
-  function Cancelar
+  static function Cancelar
 	(
 		$id_venta
 	);  
@@ -30,7 +30,7 @@
  	 * @param ordenar json Valor que determina el orden de la lista
  	 * @return detalle_venta json Objeto que contiene el detalle de la venta.
  	 **/
-  function Detalle
+  static function Detalle
 	(
 		$id_venta, 
 		$ordenar
@@ -46,7 +46,7 @@
  	 * @param id_venta int Id de la venta de la cual se listaran las ventas por arpilla
  	 * @return detalle_venta_arpilla json Objeto que contendra los detalles de las ventas por arpilla
  	 **/
-  function Detalle_venta_arpilla
+  static function Detalle_venta_arpilla
 	(
 		$id_venta
 	);  
@@ -68,7 +68,7 @@
  	 * @param liquidados bool Si este valor no es obtenido, se listaran tanto las ventas liquidadas, como las no liquidadas, si es true, se listaran solo las ventas liquidadas, si es false, se listaran las ventas no liquidadas solamente.
  	 * @return ventas json Objeto que contendra la lista de ventas
  	 **/
-  function Lista
+  static function Lista
 	(
 		$canceladas, 
 		$ordenar, 
@@ -100,7 +100,7 @@
  	 * @param tipo_de_pago string Si la venta es pagada con tarjeta, con efectivo o con cheque
  	 * @return id_venta int Id autogenerado de la nueva venta
  	 **/
-  function Nueva
+  static function Nueva
 	(
 		$total, 
 		$retencion, 
@@ -120,7 +120,7 @@
   
 	/**
  	 *
- 	 *Realiza una nueva venta por arpillas. Este m?do tiene que llamarse en conjunto con el metodo api/ventas/nueva.
+ 	 *Realiza una nueva venta por arpillas. Este m?todo tiene que llamarse en conjunto con el metodo api/ventas/nueva.
  	 *
  	 * @param peso_por_arpilla float Peso promedio por arpilla
  	 * @param merma_por_arpilla float La merma que resulto por arpilla
@@ -135,7 +135,7 @@
  	 * @param total_origen float Valor del embarque segun el origen
  	 * @return id_venta_arpilla int Id autogenerado por la insercion
  	 **/
-  function Nueva_venta_arpillas
+  static function Nueva_venta_arpillas
 	(
 		$peso_por_arpilla, 
 		$merma_por_arpilla, 

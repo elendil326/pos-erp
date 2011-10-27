@@ -65,7 +65,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
  	 * @param retenciones json Ids de las retenciones que afectan a este usuario
  	 * @return id_usuario int Id generado por la inserción del usuario
  	 **/
-	public function NuevoUsuario
+	public static function NuevoUsuario
 	(
 		$password, 
 		$id_rol, 
@@ -82,10 +82,10 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 		$salario = null, 
 		$intereses_moratorios = null, 
 		$ventas_a_credito = null, 
-		$telefono_personal1 = null, 
+		$telefono_personal1 = "", 
 		$descuento = null, 
 		$pagina_web = null, 
-		$limite_credito = null, 
+		$limite_credito = 0, 
 		$telefno_personal2 = null, 
 		$telefono1_2 = null, 
 		$codigo_postal = null, 
@@ -131,7 +131,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
  	 * @param ordenar json Valor numrico que indicar la forma en que se ordenar la lista
  	 * @return usuarios json Arreglo de objetos que contendrá la información de los usuarios del sistema
  	 **/
-	public function ListaUsuario
+	public static function ListaUsuario
 	(
 		$activo = null, 
 		$ordenar = null
@@ -198,7 +198,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
  	 * @param telefono1_2 string Telefono de la direccion alterna del usuario
  	 * @param intereses_moratorios float Intereses moratorios del cliente
  	 **/
-	public function EditarUsuario
+	public static function EditarUsuario
 	(
 		$id_usuario, 
 		$colonia_2 = null, 
@@ -265,13 +265,13 @@ require_once("interfaces/PersonalYAgentes.interface.php");
  	 * @param orden json Objeto que determinara el orden de la lista
  	 * @return roles json Objeto que contendra la lista de los roles
  	 **/
-	public function ListaRol
+	public static function ListaRol
 	(
-		$orden = null
+		$orden = ""
 	)
 	{  
   
-  		
+  
 	}
   
 	/**
@@ -281,7 +281,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
  	 * @param id_usuario int Id del usuario al que se le asignara el permiso
  	 * @param id_permiso int Id del permiso que se le asignaran a este usuario en especial
  	 **/
-	public function AsignarPermisoUsuario
+	public static function AsignarPermisoUsuario
 	(
 		$id_usuario, 
 		$id_permiso
@@ -298,7 +298,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
  	 * @param id_permiso int Arreglo de ids de los permisos que seran asignados al rol
  	 * @param id_rol int Id del rol al que se le asignaran los permisos
  	 **/
-	public function AsignarPermisoRol
+	public static function AsignarPermisoRol
 	(
 		$id_permiso, 
 		$id_rol
@@ -310,12 +310,12 @@ require_once("interfaces/PersonalYAgentes.interface.php");
   
 	/**
  	 *
- 	 *Este metodo quita uno o varios permisos a un rol. Cuando este metodo es ejecutado, se quitan los permisos a todos los usuarios de este rol
+ 	 *Este metodo quita un permiso de un rol. Al remover este permiso de un rol, los permisos que un usuario especifico tiene gracias a una asignacion especial se mantienen. 
  	 *
  	 * @param id_permiso int Id del permiso a remover
  	 * @param id_rol int Id del rol al que se le quitaran los permisos
  	 **/
-	public function RemoverPermisoRol
+	public static function RemoverPermisoRol
 	(
 		$id_permiso, 
 		$id_rol
@@ -332,7 +332,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
  	 * @param id_permiso int Id del permiso a quitar de este usuario
  	 * @param id_usuario int Id del usuario al que se le niegan los permisos
  	 **/
-	public function RemoverPermisoUsuario
+	public static function RemoverPermisoUsuario
 	(
 		$id_permiso, 
 		$id_usuario
@@ -346,23 +346,21 @@ require_once("interfaces/PersonalYAgentes.interface.php");
  	 *
  	 *Crea un nuevo grupo de usuarios. Se asignaran los permisos de este grupo al momento de su creacion.
  	 *
- 	 * @param permisos json Ids de los permisos que tendra este rol
- 	 * @param nombre string Nombre del grupo
  	 * @param descripcion string Descripcion larga del grupo
+ 	 * @param nombre string Nombre del grupo
  	 * @param descuento float El procentaje de descuento que este grupo gozara al comprar cualquier producto
  	 * @param salario float El salario de este rol
  	 * @return id_rol int Id del grupo que se genero
  	 **/
-	public function NuevoRol
+	public static function NuevoRol
 	(
-		$permisos, 
+		$descripcion, 
 		$nombre, 
-		$descripcion = null, 
-		$descuento = null, 
-		$salario = null
+		$descuento = 0, 
+		$salario = 0
 	)
 	{  
-  		
+  
   
 	}
   
@@ -376,13 +374,13 @@ require_once("interfaces/PersonalYAgentes.interface.php");
  	 * @param descuento float Descuento que se le hara a este rol
  	 * @param descripcion string Descripcion larga del grupo
  	 **/
-	public function EditarRol
+	public static function EditarRol
 	(
 		$id_rol, 
 		$salario = null, 
-		$nombre = null, 
+		$nombre = "", 
 		$descuento = null, 
-		$descripcion = null
+		$descripcion = ""
 	)
 	{  
   
@@ -391,11 +389,11 @@ require_once("interfaces/PersonalYAgentes.interface.php");
   
 	/**
  	 *
- 	 *Este metodo desactiva un usuario, usese cuando un empleado ya no trabaje para usted.
+ 	 *Este metodo desactiva un usuario, usese cuando un empleado ya no trabaje para usted. Que pasa cuando el usuario tiene cuentas abiertas o ventas a credito con saldo.
  	 *
  	 * @param id_usuario int Id del usuario a eliminar
  	 **/
-	public function EliminarUsuario
+	public static function EliminarUsuario
 	(
 		$id_usuario
 	)
@@ -406,17 +404,17 @@ require_once("interfaces/PersonalYAgentes.interface.php");
   
 	/**
  	 *
- 	 *Este metodo desactiva un grupo, solo se podra desactivar un grupo si no hay ningun usuario que pertenezca a ?
+ 	 *Este metodo desactiva un grupo, solo se podra desactivar un grupo si no hay ningun usuario que pertenezca a ?l.
  	 *
  	 * @param id_rol int Id del grupo a eliminar
  	 **/
-	public function EliminarRol
+	public static function EliminarRol
 	(
 		$id_rol
 	)
 	{  
   
-  		
+  
 	}
   
 	/**
@@ -424,12 +422,11 @@ require_once("interfaces/PersonalYAgentes.interface.php");
  	 *Regresa un alista de permisos, nombres y ids de los permisos del sistema.
  	 *
  	 **/
-	public function ListaPermisoRol
+	public static function ListaPermisoRol
 	(
 	)
 	{  
-
-  		return Permiso::getAll();
+  
   
 	}
   }

@@ -21,7 +21,7 @@
  	 * @param descripcion string Descripcion larga de la clasificacion
  	 * @param margen_de_utilidad float Margen de utilidad que se le obtendra a todos los productos al venderle a este tipo de cliente
  	 **/
-  function EditarClasificacion
+  static function EditarClasificacion
 	(
 		$id_clasificacion_cliente, 
 		$impuestos = null, 
@@ -43,7 +43,7 @@
  	 * @param orden json Objeto que determinara el orden de la lista
  	 * @return clasifciaciones_cliente json Objeto que contendra la lista de clasificaciones de cliente
  	 **/
-  function ListaClasificacion
+  static function ListaClasificacion
 	(
 		$orden = null
 	);  
@@ -64,7 +64,7 @@
  	 * @param utilidad float Utilidad que se ganara a todos los productos que no cuenten con este campo. Se utiliza para calcular el precio al que se le venden los productos a este tipo de cliente.
  	 * @return id_categoria_cliente int El id para esta nueva categoria de cliente.
  	 **/
-  function NuevaClasificacion
+  static function NuevaClasificacion
 	(
 		$clave_interna, 
 		$nombre, 
@@ -85,7 +85,7 @@
  	 * @param id_cliente int Id del cliente del cual se listarn sus datos.
  	 * @return cliente json Arreglo que contendrá la información del cliente. 
  	 **/
-  function Detalle
+  static function Detalle
 	(
 		$id_cliente
 	);  
@@ -95,7 +95,7 @@
   
 	/**
  	 *
- 	 *Edita la informaci?e un cliente. Se diferenc?del m?do editar_perfil en qu?st??do modifica informaci??sensible del cliente. El campo fecha_ultima_modificacion ser?lenado con la fecha actual del servidor. El campo Usuario_ultima_modificacion ser?lenado con la informaci?e la sesi?ctiva.
+ 	 *Edita la informaci?n de un cliente. Se diferenc?a del m?todo editar_perfil en qu? est? m?todo modifica informaci?n m?s sensible del cliente. El campo fecha_ultima_modificacion ser? llenado con la fecha actual del servidor. El campo Usuario_ultima_modificacion ser? llenado con la informaci?n de la sesi?n activa.
 
 Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran los datos que ya tiene.
  	 *
@@ -135,7 +135,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
  	 * @param numero_interior string Nmero interior del cliente.
  	 * @param dia_de_revision string Fecha de revisin del cliente.
  	 **/
-  function Editar
+  static function Editar
 	(
 		$id_cliente, 
 		$telefono1 = null, 
@@ -179,7 +179,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
   
 	/**
  	 *
- 	 *Edita la informaci?e un cliente. El campo fecha_ultima_modificacion ser?lenado con la fecha actual del servidor. El campo Usuario_ultima_modificacion ser?lenado con la informaci?e la sesi?ctiva.
+ 	 *Edita la informaci?n de un cliente. El campo fecha_ultima_modificacion ser? llenado con la fecha actual del servidor. El campo Usuario_ultima_modificacion ser? llenado con la informaci?n de la sesi?n activa.
  	 *
  	 * @param password string Password del cliente
  	 * @param razon_social string Nombre o razon social del cliente.
@@ -206,7 +206,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
  	 * @param texto_extra string Comentario sobre la direccin del cliente.
  	 * @param colonia string Colonia del cliente
  	 **/
-  function Editar_perfil
+  static function Editar_perfil
 	(
 		$password, 
 		$razon_social, 
@@ -239,9 +239,9 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
   
 	/**
  	 *
- 	 *Regresa una lista de clientes. Puede filtrarse por empresa, sucursal, activos, as?omo ordenarse seg?us atributs con el par?tro orden. Es posible que algunos clientes sean dados de alta por un admnistrador que no les asigne algun id_empresa, o id_sucursal.
+ 	 *Regresa una lista de clientes. Puede filtrarse por empresa, sucursal, activos, as? como ordenarse seg?n sus atributs con el par?metro orden. Es posible que algunos clientes sean dados de alta por un admnistrador que no les asigne algun id_empresa, o id_sucursal.
 
-Update :  ¿Es correcto que contenga el argumento id_sucursal? Ya que as?omo esta entiendo que solo te regresara los datos de los clientes de una sola sucursal.
+Update :  ?Es correcto que contenga el argumento id_sucursal? Ya que as? como esta entiendo que solo te regresara los datos de los clientes de una sola sucursal.
  	 *
  	 * @param orden json Valor que definir la forma de ordenamiento de la lista. 
  	 * @param id_empresa int Filtrara los resultados solo para los clientes que se dieron de alta en la empresa dada.
@@ -249,7 +249,7 @@ Update :  ¿Es correcto que contenga el argumento id_sucursal? Ya que as?omo esta
  	 * @param mostrar_inactivos bool Si el valor es obtenido, cuando sea true, mostrar solo los clientes que estn activos, false si solo mostrar clientes inactivos.
  	 * @return clientes json Arreglo de objetos que contendrá la información de los clientes.
  	 **/
-  function Lista
+  static function Lista
 	(
 		$orden = null, 
 		$id_empresa = null, 
@@ -262,14 +262,12 @@ Update :  ¿Es correcto que contenga el argumento id_sucursal? Ya que as?omo esta
   
 	/**
  	 *
- 	 *Crear un nuevo cliente. Para los campos de Fecha_alta y Fecha_ultima_modificacion se usar?a fecha actual del servidor. El campo Agente y Usuario_ultima_modificacion ser?tomados de la sesi?ctiva. Para el campo Sucursal se tomar?a sucursal activa donde se est?reando el cliente. 
+ 	 *Crear un nuevo cliente. Para los campos de Fecha_alta y Fecha_ultima_modificacion se usar? la fecha actual del servidor. El campo Agente y Usuario_ultima_modificacion ser?n tomados de la sesi?n activa. Para el campo Sucursal se tomar? la sucursal activa donde se est? creando el cliente. 
 
 Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda ver sus facturas y eso, si tiene email. Al crearse se le enviara un correo electronico con el url.
  	 *
  	 * @param codigo_cliente string El codigo para este cliente, con el que se esta usando, puede ser su RFC u otra cosa.
  	 * @param razon_social string Nombre o razon social del cliente.
- 	 * @param direccion_web string Direccin web del cliente.
- 	 * @param calle string Calle del cliente
  	 * @param clasificacion_cliente int Id de la clasificacin del cliente.
  	 * @param rfc string RFC del cliente.
  	 * @param telefono2 string Segundo telfono del cliente.
@@ -283,22 +281,22 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
  	 * @param representante_legal string Nombre del representante legal del cliente.
  	 * @param texto_extra string Comentario sobre la direccin del cliente.
  	 * @param telefono1 string Telefono del cliente
- 	 * @param numero_interior string Nmero interior del cliente.
- 	 * @param moneda_del_cliente int Moneda que maneja el cliente.
+ 	 * @param referencia string Referencia a la direccion.
+ 	 * @param codigo_postal string Codigo postal del cliente
  	 * @param id_ciudad int id de la ciudad
  	 * @param retenciones json Objeto que contendra los ids de las retenciones que afectan a este cliente
  	 * @param impuestos json Objeto que contendra los impuestos que afectan a este cliente
- 	 * @param codigo_postal string Codigo postal del cliente
+ 	 * @param moneda_del_cliente int Moneda que maneja el cliente.
+ 	 * @param numero_interior string Nmero interior del cliente.
+ 	 * @param calle string Calle del cliente
  	 * @param email string E-mail del cliente
- 	 * @param referencia string Referencia a la direccion.
+ 	 * @param direccion_web string Direccin web del cliente.
  	 * @return id_cliente int Id autogenerado del cliente que se insertó
  	 **/
-  function Nuevo
+  static function Nuevo
 	(
 		$codigo_cliente, 
 		$razon_social, 
-		$direccion_web = null, 
-		$calle = null, 
 		$clasificacion_cliente = "", 
 		$rfc = null, 
 		$telefono2 = null, 
@@ -312,14 +310,16 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
 		$representante_legal = null, 
 		$texto_extra = null, 
 		$telefono1 = null, 
-		$numero_interior = null, 
-		$moneda_del_cliente = "La moneda de la empresa", 
+		$referencia = "", 
+		$codigo_postal = null, 
 		$id_ciudad = null, 
 		$retenciones = null, 
 		$impuestos = null, 
-		$codigo_postal = null, 
+		$moneda_del_cliente = "", 
+		$numero_interior = null, 
+		$calle = null, 
 		$email = null, 
-		$referencia = ""
+		$direccion_web = null
 	);  
   
   

@@ -14,7 +14,7 @@
  	 *
  	 * @param id_paquete int Id del paquete a activar
  	 **/
-  function Activar
+  static function Activar
 	(
 		$id_paquete
 	);  
@@ -24,12 +24,12 @@
   
 	/**
  	 *
- 	 *Muestra los productos y/o servicios englobados en este paquete as?omo las sucursales y las empresas donde lo ofrecen
+ 	 *Muestra los productos y/o servicios englobados en este paquete as? como las sucursales y las empresas donde lo ofrecen
  	 *
  	 * @param id_paquete int Id del paquete a visualizar sus detalles
  	 * @return detalle_paquete json Informacion del detalle del paquete
  	 **/
-  function Detalle
+  static function Detalle
 	(
 		$id_paquete
 	);  
@@ -50,7 +50,7 @@
  	 * @param margen_utilidad float Margen de utilidad que se ganara al vender este paquete
  	 * @param descripcion string Descripcion larga del paquete
  	 **/
-  function Editar
+  static function Editar
 	(
 		$id_paquete, 
 		$foto_paquete = "", 
@@ -71,7 +71,7 @@
  	 *
  	 * @param id_paquete int Id del paquete a desactivar
  	 **/
-  function Eliminar
+  static function Eliminar
 	(
 		$id_paquete
 	);  
@@ -90,7 +90,7 @@
  	 * @param activo bool Si este valor no es obtenido, se listaran paquetes tanto activos como inactivos, si es verdadera, se listaran solo paquetes activos, si es falso, se listaran paquetes inactivos
  	 * @return paquetes json Lista de apquetes
  	 **/
-  function Lista
+  static function Lista
 	(
 		$id_empresa = "", 
 		$id_sucursal = "", 
@@ -117,7 +117,7 @@
  	 * @param foto_paquete string Url de la foto del paquete
  	 * @return id_paquete int Id autogenerado por la insercion
  	 **/
-  function Nuevo
+  static function Nuevo
 	(
 		$nombre, 
 		$empresas, 

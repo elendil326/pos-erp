@@ -14,7 +14,7 @@
  	 *
  	 * @param id_compra int Id de la compra a cancelar
  	 **/
-  function Cancelar
+  static function Cancelar
 	(
 		$id_compra
 	);  
@@ -29,7 +29,7 @@
  	 * @param id_compra int Id de la compra a detallar
  	 * @return detalle_compra json Objeto que contendra los productos con sus cantidades de esa compra
  	 **/
-  function Detalle
+  static function Detalle
 	(
 		$id_compra
 	);  
@@ -46,7 +46,7 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
  	 * @param id_compra int Id de la compra de la que se detallaran las compras por arpilla
  	 * @return detalle_compra_arpilla json Objeto que contendrá la información del detalle de la compra
  	 **/
-  function Detalle_compra_arpilla
+  static function Detalle_compra_arpilla
 	(
 		$id_compra
 	);  
@@ -74,7 +74,7 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
  	 * @param orden string Nombre de la columna por la cual se ordenaran las compras
  	 * @return compras json Objeto que contendra la lista de las compras
  	 **/
-  function Lista
+  static function Lista
 	(
 		$tipo_pago = null, 
 		$fecha_inicial = null, 
@@ -113,7 +113,7 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
  	 * @param tipo_de_pago string Si el pago sera en efectivo, con cheque o tarjeta
  	 * @return id_compra int Id autogenerado por la inserción de la compra
  	 **/
-  function Nueva
+  static function Nueva
 	(
 		$descuento, 
 		$subtotal, 
@@ -150,7 +150,7 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
  	 * @param productor string Nombre del productor
  	 * @return id_compra_arpilla int ID autogenerado por la insercion
  	 **/
-  function Nueva_compra_arpilla
+  static function Nueva_compra_arpilla
 	(
 		$peso_por_arpilla, 
 		$arpillas, 

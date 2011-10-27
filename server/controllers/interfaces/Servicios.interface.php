@@ -10,7 +10,7 @@
   
 	/**
  	 *
- 	 *Edita la informaci?e una clasificaci?e servicio
+ 	 *Edita la informaci?n de una clasificaci?n de servicio
  	 *
  	 * @param id_clasificacion_servicio int Id de la clasificacion del servicio que se edita
  	 * @param retenciones json Retenciones que afectan a los servicios de esta clasificacion
@@ -21,7 +21,7 @@
  	 * @param garantia int Numero de meses que tiene la garantia de este tipo de servicios
  	 * @param nombre string Nombre de la clasificacion de servicio
  	 **/
-  function EditarClasificacion
+  static function EditarClasificacion
 	(
 		$id_clasificacion_servicio, 
 		$retenciones = "", 
@@ -42,7 +42,7 @@
  	 *
  	 * @param id_clasificacion_servicio int Id de la clasificacion de servicio
  	 **/
-  function EliminarClasificacion
+  static function EliminarClasificacion
 	(
 		$id_clasificacion_servicio
 	);  
@@ -64,7 +64,7 @@
  	 * @param retenciones json Retenciones que afectana este tipo de servicio
  	 * @return id_clasificacion_servicio int Id de la clasificacion que se creo
  	 **/
-  function NuevaClasificacion
+  static function NuevaClasificacion
 	(
 		$nombre, 
 		$garantia = "", 
@@ -101,7 +101,7 @@
  	 * @param retenciones json Ids de retenciones que afectan este servicio
  	 * @param costo_estandar float Valor del costo estandar del servicio
  	 **/
-  function Editar
+  static function Editar
 	(
 		$id_servicio, 
 		$sucursales = null, 
@@ -131,7 +131,7 @@
  	 *
  	 * @param id_servicio int Id del servicio que será eliminado
  	 **/
-  function Eliminar
+  static function Eliminar
 	(
 		$id_servicio
 	);  
@@ -149,7 +149,7 @@
  	 * @param orden json Valor que determinara el orden de la lista
  	 * @return servicios json Objeto que contendra la lista de servicios
  	 **/
-  function Lista
+  static function Lista
 	(
 		$id_empresa = null, 
 		$id_sucursal = null, 
@@ -182,7 +182,7 @@
  	 * @param foto_servicio string La url de la foto del servicio
  	 * @return id_servicio int Id del servicio creado
  	 **/
-  function Nuevo
+  static function Nuevo
 	(
 		$costo_estandar, 
 		$metodo_costeo, 
@@ -212,7 +212,7 @@
  	 * @param id_orden_de_servicio int Id de la orden del servicio a cancelar
  	 * @param motivo_cancelacion string Motivo de la cancelacion
  	 **/
-  function CancelarOrden
+  static function CancelarOrden
 	(
 		$id_orden_de_servicio, 
 		$motivo_cancelacion = ""
@@ -223,12 +223,12 @@
   
 	/**
  	 *
- 	 *Ver los detalles de una orden de servicio. Puede ordenarse por sus atributos. Los detalles de la orden de servicio son los seguimientos que tiene esa orden as?omo el estado y sus fechas de orden y de entrega.
+ 	 *Ver los detalles de una orden de servicio. Puede ordenarse por sus atributos. Los detalles de la orden de servicio son los seguimientos que tiene esa orden as? como el estado y sus fechas de orden y de entrega.
  	 *
  	 * @param id_orden int Id de la orden a revisar
  	 * @return detalle_orden json Objeto que contendra el detalle de la orden
  	 **/
-  function DetalleOrden
+  static function DetalleOrden
 	(
 		$id_orden
 	);  
@@ -246,7 +246,7 @@
  	 * @param fecha_hasta string fecha en que se entregara una orden
  	 * @return ordenes json Objeto que contendrá las ordenes.
  	 **/
-  function ListaOrden
+  static function ListaOrden
 	(
 		$id_empresa = "", 
 		$id_sucursal = "", 
@@ -268,7 +268,7 @@
  	 * @param adelanto float Adelanto de la orden
  	 * @return id_orden int Id de la orden que se creo.
  	 **/
-  function NuevaOrden
+  static function NuevaOrden
 	(
 		$id_cliente, 
 		$id_servicio, 
@@ -288,7 +288,7 @@
  	 * @param id_localizacion int Id de la sucursal en la que se encuentra actualmente la orden, se usara un -1 para indicar que esta en movimiento
  	 * @param id_orden_de_servicio int Id de la orden a darle seguimiento
  	 **/
-  function SeguimientoOrden
+  static function SeguimientoOrden
 	(
 		$estado, 
 		$id_localizacion, 
@@ -304,7 +304,7 @@
  	 *
  	 * @param id_orden int Id de la orden a terminar
  	 **/
-  function TerminarOrden
+  static function TerminarOrden
 	(
 		$id_orden
 	);  

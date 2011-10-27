@@ -18,7 +18,7 @@
  	 * @param descuento float Descuento que se le hara a este rol
  	 * @param descripcion string Descripcion larga del grupo
  	 **/
-  function EditarRol
+  static function EditarRol
 	(
 		$id_rol, 
 		$salario = null, 
@@ -32,11 +32,11 @@
   
 	/**
  	 *
- 	 *Este metodo desactiva un grupo, solo se podra desactivar un grupo si no hay ningun usuario que pertenezca a ?
+ 	 *Este metodo desactiva un grupo, solo se podra desactivar un grupo si no hay ningun usuario que pertenezca a ?l.
  	 *
  	 * @param id_rol int Id del grupo a eliminar
  	 **/
-  function EliminarRol
+  static function EliminarRol
 	(
 		$id_rol
 	);  
@@ -51,7 +51,7 @@
  	 * @param orden json Objeto que determinara el orden de la lista
  	 * @return roles json Objeto que contendra la lista de los roles
  	 **/
-  function ListaRol
+  static function ListaRol
 	(
 		$orden = ""
 	);  
@@ -69,7 +69,7 @@
  	 * @param salario float El salario de este rol
  	 * @return id_rol int Id del grupo que se genero
  	 **/
-  function NuevoRol
+  static function NuevoRol
 	(
 		$descripcion, 
 		$nombre, 
@@ -87,7 +87,7 @@
  	 * @param id_permiso int Arreglo de ids de los permisos que seran asignados al rol
  	 * @param id_rol int Id del rol al que se le asignaran los permisos
  	 **/
-  function AsignarPermisoRol
+  static function AsignarPermisoRol
 	(
 		$id_permiso, 
 		$id_rol
@@ -101,7 +101,7 @@
  	 *Regresa un alista de permisos, nombres y ids de los permisos del sistema.
  	 *
  	 **/
-  function ListaPermisoRol
+  static function ListaPermisoRol
 	(
 	);  
   
@@ -110,12 +110,12 @@
   
 	/**
  	 *
- 	 *Este metodo quita uno o varios permisos a un rol. Cuando este metodo es ejecutado, se quitan los permisos a todos los usuarios de este rol
+ 	 *Este metodo quita un permiso de un rol. Al remover este permiso de un rol, los permisos que un usuario especifico tiene gracias a una asignacion especial se mantienen. 
  	 *
  	 * @param id_permiso int Id del permiso a remover
  	 * @param id_rol int Id del rol al que se le quitaran los permisos
  	 **/
-  function RemoverPermisoRol
+  static function RemoverPermisoRol
 	(
 		$id_permiso, 
 		$id_rol
@@ -181,7 +181,7 @@
  	 * @param telefono1_2 string Telefono de la direccion alterna del usuario
  	 * @param intereses_moratorios float Intereses moratorios del cliente
  	 **/
-  function EditarUsuario
+  static function EditarUsuario
 	(
 		$id_usuario, 
 		$colonia_2 = null, 
@@ -242,11 +242,11 @@
   
 	/**
  	 *
- 	 *Este metodo desactiva un usuario, usese cuando un empleado ya no trabaje para usted.
+ 	 *Este metodo desactiva un usuario, usese cuando un empleado ya no trabaje para usted. Que pasa cuando el usuario tiene cuentas abiertas o ventas a credito con saldo.
  	 *
  	 * @param id_usuario int Id del usuario a eliminar
  	 **/
-  function EliminarUsuario
+  static function EliminarUsuario
 	(
 		$id_usuario
 	);  
@@ -262,7 +262,7 @@
  	 * @param ordenar json Valor numrico que indicar la forma en que se ordenar la lista
  	 * @return usuarios json Arreglo de objetos que contendrá la información de los usuarios del sistema
  	 **/
-  function ListaUsuario
+  static function ListaUsuario
 	(
 		$activo = null, 
 		$ordenar = null
@@ -327,7 +327,7 @@
  	 * @param retenciones json Ids de las retenciones que afectan a este usuario
  	 * @return id_usuario int Id generado por la inserción del usuario
  	 **/
-  function NuevoUsuario
+  static function NuevoUsuario
 	(
 		$password, 
 		$id_rol, 
@@ -391,7 +391,7 @@
  	 * @param id_usuario int Id del usuario al que se le asignara el permiso
  	 * @param id_permiso int Id del permiso que se le asignaran a este usuario en especial
  	 **/
-  function AsignarPermisoUsuario
+  static function AsignarPermisoUsuario
 	(
 		$id_usuario, 
 		$id_permiso
@@ -407,7 +407,7 @@
  	 * @param id_permiso int Id del permiso a quitar de este usuario
  	 * @param id_usuario int Id del usuario al que se le niegan los permisos
  	 **/
-  function RemoverPermisoUsuario
+  static function RemoverPermisoUsuario
 	(
 		$id_permiso, 
 		$id_usuario

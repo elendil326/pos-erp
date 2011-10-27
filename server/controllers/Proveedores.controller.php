@@ -15,7 +15,7 @@ require_once("interfaces/Proveedores.interface.php");
  	 *
  	 * @param id_clasificacion_proveedor int Id de la clasificacion de proveedor a desactivar
  	 **/
-	public function EliminarClasificacion
+	public static function EliminarClasificacion
 	(
 		$id_clasificacion_proveedor
 	)
@@ -34,7 +34,7 @@ require_once("interfaces/Proveedores.interface.php");
  	 * @param retenciones json Ids de retenciones que afecta esta clasificacion de proveedor
  	 * @return id_clasificacion_proveedor int Id de la clasificacion del proveedor
  	 **/
-	public function NuevaClasificacion
+	public static function NuevaClasificacion
 	(
 		$nombre, 
 		$descripcion = null, 
@@ -56,13 +56,13 @@ require_once("interfaces/Proveedores.interface.php");
  	 * @param descripcion string Descripcion de la clasificacion del proveedor
  	 * @param nombre string Nombre de la clasificacion del proveedor
  	 **/
-	public function EditarClasificacion
+	public static function EditarClasificacion
 	(
 		$id_clasificacion_proveedor, 
-		$retenciones = null, 
-		$impuestos = null, 
-		$descripcion = null, 
-		$nombre = null
+		$retenciones = "", 
+		$impuestos = "", 
+		$descripcion = "", 
+		$nombre = ""
 	)
 	{  
   
@@ -77,7 +77,7 @@ require_once("interfaces/Proveedores.interface.php");
  	 * @param ordenar json Valor que determinara el orden de la lista.
  	 * @return proveedores json Objeto que contendra la lista de proveedores.
  	 **/
-	public function Lista
+	public static function Lista
 	(
 		$activo = null, 
 		$ordenar = null
@@ -119,7 +119,7 @@ require_once("interfaces/Proveedores.interface.php");
  	 * @param telefono2 string Telefono 2 de la direccion del proveedor
  	 * @return id_proveedor int Id autogenerado por la inserción del nuevo proveedor.
  	 **/
-	public function Nuevo
+	public static function Nuevo
 	(
 		$id_tipo_proveedor, 
 		$password, 
@@ -133,10 +133,10 @@ require_once("interfaces/Proveedores.interface.php");
 		$direccion_web = null, 
 		$retenciones = null, 
 		$impuestos = null, 
-		$dias_embarque = null, 
+		$dias_embarque = true, 
 		$telefono_personal = null, 
 		$rfc = null, 
-		$calle = null, 
+		$calle = 1, 
 		$email = null, 
 		$id_moneda = null, 
 		$cuenta_bancaria = null, 
@@ -185,7 +185,7 @@ require_once("interfaces/Proveedores.interface.php");
  	 * @param retenciones json Retenciones que afectan a este proveedor
  	 * @param codigo_proveedor string Codigo con el que se peude identificar al proveedor
  	 **/
-	public function Editar
+	public static function Editar
 	(
 		$id_proveedor, 
 		$limite_credito = null, 
@@ -198,7 +198,7 @@ require_once("interfaces/Proveedores.interface.php");
 		$numero_interior = null, 
 		$numero_exterior = null, 
 		$representante_legal = null, 
-		$activo = null, 
+		$activo = 1, 
 		$rfc = null, 
 		$id_tipo_proveedor = null, 
 		$dias_de_credito = null, 
@@ -226,7 +226,7 @@ require_once("interfaces/Proveedores.interface.php");
  	 *
  	 * @param id_proveedor int Id del proveedor que sera eliminado
  	 **/
-	public function Eliminar
+	public static function Eliminar
 	(
 		$id_proveedor
 	)

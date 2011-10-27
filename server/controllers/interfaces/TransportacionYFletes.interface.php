@@ -15,7 +15,7 @@
  	 * @param productos json Objeto que contendra los id de productos como sus cantidades en las que son cargados al vehiculo
  	 * @param id_carro int Id del carro que sera cargado
  	 **/
-  function Cargar
+  static function Cargar
 	(
 		$productos, 
 		$id_carro
@@ -31,7 +31,7 @@
  	 * @param id_carro int Id del carro que se descarga
  	 * @param productos json Objeto que contendra los productos con sus cantidades
  	 **/
-  function Descargar
+  static function Descargar
 	(
 		$id_carro, 
 		$productos
@@ -47,7 +47,7 @@
  	 * @param id_carro int Id del carro a detallar
  	 * @return carro json Objeto que contendra los detalles y el historial del carro
  	 **/
-  function Detalle
+  static function Detalle
 	(
 		$id_carro
 	);  
@@ -74,7 +74,7 @@
  	 * @param id_tipo_carro int Id del tipo de carro (camioneta, coche, camion)
  	 * @param ids_empresas json Los ids de las empresas a las que este vehiculo pertenece. Si este valor no se pasa, se tomara que el vehiculo pertenece a todas las empresas.
  	 **/
-  function Editar
+  static function Editar
 	(
 		$id_carro, 
 		$km_por_litro = "", 
@@ -104,7 +104,7 @@
  	 * @param fecha_salida string Fecha en la que se planea que salga carro
  	 * @param fecha_llegada_tentativa string Fecha tentativa en la que se espera que el carro llegue a su destino.
  	 **/
-  function Enrutar
+  static function Enrutar
 	(
 		$id_carro, 
 		$id_sucursal_destino, 
@@ -124,7 +124,7 @@
  	 * @param orden json Valor que determinara el orden de la lista
  	 * @return carros json Lista de carros con datos generales.
  	 **/
-  function Lista
+  static function Lista
 	(
 		$id_empresa = null, 
 		$id_estado = null, 
@@ -142,7 +142,7 @@
  	 * @param activo bool Si la marca estara habilitada para su seleccion
  	 * @param nombre_marca string Nombre de la marca del  carro
  	 **/
-  function EditarMarca
+  static function EditarMarca
 	(
 		$id_marca_carro, 
 		$activo = true, 
@@ -160,7 +160,7 @@
  	 * @param activo bool Si la marca estara disponible para su seleccion
  	 * @return id_marca_carro int Id autogenerado por la insercion de la nueva marca
  	 **/
-  function NuevoMarca
+  static function NuevoMarca
 	(
 		$nombre_marca, 
 		$activo = ""
@@ -177,7 +177,7 @@
  	 * @param nombre_modelo_carro string Nombre del modelo del carro ( 99,2010, etc)
  	 * @param activo bool Si el modelo sera activo para seleccionarse
  	 **/
-  function EditarModelo
+  static function EditarModelo
 	(
 		$id_modelo_carro, 
 		$nombre_modelo_carro, 
@@ -195,7 +195,7 @@
  	 * @param activo bool Si el modelo estara activo para su seleccion
  	 * @return id_modelo int Id del modelo autogenerado por la insercion
  	 **/
-  function NuevoModelo
+  static function NuevoModelo
 	(
 		$nombre_modelo, 
 		$activo = true
@@ -222,7 +222,7 @@
  	 * @param km_por_litro float numero de kilometros que puede trnasitar el vehiculo por un litro de combustible
  	 * @param ids_empresas json Los ids de las empresas a las que este vehiculo pertenece. Si este valor no se pasa, se tomara que el vehiculo pertenece a todas las empresas.
  	 **/
-  function Nuevo
+  static function Nuevo
 	(
 		$imagen, 
 		$id_estado, 
@@ -249,7 +249,7 @@
  	 * @param id_carro int Id del carro del cual se registra su llegada
  	 * @param fecha_llegada string Registra la fecha de llegada en caso de que haya pasado un retraso y no se haya  registrado a tiempo la llegada
  	 **/
-  function Registrar_llegada
+  static function Registrar_llegada
 	(
 		$id_carro, 
 		$fecha_llegada = ""
@@ -266,7 +266,7 @@
  	 * @param activo bool Si este carro va a estar activo para su seleccion
  	 * @param nombre_tipo_carro string Nombre del tipo de carro
  	 **/
-  function EditarTipo
+  static function EditarTipo
 	(
 		$id_tipo_carro, 
 		$activo = true, 
@@ -284,7 +284,7 @@
  	 * @param activo bool SI este tipo de carro sera valido para seleccionarlo o no
  	 * @return id_tipo_carro int Id autogenerado por la insercion del tipo de carro
  	 **/
-  function NuevoTipo
+  static function NuevoTipo
 	(
 		$nombre_tipo, 
 		$activo = true
@@ -303,7 +303,7 @@ Se movera parcial o totalmente la carga?
  	 * @param id_carro_destino int Id del carro al que se mueve la carga
  	 * @param productos json Productos que se mueve de un carro a otros.
  	 **/
-  function Transbordo
+  static function Transbordo
 	(
 		$id_carro_origen, 
 		$id_carro_destino, 

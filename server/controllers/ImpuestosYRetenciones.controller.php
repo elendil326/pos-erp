@@ -19,13 +19,13 @@ require_once("interfaces/ImpuestosYRetenciones.interface.php");
  	 * @param descripcion string Descripcion larga del impuesto
  	 * @param nombre string Nombre del impuesto
  	 **/
-	public function EditarImpuesto
+	public static function EditarImpuesto
 	(
 		$id_impuesto, 
-		$es_monto = null, 
-		$monto_porcentaje = null, 
-		$descripcion = null, 
-		$nombre = null
+		$es_monto = "", 
+		$monto_porcentaje = "", 
+		$descripcion = "", 
+		$nombre = ""
 	)
 	{  
   
@@ -42,13 +42,13 @@ require_once("interfaces/ImpuestosYRetenciones.interface.php");
  	 * @param descripcion string Descripcion larga de al retencion
  	 * @param nombre string Nombre de la retencion
  	 **/
-	public function EditarRetencion
+	public static function EditarRetencion
 	(
 		$id_retencion, 
-		$es_monto = null, 
-		$monto_porcentaje = null, 
-		$descripcion = null, 
-		$nombre = null
+		$es_monto = "", 
+		$monto_porcentaje = "", 
+		$descripcion = "", 
+		$nombre = ""
 	)
 	{  
   
@@ -62,9 +62,9 @@ require_once("interfaces/ImpuestosYRetenciones.interface.php");
  	 * @param ordenar json Objeto que determinara el orde de la lista
  	 * @return retenciones json Objeto que contendra la lista de retenciones
  	 **/
-	public function ListaRetencion
+	public static function ListaRetencion
 	(
-		$ordenar = null
+		$ordenar = ""
 	)
 	{  
   
@@ -78,9 +78,9 @@ require_once("interfaces/ImpuestosYRetenciones.interface.php");
  	 * @param ordenar json Objeto que determinara el orden de la lista
  	 * @return impuestos json Lista de impuestos
  	 **/
-	public function ListaImpuesto
+	public static function ListaImpuesto
 	(
-		$ordenar = null
+		$ordenar = ""
 	)
 	{  
   
@@ -97,12 +97,12 @@ require_once("interfaces/ImpuestosYRetenciones.interface.php");
  	 * @param descripcion string Descripcion larga de la retencion
  	 * @return id_retencion int Id de la retencion creada
  	 **/
-	public function NuevaRetencion
+	public static function NuevaRetencion
 	(
 		$es_monto, 
 		$monto_porcentaje, 
 		$nombre, 
-		$descripcion = null
+		$descripcion = ""
 	)
 	{  
   
@@ -119,12 +119,12 @@ require_once("interfaces/ImpuestosYRetenciones.interface.php");
  	 * @param descripcion string Descripcion del impuesto
  	 * @return id_impuesto int Id del impuesto insertado.
  	 **/
-	public function NuevoImpuesto
+	public static function NuevoImpuesto
 	(
 		$monto_porcentaje, 
 		$nombre, 
 		$es_monto, 
-		$descripcion = null
+		$descripcion = ""
 	)
 	{  
   

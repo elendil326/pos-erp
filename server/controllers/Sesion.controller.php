@@ -11,12 +11,12 @@ require_once("interfaces/Sesion.interface.php");
   
 	/**
  	 *
- 	 *Regresa un url de redireccion seg?l tipo de usuario.
+ 	 *Regresa un url de redireccion seg?n el tipo de usuario.
  	 *
  	 * @param auth_token string El token de autorizacion generado al iniciar la sesion
  	 * @return forward_to string La url de continuación de acuerdo al id que cerró sesión.
  	 **/
-	public function Cerrar
+	public static function Cerrar
 	(
 		$auth_token = null
 	)
@@ -27,8 +27,8 @@ require_once("interfaces/Sesion.interface.php");
   
 	/**
  	 *
- 	 *Valida las credenciales de un usuario y regresa un url a donde se debe de redireccionar. Este m?do no necesita de ning?ipo de autenticaci?
-Si se detecta un tipo de usuario inferior a admin y no se ha llamado antes a api/sucursal/revisar_sucursal se regresar?n 403 Authorization Required y la sesi?o se iniciar?
+ 	 *Valida las credenciales de un usuario y regresa un url a donde se debe de redireccionar. Este m?todo no necesita de ning?n tipo de autenticaci?n. 
+Si se detecta un tipo de usuario inferior a admin y no se ha llamado antes a api/sucursal/revisar_sucursal se regresar? un 403 Authorization Required y la sesi?n no se iniciar?.
 Si el usuario que esta intentando iniciar sesion, esta descativado... 403 Authorization Required supongo
  	 *
  	 * @param password string La contraseña del usuario.
@@ -39,7 +39,7 @@ Si el usuario que esta intentando iniciar sesion, esta descativado... 403 Author
  	 * @return login_succesful	 bool Si la validación del usuario es correcta.
  	 * @return auth_token string El token si es que fue solicitado.
  	 **/
-	public function Iniciar
+	public static function Iniciar
 	(
 		$password, 
 		$usuario, 
@@ -57,7 +57,7 @@ Si el usuario que esta intentando iniciar sesion, esta descativado... 403 Author
  	 * @param id_grupo int Obtener la lista de sesiones activas para un grupo de usuarios especifico.
  	 * @return en_linea json Arreglo de objetos que contendrán la información de las sesiones activas
  	 **/
-	public function Lista
+	public static function Lista
 	(
 		$id_grupo = null
 	)

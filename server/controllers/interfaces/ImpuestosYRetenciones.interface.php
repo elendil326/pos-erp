@@ -18,7 +18,7 @@
  	 * @param descripcion string Descripcion larga del impuesto
  	 * @param nombre string Nombre del impuesto
  	 **/
-  function EditarImpuesto
+  static function EditarImpuesto
 	(
 		$id_impuesto, 
 		$es_monto = "", 
@@ -37,7 +37,7 @@
  	 * @param ordenar json Objeto que determinara el orden de la lista
  	 * @return impuestos json Lista de impuestos
  	 **/
-  function ListaImpuesto
+  static function ListaImpuesto
 	(
 		$ordenar = ""
 	);  
@@ -55,7 +55,7 @@
  	 * @param descripcion string Descripcion del impuesto
  	 * @return id_impuesto int Id del impuesto insertado.
  	 **/
-  function NuevoImpuesto
+  static function NuevoImpuesto
 	(
 		$monto_porcentaje, 
 		$nombre, 
@@ -76,7 +76,7 @@
  	 * @param descripcion string Descripcion larga de al retencion
  	 * @param nombre string Nombre de la retencion
  	 **/
-  function EditarRetencion
+  static function EditarRetencion
 	(
 		$id_retencion, 
 		$es_monto = "", 
@@ -95,7 +95,7 @@
  	 * @param ordenar json Objeto que determinara el orde de la lista
  	 * @return retenciones json Objeto que contendra la lista de retenciones
  	 **/
-  function ListaRetencion
+  static function ListaRetencion
 	(
 		$ordenar = ""
 	);  
@@ -113,7 +113,7 @@
  	 * @param descripcion string Descripcion larga de la retencion
  	 * @return id_retencion int Id de la retencion creada
  	 **/
-  function NuevaRetencion
+  static function NuevaRetencion
 	(
 		$es_monto, 
 		$monto_porcentaje, 

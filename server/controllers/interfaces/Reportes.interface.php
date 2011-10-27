@@ -18,7 +18,7 @@
  	 * @param id_cliente int Id del cliente del cual se listaran sus productos.
  	 * @return Lista_productos_cliente json Objeto que contendrá la información de la lista.
  	 **/
-  function ProductosCliente
+  static function ProductosCliente
 	(
 		$id_sucursal = "", 
 		$id_empresa = "", 
@@ -36,7 +36,7 @@
  	 * @param id_reporte int Id del reporte a revisar.
  	 * @return detalle_reporte json Objeto que contendrá la información del detalle.
  	 **/
-  function Detalle
+  static function Detalle
 	(
 		$id_reporte
 	);  
@@ -53,7 +53,7 @@
  	 * @param orden json Valor que determinara el orden de la lista
  	 * @return reportes json Objeto que contendra la lista de reportes
  	 **/
-  function Lista
+  static function Lista
 	(
 		$id_empresa = "", 
 		$id_sucursal = "", 
@@ -69,7 +69,7 @@
  	 *
  	 * @return id_reporte int Id del reporte generado
  	 **/
-  function Nuevo
+  static function Nuevo
 	(
 	);  
   
@@ -82,7 +82,7 @@
  	 *
  	 * @param nuevo_reporte json JSON a analizar
  	 **/
-  function Revisar_syntaxNuevo
+  static function Revisar_syntaxNuevo
 	(
 		$nuevo_reporte
 	);  
@@ -100,7 +100,7 @@
  	 * @param id_sucursal int Id de la sucursal de la cual se listaran los Servicios que han comprado los clientes
  	 * @return Lista_servicios_cliente json Objeto que contendra la lista de servicios y clientes que los han comprado.
  	 **/
-  function Servicio_cliente
+  static function Servicio_cliente
 	(
 		$id_cliente = "", 
 		$orden = "", 
