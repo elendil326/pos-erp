@@ -2405,17 +2405,43 @@ Creo que este metodo tiene que estar bajo sucursal.
 	(
 		$cancelado = null, 
 		$completo = null, 
-		$id_producto = null, 
-		$id_almacen = null, 
-		$enviados = null, 
-		$id_sucursal = null, 
-		$id_empresa = null, 
+		$id_almacen_envia = null,
+                $id_almacen_recibe = null,
 		$estado = null, 
 		$ordenar = null
 	)
 	{  
-  
-  
+            Logger::log("Listando traspaso de almacenes");
+            $parametros=false;
+            if(
+                    !is_null($cancelado)        ||
+                    !is_null($completo)         ||
+                    !is_null($id_almacen_recibe)||
+                    !is_null($id_almacen_envia) ||
+                    !is_null($estado)
+            )
+                $parametros=true;
+            $traspasos_almacen=null;
+            if($parametros)
+            {
+                Logger::log("Se recibieron parametros, se listan los traspasos en rango");
+                $traspaso_criterio=new Traspaso(array(
+                                            "cancelado"         => $cancelado,
+                                            "completo"          => $completo,
+                                            "id_almacen_envia"  => $id_almacen_envia,
+                                            "id_almacen_recibe" => $id_almacen_recibe,
+                                            "estado"            => $estado
+                                            )
+                                        );
+                $traspasos_almacen=TraspasoDAO::search($traspaso_criterio);
+            }
+            else
+            {
+                Logger::log("No se recibieron parametros, se listan todos los traspasos");
+                $traspasos_almacen=TraspasoDAO::getAll(null,null,$ordenar);
+            }
+            Logger::log("lista de traspasos recibida con ".count($traspasos_almacen)." elementos");
+            return $traspasos_almacen;
 	}
   
 	/**

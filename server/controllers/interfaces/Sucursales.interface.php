@@ -191,11 +191,8 @@ Creo que este metodo tiene que estar bajo sucursal.
 	(
 		$cancelado = "", 
 		$completo = "", 
-		$id_producto = "", 
-		$id_almacen = "", 
-		$enviados = "", 
-		$id_sucursal = "", 
-		$id_empresa = "", 
+		$id_almacen_envia = "",
+                $id_almacen_recibe = "",
 		$estado = "", 
 		$ordenar = ""
 	);  
