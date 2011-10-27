@@ -7,7 +7,125 @@ require_once("interfaces/Empresas.interface.php");
   **/
 	
   class EmpresasController implements IEmpresas{
-  
+
+          private static function validarString($string, $max_length, $nombre_varibale,$min_length=0)
+          {
+                $error="";
+                if(strlen($string)<=$min_length||strlen($string)>$max_length)
+                {
+                    $error="La longitud de la variable ".$nombre_variable." proporcionada no esta en el rango de ".$min_length." - ".$max_length;
+                    return $error;
+                }
+                return true;
+          }
+
+          private static function validarNumero($num, $max_length, $nombre_variable, $min_length=0)
+          {
+                $error="";
+                if($num<$min_length||$num>$max_length)
+                {
+                    $error="La variable ".$nombre_variable." proporcionada no esta en el rango de ".$min_length." - ".$max_length;
+                    return $error;
+                }
+                return true;
+          }
+
+          private static function validarParametrosEmpresa
+          (
+                  $id_empresa=null,
+                  $id_direccion=null,
+                  $curp=null,
+                  $rfc=null,
+                  $razon_social=null,
+                  $representante_legal=null,
+                  $fecha_alta=null,
+                  $fecha_baja=null,
+                  $activo=null,
+                  $direccion_web=null,
+                  $margen_utilidad=null,
+                  $descuento=null
+          )
+          {
+                $error="";
+                if(!is_null($id_empresa))
+                {
+                    if(is_null(EmpresaDAO::getByPK($id_empresa)))
+                    {
+                        $error="La empresa con id: ".$id_empresa." no existe";
+                        return $error;
+                    }
+                }
+                if(!is_null($id_direccion))
+                {
+                    if(is_null(DireccionDAO::getByPK($id_direccion)))
+                    {
+                        $error="La direccion con id: ".$id_direccion." no existe";
+                        return $error;
+                    }
+                }
+                if(!is_null($curp))
+                {
+                    $e=self::validarString($curp, 30, "curp");
+                    if(is_string($e))
+                        return $e;
+                }
+                if(!is_null($rfc))
+                {
+                    $e=self::validarString($curp, 30, "rfc");
+                    if(is_string($e))
+                        return $e;
+                }
+                if(!is_null($razon_social))
+                {
+                    $e=self::validarString($razon_social, 100, "razon social");
+                    if(is_string($e))
+                        return $e;
+                }
+                if(!is_null($representante_legal))
+                {
+                    $e=self::validarString($representante_legal, 100, "representante legal");
+                    if(is_string($e))
+                        return $e;
+                }
+                if(!is_null($fecha_alta))
+                {
+                    $e=self::validarString($fecha_alta, strlen("YYYY-mm-dd HH:ii:ss"), "fecha de alta");
+                    if(is_string($e))
+                        return $e;
+                }
+                if(!is_null($fecha_baja))
+                {
+                    $e=self::validarString($fecha_baja, strlen("YYYY-mm-dd HH:ii:ss"), "fecha de baja");
+                    if(is_string($e))
+                        return $e;
+                }
+                if(!is_null($activo))
+                {
+                    $e=self::validarNumero($activo, 1, "activo");
+                    if(is_string($e))
+                        return $e;
+                }
+                if(!is_null($direccion_web))
+                {
+                    $e=self::validarString($direccion_web, 20, "direccion web");
+                    if(is_string($e))
+                        return $e;
+                }
+                if(!is_null($margen_utilidad))
+                {
+                    $e=self::validarNumero($margen_utilidad, 1.8e100, "margen de utilidad");
+                    if(is_string($e))
+                        return $e;
+                }
+                if(!is_null($descuento))
+                {
+                    $e=self::validarNumero($descuento, 100, "descuento");
+                    if(is_string($e))
+                        return $e;
+                }
+                return true;
+          }
+
 	/**
  	 *
  	 *Mostrar?odas la empresas en el sistema, as?omo sus sucursalse y sus gerentes[a] correspondientes. Por default no se mostraran las empresas ni sucursales inactivas. 
@@ -22,12 +140,15 @@ require_once("interfaces/Empresas.interface.php");
 	{  
   		if(is_null($activa))
   			return EmpresaDAO::getAll();
-
+                $validar=self::validarParametrosEmpresa(null, null, null, null, null, null, null, null, $activo);
+                if(is_string($validar))
+                {
+                    Logger::error($validar);
+                    throw new Exception($validar);
+                }
   		$e = new Empresa();
   		$e->setActivo( $activa );
   		return EmpresaDAO::search( $e );
-
-
   	}
   
 	/**
@@ -44,10 +165,11 @@ require_once("interfaces/Empresas.interface.php");
 	)
 	{
             Logger::log("Agregando sucursales a la empresa");
-            if(is_null(EmpresaDAO::getByPK($id_empresa)))
+            $validar=self::validarParametrosEmpresa($id_empresa);
+            if(is_string($validar))
             {
-                Logger::error("La empresa con id: ".$id_empresa." no existe");
-                throw new Exception("La empresa con id: ".$id_empresa." no existe");
+                Logger::error($validar);
+                throw new Exception($validar);
             }
             $sucursal_empresa=new SucursalEmpresa();
             $sucursal_empresa->setIdEmpresa($id_empresa);

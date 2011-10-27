@@ -9,6 +9,28 @@ require_once("interfaces/PersonalYAgentes.interface.php");
   class PersonalYAgentesController implements IPersonalYAgentes{
   
 
+        private static function validarString($string, $max_length, $nombre_varibale,$min_length=0)
+          {
+                $error="";
+                if(strlen($string)<=$min_length||strlen($string)>$max_length)
+                {
+                    $error="La longitud de la variable ".$nombre_variable." proporcionada no esta en el rango de ".$min_length." - ".$max_length;
+                    return $error;
+                }
+                return true;
+          }
+
+          private static function validarNumero($num, $max_length, $nombre_variable, $min_length=0)
+          {
+                $error="";
+                if($num<=$min_length||$num>$max_length)
+                {
+                    $error="La variable ".$nombre_variable." proporcionada no esta en el rango de ".$min_length." - ".$max_length;
+                    return $error;
+                }
+                return true;
+          }
+
       private static function ValidarParametrosRol
       (
                 $id_rol=null,
@@ -29,67 +51,27 @@ require_once("interfaces/PersonalYAgentes.interface.php");
           }
           if(!is_null($descripcion))
           {
-              if(is_string($descripcion))
-              {
-                  if(strlen($descripcion)==0||strlen($descripcion)>255)
-                  {
-                      $error="La longitud de la descripcion obtenida no esta en el rango 1-255";
-                      return $error;
-                  }
-              }
-              else
-              {
-                  $error="La descripcion proporcionada no es un string";
-                  return $error;
-              }
+              $e=self::validarString($descripcion, 255, "descripcion");
+                    if(is_string($e))
+                        return $e;
           }
           if(!is_null($nombre))
           {
-              if(is_string($nombre))
-              {
-                  if(strlen($nombre)==0||strlen($nombre)>30)
-                  {
-                      $error="La longitud del nombre obtenido no esta en el rango 1-30";
-                      return $error;
-                  }
-              }
-              else
-              {
-                  $error="El nombre proporcionado no es un string";
-                  return $error;
-              }
+              $e=self::validarString($nombre, 30, "nombre");
+                    if(is_string($e))
+                        return $e;
           }
           if(!is_null($descuento))
           {
-              if(is_numeric($descuento))
-              {
-                  if($descuento<0||$descuento>1.8e200)
-                  {
-                      $error="El descuento proporcionado no esta en el rango 0-1.8e200";
-                      return $error;
-                  }
-              }
-              else
-              {
-                  $error="El descuento proporcionado no es un numero";
-                  return $error;
-              }
+              $e=self::validarNumero($descuento, 100, "descuento");
+                    if(is_string($e))
+                        return $e;
           }
           if(!is_null($salario))
           {
-              if(is_numeric($salario))
-              {
-                  if($salario<0||$salario>1.8e200)
-                  {
-                      $error="El salario proporcionado no esta en el rango 0-1.8e200";
-                      return $error;
-                  }
-              }
-              else
-              {
-                  $error="El salario proporcionado no es un numero";
-                  return $error;
-              }
+              $e=self::validarNumero($salario, 1.8e200, "salario");
+                    if(is_string($e))
+                        return $e;
           }
           return true;
       }
@@ -530,8 +512,32 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 		$id_rol
 	)
 	{  
-  
-  
+            Logger::log("Eliminando rol: ".$id_rol);
+            $validar=self::ValidarParametrosRol($id_rol);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            $usuarios=UsuarioDAO::search(new Usuario(array( "id_rol" => $id_rol )));
+            if(!empty($usuarios))
+            {
+                Logger::error("No se puede eliminar este rol pues hay usuarios asigandos a el");
+                throw new Exception("No se puede eliminar este rol pues hay usuarios asigandos a el");
+            }
+            DAO::transBegin();
+            try
+            {
+                RolDAO::delete(RolDAO::getByPK($id_rol));
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("Error al eliminar el rol: ".$e);
+                throw $e;
+            }
+            DAO::transEnd();
+            Logger::log("Rol eliminado correctamente");
 	}
   
 	/**
