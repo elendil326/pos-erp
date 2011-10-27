@@ -459,6 +459,12 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                         "salario"       => $salario
                     )
                     );
+            $roles=RolDAO::search(new Rol(array( "nombre" => trim($nombre) )));
+            if(!is_null($roles))
+            {
+                Logger::error("No se puede crear un rol con el mismo nombre que uno ya existente: ".$roles[0]->getNombre());
+                throw new Exception("No se puede crear un rol con el mismo nombre que uno ya existente: ".$roles[0]->getNombre());
+            }
             DAO::transBegin();
             try
             {
