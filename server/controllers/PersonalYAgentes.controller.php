@@ -445,7 +445,13 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	)
 	{  
             Logger::log("Creando nuevo rol");
-            if(is_string($this->ValidarParametrosRol(null, $descripcion, $nombre, $descuento, $salario)))
+            $validar=$this->ValidarParametrosRol(null, $descripcion, $nombre, $descuento, $salario);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+
+            }
             $rol=new Rol(
                     array(
                         "nombre"        => $nombre,
