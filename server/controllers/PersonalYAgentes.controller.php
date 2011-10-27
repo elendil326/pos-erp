@@ -460,7 +460,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                     )
                     );
             $roles=RolDAO::search(new Rol(array( "nombre" => trim($nombre) )));
-            if(is_empty($roles))
+            if(!is_empty($roles))
             {
                 Logger::error("No se puede crear un rol con el mismo nombre que uno ya existente: ".$roles[0]->getNombre());
                 throw new Exception("No se puede crear un rol con el mismo nombre que uno ya existente: ".$roles[0]->getNombre());
