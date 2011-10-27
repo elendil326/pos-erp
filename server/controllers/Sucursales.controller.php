@@ -2163,11 +2163,16 @@ Creo que este metodo tiene que estar bajo sucursal.
                                     );
                 foreach($productos as $p)
                 {
-                    if(ProductoDAO::getByPK($p["id_producto"]))
+                    if(is_null(ProductoDAO::getByPK($p["id_producto"])))
                     {
                         throw new Exception("El producto con id: ".$p["id_producto"]." no existe");
                     }
+                    if(is_null(UnidadDAO::getByPK($p["id_unidad"])))
+                    {
+                        throw new Exception("La unidad con id: ".$p["id_unidad"]." no existe");
+                    }
                     $traspaso_producto->setIdProducto($p["id_producto"]);
+                    $traspaso_producto->setIdUnidad($p["id_unidad"]);
                     $traspaso_producto->setCantidadEnviada($p["cantidad"]);
                     TraspasoProductoDAO::save($traspaso_producto);
                 }
@@ -2194,8 +2199,70 @@ Creo que este metodo tiene que estar bajo sucursal.
 		$id_traspaso
 	)
 	{  
-  
-  
+            Logger::log("Enviando traspaso: ".$id_traspaso);
+            $id_usuario=LoginController::getCurrentUser();
+            if(is_null($id_usuario))
+            {
+                Logger::error("No se puede obtener al usuario de la sesion, ya inicio sesion?");
+                throw new Exception("No se puede obtener al usuario de la sesion, ya inicio sesion?");
+            }
+            $traspaso=TraspasoDAO::getByPK($id_traspaso);
+            if(is_null($traspaso))
+            {
+                Logger::error("El traspaso con id: ".$id_traspaso." no existe");
+                throw new Exception("El traspaso con id: ".$id_traspaso." no existe");
+            }
+            if($traspaso->getCancelado())
+            {
+                Logger::error("El traspaso ya ha sido cancelado, no se puede enviar");
+                throw new Exception("El traspaso ya ha sido cancelado, no se puede enviar");
+            }
+            if($traspaso->getCompleto())
+            {
+                Logger::error("El traspaso ya ha sido completado, no se puede enviar");
+                throw new Exception("El traspaso ya ha sido completado, no se puede enviar");
+            }
+            if($traspaso->getEstado()==="Enviado")
+            {
+                Logger::warn("El traspaso ya ha sido enviado");
+                throw new Exception("El traspaso ya ha sido enviado");
+            }
+            $traspaso->setFechaEnvio(date("Y-m-d H:i:s"));
+            $traspaso->setIdUsuarioEnvia($id_usuario);
+            $traspaso->setEstado("Enviado");
+            if(is_null(AlmacenDAO::getByPK($traspaso->getIdAlmacenEnvia())))
+            {
+                Logger::error("FATAL!!! el traspaso no cuenta con un almacen q envia");
+                throw new Exception("FATAL!!! el traspaso no cuenta con un almacen q envia");
+            }
+            $productos_traspaso=TraspasoProductoDAO::search(new TraspasoProducto(array( "id_traspaso" => $id_traspaso )));
+            DAO::transBegin();
+            try
+            {
+                TraspasoDAO::save($traspaso);
+                foreach($productos_traspaso as $p_t)
+                {
+                    $producto_almacen=ProductoAlmacenDAO::getByPK($p_t->getIdProducto(), $traspaso->getIdAlmacenEnvia(), $p_t->getIdUnidad());
+                    if(is_null($producto_almacen))
+                    {
+                        throw new Exception("No se puede enviar el producto de este almacen ya que no hay existencias");
+                    }
+                    if($producto_almacen->getCantidad()<$p_t->getCantidadEnviada())
+                    {
+                        throw new Exception("No se puede enviar esta cantidad de producto de este almacen ya que no hay existencias");
+                    }
+                    $producto_almacen->setCantidad($producto_almacen->getCantidad()-$p_t->getCantidadEnviada());
+                    ProductoAlmacenDAO::save($producto_almacen);
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo enviar el traspaso ".$e);
+                throw $e;
+            }
+            DAO::transEnd();
+            Logger::log("Traspaso enviado exitosamente");
 	}
   
 	/**
@@ -2211,8 +2278,64 @@ Creo que este metodo tiene que estar bajo sucursal.
 		$id_traspaso
 	)
 	{  
-  
-  
+            Logger::log("Recibiendo traspaso ".$id_traspaso);
+            $id_usuario=LoginController::getCurrentUser();
+            if(is_null($id_usuario))
+            {
+                Logger::error("El usuario no puede ser obtenido de la sesion, ya inicio sesion?");
+                throw new Exception("El usuario no puede ser obtenido de la sesion, ya inicio sesion?");
+            }
+            $traspaso=TraspasoDAO::getByPK($id_traspaso);
+            if(is_null($traspaso))
+            {
+                Logger::error("El traspaso con id: ".$id_traspaso." no existe");
+                throw new Exception("El traspaso con id: ".$id_traspaso." no existe");
+            }
+            if($traspaso->getCancelado())
+            {
+                Logger::error("El traspaso ya ha sido cancelado, no puede ser recibido");
+                throw new Exception("El traspaso ya ha sido cancelado, no puede ser recibido");
+            }
+            if($traspaso->getCompleto())
+            {
+                Logger::error("El traspaso ya ha sido completado, no puede volver a ser recibido");
+                throw new Exception("El traspaso ya ha sido completado, no puede volver a ser recibido");
+            }
+            if($traspaso->getEstado()!=="Enviado")
+            {
+                Logger::error("El traspaso no ha sido enviado");
+                throw new Exception("El traspaso no ha sido enviado");
+            }
+            $traspaso->setIdUsuarioRecibe($id_usuario);
+            $traspaso->setFechaRecibo(date("Y-m-d H:i:s"));
+            $traspaso->setEstado("Recibido");
+            $traspaso->setCompleto(1);
+            DAO::transBegin();
+            try
+            {
+                TraspasoDAO::save($traspaso);
+                foreach($productos as $p)
+                {
+                    $producto_almacen=ProductoAlmacenDAO::getByPK($p["id_producto"], $traspaso->getIdAlmacenRecibe(), $p["id_unidad"]);
+                    if(is_null($producto_almacen))
+                    {
+                        $producto_almacen= new ProductoAlmacen(array(
+                                                    "id_producto"   => $p_t->getIdProducto(),
+                                                    "id_almacen"    => $traspaso->getIdAlmacenEnvia(),
+                                                    "id_unidad"     => $p_t->getIdUnidad(),
+                                                    "cantidad"      => 0
+                                                    )
+                                                );
+                    }
+                    $producto_almacen->setCantidad($producto_almacen->getCantidad()+$p["cantidad"]);
+                    ProductoAlmacenDAO::save($producto_almacen);
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+            }
+            DAO::transEnd();
 	}
   
 	/**
