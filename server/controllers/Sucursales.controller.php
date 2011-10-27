@@ -31,7 +31,7 @@ require_once("interfaces/Sucursales.interface.php");
  	 * @param descripcion string Descripcion extesa del almacen
  	 * @return id_almacen int el id recien generado
  	 **/
-	public static static function NuevoAlmacen
+	public static function NuevoAlmacen
 	(
 		$nombre, 
 		$id_sucursal, 
@@ -89,7 +89,7 @@ require_once("interfaces/Sucursales.interface.php");
  	 * @param activo bool Si este valor no es obtenido, se mostraran almacenes tanto activos como inactivos. Si es verdadero, solo se lsitaran los activos, si es falso solo se lsitaran los inactivos.
  	 * @return almacenes json Almacenes de esta sucursal
  	 **/
-	public static static function ListaAlmacen
+	public static function ListaAlmacen
 	(
 		$id_empresa = null, 
 		$id_sucursal = null, 
@@ -147,7 +147,7 @@ require_once("interfaces/Sucursales.interface.php");
  	 * @param billetes_cambio json Ids de billetes que se entregaron como cambio
  	 * @return id_venta int Id autogenerado de la inserci�n de la venta.
  	 **/
-	public static static function VenderCaja
+	public static function VenderCaja
 	( 
 		$retencion, 
 		$id_comprador, 
@@ -569,7 +569,7 @@ require_once("interfaces/Sucursales.interface.php");
 
         }
 
-        public static static function OrdenarProductosAlmacen
+        public static function OrdenarProductosAlmacen
         (
                 $productos_almacen
         )
@@ -606,7 +606,7 @@ require_once("interfaces/Sucursales.interface.php");
  	 * @param cheques json Si el tipo de pago es con cheque, se almacena el nombre del banco, el monto y los ultimos 4 numeros del o de los cheques
  	 * @return id_compra_cliente string Id de la nueva compra
  	 **/
-	public static static function ComprarCaja
+	public static function ComprarCaja
 	(
 		$retencion, 
 		$detalle, 
@@ -792,7 +792,7 @@ require_once("interfaces/Sucursales.interface.php");
  	 * @param fecha_apertura_superior_que string Si este valor es pasado, se mostraran las sucursales cuya fecha de apertura sea superior a esta.
  	 * @return sucursales json Objeto que contendra la lista de sucursales.
  	 **/
-	public static static function Lista
+	public static function Lista
 	(
 		$activo = null,
 		$id_empresa = null, 
@@ -884,7 +884,7 @@ require_once("interfaces/Sucursales.interface.php");
  	 * @param id_cajero int Id del cajero que iniciara en esta caja en caso de que no sea este el que abre la caja
  	 * @return detalles_sucursal json Si esta es una sucursal valida, detalles sucursal contiene un objeto con informacion sobre esta sucursal.
  	 **/
-	public static static function AbrirCaja
+	public static function AbrirCaja
 	(
                 $id_caja,
 		$billetes, 
@@ -981,7 +981,7 @@ require_once("interfaces/Sucursales.interface.php");
  	 * @param descuento float Descuento que tendran todos los productos ofrecidos por esta sucursal
  	 * @return id_sucursal int Id autogenerado de la sucursal que se creo.
  	 **/
-	public static static function Nueva
+	public static function Nueva
 	(
 		$codigo_postal, 
 		$rfc, 
@@ -1097,7 +1097,7 @@ require_once("interfaces/Sucursales.interface.php");
  	 * @param calle string Calle de la sucursal
  	 * @param coidgo_postal string Codigo Postal de la sucursal
  	 **/
-	public static static function Editar
+	public static function Editar
 	(
 		$id_sucursal, 
 		$descuento = null, 
@@ -1316,7 +1316,7 @@ require_once("interfaces/Sucursales.interface.php");
  	 * @param id_sucursal int Id de la sucursal de la cual su gerencia sera cambiada
  	 * @param id_gerente string Id del nuevo gerente
  	 **/
-	public static static function EditarGerencia
+	public static function EditarGerencia
 	(
 		$id_sucursal, 
 		$id_gerente
@@ -1365,7 +1365,7 @@ require_once("interfaces/Sucursales.interface.php");
  	 * @param id_cajero int Id del cajero en caso de que no sea este el que realiza el cierre
  	 * @return id_cierre int Id del cierre autogenerado.
  	 **/
-	public static static function CerrarCaja
+	public static function CerrarCaja
 	(
                 $id_caja,
 		$saldo_real, 
@@ -1477,7 +1477,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 * @param motivo string Motivo del movimiento
  	 * @return id_surtido string Id generado por el registro de surtir
  	 **/
-	public static static function EntradaAlmacen
+	public static function EntradaAlmacen
 	(
 		$productos, 
 		$id_almacen, 
@@ -1548,7 +1548,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 * @param descripcion string Descripcion de esta caja
  	 * @return id_caja int Id de la caja generada por la isnercion
  	 **/
-	public static static function NuevaCaja
+	public static function NuevaCaja
 	(
 		$token, 
 		$impresoras = null, 
@@ -1612,7 +1612,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 * @param motivo string Motivo de la salida del producto
  	 * @return id_salida int ID de la salida del producto
  	 **/
-	public static static function SalidaAlmacen
+	public static function SalidaAlmacen
 	(
 		$productos, 
 		$id_almacen, 
@@ -1688,7 +1688,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 * @param id_cajero_nuevo int Id del cajero que entrara despues de realizar el corte
  	 * @return id_corte_caja int Id generado por la insercion del nuevo corte
  	 **/
-	public static static function CorteCaja
+	public static function CorteCaja
 	(
 		$saldo_final, 
 		$id_caja, 
@@ -1814,7 +1814,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *
  	 * @param id_almacen int Id del almacen a desactivar
  	 **/
-	public static static function EliminarAlmacen
+	public static function EliminarAlmacen
 	(
 		$id_almacen
 	)
@@ -1867,7 +1867,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 * @param descripcion string Descripcion del almacen
  	 * @param nombre string Nombre del almacen
  	 **/
-	public static static function EditarAlmacen
+	public static function EditarAlmacen
 	(
 		$id_almacen, 
 		$descripcion = null, 
@@ -1938,7 +1938,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 * @param descripcion string Descripcion de la caja
  	 * @param token string Token generado por el pos client
  	 **/
-	public static static function EditarCaja
+	public static function EditarCaja
 	(
 		$id_caja, 
 		$descripcion = null, 
@@ -1986,7 +1986,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *
  	 * @param id_caja int Id de la caja a eliminar
  	 **/
-	public static static function EliminarCaja
+	public static function EliminarCaja
 	(
 		$id_caja
 	)
@@ -2035,7 +2035,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *
  	 * @param id_sucursal int Id de la sucursal a desactivar
  	 **/
-	public static static function Eliminar
+	public static function Eliminar
 	(
 		$id_sucursal
 	)
@@ -2109,7 +2109,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 * @param productos json Productos a ser enviados con sus cantidades
  	 * @return id_traspaso int Id del traspaso autogenerado
  	 **/
-	public static static function ProgramarTraspasoAlmacen
+	public static function ProgramarTraspasoAlmacen
 	(
 		$id_almacen_recibe, 
 		$id_almacen_envia, 
@@ -2190,7 +2190,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *
  	 * @param id_traspaso int Id del traspaso a enviar
  	 **/
-	public static static function EnviarTraspasoAlmacen
+	public static function EnviarTraspasoAlmacen
 	(
 		$id_traspaso
 	)
@@ -2268,7 +2268,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 * @param productos json Productos que se reciben con sus cantidades
  	 * @param id_traspaso int Id del traspaso que se recibe
  	 **/
-	public static static function RecibirTraspasoAlmacen
+	public static function RecibirTraspasoAlmacen
 	(
 		$productos, 
 		$id_traspaso
@@ -2356,7 +2356,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *
  	 * @param id_traspaso int Id del traspaso a cancelar
  	 **/
-	public static static function CancelarTraspasoAlmacen
+	public static function CancelarTraspasoAlmacen
 	(
 		$id_traspaso
 	)
@@ -2410,7 +2410,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 * @param ordenar json Determina el orden de la lista
  	 * @return traspasos json Lista de traspasos
  	 **/
-	public static static function ListaTraspasoAlmacen
+	public static function ListaTraspasoAlmacen
 	(
 		$cancelado = null, 
 		$completo = null, 
@@ -2461,7 +2461,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 * @param productos json Productos a enviar con sus cantidades
  	 * @param fecha_envio_programada string Fecha de envio programada
  	 **/
-	public static static function EditarTraspasoAlmacen
+	public static function EditarTraspasoAlmacen
 	(
 		$id_traspaso, 
 		$productos = null, 
