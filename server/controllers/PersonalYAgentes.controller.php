@@ -61,7 +61,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
           }
           if(!is_null($descuento))
           {
-              if(!is_nan($descuento))
+              if(is_numeric($descuento))
               {
                   if($descuento<0||$descuento>1.8e200)
                   {
@@ -77,7 +77,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
           }
           if(!is_null($salario))
           {
-              if(!is_nan($salario))
+              if(is_numeric($salario))
               {
                   if($salario<0||$salario>1.8e200)
                   {
