@@ -382,7 +382,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             }
             DAO::transEnd();
             Logger::log("Rol creado exitosamente con id: ".$rol->getIdRol());
-            return $rol->getIdRol();
+            return array( "id_rol" => $rol->getIdRol());
 	}
   
 	/**
