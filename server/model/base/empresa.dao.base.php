@@ -44,7 +44,7 @@ abstract class EmpresaDAOBase extends DAO
 	  **/
 	public static final function save( &$empresa )
 	{
-		if(  self::getByPK(  $empresa->getIdEmpresa() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $empresa->getIdEmpresa() ) ) )
 		{
 			try{ return EmpresaDAOBase::update( $empresa) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -96,9 +96,9 @@ abstract class EmpresaDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from empresa";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -143,69 +143,69 @@ abstract class EmpresaDAOBase extends DAO
 	{
 		$sql = "SELECT * from empresa WHERE ("; 
 		$val = array();
-		if( $empresa->getIdEmpresa() != NULL){
+		if( ! is_null( $empresa->getIdEmpresa() ) ){
 			$sql .= " id_empresa = ? AND";
 			array_push( $val, $empresa->getIdEmpresa() );
 		}
 
-		if( $empresa->getIdDireccion() != NULL){
+		if( ! is_null( $empresa->getIdDireccion() ) ){
 			$sql .= " id_direccion = ? AND";
 			array_push( $val, $empresa->getIdDireccion() );
 		}
 
-		if( $empresa->getCurp() != NULL){
+		if( ! is_null( $empresa->getCurp() ) ){
 			$sql .= " curp = ? AND";
 			array_push( $val, $empresa->getCurp() );
 		}
 
-		if( $empresa->getRfc() != NULL){
+		if( ! is_null( $empresa->getRfc() ) ){
 			$sql .= " rfc = ? AND";
 			array_push( $val, $empresa->getRfc() );
 		}
 
-		if( $empresa->getRazonSocial() != NULL){
+		if( ! is_null( $empresa->getRazonSocial() ) ){
 			$sql .= " razon_social = ? AND";
 			array_push( $val, $empresa->getRazonSocial() );
 		}
 
-		if( $empresa->getRepresentanteLegal() != NULL){
+		if( ! is_null( $empresa->getRepresentanteLegal() ) ){
 			$sql .= " representante_legal = ? AND";
 			array_push( $val, $empresa->getRepresentanteLegal() );
 		}
 
-		if( $empresa->getFechaAlta() != NULL){
+		if( ! is_null( $empresa->getFechaAlta() ) ){
 			$sql .= " fecha_alta = ? AND";
 			array_push( $val, $empresa->getFechaAlta() );
 		}
 
-		if( $empresa->getFechaBaja() != NULL){
+		if( ! is_null( $empresa->getFechaBaja() ) ){
 			$sql .= " fecha_baja = ? AND";
 			array_push( $val, $empresa->getFechaBaja() );
 		}
 
-		if( $empresa->getActivo() != NULL){
+		if( ! is_null( $empresa->getActivo() ) ){
 			$sql .= " activo = ? AND";
 			array_push( $val, $empresa->getActivo() );
 		}
 
-		if( $empresa->getDireccionWeb() != NULL){
+		if( ! is_null( $empresa->getDireccionWeb() ) ){
 			$sql .= " direccion_web = ? AND";
 			array_push( $val, $empresa->getDireccionWeb() );
 		}
 
-		if( $empresa->getMargenUtilidad() != NULL){
+		if( ! is_null( $empresa->getMargenUtilidad() ) ){
 			$sql .= " margen_utilidad = ? AND";
 			array_push( $val, $empresa->getMargenUtilidad() );
 		}
 
-		if( $empresa->getDescuento() != NULL){
+		if( ! is_null( $empresa->getDescuento() ) ){
 			$sql .= " descuento = ? AND";
 			array_push( $val, $empresa->getDescuento() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -332,140 +332,140 @@ abstract class EmpresaDAOBase extends DAO
 	{
 		$sql = "SELECT * from empresa WHERE ("; 
 		$val = array();
-		if( (($a = $empresaA->getIdEmpresa()) !== NULL) & ( ($b = $empresaB->getIdEmpresa()) !== NULL) ){
+		if( ( !is_null (($a = $empresaA->getIdEmpresa()) ) ) & ( ! is_null ( ($b = $empresaB->getIdEmpresa()) ) ) ){
 				$sql .= " id_empresa >= ? AND id_empresa <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_empresa = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $empresaA->getIdDireccion()) !== NULL) & ( ($b = $empresaB->getIdDireccion()) !== NULL) ){
+		if( ( !is_null (($a = $empresaA->getIdDireccion()) ) ) & ( ! is_null ( ($b = $empresaB->getIdDireccion()) ) ) ){
 				$sql .= " id_direccion >= ? AND id_direccion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_direccion = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $empresaA->getCurp()) !== NULL) & ( ($b = $empresaB->getCurp()) !== NULL) ){
+		if( ( !is_null (($a = $empresaA->getCurp()) ) ) & ( ! is_null ( ($b = $empresaB->getCurp()) ) ) ){
 				$sql .= " curp >= ? AND curp <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " curp = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $empresaA->getRfc()) !== NULL) & ( ($b = $empresaB->getRfc()) !== NULL) ){
+		if( ( !is_null (($a = $empresaA->getRfc()) ) ) & ( ! is_null ( ($b = $empresaB->getRfc()) ) ) ){
 				$sql .= " rfc >= ? AND rfc <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " rfc = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $empresaA->getRazonSocial()) !== NULL) & ( ($b = $empresaB->getRazonSocial()) !== NULL) ){
+		if( ( !is_null (($a = $empresaA->getRazonSocial()) ) ) & ( ! is_null ( ($b = $empresaB->getRazonSocial()) ) ) ){
 				$sql .= " razon_social >= ? AND razon_social <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " razon_social = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $empresaA->getRepresentanteLegal()) !== NULL) & ( ($b = $empresaB->getRepresentanteLegal()) !== NULL) ){
+		if( ( !is_null (($a = $empresaA->getRepresentanteLegal()) ) ) & ( ! is_null ( ($b = $empresaB->getRepresentanteLegal()) ) ) ){
 				$sql .= " representante_legal >= ? AND representante_legal <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " representante_legal = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $empresaA->getFechaAlta()) !== NULL) & ( ($b = $empresaB->getFechaAlta()) !== NULL) ){
+		if( ( !is_null (($a = $empresaA->getFechaAlta()) ) ) & ( ! is_null ( ($b = $empresaB->getFechaAlta()) ) ) ){
 				$sql .= " fecha_alta >= ? AND fecha_alta <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " fecha_alta = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $empresaA->getFechaBaja()) !== NULL) & ( ($b = $empresaB->getFechaBaja()) !== NULL) ){
+		if( ( !is_null (($a = $empresaA->getFechaBaja()) ) ) & ( ! is_null ( ($b = $empresaB->getFechaBaja()) ) ) ){
 				$sql .= " fecha_baja >= ? AND fecha_baja <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " fecha_baja = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $empresaA->getActivo()) !== NULL) & ( ($b = $empresaB->getActivo()) !== NULL) ){
+		if( ( !is_null (($a = $empresaA->getActivo()) ) ) & ( ! is_null ( ($b = $empresaB->getActivo()) ) ) ){
 				$sql .= " activo >= ? AND activo <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " activo = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $empresaA->getDireccionWeb()) !== NULL) & ( ($b = $empresaB->getDireccionWeb()) !== NULL) ){
+		if( ( !is_null (($a = $empresaA->getDireccionWeb()) ) ) & ( ! is_null ( ($b = $empresaB->getDireccionWeb()) ) ) ){
 				$sql .= " direccion_web >= ? AND direccion_web <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " direccion_web = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $empresaA->getMargenUtilidad()) !== NULL) & ( ($b = $empresaB->getMargenUtilidad()) !== NULL) ){
+		if( ( !is_null (($a = $empresaA->getMargenUtilidad()) ) ) & ( ! is_null ( ($b = $empresaB->getMargenUtilidad()) ) ) ){
 				$sql .= " margen_utilidad >= ? AND margen_utilidad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " margen_utilidad = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $empresaA->getDescuento()) !== NULL) & ( ($b = $empresaB->getDescuento()) !== NULL) ){
+		if( ( !is_null (($a = $empresaA->getDescuento()) ) ) & ( ! is_null ( ($b = $empresaB->getDescuento()) ) ) ){
 				$sql .= " descuento >= ? AND descuento <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " descuento = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -494,7 +494,7 @@ abstract class EmpresaDAOBase extends DAO
 	  **/
 	public static final function delete( &$empresa )
 	{
-		if(self::getByPK($empresa->getIdEmpresa()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($empresa->getIdEmpresa()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM empresa WHERE  id_empresa = ?;";
 		$params = array( $empresa->getIdEmpresa() );
 		global $conn;

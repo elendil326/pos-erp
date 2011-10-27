@@ -50,7 +50,7 @@ abstract class ProductoAbastoProveedorDAOBase extends DAO
 	  **/
 	public static final function save( &$producto_abasto_proveedor )
 	{
-		if(  self::getByPK(  $producto_abasto_proveedor->getIdAbastoProveedor() , $producto_abasto_proveedor->getIdProducto() , $producto_abasto_proveedor->getIdUnidad() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $producto_abasto_proveedor->getIdAbastoProveedor() , $producto_abasto_proveedor->getIdProducto() , $producto_abasto_proveedor->getIdUnidad() ) ) )
 		{
 			try{ return ProductoAbastoProveedorDAOBase::update( $producto_abasto_proveedor) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -102,9 +102,9 @@ abstract class ProductoAbastoProveedorDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from producto_abasto_proveedor";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -151,29 +151,29 @@ abstract class ProductoAbastoProveedorDAOBase extends DAO
 	{
 		$sql = "SELECT * from producto_abasto_proveedor WHERE ("; 
 		$val = array();
-		if( $producto_abasto_proveedor->getIdAbastoProveedor() != NULL){
+		if( ! is_null( $producto_abasto_proveedor->getIdAbastoProveedor() ) ){
 			$sql .= " id_abasto_proveedor = ? AND";
 			array_push( $val, $producto_abasto_proveedor->getIdAbastoProveedor() );
 		}
 
-		if( $producto_abasto_proveedor->getIdProducto() != NULL){
+		if( ! is_null( $producto_abasto_proveedor->getIdProducto() ) ){
 			$sql .= " id_producto = ? AND";
 			array_push( $val, $producto_abasto_proveedor->getIdProducto() );
 		}
 
-		if( $producto_abasto_proveedor->getIdUnidad() != NULL){
+		if( ! is_null( $producto_abasto_proveedor->getIdUnidad() ) ){
 			$sql .= " id_unidad = ? AND";
 			array_push( $val, $producto_abasto_proveedor->getIdUnidad() );
 		}
 
-		if( $producto_abasto_proveedor->getCantidad() != NULL){
+		if( ! is_null( $producto_abasto_proveedor->getCantidad() ) ){
 			$sql .= " cantidad = ? AND";
 			array_push( $val, $producto_abasto_proveedor->getCantidad() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -282,52 +282,52 @@ abstract class ProductoAbastoProveedorDAOBase extends DAO
 	{
 		$sql = "SELECT * from producto_abasto_proveedor WHERE ("; 
 		$val = array();
-		if( (($a = $producto_abasto_proveedorA->getIdAbastoProveedor()) !== NULL) & ( ($b = $producto_abasto_proveedorB->getIdAbastoProveedor()) !== NULL) ){
+		if( ( !is_null (($a = $producto_abasto_proveedorA->getIdAbastoProveedor()) ) ) & ( ! is_null ( ($b = $producto_abasto_proveedorB->getIdAbastoProveedor()) ) ) ){
 				$sql .= " id_abasto_proveedor >= ? AND id_abasto_proveedor <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_abasto_proveedor = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $producto_abasto_proveedorA->getIdProducto()) !== NULL) & ( ($b = $producto_abasto_proveedorB->getIdProducto()) !== NULL) ){
+		if( ( !is_null (($a = $producto_abasto_proveedorA->getIdProducto()) ) ) & ( ! is_null ( ($b = $producto_abasto_proveedorB->getIdProducto()) ) ) ){
 				$sql .= " id_producto >= ? AND id_producto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_producto = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $producto_abasto_proveedorA->getIdUnidad()) !== NULL) & ( ($b = $producto_abasto_proveedorB->getIdUnidad()) !== NULL) ){
+		if( ( !is_null (($a = $producto_abasto_proveedorA->getIdUnidad()) ) ) & ( ! is_null ( ($b = $producto_abasto_proveedorB->getIdUnidad()) ) ) ){
 				$sql .= " id_unidad >= ? AND id_unidad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_unidad = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $producto_abasto_proveedorA->getCantidad()) !== NULL) & ( ($b = $producto_abasto_proveedorB->getCantidad()) !== NULL) ){
+		if( ( !is_null (($a = $producto_abasto_proveedorA->getCantidad()) ) ) & ( ! is_null ( ($b = $producto_abasto_proveedorB->getCantidad()) ) ) ){
 				$sql .= " cantidad >= ? AND cantidad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " cantidad = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -356,7 +356,7 @@ abstract class ProductoAbastoProveedorDAOBase extends DAO
 	  **/
 	public static final function delete( &$producto_abasto_proveedor )
 	{
-		if(self::getByPK($producto_abasto_proveedor->getIdAbastoProveedor(), $producto_abasto_proveedor->getIdProducto(), $producto_abasto_proveedor->getIdUnidad()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($producto_abasto_proveedor->getIdAbastoProveedor(), $producto_abasto_proveedor->getIdProducto(), $producto_abasto_proveedor->getIdUnidad()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM producto_abasto_proveedor WHERE  id_abasto_proveedor = ? AND id_producto = ? AND id_unidad = ?;";
 		$params = array( $producto_abasto_proveedor->getIdAbastoProveedor(), $producto_abasto_proveedor->getIdProducto(), $producto_abasto_proveedor->getIdUnidad() );
 		global $conn;

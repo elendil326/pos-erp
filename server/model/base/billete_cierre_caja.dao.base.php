@@ -47,7 +47,7 @@ abstract class BilleteCierreCajaDAOBase extends DAO
 	  **/
 	public static final function save( &$billete_cierre_caja )
 	{
-		if(  self::getByPK(  $billete_cierre_caja->getIdBillete() , $billete_cierre_caja->getIdCierreCaja() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $billete_cierre_caja->getIdBillete() , $billete_cierre_caja->getIdCierreCaja() ) ) )
 		{
 			try{ return BilleteCierreCajaDAOBase::update( $billete_cierre_caja) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -99,9 +99,9 @@ abstract class BilleteCierreCajaDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from billete_cierre_caja";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -147,34 +147,34 @@ abstract class BilleteCierreCajaDAOBase extends DAO
 	{
 		$sql = "SELECT * from billete_cierre_caja WHERE ("; 
 		$val = array();
-		if( $billete_cierre_caja->getIdBillete() != NULL){
+		if( ! is_null( $billete_cierre_caja->getIdBillete() ) ){
 			$sql .= " id_billete = ? AND";
 			array_push( $val, $billete_cierre_caja->getIdBillete() );
 		}
 
-		if( $billete_cierre_caja->getIdCierreCaja() != NULL){
+		if( ! is_null( $billete_cierre_caja->getIdCierreCaja() ) ){
 			$sql .= " id_cierre_caja = ? AND";
 			array_push( $val, $billete_cierre_caja->getIdCierreCaja() );
 		}
 
-		if( $billete_cierre_caja->getCantidadEncontrada() != NULL){
+		if( ! is_null( $billete_cierre_caja->getCantidadEncontrada() ) ){
 			$sql .= " cantidad_encontrada = ? AND";
 			array_push( $val, $billete_cierre_caja->getCantidadEncontrada() );
 		}
 
-		if( $billete_cierre_caja->getCantidadSobrante() != NULL){
+		if( ! is_null( $billete_cierre_caja->getCantidadSobrante() ) ){
 			$sql .= " cantidad_sobrante = ? AND";
 			array_push( $val, $billete_cierre_caja->getCantidadSobrante() );
 		}
 
-		if( $billete_cierre_caja->getCantidadFaltante() != NULL){
+		if( ! is_null( $billete_cierre_caja->getCantidadFaltante() ) ){
 			$sql .= " cantidad_faltante = ? AND";
 			array_push( $val, $billete_cierre_caja->getCantidadFaltante() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -286,63 +286,63 @@ abstract class BilleteCierreCajaDAOBase extends DAO
 	{
 		$sql = "SELECT * from billete_cierre_caja WHERE ("; 
 		$val = array();
-		if( (($a = $billete_cierre_cajaA->getIdBillete()) !== NULL) & ( ($b = $billete_cierre_cajaB->getIdBillete()) !== NULL) ){
+		if( ( !is_null (($a = $billete_cierre_cajaA->getIdBillete()) ) ) & ( ! is_null ( ($b = $billete_cierre_cajaB->getIdBillete()) ) ) ){
 				$sql .= " id_billete >= ? AND id_billete <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_billete = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $billete_cierre_cajaA->getIdCierreCaja()) !== NULL) & ( ($b = $billete_cierre_cajaB->getIdCierreCaja()) !== NULL) ){
+		if( ( !is_null (($a = $billete_cierre_cajaA->getIdCierreCaja()) ) ) & ( ! is_null ( ($b = $billete_cierre_cajaB->getIdCierreCaja()) ) ) ){
 				$sql .= " id_cierre_caja >= ? AND id_cierre_caja <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_cierre_caja = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $billete_cierre_cajaA->getCantidadEncontrada()) !== NULL) & ( ($b = $billete_cierre_cajaB->getCantidadEncontrada()) !== NULL) ){
+		if( ( !is_null (($a = $billete_cierre_cajaA->getCantidadEncontrada()) ) ) & ( ! is_null ( ($b = $billete_cierre_cajaB->getCantidadEncontrada()) ) ) ){
 				$sql .= " cantidad_encontrada >= ? AND cantidad_encontrada <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " cantidad_encontrada = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $billete_cierre_cajaA->getCantidadSobrante()) !== NULL) & ( ($b = $billete_cierre_cajaB->getCantidadSobrante()) !== NULL) ){
+		if( ( !is_null (($a = $billete_cierre_cajaA->getCantidadSobrante()) ) ) & ( ! is_null ( ($b = $billete_cierre_cajaB->getCantidadSobrante()) ) ) ){
 				$sql .= " cantidad_sobrante >= ? AND cantidad_sobrante <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " cantidad_sobrante = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $billete_cierre_cajaA->getCantidadFaltante()) !== NULL) & ( ($b = $billete_cierre_cajaB->getCantidadFaltante()) !== NULL) ){
+		if( ( !is_null (($a = $billete_cierre_cajaA->getCantidadFaltante()) ) ) & ( ! is_null ( ($b = $billete_cierre_cajaB->getCantidadFaltante()) ) ) ){
 				$sql .= " cantidad_faltante >= ? AND cantidad_faltante <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " cantidad_faltante = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -371,7 +371,7 @@ abstract class BilleteCierreCajaDAOBase extends DAO
 	  **/
 	public static final function delete( &$billete_cierre_caja )
 	{
-		if(self::getByPK($billete_cierre_caja->getIdBillete(), $billete_cierre_caja->getIdCierreCaja()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($billete_cierre_caja->getIdBillete(), $billete_cierre_caja->getIdCierreCaja()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM billete_cierre_caja WHERE  id_billete = ? AND id_cierre_caja = ?;";
 		$params = array( $billete_cierre_caja->getIdBillete(), $billete_cierre_caja->getIdCierreCaja() );
 		global $conn;

@@ -47,7 +47,7 @@ abstract class ImpuestoClasificacionServicioDAOBase extends DAO
 	  **/
 	public static final function save( &$impuesto_clasificacion_servicio )
 	{
-		if(  self::getByPK(  $impuesto_clasificacion_servicio->getIdImpuesto() , $impuesto_clasificacion_servicio->getIdClasificacionServicio() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $impuesto_clasificacion_servicio->getIdImpuesto() , $impuesto_clasificacion_servicio->getIdClasificacionServicio() ) ) )
 		{
 			try{ return ImpuestoClasificacionServicioDAOBase::update( $impuesto_clasificacion_servicio) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -99,9 +99,9 @@ abstract class ImpuestoClasificacionServicioDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from impuesto_clasificacion_servicio";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -147,19 +147,19 @@ abstract class ImpuestoClasificacionServicioDAOBase extends DAO
 	{
 		$sql = "SELECT * from impuesto_clasificacion_servicio WHERE ("; 
 		$val = array();
-		if( $impuesto_clasificacion_servicio->getIdImpuesto() != NULL){
+		if( ! is_null( $impuesto_clasificacion_servicio->getIdImpuesto() ) ){
 			$sql .= " id_impuesto = ? AND";
 			array_push( $val, $impuesto_clasificacion_servicio->getIdImpuesto() );
 		}
 
-		if( $impuesto_clasificacion_servicio->getIdClasificacionServicio() != NULL){
+		if( ! is_null( $impuesto_clasificacion_servicio->getIdClasificacionServicio() ) ){
 			$sql .= " id_clasificacion_servicio = ? AND";
 			array_push( $val, $impuesto_clasificacion_servicio->getIdClasificacionServicio() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -258,30 +258,30 @@ abstract class ImpuestoClasificacionServicioDAOBase extends DAO
 	{
 		$sql = "SELECT * from impuesto_clasificacion_servicio WHERE ("; 
 		$val = array();
-		if( (($a = $impuesto_clasificacion_servicioA->getIdImpuesto()) !== NULL) & ( ($b = $impuesto_clasificacion_servicioB->getIdImpuesto()) !== NULL) ){
+		if( ( !is_null (($a = $impuesto_clasificacion_servicioA->getIdImpuesto()) ) ) & ( ! is_null ( ($b = $impuesto_clasificacion_servicioB->getIdImpuesto()) ) ) ){
 				$sql .= " id_impuesto >= ? AND id_impuesto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_impuesto = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $impuesto_clasificacion_servicioA->getIdClasificacionServicio()) !== NULL) & ( ($b = $impuesto_clasificacion_servicioB->getIdClasificacionServicio()) !== NULL) ){
+		if( ( !is_null (($a = $impuesto_clasificacion_servicioA->getIdClasificacionServicio()) ) ) & ( ! is_null ( ($b = $impuesto_clasificacion_servicioB->getIdClasificacionServicio()) ) ) ){
 				$sql .= " id_clasificacion_servicio >= ? AND id_clasificacion_servicio <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_clasificacion_servicio = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -310,7 +310,7 @@ abstract class ImpuestoClasificacionServicioDAOBase extends DAO
 	  **/
 	public static final function delete( &$impuesto_clasificacion_servicio )
 	{
-		if(self::getByPK($impuesto_clasificacion_servicio->getIdImpuesto(), $impuesto_clasificacion_servicio->getIdClasificacionServicio()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($impuesto_clasificacion_servicio->getIdImpuesto(), $impuesto_clasificacion_servicio->getIdClasificacionServicio()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM impuesto_clasificacion_servicio WHERE  id_impuesto = ? AND id_clasificacion_servicio = ?;";
 		$params = array( $impuesto_clasificacion_servicio->getIdImpuesto(), $impuesto_clasificacion_servicio->getIdClasificacionServicio() );
 		global $conn;

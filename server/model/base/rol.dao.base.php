@@ -44,7 +44,7 @@ abstract class RolDAOBase extends DAO
 	  **/
 	public static final function save( &$rol )
 	{
-		if(  self::getByPK(  $rol->getIdRol() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $rol->getIdRol() ) ) )
 		{
 			try{ return RolDAOBase::update( $rol) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -96,9 +96,9 @@ abstract class RolDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from rol";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -143,34 +143,34 @@ abstract class RolDAOBase extends DAO
 	{
 		$sql = "SELECT * from rol WHERE ("; 
 		$val = array();
-		if( $rol->getIdRol() != NULL){
+		if( ! is_null( $rol->getIdRol() ) ){
 			$sql .= " id_rol = ? AND";
 			array_push( $val, $rol->getIdRol() );
 		}
 
-		if( $rol->getNombre() != NULL){
+		if( ! is_null( $rol->getNombre() ) ){
 			$sql .= " nombre = ? AND";
 			array_push( $val, $rol->getNombre() );
 		}
 
-		if( $rol->getDescripcion() != NULL){
+		if( ! is_null( $rol->getDescripcion() ) ){
 			$sql .= " descripcion = ? AND";
 			array_push( $val, $rol->getDescripcion() );
 		}
 
-		if( $rol->getDescuento() != NULL){
+		if( ! is_null( $rol->getDescuento() ) ){
 			$sql .= " descuento = ? AND";
 			array_push( $val, $rol->getDescuento() );
 		}
 
-		if( $rol->getSalario() != NULL){
+		if( ! is_null( $rol->getSalario() ) ){
 			$sql .= " salario = ? AND";
 			array_push( $val, $rol->getSalario() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -283,63 +283,63 @@ abstract class RolDAOBase extends DAO
 	{
 		$sql = "SELECT * from rol WHERE ("; 
 		$val = array();
-		if( (($a = $rolA->getIdRol()) !== NULL) & ( ($b = $rolB->getIdRol()) !== NULL) ){
+		if( ( !is_null (($a = $rolA->getIdRol()) ) ) & ( ! is_null ( ($b = $rolB->getIdRol()) ) ) ){
 				$sql .= " id_rol >= ? AND id_rol <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_rol = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $rolA->getNombre()) !== NULL) & ( ($b = $rolB->getNombre()) !== NULL) ){
+		if( ( !is_null (($a = $rolA->getNombre()) ) ) & ( ! is_null ( ($b = $rolB->getNombre()) ) ) ){
 				$sql .= " nombre >= ? AND nombre <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " nombre = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $rolA->getDescripcion()) !== NULL) & ( ($b = $rolB->getDescripcion()) !== NULL) ){
+		if( ( !is_null (($a = $rolA->getDescripcion()) ) ) & ( ! is_null ( ($b = $rolB->getDescripcion()) ) ) ){
 				$sql .= " descripcion >= ? AND descripcion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " descripcion = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $rolA->getDescuento()) !== NULL) & ( ($b = $rolB->getDescuento()) !== NULL) ){
+		if( ( !is_null (($a = $rolA->getDescuento()) ) ) & ( ! is_null ( ($b = $rolB->getDescuento()) ) ) ){
 				$sql .= " descuento >= ? AND descuento <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " descuento = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $rolA->getSalario()) !== NULL) & ( ($b = $rolB->getSalario()) !== NULL) ){
+		if( ( !is_null (($a = $rolA->getSalario()) ) ) & ( ! is_null ( ($b = $rolB->getSalario()) ) ) ){
 				$sql .= " salario >= ? AND salario <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " salario = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -368,7 +368,7 @@ abstract class RolDAOBase extends DAO
 	  **/
 	public static final function delete( &$rol )
 	{
-		if(self::getByPK($rol->getIdRol()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($rol->getIdRol()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM rol WHERE  id_rol = ?;";
 		$params = array( $rol->getIdRol() );
 		global $conn;

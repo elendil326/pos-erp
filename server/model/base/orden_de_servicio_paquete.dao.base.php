@@ -47,7 +47,7 @@ abstract class OrdenDeServicioPaqueteDAOBase extends DAO
 	  **/
 	public static final function save( &$orden_de_servicio_paquete )
 	{
-		if(  self::getByPK(  $orden_de_servicio_paquete->getIdServicio() , $orden_de_servicio_paquete->getIdPaquete() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $orden_de_servicio_paquete->getIdServicio() , $orden_de_servicio_paquete->getIdPaquete() ) ) )
 		{
 			try{ return OrdenDeServicioPaqueteDAOBase::update( $orden_de_servicio_paquete) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -99,9 +99,9 @@ abstract class OrdenDeServicioPaqueteDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from orden_de_servicio_paquete";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -147,24 +147,24 @@ abstract class OrdenDeServicioPaqueteDAOBase extends DAO
 	{
 		$sql = "SELECT * from orden_de_servicio_paquete WHERE ("; 
 		$val = array();
-		if( $orden_de_servicio_paquete->getIdServicio() != NULL){
+		if( ! is_null( $orden_de_servicio_paquete->getIdServicio() ) ){
 			$sql .= " id_servicio = ? AND";
 			array_push( $val, $orden_de_servicio_paquete->getIdServicio() );
 		}
 
-		if( $orden_de_servicio_paquete->getIdPaquete() != NULL){
+		if( ! is_null( $orden_de_servicio_paquete->getIdPaquete() ) ){
 			$sql .= " id_paquete = ? AND";
 			array_push( $val, $orden_de_servicio_paquete->getIdPaquete() );
 		}
 
-		if( $orden_de_servicio_paquete->getCantidad() != NULL){
+		if( ! is_null( $orden_de_servicio_paquete->getCantidad() ) ){
 			$sql .= " cantidad = ? AND";
 			array_push( $val, $orden_de_servicio_paquete->getCantidad() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -272,41 +272,41 @@ abstract class OrdenDeServicioPaqueteDAOBase extends DAO
 	{
 		$sql = "SELECT * from orden_de_servicio_paquete WHERE ("; 
 		$val = array();
-		if( (($a = $orden_de_servicio_paqueteA->getIdServicio()) !== NULL) & ( ($b = $orden_de_servicio_paqueteB->getIdServicio()) !== NULL) ){
+		if( ( !is_null (($a = $orden_de_servicio_paqueteA->getIdServicio()) ) ) & ( ! is_null ( ($b = $orden_de_servicio_paqueteB->getIdServicio()) ) ) ){
 				$sql .= " id_servicio >= ? AND id_servicio <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_servicio = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $orden_de_servicio_paqueteA->getIdPaquete()) !== NULL) & ( ($b = $orden_de_servicio_paqueteB->getIdPaquete()) !== NULL) ){
+		if( ( !is_null (($a = $orden_de_servicio_paqueteA->getIdPaquete()) ) ) & ( ! is_null ( ($b = $orden_de_servicio_paqueteB->getIdPaquete()) ) ) ){
 				$sql .= " id_paquete >= ? AND id_paquete <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_paquete = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $orden_de_servicio_paqueteA->getCantidad()) !== NULL) & ( ($b = $orden_de_servicio_paqueteB->getCantidad()) !== NULL) ){
+		if( ( !is_null (($a = $orden_de_servicio_paqueteA->getCantidad()) ) ) & ( ! is_null ( ($b = $orden_de_servicio_paqueteB->getCantidad()) ) ) ){
 				$sql .= " cantidad >= ? AND cantidad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " cantidad = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -335,7 +335,7 @@ abstract class OrdenDeServicioPaqueteDAOBase extends DAO
 	  **/
 	public static final function delete( &$orden_de_servicio_paquete )
 	{
-		if(self::getByPK($orden_de_servicio_paquete->getIdServicio(), $orden_de_servicio_paquete->getIdPaquete()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($orden_de_servicio_paquete->getIdServicio(), $orden_de_servicio_paquete->getIdPaquete()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM orden_de_servicio_paquete WHERE  id_servicio = ? AND id_paquete = ?;";
 		$params = array( $orden_de_servicio_paquete->getIdServicio(), $orden_de_servicio_paquete->getIdPaquete() );
 		global $conn;

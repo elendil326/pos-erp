@@ -44,7 +44,7 @@ abstract class RetencionDAOBase extends DAO
 	  **/
 	public static final function save( &$retencion )
 	{
-		if(  self::getByPK(  $retencion->getIdRetencion() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $retencion->getIdRetencion() ) ) )
 		{
 			try{ return RetencionDAOBase::update( $retencion) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -96,9 +96,9 @@ abstract class RetencionDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from retencion";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -143,34 +143,34 @@ abstract class RetencionDAOBase extends DAO
 	{
 		$sql = "SELECT * from retencion WHERE ("; 
 		$val = array();
-		if( $retencion->getIdRetencion() != NULL){
+		if( ! is_null( $retencion->getIdRetencion() ) ){
 			$sql .= " id_retencion = ? AND";
 			array_push( $val, $retencion->getIdRetencion() );
 		}
 
-		if( $retencion->getMontoPorcentaje() != NULL){
+		if( ! is_null( $retencion->getMontoPorcentaje() ) ){
 			$sql .= " monto_porcentaje = ? AND";
 			array_push( $val, $retencion->getMontoPorcentaje() );
 		}
 
-		if( $retencion->getEsMonto() != NULL){
+		if( ! is_null( $retencion->getEsMonto() ) ){
 			$sql .= " es_monto = ? AND";
 			array_push( $val, $retencion->getEsMonto() );
 		}
 
-		if( $retencion->getNombre() != NULL){
+		if( ! is_null( $retencion->getNombre() ) ){
 			$sql .= " nombre = ? AND";
 			array_push( $val, $retencion->getNombre() );
 		}
 
-		if( $retencion->getDescripcion() != NULL){
+		if( ! is_null( $retencion->getDescripcion() ) ){
 			$sql .= " descripcion = ? AND";
 			array_push( $val, $retencion->getDescripcion() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -283,63 +283,63 @@ abstract class RetencionDAOBase extends DAO
 	{
 		$sql = "SELECT * from retencion WHERE ("; 
 		$val = array();
-		if( (($a = $retencionA->getIdRetencion()) !== NULL) & ( ($b = $retencionB->getIdRetencion()) !== NULL) ){
+		if( ( !is_null (($a = $retencionA->getIdRetencion()) ) ) & ( ! is_null ( ($b = $retencionB->getIdRetencion()) ) ) ){
 				$sql .= " id_retencion >= ? AND id_retencion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_retencion = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $retencionA->getMontoPorcentaje()) !== NULL) & ( ($b = $retencionB->getMontoPorcentaje()) !== NULL) ){
+		if( ( !is_null (($a = $retencionA->getMontoPorcentaje()) ) ) & ( ! is_null ( ($b = $retencionB->getMontoPorcentaje()) ) ) ){
 				$sql .= " monto_porcentaje >= ? AND monto_porcentaje <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " monto_porcentaje = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $retencionA->getEsMonto()) !== NULL) & ( ($b = $retencionB->getEsMonto()) !== NULL) ){
+		if( ( !is_null (($a = $retencionA->getEsMonto()) ) ) & ( ! is_null ( ($b = $retencionB->getEsMonto()) ) ) ){
 				$sql .= " es_monto >= ? AND es_monto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " es_monto = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $retencionA->getNombre()) !== NULL) & ( ($b = $retencionB->getNombre()) !== NULL) ){
+		if( ( !is_null (($a = $retencionA->getNombre()) ) ) & ( ! is_null ( ($b = $retencionB->getNombre()) ) ) ){
 				$sql .= " nombre >= ? AND nombre <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " nombre = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $retencionA->getDescripcion()) !== NULL) & ( ($b = $retencionB->getDescripcion()) !== NULL) ){
+		if( ( !is_null (($a = $retencionA->getDescripcion()) ) ) & ( ! is_null ( ($b = $retencionB->getDescripcion()) ) ) ){
 				$sql .= " descripcion >= ? AND descripcion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " descripcion = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -368,7 +368,7 @@ abstract class RetencionDAOBase extends DAO
 	  **/
 	public static final function delete( &$retencion )
 	{
-		if(self::getByPK($retencion->getIdRetencion()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($retencion->getIdRetencion()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM retencion WHERE  id_retencion = ?;";
 		$params = array( $retencion->getIdRetencion() );
 		global $conn;

@@ -44,7 +44,7 @@ abstract class ClasificacionProductoDAOBase extends DAO
 	  **/
 	public static final function save( &$clasificacion_producto )
 	{
-		if(  self::getByPK(  $clasificacion_producto->getIdClasificacionProducto() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $clasificacion_producto->getIdClasificacionProducto() ) ) )
 		{
 			try{ return ClasificacionProductoDAOBase::update( $clasificacion_producto) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -96,9 +96,9 @@ abstract class ClasificacionProductoDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from clasificacion_producto";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -143,44 +143,44 @@ abstract class ClasificacionProductoDAOBase extends DAO
 	{
 		$sql = "SELECT * from clasificacion_producto WHERE ("; 
 		$val = array();
-		if( $clasificacion_producto->getIdClasificacionProducto() != NULL){
+		if( ! is_null( $clasificacion_producto->getIdClasificacionProducto() ) ){
 			$sql .= " id_clasificacion_producto = ? AND";
 			array_push( $val, $clasificacion_producto->getIdClasificacionProducto() );
 		}
 
-		if( $clasificacion_producto->getNombre() != NULL){
+		if( ! is_null( $clasificacion_producto->getNombre() ) ){
 			$sql .= " nombre = ? AND";
 			array_push( $val, $clasificacion_producto->getNombre() );
 		}
 
-		if( $clasificacion_producto->getDescripcion() != NULL){
+		if( ! is_null( $clasificacion_producto->getDescripcion() ) ){
 			$sql .= " descripcion = ? AND";
 			array_push( $val, $clasificacion_producto->getDescripcion() );
 		}
 
-		if( $clasificacion_producto->getGarantia() != NULL){
+		if( ! is_null( $clasificacion_producto->getGarantia() ) ){
 			$sql .= " garantia = ? AND";
 			array_push( $val, $clasificacion_producto->getGarantia() );
 		}
 
-		if( $clasificacion_producto->getActiva() != NULL){
+		if( ! is_null( $clasificacion_producto->getActiva() ) ){
 			$sql .= " activa = ? AND";
 			array_push( $val, $clasificacion_producto->getActiva() );
 		}
 
-		if( $clasificacion_producto->getMargenUtilidad() != NULL){
+		if( ! is_null( $clasificacion_producto->getMargenUtilidad() ) ){
 			$sql .= " margen_utilidad = ? AND";
 			array_push( $val, $clasificacion_producto->getMargenUtilidad() );
 		}
 
-		if( $clasificacion_producto->getDescuento() != NULL){
+		if( ! is_null( $clasificacion_producto->getDescuento() ) ){
 			$sql .= " descuento = ? AND";
 			array_push( $val, $clasificacion_producto->getDescuento() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -297,85 +297,85 @@ abstract class ClasificacionProductoDAOBase extends DAO
 	{
 		$sql = "SELECT * from clasificacion_producto WHERE ("; 
 		$val = array();
-		if( (($a = $clasificacion_productoA->getIdClasificacionProducto()) !== NULL) & ( ($b = $clasificacion_productoB->getIdClasificacionProducto()) !== NULL) ){
+		if( ( !is_null (($a = $clasificacion_productoA->getIdClasificacionProducto()) ) ) & ( ! is_null ( ($b = $clasificacion_productoB->getIdClasificacionProducto()) ) ) ){
 				$sql .= " id_clasificacion_producto >= ? AND id_clasificacion_producto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_clasificacion_producto = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $clasificacion_productoA->getNombre()) !== NULL) & ( ($b = $clasificacion_productoB->getNombre()) !== NULL) ){
+		if( ( !is_null (($a = $clasificacion_productoA->getNombre()) ) ) & ( ! is_null ( ($b = $clasificacion_productoB->getNombre()) ) ) ){
 				$sql .= " nombre >= ? AND nombre <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " nombre = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $clasificacion_productoA->getDescripcion()) !== NULL) & ( ($b = $clasificacion_productoB->getDescripcion()) !== NULL) ){
+		if( ( !is_null (($a = $clasificacion_productoA->getDescripcion()) ) ) & ( ! is_null ( ($b = $clasificacion_productoB->getDescripcion()) ) ) ){
 				$sql .= " descripcion >= ? AND descripcion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " descripcion = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $clasificacion_productoA->getGarantia()) !== NULL) & ( ($b = $clasificacion_productoB->getGarantia()) !== NULL) ){
+		if( ( !is_null (($a = $clasificacion_productoA->getGarantia()) ) ) & ( ! is_null ( ($b = $clasificacion_productoB->getGarantia()) ) ) ){
 				$sql .= " garantia >= ? AND garantia <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " garantia = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $clasificacion_productoA->getActiva()) !== NULL) & ( ($b = $clasificacion_productoB->getActiva()) !== NULL) ){
+		if( ( !is_null (($a = $clasificacion_productoA->getActiva()) ) ) & ( ! is_null ( ($b = $clasificacion_productoB->getActiva()) ) ) ){
 				$sql .= " activa >= ? AND activa <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " activa = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $clasificacion_productoA->getMargenUtilidad()) !== NULL) & ( ($b = $clasificacion_productoB->getMargenUtilidad()) !== NULL) ){
+		if( ( !is_null (($a = $clasificacion_productoA->getMargenUtilidad()) ) ) & ( ! is_null ( ($b = $clasificacion_productoB->getMargenUtilidad()) ) ) ){
 				$sql .= " margen_utilidad >= ? AND margen_utilidad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " margen_utilidad = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $clasificacion_productoA->getDescuento()) !== NULL) & ( ($b = $clasificacion_productoB->getDescuento()) !== NULL) ){
+		if( ( !is_null (($a = $clasificacion_productoA->getDescuento()) ) ) & ( ! is_null ( ($b = $clasificacion_productoB->getDescuento()) ) ) ){
 				$sql .= " descuento >= ? AND descuento <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " descuento = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -404,7 +404,7 @@ abstract class ClasificacionProductoDAOBase extends DAO
 	  **/
 	public static final function delete( &$clasificacion_producto )
 	{
-		if(self::getByPK($clasificacion_producto->getIdClasificacionProducto()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($clasificacion_producto->getIdClasificacionProducto()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM clasificacion_producto WHERE  id_clasificacion_producto = ?;";
 		$params = array( $clasificacion_producto->getIdClasificacionProducto() );
 		global $conn;

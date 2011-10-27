@@ -44,7 +44,7 @@ abstract class ClasificacionProveedorDAOBase extends DAO
 	  **/
 	public static final function save( &$clasificacion_proveedor )
 	{
-		if(  self::getByPK(  $clasificacion_proveedor->getIdClasificacionProveedor() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $clasificacion_proveedor->getIdClasificacionProveedor() ) ) )
 		{
 			try{ return ClasificacionProveedorDAOBase::update( $clasificacion_proveedor) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -96,9 +96,9 @@ abstract class ClasificacionProveedorDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from clasificacion_proveedor";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -143,29 +143,29 @@ abstract class ClasificacionProveedorDAOBase extends DAO
 	{
 		$sql = "SELECT * from clasificacion_proveedor WHERE ("; 
 		$val = array();
-		if( $clasificacion_proveedor->getIdClasificacionProveedor() != NULL){
+		if( ! is_null( $clasificacion_proveedor->getIdClasificacionProveedor() ) ){
 			$sql .= " id_clasificacion_proveedor = ? AND";
 			array_push( $val, $clasificacion_proveedor->getIdClasificacionProveedor() );
 		}
 
-		if( $clasificacion_proveedor->getNombre() != NULL){
+		if( ! is_null( $clasificacion_proveedor->getNombre() ) ){
 			$sql .= " nombre = ? AND";
 			array_push( $val, $clasificacion_proveedor->getNombre() );
 		}
 
-		if( $clasificacion_proveedor->getDescripcion() != NULL){
+		if( ! is_null( $clasificacion_proveedor->getDescripcion() ) ){
 			$sql .= " descripcion = ? AND";
 			array_push( $val, $clasificacion_proveedor->getDescripcion() );
 		}
 
-		if( $clasificacion_proveedor->getActiva() != NULL){
+		if( ! is_null( $clasificacion_proveedor->getActiva() ) ){
 			$sql .= " activa = ? AND";
 			array_push( $val, $clasificacion_proveedor->getActiva() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -276,52 +276,52 @@ abstract class ClasificacionProveedorDAOBase extends DAO
 	{
 		$sql = "SELECT * from clasificacion_proveedor WHERE ("; 
 		$val = array();
-		if( (($a = $clasificacion_proveedorA->getIdClasificacionProveedor()) !== NULL) & ( ($b = $clasificacion_proveedorB->getIdClasificacionProveedor()) !== NULL) ){
+		if( ( !is_null (($a = $clasificacion_proveedorA->getIdClasificacionProveedor()) ) ) & ( ! is_null ( ($b = $clasificacion_proveedorB->getIdClasificacionProveedor()) ) ) ){
 				$sql .= " id_clasificacion_proveedor >= ? AND id_clasificacion_proveedor <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_clasificacion_proveedor = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $clasificacion_proveedorA->getNombre()) !== NULL) & ( ($b = $clasificacion_proveedorB->getNombre()) !== NULL) ){
+		if( ( !is_null (($a = $clasificacion_proveedorA->getNombre()) ) ) & ( ! is_null ( ($b = $clasificacion_proveedorB->getNombre()) ) ) ){
 				$sql .= " nombre >= ? AND nombre <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " nombre = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $clasificacion_proveedorA->getDescripcion()) !== NULL) & ( ($b = $clasificacion_proveedorB->getDescripcion()) !== NULL) ){
+		if( ( !is_null (($a = $clasificacion_proveedorA->getDescripcion()) ) ) & ( ! is_null ( ($b = $clasificacion_proveedorB->getDescripcion()) ) ) ){
 				$sql .= " descripcion >= ? AND descripcion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " descripcion = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $clasificacion_proveedorA->getActiva()) !== NULL) & ( ($b = $clasificacion_proveedorB->getActiva()) !== NULL) ){
+		if( ( !is_null (($a = $clasificacion_proveedorA->getActiva()) ) ) & ( ! is_null ( ($b = $clasificacion_proveedorB->getActiva()) ) ) ){
 				$sql .= " activa >= ? AND activa <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " activa = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -350,7 +350,7 @@ abstract class ClasificacionProveedorDAOBase extends DAO
 	  **/
 	public static final function delete( &$clasificacion_proveedor )
 	{
-		if(self::getByPK($clasificacion_proveedor->getIdClasificacionProveedor()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($clasificacion_proveedor->getIdClasificacionProveedor()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM clasificacion_proveedor WHERE  id_clasificacion_proveedor = ?;";
 		$params = array( $clasificacion_proveedor->getIdClasificacionProveedor() );
 		global $conn;

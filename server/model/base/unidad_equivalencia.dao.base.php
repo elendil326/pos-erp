@@ -47,7 +47,7 @@ abstract class UnidadEquivalenciaDAOBase extends DAO
 	  **/
 	public static final function save( &$unidad_equivalencia )
 	{
-		if(  self::getByPK(  $unidad_equivalencia->getIdUnidad() , $unidad_equivalencia->getIdUnidades() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $unidad_equivalencia->getIdUnidad() , $unidad_equivalencia->getIdUnidades() ) ) )
 		{
 			try{ return UnidadEquivalenciaDAOBase::update( $unidad_equivalencia) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -99,9 +99,9 @@ abstract class UnidadEquivalenciaDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from unidad_equivalencia";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -147,24 +147,24 @@ abstract class UnidadEquivalenciaDAOBase extends DAO
 	{
 		$sql = "SELECT * from unidad_equivalencia WHERE ("; 
 		$val = array();
-		if( $unidad_equivalencia->getIdUnidad() != NULL){
+		if( ! is_null( $unidad_equivalencia->getIdUnidad() ) ){
 			$sql .= " id_unidad = ? AND";
 			array_push( $val, $unidad_equivalencia->getIdUnidad() );
 		}
 
-		if( $unidad_equivalencia->getEquivalencia() != NULL){
+		if( ! is_null( $unidad_equivalencia->getEquivalencia() ) ){
 			$sql .= " equivalencia = ? AND";
 			array_push( $val, $unidad_equivalencia->getEquivalencia() );
 		}
 
-		if( $unidad_equivalencia->getIdUnidades() != NULL){
+		if( ! is_null( $unidad_equivalencia->getIdUnidades() ) ){
 			$sql .= " id_unidades = ? AND";
 			array_push( $val, $unidad_equivalencia->getIdUnidades() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -272,41 +272,41 @@ abstract class UnidadEquivalenciaDAOBase extends DAO
 	{
 		$sql = "SELECT * from unidad_equivalencia WHERE ("; 
 		$val = array();
-		if( (($a = $unidad_equivalenciaA->getIdUnidad()) !== NULL) & ( ($b = $unidad_equivalenciaB->getIdUnidad()) !== NULL) ){
+		if( ( !is_null (($a = $unidad_equivalenciaA->getIdUnidad()) ) ) & ( ! is_null ( ($b = $unidad_equivalenciaB->getIdUnidad()) ) ) ){
 				$sql .= " id_unidad >= ? AND id_unidad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_unidad = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $unidad_equivalenciaA->getEquivalencia()) !== NULL) & ( ($b = $unidad_equivalenciaB->getEquivalencia()) !== NULL) ){
+		if( ( !is_null (($a = $unidad_equivalenciaA->getEquivalencia()) ) ) & ( ! is_null ( ($b = $unidad_equivalenciaB->getEquivalencia()) ) ) ){
 				$sql .= " equivalencia >= ? AND equivalencia <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " equivalencia = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $unidad_equivalenciaA->getIdUnidades()) !== NULL) & ( ($b = $unidad_equivalenciaB->getIdUnidades()) !== NULL) ){
+		if( ( !is_null (($a = $unidad_equivalenciaA->getIdUnidades()) ) ) & ( ! is_null ( ($b = $unidad_equivalenciaB->getIdUnidades()) ) ) ){
 				$sql .= " id_unidades >= ? AND id_unidades <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_unidades = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -335,7 +335,7 @@ abstract class UnidadEquivalenciaDAOBase extends DAO
 	  **/
 	public static final function delete( &$unidad_equivalencia )
 	{
-		if(self::getByPK($unidad_equivalencia->getIdUnidad(), $unidad_equivalencia->getIdUnidades()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($unidad_equivalencia->getIdUnidad(), $unidad_equivalencia->getIdUnidades()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM unidad_equivalencia WHERE  id_unidad = ? AND id_unidades = ?;";
 		$params = array( $unidad_equivalencia->getIdUnidad(), $unidad_equivalencia->getIdUnidades() );
 		global $conn;

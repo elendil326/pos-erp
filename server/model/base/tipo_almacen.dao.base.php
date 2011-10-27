@@ -44,7 +44,7 @@ abstract class TipoAlmacenDAOBase extends DAO
 	  **/
 	public static final function save( &$tipo_almacen )
 	{
-		if(  self::getByPK(  $tipo_almacen->getIdTipoAlmacen() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $tipo_almacen->getIdTipoAlmacen() ) ) )
 		{
 			try{ return TipoAlmacenDAOBase::update( $tipo_almacen) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -96,9 +96,9 @@ abstract class TipoAlmacenDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from tipo_almacen";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -143,19 +143,19 @@ abstract class TipoAlmacenDAOBase extends DAO
 	{
 		$sql = "SELECT * from tipo_almacen WHERE ("; 
 		$val = array();
-		if( $tipo_almacen->getIdTipoAlmacen() != NULL){
+		if( ! is_null( $tipo_almacen->getIdTipoAlmacen() ) ){
 			$sql .= " id_tipo_almacen = ? AND";
 			array_push( $val, $tipo_almacen->getIdTipoAlmacen() );
 		}
 
-		if( $tipo_almacen->getDescripcion() != NULL){
+		if( ! is_null( $tipo_almacen->getDescripcion() ) ){
 			$sql .= " descripcion = ? AND";
 			array_push( $val, $tipo_almacen->getDescripcion() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -262,30 +262,30 @@ abstract class TipoAlmacenDAOBase extends DAO
 	{
 		$sql = "SELECT * from tipo_almacen WHERE ("; 
 		$val = array();
-		if( (($a = $tipo_almacenA->getIdTipoAlmacen()) !== NULL) & ( ($b = $tipo_almacenB->getIdTipoAlmacen()) !== NULL) ){
+		if( ( !is_null (($a = $tipo_almacenA->getIdTipoAlmacen()) ) ) & ( ! is_null ( ($b = $tipo_almacenB->getIdTipoAlmacen()) ) ) ){
 				$sql .= " id_tipo_almacen >= ? AND id_tipo_almacen <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_tipo_almacen = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $tipo_almacenA->getDescripcion()) !== NULL) & ( ($b = $tipo_almacenB->getDescripcion()) !== NULL) ){
+		if( ( !is_null (($a = $tipo_almacenA->getDescripcion()) ) ) & ( ! is_null ( ($b = $tipo_almacenB->getDescripcion()) ) ) ){
 				$sql .= " descripcion >= ? AND descripcion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " descripcion = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -314,7 +314,7 @@ abstract class TipoAlmacenDAOBase extends DAO
 	  **/
 	public static final function delete( &$tipo_almacen )
 	{
-		if(self::getByPK($tipo_almacen->getIdTipoAlmacen()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($tipo_almacen->getIdTipoAlmacen()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM tipo_almacen WHERE  id_tipo_almacen = ?;";
 		$params = array( $tipo_almacen->getIdTipoAlmacen() );
 		global $conn;

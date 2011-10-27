@@ -47,7 +47,7 @@ abstract class PrecioProductoTipoClienteDAOBase extends DAO
 	  **/
 	public static final function save( &$precio_producto_tipo_cliente )
 	{
-		if(  self::getByPK(  $precio_producto_tipo_cliente->getIdProducto() , $precio_producto_tipo_cliente->getIdClasificacionCliente() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $precio_producto_tipo_cliente->getIdProducto() , $precio_producto_tipo_cliente->getIdClasificacionCliente() ) ) )
 		{
 			try{ return PrecioProductoTipoClienteDAOBase::update( $precio_producto_tipo_cliente) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -99,9 +99,9 @@ abstract class PrecioProductoTipoClienteDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from precio_producto_tipo_cliente";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -147,29 +147,29 @@ abstract class PrecioProductoTipoClienteDAOBase extends DAO
 	{
 		$sql = "SELECT * from precio_producto_tipo_cliente WHERE ("; 
 		$val = array();
-		if( $precio_producto_tipo_cliente->getIdProducto() != NULL){
+		if( ! is_null( $precio_producto_tipo_cliente->getIdProducto() ) ){
 			$sql .= " id_producto = ? AND";
 			array_push( $val, $precio_producto_tipo_cliente->getIdProducto() );
 		}
 
-		if( $precio_producto_tipo_cliente->getIdClasificacionCliente() != NULL){
+		if( ! is_null( $precio_producto_tipo_cliente->getIdClasificacionCliente() ) ){
 			$sql .= " id_clasificacion_cliente = ? AND";
 			array_push( $val, $precio_producto_tipo_cliente->getIdClasificacionCliente() );
 		}
 
-		if( $precio_producto_tipo_cliente->getEsMargenUtilidad() != NULL){
+		if( ! is_null( $precio_producto_tipo_cliente->getEsMargenUtilidad() ) ){
 			$sql .= " es_margen_utilidad = ? AND";
 			array_push( $val, $precio_producto_tipo_cliente->getEsMargenUtilidad() );
 		}
 
-		if( $precio_producto_tipo_cliente->getPrecioUtilidad() != NULL){
+		if( ! is_null( $precio_producto_tipo_cliente->getPrecioUtilidad() ) ){
 			$sql .= " precio_utilidad = ? AND";
 			array_push( $val, $precio_producto_tipo_cliente->getPrecioUtilidad() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -279,52 +279,52 @@ abstract class PrecioProductoTipoClienteDAOBase extends DAO
 	{
 		$sql = "SELECT * from precio_producto_tipo_cliente WHERE ("; 
 		$val = array();
-		if( (($a = $precio_producto_tipo_clienteA->getIdProducto()) !== NULL) & ( ($b = $precio_producto_tipo_clienteB->getIdProducto()) !== NULL) ){
+		if( ( !is_null (($a = $precio_producto_tipo_clienteA->getIdProducto()) ) ) & ( ! is_null ( ($b = $precio_producto_tipo_clienteB->getIdProducto()) ) ) ){
 				$sql .= " id_producto >= ? AND id_producto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_producto = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $precio_producto_tipo_clienteA->getIdClasificacionCliente()) !== NULL) & ( ($b = $precio_producto_tipo_clienteB->getIdClasificacionCliente()) !== NULL) ){
+		if( ( !is_null (($a = $precio_producto_tipo_clienteA->getIdClasificacionCliente()) ) ) & ( ! is_null ( ($b = $precio_producto_tipo_clienteB->getIdClasificacionCliente()) ) ) ){
 				$sql .= " id_clasificacion_cliente >= ? AND id_clasificacion_cliente <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_clasificacion_cliente = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $precio_producto_tipo_clienteA->getEsMargenUtilidad()) !== NULL) & ( ($b = $precio_producto_tipo_clienteB->getEsMargenUtilidad()) !== NULL) ){
+		if( ( !is_null (($a = $precio_producto_tipo_clienteA->getEsMargenUtilidad()) ) ) & ( ! is_null ( ($b = $precio_producto_tipo_clienteB->getEsMargenUtilidad()) ) ) ){
 				$sql .= " es_margen_utilidad >= ? AND es_margen_utilidad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " es_margen_utilidad = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $precio_producto_tipo_clienteA->getPrecioUtilidad()) !== NULL) & ( ($b = $precio_producto_tipo_clienteB->getPrecioUtilidad()) !== NULL) ){
+		if( ( !is_null (($a = $precio_producto_tipo_clienteA->getPrecioUtilidad()) ) ) & ( ! is_null ( ($b = $precio_producto_tipo_clienteB->getPrecioUtilidad()) ) ) ){
 				$sql .= " precio_utilidad >= ? AND precio_utilidad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " precio_utilidad = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -353,7 +353,7 @@ abstract class PrecioProductoTipoClienteDAOBase extends DAO
 	  **/
 	public static final function delete( &$precio_producto_tipo_cliente )
 	{
-		if(self::getByPK($precio_producto_tipo_cliente->getIdProducto(), $precio_producto_tipo_cliente->getIdClasificacionCliente()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($precio_producto_tipo_cliente->getIdProducto(), $precio_producto_tipo_cliente->getIdClasificacionCliente()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM precio_producto_tipo_cliente WHERE  id_producto = ? AND id_clasificacion_cliente = ?;";
 		$params = array( $precio_producto_tipo_cliente->getIdProducto(), $precio_producto_tipo_cliente->getIdClasificacionCliente() );
 		global $conn;

@@ -44,7 +44,7 @@ abstract class VentaDAOBase extends DAO
 	  **/
 	public static final function save( &$venta )
 	{
-		if(  self::getByPK(  $venta->getIdVenta() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $venta->getIdVenta() ) ) )
 		{
 			try{ return VentaDAOBase::update( $venta) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -96,9 +96,9 @@ abstract class VentaDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from venta";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -143,89 +143,89 @@ abstract class VentaDAOBase extends DAO
 	{
 		$sql = "SELECT * from venta WHERE ("; 
 		$val = array();
-		if( $venta->getIdVenta() != NULL){
+		if( ! is_null( $venta->getIdVenta() ) ){
 			$sql .= " id_venta = ? AND";
 			array_push( $val, $venta->getIdVenta() );
 		}
 
-		if( $venta->getIdCaja() != NULL){
+		if( ! is_null( $venta->getIdCaja() ) ){
 			$sql .= " id_caja = ? AND";
 			array_push( $val, $venta->getIdCaja() );
 		}
 
-		if( $venta->getIdVentaCaja() != NULL){
+		if( ! is_null( $venta->getIdVentaCaja() ) ){
 			$sql .= " id_venta_caja = ? AND";
 			array_push( $val, $venta->getIdVentaCaja() );
 		}
 
-		if( $venta->getIdCompradorVenta() != NULL){
+		if( ! is_null( $venta->getIdCompradorVenta() ) ){
 			$sql .= " id_comprador_venta = ? AND";
 			array_push( $val, $venta->getIdCompradorVenta() );
 		}
 
-		if( $venta->getTipoDeVenta() != NULL){
+		if( ! is_null( $venta->getTipoDeVenta() ) ){
 			$sql .= " tipo_de_venta = ? AND";
 			array_push( $val, $venta->getTipoDeVenta() );
 		}
 
-		if( $venta->getFecha() != NULL){
+		if( ! is_null( $venta->getFecha() ) ){
 			$sql .= " fecha = ? AND";
 			array_push( $val, $venta->getFecha() );
 		}
 
-		if( $venta->getSubtotal() != NULL){
+		if( ! is_null( $venta->getSubtotal() ) ){
 			$sql .= " subtotal = ? AND";
 			array_push( $val, $venta->getSubtotal() );
 		}
 
-		if( $venta->getImpuesto() != NULL){
+		if( ! is_null( $venta->getImpuesto() ) ){
 			$sql .= " impuesto = ? AND";
 			array_push( $val, $venta->getImpuesto() );
 		}
 
-		if( $venta->getDescuento() != NULL){
+		if( ! is_null( $venta->getDescuento() ) ){
 			$sql .= " descuento = ? AND";
 			array_push( $val, $venta->getDescuento() );
 		}
 
-		if( $venta->getTotal() != NULL){
+		if( ! is_null( $venta->getTotal() ) ){
 			$sql .= " total = ? AND";
 			array_push( $val, $venta->getTotal() );
 		}
 
-		if( $venta->getIdSucursal() != NULL){
+		if( ! is_null( $venta->getIdSucursal() ) ){
 			$sql .= " id_sucursal = ? AND";
 			array_push( $val, $venta->getIdSucursal() );
 		}
 
-		if( $venta->getIdUsuario() != NULL){
+		if( ! is_null( $venta->getIdUsuario() ) ){
 			$sql .= " id_usuario = ? AND";
 			array_push( $val, $venta->getIdUsuario() );
 		}
 
-		if( $venta->getSaldo() != NULL){
+		if( ! is_null( $venta->getSaldo() ) ){
 			$sql .= " saldo = ? AND";
 			array_push( $val, $venta->getSaldo() );
 		}
 
-		if( $venta->getCancelada() != NULL){
+		if( ! is_null( $venta->getCancelada() ) ){
 			$sql .= " cancelada = ? AND";
 			array_push( $val, $venta->getCancelada() );
 		}
 
-		if( $venta->getTipoDePago() != NULL){
+		if( ! is_null( $venta->getTipoDePago() ) ){
 			$sql .= " tipo_de_pago = ? AND";
 			array_push( $val, $venta->getTipoDePago() );
 		}
 
-		if( $venta->getRetencion() != NULL){
+		if( ! is_null( $venta->getRetencion() ) ){
 			$sql .= " retencion = ? AND";
 			array_push( $val, $venta->getRetencion() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -360,184 +360,184 @@ abstract class VentaDAOBase extends DAO
 	{
 		$sql = "SELECT * from venta WHERE ("; 
 		$val = array();
-		if( (($a = $ventaA->getIdVenta()) !== NULL) & ( ($b = $ventaB->getIdVenta()) !== NULL) ){
+		if( ( !is_null (($a = $ventaA->getIdVenta()) ) ) & ( ! is_null ( ($b = $ventaB->getIdVenta()) ) ) ){
 				$sql .= " id_venta >= ? AND id_venta <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_venta = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $ventaA->getIdCaja()) !== NULL) & ( ($b = $ventaB->getIdCaja()) !== NULL) ){
+		if( ( !is_null (($a = $ventaA->getIdCaja()) ) ) & ( ! is_null ( ($b = $ventaB->getIdCaja()) ) ) ){
 				$sql .= " id_caja >= ? AND id_caja <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_caja = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $ventaA->getIdVentaCaja()) !== NULL) & ( ($b = $ventaB->getIdVentaCaja()) !== NULL) ){
+		if( ( !is_null (($a = $ventaA->getIdVentaCaja()) ) ) & ( ! is_null ( ($b = $ventaB->getIdVentaCaja()) ) ) ){
 				$sql .= " id_venta_caja >= ? AND id_venta_caja <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_venta_caja = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $ventaA->getIdCompradorVenta()) !== NULL) & ( ($b = $ventaB->getIdCompradorVenta()) !== NULL) ){
+		if( ( !is_null (($a = $ventaA->getIdCompradorVenta()) ) ) & ( ! is_null ( ($b = $ventaB->getIdCompradorVenta()) ) ) ){
 				$sql .= " id_comprador_venta >= ? AND id_comprador_venta <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_comprador_venta = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $ventaA->getTipoDeVenta()) !== NULL) & ( ($b = $ventaB->getTipoDeVenta()) !== NULL) ){
+		if( ( !is_null (($a = $ventaA->getTipoDeVenta()) ) ) & ( ! is_null ( ($b = $ventaB->getTipoDeVenta()) ) ) ){
 				$sql .= " tipo_de_venta >= ? AND tipo_de_venta <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " tipo_de_venta = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $ventaA->getFecha()) !== NULL) & ( ($b = $ventaB->getFecha()) !== NULL) ){
+		if( ( !is_null (($a = $ventaA->getFecha()) ) ) & ( ! is_null ( ($b = $ventaB->getFecha()) ) ) ){
 				$sql .= " fecha >= ? AND fecha <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " fecha = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $ventaA->getSubtotal()) !== NULL) & ( ($b = $ventaB->getSubtotal()) !== NULL) ){
+		if( ( !is_null (($a = $ventaA->getSubtotal()) ) ) & ( ! is_null ( ($b = $ventaB->getSubtotal()) ) ) ){
 				$sql .= " subtotal >= ? AND subtotal <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " subtotal = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $ventaA->getImpuesto()) !== NULL) & ( ($b = $ventaB->getImpuesto()) !== NULL) ){
+		if( ( !is_null (($a = $ventaA->getImpuesto()) ) ) & ( ! is_null ( ($b = $ventaB->getImpuesto()) ) ) ){
 				$sql .= " impuesto >= ? AND impuesto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " impuesto = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $ventaA->getDescuento()) !== NULL) & ( ($b = $ventaB->getDescuento()) !== NULL) ){
+		if( ( !is_null (($a = $ventaA->getDescuento()) ) ) & ( ! is_null ( ($b = $ventaB->getDescuento()) ) ) ){
 				$sql .= " descuento >= ? AND descuento <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " descuento = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $ventaA->getTotal()) !== NULL) & ( ($b = $ventaB->getTotal()) !== NULL) ){
+		if( ( !is_null (($a = $ventaA->getTotal()) ) ) & ( ! is_null ( ($b = $ventaB->getTotal()) ) ) ){
 				$sql .= " total >= ? AND total <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " total = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $ventaA->getIdSucursal()) !== NULL) & ( ($b = $ventaB->getIdSucursal()) !== NULL) ){
+		if( ( !is_null (($a = $ventaA->getIdSucursal()) ) ) & ( ! is_null ( ($b = $ventaB->getIdSucursal()) ) ) ){
 				$sql .= " id_sucursal >= ? AND id_sucursal <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_sucursal = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $ventaA->getIdUsuario()) !== NULL) & ( ($b = $ventaB->getIdUsuario()) !== NULL) ){
+		if( ( !is_null (($a = $ventaA->getIdUsuario()) ) ) & ( ! is_null ( ($b = $ventaB->getIdUsuario()) ) ) ){
 				$sql .= " id_usuario >= ? AND id_usuario <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_usuario = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $ventaA->getSaldo()) !== NULL) & ( ($b = $ventaB->getSaldo()) !== NULL) ){
+		if( ( !is_null (($a = $ventaA->getSaldo()) ) ) & ( ! is_null ( ($b = $ventaB->getSaldo()) ) ) ){
 				$sql .= " saldo >= ? AND saldo <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " saldo = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $ventaA->getCancelada()) !== NULL) & ( ($b = $ventaB->getCancelada()) !== NULL) ){
+		if( ( !is_null (($a = $ventaA->getCancelada()) ) ) & ( ! is_null ( ($b = $ventaB->getCancelada()) ) ) ){
 				$sql .= " cancelada >= ? AND cancelada <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " cancelada = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $ventaA->getTipoDePago()) !== NULL) & ( ($b = $ventaB->getTipoDePago()) !== NULL) ){
+		if( ( !is_null (($a = $ventaA->getTipoDePago()) ) ) & ( ! is_null ( ($b = $ventaB->getTipoDePago()) ) ) ){
 				$sql .= " tipo_de_pago >= ? AND tipo_de_pago <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " tipo_de_pago = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $ventaA->getRetencion()) !== NULL) & ( ($b = $ventaB->getRetencion()) !== NULL) ){
+		if( ( !is_null (($a = $ventaA->getRetencion()) ) ) & ( ! is_null ( ($b = $ventaB->getRetencion()) ) ) ){
 				$sql .= " retencion >= ? AND retencion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " retencion = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -566,7 +566,7 @@ abstract class VentaDAOBase extends DAO
 	  **/
 	public static final function delete( &$venta )
 	{
-		if(self::getByPK($venta->getIdVenta()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($venta->getIdVenta()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM venta WHERE  id_venta = ?;";
 		$params = array( $venta->getIdVenta() );
 		global $conn;

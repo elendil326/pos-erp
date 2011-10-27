@@ -47,7 +47,7 @@ abstract class PaqueteEmpresaDAOBase extends DAO
 	  **/
 	public static final function save( &$paquete_empresa )
 	{
-		if(  self::getByPK(  $paquete_empresa->getIdPaquete() , $paquete_empresa->getIdEmpresa() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $paquete_empresa->getIdPaquete() , $paquete_empresa->getIdEmpresa() ) ) )
 		{
 			try{ return PaqueteEmpresaDAOBase::update( $paquete_empresa) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -99,9 +99,9 @@ abstract class PaqueteEmpresaDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from paquete_empresa";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -147,29 +147,29 @@ abstract class PaqueteEmpresaDAOBase extends DAO
 	{
 		$sql = "SELECT * from paquete_empresa WHERE ("; 
 		$val = array();
-		if( $paquete_empresa->getIdPaquete() != NULL){
+		if( ! is_null( $paquete_empresa->getIdPaquete() ) ){
 			$sql .= " id_paquete = ? AND";
 			array_push( $val, $paquete_empresa->getIdPaquete() );
 		}
 
-		if( $paquete_empresa->getIdEmpresa() != NULL){
+		if( ! is_null( $paquete_empresa->getIdEmpresa() ) ){
 			$sql .= " id_empresa = ? AND";
 			array_push( $val, $paquete_empresa->getIdEmpresa() );
 		}
 
-		if( $paquete_empresa->getPrecioUtilidad() != NULL){
+		if( ! is_null( $paquete_empresa->getPrecioUtilidad() ) ){
 			$sql .= " precio_utilidad = ? AND";
 			array_push( $val, $paquete_empresa->getPrecioUtilidad() );
 		}
 
-		if( $paquete_empresa->getEsMargenUtilidad() != NULL){
+		if( ! is_null( $paquete_empresa->getEsMargenUtilidad() ) ){
 			$sql .= " es_margen_utilidad = ? AND";
 			array_push( $val, $paquete_empresa->getEsMargenUtilidad() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -279,52 +279,52 @@ abstract class PaqueteEmpresaDAOBase extends DAO
 	{
 		$sql = "SELECT * from paquete_empresa WHERE ("; 
 		$val = array();
-		if( (($a = $paquete_empresaA->getIdPaquete()) !== NULL) & ( ($b = $paquete_empresaB->getIdPaquete()) !== NULL) ){
+		if( ( !is_null (($a = $paquete_empresaA->getIdPaquete()) ) ) & ( ! is_null ( ($b = $paquete_empresaB->getIdPaquete()) ) ) ){
 				$sql .= " id_paquete >= ? AND id_paquete <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_paquete = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $paquete_empresaA->getIdEmpresa()) !== NULL) & ( ($b = $paquete_empresaB->getIdEmpresa()) !== NULL) ){
+		if( ( !is_null (($a = $paquete_empresaA->getIdEmpresa()) ) ) & ( ! is_null ( ($b = $paquete_empresaB->getIdEmpresa()) ) ) ){
 				$sql .= " id_empresa >= ? AND id_empresa <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_empresa = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $paquete_empresaA->getPrecioUtilidad()) !== NULL) & ( ($b = $paquete_empresaB->getPrecioUtilidad()) !== NULL) ){
+		if( ( !is_null (($a = $paquete_empresaA->getPrecioUtilidad()) ) ) & ( ! is_null ( ($b = $paquete_empresaB->getPrecioUtilidad()) ) ) ){
 				$sql .= " precio_utilidad >= ? AND precio_utilidad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " precio_utilidad = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $paquete_empresaA->getEsMargenUtilidad()) !== NULL) & ( ($b = $paquete_empresaB->getEsMargenUtilidad()) !== NULL) ){
+		if( ( !is_null (($a = $paquete_empresaA->getEsMargenUtilidad()) ) ) & ( ! is_null ( ($b = $paquete_empresaB->getEsMargenUtilidad()) ) ) ){
 				$sql .= " es_margen_utilidad >= ? AND es_margen_utilidad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " es_margen_utilidad = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -353,7 +353,7 @@ abstract class PaqueteEmpresaDAOBase extends DAO
 	  **/
 	public static final function delete( &$paquete_empresa )
 	{
-		if(self::getByPK($paquete_empresa->getIdPaquete(), $paquete_empresa->getIdEmpresa()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($paquete_empresa->getIdPaquete(), $paquete_empresa->getIdEmpresa()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM paquete_empresa WHERE  id_paquete = ? AND id_empresa = ?;";
 		$params = array( $paquete_empresa->getIdPaquete(), $paquete_empresa->getIdEmpresa() );
 		global $conn;

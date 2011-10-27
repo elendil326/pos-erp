@@ -44,7 +44,7 @@ abstract class PrestamoDAOBase extends DAO
 	  **/
 	public static final function save( &$prestamo )
 	{
-		if(  self::getByPK(  $prestamo->getIdPrestamo() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $prestamo->getIdPrestamo() ) ) )
 		{
 			try{ return PrestamoDAOBase::update( $prestamo) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -96,9 +96,9 @@ abstract class PrestamoDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from prestamo";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -143,54 +143,54 @@ abstract class PrestamoDAOBase extends DAO
 	{
 		$sql = "SELECT * from prestamo WHERE ("; 
 		$val = array();
-		if( $prestamo->getIdPrestamo() != NULL){
+		if( ! is_null( $prestamo->getIdPrestamo() ) ){
 			$sql .= " id_prestamo = ? AND";
 			array_push( $val, $prestamo->getIdPrestamo() );
 		}
 
-		if( $prestamo->getIdSolicitante() != NULL){
+		if( ! is_null( $prestamo->getIdSolicitante() ) ){
 			$sql .= " id_solicitante = ? AND";
 			array_push( $val, $prestamo->getIdSolicitante() );
 		}
 
-		if( $prestamo->getIdEmpresaPresta() != NULL){
+		if( ! is_null( $prestamo->getIdEmpresaPresta() ) ){
 			$sql .= " id_empresa_presta = ? AND";
 			array_push( $val, $prestamo->getIdEmpresaPresta() );
 		}
 
-		if( $prestamo->getIdSucursalPresta() != NULL){
+		if( ! is_null( $prestamo->getIdSucursalPresta() ) ){
 			$sql .= " id_sucursal_presta = ? AND";
 			array_push( $val, $prestamo->getIdSucursalPresta() );
 		}
 
-		if( $prestamo->getIdUsuario() != NULL){
+		if( ! is_null( $prestamo->getIdUsuario() ) ){
 			$sql .= " id_usuario = ? AND";
 			array_push( $val, $prestamo->getIdUsuario() );
 		}
 
-		if( $prestamo->getMonto() != NULL){
+		if( ! is_null( $prestamo->getMonto() ) ){
 			$sql .= " monto = ? AND";
 			array_push( $val, $prestamo->getMonto() );
 		}
 
-		if( $prestamo->getSaldo() != NULL){
+		if( ! is_null( $prestamo->getSaldo() ) ){
 			$sql .= " saldo = ? AND";
 			array_push( $val, $prestamo->getSaldo() );
 		}
 
-		if( $prestamo->getInteresMensual() != NULL){
+		if( ! is_null( $prestamo->getInteresMensual() ) ){
 			$sql .= " interes_mensual = ? AND";
 			array_push( $val, $prestamo->getInteresMensual() );
 		}
 
-		if( $prestamo->getFecha() != NULL){
+		if( ! is_null( $prestamo->getFecha() ) ){
 			$sql .= " fecha = ? AND";
 			array_push( $val, $prestamo->getFecha() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -311,107 +311,107 @@ abstract class PrestamoDAOBase extends DAO
 	{
 		$sql = "SELECT * from prestamo WHERE ("; 
 		$val = array();
-		if( (($a = $prestamoA->getIdPrestamo()) !== NULL) & ( ($b = $prestamoB->getIdPrestamo()) !== NULL) ){
+		if( ( !is_null (($a = $prestamoA->getIdPrestamo()) ) ) & ( ! is_null ( ($b = $prestamoB->getIdPrestamo()) ) ) ){
 				$sql .= " id_prestamo >= ? AND id_prestamo <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_prestamo = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $prestamoA->getIdSolicitante()) !== NULL) & ( ($b = $prestamoB->getIdSolicitante()) !== NULL) ){
+		if( ( !is_null (($a = $prestamoA->getIdSolicitante()) ) ) & ( ! is_null ( ($b = $prestamoB->getIdSolicitante()) ) ) ){
 				$sql .= " id_solicitante >= ? AND id_solicitante <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_solicitante = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $prestamoA->getIdEmpresaPresta()) !== NULL) & ( ($b = $prestamoB->getIdEmpresaPresta()) !== NULL) ){
+		if( ( !is_null (($a = $prestamoA->getIdEmpresaPresta()) ) ) & ( ! is_null ( ($b = $prestamoB->getIdEmpresaPresta()) ) ) ){
 				$sql .= " id_empresa_presta >= ? AND id_empresa_presta <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_empresa_presta = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $prestamoA->getIdSucursalPresta()) !== NULL) & ( ($b = $prestamoB->getIdSucursalPresta()) !== NULL) ){
+		if( ( !is_null (($a = $prestamoA->getIdSucursalPresta()) ) ) & ( ! is_null ( ($b = $prestamoB->getIdSucursalPresta()) ) ) ){
 				$sql .= " id_sucursal_presta >= ? AND id_sucursal_presta <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_sucursal_presta = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $prestamoA->getIdUsuario()) !== NULL) & ( ($b = $prestamoB->getIdUsuario()) !== NULL) ){
+		if( ( !is_null (($a = $prestamoA->getIdUsuario()) ) ) & ( ! is_null ( ($b = $prestamoB->getIdUsuario()) ) ) ){
 				$sql .= " id_usuario >= ? AND id_usuario <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_usuario = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $prestamoA->getMonto()) !== NULL) & ( ($b = $prestamoB->getMonto()) !== NULL) ){
+		if( ( !is_null (($a = $prestamoA->getMonto()) ) ) & ( ! is_null ( ($b = $prestamoB->getMonto()) ) ) ){
 				$sql .= " monto >= ? AND monto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " monto = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $prestamoA->getSaldo()) !== NULL) & ( ($b = $prestamoB->getSaldo()) !== NULL) ){
+		if( ( !is_null (($a = $prestamoA->getSaldo()) ) ) & ( ! is_null ( ($b = $prestamoB->getSaldo()) ) ) ){
 				$sql .= " saldo >= ? AND saldo <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " saldo = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $prestamoA->getInteresMensual()) !== NULL) & ( ($b = $prestamoB->getInteresMensual()) !== NULL) ){
+		if( ( !is_null (($a = $prestamoA->getInteresMensual()) ) ) & ( ! is_null ( ($b = $prestamoB->getInteresMensual()) ) ) ){
 				$sql .= " interes_mensual >= ? AND interes_mensual <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " interes_mensual = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $prestamoA->getFecha()) !== NULL) & ( ($b = $prestamoB->getFecha()) !== NULL) ){
+		if( ( !is_null (($a = $prestamoA->getFecha()) ) ) & ( ! is_null ( ($b = $prestamoB->getFecha()) ) ) ){
 				$sql .= " fecha >= ? AND fecha <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " fecha = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -440,7 +440,7 @@ abstract class PrestamoDAOBase extends DAO
 	  **/
 	public static final function delete( &$prestamo )
 	{
-		if(self::getByPK($prestamo->getIdPrestamo()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($prestamo->getIdPrestamo()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM prestamo WHERE  id_prestamo = ?;";
 		$params = array( $prestamo->getIdPrestamo() );
 		global $conn;

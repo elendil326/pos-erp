@@ -47,7 +47,7 @@ abstract class ImpresoraCajaDAOBase extends DAO
 	  **/
 	public static final function save( &$impresora_caja )
 	{
-		if(  self::getByPK(  $impresora_caja->getIdImpresora() , $impresora_caja->getIdCaja() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $impresora_caja->getIdImpresora() , $impresora_caja->getIdCaja() ) ) )
 		{
 			try{ return ImpresoraCajaDAOBase::update( $impresora_caja) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -99,9 +99,9 @@ abstract class ImpresoraCajaDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from impresora_caja";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -147,19 +147,19 @@ abstract class ImpresoraCajaDAOBase extends DAO
 	{
 		$sql = "SELECT * from impresora_caja WHERE ("; 
 		$val = array();
-		if( $impresora_caja->getIdImpresora() != NULL){
+		if( ! is_null( $impresora_caja->getIdImpresora() ) ){
 			$sql .= " id_impresora = ? AND";
 			array_push( $val, $impresora_caja->getIdImpresora() );
 		}
 
-		if( $impresora_caja->getIdCaja() != NULL){
+		if( ! is_null( $impresora_caja->getIdCaja() ) ){
 			$sql .= " id_caja = ? AND";
 			array_push( $val, $impresora_caja->getIdCaja() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -258,30 +258,30 @@ abstract class ImpresoraCajaDAOBase extends DAO
 	{
 		$sql = "SELECT * from impresora_caja WHERE ("; 
 		$val = array();
-		if( (($a = $impresora_cajaA->getIdImpresora()) !== NULL) & ( ($b = $impresora_cajaB->getIdImpresora()) !== NULL) ){
+		if( ( !is_null (($a = $impresora_cajaA->getIdImpresora()) ) ) & ( ! is_null ( ($b = $impresora_cajaB->getIdImpresora()) ) ) ){
 				$sql .= " id_impresora >= ? AND id_impresora <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_impresora = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $impresora_cajaA->getIdCaja()) !== NULL) & ( ($b = $impresora_cajaB->getIdCaja()) !== NULL) ){
+		if( ( !is_null (($a = $impresora_cajaA->getIdCaja()) ) ) & ( ! is_null ( ($b = $impresora_cajaB->getIdCaja()) ) ) ){
 				$sql .= " id_caja >= ? AND id_caja <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_caja = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -310,7 +310,7 @@ abstract class ImpresoraCajaDAOBase extends DAO
 	  **/
 	public static final function delete( &$impresora_caja )
 	{
-		if(self::getByPK($impresora_caja->getIdImpresora(), $impresora_caja->getIdCaja()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($impresora_caja->getIdImpresora(), $impresora_caja->getIdCaja()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM impresora_caja WHERE  id_impresora = ? AND id_caja = ?;";
 		$params = array( $impresora_caja->getIdImpresora(), $impresora_caja->getIdCaja() );
 		global $conn;

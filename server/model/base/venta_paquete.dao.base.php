@@ -47,7 +47,7 @@ abstract class VentaPaqueteDAOBase extends DAO
 	  **/
 	public static final function save( &$venta_paquete )
 	{
-		if(  self::getByPK(  $venta_paquete->getIdVenta() , $venta_paquete->getIdPaquete() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $venta_paquete->getIdVenta() , $venta_paquete->getIdPaquete() ) ) )
 		{
 			try{ return VentaPaqueteDAOBase::update( $venta_paquete) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -99,9 +99,9 @@ abstract class VentaPaqueteDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from venta_paquete";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -147,34 +147,34 @@ abstract class VentaPaqueteDAOBase extends DAO
 	{
 		$sql = "SELECT * from venta_paquete WHERE ("; 
 		$val = array();
-		if( $venta_paquete->getIdVenta() != NULL){
+		if( ! is_null( $venta_paquete->getIdVenta() ) ){
 			$sql .= " id_venta = ? AND";
 			array_push( $val, $venta_paquete->getIdVenta() );
 		}
 
-		if( $venta_paquete->getIdPaquete() != NULL){
+		if( ! is_null( $venta_paquete->getIdPaquete() ) ){
 			$sql .= " id_paquete = ? AND";
 			array_push( $val, $venta_paquete->getIdPaquete() );
 		}
 
-		if( $venta_paquete->getCantidad() != NULL){
+		if( ! is_null( $venta_paquete->getCantidad() ) ){
 			$sql .= " cantidad = ? AND";
 			array_push( $val, $venta_paquete->getCantidad() );
 		}
 
-		if( $venta_paquete->getPrecio() != NULL){
+		if( ! is_null( $venta_paquete->getPrecio() ) ){
 			$sql .= " precio = ? AND";
 			array_push( $val, $venta_paquete->getPrecio() );
 		}
 
-		if( $venta_paquete->getDescuento() != NULL){
+		if( ! is_null( $venta_paquete->getDescuento() ) ){
 			$sql .= " descuento = ? AND";
 			array_push( $val, $venta_paquete->getDescuento() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -286,63 +286,63 @@ abstract class VentaPaqueteDAOBase extends DAO
 	{
 		$sql = "SELECT * from venta_paquete WHERE ("; 
 		$val = array();
-		if( (($a = $venta_paqueteA->getIdVenta()) !== NULL) & ( ($b = $venta_paqueteB->getIdVenta()) !== NULL) ){
+		if( ( !is_null (($a = $venta_paqueteA->getIdVenta()) ) ) & ( ! is_null ( ($b = $venta_paqueteB->getIdVenta()) ) ) ){
 				$sql .= " id_venta >= ? AND id_venta <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_venta = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $venta_paqueteA->getIdPaquete()) !== NULL) & ( ($b = $venta_paqueteB->getIdPaquete()) !== NULL) ){
+		if( ( !is_null (($a = $venta_paqueteA->getIdPaquete()) ) ) & ( ! is_null ( ($b = $venta_paqueteB->getIdPaquete()) ) ) ){
 				$sql .= " id_paquete >= ? AND id_paquete <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_paquete = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $venta_paqueteA->getCantidad()) !== NULL) & ( ($b = $venta_paqueteB->getCantidad()) !== NULL) ){
+		if( ( !is_null (($a = $venta_paqueteA->getCantidad()) ) ) & ( ! is_null ( ($b = $venta_paqueteB->getCantidad()) ) ) ){
 				$sql .= " cantidad >= ? AND cantidad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " cantidad = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $venta_paqueteA->getPrecio()) !== NULL) & ( ($b = $venta_paqueteB->getPrecio()) !== NULL) ){
+		if( ( !is_null (($a = $venta_paqueteA->getPrecio()) ) ) & ( ! is_null ( ($b = $venta_paqueteB->getPrecio()) ) ) ){
 				$sql .= " precio >= ? AND precio <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " precio = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $venta_paqueteA->getDescuento()) !== NULL) & ( ($b = $venta_paqueteB->getDescuento()) !== NULL) ){
+		if( ( !is_null (($a = $venta_paqueteA->getDescuento()) ) ) & ( ! is_null ( ($b = $venta_paqueteB->getDescuento()) ) ) ){
 				$sql .= " descuento >= ? AND descuento <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " descuento = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -371,7 +371,7 @@ abstract class VentaPaqueteDAOBase extends DAO
 	  **/
 	public static final function delete( &$venta_paquete )
 	{
-		if(self::getByPK($venta_paquete->getIdVenta(), $venta_paquete->getIdPaquete()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($venta_paquete->getIdVenta(), $venta_paquete->getIdPaquete()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM venta_paquete WHERE  id_venta = ? AND id_paquete = ?;";
 		$params = array( $venta_paquete->getIdVenta(), $venta_paquete->getIdPaquete() );
 		global $conn;

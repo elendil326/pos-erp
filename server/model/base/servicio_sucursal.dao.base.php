@@ -47,7 +47,7 @@ abstract class ServicioSucursalDAOBase extends DAO
 	  **/
 	public static final function save( &$servicio_sucursal )
 	{
-		if(  self::getByPK(  $servicio_sucursal->getIdServicio() , $servicio_sucursal->getIdSucursal() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $servicio_sucursal->getIdServicio() , $servicio_sucursal->getIdSucursal() ) ) )
 		{
 			try{ return ServicioSucursalDAOBase::update( $servicio_sucursal) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -99,9 +99,9 @@ abstract class ServicioSucursalDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from servicio_sucursal";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -147,29 +147,29 @@ abstract class ServicioSucursalDAOBase extends DAO
 	{
 		$sql = "SELECT * from servicio_sucursal WHERE ("; 
 		$val = array();
-		if( $servicio_sucursal->getIdServicio() != NULL){
+		if( ! is_null( $servicio_sucursal->getIdServicio() ) ){
 			$sql .= " id_servicio = ? AND";
 			array_push( $val, $servicio_sucursal->getIdServicio() );
 		}
 
-		if( $servicio_sucursal->getIdSucursal() != NULL){
+		if( ! is_null( $servicio_sucursal->getIdSucursal() ) ){
 			$sql .= " id_sucursal = ? AND";
 			array_push( $val, $servicio_sucursal->getIdSucursal() );
 		}
 
-		if( $servicio_sucursal->getPrecioUtilidad() != NULL){
+		if( ! is_null( $servicio_sucursal->getPrecioUtilidad() ) ){
 			$sql .= " precio_utilidad = ? AND";
 			array_push( $val, $servicio_sucursal->getPrecioUtilidad() );
 		}
 
-		if( $servicio_sucursal->getEsMargenUtilidad() != NULL){
+		if( ! is_null( $servicio_sucursal->getEsMargenUtilidad() ) ){
 			$sql .= " es_margen_utilidad = ? AND";
 			array_push( $val, $servicio_sucursal->getEsMargenUtilidad() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -279,52 +279,52 @@ abstract class ServicioSucursalDAOBase extends DAO
 	{
 		$sql = "SELECT * from servicio_sucursal WHERE ("; 
 		$val = array();
-		if( (($a = $servicio_sucursalA->getIdServicio()) !== NULL) & ( ($b = $servicio_sucursalB->getIdServicio()) !== NULL) ){
+		if( ( !is_null (($a = $servicio_sucursalA->getIdServicio()) ) ) & ( ! is_null ( ($b = $servicio_sucursalB->getIdServicio()) ) ) ){
 				$sql .= " id_servicio >= ? AND id_servicio <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_servicio = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $servicio_sucursalA->getIdSucursal()) !== NULL) & ( ($b = $servicio_sucursalB->getIdSucursal()) !== NULL) ){
+		if( ( !is_null (($a = $servicio_sucursalA->getIdSucursal()) ) ) & ( ! is_null ( ($b = $servicio_sucursalB->getIdSucursal()) ) ) ){
 				$sql .= " id_sucursal >= ? AND id_sucursal <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_sucursal = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $servicio_sucursalA->getPrecioUtilidad()) !== NULL) & ( ($b = $servicio_sucursalB->getPrecioUtilidad()) !== NULL) ){
+		if( ( !is_null (($a = $servicio_sucursalA->getPrecioUtilidad()) ) ) & ( ! is_null ( ($b = $servicio_sucursalB->getPrecioUtilidad()) ) ) ){
 				$sql .= " precio_utilidad >= ? AND precio_utilidad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " precio_utilidad = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $servicio_sucursalA->getEsMargenUtilidad()) !== NULL) & ( ($b = $servicio_sucursalB->getEsMargenUtilidad()) !== NULL) ){
+		if( ( !is_null (($a = $servicio_sucursalA->getEsMargenUtilidad()) ) ) & ( ! is_null ( ($b = $servicio_sucursalB->getEsMargenUtilidad()) ) ) ){
 				$sql .= " es_margen_utilidad >= ? AND es_margen_utilidad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " es_margen_utilidad = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -353,7 +353,7 @@ abstract class ServicioSucursalDAOBase extends DAO
 	  **/
 	public static final function delete( &$servicio_sucursal )
 	{
-		if(self::getByPK($servicio_sucursal->getIdServicio(), $servicio_sucursal->getIdSucursal()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($servicio_sucursal->getIdServicio(), $servicio_sucursal->getIdSucursal()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM servicio_sucursal WHERE  id_servicio = ? AND id_sucursal = ?;";
 		$params = array( $servicio_sucursal->getIdServicio(), $servicio_sucursal->getIdSucursal() );
 		global $conn;

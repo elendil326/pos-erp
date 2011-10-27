@@ -44,7 +44,7 @@ abstract class ServicioDAOBase extends DAO
 	  **/
 	public static final function save( &$servicio )
 	{
-		if(  self::getByPK(  $servicio->getIdServicio() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $servicio->getIdServicio() ) ) )
 		{
 			try{ return ServicioDAOBase::update( $servicio) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -96,9 +96,9 @@ abstract class ServicioDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from servicio";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -143,74 +143,74 @@ abstract class ServicioDAOBase extends DAO
 	{
 		$sql = "SELECT * from servicio WHERE ("; 
 		$val = array();
-		if( $servicio->getIdServicio() != NULL){
+		if( ! is_null( $servicio->getIdServicio() ) ){
 			$sql .= " id_servicio = ? AND";
 			array_push( $val, $servicio->getIdServicio() );
 		}
 
-		if( $servicio->getNombreServicio() != NULL){
+		if( ! is_null( $servicio->getNombreServicio() ) ){
 			$sql .= " nombre_servicio = ? AND";
 			array_push( $val, $servicio->getNombreServicio() );
 		}
 
-		if( $servicio->getMetodoCosteo() != NULL){
+		if( ! is_null( $servicio->getMetodoCosteo() ) ){
 			$sql .= " metodo_costeo = ? AND";
 			array_push( $val, $servicio->getMetodoCosteo() );
 		}
 
-		if( $servicio->getCodigoServicio() != NULL){
+		if( ! is_null( $servicio->getCodigoServicio() ) ){
 			$sql .= " codigo_servicio = ? AND";
 			array_push( $val, $servicio->getCodigoServicio() );
 		}
 
-		if( $servicio->getCompraEnMostrador() != NULL){
+		if( ! is_null( $servicio->getCompraEnMostrador() ) ){
 			$sql .= " compra_en_mostrador = ? AND";
 			array_push( $val, $servicio->getCompraEnMostrador() );
 		}
 
-		if( $servicio->getActivo() != NULL){
+		if( ! is_null( $servicio->getActivo() ) ){
 			$sql .= " activo = ? AND";
 			array_push( $val, $servicio->getActivo() );
 		}
 
-		if( $servicio->getMargenDeUtilidad() != NULL){
+		if( ! is_null( $servicio->getMargenDeUtilidad() ) ){
 			$sql .= " margen_de_utilidad = ? AND";
 			array_push( $val, $servicio->getMargenDeUtilidad() );
 		}
 
-		if( $servicio->getDescripcionServicio() != NULL){
+		if( ! is_null( $servicio->getDescripcionServicio() ) ){
 			$sql .= " descripcion_servicio = ? AND";
 			array_push( $val, $servicio->getDescripcionServicio() );
 		}
 
-		if( $servicio->getCostoEstandar() != NULL){
+		if( ! is_null( $servicio->getCostoEstandar() ) ){
 			$sql .= " costo_estandar = ? AND";
 			array_push( $val, $servicio->getCostoEstandar() );
 		}
 
-		if( $servicio->getGarantia() != NULL){
+		if( ! is_null( $servicio->getGarantia() ) ){
 			$sql .= " garantia = ? AND";
 			array_push( $val, $servicio->getGarantia() );
 		}
 
-		if( $servicio->getControlExistencia() != NULL){
+		if( ! is_null( $servicio->getControlExistencia() ) ){
 			$sql .= " control_existencia = ? AND";
 			array_push( $val, $servicio->getControlExistencia() );
 		}
 
-		if( $servicio->getFotoServicio() != NULL){
+		if( ! is_null( $servicio->getFotoServicio() ) ){
 			$sql .= " foto_servicio = ? AND";
 			array_push( $val, $servicio->getFotoServicio() );
 		}
 
-		if( $servicio->getPrecio() != NULL){
+		if( ! is_null( $servicio->getPrecio() ) ){
 			$sql .= " precio = ? AND";
 			array_push( $val, $servicio->getPrecio() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -339,151 +339,151 @@ abstract class ServicioDAOBase extends DAO
 	{
 		$sql = "SELECT * from servicio WHERE ("; 
 		$val = array();
-		if( (($a = $servicioA->getIdServicio()) !== NULL) & ( ($b = $servicioB->getIdServicio()) !== NULL) ){
+		if( ( !is_null (($a = $servicioA->getIdServicio()) ) ) & ( ! is_null ( ($b = $servicioB->getIdServicio()) ) ) ){
 				$sql .= " id_servicio >= ? AND id_servicio <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_servicio = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $servicioA->getNombreServicio()) !== NULL) & ( ($b = $servicioB->getNombreServicio()) !== NULL) ){
+		if( ( !is_null (($a = $servicioA->getNombreServicio()) ) ) & ( ! is_null ( ($b = $servicioB->getNombreServicio()) ) ) ){
 				$sql .= " nombre_servicio >= ? AND nombre_servicio <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " nombre_servicio = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $servicioA->getMetodoCosteo()) !== NULL) & ( ($b = $servicioB->getMetodoCosteo()) !== NULL) ){
+		if( ( !is_null (($a = $servicioA->getMetodoCosteo()) ) ) & ( ! is_null ( ($b = $servicioB->getMetodoCosteo()) ) ) ){
 				$sql .= " metodo_costeo >= ? AND metodo_costeo <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " metodo_costeo = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $servicioA->getCodigoServicio()) !== NULL) & ( ($b = $servicioB->getCodigoServicio()) !== NULL) ){
+		if( ( !is_null (($a = $servicioA->getCodigoServicio()) ) ) & ( ! is_null ( ($b = $servicioB->getCodigoServicio()) ) ) ){
 				$sql .= " codigo_servicio >= ? AND codigo_servicio <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " codigo_servicio = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $servicioA->getCompraEnMostrador()) !== NULL) & ( ($b = $servicioB->getCompraEnMostrador()) !== NULL) ){
+		if( ( !is_null (($a = $servicioA->getCompraEnMostrador()) ) ) & ( ! is_null ( ($b = $servicioB->getCompraEnMostrador()) ) ) ){
 				$sql .= " compra_en_mostrador >= ? AND compra_en_mostrador <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " compra_en_mostrador = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $servicioA->getActivo()) !== NULL) & ( ($b = $servicioB->getActivo()) !== NULL) ){
+		if( ( !is_null (($a = $servicioA->getActivo()) ) ) & ( ! is_null ( ($b = $servicioB->getActivo()) ) ) ){
 				$sql .= " activo >= ? AND activo <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " activo = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $servicioA->getMargenDeUtilidad()) !== NULL) & ( ($b = $servicioB->getMargenDeUtilidad()) !== NULL) ){
+		if( ( !is_null (($a = $servicioA->getMargenDeUtilidad()) ) ) & ( ! is_null ( ($b = $servicioB->getMargenDeUtilidad()) ) ) ){
 				$sql .= " margen_de_utilidad >= ? AND margen_de_utilidad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " margen_de_utilidad = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $servicioA->getDescripcionServicio()) !== NULL) & ( ($b = $servicioB->getDescripcionServicio()) !== NULL) ){
+		if( ( !is_null (($a = $servicioA->getDescripcionServicio()) ) ) & ( ! is_null ( ($b = $servicioB->getDescripcionServicio()) ) ) ){
 				$sql .= " descripcion_servicio >= ? AND descripcion_servicio <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " descripcion_servicio = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $servicioA->getCostoEstandar()) !== NULL) & ( ($b = $servicioB->getCostoEstandar()) !== NULL) ){
+		if( ( !is_null (($a = $servicioA->getCostoEstandar()) ) ) & ( ! is_null ( ($b = $servicioB->getCostoEstandar()) ) ) ){
 				$sql .= " costo_estandar >= ? AND costo_estandar <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " costo_estandar = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $servicioA->getGarantia()) !== NULL) & ( ($b = $servicioB->getGarantia()) !== NULL) ){
+		if( ( !is_null (($a = $servicioA->getGarantia()) ) ) & ( ! is_null ( ($b = $servicioB->getGarantia()) ) ) ){
 				$sql .= " garantia >= ? AND garantia <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " garantia = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $servicioA->getControlExistencia()) !== NULL) & ( ($b = $servicioB->getControlExistencia()) !== NULL) ){
+		if( ( !is_null (($a = $servicioA->getControlExistencia()) ) ) & ( ! is_null ( ($b = $servicioB->getControlExistencia()) ) ) ){
 				$sql .= " control_existencia >= ? AND control_existencia <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " control_existencia = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $servicioA->getFotoServicio()) !== NULL) & ( ($b = $servicioB->getFotoServicio()) !== NULL) ){
+		if( ( !is_null (($a = $servicioA->getFotoServicio()) ) ) & ( ! is_null ( ($b = $servicioB->getFotoServicio()) ) ) ){
 				$sql .= " foto_servicio >= ? AND foto_servicio <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " foto_servicio = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $servicioA->getPrecio()) !== NULL) & ( ($b = $servicioB->getPrecio()) !== NULL) ){
+		if( ( !is_null (($a = $servicioA->getPrecio()) ) ) & ( ! is_null ( ($b = $servicioB->getPrecio()) ) ) ){
 				$sql .= " precio >= ? AND precio <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " precio = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -512,7 +512,7 @@ abstract class ServicioDAOBase extends DAO
 	  **/
 	public static final function delete( &$servicio )
 	{
-		if(self::getByPK($servicio->getIdServicio()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($servicio->getIdServicio()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM servicio WHERE  id_servicio = ?;";
 		$params = array( $servicio->getIdServicio() );
 		global $conn;

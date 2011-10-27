@@ -47,7 +47,7 @@ abstract class PrecioPaqueteUsuarioDAOBase extends DAO
 	  **/
 	public static final function save( &$precio_paquete_usuario )
 	{
-		if(  self::getByPK(  $precio_paquete_usuario->getIdPaquete() , $precio_paquete_usuario->getIdUsuario() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $precio_paquete_usuario->getIdPaquete() , $precio_paquete_usuario->getIdUsuario() ) ) )
 		{
 			try{ return PrecioPaqueteUsuarioDAOBase::update( $precio_paquete_usuario) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -99,9 +99,9 @@ abstract class PrecioPaqueteUsuarioDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from precio_paquete_usuario";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -147,29 +147,29 @@ abstract class PrecioPaqueteUsuarioDAOBase extends DAO
 	{
 		$sql = "SELECT * from precio_paquete_usuario WHERE ("; 
 		$val = array();
-		if( $precio_paquete_usuario->getIdPaquete() != NULL){
+		if( ! is_null( $precio_paquete_usuario->getIdPaquete() ) ){
 			$sql .= " id_paquete = ? AND";
 			array_push( $val, $precio_paquete_usuario->getIdPaquete() );
 		}
 
-		if( $precio_paquete_usuario->getIdUsuario() != NULL){
+		if( ! is_null( $precio_paquete_usuario->getIdUsuario() ) ){
 			$sql .= " id_usuario = ? AND";
 			array_push( $val, $precio_paquete_usuario->getIdUsuario() );
 		}
 
-		if( $precio_paquete_usuario->getPrecioUtilidad() != NULL){
+		if( ! is_null( $precio_paquete_usuario->getPrecioUtilidad() ) ){
 			$sql .= " precio_utilidad = ? AND";
 			array_push( $val, $precio_paquete_usuario->getPrecioUtilidad() );
 		}
 
-		if( $precio_paquete_usuario->getEsMargenUtilidad() != NULL){
+		if( ! is_null( $precio_paquete_usuario->getEsMargenUtilidad() ) ){
 			$sql .= " es_margen_utilidad = ? AND";
 			array_push( $val, $precio_paquete_usuario->getEsMargenUtilidad() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -279,52 +279,52 @@ abstract class PrecioPaqueteUsuarioDAOBase extends DAO
 	{
 		$sql = "SELECT * from precio_paquete_usuario WHERE ("; 
 		$val = array();
-		if( (($a = $precio_paquete_usuarioA->getIdPaquete()) !== NULL) & ( ($b = $precio_paquete_usuarioB->getIdPaquete()) !== NULL) ){
+		if( ( !is_null (($a = $precio_paquete_usuarioA->getIdPaquete()) ) ) & ( ! is_null ( ($b = $precio_paquete_usuarioB->getIdPaquete()) ) ) ){
 				$sql .= " id_paquete >= ? AND id_paquete <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_paquete = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $precio_paquete_usuarioA->getIdUsuario()) !== NULL) & ( ($b = $precio_paquete_usuarioB->getIdUsuario()) !== NULL) ){
+		if( ( !is_null (($a = $precio_paquete_usuarioA->getIdUsuario()) ) ) & ( ! is_null ( ($b = $precio_paquete_usuarioB->getIdUsuario()) ) ) ){
 				$sql .= " id_usuario >= ? AND id_usuario <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_usuario = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $precio_paquete_usuarioA->getPrecioUtilidad()) !== NULL) & ( ($b = $precio_paquete_usuarioB->getPrecioUtilidad()) !== NULL) ){
+		if( ( !is_null (($a = $precio_paquete_usuarioA->getPrecioUtilidad()) ) ) & ( ! is_null ( ($b = $precio_paquete_usuarioB->getPrecioUtilidad()) ) ) ){
 				$sql .= " precio_utilidad >= ? AND precio_utilidad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " precio_utilidad = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $precio_paquete_usuarioA->getEsMargenUtilidad()) !== NULL) & ( ($b = $precio_paquete_usuarioB->getEsMargenUtilidad()) !== NULL) ){
+		if( ( !is_null (($a = $precio_paquete_usuarioA->getEsMargenUtilidad()) ) ) & ( ! is_null ( ($b = $precio_paquete_usuarioB->getEsMargenUtilidad()) ) ) ){
 				$sql .= " es_margen_utilidad >= ? AND es_margen_utilidad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " es_margen_utilidad = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -353,7 +353,7 @@ abstract class PrecioPaqueteUsuarioDAOBase extends DAO
 	  **/
 	public static final function delete( &$precio_paquete_usuario )
 	{
-		if(self::getByPK($precio_paquete_usuario->getIdPaquete(), $precio_paquete_usuario->getIdUsuario()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($precio_paquete_usuario->getIdPaquete(), $precio_paquete_usuario->getIdUsuario()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM precio_paquete_usuario WHERE  id_paquete = ? AND id_usuario = ?;";
 		$params = array( $precio_paquete_usuario->getIdPaquete(), $precio_paquete_usuario->getIdUsuario() );
 		global $conn;

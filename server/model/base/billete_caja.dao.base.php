@@ -47,7 +47,7 @@ abstract class BilleteCajaDAOBase extends DAO
 	  **/
 	public static final function save( &$billete_caja )
 	{
-		if(  self::getByPK(  $billete_caja->getIdBillete() , $billete_caja->getIdCaja() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $billete_caja->getIdBillete() , $billete_caja->getIdCaja() ) ) )
 		{
 			try{ return BilleteCajaDAOBase::update( $billete_caja) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -99,9 +99,9 @@ abstract class BilleteCajaDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from billete_caja";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -147,24 +147,24 @@ abstract class BilleteCajaDAOBase extends DAO
 	{
 		$sql = "SELECT * from billete_caja WHERE ("; 
 		$val = array();
-		if( $billete_caja->getIdBillete() != NULL){
+		if( ! is_null( $billete_caja->getIdBillete() ) ){
 			$sql .= " id_billete = ? AND";
 			array_push( $val, $billete_caja->getIdBillete() );
 		}
 
-		if( $billete_caja->getIdCaja() != NULL){
+		if( ! is_null( $billete_caja->getIdCaja() ) ){
 			$sql .= " id_caja = ? AND";
 			array_push( $val, $billete_caja->getIdCaja() );
 		}
 
-		if( $billete_caja->getCantidad() != NULL){
+		if( ! is_null( $billete_caja->getCantidad() ) ){
 			$sql .= " cantidad = ? AND";
 			array_push( $val, $billete_caja->getCantidad() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -272,41 +272,41 @@ abstract class BilleteCajaDAOBase extends DAO
 	{
 		$sql = "SELECT * from billete_caja WHERE ("; 
 		$val = array();
-		if( (($a = $billete_cajaA->getIdBillete()) !== NULL) & ( ($b = $billete_cajaB->getIdBillete()) !== NULL) ){
+		if( ( !is_null (($a = $billete_cajaA->getIdBillete()) ) ) & ( ! is_null ( ($b = $billete_cajaB->getIdBillete()) ) ) ){
 				$sql .= " id_billete >= ? AND id_billete <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_billete = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $billete_cajaA->getIdCaja()) !== NULL) & ( ($b = $billete_cajaB->getIdCaja()) !== NULL) ){
+		if( ( !is_null (($a = $billete_cajaA->getIdCaja()) ) ) & ( ! is_null ( ($b = $billete_cajaB->getIdCaja()) ) ) ){
 				$sql .= " id_caja >= ? AND id_caja <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_caja = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $billete_cajaA->getCantidad()) !== NULL) & ( ($b = $billete_cajaB->getCantidad()) !== NULL) ){
+		if( ( !is_null (($a = $billete_cajaA->getCantidad()) ) ) & ( ! is_null ( ($b = $billete_cajaB->getCantidad()) ) ) ){
 				$sql .= " cantidad >= ? AND cantidad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " cantidad = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -335,7 +335,7 @@ abstract class BilleteCajaDAOBase extends DAO
 	  **/
 	public static final function delete( &$billete_caja )
 	{
-		if(self::getByPK($billete_caja->getIdBillete(), $billete_caja->getIdCaja()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($billete_caja->getIdBillete(), $billete_caja->getIdCaja()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM billete_caja WHERE  id_billete = ? AND id_caja = ?;";
 		$params = array( $billete_caja->getIdBillete(), $billete_caja->getIdCaja() );
 		global $conn;

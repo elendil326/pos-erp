@@ -47,7 +47,7 @@ abstract class PaqueteSucursalDAOBase extends DAO
 	  **/
 	public static final function save( &$paquete_sucursal )
 	{
-		if(  self::getByPK(  $paquete_sucursal->getIdPaquete() , $paquete_sucursal->getIdSucursal() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $paquete_sucursal->getIdPaquete() , $paquete_sucursal->getIdSucursal() ) ) )
 		{
 			try{ return PaqueteSucursalDAOBase::update( $paquete_sucursal) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -99,9 +99,9 @@ abstract class PaqueteSucursalDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from paquete_sucursal";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -147,29 +147,29 @@ abstract class PaqueteSucursalDAOBase extends DAO
 	{
 		$sql = "SELECT * from paquete_sucursal WHERE ("; 
 		$val = array();
-		if( $paquete_sucursal->getIdPaquete() != NULL){
+		if( ! is_null( $paquete_sucursal->getIdPaquete() ) ){
 			$sql .= " id_paquete = ? AND";
 			array_push( $val, $paquete_sucursal->getIdPaquete() );
 		}
 
-		if( $paquete_sucursal->getIdSucursal() != NULL){
+		if( ! is_null( $paquete_sucursal->getIdSucursal() ) ){
 			$sql .= " id_sucursal = ? AND";
 			array_push( $val, $paquete_sucursal->getIdSucursal() );
 		}
 
-		if( $paquete_sucursal->getPrecioUtilidad() != NULL){
+		if( ! is_null( $paquete_sucursal->getPrecioUtilidad() ) ){
 			$sql .= " precio_utilidad = ? AND";
 			array_push( $val, $paquete_sucursal->getPrecioUtilidad() );
 		}
 
-		if( $paquete_sucursal->getEsMargenUtilidad() != NULL){
+		if( ! is_null( $paquete_sucursal->getEsMargenUtilidad() ) ){
 			$sql .= " es_margen_utilidad = ? AND";
 			array_push( $val, $paquete_sucursal->getEsMargenUtilidad() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -279,52 +279,52 @@ abstract class PaqueteSucursalDAOBase extends DAO
 	{
 		$sql = "SELECT * from paquete_sucursal WHERE ("; 
 		$val = array();
-		if( (($a = $paquete_sucursalA->getIdPaquete()) !== NULL) & ( ($b = $paquete_sucursalB->getIdPaquete()) !== NULL) ){
+		if( ( !is_null (($a = $paquete_sucursalA->getIdPaquete()) ) ) & ( ! is_null ( ($b = $paquete_sucursalB->getIdPaquete()) ) ) ){
 				$sql .= " id_paquete >= ? AND id_paquete <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_paquete = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $paquete_sucursalA->getIdSucursal()) !== NULL) & ( ($b = $paquete_sucursalB->getIdSucursal()) !== NULL) ){
+		if( ( !is_null (($a = $paquete_sucursalA->getIdSucursal()) ) ) & ( ! is_null ( ($b = $paquete_sucursalB->getIdSucursal()) ) ) ){
 				$sql .= " id_sucursal >= ? AND id_sucursal <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_sucursal = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $paquete_sucursalA->getPrecioUtilidad()) !== NULL) & ( ($b = $paquete_sucursalB->getPrecioUtilidad()) !== NULL) ){
+		if( ( !is_null (($a = $paquete_sucursalA->getPrecioUtilidad()) ) ) & ( ! is_null ( ($b = $paquete_sucursalB->getPrecioUtilidad()) ) ) ){
 				$sql .= " precio_utilidad >= ? AND precio_utilidad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " precio_utilidad = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $paquete_sucursalA->getEsMargenUtilidad()) !== NULL) & ( ($b = $paquete_sucursalB->getEsMargenUtilidad()) !== NULL) ){
+		if( ( !is_null (($a = $paquete_sucursalA->getEsMargenUtilidad()) ) ) & ( ! is_null ( ($b = $paquete_sucursalB->getEsMargenUtilidad()) ) ) ){
 				$sql .= " es_margen_utilidad >= ? AND es_margen_utilidad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " es_margen_utilidad = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -353,7 +353,7 @@ abstract class PaqueteSucursalDAOBase extends DAO
 	  **/
 	public static final function delete( &$paquete_sucursal )
 	{
-		if(self::getByPK($paquete_sucursal->getIdPaquete(), $paquete_sucursal->getIdSucursal()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($paquete_sucursal->getIdPaquete(), $paquete_sucursal->getIdSucursal()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM paquete_sucursal WHERE  id_paquete = ? AND id_sucursal = ?;";
 		$params = array( $paquete_sucursal->getIdPaquete(), $paquete_sucursal->getIdSucursal() );
 		global $conn;

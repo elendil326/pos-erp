@@ -44,7 +44,7 @@ abstract class DireccionDAOBase extends DAO
 	  **/
 	public static final function save( &$direccion )
 	{
-		if(  self::getByPK(  $direccion->getIdDireccion() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $direccion->getIdDireccion() ) ) )
 		{
 			try{ return DireccionDAOBase::update( $direccion) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -96,9 +96,9 @@ abstract class DireccionDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from direccion";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -143,69 +143,69 @@ abstract class DireccionDAOBase extends DAO
 	{
 		$sql = "SELECT * from direccion WHERE ("; 
 		$val = array();
-		if( $direccion->getIdDireccion() != NULL){
+		if( ! is_null( $direccion->getIdDireccion() ) ){
 			$sql .= " id_direccion = ? AND";
 			array_push( $val, $direccion->getIdDireccion() );
 		}
 
-		if( $direccion->getCalle() != NULL){
+		if( ! is_null( $direccion->getCalle() ) ){
 			$sql .= " calle = ? AND";
 			array_push( $val, $direccion->getCalle() );
 		}
 
-		if( $direccion->getNumeroExterior() != NULL){
+		if( ! is_null( $direccion->getNumeroExterior() ) ){
 			$sql .= " numero_exterior = ? AND";
 			array_push( $val, $direccion->getNumeroExterior() );
 		}
 
-		if( $direccion->getNumeroInterior() != NULL){
+		if( ! is_null( $direccion->getNumeroInterior() ) ){
 			$sql .= " numero_interior = ? AND";
 			array_push( $val, $direccion->getNumeroInterior() );
 		}
 
-		if( $direccion->getReferencia() != NULL){
+		if( ! is_null( $direccion->getReferencia() ) ){
 			$sql .= " referencia = ? AND";
 			array_push( $val, $direccion->getReferencia() );
 		}
 
-		if( $direccion->getColonia() != NULL){
+		if( ! is_null( $direccion->getColonia() ) ){
 			$sql .= " colonia = ? AND";
 			array_push( $val, $direccion->getColonia() );
 		}
 
-		if( $direccion->getIdCiudad() != NULL){
+		if( ! is_null( $direccion->getIdCiudad() ) ){
 			$sql .= " id_ciudad = ? AND";
 			array_push( $val, $direccion->getIdCiudad() );
 		}
 
-		if( $direccion->getCodigoPostal() != NULL){
+		if( ! is_null( $direccion->getCodigoPostal() ) ){
 			$sql .= " codigo_postal = ? AND";
 			array_push( $val, $direccion->getCodigoPostal() );
 		}
 
-		if( $direccion->getTelefono() != NULL){
+		if( ! is_null( $direccion->getTelefono() ) ){
 			$sql .= " telefono = ? AND";
 			array_push( $val, $direccion->getTelefono() );
 		}
 
-		if( $direccion->getTelefono2() != NULL){
+		if( ! is_null( $direccion->getTelefono2() ) ){
 			$sql .= " telefono2 = ? AND";
 			array_push( $val, $direccion->getTelefono2() );
 		}
 
-		if( $direccion->getUltimaModificacion() != NULL){
+		if( ! is_null( $direccion->getUltimaModificacion() ) ){
 			$sql .= " ultima_modificacion = ? AND";
 			array_push( $val, $direccion->getUltimaModificacion() );
 		}
 
-		if( $direccion->getIdUsuarioUltimaModificacion() != NULL){
+		if( ! is_null( $direccion->getIdUsuarioUltimaModificacion() ) ){
 			$sql .= " id_usuario_ultima_modificacion = ? AND";
 			array_push( $val, $direccion->getIdUsuarioUltimaModificacion() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -332,140 +332,140 @@ abstract class DireccionDAOBase extends DAO
 	{
 		$sql = "SELECT * from direccion WHERE ("; 
 		$val = array();
-		if( (($a = $direccionA->getIdDireccion()) !== NULL) & ( ($b = $direccionB->getIdDireccion()) !== NULL) ){
+		if( ( !is_null (($a = $direccionA->getIdDireccion()) ) ) & ( ! is_null ( ($b = $direccionB->getIdDireccion()) ) ) ){
 				$sql .= " id_direccion >= ? AND id_direccion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_direccion = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $direccionA->getCalle()) !== NULL) & ( ($b = $direccionB->getCalle()) !== NULL) ){
+		if( ( !is_null (($a = $direccionA->getCalle()) ) ) & ( ! is_null ( ($b = $direccionB->getCalle()) ) ) ){
 				$sql .= " calle >= ? AND calle <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " calle = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $direccionA->getNumeroExterior()) !== NULL) & ( ($b = $direccionB->getNumeroExterior()) !== NULL) ){
+		if( ( !is_null (($a = $direccionA->getNumeroExterior()) ) ) & ( ! is_null ( ($b = $direccionB->getNumeroExterior()) ) ) ){
 				$sql .= " numero_exterior >= ? AND numero_exterior <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " numero_exterior = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $direccionA->getNumeroInterior()) !== NULL) & ( ($b = $direccionB->getNumeroInterior()) !== NULL) ){
+		if( ( !is_null (($a = $direccionA->getNumeroInterior()) ) ) & ( ! is_null ( ($b = $direccionB->getNumeroInterior()) ) ) ){
 				$sql .= " numero_interior >= ? AND numero_interior <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " numero_interior = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $direccionA->getReferencia()) !== NULL) & ( ($b = $direccionB->getReferencia()) !== NULL) ){
+		if( ( !is_null (($a = $direccionA->getReferencia()) ) ) & ( ! is_null ( ($b = $direccionB->getReferencia()) ) ) ){
 				$sql .= " referencia >= ? AND referencia <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " referencia = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $direccionA->getColonia()) !== NULL) & ( ($b = $direccionB->getColonia()) !== NULL) ){
+		if( ( !is_null (($a = $direccionA->getColonia()) ) ) & ( ! is_null ( ($b = $direccionB->getColonia()) ) ) ){
 				$sql .= " colonia >= ? AND colonia <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " colonia = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $direccionA->getIdCiudad()) !== NULL) & ( ($b = $direccionB->getIdCiudad()) !== NULL) ){
+		if( ( !is_null (($a = $direccionA->getIdCiudad()) ) ) & ( ! is_null ( ($b = $direccionB->getIdCiudad()) ) ) ){
 				$sql .= " id_ciudad >= ? AND id_ciudad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_ciudad = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $direccionA->getCodigoPostal()) !== NULL) & ( ($b = $direccionB->getCodigoPostal()) !== NULL) ){
+		if( ( !is_null (($a = $direccionA->getCodigoPostal()) ) ) & ( ! is_null ( ($b = $direccionB->getCodigoPostal()) ) ) ){
 				$sql .= " codigo_postal >= ? AND codigo_postal <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " codigo_postal = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $direccionA->getTelefono()) !== NULL) & ( ($b = $direccionB->getTelefono()) !== NULL) ){
+		if( ( !is_null (($a = $direccionA->getTelefono()) ) ) & ( ! is_null ( ($b = $direccionB->getTelefono()) ) ) ){
 				$sql .= " telefono >= ? AND telefono <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " telefono = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $direccionA->getTelefono2()) !== NULL) & ( ($b = $direccionB->getTelefono2()) !== NULL) ){
+		if( ( !is_null (($a = $direccionA->getTelefono2()) ) ) & ( ! is_null ( ($b = $direccionB->getTelefono2()) ) ) ){
 				$sql .= " telefono2 >= ? AND telefono2 <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " telefono2 = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $direccionA->getUltimaModificacion()) !== NULL) & ( ($b = $direccionB->getUltimaModificacion()) !== NULL) ){
+		if( ( !is_null (($a = $direccionA->getUltimaModificacion()) ) ) & ( ! is_null ( ($b = $direccionB->getUltimaModificacion()) ) ) ){
 				$sql .= " ultima_modificacion >= ? AND ultima_modificacion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " ultima_modificacion = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $direccionA->getIdUsuarioUltimaModificacion()) !== NULL) & ( ($b = $direccionB->getIdUsuarioUltimaModificacion()) !== NULL) ){
+		if( ( !is_null (($a = $direccionA->getIdUsuarioUltimaModificacion()) ) ) & ( ! is_null ( ($b = $direccionB->getIdUsuarioUltimaModificacion()) ) ) ){
 				$sql .= " id_usuario_ultima_modificacion >= ? AND id_usuario_ultima_modificacion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_usuario_ultima_modificacion = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -494,7 +494,7 @@ abstract class DireccionDAOBase extends DAO
 	  **/
 	public static final function delete( &$direccion )
 	{
-		if(self::getByPK($direccion->getIdDireccion()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($direccion->getIdDireccion()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM direccion WHERE  id_direccion = ?;";
 		$params = array( $direccion->getIdDireccion() );
 		global $conn;

@@ -47,7 +47,7 @@ abstract class RetencionSucursalDAOBase extends DAO
 	  **/
 	public static final function save( &$retencion_sucursal )
 	{
-		if(  self::getByPK(  $retencion_sucursal->getIdRetencion() , $retencion_sucursal->getIdSucursal() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $retencion_sucursal->getIdRetencion() , $retencion_sucursal->getIdSucursal() ) ) )
 		{
 			try{ return RetencionSucursalDAOBase::update( $retencion_sucursal) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -99,9 +99,9 @@ abstract class RetencionSucursalDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from retencion_sucursal";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -147,19 +147,19 @@ abstract class RetencionSucursalDAOBase extends DAO
 	{
 		$sql = "SELECT * from retencion_sucursal WHERE ("; 
 		$val = array();
-		if( $retencion_sucursal->getIdRetencion() != NULL){
+		if( ! is_null( $retencion_sucursal->getIdRetencion() ) ){
 			$sql .= " id_retencion = ? AND";
 			array_push( $val, $retencion_sucursal->getIdRetencion() );
 		}
 
-		if( $retencion_sucursal->getIdSucursal() != NULL){
+		if( ! is_null( $retencion_sucursal->getIdSucursal() ) ){
 			$sql .= " id_sucursal = ? AND";
 			array_push( $val, $retencion_sucursal->getIdSucursal() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -258,30 +258,30 @@ abstract class RetencionSucursalDAOBase extends DAO
 	{
 		$sql = "SELECT * from retencion_sucursal WHERE ("; 
 		$val = array();
-		if( (($a = $retencion_sucursalA->getIdRetencion()) !== NULL) & ( ($b = $retencion_sucursalB->getIdRetencion()) !== NULL) ){
+		if( ( !is_null (($a = $retencion_sucursalA->getIdRetencion()) ) ) & ( ! is_null ( ($b = $retencion_sucursalB->getIdRetencion()) ) ) ){
 				$sql .= " id_retencion >= ? AND id_retencion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_retencion = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $retencion_sucursalA->getIdSucursal()) !== NULL) & ( ($b = $retencion_sucursalB->getIdSucursal()) !== NULL) ){
+		if( ( !is_null (($a = $retencion_sucursalA->getIdSucursal()) ) ) & ( ! is_null ( ($b = $retencion_sucursalB->getIdSucursal()) ) ) ){
 				$sql .= " id_sucursal >= ? AND id_sucursal <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_sucursal = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -310,7 +310,7 @@ abstract class RetencionSucursalDAOBase extends DAO
 	  **/
 	public static final function delete( &$retencion_sucursal )
 	{
-		if(self::getByPK($retencion_sucursal->getIdRetencion(), $retencion_sucursal->getIdSucursal()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($retencion_sucursal->getIdRetencion(), $retencion_sucursal->getIdSucursal()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM retencion_sucursal WHERE  id_retencion = ? AND id_sucursal = ?;";
 		$params = array( $retencion_sucursal->getIdRetencion(), $retencion_sucursal->getIdSucursal() );
 		global $conn;

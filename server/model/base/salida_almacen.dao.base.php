@@ -44,7 +44,7 @@ abstract class SalidaAlmacenDAOBase extends DAO
 	  **/
 	public static final function save( &$salida_almacen )
 	{
-		if(  self::getByPK(  $salida_almacen->getIdSalidaAlmacen() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $salida_almacen->getIdSalidaAlmacen() ) ) )
 		{
 			try{ return SalidaAlmacenDAOBase::update( $salida_almacen) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -96,9 +96,9 @@ abstract class SalidaAlmacenDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from salida_almacen";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -143,34 +143,34 @@ abstract class SalidaAlmacenDAOBase extends DAO
 	{
 		$sql = "SELECT * from salida_almacen WHERE ("; 
 		$val = array();
-		if( $salida_almacen->getIdSalidaAlmacen() != NULL){
+		if( ! is_null( $salida_almacen->getIdSalidaAlmacen() ) ){
 			$sql .= " id_salida_almacen = ? AND";
 			array_push( $val, $salida_almacen->getIdSalidaAlmacen() );
 		}
 
-		if( $salida_almacen->getIdAlmacen() != NULL){
+		if( ! is_null( $salida_almacen->getIdAlmacen() ) ){
 			$sql .= " id_almacen = ? AND";
 			array_push( $val, $salida_almacen->getIdAlmacen() );
 		}
 
-		if( $salida_almacen->getIdUsuario() != NULL){
+		if( ! is_null( $salida_almacen->getIdUsuario() ) ){
 			$sql .= " id_usuario = ? AND";
 			array_push( $val, $salida_almacen->getIdUsuario() );
 		}
 
-		if( $salida_almacen->getFechaRegistro() != NULL){
+		if( ! is_null( $salida_almacen->getFechaRegistro() ) ){
 			$sql .= " fecha_registro = ? AND";
 			array_push( $val, $salida_almacen->getFechaRegistro() );
 		}
 
-		if( $salida_almacen->getMotivo() != NULL){
+		if( ! is_null( $salida_almacen->getMotivo() ) ){
 			$sql .= " motivo = ? AND";
 			array_push( $val, $salida_almacen->getMotivo() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -283,63 +283,63 @@ abstract class SalidaAlmacenDAOBase extends DAO
 	{
 		$sql = "SELECT * from salida_almacen WHERE ("; 
 		$val = array();
-		if( (($a = $salida_almacenA->getIdSalidaAlmacen()) !== NULL) & ( ($b = $salida_almacenB->getIdSalidaAlmacen()) !== NULL) ){
+		if( ( !is_null (($a = $salida_almacenA->getIdSalidaAlmacen()) ) ) & ( ! is_null ( ($b = $salida_almacenB->getIdSalidaAlmacen()) ) ) ){
 				$sql .= " id_salida_almacen >= ? AND id_salida_almacen <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_salida_almacen = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $salida_almacenA->getIdAlmacen()) !== NULL) & ( ($b = $salida_almacenB->getIdAlmacen()) !== NULL) ){
+		if( ( !is_null (($a = $salida_almacenA->getIdAlmacen()) ) ) & ( ! is_null ( ($b = $salida_almacenB->getIdAlmacen()) ) ) ){
 				$sql .= " id_almacen >= ? AND id_almacen <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_almacen = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $salida_almacenA->getIdUsuario()) !== NULL) & ( ($b = $salida_almacenB->getIdUsuario()) !== NULL) ){
+		if( ( !is_null (($a = $salida_almacenA->getIdUsuario()) ) ) & ( ! is_null ( ($b = $salida_almacenB->getIdUsuario()) ) ) ){
 				$sql .= " id_usuario >= ? AND id_usuario <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_usuario = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $salida_almacenA->getFechaRegistro()) !== NULL) & ( ($b = $salida_almacenB->getFechaRegistro()) !== NULL) ){
+		if( ( !is_null (($a = $salida_almacenA->getFechaRegistro()) ) ) & ( ! is_null ( ($b = $salida_almacenB->getFechaRegistro()) ) ) ){
 				$sql .= " fecha_registro >= ? AND fecha_registro <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " fecha_registro = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $salida_almacenA->getMotivo()) !== NULL) & ( ($b = $salida_almacenB->getMotivo()) !== NULL) ){
+		if( ( !is_null (($a = $salida_almacenA->getMotivo()) ) ) & ( ! is_null ( ($b = $salida_almacenB->getMotivo()) ) ) ){
 				$sql .= " motivo >= ? AND motivo <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " motivo = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -368,7 +368,7 @@ abstract class SalidaAlmacenDAOBase extends DAO
 	  **/
 	public static final function delete( &$salida_almacen )
 	{
-		if(self::getByPK($salida_almacen->getIdSalidaAlmacen()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($salida_almacen->getIdSalidaAlmacen()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM salida_almacen WHERE  id_salida_almacen = ?;";
 		$params = array( $salida_almacen->getIdSalidaAlmacen() );
 		global $conn;

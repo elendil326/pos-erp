@@ -44,7 +44,7 @@ abstract class SeguimientoDeServicioDAOBase extends DAO
 	  **/
 	public static final function save( &$seguimiento_de_servicio )
 	{
-		if(  self::getByPK(  $seguimiento_de_servicio->getIdSeguimientoDeServicio() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $seguimiento_de_servicio->getIdSeguimientoDeServicio() ) ) )
 		{
 			try{ return SeguimientoDeServicioDAOBase::update( $seguimiento_de_servicio) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -96,9 +96,9 @@ abstract class SeguimientoDeServicioDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from seguimiento_de_servicio";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -143,44 +143,44 @@ abstract class SeguimientoDeServicioDAOBase extends DAO
 	{
 		$sql = "SELECT * from seguimiento_de_servicio WHERE ("; 
 		$val = array();
-		if( $seguimiento_de_servicio->getIdSeguimientoDeServicio() != NULL){
+		if( ! is_null( $seguimiento_de_servicio->getIdSeguimientoDeServicio() ) ){
 			$sql .= " id_seguimiento_de_servicio = ? AND";
 			array_push( $val, $seguimiento_de_servicio->getIdSeguimientoDeServicio() );
 		}
 
-		if( $seguimiento_de_servicio->getIdOrdenDeServicio() != NULL){
+		if( ! is_null( $seguimiento_de_servicio->getIdOrdenDeServicio() ) ){
 			$sql .= " id_orden_de_servicio = ? AND";
 			array_push( $val, $seguimiento_de_servicio->getIdOrdenDeServicio() );
 		}
 
-		if( $seguimiento_de_servicio->getIdLocalizacion() != NULL){
+		if( ! is_null( $seguimiento_de_servicio->getIdLocalizacion() ) ){
 			$sql .= " id_localizacion = ? AND";
 			array_push( $val, $seguimiento_de_servicio->getIdLocalizacion() );
 		}
 
-		if( $seguimiento_de_servicio->getIdUsuario() != NULL){
+		if( ! is_null( $seguimiento_de_servicio->getIdUsuario() ) ){
 			$sql .= " id_usuario = ? AND";
 			array_push( $val, $seguimiento_de_servicio->getIdUsuario() );
 		}
 
-		if( $seguimiento_de_servicio->getIdSucursal() != NULL){
+		if( ! is_null( $seguimiento_de_servicio->getIdSucursal() ) ){
 			$sql .= " id_sucursal = ? AND";
 			array_push( $val, $seguimiento_de_servicio->getIdSucursal() );
 		}
 
-		if( $seguimiento_de_servicio->getEstado() != NULL){
+		if( ! is_null( $seguimiento_de_servicio->getEstado() ) ){
 			$sql .= " estado = ? AND";
 			array_push( $val, $seguimiento_de_servicio->getEstado() );
 		}
 
-		if( $seguimiento_de_servicio->getFechaSeguimiento() != NULL){
+		if( ! is_null( $seguimiento_de_servicio->getFechaSeguimiento() ) ){
 			$sql .= " fecha_seguimiento = ? AND";
 			array_push( $val, $seguimiento_de_servicio->getFechaSeguimiento() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -297,85 +297,85 @@ abstract class SeguimientoDeServicioDAOBase extends DAO
 	{
 		$sql = "SELECT * from seguimiento_de_servicio WHERE ("; 
 		$val = array();
-		if( (($a = $seguimiento_de_servicioA->getIdSeguimientoDeServicio()) !== NULL) & ( ($b = $seguimiento_de_servicioB->getIdSeguimientoDeServicio()) !== NULL) ){
+		if( ( !is_null (($a = $seguimiento_de_servicioA->getIdSeguimientoDeServicio()) ) ) & ( ! is_null ( ($b = $seguimiento_de_servicioB->getIdSeguimientoDeServicio()) ) ) ){
 				$sql .= " id_seguimiento_de_servicio >= ? AND id_seguimiento_de_servicio <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_seguimiento_de_servicio = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $seguimiento_de_servicioA->getIdOrdenDeServicio()) !== NULL) & ( ($b = $seguimiento_de_servicioB->getIdOrdenDeServicio()) !== NULL) ){
+		if( ( !is_null (($a = $seguimiento_de_servicioA->getIdOrdenDeServicio()) ) ) & ( ! is_null ( ($b = $seguimiento_de_servicioB->getIdOrdenDeServicio()) ) ) ){
 				$sql .= " id_orden_de_servicio >= ? AND id_orden_de_servicio <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_orden_de_servicio = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $seguimiento_de_servicioA->getIdLocalizacion()) !== NULL) & ( ($b = $seguimiento_de_servicioB->getIdLocalizacion()) !== NULL) ){
+		if( ( !is_null (($a = $seguimiento_de_servicioA->getIdLocalizacion()) ) ) & ( ! is_null ( ($b = $seguimiento_de_servicioB->getIdLocalizacion()) ) ) ){
 				$sql .= " id_localizacion >= ? AND id_localizacion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_localizacion = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $seguimiento_de_servicioA->getIdUsuario()) !== NULL) & ( ($b = $seguimiento_de_servicioB->getIdUsuario()) !== NULL) ){
+		if( ( !is_null (($a = $seguimiento_de_servicioA->getIdUsuario()) ) ) & ( ! is_null ( ($b = $seguimiento_de_servicioB->getIdUsuario()) ) ) ){
 				$sql .= " id_usuario >= ? AND id_usuario <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_usuario = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $seguimiento_de_servicioA->getIdSucursal()) !== NULL) & ( ($b = $seguimiento_de_servicioB->getIdSucursal()) !== NULL) ){
+		if( ( !is_null (($a = $seguimiento_de_servicioA->getIdSucursal()) ) ) & ( ! is_null ( ($b = $seguimiento_de_servicioB->getIdSucursal()) ) ) ){
 				$sql .= " id_sucursal >= ? AND id_sucursal <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_sucursal = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $seguimiento_de_servicioA->getEstado()) !== NULL) & ( ($b = $seguimiento_de_servicioB->getEstado()) !== NULL) ){
+		if( ( !is_null (($a = $seguimiento_de_servicioA->getEstado()) ) ) & ( ! is_null ( ($b = $seguimiento_de_servicioB->getEstado()) ) ) ){
 				$sql .= " estado >= ? AND estado <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " estado = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $seguimiento_de_servicioA->getFechaSeguimiento()) !== NULL) & ( ($b = $seguimiento_de_servicioB->getFechaSeguimiento()) !== NULL) ){
+		if( ( !is_null (($a = $seguimiento_de_servicioA->getFechaSeguimiento()) ) ) & ( ! is_null ( ($b = $seguimiento_de_servicioB->getFechaSeguimiento()) ) ) ){
 				$sql .= " fecha_seguimiento >= ? AND fecha_seguimiento <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " fecha_seguimiento = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -404,7 +404,7 @@ abstract class SeguimientoDeServicioDAOBase extends DAO
 	  **/
 	public static final function delete( &$seguimiento_de_servicio )
 	{
-		if(self::getByPK($seguimiento_de_servicio->getIdSeguimientoDeServicio()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($seguimiento_de_servicio->getIdSeguimientoDeServicio()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM seguimiento_de_servicio WHERE  id_seguimiento_de_servicio = ?;";
 		$params = array( $seguimiento_de_servicio->getIdSeguimientoDeServicio() );
 		global $conn;

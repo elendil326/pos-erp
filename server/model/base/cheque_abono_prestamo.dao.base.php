@@ -47,7 +47,7 @@ abstract class ChequeAbonoPrestamoDAOBase extends DAO
 	  **/
 	public static final function save( &$cheque_abono_prestamo )
 	{
-		if(  self::getByPK(  $cheque_abono_prestamo->getIdCheque() , $cheque_abono_prestamo->getIdAbonoPrestamo() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $cheque_abono_prestamo->getIdCheque() , $cheque_abono_prestamo->getIdAbonoPrestamo() ) ) )
 		{
 			try{ return ChequeAbonoPrestamoDAOBase::update( $cheque_abono_prestamo) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -99,9 +99,9 @@ abstract class ChequeAbonoPrestamoDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from cheque_abono_prestamo";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -147,19 +147,19 @@ abstract class ChequeAbonoPrestamoDAOBase extends DAO
 	{
 		$sql = "SELECT * from cheque_abono_prestamo WHERE ("; 
 		$val = array();
-		if( $cheque_abono_prestamo->getIdCheque() != NULL){
+		if( ! is_null( $cheque_abono_prestamo->getIdCheque() ) ){
 			$sql .= " id_cheque = ? AND";
 			array_push( $val, $cheque_abono_prestamo->getIdCheque() );
 		}
 
-		if( $cheque_abono_prestamo->getIdAbonoPrestamo() != NULL){
+		if( ! is_null( $cheque_abono_prestamo->getIdAbonoPrestamo() ) ){
 			$sql .= " id_abono_prestamo = ? AND";
 			array_push( $val, $cheque_abono_prestamo->getIdAbonoPrestamo() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -258,30 +258,30 @@ abstract class ChequeAbonoPrestamoDAOBase extends DAO
 	{
 		$sql = "SELECT * from cheque_abono_prestamo WHERE ("; 
 		$val = array();
-		if( (($a = $cheque_abono_prestamoA->getIdCheque()) !== NULL) & ( ($b = $cheque_abono_prestamoB->getIdCheque()) !== NULL) ){
+		if( ( !is_null (($a = $cheque_abono_prestamoA->getIdCheque()) ) ) & ( ! is_null ( ($b = $cheque_abono_prestamoB->getIdCheque()) ) ) ){
 				$sql .= " id_cheque >= ? AND id_cheque <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_cheque = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $cheque_abono_prestamoA->getIdAbonoPrestamo()) !== NULL) & ( ($b = $cheque_abono_prestamoB->getIdAbonoPrestamo()) !== NULL) ){
+		if( ( !is_null (($a = $cheque_abono_prestamoA->getIdAbonoPrestamo()) ) ) & ( ! is_null ( ($b = $cheque_abono_prestamoB->getIdAbonoPrestamo()) ) ) ){
 				$sql .= " id_abono_prestamo >= ? AND id_abono_prestamo <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_abono_prestamo = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -310,7 +310,7 @@ abstract class ChequeAbonoPrestamoDAOBase extends DAO
 	  **/
 	public static final function delete( &$cheque_abono_prestamo )
 	{
-		if(self::getByPK($cheque_abono_prestamo->getIdCheque(), $cheque_abono_prestamo->getIdAbonoPrestamo()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($cheque_abono_prestamo->getIdCheque(), $cheque_abono_prestamo->getIdAbonoPrestamo()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM cheque_abono_prestamo WHERE  id_cheque = ? AND id_abono_prestamo = ?;";
 		$params = array( $cheque_abono_prestamo->getIdCheque(), $cheque_abono_prestamo->getIdAbonoPrestamo() );
 		global $conn;

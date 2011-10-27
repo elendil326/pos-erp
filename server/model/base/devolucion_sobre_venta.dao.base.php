@@ -44,7 +44,7 @@ abstract class DevolucionSobreVentaDAOBase extends DAO
 	  **/
 	public static final function save( &$devolucion_sobre_venta )
 	{
-		if(  self::getByPK(  $devolucion_sobre_venta->getIdDevolucionSobreVenta() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $devolucion_sobre_venta->getIdDevolucionSobreVenta() ) ) )
 		{
 			try{ return DevolucionSobreVentaDAOBase::update( $devolucion_sobre_venta) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -96,9 +96,9 @@ abstract class DevolucionSobreVentaDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from devolucion_sobre_venta";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -143,34 +143,34 @@ abstract class DevolucionSobreVentaDAOBase extends DAO
 	{
 		$sql = "SELECT * from devolucion_sobre_venta WHERE ("; 
 		$val = array();
-		if( $devolucion_sobre_venta->getIdDevolucionSobreVenta() != NULL){
+		if( ! is_null( $devolucion_sobre_venta->getIdDevolucionSobreVenta() ) ){
 			$sql .= " id_devolucion_sobre_venta = ? AND";
 			array_push( $val, $devolucion_sobre_venta->getIdDevolucionSobreVenta() );
 		}
 
-		if( $devolucion_sobre_venta->getIdVenta() != NULL){
+		if( ! is_null( $devolucion_sobre_venta->getIdVenta() ) ){
 			$sql .= " id_venta = ? AND";
 			array_push( $val, $devolucion_sobre_venta->getIdVenta() );
 		}
 
-		if( $devolucion_sobre_venta->getIdUsuario() != NULL){
+		if( ! is_null( $devolucion_sobre_venta->getIdUsuario() ) ){
 			$sql .= " id_usuario = ? AND";
 			array_push( $val, $devolucion_sobre_venta->getIdUsuario() );
 		}
 
-		if( $devolucion_sobre_venta->getFecha() != NULL){
+		if( ! is_null( $devolucion_sobre_venta->getFecha() ) ){
 			$sql .= " fecha = ? AND";
 			array_push( $val, $devolucion_sobre_venta->getFecha() );
 		}
 
-		if( $devolucion_sobre_venta->getMotivo() != NULL){
+		if( ! is_null( $devolucion_sobre_venta->getMotivo() ) ){
 			$sql .= " motivo = ? AND";
 			array_push( $val, $devolucion_sobre_venta->getMotivo() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -283,63 +283,63 @@ abstract class DevolucionSobreVentaDAOBase extends DAO
 	{
 		$sql = "SELECT * from devolucion_sobre_venta WHERE ("; 
 		$val = array();
-		if( (($a = $devolucion_sobre_ventaA->getIdDevolucionSobreVenta()) !== NULL) & ( ($b = $devolucion_sobre_ventaB->getIdDevolucionSobreVenta()) !== NULL) ){
+		if( ( !is_null (($a = $devolucion_sobre_ventaA->getIdDevolucionSobreVenta()) ) ) & ( ! is_null ( ($b = $devolucion_sobre_ventaB->getIdDevolucionSobreVenta()) ) ) ){
 				$sql .= " id_devolucion_sobre_venta >= ? AND id_devolucion_sobre_venta <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_devolucion_sobre_venta = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $devolucion_sobre_ventaA->getIdVenta()) !== NULL) & ( ($b = $devolucion_sobre_ventaB->getIdVenta()) !== NULL) ){
+		if( ( !is_null (($a = $devolucion_sobre_ventaA->getIdVenta()) ) ) & ( ! is_null ( ($b = $devolucion_sobre_ventaB->getIdVenta()) ) ) ){
 				$sql .= " id_venta >= ? AND id_venta <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_venta = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $devolucion_sobre_ventaA->getIdUsuario()) !== NULL) & ( ($b = $devolucion_sobre_ventaB->getIdUsuario()) !== NULL) ){
+		if( ( !is_null (($a = $devolucion_sobre_ventaA->getIdUsuario()) ) ) & ( ! is_null ( ($b = $devolucion_sobre_ventaB->getIdUsuario()) ) ) ){
 				$sql .= " id_usuario >= ? AND id_usuario <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_usuario = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $devolucion_sobre_ventaA->getFecha()) !== NULL) & ( ($b = $devolucion_sobre_ventaB->getFecha()) !== NULL) ){
+		if( ( !is_null (($a = $devolucion_sobre_ventaA->getFecha()) ) ) & ( ! is_null ( ($b = $devolucion_sobre_ventaB->getFecha()) ) ) ){
 				$sql .= " fecha >= ? AND fecha <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " fecha = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $devolucion_sobre_ventaA->getMotivo()) !== NULL) & ( ($b = $devolucion_sobre_ventaB->getMotivo()) !== NULL) ){
+		if( ( !is_null (($a = $devolucion_sobre_ventaA->getMotivo()) ) ) & ( ! is_null ( ($b = $devolucion_sobre_ventaB->getMotivo()) ) ) ){
 				$sql .= " motivo >= ? AND motivo <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " motivo = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -368,7 +368,7 @@ abstract class DevolucionSobreVentaDAOBase extends DAO
 	  **/
 	public static final function delete( &$devolucion_sobre_venta )
 	{
-		if(self::getByPK($devolucion_sobre_venta->getIdDevolucionSobreVenta()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($devolucion_sobre_venta->getIdDevolucionSobreVenta()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM devolucion_sobre_venta WHERE  id_devolucion_sobre_venta = ?;";
 		$params = array( $devolucion_sobre_venta->getIdDevolucionSobreVenta() );
 		global $conn;

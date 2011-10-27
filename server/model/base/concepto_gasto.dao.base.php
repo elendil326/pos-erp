@@ -44,7 +44,7 @@ abstract class ConceptoGastoDAOBase extends DAO
 	  **/
 	public static final function save( &$concepto_gasto )
 	{
-		if(  self::getByPK(  $concepto_gasto->getIdConceptoGasto() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $concepto_gasto->getIdConceptoGasto() ) ) )
 		{
 			try{ return ConceptoGastoDAOBase::update( $concepto_gasto) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -96,9 +96,9 @@ abstract class ConceptoGastoDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from concepto_gasto";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -143,34 +143,34 @@ abstract class ConceptoGastoDAOBase extends DAO
 	{
 		$sql = "SELECT * from concepto_gasto WHERE ("; 
 		$val = array();
-		if( $concepto_gasto->getIdConceptoGasto() != NULL){
+		if( ! is_null( $concepto_gasto->getIdConceptoGasto() ) ){
 			$sql .= " id_concepto_gasto = ? AND";
 			array_push( $val, $concepto_gasto->getIdConceptoGasto() );
 		}
 
-		if( $concepto_gasto->getNombre() != NULL){
+		if( ! is_null( $concepto_gasto->getNombre() ) ){
 			$sql .= " nombre = ? AND";
 			array_push( $val, $concepto_gasto->getNombre() );
 		}
 
-		if( $concepto_gasto->getDescripcion() != NULL){
+		if( ! is_null( $concepto_gasto->getDescripcion() ) ){
 			$sql .= " descripcion = ? AND";
 			array_push( $val, $concepto_gasto->getDescripcion() );
 		}
 
-		if( $concepto_gasto->getMonto() != NULL){
+		if( ! is_null( $concepto_gasto->getMonto() ) ){
 			$sql .= " monto = ? AND";
 			array_push( $val, $concepto_gasto->getMonto() );
 		}
 
-		if( $concepto_gasto->getActivo() != NULL){
+		if( ! is_null( $concepto_gasto->getActivo() ) ){
 			$sql .= " activo = ? AND";
 			array_push( $val, $concepto_gasto->getActivo() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -283,63 +283,63 @@ abstract class ConceptoGastoDAOBase extends DAO
 	{
 		$sql = "SELECT * from concepto_gasto WHERE ("; 
 		$val = array();
-		if( (($a = $concepto_gastoA->getIdConceptoGasto()) !== NULL) & ( ($b = $concepto_gastoB->getIdConceptoGasto()) !== NULL) ){
+		if( ( !is_null (($a = $concepto_gastoA->getIdConceptoGasto()) ) ) & ( ! is_null ( ($b = $concepto_gastoB->getIdConceptoGasto()) ) ) ){
 				$sql .= " id_concepto_gasto >= ? AND id_concepto_gasto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_concepto_gasto = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $concepto_gastoA->getNombre()) !== NULL) & ( ($b = $concepto_gastoB->getNombre()) !== NULL) ){
+		if( ( !is_null (($a = $concepto_gastoA->getNombre()) ) ) & ( ! is_null ( ($b = $concepto_gastoB->getNombre()) ) ) ){
 				$sql .= " nombre >= ? AND nombre <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " nombre = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $concepto_gastoA->getDescripcion()) !== NULL) & ( ($b = $concepto_gastoB->getDescripcion()) !== NULL) ){
+		if( ( !is_null (($a = $concepto_gastoA->getDescripcion()) ) ) & ( ! is_null ( ($b = $concepto_gastoB->getDescripcion()) ) ) ){
 				$sql .= " descripcion >= ? AND descripcion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " descripcion = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $concepto_gastoA->getMonto()) !== NULL) & ( ($b = $concepto_gastoB->getMonto()) !== NULL) ){
+		if( ( !is_null (($a = $concepto_gastoA->getMonto()) ) ) & ( ! is_null ( ($b = $concepto_gastoB->getMonto()) ) ) ){
 				$sql .= " monto >= ? AND monto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " monto = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $concepto_gastoA->getActivo()) !== NULL) & ( ($b = $concepto_gastoB->getActivo()) !== NULL) ){
+		if( ( !is_null (($a = $concepto_gastoA->getActivo()) ) ) & ( ! is_null ( ($b = $concepto_gastoB->getActivo()) ) ) ){
 				$sql .= " activo >= ? AND activo <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " activo = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -368,7 +368,7 @@ abstract class ConceptoGastoDAOBase extends DAO
 	  **/
 	public static final function delete( &$concepto_gasto )
 	{
-		if(self::getByPK($concepto_gasto->getIdConceptoGasto()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($concepto_gasto->getIdConceptoGasto()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM concepto_gasto WHERE  id_concepto_gasto = ?;";
 		$params = array( $concepto_gasto->getIdConceptoGasto() );
 		global $conn;

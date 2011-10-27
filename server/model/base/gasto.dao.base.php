@@ -44,7 +44,7 @@ abstract class GastoDAOBase extends DAO
 	  **/
 	public static final function save( &$gasto )
 	{
-		if(  self::getByPK(  $gasto->getIdGasto() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $gasto->getIdGasto() ) ) )
 		{
 			try{ return GastoDAOBase::update( $gasto) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -96,9 +96,9 @@ abstract class GastoDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from gasto";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -143,84 +143,84 @@ abstract class GastoDAOBase extends DAO
 	{
 		$sql = "SELECT * from gasto WHERE ("; 
 		$val = array();
-		if( $gasto->getIdGasto() != NULL){
+		if( ! is_null( $gasto->getIdGasto() ) ){
 			$sql .= " id_gasto = ? AND";
 			array_push( $val, $gasto->getIdGasto() );
 		}
 
-		if( $gasto->getIdEmpresa() != NULL){
+		if( ! is_null( $gasto->getIdEmpresa() ) ){
 			$sql .= " id_empresa = ? AND";
 			array_push( $val, $gasto->getIdEmpresa() );
 		}
 
-		if( $gasto->getIdUsuario() != NULL){
+		if( ! is_null( $gasto->getIdUsuario() ) ){
 			$sql .= " id_usuario = ? AND";
 			array_push( $val, $gasto->getIdUsuario() );
 		}
 
-		if( $gasto->getIdConceptoGasto() != NULL){
+		if( ! is_null( $gasto->getIdConceptoGasto() ) ){
 			$sql .= " id_concepto_gasto = ? AND";
 			array_push( $val, $gasto->getIdConceptoGasto() );
 		}
 
-		if( $gasto->getIdOrdenDeServicio() != NULL){
+		if( ! is_null( $gasto->getIdOrdenDeServicio() ) ){
 			$sql .= " id_orden_de_servicio = ? AND";
 			array_push( $val, $gasto->getIdOrdenDeServicio() );
 		}
 
-		if( $gasto->getIdCaja() != NULL){
+		if( ! is_null( $gasto->getIdCaja() ) ){
 			$sql .= " id_caja = ? AND";
 			array_push( $val, $gasto->getIdCaja() );
 		}
 
-		if( $gasto->getFechaDelGasto() != NULL){
+		if( ! is_null( $gasto->getFechaDelGasto() ) ){
 			$sql .= " fecha_del_gasto = ? AND";
 			array_push( $val, $gasto->getFechaDelGasto() );
 		}
 
-		if( $gasto->getFechaDeRegistro() != NULL){
+		if( ! is_null( $gasto->getFechaDeRegistro() ) ){
 			$sql .= " fecha_de_registro = ? AND";
 			array_push( $val, $gasto->getFechaDeRegistro() );
 		}
 
-		if( $gasto->getIdSucursal() != NULL){
+		if( ! is_null( $gasto->getIdSucursal() ) ){
 			$sql .= " id_sucursal = ? AND";
 			array_push( $val, $gasto->getIdSucursal() );
 		}
 
-		if( $gasto->getNota() != NULL){
+		if( ! is_null( $gasto->getNota() ) ){
 			$sql .= " nota = ? AND";
 			array_push( $val, $gasto->getNota() );
 		}
 
-		if( $gasto->getDescripcion() != NULL){
+		if( ! is_null( $gasto->getDescripcion() ) ){
 			$sql .= " descripcion = ? AND";
 			array_push( $val, $gasto->getDescripcion() );
 		}
 
-		if( $gasto->getFolio() != NULL){
+		if( ! is_null( $gasto->getFolio() ) ){
 			$sql .= " folio = ? AND";
 			array_push( $val, $gasto->getFolio() );
 		}
 
-		if( $gasto->getMonto() != NULL){
+		if( ! is_null( $gasto->getMonto() ) ){
 			$sql .= " monto = ? AND";
 			array_push( $val, $gasto->getMonto() );
 		}
 
-		if( $gasto->getCancelado() != NULL){
+		if( ! is_null( $gasto->getCancelado() ) ){
 			$sql .= " cancelado = ? AND";
 			array_push( $val, $gasto->getCancelado() );
 		}
 
-		if( $gasto->getMotivoCancelacion() != NULL){
+		if( ! is_null( $gasto->getMotivoCancelacion() ) ){
 			$sql .= " motivo_cancelacion = ? AND";
 			array_push( $val, $gasto->getMotivoCancelacion() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -353,173 +353,173 @@ abstract class GastoDAOBase extends DAO
 	{
 		$sql = "SELECT * from gasto WHERE ("; 
 		$val = array();
-		if( (($a = $gastoA->getIdGasto()) !== NULL) & ( ($b = $gastoB->getIdGasto()) !== NULL) ){
+		if( ( !is_null (($a = $gastoA->getIdGasto()) ) ) & ( ! is_null ( ($b = $gastoB->getIdGasto()) ) ) ){
 				$sql .= " id_gasto >= ? AND id_gasto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_gasto = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $gastoA->getIdEmpresa()) !== NULL) & ( ($b = $gastoB->getIdEmpresa()) !== NULL) ){
+		if( ( !is_null (($a = $gastoA->getIdEmpresa()) ) ) & ( ! is_null ( ($b = $gastoB->getIdEmpresa()) ) ) ){
 				$sql .= " id_empresa >= ? AND id_empresa <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_empresa = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $gastoA->getIdUsuario()) !== NULL) & ( ($b = $gastoB->getIdUsuario()) !== NULL) ){
+		if( ( !is_null (($a = $gastoA->getIdUsuario()) ) ) & ( ! is_null ( ($b = $gastoB->getIdUsuario()) ) ) ){
 				$sql .= " id_usuario >= ? AND id_usuario <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_usuario = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $gastoA->getIdConceptoGasto()) !== NULL) & ( ($b = $gastoB->getIdConceptoGasto()) !== NULL) ){
+		if( ( !is_null (($a = $gastoA->getIdConceptoGasto()) ) ) & ( ! is_null ( ($b = $gastoB->getIdConceptoGasto()) ) ) ){
 				$sql .= " id_concepto_gasto >= ? AND id_concepto_gasto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_concepto_gasto = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $gastoA->getIdOrdenDeServicio()) !== NULL) & ( ($b = $gastoB->getIdOrdenDeServicio()) !== NULL) ){
+		if( ( !is_null (($a = $gastoA->getIdOrdenDeServicio()) ) ) & ( ! is_null ( ($b = $gastoB->getIdOrdenDeServicio()) ) ) ){
 				$sql .= " id_orden_de_servicio >= ? AND id_orden_de_servicio <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_orden_de_servicio = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $gastoA->getIdCaja()) !== NULL) & ( ($b = $gastoB->getIdCaja()) !== NULL) ){
+		if( ( !is_null (($a = $gastoA->getIdCaja()) ) ) & ( ! is_null ( ($b = $gastoB->getIdCaja()) ) ) ){
 				$sql .= " id_caja >= ? AND id_caja <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_caja = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $gastoA->getFechaDelGasto()) !== NULL) & ( ($b = $gastoB->getFechaDelGasto()) !== NULL) ){
+		if( ( !is_null (($a = $gastoA->getFechaDelGasto()) ) ) & ( ! is_null ( ($b = $gastoB->getFechaDelGasto()) ) ) ){
 				$sql .= " fecha_del_gasto >= ? AND fecha_del_gasto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " fecha_del_gasto = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $gastoA->getFechaDeRegistro()) !== NULL) & ( ($b = $gastoB->getFechaDeRegistro()) !== NULL) ){
+		if( ( !is_null (($a = $gastoA->getFechaDeRegistro()) ) ) & ( ! is_null ( ($b = $gastoB->getFechaDeRegistro()) ) ) ){
 				$sql .= " fecha_de_registro >= ? AND fecha_de_registro <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " fecha_de_registro = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $gastoA->getIdSucursal()) !== NULL) & ( ($b = $gastoB->getIdSucursal()) !== NULL) ){
+		if( ( !is_null (($a = $gastoA->getIdSucursal()) ) ) & ( ! is_null ( ($b = $gastoB->getIdSucursal()) ) ) ){
 				$sql .= " id_sucursal >= ? AND id_sucursal <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_sucursal = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $gastoA->getNota()) !== NULL) & ( ($b = $gastoB->getNota()) !== NULL) ){
+		if( ( !is_null (($a = $gastoA->getNota()) ) ) & ( ! is_null ( ($b = $gastoB->getNota()) ) ) ){
 				$sql .= " nota >= ? AND nota <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " nota = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $gastoA->getDescripcion()) !== NULL) & ( ($b = $gastoB->getDescripcion()) !== NULL) ){
+		if( ( !is_null (($a = $gastoA->getDescripcion()) ) ) & ( ! is_null ( ($b = $gastoB->getDescripcion()) ) ) ){
 				$sql .= " descripcion >= ? AND descripcion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " descripcion = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $gastoA->getFolio()) !== NULL) & ( ($b = $gastoB->getFolio()) !== NULL) ){
+		if( ( !is_null (($a = $gastoA->getFolio()) ) ) & ( ! is_null ( ($b = $gastoB->getFolio()) ) ) ){
 				$sql .= " folio >= ? AND folio <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " folio = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $gastoA->getMonto()) !== NULL) & ( ($b = $gastoB->getMonto()) !== NULL) ){
+		if( ( !is_null (($a = $gastoA->getMonto()) ) ) & ( ! is_null ( ($b = $gastoB->getMonto()) ) ) ){
 				$sql .= " monto >= ? AND monto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " monto = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $gastoA->getCancelado()) !== NULL) & ( ($b = $gastoB->getCancelado()) !== NULL) ){
+		if( ( !is_null (($a = $gastoA->getCancelado()) ) ) & ( ! is_null ( ($b = $gastoB->getCancelado()) ) ) ){
 				$sql .= " cancelado >= ? AND cancelado <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " cancelado = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $gastoA->getMotivoCancelacion()) !== NULL) & ( ($b = $gastoB->getMotivoCancelacion()) !== NULL) ){
+		if( ( !is_null (($a = $gastoA->getMotivoCancelacion()) ) ) & ( ! is_null ( ($b = $gastoB->getMotivoCancelacion()) ) ) ){
 				$sql .= " motivo_cancelacion >= ? AND motivo_cancelacion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " motivo_cancelacion = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -548,7 +548,7 @@ abstract class GastoDAOBase extends DAO
 	  **/
 	public static final function delete( &$gasto )
 	{
-		if(self::getByPK($gasto->getIdGasto()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($gasto->getIdGasto()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM gasto WHERE  id_gasto = ?;";
 		$params = array( $gasto->getIdGasto() );
 		global $conn;

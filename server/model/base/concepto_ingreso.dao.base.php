@@ -44,7 +44,7 @@ abstract class ConceptoIngresoDAOBase extends DAO
 	  **/
 	public static final function save( &$concepto_ingreso )
 	{
-		if(  self::getByPK(  $concepto_ingreso->getIdConceptoIngreso() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $concepto_ingreso->getIdConceptoIngreso() ) ) )
 		{
 			try{ return ConceptoIngresoDAOBase::update( $concepto_ingreso) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -96,9 +96,9 @@ abstract class ConceptoIngresoDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from concepto_ingreso";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -143,34 +143,34 @@ abstract class ConceptoIngresoDAOBase extends DAO
 	{
 		$sql = "SELECT * from concepto_ingreso WHERE ("; 
 		$val = array();
-		if( $concepto_ingreso->getIdConceptoIngreso() != NULL){
+		if( ! is_null( $concepto_ingreso->getIdConceptoIngreso() ) ){
 			$sql .= " id_concepto_ingreso = ? AND";
 			array_push( $val, $concepto_ingreso->getIdConceptoIngreso() );
 		}
 
-		if( $concepto_ingreso->getNombre() != NULL){
+		if( ! is_null( $concepto_ingreso->getNombre() ) ){
 			$sql .= " nombre = ? AND";
 			array_push( $val, $concepto_ingreso->getNombre() );
 		}
 
-		if( $concepto_ingreso->getDescripcion() != NULL){
+		if( ! is_null( $concepto_ingreso->getDescripcion() ) ){
 			$sql .= " descripcion = ? AND";
 			array_push( $val, $concepto_ingreso->getDescripcion() );
 		}
 
-		if( $concepto_ingreso->getMonto() != NULL){
+		if( ! is_null( $concepto_ingreso->getMonto() ) ){
 			$sql .= " monto = ? AND";
 			array_push( $val, $concepto_ingreso->getMonto() );
 		}
 
-		if( $concepto_ingreso->getActivo() != NULL){
+		if( ! is_null( $concepto_ingreso->getActivo() ) ){
 			$sql .= " activo = ? AND";
 			array_push( $val, $concepto_ingreso->getActivo() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -283,63 +283,63 @@ abstract class ConceptoIngresoDAOBase extends DAO
 	{
 		$sql = "SELECT * from concepto_ingreso WHERE ("; 
 		$val = array();
-		if( (($a = $concepto_ingresoA->getIdConceptoIngreso()) !== NULL) & ( ($b = $concepto_ingresoB->getIdConceptoIngreso()) !== NULL) ){
+		if( ( !is_null (($a = $concepto_ingresoA->getIdConceptoIngreso()) ) ) & ( ! is_null ( ($b = $concepto_ingresoB->getIdConceptoIngreso()) ) ) ){
 				$sql .= " id_concepto_ingreso >= ? AND id_concepto_ingreso <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_concepto_ingreso = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $concepto_ingresoA->getNombre()) !== NULL) & ( ($b = $concepto_ingresoB->getNombre()) !== NULL) ){
+		if( ( !is_null (($a = $concepto_ingresoA->getNombre()) ) ) & ( ! is_null ( ($b = $concepto_ingresoB->getNombre()) ) ) ){
 				$sql .= " nombre >= ? AND nombre <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " nombre = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $concepto_ingresoA->getDescripcion()) !== NULL) & ( ($b = $concepto_ingresoB->getDescripcion()) !== NULL) ){
+		if( ( !is_null (($a = $concepto_ingresoA->getDescripcion()) ) ) & ( ! is_null ( ($b = $concepto_ingresoB->getDescripcion()) ) ) ){
 				$sql .= " descripcion >= ? AND descripcion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " descripcion = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $concepto_ingresoA->getMonto()) !== NULL) & ( ($b = $concepto_ingresoB->getMonto()) !== NULL) ){
+		if( ( !is_null (($a = $concepto_ingresoA->getMonto()) ) ) & ( ! is_null ( ($b = $concepto_ingresoB->getMonto()) ) ) ){
 				$sql .= " monto >= ? AND monto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " monto = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $concepto_ingresoA->getActivo()) !== NULL) & ( ($b = $concepto_ingresoB->getActivo()) !== NULL) ){
+		if( ( !is_null (($a = $concepto_ingresoA->getActivo()) ) ) & ( ! is_null ( ($b = $concepto_ingresoB->getActivo()) ) ) ){
 				$sql .= " activo >= ? AND activo <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " activo = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -368,7 +368,7 @@ abstract class ConceptoIngresoDAOBase extends DAO
 	  **/
 	public static final function delete( &$concepto_ingreso )
 	{
-		if(self::getByPK($concepto_ingreso->getIdConceptoIngreso()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($concepto_ingreso->getIdConceptoIngreso()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM concepto_ingreso WHERE  id_concepto_ingreso = ?;";
 		$params = array( $concepto_ingreso->getIdConceptoIngreso() );
 		global $conn;

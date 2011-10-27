@@ -44,7 +44,7 @@ abstract class ClasificacionServicioDAOBase extends DAO
 	  **/
 	public static final function save( &$clasificacion_servicio )
 	{
-		if(  self::getByPK(  $clasificacion_servicio->getIdClasificacionServicio() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $clasificacion_servicio->getIdClasificacionServicio() ) ) )
 		{
 			try{ return ClasificacionServicioDAOBase::update( $clasificacion_servicio) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -96,9 +96,9 @@ abstract class ClasificacionServicioDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from clasificacion_servicio";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -143,44 +143,44 @@ abstract class ClasificacionServicioDAOBase extends DAO
 	{
 		$sql = "SELECT * from clasificacion_servicio WHERE ("; 
 		$val = array();
-		if( $clasificacion_servicio->getIdClasificacionServicio() != NULL){
+		if( ! is_null( $clasificacion_servicio->getIdClasificacionServicio() ) ){
 			$sql .= " id_clasificacion_servicio = ? AND";
 			array_push( $val, $clasificacion_servicio->getIdClasificacionServicio() );
 		}
 
-		if( $clasificacion_servicio->getNombre() != NULL){
+		if( ! is_null( $clasificacion_servicio->getNombre() ) ){
 			$sql .= " nombre = ? AND";
 			array_push( $val, $clasificacion_servicio->getNombre() );
 		}
 
-		if( $clasificacion_servicio->getGarantia() != NULL){
+		if( ! is_null( $clasificacion_servicio->getGarantia() ) ){
 			$sql .= " garantia = ? AND";
 			array_push( $val, $clasificacion_servicio->getGarantia() );
 		}
 
-		if( $clasificacion_servicio->getDescripcion() != NULL){
+		if( ! is_null( $clasificacion_servicio->getDescripcion() ) ){
 			$sql .= " descripcion = ? AND";
 			array_push( $val, $clasificacion_servicio->getDescripcion() );
 		}
 
-		if( $clasificacion_servicio->getMargenUtilidad() != NULL){
+		if( ! is_null( $clasificacion_servicio->getMargenUtilidad() ) ){
 			$sql .= " margen_utilidad = ? AND";
 			array_push( $val, $clasificacion_servicio->getMargenUtilidad() );
 		}
 
-		if( $clasificacion_servicio->getDescuento() != NULL){
+		if( ! is_null( $clasificacion_servicio->getDescuento() ) ){
 			$sql .= " descuento = ? AND";
 			array_push( $val, $clasificacion_servicio->getDescuento() );
 		}
 
-		if( $clasificacion_servicio->getActiva() != NULL){
+		if( ! is_null( $clasificacion_servicio->getActiva() ) ){
 			$sql .= " activa = ? AND";
 			array_push( $val, $clasificacion_servicio->getActiva() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -297,85 +297,85 @@ abstract class ClasificacionServicioDAOBase extends DAO
 	{
 		$sql = "SELECT * from clasificacion_servicio WHERE ("; 
 		$val = array();
-		if( (($a = $clasificacion_servicioA->getIdClasificacionServicio()) !== NULL) & ( ($b = $clasificacion_servicioB->getIdClasificacionServicio()) !== NULL) ){
+		if( ( !is_null (($a = $clasificacion_servicioA->getIdClasificacionServicio()) ) ) & ( ! is_null ( ($b = $clasificacion_servicioB->getIdClasificacionServicio()) ) ) ){
 				$sql .= " id_clasificacion_servicio >= ? AND id_clasificacion_servicio <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_clasificacion_servicio = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $clasificacion_servicioA->getNombre()) !== NULL) & ( ($b = $clasificacion_servicioB->getNombre()) !== NULL) ){
+		if( ( !is_null (($a = $clasificacion_servicioA->getNombre()) ) ) & ( ! is_null ( ($b = $clasificacion_servicioB->getNombre()) ) ) ){
 				$sql .= " nombre >= ? AND nombre <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " nombre = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $clasificacion_servicioA->getGarantia()) !== NULL) & ( ($b = $clasificacion_servicioB->getGarantia()) !== NULL) ){
+		if( ( !is_null (($a = $clasificacion_servicioA->getGarantia()) ) ) & ( ! is_null ( ($b = $clasificacion_servicioB->getGarantia()) ) ) ){
 				$sql .= " garantia >= ? AND garantia <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " garantia = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $clasificacion_servicioA->getDescripcion()) !== NULL) & ( ($b = $clasificacion_servicioB->getDescripcion()) !== NULL) ){
+		if( ( !is_null (($a = $clasificacion_servicioA->getDescripcion()) ) ) & ( ! is_null ( ($b = $clasificacion_servicioB->getDescripcion()) ) ) ){
 				$sql .= " descripcion >= ? AND descripcion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " descripcion = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $clasificacion_servicioA->getMargenUtilidad()) !== NULL) & ( ($b = $clasificacion_servicioB->getMargenUtilidad()) !== NULL) ){
+		if( ( !is_null (($a = $clasificacion_servicioA->getMargenUtilidad()) ) ) & ( ! is_null ( ($b = $clasificacion_servicioB->getMargenUtilidad()) ) ) ){
 				$sql .= " margen_utilidad >= ? AND margen_utilidad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " margen_utilidad = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $clasificacion_servicioA->getDescuento()) !== NULL) & ( ($b = $clasificacion_servicioB->getDescuento()) !== NULL) ){
+		if( ( !is_null (($a = $clasificacion_servicioA->getDescuento()) ) ) & ( ! is_null ( ($b = $clasificacion_servicioB->getDescuento()) ) ) ){
 				$sql .= " descuento >= ? AND descuento <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " descuento = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $clasificacion_servicioA->getActiva()) !== NULL) & ( ($b = $clasificacion_servicioB->getActiva()) !== NULL) ){
+		if( ( !is_null (($a = $clasificacion_servicioA->getActiva()) ) ) & ( ! is_null ( ($b = $clasificacion_servicioB->getActiva()) ) ) ){
 				$sql .= " activa >= ? AND activa <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " activa = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -404,7 +404,7 @@ abstract class ClasificacionServicioDAOBase extends DAO
 	  **/
 	public static final function delete( &$clasificacion_servicio )
 	{
-		if(self::getByPK($clasificacion_servicio->getIdClasificacionServicio()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($clasificacion_servicio->getIdClasificacionServicio()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM clasificacion_servicio WHERE  id_clasificacion_servicio = ?;";
 		$params = array( $clasificacion_servicio->getIdClasificacionServicio() );
 		global $conn;

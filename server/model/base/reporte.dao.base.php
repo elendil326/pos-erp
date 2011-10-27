@@ -44,7 +44,7 @@ abstract class ReporteDAOBase extends DAO
 	  **/
 	public static final function save( &$reporte )
 	{
-		if(  self::getByPK(  $reporte->getIdReporte() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $reporte->getIdReporte() ) ) )
 		{
 			try{ return ReporteDAOBase::update( $reporte) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -96,9 +96,9 @@ abstract class ReporteDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from reporte";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -143,14 +143,14 @@ abstract class ReporteDAOBase extends DAO
 	{
 		$sql = "SELECT * from reporte WHERE ("; 
 		$val = array();
-		if( $reporte->getIdReporte() != NULL){
+		if( ! is_null( $reporte->getIdReporte() ) ){
 			$sql .= " id_reporte = ? AND";
 			array_push( $val, $reporte->getIdReporte() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -248,19 +248,19 @@ abstract class ReporteDAOBase extends DAO
 	{
 		$sql = "SELECT * from reporte WHERE ("; 
 		$val = array();
-		if( (($a = $reporteA->getIdReporte()) !== NULL) & ( ($b = $reporteB->getIdReporte()) !== NULL) ){
+		if( ( !is_null (($a = $reporteA->getIdReporte()) ) ) & ( ! is_null ( ($b = $reporteB->getIdReporte()) ) ) ){
 				$sql .= " id_reporte >= ? AND id_reporte <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_reporte = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -289,7 +289,7 @@ abstract class ReporteDAOBase extends DAO
 	  **/
 	public static final function delete( &$reporte )
 	{
-		if(self::getByPK($reporte->getIdReporte()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($reporte->getIdReporte()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM reporte WHERE  id_reporte = ?;";
 		$params = array( $reporte->getIdReporte() );
 		global $conn;

@@ -44,7 +44,7 @@ abstract class AutorizacionDAOBase extends DAO
 	  **/
 	public static final function save( &$autorizacion )
 	{
-		if(  self::getByPK(  $autorizacion->getIdAutorizacion() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $autorizacion->getIdAutorizacion() ) ) )
 		{
 			try{ return AutorizacionDAOBase::update( $autorizacion) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -96,9 +96,9 @@ abstract class AutorizacionDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from autorizacion";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -143,14 +143,14 @@ abstract class AutorizacionDAOBase extends DAO
 	{
 		$sql = "SELECT * from autorizacion WHERE ("; 
 		$val = array();
-		if( $autorizacion->getIdAutorizacion() != NULL){
+		if( ! is_null( $autorizacion->getIdAutorizacion() ) ){
 			$sql .= " id_autorizacion = ? AND";
 			array_push( $val, $autorizacion->getIdAutorizacion() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -248,19 +248,19 @@ abstract class AutorizacionDAOBase extends DAO
 	{
 		$sql = "SELECT * from autorizacion WHERE ("; 
 		$val = array();
-		if( (($a = $autorizacionA->getIdAutorizacion()) !== NULL) & ( ($b = $autorizacionB->getIdAutorizacion()) !== NULL) ){
+		if( ( !is_null (($a = $autorizacionA->getIdAutorizacion()) ) ) & ( ! is_null ( ($b = $autorizacionB->getIdAutorizacion()) ) ) ){
 				$sql .= " id_autorizacion >= ? AND id_autorizacion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_autorizacion = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -289,7 +289,7 @@ abstract class AutorizacionDAOBase extends DAO
 	  **/
 	public static final function delete( &$autorizacion )
 	{
-		if(self::getByPK($autorizacion->getIdAutorizacion()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($autorizacion->getIdAutorizacion()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM autorizacion WHERE  id_autorizacion = ?;";
 		$params = array( $autorizacion->getIdAutorizacion() );
 		global $conn;

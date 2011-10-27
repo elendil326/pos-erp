@@ -44,7 +44,7 @@ abstract class MonedaDAOBase extends DAO
 	  **/
 	public static final function save( &$moneda )
 	{
-		if(  self::getByPK(  $moneda->getIdMoneda() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $moneda->getIdMoneda() ) ) )
 		{
 			try{ return MonedaDAOBase::update( $moneda) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -96,9 +96,9 @@ abstract class MonedaDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from moneda";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -143,29 +143,29 @@ abstract class MonedaDAOBase extends DAO
 	{
 		$sql = "SELECT * from moneda WHERE ("; 
 		$val = array();
-		if( $moneda->getIdMoneda() != NULL){
+		if( ! is_null( $moneda->getIdMoneda() ) ){
 			$sql .= " id_moneda = ? AND";
 			array_push( $val, $moneda->getIdMoneda() );
 		}
 
-		if( $moneda->getNombre() != NULL){
+		if( ! is_null( $moneda->getNombre() ) ){
 			$sql .= " nombre = ? AND";
 			array_push( $val, $moneda->getNombre() );
 		}
 
-		if( $moneda->getSimbolo() != NULL){
+		if( ! is_null( $moneda->getSimbolo() ) ){
 			$sql .= " simbolo = ? AND";
 			array_push( $val, $moneda->getSimbolo() );
 		}
 
-		if( $moneda->getActiva() != NULL){
+		if( ! is_null( $moneda->getActiva() ) ){
 			$sql .= " activa = ? AND";
 			array_push( $val, $moneda->getActiva() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -276,52 +276,52 @@ abstract class MonedaDAOBase extends DAO
 	{
 		$sql = "SELECT * from moneda WHERE ("; 
 		$val = array();
-		if( (($a = $monedaA->getIdMoneda()) !== NULL) & ( ($b = $monedaB->getIdMoneda()) !== NULL) ){
+		if( ( !is_null (($a = $monedaA->getIdMoneda()) ) ) & ( ! is_null ( ($b = $monedaB->getIdMoneda()) ) ) ){
 				$sql .= " id_moneda >= ? AND id_moneda <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_moneda = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $monedaA->getNombre()) !== NULL) & ( ($b = $monedaB->getNombre()) !== NULL) ){
+		if( ( !is_null (($a = $monedaA->getNombre()) ) ) & ( ! is_null ( ($b = $monedaB->getNombre()) ) ) ){
 				$sql .= " nombre >= ? AND nombre <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " nombre = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $monedaA->getSimbolo()) !== NULL) & ( ($b = $monedaB->getSimbolo()) !== NULL) ){
+		if( ( !is_null (($a = $monedaA->getSimbolo()) ) ) & ( ! is_null ( ($b = $monedaB->getSimbolo()) ) ) ){
 				$sql .= " simbolo >= ? AND simbolo <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " simbolo = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $monedaA->getActiva()) !== NULL) & ( ($b = $monedaB->getActiva()) !== NULL) ){
+		if( ( !is_null (($a = $monedaA->getActiva()) ) ) & ( ! is_null ( ($b = $monedaB->getActiva()) ) ) ){
 				$sql .= " activa >= ? AND activa <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " activa = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -350,7 +350,7 @@ abstract class MonedaDAOBase extends DAO
 	  **/
 	public static final function delete( &$moneda )
 	{
-		if(self::getByPK($moneda->getIdMoneda()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($moneda->getIdMoneda()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM moneda WHERE  id_moneda = ?;";
 		$params = array( $moneda->getIdMoneda() );
 		global $conn;

@@ -47,7 +47,7 @@ abstract class ImpuestoServicioDAOBase extends DAO
 	  **/
 	public static final function save( &$impuesto_servicio )
 	{
-		if(  self::getByPK(  $impuesto_servicio->getIdImpuesto() , $impuesto_servicio->getIdServicio() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $impuesto_servicio->getIdImpuesto() , $impuesto_servicio->getIdServicio() ) ) )
 		{
 			try{ return ImpuestoServicioDAOBase::update( $impuesto_servicio) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -99,9 +99,9 @@ abstract class ImpuestoServicioDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from impuesto_servicio";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -147,19 +147,19 @@ abstract class ImpuestoServicioDAOBase extends DAO
 	{
 		$sql = "SELECT * from impuesto_servicio WHERE ("; 
 		$val = array();
-		if( $impuesto_servicio->getIdImpuesto() != NULL){
+		if( ! is_null( $impuesto_servicio->getIdImpuesto() ) ){
 			$sql .= " id_impuesto = ? AND";
 			array_push( $val, $impuesto_servicio->getIdImpuesto() );
 		}
 
-		if( $impuesto_servicio->getIdServicio() != NULL){
+		if( ! is_null( $impuesto_servicio->getIdServicio() ) ){
 			$sql .= " id_servicio = ? AND";
 			array_push( $val, $impuesto_servicio->getIdServicio() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -258,30 +258,30 @@ abstract class ImpuestoServicioDAOBase extends DAO
 	{
 		$sql = "SELECT * from impuesto_servicio WHERE ("; 
 		$val = array();
-		if( (($a = $impuesto_servicioA->getIdImpuesto()) !== NULL) & ( ($b = $impuesto_servicioB->getIdImpuesto()) !== NULL) ){
+		if( ( !is_null (($a = $impuesto_servicioA->getIdImpuesto()) ) ) & ( ! is_null ( ($b = $impuesto_servicioB->getIdImpuesto()) ) ) ){
 				$sql .= " id_impuesto >= ? AND id_impuesto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_impuesto = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $impuesto_servicioA->getIdServicio()) !== NULL) & ( ($b = $impuesto_servicioB->getIdServicio()) !== NULL) ){
+		if( ( !is_null (($a = $impuesto_servicioA->getIdServicio()) ) ) & ( ! is_null ( ($b = $impuesto_servicioB->getIdServicio()) ) ) ){
 				$sql .= " id_servicio >= ? AND id_servicio <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_servicio = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -310,7 +310,7 @@ abstract class ImpuestoServicioDAOBase extends DAO
 	  **/
 	public static final function delete( &$impuesto_servicio )
 	{
-		if(self::getByPK($impuesto_servicio->getIdImpuesto(), $impuesto_servicio->getIdServicio()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($impuesto_servicio->getIdImpuesto(), $impuesto_servicio->getIdServicio()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM impuesto_servicio WHERE  id_impuesto = ? AND id_servicio = ?;";
 		$params = array( $impuesto_servicio->getIdImpuesto(), $impuesto_servicio->getIdServicio() );
 		global $conn;

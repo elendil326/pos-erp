@@ -47,7 +47,7 @@ abstract class VentaEmpresaDAOBase extends DAO
 	  **/
 	public static final function save( &$venta_empresa )
 	{
-		if(  self::getByPK(  $venta_empresa->getIdVenta() , $venta_empresa->getIdEmpresa() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $venta_empresa->getIdVenta() , $venta_empresa->getIdEmpresa() ) ) )
 		{
 			try{ return VentaEmpresaDAOBase::update( $venta_empresa) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -99,9 +99,9 @@ abstract class VentaEmpresaDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from venta_empresa";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -147,29 +147,29 @@ abstract class VentaEmpresaDAOBase extends DAO
 	{
 		$sql = "SELECT * from venta_empresa WHERE ("; 
 		$val = array();
-		if( $venta_empresa->getIdVenta() != NULL){
+		if( ! is_null( $venta_empresa->getIdVenta() ) ){
 			$sql .= " id_venta = ? AND";
 			array_push( $val, $venta_empresa->getIdVenta() );
 		}
 
-		if( $venta_empresa->getIdEmpresa() != NULL){
+		if( ! is_null( $venta_empresa->getIdEmpresa() ) ){
 			$sql .= " id_empresa = ? AND";
 			array_push( $val, $venta_empresa->getIdEmpresa() );
 		}
 
-		if( $venta_empresa->getTotal() != NULL){
+		if( ! is_null( $venta_empresa->getTotal() ) ){
 			$sql .= " total = ? AND";
 			array_push( $val, $venta_empresa->getTotal() );
 		}
 
-		if( $venta_empresa->getSaldada() != NULL){
+		if( ! is_null( $venta_empresa->getSaldada() ) ){
 			$sql .= " saldada = ? AND";
 			array_push( $val, $venta_empresa->getSaldada() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -279,52 +279,52 @@ abstract class VentaEmpresaDAOBase extends DAO
 	{
 		$sql = "SELECT * from venta_empresa WHERE ("; 
 		$val = array();
-		if( (($a = $venta_empresaA->getIdVenta()) !== NULL) & ( ($b = $venta_empresaB->getIdVenta()) !== NULL) ){
+		if( ( !is_null (($a = $venta_empresaA->getIdVenta()) ) ) & ( ! is_null ( ($b = $venta_empresaB->getIdVenta()) ) ) ){
 				$sql .= " id_venta >= ? AND id_venta <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_venta = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $venta_empresaA->getIdEmpresa()) !== NULL) & ( ($b = $venta_empresaB->getIdEmpresa()) !== NULL) ){
+		if( ( !is_null (($a = $venta_empresaA->getIdEmpresa()) ) ) & ( ! is_null ( ($b = $venta_empresaB->getIdEmpresa()) ) ) ){
 				$sql .= " id_empresa >= ? AND id_empresa <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_empresa = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $venta_empresaA->getTotal()) !== NULL) & ( ($b = $venta_empresaB->getTotal()) !== NULL) ){
+		if( ( !is_null (($a = $venta_empresaA->getTotal()) ) ) & ( ! is_null ( ($b = $venta_empresaB->getTotal()) ) ) ){
 				$sql .= " total >= ? AND total <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " total = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $venta_empresaA->getSaldada()) !== NULL) & ( ($b = $venta_empresaB->getSaldada()) !== NULL) ){
+		if( ( !is_null (($a = $venta_empresaA->getSaldada()) ) ) & ( ! is_null ( ($b = $venta_empresaB->getSaldada()) ) ) ){
 				$sql .= " saldada >= ? AND saldada <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " saldada = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -353,7 +353,7 @@ abstract class VentaEmpresaDAOBase extends DAO
 	  **/
 	public static final function delete( &$venta_empresa )
 	{
-		if(self::getByPK($venta_empresa->getIdVenta(), $venta_empresa->getIdEmpresa()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($venta_empresa->getIdVenta(), $venta_empresa->getIdEmpresa()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM venta_empresa WHERE  id_venta = ? AND id_empresa = ?;";
 		$params = array( $venta_empresa->getIdVenta(), $venta_empresa->getIdEmpresa() );
 		global $conn;

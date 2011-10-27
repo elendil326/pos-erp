@@ -44,7 +44,7 @@ abstract class PermisoDAOBase extends DAO
 	  **/
 	public static final function save( &$permiso )
 	{
-		if(  self::getByPK(  $permiso->getIdPermiso() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $permiso->getIdPermiso() ) ) )
 		{
 			try{ return PermisoDAOBase::update( $permiso) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -96,9 +96,9 @@ abstract class PermisoDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from permiso";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -143,19 +143,19 @@ abstract class PermisoDAOBase extends DAO
 	{
 		$sql = "SELECT * from permiso WHERE ("; 
 		$val = array();
-		if( $permiso->getIdPermiso() != NULL){
+		if( ! is_null( $permiso->getIdPermiso() ) ){
 			$sql .= " id_permiso = ? AND";
 			array_push( $val, $permiso->getIdPermiso() );
 		}
 
-		if( $permiso->getPermiso() != NULL){
+		if( ! is_null( $permiso->getPermiso() ) ){
 			$sql .= " permiso = ? AND";
 			array_push( $val, $permiso->getPermiso() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -262,30 +262,30 @@ abstract class PermisoDAOBase extends DAO
 	{
 		$sql = "SELECT * from permiso WHERE ("; 
 		$val = array();
-		if( (($a = $permisoA->getIdPermiso()) !== NULL) & ( ($b = $permisoB->getIdPermiso()) !== NULL) ){
+		if( ( !is_null (($a = $permisoA->getIdPermiso()) ) ) & ( ! is_null ( ($b = $permisoB->getIdPermiso()) ) ) ){
 				$sql .= " id_permiso >= ? AND id_permiso <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_permiso = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $permisoA->getPermiso()) !== NULL) & ( ($b = $permisoB->getPermiso()) !== NULL) ){
+		if( ( !is_null (($a = $permisoA->getPermiso()) ) ) & ( ! is_null ( ($b = $permisoB->getPermiso()) ) ) ){
 				$sql .= " permiso >= ? AND permiso <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " permiso = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -314,7 +314,7 @@ abstract class PermisoDAOBase extends DAO
 	  **/
 	public static final function delete( &$permiso )
 	{
-		if(self::getByPK($permiso->getIdPermiso()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($permiso->getIdPermiso()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM permiso WHERE  id_permiso = ?;";
 		$params = array( $permiso->getIdPermiso() );
 		global $conn;

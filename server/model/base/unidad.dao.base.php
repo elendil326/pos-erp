@@ -44,7 +44,7 @@ abstract class UnidadDAOBase extends DAO
 	  **/
 	public static final function save( &$unidad )
 	{
-		if(  self::getByPK(  $unidad->getIdUnidad() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $unidad->getIdUnidad() ) ) )
 		{
 			try{ return UnidadDAOBase::update( $unidad) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -96,9 +96,9 @@ abstract class UnidadDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from unidad";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -143,34 +143,34 @@ abstract class UnidadDAOBase extends DAO
 	{
 		$sql = "SELECT * from unidad WHERE ("; 
 		$val = array();
-		if( $unidad->getIdUnidad() != NULL){
+		if( ! is_null( $unidad->getIdUnidad() ) ){
 			$sql .= " id_unidad = ? AND";
 			array_push( $val, $unidad->getIdUnidad() );
 		}
 
-		if( $unidad->getNombre() != NULL){
+		if( ! is_null( $unidad->getNombre() ) ){
 			$sql .= " nombre = ? AND";
 			array_push( $val, $unidad->getNombre() );
 		}
 
-		if( $unidad->getDescripcion() != NULL){
+		if( ! is_null( $unidad->getDescripcion() ) ){
 			$sql .= " descripcion = ? AND";
 			array_push( $val, $unidad->getDescripcion() );
 		}
 
-		if( $unidad->getEsEntero() != NULL){
+		if( ! is_null( $unidad->getEsEntero() ) ){
 			$sql .= " es_entero = ? AND";
 			array_push( $val, $unidad->getEsEntero() );
 		}
 
-		if( $unidad->getActiva() != NULL){
+		if( ! is_null( $unidad->getActiva() ) ){
 			$sql .= " activa = ? AND";
 			array_push( $val, $unidad->getActiva() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -283,63 +283,63 @@ abstract class UnidadDAOBase extends DAO
 	{
 		$sql = "SELECT * from unidad WHERE ("; 
 		$val = array();
-		if( (($a = $unidadA->getIdUnidad()) !== NULL) & ( ($b = $unidadB->getIdUnidad()) !== NULL) ){
+		if( ( !is_null (($a = $unidadA->getIdUnidad()) ) ) & ( ! is_null ( ($b = $unidadB->getIdUnidad()) ) ) ){
 				$sql .= " id_unidad >= ? AND id_unidad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_unidad = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $unidadA->getNombre()) !== NULL) & ( ($b = $unidadB->getNombre()) !== NULL) ){
+		if( ( !is_null (($a = $unidadA->getNombre()) ) ) & ( ! is_null ( ($b = $unidadB->getNombre()) ) ) ){
 				$sql .= " nombre >= ? AND nombre <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " nombre = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $unidadA->getDescripcion()) !== NULL) & ( ($b = $unidadB->getDescripcion()) !== NULL) ){
+		if( ( !is_null (($a = $unidadA->getDescripcion()) ) ) & ( ! is_null ( ($b = $unidadB->getDescripcion()) ) ) ){
 				$sql .= " descripcion >= ? AND descripcion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " descripcion = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $unidadA->getEsEntero()) !== NULL) & ( ($b = $unidadB->getEsEntero()) !== NULL) ){
+		if( ( !is_null (($a = $unidadA->getEsEntero()) ) ) & ( ! is_null ( ($b = $unidadB->getEsEntero()) ) ) ){
 				$sql .= " es_entero >= ? AND es_entero <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " es_entero = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $unidadA->getActiva()) !== NULL) & ( ($b = $unidadB->getActiva()) !== NULL) ){
+		if( ( !is_null (($a = $unidadA->getActiva()) ) ) & ( ! is_null ( ($b = $unidadB->getActiva()) ) ) ){
 				$sql .= " activa >= ? AND activa <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " activa = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -368,7 +368,7 @@ abstract class UnidadDAOBase extends DAO
 	  **/
 	public static final function delete( &$unidad )
 	{
-		if(self::getByPK($unidad->getIdUnidad()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($unidad->getIdUnidad()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM unidad WHERE  id_unidad = ?;";
 		$params = array( $unidad->getIdUnidad() );
 		global $conn;

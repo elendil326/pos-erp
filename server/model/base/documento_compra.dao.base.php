@@ -47,7 +47,7 @@ abstract class DocumentoCompraDAOBase extends DAO
 	  **/
 	public static final function save( &$documento_compra )
 	{
-		if(  self::getByPK(  $documento_compra->getIdDocumento() , $documento_compra->getIdCompra() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $documento_compra->getIdDocumento() , $documento_compra->getIdCompra() ) ) )
 		{
 			try{ return DocumentoCompraDAOBase::update( $documento_compra) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -99,9 +99,9 @@ abstract class DocumentoCompraDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from documento_compra";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -147,19 +147,19 @@ abstract class DocumentoCompraDAOBase extends DAO
 	{
 		$sql = "SELECT * from documento_compra WHERE ("; 
 		$val = array();
-		if( $documento_compra->getIdDocumento() != NULL){
+		if( ! is_null( $documento_compra->getIdDocumento() ) ){
 			$sql .= " id_documento = ? AND";
 			array_push( $val, $documento_compra->getIdDocumento() );
 		}
 
-		if( $documento_compra->getIdCompra() != NULL){
+		if( ! is_null( $documento_compra->getIdCompra() ) ){
 			$sql .= " id_compra = ? AND";
 			array_push( $val, $documento_compra->getIdCompra() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -258,30 +258,30 @@ abstract class DocumentoCompraDAOBase extends DAO
 	{
 		$sql = "SELECT * from documento_compra WHERE ("; 
 		$val = array();
-		if( (($a = $documento_compraA->getIdDocumento()) !== NULL) & ( ($b = $documento_compraB->getIdDocumento()) !== NULL) ){
+		if( ( !is_null (($a = $documento_compraA->getIdDocumento()) ) ) & ( ! is_null ( ($b = $documento_compraB->getIdDocumento()) ) ) ){
 				$sql .= " id_documento >= ? AND id_documento <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_documento = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $documento_compraA->getIdCompra()) !== NULL) & ( ($b = $documento_compraB->getIdCompra()) !== NULL) ){
+		if( ( !is_null (($a = $documento_compraA->getIdCompra()) ) ) & ( ! is_null ( ($b = $documento_compraB->getIdCompra()) ) ) ){
 				$sql .= " id_compra >= ? AND id_compra <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_compra = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -310,7 +310,7 @@ abstract class DocumentoCompraDAOBase extends DAO
 	  **/
 	public static final function delete( &$documento_compra )
 	{
-		if(self::getByPK($documento_compra->getIdDocumento(), $documento_compra->getIdCompra()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($documento_compra->getIdDocumento(), $documento_compra->getIdCompra()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM documento_compra WHERE  id_documento = ? AND id_compra = ?;";
 		$params = array( $documento_compra->getIdDocumento(), $documento_compra->getIdCompra() );
 		global $conn;

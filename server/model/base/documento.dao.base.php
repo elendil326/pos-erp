@@ -44,7 +44,7 @@ abstract class DocumentoDAOBase extends DAO
 	  **/
 	public static final function save( &$documento )
 	{
-		if(  self::getByPK(  $documento->getIdDocumento() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $documento->getIdDocumento() ) ) )
 		{
 			try{ return DocumentoDAOBase::update( $documento) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -96,9 +96,9 @@ abstract class DocumentoDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from documento";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -143,14 +143,14 @@ abstract class DocumentoDAOBase extends DAO
 	{
 		$sql = "SELECT * from documento WHERE ("; 
 		$val = array();
-		if( $documento->getIdDocumento() != NULL){
+		if( ! is_null( $documento->getIdDocumento() ) ){
 			$sql .= " id_documento = ? AND";
 			array_push( $val, $documento->getIdDocumento() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -248,19 +248,19 @@ abstract class DocumentoDAOBase extends DAO
 	{
 		$sql = "SELECT * from documento WHERE ("; 
 		$val = array();
-		if( (($a = $documentoA->getIdDocumento()) !== NULL) & ( ($b = $documentoB->getIdDocumento()) !== NULL) ){
+		if( ( !is_null (($a = $documentoA->getIdDocumento()) ) ) & ( ! is_null ( ($b = $documentoB->getIdDocumento()) ) ) ){
 				$sql .= " id_documento >= ? AND id_documento <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_documento = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -289,7 +289,7 @@ abstract class DocumentoDAOBase extends DAO
 	  **/
 	public static final function delete( &$documento )
 	{
-		if(self::getByPK($documento->getIdDocumento()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($documento->getIdDocumento()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM documento WHERE  id_documento = ?;";
 		$params = array( $documento->getIdDocumento() );
 		global $conn;

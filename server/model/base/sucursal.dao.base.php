@@ -44,7 +44,7 @@ abstract class SucursalDAOBase extends DAO
 	  **/
 	public static final function save( &$sucursal )
 	{
-		if(  self::getByPK(  $sucursal->getIdSucursal() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $sucursal->getIdSucursal() ) ) )
 		{
 			try{ return SucursalDAOBase::update( $sucursal) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -96,9 +96,9 @@ abstract class SucursalDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from sucursal";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -143,69 +143,69 @@ abstract class SucursalDAOBase extends DAO
 	{
 		$sql = "SELECT * from sucursal WHERE ("; 
 		$val = array();
-		if( $sucursal->getIdSucursal() != NULL){
+		if( ! is_null( $sucursal->getIdSucursal() ) ){
 			$sql .= " id_sucursal = ? AND";
 			array_push( $val, $sucursal->getIdSucursal() );
 		}
 
-		if( $sucursal->getIdDireccion() != NULL){
+		if( ! is_null( $sucursal->getIdDireccion() ) ){
 			$sql .= " id_direccion = ? AND";
 			array_push( $val, $sucursal->getIdDireccion() );
 		}
 
-		if( $sucursal->getRfc() != NULL){
+		if( ! is_null( $sucursal->getRfc() ) ){
 			$sql .= " rfc = ? AND";
 			array_push( $val, $sucursal->getRfc() );
 		}
 
-		if( $sucursal->getRazonSocial() != NULL){
+		if( ! is_null( $sucursal->getRazonSocial() ) ){
 			$sql .= " razon_social = ? AND";
 			array_push( $val, $sucursal->getRazonSocial() );
 		}
 
-		if( $sucursal->getDescripcion() != NULL){
+		if( ! is_null( $sucursal->getDescripcion() ) ){
 			$sql .= " descripcion = ? AND";
 			array_push( $val, $sucursal->getDescripcion() );
 		}
 
-		if( $sucursal->getIdGerente() != NULL){
+		if( ! is_null( $sucursal->getIdGerente() ) ){
 			$sql .= " id_gerente = ? AND";
 			array_push( $val, $sucursal->getIdGerente() );
 		}
 
-		if( $sucursal->getSaldoAFavor() != NULL){
+		if( ! is_null( $sucursal->getSaldoAFavor() ) ){
 			$sql .= " saldo_a_favor = ? AND";
 			array_push( $val, $sucursal->getSaldoAFavor() );
 		}
 
-		if( $sucursal->getFechaApertura() != NULL){
+		if( ! is_null( $sucursal->getFechaApertura() ) ){
 			$sql .= " fecha_apertura = ? AND";
 			array_push( $val, $sucursal->getFechaApertura() );
 		}
 
-		if( $sucursal->getActiva() != NULL){
+		if( ! is_null( $sucursal->getActiva() ) ){
 			$sql .= " activa = ? AND";
 			array_push( $val, $sucursal->getActiva() );
 		}
 
-		if( $sucursal->getFechaBaja() != NULL){
+		if( ! is_null( $sucursal->getFechaBaja() ) ){
 			$sql .= " fecha_baja = ? AND";
 			array_push( $val, $sucursal->getFechaBaja() );
 		}
 
-		if( $sucursal->getMargenUtilidad() != NULL){
+		if( ! is_null( $sucursal->getMargenUtilidad() ) ){
 			$sql .= " margen_utilidad = ? AND";
 			array_push( $val, $sucursal->getMargenUtilidad() );
 		}
 
-		if( $sucursal->getDescuento() != NULL){
+		if( ! is_null( $sucursal->getDescuento() ) ){
 			$sql .= " descuento = ? AND";
 			array_push( $val, $sucursal->getDescuento() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -332,140 +332,140 @@ abstract class SucursalDAOBase extends DAO
 	{
 		$sql = "SELECT * from sucursal WHERE ("; 
 		$val = array();
-		if( (($a = $sucursalA->getIdSucursal()) !== NULL) & ( ($b = $sucursalB->getIdSucursal()) !== NULL) ){
+		if( ( !is_null (($a = $sucursalA->getIdSucursal()) ) ) & ( ! is_null ( ($b = $sucursalB->getIdSucursal()) ) ) ){
 				$sql .= " id_sucursal >= ? AND id_sucursal <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_sucursal = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $sucursalA->getIdDireccion()) !== NULL) & ( ($b = $sucursalB->getIdDireccion()) !== NULL) ){
+		if( ( !is_null (($a = $sucursalA->getIdDireccion()) ) ) & ( ! is_null ( ($b = $sucursalB->getIdDireccion()) ) ) ){
 				$sql .= " id_direccion >= ? AND id_direccion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_direccion = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $sucursalA->getRfc()) !== NULL) & ( ($b = $sucursalB->getRfc()) !== NULL) ){
+		if( ( !is_null (($a = $sucursalA->getRfc()) ) ) & ( ! is_null ( ($b = $sucursalB->getRfc()) ) ) ){
 				$sql .= " rfc >= ? AND rfc <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " rfc = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $sucursalA->getRazonSocial()) !== NULL) & ( ($b = $sucursalB->getRazonSocial()) !== NULL) ){
+		if( ( !is_null (($a = $sucursalA->getRazonSocial()) ) ) & ( ! is_null ( ($b = $sucursalB->getRazonSocial()) ) ) ){
 				$sql .= " razon_social >= ? AND razon_social <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " razon_social = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $sucursalA->getDescripcion()) !== NULL) & ( ($b = $sucursalB->getDescripcion()) !== NULL) ){
+		if( ( !is_null (($a = $sucursalA->getDescripcion()) ) ) & ( ! is_null ( ($b = $sucursalB->getDescripcion()) ) ) ){
 				$sql .= " descripcion >= ? AND descripcion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " descripcion = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $sucursalA->getIdGerente()) !== NULL) & ( ($b = $sucursalB->getIdGerente()) !== NULL) ){
+		if( ( !is_null (($a = $sucursalA->getIdGerente()) ) ) & ( ! is_null ( ($b = $sucursalB->getIdGerente()) ) ) ){
 				$sql .= " id_gerente >= ? AND id_gerente <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_gerente = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $sucursalA->getSaldoAFavor()) !== NULL) & ( ($b = $sucursalB->getSaldoAFavor()) !== NULL) ){
+		if( ( !is_null (($a = $sucursalA->getSaldoAFavor()) ) ) & ( ! is_null ( ($b = $sucursalB->getSaldoAFavor()) ) ) ){
 				$sql .= " saldo_a_favor >= ? AND saldo_a_favor <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " saldo_a_favor = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $sucursalA->getFechaApertura()) !== NULL) & ( ($b = $sucursalB->getFechaApertura()) !== NULL) ){
+		if( ( !is_null (($a = $sucursalA->getFechaApertura()) ) ) & ( ! is_null ( ($b = $sucursalB->getFechaApertura()) ) ) ){
 				$sql .= " fecha_apertura >= ? AND fecha_apertura <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " fecha_apertura = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $sucursalA->getActiva()) !== NULL) & ( ($b = $sucursalB->getActiva()) !== NULL) ){
+		if( ( !is_null (($a = $sucursalA->getActiva()) ) ) & ( ! is_null ( ($b = $sucursalB->getActiva()) ) ) ){
 				$sql .= " activa >= ? AND activa <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " activa = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $sucursalA->getFechaBaja()) !== NULL) & ( ($b = $sucursalB->getFechaBaja()) !== NULL) ){
+		if( ( !is_null (($a = $sucursalA->getFechaBaja()) ) ) & ( ! is_null ( ($b = $sucursalB->getFechaBaja()) ) ) ){
 				$sql .= " fecha_baja >= ? AND fecha_baja <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " fecha_baja = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $sucursalA->getMargenUtilidad()) !== NULL) & ( ($b = $sucursalB->getMargenUtilidad()) !== NULL) ){
+		if( ( !is_null (($a = $sucursalA->getMargenUtilidad()) ) ) & ( ! is_null ( ($b = $sucursalB->getMargenUtilidad()) ) ) ){
 				$sql .= " margen_utilidad >= ? AND margen_utilidad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " margen_utilidad = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $sucursalA->getDescuento()) !== NULL) & ( ($b = $sucursalB->getDescuento()) !== NULL) ){
+		if( ( !is_null (($a = $sucursalA->getDescuento()) ) ) & ( ! is_null ( ($b = $sucursalB->getDescuento()) ) ) ){
 				$sql .= " descuento >= ? AND descuento <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " descuento = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -494,7 +494,7 @@ abstract class SucursalDAOBase extends DAO
 	  **/
 	public static final function delete( &$sucursal )
 	{
-		if(self::getByPK($sucursal->getIdSucursal()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($sucursal->getIdSucursal()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM sucursal WHERE  id_sucursal = ?;";
 		$params = array( $sucursal->getIdSucursal() );
 		global $conn;

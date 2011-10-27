@@ -44,7 +44,7 @@ abstract class ChequeDAOBase extends DAO
 	  **/
 	public static final function save( &$cheque )
 	{
-		if(  self::getByPK(  $cheque->getIdCheque() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $cheque->getIdCheque() ) ) )
 		{
 			try{ return ChequeDAOBase::update( $cheque) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -96,9 +96,9 @@ abstract class ChequeDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from cheque";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -143,39 +143,39 @@ abstract class ChequeDAOBase extends DAO
 	{
 		$sql = "SELECT * from cheque WHERE ("; 
 		$val = array();
-		if( $cheque->getIdCheque() != NULL){
+		if( ! is_null( $cheque->getIdCheque() ) ){
 			$sql .= " id_cheque = ? AND";
 			array_push( $val, $cheque->getIdCheque() );
 		}
 
-		if( $cheque->getNombreBanco() != NULL){
+		if( ! is_null( $cheque->getNombreBanco() ) ){
 			$sql .= " nombre_banco = ? AND";
 			array_push( $val, $cheque->getNombreBanco() );
 		}
 
-		if( $cheque->getMonto() != NULL){
+		if( ! is_null( $cheque->getMonto() ) ){
 			$sql .= " monto = ? AND";
 			array_push( $val, $cheque->getMonto() );
 		}
 
-		if( $cheque->getNumero() != NULL){
+		if( ! is_null( $cheque->getNumero() ) ){
 			$sql .= " numero = ? AND";
 			array_push( $val, $cheque->getNumero() );
 		}
 
-		if( $cheque->getExpedido() != NULL){
+		if( ! is_null( $cheque->getExpedido() ) ){
 			$sql .= " expedido = ? AND";
 			array_push( $val, $cheque->getExpedido() );
 		}
 
-		if( $cheque->getIdUsuario() != NULL){
+		if( ! is_null( $cheque->getIdUsuario() ) ){
 			$sql .= " id_usuario = ? AND";
 			array_push( $val, $cheque->getIdUsuario() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -290,74 +290,74 @@ abstract class ChequeDAOBase extends DAO
 	{
 		$sql = "SELECT * from cheque WHERE ("; 
 		$val = array();
-		if( (($a = $chequeA->getIdCheque()) !== NULL) & ( ($b = $chequeB->getIdCheque()) !== NULL) ){
+		if( ( !is_null (($a = $chequeA->getIdCheque()) ) ) & ( ! is_null ( ($b = $chequeB->getIdCheque()) ) ) ){
 				$sql .= " id_cheque >= ? AND id_cheque <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_cheque = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $chequeA->getNombreBanco()) !== NULL) & ( ($b = $chequeB->getNombreBanco()) !== NULL) ){
+		if( ( !is_null (($a = $chequeA->getNombreBanco()) ) ) & ( ! is_null ( ($b = $chequeB->getNombreBanco()) ) ) ){
 				$sql .= " nombre_banco >= ? AND nombre_banco <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " nombre_banco = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $chequeA->getMonto()) !== NULL) & ( ($b = $chequeB->getMonto()) !== NULL) ){
+		if( ( !is_null (($a = $chequeA->getMonto()) ) ) & ( ! is_null ( ($b = $chequeB->getMonto()) ) ) ){
 				$sql .= " monto >= ? AND monto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " monto = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $chequeA->getNumero()) !== NULL) & ( ($b = $chequeB->getNumero()) !== NULL) ){
+		if( ( !is_null (($a = $chequeA->getNumero()) ) ) & ( ! is_null ( ($b = $chequeB->getNumero()) ) ) ){
 				$sql .= " numero >= ? AND numero <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " numero = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $chequeA->getExpedido()) !== NULL) & ( ($b = $chequeB->getExpedido()) !== NULL) ){
+		if( ( !is_null (($a = $chequeA->getExpedido()) ) ) & ( ! is_null ( ($b = $chequeB->getExpedido()) ) ) ){
 				$sql .= " expedido >= ? AND expedido <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " expedido = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $chequeA->getIdUsuario()) !== NULL) & ( ($b = $chequeB->getIdUsuario()) !== NULL) ){
+		if( ( !is_null (($a = $chequeA->getIdUsuario()) ) ) & ( ! is_null ( ($b = $chequeB->getIdUsuario()) ) ) ){
 				$sql .= " id_usuario >= ? AND id_usuario <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_usuario = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -386,7 +386,7 @@ abstract class ChequeDAOBase extends DAO
 	  **/
 	public static final function delete( &$cheque )
 	{
-		if(self::getByPK($cheque->getIdCheque()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($cheque->getIdCheque()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM cheque WHERE  id_cheque = ?;";
 		$params = array( $cheque->getIdCheque() );
 		global $conn;

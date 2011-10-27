@@ -47,7 +47,7 @@ abstract class VentaOrdenDAOBase extends DAO
 	  **/
 	public static final function save( &$venta_orden )
 	{
-		if(  self::getByPK(  $venta_orden->getIdVenta() , $venta_orden->getIdOrdenDeServicio() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $venta_orden->getIdVenta() , $venta_orden->getIdOrdenDeServicio() ) ) )
 		{
 			try{ return VentaOrdenDAOBase::update( $venta_orden) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -99,9 +99,9 @@ abstract class VentaOrdenDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from venta_orden";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -147,39 +147,39 @@ abstract class VentaOrdenDAOBase extends DAO
 	{
 		$sql = "SELECT * from venta_orden WHERE ("; 
 		$val = array();
-		if( $venta_orden->getIdVenta() != NULL){
+		if( ! is_null( $venta_orden->getIdVenta() ) ){
 			$sql .= " id_venta = ? AND";
 			array_push( $val, $venta_orden->getIdVenta() );
 		}
 
-		if( $venta_orden->getIdOrdenDeServicio() != NULL){
+		if( ! is_null( $venta_orden->getIdOrdenDeServicio() ) ){
 			$sql .= " id_orden_de_servicio = ? AND";
 			array_push( $val, $venta_orden->getIdOrdenDeServicio() );
 		}
 
-		if( $venta_orden->getPrecio() != NULL){
+		if( ! is_null( $venta_orden->getPrecio() ) ){
 			$sql .= " precio = ? AND";
 			array_push( $val, $venta_orden->getPrecio() );
 		}
 
-		if( $venta_orden->getDescuento() != NULL){
+		if( ! is_null( $venta_orden->getDescuento() ) ){
 			$sql .= " descuento = ? AND";
 			array_push( $val, $venta_orden->getDescuento() );
 		}
 
-		if( $venta_orden->getImpuesto() != NULL){
+		if( ! is_null( $venta_orden->getImpuesto() ) ){
 			$sql .= " impuesto = ? AND";
 			array_push( $val, $venta_orden->getImpuesto() );
 		}
 
-		if( $venta_orden->getRetencion() != NULL){
+		if( ! is_null( $venta_orden->getRetencion() ) ){
 			$sql .= " retencion = ? AND";
 			array_push( $val, $venta_orden->getRetencion() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -293,74 +293,74 @@ abstract class VentaOrdenDAOBase extends DAO
 	{
 		$sql = "SELECT * from venta_orden WHERE ("; 
 		$val = array();
-		if( (($a = $venta_ordenA->getIdVenta()) !== NULL) & ( ($b = $venta_ordenB->getIdVenta()) !== NULL) ){
+		if( ( !is_null (($a = $venta_ordenA->getIdVenta()) ) ) & ( ! is_null ( ($b = $venta_ordenB->getIdVenta()) ) ) ){
 				$sql .= " id_venta >= ? AND id_venta <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_venta = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $venta_ordenA->getIdOrdenDeServicio()) !== NULL) & ( ($b = $venta_ordenB->getIdOrdenDeServicio()) !== NULL) ){
+		if( ( !is_null (($a = $venta_ordenA->getIdOrdenDeServicio()) ) ) & ( ! is_null ( ($b = $venta_ordenB->getIdOrdenDeServicio()) ) ) ){
 				$sql .= " id_orden_de_servicio >= ? AND id_orden_de_servicio <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_orden_de_servicio = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $venta_ordenA->getPrecio()) !== NULL) & ( ($b = $venta_ordenB->getPrecio()) !== NULL) ){
+		if( ( !is_null (($a = $venta_ordenA->getPrecio()) ) ) & ( ! is_null ( ($b = $venta_ordenB->getPrecio()) ) ) ){
 				$sql .= " precio >= ? AND precio <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " precio = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $venta_ordenA->getDescuento()) !== NULL) & ( ($b = $venta_ordenB->getDescuento()) !== NULL) ){
+		if( ( !is_null (($a = $venta_ordenA->getDescuento()) ) ) & ( ! is_null ( ($b = $venta_ordenB->getDescuento()) ) ) ){
 				$sql .= " descuento >= ? AND descuento <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " descuento = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $venta_ordenA->getImpuesto()) !== NULL) & ( ($b = $venta_ordenB->getImpuesto()) !== NULL) ){
+		if( ( !is_null (($a = $venta_ordenA->getImpuesto()) ) ) & ( ! is_null ( ($b = $venta_ordenB->getImpuesto()) ) ) ){
 				$sql .= " impuesto >= ? AND impuesto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " impuesto = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $venta_ordenA->getRetencion()) !== NULL) & ( ($b = $venta_ordenB->getRetencion()) !== NULL) ){
+		if( ( !is_null (($a = $venta_ordenA->getRetencion()) ) ) & ( ! is_null ( ($b = $venta_ordenB->getRetencion()) ) ) ){
 				$sql .= " retencion >= ? AND retencion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " retencion = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -389,7 +389,7 @@ abstract class VentaOrdenDAOBase extends DAO
 	  **/
 	public static final function delete( &$venta_orden )
 	{
-		if(self::getByPK($venta_orden->getIdVenta(), $venta_orden->getIdOrdenDeServicio()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($venta_orden->getIdVenta(), $venta_orden->getIdOrdenDeServicio()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM venta_orden WHERE  id_venta = ? AND id_orden_de_servicio = ?;";
 		$params = array( $venta_orden->getIdVenta(), $venta_orden->getIdOrdenDeServicio() );
 		global $conn;

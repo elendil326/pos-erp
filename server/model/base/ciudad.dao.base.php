@@ -44,7 +44,7 @@ abstract class CiudadDAOBase extends DAO
 	  **/
 	public static final function save( &$ciudad )
 	{
-		if(  self::getByPK(  $ciudad->getIdCiudad() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $ciudad->getIdCiudad() ) ) )
 		{
 			try{ return CiudadDAOBase::update( $ciudad) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -96,9 +96,9 @@ abstract class CiudadDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from ciudad";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -143,24 +143,24 @@ abstract class CiudadDAOBase extends DAO
 	{
 		$sql = "SELECT * from ciudad WHERE ("; 
 		$val = array();
-		if( $ciudad->getIdCiudad() != NULL){
+		if( ! is_null( $ciudad->getIdCiudad() ) ){
 			$sql .= " id_ciudad = ? AND";
 			array_push( $val, $ciudad->getIdCiudad() );
 		}
 
-		if( $ciudad->getIdEstado() != NULL){
+		if( ! is_null( $ciudad->getIdEstado() ) ){
 			$sql .= " id_estado = ? AND";
 			array_push( $val, $ciudad->getIdEstado() );
 		}
 
-		if( $ciudad->getNombre() != NULL){
+		if( ! is_null( $ciudad->getNombre() ) ){
 			$sql .= " nombre = ? AND";
 			array_push( $val, $ciudad->getNombre() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -269,41 +269,41 @@ abstract class CiudadDAOBase extends DAO
 	{
 		$sql = "SELECT * from ciudad WHERE ("; 
 		$val = array();
-		if( (($a = $ciudadA->getIdCiudad()) !== NULL) & ( ($b = $ciudadB->getIdCiudad()) !== NULL) ){
+		if( ( !is_null (($a = $ciudadA->getIdCiudad()) ) ) & ( ! is_null ( ($b = $ciudadB->getIdCiudad()) ) ) ){
 				$sql .= " id_ciudad >= ? AND id_ciudad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_ciudad = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $ciudadA->getIdEstado()) !== NULL) & ( ($b = $ciudadB->getIdEstado()) !== NULL) ){
+		if( ( !is_null (($a = $ciudadA->getIdEstado()) ) ) & ( ! is_null ( ($b = $ciudadB->getIdEstado()) ) ) ){
 				$sql .= " id_estado >= ? AND id_estado <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_estado = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $ciudadA->getNombre()) !== NULL) & ( ($b = $ciudadB->getNombre()) !== NULL) ){
+		if( ( !is_null (($a = $ciudadA->getNombre()) ) ) & ( ! is_null ( ($b = $ciudadB->getNombre()) ) ) ){
 				$sql .= " nombre >= ? AND nombre <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " nombre = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -332,7 +332,7 @@ abstract class CiudadDAOBase extends DAO
 	  **/
 	public static final function delete( &$ciudad )
 	{
-		if(self::getByPK($ciudad->getIdCiudad()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($ciudad->getIdCiudad()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM ciudad WHERE  id_ciudad = ?;";
 		$params = array( $ciudad->getIdCiudad() );
 		global $conn;

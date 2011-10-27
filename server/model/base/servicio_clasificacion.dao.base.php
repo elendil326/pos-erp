@@ -47,7 +47,7 @@ abstract class ServicioClasificacionDAOBase extends DAO
 	  **/
 	public static final function save( &$servicio_clasificacion )
 	{
-		if(  self::getByPK(  $servicio_clasificacion->getIdServicio() , $servicio_clasificacion->getIdClasificacionServicio() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $servicio_clasificacion->getIdServicio() , $servicio_clasificacion->getIdClasificacionServicio() ) ) )
 		{
 			try{ return ServicioClasificacionDAOBase::update( $servicio_clasificacion) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -99,9 +99,9 @@ abstract class ServicioClasificacionDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from servicio_clasificacion";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -147,19 +147,19 @@ abstract class ServicioClasificacionDAOBase extends DAO
 	{
 		$sql = "SELECT * from servicio_clasificacion WHERE ("; 
 		$val = array();
-		if( $servicio_clasificacion->getIdServicio() != NULL){
+		if( ! is_null( $servicio_clasificacion->getIdServicio() ) ){
 			$sql .= " id_servicio = ? AND";
 			array_push( $val, $servicio_clasificacion->getIdServicio() );
 		}
 
-		if( $servicio_clasificacion->getIdClasificacionServicio() != NULL){
+		if( ! is_null( $servicio_clasificacion->getIdClasificacionServicio() ) ){
 			$sql .= " id_clasificacion_servicio = ? AND";
 			array_push( $val, $servicio_clasificacion->getIdClasificacionServicio() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -258,30 +258,30 @@ abstract class ServicioClasificacionDAOBase extends DAO
 	{
 		$sql = "SELECT * from servicio_clasificacion WHERE ("; 
 		$val = array();
-		if( (($a = $servicio_clasificacionA->getIdServicio()) !== NULL) & ( ($b = $servicio_clasificacionB->getIdServicio()) !== NULL) ){
+		if( ( !is_null (($a = $servicio_clasificacionA->getIdServicio()) ) ) & ( ! is_null ( ($b = $servicio_clasificacionB->getIdServicio()) ) ) ){
 				$sql .= " id_servicio >= ? AND id_servicio <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_servicio = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $servicio_clasificacionA->getIdClasificacionServicio()) !== NULL) & ( ($b = $servicio_clasificacionB->getIdClasificacionServicio()) !== NULL) ){
+		if( ( !is_null (($a = $servicio_clasificacionA->getIdClasificacionServicio()) ) ) & ( ! is_null ( ($b = $servicio_clasificacionB->getIdClasificacionServicio()) ) ) ){
 				$sql .= " id_clasificacion_servicio >= ? AND id_clasificacion_servicio <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_clasificacion_servicio = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -310,7 +310,7 @@ abstract class ServicioClasificacionDAOBase extends DAO
 	  **/
 	public static final function delete( &$servicio_clasificacion )
 	{
-		if(self::getByPK($servicio_clasificacion->getIdServicio(), $servicio_clasificacion->getIdClasificacionServicio()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($servicio_clasificacion->getIdServicio(), $servicio_clasificacion->getIdClasificacionServicio()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM servicio_clasificacion WHERE  id_servicio = ? AND id_clasificacion_servicio = ?;";
 		$params = array( $servicio_clasificacion->getIdServicio(), $servicio_clasificacion->getIdClasificacionServicio() );
 		global $conn;

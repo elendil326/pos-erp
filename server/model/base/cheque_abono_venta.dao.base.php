@@ -47,7 +47,7 @@ abstract class ChequeAbonoVentaDAOBase extends DAO
 	  **/
 	public static final function save( &$cheque_abono_venta )
 	{
-		if(  self::getByPK(  $cheque_abono_venta->getIdCheque() , $cheque_abono_venta->getIdAbonoVenta() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $cheque_abono_venta->getIdCheque() , $cheque_abono_venta->getIdAbonoVenta() ) ) )
 		{
 			try{ return ChequeAbonoVentaDAOBase::update( $cheque_abono_venta) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -99,9 +99,9 @@ abstract class ChequeAbonoVentaDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from cheque_abono_venta";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -147,19 +147,19 @@ abstract class ChequeAbonoVentaDAOBase extends DAO
 	{
 		$sql = "SELECT * from cheque_abono_venta WHERE ("; 
 		$val = array();
-		if( $cheque_abono_venta->getIdCheque() != NULL){
+		if( ! is_null( $cheque_abono_venta->getIdCheque() ) ){
 			$sql .= " id_cheque = ? AND";
 			array_push( $val, $cheque_abono_venta->getIdCheque() );
 		}
 
-		if( $cheque_abono_venta->getIdAbonoVenta() != NULL){
+		if( ! is_null( $cheque_abono_venta->getIdAbonoVenta() ) ){
 			$sql .= " id_abono_venta = ? AND";
 			array_push( $val, $cheque_abono_venta->getIdAbonoVenta() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -258,30 +258,30 @@ abstract class ChequeAbonoVentaDAOBase extends DAO
 	{
 		$sql = "SELECT * from cheque_abono_venta WHERE ("; 
 		$val = array();
-		if( (($a = $cheque_abono_ventaA->getIdCheque()) !== NULL) & ( ($b = $cheque_abono_ventaB->getIdCheque()) !== NULL) ){
+		if( ( !is_null (($a = $cheque_abono_ventaA->getIdCheque()) ) ) & ( ! is_null ( ($b = $cheque_abono_ventaB->getIdCheque()) ) ) ){
 				$sql .= " id_cheque >= ? AND id_cheque <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_cheque = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $cheque_abono_ventaA->getIdAbonoVenta()) !== NULL) & ( ($b = $cheque_abono_ventaB->getIdAbonoVenta()) !== NULL) ){
+		if( ( !is_null (($a = $cheque_abono_ventaA->getIdAbonoVenta()) ) ) & ( ! is_null ( ($b = $cheque_abono_ventaB->getIdAbonoVenta()) ) ) ){
 				$sql .= " id_abono_venta >= ? AND id_abono_venta <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_abono_venta = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -310,7 +310,7 @@ abstract class ChequeAbonoVentaDAOBase extends DAO
 	  **/
 	public static final function delete( &$cheque_abono_venta )
 	{
-		if(self::getByPK($cheque_abono_venta->getIdCheque(), $cheque_abono_venta->getIdAbonoVenta()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($cheque_abono_venta->getIdCheque(), $cheque_abono_venta->getIdAbonoVenta()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM cheque_abono_venta WHERE  id_cheque = ? AND id_abono_venta = ?;";
 		$params = array( $cheque_abono_venta->getIdCheque(), $cheque_abono_venta->getIdAbonoVenta() );
 		global $conn;

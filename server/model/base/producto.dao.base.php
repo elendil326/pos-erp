@@ -44,7 +44,7 @@ abstract class ProductoDAOBase extends DAO
 	  **/
 	public static final function save( &$producto )
 	{
-		if(  self::getByPK(  $producto->getIdProducto() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $producto->getIdProducto() ) ) )
 		{
 			try{ return ProductoDAOBase::update( $producto) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -96,9 +96,9 @@ abstract class ProductoDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from producto";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -143,99 +143,99 @@ abstract class ProductoDAOBase extends DAO
 	{
 		$sql = "SELECT * from producto WHERE ("; 
 		$val = array();
-		if( $producto->getIdProducto() != NULL){
+		if( ! is_null( $producto->getIdProducto() ) ){
 			$sql .= " id_producto = ? AND";
 			array_push( $val, $producto->getIdProducto() );
 		}
 
-		if( $producto->getCompraEnMostrador() != NULL){
+		if( ! is_null( $producto->getCompraEnMostrador() ) ){
 			$sql .= " compra_en_mostrador = ? AND";
 			array_push( $val, $producto->getCompraEnMostrador() );
 		}
 
-		if( $producto->getMetodoCosteo() != NULL){
+		if( ! is_null( $producto->getMetodoCosteo() ) ){
 			$sql .= " metodo_costeo = ? AND";
 			array_push( $val, $producto->getMetodoCosteo() );
 		}
 
-		if( $producto->getActivo() != NULL){
+		if( ! is_null( $producto->getActivo() ) ){
 			$sql .= " activo = ? AND";
 			array_push( $val, $producto->getActivo() );
 		}
 
-		if( $producto->getCodigoProducto() != NULL){
+		if( ! is_null( $producto->getCodigoProducto() ) ){
 			$sql .= " codigo_producto = ? AND";
 			array_push( $val, $producto->getCodigoProducto() );
 		}
 
-		if( $producto->getNombreProducto() != NULL){
+		if( ! is_null( $producto->getNombreProducto() ) ){
 			$sql .= " nombre_producto = ? AND";
 			array_push( $val, $producto->getNombreProducto() );
 		}
 
-		if( $producto->getGarantia() != NULL){
+		if( ! is_null( $producto->getGarantia() ) ){
 			$sql .= " garantia = ? AND";
 			array_push( $val, $producto->getGarantia() );
 		}
 
-		if( $producto->getCostoEstandar() != NULL){
+		if( ! is_null( $producto->getCostoEstandar() ) ){
 			$sql .= " costo_estandar = ? AND";
 			array_push( $val, $producto->getCostoEstandar() );
 		}
 
-		if( $producto->getControlDeExistencia() != NULL){
+		if( ! is_null( $producto->getControlDeExistencia() ) ){
 			$sql .= " control_de_existencia = ? AND";
 			array_push( $val, $producto->getControlDeExistencia() );
 		}
 
-		if( $producto->getMargenDeUtilidad() != NULL){
+		if( ! is_null( $producto->getMargenDeUtilidad() ) ){
 			$sql .= " margen_de_utilidad = ? AND";
 			array_push( $val, $producto->getMargenDeUtilidad() );
 		}
 
-		if( $producto->getDescuento() != NULL){
+		if( ! is_null( $producto->getDescuento() ) ){
 			$sql .= " descuento = ? AND";
 			array_push( $val, $producto->getDescuento() );
 		}
 
-		if( $producto->getDescripcion() != NULL){
+		if( ! is_null( $producto->getDescripcion() ) ){
 			$sql .= " descripcion = ? AND";
 			array_push( $val, $producto->getDescripcion() );
 		}
 
-		if( $producto->getFotoDelProducto() != NULL){
+		if( ! is_null( $producto->getFotoDelProducto() ) ){
 			$sql .= " foto_del_producto = ? AND";
 			array_push( $val, $producto->getFotoDelProducto() );
 		}
 
-		if( $producto->getCostoExtraAlmacen() != NULL){
+		if( ! is_null( $producto->getCostoExtraAlmacen() ) ){
 			$sql .= " costo_extra_almacen = ? AND";
 			array_push( $val, $producto->getCostoExtraAlmacen() );
 		}
 
-		if( $producto->getCodigoDeBarras() != NULL){
+		if( ! is_null( $producto->getCodigoDeBarras() ) ){
 			$sql .= " codigo_de_barras = ? AND";
 			array_push( $val, $producto->getCodigoDeBarras() );
 		}
 
-		if( $producto->getPesoProducto() != NULL){
+		if( ! is_null( $producto->getPesoProducto() ) ){
 			$sql .= " peso_producto = ? AND";
 			array_push( $val, $producto->getPesoProducto() );
 		}
 
-		if( $producto->getIdUnidad() != NULL){
+		if( ! is_null( $producto->getIdUnidad() ) ){
 			$sql .= " id_unidad = ? AND";
 			array_push( $val, $producto->getIdUnidad() );
 		}
 
-		if( $producto->getPrecio() != NULL){
+		if( ! is_null( $producto->getPrecio() ) ){
 			$sql .= " precio = ? AND";
 			array_push( $val, $producto->getPrecio() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -374,206 +374,206 @@ abstract class ProductoDAOBase extends DAO
 	{
 		$sql = "SELECT * from producto WHERE ("; 
 		$val = array();
-		if( (($a = $productoA->getIdProducto()) !== NULL) & ( ($b = $productoB->getIdProducto()) !== NULL) ){
+		if( ( !is_null (($a = $productoA->getIdProducto()) ) ) & ( ! is_null ( ($b = $productoB->getIdProducto()) ) ) ){
 				$sql .= " id_producto >= ? AND id_producto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_producto = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $productoA->getCompraEnMostrador()) !== NULL) & ( ($b = $productoB->getCompraEnMostrador()) !== NULL) ){
+		if( ( !is_null (($a = $productoA->getCompraEnMostrador()) ) ) & ( ! is_null ( ($b = $productoB->getCompraEnMostrador()) ) ) ){
 				$sql .= " compra_en_mostrador >= ? AND compra_en_mostrador <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " compra_en_mostrador = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $productoA->getMetodoCosteo()) !== NULL) & ( ($b = $productoB->getMetodoCosteo()) !== NULL) ){
+		if( ( !is_null (($a = $productoA->getMetodoCosteo()) ) ) & ( ! is_null ( ($b = $productoB->getMetodoCosteo()) ) ) ){
 				$sql .= " metodo_costeo >= ? AND metodo_costeo <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " metodo_costeo = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $productoA->getActivo()) !== NULL) & ( ($b = $productoB->getActivo()) !== NULL) ){
+		if( ( !is_null (($a = $productoA->getActivo()) ) ) & ( ! is_null ( ($b = $productoB->getActivo()) ) ) ){
 				$sql .= " activo >= ? AND activo <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " activo = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $productoA->getCodigoProducto()) !== NULL) & ( ($b = $productoB->getCodigoProducto()) !== NULL) ){
+		if( ( !is_null (($a = $productoA->getCodigoProducto()) ) ) & ( ! is_null ( ($b = $productoB->getCodigoProducto()) ) ) ){
 				$sql .= " codigo_producto >= ? AND codigo_producto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " codigo_producto = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $productoA->getNombreProducto()) !== NULL) & ( ($b = $productoB->getNombreProducto()) !== NULL) ){
+		if( ( !is_null (($a = $productoA->getNombreProducto()) ) ) & ( ! is_null ( ($b = $productoB->getNombreProducto()) ) ) ){
 				$sql .= " nombre_producto >= ? AND nombre_producto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " nombre_producto = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $productoA->getGarantia()) !== NULL) & ( ($b = $productoB->getGarantia()) !== NULL) ){
+		if( ( !is_null (($a = $productoA->getGarantia()) ) ) & ( ! is_null ( ($b = $productoB->getGarantia()) ) ) ){
 				$sql .= " garantia >= ? AND garantia <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " garantia = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $productoA->getCostoEstandar()) !== NULL) & ( ($b = $productoB->getCostoEstandar()) !== NULL) ){
+		if( ( !is_null (($a = $productoA->getCostoEstandar()) ) ) & ( ! is_null ( ($b = $productoB->getCostoEstandar()) ) ) ){
 				$sql .= " costo_estandar >= ? AND costo_estandar <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " costo_estandar = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $productoA->getControlDeExistencia()) !== NULL) & ( ($b = $productoB->getControlDeExistencia()) !== NULL) ){
+		if( ( !is_null (($a = $productoA->getControlDeExistencia()) ) ) & ( ! is_null ( ($b = $productoB->getControlDeExistencia()) ) ) ){
 				$sql .= " control_de_existencia >= ? AND control_de_existencia <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " control_de_existencia = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $productoA->getMargenDeUtilidad()) !== NULL) & ( ($b = $productoB->getMargenDeUtilidad()) !== NULL) ){
+		if( ( !is_null (($a = $productoA->getMargenDeUtilidad()) ) ) & ( ! is_null ( ($b = $productoB->getMargenDeUtilidad()) ) ) ){
 				$sql .= " margen_de_utilidad >= ? AND margen_de_utilidad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " margen_de_utilidad = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $productoA->getDescuento()) !== NULL) & ( ($b = $productoB->getDescuento()) !== NULL) ){
+		if( ( !is_null (($a = $productoA->getDescuento()) ) ) & ( ! is_null ( ($b = $productoB->getDescuento()) ) ) ){
 				$sql .= " descuento >= ? AND descuento <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " descuento = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $productoA->getDescripcion()) !== NULL) & ( ($b = $productoB->getDescripcion()) !== NULL) ){
+		if( ( !is_null (($a = $productoA->getDescripcion()) ) ) & ( ! is_null ( ($b = $productoB->getDescripcion()) ) ) ){
 				$sql .= " descripcion >= ? AND descripcion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " descripcion = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $productoA->getFotoDelProducto()) !== NULL) & ( ($b = $productoB->getFotoDelProducto()) !== NULL) ){
+		if( ( !is_null (($a = $productoA->getFotoDelProducto()) ) ) & ( ! is_null ( ($b = $productoB->getFotoDelProducto()) ) ) ){
 				$sql .= " foto_del_producto >= ? AND foto_del_producto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " foto_del_producto = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $productoA->getCostoExtraAlmacen()) !== NULL) & ( ($b = $productoB->getCostoExtraAlmacen()) !== NULL) ){
+		if( ( !is_null (($a = $productoA->getCostoExtraAlmacen()) ) ) & ( ! is_null ( ($b = $productoB->getCostoExtraAlmacen()) ) ) ){
 				$sql .= " costo_extra_almacen >= ? AND costo_extra_almacen <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " costo_extra_almacen = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $productoA->getCodigoDeBarras()) !== NULL) & ( ($b = $productoB->getCodigoDeBarras()) !== NULL) ){
+		if( ( !is_null (($a = $productoA->getCodigoDeBarras()) ) ) & ( ! is_null ( ($b = $productoB->getCodigoDeBarras()) ) ) ){
 				$sql .= " codigo_de_barras >= ? AND codigo_de_barras <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " codigo_de_barras = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $productoA->getPesoProducto()) !== NULL) & ( ($b = $productoB->getPesoProducto()) !== NULL) ){
+		if( ( !is_null (($a = $productoA->getPesoProducto()) ) ) & ( ! is_null ( ($b = $productoB->getPesoProducto()) ) ) ){
 				$sql .= " peso_producto >= ? AND peso_producto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " peso_producto = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $productoA->getIdUnidad()) !== NULL) & ( ($b = $productoB->getIdUnidad()) !== NULL) ){
+		if( ( !is_null (($a = $productoA->getIdUnidad()) ) ) & ( ! is_null ( ($b = $productoB->getIdUnidad()) ) ) ){
 				$sql .= " id_unidad >= ? AND id_unidad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_unidad = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $productoA->getPrecio()) !== NULL) & ( ($b = $productoB->getPrecio()) !== NULL) ){
+		if( ( !is_null (($a = $productoA->getPrecio()) ) ) & ( ! is_null ( ($b = $productoB->getPrecio()) ) ) ){
 				$sql .= " precio >= ? AND precio <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " precio = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -602,7 +602,7 @@ abstract class ProductoDAOBase extends DAO
 	  **/
 	public static final function delete( &$producto )
 	{
-		if(self::getByPK($producto->getIdProducto()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($producto->getIdProducto()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM producto WHERE  id_producto = ?;";
 		$params = array( $producto->getIdProducto() );
 		global $conn;

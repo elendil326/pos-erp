@@ -44,7 +44,7 @@ abstract class CorteDeCajaDAOBase extends DAO
 	  **/
 	public static final function save( &$corte_de_caja )
 	{
-		if(  self::getByPK(  $corte_de_caja->getIdCorteDeCaja() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $corte_de_caja->getIdCorteDeCaja() ) ) )
 		{
 			try{ return CorteDeCajaDAOBase::update( $corte_de_caja) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -96,9 +96,9 @@ abstract class CorteDeCajaDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from corte_de_caja";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -143,49 +143,49 @@ abstract class CorteDeCajaDAOBase extends DAO
 	{
 		$sql = "SELECT * from corte_de_caja WHERE ("; 
 		$val = array();
-		if( $corte_de_caja->getIdCorteDeCaja() != NULL){
+		if( ! is_null( $corte_de_caja->getIdCorteDeCaja() ) ){
 			$sql .= " id_corte_de_caja = ? AND";
 			array_push( $val, $corte_de_caja->getIdCorteDeCaja() );
 		}
 
-		if( $corte_de_caja->getIdCaja() != NULL){
+		if( ! is_null( $corte_de_caja->getIdCaja() ) ){
 			$sql .= " id_caja = ? AND";
 			array_push( $val, $corte_de_caja->getIdCaja() );
 		}
 
-		if( $corte_de_caja->getIdCajero() != NULL){
+		if( ! is_null( $corte_de_caja->getIdCajero() ) ){
 			$sql .= " id_cajero = ? AND";
 			array_push( $val, $corte_de_caja->getIdCajero() );
 		}
 
-		if( $corte_de_caja->getIdCajeroNuevo() != NULL){
+		if( ! is_null( $corte_de_caja->getIdCajeroNuevo() ) ){
 			$sql .= " id_cajero_nuevo = ? AND";
 			array_push( $val, $corte_de_caja->getIdCajeroNuevo() );
 		}
 
-		if( $corte_de_caja->getFecha() != NULL){
+		if( ! is_null( $corte_de_caja->getFecha() ) ){
 			$sql .= " fecha = ? AND";
 			array_push( $val, $corte_de_caja->getFecha() );
 		}
 
-		if( $corte_de_caja->getSaldoReal() != NULL){
+		if( ! is_null( $corte_de_caja->getSaldoReal() ) ){
 			$sql .= " saldo_real = ? AND";
 			array_push( $val, $corte_de_caja->getSaldoReal() );
 		}
 
-		if( $corte_de_caja->getSaldoEsperado() != NULL){
+		if( ! is_null( $corte_de_caja->getSaldoEsperado() ) ){
 			$sql .= " saldo_esperado = ? AND";
 			array_push( $val, $corte_de_caja->getSaldoEsperado() );
 		}
 
-		if( $corte_de_caja->getSaldoFinal() != NULL){
+		if( ! is_null( $corte_de_caja->getSaldoFinal() ) ){
 			$sql .= " saldo_final = ? AND";
 			array_push( $val, $corte_de_caja->getSaldoFinal() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -304,96 +304,96 @@ abstract class CorteDeCajaDAOBase extends DAO
 	{
 		$sql = "SELECT * from corte_de_caja WHERE ("; 
 		$val = array();
-		if( (($a = $corte_de_cajaA->getIdCorteDeCaja()) !== NULL) & ( ($b = $corte_de_cajaB->getIdCorteDeCaja()) !== NULL) ){
+		if( ( !is_null (($a = $corte_de_cajaA->getIdCorteDeCaja()) ) ) & ( ! is_null ( ($b = $corte_de_cajaB->getIdCorteDeCaja()) ) ) ){
 				$sql .= " id_corte_de_caja >= ? AND id_corte_de_caja <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_corte_de_caja = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $corte_de_cajaA->getIdCaja()) !== NULL) & ( ($b = $corte_de_cajaB->getIdCaja()) !== NULL) ){
+		if( ( !is_null (($a = $corte_de_cajaA->getIdCaja()) ) ) & ( ! is_null ( ($b = $corte_de_cajaB->getIdCaja()) ) ) ){
 				$sql .= " id_caja >= ? AND id_caja <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_caja = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $corte_de_cajaA->getIdCajero()) !== NULL) & ( ($b = $corte_de_cajaB->getIdCajero()) !== NULL) ){
+		if( ( !is_null (($a = $corte_de_cajaA->getIdCajero()) ) ) & ( ! is_null ( ($b = $corte_de_cajaB->getIdCajero()) ) ) ){
 				$sql .= " id_cajero >= ? AND id_cajero <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_cajero = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $corte_de_cajaA->getIdCajeroNuevo()) !== NULL) & ( ($b = $corte_de_cajaB->getIdCajeroNuevo()) !== NULL) ){
+		if( ( !is_null (($a = $corte_de_cajaA->getIdCajeroNuevo()) ) ) & ( ! is_null ( ($b = $corte_de_cajaB->getIdCajeroNuevo()) ) ) ){
 				$sql .= " id_cajero_nuevo >= ? AND id_cajero_nuevo <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_cajero_nuevo = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $corte_de_cajaA->getFecha()) !== NULL) & ( ($b = $corte_de_cajaB->getFecha()) !== NULL) ){
+		if( ( !is_null (($a = $corte_de_cajaA->getFecha()) ) ) & ( ! is_null ( ($b = $corte_de_cajaB->getFecha()) ) ) ){
 				$sql .= " fecha >= ? AND fecha <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " fecha = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $corte_de_cajaA->getSaldoReal()) !== NULL) & ( ($b = $corte_de_cajaB->getSaldoReal()) !== NULL) ){
+		if( ( !is_null (($a = $corte_de_cajaA->getSaldoReal()) ) ) & ( ! is_null ( ($b = $corte_de_cajaB->getSaldoReal()) ) ) ){
 				$sql .= " saldo_real >= ? AND saldo_real <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " saldo_real = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $corte_de_cajaA->getSaldoEsperado()) !== NULL) & ( ($b = $corte_de_cajaB->getSaldoEsperado()) !== NULL) ){
+		if( ( !is_null (($a = $corte_de_cajaA->getSaldoEsperado()) ) ) & ( ! is_null ( ($b = $corte_de_cajaB->getSaldoEsperado()) ) ) ){
 				$sql .= " saldo_esperado >= ? AND saldo_esperado <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " saldo_esperado = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $corte_de_cajaA->getSaldoFinal()) !== NULL) & ( ($b = $corte_de_cajaB->getSaldoFinal()) !== NULL) ){
+		if( ( !is_null (($a = $corte_de_cajaA->getSaldoFinal()) ) ) & ( ! is_null ( ($b = $corte_de_cajaB->getSaldoFinal()) ) ) ){
 				$sql .= " saldo_final >= ? AND saldo_final <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " saldo_final = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -422,7 +422,7 @@ abstract class CorteDeCajaDAOBase extends DAO
 	  **/
 	public static final function delete( &$corte_de_caja )
 	{
-		if(self::getByPK($corte_de_caja->getIdCorteDeCaja()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($corte_de_caja->getIdCorteDeCaja()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM corte_de_caja WHERE  id_corte_de_caja = ?;";
 		$params = array( $corte_de_caja->getIdCorteDeCaja() );
 		global $conn;

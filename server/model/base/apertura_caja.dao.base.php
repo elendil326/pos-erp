@@ -44,7 +44,7 @@ abstract class AperturaCajaDAOBase extends DAO
 	  **/
 	public static final function save( &$apertura_caja )
 	{
-		if(  self::getByPK(  $apertura_caja->getIdAperturaCaja() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $apertura_caja->getIdAperturaCaja() ) ) )
 		{
 			try{ return AperturaCajaDAOBase::update( $apertura_caja) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -96,9 +96,9 @@ abstract class AperturaCajaDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from apertura_caja";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -143,34 +143,34 @@ abstract class AperturaCajaDAOBase extends DAO
 	{
 		$sql = "SELECT * from apertura_caja WHERE ("; 
 		$val = array();
-		if( $apertura_caja->getIdAperturaCaja() != NULL){
+		if( ! is_null( $apertura_caja->getIdAperturaCaja() ) ){
 			$sql .= " id_apertura_caja = ? AND";
 			array_push( $val, $apertura_caja->getIdAperturaCaja() );
 		}
 
-		if( $apertura_caja->getIdCaja() != NULL){
+		if( ! is_null( $apertura_caja->getIdCaja() ) ){
 			$sql .= " id_caja = ? AND";
 			array_push( $val, $apertura_caja->getIdCaja() );
 		}
 
-		if( $apertura_caja->getFecha() != NULL){
+		if( ! is_null( $apertura_caja->getFecha() ) ){
 			$sql .= " fecha = ? AND";
 			array_push( $val, $apertura_caja->getFecha() );
 		}
 
-		if( $apertura_caja->getSaldo() != NULL){
+		if( ! is_null( $apertura_caja->getSaldo() ) ){
 			$sql .= " saldo = ? AND";
 			array_push( $val, $apertura_caja->getSaldo() );
 		}
 
-		if( $apertura_caja->getIdCajero() != NULL){
+		if( ! is_null( $apertura_caja->getIdCajero() ) ){
 			$sql .= " id_cajero = ? AND";
 			array_push( $val, $apertura_caja->getIdCajero() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -283,63 +283,63 @@ abstract class AperturaCajaDAOBase extends DAO
 	{
 		$sql = "SELECT * from apertura_caja WHERE ("; 
 		$val = array();
-		if( (($a = $apertura_cajaA->getIdAperturaCaja()) !== NULL) & ( ($b = $apertura_cajaB->getIdAperturaCaja()) !== NULL) ){
+		if( ( !is_null (($a = $apertura_cajaA->getIdAperturaCaja()) ) ) & ( ! is_null ( ($b = $apertura_cajaB->getIdAperturaCaja()) ) ) ){
 				$sql .= " id_apertura_caja >= ? AND id_apertura_caja <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_apertura_caja = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $apertura_cajaA->getIdCaja()) !== NULL) & ( ($b = $apertura_cajaB->getIdCaja()) !== NULL) ){
+		if( ( !is_null (($a = $apertura_cajaA->getIdCaja()) ) ) & ( ! is_null ( ($b = $apertura_cajaB->getIdCaja()) ) ) ){
 				$sql .= " id_caja >= ? AND id_caja <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_caja = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $apertura_cajaA->getFecha()) !== NULL) & ( ($b = $apertura_cajaB->getFecha()) !== NULL) ){
+		if( ( !is_null (($a = $apertura_cajaA->getFecha()) ) ) & ( ! is_null ( ($b = $apertura_cajaB->getFecha()) ) ) ){
 				$sql .= " fecha >= ? AND fecha <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " fecha = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $apertura_cajaA->getSaldo()) !== NULL) & ( ($b = $apertura_cajaB->getSaldo()) !== NULL) ){
+		if( ( !is_null (($a = $apertura_cajaA->getSaldo()) ) ) & ( ! is_null ( ($b = $apertura_cajaB->getSaldo()) ) ) ){
 				$sql .= " saldo >= ? AND saldo <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " saldo = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $apertura_cajaA->getIdCajero()) !== NULL) & ( ($b = $apertura_cajaB->getIdCajero()) !== NULL) ){
+		if( ( !is_null (($a = $apertura_cajaA->getIdCajero()) ) ) & ( ! is_null ( ($b = $apertura_cajaB->getIdCajero()) ) ) ){
 				$sql .= " id_cajero >= ? AND id_cajero <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_cajero = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -368,7 +368,7 @@ abstract class AperturaCajaDAOBase extends DAO
 	  **/
 	public static final function delete( &$apertura_caja )
 	{
-		if(self::getByPK($apertura_caja->getIdAperturaCaja()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($apertura_caja->getIdAperturaCaja()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM apertura_caja WHERE  id_apertura_caja = ?;";
 		$params = array( $apertura_caja->getIdAperturaCaja() );
 		global $conn;

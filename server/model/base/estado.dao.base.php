@@ -44,7 +44,7 @@ abstract class EstadoDAOBase extends DAO
 	  **/
 	public static final function save( &$estado )
 	{
-		if(  self::getByPK(  $estado->getIdEstado() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $estado->getIdEstado() ) ) )
 		{
 			try{ return EstadoDAOBase::update( $estado) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -96,9 +96,9 @@ abstract class EstadoDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from estado";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -143,19 +143,19 @@ abstract class EstadoDAOBase extends DAO
 	{
 		$sql = "SELECT * from estado WHERE ("; 
 		$val = array();
-		if( $estado->getIdEstado() != NULL){
+		if( ! is_null( $estado->getIdEstado() ) ){
 			$sql .= " id_estado = ? AND";
 			array_push( $val, $estado->getIdEstado() );
 		}
 
-		if( $estado->getNombre() != NULL){
+		if( ! is_null( $estado->getNombre() ) ){
 			$sql .= " nombre = ? AND";
 			array_push( $val, $estado->getNombre() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -262,30 +262,30 @@ abstract class EstadoDAOBase extends DAO
 	{
 		$sql = "SELECT * from estado WHERE ("; 
 		$val = array();
-		if( (($a = $estadoA->getIdEstado()) !== NULL) & ( ($b = $estadoB->getIdEstado()) !== NULL) ){
+		if( ( !is_null (($a = $estadoA->getIdEstado()) ) ) & ( ! is_null ( ($b = $estadoB->getIdEstado()) ) ) ){
 				$sql .= " id_estado >= ? AND id_estado <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_estado = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $estadoA->getNombre()) !== NULL) & ( ($b = $estadoB->getNombre()) !== NULL) ){
+		if( ( !is_null (($a = $estadoA->getNombre()) ) ) & ( ! is_null ( ($b = $estadoB->getNombre()) ) ) ){
 				$sql .= " nombre >= ? AND nombre <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " nombre = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -314,7 +314,7 @@ abstract class EstadoDAOBase extends DAO
 	  **/
 	public static final function delete( &$estado )
 	{
-		if(self::getByPK($estado->getIdEstado()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($estado->getIdEstado()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM estado WHERE  id_estado = ?;";
 		$params = array( $estado->getIdEstado() );
 		global $conn;

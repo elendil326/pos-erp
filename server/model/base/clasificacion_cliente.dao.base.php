@@ -44,7 +44,7 @@ abstract class ClasificacionClienteDAOBase extends DAO
 	  **/
 	public static final function save( &$clasificacion_cliente )
 	{
-		if(  self::getByPK(  $clasificacion_cliente->getIdClasificacionCliente() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $clasificacion_cliente->getIdClasificacionCliente() ) ) )
 		{
 			try{ return ClasificacionClienteDAOBase::update( $clasificacion_cliente) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -96,9 +96,9 @@ abstract class ClasificacionClienteDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from clasificacion_cliente";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -143,39 +143,39 @@ abstract class ClasificacionClienteDAOBase extends DAO
 	{
 		$sql = "SELECT * from clasificacion_cliente WHERE ("; 
 		$val = array();
-		if( $clasificacion_cliente->getIdClasificacionCliente() != NULL){
+		if( ! is_null( $clasificacion_cliente->getIdClasificacionCliente() ) ){
 			$sql .= " id_clasificacion_cliente = ? AND";
 			array_push( $val, $clasificacion_cliente->getIdClasificacionCliente() );
 		}
 
-		if( $clasificacion_cliente->getClaveInterna() != NULL){
+		if( ! is_null( $clasificacion_cliente->getClaveInterna() ) ){
 			$sql .= " clave_interna = ? AND";
 			array_push( $val, $clasificacion_cliente->getClaveInterna() );
 		}
 
-		if( $clasificacion_cliente->getNombre() != NULL){
+		if( ! is_null( $clasificacion_cliente->getNombre() ) ){
 			$sql .= " nombre = ? AND";
 			array_push( $val, $clasificacion_cliente->getNombre() );
 		}
 
-		if( $clasificacion_cliente->getDescripcion() != NULL){
+		if( ! is_null( $clasificacion_cliente->getDescripcion() ) ){
 			$sql .= " descripcion = ? AND";
 			array_push( $val, $clasificacion_cliente->getDescripcion() );
 		}
 
-		if( $clasificacion_cliente->getMargenUtilidad() != NULL){
+		if( ! is_null( $clasificacion_cliente->getMargenUtilidad() ) ){
 			$sql .= " margen_utilidad = ? AND";
 			array_push( $val, $clasificacion_cliente->getMargenUtilidad() );
 		}
 
-		if( $clasificacion_cliente->getDescuento() != NULL){
+		if( ! is_null( $clasificacion_cliente->getDescuento() ) ){
 			$sql .= " descuento = ? AND";
 			array_push( $val, $clasificacion_cliente->getDescuento() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -290,74 +290,74 @@ abstract class ClasificacionClienteDAOBase extends DAO
 	{
 		$sql = "SELECT * from clasificacion_cliente WHERE ("; 
 		$val = array();
-		if( (($a = $clasificacion_clienteA->getIdClasificacionCliente()) !== NULL) & ( ($b = $clasificacion_clienteB->getIdClasificacionCliente()) !== NULL) ){
+		if( ( !is_null (($a = $clasificacion_clienteA->getIdClasificacionCliente()) ) ) & ( ! is_null ( ($b = $clasificacion_clienteB->getIdClasificacionCliente()) ) ) ){
 				$sql .= " id_clasificacion_cliente >= ? AND id_clasificacion_cliente <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_clasificacion_cliente = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $clasificacion_clienteA->getClaveInterna()) !== NULL) & ( ($b = $clasificacion_clienteB->getClaveInterna()) !== NULL) ){
+		if( ( !is_null (($a = $clasificacion_clienteA->getClaveInterna()) ) ) & ( ! is_null ( ($b = $clasificacion_clienteB->getClaveInterna()) ) ) ){
 				$sql .= " clave_interna >= ? AND clave_interna <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " clave_interna = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $clasificacion_clienteA->getNombre()) !== NULL) & ( ($b = $clasificacion_clienteB->getNombre()) !== NULL) ){
+		if( ( !is_null (($a = $clasificacion_clienteA->getNombre()) ) ) & ( ! is_null ( ($b = $clasificacion_clienteB->getNombre()) ) ) ){
 				$sql .= " nombre >= ? AND nombre <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " nombre = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $clasificacion_clienteA->getDescripcion()) !== NULL) & ( ($b = $clasificacion_clienteB->getDescripcion()) !== NULL) ){
+		if( ( !is_null (($a = $clasificacion_clienteA->getDescripcion()) ) ) & ( ! is_null ( ($b = $clasificacion_clienteB->getDescripcion()) ) ) ){
 				$sql .= " descripcion >= ? AND descripcion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " descripcion = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $clasificacion_clienteA->getMargenUtilidad()) !== NULL) & ( ($b = $clasificacion_clienteB->getMargenUtilidad()) !== NULL) ){
+		if( ( !is_null (($a = $clasificacion_clienteA->getMargenUtilidad()) ) ) & ( ! is_null ( ($b = $clasificacion_clienteB->getMargenUtilidad()) ) ) ){
 				$sql .= " margen_utilidad >= ? AND margen_utilidad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " margen_utilidad = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $clasificacion_clienteA->getDescuento()) !== NULL) & ( ($b = $clasificacion_clienteB->getDescuento()) !== NULL) ){
+		if( ( !is_null (($a = $clasificacion_clienteA->getDescuento()) ) ) & ( ! is_null ( ($b = $clasificacion_clienteB->getDescuento()) ) ) ){
 				$sql .= " descuento >= ? AND descuento <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " descuento = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -386,7 +386,7 @@ abstract class ClasificacionClienteDAOBase extends DAO
 	  **/
 	public static final function delete( &$clasificacion_cliente )
 	{
-		if(self::getByPK($clasificacion_cliente->getIdClasificacionCliente()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($clasificacion_cliente->getIdClasificacionCliente()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM clasificacion_cliente WHERE  id_clasificacion_cliente = ?;";
 		$params = array( $clasificacion_cliente->getIdClasificacionCliente() );
 		global $conn;

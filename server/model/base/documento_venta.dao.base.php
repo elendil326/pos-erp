@@ -47,7 +47,7 @@ abstract class DocumentoVentaDAOBase extends DAO
 	  **/
 	public static final function save( &$documento_venta )
 	{
-		if(  self::getByPK(  $documento_venta->getIdDocumento() , $documento_venta->getIdVenta() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $documento_venta->getIdDocumento() , $documento_venta->getIdVenta() ) ) )
 		{
 			try{ return DocumentoVentaDAOBase::update( $documento_venta) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -99,9 +99,9 @@ abstract class DocumentoVentaDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from documento_venta";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -147,19 +147,19 @@ abstract class DocumentoVentaDAOBase extends DAO
 	{
 		$sql = "SELECT * from documento_venta WHERE ("; 
 		$val = array();
-		if( $documento_venta->getIdDocumento() != NULL){
+		if( ! is_null( $documento_venta->getIdDocumento() ) ){
 			$sql .= " id_documento = ? AND";
 			array_push( $val, $documento_venta->getIdDocumento() );
 		}
 
-		if( $documento_venta->getIdVenta() != NULL){
+		if( ! is_null( $documento_venta->getIdVenta() ) ){
 			$sql .= " id_venta = ? AND";
 			array_push( $val, $documento_venta->getIdVenta() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -258,30 +258,30 @@ abstract class DocumentoVentaDAOBase extends DAO
 	{
 		$sql = "SELECT * from documento_venta WHERE ("; 
 		$val = array();
-		if( (($a = $documento_ventaA->getIdDocumento()) !== NULL) & ( ($b = $documento_ventaB->getIdDocumento()) !== NULL) ){
+		if( ( !is_null (($a = $documento_ventaA->getIdDocumento()) ) ) & ( ! is_null ( ($b = $documento_ventaB->getIdDocumento()) ) ) ){
 				$sql .= " id_documento >= ? AND id_documento <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_documento = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $documento_ventaA->getIdVenta()) !== NULL) & ( ($b = $documento_ventaB->getIdVenta()) !== NULL) ){
+		if( ( !is_null (($a = $documento_ventaA->getIdVenta()) ) ) & ( ! is_null ( ($b = $documento_ventaB->getIdVenta()) ) ) ){
 				$sql .= " id_venta >= ? AND id_venta <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_venta = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -310,7 +310,7 @@ abstract class DocumentoVentaDAOBase extends DAO
 	  **/
 	public static final function delete( &$documento_venta )
 	{
-		if(self::getByPK($documento_venta->getIdDocumento(), $documento_venta->getIdVenta()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($documento_venta->getIdDocumento(), $documento_venta->getIdVenta()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM documento_venta WHERE  id_documento = ? AND id_venta = ?;";
 		$params = array( $documento_venta->getIdDocumento(), $documento_venta->getIdVenta() );
 		global $conn;

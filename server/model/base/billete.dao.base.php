@@ -44,7 +44,7 @@ abstract class BilleteDAOBase extends DAO
 	  **/
 	public static final function save( &$billete )
 	{
-		if(  self::getByPK(  $billete->getIdBillete() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $billete->getIdBillete() ) ) )
 		{
 			try{ return BilleteDAOBase::update( $billete) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -96,9 +96,9 @@ abstract class BilleteDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from billete";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -143,39 +143,39 @@ abstract class BilleteDAOBase extends DAO
 	{
 		$sql = "SELECT * from billete WHERE ("; 
 		$val = array();
-		if( $billete->getIdBillete() != NULL){
+		if( ! is_null( $billete->getIdBillete() ) ){
 			$sql .= " id_billete = ? AND";
 			array_push( $val, $billete->getIdBillete() );
 		}
 
-		if( $billete->getIdMoneda() != NULL){
+		if( ! is_null( $billete->getIdMoneda() ) ){
 			$sql .= " id_moneda = ? AND";
 			array_push( $val, $billete->getIdMoneda() );
 		}
 
-		if( $billete->getNombre() != NULL){
+		if( ! is_null( $billete->getNombre() ) ){
 			$sql .= " nombre = ? AND";
 			array_push( $val, $billete->getNombre() );
 		}
 
-		if( $billete->getValor() != NULL){
+		if( ! is_null( $billete->getValor() ) ){
 			$sql .= " valor = ? AND";
 			array_push( $val, $billete->getValor() );
 		}
 
-		if( $billete->getFotoBillete() != NULL){
+		if( ! is_null( $billete->getFotoBillete() ) ){
 			$sql .= " foto_billete = ? AND";
 			array_push( $val, $billete->getFotoBillete() );
 		}
 
-		if( $billete->getActivo() != NULL){
+		if( ! is_null( $billete->getActivo() ) ){
 			$sql .= " activo = ? AND";
 			array_push( $val, $billete->getActivo() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -290,74 +290,74 @@ abstract class BilleteDAOBase extends DAO
 	{
 		$sql = "SELECT * from billete WHERE ("; 
 		$val = array();
-		if( (($a = $billeteA->getIdBillete()) !== NULL) & ( ($b = $billeteB->getIdBillete()) !== NULL) ){
+		if( ( !is_null (($a = $billeteA->getIdBillete()) ) ) & ( ! is_null ( ($b = $billeteB->getIdBillete()) ) ) ){
 				$sql .= " id_billete >= ? AND id_billete <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_billete = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $billeteA->getIdMoneda()) !== NULL) & ( ($b = $billeteB->getIdMoneda()) !== NULL) ){
+		if( ( !is_null (($a = $billeteA->getIdMoneda()) ) ) & ( ! is_null ( ($b = $billeteB->getIdMoneda()) ) ) ){
 				$sql .= " id_moneda >= ? AND id_moneda <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_moneda = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $billeteA->getNombre()) !== NULL) & ( ($b = $billeteB->getNombre()) !== NULL) ){
+		if( ( !is_null (($a = $billeteA->getNombre()) ) ) & ( ! is_null ( ($b = $billeteB->getNombre()) ) ) ){
 				$sql .= " nombre >= ? AND nombre <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " nombre = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $billeteA->getValor()) !== NULL) & ( ($b = $billeteB->getValor()) !== NULL) ){
+		if( ( !is_null (($a = $billeteA->getValor()) ) ) & ( ! is_null ( ($b = $billeteB->getValor()) ) ) ){
 				$sql .= " valor >= ? AND valor <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " valor = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $billeteA->getFotoBillete()) !== NULL) & ( ($b = $billeteB->getFotoBillete()) !== NULL) ){
+		if( ( !is_null (($a = $billeteA->getFotoBillete()) ) ) & ( ! is_null ( ($b = $billeteB->getFotoBillete()) ) ) ){
 				$sql .= " foto_billete >= ? AND foto_billete <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " foto_billete = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $billeteA->getActivo()) !== NULL) & ( ($b = $billeteB->getActivo()) !== NULL) ){
+		if( ( !is_null (($a = $billeteA->getActivo()) ) ) & ( ! is_null ( ($b = $billeteB->getActivo()) ) ) ){
 				$sql .= " activo >= ? AND activo <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " activo = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -386,7 +386,7 @@ abstract class BilleteDAOBase extends DAO
 	  **/
 	public static final function delete( &$billete )
 	{
-		if(self::getByPK($billete->getIdBillete()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($billete->getIdBillete()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM billete WHERE  id_billete = ?;";
 		$params = array( $billete->getIdBillete() );
 		global $conn;

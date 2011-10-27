@@ -47,7 +47,7 @@ abstract class ProductoClasificacionDAOBase extends DAO
 	  **/
 	public static final function save( &$producto_clasificacion )
 	{
-		if(  self::getByPK(  $producto_clasificacion->getIdProducto() , $producto_clasificacion->getIdClasificacionProducto() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $producto_clasificacion->getIdProducto() , $producto_clasificacion->getIdClasificacionProducto() ) ) )
 		{
 			try{ return ProductoClasificacionDAOBase::update( $producto_clasificacion) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -99,9 +99,9 @@ abstract class ProductoClasificacionDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from producto_clasificacion";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -147,19 +147,19 @@ abstract class ProductoClasificacionDAOBase extends DAO
 	{
 		$sql = "SELECT * from producto_clasificacion WHERE ("; 
 		$val = array();
-		if( $producto_clasificacion->getIdProducto() != NULL){
+		if( ! is_null( $producto_clasificacion->getIdProducto() ) ){
 			$sql .= " id_producto = ? AND";
 			array_push( $val, $producto_clasificacion->getIdProducto() );
 		}
 
-		if( $producto_clasificacion->getIdClasificacionProducto() != NULL){
+		if( ! is_null( $producto_clasificacion->getIdClasificacionProducto() ) ){
 			$sql .= " id_clasificacion_producto = ? AND";
 			array_push( $val, $producto_clasificacion->getIdClasificacionProducto() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -258,30 +258,30 @@ abstract class ProductoClasificacionDAOBase extends DAO
 	{
 		$sql = "SELECT * from producto_clasificacion WHERE ("; 
 		$val = array();
-		if( (($a = $producto_clasificacionA->getIdProducto()) !== NULL) & ( ($b = $producto_clasificacionB->getIdProducto()) !== NULL) ){
+		if( ( !is_null (($a = $producto_clasificacionA->getIdProducto()) ) ) & ( ! is_null ( ($b = $producto_clasificacionB->getIdProducto()) ) ) ){
 				$sql .= " id_producto >= ? AND id_producto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_producto = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $producto_clasificacionA->getIdClasificacionProducto()) !== NULL) & ( ($b = $producto_clasificacionB->getIdClasificacionProducto()) !== NULL) ){
+		if( ( !is_null (($a = $producto_clasificacionA->getIdClasificacionProducto()) ) ) & ( ! is_null ( ($b = $producto_clasificacionB->getIdClasificacionProducto()) ) ) ){
 				$sql .= " id_clasificacion_producto >= ? AND id_clasificacion_producto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_clasificacion_producto = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -310,7 +310,7 @@ abstract class ProductoClasificacionDAOBase extends DAO
 	  **/
 	public static final function delete( &$producto_clasificacion )
 	{
-		if(self::getByPK($producto_clasificacion->getIdProducto(), $producto_clasificacion->getIdClasificacionProducto()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($producto_clasificacion->getIdProducto(), $producto_clasificacion->getIdClasificacionProducto()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM producto_clasificacion WHERE  id_producto = ? AND id_clasificacion_producto = ?;";
 		$params = array( $producto_clasificacion->getIdProducto(), $producto_clasificacion->getIdClasificacionProducto() );
 		global $conn;

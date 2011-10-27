@@ -47,7 +47,7 @@ abstract class RetencionClasificacionClienteDAOBase extends DAO
 	  **/
 	public static final function save( &$retencion_clasificacion_cliente )
 	{
-		if(  self::getByPK(  $retencion_clasificacion_cliente->getIdRetencion() , $retencion_clasificacion_cliente->getIdClasificacionCliente() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $retencion_clasificacion_cliente->getIdRetencion() , $retencion_clasificacion_cliente->getIdClasificacionCliente() ) ) )
 		{
 			try{ return RetencionClasificacionClienteDAOBase::update( $retencion_clasificacion_cliente) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -99,9 +99,9 @@ abstract class RetencionClasificacionClienteDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from retencion_clasificacion_cliente";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -147,19 +147,19 @@ abstract class RetencionClasificacionClienteDAOBase extends DAO
 	{
 		$sql = "SELECT * from retencion_clasificacion_cliente WHERE ("; 
 		$val = array();
-		if( $retencion_clasificacion_cliente->getIdRetencion() != NULL){
+		if( ! is_null( $retencion_clasificacion_cliente->getIdRetencion() ) ){
 			$sql .= " id_retencion = ? AND";
 			array_push( $val, $retencion_clasificacion_cliente->getIdRetencion() );
 		}
 
-		if( $retencion_clasificacion_cliente->getIdClasificacionCliente() != NULL){
+		if( ! is_null( $retencion_clasificacion_cliente->getIdClasificacionCliente() ) ){
 			$sql .= " id_clasificacion_cliente = ? AND";
 			array_push( $val, $retencion_clasificacion_cliente->getIdClasificacionCliente() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -258,30 +258,30 @@ abstract class RetencionClasificacionClienteDAOBase extends DAO
 	{
 		$sql = "SELECT * from retencion_clasificacion_cliente WHERE ("; 
 		$val = array();
-		if( (($a = $retencion_clasificacion_clienteA->getIdRetencion()) !== NULL) & ( ($b = $retencion_clasificacion_clienteB->getIdRetencion()) !== NULL) ){
+		if( ( !is_null (($a = $retencion_clasificacion_clienteA->getIdRetencion()) ) ) & ( ! is_null ( ($b = $retencion_clasificacion_clienteB->getIdRetencion()) ) ) ){
 				$sql .= " id_retencion >= ? AND id_retencion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_retencion = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $retencion_clasificacion_clienteA->getIdClasificacionCliente()) !== NULL) & ( ($b = $retencion_clasificacion_clienteB->getIdClasificacionCliente()) !== NULL) ){
+		if( ( !is_null (($a = $retencion_clasificacion_clienteA->getIdClasificacionCliente()) ) ) & ( ! is_null ( ($b = $retencion_clasificacion_clienteB->getIdClasificacionCliente()) ) ) ){
 				$sql .= " id_clasificacion_cliente >= ? AND id_clasificacion_cliente <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_clasificacion_cliente = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -310,7 +310,7 @@ abstract class RetencionClasificacionClienteDAOBase extends DAO
 	  **/
 	public static final function delete( &$retencion_clasificacion_cliente )
 	{
-		if(self::getByPK($retencion_clasificacion_cliente->getIdRetencion(), $retencion_clasificacion_cliente->getIdClasificacionCliente()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($retencion_clasificacion_cliente->getIdRetencion(), $retencion_clasificacion_cliente->getIdClasificacionCliente()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM retencion_clasificacion_cliente WHERE  id_retencion = ? AND id_clasificacion_cliente = ?;";
 		$params = array( $retencion_clasificacion_cliente->getIdRetencion(), $retencion_clasificacion_cliente->getIdClasificacionCliente() );
 		global $conn;

@@ -44,7 +44,7 @@ abstract class AbonoCompraDAOBase extends DAO
 	  **/
 	public static final function save( &$abono_compra )
 	{
-		if(  self::getByPK(  $abono_compra->getIdAbonoCompra() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $abono_compra->getIdAbonoCompra() ) ) )
 		{
 			try{ return AbonoCompraDAOBase::update( $abono_compra) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -96,9 +96,9 @@ abstract class AbonoCompraDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from abono_compra";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -143,69 +143,69 @@ abstract class AbonoCompraDAOBase extends DAO
 	{
 		$sql = "SELECT * from abono_compra WHERE ("; 
 		$val = array();
-		if( $abono_compra->getIdAbonoCompra() != NULL){
+		if( ! is_null( $abono_compra->getIdAbonoCompra() ) ){
 			$sql .= " id_abono_compra = ? AND";
 			array_push( $val, $abono_compra->getIdAbonoCompra() );
 		}
 
-		if( $abono_compra->getIdCompra() != NULL){
+		if( ! is_null( $abono_compra->getIdCompra() ) ){
 			$sql .= " id_compra = ? AND";
 			array_push( $val, $abono_compra->getIdCompra() );
 		}
 
-		if( $abono_compra->getIdSucursal() != NULL){
+		if( ! is_null( $abono_compra->getIdSucursal() ) ){
 			$sql .= " id_sucursal = ? AND";
 			array_push( $val, $abono_compra->getIdSucursal() );
 		}
 
-		if( $abono_compra->getMonto() != NULL){
+		if( ! is_null( $abono_compra->getMonto() ) ){
 			$sql .= " monto = ? AND";
 			array_push( $val, $abono_compra->getMonto() );
 		}
 
-		if( $abono_compra->getIdCaja() != NULL){
+		if( ! is_null( $abono_compra->getIdCaja() ) ){
 			$sql .= " id_caja = ? AND";
 			array_push( $val, $abono_compra->getIdCaja() );
 		}
 
-		if( $abono_compra->getIdDeudor() != NULL){
+		if( ! is_null( $abono_compra->getIdDeudor() ) ){
 			$sql .= " id_deudor = ? AND";
 			array_push( $val, $abono_compra->getIdDeudor() );
 		}
 
-		if( $abono_compra->getIdReceptor() != NULL){
+		if( ! is_null( $abono_compra->getIdReceptor() ) ){
 			$sql .= " id_receptor = ? AND";
 			array_push( $val, $abono_compra->getIdReceptor() );
 		}
 
-		if( $abono_compra->getNota() != NULL){
+		if( ! is_null( $abono_compra->getNota() ) ){
 			$sql .= " nota = ? AND";
 			array_push( $val, $abono_compra->getNota() );
 		}
 
-		if( $abono_compra->getFecha() != NULL){
+		if( ! is_null( $abono_compra->getFecha() ) ){
 			$sql .= " fecha = ? AND";
 			array_push( $val, $abono_compra->getFecha() );
 		}
 
-		if( $abono_compra->getTipoDePago() != NULL){
+		if( ! is_null( $abono_compra->getTipoDePago() ) ){
 			$sql .= " tipo_de_pago = ? AND";
 			array_push( $val, $abono_compra->getTipoDePago() );
 		}
 
-		if( $abono_compra->getCancelado() != NULL){
+		if( ! is_null( $abono_compra->getCancelado() ) ){
 			$sql .= " cancelado = ? AND";
 			array_push( $val, $abono_compra->getCancelado() );
 		}
 
-		if( $abono_compra->getMotivoCancelacion() != NULL){
+		if( ! is_null( $abono_compra->getMotivoCancelacion() ) ){
 			$sql .= " motivo_cancelacion = ? AND";
 			array_push( $val, $abono_compra->getMotivoCancelacion() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -332,140 +332,140 @@ abstract class AbonoCompraDAOBase extends DAO
 	{
 		$sql = "SELECT * from abono_compra WHERE ("; 
 		$val = array();
-		if( (($a = $abono_compraA->getIdAbonoCompra()) !== NULL) & ( ($b = $abono_compraB->getIdAbonoCompra()) !== NULL) ){
+		if( ( !is_null (($a = $abono_compraA->getIdAbonoCompra()) ) ) & ( ! is_null ( ($b = $abono_compraB->getIdAbonoCompra()) ) ) ){
 				$sql .= " id_abono_compra >= ? AND id_abono_compra <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_abono_compra = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $abono_compraA->getIdCompra()) !== NULL) & ( ($b = $abono_compraB->getIdCompra()) !== NULL) ){
+		if( ( !is_null (($a = $abono_compraA->getIdCompra()) ) ) & ( ! is_null ( ($b = $abono_compraB->getIdCompra()) ) ) ){
 				$sql .= " id_compra >= ? AND id_compra <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_compra = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $abono_compraA->getIdSucursal()) !== NULL) & ( ($b = $abono_compraB->getIdSucursal()) !== NULL) ){
+		if( ( !is_null (($a = $abono_compraA->getIdSucursal()) ) ) & ( ! is_null ( ($b = $abono_compraB->getIdSucursal()) ) ) ){
 				$sql .= " id_sucursal >= ? AND id_sucursal <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_sucursal = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $abono_compraA->getMonto()) !== NULL) & ( ($b = $abono_compraB->getMonto()) !== NULL) ){
+		if( ( !is_null (($a = $abono_compraA->getMonto()) ) ) & ( ! is_null ( ($b = $abono_compraB->getMonto()) ) ) ){
 				$sql .= " monto >= ? AND monto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " monto = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $abono_compraA->getIdCaja()) !== NULL) & ( ($b = $abono_compraB->getIdCaja()) !== NULL) ){
+		if( ( !is_null (($a = $abono_compraA->getIdCaja()) ) ) & ( ! is_null ( ($b = $abono_compraB->getIdCaja()) ) ) ){
 				$sql .= " id_caja >= ? AND id_caja <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_caja = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $abono_compraA->getIdDeudor()) !== NULL) & ( ($b = $abono_compraB->getIdDeudor()) !== NULL) ){
+		if( ( !is_null (($a = $abono_compraA->getIdDeudor()) ) ) & ( ! is_null ( ($b = $abono_compraB->getIdDeudor()) ) ) ){
 				$sql .= " id_deudor >= ? AND id_deudor <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_deudor = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $abono_compraA->getIdReceptor()) !== NULL) & ( ($b = $abono_compraB->getIdReceptor()) !== NULL) ){
+		if( ( !is_null (($a = $abono_compraA->getIdReceptor()) ) ) & ( ! is_null ( ($b = $abono_compraB->getIdReceptor()) ) ) ){
 				$sql .= " id_receptor >= ? AND id_receptor <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_receptor = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $abono_compraA->getNota()) !== NULL) & ( ($b = $abono_compraB->getNota()) !== NULL) ){
+		if( ( !is_null (($a = $abono_compraA->getNota()) ) ) & ( ! is_null ( ($b = $abono_compraB->getNota()) ) ) ){
 				$sql .= " nota >= ? AND nota <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " nota = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $abono_compraA->getFecha()) !== NULL) & ( ($b = $abono_compraB->getFecha()) !== NULL) ){
+		if( ( !is_null (($a = $abono_compraA->getFecha()) ) ) & ( ! is_null ( ($b = $abono_compraB->getFecha()) ) ) ){
 				$sql .= " fecha >= ? AND fecha <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " fecha = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $abono_compraA->getTipoDePago()) !== NULL) & ( ($b = $abono_compraB->getTipoDePago()) !== NULL) ){
+		if( ( !is_null (($a = $abono_compraA->getTipoDePago()) ) ) & ( ! is_null ( ($b = $abono_compraB->getTipoDePago()) ) ) ){
 				$sql .= " tipo_de_pago >= ? AND tipo_de_pago <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " tipo_de_pago = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $abono_compraA->getCancelado()) !== NULL) & ( ($b = $abono_compraB->getCancelado()) !== NULL) ){
+		if( ( !is_null (($a = $abono_compraA->getCancelado()) ) ) & ( ! is_null ( ($b = $abono_compraB->getCancelado()) ) ) ){
 				$sql .= " cancelado >= ? AND cancelado <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " cancelado = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $abono_compraA->getMotivoCancelacion()) !== NULL) & ( ($b = $abono_compraB->getMotivoCancelacion()) !== NULL) ){
+		if( ( !is_null (($a = $abono_compraA->getMotivoCancelacion()) ) ) & ( ! is_null ( ($b = $abono_compraB->getMotivoCancelacion()) ) ) ){
 				$sql .= " motivo_cancelacion >= ? AND motivo_cancelacion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " motivo_cancelacion = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -494,7 +494,7 @@ abstract class AbonoCompraDAOBase extends DAO
 	  **/
 	public static final function delete( &$abono_compra )
 	{
-		if(self::getByPK($abono_compra->getIdAbonoCompra()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($abono_compra->getIdAbonoCompra()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM abono_compra WHERE  id_abono_compra = ?;";
 		$params = array( $abono_compra->getIdAbonoCompra() );
 		global $conn;

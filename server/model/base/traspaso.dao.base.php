@@ -44,7 +44,7 @@ abstract class TraspasoDAOBase extends DAO
 	  **/
 	public static final function save( &$traspaso )
 	{
-		if(  self::getByPK(  $traspaso->getIdTraspaso() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $traspaso->getIdTraspaso() ) ) )
 		{
 			try{ return TraspasoDAOBase::update( $traspaso) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -96,9 +96,9 @@ abstract class TraspasoDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from traspaso";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -143,69 +143,69 @@ abstract class TraspasoDAOBase extends DAO
 	{
 		$sql = "SELECT * from traspaso WHERE ("; 
 		$val = array();
-		if( $traspaso->getIdTraspaso() != NULL){
+		if( ! is_null( $traspaso->getIdTraspaso() ) ){
 			$sql .= " id_traspaso = ? AND";
 			array_push( $val, $traspaso->getIdTraspaso() );
 		}
 
-		if( $traspaso->getIdUsuarioPrograma() != NULL){
+		if( ! is_null( $traspaso->getIdUsuarioPrograma() ) ){
 			$sql .= " id_usuario_programa = ? AND";
 			array_push( $val, $traspaso->getIdUsuarioPrograma() );
 		}
 
-		if( $traspaso->getIdUsuarioEnvia() != NULL){
+		if( ! is_null( $traspaso->getIdUsuarioEnvia() ) ){
 			$sql .= " id_usuario_envia = ? AND";
 			array_push( $val, $traspaso->getIdUsuarioEnvia() );
 		}
 
-		if( $traspaso->getIdAlmacenEnvia() != NULL){
+		if( ! is_null( $traspaso->getIdAlmacenEnvia() ) ){
 			$sql .= " id_almacen_envia = ? AND";
 			array_push( $val, $traspaso->getIdAlmacenEnvia() );
 		}
 
-		if( $traspaso->getFechaEnvioProgramada() != NULL){
+		if( ! is_null( $traspaso->getFechaEnvioProgramada() ) ){
 			$sql .= " fecha_envio_programada = ? AND";
 			array_push( $val, $traspaso->getFechaEnvioProgramada() );
 		}
 
-		if( $traspaso->getFechaEnvio() != NULL){
+		if( ! is_null( $traspaso->getFechaEnvio() ) ){
 			$sql .= " fecha_envio = ? AND";
 			array_push( $val, $traspaso->getFechaEnvio() );
 		}
 
-		if( $traspaso->getIdUsuarioRecibe() != NULL){
+		if( ! is_null( $traspaso->getIdUsuarioRecibe() ) ){
 			$sql .= " id_usuario_recibe = ? AND";
 			array_push( $val, $traspaso->getIdUsuarioRecibe() );
 		}
 
-		if( $traspaso->getIdAlmacenRecibe() != NULL){
+		if( ! is_null( $traspaso->getIdAlmacenRecibe() ) ){
 			$sql .= " id_almacen_recibe = ? AND";
 			array_push( $val, $traspaso->getIdAlmacenRecibe() );
 		}
 
-		if( $traspaso->getFechaRecibo() != NULL){
+		if( ! is_null( $traspaso->getFechaRecibo() ) ){
 			$sql .= " fecha_recibo = ? AND";
 			array_push( $val, $traspaso->getFechaRecibo() );
 		}
 
-		if( $traspaso->getEstado() != NULL){
+		if( ! is_null( $traspaso->getEstado() ) ){
 			$sql .= " estado = ? AND";
 			array_push( $val, $traspaso->getEstado() );
 		}
 
-		if( $traspaso->getCancelado() != NULL){
+		if( ! is_null( $traspaso->getCancelado() ) ){
 			$sql .= " cancelado = ? AND";
 			array_push( $val, $traspaso->getCancelado() );
 		}
 
-		if( $traspaso->getCompleto() != NULL){
+		if( ! is_null( $traspaso->getCompleto() ) ){
 			$sql .= " completo = ? AND";
 			array_push( $val, $traspaso->getCompleto() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -332,140 +332,140 @@ abstract class TraspasoDAOBase extends DAO
 	{
 		$sql = "SELECT * from traspaso WHERE ("; 
 		$val = array();
-		if( (($a = $traspasoA->getIdTraspaso()) !== NULL) & ( ($b = $traspasoB->getIdTraspaso()) !== NULL) ){
+		if( ( !is_null (($a = $traspasoA->getIdTraspaso()) ) ) & ( ! is_null ( ($b = $traspasoB->getIdTraspaso()) ) ) ){
 				$sql .= " id_traspaso >= ? AND id_traspaso <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_traspaso = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $traspasoA->getIdUsuarioPrograma()) !== NULL) & ( ($b = $traspasoB->getIdUsuarioPrograma()) !== NULL) ){
+		if( ( !is_null (($a = $traspasoA->getIdUsuarioPrograma()) ) ) & ( ! is_null ( ($b = $traspasoB->getIdUsuarioPrograma()) ) ) ){
 				$sql .= " id_usuario_programa >= ? AND id_usuario_programa <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_usuario_programa = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $traspasoA->getIdUsuarioEnvia()) !== NULL) & ( ($b = $traspasoB->getIdUsuarioEnvia()) !== NULL) ){
+		if( ( !is_null (($a = $traspasoA->getIdUsuarioEnvia()) ) ) & ( ! is_null ( ($b = $traspasoB->getIdUsuarioEnvia()) ) ) ){
 				$sql .= " id_usuario_envia >= ? AND id_usuario_envia <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_usuario_envia = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $traspasoA->getIdAlmacenEnvia()) !== NULL) & ( ($b = $traspasoB->getIdAlmacenEnvia()) !== NULL) ){
+		if( ( !is_null (($a = $traspasoA->getIdAlmacenEnvia()) ) ) & ( ! is_null ( ($b = $traspasoB->getIdAlmacenEnvia()) ) ) ){
 				$sql .= " id_almacen_envia >= ? AND id_almacen_envia <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_almacen_envia = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $traspasoA->getFechaEnvioProgramada()) !== NULL) & ( ($b = $traspasoB->getFechaEnvioProgramada()) !== NULL) ){
+		if( ( !is_null (($a = $traspasoA->getFechaEnvioProgramada()) ) ) & ( ! is_null ( ($b = $traspasoB->getFechaEnvioProgramada()) ) ) ){
 				$sql .= " fecha_envio_programada >= ? AND fecha_envio_programada <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " fecha_envio_programada = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $traspasoA->getFechaEnvio()) !== NULL) & ( ($b = $traspasoB->getFechaEnvio()) !== NULL) ){
+		if( ( !is_null (($a = $traspasoA->getFechaEnvio()) ) ) & ( ! is_null ( ($b = $traspasoB->getFechaEnvio()) ) ) ){
 				$sql .= " fecha_envio >= ? AND fecha_envio <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " fecha_envio = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $traspasoA->getIdUsuarioRecibe()) !== NULL) & ( ($b = $traspasoB->getIdUsuarioRecibe()) !== NULL) ){
+		if( ( !is_null (($a = $traspasoA->getIdUsuarioRecibe()) ) ) & ( ! is_null ( ($b = $traspasoB->getIdUsuarioRecibe()) ) ) ){
 				$sql .= " id_usuario_recibe >= ? AND id_usuario_recibe <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_usuario_recibe = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $traspasoA->getIdAlmacenRecibe()) !== NULL) & ( ($b = $traspasoB->getIdAlmacenRecibe()) !== NULL) ){
+		if( ( !is_null (($a = $traspasoA->getIdAlmacenRecibe()) ) ) & ( ! is_null ( ($b = $traspasoB->getIdAlmacenRecibe()) ) ) ){
 				$sql .= " id_almacen_recibe >= ? AND id_almacen_recibe <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_almacen_recibe = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $traspasoA->getFechaRecibo()) !== NULL) & ( ($b = $traspasoB->getFechaRecibo()) !== NULL) ){
+		if( ( !is_null (($a = $traspasoA->getFechaRecibo()) ) ) & ( ! is_null ( ($b = $traspasoB->getFechaRecibo()) ) ) ){
 				$sql .= " fecha_recibo >= ? AND fecha_recibo <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " fecha_recibo = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $traspasoA->getEstado()) !== NULL) & ( ($b = $traspasoB->getEstado()) !== NULL) ){
+		if( ( !is_null (($a = $traspasoA->getEstado()) ) ) & ( ! is_null ( ($b = $traspasoB->getEstado()) ) ) ){
 				$sql .= " estado >= ? AND estado <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " estado = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $traspasoA->getCancelado()) !== NULL) & ( ($b = $traspasoB->getCancelado()) !== NULL) ){
+		if( ( !is_null (($a = $traspasoA->getCancelado()) ) ) & ( ! is_null ( ($b = $traspasoB->getCancelado()) ) ) ){
 				$sql .= " cancelado >= ? AND cancelado <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " cancelado = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $traspasoA->getCompleto()) !== NULL) & ( ($b = $traspasoB->getCompleto()) !== NULL) ){
+		if( ( !is_null (($a = $traspasoA->getCompleto()) ) ) & ( ! is_null ( ($b = $traspasoB->getCompleto()) ) ) ){
 				$sql .= " completo >= ? AND completo <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " completo = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -494,7 +494,7 @@ abstract class TraspasoDAOBase extends DAO
 	  **/
 	public static final function delete( &$traspaso )
 	{
-		if(self::getByPK($traspaso->getIdTraspaso()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($traspaso->getIdTraspaso()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM traspaso WHERE  id_traspaso = ?;";
 		$params = array( $traspaso->getIdTraspaso() );
 		global $conn;

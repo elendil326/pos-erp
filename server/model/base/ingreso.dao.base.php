@@ -44,7 +44,7 @@ abstract class IngresoDAOBase extends DAO
 	  **/
 	public static final function save( &$ingreso )
 	{
-		if(  self::getByPK(  $ingreso->getIdIngreso() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $ingreso->getIdIngreso() ) ) )
 		{
 			try{ return IngresoDAOBase::update( $ingreso) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -96,9 +96,9 @@ abstract class IngresoDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from ingreso";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -143,79 +143,79 @@ abstract class IngresoDAOBase extends DAO
 	{
 		$sql = "SELECT * from ingreso WHERE ("; 
 		$val = array();
-		if( $ingreso->getIdIngreso() != NULL){
+		if( ! is_null( $ingreso->getIdIngreso() ) ){
 			$sql .= " id_ingreso = ? AND";
 			array_push( $val, $ingreso->getIdIngreso() );
 		}
 
-		if( $ingreso->getIdEmpresa() != NULL){
+		if( ! is_null( $ingreso->getIdEmpresa() ) ){
 			$sql .= " id_empresa = ? AND";
 			array_push( $val, $ingreso->getIdEmpresa() );
 		}
 
-		if( $ingreso->getIdUsuario() != NULL){
+		if( ! is_null( $ingreso->getIdUsuario() ) ){
 			$sql .= " id_usuario = ? AND";
 			array_push( $val, $ingreso->getIdUsuario() );
 		}
 
-		if( $ingreso->getIdConceptoIngreso() != NULL){
+		if( ! is_null( $ingreso->getIdConceptoIngreso() ) ){
 			$sql .= " id_concepto_ingreso = ? AND";
 			array_push( $val, $ingreso->getIdConceptoIngreso() );
 		}
 
-		if( $ingreso->getFechaDelIngreso() != NULL){
+		if( ! is_null( $ingreso->getFechaDelIngreso() ) ){
 			$sql .= " fecha_del_ingreso = ? AND";
 			array_push( $val, $ingreso->getFechaDelIngreso() );
 		}
 
-		if( $ingreso->getFechaDeRegistro() != NULL){
+		if( ! is_null( $ingreso->getFechaDeRegistro() ) ){
 			$sql .= " fecha_de_registro = ? AND";
 			array_push( $val, $ingreso->getFechaDeRegistro() );
 		}
 
-		if( $ingreso->getIdSucursal() != NULL){
+		if( ! is_null( $ingreso->getIdSucursal() ) ){
 			$sql .= " id_sucursal = ? AND";
 			array_push( $val, $ingreso->getIdSucursal() );
 		}
 
-		if( $ingreso->getIdCaja() != NULL){
+		if( ! is_null( $ingreso->getIdCaja() ) ){
 			$sql .= " id_caja = ? AND";
 			array_push( $val, $ingreso->getIdCaja() );
 		}
 
-		if( $ingreso->getNota() != NULL){
+		if( ! is_null( $ingreso->getNota() ) ){
 			$sql .= " nota = ? AND";
 			array_push( $val, $ingreso->getNota() );
 		}
 
-		if( $ingreso->getDescripcion() != NULL){
+		if( ! is_null( $ingreso->getDescripcion() ) ){
 			$sql .= " descripcion = ? AND";
 			array_push( $val, $ingreso->getDescripcion() );
 		}
 
-		if( $ingreso->getFolio() != NULL){
+		if( ! is_null( $ingreso->getFolio() ) ){
 			$sql .= " folio = ? AND";
 			array_push( $val, $ingreso->getFolio() );
 		}
 
-		if( $ingreso->getMonto() != NULL){
+		if( ! is_null( $ingreso->getMonto() ) ){
 			$sql .= " monto = ? AND";
 			array_push( $val, $ingreso->getMonto() );
 		}
 
-		if( $ingreso->getCancelado() != NULL){
+		if( ! is_null( $ingreso->getCancelado() ) ){
 			$sql .= " cancelado = ? AND";
 			array_push( $val, $ingreso->getCancelado() );
 		}
 
-		if( $ingreso->getMotivoCancelacion() != NULL){
+		if( ! is_null( $ingreso->getMotivoCancelacion() ) ){
 			$sql .= " motivo_cancelacion = ? AND";
 			array_push( $val, $ingreso->getMotivoCancelacion() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -346,162 +346,162 @@ abstract class IngresoDAOBase extends DAO
 	{
 		$sql = "SELECT * from ingreso WHERE ("; 
 		$val = array();
-		if( (($a = $ingresoA->getIdIngreso()) !== NULL) & ( ($b = $ingresoB->getIdIngreso()) !== NULL) ){
+		if( ( !is_null (($a = $ingresoA->getIdIngreso()) ) ) & ( ! is_null ( ($b = $ingresoB->getIdIngreso()) ) ) ){
 				$sql .= " id_ingreso >= ? AND id_ingreso <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_ingreso = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $ingresoA->getIdEmpresa()) !== NULL) & ( ($b = $ingresoB->getIdEmpresa()) !== NULL) ){
+		if( ( !is_null (($a = $ingresoA->getIdEmpresa()) ) ) & ( ! is_null ( ($b = $ingresoB->getIdEmpresa()) ) ) ){
 				$sql .= " id_empresa >= ? AND id_empresa <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_empresa = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $ingresoA->getIdUsuario()) !== NULL) & ( ($b = $ingresoB->getIdUsuario()) !== NULL) ){
+		if( ( !is_null (($a = $ingresoA->getIdUsuario()) ) ) & ( ! is_null ( ($b = $ingresoB->getIdUsuario()) ) ) ){
 				$sql .= " id_usuario >= ? AND id_usuario <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_usuario = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $ingresoA->getIdConceptoIngreso()) !== NULL) & ( ($b = $ingresoB->getIdConceptoIngreso()) !== NULL) ){
+		if( ( !is_null (($a = $ingresoA->getIdConceptoIngreso()) ) ) & ( ! is_null ( ($b = $ingresoB->getIdConceptoIngreso()) ) ) ){
 				$sql .= " id_concepto_ingreso >= ? AND id_concepto_ingreso <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_concepto_ingreso = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $ingresoA->getFechaDelIngreso()) !== NULL) & ( ($b = $ingresoB->getFechaDelIngreso()) !== NULL) ){
+		if( ( !is_null (($a = $ingresoA->getFechaDelIngreso()) ) ) & ( ! is_null ( ($b = $ingresoB->getFechaDelIngreso()) ) ) ){
 				$sql .= " fecha_del_ingreso >= ? AND fecha_del_ingreso <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " fecha_del_ingreso = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $ingresoA->getFechaDeRegistro()) !== NULL) & ( ($b = $ingresoB->getFechaDeRegistro()) !== NULL) ){
+		if( ( !is_null (($a = $ingresoA->getFechaDeRegistro()) ) ) & ( ! is_null ( ($b = $ingresoB->getFechaDeRegistro()) ) ) ){
 				$sql .= " fecha_de_registro >= ? AND fecha_de_registro <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " fecha_de_registro = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $ingresoA->getIdSucursal()) !== NULL) & ( ($b = $ingresoB->getIdSucursal()) !== NULL) ){
+		if( ( !is_null (($a = $ingresoA->getIdSucursal()) ) ) & ( ! is_null ( ($b = $ingresoB->getIdSucursal()) ) ) ){
 				$sql .= " id_sucursal >= ? AND id_sucursal <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_sucursal = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $ingresoA->getIdCaja()) !== NULL) & ( ($b = $ingresoB->getIdCaja()) !== NULL) ){
+		if( ( !is_null (($a = $ingresoA->getIdCaja()) ) ) & ( ! is_null ( ($b = $ingresoB->getIdCaja()) ) ) ){
 				$sql .= " id_caja >= ? AND id_caja <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_caja = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $ingresoA->getNota()) !== NULL) & ( ($b = $ingresoB->getNota()) !== NULL) ){
+		if( ( !is_null (($a = $ingresoA->getNota()) ) ) & ( ! is_null ( ($b = $ingresoB->getNota()) ) ) ){
 				$sql .= " nota >= ? AND nota <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " nota = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $ingresoA->getDescripcion()) !== NULL) & ( ($b = $ingresoB->getDescripcion()) !== NULL) ){
+		if( ( !is_null (($a = $ingresoA->getDescripcion()) ) ) & ( ! is_null ( ($b = $ingresoB->getDescripcion()) ) ) ){
 				$sql .= " descripcion >= ? AND descripcion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " descripcion = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $ingresoA->getFolio()) !== NULL) & ( ($b = $ingresoB->getFolio()) !== NULL) ){
+		if( ( !is_null (($a = $ingresoA->getFolio()) ) ) & ( ! is_null ( ($b = $ingresoB->getFolio()) ) ) ){
 				$sql .= " folio >= ? AND folio <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " folio = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $ingresoA->getMonto()) !== NULL) & ( ($b = $ingresoB->getMonto()) !== NULL) ){
+		if( ( !is_null (($a = $ingresoA->getMonto()) ) ) & ( ! is_null ( ($b = $ingresoB->getMonto()) ) ) ){
 				$sql .= " monto >= ? AND monto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " monto = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $ingresoA->getCancelado()) !== NULL) & ( ($b = $ingresoB->getCancelado()) !== NULL) ){
+		if( ( !is_null (($a = $ingresoA->getCancelado()) ) ) & ( ! is_null ( ($b = $ingresoB->getCancelado()) ) ) ){
 				$sql .= " cancelado >= ? AND cancelado <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " cancelado = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $ingresoA->getMotivoCancelacion()) !== NULL) & ( ($b = $ingresoB->getMotivoCancelacion()) !== NULL) ){
+		if( ( !is_null (($a = $ingresoA->getMotivoCancelacion()) ) ) & ( ! is_null ( ($b = $ingresoB->getMotivoCancelacion()) ) ) ){
 				$sql .= " motivo_cancelacion >= ? AND motivo_cancelacion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " motivo_cancelacion = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -530,7 +530,7 @@ abstract class IngresoDAOBase extends DAO
 	  **/
 	public static final function delete( &$ingreso )
 	{
-		if(self::getByPK($ingreso->getIdIngreso()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($ingreso->getIdIngreso()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM ingreso WHERE  id_ingreso = ?;";
 		$params = array( $ingreso->getIdIngreso() );
 		global $conn;

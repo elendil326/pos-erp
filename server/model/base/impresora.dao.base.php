@@ -44,7 +44,7 @@ abstract class ImpresoraDAOBase extends DAO
 	  **/
 	public static final function save( &$impresora )
 	{
-		if(  self::getByPK(  $impresora->getIdImpresora() ) !== NULL )
+		if( ! is_null ( self::getByPK(  $impresora->getIdImpresora() ) ) )
 		{
 			try{ return ImpresoraDAOBase::update( $impresora) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -96,9 +96,9 @@ abstract class ImpresoraDAOBase extends DAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from impresora";
-		if($orden != NULL)
+		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
-		if($pagina != NULL)
+		if( ! is_null ( $pagina ) )
 		{
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
@@ -143,19 +143,19 @@ abstract class ImpresoraDAOBase extends DAO
 	{
 		$sql = "SELECT * from impresora WHERE ("; 
 		$val = array();
-		if( $impresora->getIdImpresora() != NULL){
+		if( ! is_null( $impresora->getIdImpresora() ) ){
 			$sql .= " id_impresora = ? AND";
 			array_push( $val, $impresora->getIdImpresora() );
 		}
 
-		if( $impresora->getPuerto() != NULL){
+		if( ! is_null( $impresora->getPuerto() ) ){
 			$sql .= " puerto = ? AND";
 			array_push( $val, $impresora->getPuerto() );
 		}
 
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -262,30 +262,30 @@ abstract class ImpresoraDAOBase extends DAO
 	{
 		$sql = "SELECT * from impresora WHERE ("; 
 		$val = array();
-		if( (($a = $impresoraA->getIdImpresora()) !== NULL) & ( ($b = $impresoraB->getIdImpresora()) !== NULL) ){
+		if( ( !is_null (($a = $impresoraA->getIdImpresora()) ) ) & ( ! is_null ( ($b = $impresoraB->getIdImpresora()) ) ) ){
 				$sql .= " id_impresora >= ? AND id_impresora <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_impresora = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $impresoraA->getPuerto()) !== NULL) & ( ($b = $impresoraB->getPuerto()) !== NULL) ){
+		if( ( !is_null (($a = $impresoraA->getPuerto()) ) ) & ( ! is_null ( ($b = $impresoraB->getPuerto()) ) ) ){
 				$sql .= " puerto >= ? AND puerto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " puerto = ? AND"; 
-			$a = $a === NULL ? $b : $a;
+			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		if( $orderBy !== null ){
+		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
 		
 		}
@@ -314,7 +314,7 @@ abstract class ImpresoraDAOBase extends DAO
 	  **/
 	public static final function delete( &$impresora )
 	{
-		if(self::getByPK($impresora->getIdImpresora()) === NULL) throw new Exception('Campo no encontrado.');
+		if( is_null( self::getByPK($impresora->getIdImpresora()) ) ) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM impresora WHERE  id_impresora = ?;";
 		$params = array( $impresora->getIdImpresora() );
 		global $conn;

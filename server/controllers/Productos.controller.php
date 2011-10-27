@@ -23,8 +23,20 @@ require_once("interfaces/Productos.interface.php");
 		$ordenar = null
 	)
 	{  
-  
-  
+            Logger::log("Listando unidades");
+            $unidades=null;
+            if(is_null($activo))
+            {
+                Logger::log("No se recibieron parametros, se listan todas las unidades");
+                $unidades=UnidadDAO::getAll(null,null,$ordenar);
+            }
+            else
+            {
+                Logger::log("Se recibieron parametros, se listan las unidades en rango");
+                $unidades=UnidadDAO::search(new Unidad(array( "activa" => 0 )), $ordenar);
+            }
+            Logger::log("Lista de unidades obtenida con ".count($unidades)." elementos");
+            return $unidades;
 	}
   
 	/**
