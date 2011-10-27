@@ -9,7 +9,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
   class PersonalYAgentesController implements IPersonalYAgentes{
   
 
-        private static function validarString($string, $max_length, $nombre_varibale,$min_length=0)
+        private static function validarString($string, $max_length, $nombre_variable,$min_length=0)
           {
                 $error="";
                 if(strlen($string)<=$min_length||strlen($string)>$max_length)

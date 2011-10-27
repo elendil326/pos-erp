@@ -8,7 +8,7 @@ require_once("interfaces/Empresas.interface.php");
 	
   class EmpresasController implements IEmpresas{
 
-          private static function validarString($string, $max_length, $nombre_varibale,$min_length=0)
+          private static function validarString($string, $max_length, $nombre_variable,$min_length=0)
           {
                 $error="";
                 if(strlen($string)<=$min_length||strlen($string)>$max_length)
@@ -180,7 +180,6 @@ require_once("interfaces/Empresas.interface.php");
                 {
                     if(is_null(SucursalDAO::getByPK($sucursal["id_sucursal"])))
                     {
-                        Logger::error("La sucursal con id: ".$sucursal["id_sucursal"]." no existe");
                         throw new Exception("La sucursal con id: ".$sucursal["id_sucursal"]." no existe");
                     }
                     $sucursal_empresa->setIdSucursal($sucursal["id_sucursal"]);
