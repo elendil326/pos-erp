@@ -9,17 +9,13 @@ require_once("interfaces/Sucursales.interface.php");
 
 	
   class SucursalesController implements ISucursales{
-  
-      var $formato_fecha="Y-m-d H:i:s";
 
-      private static $almacen_consignacion=2;
-
-      private function getCaja()
+      private static function getCaja()
       {
           return 1;
       }
 
-      private function getSucursal()
+      private static function getSucursal()
       {
           return 1;
       }
@@ -35,7 +31,7 @@ require_once("interfaces/Sucursales.interface.php");
  	 * @param descripcion string Descripcion extesa del almacen
  	 * @return id_almacen int el id recien generado
  	 **/
-	public static function NuevoAlmacen
+	public static static function NuevoAlmacen
 	(
 		$nombre, 
 		$id_sucursal, 
@@ -93,7 +89,7 @@ require_once("interfaces/Sucursales.interface.php");
  	 * @param activo bool Si este valor no es obtenido, se mostraran almacenes tanto activos como inactivos. Si es verdadero, solo se lsitaran los activos, si es falso solo se lsitaran los inactivos.
  	 * @return almacenes json Almacenes de esta sucursal
  	 **/
-	public static function ListaAlmacen
+	public static static function ListaAlmacen
 	(
 		$id_empresa = null, 
 		$id_sucursal = null, 
@@ -151,7 +147,7 @@ require_once("interfaces/Sucursales.interface.php");
  	 * @param billetes_cambio json Ids de billetes que se entregaron como cambio
  	 * @return id_venta int Id autogenerado de la inserci�n de la venta.
  	 **/
-	public static function VenderCaja
+	public static static function VenderCaja
 	( 
 		$retencion, 
 		$id_comprador, 
@@ -192,13 +188,13 @@ require_once("interfaces/Sucursales.interface.php");
             $venta->setTotal($total);
             $venta->setDescuento($descuento);
             $venta->setTipoDeVenta($tipo_venta);
-            $venta->setIdCaja($this->getCaja());
-            $venta->setIdSucursal($this->getSucursal());
+            $venta->setIdCaja(self::getCaja());
+            $venta->setIdSucursal(self::getSucursal());
             $venta->setIdUsuario($id_usuario);
             $venta->setIdVentaCaja($id_venta_caja);
             $venta->setCancelada(0);
             $venta->setTipoDePago($tipo_pago);
-            $venta->setFecha(date($this->formato_fecha,time()));
+            $venta->setFecha(date("Y-m-d H:i:s",time()));
             DAO::transBegin();
             try
             {
@@ -303,7 +299,7 @@ require_once("interfaces/Sucursales.interface.php");
                         $d_producto->setPrecio($d_p["precio"]);
                         $d_producto->setRetencion($d_p["retencion"]);
                         VentaProductoDAO::save($d_producto);
-                        $this->DescontarDeAlmacenes($d_producto, $this->getSucursal());
+                        self::DescontarDeAlmacenes($d_producto, self::getSucursal());
                     }
                 }
                 if(!is_null($detalle_orden))
@@ -324,7 +320,7 @@ require_once("interfaces/Sucursales.interface.php");
                         VentaOrdenDAO::save($d_orden);
                     }
                 }
-                $id_empresas=$this->ObtenerEmpresasParaAsignacionVenta($detalle_producto, $detalle_paquete, $detalle_orden);
+                $id_empresas=self::ObtenerEmpresasParaAsignacionVenta($detalle_producto, $detalle_paquete, $detalle_orden);
                 $venta_empresa=new VentaEmpresa(array("id_venta" => $venta->getIdVenta()));
                 $n=count($id_empresas["id"]);
                 for($i = 0 ; $i < $n ; $i++)
@@ -349,7 +345,7 @@ require_once("interfaces/Sucursales.interface.php");
             return $venta->getIdVenta();
 	}
 
-        private function ObtenerEmpresasParaAsignacionVenta
+        private static function ObtenerEmpresasParaAsignacionVenta
         (
                 $detalle_producto=null,
                 $detalle_paquete=null,
@@ -369,7 +365,7 @@ require_once("interfaces/Sucursales.interface.php");
                     $productos_empresa=ProductoEmpresaDAO::search($producto_empresa);
                     foreach($productos_empresa as $p_e)
                     {
-                        $this->InsertarIdEmpresa($p_e, $id_empresas, $d_p["precio"]*$d_p["cantidad"]);
+                        self::InsertarIdEmpresa($p_e, $id_empresas, $d_p["precio"]*$d_p["cantidad"]);
                     }
                 }
             }
@@ -383,7 +379,7 @@ require_once("interfaces/Sucursales.interface.php");
                     $paquetes_empresa=PaqueteEmpresaDAO::search($paquete_empresa);
                     foreach($paquetes_empresa as $p_e)
                     {
-                        $this->InsertarIdEmpresa($p_e, $id_empresas, $d_p["precio"]*$d_p["cantidad"]);
+                        self::InsertarIdEmpresa($p_e, $id_empresas, $d_p["precio"]*$d_p["cantidad"]);
                     }
                 }
             }
@@ -398,7 +394,7 @@ require_once("interfaces/Sucursales.interface.php");
                     $servicios_empresa=ServicioEmpresaDAO::search($servicio_empresa);
                     foreach($servicios_empresa as $s_e)
                     {
-                        $this->InsertarIdEmpresa($s_e, $id_empresas, $orden["precio"]);
+                        self::InsertarIdEmpresa($s_e, $id_empresas, $orden["precio"]);
                     }
                 }
             }
@@ -411,13 +407,13 @@ require_once("interfaces/Sucursales.interface.php");
             {
                 foreach($empresa as $objeto)
                 {
-                    $this->InsertarIdEmpresa($objeto, $id_empresas);
+                    self::InsertarIdEmpresa($objeto, $id_empresas);
                 }
             }
             return $id_empresas;
         }
 
-        private function InsertarIdEmpresa
+        private static function InsertarIdEmpresa
         (
                 $objeto,
                 &$id_empresas,
@@ -445,7 +441,7 @@ require_once("interfaces/Sucursales.interface.php");
             }
         }
 
-        private function DescontarDeAlmacenes
+        private static function DescontarDeAlmacenes
         (
                 VentaProducto $detalle_producto,
                 $id_sucursal
@@ -456,7 +452,7 @@ require_once("interfaces/Sucursales.interface.php");
             $total=0;
             foreach($almacenes as $almacen)
             {
-                if($almacen->getIdTipoAlmacen()==self::$almacen_consignacion)
+                if($almacen->getIdTipoAlmacen()==2)
                     continue;
                 $producto_almacen=ProductoAlmacenDAO::getByPK($detalle_producto->getIdProducto(), $almacen->getIdAlmacen(), $detalle_producto->getIdUnidad());
                 if(!is_null($producto_almacen))
@@ -515,7 +511,7 @@ require_once("interfaces/Sucursales.interface.php");
             }
             else
             {
-                $productos_almacen=$this->OrdenarProductosAlmacen($productos_almacen);
+                $productos_almacen=self::OrdenarProductosAlmacen($productos_almacen);
                 $diferencia=array();
                 for($i=0;$i<$n_almacenes-1;$i++)
                 {
@@ -573,7 +569,7 @@ require_once("interfaces/Sucursales.interface.php");
 
         }
 
-        public static function OrdenarProductosAlmacen
+        public static static function OrdenarProductosAlmacen
         (
                 $productos_almacen
         )
@@ -610,7 +606,7 @@ require_once("interfaces/Sucursales.interface.php");
  	 * @param cheques json Si el tipo de pago es con cheque, se almacena el nombre del banco, el monto y los ultimos 4 numeros del o de los cheques
  	 * @return id_compra_cliente string Id de la nueva compra
  	 **/
-	public static function ComprarCaja
+	public static static function ComprarCaja
 	(
 		$retencion, 
 		$detalle, 
@@ -650,13 +646,13 @@ require_once("interfaces/Sucursales.interface.php");
             $compra->setTotal($total);
             $compra->setDescuento($descuento);
             $compra->setTipoDeCompra($tipo_compra);
-            $compra->setIdCaja($this->getCaja());
-            $compra->setIdSucursal($this->getSucursal());
+            $compra->setIdCaja(self::getCaja());
+            $compra->setIdSucursal(self::getSucursal());
             $compra->setIdUsuario($id_usuario);
             $compra->setIdCompraCaja($id_compra_caja);
             $compra->setCancelada(0);
             $compra->setTipoDePago($tipo_pago);
-            $compra->setFecha(date($this->formato_fecha,time()));
+            $compra->setFecha(date("Y-m-d H:i:s",time()));
             $compra->setIdEmpresa($id_empresa);
             DAO::transBegin();
             try
@@ -717,11 +713,11 @@ require_once("interfaces/Sucursales.interface.php");
                 {
                     $d_producto=new CompraProducto();
                     $d_producto->setIdCompra($compra->getIdCompra());
-                    $almacenes=AlmacenDAO::search(new Almacen(array("id_sucursal" => $this->getSucursal(), "id_empresa" => $id_empresa)));
+                    $almacenes=AlmacenDAO::search(new Almacen(array("id_sucursal" => self::getSucursal(), "id_empresa" => $id_empresa)));
                     $id_almacen=null;
                     foreach($almacenes as $a)
                     {
-                        if($a->getIdTipoAlmacen()==self::$almacen_consignacion)
+                        if($a->getIdTipoAlmacen()==2)
                                 continue;
                         $id_almacen=$a->getIdAlmacen();
                     }
@@ -796,7 +792,7 @@ require_once("interfaces/Sucursales.interface.php");
  	 * @param fecha_apertura_superior_que string Si este valor es pasado, se mostraran las sucursales cuya fecha de apertura sea superior a esta.
  	 * @return sucursales json Objeto que contendra la lista de sucursales.
  	 **/
-	public static function Lista
+	public static static function Lista
 	(
 		$activo = null,
 		$id_empresa = null, 
@@ -858,7 +854,7 @@ require_once("interfaces/Sucursales.interface.php");
                     if(!is_null($fecha_apertura_inferior_que))
                         $sucursal_criterio2->setFechaApertura($fecha_apertura_inferior_que);
                     else
-                        $sucursal_criterio2->setFechaApertura(date($this->formato_fecha,time()));
+                        $sucursal_criterio2->setFechaApertura(date("Y-m-d H:i:s",time()));
                 }
                 else if(!is_null($fecha_apertura_inferior_que))
                 {
@@ -888,7 +884,7 @@ require_once("interfaces/Sucursales.interface.php");
  	 * @param id_cajero int Id del cajero que iniciara en esta caja en caso de que no sea este el que abre la caja
  	 * @return detalles_sucursal json Si esta es una sucursal valida, detalles sucursal contiene un objeto con informacion sobre esta sucursal.
  	 **/
-	public static function AbrirCaja
+	public static static function AbrirCaja
 	(
                 $id_caja,
 		$billetes, 
@@ -917,7 +913,7 @@ require_once("interfaces/Sucursales.interface.php");
             }
             $apertura_caja=new AperturaCaja();
             $apertura_caja->setIdCaja($id_caja);
-            $apertura_caja->setFecha(date($this->formato_fecha,time()));
+            $apertura_caja->setFecha(date("Y-m-d H:i:s",time()));
             $apertura_caja->setIdCajero($id_cajero);
             $apertura_caja->setSaldo($saldo);
             $caja->setAbierta(1);
@@ -985,7 +981,7 @@ require_once("interfaces/Sucursales.interface.php");
  	 * @param descuento float Descuento que tendran todos los productos ofrecidos por esta sucursal
  	 * @return id_sucursal int Id autogenerado de la sucursal que se creo.
  	 **/
-	public static function Nueva
+	public static static function Nueva
 	(
 		$codigo_postal, 
 		$rfc, 
@@ -1024,7 +1020,7 @@ require_once("interfaces/Sucursales.interface.php");
             $sucursal->setMargenUtilidad($margen_utilidad);
             $sucursal->setDescripcion($descripcion);
             $sucursal->setDescuento($descuento);
-            $sucursal->setFechaApertura($this->formato_fecha,time());
+            $sucursal->setFechaApertura("Y-m-d H:i:s",time());
             DAO::transBegin();
             try
             {
@@ -1101,7 +1097,7 @@ require_once("interfaces/Sucursales.interface.php");
  	 * @param calle string Calle de la sucursal
  	 * @param coidgo_postal string Codigo Postal de la sucursal
  	 **/
-	public static function Editar
+	public static static function Editar
 	(
 		$id_sucursal, 
 		$descuento = null, 
@@ -1208,7 +1204,7 @@ require_once("interfaces/Sucursales.interface.php");
             }
             if($cambio_direccion)
             {
-                $direccion->setUltimaModificacion(date($this->formato_fecha,time()));
+                $direccion->setUltimaModificacion(date("Y-m-d H:i:s",time()));
                 $id_usuario=LoginController::getCurrentUser();
                 if(is_null($id_usuario))
                 {
@@ -1320,7 +1316,7 @@ require_once("interfaces/Sucursales.interface.php");
  	 * @param id_sucursal int Id de la sucursal de la cual su gerencia sera cambiada
  	 * @param id_gerente string Id del nuevo gerente
  	 **/
-	public static function EditarGerencia
+	public static static function EditarGerencia
 	(
 		$id_sucursal, 
 		$id_gerente
@@ -1369,7 +1365,7 @@ require_once("interfaces/Sucursales.interface.php");
  	 * @param id_cajero int Id del cajero en caso de que no sea este el que realiza el cierre
  	 * @return id_cierre int Id del cierre autogenerado.
  	 **/
-	public static function CerrarCaja
+	public static static function CerrarCaja
 	(
                 $id_caja,
 		$saldo_real, 
@@ -1481,7 +1477,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 * @param motivo string Motivo del movimiento
  	 * @return id_surtido string Id generado por el registro de surtir
  	 **/
-	public static function EntradaAlmacen
+	public static static function EntradaAlmacen
 	(
 		$productos, 
 		$id_almacen, 
@@ -1552,7 +1548,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 * @param descripcion string Descripcion de esta caja
  	 * @return id_caja int Id de la caja generada por la isnercion
  	 **/
-	public static function NuevaCaja
+	public static static function NuevaCaja
 	(
 		$token, 
 		$impresoras = null, 
@@ -1571,7 +1567,7 @@ Creo que este metodo tiene que estar bajo sucursal.
                 }
             }
             else
-                $id_sucursal=$this->getSucursal();
+                $id_sucursal=self::getSucursal();
             $caja = new Caja();
             $caja->setIdSucursal($id_sucursal);
             $caja->setAbierta(0);
@@ -1616,7 +1612,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 * @param motivo string Motivo de la salida del producto
  	 * @return id_salida int ID de la salida del producto
  	 **/
-	public static function SalidaAlmacen
+	public static static function SalidaAlmacen
 	(
 		$productos, 
 		$id_almacen, 
@@ -1692,7 +1688,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 * @param id_cajero_nuevo int Id del cajero que entrara despues de realizar el corte
  	 * @return id_corte_caja int Id generado por la insercion del nuevo corte
  	 **/
-	public static function CorteCaja
+	public static static function CorteCaja
 	(
 		$saldo_final, 
 		$id_caja, 
@@ -1818,7 +1814,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *
  	 * @param id_almacen int Id del almacen a desactivar
  	 **/
-	public static function EliminarAlmacen
+	public static static function EliminarAlmacen
 	(
 		$id_almacen
 	)
@@ -1871,7 +1867,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 * @param descripcion string Descripcion del almacen
  	 * @param nombre string Nombre del almacen
  	 **/
-	public static function EditarAlmacen
+	public static static function EditarAlmacen
 	(
 		$id_almacen, 
 		$descripcion = null, 
@@ -1942,7 +1938,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 * @param descripcion string Descripcion de la caja
  	 * @param token string Token generado por el pos client
  	 **/
-	public static function EditarCaja
+	public static static function EditarCaja
 	(
 		$id_caja, 
 		$descripcion = null, 
@@ -1990,7 +1986,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *
  	 * @param id_caja int Id de la caja a eliminar
  	 **/
-	public static function EliminarCaja
+	public static static function EliminarCaja
 	(
 		$id_caja
 	)
@@ -2039,7 +2035,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *
  	 * @param id_sucursal int Id de la sucursal a desactivar
  	 **/
-	public static function Eliminar
+	public static static function Eliminar
 	(
 		$id_sucursal
 	)
@@ -2070,7 +2066,7 @@ Creo que este metodo tiene que estar bajo sucursal.
                 $cajas=CajaDAO::search(new Caja(array( "id_sucursal" => $id_sucursal )));
                 foreach($cajas as $c)
                 {
-                    $this->EliminarCaja($c->getIdCaja());
+                    self::EliminarCaja($c->getIdCaja());
                 }
                 $impuestos_sucursal=ImpuestoSucursalDAO::search(new ImpuestoSucursal(array( "id_sucursal" => $id_sucursal )));
                 foreach($impuestos_sucursal as $i_e)
@@ -2113,7 +2109,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 * @param productos json Productos a ser enviados con sus cantidades
  	 * @return id_traspaso int Id del traspaso autogenerado
  	 **/
-	public static function ProgramarTraspasoAlmacen
+	public static static function ProgramarTraspasoAlmacen
 	(
 		$id_almacen_recibe, 
 		$id_almacen_envia, 
@@ -2194,7 +2190,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *
  	 * @param id_traspaso int Id del traspaso a enviar
  	 **/
-	public static function EnviarTraspasoAlmacen
+	public static static function EnviarTraspasoAlmacen
 	(
 		$id_traspaso
 	)
@@ -2272,7 +2268,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 * @param productos json Productos que se reciben con sus cantidades
  	 * @param id_traspaso int Id del traspaso que se recibe
  	 **/
-	public static function RecibirTraspasoAlmacen
+	public static static function RecibirTraspasoAlmacen
 	(
 		$productos, 
 		$id_traspaso
@@ -2360,7 +2356,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *
  	 * @param id_traspaso int Id del traspaso a cancelar
  	 **/
-	public static function CancelarTraspasoAlmacen
+	public static static function CancelarTraspasoAlmacen
 	(
 		$id_traspaso
 	)
@@ -2414,7 +2410,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 * @param ordenar json Determina el orden de la lista
  	 * @return traspasos json Lista de traspasos
  	 **/
-	public static function ListaTraspasoAlmacen
+	public static static function ListaTraspasoAlmacen
 	(
 		$cancelado = null, 
 		$completo = null, 
@@ -2465,7 +2461,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 * @param productos json Productos a enviar con sus cantidades
  	 * @param fecha_envio_programada string Fecha de envio programada
  	 **/
-	public static function EditarTraspasoAlmacen
+	public static static function EditarTraspasoAlmacen
 	(
 		$id_traspaso, 
 		$productos = null, 
