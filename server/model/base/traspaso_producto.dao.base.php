@@ -14,22 +14,25 @@ abstract class TraspasoProductoDAOBase extends DAO
 
 		private static $loadedRecords = array();
 
-		private static function recordExists(  $id_traspaso, $id_producto ){
+		private static function recordExists(  $id_traspaso, $id_producto, $id_unidad ){
 			$pk = "";
 			$pk .= $id_traspaso . "-";
 			$pk .= $id_producto . "-";
+			$pk .= $id_unidad . "-";
 			return array_key_exists ( $pk , self::$loadedRecords );
 		}
-		private static function pushRecord( $inventario,  $id_traspaso, $id_producto){
+		private static function pushRecord( $inventario,  $id_traspaso, $id_producto, $id_unidad){
 			$pk = "";
 			$pk .= $id_traspaso . "-";
 			$pk .= $id_producto . "-";
+			$pk .= $id_unidad . "-";
 			self::$loadedRecords [$pk] = $inventario;
 		}
-		private static function getRecord(  $id_traspaso, $id_producto ){
+		private static function getRecord(  $id_traspaso, $id_producto, $id_unidad ){
 			$pk = "";
 			$pk .= $id_traspaso . "-";
 			$pk .= $id_producto . "-";
+			$pk .= $id_unidad . "-";
 			return self::$loadedRecords[$pk];
 		}
 	/**
@@ -47,7 +50,7 @@ abstract class TraspasoProductoDAOBase extends DAO
 	  **/
 	public static final function save( &$traspaso_producto )
 	{
-		if(  self::getByPK(  $traspaso_producto->getIdTraspaso() , $traspaso_producto->getIdProducto() ) !== NULL )
+		if(  self::getByPK(  $traspaso_producto->getIdTraspaso() , $traspaso_producto->getIdProducto() , $traspaso_producto->getIdUnidad() ) !== NULL )
 		{
 			try{ return TraspasoProductoDAOBase::update( $traspaso_producto) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -65,18 +68,18 @@ abstract class TraspasoProductoDAOBase extends DAO
 	  *	@static
 	  * @return @link TraspasoProducto Un objeto del tipo {@link TraspasoProducto}. NULL si no hay tal registro.
 	  **/
-	public static final function getByPK(  $id_traspaso, $id_producto )
+	public static final function getByPK(  $id_traspaso, $id_producto, $id_unidad )
 	{
-		if(self::recordExists(  $id_traspaso, $id_producto)){
-			return self::getRecord( $id_traspaso, $id_producto );
+		if(self::recordExists(  $id_traspaso, $id_producto, $id_unidad)){
+			return self::getRecord( $id_traspaso, $id_producto, $id_unidad );
 		}
-		$sql = "SELECT * FROM traspaso_producto WHERE (id_traspaso = ? AND id_producto = ? ) LIMIT 1;";
-		$params = array(  $id_traspaso, $id_producto );
+		$sql = "SELECT * FROM traspaso_producto WHERE (id_traspaso = ? AND id_producto = ? AND id_unidad = ? ) LIMIT 1;";
+		$params = array(  $id_traspaso, $id_producto, $id_unidad );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new TraspasoProducto( $rs );
-			self::pushRecord( $foo,  $id_traspaso, $id_producto );
+			self::pushRecord( $foo,  $id_traspaso, $id_producto, $id_unidad );
 			return $foo;
 	}
 
@@ -113,7 +116,8 @@ abstract class TraspasoProductoDAOBase extends DAO
     		array_push( $allData, $bar);
 			//id_traspaso
 			//id_producto
-    		self::pushRecord( $bar, $foo["id_traspaso"],$foo["id_producto"] );
+			//id_unidad
+    		self::pushRecord( $bar, $foo["id_traspaso"],$foo["id_producto"],$foo["id_unidad"] );
 		}
 		return $allData;
 	}
@@ -157,6 +161,11 @@ abstract class TraspasoProductoDAOBase extends DAO
 			array_push( $val, $traspaso_producto->getIdProducto() );
 		}
 
+		if( $traspaso_producto->getIdUnidad() != NULL){
+			$sql .= " id_unidad = ? AND";
+			array_push( $val, $traspaso_producto->getIdUnidad() );
+		}
+
 		if( $traspaso_producto->getCantidadEnviada() != NULL){
 			$sql .= " cantidad_enviada = ? AND";
 			array_push( $val, $traspaso_producto->getCantidadEnviada() );
@@ -179,7 +188,7 @@ abstract class TraspasoProductoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new TraspasoProducto($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_traspaso"],$foo["id_producto"] );
+    		self::pushRecord( $bar, $foo["id_traspaso"],$foo["id_producto"],$foo["id_unidad"] );
 		}
 		return $ar;
 	}
@@ -198,11 +207,11 @@ abstract class TraspasoProductoDAOBase extends DAO
 	  **/
 	private static final function update( $traspaso_producto )
 	{
-		$sql = "UPDATE traspaso_producto SET  cantidad_enviada = ?, cantidad_recibida = ? WHERE  id_traspaso = ? AND id_producto = ?;";
+		$sql = "UPDATE traspaso_producto SET  cantidad_enviada = ?, cantidad_recibida = ? WHERE  id_traspaso = ? AND id_producto = ? AND id_unidad = ?;";
 		$params = array( 
 			$traspaso_producto->getCantidadEnviada(), 
 			$traspaso_producto->getCantidadRecibida(), 
-			$traspaso_producto->getIdTraspaso(),$traspaso_producto->getIdProducto(), );
+			$traspaso_producto->getIdTraspaso(),$traspaso_producto->getIdProducto(),$traspaso_producto->getIdUnidad(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
@@ -225,10 +234,11 @@ abstract class TraspasoProductoDAOBase extends DAO
 	  **/
 	private static final function create( &$traspaso_producto )
 	{
-		$sql = "INSERT INTO traspaso_producto ( id_traspaso, id_producto, cantidad_enviada, cantidad_recibida ) VALUES ( ?, ?, ?, ?);";
+		$sql = "INSERT INTO traspaso_producto ( id_traspaso, id_producto, id_unidad, cantidad_enviada, cantidad_recibida ) VALUES ( ?, ?, ?, ?, ?);";
 		$params = array( 
 			$traspaso_producto->getIdTraspaso(), 
 			$traspaso_producto->getIdProducto(), 
+			$traspaso_producto->getIdUnidad(), 
 			$traspaso_producto->getCantidadEnviada(), 
 			$traspaso_producto->getCantidadRecibida(), 
 		 );
@@ -301,6 +311,17 @@ abstract class TraspasoProductoDAOBase extends DAO
 			
 		}
 
+		if( (($a = $traspaso_productoA->getIdUnidad()) !== NULL) & ( ($b = $traspaso_productoB->getIdUnidad()) !== NULL) ){
+				$sql .= " id_unidad >= ? AND id_unidad <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a !== NULL|| $b !== NULL ){
+			$sql .= " id_unidad = ? AND"; 
+			$a = $a === NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
 		if( (($a = $traspaso_productoA->getCantidadEnviada()) !== NULL) & ( ($b = $traspaso_productoB->getCantidadEnviada()) !== NULL) ){
 				$sql .= " cantidad_enviada >= ? AND cantidad_enviada <= ? AND";
 				array_push( $val, min($a,$b)); 
@@ -353,9 +374,9 @@ abstract class TraspasoProductoDAOBase extends DAO
 	  **/
 	public static final function delete( &$traspaso_producto )
 	{
-		if(self::getByPK($traspaso_producto->getIdTraspaso(), $traspaso_producto->getIdProducto()) === NULL) throw new Exception('Campo no encontrado.');
-		$sql = "DELETE FROM traspaso_producto WHERE  id_traspaso = ? AND id_producto = ?;";
-		$params = array( $traspaso_producto->getIdTraspaso(), $traspaso_producto->getIdProducto() );
+		if(self::getByPK($traspaso_producto->getIdTraspaso(), $traspaso_producto->getIdProducto(), $traspaso_producto->getIdUnidad()) === NULL) throw new Exception('Campo no encontrado.');
+		$sql = "DELETE FROM traspaso_producto WHERE  id_traspaso = ? AND id_producto = ? AND id_unidad = ?;";
+		$params = array( $traspaso_producto->getIdTraspaso(), $traspaso_producto->getIdProducto(), $traspaso_producto->getIdUnidad() );
 		global $conn;
 
 		$conn->Execute($sql, $params);

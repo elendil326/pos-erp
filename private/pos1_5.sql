@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 26-10-2011 a las 23:54:34
+-- Tiempo de generación: 27-10-2011 a las 14:14:52
 -- Versión del servidor: 5.1.53
 -- Versión de PHP: 5.3.4
 
@@ -1650,7 +1650,7 @@ CREATE TABLE IF NOT EXISTS `traspaso` (
   `cancelado` tinyint(1) NOT NULL COMMENT 'Si la solicitud de traspaso fue cancelada',
   `completo` tinyint(1) NOT NULL COMMENT 'Verdadero si se enviaron todos los productos solicitados al inicio del traspaso',
   PRIMARY KEY (`id_traspaso`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Traspasos entre un almacen y otro' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Traspasos entre un almacen y otro' AUTO_INCREMENT=5 ;
 
 -- --------------------------------------------------------
 
@@ -1661,9 +1661,10 @@ CREATE TABLE IF NOT EXISTS `traspaso` (
 CREATE TABLE IF NOT EXISTS `traspaso_producto` (
   `id_traspaso` int(11) NOT NULL COMMENT 'Id del traspaso',
   `id_producto` int(11) NOT NULL COMMENT 'Id del producto a traspasar',
+  `id_unidad` int(11) NOT NULL,
   `cantidad_enviada` int(11) NOT NULL DEFAULT '0' COMMENT 'cantidad de producto a traspasar',
   `cantidad_recibida` int(11) NOT NULL DEFAULT '0' COMMENT 'Cantidad de producto recibida',
-  PRIMARY KEY (`id_traspaso`,`id_producto`)
+  PRIMARY KEY (`id_traspaso`,`id_producto`,`id_unidad`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='detalle traspaso producto';
 
 -- --------------------------------------------------------

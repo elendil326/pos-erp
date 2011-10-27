@@ -305,6 +305,7 @@ require_once("interfaces/Empresas.interface.php");
                                 $sucursales_controller->EliminarAlmacen($a->getIdAlmacen());
                         }
                     }
+                    SucursalEmpresaDAO::delete($sucursal);
                 }
             }
             catch(Exception $e)
