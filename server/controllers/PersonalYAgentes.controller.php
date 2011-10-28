@@ -8,28 +8,34 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	
   class PersonalYAgentesController implements IPersonalYAgentes{
   
+  	
+    private static function validarString($string, $max_length, $nombre_variable,$min_length=0)
+	{
+		$error="";
 
-        private static function validarString($string, $max_length, $nombre_variable,$min_length=0)
-          {
-                $error="";
-                if(strlen($string)<=$min_length||strlen($string)>$max_length)
-                {
-                    $error="La longitud de la variable ".$nombre_variable." proporcionada no esta en el rango de ".$min_length." - ".$max_length;
-                    return $error;
-                }
-                return true;
-          }
+		if(strlen($string)<=$min_length||strlen($string)>$max_length)
+		{
+		    $error = "La longitud de la variable ".$nombre_variable." proporcionada no esta en el rango de ".$min_length." - ".$max_length;
+		    return $error;
+		}
+		return true;
+    }
 
-          private static function validarNumero($num, $max_length, $nombre_variable, $min_length=0)
-          {
-                $error="";
-                if($num<=$min_length||$num>$max_length)
-                {
-                    $error="La variable ".$nombre_variable." proporcionada no esta en el rango de ".$min_length." - ".$max_length;
-                    return $error;
-                }
-                return true;
-          }
+
+
+	private static function validarNumero($num, $max_length, $nombre_variable, $min_length=0)
+	{
+	    $error="";
+	    if($num<=$min_length||$num>$max_length)
+	    {
+	        $error="La variable ".$nombre_variable." proporcionada no esta en el rango de ".$min_length." - ".$max_length;
+	        return $error;
+	    }
+	    return true;
+	}
+
+
+
 
       private static function ValidarParametrosRol
       (
@@ -75,6 +81,10 @@ require_once("interfaces/PersonalYAgentes.interface.php");
           }
           return true;
       }
+
+
+
+
 	/**
  	 *
  	 *Insertar un nuevo usuario. El usuario que lo crea sera tomado de la sesion actual y la fecha sera tomada del servidor. Un usuario no puede tener mas de un rol en una misma sucursal de una misma empresa.
@@ -336,8 +346,9 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 		$orden = ""
 	)
 	{  
-  
-  
+		$roles = RolDAO::getAll();
+		
+  		return array( "roles" => $roles );
 	}
   
 	/**
@@ -512,30 +523,40 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 		$id_rol
 	)
 	{  
+
             Logger::log("Eliminando rol: ".$id_rol);
-            $validar=self::ValidarParametrosRol($id_rol);
+
+            $validar = self::ValidarParametrosRol($id_rol);
+            
             if(is_string($validar))
             {
                 Logger::error($validar);
                 throw new Exception($validar);
             }
-            $usuarios=UsuarioDAO::search(new Usuario(array( "id_rol" => $id_rol )));
+
+            $usuarios = UsuarioDAO::search(new Usuario(array( "id_rol" => $id_rol )));
+            
             if(!empty($usuarios))
             {
-                Logger::error("No se puede eliminar este rol pues hay usuarios asigandos a el");
+                Logger::error("No se puede eliminar este rol pues hay ".sizeof( $usuarios )." usuarios asigandos a el. ");
+
                 throw new Exception("No se puede eliminar este rol pues hay usuarios asigandos a el");
             }
+
             DAO::transBegin();
-            try
-            {
-                RolDAO::delete(RolDAO::getByPK($id_rol));
-            }
-            catch(Exception $e)
-            {
+
+            try{
+            	//@andres: http://the-stickman.com/web-development/php/php-505-fatal-error-only-variables-can-be-passed-by-reference/
+            	$to_delete = RolDAO::getByPK( $id_rol );
+                RolDAO::delete( $to_delete );
+
+            }catch(Exception $e){
                 DAO::transRollback();
                 Logger::error("Error al eliminar el rol: ".$e);
                 throw $e;
+
             }
+
             DAO::transEnd();
             Logger::log("Rol eliminado correctamente");
 	}

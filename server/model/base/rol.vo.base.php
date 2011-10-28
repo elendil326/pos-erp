@@ -56,7 +56,8 @@ class Rol extends VO
 			"descuento" => $this->descuento,
 			"salario" => $this->salario
 		); 
-	return json_encode($vec); 
+		
+		return json_encode($vec); 
 	}
 	
 	/**
@@ -68,7 +69,7 @@ class Rol extends VO
 	  * @access protected
 	  * @var int(11)
 	  */
-	protected $id_rol;
+	public $id_rol;
 
 	/**
 	  * nombre
@@ -77,7 +78,7 @@ class Rol extends VO
 	  * @access protected
 	  * @var varchar(30)
 	  */
-	protected $nombre;
+	public $nombre;
 
 	/**
 	  * descripcion
@@ -86,7 +87,7 @@ class Rol extends VO
 	  * @access protected
 	  * @var varchar(255)
 	  */
-	protected $descripcion;
+	public $descripcion;
 
 	/**
 	  * descuento
@@ -95,7 +96,7 @@ class Rol extends VO
 	  * @access protected
 	  * @var float
 	  */
-	protected $descuento;
+	public $descuento;
 
 	/**
 	  * salario
@@ -104,7 +105,7 @@ class Rol extends VO
 	  * @access protected
 	  * @var float
 	  */
-	protected $salario;
+	public $salario;
 
 	/**
 	  * getIdRol

@@ -89,7 +89,7 @@ require_once("interfaces/POS.interface.php");
 	(
 	)
 	{  
-  
+  		
   
 	}
   
@@ -104,7 +104,9 @@ require_once("interfaces/POS.interface.php");
 	{  
 
   		$sql = "TRUNCATE TABLE `rol`;";
-		
+
+		Logger::log("TRUNCANDO LA BASE DE DATOS !");
+
 		global $conn;
 
 		$rs = $conn->Execute($sql);
