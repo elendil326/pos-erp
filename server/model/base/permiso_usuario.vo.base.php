@@ -52,20 +52,20 @@ class PermisoUsuario extends VO
 	  * 
 	  * Id del permiso del usuario en la empresa<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_permiso;
+	public $id_permiso;
 
 	/**
 	  * id_usuario
 	  * 
 	  * Id del usuario con el permiso en la empresa<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_usuario;
+	public $id_usuario;
 
 	/**
 	  * getIdPermiso

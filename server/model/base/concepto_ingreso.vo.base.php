@@ -65,46 +65,46 @@ class ConceptoIngreso extends VO
 	  * Id del concepto de ingreso<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_concepto_ingreso;
+	public $id_concepto_ingreso;
 
 	/**
 	  * nombre
 	  * 
 	  * nombre del concepto<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(50)
 	  */
-	protected $nombre;
+	public $nombre;
 
 	/**
 	  * descripcion
 	  * 
 	  * Descripcion del concepto<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(255)
 	  */
-	protected $descripcion;
+	public $descripcion;
 
 	/**
 	  * monto
 	  * 
 	  * Si el concepto tienen un monto fijo<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $monto;
+	public $monto;
 
 	/**
 	  * activo
 	  * 
 	  * Si este concepto de ingreso esta activo<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $activo;
+	public $activo;
 
 	/**
 	  * getIdConceptoIngreso

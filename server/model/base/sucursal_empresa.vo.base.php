@@ -60,38 +60,38 @@ class SucursalEmpresa extends VO
 	  * 
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_sucursal;
+	public $id_sucursal;
 
 	/**
 	  * id_empresa
 	  * 
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_empresa;
+	public $id_empresa;
 
 	/**
 	  * margen_utilidad
 	  * 
 	  * Porcentaje de margen de utilidad que le gana esta sucursal a los productos de esta empresa<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $margen_utilidad;
+	public $margen_utilidad;
 
 	/**
 	  * descuento
 	  * 
 	  * Descuento que se aplicara a todos los productos de esta empresa en esta sucursal<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $descuento;
+	public $descuento;
 
 	/**
 	  * getIdSucursal

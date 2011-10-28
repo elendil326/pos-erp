@@ -65,46 +65,46 @@ class SalidaAlmacen extends VO
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_salida_almacen;
+	public $id_salida_almacen;
 
 	/**
 	  * id_almacen
 	  * 
 	  * Id del almacen del cual sale producto<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_almacen;
+	public $id_almacen;
 
 	/**
 	  * id_usuario
 	  * 
 	  * Id del usuario que registra<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_usuario;
+	public $id_usuario;
 
 	/**
 	  * fecha_registro
 	  * 
 	  * Fecha en que se registra el movimiento<br>
-	  * @access protected
+	  * @access public
 	  * @var datetime
 	  */
-	protected $fecha_registro;
+	public $fecha_registro;
 
 	/**
 	  * motivo
 	  * 
 	  * motivo por le cual sale producto del almacen<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(255)
 	  */
-	protected $motivo;
+	public $motivo;
 
 	/**
 	  * getIdSalidaAlmacen

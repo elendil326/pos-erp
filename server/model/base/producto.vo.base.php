@@ -117,163 +117,163 @@ class Producto extends VO
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_producto;
+	public $id_producto;
 
 	/**
 	  * compra_en_mostrador
 	  * 
 	  * Verdadero si el producto se puede comprar en mostrador<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $compra_en_mostrador;
+	public $compra_en_mostrador;
 
 	/**
 	  * metodo_costeo
 	  * 
 	  * Si el precio se toma del margen de utilidad o del precio fijo<br>
-	  * @access protected
+	  * @access public
 	  * @var enum('precio','margen')
 	  */
-	protected $metodo_costeo;
+	public $metodo_costeo;
 
 	/**
 	  * activo
 	  * 
 	  * Si el producto esta activo o no<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $activo;
+	public $activo;
 
 	/**
 	  * codigo_producto
 	  * 
 	  * Codigo interno del producto<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(30)
 	  */
-	protected $codigo_producto;
+	public $codigo_producto;
 
 	/**
 	  * nombre_producto
 	  * 
 	  * Nombre del producto<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(30)
 	  */
-	protected $nombre_producto;
+	public $nombre_producto;
 
 	/**
 	  * garantia
 	  * 
 	  * Si este producto cuenta con un numero de meses de garantia<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $garantia;
+	public $garantia;
 
 	/**
 	  * costo_estandar
 	  * 
 	  * Costo estandar del producto<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $costo_estandar;
+	public $costo_estandar;
 
 	/**
 	  * control_de_existencia
 	  * 
 	  * 00000001 = Unidades. 00000010 = Caractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = Lote<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $control_de_existencia;
+	public $control_de_existencia;
 
 	/**
 	  * margen_de_utilidad
 	  * 
 	  * Un porcentage de 0 a 100 si queremos que este producto marque utilidad en especifico<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $margen_de_utilidad;
+	public $margen_de_utilidad;
 
 	/**
 	  * descuento
 	  * 
 	  * Descuento que tendra este producto<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $descuento;
+	public $descuento;
 
 	/**
 	  * descripcion
 	  * 
 	  * Descripcion del producto<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(255)
 	  */
-	protected $descripcion;
+	public $descripcion;
 
 	/**
 	  * foto_del_producto
 	  * 
 	  * Url a una foto de este producto<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(100)
 	  */
-	protected $foto_del_producto;
+	public $foto_del_producto;
 
 	/**
 	  * costo_extra_almacen
 	  * 
 	  * Si este producto produce un costo extra en el almacen<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $costo_extra_almacen;
+	public $costo_extra_almacen;
 
 	/**
 	  * codigo_de_barras
 	  * 
 	  * El codigo de barras de este producto<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(30)
 	  */
-	protected $codigo_de_barras;
+	public $codigo_de_barras;
 
 	/**
 	  * peso_producto
 	  * 
 	  * El peso de este producto en Kg<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $peso_producto;
+	public $peso_producto;
 
 	/**
 	  * id_unidad
 	  * 
 	  * Id de la unidad en la que usualmente se maneja este producto<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_unidad;
+	public $id_unidad;
 
 	/**
 	  * precio
 	  * 
 	  * El precio fijo del producto<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $precio;
+	public $precio;
 
 	/**
 	  * getIdProducto

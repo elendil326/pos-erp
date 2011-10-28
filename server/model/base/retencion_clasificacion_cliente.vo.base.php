@@ -52,20 +52,20 @@ class RetencionClasificacionCliente extends VO
 	  * 
 	  * Id del retencion a aplicar al tipo de cliente<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_retencion;
+	public $id_retencion;
 
 	/**
 	  * id_clasificacion_cliente
 	  * 
 	  * Id de la clasificacion del cliente<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_clasificacion_cliente;
+	public $id_clasificacion_cliente;
 
 	/**
 	  * getIdRetencion

@@ -65,46 +65,46 @@ class ConceptoGasto extends VO
 	  * Id de la tabla concepto gasto<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_concepto_gasto;
+	public $id_concepto_gasto;
 
 	/**
 	  * nombre
 	  * 
 	  * Nombre del concepto<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(50)
 	  */
-	protected $nombre;
+	public $nombre;
 
 	/**
 	  * descripcion
 	  * 
 	  * Descripcion detallada del concepto<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(255)
 	  */
-	protected $descripcion;
+	public $descripcion;
 
 	/**
 	  * monto
 	  * 
 	  * monto del concepto si este es fijo siempre<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $monto;
+	public $monto;
 
 	/**
 	  * activo
 	  * 
 	  * Si este concepto de gasto esta activo<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $activo;
+	public $activo;
 
 	/**
 	  * getIdConceptoGasto

@@ -77,73 +77,73 @@ class Caja extends VO
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_caja;
+	public $id_caja;
 
 	/**
 	  * id_sucursal
 	  * 
 	  * a que sucursal pertenece esta caja<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_sucursal;
+	public $id_sucursal;
 
 	/**
 	  * token
 	  * 
 	  * el token que genero el pos client<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(32)
 	  */
-	protected $token;
+	public $token;
 
 	/**
 	  * descripcion
 	  * 
 	  * alguna descripcion para esta caja<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(32)
 	  */
-	protected $descripcion;
+	public $descripcion;
 
 	/**
 	  * abierta
 	  * 
 	  * Si esta abierta la caja o no<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $abierta;
+	public $abierta;
 
 	/**
 	  * saldo
 	  * 
 	  * Saldo actual de la caja<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $saldo;
+	public $saldo;
 
 	/**
 	  * control_billetes
 	  * 
 	  * Si esta caja esta llevando control de billetes o no<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $control_billetes;
+	public $control_billetes;
 
 	/**
 	  * activa
 	  * 
 	  * Si la caja esta activa o ha sido eliminada<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $activa;
+	public $activa;
 
 	/**
 	  * getIdCaja

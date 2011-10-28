@@ -56,29 +56,29 @@ class BilleteCaja extends VO
 	  * 
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_billete;
+	public $id_billete;
 
 	/**
 	  * id_caja
 	  * 
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_caja;
+	public $id_caja;
 
 	/**
 	  * cantidad
 	  * 
 	  * Cantidad de estos billetes en la caja<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $cantidad;
+	public $cantidad;
 
 	/**
 	  * getIdBillete

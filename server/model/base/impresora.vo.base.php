@@ -53,19 +53,19 @@ class Impresora extends VO
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_impresora;
+	public $id_impresora;
 
 	/**
 	  * puerto
 	  * 
 	  *  [Campo no documentado]<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(16)
 	  */
-	protected $puerto;
+	public $puerto;
 
 	/**
 	  * getIdImpresora

@@ -56,29 +56,29 @@ class OrdenDeServicioPaquete extends VO
 	  * 
 	  * Id del servicio<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_servicio;
+	public $id_servicio;
 
 	/**
 	  * id_paquete
 	  * 
 	  * Id del paquete<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_paquete;
+	public $id_paquete;
 
 	/**
 	  * cantidad
 	  * 
 	  * Cantidad de ordenes de servicio incluidos en el paquete<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $cantidad;
+	public $cantidad;
 
 	/**
 	  * getIdServicio

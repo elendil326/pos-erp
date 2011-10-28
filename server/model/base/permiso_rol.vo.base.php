@@ -52,20 +52,20 @@ class PermisoRol extends VO
 	  * 
 	  * Id del permiso del rol en esa empresa<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_permiso;
+	public $id_permiso;
 
 	/**
 	  * id_rol
 	  * 
 	  * Id del rol que tiene el permiso en esa empresa<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_rol;
+	public $id_rol;
 
 	/**
 	  * getIdPermiso

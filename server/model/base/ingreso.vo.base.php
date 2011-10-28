@@ -101,127 +101,127 @@ class Ingreso extends VO
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_ingreso;
+	public $id_ingreso;
 
 	/**
 	  * id_empresa
 	  * 
 	  * el id de la empresa a quien pertenece este ingreso<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_empresa;
+	public $id_empresa;
 
 	/**
 	  * id_usuario
 	  * 
 	  * el usuario que inserto este ingreso<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_usuario;
+	public $id_usuario;
 
 	/**
 	  * id_concepto_ingreso
 	  * 
 	  * el id del concepto de este ingreso<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_concepto_ingreso;
+	public $id_concepto_ingreso;
 
 	/**
 	  * fecha_del_ingreso
 	  * 
 	  * la fecha de cuando el ingreso se hizo<br>
-	  * @access protected
+	  * @access public
 	  * @var datetime
 	  */
-	protected $fecha_del_ingreso;
+	public $fecha_del_ingreso;
 
 	/**
 	  * fecha_de_registro
 	  * 
 	  * fecha de cuando el ingreso se registro en el sistema<br>
-	  * @access protected
+	  * @access public
 	  * @var datetime
 	  */
-	protected $fecha_de_registro;
+	public $fecha_de_registro;
 
 	/**
 	  * id_sucursal
 	  * 
 	  * si el ingreso pertenece a una sucursal especifica, este es el id de esa sucursal<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_sucursal;
+	public $id_sucursal;
 
 	/**
 	  * id_caja
 	  * 
 	  * si el ingreso se recibe en una caja, este es su id<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_caja;
+	public $id_caja;
 
 	/**
 	  * nota
 	  * 
 	  * alguna nota extra para el ingreso<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(64)
 	  */
-	protected $nota;
+	public $nota;
 
 	/**
 	  * descripcion
 	  * 
 	  * Descripcion del ingreso en caso de que no este contemplado en la lista de  conceptos de ingreso<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(255)
 	  */
-	protected $descripcion;
+	public $descripcion;
 
 	/**
 	  * folio
 	  * 
 	  * Folio de la factura del ingreso<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(50)
 	  */
-	protected $folio;
+	public $folio;
 
 	/**
 	  * monto
 	  * 
 	  * Monto del ingreso si no esta definido por el concepto de gasto<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $monto;
+	public $monto;
 
 	/**
 	  * cancelado
 	  * 
 	  * Si este ingreso ha sido cancelado o no<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $cancelado;
+	public $cancelado;
 
 	/**
 	  * motivo_cancelacion
 	  * 
 	  * Motivo por el cual se realiza la cancelacion<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(255)
 	  */
-	protected $motivo_cancelacion;
+	public $motivo_cancelacion;
 
 	/**
 	  * getIdIngreso

@@ -53,19 +53,19 @@ class Estado extends VO
 	  * Id del estado en el sistema<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_estado;
+	public $id_estado;
 
 	/**
 	  * nombre
 	  * 
 	  * Nombre del estado<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(16)
 	  */
-	protected $nombre;
+	public $nombre;
 
 	/**
 	  * getIdEstado

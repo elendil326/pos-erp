@@ -77,73 +77,73 @@ class InspeccionConsignacion extends VO
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_inspeccion_consignacion;
+	public $id_inspeccion_consignacion;
 
 	/**
 	  * id_consignacion
 	  * 
 	  * Id de la consignacion a la que se le hace la inspeccion<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_consignacion;
+	public $id_consignacion;
 
 	/**
 	  * id_usuario
 	  * 
 	  * Id del usuario que realiza la inspeccion<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_usuario;
+	public $id_usuario;
 
 	/**
 	  * id_caja
 	  * 
 	  * Id de la caja en la que se deposita el monto<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_caja;
+	public $id_caja;
 
 	/**
 	  * fecha_inspeccion
 	  * 
 	  * fecha en que se programa la inspeccion<br>
-	  * @access protected
+	  * @access public
 	  * @var datetime
 	  */
-	protected $fecha_inspeccion;
+	public $fecha_inspeccion;
 
 	/**
 	  * monto_abonado
 	  * 
 	  * Monto abonado a la inspeccion<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $monto_abonado;
+	public $monto_abonado;
 
 	/**
 	  * cancelada
 	  * 
 	  * Si esta inspeccion sigue programada o se ha cancelado<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $cancelada;
+	public $cancelada;
 
 	/**
 	  * motivo_cancelacion
 	  * 
 	  * motivo por el cual se ha cancelado la inspeccion<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(255)
 	  */
-	protected $motivo_cancelacion;
+	public $motivo_cancelacion;
 
 	/**
 	  * getIdInspeccionConsignacion

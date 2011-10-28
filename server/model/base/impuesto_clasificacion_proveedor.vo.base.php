@@ -52,20 +52,20 @@ class ImpuestoClasificacionProveedor extends VO
 	  * 
 	  * Id del impuesto a aplicar al tipo de proveedor<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_impuesto;
+	public $id_impuesto;
 
 	/**
 	  * id_clasificacion_proveedor
 	  * 
 	  * Id de la clasificacion del proveedor<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_clasificacion_proveedor;
+	public $id_clasificacion_proveedor;
 
 	/**
 	  * getIdImpuesto

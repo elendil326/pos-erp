@@ -60,38 +60,38 @@ class VentaEmpresa extends VO
 	  * 
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_venta;
+	public $id_venta;
 
 	/**
 	  * id_empresa
 	  * 
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_empresa;
+	public $id_empresa;
 
 	/**
 	  * total
 	  * 
 	  * El total correspondiente<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $total;
+	public $total;
 
 	/**
 	  * saldada
 	  * 
 	  * Si la venta ya fue saldada o aun no lo ha sido<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $saldada;
+	public $saldada;
 
 	/**
 	  * getIdVenta

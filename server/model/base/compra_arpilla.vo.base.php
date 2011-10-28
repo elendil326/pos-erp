@@ -93,109 +93,109 @@ class CompraArpilla extends VO
 	  * Id de la tabla compra por arpilla<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_compra_arpilla;
+	public $id_compra_arpilla;
 
 	/**
 	  * id_compra
 	  * 
 	  * Id de la compra a la que se refiere<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_compra;
+	public $id_compra;
 
 	/**
 	  * peso_origen
 	  * 
 	  * El peso del camion en el origen<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $peso_origen;
+	public $peso_origen;
 
 	/**
 	  * fecha_origen
 	  * 
 	  * Fecha en la que se envío el embarque<br>
-	  * @access protected
+	  * @access public
 	  * @var datetime
 	  */
-	protected $fecha_origen;
+	public $fecha_origen;
 
 	/**
 	  * folio
 	  * 
 	  * Folio del camion<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(11)
 	  */
-	protected $folio;
+	public $folio;
 
 	/**
 	  * numero_de_viaje
 	  * 
 	  * Número de viaje<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(11)
 	  */
-	protected $numero_de_viaje;
+	public $numero_de_viaje;
 
 	/**
 	  * peso_recibido
 	  * 
 	  * Peso del camion al llegar<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $peso_recibido;
+	public $peso_recibido;
 
 	/**
 	  * arpillas
 	  * 
 	  * Cantidad de arpillas recibidas<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $arpillas;
+	public $arpillas;
 
 	/**
 	  * peso_por_arpilla
 	  * 
 	  * El peso por arpilla promedio<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $peso_por_arpilla;
+	public $peso_por_arpilla;
 
 	/**
 	  * productor
 	  * 
 	  * Nombre del productor<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(64)
 	  */
-	protected $productor;
+	public $productor;
 
 	/**
 	  * merma_por_arpilla
 	  * 
 	  * La merma de producto por arpilla<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $merma_por_arpilla;
+	public $merma_por_arpilla;
 
 	/**
 	  * total_origen
 	  * 
 	  * El valor del embarque según el proveedor<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $total_origen;
+	public $total_origen;
 
 	/**
 	  * getIdCompraArpilla

@@ -73,64 +73,64 @@ class SeguimientoDeServicio extends VO
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_seguimiento_de_servicio;
+	public $id_seguimiento_de_servicio;
 
 	/**
 	  * id_orden_de_servicio
 	  * 
 	  * Id orden de servicio a la que se le realiza el seguimiento<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_orden_de_servicio;
+	public $id_orden_de_servicio;
 
 	/**
 	  * id_localizacion
 	  * 
 	  * Id de la sucursal en la que se encuentra el servicio actualmente<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_localizacion;
+	public $id_localizacion;
 
 	/**
 	  * id_usuario
 	  * 
 	  * Id del usuario que realiza el seguimiento<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_usuario;
+	public $id_usuario;
 
 	/**
 	  * id_sucursal
 	  * 
 	  * Id de la sucursal de donde se realiza el seguimiento<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_sucursal;
+	public $id_sucursal;
 
 	/**
 	  * estado
 	  * 
 	  * Estado en la que se encuentra la orden<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(255)
 	  */
-	protected $estado;
+	public $estado;
 
 	/**
 	  * fecha_seguimiento
 	  * 
 	  * Fecha en la que se realizo el seguimiento<br>
-	  * @access protected
+	  * @access public
 	  * @var datetime
 	  */
-	protected $fecha_seguimiento;
+	public $fecha_seguimiento;
 
 	/**
 	  * getIdSeguimientoDeServicio

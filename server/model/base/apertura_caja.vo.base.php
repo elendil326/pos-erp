@@ -65,46 +65,46 @@ class AperturaCaja extends VO
 	  * ID de la apertura de la caja<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_apertura_caja;
+	public $id_apertura_caja;
 
 	/**
 	  * id_caja
 	  * 
 	  * Id de la caja que se abre<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_caja;
+	public $id_caja;
 
 	/**
 	  * fecha
 	  * 
 	  * Fecha en que se realizo la apertura de caja<br>
-	  * @access protected
+	  * @access public
 	  * @var datetime
 	  */
-	protected $fecha;
+	public $fecha;
 
 	/**
 	  * saldo
 	  * 
 	  * Saldo con que inicia operaciones la caja<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $saldo;
+	public $saldo;
 
 	/**
 	  * id_cajero
 	  * 
 	  * Id del usuario que realizará las funciones de cajero<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_cajero;
+	public $id_cajero;
 
 	/**
 	  * getIdAperturaCaja

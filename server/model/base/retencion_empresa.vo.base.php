@@ -52,20 +52,20 @@ class RetencionEmpresa extends VO
 	  * 
 	  * Id de la retencion que se aplica a la empreas<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_retencion;
+	public $id_retencion;
 
 	/**
 	  * id_empresa
 	  * 
 	  * Id de la empresa a la que se le aplica la retencion<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_empresa;
+	public $id_empresa;
 
 	/**
 	  * getIdRetencion

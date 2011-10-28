@@ -68,56 +68,56 @@ class VentaOrden extends VO
 	  * 
 	  * Id de la venta en la que se vendieron las ordenes de servicio<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_venta;
+	public $id_venta;
 
 	/**
 	  * id_orden_de_servicio
 	  * 
 	  * Id de la orden de servicio que se vendio<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_orden_de_servicio;
+	public $id_orden_de_servicio;
 
 	/**
 	  * precio
 	  * 
 	  * El precio de la orden<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $precio;
+	public $precio;
 
 	/**
 	  * descuento
 	  * 
 	  * El descuento de la orden<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $descuento;
+	public $descuento;
 
 	/**
 	  * impuesto
 	  * 
 	  * Cantidad añadida por los impuestos<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $impuesto;
+	public $impuesto;
 
 	/**
 	  * retencion
 	  * 
 	  * Cantidad añadida por las retenciones<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $retencion;
+	public $retencion;
 
 	/**
 	  * getIdVenta

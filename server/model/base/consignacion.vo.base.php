@@ -101,127 +101,127 @@ class Consignacion extends VO
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_consignacion;
+	public $id_consignacion;
 
 	/**
 	  * id_cliente
 	  * 
 	  * Id del usuario al que se le consignan los productos<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_cliente;
+	public $id_cliente;
 
 	/**
 	  * id_usuario
 	  * 
 	  * el usuario que inicio la consigacion<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_usuario;
+	public $id_usuario;
 
 	/**
 	  * id_almacen
 	  * 
 	  * Id del almacen generado por la consignacion<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_almacen;
+	public $id_almacen;
 
 	/**
 	  * id_usuario_cancelacion
 	  * 
 	  * Id del usuario que cancela la consignacion<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_usuario_cancelacion;
+	public $id_usuario_cancelacion;
 
 	/**
 	  * fecha_creacion
 	  * 
 	  * la fecha que se creo esta consignacion<br>
-	  * @access protected
+	  * @access public
 	  * @var datetime
 	  */
-	protected $fecha_creacion;
+	public $fecha_creacion;
 
 	/**
 	  * activa
 	  * 
 	  * Si la consignacion esta activa<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $activa;
+	public $activa;
 
 	/**
 	  * cancelada
 	  * 
 	  * Si esta consignacion fue cancelada o no<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $cancelada;
+	public $cancelada;
 
 	/**
 	  * motivo_cancelacion
 	  * 
 	  * Justificacion de la cancelacion si esta consginacion fue cancelada<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(255)
 	  */
-	protected $motivo_cancelacion;
+	public $motivo_cancelacion;
 
 	/**
 	  * folio
 	  * 
 	  * Folio de la consignacion<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(50)
 	  */
-	protected $folio;
+	public $folio;
 
 	/**
 	  * fecha_termino
 	  * 
 	  * Fecha en que se termino la consignacion, si la consignacion fue cancelada, la fecha de cancelacion se guardara aqui<br>
-	  * @access protected
+	  * @access public
 	  * @var datetime
 	  */
-	protected $fecha_termino;
+	public $fecha_termino;
 
 	/**
 	  * impuesto
 	  * 
 	  * Monto generado por impuestos para esta consignacion<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $impuesto;
+	public $impuesto;
 
 	/**
 	  * descuento
 	  * 
 	  * Monto a descontar de esta consignacion<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $descuento;
+	public $descuento;
 
 	/**
 	  * retencion
 	  * 
 	  * Monto generado por retenciones<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $retencion;
+	public $retencion;
 
 	/**
 	  * getIdConsignacion

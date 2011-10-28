@@ -52,20 +52,20 @@ class ImpuestoEmpresa extends VO
 	  * 
 	  * Id del impuesto que se aplicara a la empresa<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_impuesto;
+	public $id_impuesto;
 
 	/**
 	  * id_empresa
 	  * 
 	  * id de la empresa<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_empresa;
+	public $id_empresa;
 
 	/**
 	  * getIdImpuesto

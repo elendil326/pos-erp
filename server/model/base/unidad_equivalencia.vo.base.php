@@ -56,29 +56,29 @@ class UnidadEquivalencia extends VO
 	  * 
 	  * Id de la unidad origen<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_unidad;
+	public $id_unidad;
 
 	/**
 	  * equivalencia
 	  * 
 	  * Numero de unidades de id_unidades que caben en la unidad id_unidad<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $equivalencia;
+	public $equivalencia;
 
 	/**
 	  * id_unidades
 	  * 
 	  * Id de las unidades equivalentes<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_unidades;
+	public $id_unidades;
 
 	/**
 	  * getIdUnidad

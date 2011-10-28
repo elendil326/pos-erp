@@ -60,38 +60,38 @@ class PaqueteEmpresa extends VO
 	  * 
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_paquete;
+	public $id_paquete;
 
 	/**
 	  * id_empresa
 	  * 
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_empresa;
+	public $id_empresa;
 
 	/**
 	  * precio_utilidad
 	  * 
 	  * Precio o margen de utilidad con el que se vendera este producto en esta empresa<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $precio_utilidad;
+	public $precio_utilidad;
 
 	/**
 	  * es_margen_utilidad
 	  * 
 	  * Si el campo precio_utilidad es un precio fijo o un margen de utilidad<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $es_margen_utilidad;
+	public $es_margen_utilidad;
 
 	/**
 	  * getIdPaquete

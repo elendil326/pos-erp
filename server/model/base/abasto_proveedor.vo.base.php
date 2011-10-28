@@ -69,55 +69,55 @@ class AbastoProveedor extends VO
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_abasto_proveedor;
+	public $id_abasto_proveedor;
 
 	/**
 	  * id_proveedor
 	  * 
 	  * Id del proveedor que abastese, se usara -1 cuando la entrada sea por inventario fisico<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_proveedor;
+	public $id_proveedor;
 
 	/**
 	  * id_almacen
 	  * 
 	  * Id del almacen abastesido<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_almacen;
+	public $id_almacen;
 
 	/**
 	  * id_usuario
 	  * 
 	  * Id del usuario que registra<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_usuario;
+	public $id_usuario;
 
 	/**
 	  * fecha
 	  * 
 	  * Fecha del movimiento<br>
-	  * @access protected
+	  * @access public
 	  * @var datetime
 	  */
-	protected $fecha;
+	public $fecha;
 
 	/**
 	  * motivo
 	  * 
 	  * Motivo de la entrada del producto<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(255)
 	  */
-	protected $motivo;
+	public $motivo;
 
 	/**
 	  * getIdAbastoProveedor

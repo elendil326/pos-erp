@@ -97,118 +97,118 @@ class Servicio extends VO
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_servicio;
+	public $id_servicio;
 
 	/**
 	  * nombre_servicio
 	  * 
 	  * nombre del servicio<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(50)
 	  */
-	protected $nombre_servicio;
+	public $nombre_servicio;
 
 	/**
 	  * metodo_costeo
 	  * 
 	  * Si el precio se toma del margen de utilidad o del precio fijo<br>
-	  * @access protected
+	  * @access public
 	  * @var enum('precio','margen')
 	  */
-	protected $metodo_costeo;
+	public $metodo_costeo;
 
 	/**
 	  * codigo_servicio
 	  * 
 	  * Codigo de control del servicio manejado por la empresa, no se puede repetir<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(20)
 	  */
-	protected $codigo_servicio;
+	public $codigo_servicio;
 
 	/**
 	  * compra_en_mostrador
 	  * 
 	  * Verdadero si este servicio se puede comprar en mostrador, para aquello de compra-venta. Para poder hacer esto, el sistema debe poder hacer compras en mostrador<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $compra_en_mostrador;
+	public $compra_en_mostrador;
 
 	/**
 	  * activo
 	  * 
 	  * Si el servicio esta activo<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $activo;
+	public $activo;
 
 	/**
 	  * margen_de_utilidad
 	  * 
 	  * Un porcentage de 0 a 100 si queremos que este servicio marque utilidad en especifico<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $margen_de_utilidad;
+	public $margen_de_utilidad;
 
 	/**
 	  * descripcion_servicio
 	  * 
 	  * Descripcion del servicio<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(255)
 	  */
-	protected $descripcion_servicio;
+	public $descripcion_servicio;
 
 	/**
 	  * costo_estandar
 	  * 
 	  * Valor del costo estandar del servicio<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $costo_estandar;
+	public $costo_estandar;
 
 	/**
 	  * garantia
 	  * 
 	  * Si este servicio tiene una garantía en meses.<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $garantia;
+	public $garantia;
 
 	/**
 	  * control_existencia
 	  * 
 	  * 00000001 = Unidades. 00000010 = Caractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = LoteCaractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = Lote<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $control_existencia;
+	public $control_existencia;
 
 	/**
 	  * foto_servicio
 	  * 
 	  * Url de la foto del servicio<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(50)
 	  */
-	protected $foto_servicio;
+	public $foto_servicio;
 
 	/**
 	  * precio
 	  * 
 	  * El precio fijo del servicio<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $precio;
+	public $precio;
 
 	/**
 	  * getIdServicio

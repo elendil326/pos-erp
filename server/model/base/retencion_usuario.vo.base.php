@@ -52,20 +52,20 @@ class RetencionUsuario extends VO
 	  * 
 	  * Id de la retencion que se aplica al usuario<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_retencion;
+	public $id_retencion;
 
 	/**
 	  * id_usuario
 	  * 
 	  * Id del usuario que tiene la retencion<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_usuario;
+	public $id_usuario;
 
 	/**
 	  * getIdRetencion

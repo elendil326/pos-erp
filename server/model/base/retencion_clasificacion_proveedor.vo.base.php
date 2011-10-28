@@ -52,20 +52,20 @@ class RetencionClasificacionProveedor extends VO
 	  * 
 	  * Id del retencion a aplicar al tipo de proveedor<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_retencion;
+	public $id_retencion;
 
 	/**
 	  * id_clasificacion_proveedor
 	  * 
 	  * Id de la clasificacion del proveedor<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_clasificacion_proveedor;
+	public $id_clasificacion_proveedor;
 
 	/**
 	  * getIdRetencion

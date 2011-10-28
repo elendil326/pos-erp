@@ -93,109 +93,109 @@ class Empresa extends VO
 	  * Id de la tabla empresa<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_empresa;
+	public $id_empresa;
 
 	/**
 	  * id_direccion
 	  * 
 	  * Id de la direccion de la empresa<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_direccion;
+	public $id_direccion;
 
 	/**
 	  * curp
 	  * 
 	  * CURP de la empresa<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(30)
 	  */
-	protected $curp;
+	public $curp;
 
 	/**
 	  * rfc
 	  * 
 	  * RFC de la empresa<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(30)
 	  */
-	protected $rfc;
+	public $rfc;
 
 	/**
 	  * razon_social
 	  * 
 	  * Razon social de la empresa<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(100)
 	  */
-	protected $razon_social;
+	public $razon_social;
 
 	/**
 	  * representante_legal
 	  * 
 	  * Representante legal de la empresa, puede ser persona o empresa<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(100)
 	  */
-	protected $representante_legal;
+	public $representante_legal;
 
 	/**
 	  * fecha_alta
 	  * 
 	  * Fecha en que se creo esta empresa<br>
-	  * @access protected
+	  * @access public
 	  * @var datetime
 	  */
-	protected $fecha_alta;
+	public $fecha_alta;
 
 	/**
 	  * fecha_baja
 	  * 
 	  * Fecha en que se desactivo esa empresa<br>
-	  * @access protected
+	  * @access public
 	  * @var datetime
 	  */
-	protected $fecha_baja;
+	public $fecha_baja;
 
 	/**
 	  * activo
 	  * 
 	  * Si esta empresa esta activa o no<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $activo;
+	public $activo;
 
 	/**
 	  * direccion_web
 	  * 
 	  * Direccion web de la empresa<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(20)
 	  */
-	protected $direccion_web;
+	public $direccion_web;
 
 	/**
 	  * margen_utilidad
 	  * 
 	  * Porcentaje del margen de utilidad que esta empresa le gana a todos sus productos<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $margen_utilidad;
+	public $margen_utilidad;
 
 	/**
 	  * descuento
 	  * 
 	  * Descuento que se aplicara a todos los productos de esta empresa<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $descuento;
+	public $descuento;
 
 	/**
 	  * getIdEmpresa

@@ -109,145 +109,145 @@ class Venta extends VO
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_venta;
+	public $id_venta;
 
 	/**
 	  * id_caja
 	  * 
 	  * la caja donde se hizo la venta, esta puede ser null ya que un gerente puede vender en el sistema web<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_caja;
+	public $id_caja;
 
 	/**
 	  * id_venta_caja
 	  * 
 	  * el id de la venta de esta caja<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_venta_caja;
+	public $id_venta_caja;
 
 	/**
 	  * id_comprador_venta
 	  * 
 	  * Id del usuario al que se le vende<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_comprador_venta;
+	public $id_comprador_venta;
 
 	/**
 	  * tipo_de_venta
 	  * 
 	  * nota si esta fue venta a contado o a credito<br>
-	  * @access protected
+	  * @access public
 	  * @var enum('contado','credito')
 	  */
-	protected $tipo_de_venta;
+	public $tipo_de_venta;
 
 	/**
 	  * fecha
 	  * 
 	  * la fecha de esta venta<br>
-	  * @access protected
+	  * @access public
 	  * @var datetime
 	  */
-	protected $fecha;
+	public $fecha;
 
 	/**
 	  * subtotal
 	  * 
 	  *  [Campo no documentado]<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $subtotal;
+	public $subtotal;
 
 	/**
 	  * impuesto
 	  * 
 	  *  [Campo no documentado]<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $impuesto;
+	public $impuesto;
 
 	/**
 	  * descuento
 	  * 
 	  *  [Campo no documentado]<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $descuento;
+	public $descuento;
 
 	/**
 	  * total
 	  * 
 	  * el total a pagar<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $total;
+	public $total;
 
 	/**
 	  * id_sucursal
 	  * 
 	  * el id de donde se hizo la venta, aunque ya tenemos en que caja se hizo, guardaremos la sucursal ya que la caja puede haberse ido ademas para hacer busquedas mas rapidas<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_sucursal;
+	public $id_sucursal;
 
 	/**
 	  * id_usuario
 	  * 
 	  * el usuario que hizo esta venta<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_usuario;
+	public $id_usuario;
 
 	/**
 	  * saldo
 	  * 
 	  * el saldo pendiente por abonar en esta venta<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $saldo;
+	public $saldo;
 
 	/**
 	  * cancelada
 	  * 
 	  * Si la venta ha sido cancelada<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $cancelada;
+	public $cancelada;
 
 	/**
 	  * tipo_de_pago
 	  * 
 	  * Si la venta fue pagada con tarjeta, cheque, o en efectivo<br>
-	  * @access protected
+	  * @access public
 	  * @var enum('cheque','tarjeta','efectivo')
 	  */
-	protected $tipo_de_pago;
+	public $tipo_de_pago;
 
 	/**
 	  * retencion
 	  * 
 	  * Monto de retencion<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $retencion;
+	public $retencion;
 
 	/**
 	  * getIdVenta

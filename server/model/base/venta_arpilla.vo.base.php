@@ -93,109 +93,109 @@ class VentaArpilla extends VO
 	  * Id de la venta por arpilla<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_venta_arpilla;
+	public $id_venta_arpilla;
 
 	/**
 	  * id_venta
 	  * 
 	  * Id de la venta en arpillas<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_venta;
+	public $id_venta;
 
 	/**
 	  * peso_destino
 	  * 
 	  * Peso del embarque en el destino<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $peso_destino;
+	public $peso_destino;
 
 	/**
 	  * fecha_origen
 	  * 
 	  * Fecha en la que se envía el embarque<br>
-	  * @access protected
+	  * @access public
 	  * @var datetime
 	  */
-	protected $fecha_origen;
+	public $fecha_origen;
 
 	/**
 	  * folio
 	  * 
 	  * Folio de la entrega<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(11)
 	  */
-	protected $folio;
+	public $folio;
 
 	/**
 	  * numero_de_viaje
 	  * 
 	  * Numero de viaje<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(11)
 	  */
-	protected $numero_de_viaje;
+	public $numero_de_viaje;
 
 	/**
 	  * peso_origen
 	  * 
 	  * Peso del embarque en el origen<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $peso_origen;
+	public $peso_origen;
 
 	/**
 	  * arpillas
 	  * 
 	  * Numero de arpillas enviadas<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $arpillas;
+	public $arpillas;
 
 	/**
 	  * peso_por_arpilla
 	  * 
 	  * Promedio de peso por arpilla<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $peso_por_arpilla;
+	public $peso_por_arpilla;
 
 	/**
 	  * productor
 	  * 
 	  * Nombre del productor<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(64)
 	  */
-	protected $productor;
+	public $productor;
 
 	/**
 	  * merma_por_arpilla
 	  * 
 	  * Merma por arpilla<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $merma_por_arpilla;
+	public $merma_por_arpilla;
 
 	/**
 	  * total_origen
 	  * 
 	  * Valor del embarque<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $total_origen;
+	public $total_origen;
 
 	/**
 	  * getIdVentaArpilla

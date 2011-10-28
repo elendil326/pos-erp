@@ -105,136 +105,136 @@ class Gasto extends VO
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_gasto;
+	public $id_gasto;
 
 	/**
 	  * id_empresa
 	  * 
 	  * el id de la empresa a quien pertenece este gasto<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_empresa;
+	public $id_empresa;
 
 	/**
 	  * id_usuario
 	  * 
 	  * el usuario que inserto este gasto<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_usuario;
+	public $id_usuario;
 
 	/**
 	  * id_concepto_gasto
 	  * 
 	  * el id del concepto de este gasto<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_concepto_gasto;
+	public $id_concepto_gasto;
 
 	/**
 	  * id_orden_de_servicio
 	  * 
 	  * Si este gasto se aplico a una orden de servicio<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_orden_de_servicio;
+	public $id_orden_de_servicio;
 
 	/**
 	  * id_caja
 	  * 
 	  * Id de la caja de la cual se sustrae el dinero para pagar el gasto<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_caja;
+	public $id_caja;
 
 	/**
 	  * fecha_del_gasto
 	  * 
 	  * la fecha de cuando el gasto se hizo<br>
-	  * @access protected
+	  * @access public
 	  * @var datetime
 	  */
-	protected $fecha_del_gasto;
+	public $fecha_del_gasto;
 
 	/**
 	  * fecha_de_registro
 	  * 
 	  * fecha de cuando el gasto se ingreso en el sistema<br>
-	  * @access protected
+	  * @access public
 	  * @var datetime
 	  */
-	protected $fecha_de_registro;
+	public $fecha_de_registro;
 
 	/**
 	  * id_sucursal
 	  * 
 	  * si el gasto pertenece a una sucursal especifica, este es el id de esa sucursal<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_sucursal;
+	public $id_sucursal;
 
 	/**
 	  * nota
 	  * 
 	  * alguna nota extra para el gasto<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(64)
 	  */
-	protected $nota;
+	public $nota;
 
 	/**
 	  * descripcion
 	  * 
 	  * Descripcion del gasto en caso de que no este contemplado en la lista de  conceptos de gasto<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(255)
 	  */
-	protected $descripcion;
+	public $descripcion;
 
 	/**
 	  * folio
 	  * 
 	  * Folio de la factura del gasto<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(50)
 	  */
-	protected $folio;
+	public $folio;
 
 	/**
 	  * monto
 	  * 
 	  * Monto del gasto si no esta definido por el concepto de gasto<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $monto;
+	public $monto;
 
 	/**
 	  * cancelado
 	  * 
 	  * Si este gasto ha sido cancelado o no<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $cancelado;
+	public $cancelado;
 
 	/**
 	  * motivo_cancelacion
 	  * 
 	  * Motivo por el cual se realiza la cancelacion<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(255)
 	  */
-	protected $motivo_cancelacion;
+	public $motivo_cancelacion;
 
 	/**
 	  * getIdGasto

@@ -93,109 +93,109 @@ class Sucursal extends VO
 	  * Id de la tabla sucursal<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_sucursal;
+	public $id_sucursal;
 
 	/**
 	  * id_direccion
 	  * 
 	  * Id de la direccion de la sucursal<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_direccion;
+	public $id_direccion;
 
 	/**
 	  * rfc
 	  * 
 	  * RFC de la sucursal<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(30)
 	  */
-	protected $rfc;
+	public $rfc;
 
 	/**
 	  * razon_social
 	  * 
 	  * Razon social de la sucursal<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(100)
 	  */
-	protected $razon_social;
+	public $razon_social;
 
 	/**
 	  * descripcion
 	  * 
 	  * Descrpicion de la sucursal<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(255)
 	  */
-	protected $descripcion;
+	public $descripcion;
 
 	/**
 	  * id_gerente
 	  * 
 	  * Id del usuario que funje como gerente general de la sucursal<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_gerente;
+	public $id_gerente;
 
 	/**
 	  * saldo_a_favor
 	  * 
 	  * Saldo a favor de la sucursal<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $saldo_a_favor;
+	public $saldo_a_favor;
 
 	/**
 	  * fecha_apertura
 	  * 
 	  * Fecha en que se creo la sucursal<br>
-	  * @access protected
+	  * @access public
 	  * @var datetime
 	  */
-	protected $fecha_apertura;
+	public $fecha_apertura;
 
 	/**
 	  * activa
 	  * 
 	  * Si esta sucursal esta activa o no<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $activa;
+	public $activa;
 
 	/**
 	  * fecha_baja
 	  * 
 	  * Fecha en que se dio de baja esta sucursal<br>
-	  * @access protected
+	  * @access public
 	  * @var datetime
 	  */
-	protected $fecha_baja;
+	public $fecha_baja;
 
 	/**
 	  * margen_utilidad
 	  * 
 	  * POrcentaje del margen de utilidad que esta sucursal le gana a todos los productos que ofrece<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $margen_utilidad;
+	public $margen_utilidad;
 
 	/**
 	  * descuento
 	  * 
 	  * Descuento que se aplicara a todos los productos de esta sucursal<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $descuento;
+	public $descuento;
 
 	/**
 	  * getIdSucursal

@@ -52,20 +52,20 @@ class ChequeVenta extends VO
 	  * 
 	  * Id del cheque con el que se pago la venta<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_cheque;
+	public $id_cheque;
 
 	/**
 	  * id_venta
 	  * 
 	  * Id de la venta que se pago con el cheque<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_venta;
+	public $id_venta;
 
 	/**
 	  * getIdCheque

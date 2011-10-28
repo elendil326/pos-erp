@@ -52,20 +52,20 @@ class RetencionServicio extends VO
 	  * 
 	  * Id de la retencion que se aplica al servicio<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_retencion;
+	public $id_retencion;
 
 	/**
 	  * id_servicio
 	  * 
 	  * Id del servicio al que se le aplica la retencion<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_servicio;
+	public $id_servicio;
 
 	/**
 	  * getIdRetencion

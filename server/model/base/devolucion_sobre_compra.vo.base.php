@@ -65,46 +65,46 @@ class DevolucionSobreCompra extends VO
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_devolucion_sobre_compra;
+	public $id_devolucion_sobre_compra;
 
 	/**
 	  * id_compra
 	  * 
 	  * Id de la compra a cancelar<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_compra;
+	public $id_compra;
 
 	/**
 	  * id_usuario
 	  * 
 	  * Id del usuario que realiza la devolucion<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_usuario;
+	public $id_usuario;
 
 	/**
 	  * fecha
 	  * 
 	  * Fecha en que se realiza la devolucion<br>
-	  * @access protected
+	  * @access public
 	  * @var datetime
 	  */
-	protected $fecha;
+	public $fecha;
 
 	/**
 	  * motivo
 	  * 
 	  * Motivo por el cual se realiza la devolucion<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(255)
 	  */
-	protected $motivo;
+	public $motivo;
 
 	/**
 	  * getIdDevolucionSobreCompra

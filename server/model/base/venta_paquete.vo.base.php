@@ -64,47 +64,47 @@ class VentaPaquete extends VO
 	  * 
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_venta;
+	public $id_venta;
 
 	/**
 	  * id_paquete
 	  * 
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_paquete;
+	public $id_paquete;
 
 	/**
 	  * cantidad
 	  * 
 	  *  [Campo no documentado]<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $cantidad;
+	public $cantidad;
 
 	/**
 	  * precio
 	  * 
 	  *  [Campo no documentado]<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $precio;
+	public $precio;
 
 	/**
 	  * descuento
 	  * 
 	  *  [Campo no documentado]<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $descuento;
+	public $descuento;
 
 	/**
 	  * getIdVenta

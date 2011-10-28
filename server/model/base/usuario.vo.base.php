@@ -209,370 +209,370 @@ class Usuario extends VO
 	  * Id de la tabla usuario<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_usuario;
+	public $id_usuario;
 
 	/**
 	  * id_direccion
 	  * 
 	  * Id de la direccion del usuario<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_direccion;
+	public $id_direccion;
 
 	/**
 	  * id_direccion_alterna
 	  * 
 	  * Id de la direccion alterna del usuario<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_direccion_alterna;
+	public $id_direccion_alterna;
 
 	/**
 	  * id_sucursal
 	  * 
 	  * Id sucursal en la que labora este usuario o dodne se dio de alta<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_sucursal;
+	public $id_sucursal;
 
 	/**
 	  * id_rol
 	  * 
 	  * Id del rol que desempeñara el usuario en la instancia<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_rol;
+	public $id_rol;
 
 	/**
 	  * id_clasificacion_cliente
 	  * 
 	  * Id de la clasificaiocn del cliente<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_clasificacion_cliente;
+	public $id_clasificacion_cliente;
 
 	/**
 	  * id_clasificacion_proveedor
 	  * 
 	  * Id de la clasificacion del proveedor<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_clasificacion_proveedor;
+	public $id_clasificacion_proveedor;
 
 	/**
 	  * id_moneda
 	  * 
 	  * Id moneda de preferencia del usuario<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_moneda;
+	public $id_moneda;
 
 	/**
 	  * fecha_asignacion_rol
 	  * 
 	  * Fecha en que se asigno o modifico el rol de este usuario<br>
-	  * @access protected
+	  * @access public
 	  * @var datetime
 	  */
-	protected $fecha_asignacion_rol;
+	public $fecha_asignacion_rol;
 
 	/**
 	  * nombre
 	  * 
 	  * Nombre del agente<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(100)
 	  */
-	protected $nombre;
+	public $nombre;
 
 	/**
 	  * rfc
 	  * 
 	  * RFC del agente<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(30)
 	  */
-	protected $rfc;
+	public $rfc;
 
 	/**
 	  * curp
 	  * 
 	  * CURP del agente<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(30)
 	  */
-	protected $curp;
+	public $curp;
 
 	/**
 	  * comision_ventas
 	  * 
 	  * Comision sobre las ventas que recibira este agente<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $comision_ventas;
+	public $comision_ventas;
 
 	/**
 	  * telefono_personal1
 	  * 
 	  * Telefono personal del agente<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(20)
 	  */
-	protected $telefono_personal1;
+	public $telefono_personal1;
 
 	/**
 	  * telefono_personal2
 	  * 
 	  * Telefono personal del agente<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(20)
 	  */
-	protected $telefono_personal2;
+	public $telefono_personal2;
 
 	/**
 	  * fecha_alta
 	  * 
 	  * Fecha en que se creo este usuario<br>
-	  * @access protected
+	  * @access public
 	  * @var datetime
 	  */
-	protected $fecha_alta;
+	public $fecha_alta;
 
 	/**
 	  * fecha_baja
 	  * 
 	  * fecha en que se desactivo este usuario<br>
-	  * @access protected
+	  * @access public
 	  * @var datetime
 	  */
-	protected $fecha_baja;
+	public $fecha_baja;
 
 	/**
 	  * activo
 	  * 
 	  * si este usuario esta activo o no<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $activo;
+	public $activo;
 
 	/**
 	  * limite_credito
 	  * 
 	  * Limite de credito del usuario<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $limite_credito;
+	public $limite_credito;
 
 	/**
 	  * descuento
 	  * 
 	  * Porcentaje del descuento del usuario<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $descuento;
+	public $descuento;
 
 	/**
 	  * password
 	  * 
 	  * Password del usuario<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(64)
 	  */
-	protected $password;
+	public $password;
 
 	/**
 	  * last_login
 	  * 
 	  * Fecha en la que ingreso el usuario por ultima vez<br>
-	  * @access protected
+	  * @access public
 	  * @var datetime
 	  */
-	protected $last_login;
+	public $last_login;
 
 	/**
 	  * consignatario
 	  * 
 	  * Si el usuario es consignatario<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $consignatario;
+	public $consignatario;
 
 	/**
 	  * salario
 	  * 
 	  * El salario que recibe el usuaario actualmente<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $salario;
+	public $salario;
 
 	/**
 	  * correo_electronico
 	  * 
 	  * Correo electronico del usuario<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(30)
 	  */
-	protected $correo_electronico;
+	public $correo_electronico;
 
 	/**
 	  * pagina_web
 	  * 
 	  * Pagina Web del usuario<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(30)
 	  */
-	protected $pagina_web;
+	public $pagina_web;
 
 	/**
 	  * saldo_del_ejercicio
 	  * 
 	  * Saldo del ejercicio del cliente<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $saldo_del_ejercicio;
+	public $saldo_del_ejercicio;
 
 	/**
 	  * ventas_a_credito
 	  * 
 	  * Ventas a credito del cliente<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $ventas_a_credito;
+	public $ventas_a_credito;
 
 	/**
 	  * representante_legal
 	  * 
 	  * Nombre del representante legal del usuario<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(100)
 	  */
-	protected $representante_legal;
+	public $representante_legal;
 
 	/**
 	  * facturar_a_terceros
 	  * 
 	  * Si el cliente puede facturar a terceros<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $facturar_a_terceros;
+	public $facturar_a_terceros;
 
 	/**
 	  * dia_de_pago
 	  * 
 	  * Fecha de pago del cliente<br>
-	  * @access protected
+	  * @access public
 	  * @var datetime
 	  */
-	protected $dia_de_pago;
+	public $dia_de_pago;
 
 	/**
 	  * mensajeria
 	  * 
 	  * Si el cliente cuenta con una cuenta de mensajería y paquetería<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $mensajeria;
+	public $mensajeria;
 
 	/**
 	  * intereses_moratorios
 	  * 
 	  * Intereses moratorios del cliente<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $intereses_moratorios;
+	public $intereses_moratorios;
 
 	/**
 	  * denominacion_comercial
 	  * 
 	  * Denominación comercial del cliente<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(100)
 	  */
-	protected $denominacion_comercial;
+	public $denominacion_comercial;
 
 	/**
 	  * dias_de_credito
 	  * 
 	  * Días de crédito que se le darán al cliente<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $dias_de_credito;
+	public $dias_de_credito;
 
 	/**
 	  * cuenta_de_mensajeria
 	  * 
 	  * Cuenta de mensajeria del cliente<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(50)
 	  */
-	protected $cuenta_de_mensajeria;
+	public $cuenta_de_mensajeria;
 
 	/**
 	  * dia_de_revision
 	  * 
 	  * Fecha de revisión del cliente<br>
-	  * @access protected
+	  * @access public
 	  * @var datetime
 	  */
-	protected $dia_de_revision;
+	public $dia_de_revision;
 
 	/**
 	  * codigo_usuario
 	  * 
 	  * Codigo del usuario para uso interno de la empresa<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(50)
 	  */
-	protected $codigo_usuario;
+	public $codigo_usuario;
 
 	/**
 	  * dias_de_embarque
 	  * 
 	  * Dias de embarque del proveedor (Lunes, Martes, etc)<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $dias_de_embarque;
+	public $dias_de_embarque;
 
 	/**
 	  * tiempo_entrega
 	  * 
 	  * Tiempo de entrega del proveedor en días<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $tiempo_entrega;
+	public $tiempo_entrega;
 
 	/**
 	  * cuenta_bancaria
 	  * 
 	  * Cuenta bancaria del usuario<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(50)
 	  */
-	protected $cuenta_bancaria;
+	public $cuenta_bancaria;
 
 	/**
 	  * getIdUsuario

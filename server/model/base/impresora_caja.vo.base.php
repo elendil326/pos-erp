@@ -52,20 +52,20 @@ class ImpresoraCaja extends VO
 	  * 
 	  * Id de la impresora<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_impresora;
+	public $id_impresora;
 
 	/**
 	  * id_caja
 	  * 
 	  * Id de la caja que utiliza la impresora<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_caja;
+	public $id_caja;
 
 	/**
 	  * getIdImpresora

@@ -89,100 +89,100 @@ class OrdenDeServicio extends VO
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_orden_de_servicio;
+	public $id_orden_de_servicio;
 
 	/**
 	  * id_servicio
 	  * 
 	  * Id del servicio entregado<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_servicio;
+	public $id_servicio;
 
 	/**
 	  * id_usuario_venta
 	  * 
 	  * Id del usuario al que se le relaiza la orden<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_usuario_venta;
+	public $id_usuario_venta;
 
 	/**
 	  * id_usuario
 	  * 
 	  * Id del usuario que realiza la orden<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_usuario;
+	public $id_usuario;
 
 	/**
 	  * fecha_orden
 	  * 
 	  * fecha en la que se realiza la orden<br>
-	  * @access protected
+	  * @access public
 	  * @var datetime
 	  */
-	protected $fecha_orden;
+	public $fecha_orden;
 
 	/**
 	  * fecha_entrega
 	  * 
 	  * fecha en la que se entrega la orden<br>
-	  * @access protected
+	  * @access public
 	  * @var datetime
 	  */
-	protected $fecha_entrega;
+	public $fecha_entrega;
 
 	/**
 	  * activa
 	  * 
 	  * Si la orden esta activa<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $activa;
+	public $activa;
 
 	/**
 	  * cancelada
 	  * 
 	  * Si la orden esta cancelada<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $cancelada;
+	public $cancelada;
 
 	/**
 	  * descripcion
 	  * 
 	  * Descripcion de la orden<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(255)
 	  */
-	protected $descripcion;
+	public $descripcion;
 
 	/**
 	  * motivo_cancelacion
 	  * 
 	  * Motivo por la cual fue cancelada la orden<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(255)
 	  */
-	protected $motivo_cancelacion;
+	public $motivo_cancelacion;
 
 	/**
 	  * adelanto
 	  * 
 	  * Cantidad de dinero pagada por adelantado<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $adelanto;
+	public $adelanto;
 
 	/**
 	  * getIdOrdenDeServicio

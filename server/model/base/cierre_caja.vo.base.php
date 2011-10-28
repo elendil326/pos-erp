@@ -69,55 +69,55 @@ class CierreCaja extends VO
 	  * Id del cierre de caja<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_cierre_caja;
+	public $id_cierre_caja;
 
 	/**
 	  * id_caja
 	  * 
 	  * Id de la caja que se cierra<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_caja;
+	public $id_caja;
 
 	/**
 	  * id_cajero
 	  * 
 	  * Id del usuario que realiza las funciones de cajero al momento de cerrar la caja<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_cajero;
+	public $id_cajero;
 
 	/**
 	  * fecha
 	  * 
 	  * fecha en que se realiza la operacion<br>
-	  * @access protected
+	  * @access public
 	  * @var datetime
 	  */
-	protected $fecha;
+	public $fecha;
 
 	/**
 	  * saldo_real
 	  * 
 	  * Saldo de la caja<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $saldo_real;
+	public $saldo_real;
 
 	/**
 	  * saldo_esperado
 	  * 
 	  * Saldo que debería de haber en la caja después de todos los movimientos del día<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $saldo_esperado;
+	public $saldo_esperado;
 
 	/**
 	  * getIdCierreCaja

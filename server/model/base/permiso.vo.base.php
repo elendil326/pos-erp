@@ -53,19 +53,19 @@ class Permiso extends VO
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_permiso;
+	public $id_permiso;
 
 	/**
 	  * permiso
 	  * 
 	  * el nombre de la funcion en el api a la que se le dara permiso<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(64)
 	  */
-	protected $permiso;
+	public $permiso;
 
 	/**
 	  * getIdPermiso

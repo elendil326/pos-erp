@@ -93,109 +93,109 @@ class Direccion extends VO
 	  * El id de esta direccion<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_direccion;
+	public $id_direccion;
 
 	/**
 	  * calle
 	  * 
 	  *  [Campo no documentado]<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(128)
 	  */
-	protected $calle;
+	public $calle;
 
 	/**
 	  * numero_exterior
 	  * 
 	  *  [Campo no documentado]<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(8)
 	  */
-	protected $numero_exterior;
+	public $numero_exterior;
 
 	/**
 	  * numero_interior
 	  * 
 	  *  [Campo no documentado]<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(8)
 	  */
-	protected $numero_interior;
+	public $numero_interior;
 
 	/**
 	  * referencia
 	  * 
 	  *  [Campo no documentado]<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(256)
 	  */
-	protected $referencia;
+	public $referencia;
 
 	/**
 	  * colonia
 	  * 
 	  *  [Campo no documentado]<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(128)
 	  */
-	protected $colonia;
+	public $colonia;
 
 	/**
 	  * id_ciudad
 	  * 
 	  *  [Campo no documentado]<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_ciudad;
+	public $id_ciudad;
 
 	/**
 	  * codigo_postal
 	  * 
 	  *  [Campo no documentado]<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(10)
 	  */
-	protected $codigo_postal;
+	public $codigo_postal;
 
 	/**
 	  * telefono
 	  * 
 	  *  [Campo no documentado]<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(32)
 	  */
-	protected $telefono;
+	public $telefono;
 
 	/**
 	  * telefono2
 	  * 
 	  * Telefono alterno de la direccion<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(32)
 	  */
-	protected $telefono2;
+	public $telefono2;
 
 	/**
 	  * ultima_modificacion
 	  * 
 	  * La ultima vez que este registro se modifico<br>
-	  * @access protected
+	  * @access public
 	  * @var datetime
 	  */
-	protected $ultima_modificacion;
+	public $ultima_modificacion;
 
 	/**
 	  * id_usuario_ultima_modificacion
 	  * 
 	  * quien fue el usuario que modifico este registro la ultima vez<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_usuario_ultima_modificacion;
+	public $id_usuario_ultima_modificacion;
 
 	/**
 	  * getIdDireccion

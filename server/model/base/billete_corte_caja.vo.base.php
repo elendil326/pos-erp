@@ -68,56 +68,56 @@ class BilleteCorteCaja extends VO
 	  * 
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_billete;
+	public $id_billete;
 
 	/**
 	  * id_corte_caja
 	  * 
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_corte_caja;
+	public $id_corte_caja;
 
 	/**
 	  * cantidad_encontrada
 	  * 
 	  * Cantidad de este billete encontrado en la caja al hacer el corte<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $cantidad_encontrada;
+	public $cantidad_encontrada;
 
 	/**
 	  * cantidad_dejada
 	  * 
 	  * Cantidad de este billete dejada al finalizar el corte<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $cantidad_dejada;
+	public $cantidad_dejada;
 
 	/**
 	  * cantidad_sobrante
 	  * 
 	  * Cantidad de billetes saobrante en el corte de caja<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $cantidad_sobrante;
+	public $cantidad_sobrante;
 
 	/**
 	  * cantidad_faltante
 	  * 
 	  * Cantidad de billetes faltante en el corte de caja<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $cantidad_faltante;
+	public $cantidad_faltante;
 
 	/**
 	  * getIdBillete

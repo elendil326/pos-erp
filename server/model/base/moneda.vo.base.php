@@ -61,37 +61,37 @@ class Moneda extends VO
 	  * Id de la tabla moneda<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_moneda;
+	public $id_moneda;
 
 	/**
 	  * nombre
 	  * 
 	  * Nombre de la moneda<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(100)
 	  */
-	protected $nombre;
+	public $nombre;
 
 	/**
 	  * simbolo
 	  * 
 	  * Simbolo de la moneda (US$,NP$)<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(10)
 	  */
-	protected $simbolo;
+	public $simbolo;
 
 	/**
 	  * activa
 	  * 
 	  * Si esta moneda esta activa o ya no se usa<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $activa;
+	public $activa;
 
 	/**
 	  * getIdMoneda

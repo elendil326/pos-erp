@@ -52,20 +52,20 @@ class ImpuestoUsuario extends VO
 	  * 
 	  * Id del impuesto que se aplica al usuario<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_impuesto;
+	public $id_impuesto;
 
 	/**
 	  * id_usuario
 	  * 
 	  * Id del usuario al que se le cargan impuestos<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_usuario;
+	public $id_usuario;
 
 	/**
 	  * getIdImpuesto

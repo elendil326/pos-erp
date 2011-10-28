@@ -52,20 +52,20 @@ class ImpuestoServicio extends VO
 	  * 
 	  * Id del impuesto a aplicar al servicio<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_impuesto;
+	public $id_impuesto;
 
 	/**
 	  * id_servicio
 	  * 
 	  * Id del servicio al que se le aplicara el impuesto<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_servicio;
+	public $id_servicio;
 
 	/**
 	  * getIdImpuesto

@@ -93,109 +93,109 @@ class Traspaso extends VO
 	  * Id de la tabla traspaso<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_traspaso;
+	public $id_traspaso;
 
 	/**
 	  * id_usuario_programa
 	  * 
 	  * Id del usuario que programa el traspaso<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_usuario_programa;
+	public $id_usuario_programa;
 
 	/**
 	  * id_usuario_envia
 	  * 
 	  * Id del usuario que envia<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_usuario_envia;
+	public $id_usuario_envia;
 
 	/**
 	  * id_almacen_envia
 	  * 
 	  * Id del almacen que envia los productos<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_almacen_envia;
+	public $id_almacen_envia;
 
 	/**
 	  * fecha_envio_programada
 	  * 
 	  * Fecha de envio programada para este traspaso<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $fecha_envio_programada;
+	public $fecha_envio_programada;
 
 	/**
 	  * fecha_envio
 	  * 
 	  * Fecha en que se envia<br>
-	  * @access protected
+	  * @access public
 	  * @var datetime
 	  */
-	protected $fecha_envio;
+	public $fecha_envio;
 
 	/**
 	  * id_usuario_recibe
 	  * 
 	  * Id del usuario que recibe<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_usuario_recibe;
+	public $id_usuario_recibe;
 
 	/**
 	  * id_almacen_recibe
 	  * 
 	  * Id del almacen que recibe los productos<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_almacen_recibe;
+	public $id_almacen_recibe;
 
 	/**
 	  * fecha_recibo
 	  * 
 	  * Fecha en que se recibe el envio<br>
-	  * @access protected
+	  * @access public
 	  * @var datetime
 	  */
-	protected $fecha_recibo;
+	public $fecha_recibo;
 
 	/**
 	  * estado
 	  * 
 	  * Si el traspaso esta en solicitud, en envio o si ya fue recibida<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(30)
 	  */
-	protected $estado;
+	public $estado;
 
 	/**
 	  * cancelado
 	  * 
 	  * Si la solicitud de traspaso fue cancelada<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $cancelado;
+	public $cancelado;
 
 	/**
 	  * completo
 	  * 
 	  * Verdadero si se enviaron todos los productos solicitados al inicio del traspaso<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $completo;
+	public $completo;
 
 	/**
 	  * getIdTraspaso

@@ -60,39 +60,39 @@ class ProductoAbastoProveedor extends VO
 	  * 
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_abasto_proveedor;
+	public $id_abasto_proveedor;
 
 	/**
 	  * id_producto
 	  * 
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_producto;
+	public $id_producto;
 
 	/**
 	  * id_unidad
 	  * 
 	  * Id de la unidad<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_unidad;
+	public $id_unidad;
 
 	/**
 	  * cantidad
 	  * 
 	  * Cantidad de producto abastesido<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $cantidad;
+	public $cantidad;
 
 	/**
 	  * getIdAbastoProveedor

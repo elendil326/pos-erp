@@ -52,20 +52,20 @@ class RetencionClasificacionServicio extends VO
 	  * 
 	  * Id del retencion a aplicar al tipo de servicio<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_retencion;
+	public $id_retencion;
 
 	/**
 	  * id_clasificacion_servicio
 	  * 
 	  * Id de la clasificacion del servicio<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_clasificacion_servicio;
+	public $id_clasificacion_servicio;
 
 	/**
 	  * getIdRetencion

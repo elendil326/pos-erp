@@ -65,46 +65,46 @@ class Retencion extends VO
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_retencion;
+	public $id_retencion;
 
 	/**
 	  * monto_porcentaje
 	  * 
 	  * El monto o el porcentaje de la retencionde la <br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $monto_porcentaje;
+	public $monto_porcentaje;
 
 	/**
 	  * es_monto
 	  * 
 	  * Verdadero si el valor del campo monto_porcentaje es un monto, false si es un porcentaje<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $es_monto;
+	public $es_monto;
 
 	/**
 	  * nombre
 	  * 
 	  * El nombre de la retencion<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(100)
 	  */
-	protected $nombre;
+	public $nombre;
 
 	/**
 	  * descripcion
 	  * 
 	  * DEscripcion larga de la retencion<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(255)
 	  */
-	protected $descripcion;
+	public $descripcion;
 
 	/**
 	  * getIdRetencion

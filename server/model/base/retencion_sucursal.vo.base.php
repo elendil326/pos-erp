@@ -52,20 +52,20 @@ class RetencionSucursal extends VO
 	  * 
 	  * Id de la retencion que se aplica a la sucursal<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_retencion;
+	public $id_retencion;
 
 	/**
 	  * id_sucursal
 	  * 
 	  * Id de la sucursal que tiene la retencion<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_sucursal;
+	public $id_sucursal;
 
 	/**
 	  * getIdRetencion

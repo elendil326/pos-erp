@@ -68,56 +68,56 @@ class InspeccionConsignacionProducto extends VO
 	  * 
 	  * Id de la isnpeccion de consignacion<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_inspeccion_consignacion;
+	public $id_inspeccion_consignacion;
 
 	/**
 	  * id_producto
 	  * 
 	  * id del producto<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_producto;
+	public $id_producto;
 
 	/**
 	  * cantidad
 	  * 
 	  * cantidad del producto<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $cantidad;
+	public $cantidad;
 
 	/**
 	  * actual
 	  * 
 	  * true si la cantidad se refiere a la cantidad actual de ese producto<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $actual;
+	public $actual;
 
 	/**
 	  * solicitado
 	  * 
 	  * true si la cantidad se refiere a la cantidad de ese producto que se solicita<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $solicitado;
+	public $solicitado;
 
 	/**
 	  * devuelto
 	  * 
 	  * true si la cantidad de ese producto es devuelta<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $devuelto;
+	public $devuelto;
 
 	/**
 	  * getIdInspeccionConsignacion

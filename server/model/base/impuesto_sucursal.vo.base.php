@@ -52,20 +52,20 @@ class ImpuestoSucursal extends VO
 	  * 
 	  * Id del impuesto que se aplicara a la sucursal<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_impuesto;
+	public $id_impuesto;
 
 	/**
 	  * id_sucursal
 	  * 
 	  * Id de la sucursal que tiene diversos impuestos<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_sucursal;
+	public $id_sucursal;
 
 	/**
 	  * getIdImpuesto

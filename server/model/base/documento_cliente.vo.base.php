@@ -52,20 +52,20 @@ class DocumentoCliente extends VO
 	  * 
 	  * Id del documento que se aplica al cliente<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_documento;
+	public $id_documento;
 
 	/**
 	  * id_cliente
 	  * 
 	  * Id cliente<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_cliente;
+	public $id_cliente;
 
 	/**
 	  * getIdDocumento

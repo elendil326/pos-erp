@@ -73,64 +73,64 @@ class ClasificacionServicio extends VO
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_clasificacion_servicio;
+	public $id_clasificacion_servicio;
 
 	/**
 	  * nombre
 	  * 
 	  * Nombre del servicio<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(50)
 	  */
-	protected $nombre;
+	public $nombre;
 
 	/**
 	  * garantia
 	  * 
 	  * Numero de meses de garantia que tendran los servicios de esta clasificacion los servicios <br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $garantia;
+	public $garantia;
 
 	/**
 	  * descripcion
 	  * 
 	  * Descripcion larga de la clasificacion del servicio<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(255)
 	  */
-	protected $descripcion;
+	public $descripcion;
 
 	/**
 	  * margen_utilidad
 	  * 
 	  * Precio o margen de utilidad que se le asignara a los servicios de esta clasificaicon<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $margen_utilidad;
+	public $margen_utilidad;
 
 	/**
 	  * descuento
 	  * 
 	  * Porcentaje del descuento que se aplciara a los servicios de esta clasificacion<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $descuento;
+	public $descuento;
 
 	/**
 	  * activa
 	  * 
 	  * Si esta categoria de servicio esta fija o no<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $activa;
+	public $activa;
 
 	/**
 	  * getIdClasificacionServicio

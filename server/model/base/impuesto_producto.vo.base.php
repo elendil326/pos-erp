@@ -52,20 +52,20 @@ class ImpuestoProducto extends VO
 	  * 
 	  * Id del impuesto a aplicar al producto<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_impuesto;
+	public $id_impuesto;
 
 	/**
 	  * id_producto
 	  * 
 	  * Id del producto al que se le aplica el impuesto<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_producto;
+	public $id_producto;
 
 	/**
 	  * getIdImpuesto

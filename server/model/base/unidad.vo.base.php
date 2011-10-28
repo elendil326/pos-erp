@@ -65,46 +65,46 @@ class Unidad extends VO
 	  * Id de la tabal unidad convertible<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_unidad;
+	public $id_unidad;
 
 	/**
 	  * nombre
 	  * 
 	  * nombre de la unidad convertible<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(100)
 	  */
-	protected $nombre;
+	public $nombre;
 
 	/**
 	  * descripcion
 	  * 
 	  * Descripcion larga de esta unidad<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(255)
 	  */
-	protected $descripcion;
+	public $descripcion;
 
 	/**
 	  * es_entero
 	  * 
 	  * Si esta unidad manejara sus cantidades como enteras o como flotantes<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $es_entero;
+	public $es_entero;
 
 	/**
 	  * activa
 	  * 
 	  * Si esta unidad esa activa o no<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $activa;
+	public $activa;
 
 	/**
 	  * getIdUnidad

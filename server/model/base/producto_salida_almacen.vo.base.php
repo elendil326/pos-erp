@@ -60,39 +60,39 @@ class ProductoSalidaAlmacen extends VO
 	  * 
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_salida_almacen;
+	public $id_salida_almacen;
 
 	/**
 	  * id_producto
 	  * 
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_producto;
+	public $id_producto;
 
 	/**
 	  * id_unidad
 	  * 
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_unidad;
+	public $id_unidad;
 
 	/**
 	  * cantidad
 	  * 
 	  * Cantidad de producto que sale del almacen en cierta unidad<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $cantidad;
+	public $cantidad;
 
 	/**
 	  * getIdSalidaAlmacen

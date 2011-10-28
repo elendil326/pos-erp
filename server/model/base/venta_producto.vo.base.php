@@ -76,75 +76,75 @@ class VentaProducto extends VO
 	  * 
 	  * id de la venta<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_venta;
+	public $id_venta;
 
 	/**
 	  * id_producto
 	  * 
 	  * id del producto vendido<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_producto;
+	public $id_producto;
 
 	/**
 	  * precio
 	  * 
 	  * precio unitario con el que se vendio el producto<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $precio;
+	public $precio;
 
 	/**
 	  * cantidad
 	  * 
 	  * cantidad de producto que se vendio<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $cantidad;
+	public $cantidad;
 
 	/**
 	  * descuento
 	  * 
 	  * descuento que se aplico al producto<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $descuento;
+	public $descuento;
 
 	/**
 	  * impuesto
 	  * 
 	  * impuesto que se aplico al producto<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $impuesto;
+	public $impuesto;
 
 	/**
 	  * retencion
 	  * 
 	  * Retencion unitaria en el producto<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $retencion;
+	public $retencion;
 
 	/**
 	  * id_unidad
 	  * 
 	  * Id de la unidad del producto<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_unidad;
+	public $id_unidad;
 
 	/**
 	  * getIdVenta

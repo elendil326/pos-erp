@@ -64,48 +64,48 @@ class TraspasoProducto extends VO
 	  * 
 	  * Id del traspaso<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_traspaso;
+	public $id_traspaso;
 
 	/**
 	  * id_producto
 	  * 
 	  * Id del producto a traspasar<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_producto;
+	public $id_producto;
 
 	/**
 	  * id_unidad
 	  * 
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_unidad;
+	public $id_unidad;
 
 	/**
 	  * cantidad_enviada
 	  * 
 	  * cantidad de producto a traspasar<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $cantidad_enviada;
+	public $cantidad_enviada;
 
 	/**
 	  * cantidad_recibida
 	  * 
 	  * Cantidad de producto recibida<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $cantidad_recibida;
+	public $cantidad_recibida;
 
 	/**
 	  * getIdTraspaso

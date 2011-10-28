@@ -81,82 +81,82 @@ class Prestamo extends VO
 	  * Id del prestamo<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_prestamo;
+	public $id_prestamo;
 
 	/**
 	  * id_solicitante
 	  * 
 	  * Id de la sucursal o usuario que solicita el prestamo, la sucursal sera negativa<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_solicitante;
+	public $id_solicitante;
 
 	/**
 	  * id_empresa_presta
 	  * 
 	  * Id de la emresa que realiza el prestamo<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_empresa_presta;
+	public $id_empresa_presta;
 
 	/**
 	  * id_sucursal_presta
 	  * 
 	  * Id de la sucursal que presta<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_sucursal_presta;
+	public $id_sucursal_presta;
 
 	/**
 	  * id_usuario
 	  * 
 	  * Id del usuario que realiza el prestamo<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_usuario;
+	public $id_usuario;
 
 	/**
 	  * monto
 	  * 
 	  * Monto que se solicita<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $monto;
+	public $monto;
 
 	/**
 	  * saldo
 	  * 
 	  * Saldo que lleva abonado el prestamo<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $saldo;
+	public $saldo;
 
 	/**
 	  * interes_mensual
 	  * 
 	  * Porcentaje de interes mensual del prestamo<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $interes_mensual;
+	public $interes_mensual;
 
 	/**
 	  * fecha
 	  * 
 	  * Fecha en que se realiza el prestamo<br>
-	  * @access protected
+	  * @access public
 	  * @var datetime
 	  */
-	protected $fecha;
+	public $fecha;
 
 	/**
 	  * getIdPrestamo

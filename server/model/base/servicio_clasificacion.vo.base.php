@@ -52,20 +52,20 @@ class ServicioClasificacion extends VO
 	  * 
 	  * Id del servicio <br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_servicio;
+	public $id_servicio;
 
 	/**
 	  * id_clasificacion_servicio
 	  * 
 	  * Id de la clasificacio dnel servicio<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_clasificacion_servicio;
+	public $id_clasificacion_servicio;
 
 	/**
 	  * getIdServicio

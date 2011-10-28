@@ -65,46 +65,46 @@ class Impuesto extends VO
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_impuesto;
+	public $id_impuesto;
 
 	/**
 	  * monto_porcentaje
 	  * 
 	  * El monto o e lporcentaje correspondiente del impuesto<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $monto_porcentaje;
+	public $monto_porcentaje;
 
 	/**
 	  * es_monto
 	  * 
 	  * True si el valor del campo monto_porcentaje es un monto, false si es un porcentaje<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $es_monto;
+	public $es_monto;
 
 	/**
 	  * nombre
 	  * 
 	  * Nombre del impuesto<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(100)
 	  */
-	protected $nombre;
+	public $nombre;
 
 	/**
 	  * descripcion
 	  * 
 	  * Descripcion larga del impuesto<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(255)
 	  */
-	protected $descripcion;
+	public $descripcion;
 
 	/**
 	  * getIdImpuesto

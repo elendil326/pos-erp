@@ -73,64 +73,64 @@ class ClasificacionProducto extends VO
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_clasificacion_producto;
+	public $id_clasificacion_producto;
 
 	/**
 	  * nombre
 	  * 
 	  * el nombre de esta clasificacion<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(64)
 	  */
-	protected $nombre;
+	public $nombre;
 
 	/**
 	  * descripcion
 	  * 
 	  * Descripcion larga de la clasificacion del producto<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(255)
 	  */
-	protected $descripcion;
+	public $descripcion;
 
 	/**
 	  * garantia
 	  * 
 	  * numero de meses que tendran los productos de esta clasificacion<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $garantia;
+	public $garantia;
 
 	/**
 	  * activa
 	  * 
 	  * Si esta claificacion esta activa<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $activa;
+	public $activa;
 
 	/**
 	  * margen_utilidad
 	  * 
 	  * Margen de utilidad que aplicara a todos los productos de esta clasificacion de productos<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $margen_utilidad;
+	public $margen_utilidad;
 
 	/**
 	  * descuento
 	  * 
 	  * Descuento que se apicar a esta clasificaciond e producto<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $descuento;
+	public $descuento;
 
 	/**
 	  * getIdClasificacionProducto

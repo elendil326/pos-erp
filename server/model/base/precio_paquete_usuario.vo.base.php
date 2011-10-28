@@ -60,38 +60,38 @@ class PrecioPaqueteUsuario extends VO
 	  * 
 	  * Id del paquete al que se le aplicara un precio de acuerdo al usuario<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_paquete;
+	public $id_paquete;
 
 	/**
 	  * id_usuario
 	  * 
 	  * Id del usuario al que se le ofrecera el paquete a un cierto precio<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_usuario;
+	public $id_usuario;
 
 	/**
 	  * precio_utilidad
 	  * 
 	  * Precio o porcentaje del margen de utilidad que se le ganara a este paquete para este usuario<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $precio_utilidad;
+	public $precio_utilidad;
 
 	/**
 	  * es_margen_utilidad
 	  * 
 	  * Verdadero si el valor del campo precio_utilidad es un margen de utilidad, false si es un precio fijo<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $es_margen_utilidad;
+	public $es_margen_utilidad;
 
 	/**
 	  * getIdPaquete

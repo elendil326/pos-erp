@@ -52,20 +52,20 @@ class RetencionProducto extends VO
 	  * 
 	  * Id de la retencion que se aplica al producto<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_retencion;
+	public $id_retencion;
 
 	/**
 	  * id_producto
 	  * 
 	  * Id del producto al que se le aplica la retencion<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_producto;
+	public $id_producto;
 
 	/**
 	  * getIdRetencion

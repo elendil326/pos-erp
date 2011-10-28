@@ -61,37 +61,37 @@ class ClasificacionProveedor extends VO
 	  * Id de la tabla clasificacion_proveedor<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_clasificacion_proveedor;
+	public $id_clasificacion_proveedor;
 
 	/**
 	  * nombre
 	  * 
 	  * Nombre de la clasificacion<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(100)
 	  */
-	protected $nombre;
+	public $nombre;
 
 	/**
 	  * descripcion
 	  * 
 	  * Descripcion larga de la clasificacion del proveedor<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(255)
 	  */
-	protected $descripcion;
+	public $descripcion;
 
 	/**
 	  * activa
 	  * 
 	  * Si esta clasificacion esat activa o no<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $activa;
+	public $activa;
 
 	/**
 	  * getIdClasificacionProveedor

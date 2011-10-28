@@ -64,47 +64,47 @@ class BilleteCierreCaja extends VO
 	  * 
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_billete;
+	public $id_billete;
 
 	/**
 	  * id_cierre_caja
 	  * 
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_cierre_caja;
+	public $id_cierre_caja;
 
 	/**
 	  * cantidad_encontrada
 	  * 
 	  * Cantidad de billetes encontrados en el cierre de caja<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $cantidad_encontrada;
+	public $cantidad_encontrada;
 
 	/**
 	  * cantidad_sobrante
 	  * 
 	  * Cantidad de billetes saobrante en el cierre de caja<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $cantidad_sobrante;
+	public $cantidad_sobrante;
 
 	/**
 	  * cantidad_faltante
 	  * 
 	  * Cantidad de billetes faltante en el cierre de caja<br>
-	  * @access protected
+	  * @access public
 	  * @var int(1)
 	  */
-	protected $cantidad_faltante;
+	public $cantidad_faltante;
 
 	/**
 	  * getIdBillete

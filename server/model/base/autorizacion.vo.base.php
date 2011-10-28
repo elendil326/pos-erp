@@ -49,10 +49,10 @@ class Autorizacion extends VO
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_autorizacion;
+	public $id_autorizacion;
 
 	/**
 	  * getIdAutorizacion

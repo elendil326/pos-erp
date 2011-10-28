@@ -52,20 +52,20 @@ class ProductoClasificacion extends VO
 	  * 
 	  * Id del producto con esa clasificacion<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_producto;
+	public $id_producto;
 
 	/**
 	  * id_clasificacion_producto
 	  * 
 	  * Id de la clasificacion del producto<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_clasificacion_producto;
+	public $id_clasificacion_producto;
 
 	/**
 	  * getIdProducto

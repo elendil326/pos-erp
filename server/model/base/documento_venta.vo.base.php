@@ -52,20 +52,20 @@ class DocumentoVenta extends VO
 	  * 
 	  * Id del documento que se aplica a la venta<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_documento;
+	public $id_documento;
 
 	/**
 	  * id_venta
 	  * 
 	  * id de la venta<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_venta;
+	public $id_venta;
 
 	/**
 	  * getIdDocumento

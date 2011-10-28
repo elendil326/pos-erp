@@ -69,55 +69,55 @@ class Cheque extends VO
 	  * Id del cheque<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_cheque;
+	public $id_cheque;
 
 	/**
 	  * nombre_banco
 	  * 
 	  * Nombre del banco del que se expide el cheque<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(100)
 	  */
-	protected $nombre_banco;
+	public $nombre_banco;
 
 	/**
 	  * monto
 	  * 
 	  * Monto del cheque<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $monto;
+	public $monto;
 
 	/**
 	  * numero
 	  * 
 	  * Los ultimos cuatro numeros del cheque<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(4)
 	  */
-	protected $numero;
+	public $numero;
 
 	/**
 	  * expedido
 	  * 
 	  * Verdadero si el cheque es expedido por la empresa, falso si es recibido<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $expedido;
+	public $expedido;
 
 	/**
 	  * id_usuario
 	  * 
 	  * Id del usuario que registra el cheque<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_usuario;
+	public $id_usuario;
 
 	/**
 	  * getIdCheque

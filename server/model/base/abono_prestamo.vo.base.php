@@ -93,109 +93,109 @@ class AbonoPrestamo extends VO
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_abono_prestamo;
+	public $id_abono_prestamo;
 
 	/**
 	  * id_prestamo
 	  * 
 	  * Id prestamo al que se le abona<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_prestamo;
+	public $id_prestamo;
 
 	/**
 	  * id_sucursal
 	  * 
 	  *  [Campo no documentado]<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_sucursal;
+	public $id_sucursal;
 
 	/**
 	  * monto
 	  * 
 	  *  [Campo no documentado]<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $monto;
+	public $monto;
 
 	/**
 	  * id_caja
 	  * 
 	  * Id de la caja donde se registra el abono<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_caja;
+	public $id_caja;
 
 	/**
 	  * id_deudor
 	  * 
 	  * Id del usuario que abona<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_deudor;
+	public $id_deudor;
 
 	/**
 	  * id_receptor
 	  * 
 	  * Id del usuario que registra el abono<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_receptor;
+	public $id_receptor;
 
 	/**
 	  * nota
 	  * 
 	  * Nota del abono<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(255)
 	  */
-	protected $nota;
+	public $nota;
 
 	/**
 	  * fecha
 	  * 
 	  * Fecha en que se realiza el abono<br>
-	  * @access protected
+	  * @access public
 	  * @var datetime
 	  */
-	protected $fecha;
+	public $fecha;
 
 	/**
 	  * tipo_de_pago
 	  * 
 	  * Si el tipo de pago es con tarjeta, con cheque, o en efectivo<br>
-	  * @access protected
+	  * @access public
 	  * @var enum('cheque','tarjeta','efectivo')
 	  */
-	protected $tipo_de_pago;
+	public $tipo_de_pago;
 
 	/**
 	  * cancelado
 	  * 
 	  * Si este abono es cancelado<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $cancelado;
+	public $cancelado;
 
 	/**
 	  * motivo_cancelacion
 	  * 
 	  * Motivo por el cual se realiza la cancelacion<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(255)
 	  */
-	protected $motivo_cancelacion;
+	public $motivo_cancelacion;
 
 	/**
 	  * getIdAbonoPrestamo

@@ -69,55 +69,55 @@ class ClasificacionCliente extends VO
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_clasificacion_cliente;
+	public $id_clasificacion_cliente;
 
 	/**
 	  * clave_interna
 	  * 
 	  * Clave interna del tipo de cliente<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(20)
 	  */
-	protected $clave_interna;
+	public $clave_interna;
 
 	/**
 	  * nombre
 	  * 
 	  * un nombre corto para esta clasificacion<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(16)
 	  */
-	protected $nombre;
+	public $nombre;
 
 	/**
 	  * descripcion
 	  * 
 	  * Descripcion larga de la clasificacion del cliente<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(255)
 	  */
-	protected $descripcion;
+	public $descripcion;
 
 	/**
 	  * margen_utilidad
 	  * 
 	  * Margen de utilidad que se le obtendra a los productos al venderle a este tipo de cliente<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $margen_utilidad;
+	public $margen_utilidad;
 
 	/**
 	  * descuento
 	  * 
 	  * Porcentaje de descuento que se le dara a este tipo de cliente<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $descuento;
+	public $descuento;
 
 	/**
 	  * getIdClasificacionCliente

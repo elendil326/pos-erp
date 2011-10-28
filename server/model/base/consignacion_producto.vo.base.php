@@ -72,65 +72,65 @@ class ConsignacionProducto extends VO
 	  * 
 	  * Id de la consignacion<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_consignacion;
+	public $id_consignacion;
 
 	/**
 	  * id_producto
 	  * 
 	  * Id del producto consignado<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_producto;
+	public $id_producto;
 
 	/**
 	  * cantidad
 	  * 
 	  * Cantidad de ese producto en esa consignacion<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $cantidad;
+	public $cantidad;
 
 	/**
 	  * impuesto
 	  * 
 	  * Monto generado por impuestos para este producto<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $impuesto;
+	public $impuesto;
 
 	/**
 	  * descuento
 	  * 
 	  * Monto a descontar de este producto<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $descuento;
+	public $descuento;
 
 	/**
 	  * retencion
 	  * 
 	  * Monto generado por retenciones<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $retencion;
+	public $retencion;
 
 	/**
 	  * precio
 	  * 
 	  * Precio del producto por ser de consignacion<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $precio;
+	public $precio;
 
 	/**
 	  * getIdConsignacion

@@ -57,28 +57,28 @@ class Ciudad extends VO
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_ciudad;
+	public $id_ciudad;
 
 	/**
 	  * id_estado
 	  * 
 	  *  [Campo no documentado]<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_estado;
+	public $id_estado;
 
 	/**
 	  * nombre
 	  * 
 	  *  [Campo no documentado]<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(128)
 	  */
-	protected $nombre;
+	public $nombre;
 
 	/**
 	  * getIdCiudad

@@ -69,55 +69,55 @@ class Billete extends VO
 	  * Id de la tabla billete<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_billete;
+	public $id_billete;
 
 	/**
 	  * id_moneda
 	  * 
 	  *  [Campo no documentado]<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_moneda;
+	public $id_moneda;
 
 	/**
 	  * nombre
 	  * 
 	  *  [Campo no documentado]<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(50)
 	  */
-	protected $nombre;
+	public $nombre;
 
 	/**
 	  * valor
 	  * 
 	  *  [Campo no documentado]<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $valor;
+	public $valor;
 
 	/**
 	  * foto_billete
 	  * 
 	  * Url de la foto del billete<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(100)
 	  */
-	protected $foto_billete;
+	public $foto_billete;
 
 	/**
 	  * activo
 	  * 
 	  * Si este billete esta activo o ya no se usa<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $activo;
+	public $activo;
 
 	/**
 	  * getIdBillete

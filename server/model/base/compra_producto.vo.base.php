@@ -76,75 +76,75 @@ class CompraProducto extends VO
 	  * 
 	  * Id de la compra<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_compra;
+	public $id_compra;
 
 	/**
 	  * id_producto
 	  * 
 	  * Id del producto comprado<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_producto;
+	public $id_producto;
 
 	/**
 	  * cantidad
 	  * 
 	  * Cantidad del producto comprado, puede ser en kilogramos<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $cantidad;
+	public $cantidad;
 
 	/**
 	  * precio
 	  * 
 	  * Precio unitario del producto<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $precio;
+	public $precio;
 
 	/**
 	  * descuento
 	  * 
 	  * Descuento unitario del producto<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $descuento;
+	public $descuento;
 
 	/**
 	  * impuesto
 	  * 
 	  * Impuesto unitario del producto<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $impuesto;
+	public $impuesto;
 
 	/**
 	  * id_unidad
 	  * 
 	  * Id de la unidad del producto<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_unidad;
+	public $id_unidad;
 
 	/**
 	  * retencion
 	  * 
 	  * Retencion unitaria del producto<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $retencion;
+	public $retencion;
 
 	/**
 	  * getIdCompra

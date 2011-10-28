@@ -52,20 +52,20 @@ class ChequeAbonoPrestamo extends VO
 	  * 
 	  * Id del cheque con el que se abono<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_cheque;
+	public $id_cheque;
 
 	/**
 	  * id_abono_prestamo
 	  * 
 	  * Id del abono que se pago con ese cheque<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_abono_prestamo;
+	public $id_abono_prestamo;
 
 	/**
 	  * getIdCheque

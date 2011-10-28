@@ -77,73 +77,73 @@ class CorteDeCaja extends VO
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_corte_de_caja;
+	public $id_corte_de_caja;
 
 	/**
 	  * id_caja
 	  * 
 	  * Id de la caja a la que se le realiza el corte<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_caja;
+	public $id_caja;
 
 	/**
 	  * id_cajero
 	  * 
 	  * Id del usuario que funje como cajero<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_cajero;
+	public $id_cajero;
 
 	/**
 	  * id_cajero_nuevo
 	  * 
 	  * Id del usuario que entrara como nuevo cajero si es que hubo un cambio de turno con el corte de caja<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_cajero_nuevo;
+	public $id_cajero_nuevo;
 
 	/**
 	  * fecha
 	  * 
 	  * fecha en la que se realiza el corte de caja<br>
-	  * @access protected
+	  * @access public
 	  * @var datetime
 	  */
-	protected $fecha;
+	public $fecha;
 
 	/**
 	  * saldo_real
 	  * 
 	  * Saldo actual de la caja<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $saldo_real;
+	public $saldo_real;
 
 	/**
 	  * saldo_esperado
 	  * 
 	  * Saldo que se espera de acuerdo a las ventas realizadas apartir del último corte de caja o a la apertura de la misma<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $saldo_esperado;
+	public $saldo_esperado;
 
 	/**
 	  * saldo_final
 	  * 
 	  * Saldo que se deja en caja después de realizar el corte<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $saldo_final;
+	public $saldo_final;
 
 	/**
 	  * getIdCorteDeCaja

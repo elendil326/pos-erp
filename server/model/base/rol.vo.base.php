@@ -56,8 +56,7 @@ class Rol extends VO
 			"descuento" => $this->descuento,
 			"salario" => $this->salario
 		); 
-		
-		return json_encode($vec); 
+	return json_encode($vec); 
 	}
 	
 	/**
@@ -66,7 +65,7 @@ class Rol extends VO
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
 	public $id_rol;
@@ -75,7 +74,7 @@ class Rol extends VO
 	  * nombre
 	  * 
 	  * Nombre del rol<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(30)
 	  */
 	public $nombre;
@@ -84,7 +83,7 @@ class Rol extends VO
 	  * descripcion
 	  * 
 	  * descripcion larga de este rol<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(255)
 	  */
 	public $descripcion;
@@ -93,7 +92,7 @@ class Rol extends VO
 	  * descuento
 	  * 
 	  * Porcentaje del descuento del que gozaran los usuarios de este rol<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
 	public $descuento;
@@ -102,7 +101,7 @@ class Rol extends VO
 	  * salario
 	  * 
 	  * Si los usuarios con dicho rol contaran con un salario<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
 	public $salario;

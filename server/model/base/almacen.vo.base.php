@@ -73,64 +73,64 @@ class Almacen extends VO
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_almacen;
+	public $id_almacen;
 
 	/**
 	  * id_sucursal
 	  * 
 	  *  [Campo no documentado]<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_sucursal;
+	public $id_sucursal;
 
 	/**
 	  * id_empresa
 	  * 
 	  * Id de la empresa de la cual pertenecen los productos que se almacenaran en este almacen<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_empresa;
+	public $id_empresa;
 
 	/**
 	  * id_tipo_almacen
 	  * 
 	  * el tipo de almacen de que este tipo es<br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_tipo_almacen;
+	public $id_tipo_almacen;
 
 	/**
 	  * nombre
 	  * 
 	  * Nombre del almacen<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(100)
 	  */
-	protected $nombre;
+	public $nombre;
 
 	/**
 	  * descripcion
 	  * 
 	  * Descripcion larga del almacen<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(255)
 	  */
-	protected $descripcion;
+	public $descripcion;
 
 	/**
 	  * activo
 	  * 
 	  * Si el almacen esta activo o no<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $activo;
+	public $activo;
 
 	/**
 	  * getIdAlmacen

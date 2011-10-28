@@ -68,57 +68,57 @@ class ProductoAlmacen extends VO
 	  * 
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_producto;
+	public $id_producto;
 
 	/**
 	  * id_almacen
 	  * 
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_almacen;
+	public $id_almacen;
 
 	/**
 	  * id_unidad
 	  * 
 	  * Id de la unidad almacenada del producto<br>
 	  * <b>Llave Primaria</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_unidad;
+	public $id_unidad;
 
 	/**
 	  * cantidad
 	  * 
 	  *  [Campo no documentado]<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $cantidad;
+	public $cantidad;
 
 	/**
 	  * precio_utilidad
 	  * 
 	  * Precio o margen de utilidad con el que se vendera este producto en esta sucursal<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $precio_utilidad;
+	public $precio_utilidad;
 
 	/**
 	  * es_margen_utilidad
 	  * 
 	  * Si el campo precio_utilidad es un margen de utilidad o un precio fijo<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $es_margen_utilidad;
+	public $es_margen_utilidad;
 
 	/**
 	  * getIdProducto

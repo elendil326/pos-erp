@@ -53,19 +53,19 @@ class TipoAlmacen extends VO
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_tipo_almacen;
+	public $id_tipo_almacen;
 
 	/**
 	  * descripcion
 	  * 
 	  *  [Campo no documentado]<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(64)
 	  */
-	protected $descripcion;
+	public $descripcion;
 
 	/**
 	  * getIdTipoAlmacen

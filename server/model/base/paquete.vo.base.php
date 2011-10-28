@@ -81,82 +81,82 @@ class Paquete extends VO
 	  * Id de la tabla paquete<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
-	  * @access protected
+	  * @access public
 	  * @var int(11)
 	  */
-	protected $id_paquete;
+	public $id_paquete;
 
 	/**
 	  * nombre
 	  * 
 	  * Nombre del paquete<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(100)
 	  */
-	protected $nombre;
+	public $nombre;
 
 	/**
 	  * descripcion
 	  * 
 	  * Descripcion larga del paquete<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(255)
 	  */
-	protected $descripcion;
+	public $descripcion;
 
 	/**
 	  * margen_utilidad
 	  * 
 	  * Margen de utilidad que se obtendra al vender este paquete<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $margen_utilidad;
+	public $margen_utilidad;
 
 	/**
 	  * descuento
 	  * 
 	  * Descuento que se aplciara a este paquete<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $descuento;
+	public $descuento;
 
 	/**
 	  * foto_paquete
 	  * 
 	  * Url de la foto del paquete<br>
-	  * @access protected
+	  * @access public
 	  * @var varchar(255)
 	  */
-	protected $foto_paquete;
+	public $foto_paquete;
 
 	/**
 	  * costo_estandar
 	  * 
 	  * Costo estandar del paquete<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $costo_estandar;
+	public $costo_estandar;
 
 	/**
 	  * precio
 	  * 
 	  * Precio dijo del paquete<br>
-	  * @access protected
+	  * @access public
 	  * @var float
 	  */
-	protected $precio;
+	public $precio;
 
 	/**
 	  * activo
 	  * 
 	  * Si el paquete esta activo o no<br>
-	  * @access protected
+	  * @access public
 	  * @var tinyint(1)
 	  */
-	protected $activo;
+	public $activo;
 
 	/**
 	  * getIdPaquete
