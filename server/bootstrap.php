@@ -53,7 +53,7 @@
 
 	if(!is_file("config.php"))
 	{	
-		Logger::warn("config.php no exitste. Usando config.defatult.php");
+		//Logger::warn("config.php no exitste. Usando config.defatult.php");
 	}
 
 

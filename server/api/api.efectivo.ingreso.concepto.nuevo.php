@@ -36,8 +36,8 @@ Update : En la respuesta basta con solo indicar success : true | false, y en cas
 			
 			);
 		}catch(Exception $e){
- 			Logger::error($e);
-			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation() );
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
 		}
  	}
   }

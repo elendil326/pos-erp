@@ -35,8 +35,8 @@
 			
 			);
 		}catch(Exception $e){
- 			Logger::error($e);
-			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation() );
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
 		}
  	}
   }

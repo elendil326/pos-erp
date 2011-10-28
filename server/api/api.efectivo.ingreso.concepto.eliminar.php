@@ -32,8 +32,8 @@ Update :Se deber?a tambi?n obtener de la sesi?n el id del usuario y fecha de la 
 			
 			);
 		}catch(Exception $e){
- 			Logger::error($e);
-			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation() );
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
 		}
  	}
   }

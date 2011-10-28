@@ -50,8 +50,8 @@ Update :Ademas deber?a tambi?n de tomar la fecha de ingreso del gasto del servid
 			
 			);
 		}catch(Exception $e){
- 			Logger::error($e);
-			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation() );
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
 		}
  	}
   }

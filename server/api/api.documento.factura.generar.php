@@ -34,8 +34,8 @@ Update : Falta especificar si seria una factura detallada (cuando en los concept
 			
 			);
 		}catch(Exception $e){
- 			Logger::error($e);
-			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation() );
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
 		}
  	}
   }
