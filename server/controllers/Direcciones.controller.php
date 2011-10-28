@@ -12,21 +12,21 @@
 class DireccionController{
 	
         private static function validarString($string, $max_length, $nombre_variable,$min_length=0)
-            {
+	{
 		if(strlen($string)<=$min_length||strlen($string)>$max_length)
 		{
-		    return "La longitud de la variable ".$nombre_variable." proporcionada no esta en el rango de ".$min_length." - ".$max_length;
+		    return "La longitud de la variable ".$nombre_variable." proporcionada (".$nombre_variable.") no esta en el rango de ".$min_length." - ".$max_length;
 		}
 		return true;
-            }
+    }
 
 
 
 	private static function validarNumero($num, $max_length, $nombre_variable, $min_length=0)
 	{
-	    if($num<=$min_length||$num>$max_length)
+	    if($num<$min_length||$num>$max_length)
 	    {
-	        return "La variable ".$nombre_variable." proporcionada no esta en el rango de ".$min_length." - ".$max_length;
+	        return "La variable ".$nombre_variable." proporcionada (".$num.") no esta en el rango de ".$min_length." - ".$max_length;
 	    }
 	    return true;
 	}

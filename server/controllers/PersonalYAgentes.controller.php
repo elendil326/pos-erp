@@ -13,7 +13,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	{
 		if(strlen($string)<=$min_length||strlen($string)>$max_length)
 		{
-		    return "La longitud de la variable ".$nombre_variable." proporcionada no esta en el rango de ".$min_length." - ".$max_length;
+		    return "La longitud de la variable ".$nombre_variable." proporcionada (".$nombre_variable.") no esta en el rango de ".$min_length." - ".$max_length;
 		}
 		return true;
     }
@@ -22,9 +22,9 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 
 	private static function validarNumero($num, $max_length, $nombre_variable, $min_length=0)
 	{
-	    if($num<=$min_length||$num>$max_length)
+	    if($num<$min_length||$num>$max_length)
 	    {
-	        return "La variable ".$nombre_variable." proporcionada no esta en el rango de ".$min_length." - ".$max_length;
+	        return "La variable ".$nombre_variable." proporcionada (".$num.") no esta en el rango de ".$min_length." - ".$max_length;
 	    }
 	    return true;
 	}
@@ -584,8 +584,80 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 		$ordenar = null
 	)
 	{  
-  
-  
+            $validar=self::validarParametrosUsuario(null, null, null, null, null, null, null, $activo);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            $usuarios=array();
+            if(!is_null($ordenar))
+            {
+                $e=self::validarString($ordenar, 30, "ordenar");
+                if(is_string($e))
+                {
+                    Logger::error($e);
+                    throw new Exception($e);
+                }
+                if
+                (
+                        $ordenar != "id_usuario" &&
+                        $ordenar != "id_direccion" &&
+                        $ordenar != "id_direccion_alterna" &&
+                        $ordenar != "id_sucursal" &&
+                        $ordenar != "id_rol" &&
+                        $ordenar != "id_clasificacion_cliente" &&
+                        $ordenar != "id_clasificacion_proveedor" &&
+                        $ordenar != "id_moneda" &&
+                        $ordenar != "fecha_asignacion_rol" &&
+                        $ordenar != "nombre" &&
+                        $ordenar != "rfc" &&
+                        $ordenar != "curp" &&
+                        $ordenar != "comision_ventas" &&
+                        $ordenar != "telefono_personal1" &&
+                        $ordenar != "telefono_personal2" &&
+                        $ordenar != "fecha_alta" &&
+                        $ordenar != "fecha_baja" &&
+                        $ordenar != "activo" &&
+                        $ordenar != "limite_credito" &&
+                        $ordenar != "descuento" &&
+                        $ordenar != "password" &&
+                        $ordenar != "last_login" &&
+                        $ordenar != "consignatario" &&
+                        $ordenar != "salario" &&
+                        $ordenar != "correo_electronico" &&
+                        $ordenar != "pagina_web" &&
+                        $ordenar != "saldo_del_ejercicio" &&
+                        $ordenar != "ventas_a_credito" &&
+                        $ordenar != "representante_legal" &&
+                        $ordenar != "facturar_a_terceros" &&
+                        $ordenar != "dia_de_pago" &&
+                        $ordenar != "mensajeria" &&
+                        $ordenar != "intereses_moratorios" &&
+                        $ordenar != "denominacion_comercial" &&
+                        $ordenar != "dias_de_credito" &&
+                        $ordenar != "cuenta_de_mensajeria" &&
+                        $ordenar != "dia_de_revision" &&
+                        $ordenar != "codigo_usuario" &&
+                        $ordenar != "dias_de_embarque" &&
+                        $ordenar != "tiempo_entrega" &&
+                        $ordenar != "cuenta_bancaria"
+                )
+                {
+                    Logger::error("El parametro ordenar :".$ordenar." no es una columna de la tabla usuario");
+                    throw new Exception("El parametro ordenar es invalido");
+                }
+            }
+            if(!is_null($activo))
+            {
+                $usuarios=UsuarioDAO::search(new Usuario( array( "activo" => $activo ) ),$ordenar);
+            }
+            else
+            {
+                $usuarios=UsuarioDAO::getAll(null,null,$ordenar);
+            }
+            Logger::log("Se obtuvo la lista de usuarios exitosamente con ".count($usuarios)." elementos");
+            return $usuarios;
 	}
   
 	/**
