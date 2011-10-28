@@ -1,9 +1,9 @@
 <?php
 /**
   * GET api/consignacion/nueva
-  * Iniciar una orden de consignaci?
+  * Iniciar una orden de consignaci?n
   *
-  * Iniciar una orden de consignaci?La fecha sera tomada del servidor.
+  * Iniciar una orden de consignaci?n. La fecha sera tomada del servidor.
   *
   *
   *

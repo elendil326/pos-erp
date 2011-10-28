@@ -3,7 +3,7 @@
   * GET api/documento/factura/generar
   * Genera una factura
   *
-  * Genera una factura seg?a informaci?e un cliente y la venta realizada.
+  * Genera una factura seg?n la informaci?n de un cliente y la venta realizada.
 
 Update : Falta especificar si seria una factura detallada (cuando en los conceptos de la factura describe a cada articulo) o generica (un solo concepto que engloba a todos los productos).
   *

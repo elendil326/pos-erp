@@ -3,7 +3,7 @@
   * GET api/servicios/clasificacion/editar
   * Edita una clasificacion de servicio
   *
-  * Edita la informaci?e una clasificaci?e servicio
+  * Edita la informaci?n de una clasificaci?n de servicio
   *
   *
   *

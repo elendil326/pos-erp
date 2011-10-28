@@ -3,7 +3,7 @@
   * GET api/ventas/nueva_venta_arpillas
   * Realiza una nueva venta por arpillas
   *
-  * Realiza una nueva venta por arpillas. Este m?do tiene que llamarse en conjunto con el metodo api/ventas/nueva.
+  * Realiza una nueva venta por arpillas. Este m?todo tiene que llamarse en conjunto con el metodo api/ventas/nueva.
   *
   *
   *

@@ -3,7 +3,7 @@
   * GET api/producto/editar
   * Edita un producto
   *
-  * Edita la informaci?e un producto
+  * Edita la informaci?n de un producto
   *
   *
   *

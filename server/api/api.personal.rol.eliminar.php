@@ -3,7 +3,7 @@
   * POST api/personal/rol/eliminar
   * Elimina un grupo
   *
-  * Este metodo desactiva un grupo, solo se podra desactivar un grupo si no hay ningun usuario que pertenezca a ?
+  * Este metodo desactiva un grupo, solo se podra desactivar un grupo si no hay ningun usuario que pertenezca a ?l.
   *
   *
   *

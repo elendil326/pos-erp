@@ -3,7 +3,7 @@
   * GET api/sesion/cerrar
   * Cerrar la sesion actual.
   *
-  * Regresa un url de redireccion seg?l tipo de usuario.
+  * Regresa un url de redireccion seg?n el tipo de usuario.
   *
   *
   *

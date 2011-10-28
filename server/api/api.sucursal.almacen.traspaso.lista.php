@@ -17,15 +17,12 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"cancelado" => new ApiExposedProperty("cancelado", false, GET, array( "bool" )),
-			"completo" => new ApiExposedProperty("completo", false, GET, array( "bool" )),
-			"id_producto" => new ApiExposedProperty("id_producto", false, GET, array( "int" )),
-			"id_almacen" => new ApiExposedProperty("id_almacen", false, GET, array( "int" )),
-			"enviados" => new ApiExposedProperty("enviados", false, GET, array( "bool" )),
-			"id_sucursal" => new ApiExposedProperty("id_sucursal", false, GET, array( "int" )),
-			"id_empresa" => new ApiExposedProperty("id_empresa", false, GET, array( "int" )),
-			"estado" => new ApiExposedProperty("estado", false, GET, array( "string" )),
 			"ordenar" => new ApiExposedProperty("ordenar", false, GET, array( "json" )),
+			"estado" => new ApiExposedProperty("estado", false, GET, array( "string" )),
+			"id_almacen_recibe" => new ApiExposedProperty("id_almacen_recibe", false, GET, array( "int" )),
+			"id_almacen_envia" => new ApiExposedProperty("id_almacen_envia", false, GET, array( "int" )),
+			"completo" => new ApiExposedProperty("completo", false, GET, array( "bool" )),
+			"cancelado" => new ApiExposedProperty("cancelado", false, GET, array( "bool" )),
 		);
 	}
 
@@ -34,15 +31,12 @@
  		$this->response = SucursalesController::ListaTraspasoAlmacen( 
  			
 			
-			isset($_GET['cancelado'] ) ? $_GET['cancelado'] : null,
-			isset($_GET['completo'] ) ? $_GET['completo'] : null,
-			isset($_GET['id_producto'] ) ? $_GET['id_producto'] : null,
-			isset($_GET['id_almacen'] ) ? $_GET['id_almacen'] : null,
-			isset($_GET['enviados'] ) ? $_GET['enviados'] : null,
-			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null,
-			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] : null,
+			isset($_GET['ordenar'] ) ? $_GET['ordenar'] : null,
 			isset($_GET['estado'] ) ? $_GET['estado'] : null,
-			isset($_GET['ordenar'] ) ? $_GET['ordenar'] : null
+			isset($_GET['id_almacen_recibe'] ) ? $_GET['id_almacen_recibe'] : null,
+			isset($_GET['id_almacen_envia'] ) ? $_GET['id_almacen_envia'] : null,
+			isset($_GET['completo'] ) ? $_GET['completo'] : null,
+			isset($_GET['cancelado'] ) ? $_GET['cancelado'] : null
 			
 			);
 		}catch(Exception $e){

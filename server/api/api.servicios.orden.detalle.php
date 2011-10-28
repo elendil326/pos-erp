@@ -3,7 +3,7 @@
   * GET api/servicios/orden/detalle
   * Ver los detalles de una orden de servicio
   *
-  * Ver los detalles de una orden de servicio. Puede ordenarse por sus atributos. Los detalles de la orden de servicio son los seguimientos que tiene esa orden as?omo el estado y sus fechas de orden y de entrega.
+  * Ver los detalles de una orden de servicio. Puede ordenarse por sus atributos. Los detalles de la orden de servicio son los seguimientos que tiene esa orden as? como el estado y sus fechas de orden y de entrega.
   *
   *
   *

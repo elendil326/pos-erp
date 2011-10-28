@@ -3,7 +3,7 @@
   * POST api/autorizaciones/cliente/editar
   * Solicitar autorizacion para editar algun campo de un cliente.
   *
-  * Solicitud para cambiar alg?ato de un cliente. La fecha de petici?e tomar?el servidor. El usuario y la sucursal que emiten la autorizaci?er?tomadas de la sesi?
+  * Solicitud para cambiar alg?n dato de un cliente. La fecha de petici?n se tomar? del servidor. El usuario y la sucursal que emiten la autorizaci?n ser?n tomadas de la sesi?n.
 
 La autorizacion se guardara con los datos del usuario que la pidio. Si es aceptada, entonces el usuario podra editar al cliente una vez.
   *

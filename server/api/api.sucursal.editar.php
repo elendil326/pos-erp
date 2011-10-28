@@ -18,14 +18,7 @@
 	{
 		$this->request = array(	
 			"id_sucursal" => new ApiExposedProperty("id_sucursal", true, GET, array( "int" )),
-			"descuento" => new ApiExposedProperty("descuento", false, GET, array( "float" )),
-			"margen_utilidad" => new ApiExposedProperty("margen_utilidad", false, GET, array( "float" )),
-			"descripcion" => new ApiExposedProperty("descripcion", false, GET, array( "string" )),
-			"empresas" => new ApiExposedProperty("empresas", false, GET, array( "json" )),
-			"telefono1" => new ApiExposedProperty("telefono1", false, GET, array( "string" )),
-			"telefono2" => new ApiExposedProperty("telefono2", false, GET, array( "string" )),
-			"numero_exterior" => new ApiExposedProperty("numero_exterior", false, GET, array( "string" )),
-			"razon_social" => new ApiExposedProperty("razon_social", false, GET, array( "string" )),
+			"calle" => new ApiExposedProperty("calle", false, GET, array( "string" )),
 			"id_gerente" => new ApiExposedProperty("id_gerente", false, GET, array( "int" )),
 			"municipio" => new ApiExposedProperty("municipio", false, GET, array( "int" )),
 			"impuestos" => new ApiExposedProperty("impuestos", false, GET, array( "json" )),
@@ -33,8 +26,16 @@
 			"saldo_a_favor" => new ApiExposedProperty("saldo_a_favor", false, GET, array( "float" )),
 			"numero_interior" => new ApiExposedProperty("numero_interior", false, GET, array( "string" )),
 			"colonia" => new ApiExposedProperty("colonia", false, GET, array( "string" )),
-			"calle" => new ApiExposedProperty("calle", false, GET, array( "string" )),
+			"numero_exterior" => new ApiExposedProperty("numero_exterior", false, GET, array( "string" )),
+			"razon_social" => new ApiExposedProperty("razon_social", false, GET, array( "string" )),
+			"telefono2" => new ApiExposedProperty("telefono2", false, GET, array( "string" )),
+			"telefono1" => new ApiExposedProperty("telefono1", false, GET, array( "string" )),
+			"empresas" => new ApiExposedProperty("empresas", false, GET, array( "json" )),
+			"descripcion" => new ApiExposedProperty("descripcion", false, GET, array( "string" )),
+			"margen_utilidad" => new ApiExposedProperty("margen_utilidad", false, GET, array( "float" )),
+			"descuento" => new ApiExposedProperty("descuento", false, GET, array( "float" )),
 			"coidgo_postal" => new ApiExposedProperty("coidgo_postal", false, GET, array( "string" )),
+			"retenciones" => new ApiExposedProperty("retenciones", false, GET, array( "json" )),
 		);
 	}
 
@@ -44,14 +45,7 @@
  			
 			
 			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null,
-			isset($_GET['descuento'] ) ? $_GET['descuento'] : null,
-			isset($_GET['margen_utilidad'] ) ? $_GET['margen_utilidad'] : null,
-			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
-			isset($_GET['empresas'] ) ? $_GET['empresas'] : null,
-			isset($_GET['telefono1'] ) ? $_GET['telefono1'] : null,
-			isset($_GET['telefono2'] ) ? $_GET['telefono2'] : null,
-			isset($_GET['numero_exterior'] ) ? $_GET['numero_exterior'] : null,
-			isset($_GET['razon_social'] ) ? $_GET['razon_social'] : null,
+			isset($_GET['calle'] ) ? $_GET['calle'] : null,
 			isset($_GET['id_gerente'] ) ? $_GET['id_gerente'] : null,
 			isset($_GET['municipio'] ) ? $_GET['municipio'] : null,
 			isset($_GET['impuestos'] ) ? $_GET['impuestos'] : null,
@@ -59,8 +53,16 @@
 			isset($_GET['saldo_a_favor'] ) ? $_GET['saldo_a_favor'] : null,
 			isset($_GET['numero_interior'] ) ? $_GET['numero_interior'] : null,
 			isset($_GET['colonia'] ) ? $_GET['colonia'] : null,
-			isset($_GET['calle'] ) ? $_GET['calle'] : null,
-			isset($_GET['coidgo_postal'] ) ? $_GET['coidgo_postal'] : null
+			isset($_GET['numero_exterior'] ) ? $_GET['numero_exterior'] : null,
+			isset($_GET['razon_social'] ) ? $_GET['razon_social'] : null,
+			isset($_GET['telefono2'] ) ? $_GET['telefono2'] : null,
+			isset($_GET['telefono1'] ) ? $_GET['telefono1'] : null,
+			isset($_GET['empresas'] ) ? $_GET['empresas'] : null,
+			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
+			isset($_GET['margen_utilidad'] ) ? $_GET['margen_utilidad'] : null,
+			isset($_GET['descuento'] ) ? $_GET['descuento'] : null,
+			isset($_GET['coidgo_postal'] ) ? $_GET['coidgo_postal'] : null,
+			isset($_GET['retenciones'] ) ? $_GET['retenciones'] : null
 			
 			);
 		}catch(Exception $e){

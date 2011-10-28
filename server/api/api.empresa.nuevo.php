@@ -41,8 +41,7 @@
 
 	protected function GenerateResponse() {		
 		try{
-			$controller = new EmpresasController();
-	 		$this->response = $controller->Nuevo( 
+ 		$this->response = EmpresasController::Nuevo( 
  			
 			
 			isset($_POST['rfc'] ) ? $_POST['rfc'] : null,
