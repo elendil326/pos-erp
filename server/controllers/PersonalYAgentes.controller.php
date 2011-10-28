@@ -332,6 +332,51 @@ require_once("interfaces/PersonalYAgentes.interface.php");
           return true;
       }
 
+      private static function validarParametrosImpuestoUsuario
+      (
+              $id_impuesto = null,
+              $id_usuario = null
+      )
+      {
+        if(!is_null($id_impuesto))
+        {
+            if(is_null(ImpuestoDAO::getByPK($id_impuesto)))
+            {
+                return "El impuesto con id: ".$id_impuesto." no existe";
+            }
+        }
+        if(!is_null($id_usuario))
+        {
+            if(is_null(UsuarioDAO::getByPK($id_usuario)))
+            {
+                return "El usuario con id: ".$id_usuario." no existe";
+            }
+        }
+        return true;
+      }
+
+      private static function validarParametrosRetencionUsuario
+      (
+              $id_retencion = null,
+              $id_usuario = null
+      )
+      {
+          if(!is_null($id_retencion))
+          {
+              if(is_null(RetencionDAO::getByPK($id_retencion)))
+              {
+                  return "La retencion con id: ".$id_retencion." no existe";
+              }
+          }
+          if(!is_null($id_usuario))
+          {
+              if(is_null(UsuarioDAO::getByPK($id_usuario)))
+              {
+                  return "El usuario con id: ".$id_usuario." no existe";
+              }
+          }
+          return true;
+      }
 
 	/**
  	 *
@@ -439,16 +484,21 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 		$cuenta_mensajeria = null,
 		$rfc = "",
 		$id_clasificacion_proveedor = null,
-		$retenciones = "",
+		$retenciones = null,
 		$colonia = "",
 		$id_moneda = null,
 		$tiempo_entrega = null
 	)
 	{  
             Logger::log("Creando usuario nuevo");
-            $validar=self::validarParametrosUsuario(null, null, $id_sucursal, $id_rol, $id_clasificacion_cliente,
-                    $id_clasificacion_proveedor, $id_moneda, null, $nombre, $rfc, $curp, $comision_ventas, $telefono_personal1,
-                    $telefono_personal2, $limite_credito, $descuento, $password, null, $salario);
+            $validar=self::validarParametrosUsuario(null, null, $id_sucursal, $id_rol,
+                    $id_clasificacion_cliente, $id_clasificacion_proveedor, $id_moneda,
+                    null, $nombre, $rfc, $curp, $comision_ventas, $telefono_personal1,
+                    $telefono_personal2, $limite_credito, $descuento, $password, $salario,
+                    $correo_electronico,$pagina_web,$saldo_del_ejercicio,$ventas_a_credito,
+                    $representante_legal,$facturar_a_terceros,$dia_de_pago,$mensajeria,
+                    $intereses_moratorios,$denominacion_comercial,$dias_de_credito,
+                    $cuenta_mensajeria,$dia_de_revision,$codigo_usuario,$dias_de_embarque,$tiempo_entrega,$cuenta_bancaria);
             if(is_string($validar))
             {
                 Logger::error($validar);
@@ -486,14 +536,24 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 Logger::error("El telefono personal es igual al telefno personal alterno: ".$telefono_personal1."  ".$telefono_personal2);
                 throw new Exception("El telefono personal es igual al telefno personal alterno: ".$telefono_personal1."  ".$telefono_personal2);
             }
-            $usuarios=UsuarioDAO::search(new Usuario( array( "correo_electronico" => $correo_electronico ) ));
-            foreach($usuarios as $usuario)
+            if(!is_null($correo_electronico))
             {
-                if($usuario->getActivo())
+                $usuarios=UsuarioDAO::search(new Usuario( array( "correo_electronico" => $correo_electronico ) ));
+                foreach($usuarios as $usuario)
                 {
-                    Logger::error("El correo electronico ".$correo_electronico." ya esta en uso");
-                    throw new Exception("El correo electronico ".$correo_electronico." ya esta en uso");
+                    if($usuario->getActivo())
+                    {
+                        Logger::error("El correo electronico ".$correo_electronico." ya esta en uso");
+                        throw new Exception("El correo electronico ".$correo_electronico." ya esta en uso");
+                    }
                 }
+            }
+            if($password==$codigo_usuario||$password==$correo_electronico)
+            {
+                Logger::error("El password (".$password.") no puede ser igual al codigo de usuario
+                    (".$codigo_usuario.") ni al correo electronico (".$correo_electronico.")");
+                throw new Exception("El password (".$password.") no puede ser igual al codigo de usuario
+                    (".$codigo_usuario.") ni al correo electronico (".$correo_electronico.")");
             }
             if(is_null($limite_credito))
                 $limite_credito=0;
@@ -518,7 +578,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                                 "activo"                    => 1,
                                 "limite_credito"            => $limite_credito,
                                 "descuento"                 => $descuento,
-                                "password"                  => $password,
+                                "password"                  => hash("md5",$password),
                                 "salario"                   => $salario,
                                 "correo_electronico"        => $correo_electronico,
                                 "pagina_web"                => $pagina_web,
@@ -558,6 +618,26 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 if($id_direccion2>0)
                     $usuario->setIdDireccionAlterna($id_direccion2);
                 UsuarioDAO::save($usuario);
+                if(!is_null($impuestos))
+                {
+                    foreach($impuestos as $id_impuesto)
+                    {
+                        $validar=self::validarParametrosImpuestoUsuario($id_impuesto);
+                        if(is_string($validar))
+                            throw $validar;
+                        ImpuestoUsuarioDAO::save(new ImpuestoUsuario(array( "id_impuesto" => $id_impuesto , "id_usuario" => $usuario->getIdUsuario())));
+                    }
+                }
+                if(!is_null($retenciones))
+                {
+                    foreach($retenciones as $id_retencion)
+                    {
+                        $validar=self::validarParametrosRetencionUsuario($id_retencion);
+                        if(is_string($validar))
+                            throw $validar;
+                        RetencionEmpresaDAO::save(new RetencionEmpresa(array( "id_retencion" => $id_retencion , "id_usuario" => $usuario->getIdUsuario() )));
+                    }
+                }
             }
             catch(Exception $e)
             {
@@ -775,7 +855,11 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 $tiempo_entrega = null
 	)
 	{  
-  
+            Logger::log("Editando usuario: ".$id_usuario);
+            $validar=self::validarParametrosUsuario($id_usuario, null, $id_sucursal, $id_rol,
+                    $id_clasificacion_cliente, $id_clasificacion_proveedor, $id_moneda, null,
+                    $nombre, $rfc, $curp, $comision_ventas, $telefono_personal_1, $telefono_personal_2,
+                    $limite_de_credito, $descuento, $password, $salario, $correo_electronico);
   
 	}
   
