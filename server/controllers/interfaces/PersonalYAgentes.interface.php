@@ -103,6 +103,8 @@
  	 **/
   static function ListaPermisoRol
 	(
+                $id_rol = null,
+                $id_permiso = null
 	);  
   
   
@@ -234,7 +236,9 @@
 		$codigo_postal_2 = null, 
 		$id_sucursal = null, 
 		$telefono1_2 = null, 
-		$intereses_moratorios = null
+		$intereses_moratorios = null,
+                $id_moneda = null,
+                $tiempo_entrega = null
 	);  
   
   
@@ -260,7 +264,7 @@
  	 *
  	 * @param activo bool True si se mostrarn solo los usuarios activos, false si solo se mostrarn los usuarios inactivos
  	 * @param ordenar json Valor numrico que indicar la forma en que se ordenar la lista
- 	 * @return usuarios json Arreglo de objetos que contendrá la información de los usuarios del sistema
+ 	 * @return usuarios json Arreglo de objetos que contendrï¿½ la informaciï¿½n de los usuarios del sistema
  	 **/
   static function ListaUsuario
 	(
@@ -325,60 +329,62 @@
  	 * @param id_clasificacion_proveedor int Id de la clasificacion del proveedor
  	 * @param colonia string Colonia donde vive el agente
  	 * @param retenciones json Ids de las retenciones que afectan a este usuario
- 	 * @return id_usuario int Id generado por la inserción del usuario
+ 	 * @return id_usuario int Id generado por la inserciï¿½n del usuario
  	 **/
   static function NuevoUsuario
 	(
-		$nombre, 
-		$id_rol, 
-		$password, 
-		$codigo_usuario, 
-		$telefono1 = null, 
-		$numero_exterior_2 = null, 
-		$calle_2 = null, 
-		$dias_de_credito = null, 
-		$denominacion_comercial = null, 
-		$telefono2 = null, 
-		$texto_extra = null, 
-		$correo_electronico = null, 
-		$id_ciudad_2 = null, 
-		$numero_interior = null, 
-		$calle = null, 
-		$colonia_2 = null, 
-		$id_ciudad = null, 
-		$numero_interior_2 = null, 
-		$texto_extra_2 = null, 
-		$codigo_postal_2 = null, 
-		$telefono2_2 = null, 
-		$codigo_postal = null, 
-		$telefono1_2 = null, 
-		$telefno_personal2 = null, 
-		$limite_credito = 0, 
-		$pagina_web = null, 
-		$descuento = null, 
-		$telefono_personal1 = "", 
-		$ventas_a_credito = null, 
-		$intereses_moratorios = null, 
-		$salario = null, 
+		$codigo_usuario,
+		$password,
+		$id_rol,
+		$nombre,
+		$curp = null,
+		$dia_de_revision = null,
+		$id_clasificacion_cliente = null,
+		$numero_exterior = null,
+		$facturar_a_terceros = null,
+		$id_sucursal = null,
+		$dias_de_embarque = null,
 		$saldo_del_ejercicio = null, 
-		$representante_legal = null, 
-		$cuenta_bancaria = null, 
-		$dia_de_pago = null, 
-		$mpuestos = null, 
-		$mensajeria = null, 
-		$id_sucursal = null, 
-		$facturar_a_terceros = null, 
-		$dias_de_embarque = null, 
-		$numero_exterior = null, 
-		$id_clasificacion_cliente = null, 
-		$curp = null, 
-		$dia_de_revision = null, 
-		$cuenta_mensajeria = null, 
-		$comision_ventas = null, 
-		$rfc = null, 
-		$id_clasificacion_proveedor = null, 
-		$colonia = null, 
-		$retenciones = null
+		$representante_legal = null,
+		$dia_de_pago = null,
+		$impuestos = null,
+		$mensajeria = null,
+		$salario = null,
+		$cuenta_bancaria = null,
+		$intereses_moratorios = null,
+		$ventas_a_credito = null,
+		$pagina_web = null,
+		$telefono_personal1 = "",
+		$descuento = null,
+		$telefono2_2 = null,
+		$limite_credito = 0,
+		$telefono_personal2 = null,
+		$telefono1_2 = null,
+		$codigo_postal = null,
+		$texto_extra_2 = null,
+		$codigo_postal_2 = null,
+		$calle = null,
+		$numero_interior_2 = null,
+		$id_ciudad = null,
+		$colonia_2 = null,
+		$id_ciudad_2 = null,
+		$numero_interior = null,
+		$correo_electronico = null,
+		$telefono2 = null,
+		$dias_de_credito = null,
+		$texto_extra = "",
+		$calle_2 = null,
+		$denominacion_comercial = null,
+		$numero_exterior_2 = null,
+		$comision_ventas = 0,
+		$telefono1 = null,
+		$cuenta_mensajeria = null,
+		$rfc = "",
+		$id_clasificacion_proveedor = null,
+		$retenciones = "",
+		$colonia = "",
+		$id_moneda = null,
+		$tiempo_entrega = null
 	);  
   
   
@@ -397,7 +403,11 @@
 		$id_permiso
 	);  
   
-  
+  static function ListaPermisoUsuario
+        (
+                $id_usuario = null,
+                $id_permiso = null
+        );
 	
   
 	/**

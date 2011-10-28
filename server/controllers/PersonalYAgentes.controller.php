@@ -11,12 +11,9 @@ require_once("interfaces/PersonalYAgentes.interface.php");
   	
     private static function validarString($string, $max_length, $nombre_variable,$min_length=0)
 	{
-		$error="";
-
 		if(strlen($string)<=$min_length||strlen($string)>$max_length)
 		{
-		    $error = "La longitud de la variable ".$nombre_variable." proporcionada no esta en el rango de ".$min_length." - ".$max_length;
-		    return $error;
+		    return "La longitud de la variable ".$nombre_variable." proporcionada no esta en el rango de ".$min_length." - ".$max_length;
 		}
 		return true;
     }
@@ -25,17 +22,12 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 
 	private static function validarNumero($num, $max_length, $nombre_variable, $min_length=0)
 	{
-	    $error="";
 	    if($num<=$min_length||$num>$max_length)
 	    {
-	        $error="La variable ".$nombre_variable." proporcionada no esta en el rango de ".$min_length." - ".$max_length;
-	        return $error;
+	        return "La variable ".$nombre_variable." proporcionada no esta en el rango de ".$min_length." - ".$max_length;
 	    }
 	    return true;
 	}
-
-
-
 
       private static function ValidarParametrosRol
       (
@@ -46,13 +38,11 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 		$salario = null
       )
       {
-          $error="";
           if(!is_null($id_rol))
           {
               if(is_null(RolDAO::getByPK($id_rol)))
               {
-                  $error="El rol con id: ".$id_rol." no existe";
-                  return $error;
+                  return "El rol con id: ".$id_rol." no existe";
               }
           }
           if(!is_null($descripcion))
@@ -64,8 +54,8 @@ require_once("interfaces/PersonalYAgentes.interface.php");
           if(!is_null($nombre))
           {
               $e=self::validarString($nombre, 30, "nombre");
-                    if(is_string($e))
-                        return $e;
+              if(is_string($e))
+                  return $e;
           }
           if(!is_null($descuento))
           {
@@ -82,7 +72,265 @@ require_once("interfaces/PersonalYAgentes.interface.php");
           return true;
       }
 
-
+      private static function validarParametrosUsuario
+      (
+              $id_usuario = null,
+              $id_direccion = null,
+              $id_sucursal = null,
+              $id_rol = null,
+              $id_clasificacion_cliente = null,
+              $id_clasificacion_proveedor = null,
+              $id_moneda = null,
+              $activo = null,
+              $nombre = null,
+              $rfc = null,
+              $curp = null,
+              $comision_ventas = null,
+              $telefono_personal1 = null,
+              $telefono_personal2 = null,
+              $limite_credito = null,
+              $descuento = null,
+              $password = null,
+              $salario = null,
+              $correo_electronico = null,
+              $pagina_web = null,
+              $saldo_del_ejercicio = null,
+              $ventas_a_credito = null,
+              $representante_legal = null,
+              $facturar_a_terceros = null,
+              $dia_de_pago = null,
+              $mensajeria = null,
+              $intereses_moratorios = null,
+              $denominacion_comercial = null,
+              $dias_de_credito = null,
+              $cuenta_de_mensajeria = null,
+              $dia_de_revision = null,
+              $codigo_usuario = null,
+              $dias_de_embarque = null,
+              $tiempo_entrega = null,
+              $cuenta_bancaria = null
+      )
+      {
+          if(!is_null($id_usuario))
+          {
+              if(is_null(UsuarioDAO::getByPK($id_usuario)))
+                  return "El usuario con id: ".$id_usuario." no existe";
+          }
+          if(!is_null($id_direccion))
+          {
+              if(is_null(DireccionDAO::getByPK($id_direccion)))
+                  return "La direccion con id: ".$id_direccion." no existe";
+          }
+          if(!is_null($id_sucursal))
+          {
+              if(is_null(SucursalDAO::getByPK($id_sucursal)))
+                  return "La sucursal con id: ".$id_sucursal." no existe";
+          }
+          if(!is_null($id_rol))
+          {
+              if(is_null(RolDAO::getByPK($id_rol)))
+                  return "El rol con id: ".$id_rol." no existe";
+          }
+          if(!is_null($id_clasificacion_cliente))
+          {
+              if(is_null(ClasificacionClienteDAO::getByPK($id_clasificacion_cliente)))
+                  return "La clasificacion cliente con id: ".$id_clasificacion_cliente." no existe";
+          }
+          if(!is_null($id_clasificacion_proveedor))
+          {
+              if(is_null(ClasificacionProveedorDAO::getByPK($id_clasificacion_proveedor)))
+                  return "La clasficiacion proveedor con id: ".$id_clasificacion_proveedor." no existe";
+          }
+          if(!is_null($id_moneda))
+          {
+              if(is_null(MonedaDAO::getByPK($id_moneda)))
+                  return "La moneda con id: ".$id_moneda." no existe";
+          }
+          if(!is_null($nombre))
+          {
+              $e=self::validarString($nombre, 100, "nombre");
+              if(is_string($e))
+                  return $e;
+          }
+          if(!is_null($rfc))
+          {
+              $e=self::validarString($rfc, 30, "rfc");
+              if(is_string($e))
+                  return $e;
+              if(preg_match('/[^A-Z0-9]/' ,$rfc))
+                  return "El rfc ".$rfc." contiene caracteres fuera del rango A-Z y 0-9";
+          }
+          if(!is_null($curp))
+          {
+              $e=self::validarString($curp, 30, "curp");
+              if(is_string($e))
+                  return $e;
+              if(preg_match('/[^A-Z0-9]/' ,$curp))
+                  return "El curp ".$curp." contiene caracteres fuera del rango A-Z y 0-9";
+          }
+          if(!is_null($comision_ventas))
+          {
+              $e=self::validarNumero($comision_ventas, 100, "comision de ventas");
+              if(is_string($e))
+                  return $e;
+          }
+          if(!is_null($telefono_personal1))
+          {
+              $e=self::validarString($telefono_personal1, 20, "Telefono personal");
+              if(is_string($e))
+                  return $e;
+              if(preg_match('/[^0-9\- \(\)\*]/',$telefono_personal1))
+                  return "El telefono ".$telefono_personal1." tiene caracteres fuera del rango 0-9,-,(,),* o espacio vacío";
+          }
+          if(!is_null($telefono_personal2))
+          {
+              $e=self::validarString($telefono_personal2, 20, "Telefono personal alterno");
+              if(is_string($e))
+                  return $e;
+              if(preg_match('/[^0-9\- \(\)\*]/',$telefono_personal2))
+                  return "El telefono ".$telefono_personal2." tiene caracteres fuera del rango 0-9,-,(,),* o espacio vacío";
+          }
+          if(!is_null($activo))
+          {
+              $e=self::validarNumero($activo, 1, "activo");
+              if(is_string($e))
+                  return $e;
+          }
+          if(!is_null($limite_credito))
+          {
+              $e=self::validarNumero($limite_credito, 1.8e200, "limite de credito");
+              if(is_string($e))
+                  return $e;
+          }
+          if(!is_null($descuento))
+          {
+              $e=self::validarNumero($descuento, 1.8e200, "descuento");
+              if(is_string($e))
+                  return $e;
+          }
+          if(!is_null($password))
+          {
+              $e=self::validarString($password, 1.8e200, "password",3);
+              if(is_string($e))
+                  return $e;
+          }
+          if(!is_null($salario))
+          {
+              $e=self::validarNumero($salario, 1.8e200, "salario");
+              if(is_string($e))
+                  return $e;
+          }
+          if(!is_null($correo_electronico))
+          {
+              $e=self::validarString($correo_electronico, 30, "correo electronico");
+              if(is_string($e))
+                  return $e;
+              if(!is_string(filter_var($email, FILTER_VALIDATE_EMAIL)))
+                      return "El correo electronico ".$correo_electronico." no es valido";
+          }
+          if(!is_null($pagina_web))
+          {
+              $e=self::validarString($pagina_web, 30, "pagina web");
+              if(is_string($e))
+                  return $e;
+              if(!preg_match('/^(http|https|ftp):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,6}'.'((:[0-9]{1,5})?\/.*)?$/i' ,$pagina_web)&&
+                    !preg_match('/^[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,6}'.'((:[0-9]{1,5})?\/.*)?$/i' ,$pagina_web))
+                            return "La direccion web ".$pagina_web." no cumple el formato valido";
+          }
+          if(!is_null($saldo_del_ejercicio))
+          {
+              $e=self::validarNumero($saldo_del_ejercicio, 1.8e200, $saldo_del_ejercicio, -1.8e200);
+              if(is_string($e))
+                  return $e;
+          }
+          if(!is_null($ventas_a_credito))
+          {
+              $e=self::validarNumero($ventas_a_credito, PHP_INT_MAX, "ventas a credito");
+              if(is_string($e))
+                  return $e;
+          }
+          if(!is_null($representante_legal))
+          {
+              $e=self::validarString($representante_legal, 100, "representante legal");
+              if(is_string($e))
+                  return $e;
+          }
+          if(!is_null($facturar_a_terceros))
+          {
+              $e=self::validarNumero($facturar_a_terceros, 1, "facturar a terceros");
+              if(is_string($e))
+                  return $e;
+          }
+          if(!is_null($dia_de_pago))
+          {
+              $e=self::validarString($dia_de_pago, strlen("YYYY-mm-dd HH:ii:ss"), "dia de pago");
+              if(is_string($e))
+                  return $e;
+          }
+          if(!is_null($mensajeria))
+          {
+              $e=self::validarNumero($mensajeria, 1, "mensajeria");
+              if(is_string($e))
+                  return $e;
+          }
+          if(!is_null($intereses_moratorios))
+          {
+              $e=self::validarNumero($intereses_moratorios, 1.8e200, "intereses moratorios");
+              if(is_string($e))
+                  return $e;
+          }
+          if(!is_null($denominacion_comercial))
+          {
+              $e=self::validarString($denominacion_comercial, 100, "denominacion comercial");
+              if(is_string($e))
+                  return $e;
+          }
+          if(!is_null($dias_de_credito))
+          {
+              $e=self::validarNumero($dias_de_credito, PHP_INT_MAX, "dias de credito");
+              if(is_string($e))
+                  return $e;
+          }
+          if(!is_null($cuenta_de_mensajeria))
+          {
+              $e=self::validarString($cuenta_de_mensajeria, 50, "cuenta de mensajeria");
+              if(is_string($e))
+                  return $e;
+          }
+          if(!is_null($dia_de_revision))
+          {
+              $e=self::validarString($dia_de_revision, strlen("YYYY-mm-dd HH:ii:ss"), "dia de revision");
+              if(is_string($e))
+                  return $e;
+          }
+          if(!is_null($codigo_usuario))
+          {
+              $e=self::validarString($codigo_usuario, 50, "codigo de usuario");
+              if(is_string($e))
+                  return $e;
+              if(preg_match('/[^a-zA-Z0-9]/', $codigo_usuario))
+                      return "El codigo de usuario ".$codigo_usuario." no tiene solo caracteres alfanumericos";
+          }
+          if(!is_null($dias_de_embarque))
+          {
+              $e=self::validarNumero($dias_de_embarque, PHP_INT_MAX, "dias de embarque");
+              if(is_string($e))
+                  return $e;
+          }
+          if(!is_null($tiempo_entrega))
+          {
+              $e=self::validarNumero($tiempo_entrega, PHP_INT_MAX, "tiempo de entrega");
+              if(is_string($e))
+                  return $e;
+          }
+          if(!is_null($cuenta_bancaria))
+          {
+              $e=self::validarString($cuenta_bancaria, 50, "cuenta bancaria");
+              if(is_string($e))
+                  return $e;
+          }
+          return true;
+      }
 
 
 	/**
@@ -143,60 +391,183 @@ require_once("interfaces/PersonalYAgentes.interface.php");
  	 **/
 	public static function NuevoUsuario
 	(
-		$password, 
-		$id_rol, 
-		$nombre, 
-		$codigo_usuario, 
-		$facturar_a_terceros = null, 
-		$id_sucursal = null, 
-		$mensajeria = null, 
-		$mpuestos = null, 
-		$dia_de_pago = null, 
-		$cuenta_bancaria = null, 
-		$representante_legal = null, 
-		$saldo_del_ejercicio = null, 
-		$salario = null, 
-		$intereses_moratorios = null, 
-		$ventas_a_credito = null, 
-		$telefono_personal1 = "", 
-		$descuento = null, 
-		$pagina_web = null, 
-		$limite_credito = 0, 
-		$telefno_personal2 = null, 
-		$telefono1_2 = null, 
-		$codigo_postal = null, 
-		$telefono2_2 = null, 
-		$codigo_postal_2 = null, 
-		$texto_extra_2 = null, 
-		$numero_interior_2 = null, 
-		$id_ciudad = null, 
-		$colonia_2 = null, 
-		$calle = null, 
-		$numero_interior = null, 
-		$id_ciudad_2 = null, 
-		$correo_electronico = null, 
-		$texto_extra = null, 
-		$telefono2 = null, 
-		$denominacion_comercial = null, 
-		$dias_de_credito = null, 
-		$calle_2 = null, 
-		$numero_exterior_2 = null, 
-		$telefono1 = null, 
-		$dias_de_embarque = null, 
-		$numero_exterior = null, 
-		$id_clasificacion_cliente = null, 
-		$curp = null, 
-		$dia_de_revision = null, 
-		$cuenta_mensajeria = null, 
-		$comision_ventas = null, 
-		$rfc = null, 
-		$id_clasificacion_proveedor = null, 
-		$colonia = null, 
-		$retenciones = null
+		$codigo_usuario,
+		$password,
+		$id_rol,
+		$nombre,
+		$curp = null,
+		$dia_de_revision = null,
+		$id_clasificacion_cliente = null,
+		$numero_exterior = null,
+		$facturar_a_terceros = null,
+		$id_sucursal = null,
+		$dias_de_embarque = null,
+		$saldo_del_ejercicio = 0,
+		$representante_legal = null,
+		$dia_de_pago = null,
+		$impuestos = null,
+		$mensajeria = null,
+		$salario = null,
+		$cuenta_bancaria = null,
+		$intereses_moratorios = null,
+		$ventas_a_credito = null,
+		$pagina_web = null,
+		$telefono_personal1 = "",
+		$descuento = null,
+		$telefono2_2 = null,
+		$limite_credito = 0,
+		$telefono_personal2 = null,
+		$telefono1_2 = null,
+		$codigo_postal = null,
+		$texto_extra_2 = null,
+		$codigo_postal_2 = null,
+		$calle = null,
+		$numero_interior_2 = null,
+		$id_ciudad = null,
+		$colonia_2 = null,
+		$id_ciudad_2 = null,
+		$numero_interior = null,
+		$correo_electronico = null,
+		$telefono2 = null,
+		$dias_de_credito = null,
+		$texto_extra = "",
+		$calle_2 = null,
+		$denominacion_comercial = null,
+		$numero_exterior_2 = null,
+		$comision_ventas = 0,
+		$telefono1 = null,
+		$cuenta_mensajeria = null,
+		$rfc = "",
+		$id_clasificacion_proveedor = null,
+		$retenciones = "",
+		$colonia = "",
+		$id_moneda = null,
+		$tiempo_entrega = null
 	)
 	{  
-  
-  
+            Logger::log("Creando usuario nuevo");
+            $validar=self::validarParametrosUsuario(null, null, $id_sucursal, $id_rol, $id_clasificacion_cliente,
+                    $id_clasificacion_proveedor, $id_moneda, null, $nombre, $rfc, $curp, $comision_ventas, $telefono_personal1,
+                    $telefono_personal2, $limite_credito, $descuento, $password, null, $salario);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            $usuarios=UsuarioDAO::search(new Usuario(array( "codigo_usuario" => $codigo_usuario )));
+            foreach($usuarios as $usuario)
+            {
+                if($usuario->getActivo())
+                {
+                    Logger::error("El codigo de usuario ".$codigo_usuario." ya esta en uso");
+                    throw new Exception("El codigo de usuario ".$codigo_usuario." ya esta en uso");
+                }
+            }
+            $usuarios=UsuarioDAO::search(new Usuario(array( "rfc" => $rfc )));
+            foreach($usuarios as $usuario)
+            {
+                if($usuario->getActivo())
+                {
+                    Logger::error("El rfc ".$rfc." ya existe");
+                    throw new Exception("El rfc ".$rfc." ya existe");
+                }
+            }
+            $usuarios=UsuarioDAO::search(new Usuario(array( "curp" => $curp )));
+            foreach($usuarios as $usuario)
+            {
+                if($usuario->getActivo())
+                {
+                    Logger::error("La curp ".$curp." ya existe");
+                    throw new Exception("La curp ".$curp." ya existe");
+                }
+            }
+            if(!is_null($telefono_personal1)&&$telefono_personal1==$telefono_personal2)
+            {
+                Logger::error("El telefono personal es igual al telefno personal alterno: ".$telefono_personal1."  ".$telefono_personal2);
+                throw new Exception("El telefono personal es igual al telefno personal alterno: ".$telefono_personal1."  ".$telefono_personal2);
+            }
+            $usuarios=UsuarioDAO::search(new Usuario( array( "correo_electronico" => $correo_electronico ) ));
+            foreach($usuarios as $usuario)
+            {
+                if($usuario->getActivo())
+                {
+                    Logger::error("El correo electronico ".$correo_electronico." ya esta en uso");
+                    throw new Exception("El correo electronico ".$correo_electronico." ya esta en uso");
+                }
+            }
+            if(is_null($limite_credito))
+                $limite_credito=0;
+            if(is_null($saldo_del_ejercicio))
+                $saldo_del_ejercicio=0;
+            $usuario = new Usuario(
+                        array
+                            (
+                                "id_sucursal"               => $id_sucursal,
+                                "id_rol"                    => $id_rol,
+                                "id_clasificacion_cliente"  => $id_clasificacion_cliente,
+                                "id_clasificacion_proveedor"=> $id_clasificacion_proveedor,
+                                "id_moneda"                 => $id_moneda,
+                                "fecha_asignacion_rol"      => date("Y-m-d H:i:s"),
+                                "nombre"                    => $nombre,
+                                "rfc"                       => $rfc,
+                                "curp"                      => $curp,
+                                "comision_ventas"           => $comision_ventas,
+                                "telefono_personal1"        => $telefono_personal1,
+                                "telefono_personal2"        => $telefono_personal2,
+                                "fecha_alta"                => date("Y-m-d H:i:s"),
+                                "activo"                    => 1,
+                                "limite_credito"            => $limite_credito,
+                                "descuento"                 => $descuento,
+                                "password"                  => $password,
+                                "salario"                   => $salario,
+                                "correo_electronico"        => $correo_electronico,
+                                "pagina_web"                => $pagina_web,
+                                "saldo_del_ejercicio"       => $saldo_del_ejercicio,
+                                "ventas_a_credito"          => $ventas_a_credito,
+                                "representante_legal"       => $representante_legal,
+                                "facturar_a_terceros"       => $facturar_a_terceros,
+                                "mensajeria"                => $mensajeria,
+                                "intereses_moratorios"      => $intereses_moratorios,
+                                "denominacion_comercial"    => $denominacion_comercial,
+                                "dias_de_credito"           => $dias_de_credito,
+                                "cuenta_de_mensajeria"      => $cuenta_mensajeria,
+                                "codigo_usuario"            => $codigo_usuario,
+                                "dias_de_embarque"          => $dias_de_embarque,
+                                "tiempo_entrega"            => $tiempo_entrega,
+                                "cuenta_bancaria"           => $cuenta_bancaria,
+                                "consignatario"             => 0
+                            )
+                        );
+            $id_direccion1=-1;
+            $id_direccion2=-1;
+            DAO::transBegin();
+            try
+            {
+                if(!is_null($calle))
+                {
+                    $id_direccion1 = DireccionController::NuevaDireccion($calle, $numero_exterior, $colonia,
+                            $id_ciudad, $codigo_postal, $numero_interior, $texto_extra, $telefono1, $telefono2);
+                }
+                if(!is_null($calle_2))
+                {
+                    $id_direccion2 = DireccionController::NuevaDireccion($calle_2, $numero_exterior_2, $colonia_2,
+                            $id_ciudad_2, $codigo_postal_2, $numero_interior_2, $texto_extra_2, $telefono1_2, $telefono2_2);
+                }
+                if($id_direccion1>0)
+                    $usuario->setIdDireccion($id_direccion1);
+                if($id_direccion2>0)
+                    $usuario->setIdDireccionAlterna($id_direccion2);
+                UsuarioDAO::save($usuario);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo crear al usuario: ".$e);
+                throw new Exception("No se pudo crear al usuario");
+            }
+            DAO::transEnd();
+            Logger::log("Usuario creado exitosamente con id".$usuario->getIdUsuario());
+            return array( "id_usuario" => $usuario->getIdUsuario() );
 	}
   
 	/**
@@ -327,7 +698,9 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 		$codigo_postal_2 = null, 
 		$id_sucursal = null, 
 		$telefono1_2 = null, 
-		$intereses_moratorios = null
+		$intereses_moratorios = null,
+                $id_moneda = null,
+                $tiempo_entrega = null
 	)
 	{  
   
@@ -568,9 +941,20 @@ require_once("interfaces/PersonalYAgentes.interface.php");
  	 **/
 	public static function ListaPermisoRol
 	(
+                $id_rol = null,
+                $id_permiso = null
 	)
 	{  
-  
+
   
 	}
+
+        public static function ListaPermisoUsuario
+        (
+                $id_usuario = null,
+                $id_permiso = null
+        )
+        {
+
+        }
   }

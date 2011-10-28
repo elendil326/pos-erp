@@ -10,22 +10,18 @@ require_once("interfaces/Empresas.interface.php");
 
           private static function validarString($string, $max_length, $nombre_variable,$min_length=0)
           {
-                $error="";
                 if(strlen($string)<=$min_length||strlen($string)>$max_length)
                 {
-                    $error="La longitud de la variable ".$nombre_variable." proporcionada no esta en el rango de ".$min_length." - ".$max_length;
-                    return $error;
+                    return "La longitud de la variable ".$nombre_variable." proporcionada no esta en el rango de ".$min_length." - ".$max_length;
                 }
                 return true;
           }
 
           private static function validarNumero($num, $max_length, $nombre_variable, $min_length=0)
           {
-                $error="";
                 if($num<$min_length||$num>$max_length)
                 {
-                    $error="La variable ".$nombre_variable." proporcionada no esta en el rango de ".$min_length." - ".$max_length;
-                    return $error;
+                    return "La variable ".$nombre_variable." proporcionada no esta en el rango de ".$min_length." - ".$max_length;
                 }
                 return true;
           }
@@ -38,29 +34,24 @@ require_once("interfaces/Empresas.interface.php");
                   $rfc=null,
                   $razon_social=null,
                   $representante_legal=null,
-                  $fecha_alta=null,
-                  $fecha_baja=null,
                   $activo=null,
                   $direccion_web=null,
                   $margen_utilidad=null,
                   $descuento=null
           )
           {
-                $error="";
                 if(!is_null($id_empresa))
                 {
                     if(is_null(EmpresaDAO::getByPK($id_empresa)))
                     {
-                        $error="La empresa con id: ".$id_empresa." no existe";
-                        return $error;
+                        return "La empresa con id: ".$id_empresa." no existe";
                     }
                 }
                 if(!is_null($id_direccion))
                 {
                     if(is_null(DireccionDAO::getByPK($id_direccion)))
                     {
-                        $error="La direccion con id: ".$id_direccion." no existe";
-                        return $error;
+                         return "La direccion con id: ".$id_direccion." no existe";
                     }
                 }
                 if(!is_null($curp))
@@ -68,6 +59,8 @@ require_once("interfaces/Empresas.interface.php");
                     $e=self::validarString($curp, 30, "curp");
                     if(is_string($e))
                         return $e;
+                    if(preg_match('/[^A-Z0-9]/' ,$curp))
+                            return "El curp ".$curp." contiene caracteres fuera del rango A-Z y 0-9";
                 }
                 if(!is_null($rfc))
                 {
@@ -110,6 +103,9 @@ require_once("interfaces/Empresas.interface.php");
                     $e=self::validarString($direccion_web, 20, "direccion web");
                     if(is_string($e))
                         return $e;
+                    if(!preg_match('/^(http|https|ftp):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,6}'.'((:[0-9]{1,5})?\/.*)?$/i' ,$direccion_web)&&
+                    !preg_match('/^[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,6}'.'((:[0-9]{1,5})?\/.*)?$/i' ,$direccion_web))
+                            return "La direccion web ".$direccion_web." no cumple el formato esperado";
                 }
                 if(!is_null($margen_utilidad))
                 {
@@ -126,6 +122,42 @@ require_once("interfaces/Empresas.interface.php");
                 return true;
           }
 
+          private static function validarParametrosSucursalEmpresa
+          (
+                  $id_sucursal=null,
+                  $id_empresa=null,
+                  $margen_utiliad=null,
+                  $descuento=null
+          )
+          {
+              if(!is_null($id_sucursal))
+              {
+                  if(is_null(SucursalDAO::getByPK($id_sucursal)))
+                  {
+                      return "La sucursal con id: ".$id_sucursal." no existe";
+                  }
+              }
+              if(!is_null($id_empresa))
+              {
+                  if(is_null(EmpresaDAO::getByPK($id_empresa)))
+                  {
+                      return "La empresa con id: ".$id_empresa." no existe";
+                  }
+              }
+              if(!is_null($margen_utilidad))
+              {
+                  $e=self::validarNumero($margen_utilidad, 1.8e200, "margen de utilidad");
+                  if(is_string($e))
+                      return $e;
+              }
+              if(!is_null($descuento))
+              {
+                  $e=self::validarNumero($descuento, 100, "descuento");
+                  if(is_string($e))
+                      return $e;
+              }
+          }
+
 	/**
  	 *
  	 *Mostrar?odas la empresas en el sistema, as?omo sus sucursalse y sus gerentes[a] correspondientes. Por default no se mostraran las empresas ni sucursales inactivas. 
@@ -140,7 +172,7 @@ require_once("interfaces/Empresas.interface.php");
 	{  
   		if(is_null($activa))
   			return EmpresaDAO::getAll();
-                $validar=self::validarParametrosEmpresa(null, null, null, null, null, null, null, null, $activo);
+                $validar=self::validarParametrosEmpresa(null, null, null, null, null, null, $activo);
                 if(is_string($validar))
                 {
                     Logger::error($validar);
@@ -178,9 +210,10 @@ require_once("interfaces/Empresas.interface.php");
             {
                 foreach($sucursales as $sucursal)
                 {
-                    if(is_null(SucursalDAO::getByPK($sucursal["id_sucursal"])))
+                    $validar=self::validarParametrosSucursalEmpresa($sucursal["id_sucursal"], null,$sucursal["margen_utilidad"], $sucursal["descuento"]);
+                    if(is_string($validar))
                     {
-                        throw new Exception("La sucursal con id: ".$sucursal["id_sucursal"]." no existe");
+                        throw new Exception($validar);
                     }
                     $sucursal_empresa->setIdSucursal($sucursal["id_sucursal"]);
                     $sucursal_empresa->setDescuento($sucursal["descuento"]);
@@ -247,18 +280,12 @@ require_once("interfaces/Empresas.interface.php");
 	)
 	{  
             Logger::log("Creando empresa");
-//            $addr = new Direccion(array(
-//                        "calle"             =>  $calle,
-//                        "numero_exterior"   =>  $numero_exterior,
-//                        "colonia"           =>  $colonia,
-//                        "id_ciudad"         =>  $ciudad,
-//                        "codigo_postal"     =>  $codigo_postal,
-//                        "numero_interior"   =>  $numero_interior,
-//                        "referencia"        =>  $texto_extra,
-//                        "telefono"          =>  $telefono1,
-//                        "telefono2"         =>  $telefono2
-//                    ));
-            Logger::log("Colonia:" . $colonia);
+            $validar=self::validarParametrosEmpresa(null, null, $curp, $rfc, $razon_social, $representante_legal, null, $direccion_web, $margen_utilidad, $descuento);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
             $e = new Empresa(array(
                             "activo"                => true,
                             "curp"                  => $curp,
@@ -271,6 +298,7 @@ require_once("interfaces/Empresas.interface.php");
                             "representante_legal"   => $representante_legal,
                             "rfc"                   => $rfc
                     ));
+            $empresas=EmpresaDAO::search(new Empresa( array( "curp" => $curp ) ));
              DAO::transBegin();
              try
              {

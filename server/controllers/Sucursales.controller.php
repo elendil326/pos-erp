@@ -244,6 +244,7 @@ require_once("interfaces/Sucursales.interface.php");
                     $venta->setSaldo($saldo);
                     VentaDAO::save($venta);
                     $usuario->setSaldoDelEjercicio($usuario->getSaldoDelEjercicio()-$total+$saldo);
+                    $usuario->setVentasACredito($usuario->getVentasACredito()+1);
                     UsuarioDAO::save($usuario);
                 }
                 else
