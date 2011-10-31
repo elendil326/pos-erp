@@ -8,7 +8,9 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	
   class PersonalYAgentesController implements IPersonalYAgentes{
   
-  	
+  	/*
+         *
+         */
     private static function validarString($string, $max_length, $nombre_variable,$min_length=0)
 	{
 		if(strlen($string)<=$min_length||strlen($string)>$max_length)
@@ -1232,7 +1234,8 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                         $orden != "nombre" &&
                         $orden != "descripcion" &&
                         $orden != "descuento" &&
-                        $orden != "salario"
+                        $orden != "salario" &&
+                        !is_null($orden)
                 )
                 {
                     Logger::log("La variable orden: ".$orden." no es una columna de la tabla rol");
