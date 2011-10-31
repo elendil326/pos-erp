@@ -9,7 +9,8 @@ require_once("interfaces/PersonalYAgentes.interface.php");
   class PersonalYAgentesController implements IPersonalYAgentes{
   
   	/*
-         *
+         *Se valida que un string tenga longitud en un rango de un maximo inclusivo y un minimo exclusvio.
+         *Regresa true cuando es valido, y un string cuando no lo es.
          */
     private static function validarString($string, $max_length, $nombre_variable,$min_length=0)
 	{
@@ -21,7 +22,10 @@ require_once("interfaces/PersonalYAgentes.interface.php");
     }
 
 
-
+        /*
+         * Se valida que un numero este en un rango de un maximo y un minimo inclusivos
+         * Regresa true cuando es valido, y un string cuando no lo es
+         */
 	private static function validarNumero($num, $max_length, $nombre_variable, $min_length=0)
 	{
 	    if($num<$min_length||$num>$max_length)
@@ -31,6 +35,12 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	    return true;
 	}
 
+
+        /*
+         * Valida los parametros de la tabla rol haciendo uso de las validaciones basicas de string y num,
+         * el maximo y el minimo se toman de la tabla y se aplican otras validaciones de acuerdo al uso
+         * Regresa true cuando son validos, un string con el error cuando no lo es
+         */
       private static function ValidarParametrosRol
       (
                 $id_rol=null,
@@ -40,6 +50,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 		$salario = null
       )
       {
+          //Valida si el rol existe en la base de datos
           if(!is_null($id_rol))
           {
               if(is_null(RolDAO::getByPK($id_rol)))
@@ -47,24 +58,28 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                   return "El rol con id: ".$id_rol." no existe";
               }
           }
+          //valida la descripcion
           if(!is_null($descripcion))
           {
               $e=self::validarString($descripcion, 255, "descripcion");
                     if(is_string($e))
                         return $e;
           }
+          //valida el nombre
           if(!is_null($nombre))
           {
               $e=self::validarString($nombre, 30, "nombre");
               if(is_string($e))
                   return $e;
           }
+          //valida el descuento, el descuento es un porcentaje asi que no puede ser mayor a 100
           if(!is_null($descuento))
           {
               $e=self::validarNumero($descuento, 100, "descuento");
                     if(is_string($e))
                         return $e;
           }
+          //valida e salario
           if(!is_null($salario))
           {
               $e=self::validarNumero($salario, 1.8e200, "salario");
@@ -74,6 +89,11 @@ require_once("interfaces/PersonalYAgentes.interface.php");
           return true;
       }
 
+      /*
+       * Valida los parametros de la tabla usuario haciendo uso de las valdiaciones basicas de strng y num,
+       * se aplican validaciones extras de acuerdo a su uso
+       * Regresa true cuando son validos, un string con el error cuando no lo es
+       */
       private static function validarParametrosUsuario
       (
               $id_usuario = null,
@@ -113,47 +133,56 @@ require_once("interfaces/PersonalYAgentes.interface.php");
               $cuenta_bancaria = null
       )
       {
+          //valida que el id del usuario exista en la base de datos
           if(!is_null($id_usuario))
           {
               if(is_null(UsuarioDAO::getByPK($id_usuario)))
                   return "El usuario con id: ".$id_usuario." no existe";
           }
+          //valida que el id de la direccion exista en la base de datos
           if(!is_null($id_direccion))
           {
               if(is_null(DireccionDAO::getByPK($id_direccion)))
                   return "La direccion con id: ".$id_direccion." no existe";
           }
+          //valida el id de la sucursal exista en la base de datos
           if(!is_null($id_sucursal))
           {
               if(is_null(SucursalDAO::getByPK($id_sucursal)))
                   return "La sucursal con id: ".$id_sucursal." no existe";
           }
+          //valida que el id del rol exista en la base de datos
           if(!is_null($id_rol))
           {
               if(is_null(RolDAO::getByPK($id_rol)))
                   return "El rol con id: ".$id_rol." no existe";
           }
+          //valida que la clasificacion del cliente exista en la base de datos
           if(!is_null($id_clasificacion_cliente))
           {
               if(is_null(ClasificacionClienteDAO::getByPK($id_clasificacion_cliente)))
                   return "La clasificacion cliente con id: ".$id_clasificacion_cliente." no existe";
           }
+          //valida que la clasificacion del proveedor exista en la base de datos
           if(!is_null($id_clasificacion_proveedor))
           {
               if(is_null(ClasificacionProveedorDAO::getByPK($id_clasificacion_proveedor)))
                   return "La clasficiacion proveedor con id: ".$id_clasificacion_proveedor." no existe";
           }
+          //valida que la moneda exista en la base de datos
           if(!is_null($id_moneda))
           {
               if(is_null(MonedaDAO::getByPK($id_moneda)))
                   return "La moneda con id: ".$id_moneda." no existe";
           }
+          //valida el nombre
           if(!is_null($nombre))
           {
               $e=self::validarString($nombre, 100, "nombre");
               if(is_string($e))
                   return $e;
           }
+          //valida el rfc, el rfc solo puede estar compuesto por Letras mayusculas y numeros
           if(!is_null($rfc))
           {
               $e=self::validarString($rfc, 30, "rfc");
@@ -162,6 +191,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
               if(preg_match('/[^A-Z0-9]/' ,$rfc))
                   return "El rfc ".$rfc." contiene caracteres fuera del rango A-Z y 0-9";
           }
+          //valida el curp, el curp solo puede tener letras mayusculas y numeros
           if(!is_null($curp))
           {
               $e=self::validarString($curp, 30, "curp");
@@ -170,12 +200,14 @@ require_once("interfaces/PersonalYAgentes.interface.php");
               if(preg_match('/[^A-Z0-9]/' ,$curp))
                   return "El curp ".$curp." contiene caracteres fuera del rango A-Z y 0-9";
           }
+          //valida la comision por ventas
           if(!is_null($comision_ventas))
           {
               $e=self::validarNumero($comision_ventas, 100, "comision de ventas");
               if(is_string($e))
                   return $e;
           }
+          //valida el telefono. Los telefonos solo pueden tener numeros, guiones,parentesis,asteriscos y espacios en blanco
           if(!is_null($telefono_personal1))
           {
               $e=self::validarString($telefono_personal1, 20, "Telefono personal");
@@ -184,6 +216,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
               if(preg_match('/[^0-9\- \(\)\*]/',$telefono_personal1))
                   return "El telefono ".$telefono_personal1." tiene caracteres fuera del rango 0-9,-,(,),* o espacio vacío";
           }
+          //valida el telefono. Los telefonos solo pueden tener numeros, guiones,parentesis,asteriscos y espacios en blanco
           if(!is_null($telefono_personal2))
           {
               $e=self::validarString($telefono_personal2, 20, "Telefono personal alterno");
@@ -192,36 +225,42 @@ require_once("interfaces/PersonalYAgentes.interface.php");
               if(preg_match('/[^0-9\- \(\)\*]/',$telefono_personal2))
                   return "El telefono ".$telefono_personal2." tiene caracteres fuera del rango 0-9,-,(,),* o espacio vacío";
           }
+          //valida el activo. Activo es una variable booleana.
           if(!is_null($activo))
           {
               $e=self::validarNumero($activo, 1, "activo");
               if(is_string($e))
                   return $e;
           }
+          //valida el limite de credito
           if(!is_null($limite_credito))
           {
               $e=self::validarNumero($limite_credito, 1.8e200, "limite de credito");
               if(is_string($e))
                   return $e;
           }
+          //valida el descuento. El descuento es un porcentaje y no puede ser mayor a 100
           if(!is_null($descuento))
           {
-              $e=self::validarNumero($descuento, 1.8e200, "descuento");
+              $e=self::validarNumero($descuento, 100, "descuento");
               if(is_string($e))
                   return $e;
           }
+          //valida el password, El pasword tiene que tener una longitud mayor o igual a 4
           if(!is_null($password))
           {
-              $e=self::validarString($password, 1.8e200, "password",3);
+              $e=self::validarString($password, 1.8e200, "password",4);
               if(is_string($e))
                   return $e;
           }
+          //valida el salario
           if(!is_null($salario))
           {
               $e=self::validarNumero($salario, 1.8e200, "salario");
               if(is_string($e))
                   return $e;
           }
+          //valida el correo electronico segun las especificaciones de php
           if(!is_null($correo_electronico))
           {
               $e=self::validarString($correo_electronico, 30, "correo electronico");
@@ -230,6 +269,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
               if(!is_string(filter_var($email, FILTER_VALIDATE_EMAIL)))
                       return "El correo electronico ".$correo_electronico." no es valido";
           }
+          //valida que una pagina web tenga un formato valido.
           if(!is_null($pagina_web))
           {
               $e=self::validarString($pagina_web, 30, "pagina web");
@@ -239,72 +279,84 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                     !preg_match('/^[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,6}'.'((:[0-9]{1,5})?\/.*)?$/i' ,$pagina_web))
                             return "La direccion web ".$pagina_web." no cumple el formato valido";
           }
+          //valida el saldo del ejercicio
           if(!is_null($saldo_del_ejercicio))
           {
               $e=self::validarNumero($saldo_del_ejercicio, 1.8e200, $saldo_del_ejercicio, -1.8e200);
               if(is_string($e))
                   return $e;
           }
+          //valida las ventas a credito
           if(!is_null($ventas_a_credito))
           {
               $e=self::validarNumero($ventas_a_credito, PHP_INT_MAX, "ventas a credito");
               if(is_string($e))
                   return $e;
           }
+          //valida el represnetante legal
           if(!is_null($representante_legal))
           {
               $e=self::validarString($representante_legal, 100, "representante legal");
               if(is_string($e))
                   return $e;
           }
+          //valida la facturacion a terceros. Es un boleano
           if(!is_null($facturar_a_terceros))
           {
               $e=self::validarNumero($facturar_a_terceros, 1, "facturar a terceros");
               if(is_string($e))
                   return $e;
           }
+          //valida los dias de pago
           if(!is_null($dia_de_pago))
           {
               $e=self::validarString($dia_de_pago, strlen("YYYY-mm-dd HH:ii:ss"), "dia de pago");
               if(is_string($e))
                   return $e;
           }
+          //valida el boleano mensajeria
           if(!is_null($mensajeria))
           {
               $e=self::validarNumero($mensajeria, 1, "mensajeria");
               if(is_string($e))
                   return $e;
           }
+          //valida los intereses moratorios
           if(!is_null($intereses_moratorios))
           {
               $e=self::validarNumero($intereses_moratorios, 1.8e200, "intereses moratorios");
               if(is_string($e))
                   return $e;
           }
+          //valida la denominacion comercial
           if(!is_null($denominacion_comercial))
           {
               $e=self::validarString($denominacion_comercial, 100, "denominacion comercial");
               if(is_string($e))
                   return $e;
           }
+          //valida los dias de credito
           if(!is_null($dias_de_credito))
           {
               $e=self::validarNumero($dias_de_credito, PHP_INT_MAX, "dias de credito");
               if(is_string($e))
                   return $e;
           }
+          //valida la cuenta de mensajeria
           if(!is_null($cuenta_de_mensajeria))
           {
               $e=self::validarString($cuenta_de_mensajeria, 50, "cuenta de mensajeria");
               if(is_string($e))
                   return $e;
           }
+          //valida lso dias de revision
           if(!is_null($dia_de_revision))
           {
               $e=self::validarString($dia_de_revision, strlen("YYYY-mm-dd HH:ii:ss"), "dia de revision");
               if(is_string($e))
                   return $e;
           }
+          //valida el codigo de usuario
           if(!is_null($codigo_usuario))
           {
               $e=self::validarString($codigo_usuario, 50, "codigo de usuario");
@@ -313,18 +365,21 @@ require_once("interfaces/PersonalYAgentes.interface.php");
               if(preg_match('/[^a-zA-Z0-9]/', $codigo_usuario))
                       return "El codigo de usuario ".$codigo_usuario." no tiene solo caracteres alfanumericos";
           }
+          //valida los dias de embarque
           if(!is_null($dias_de_embarque))
           {
               $e=self::validarNumero($dias_de_embarque, PHP_INT_MAX, "dias de embarque");
               if(is_string($e))
                   return $e;
           }
+          //valida el tiempo de entrega
           if(!is_null($tiempo_entrega))
           {
               $e=self::validarNumero($tiempo_entrega, PHP_INT_MAX, "tiempo de entrega");
               if(is_string($e))
                   return $e;
           }
+          //valida la cuenta bancaria
           if(!is_null($cuenta_bancaria))
           {
               $e=self::validarString($cuenta_bancaria, 50, "cuenta bancaria");
@@ -334,12 +389,18 @@ require_once("interfaces/PersonalYAgentes.interface.php");
           return true;
       }
 
+
+      /*
+       * Valida los campos de la tabla Impuesto_usuario
+       * Regresa true cuando son validos, un string con el error cuando no lo es
+       */
       private static function validarParametrosImpuestoUsuario
       (
               $id_impuesto = null,
               $id_usuario = null
       )
       {
+          //valida que el impuesto exista en la base de datos
         if(!is_null($id_impuesto))
         {
             if(is_null(ImpuestoDAO::getByPK($id_impuesto)))
@@ -347,6 +408,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 return "El impuesto con id: ".$id_impuesto." no existe";
             }
         }
+        //valida que el usuario exista en la base de datos
         if(!is_null($id_usuario))
         {
             if(is_null(UsuarioDAO::getByPK($id_usuario)))
@@ -357,12 +419,18 @@ require_once("interfaces/PersonalYAgentes.interface.php");
         return true;
       }
 
+
+      /*
+       * Valida los campos de al tabla retencion_usuario
+       * Regresa true cuando son validos, un string con el error cuando no lo es
+       */
       private static function validarParametrosRetencionUsuario
       (
               $id_retencion = null,
               $id_usuario = null
       )
       {
+          //valida que la retencion exista en la base de datos
           if(!is_null($id_retencion))
           {
               if(is_null(RetencionDAO::getByPK($id_retencion)))
@@ -370,6 +438,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                   return "La retencion con id: ".$id_retencion." no existe";
               }
           }
+          //valida que el usuario exista en la base de datos
           if(!is_null($id_usuario))
           {
               if(is_null(UsuarioDAO::getByPK($id_usuario)))
@@ -493,6 +562,9 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	)
 	{  
             Logger::log("Creando usuario nuevo");
+
+            //Se validan los parametros obtenidos
+
             $validar=self::validarParametrosUsuario(null, null, $id_sucursal, $id_rol,
                     $id_clasificacion_cliente, $id_clasificacion_proveedor, $id_moneda,
                     null, $nombre, $rfc, $curp, $comision_ventas, $telefono_personal1,
@@ -501,11 +573,15 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                     $representante_legal,$facturar_a_terceros,$dia_de_pago,$mensajeria,
                     $intereses_moratorios,$denominacion_comercial,$dias_de_credito,
                     $cuenta_mensajeria,$dia_de_revision,$codigo_usuario,$dias_de_embarque,$tiempo_entrega,$cuenta_bancaria);
+
+            //se verifica que la validacion haya sido correcta
             if(is_string($validar))
             {
                 Logger::error($validar);
                 throw new Exception($validar);
             }
+
+            //se verifica que el codigo de usuario no sea repetido
             $usuarios=UsuarioDAO::search(new Usuario(array( "codigo_usuario" => $codigo_usuario )));
             foreach($usuarios as $usuario)
             {
@@ -515,6 +591,8 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                     throw new Exception("El codigo de usuario ".$codigo_usuario." ya esta en uso");
                 }
             }
+
+            //se verifica que el rfc no sea repetido
             $usuarios=UsuarioDAO::search(new Usuario(array( "rfc" => $rfc )));
             foreach($usuarios as $usuario)
             {
@@ -524,6 +602,8 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                     throw new Exception("El rfc ".$rfc." ya existe");
                 }
             }
+
+            //se verifica que la curp no sea repetida
             $usuarios=UsuarioDAO::search(new Usuario(array( "curp" => $curp )));
             foreach($usuarios as $usuario)
             {
@@ -533,11 +613,15 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                     throw new Exception("La curp ".$curp." ya existe");
                 }
             }
+
+            //se verifica que los telefonos no sean iguales
             if(!is_null($telefono_personal1)&&$telefono_personal1==$telefono_personal2)
             {
                 Logger::error("El telefono personal es igual al telefno personal alterno: ".$telefono_personal1."  ".$telefono_personal2);
                 throw new Exception("El telefono personal es igual al telefno personal alterno: ".$telefono_personal1."  ".$telefono_personal2);
             }
+
+            //se verifica que el correo electronico no se repita
             if(!is_null($correo_electronico))
             {
                 $usuarios=UsuarioDAO::search(new Usuario( array( "correo_electronico" => $correo_electronico ) ));
@@ -550,6 +634,8 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                     }
                 }
             }
+
+            //se verifica como medida de seguridad que el password no sea igual al codigo de usaurio ni al correo electronico
             if($password==$codigo_usuario||$password==$correo_electronico)
             {
                 Logger::error("El password (".$password.") no puede ser igual al codigo de usuario
@@ -557,10 +643,14 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 throw new Exception("El password (".$password.") no puede ser igual al codigo de usuario
                     (".$codigo_usuario.") ni al correo electronico (".$correo_electronico.")");
             }
+
+            //se ponen los valores por default en limite de credito y saldo del ejercicio
             if(is_null($limite_credito))
                 $limite_credito=0;
             if(is_null($saldo_del_ejercicio))
                 $saldo_del_ejercicio=0;
+
+            //se crea el objeto usuario con todos los parametros
             $usuario = new Usuario(
                         array
                             (
@@ -600,26 +690,35 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                                 "consignatario"             => 0
                             )
                         );
+
+            //se inicializan los ids de las direcciones
             $id_direccion1=-1;
             $id_direccion2=-1;
             DAO::transBegin();
             try
             {
+                //si se paso un parametro obligatorio de la direccion, se intenta crear la misma
                 if(!is_null($calle))
                 {
                     $id_direccion1 = DireccionController::NuevaDireccion($calle, $numero_exterior, $colonia,
                             $id_ciudad, $codigo_postal, $numero_interior, $texto_extra, $telefono1, $telefono2);
                 }
+
+                //si se paso un parametro obligatorio de la direccion alterna, se intenta crear la misma
                 if(!is_null($calle_2))
                 {
                     $id_direccion2 = DireccionController::NuevaDireccion($calle_2, $numero_exterior_2, $colonia_2,
                             $id_ciudad_2, $codigo_postal_2, $numero_interior_2, $texto_extra_2, $telefono1_2, $telefono2_2);
                 }
+
+                //si se crearon las direcciones se asignan al usuario
                 if($id_direccion1>0)
                     $usuario->setIdDireccion($id_direccion1);
                 if($id_direccion2>0)
                     $usuario->setIdDireccionAlterna($id_direccion2);
                 UsuarioDAO::save($usuario);
+
+                //si se pasaron impuestos, se validan y se agregan a la tabla impuesto_usuario
                 if(!is_null($impuestos))
                 {
                     foreach($impuestos as $id_impuesto)
@@ -630,6 +729,8 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                         ImpuestoUsuarioDAO::save(new ImpuestoUsuario(array( "id_impuesto" => $id_impuesto , "id_usuario" => $usuario->getIdUsuario())));
                     }
                 }
+
+                //si se pasaron retenciones, se validan y se agregan a la tabla retencion_usuario
                 if(!is_null($retenciones))
                 {
                     foreach($retenciones as $id_retencion)
