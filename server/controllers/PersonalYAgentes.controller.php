@@ -1634,8 +1634,12 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 $id_permiso = null
 	)
 	{  
-
-  
+            Logger::log("Listando roles con sus permisos");
+            if(!is_null($id_rol) || !is_null($id_permiso))
+                $permisos_roles = PermisoRolDAO::search(new PermisoRol(array( "id_rol" => $id_rol , "id_permiso" => $id_permiso )));
+            else
+                $permisos_roles = PermisoRolDAO::getAll();
+            return array( "permisos_roles" => $permisos_roles);
 	}
 
         public static function ListaPermisoUsuario
