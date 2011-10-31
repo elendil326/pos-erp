@@ -1262,10 +1262,16 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 Logger::error("El permiso con id:".$id_permiso." no existe");
                 throw new Exception("El permiso no existe");
             }
-            if(is_null(UsuarioDAO::getByPK($id_usuario)))
+            $usuario=UsuarioDAO::getByPK($id_usuario);
+            if(is_null($usuario))
             {
                 Logger::error("El usuario con id:".$id_usuario." no existe");
                 throw new Exception("El usuario no existe");
+            }
+            if(!$usuario->getActivo())
+            {
+                Logger::error("El usuario con id:".$id_usuario." esta inactivo");
+                throw new Exception("El usuario esta inactivo y no se puede modificar");
             }
             DAO::transBegin();
             try
@@ -1312,7 +1318,8 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             {
                 foreach($usuarios as $usuario)
                 {
-                    self::AsignarPermisoUsuario($usuario->getIdUsuario(), $id_permiso);
+                    if($usuario->getActivo())
+                        PermisoUsuarioDAO::save(new PermisoUsuario( array( "id_permiso" => $id_permiso , "id_usuario" => $usuario->getIdUsuario() ) ));
                 }
                 PermisoRolDAO::save(new PermisoRol( array( "id_permiso" => $id_permiso , "id_rol" => $id_rol ) ));
             }
@@ -1339,7 +1346,31 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 		$id_rol
 	)
 	{  
-
+            Logger::log("Quitando permiso ".$id_permiso." al rol ".$id_rol);
+            $permiso_rol = PermisoRolDAO::getByPK($id_permiso, $id_rol);
+            if(is_null($permiso_rol))
+            {
+                Logger::error("El rol ".$id_rol." no tiene el permiso ".$id_rol);
+                throw new Exception("El rol no tiene ese permiso");
+            }
+            $usuarios = UsuarioDAO::search( new Usuario( array( "id_rol" => $id_rol ) ) );
+            DAO::transBegin();
+            try
+            {
+                foreach($usuarios as $usuario)
+                {
+                    if(!is_null(PermisoUsuarioDAO::getByPK($id_permiso, $usuario->getIdUsuario()))&&$usuario->getActivo())
+                    {
+                        PermisoUsuarioDAO::delete(new PermisoUsuario( array( "id_permiso" => $id_permiso , "id_usuario" => $usuario->getIdUsuario() ) ));
+                    }
+                }
+                PermisoRolDAO::delete($permiso_rol);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+            }
+            DAO::transEnd();
 	}
   
 	/**
@@ -1356,6 +1387,36 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	)
 	{  
             Logger::log("Quitando permiso ".$id_permiso." a usuario ".$id_usuario);
+            $permiso_usuario = PermisoUsuarioDAO::getByPK($id_permiso, $id_usuario);
+            if(is_null($permiso_usuario))
+            {
+                Logger::error("El usuario ".$id_usuario." no tiene el permiso ".$id_permiso);
+                throw new Exception("El usuario no tiene ese permiso");
+            }
+            $usuario=UsuarioDAO::getByPK($id_usuario);
+            if(is_null($usuario))
+            {
+                Logger::error("El usuario con id:".$id_usuario." no existe");
+                throw new Exception("El usuario no existe");
+            }
+            if(!$usuario->getActivo())
+            {
+                Logger::error("El usuario con id:".$id_usuario." esta inactivo");
+                throw new Exception("El usuario esta inactivo y no se puede modificar");
+            }
+            DAO::transBegin();
+            try
+            {
+                PermisoUsuarioDAO::delete($permiso_usuario);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo eliminar el permiso del usuario: ".$e);
+                throw new Exception("No se pudo quitar el permiso del usuario");
+            }
+            DAO::transEnd();
+            Logger::log("Permiso eliminado exitosamente");
 	}
   
 	/**
