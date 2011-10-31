@@ -1239,6 +1239,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                     throw new Exception("La variable orden no es valida");
                 }
 		$roles = RolDAO::getAll(null,null,$orden);
+                Logger::log("Lista de roles obtenida con ".count($roles)." elementos");
   		return array( "roles" => $roles );
 	}
   
@@ -1255,8 +1256,30 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 		$id_permiso
 	)
 	{  
-  
-  
+            Logger::log("Asignando permiso ".$id_permiso." al usuario ".$id_usuario);
+            if(is_null(PermisoDAO::getByPK($id_permiso)))
+            {
+                Logger::error("El permiso con id:".$id_permiso." no existe");
+                throw new Exception("El permiso no existe");
+            }
+            if(is_null(UsuarioDAO::getByPK($id_usuario)))
+            {
+                Logger::error("El usuario con id:".$id_usuario." no existe");
+                throw new Exception("El usuario no existe");
+            }
+            DAO::transBegin();
+            try
+            {
+                PermisoUsuarioDAO::save(new PermisoUsuario( array( "id_permiso" => $id_permiso , "id_usuario" => $id_usuario ) ));
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo asignar el permiso al usuario: ".$e);
+                throw new Exception("No se pudo asignar el permiso al usuario");
+            }
+            DAO::transEnd();
+            Logger::log("Permiso asignado exitosamente");
 	}
   
 	/**
@@ -1272,8 +1295,35 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 		$id_rol
 	)
 	{  
-  
-  
+            Logger::log("Asignando permiso ".$id_permiso." al rol ".$id_rol);
+            if(is_null(PermisoDAO::getByPK($id_permiso)))
+            {
+                Logger::error("El permiso con id: ".$id_permiso." no existe");
+                throw new Exception("El permiso no existe");
+            }
+            if(is_null(RolDAO::getByPK($id_rol)))
+            {
+                Logger::error("El rol con id: ".$id_rol." no existe");
+                throw new Exception("El rol no existe");
+            }
+            $usuarios=UsuarioDAO::search(new Usuario( array( "id_rol" => $id_rol ) ));
+            DAO::transBegin();
+            try
+            {
+                foreach($usuarios as $usuario)
+                {
+                    self::AsignarPermisoUsuario($usuario->getIdUsuario(), $id_permiso);
+                }
+                PermisoRolDAO::save(new PermisoRol( array( "id_permiso" => $id_permiso , "id_rol" => $id_rol ) ));
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo asignar el permiso al rol: ".$e);
+                throw new Excpetion("No se pudo asignar el permiso al rol");
+            }
+            DAO::transEnd();
+            Logger::log("Permiso asignado exitosamente");
 	}
   
 	/**
@@ -1289,8 +1339,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 		$id_rol
 	)
 	{  
-  
-  
+
 	}
   
 	/**
@@ -1306,8 +1355,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 		$id_usuario
 	)
 	{  
-  
-  
+            Logger::log("Quitando permiso ".$id_permiso." a usuario ".$id_usuario);
 	}
   
 	/**
