@@ -1226,7 +1226,19 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	)
 	{
                 Logger::log("Listando roles con orden: ".$orden);
-		$roles = RolDAO::getAll();
+                if
+                (
+                        $orden != "id_rol" &&
+                        $orden != "nombre" &&
+                        $orden != "descripcion" &&
+                        $orden != "descuento" &&
+                        $orden != "salario"
+                )
+                {
+                    Logger::log("La variable orden: ".$orden." no es una columna de la tabla rol");
+                    throw new Exception("La variable orden no es valida");
+                }
+		$roles = RolDAO::getAll(null,null,$orden);
   		return array( "roles" => $roles );
 	}
   
