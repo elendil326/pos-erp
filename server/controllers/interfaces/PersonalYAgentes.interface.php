@@ -21,10 +21,10 @@
   static function EditarRol
 	(
 		$id_rol, 
-		$descuento = 0, 
-		$nombre = "", 
-		$salario = 0, 
-		$descripcion = ""
+		$descuento = null,
+		$nombre = null,
+		$salario = null,
+		$descripcion = null
 	);  
   
   

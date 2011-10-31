@@ -1488,13 +1488,48 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	(
 		$id_rol, 
 		$salario = null, 
-		$nombre = "", 
+		$nombre = null,
 		$descuento = null, 
-		$descripcion = ""
+		$descripcion = null
 	)
 	{  
-  
-  
+            Logger::log("Editando rol ".$id_rol);
+            $validar = self::ValidarParametrosRol($id_rol, $descripcion, $nombre, $descuento, $salario);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            $rol = RolDAO::getByPK($id_rol);
+            if(!is_null($salario))
+            {
+                $rol->setSalario($salario);
+            }
+            if(!is_null($nombre))
+            {
+                $rol->setNombre($nombre);
+            }
+            if(!is_null($descuento))
+            {
+                $rol->setDescuento($descuento);
+            }
+            if(!is_null($descripcion))
+            {
+                $rol->setDescripcion($descripcion);
+            }
+            DAO::transBegin();
+            try
+            {
+                RolDAO::save($rol);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo editar el rol: ".$e);
+                throw new Exception("No se pudo editar el rol");
+            }
+            DAO::transEnd();
+            Logger::log("Rol editado exitosamente");
 	}
   
 	/**
