@@ -1543,8 +1543,35 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 		$id_usuario
 	)
 	{  
-  
-  
+            Logger::log("Eliminando usuario ".$id_usuario);
+            $usuario=UsuarioDAO::getByPK($id_usuario);
+            if(is_null($usuario))
+            {
+                Logger::error("El usuario con id ".$id_usuario." no existe");
+                throw new Exception("El usuario no existe");
+            }
+            if(!$usuario->getActivo())
+            {
+                Logger::warn("El usuario con id: ".$id_usuario." ya esta inactivo");
+                throw new Exception("El usuario ya esta inactivo");
+            }
+            if($usuario->getSaldoDelEjercicio()!=0)
+            {
+                Logger::error("El usuario con id: ".$id_usuario." no tiene un saldo en ceros");
+                throw new Exception("El usuario no tiene un saldo en ceros");
+            }
+            $usuario->setActivo(0);
+            $usuario->setFechaBaja(date("Y-m-d H:i:s"));
+            DAO::transBegin();
+            try
+            {
+                UsuarioDAO::save($usuario);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+            }
+            DAO::transEnd();
 	}
   
 	/**
