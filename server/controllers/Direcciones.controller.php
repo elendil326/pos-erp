@@ -31,7 +31,7 @@ class DireccionController{
 	    return true;
 	}
 
-	private static function validarParametrosDireccion
+	public static function validarParametrosDireccion
         (
                 $id_direccion = null,
                 $calle = null,

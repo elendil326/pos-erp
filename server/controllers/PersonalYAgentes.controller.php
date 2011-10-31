@@ -724,7 +724,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                         $ordenar != "cuenta_bancaria"
                 )
                 {
-                    Logger::error("El parametro ordenar :".$ordenar." no es una columna de la tabla usuario");
+                    Logger::error("El parametro ordenar: ".$ordenar." no es una columna de la tabla usuario");
                     throw new Exception("El parametro ordenar es invalido");
                 }
             }
@@ -840,8 +840,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 		$curp = null, 
 		$numero_exterior_2 = null, 
 		$numero_exterior = null, 
-		$denominacion_comercial = null, 
-		$descuento_es_porcentaje = null, 
+		$denominacion_comercial = null,  
 		$id_clasificacion_cliente = null, 
 		$cuenta_bancaria = null, 
 		$dia_de_revision = null, 
@@ -857,10 +856,361 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	{  
             Logger::log("Editando usuario: ".$id_usuario);
             $validar=self::validarParametrosUsuario($id_usuario, null, $id_sucursal, $id_rol,
-                    $id_clasificacion_cliente, $id_clasificacion_proveedor, $id_moneda, null,
-                    $nombre, $rfc, $curp, $comision_ventas, $telefono_personal_1, $telefono_personal_2,
-                    $limite_de_credito, $descuento, $password, $salario, $correo_electronico);
-  
+                    $id_clasificacion_cliente, $id_clasificacion_proveedor, $id_moneda,
+                    null, $nombre, $rfc, $curp, $comision_ventas, $telefono_personal_1,
+                    $telefono_personal_2, $limite_de_credito, $descuento, $password, $salario,
+                    $correo_electronico,$pagina_web,$saldo_del_ejercicio,$ventas_a_credito,
+                    $representante_legal,$facturar_a_terceros,$dia_de_pago,$mensajeria,
+                    $intereses_moratorios,$denominacion_comercial,$dias_de_credito,
+                    $cuenta_mensajeria,$dia_de_revision,$codigo_usuario,$dias_de_embarque,$tiempo_entrega,$cuenta_bancaria);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            $validar=DireccionController::validarParametrosDireccion(null, $calle, $numero_exterior, $numero_interior,
+                    $texto_extra, $colonia, $id_ciudad, $codigo_postal, $telefono1, $telefono2);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            $validar=DireccionController::validarParametrosDireccion(null, $calle_2, $numero_exterior_2, $numero_interior_2, $texto_extra_2, $colonia_2, $id_ciudad_2, $codigo_postal_2, $telefono1_2, $telefono2_2);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            $usuario = UsuarioDAO::getByPK($id_usuario);
+            $direccion1 = DireccionDAO::getByPK($usuario->getIdDireccion());
+            $direccion2 = DireccionDAO::getByPK($usuario->getIdDireccionAlterna());
+            $cambio_direccion1 = false;
+            $cambio_direccion2 = false;
+            $nueva_direccion1 = false;
+            $nueva_direccion2 = false;
+            if(is_null($direccion1))
+            {
+                $nueva_direccion1=true;
+                $direccion1=new Direccion();
+            }
+            if(is_null($direccion2))
+            {
+                $nueva_direccion2=true;
+                $direccion2=new Direccion();
+            }
+          if(!is_null($id_sucursal))
+          {
+              $usuario->setIdSucursal($id_sucursal);
+          }
+          if(!is_null($id_rol))
+          {
+              if($usuario->getIdRol()!=$id_rol)
+              {
+                $usuario->setIdRol($id_rol);
+                $usuario->setFechaAsignacionRol(date("Y-m-d H:i:s"));
+              }
+          }
+          if(!is_null($id_clasificacion_cliente))
+          {
+              $usuario->setIdClasificacionCliente($id_clasificacion_cliente);
+          }
+          if(!is_null($id_clasificacion_proveedor))
+          {
+              $usuario->setIdClasificacionProveedor($id_clasificacion_proveedor);
+          }
+          if(!is_null($id_moneda))
+          {
+              $usuario->setIdMoneda($id_moneda);
+          }
+          if(!is_null($nombre))
+          {
+              $usuario->setNombre($nombre);
+          }
+          if(!is_null($rfc))
+          {
+              $usuario->setRfc($rfc);
+          }
+          if(!is_null($curp))
+          {
+              $usuario->setCurp($curp);
+          }
+          if(!is_null($comision_ventas))
+          {
+              $usuario->setComisionVentas($comision_ventas);
+          }
+          if(!is_null($telefono_personal_1))
+          {
+              $usuario->setTelefonoPersonal1($telefono_personal_1);
+          }
+          if(!is_null($telefono_personal_2))
+          {
+              $usuario->setTelefonoPersonal2($telefono_personal_2);
+          }
+          if(!is_null($limite_de_credito))
+          {
+              $usuario->setLimiteCredito($limite_de_credito);
+          }
+          if(!is_null($descuento))
+          {
+              $usuario->setDescuento($descuento);
+          }
+          if(!is_null($password))
+          {
+              $usuario->setPassword(hash("md5",$password));
+          }
+          if(!is_null($salario))
+          {
+              $usuario->setSalario($salario);
+          }
+          if(!is_null($correo_electronico))
+          {
+              $usuario->setCorreoElectronico($correo_electronico);
+          }
+          if(!is_null($pagina_web))
+          {
+              $usuario->setPaginaWeb($pagina_web);
+          }
+          if(!is_null($saldo_del_ejercicio))
+          {
+              $usuario->setSaldoDelEjercicio($saldo_del_ejercicio);
+          }
+          if(!is_null($ventas_a_credito))
+          {
+              $usuario->setVentasACredito($ventas_a_credito);
+          }
+          if(!is_null($representante_legal))
+          {
+              $usuario->setRepresentanteLegal($representante_legal);
+          }
+          if(!is_null($facturar_a_terceros))
+          {
+              $usuario->setFacturarATerceros($facturar_a_terceros);
+          }
+          if(!is_null($dia_de_pago))
+          {
+              $usuario->setDiaDePago($dia_de_pago);
+          }
+          if(!is_null($mensajeria))
+          {
+              $usuario->setMensajeria($mensajeria);
+          }
+          if(!is_null($intereses_moratorios))
+          {
+              $usuario->setInteresesMoratorios($intereses_moratorios);
+          }
+          if(!is_null($denominacion_comercial))
+          {
+              $usuario->setDenominacionComercial($denominacion_comercial);
+          }
+          if(!is_null($dias_de_credito))
+          {
+              $usuario->setDiasDeCredito($dias_de_credito);
+          }
+          if(!is_null($cuenta_mensajeria))
+          {
+              $usuario->setCuentaDeMensajeria($cuenta_mensajeria);
+          }
+          if(!is_null($dia_de_revision))
+          {
+              $usuario->setDiaDeRevision($dia_de_revision);
+          }
+          if(!is_null($codigo_usuario))
+          {
+              $usuario->setCodigoUsuario($codigo_usuario);
+          }
+          if(!is_null($dias_de_embarque))
+          {
+              $usuario->setDiasDeEmbarque($dias_de_embarque);
+          }
+          if(!is_null($tiempo_entrega))
+          {
+              $usuario->setTiempoEntrega($tiempo_entrega);
+          }
+          if(!is_null($cuenta_bancaria))
+          {
+              $usuario->setCuentaBancaria($cuenta_bancaria);
+          }
+            if(!is_null($calle))
+            {
+                $direccion1->setCalle($calle);
+                $cambio_direccion1=true;
+            }
+            if(!is_null($numero_exterior))
+            {
+                $direccion1->setNumeroExterior($numero_exterior);
+                $cambio_direccion1=true;
+            }
+            if(!is_null($numero_interior))
+            {
+                $direccion1->setNumeroInterior($numero_interior);
+                $cambio_direccion1=true;
+            }
+            if(!is_null($texto_extra))
+            {
+                $direccion1->setReferencia($texto_extra);
+                $cambio_direccion1=true;
+            }
+            if(!is_null($colonia))
+            {
+                $direccion1->setColonia($colonia);
+                $cambio_direccion1=true;
+            }
+            if(!is_null($id_ciudad))
+            {
+                $direccion1->setIdCiudad($id_ciudad);
+                $cambio_direccion1=true;
+            }
+            if(!is_null($codigo_postal))
+            {
+                $direccion1->setCodigoPostal($codigo_postal);
+                $cambio_direccion1=true;
+            }
+            if(!is_null($telefono1))
+            {
+                $direccion1->setTelefono($telefono1);
+                $cambio_direccion1=true;
+            }
+            if(!is_null($telefono2))
+            {
+                $direccion1->setTelefono2($telefono2);
+                $cambio_direccion1=true;
+            }
+            if(!is_null($calle_2))
+            {
+                $direccion2->setCalle($calle_2);
+                $cambio_direccion2=true;
+            }
+            if(!is_null($numero_exterior_2))
+            {
+                $direccion2->setNumeroExterior($numero_exterior_2);
+                $cambio_direccion2=true;
+            }
+            if(!is_null($numero_interior_2))
+            {
+                $direccion2->setNumeroInterior($numero_interior_2);
+                $cambio_direccion2=true;
+            }
+            if(!is_null($texto_extra_2))
+            {
+                $direccion2->setReferencia($texto_extra_2);
+                $cambio_direccion2=true;
+            }
+            if(!is_null($colonia_2))
+            {
+                $direccion2->setColonia($colonia_2);
+                $cambio_direccion2=true;
+            }
+            if(!is_null($id_ciudad_2))
+            {
+                $direccion2->setIdCiudad($id_ciudad_2);
+                $cambio_direccion2=true;
+            }
+            if(!is_null($codigo_postal_2))
+            {
+                $direccion2->setCodigoPostal($codigo_postal_2);
+                $cambio_direccion2=true;
+            }
+            if(!is_null($telefono1_2))
+            {
+                $direccion2->setTelefono($telefono1_2);
+                $cambio_direccion2=true;
+            }
+            if(!is_null($telefono2_2))
+            {
+                $direccion2->setTelefono2($telefono2_2);
+                $cambio_direccion2=true;
+            }
+            DAO::transBegin();
+            try
+            {
+                if($cambio_direccion1)
+                {
+                    $direccion1->setUltimaModificacion(date("Y-m-d H:i:s"));
+                    $id_u=LoginController::getCurrentUser();
+                    if(is_null($id_u))
+                    {
+                        throw new Exception("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
+                    }
+                    $direccion1->setIdUsuarioUltimaModificacion($id_u);
+                    DireccionDAO::save($direccion1);
+                    if($nueva_direccion1)
+                    {
+                        $usuario->setIdDireccion($direccion1->getIdDireccion());
+                    }
+                }
+                if($cambio_direccion2)
+                {
+                    $direccion2->setUltimaModificacion(date("Y-m-d H:i:s"));
+                    $id_u=LoginController::getCurrentUser();
+                    if(is_null($id_u))
+                    {
+                        throw new Exception("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
+                    }
+                    $direccion2->setIdUsuarioUltimaModificacion($id_u);
+                    DireccionDAO::save($direccion2);
+                    if($nueva_direccion2)
+                    {
+                        $usuario->setIdDireccion($direccion2->getIdDireccion());
+                    }
+                }
+                UsuarioDAO::save($usuario);
+                if(!is_null($impuestos))
+                {
+                    foreach($impuestos as $id_impuesto)
+                    {
+                        ImpuestoUsuarioDAO::save(new ImpuestoUsuario( array( "id_impuesto" => $id_impuesto , "id_usuario" => $id_usuario ) ));
+                    }
+                    $impuestos_usuario = ImpuestoUsuarioDAO::search( new ImpuestoUsuario( array( "id_usuario" => $id_usuario ) ));
+                    foreach($impuestos_usuario as $impuesto_usuario)
+                    {
+                        $encontrado=false;
+                        foreach($impuestos as $id_impuesto)
+                        {
+                            if($id_impuesto == $impuesto_usuario->getIdImpuesto())
+                            {
+                                $encontrado = true;
+                                break;
+                            }
+                        }
+                        if(!$encontrado)
+                        {
+                            ImpuestoUsuarioDAO::delete($impuesto_usuario);
+                        }
+                    }
+                }
+                if(!is_null($retenciones))
+                {
+                    foreach($retenciones as $id_retencion)
+                    {
+                        RetencionUsuarioDAO::save(new RetencionUsuario( array( "id_retencion" => $id_retencion , "id_usuario" => $id_usuario ) ));
+                    }
+                    $retenciones_usuario = RetencionUsuarioDAO::search( new RetencionUsuario( array( "id_usuario" => $id_usuario ) ));
+                    foreach($retenciones_usuario as $retencion_usuario)
+                    {
+                        $encontrado=false;
+                        foreach($retenciones as $id_retencion)
+                        {
+                            if($id_retencion == $retencion_usuario->getIdRetencion())
+                            {
+                                $encontrado = true;
+                                break;
+                            }
+                        }
+                        if(!$encontrado)
+                        {
+                            RetencionUsuarioDAO::delete($retencion_usuario);
+                        }
+                    }
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("El usuario ".$id_usuario." no ha podido se editado: ".$e);
+                throw new Exception("No se pudo editar al usuario");
+            }
+            DAO::transEnd();
+            Logger::log("Usuario ".$id_usaurio." editado exitosamente");
 	}
   
 	/**
@@ -872,11 +1222,11 @@ require_once("interfaces/PersonalYAgentes.interface.php");
  	 **/
 	public static function ListaRol
 	(
-		$orden = ""
+		$orden = null
 	)
-	{  
+	{
+                Logger::log("Listando roles con orden: ".$orden);
 		$roles = RolDAO::getAll();
-		
   		return array( "roles" => $roles );
 	}
   

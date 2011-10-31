@@ -53,7 +53,7 @@
  	 **/
   static function ListaRol
 	(
-		$orden = ""
+		$orden = null
 	);  
   
   
@@ -227,7 +227,6 @@
 		$id_rol = null, 
 		$colonia_2 = null, 
 		$denominacion_comercial = null, 
-		$descuento_es_porcentaje = null, 
 		$id_clasificacion_cliente = null, 
 		$cuenta_bancaria = null, 
 		$dia_de_revision = null, 
