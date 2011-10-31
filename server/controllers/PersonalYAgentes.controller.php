@@ -1639,6 +1639,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 $permisos_roles = PermisoRolDAO::search(new PermisoRol(array( "id_rol" => $id_rol , "id_permiso" => $id_permiso )));
             else
                 $permisos_roles = PermisoRolDAO::getAll();
+            Logger::log("Lista de roles con sus permisos obtenida exitosamente con ".count($permisos_roles)." elementos");
             return array( "permisos_roles" => $permisos_roles);
 	}
 
@@ -1648,6 +1649,12 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 $id_permiso = null
         )
         {
-
+            Logger::log("Listando usuarios con sus permisos");
+            if(!is_null($id_usuario) || !is_null($id_permiso))
+                $permisos_usuario = PermisoUsuarioDAO::search(new PermisoUsuario(array( "id_usuario" => $id_usuario , "id_permiso" => $id_permiso )));
+            else
+                $permisos_usuario = PermisoUsuarioDAO::getAll();
+            Logger::log("Lista de usuarios con sus permisos obtenida exitosamente con ".count($permisos_usuario)." elementos");
+            return array( "permisos_usuario" => $permisos_usuario);
         }
   }
