@@ -15,7 +15,7 @@ class DireccionController{
 	{
 		if(strlen($string)<=$min_length||strlen($string)>$max_length)
 		{
-		    return "La longitud de la variable ".$nombre_variable." proporcionada (".$nombre_variable.") no esta en el rango de ".$min_length." - ".$max_length;
+		    return "La longitud de la variable ".$nombre_variable." proporcionada (".$string.") no esta en el rango de ".$min_length." - ".$max_length;
 		}
 		return true;
     }
@@ -135,19 +135,16 @@ class DireccionController{
                     $colonia, $id_ciudad, $codigo_postal, $telefono, $telefono2);
             if(is_string($validar))
             {
-                Logger::error($validar);
                 throw new Exception($validar);
             }
             $direccion = new Direccion();
             $id_usuario=LoginController::getCurrentUser();
             if($id_usuario==null)
             {
-                Logger::error("No se pudo obtener la sesion del usuario, ya inicio sesion?");
                 throw new Exception("No se pudo obtener la sesion del usuario, ya inicio sesion?");
             }
             if(!is_null($telefono)&&$telefono==$telefono2)
             {
-                Logger::error("El telefono ".$telefono." es igual al telefono alterno ".$telefono2);
                 throw new Exception("El telefono ".$telefono." es igual al telefono alterno ".$telefono2);
             }
             $direccion->setCalle($calle);
@@ -169,8 +166,7 @@ class DireccionController{
             catch(Exception $e)
             {
                 DAO::transRollback();
-                Logger::error("No se pudo guardar la direccion: ".$e);
-                throw $e;
+                throw new Exception("No se pudo crear la direccion: ".$e);
             }
 
             DAO::transEnd();

@@ -16,7 +16,7 @@ require_once("interfaces/Empresas.interface.php");
 	{
 		if(strlen($string)<=$min_length||strlen($string)>$max_length)
 		{
-		    return "La longitud de la variable ".$nombre_variable." proporcionada (".$nombre_variable.") no esta en el rango de ".$min_length." - ".$max_length;
+		    return "La longitud de la variable ".$nombre_variable." proporcionada (".$string.") no esta en el rango de ".$min_length." - ".$max_length;
 		}
 		return true;
     }
@@ -106,22 +106,6 @@ require_once("interfaces/Empresas.interface.php");
                         return $e;
                 }
 
-                //Se valida que la fecha este en el rango
-                if(!is_null($fecha_alta))
-                {
-                    $e=self::validarString($fecha_alta, strlen("YYYY-mm-dd HH:ii:ss"), "fecha de alta");
-                    if(is_string($e))
-                        return $e;
-                }
-
-                //se valida que la fecha este en el rango
-                if(!is_null($fecha_baja))
-                {
-                    $e=self::validarString($fecha_baja, strlen("YYYY-mm-dd HH:ii:ss"), "fecha de baja");
-                    if(is_string($e))
-                        return $e;
-                }
-
                 //se valida que el boleano activo este en el rango
                 if(!is_null($activo))
                 {
@@ -166,7 +150,7 @@ require_once("interfaces/Empresas.interface.php");
           (
                   $id_sucursal=null,
                   $id_empresa=null,
-                  $margen_utiliad=null,
+                  $margen_utilidad=null,
                   $descuento=null
           )
           {
@@ -379,17 +363,17 @@ require_once("interfaces/Empresas.interface.php");
                 $colonia,
                 $codigo_postal,
                 $calle,
-                $representante_legal = "",
+                $representante_legal = null,
                 $descuento = null,
-                $impuestos = "",
-                $numero_interior = "",
+                $impuestos = null,
+                $numero_interior = null,
                 $margen_utilidad = null,
-                $texto_extra = "",
-                $telefono2 = "",
-                $email = "",
+                $texto_extra = null,
+                $telefono2 = null,
+                $email = null,
                 $retenciones = null,
-                $telefono1 = "",
-                $direccion_web = ""
+                $telefono1 = null,
+                $direccion_web = null
 	)
 	{  
             Logger::log("Creando empresa");
@@ -411,7 +395,7 @@ require_once("interfaces/Empresas.interface.php");
                             "fecha_alta"            => date("Y-m-d H:i:s",time()),
                             "fecha_baja"            => null,
                             "margen_utilidad"       => $margen_utilidad,
-                            "razon_social"          => $razon_social,
+                            "razon_social"          => trim($razon_social),
                             "representante_legal"   => $representante_legal,
                             "rfc"                   => $rfc
                     ));
@@ -443,7 +427,7 @@ require_once("interfaces/Empresas.interface.php");
             //Se busca la razon social en la base de datos. Si hay una empresa activa
             //con la misma razon zocial se lanza un error. Se usa trim para cubrir 
             //los casos "caffeina" y "    caffeina    ".
-            $empresas=EmpresaDAO::search( new Empresa( array( "razon_social" => $razon_social ) ) );
+            $empresas=EmpresaDAO::search( new Empresa( array( "razon_social" => trim($razon_social) ) ) );
             foreach($empresas as $empresa)
             {
                 if($empresa->getActivo())
@@ -515,8 +499,8 @@ require_once("interfaces/Empresas.interface.php");
              catch(Exception $e)
              {
                  DAO::transRollback();
-                 Logger::error("Error al crear la empresa: ".$e);
-                 throw $e;
+                 Logger::error("No se pudo crear la empresa: ".$e);
+                 throw new Exception("No se pudo crear la empresa");
              }
              DAO::transEnd();
              Logger::log("Empresa creada exitosamente");
@@ -536,41 +520,68 @@ require_once("interfaces/Empresas.interface.php");
 	)
 	{
             Logger::log("Eliminando empresa");
-            $empresa=EmpresaDAO::getByPK($id_empresa);
-            if(is_null($empresa))
+            
+            //se valida que la empresa exista en la base de datos
+            $validar = self::validarParametrosEmpresa($id_empresa);
+            if(is_string($validar))
             {
-                Logger::error("La empresa con id: ".$id_empresa." no existe");
-                throw new Exception("La empresa con id: ".$id_empresa." no existe");
+                Logger::error($validar);
+                throw new Exception($valdiar);
             }
+            
+            //Se guarda el registro de la empresa y se verifica si esat activa
+            $empresa=EmpresaDAO::getByPK($id_empresa);
             if(!$empresa->getActivo())
             {
                 Logger::warn("La empresa ya esta cancelada");
                 throw new Exception("La empresa ya esta cancelada");
             }
+            
+            //Se cambia el campo activo a falso y se registra la fecha de baja como hoy
             $empresa->setActivo(0);
             $empresa->setFechaBaja(date("Y-m-d H:i:s"));
+            
+            //Se buscan los productos pertenecientes a esta empresa y 
+            //se inicializa una variable temporal producto_empresa
             $pr=new ProductoEmpresa(array("id_empresa"=>$id_empresa));
-            $producto_empresa=new ProductoEmpresa();
             $productos_empresa=ProductoEmpresaDAO::search($pr);
-
+            $producto_empresa=new ProductoEmpresa();
+            
+            //Se buscan los paquetes pertenecientes a esta empresa y 
+            //se inicializa una variable temporal paquete_empresa
             $pa=new PaqueteEmpresa(array("id_empresa"=>$id_empresa));
-            $paquete_empresa=new PaqueteEmpresa();
             $paquetes_empresa=PaqueteEmpresaDAO::search($pa);
-
+            $paquete_empresa=new PaqueteEmpresa();
+            
+            //Se buscan los servicios pertenecientes a esta empresa y 
+            //se inicializa una variable temporal servicio_empresa
             $se=new ServicioEmpresa(array("id_empresa"=>$id_empresa));
-            $servicio_empresa=new ServicioEmpresa();
             $servicios_empresa=ServicioEmpresaDAO::search($se);
+            $servicio_empresa=new ServicioEmpresa();
 
+            //Se buscan las sucursales pertenecientes a esta empresa y 
+            //se inicializa una variable temporal sucursal_empresa
             $su=new SucursalEmpresa(array("id_empresa"=>$id_empresa));
-            $sucursal_empresa=new SucursalEmpresa();
             $sucursales_empresa=SucursalEmpresaDAO::search($su);
-
+            $sucursal_empresa=new SucursalEmpresa();
+            
+            //Se buscan los almacenes de esta empresa distribuidos en las distintas sucursales
             $almacen=new Almacen(array("id_empresa"=>$id_empresa));
 
             DAO::transBegin();
             try
             {
+                //Se actualiza la empresa
                 EmpresaDAO::save($empresa);
+                
+                //Por cada uno de los productos en la empresa como producto,
+                //se le asigna el id del producto a la variable temporal producto_empresa para
+                //poder buscar las empresas en la que es ofrecido ese producto.
+                //Si la busqueda regresa menos de dos campos, significa que solo esta empresa ofrece este producto,
+                //por tanto, se tiene que desactivar el producto tambien.
+                //
+                //En cualquier caso, se eliminan tambien los registros de la tabla producto_empresa correspondiente
+                //a todos los productos de la empresa.
                 foreach($productos_empresa as $producto)
                 {
                     $producto_empresa->setIdProducto($producto->getIdProducto());
@@ -579,8 +590,18 @@ require_once("interfaces/Empresas.interface.php");
                     {
                         ProductosController::Desactivar($producto->getIdProducto());
                     }
+                    $pr->setIdProducto($producto->getIdProducto());
+                    ProductoEmpresaDAO::delete($pr);
                 }
-
+                
+                //Por cada uno de los paquetes en la empresa como paquete,
+                //se le asigna el id del paquete a la variabe temporal paquete_empresa para
+                //poder buscar las empresas en la que es ofrecido ese paquete.
+                //Si la busqueda regresa menos de dos campos, significa que solo esta empresa ofrece este paquete,
+                //por lo tanto, se tiene que desactivar el paquete tambien.
+                //
+                //En cualquier caso, se eliminan tambien los registros de la tabla paquete_empresa correspondiente
+                //a todos los paquetes de la empresa
                 foreach($paquetes_empresa as $paquete)
                 {
                     $paquete_empresa->setIdPaquete($paquete->getIdPaquete());
@@ -589,8 +610,18 @@ require_once("interfaces/Empresas.interface.php");
                     {
                         PaquetesController::Eliminar($paquete->getIdPaquete());
                     }
+                    $pa->setIdPaquete($paquete->getIdPaquete());
+                    PaqueteEmpresaDAO::delete($pa);
                 }
-
+                
+                //Por cada uno de los servicios en la empresa como paquete,
+                //se le asigna el id del servicio a la variable temporal servicio_empresa para
+                //poder buscar las empresas en la que es ofrecido ese servicio.
+                //Si la busqueda regresa menos de dos campos, significa que solo esta empresa ofrece este servicio,
+                //por lo tanto, se tiene que desactivar el servicio tambie.
+                //
+                //En cualquier caso, se eliminan tambien los registros de la tabla servicio_empresa correspondiente
+                //a todos los servicios de la empresa.
                 foreach($servicios_empresa as $servicio)
                 {
                     $servicio_empresa->setIdServicio($servicio->getIdServicio());
@@ -599,8 +630,22 @@ require_once("interfaces/Empresas.interface.php");
                     {
                         ServiciosController::Eliminar($servicio->getIdServicio());
                     }
+                    $se->setIdServicio($servicio->getIdServicio());
+                    ServicioEmpresaDAO::delete($se);
                 }
-
+                
+                //Por cada una de las sucursales en la empresa como sucursal,
+                //se le asigna el id de la sucursal a la variable temporal sucursal_empresa para
+                //poder buscar las empresas que existen en la sucursal.
+                //Si la busqueda regresa menos de dos campos, significa que solo existe esta empresa en esta sucursal,
+                //por lo tanto, se tiene que desactivar la sucursal tambien.
+                //
+                //Si no, se buscan los almacenes de esta empresa y se eliminan aquellos que esten activos. 
+                //Por ende, si un almacen de consignacion de esta empresa sigue activo significa
+                //que aun no se termina la consignacion y por tal motivo no se puede eliminar la empresa
+                //
+                //En cualquier caso, se eliminan tambien los registros de la tabla sucursal_empresa correspondiente
+                //a todas las sucursales de la empresa.
                 foreach($sucursales_empresa as $sucursal)
                 {
                     $sucursal_empresa->setIdSucursal($sucursal->getIdSucursal());
@@ -615,8 +660,10 @@ require_once("interfaces/Empresas.interface.php");
                         $almacenes=AlmacenDAO::search($almacen);
                         foreach($almacenes as $a)
                         {
-                            if($a->getIdTipoAlmacen()!=2&&$a->getActivo())
+                            if($a->getActivo())
+                            {
                                 SucursalesController::EliminarAlmacen($a->getIdAlmacen());
+                            }
                         }
                     }
                     SucursalEmpresaDAO::delete($sucursal);
@@ -625,8 +672,8 @@ require_once("interfaces/Empresas.interface.php");
             catch(Exception $e)
             {
                 DAO::transRollback();
-                Logger::error("Error al eliminar la empresa: ".$e);
-                throw $e;
+                Logger::error("No se pudo eliminar la empresa: ".$e);
+                throw "No se pudo eliminar la empresa";
             }
             DAO::transEnd();
             Logger::log("Empresa eliminada exitosamente");

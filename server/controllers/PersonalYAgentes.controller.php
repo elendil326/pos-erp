@@ -16,7 +16,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	{
 		if(strlen($string)<=$min_length||strlen($string)>$max_length)
 		{
-		    return "La longitud de la variable ".$nombre_variable." proporcionada (".$nombre_variable.") no esta en el rango de ".$min_length." - ".$max_length;
+		    return "La longitud de la variable ".$nombre_variable." proporcionada (".$string.") no esta en el rango de ".$min_length." - ".$max_length;
 		}
 		return true;
     }
@@ -1670,7 +1670,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             //Se inicializa el nuevo rol con los parametros obtenidos
             $rol=new Rol(
                     array(
-                        "nombre"        => $nombre,
+                        "nombre"        => trim($nombre),
                         "descripcion"   => $descripcion,
                         "descuento"     => $descuento,
                         "salario"       => $salario
