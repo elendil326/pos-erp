@@ -730,24 +730,43 @@ require_once("interfaces/Empresas.interface.php");
 	)
 	{
             Logger::log("Editando la empresa");
-            $empresa=EmpresaDAO::getByPK($id_empresa);
-            $modificar_direccion=false;
-            if(is_null($empresa))
+            
+            //Se validan los parametros de empresa recibidos
+            $validar = self::validarParametrosEmpresa($id_empresa,null,$curp,$rfc,$razon_social,$representante_legal,null,$direccion_web,$margen_utilidad,$descuento);
+            if(is_string($validar))
             {
-                Logger::error("La empresa con id: ".$id_empresa." no existe");
-                throw new Exception("La empresa con id: ".$id_empresa." no existe");
+                Logger::error($validar);
+                throw new Exception($validar);
             }
+            
+            //Se validan los parametros de direccion recibidos
+            $validar = DireccionController::validarParametrosDireccion(null,$calle,$numero_exterior,$numero_interno,$texto_extra,$colonia,$ciudad,$codigo_postal,$telefono1,$telefono2);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            //se guarda el registro de la empresa y se verifica que este activa
+            $empresa=EmpresaDAO::getByPK($id_empresa);
             if(!$empresa->getActivo())
             {
                 Logger::error("La empresa no esta activa, no se puede editar una empresa desactivada");
                 throw new Exception("La empresa no esta activa, no se puede editar una empresa desactivada");
             }
+            
+            //se guarda el registro de la direccion perteneciente a esta empresa
             $direccion=DireccionDAO::getByPK($empresa->getIdDireccion());
             if(is_null($direccion))
             {
                 Logger::error("FATAL!!! La empresa no cuenta con una direccion");
                 throw new Exception("FATAL!!! La empresa no cuenta con una direccion");
             }
+            
+            //bandera para saber si se modifico algun campo de la direccion
+            $modificar_direccion=false;
+            
+            //se evaluan los parametros. Los que no sean nulos seran tomados com oactualizacion
             if(!is_null($descuento))
             {
                 $empresa->setDescuento($descuento);
@@ -821,6 +840,9 @@ require_once("interfaces/Empresas.interface.php");
                 $direccion->setReferencia($texto_extra);
                 $modificar_direccion=true;
             }
+            
+            //Si se cambio algun campo de la direccion se actualiza el campo ultima modificacion
+            //y se toma al usuario de la sesion.
             if($modificar_direccion)
             {
                 $direccion->setUltimaModificacion("Y-m-d H:i:s",time());
@@ -831,17 +853,25 @@ require_once("interfaces/Empresas.interface.php");
                     throw new Exception("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
                 }
             }
-            $impuesto_empresa=new ImpuestoEmpresa(array("id_empresa"=>$id_empresa));
-            $impuestos_empresa=ImpuestoEmpresaDAO::search($impuesto_empresa);
-            $retencion_empresa=new RetencionEmpresa(array("id_empresa"=>$id_empresa));
-            $retenciones_empresa=RetencionEmpresaDAO::search($retencion_empresa);
+            
             DAO::transBegin();
             try
             {
+                //Se guardan los cambios hechos en la empresa y en su direccion
                 EmpresaDAO::save($empresa);
                 DireccionDAO::save($direccion);
+                
+                //Si se obtiene el parametro impuestos se buscan los impuestos actuales de la empresa.
+                //Por cada impuesto recibido, se verifica que el impuesto exista y se almacena en la tabla
+                //impuesto_empresa. Si esta relacion ya existe solo se actualizara.
+                //
+                //Despues, se recorren los impuestos actuales y se buscan en la lista de impuestos recibidos.
+                //Se eliminaran aquellos impuestos qe no esten en la lista recibida.
                 if(!is_null($impuestos))
                 {
+                    $impuesto_empresa=new ImpuestoEmpresa(array("id_empresa"=>$id_empresa));
+                    $impuestos_empresa=ImpuestoEmpresaDAO::search($impuesto_empresa);
+                    
                     $i_empresa=new ImpuestoEmpresa(array("id_empresa"=>$id_empresa));
                     foreach($impuestos as $id_impuesto)
                     {
@@ -869,8 +899,18 @@ require_once("interfaces/Empresas.interface.php");
                         }
                     }
                 }
+                
+                //Si se obtiene el parametro retneciones se buscan lretenciones actuales de la empresa.
+                //Por cada retencion recibida, se verifica que la retencion exista y se almacena en la tabla
+                //retencion_empresa. Si esta relacion ya existe solo se actualizara.
+                //
+                //Despues, se recorren las retenciones actuales y se buscan en la lista de retenciones recibidas.
+                //Se eliminaran aquellas retenciones que no esten en la lista recibida.
                 if(!is_null($retenciones))
                 {
+                    $retencion_empresa=new RetencionEmpresa(array("id_empresa"=>$id_empresa));
+                    $retenciones_empresa=RetencionEmpresaDAO::search($retencion_empresa);
+                    
                     $r_empresa=new RetencionEmpresa(array("id_empresa"=>$id_empresa));
                     foreach($retenciones as $id_retencion)
                     {
@@ -902,8 +942,8 @@ require_once("interfaces/Empresas.interface.php");
             catch(Exception $e)
             {
                 DAO::transRollback();
-                Logger::error("No se pudo modificar la empresa");
-                throw $e;
+                Logger::error("No se pudo modificar la empresa: ".$e);
+                throw "No se pudo modificar la empresa";
             }
             DAO::transEnd();
             Logger::log("Empresa editada con exito");
