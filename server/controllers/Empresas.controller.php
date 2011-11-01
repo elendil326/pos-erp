@@ -8,6 +8,10 @@ require_once("interfaces/Empresas.interface.php");
 	
   class EmpresasController implements IEmpresas{
 
+        /*
+         *Se valida que un string tenga longitud en un rango de un maximo inclusivo y un minimo exclusvio.
+         *Regresa true cuando es valido, y un string cuando no lo es.
+         */
           private static function validarString($string, $max_length, $nombre_variable,$min_length=0)
 	{
 		if(strlen($string)<=$min_length||strlen($string)>$max_length)
@@ -18,7 +22,10 @@ require_once("interfaces/Empresas.interface.php");
     }
 
 
-
+        /*
+         * Se valida que un numero este en un rango de un maximo y un minimo inclusivos
+         * Regresa true cuando es valido, y un string cuando no lo es
+         */
 	private static function validarNumero($num, $max_length, $nombre_variable, $min_length=0)
 	{
 	    if($num<$min_length||$num>$max_length)
@@ -28,6 +35,10 @@ require_once("interfaces/Empresas.interface.php");
 	    return true;
 	}
 
+        /*
+         * Valida los parametros de la tabla empresa haciendo uso de las validaciones basicas
+         * de string y num. El minimo y el maximo se toman de la tabla y de su uso en particular.
+         */
           private static function validarParametrosEmpresa
           (
                   $id_empresa=null,
@@ -42,6 +53,7 @@ require_once("interfaces/Empresas.interface.php");
                   $descuento=null
           )
           {
+              //Se valida que la empresa exista en la base de datos
                 if(!is_null($id_empresa))
                 {
                     if(is_null(EmpresaDAO::getByPK($id_empresa)))
@@ -49,6 +61,7 @@ require_once("interfaces/Empresas.interface.php");
                         return "La empresa con id: ".$id_empresa." no existe";
                     }
                 }
+                //se valida que la direccion exista en la base de datos
                 if(!is_null($id_direccion))
                 {
                     if(is_null(DireccionDAO::getByPK($id_direccion)))
@@ -56,6 +69,8 @@ require_once("interfaces/Empresas.interface.php");
                          return "La direccion con id: ".$id_direccion." no existe";
                     }
                 }
+
+                //se valida que la curp tenga solo letras mayusculas y numeros
                 if(!is_null($curp))
                 {
                     $e=self::validarString($curp, 30, "curp");
@@ -64,42 +79,58 @@ require_once("interfaces/Empresas.interface.php");
                     if(preg_match('/[^A-Z0-9]/' ,$curp))
                             return "El curp ".$curp." contiene caracteres fuera del rango A-Z y 0-9";
                 }
+
+                //se valida que el rfc tenga solo letras mayusculas y numeros.
                 if(!is_null($rfc))
                 {
                     $e=self::validarString($curp, 30, "rfc");
                     if(is_string($e))
                         return $e;
+                    if(preg_match('/[^A-Z0-9]/' ,$rfc))
+                            return "El rfc ".$rfc." contiene caracteres fuera del rango A-Z y 0-9";
                 }
+
+                //se valida que la razon social este en le rango
                 if(!is_null($razon_social))
                 {
                     $e=self::validarString($razon_social, 100, "razon social");
                     if(is_string($e))
                         return $e;
                 }
+
+                //se valida que el representante legal este en el rango
                 if(!is_null($representante_legal))
                 {
                     $e=self::validarString($representante_legal, 100, "representante legal");
                     if(is_string($e))
                         return $e;
                 }
+
+                //Se valida que la fecha este en el rango
                 if(!is_null($fecha_alta))
                 {
                     $e=self::validarString($fecha_alta, strlen("YYYY-mm-dd HH:ii:ss"), "fecha de alta");
                     if(is_string($e))
                         return $e;
                 }
+
+                //se valida que la fecha este en el rango
                 if(!is_null($fecha_baja))
                 {
                     $e=self::validarString($fecha_baja, strlen("YYYY-mm-dd HH:ii:ss"), "fecha de baja");
                     if(is_string($e))
                         return $e;
                 }
+
+                //se valida que el boleano activo este en el rango
                 if(!is_null($activo))
                 {
                     $e=self::validarNumero($activo, 1, "activo");
                     if(is_string($e))
                         return $e;
                 }
+
+                //se valida que la direccion web tenga un formato adecuado
                 if(!is_null($direccion_web))
                 {
                     $e=self::validarString($direccion_web, 20, "direccion web");
@@ -109,12 +140,16 @@ require_once("interfaces/Empresas.interface.php");
                     !preg_match('/^[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,6}'.'((:[0-9]{1,5})?\/.*)?$/i' ,$direccion_web))
                             return "La direccion web ".$direccion_web." no cumple el formato esperado";
                 }
+
+                //Se valida que el margen de utilidad este en rango
                 if(!is_null($margen_utilidad))
                 {
-                    $e=self::validarNumero($margen_utilidad, 1.8e100, "margen de utilidad");
+                    $e=self::validarNumero($margen_utilidad, 1.8e200, "margen de utilidad");
                     if(is_string($e))
                         return $e;
                 }
+
+                //se valida que el descuento este en rango. Descuento es un porcentaje y no puede pasar de 100
                 if(!is_null($descuento))
                 {
                     $e=self::validarNumero($descuento, 100, "descuento");
@@ -124,6 +159,9 @@ require_once("interfaces/Empresas.interface.php");
                 return true;
           }
 
+          /*
+           * Valida los parametros de la tabla sucursal_empresa
+           */
           private static function validarParametrosSucursalEmpresa
           (
                   $id_sucursal=null,
@@ -132,6 +170,7 @@ require_once("interfaces/Empresas.interface.php");
                   $descuento=null
           )
           {
+              //verifica que la sucursal exista en la base de datos
               if(!is_null($id_sucursal))
               {
                   if(is_null(SucursalDAO::getByPK($id_sucursal)))
@@ -139,6 +178,8 @@ require_once("interfaces/Empresas.interface.php");
                       return "La sucursal con id: ".$id_sucursal." no existe";
                   }
               }
+
+              //verifica que la empresa exista en la base de datos
               if(!is_null($id_empresa))
               {
                   if(is_null(EmpresaDAO::getByPK($id_empresa)))
@@ -146,18 +187,72 @@ require_once("interfaces/Empresas.interface.php");
                       return "La empresa con id: ".$id_empresa." no existe";
                   }
               }
+
+              //valida que el margen de utilidad este en el rango
               if(!is_null($margen_utilidad))
               {
                   $e=self::validarNumero($margen_utilidad, 1.8e200, "margen de utilidad");
                   if(is_string($e))
                       return $e;
               }
+
+              //valida que el descuento no pase de 100 pues e sun porcentaje
               if(!is_null($descuento))
               {
                   $e=self::validarNumero($descuento, 100, "descuento");
                   if(is_string($e))
                       return $e;
               }
+          }
+          
+          /*
+           * Valida los parametros de la tabla impuesto_empresa
+           */
+          private static function validarParametrosImpuestoEmpresa
+          (
+                  $id_impuesto = null,
+                  $id_empresa = null
+          )
+          {
+              //valida que el impuesto exista en la base de datos
+              if(!is_null($id_impuesto))
+              {
+                  if(is_null(ImpuestoDAO::getByPK($id_impuesto)))
+                          return "El impuesto con id: ".$id_impuesto." no existe";
+              }
+              
+              //valida que la empresa exista en la base de datos
+              if(!is_null($id_empresa))
+              {
+                  if(is_null(EmpresaDAO::getByPK($id_empresa)))
+                          return "La empresa con id: ".$id_empresa." no existe";
+              }
+              return true;
+          }
+          
+           /*
+           * Valida los parametros de la tabla retencion_empresa
+           */
+          private static function validarParametrosRetencionEmpresa
+          (
+                  $id_retencion = null,
+                  $id_empresa = null
+          )
+          {
+              //valida que la retencion exista en la base de datos
+              if(!is_null($id_retencion))
+              {
+                  if(is_null(ImpuestoDAO::getByPK($id_retencion)))
+                          return "La retencion con id: ".$id_retencion." no existe";
+              }
+              
+              //valida que la empresa exista en la base de datos
+              if(!is_null($id_empresa))
+              {
+                  if(is_null(EmpresaDAO::getByPK($id_empresa)))
+                          return "La empresa con id: ".$id_empresa." no existe";
+              }
+              return true;
           }
 
 	/**
@@ -171,17 +266,27 @@ require_once("interfaces/Empresas.interface.php");
 	(
 		$activa = null
 	)
-	{  
+	{
+            Logger::log("Listando empresas");
+            //Si activa no es obtenida, se regresan todas las empresas.
   		if(is_null($activa))
+                {
+                    Logger::log("Se listan todas las empresas");
   			return EmpresaDAO::getAll();
-                $validar=self::validarParametrosEmpresa(null, null, null, null, null, null, $activo);
+                }
+
+                //Se valida el boleano activa
+                $validar=self::validarParametrosEmpresa(null, null, null, null, null, null, $activa);
                 if(is_string($validar))
                 {
                     Logger::error($validar);
                     throw new Exception($validar);
                 }
+
+                //Se listan las empresas con el valor de activa obtenido
   		$e = new Empresa();
   		$e->setActivo( $activa );
+                Logger::log("Listando empresas con activo = ".$activa);
   		return EmpresaDAO::search( $e );
   	}
   
@@ -199,17 +304,23 @@ require_once("interfaces/Empresas.interface.php");
 	)
 	{
             Logger::log("Agregando sucursales a la empresa");
+
+            //Se valida que la empresa exista en la base de datos
             $validar=self::validarParametrosEmpresa($id_empresa);
             if(is_string($validar))
             {
                 Logger::error($validar);
                 throw new Exception($validar);
             }
+
+            //Se crea un registro de sucursal-empresa y se le asigna como empresa la obtenida.
             $sucursal_empresa=new SucursalEmpresa();
             $sucursal_empresa->setIdEmpresa($id_empresa);
             DAO::transBegin();
             try
             {
+                //Por cada una de las sucursales como sucursal, se validan los parametros que contiene
+                //y si son v'alidos, se almacenan en el objeto sucursal-empresa para luego guardarlo.
                 foreach($sucursales as $sucursal)
                 {
                     $validar=self::validarParametrosSucursalEmpresa($sucursal["id_sucursal"], null,$sucursal["margen_utilidad"], $sucursal["descuento"]);
@@ -227,7 +338,7 @@ require_once("interfaces/Empresas.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudieron agregar las sucursales a la empresa: ".$e);
-                throw $e;
+                throw new Exception("NO se pudieron agregar las sucursales a la empresa");
             }
             DAO::transEnd();
             Logger::log("Sucursales agregadas exitosamente");
@@ -282,12 +393,16 @@ require_once("interfaces/Empresas.interface.php");
 	)
 	{  
             Logger::log("Creando empresa");
+
+            //Se validan los parametros
             $validar=self::validarParametrosEmpresa(null, null, $curp, $rfc, $razon_social, $representante_legal, null, $direccion_web, $margen_utilidad, $descuento);
             if(is_string($validar))
             {
                 Logger::error($validar);
                 throw new Exception($validar);
             }
+
+            //Se crea la empresa con los parametros obtenidos.
             $e = new Empresa(array(
                             "activo"                => true,
                             "curp"                  => $curp,
@@ -300,10 +415,47 @@ require_once("interfaces/Empresas.interface.php");
                             "representante_legal"   => $representante_legal,
                             "rfc"                   => $rfc
                     ));
+
+            //Se busca la curp en la base de datos. Si hay una empresa activa
+            //con esa misma curp se lanza un error
             $empresas=EmpresaDAO::search(new Empresa( array( "curp" => $curp ) ));
+            foreach($empresas as $empresa)
+            {
+                if($empresa->getActivo())
+                {
+                    Logger::error("El curp: ".$curp." ya esta en uso por la empresa: ".$empresa->getIdEmpresa());
+                    throw new Exception("El curp: ".$curp." ya esta en uso");
+                }
+            }
+
+            //Se busca el rfc en la base de datos. Si hay una empresa activa
+            //con el mismo rfc se lanza un error
+            $empresas=EmpresaDAO::search( new Empresa( array( "rfc" => $rfc ) ) );
+            foreach($empresas as $empresa)
+            {
+                if($empresa->getActivo())
+                {
+                    Logger::error("El rfc: ".$rfc." ya esta en uso por la empresa: ".$empresa->getIdEmpresa());
+                    throw new Exception("El rfc: ".$rfc." ya esta en uso");
+                }
+            }
+            
+            //Se busca la razon social en la base de datos. Si hay una empresa activa
+            //con la misma razon zocial se lanza un error. Se usa trim para cubrir 
+            //los casos "caffeina" y "    caffeina    ".
+            $empresas=EmpresaDAO::search( new Empresa( array( "razon_social" => $razon_social ) ) );
+            foreach($empresas as $empresa)
+            {
+                if($empresa->getActivo())
+                {
+                    Logger::error("La razon social: ".$razon_social." ya esta en uso por la empresa: ".$empresa->getIdEmpresa());
+                    throw new Exception("La razon social: ".$razon_social." ya esta en uso");
+                }
+            }
              DAO::transBegin();
              try
              {
+                 //Se crea la nueva direccion con los parametros obtenidos.
                  $id_direccion = DireccionController::NuevaDireccion( 
                     $calle,
                     $numero_exterior,
@@ -315,32 +467,49 @@ require_once("interfaces/Empresas.interface.php");
                     $telefono1,
                     $telefono2
                   );
-
+                 
+                 //Se agrega la direccion a la empresa y se guarda
                  $e->setIdDireccion($id_direccion);
                  EmpresaDAO::save($e);
-                 $impuesto_empresa=new ImpuestoEmpresa(array("id_empresa" => $e->getIdEmpresa()));
+                 
+                 //Si se recibieron impuestos se genera un registro impuesto-empresa y 
+                 //se inicializa con el id de esta empresa.
+                 //Por cada uno de los impuestos como id impuesto, se verifica que el 
+                 //impuesto exista, se asigna al registro y se guarda.
                  if($impuestos)
-                 foreach($impuestos as $id_impuesto)
                  {
-                     if(is_null(ImpuestoDAO::getByPK($id_impuesto)))
+                     $impuesto_empresa=new ImpuestoEmpresa(array("id_empresa" => $e->getIdEmpresa()));
+                     foreach($impuestos as $id_impuesto)
                      {
-                         Logger::error("El impuesto con id: ".$id_impuesto." no existe");
-                         throw new Exception("El impuesto con id: ".$id_impuesto." no existe");
+                         $validar=self::validarParametrosImpuestoEmpresa($id_impuesto);
+                         if(is_sring($validar))
+                         {
+                             Logger::error($validar);
+                             throw new Exception($validar);
+                         }
+                         $impuesto_empresa->setIdImpuesto($id_impuesto);
+                         ImpuestoEmpresaDAO::save($impuesto_empresa);
                      }
-                     $impuesto_empresa->setIdImpuesto($id_impuesto);
-                     ImpuestoEmpresaDAO::save($impuesto_empresa);
                  }
-                 $retencion_empresa=new RetencionEmpresa(array("id_empresa" => $e->getIdEmpresa()));
+                 
+                 //Si se recibieron retenciones se genera un registro retencion-empresa y 
+                 //se inicializa con el id de esta empresa.
+                 //Por cada uno de las retenciones como id retencion, se verifica que la 
+                 //retencion exista, se asigna al registro y se guarda.
                  if($retenciones)
-                 foreach($retenciones as $id_retencion)
                  {
-                     if(is_null(RetencionDAO::getByPK($id_retencion)))
+                     $retencion_empresa=new RetencionEmpresa(array("id_empresa" => $e->getIdEmpresa()));
+                     foreach($retenciones as $id_retencion)
                      {
-                         Logger::error("La retencion con id: ".$id_retencion." no existe");
-                         throw new Exception("La retencion con id: ".$id_retencion." no existe");
+                         $validar = self::validarParametrosRetencionEmpresa($id_retencion);
+                         if(is_string($validar))
+                         {
+                             Logger::error($validar);
+                             throw new Exception($validar);
+                         }
+                         $retencion_empresa->setIdRetencion($id_retencion);
+                         RetencionEmpresaDAO::save($retencion_empresa);
                      }
-                     $retencion_empresa->setIdRetencion($id_retencion);
-                     RetencionEmpresaDAO::save($retencion_empresa);
                  }
              }
              catch(Exception $e)
