@@ -528,7 +528,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 		$intereses_moratorios = null,
 		$ventas_a_credito = null,
 		$pagina_web = null,
-		$telefono_personal1 = "",
+		$telefono_personal1 = null,
 		$descuento = null,
 		$telefono2_2 = null,
 		$limite_credito = 0,
@@ -546,17 +546,17 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 		$correo_electronico = null,
 		$telefono2 = null,
 		$dias_de_credito = null,
-		$texto_extra = "",
+		$texto_extra = null,
 		$calle_2 = null,
 		$denominacion_comercial = null,
 		$numero_exterior_2 = null,
 		$comision_ventas = 0,
 		$telefono1 = null,
 		$cuenta_mensajeria = null,
-		$rfc = "",
+		$rfc = null,
 		$id_clasificacion_proveedor = null,
 		$retenciones = null,
-		$colonia = "",
+		$colonia = null,
 		$id_moneda = null,
 		$tiempo_entrega = null
 	)
@@ -716,6 +716,8 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                     $usuario->setIdDireccion($id_direccion1);
                 if($id_direccion2>0)
                     $usuario->setIdDireccionAlterna($id_direccion2);
+
+                //Se guarda el usuario creado.
                 UsuarioDAO::save($usuario);
 
                 //si se pasaron impuestos, se validan y se agregan a la tabla impuesto_usuario
@@ -740,6 +742,13 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                             throw $validar;
                         RetencionEmpresaDAO::save(new RetencionEmpresa(array( "id_retencion" => $id_retencion , "id_usuario" => $usuario->getIdUsuario() )));
                     }
+                }
+
+                //Se buscan los permisos de este rol y se le asignan a este usuario
+                $permisos_rol = PermisoRolDAO::search( new PermisoRol( array( "id_rol" => $id_rol ) ) );
+                foreach($permisos_rol as $permiso_rol)
+                {
+                    PermisoUsuarioDAO::save( new PermisoUsuario( array( "id_usuario" => $usuario->getIdUsuario() , "id_permiso" => $permiso_rol->getIdPermiso() ) ) );
                 }
             }
             catch(Exception $e)
@@ -767,13 +776,19 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 		$ordenar = null
 	)
 	{  
+            Logger::log("Listando a los usuarios");
+            //valida el parametro activo.
             $validar=self::validarParametrosUsuario(null, null, null, null, null, null, null, $activo);
             if(is_string($validar))
             {
                 Logger::error($validar);
                 throw new Exception($validar);
             }
+            //inicializamos el arreglo que contendra la lista.
             $usuarios=array();
+
+            //valida el parametro ordenar.
+            //Ordenar tiene que ser un string que corresponda al nombre de un campo de la tabla usuario
             if(!is_null($ordenar))
             {
                 $e=self::validarString($ordenar, 30, "ordenar");
@@ -831,10 +846,13 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                     throw new Exception("El parametro ordenar es invalido");
                 }
             }
+            //Si se paso el parametro activo, se llama al metodo search
             if(!is_null($activo))
             {
                 $usuarios=UsuarioDAO::search(new Usuario( array( "activo" => $activo ) ),$ordenar);
             }
+
+            //Si no, se llama al metodo getAll.
             else
             {
                 $usuarios=UsuarioDAO::getAll(null,null,$ordenar);
@@ -958,6 +976,8 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	)
 	{  
             Logger::log("Editando usuario: ".$id_usuario);
+
+            //valida los parametros de la tabla usuario
             $validar=self::validarParametrosUsuario($id_usuario, null, $id_sucursal, $id_rol,
                     $id_clasificacion_cliente, $id_clasificacion_proveedor, $id_moneda,
                     null, $nombre, $rfc, $curp, $comision_ventas, $telefono_personal_1,
@@ -971,6 +991,8 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 Logger::error($validar);
                 throw new Exception($validar);
             }
+
+            //valida los parametros correspondientes a direccion
             $validar=DireccionController::validarParametrosDireccion(null, $calle, $numero_exterior, $numero_interior,
                     $texto_extra, $colonia, $id_ciudad, $codigo_postal, $telefono1, $telefono2);
             if(is_string($validar))
@@ -978,29 +1000,47 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 Logger::error($validar);
                 throw new Exception($validar);
             }
+
+            //valida los parametros correspondientes a direccion
             $validar=DireccionController::validarParametrosDireccion(null, $calle_2, $numero_exterior_2, $numero_interior_2, $texto_extra_2, $colonia_2, $id_ciudad_2, $codigo_postal_2, $telefono1_2, $telefono2_2);
             if(is_string($validar))
             {
                 Logger::error($validar);
                 throw new Exception($validar);
             }
+
+            //Se trae el registro con el id obtenido
             $usuario = UsuarioDAO::getByPK($id_usuario);
+
+            //Se intenta traer las direcciones actualmente registradas del usuario
             $direccion1 = DireccionDAO::getByPK($usuario->getIdDireccion());
             $direccion2 = DireccionDAO::getByPK($usuario->getIdDireccionAlterna());
+
+            //banderas que indican si se cambió un campo de una direccion
+            //o si la direccion es nueva
             $cambio_direccion1 = false;
             $cambio_direccion2 = false;
             $nueva_direccion1 = false;
             $nueva_direccion2 = false;
+
+            //bandera que indica si el rol se cambio o no.
+            $cambio_rol = false;
+
+            //Si no se obtuvo direccion 1, se crea
             if(is_null($direccion1))
             {
                 $nueva_direccion1=true;
                 $direccion1=new Direccion();
             }
+
+            //Si no se obtuvo direccion 2, se crea
             if(is_null($direccion2))
             {
                 $nueva_direccion2=true;
                 $direccion2=new Direccion();
             }
+
+            // se validan los campos, si no son nulos, se cambia el registro.
           if(!is_null($id_sucursal))
           {
               $usuario->setIdSucursal($id_sucursal);
@@ -1011,6 +1051,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
               {
                 $usuario->setIdRol($id_rol);
                 $usuario->setFechaAsignacionRol(date("Y-m-d H:i:s"));
+                $cambio_rol=true;
               }
           }
           if(!is_null($id_clasificacion_cliente))
@@ -1226,9 +1267,12 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             DAO::transBegin();
             try
             {
+                //Si hubo un cambio en la direccion 1, se realiza el cambio
                 if($cambio_direccion1)
                 {
                     $direccion1->setUltimaModificacion(date("Y-m-d H:i:s"));
+
+                    //Se busca el id del usuario loggeado. Si no hay ningun muestra un error.
                     $id_u=LoginController::getCurrentUser();
                     if(is_null($id_u))
                     {
@@ -1236,14 +1280,20 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                     }
                     $direccion1->setIdUsuarioUltimaModificacion($id_u);
                     DireccionDAO::save($direccion1);
+
+                    //Si la direccion es nueva, se relaciona con el usuario.
                     if($nueva_direccion1)
                     {
                         $usuario->setIdDireccion($direccion1->getIdDireccion());
                     }
                 }
+
+                //Si hubo un cambio en la direccion alterna, se realiza el cambio
                 if($cambio_direccion2)
                 {
                     $direccion2->setUltimaModificacion(date("Y-m-d H:i:s"));
+
+                    //Se busca el id del usuario loggeado. Si no hay ningun muestra un error.
                     $id_u=LoginController::getCurrentUser();
                     if(is_null($id_u))
                     {
@@ -1251,18 +1301,28 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                     }
                     $direccion2->setIdUsuarioUltimaModificacion($id_u);
                     DireccionDAO::save($direccion2);
+
+                    //Si la direccion es nueva, se relaciona con el usuario.
                     if($nueva_direccion2)
                     {
                         $usuario->setIdDireccion($direccion2->getIdDireccion());
                     }
                 }
+
+                //guarda los cambios en el usuario
                 UsuarioDAO::save($usuario);
+
+                //si se han obtenido nuevos impuestos se llama al metodo save para que actualice
+                //los ya existentes y almacene los nuevos
                 if(!is_null($impuestos))
                 {
                     foreach($impuestos as $id_impuesto)
                     {
                         ImpuestoUsuarioDAO::save(new ImpuestoUsuario( array( "id_impuesto" => $id_impuesto , "id_usuario" => $id_usuario ) ));
                     }
+
+                    //Se obtiene la lista de impuestos correspondientes a este usuario y se buscan aquellos
+                    //que no esten incluidos en la nueva lista obtenida de impuestos para eliminarlos.
                     $impuestos_usuario = ImpuestoUsuarioDAO::search( new ImpuestoUsuario( array( "id_usuario" => $id_usuario ) ));
                     foreach($impuestos_usuario as $impuesto_usuario)
                     {
@@ -1281,12 +1341,18 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                         }
                     }
                 }
+
+                //si se han obtenido nuevas retenciones se llama al metodo save para que actualice
+                //las ya existentes y almacene las nuevas
                 if(!is_null($retenciones))
                 {
                     foreach($retenciones as $id_retencion)
                     {
                         RetencionUsuarioDAO::save(new RetencionUsuario( array( "id_retencion" => $id_retencion , "id_usuario" => $id_usuario ) ));
                     }
+
+                    //Se obtiene la lista de retenciones correspondientes a este usuario y se buscan aquellas
+                    //que no esten incluidas en la nueva lista obtenida de retenciones para eliminarlas.
                     $retenciones_usuario = RetencionUsuarioDAO::search( new RetencionUsuario( array( "id_usuario" => $id_usuario ) ));
                     foreach($retenciones_usuario as $retencion_usuario)
                     {
@@ -1305,6 +1371,19 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                         }
                     }
                 }
+
+                //Si cambio el rol, se borran todos los permisos del usuario y se le asignan los
+                //permisos del nuevo rol.
+                $permisos_usuario = PermisoUsuarioDAO::search( new PermisoUsuario( array( "id_usuario" => $id_usuario ) ) );
+                foreach($permisos_usuario as $permiso_usuario)
+                {
+                    PermisoUsuarioDAO::delete($permiso_usuario);
+                }
+                $permisos_rol = PermisoRolDAO::search( new PermisoRol( array( "id_rol" => $id_rol ) ) );
+                foreach($permisos_rol as $permiso_rol)
+                {
+                    PermisoUsuarioDAO::save( new PermisoUsuario( array( "id_usuario" => $id_usuario , "id_permiso" => $permiso_rol->getIdPermiso() ) ) );
+                }
             }
             catch(Exception $e)
             {
@@ -1313,7 +1392,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 throw new Exception("No se pudo editar al usuario");
             }
             DAO::transEnd();
-            Logger::log("Usuario ".$id_usaurio." editado exitosamente");
+            Logger::log("Usuario ".$id_usuario." editado exitosamente");
 	}
   
 	/**
@@ -1329,6 +1408,9 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	)
 	{
                 Logger::log("Listando roles con orden: ".$orden);
+
+                //Se valida si el orden es valido. Orden tiene que ser el nombre de un campo
+                //de la tabla rol
                 if
                 (
                         $orden != "id_rol" &&
@@ -1342,6 +1424,8 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                     Logger::log("La variable orden: ".$orden." no es una columna de la tabla rol");
                     throw new Exception("La variable orden no es valida");
                 }
+
+                //Se traen todos los roles d ela base de datos.
 		$roles = RolDAO::getAll(null,null,$orden);
                 Logger::log("Lista de roles obtenida con ".count($roles)." elementos");
   		return array( "roles" => $roles );
@@ -1361,17 +1445,23 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	)
 	{  
             Logger::log("Asignando permiso ".$id_permiso." al usuario ".$id_usuario);
+
+            //Se valida que el permiso exista en la base de datos.
             if(is_null(PermisoDAO::getByPK($id_permiso)))
             {
                 Logger::error("El permiso con id:".$id_permiso." no existe");
                 throw new Exception("El permiso no existe");
             }
+
+            //Se valida que el usuario exista en la base de datos.
             $usuario=UsuarioDAO::getByPK($id_usuario);
             if(is_null($usuario))
             {
                 Logger::error("El usuario con id:".$id_usuario." no existe");
                 throw new Exception("El usuario no existe");
             }
+
+            //Si el usuario no esta activo no se le pueden asignar permisos
             if(!$usuario->getActivo())
             {
                 Logger::error("El usuario con id:".$id_usuario." esta inactivo");
@@ -1380,6 +1470,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             DAO::transBegin();
             try
             {
+                //se guarda el permiso con el usuario
                 PermisoUsuarioDAO::save(new PermisoUsuario( array( "id_permiso" => $id_permiso , "id_usuario" => $id_usuario ) ));
             }
             catch(Exception $e)
@@ -1406,25 +1497,35 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	)
 	{  
             Logger::log("Asignando permiso ".$id_permiso." al rol ".$id_rol);
+
+            //Se valida que el permiso exista en la base de datos
             if(is_null(PermisoDAO::getByPK($id_permiso)))
             {
                 Logger::error("El permiso con id: ".$id_permiso." no existe");
                 throw new Exception("El permiso no existe");
             }
+
+            //Se valida que el rol exista en la base de datos
             if(is_null(RolDAO::getByPK($id_rol)))
             {
                 Logger::error("El rol con id: ".$id_rol." no existe");
                 throw new Exception("El rol no existe");
             }
+
+            //Se obtiene la lisa de usuarios que pertenecen a este rol
             $usuarios=UsuarioDAO::search(new Usuario( array( "id_rol" => $id_rol ) ));
             DAO::transBegin();
             try
             {
+                //Por cada uno de los usuarios como usuario, se valida si el usuario este activo.
+                //Si lo esta, se le asigna el permiso que se le esta asignando al rol.
                 foreach($usuarios as $usuario)
                 {
                     if($usuario->getActivo())
                         PermisoUsuarioDAO::save(new PermisoUsuario( array( "id_permiso" => $id_permiso , "id_usuario" => $usuario->getIdUsuario() ) ));
                 }
+
+                //Se guarda el permiso al rol.
                 PermisoRolDAO::save(new PermisoRol( array( "id_permiso" => $id_permiso , "id_rol" => $id_rol ) ));
             }
             catch(Exception $e)
@@ -1451,16 +1552,22 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	)
 	{  
             Logger::log("Quitando permiso ".$id_permiso." al rol ".$id_rol);
+
+            //Se valida que ese rol tenga ese permiso
             $permiso_rol = PermisoRolDAO::getByPK($id_permiso, $id_rol);
             if(is_null($permiso_rol))
             {
-                Logger::error("El rol ".$id_rol." no tiene el permiso ".$id_rol);
+                Logger::error("El rol ".$id_rol." no tiene el permiso ".$id_permiso);
                 throw new Exception("El rol no tiene ese permiso");
             }
+
+            //Se obtienen los usuarios de ese rol
             $usuarios = UsuarioDAO::search( new Usuario( array( "id_rol" => $id_rol ) ) );
             DAO::transBegin();
             try
             {
+                //Por cada uno de los usuarios como usuario, se busca que el usuario
+                //tenga el permiso a remover y que este activo. Si el usuario cumple, se le quita el permiso.
                 foreach($usuarios as $usuario)
                 {
                     if(!is_null(PermisoUsuarioDAO::getByPK($id_permiso, $usuario->getIdUsuario()))&&$usuario->getActivo())
@@ -1468,6 +1575,8 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                         PermisoUsuarioDAO::delete(new PermisoUsuario( array( "id_permiso" => $id_permiso , "id_usuario" => $usuario->getIdUsuario() ) ));
                     }
                 }
+
+                //Se quita el permiso al rol
                 PermisoRolDAO::delete($permiso_rol);
             }
             catch(Exception $e)
@@ -1491,18 +1600,24 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	)
 	{  
             Logger::log("Quitando permiso ".$id_permiso." a usuario ".$id_usuario);
+
+            //Se valida que el usuario tenga ese permiso
             $permiso_usuario = PermisoUsuarioDAO::getByPK($id_permiso, $id_usuario);
             if(is_null($permiso_usuario))
             {
                 Logger::error("El usuario ".$id_usuario." no tiene el permiso ".$id_permiso);
                 throw new Exception("El usuario no tiene ese permiso");
             }
+
+            //Se valida que el usuario exista en la base de datos.
             $usuario=UsuarioDAO::getByPK($id_usuario);
             if(is_null($usuario))
             {
                 Logger::error("El usuario con id:".$id_usuario." no existe");
                 throw new Exception("El usuario no existe");
             }
+
+            //Si el usuario no esta activo no se puede cambiar su relacion.
             if(!$usuario->getActivo())
             {
                 Logger::error("El usuario con id:".$id_usuario." esta inactivo");
@@ -1511,6 +1626,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             DAO::transBegin();
             try
             {
+                //Borra el permiso del usuario
                 PermisoUsuarioDAO::delete($permiso_usuario);
             }
             catch(Exception $e)
@@ -1542,12 +1658,16 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	)
 	{  
             Logger::log("Creando nuevo rol");
+
+            //Se validan lso parametros del rol
             $validar=self::ValidarParametrosRol(null, $descripcion, $nombre, $descuento, $salario);
             if(is_string($validar))
             {
                 Logger::error($validar);
                 throw new Exception($validar);
             }
+
+            //Se inicializa el nuevo rol con los parametros obtenidos
             $rol=new Rol(
                     array(
                         "nombre"        => $nombre,
@@ -1556,6 +1676,10 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                         "salario"       => $salario
                     )
                     );
+
+            //Se busca el nombre obtenido en la base de datos. Si existe
+            //se manda un error pues los nombres no se pueden repetir.
+            //Se usa trim para validar casos como "gerente" y "  gerente ".
             $roles=RolDAO::search(new Rol(array( "nombre" => trim($nombre) )));
             if(!empty($roles))
             {
@@ -1565,6 +1689,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             DAO::transBegin();
             try
             {
+                //Se guarda el rol.
                 RolDAO::save($rol);
             }
             catch(Exception $e)
@@ -1598,13 +1723,19 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	)
 	{  
             Logger::log("Editando rol ".$id_rol);
+
+            //Se validan los parametros obtenidos.
             $validar = self::ValidarParametrosRol($id_rol, $descripcion, $nombre, $descuento, $salario);
             if(is_string($validar))
             {
                 Logger::error($validar);
                 throw new Exception($validar);
             }
+
+            //Se obtiene el rol de la base de datos.
             $rol = RolDAO::getByPK($id_rol);
+
+            //Se verifican los parametros. Los que no son nulos se actualizan.
             if(!is_null($salario))
             {
                 $rol->setSalario($salario);
@@ -1624,6 +1755,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             DAO::transBegin();
             try
             {
+                //Se actualiza el rol.
                 RolDAO::save($rol);
             }
             catch(Exception $e)
@@ -1648,39 +1780,59 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	)
 	{  
             Logger::log("Eliminando usuario ".$id_usuario);
+
+            //Se obtiene y se verifica que el usuario exista en la base de datos.
             $usuario=UsuarioDAO::getByPK($id_usuario);
             if(is_null($usuario))
             {
                 Logger::error("El usuario con id ".$id_usuario." no existe");
                 throw new Exception("El usuario no existe");
             }
+
+            //Si el usuario ya esta inactivo, no se le hacen cambios.
             if(!$usuario->getActivo())
             {
                 Logger::warn("El usuario con id: ".$id_usuario." ya esta inactivo");
                 throw new Exception("El usuario ya esta inactivo");
             }
+
+            //Si el saldo del ejercicio del usuario no es cero, siginifica que debe o que
+            //se le debe, entonces no se puede eliminar.
             if($usuario->getSaldoDelEjercicio()!=0)
             {
                 Logger::error("El usuario con id: ".$id_usuario." no tiene un saldo en ceros");
                 throw new Exception("El usuario no tiene un saldo en ceros");
             }
+
+            //Se cambia su estado activo a falso y se le asigna como hoy la fecha de baja.
             $usuario->setActivo(0);
             $usuario->setFechaBaja(date("Y-m-d H:i:s"));
             DAO::transBegin();
             try
             {
+                //Se actualiza el usuario
                 UsuarioDAO::save($usuario);
+
+                //Se eliminan los registros de la tabla permiso_usuario que contengan a este usuario
+                $permisos_usuario = PermisoUsuarioDAO::search(new PermisoUsuario( array( "id_usuario" => $id_usuario ) ));
+                foreach($permisos_usuario as $permiso_usuario)
+                {
+                    PermisoUsuarioDAO::delete($permiso_usuario);
+                }
             }
             catch(Exception $e)
             {
                 DAO::transRollback();
+                Logger::error("No se pudo eliminar el usuario: ".$e);
+                throw new Exception("No se pudo eliminar el usuario");
             }
             DAO::transEnd();
+            Logger::log("Usuario eliminado exitosamente");
 	}
   
 	/**
  	 *
- 	 *Este metodo desactiva un grupo, solo se podra desactivar un grupo si no hay ningun usuario que pertenezca a ?l.
+ 	 *Este metodo desactiva un grupo, solo se podra desactivar un grupo si no hay ningun usuario que pertenezca a el.
  	 *
  	 * @param id_rol int Id del grupo a eliminar
  	 **/
@@ -1692,6 +1844,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 
             Logger::log("Eliminando rol: ".$id_rol);
 
+            //valida que el rol exista en la base de datos.
             $validar = self::ValidarParametrosRol($id_rol);
             
             if(is_string($validar))
@@ -1700,21 +1853,32 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 throw new Exception($validar);
             }
 
+            //Se obtiene la lista de usuarios con este rol. Si almenos uno aun sigue activo,
+            //entonces no se puede eliminar el rol.
             $usuarios = UsuarioDAO::search(new Usuario(array( "id_rol" => $id_rol )));
             
-            if(!empty($usuarios))
+            foreach($usuarios as $usuario)
             {
-                Logger::error("No se puede eliminar este rol pues hay ".sizeof( $usuarios )." usuarios asigandos a el. ");
-
-                throw new Exception("No se puede eliminar este rol pues hay usuarios asigandos a el");
+                if($usuario->getActivo())
+                {
+                    Logger::error("No se puede eliminar este rol pues el usuario ".$usuario->getIdUsuario." lo tiene asignado");
+                    throw new Exception("No se puede eliminar este rol pues hay almenos un usuario asignado a el");
+                }
             }
 
             DAO::transBegin();
 
             try{
-            	//@andres: http://the-stickman.com/web-development/php/php-505-fatal-error-only-variables-can-be-passed-by-reference/
+            	//Se elimina el rol
             	$to_delete = RolDAO::getByPK( $id_rol );
                 RolDAO::delete( $to_delete );
+
+                //Se eliminan todos los registros de la tabla permiso_rol que contengan este rol
+                $permisos_rol = PermisoRolDAO::search(new PermisoRol( array( "id_rol" => $id_rol ) ));
+                foreach($permisos_rol as $permiso_rol)
+                {
+                    PermisoRolDAO::delete($permiso_rol);
+                }
 
             }catch(Exception $e){
                 DAO::transRollback();
@@ -1739,6 +1903,9 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	)
 	{  
             Logger::log("Listando roles con sus permisos");
+
+            //Si se ha obtenido alguno de los parametros, se llama al metodo search.
+            //Si no, se llama a getAll.
             if(!is_null($id_rol) || !is_null($id_permiso))
                 $permisos_roles = PermisoRolDAO::search(new PermisoRol(array( "id_rol" => $id_rol , "id_permiso" => $id_permiso )));
             else
@@ -1754,6 +1921,9 @@ require_once("interfaces/PersonalYAgentes.interface.php");
         )
         {
             Logger::log("Listando usuarios con sus permisos");
+
+            //Si se ha obtenido alguno de los parametros, se llama al metodo search,
+            //si no, se llama a getAll.
             if(!is_null($id_usuario) || !is_null($id_permiso))
                 $permisos_usuario = PermisoUsuarioDAO::search(new PermisoUsuario(array( "id_usuario" => $id_usuario , "id_permiso" => $id_permiso )));
             else
