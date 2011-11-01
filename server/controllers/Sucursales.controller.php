@@ -10,16 +10,52 @@ require_once("interfaces/Sucursales.interface.php");
 	
   class SucursalesController implements ISucursales{
 
+      //funcion para pruebas que obtiene el id de la caja de la sesion.
       private static function getCaja()
       {
           return 1;
       }
 
+      //funcion para pruebas que obtiene el id de la sucursal de la sesion.
       private static function getSucursal()
       {
           return 1;
       }
-  
+      
+      /*
+         *Se valida que un string tenga longitud en un rango de un maximo inclusivo y un minimo exclusvio.
+         *Regresa true cuando es valido, y un string cuando no lo es.
+         */
+          private static function validarString($string, $max_length, $nombre_variable,$min_length=0)
+	{
+		if(strlen($string)<=$min_length||strlen($string)>$max_length)
+		{
+		    return "La longitud de la variable ".$nombre_variable." proporcionada (".$string.") no esta en el rango de ".$min_length." - ".$max_length;
+		}
+		return true;
+    }
+
+
+        /*
+         * Se valida que un numero este en un rango de un maximo y un minimo inclusivos
+         * Regresa true cuando es valido, y un string cuando no lo es
+         */
+	private static function validarNumero($num, $max_length, $nombre_variable, $min_length=0)
+	{
+	    if($num<$min_length||$num>$max_length)
+	    {
+	        return "La variable ".$nombre_variable." proporcionada (".$num.") no esta en el rango de ".$min_length." - ".$max_length;
+	    }
+	    return true;
+	}
+        
+        private static function validarParametrosSucursal
+        (
+        )
+        {
+            
+        }
+      
 	/**
  	 *
  	 *Creara un nuevo almacen en una sucursal, este almacen contendra lotes.
