@@ -49,12 +49,318 @@ require_once("interfaces/Sucursales.interface.php");
 	    return true;
 	}
         
+        /*
+         * Valida los parametros de la tabla sucursal. Cuando algun parametro es incorrecto regresa
+         * un string, cuando no hay error regresa true
+         */
         private static function validarParametrosSucursal
         (
+                $id_sucursal = null,
+                $id_direccion = null,
+                $rfc = null,
+                $razon_social = null,
+                $descripcion = null,
+                $id_gerente = null,
+                $saldo_a_favor = null,
+                $fecha_apertura = null,
+                $activa = null,
+                $fecha_baja = null,
+                $margen_utilidad = null,
+                $descuento = null
         )
         {
+            //Se valida que la sucursal exista en la base de datos
+            if(!is_null($id_sucursal))
+            {
+                if(is_null(SucursalDAO::getByPK($id_sucursal)))
+                {
+                    return "La sucursal con id: ".$id_sucursal." no existe";
+                }
+            }
             
+            //Se valida que la direccion exista en la base de dats
+            if(!is_null($id_direccion))
+            {
+                if(is_null(DireccionDAO::getByPK($id_direccion)))
+                {
+                    return "La direccion con id: ".$id_direccion." no existe";
+                }
+            }
+            
+            //Se valida que el rfc solo tenga letras de la A-Z y 0-9.
+            if(!is_null($rfc))
+            {
+                $e=self::validarString($curp, 30, "rfc");
+                if(is_string($e))
+                    return $e;
+                if(preg_match('/[^A-Z0-9]/' ,$rfc))
+                        return "El rfc ".$rfc." contiene caracteres fuera del rango A-Z y 0-9";
+            }
+            
+            //Se valida que la razon social tenga una longitud maxima de 100
+            if(!is_null($razon_social))
+            {
+                $e=self::validarString($razon_social, 100, "razon social");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //Se valida que la descripcion tenga una longitud maxima de 255
+            if(!is_null($descripcion))
+            {
+                $e=self::validarString($descripcion, 255, "descripcion");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //Se valida que el usuario gerente exista y que tenga el rol de gerente
+            if(!is_null($id_gerente))
+            {
+                $gerente = UsuarioDAO::getByPK($id_gerente);
+                if(is_null($gerente))
+                    return "El usuario con id: ".$id_gerente." no existe";
+                if($gerente->getIdRol()!=2)
+                {
+                    return "El usuario con id: ".$id_gerente." no es un gerente";
+                }
+            }
+            
+            //Se valida que el saldo a favor este en el rango
+            if(!is_null($saldo_a_favor))
+            {
+                $e=self::validarNumero($saldo_a_favor, 1.8e200, "saldo a favor");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //Se valida el boleano activa
+            if(!is_null($activa))
+            {
+                $e=self::validarNumero($activa, 1, "activa");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //Se valida el margen de utilidad
+            if(!is_null($margen_utilidad))
+            {
+                $e=self::validarNumero($margen_utilidad, 1.8e200, "margen de utilidad");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //Se valida el descuento. El descuento e sun porcentaje y no puede ser mayor a 100
+            if(!is_null($descuento))
+            {
+                $e=self::validarNumero($descuento, 100, "descuento");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //No se encontro error, regresa true
+            return true;
         }
+        
+        /*
+         * Valida los parametros de la tabla almacen. Cuando algun parametro es incorrecto
+         * regresa un string. Cuando no hay error regresa true.
+         */
+        private static function validarParametrosAlmacen
+        (
+                $id_almacen = null,
+                $id_sucursal = null,
+                $id_empresa = null,
+                $id_tipo_almacen = null,
+                $nombre = null,
+                $descripcion = null,
+                $activo = null
+        )
+        {
+            //Valida que el almacen exista en la base de datos
+            if(!is_null($id_almacen))
+            {
+                if(is_null(AlmacenDAO::getByPK($id_almacen)))
+                        return "El almacen con id: ".$id_almacen." no existe";
+            }
+            
+            //Valida que la sucursal exista en la base de datos
+            if(!is_null($id_sucursal))
+            {
+                if(is_null(SucursalDAO::getByPK($id_sucursal)))
+                        return "La sucursal con id: ".$id_sucursal." no existe";
+            }
+            
+            //Valida que la empresa exista en la base de datos
+            if(!is_null($id_empresa))
+            {
+                if(is_null(EmpresaDAO::getByPK($id_empresa)))
+                        return "La empresa con id: ".$id_empresa." no existe";
+            }
+            
+            //Valida que el tipo de almacen exista en la base de datos
+            if(!is_null($id_tipo_almacen))
+            {
+                if(is_null(TipoAlmacenDAO::getByPK($id_tipo_almacen)))
+                        return "El tipo de almacen con id: ".$id_tipo_almacen." no existe";
+            }
+            
+            //Valida que el nombre tenga una longitud maxima de 100
+            if(!is_null($nombre))
+            {
+                $e = self::validarString($nombre, 100, "nombre");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //Valida que la descripcion tenga una longitud maxima de 255
+            if(!is_null($descripcion))
+            {
+                $e = self::validarString($descripcion, 255, "descripcion");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //Valida el boleano activo
+            if(!is_null($activo))
+            {
+                $e = self::validarNumero($activo, 1, "activo");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //No se encontro error, regresa true
+            return true;
+        }
+        
+        /*
+         * Valida los parametros de la tabla caja. Cuando algun parametro es incorrecto
+         * regresa un string. Cuando no hay error, regresa verdadero
+         */
+        private static function validarParametrosCaja
+        (
+                $id_caja = null,
+                $id_sucursal = null,
+                $token = null,
+                $descripcion = null,
+                $abierta = null,
+                $saldo = null,
+                $control_billetes = null,
+                $activa = null
+        )
+        {
+            //Valida que la caja exista en la base de datos
+            if(!is_null($id_caja))
+            {
+                if(is_null(CajaDAO::getByPK($id_caja)))
+                        return "La caja con id: ".$id_caja." no existe";
+            }
+            
+            //Valida que la sucursal exista en l abase de datos
+            if(!is_null($id_sucursal))
+            {
+                if(is_null(SucursalDAO::getByPK($id_sucursal)))
+                        return "La sucursal con id: ".$id_sucursal." no existe";
+            }
+            
+            //Valida que el token tenga un maximo de 32 caracteres y que solo tenga letras mayusculas, minusculas y numeros
+            if(!is_null($token))
+            {
+                $e = self::validarString($token, 32, "token");
+                if(is_string($e))
+                    return $e;
+                if(preg_match('/[^a-zA-Z0-9]/' ,$token))
+                            return "El token (".$token.") contiene caracteres que no son alfanumericos";
+            }
+            
+            //Valida que la descripcion tenga un maximo de 32 caracteres
+            if(!is_null($descripcion))
+            {
+                $e = self::validarString($descripcion, 32, "descripcion");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //Valida el boleano abierta
+            if(!is_null($abierta))
+            {
+                $e = self::validarNumero($abierta, 1, "abierta");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //Valida que el saldo este en rango
+            if(!is_null($saldo))
+            {
+                $e = self::validarNumero($saldo, 1.8e200, "saldo");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //Valida el boleano control de billetes
+            if(!is_null($control_billetes))
+            {
+                $e = self::validarNumero($control_billetes, 1, "control de billetes");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //Valida el boleano activa
+            if(!is_null($activa))
+            {
+                $e = self::validarNumero($activa, 1, "activa");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //No se encontro error, regresa true
+            return true;
+        }
+        
+        /*
+         * Valida los parametros de la tabla traspaso. Cuando algun parametro es erroneo
+         * regresa un string. Si no hay error, regresa true.
+         */
+        private static function validarParametrosTraspaso
+        (
+                $id_traspaso = null,
+                $id_usuario = null,
+                $id_almacen = null,
+                $fecha = null
+        )
+        {
+            //Verifica que el traspaso exista en la base de datos
+            if(!is_null($id_traspaso))
+            {
+                if(is_null(TraspasoDAO::getByPK($id_traspaso)))
+                        return "El traspaso con id: ".$id_traspaso." no existe";
+            }
+            
+            //Verifica que el usuario exista en la base de datos
+            if(!is_null($id_usuario))
+            {
+                if(is_null(UsuarioDAO::getByPK($id_usuario)))
+                        return "El usuario con id: ".$id_usuario." no existe";
+            }
+            
+            //Verifica que el almacen exista en la base de datos
+            if(!is_null($id_almacen))
+            {
+                if(is_null(AlmacenDAO::getByPK($id_almacen)))
+                    return "El almacen con id: ".$id_almacen." no existe";
+            }
+            
+            //Verifica que la fecha este en el rango
+            if(!is_null($fecha))
+            {
+                $e = self::validarString($fecha, strlen("Y-m-d H:i:s"), "fecha");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //No se encontro error, regresa true
+            return true;
+        }
+        
       
 	/**
  	 *
@@ -77,23 +383,42 @@ require_once("interfaces/Sucursales.interface.php");
 	)
 	{
             Logger::log("Creando nuevo almacen");
-            if(is_null(SucursalDAO::getByPK($id_sucursal)))
+            
+            //Se validan los parametros obtenidos del almacen
+            $validar = self::validarParametrosAlmacen(null, $id_sucursal, $id_empresa, $id_tipo_almacen, $nombre, $descripcion, null);
+            if(is_string($validar))
             {
-                Logger::error("La sucursal con id: ".$id_sucursal." no existe");
-                throw new Exception("La sucursal con id: ".$id_sucursal." no existe");
+                Logger::log($validar);
+                throw new Exception($validar);
             }
-            if(is_null(EmpresaDAO::getByPK($id_empresa)))
+            
+            //Se valida si hay un almacen con ese mimso nombre en esta sucursal
+            $almacenes = AlmacenDAO::search(new Almacen( array( "id_sucursal" => $id_sucursal ) ) );
+            foreach($almacenes as $almacen)
             {
-                Logger::error("La empresa con id: ".$id_empresa." no existe");
-                throw new Exception("La empresa con id: ".$id_empresa." no existe");
+                if($almacen->getNombre()==trim($nombre))
+                {
+                    Logger::log("El nombre (".$nombre.") ya esta siendo usado por el almacen: ".$almacen->getIdAlmacen());
+                    throw new Exception("El nombre ya esta en uso");
+                }
             }
-            if(is_null(TipoAlmacenDAO::getByPK($id_tipo_almacen)))
+            
+            //Solo puede haber un almacen por tipo por cada empresa en una sucursal.
+            //Sin embargo, puede haber muchos almacenes de consignacion de la misma empresa en la misma sucursal.
+            if($id_tipo_almacen!=2)
             {
-                Logger::error("El tipo de almacen con id: ".$id_tipo_almacen." no existe");
-                throw new Exception("El tipo de almacen con id: ".$id_tipo_almacen." no existe");
+                $almacenes = AlmacenDAO::search( new Almacen( array( "id_sucursal" => $id_sucursal ,
+                    "id_empresa" => $id_empresa , "id_tipo_almacen" => $id_tipo_almacen ) ) );
+                if(!empty($almacenes))
+                {
+                    Logger::error("Ya existe un almacen (".$almacenes[0]->getIdAlmacen().") de este tipo (".$id_tipo_almacen.") en esta sucursal (".$id_sucursal.") para esta empresa (".$id_empresa.")");
+                    throw new Exception("Ya existe un almacen de este tipo en esta sucursal para esta empresa");
+                }
             }
+            
+            //Se inicializa la el registro a guardar con los datos obtenidos.
             $almacen=new Almacen();
-            $almacen->setNombre($nombre);
+            $almacen->setNombre(trim($nombre));
             $almacen->setDescripcion($descripcion);
             $almacen->setIdSucursal($id_sucursal);
             $almacen->setIdEmpresa($id_empresa);
@@ -102,6 +427,7 @@ require_once("interfaces/Sucursales.interface.php");
             DAO::transBegin();
             try
             {
+                //Se guarda el almacen
                 AlmacenDAO::save($almacen);
             }
             catch(Exception $e)
@@ -112,7 +438,7 @@ require_once("interfaces/Sucursales.interface.php");
             }
             DAO::transEnd();
             Logger::log("Almacen creado exitosamente");
-            return $almacen->getIdAlmacen();
+            return array( "id_almacen" => $almacen->getIdAlmacen());
 	}
   
 	/**
@@ -1372,7 +1698,7 @@ require_once("interfaces/Sucursales.interface.php");
                 Logger::error("El usuario con id: ".$gerente." no existe");
                 throw new Exception("El usuario con id: ".$gerente." no existe");
             }
-            if($gerente->getIdRol()!=3)
+            if($gerente->getIdRol()!=2)
             {
                 Logger::error("El usuario no tiene rol de gerente");
                 throw new Exception("El usuario no tiene rol de gerente");
