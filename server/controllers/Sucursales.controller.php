@@ -416,7 +416,7 @@ require_once("interfaces/Sucursales.interface.php");
                 }
             }
             
-            //Se inicializa la el registro a guardar con los datos obtenidos.
+            //Se inicializa el registro a guardar con los datos obtenidos.
             $almacen=new Almacen();
             $almacen->setNombre(trim($nombre));
             $almacen->setDescripcion($descripcion);
@@ -470,16 +470,27 @@ require_once("interfaces/Sucursales.interface.php");
             )
                 $parametros=true;
             $almacenes=null;
+            
+            //Si se recibieron parametros, se buscan los almacenes con dichos parametros, si no
+            //se imprimen todos los almacenes
             if($parametros)
             {
                 Logger::log("Se recibieron parametros, se listan las almacenes en rango");
+                
+                //Se valida el parametro activo
+                $validar = self::validarParametrosAlmacen(null, null, null, null, null, null, $activo);
+                if(is_string($validar))
+                {
+                    Logger::error($validar);
+                    throw new Exception($validar);
+                }
+                
                 $almacen_criterio_1=new Almacen();
-                $almacen_criterio_2=new Almacen();
                 $almacen_criterio_1->setActivo($activo);
                 $almacen_criterio_1->setIdEmpresa($id_empresa);
                 $almacen_criterio_1->setIdSucursal($id_sucursal);
                 $almacen_criterio_1->setIdTipoAlmacen($id_tipo_almacen);
-                $almacenes=AlmacenDAO::byRange($almacen_criterio_1, $almacen_criterio_2);
+                $almacenes=AlmacenDAO::search($almacen_criterio_1);
             }
             else
             {
@@ -530,6 +541,8 @@ require_once("interfaces/Sucursales.interface.php");
 	)
 	{
             Logger::log("Realizando la venta");
+            
+            //Se obtiene el id del usuario actualmente logueado
             $id_usuario=LoginController::getCurrentUser();
             if(is_null($id_usuario))
             {
