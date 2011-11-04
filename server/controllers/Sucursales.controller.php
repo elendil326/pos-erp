@@ -1884,6 +1884,8 @@ require_once("interfaces/Sucursales.interface.php");
 	)
 	{
             Logger::log("Listando sucursales");
+            
+            //bandera para saber si se recibieron parametros o no
             $parametros=false;
             if
             (
@@ -1895,11 +1897,21 @@ require_once("interfaces/Sucursales.interface.php");
                     !is_null($fecha_apertura_superior_que)
             )
                 $parametros=true;
+            
+            //obejtos que almacenaran las comparaciones
             $sucursales=array();
             $sucursales1=array();
+            
+            //Si se recibieron parametros, se almacenan los distintos parametros en los objetos.
+            //Los parametros de comparacion como saldo inferior que o superior que proponen limites
+            //y cuando solo es pasado alguno de ellos, el otro objeto almacena el mayor o menor posible
+            //para conseguir la mejor comparacion.
             if($parametros)
             {
                 Logger::log("se recibieron parametros, se listan las sucursales en rango");
+                
+                //Cuando se recibe el parametro id_empresa, ademas de traer las sucursales con en el rango de los demas parametros
+                //se tiene que traer se traen todas las sucursales de esa empresa y se hace una interseccion.
                 if(!is_null($id_empresa))
                 {
                     $sucursales_empresa=SucursalEmpresaDAO::search(new SucursalEmpresa(array( "id_empresa" => $id_empresa )));
@@ -1944,7 +1956,9 @@ require_once("interfaces/Sucursales.interface.php");
                 }
                 $sucursales2=SucursalDAO::byRange($sucursal_criterio1, $sucursal_criterio2);
                 $sucursales=array_intersect($sucursales1, $sucursales2);
-            }
+            } /* fin if de parametros*/
+            
+            //Si no se recibieron parametros, se listan todas las sucursales
             else
             {
                 Logger::log("No se recibieron parametros, se listan todas las sucursales");
@@ -1977,11 +1991,6 @@ require_once("interfaces/Sucursales.interface.php");
 	{
             Logger::log("Abriendo caja");
             $caja=CajaDAO::getByPK($id_caja);
-            if(is_null($caja))
-            {
-                Logger::error("La caja con id: ".$id_caja." no existe");
-                throw new Exception("La caja con id: ".$id_caja." no existe");
-            }
             if(!$caja->getActiva())
             {
                 Logger::error("La caja no esta activa y no puede ser abierta");
