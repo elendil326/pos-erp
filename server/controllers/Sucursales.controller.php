@@ -361,8 +361,337 @@ require_once("interfaces/Sucursales.interface.php");
             return true;
         }
         
-      
-	/**
+        /*
+         * Valida los parametros para la tabla venta. Cuando algun parametro es erroneo
+         * regres aun string con el error. Cuando no hay error, regresa verdadero.
+         */
+        private static function validarParametrosVenta
+        (
+                $id_venta = null,
+                $id_venta_caja = null,
+                $id_comprador_venta = null,
+                $tipo_de_venta = null,
+                $subtotal = null,
+                $impuesto = null,
+                $descuento = null,
+                $total = null,
+                $saldo = null,
+                $cancelada = null,
+                $tipo_de_pago = null,
+                $retencion = null
+        )
+        {
+            //valida que la venta exista en la base de datos
+            if(!is_null($id_venta))
+            {
+                if(is_null(VentaDAO::getByPK($id_venta)))
+                {
+                    return "La venta con id: ".$id_venta." no existe";
+                }
+            }
+            
+            //valida que la venta caja este en el rango
+            if(!is_null($id_venta_caja))
+            {
+                $e = self::validarNumero($id_venta_caja, PHP_INT_MAX, "id venta caja");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el comprador de la venta exista en la base de datos y sea un cliente
+            if(!is_null($id_comprador_venta))
+            {
+                $usuario = UsuarioDAO::getByPK($id_comprador_venta);
+                if(is_null($usuario))
+                {
+                    return "El usuario con id ".$id_comprador_venta." no existe";
+                }
+                if(is_null($usuario->getIdClasificacionCliente()))
+                {
+                    return "El usuario no es un cliente pues no tiene una clasificacion como tal.";
+                }     
+                if(!$usuario->getActivo())
+                {
+                    return "El usuario no esta activo, no se le puede vender a un usuario inactivo";
+                }
+            }
+            
+            //valida que el tipo de venta sea contado o a credito
+            if(!is_null($tipo_de_venta))
+            {
+                if($tipo_de_venta!="contado"&&$tipo_de_venta!="credito")
+                    return "El tipo de venta (".$tipo_de_venta.") no es valido, tiene que ser 'credito' o 'contado'";
+            }
+            
+            //valida que el subtotal este en el rango
+            if(!is_null($subtotal))
+            {
+                $e=self::validarNumero($subtotal, 1.8e200, "subtotal");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el impuesto este en el rango
+            if(!is_null($impuesto))
+            {
+                $e = self::validarNumero($impuesto, 1.8e200, "impuesto");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el descuento este en el rango
+            if(!is_null($descuento))
+            {
+                $e = self::validarNumero($descuento, 1.8e200, "descuento");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el total este en el rango
+            if(!is_null($total))
+            {
+                $e = self::validarNumero($total, 1.8e200, "total");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el saldo este en el rango
+            if(!is_null($saldo))
+            {
+                $e = self::validarNumero($saldo, 1.8e200, "saldo");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida el boleano cancelada
+            if(!is_null($cancelada))
+            {
+                $e = self::validarNumero($cancelada, 1, "cancelada");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida el tipo de pago
+            if(!is_null($tipo_de_pago))
+            {
+                if($tipo_de_pago!="cheque"&&$tipo_de_pago!="tarjeta"&&$tipo_de_pago!="efectivo")
+                    return "El tipo de pago (".$tipo_de_pago.") no es valido. Solo se permite 'cheque', 'tarjeta' y 'efectivo'";
+            }
+            
+            //valida que la retencion este en rango
+            if(!is_null($retencion))
+            {
+                $e = self::validarNumero($retencion, 1.8e200, "retencion");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //No se encontro ningun error, regresa true
+            return true;
+        }
+            
+        /*
+         * Valida los parametros de la tabla venta_orden. Cuando un parametro es erroneo regresa
+         * un string con el error. Cuando no hay error, regresa verdadero.
+         */
+        private static function validarParametrosVentaOrden
+        (
+                $id_venta = null,
+                $id_orden_de_servicio = null,
+                $precio = null,
+                $descuento = null,
+                $impuesto = null,
+                $retencion = null
+        )
+        {
+            //valida que la venta exista en la base de datos
+            if(!is_null($id_venta))
+            {
+                if(is_null(VentaDAO::getByPK($id_venta)))
+                        return "La venta con id ".$id_venta." no existe";
+            }
+            
+            //valida que la orden de servicio exista en la base de datos
+            if(!is_null($id_orden_de_servicio))
+            {
+                if(is_null(OrdenDeServicioDAO::getByPK($id_orden_de_servicio)))
+                        return "La orden de servicio con id ".$id_orden_de_servicio." no existe";
+            }
+            
+            //valida que el precio este en el rango
+            if(!is_null($precio))
+            {
+                $e = self::validarNumero($precio, 1.8e200, "precio");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el descuento este en rango
+            if(!is_null($descuento))
+            {
+                $e = self::validarNumero($descuento, 1.8e200, "descuento");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el impuesto este en rango
+            if(!is_null($impuesto))
+            {
+                $e = self::validarNumero($impuesto, 1.8e200, "impuesto");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que la retencion este en rango
+            if(!is_null($retencion))
+            {
+                $e = self::validarNumero($retencion, 1.8e200, "retencion");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //No se encontro error, regresa true
+            return true;
+        }
+        
+        /*
+         * Valida los parametros de la tabla venta_paquete. Cuando algun parametro es erroneo
+         * regresa un string con el error. Si no se encontro error regresa verdadero
+         */
+        private static function validarParametrosVentaPaquete
+        (
+                $id_venta = null,
+                $id_paquete = null,
+                $cantidad = null,
+                $precio = null,
+                $descuento = null
+        )
+        {
+            //validar que la venta exista en la base de datos
+            if(!is_null($id_venta))
+            {
+                if(is_null(VentaDAO::getByPK($id_venta)))
+                        return "La venta con id ".$id_venta." no existe";
+            }
+            
+            //validar que el paquete exista en la base de datos
+            if(!is_null($id_paquete))
+            {
+                if(is_null(PaqueteDAO::getByPK($id_paquete)))
+                        return "El paquete con id ".$id_paquete." no existe";
+            }
+            
+            //validar que la cantidad este en rango
+            if(!is_null($cantidad))
+            {
+                $e = self::validarNumero($cantidad, 1.8e200, "cantidad");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //validar que el precio este en rango
+            if(!is_null($precio))
+            {
+                $e = self::validarNumero($precio, 1.8e200, "precio");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //validar que el descuento este en rango
+            if(!is_null($descuento))
+            {
+                $e = self::validarNumero($descuento, 1.8e200, "descuento");
+                if(is_string($e))
+                    return $e;
+            }
+        }
+        
+        /*
+         * Valida los parametros de la tabla venta_paquete. Cuando algun parametro es erroneo
+         * regresa un string con el error. Cuando no encuentra error, regresa verdadero.
+         */
+        private static function validarParametrosVentaProducto
+        (
+                $id_venta = null,
+                $id_producto = null,
+                $precio = null,
+                $cantidad = null,
+                $descuento = null,
+                $impuesto = null,
+                $retencion = null,
+                $id_unidad = null
+        )
+        {
+            //valida que la venta exista en la base de datos
+            if(!is_null($id_venta))
+            {
+                if(is_null(VentaDAO::getByPK($id_venta)))
+                {
+                    return "La venta con id ".$id_venta." no existe";
+                }
+            }
+            
+            //valida que el producto exista en la base de datos
+            if(!is_null($id_producto))
+            {
+                if(is_null(ProductoDAO::getByPK($id_producto)))
+                {
+                    return "El producto con id ".$id_producto." no existe";
+                }
+            }
+            
+            //valida que el precio este en el rango
+            if(!is_null($precio))
+            {
+                $e = self::validarNumero($precio,1.8e200,"precio");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que la cantidad este en el rango
+            if(!is_null($cantidad))
+            {
+                $e = self::validarNumero($cantidad, PHP_INT_MAX, "cantidad");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el descuento este en el rango
+            if(!is_null($descuento))
+            {
+                $e = self::validarNumero($descuento, 1.8e200, "descuento");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el impuesto este en rango
+            if(!is_null($impuesto))
+            {
+                $e = self::validarNumero($impuesto, 1.8e200, "impuesto");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que la retencion este en rango
+            if(!is_null($retencion))
+            {
+                $e = self::validarNumero($retencion, 1.8e200, "retencion");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que la unidad exista en la base de datos
+            if(!is_null($id_unidad))
+            {
+                if(is_null(UnidadDAO::getByPK($id_unidad)))
+                        return "La unidad con id ".$id_unidad." no existe";
+            }
+            
+            //no se encontro error, regresa true
+            return true;
+        }
+
+        /**
  	 *
  	 *Creara un nuevo almacen en una sucursal, este almacen contendra lotes.
  	 *
@@ -549,12 +878,19 @@ require_once("interfaces/Sucursales.interface.php");
                 Logger::error("No se pudo obtener al usuario de la sesion actual, ya inicio sesion?");
                 throw new Exception("No se pudo obtener al usuario de la sesion actual, ya inicio sesion?");
             }
-            $usuario=UsuarioDAO::getByPK($id_comprador);
-            if(is_null($usuario))
+            
+            //Se validan los parametros de la venta
+            $validar = self::validarparametrosVenta(null,$id_venta_caja,$id_comprador,$tipo_venta,$subtotal,$impuesto,$descuento,$total,$saldo,null,$tipo_pago,$retencion);
+            if(is_string($validar))
             {
-                Logger::error("El usuario recibido como comprador no existe");
-                throw new Exception("El usuario recibido como comprador no existe");
+                Logger::error($validar);
+                throw new Exception($validar);
             }
+            
+            //Se busca al usuario comprador
+            $usuario=UsuarioDAO::getByPK($id_comprador);
+            
+            //Se inicializa la venta con los parametros obtenidos
             $venta=new Venta();
             $venta->setRetencion($retencion);
             $venta->setIdCompradorVenta($id_comprador);
@@ -573,20 +909,32 @@ require_once("interfaces/Sucursales.interface.php");
             DAO::transBegin();
             try
             {
+                //Si la venta es de contado, se verifica el tipo de pago para realizar modificaciones
                 if($tipo_venta==="contado")
-                {
-                    if($tipo_pago==="cheque"&&is_null($cheques))
-                    {
-                        throw new Exception("El tipo de pago es con cheque pero no se recibio informacion del mismo");
-                    }
+                {   
+                    //Si se recibe un saldo registra una advertencia
                     if(!is_null($saldo))
                     {
                         Logger::warn("Se recibio un saldo cuando la venta es de contado, el saldo se tomara del total");
                     }
+                    
+                    //El saldo de la venta se toma del total, pues siendo de contado, se tiene que pagar todo al momento de la venta;
+                    //y se guarda la venta
                     $venta->setSaldo($total);
                     VentaDAO::save($venta);
+                    
+                    //Si el tipo de pago es con cheque se realizan movimientos extras con los cheques
                     if($tipo_pago==="cheque")
                     {
+                        //Si no se recibe informacion de los cheques manda error
+                        if(is_null($cheques))
+                        {
+                            throw new Exception("El tipo de pago es con cheque pero no se recibio informacion del mismo");
+                        }
+                        
+                        //Se inicializa un registro de la tabla cheque_venta con el id de la venta guardada
+                        //Se guarda un cheque por cada uno de los recibidos y se usa el id de la insercion para
+                        //guardar el registro cheque_venta.
                         $cheque_venta = new ChequeVenta();
                         $cheque_venta->setIdVenta($venta->getIdVenta());
                         foreach($cheques as $cheque)
@@ -596,25 +944,32 @@ require_once("interfaces/Sucursales.interface.php");
                             ChequeVentaDAO::save($cheque_venta);
                         }
                     }
+                    
+                    //Si el tipo de pago es con efectivo, se realizan movimientos extras con la caja
                     else if($tipo_pago==="efectivo")
                     {
+                        //Se modifica la caja en la cual se realiza la transaccion, si la caja lleva un control de billetes
+                        //se le pasan los billetes que se recibieron como pago. Si se entrega cambio y se lleva control de
+                        //billetes solo se pasan lso billetes que salieron por concepto del cambio.
                         CajasController::modificarCaja($venta->getIdCaja(), 1, $billetes_pago, $total);
                         if(!is_null($billetes_cambio))
                         {
                             CajasController::modificarCaja($venta->getIdCaja(), 0, $billetes_cambio, 0);
                         }
                     }
-                    else 
-                    {
-                        throw new Exception("Se recibio un tipo de pago de: ".$tipo_pago." para esta venta de contado");
-                    }
-                }
+                }/*Fin if de tipo de venta igual a contado*/
+                
+                //Si la venta es a credito, se modifica el saldo del ejercicio del usuario comprador.
                 else if($tipo_venta=="credito")
                 {
-                    if(!is_null($saldo))
+                    if(is_null($saldo))
                     {
                         Logger::warn("No se recibio un saldo, se tomara 0 como saldo");
                         $saldo=0;
+                    }
+                    else if($saldo>$total)
+                    {
+                        throw new Exception("El saldo es mayor al total, no se puede pagar más por una venta que su total.");
                     }
                     $venta->setSaldo($saldo);
                     VentaDAO::save($venta);
@@ -622,24 +977,26 @@ require_once("interfaces/Sucursales.interface.php");
                     $usuario->setVentasACredito($usuario->getVentasACredito()+1);
                     UsuarioDAO::save($usuario);
                 }
-                else
-                {
-                    throw new Exception("El tipo de venta recibido no es valido");
-                }
+                
+                //Si el detalle de las ordenes compradas, el detalle de los paquetes y el detalle de los productos
+                //son nulos, manda error.
                 if(is_null($detalle_orden)&&is_null($detalle_paquete)&&is_null($detalle_producto))
                 {
                     throw new Exception ("No se recibieron ni paquetes ni productos ni servicios para esta venta");
                 }
+                
+                //Por cada detalle, se valida la informacion recibida, se guarda en un registro
+                //que contiene el id de la venta generada y se guarda el detalle en su respectiva tabla.
+                
                 if(!is_null($detalle_paquete))
                 {
                     $d_paquete=new VentaPaquete();
                     $d_paquete->setIdVenta($venta->getIdVenta());
                     foreach($detalle_paquete as $d_p)
                     {
-                        if(is_null(PaqueteDAO::getByPK($d_p["id_paquete"])))
-                        {
-                            throw new Exception("El paquete con id: ".$d_p["id_paquete"]." no existe");
-                        }
+                        $validar = self::validarParametrosVentaPaquete(null,$d_p["id_paquete"],$d_p["cantidad"],$d_p["precio"],$d_p["descuento"]);
+                        if(is_string($validar))
+                            throw new Exception($validar);
                         $d_paquete->setCantidad($d_p["cantidad"]);
                         $d_paquete->setDescuento($d_p["descuento"]);
                         $d_paquete->setIdPaquete($d_p["id_paquete"]);
@@ -647,22 +1004,17 @@ require_once("interfaces/Sucursales.interface.php");
                         VentaPaqueteDAO::save($d_paquete);
                     }
                 }
+                
                 if(!is_null($detalle_producto))
                 {
                     $d_producto=new VentaProducto();
                     $d_producto->setIdVenta($venta->getIdVenta());
                     foreach($detalle_producto as $d_p)
                     {
+                        $validar = self::validarParametrosVentaProducto(null,$d_p["id_producto"],$d_p["precio"],$d_p["cantidad"],$d_p["descuento"],$d_p["impuesto"],$d_p["retencion"],$d_p["id_unidad"]);
+                        if(is_string($validar))
+                            throw new Exception($validar);
                         $producto=ProductoDAO::getByPK($d_p["id_producto"]);
-                        if(is_null($producto))
-                        {
-                            throw new Exception("El producto con id: ".$d_p["id_producto"]." no existe");
-                        }
-                        if(is_null(UnidadDAO::getByPk($d_p["id_unidad"])))
-                        {
-                            throw new Exception("La unidad con id: ".$d_p["id_unidad"]." no existe");
-                        }
-                        
                         if(!$producto->getCompraEnMostrador())
                         {
                             throw new Exception("No se puede vender el producto con id ".$d_p["id_producto"]." en mostrador");
@@ -675,19 +1027,22 @@ require_once("interfaces/Sucursales.interface.php");
                         $d_producto->setPrecio($d_p["precio"]);
                         $d_producto->setRetencion($d_p["retencion"]);
                         VentaProductoDAO::save($d_producto);
+                        
+                        //Se descuentan los productos especificados de los almacenes.
                         self::DescontarDeAlmacenes($d_producto, self::getSucursal());
                     }
-                }
+                }/* Fin de if para detalle_producto */
+                
+                
                 if(!is_null($detalle_orden))
                 {
                     $d_orden = new VentaOrden();
                     $d_orden->setIdVenta($venta->getIdVenta());
                     foreach($detalle_orden as $d_p)
                     {
-                        if(is_null(OrdenDeServicioDAO::getByPK($d_p["id_orden_de_servicio"])))
-                        {
-                            throw new Exception("La orden de servicio con id: ".$d_p["id_orden_de_servicio"]." no existe");
-                        }
+                        $validar = self::validarParametrosVentaOrden(null,$d_p["id_orden_de_servicio"],$d_p["precio"],$d_p["descuento"],$d_p["impuesto"],$d_p["retencion"]);
+                        if(is_string($validar))
+                            throw new Exception($validar);
                         $d_orden->setDescuento($d_p["descuento"]);
                         $d_orden->setIdOrdenDeServicio($d_p["id_orden_de_servicio"]);
                         $d_orden->setImpuesto($d_p["impuesto"]);
@@ -696,31 +1051,42 @@ require_once("interfaces/Sucursales.interface.php");
                         VentaOrdenDAO::save($d_orden);
                     }
                 }
+                
+                //Se obtiene la relacion de empresas a las que pertenecera esta venta.
                 $id_empresas=self::ObtenerEmpresasParaAsignacionVenta($detalle_producto, $detalle_paquete, $detalle_orden);
+                
+                //Se genera un registro de la tabla venta_empresa, se le asigna el id de la venta generada
+                //y se recorren las empresas obtenidas para guardar nuevos registros en la tabla venta_empresa
                 $venta_empresa=new VentaEmpresa(array("id_venta" => $venta->getIdVenta()));
                 $n=count($id_empresas["id"]);
                 for($i = 0 ; $i < $n ; $i++)
                 {
                     $venta_empresa->setIdEmpresa($id_empresas["id"][$i]);
                     $venta_empresa->setTotal($id_empresas["total"][$i]);
-                    if($tipo_venta==="contado")
+                    if($venta->getSaldo()==$venta->getTotal())
                         $venta_empresa->setSaldada(1);
                     else
                         $venta_empresa->setSaldada(0);
                     VentaEmpresaDAO::save($venta_empresa);
                 }
-            }
+            } /* Fin del try */
             catch(Exception $e)
             {
                 DAO::transRollback();
                 Logger::error("No se pudo realizar la venta: ".$e);
-                throw $e;
+                throw "No se pudo realizar la venta";
             }
             DAO::transEnd();
             Logger::log("venta realizada exitosamente");
             return $venta->getIdVenta();
 	}
 
+        /*
+         * Este metodo analiza los arreglos del detalle de una venta y regresa
+         * un arreglo de dos dimensiones donde un renglon cuenta con los ids
+         * de las empresas y el segundo renglon cuenta con el total correspondiente
+         * a esa empresa del total de la venta.
+         */
         private static function ObtenerEmpresasParaAsignacionVenta
         (
                 $detalle_producto=null,
@@ -728,9 +1094,18 @@ require_once("interfaces/Sucursales.interface.php");
                 $detalle_orden=null
         )
         {
+            //inicializa los arreglos base
             $empresas=array();
             $id_empresas=array( "id" => array(), "total" => array());
+            
+            //bandera que indica si se recibio alguno de los 3 detalles
             $parametro=false;
+            
+            //Para todos los detalles, se recorre el detalle recibido, se validan sus datos
+            //y se buscan las empresas que tengan ese elemento. Despues se llama al metodo
+            //InsertarIdEmpresa que se encarga de acomodar el arreglo de empresas y su total
+            //correspondiente
+            
             if(!is_null($detalle_producto))
             {
                 $parametro=true;
@@ -774,21 +1149,20 @@ require_once("interfaces/Sucursales.interface.php");
                     }
                 }
             }
+            
+            //Si no se recibio ningun detalle se arroja una excepcion
             if(!$parametro)
             {
                 throw new Exception("No se recibio un id_producto ni un id_paquete ni un id_orden");
             }
             
-            foreach($empresas as $empresa)
-            {
-                foreach($empresa as $objeto)
-                {
-                    self::InsertarIdEmpresa($objeto, $id_empresas);
-                }
-            }
             return $id_empresas;
         }
-
+        
+        /*
+         * Este metodo Inserta un id de una empresa con su precio a un arreglo.
+         * En el arreglo solo puede haber una ocurrencia de un id de empresa
+         */
         private static function InsertarIdEmpresa
         (
                 $objeto,
@@ -796,7 +1170,10 @@ require_once("interfaces/Sucursales.interface.php");
                 $precio
         )
         {
+            //bandera que indica si el id de la empresa se repite
             $repetido=false;
+            
+            //Se busca el id de la empresa proveniente del objeto en el arreglo actal de ids
             $n=count($id_empresas["id"]);
             for($i = 0; $i < $n; $i++)
             {
@@ -806,16 +1183,29 @@ require_once("interfaces/Sucursales.interface.php");
                     break;
                 }
             }
+            
+            //Si no esta repetido se inserta el nuevo id con su total correspondiente.
             if(!$repetido)
             {
                 array_push($id_empresas["id"],$objeto->getIdEmpresa());
                 array_push($id_empresas["total"],$precio);
             }
+            
+            //si la variable i no llego a n quiere decir que el id esta repetido.
+            //La variable i se quedo en la posicion donde se encontro el id de la empresa,
+            //solo se accede a el y se incrementa su total.
             else if($i!=$n)
             {
                 $id_empresas["total"][$i]+=$precio;
             }
         }
+        
+        
+        /*
+         * Este metodo recibe un registro de la tabla venta_producto y la sucursal,
+         * de tal forma que descontara de los almacenes de esa sucursal de manera uniforme
+         * el producto recibido en el registro de venta_producto
+         */
 
         private static function DescontarDeAlmacenes
         (
@@ -823,9 +1213,18 @@ require_once("interfaces/Sucursales.interface.php");
                 $id_sucursal
         )
         {
+            //se buscan los almacenes de la sucursal
             $almacenes=AlmacenDAO::search(new Almacen(array("id_sucursal" => $id_sucursal)));
+            
+            //Arreglo que contendra los almacenes con el producto que buscamos.
             $productos_almacen=array();
+            
+            //El total de productos en existencia en todos los almacenes
             $total=0;
+            
+            //por cada almacen en la sucursal que no sea de consignacion se busca el producto en dicho almacen,
+            //si el producto fue encontrado se ingresa en el arreglo de productos_almacen y si su existencia es mayor a 0
+            //se lleva incrementa el total de productos en existencia por parte de todos los almacenes
             foreach($almacenes as $almacen)
             {
                 if($almacen->getIdTipoAlmacen()==2)
@@ -838,17 +1237,58 @@ require_once("interfaces/Sucursales.interface.php");
                     array_push($productos_almacen,$producto_almacen);
                 }
             }
+            
+            //Si productos_almacen queda vacío, quiere decir que no se encontro el producto en ningún almacen de esta sucursal
             if(empty ($productos_almacen))
             {
                 throw new Exception("No se encontro el producto en los almacenes de esta sucursal");
             }
+            
+            //La cantidad de producto que estamos buscando vender
             $n=$detalle_producto->getCantidad();
+            
+            //El numero de almacenes que cuentan con el producto
             $n_almacenes=count($productos_almacen);
+            
+            //La unidad en la que se encuentra el producto, si no existe ocurre un error fatal.
             $unidad=UnidadDAO::getByPK($detalle_producto->getIdUnidad());
             if(is_null($unidad))
             {
                 throw new Exception("FATAL!!! este producto no tiene unidad");
             }
+            
+            /*
+             * Este algoritmo se basa en dos casos posibles
+             * 
+             * 1. Que el numero de elementos vendidos sea mayor o igual al total de elementos encontrados en los almacenes
+             * 
+             * 2. Que el numero de elementos vendidos sean menor al total de elementos encontrados
+             * 
+             * Caso 1:
+             * 
+             *    Dejamos la posibilidad abierta de que los almacenes queden con cantidad negativa, pues como es una
+             *    venta en mostrador, para vender el producto tiene que estar fisicamente ahi, y no se pretende evitar la venta
+             *    de un producto que fisicamente esta presente pero no lo esta en el sistema.
+             * 
+             *    Así pues, como de cualqueir manera todos los almacenes van a quedar con ese elemento en cantidades negativas o en ceros
+             *    cuando el numero de elementos sea igual al total, dejamos en ceros las existencias y empezamos a restar uniformemente
+             *    en cada almacen hasta cubrir la diferencia entre el numero de elementos vendidos con el numero de elementos encontrados.
+             * 
+             * Caso 2:
+             * 
+             *    Se tiene que empezar a descontar del almacen que cuenta con mas existencia del elemento vendido
+             *    hasta que su existencia sea igual a la del segundo almacen que cuenta con mas existencia. A partir de ahi
+             *    se descontara de dos almacenes en lugar de uno, y asi hasta llegar al almacen co nmenos existencia.
+             * 
+             *    Para lograr esto, se ordena el arreglo de almacenes con sus productos y se guarda un arreglo de diferencias,
+             *    que indicara cuantas veces podremos restar de un almacen hasta tener que pasar al siguiente y restar de ambos.
+             *    Un contador nos indica a cuantos almacenes le estamso restando producto hasta que se cubre la demanda de elementos.
+             * 
+             * En ambos casos se mantiene la uniformidad de existencia del elemento en los almacenes. El metodo funciona tanto para 
+             * las unidades que aceptan decimales como aquellas que solo son enteros.
+             */
+            
+            //caso 1
             if($n>=$total)
             {
                 $n-=$total;
@@ -884,7 +1324,9 @@ require_once("interfaces/Sucursales.interface.php");
                     throw $e;
                 }
                 DAO::transEnd();
-            }
+            } /* fin del caso 1 */
+            
+            //caso 2
             else
             {
                 $productos_almacen=self::OrdenarProductosAlmacen($productos_almacen);
@@ -940,11 +1382,17 @@ require_once("interfaces/Sucursales.interface.php");
                         }
                     }
                     $n-=$diferencia[$i]*($i+1);
-                }
-            }
+                } /* Fin del for */
+            } /* Fin del caso 2 */
 
         }
-
+        
+        /*
+         * Este metodo recibe un arreglo de registros de la tabla producto_almacen y los ordena
+         * de acuerdo a su cantidad en el almacen.
+         * Regresa un arreglo rodenado de registros de la tabla producto_almacen
+         */
+        
         public static function OrdenarProductosAlmacen
         (
                 $productos_almacen
