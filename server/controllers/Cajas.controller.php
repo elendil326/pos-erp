@@ -5,6 +5,19 @@
  */
 class CajasController{
 
+    /*
+     * Se valida que un numero este en un rango de un maximo y un minimo inclusivos
+     * Regresa true cuando es valido, y un string cuando no lo es
+     */
+    private static function validarNumero($num, $max_length, $nombre_variable, $min_length=0)
+    {
+        if($num<$min_length||$num>$max_length)
+        {
+            return "La variable ".$nombre_variable." proporcionada (".$num.") no esta en el rango de ".$min_length." - ".$max_length;
+        }
+        return true;
+    }
+    
     public static function modificarCaja
         (
                 $id_caja,
@@ -56,8 +69,11 @@ class CajasController{
                     {
                         if(is_null(BilleteDAO::getByPK($billetes[$i]["id_billete"])))
                         {
-                            Logger::error("El billete con id: ".$billetes[$i]["id_billete"]." no existe");
                             throw new Exception("El billete con id: ".$billetes[$i]["id_billete"]." no existe");
+                        }
+                        if(is_string($validar=self::validarNumero($billetes[$i]["cantidad"], PHP_INT_MAX, "cantidad")))
+                        {
+                                throw new Exception($validar);
                         }
                         $billete_caja[$i]=new BilleteCaja();
                         $billete_caja[$i]->setIdBillete($billetes[$i]["id_billete"]);
@@ -92,9 +108,10 @@ class CajasController{
             {
                 DAO::transRollback();
                 Logger::error("No se pudo actualizar la caja: ".$e);
-                throw $e;
+                throw new Exception("No se pudo actualizar la caja");
             }
             DAO::transEnd();
+            Logger::log("Caja actualizada exitosamente");
         }
 }
 ?>

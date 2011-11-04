@@ -690,7 +690,232 @@ require_once("interfaces/Sucursales.interface.php");
             //no se encontro error, regresa true
             return true;
         }
-
+        
+        /*
+         * Valida los parametros para la tabla compra. Cuando algun parametro es erroneo
+         * regresa un string con el error. Cuando no hay error, regresa verdadero.
+         */
+        private static function validarParametrosCompra
+        (
+                $id_compra = null,
+                $id_compra_caja = null,
+                $id_vendedor_compra = null,
+                $tipo_de_compra = null,
+                $subtotal = null,
+                $impuesto = null,
+                $descuento = null,
+                $total = null,
+                $id_empresa = null,
+                $saldo = null,
+                $cancelada = null,
+                $tipo_de_pago = null,
+                $retencion = null
+        )
+        {
+            //valida que la compra exista en la base de datos
+            if(!is_null($id_compra))
+            {
+                if(is_null(CompraDAO::getByPK($id_compra)))
+                {
+                    return "La compra con id: ".$id_compra." no existe";
+                }
+            }
+            
+            //valida que la compra caja este en el rango
+            if(!is_null($id_compra_caja))
+            {
+                $e = self::validarNumero($id_compra_caja, PHP_INT_MAX, "id compra caja");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el vendedor de la compra exista en la base de datos y sea un proveedor
+            if(!is_null($id_vendedor_compra))
+            {
+                $usuario = UsuarioDAO::getByPK($id_vendedor_compra);
+                if(is_null($usuario))
+                {
+                    return "El usuario con id ".$id_vendedor_compra." no existe";
+                }
+                if(is_null($usuario->getIdClasificacionProveedor()))
+                {
+                    return "El usuario no es un proveedor pues no tiene una clasificacion como tal.";
+                }     
+                if(!$usuario->getActivo())
+                {
+                    return "El usuario no esta activo, no se le puede comprar a un usuario inactivo";
+                }
+            }
+            
+            //valida que el tipo de compra sea contado o a credito
+            if(!is_null($tipo_de_compra))
+            {
+                if($tipo_de_compra!="contado"&&$tipo_de_compra!="credito")
+                    return "El tipo de compra (".$tipo_de_compra.") no es valido, tiene que ser 'credito' o 'contado'";
+            }
+            
+            //valida que el subtotal este en el rango
+            if(!is_null($subtotal))
+            {
+                $e=self::validarNumero($subtotal, 1.8e200, "subtotal");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el impuesto este en el rango
+            if(!is_null($impuesto))
+            {
+                $e = self::validarNumero($impuesto, 1.8e200, "impuesto");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el descuento este en el rango
+            if(!is_null($descuento))
+            {
+                $e = self::validarNumero($descuento, 1.8e200, "descuento");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el total este en el rango
+            if(!is_null($total))
+            {
+                $e = self::validarNumero($total, 1.8e200, "total");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que la empresa exista en la base de datos
+            if(!is_null($id_empresa))
+            {
+                $empresa = EmpresaDAO::getByPK($id_empresa);
+                if(is_null($empresa))
+                    return "La empresa con id ".$id_empresa." no existe";
+                if(!$empresa->getActivo())
+                    return "La empresa esta cancelada, no se pueden comprar productos en nombre de una empresa desactivada";
+            }
+            
+            //valida que el saldo este en el rango
+            if(!is_null($saldo))
+            {
+                $e = self::validarNumero($saldo, 1.8e200, "saldo");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida el boleano cancelada
+            if(!is_null($cancelada))
+            {
+                $e = self::validarNumero($cancelada, 1, "cancelada");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida el tipo de pago
+            if(!is_null($tipo_de_pago))
+            {
+                if($tipo_de_pago!="cheque"&&$tipo_de_pago!="tarjeta"&&$tipo_de_pago!="efectivo")
+                    return "El tipo de pago (".$tipo_de_pago.") no es valido. Solo se permite 'cheque', 'tarjeta' y 'efectivo'";
+            }
+            
+            //valida que la retencion este en rango
+            if(!is_null($retencion))
+            {
+                $e = self::validarNumero($retencion, 1.8e200, "retencion");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //No se encontro ningun error, regresa true
+            return true;
+        }
+        
+        /*
+         * Valida los parametros de la tabla CompraProducto
+         */
+        
+        private static function validarParametrosCompraProducto
+        (
+                $id_compra = null,
+                $id_producto = null,
+                $precio = null,
+                $cantidad = null,
+                $descuento = null,
+                $impuesto = null,
+                $retencion = null,
+                $id_unidad = null
+        )
+        {
+            //valida que la compra exista en la base de datos
+            if(!is_null($id_compra))
+            {
+                if(is_null(CompraDAO::getByPK($id_compra)))
+                {
+                    return "La compra con id ".$id_compra." no existe";
+                }
+            }
+            
+            //valida que el producto exista en la base de datos
+            if(!is_null($id_producto))
+            {
+                if(is_null(ProductoDAO::getByPK($id_producto)))
+                {
+                    return "El producto con id ".$id_producto." no existe";
+                }
+            }
+            
+            //valida que el precio este en el rango
+            if(!is_null($precio))
+            {
+                $e = self::validarNumero($precio,1.8e200,"precio");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que la cantidad este en el rango
+            if(!is_null($cantidad))
+            {
+                $e = self::validarNumero($cantidad, PHP_INT_MAX, "cantidad");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el descuento este en el rango
+            if(!is_null($descuento))
+            {
+                $e = self::validarNumero($descuento, 1.8e200, "descuento");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el impuesto este en rango
+            if(!is_null($impuesto))
+            {
+                $e = self::validarNumero($impuesto, 1.8e200, "impuesto");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que la retencion este en rango
+            if(!is_null($retencion))
+            {
+                $e = self::validarNumero($retencion, 1.8e200, "retencion");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que la unidad exista en la base de datos
+            if(!is_null($id_unidad))
+            {
+                if(is_null(UnidadDAO::getByPK($id_unidad)))
+                        return "La unidad con id ".$id_unidad." no existe";
+            }
+            
+            //no se encontro error, regresa true
+            return true;
+        }
+        
         /**
  	 *
  	 *Creara un nuevo almacen en una sucursal, este almacen contendra lotes.
@@ -1450,18 +1675,26 @@ require_once("interfaces/Sucursales.interface.php");
 	)
 	{  
             Logger::log("Realizando la compra");
+            
+            //Se obtiene el id del usuario de la sesion actual
             $id_usuario=LoginController::getCurrentUser();
             if(is_null($id_usuario))
             {
                 Logger::error("No se pudo obtener al usuario de la sesion actual, ya inicio sesion?");
                 throw new Exception("No se pudo obtener al usuario de la sesion actual, ya inicio sesion?");
             }
-            $usuario=UsuarioDAO::getByPK($id_vendedor);
-            if(is_null($usuario))
+            
+            //Se validan los parametros recibidos
+            $validar = self::validarParametrosCompra(null,$id_compra_caja,$id_vendedor,$tipo_compra,$subtotal,$impuesto,$descuento,$total,$id_empresa,$saldo,null,$tipo_pago,$retencion);
+            if(is_string($validar))
             {
-                Logger::error("El usuario recibido como vendedor no existe");
-                throw new Exception("El usuario recibido como vendedor no existe");
+                Logger::error($validar);
+                throw new Exception($validar);
             }
+            
+            //Se inicializa el usuario con los parametros recibidos.
+            $usuario=UsuarioDAO::getByPK($id_vendedor);
+            
             $compra=new Compra();
             $compra->setRetencion($retencion);
             $compra->setIdVendedorCompra($id_vendedor);
@@ -1481,20 +1714,26 @@ require_once("interfaces/Sucursales.interface.php");
             DAO::transBegin();
             try
             {
+                //Si la compra es a contado, se realizan operaciones dependiendo del tipo de pago
                 if($tipo_compra==="contado")
                 {
-                    if($tipo_pago==="cheque"&&is_null($cheques))
-                    {
-                        throw new Exception("El tipo de pago es con cheque pero no se recibio informacion del mismo");
-                    }
+                    //Si se recibe un saldo, se loguea una advertencia indicando que se ignorará
                     if(!is_null($saldo))
                     {
                         Logger::warn("Se recibio un saldo cuando la venta es de contado, el saldo se tomara del total");
                     }
                     $compra->setSaldo($total);
                     CompraDAO::save($compra);
+                    
+                    //Si el tipo de pago es cheque, se crean los nuevos cheques con la informacion obtenida
+                    //y se almacenan registros por cada cheque para esta compra en la tabla cheque_compra
                     if($tipo_pago==="cheque")
                     {
+                        //Si no se recibe informacion de los cheques se lanza una excepcion
+                        if(is_null($cheques))
+                        {
+                            throw new Exception("El tipo de pago es con cheque pero no se recibio informacion del mismo");
+                        }
                         $cheque_compra = new ChequeCompra();
                         $cheque_compra->setIdCompra($compra->getIdCompra());
                         foreach($cheques as $cheque)
@@ -1504,6 +1743,10 @@ require_once("interfaces/Sucursales.interface.php");
                             ChequeCompraDAO::save($cheque_compra);
                         }
                     }
+                    
+                    //Si el tipo de pago es efectivo, se modifica el saldo de la caja en la que se realiza la operacion
+                    //y si lleva control de billetes, se pasa la informacion de los mismos. Si salieron billetes a causa del cambio
+                    //se vuelve a modificar la caja sin modificar su saldo.
                     else if($tipo_pago==="efectivo")
                     {
                         CajasController::modificarCaja($compra->getIdCaja(), 0, $billetes_pago, $total);
@@ -1512,11 +1755,9 @@ require_once("interfaces/Sucursales.interface.php");
                             CajasController::modificarCaja($compra->getIdCaja(), 1, $billetes_cambio, 0);
                         }
                     }
-                    else
-                    {
-                        throw new Exception("Se recibio un tipo de pago de: ".$tipo_pago." para esta compra de contado");
-                    }
                 }
+                
+                //Si la compra ha sido a credito, se modifica el saldo del ejercicio del usuario al que se le compra
                 else if($tipo_compra=="credito")
                 {
                     if(is_null($saldo))
@@ -1524,19 +1765,27 @@ require_once("interfaces/Sucursales.interface.php");
                         Logger::warn("No se recibio un saldo, se tomara 0 como saldo");
                         $saldo=0;
                     }
+                    
+                    //El saldo no puede ser mayor que la cantidad a comprar
+                    if($saldo>$total)
+                    {
+                        throw new Exception("El saldo no puede ser mayor que el total de la compra");
+                    }
                     $compra->setSaldo($saldo);
                     CompraDAO::save($compra);
                     $usuario->setSaldoDelEjercicio($usuario->getSaldoDelEjercicio()+$total-$saldo);
                     UsuarioDAO::save($usuario);
                 }
-                else
-                {
-                    throw new Exception("El tipo de compra recibido no es valido");
-                }
+                
+                //Si se recibio detalle de productos, se agregan al almacen correspondiente a la empresa
+                //dentro de esta sucursal. Tambien se guarda el detalle en la tabla compra_producto
                 if(!is_null($detalle))
                 {
+                    //Se inicializan variables para el almacenamiento de los registros.
                     $d_producto=new CompraProducto();
                     $d_producto->setIdCompra($compra->getIdCompra());
+                    
+                    //se buscan los almacenes de esta empresa para esta sucursal y se ignoran los de consginacion
                     $almacenes=AlmacenDAO::search(new Almacen(array("id_sucursal" => self::getSucursal(), "id_empresa" => $id_empresa)));
                     $id_almacen=null;
                     foreach($almacenes as $a)
@@ -1545,29 +1794,35 @@ require_once("interfaces/Sucursales.interface.php");
                                 continue;
                         $id_almacen=$a->getIdAlmacen();
                     }
+                    
+                    //Si no se encontro un almacen, se arroja una excepcion
                     if(is_null($id_almacen))
                     {
                         throw new Exception("No existe un almacen para esta empresa en esta sucursal");
                     }
+                    
+                    //Por cada producto en el detalle se almacena en la tabla compra_producto y se agregan al
+                    //almacen de la empresa
                     foreach($detalle as $d_p)
                     {
+                        $validar = self::validarParametrosCompraProducto(null,$d_p["id_producto"],$d_p["precio"],$d_p["cantidad"],$d_p["descuento"],$d_p["impuesto"],$d_p["retencion"],$d_p["id_unidad"]);
+                        if(is_string($validar))
+                        {
+                            throw $validar;
+                        }
                         $producto=ProductoDAO::getByPK($d_p["id_producto"]);
-                        if(is_null($producto))
-                        {
-                            throw new Exception("El producto con id: ".$d_p["id_producto"]." no existe");
-                        }
-                        if(is_null(UnidadDAO::getByPk($d_p["id_unidad"])))
-                        {
-                            throw new Exception("La unidad con id: ".$d_p["id_unidad"]." no existe");
-                        }
+                        //Si el producto no puede ser comprado en mostrador arroja una excepcion
                         if(!$producto->getCompraEnMostrador())
                         {
                             throw new Exception("No se puede comprar el producto con id ".$d_p["id_producto"]." en mostrador");
                         }
+                        //Si el producto no pertenece a la empresa que quiere hacer la compra, arroja una excepcion
                         if(is_null(ProductoEmpresaDAO::getByPK($d_p["id_producto"], $id_empresa)))
                         {
                             throw new Exception("El producto no pertenece a la empresa seleccionada");
                         }
+                        
+                        //Se incializa ys e guarda el nuevo registro de la tabla compra_producto
                         $d_producto->setCantidad($d_p["cantidad"]);
                         $d_producto->setDescuento($d_p["descuento"]);
                         $d_producto->setIdProducto($d_p["id_producto"]);
@@ -1576,6 +1831,9 @@ require_once("interfaces/Sucursales.interface.php");
                         $d_producto->setPrecio($d_p["precio"]);
                         $d_producto->setRetencion($d_p["retencion"]);
                         CompraProductoDAO::save($d_producto);
+                        
+                        //Se busca el producto en el almacen en la unidad obtenida, si no existe aun
+                        //se crea uno nuevo y al final se guarda.
                         $producto_almacen=ProductoAlmacenDAO::getByPK($d_p["id_producto"], $id_almacen, $d_p["id_unidad"]);
                         if(is_null($producto_almacen))
                         {
@@ -1587,7 +1845,6 @@ require_once("interfaces/Sucursales.interface.php");
                 }
                 else
                 {
-                    Logger::error("No se recibieron productos para esta compra");
                     throw new Exception ("No se recibieron productos para esta compra");
                 }
             }
@@ -1595,7 +1852,7 @@ require_once("interfaces/Sucursales.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudo realizar la compra: ".$e);
-                throw $e;
+                throw new Exception("No se pudo realizar la compra");
             }
             DAO::transEnd();
             Logger::log("compra realizada exitosamente");
