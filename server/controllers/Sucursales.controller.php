@@ -90,7 +90,7 @@ require_once("interfaces/Sucursales.interface.php");
             //Se valida que el rfc solo tenga letras de la A-Z y 0-9.
             if(!is_null($rfc))
             {
-                $e=self::validarString($curp, 30, "rfc");
+                $e=self::validarString($rfc, 30, "rfc");
                 if(is_string($e))
                     return $e;
                 if(preg_match('/[^A-Z0-9]/' ,$rfc))
@@ -916,6 +916,53 @@ require_once("interfaces/Sucursales.interface.php");
             return true;
         }
         
+        
+        /*
+         * Valida los parametros de la tabla sucursal_empresa. Regresa un string con el error
+         * en caso de que un parametro sea erroneo. Regresa verdadero si no se ha encontrado error
+         */
+        private static function validarParametrosSucursalEmpresa
+        (
+                $id_sucursal = null,
+                $id_empresa = null,
+                $margen_utilidad = null,
+                $descuento = null
+        )
+        {
+            //valida que la sucursal exista en la base de datos
+            if(!is_null($id_sucursal))
+            {
+                if(is_null(SucursalDAO::getByPK($id_sucursal)))
+                        return "La sucursal con id ".$id_sucursal." no existe";
+            }
+            
+            //valida que la empresa exista en la base de datos
+            if(!is_null($id_empresa))
+            {
+                if(is_null(EmpresaDAO::getByPK($id_empresa)))
+                        return "La empresa con id ".$id_empresa." no existe";
+            }
+            
+            //valida el margen utilida
+            if(!is_null($margen_utilidad))
+            {
+                $e = self::validarNumero($margen_utilidad, 1.8e200, "margen de utilidad");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida el descuento, el descuento no puede ser mayor a 100
+            if(!is_null($descuento))
+            {
+                $e = self::validarNumero($descuento, 100, "descuento");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //no se encontro error, regres true;
+            return true;
+        }
+        
         /**
  	 *
  	 *Creara un nuevo almacen en una sucursal, este almacen contendra lotes.
@@ -1105,7 +1152,7 @@ require_once("interfaces/Sucursales.interface.php");
             }
             
             //Se validan los parametros de la venta
-            $validar = self::validarparametrosVenta(null,$id_venta_caja,$id_comprador,$tipo_venta,$subtotal,$impuesto,$descuento,$total,$saldo,null,$tipo_pago,$retencion);
+            $validar = self::validarParametrosVenta(null,$id_venta_caja,$id_comprador,$tipo_venta,$subtotal,$impuesto,$descuento,$total,$saldo,null,$tipo_pago,$retencion);
             if(is_string($validar))
             {
                 Logger::error($validar);
@@ -1990,17 +2037,47 @@ require_once("interfaces/Sucursales.interface.php");
 	)
 	{
             Logger::log("Abriendo caja");
+            
+            //Se validan los parametros obtenidos
+            $validar = self::validarParametrosCaja($id_caja,null,$client_token,null,null,$saldo,$control_billetes);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
             $caja=CajaDAO::getByPK($id_caja);
+            
+            //verifica que la caja este activa
             if(!$caja->getActiva())
             {
                 Logger::error("La caja no esta activa y no puede ser abierta");
                 throw new Exception("La caja no esta activa y no puede ser abierta");
             }
+            
+            //verifica que la caja no este abierta
             if($caja->getAbierta())
             {
                 Logger::warn("La caja ya ha sido abierta");
                 throw new Exception("La caja ya ha sido abierta");
             }
+            
+            //verifica que el id cajero exista en la base de datos
+            if(!is_null($id_cajero))
+            {
+                $cajero = UsuarioDAO::getByPK($id_cajero);
+                if(is_null($cajero))
+                {
+                    Logger::error("El cajero con id ".$id_cajero." no existe");
+                    throw new Excetion("El cajero no existe");
+                }
+                if($cajero->getIdRol()!=3)
+                {
+                    Logger::error("El usuario obtenido como cajero no es un cajero, no tiene rol 3");
+                    throw new Exception("El usuario obtenido como cajero no es un cajero");
+                }
+            }
+            
+            //Se declara la apertura de la caja
             $apertura_caja=new AperturaCaja();
             $apertura_caja->setIdCaja($id_caja);
             $apertura_caja->setFecha(date("Y-m-d H:i:s",time()));
@@ -2012,27 +2089,19 @@ require_once("interfaces/Sucursales.interface.php");
             DAO::transBegin();
             try
             {
+                //Inserta los billetes en la caja y guarda los cambios en apetura caja y caja
+                //El acto de abrir una caja da por hecho que no tiene ningun billete, pues al cerrar la caja se vaciaron.
                 CajasController::modificarCaja($id_caja, 1, $billetes, 0);
                 AperturaCajaDAO::save($apertura_caja);
                 CajaDAO::save($caja);
                 if($control_billetes)
                 {
-                    $billetes_caja=BilleteCajaDAO::search(new BilleteCaja(array( "id_caja" => $id_caja)));
-                    foreach($billetes_caja as $b_c)
-                    {
-                        $b_c->setCantidad(0);
-                        BilleteCajaDAO::save($b_c);
-                    }
                     $billete_apertura_caja=new BilleteAperturaCaja(array( "id_apertura_caja" => $apertura_caja->getIdAperturaCaja()));
-                    $billete_caja=new BilleteCaja(array( "id_caja" => $id_caja ));
                     foreach($billetes as $billete)
                     {
                         $billete_apertura_caja->setIdBillete($billete["id_billete"]);
-                        $billete_caja->setIdBillete($billete["id_billete"]);
                         $billete_apertura_caja->setCantidad($billete["cantidad"]);
-                        $billete_caja->setCantidad($billete["cantidad"]);
                         BilleteAperturaCajaDAO::save($billete_apertura_caja);
-                        BilleteCajaDAO::save($billete_caja);
                     }
                 }
             }
@@ -2040,7 +2109,7 @@ require_once("interfaces/Sucursales.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudo abrir la caja: ".$e);
-                throw $e;
+                throw new Exception("No se pudo abrir la caja");
             }
             DAO::transEnd();
             Logger::log("Caja abierta exitosamente");
@@ -2096,15 +2165,21 @@ require_once("interfaces/Sucursales.interface.php");
 	)
 	{
             Logger::log("Creando nueva sucursal");
+            
+            //Se validan los parametros obtenidos
+            $validar = self::validarParametrosSucursal(null,null,$rfc,$razon_social,$descripcion,
+                    $id_gerente,$saldo_a_favor,null,$activo,null,$margen_utilidad,$descuento);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            //Se inicializa el objeto sucursal con los parametros obtenidos
             $sucursal=new Sucursal();
             $sucursal->setRfc($rfc);
             $sucursal->setActiva($activo);
             $sucursal->setRazonSocial($razon_social);
-            if(is_null(CiudadDAO::getByPK($id_ciudad)))
-            {
-                Logger::error("La ciudad con id: ".$id_ciudad." no existe");
-                throw new Exception("La ciudad con id: ".$id_ciudad." no existe");
-            }
             $sucursal->setSaldoAFavor($saldo_a_favor);
             $sucursal->setIdGerente($id_gerente);
             $sucursal->setMargenUtilidad($margen_utilidad);
@@ -2114,18 +2189,26 @@ require_once("interfaces/Sucursales.interface.php");
             DAO::transBegin();
             try
             {
+                //Se crea la nueva direccion y se le asigna a la nueva sucursal
                 $id_direccion=DireccionController::NuevaDireccion($calle,$numero_exterior,$colonia,$id_ciudad,$codigo_postal,$numero_interior,$referencia,$telefono1,$telefono2);
                 $sucursal->setIdDireccion($id_direccion);
                 SucursalDAO::save($sucursal);
+                
+                //Se asignan las empresas que fueron obtenidas a esta sucursal
                 $sucursal_empresa = new SucursalEmpresa();
                 $sucursal_empresa->setIdSucursal($sucursal->getIdSucursal());
                 foreach($empresas as $empresa)
                 {
+                    $validar = self::validarParametrosSucursalEmpresa(null,$empresa["id_empresa"],$empresa["margen_utilidad"],$empresa["descuento"]);
+                    if(is_string($validar))
+                        throw new Exception($validar);
                     $sucursal_empresa->setIdEmpresa($empresa["id_empresa"]);
                     $sucursal_empresa->setDescuento($empresa["descuento"]);
                     $sucursal_empresa->setMargenUtilidad($empresa["margen_utilidad"]);
                     SucursalEmpresaDAO::save($sucursal_empresa);
                 }
+                
+                //Si se recibieron impuestos, se crea el registro correspondiente en la tabla impuesto sucursal
                 if(!is_null($impuestos))
                 {
                     $impuesto=new ImpuestoSucursal(array( "id_sucursal" => $sucursal->getIdSucursal()));
@@ -2139,6 +2222,8 @@ require_once("interfaces/Sucursales.interface.php");
                         ImpuestoSucursalDAO::save($impuesto);
                     }
                 }
+                
+                //Si se recibieron retenciones, se crea el registro correspondiente en la tabla retencion sucursal
                 if(!is_null($retenciones))
                 {
                     $retencion= new RetencionSucursal(array( "id_sucursal" => $sucursal->getIdSucursal()));
@@ -2152,7 +2237,7 @@ require_once("interfaces/Sucursales.interface.php");
                         RetencionSucursalDAO::save($retencion);
                     }
                 }
-            }
+            }/* Fin del try */
             catch(Exception $e)
             {
                 DAO::transRollback();
