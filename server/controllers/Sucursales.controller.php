@@ -2746,17 +2746,40 @@ Creo que este metodo tiene que estar bajo sucursal.
 	{
             Logger::log("Resgitrando entrada a almacen");
             $entrada_almacen = new EntradaAlmacen();
+            
+            //Se obtiene el usuario de la sesion
             $id_usuario=LoginController::getCurrentUser();
             if(is_null($id_usuario))
             {
                 Logger::error("No se puede obtener al usuario de la sesion, ya inicio sesion?");
                 throw new Exception("No se puede obtener al usuario de la sesion, ya inicio sesion?");
             }
-            if(is_null(AlmacenDAO::getByPK($id_almacen)))
+            
+            //valida que el almacen exista
+            $almacen = AlmacenDAO::getByPK($id_almacen);
+            if(is_null($almacen))
             {
                 Logger::error("El almacen con id: ".$id_almacen." no existe");
                 throw new Exception("El almacen con id: ".$id_almacen." no existe");
             }
+            
+            if(!$almacen->getActivo())
+            {
+                Logger::error("El almacen no esta activo, no se le pueden ingresar productos");
+                throw new Exception("El almacen no esta activo, no se le pueden ingresar productos");
+            }
+            
+            //valida que el motivo sea un string valido
+            if(!is_null($motivo))
+            {
+                $validar = self::validarString($motivo, 255, "motivo");
+                if(is_string($validar))
+                {
+                    Logger::error($validar);
+                    throw new Exception($validar);
+                }
+            }
+            //Se inicializa el registro de la tabla entrada_almacen
             $entrada_almacen->setIdAlmacen($id_almacen);
             $entrada_almacen->setMotivo($motivo);
             $entrada_almacen->setIdUsuario($id_usuario);
@@ -2764,7 +2787,12 @@ Creo que este metodo tiene que estar bajo sucursal.
             DAO::transBegin();
             try
             {
+                //se guarda el registro de entrada_almacen
                 EntradaAlmacenDAO::save($entrada_almacen);
+                
+                //Por cada producto recibido se crea un registro en  la tabla producto_entrada_almacen.
+                //Cada producto ingresado incrementa su cantidad en el almacen. Si aun no existe,
+                //se crea su registro y se guarda.
                 $producto_entrada_almacen=new ProductoEntradaAlmacen(array( "id_entrada_almacen" => $entrada_almacen->getIdEntradaAlmacen() ));
                 foreach($productos as $p)
                 {
@@ -2778,6 +2806,7 @@ Creo que este metodo tiene que estar bajo sucursal.
                     $producto_entrada_almacen->setIdUnidad($p["id_unidad"]);
                     $producto_entrada_almacen->setCantidad($p["cantidad"]);
                     $producto_almacen=ProductoAlmacenDAO::getByPK($p["id_producto"], $id_almacen, $p["id_unidad"]);
+                    
                     if(is_null($producto_almacen))
                         $producto_almacen=new ProductoAlmacen(array( "id_producto" => $p["id_producto"] , "id_almacen" => $id_almacen , "id_unidad" => $p["id_unidad"] ));
 
