@@ -1035,7 +1035,7 @@ require_once("interfaces/Sucursales.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudo crear el nuevo almacen");
-                throw $e;
+                throw new Exception("No se pudo crear el nuevo almacen");
             }
             DAO::transEnd();
             Logger::log("Almacen creado exitosamente");
@@ -1346,7 +1346,7 @@ require_once("interfaces/Sucursales.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudo realizar la venta: ".$e);
-                throw "No se pudo realizar la venta";
+                throw new Exception("No se pudo realizar la venta");
             }
             DAO::transEnd();
             Logger::log("venta realizada exitosamente");
@@ -1592,8 +1592,8 @@ require_once("interfaces/Sucursales.interface.php");
                 catch(Exception $e)
                 {
                     DAO::transRollback();
-                    Logger::error("No se pudo actualizar la cantidad de producto en almacen");
-                    throw $e;
+                    Logger::error("No se pudo actualizar la cantidad de producto en almacen: ".$e);
+                    throw new Exception("No se pudo actualizar la cantidad de producto en almacen");
                 }
                 DAO::transEnd();
             } /* fin del caso 1 */
@@ -1641,8 +1641,8 @@ require_once("interfaces/Sucursales.interface.php");
                         catch(Exception $e)
                         {
                             DAO::transRollback();
-                            Logger::error("No se pudo actualizar la cantidad de producto en almacen");
-                            throw $e;
+                            Logger::error("No se pudo actualizar la cantidad de producto en almacen: ".$e);
+                            throw new Exception("No se pudo actualizar la cantidad de producto en almacen");
                         }
                         DAO::transEnd();
                     }
@@ -2242,7 +2242,7 @@ require_once("interfaces/Sucursales.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudo crear la nueva sucursal ".$e);
-                throw $e;
+                throw new Exception("No se pudo crear la nueva sucursal");
             }
             DAO::transEnd();
             Logger::log("Sucursal creada con exito");
@@ -2564,7 +2564,7 @@ require_once("interfaces/Sucursales.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("Error al editar la gerencia de la sucursal: ".$e);
-                throw "Error al editar la gerencia de la sucursal";
+                throw new Exception("Error al editar la gerencia de la sucursal");
             }
             DAO::transEnd();
             Logger::log("Gerencia editada correctamente");
@@ -2671,7 +2671,7 @@ require_once("interfaces/Sucursales.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("Error al cerrar la caja: ".$e);
-                throw $e;
+                throw new Exception("Error al cerrar la caja");
             }
             DAO::transEnd();
             Logger::log("Caja cerrada exitosamente");
@@ -2744,7 +2744,7 @@ Creo que este metodo tiene que estar bajo sucursal.
             {
                 DAO::transRollback();
                 Logger::error("No se pudo registrar la entrada al almacen: ".$e);
-                throw $e;
+                throw new Exception("No se pudo registrar la entrada al almacen");
             }
             DAO::transEnd();
             Logger::log("Entrada a almacen registrada exitosamente");
@@ -2810,7 +2810,7 @@ Creo que este metodo tiene que estar bajo sucursal.
             {
                 DAO::transRollback();
                 Logger::error("No se pudo crear la caja: ".$e);
-                throw $e;
+                throw new Exception("No se pudo crear la caja");
             }
             DAO::transEnd();
             Logger::log("caja creada exitosamente");
@@ -2882,7 +2882,7 @@ Creo que este metodo tiene que estar bajo sucursal.
             {
                 DAO::transRollback();
                 Logger::error("No se pudo registrar la salida de producto: ".$e);
-                throw $e;
+                throw new Exception("No se pudo registrar la salida de producto");
             }
             DAO::transEnd();
             Logger::log("Salida de almacen registrada correctamente");
@@ -3015,7 +3015,7 @@ Creo que este metodo tiene que estar bajo sucursal.
             {
                 DAO::transRollback();
                 Logger::error("No se pudo realizar el corte de caja: ".$e);
-                throw $e;
+                throw new Exception("No se pudo realizar el corte de caja");
             }
             DAO::transEnd();
             Logger::log("Corte de caja realizado correctamente");
@@ -3067,7 +3067,7 @@ Creo que este metodo tiene que estar bajo sucursal.
             {
                 DAO::transRollback();
                 Logger::error("No se pudo eliminar el almacen: ".$e);
-                throw $e;
+                throw new Exception("No se pudo eliminar el almacen");
             }
             DAO::transEnd();
             Logger::log("Almacen eliminado exitosamente");
@@ -3138,7 +3138,7 @@ Creo que este metodo tiene que estar bajo sucursal.
             {
                 DAO::transRollBack();
                 Logger::error("No se pudo editar el almacen: ".$e);
-                throw $e;
+                throw new Exception("No se pudo editar el almacen");
             }
             DAO::transEnd();
             Logger::log("Almacen editado exitosamente");
@@ -3188,7 +3188,7 @@ Creo que este metodo tiene que estar bajo sucursal.
             {
                 DAO::transRollback();
                 Logger::error("No se pudo editar la caja: ".$e);
-                throw $e;
+                throw new Exception("No se pudo editar la caja");
             }
             DAO::transEnd();
             Logger::log("Caja editada exitosamente");
@@ -3237,7 +3237,7 @@ Creo que este metodo tiene que estar bajo sucursal.
             {
                 DAO::transRollback();
                 Logger::error("Error al eliminar la caja ".$e);
-                throw $e;
+                throw new Exception("Error al eliminar la caja");
             }
             DAO::transEnd();
             Logger::log("Caja eliminada exitosamente");
@@ -3307,7 +3307,7 @@ Creo que este metodo tiene que estar bajo sucursal.
             {
                 DAO::transRollback();
                 Logger::error("La sucursal no pudo ser eliminada ".$e);
-                throw $e;
+                throw new Exception("La sucursal no pudo ser eliminada");
             }
             DAO::transEnd();
             Logger::log("Sucursal eliminada exitosamente");
@@ -3391,7 +3391,7 @@ Creo que este metodo tiene que estar bajo sucursal.
             {
                 DAO::transRollback();
                 Logger::error("Error al crear el traspaso de producto: ".$e);
-                throw $e;
+                throw new Exception("Error al crear el traspaso de producto");
             }
             DAO::transEnd();
             Logger::log("traspaso creado exitosamente");
@@ -3469,7 +3469,7 @@ Creo que este metodo tiene que estar bajo sucursal.
             {
                 DAO::transRollback();
                 Logger::error("No se pudo enviar el traspaso ".$e);
-                throw $e;
+                throw new Exception("No se pudo enviar el traspaso");
             }
             DAO::transEnd();
             Logger::log("Traspaso enviado exitosamente");
@@ -3558,7 +3558,7 @@ Creo que este metodo tiene que estar bajo sucursal.
             {
                 DAO::transRollback();
                 Logger::error("No se pudo recibir el traspaso: ".$e);
-                throw $e;
+                throw new Exception("No se pudo recibir el traspaso");
             }
             DAO::transEnd();
             Logger::log("Eltraspaso ha sido recibido exitosamente");
@@ -3603,7 +3603,7 @@ Creo que este metodo tiene que estar bajo sucursal.
            {
                DAO::transRollback();
                Logger::error("No se pudo cancelar el traslado ".$e);
-               throw $e;
+               throw new Exception("No se pudo cancelar el traslado");
            }
            DAO::transEnd();
            Logger::log("Traslado cancelado exitosamente");
@@ -3749,7 +3749,7 @@ Creo que este metodo tiene que estar bajo sucursal.
             {
                 DAO::transRollback();
                 Logger::error("No se pudo editar el traspaso: ".$e);
-                throw $e;
+                throw new Exception("No se pudo editar el traspaso");
             }
             DAO::transEnd();
             Logger::log("Traspaso editado correctamente");
