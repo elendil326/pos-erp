@@ -3028,6 +3028,8 @@ Creo que este metodo tiene que estar bajo sucursal.
 	)
 	{
             Logger::log("Realizando corte de caja");
+            
+            //valida que la caja exista, que este abierta y que exista
             $caja=CajaDAO::getByPK($id_caja);
             if(is_null($caja))
             {
@@ -3044,6 +3046,8 @@ Creo que este metodo tiene que estar bajo sucursal.
                 Logger::error("La caja proporcionada esta cerrada, no se pueden realizar movimientos a una caja cerrada");
                 throw new Exception("La caja proporcionada esta cerrada, no se pueden realizar movimientos a una caja cerrada");
             }
+            
+            //se inicializa el registro de la tabla corte de caja
             $corte_de_caja= new CorteDeCaja(array(
                                 "id_caja" => $id_caja,
                                 "id_cajero" => $id_cajero,
@@ -3057,8 +3061,15 @@ Creo que este metodo tiene que estar bajo sucursal.
             DAO::transBegin();
             try
             {
+                //Se guarda el corte de caja y se modifica la caja, restandole los billetes encontrados y el saldo de la caja.
                 CorteDeCajaDAO::save($corte_de_caja);
                 CajasController::modificarCaja($id_caja, 0, $billetes_encontrados, $caja->getSaldo());
+                
+                //Si se lleva control de billetes, se hac eun registro por cada tipo de billete encontrado.
+                //Despues, se buscan los billetes que quedan en la caja entre los tipos de billetes encontrados,
+                //si no se encuentran, se crea su registro.
+                //Como los billetes ya han sido restados de la caja, los que queden con numeros positivos seran
+                //aquellos que hagan falta, y los que queden en numeros negativos seran los que sobraran.
                 if($caja->getControlBilletes())
                 {
                     $billete_corte_caja = new BilleteCorteCaja(array( 
@@ -3088,11 +3099,11 @@ Creo que este metodo tiene que estar bajo sucursal.
                                                     "cantidad_faltante" => 0
                                                     )
                                                             );
-                        if($b_c->getCantidad()>0)
+                        if($b_c->getCantidad()<0)
                         {
                             $billete_corte_caja->setCantidadSobrante($b_c->getCantidad());
                         }
-                        else if($b_c->getCantidad()<0)
+                        else if($b_c->getCantidad()>0)
                         {
                             $billete_corte_caja->setCantidadFaltante($b_c->getCantidad()*-1);
                         }
@@ -3101,11 +3112,17 @@ Creo que este metodo tiene que estar bajo sucursal.
                         $b_c->setCantidad(0);
                         BilleteCajaDAO::save($b_c);
                         BilleteCorteCajaDAO::save($billete_corte_caja);
-                    }
+                    }/* Fin del foreach */
+                    
+                    //Si los billetes dejados despues del corte no son obtenidos y el saldo de la caja
+                    //no es cero, se arroja una excepcion.
                     if(is_null($billetes_dejados)&&$saldo_final!=0)
                     {
-                        throw new Exception("No se encontro el parametro billetes_dejados cuando se esta llevando control de los billetes en esta caja");
+                        throw new Exception("No se encontro el parametro billetes_dejados cuando se esta llevando control de los billetes en esta caja y su saldo no quedara en 0");
                     }
+                    
+                    //Por cada billete dejado se busca su registro en la tabla billete_corte_caja, si no existe se crea,
+                    //si existe, se actualiza su parametro cantidad_dejada
                     foreach($billetes_dejados as $b_d)
                     {
                          $billete_corte_caja=BilleteCorteCajaDAO::getByPK($b_d["id_billete"], $corte_de_caja->getIdCorteDeCaja());
@@ -3122,9 +3139,9 @@ Creo que este metodo tiene que estar bajo sucursal.
                          $billete_corte_caja->setCantidadDejada($b_d["cantidad"]);
                          BilleteCorteCajaDAO::save($billete_corte_caja);
                     }
-                }
+                }/* Fin if control billetes*/
                 CajasController::modificarCaja($id_caja, 1, $billetes_dejados, $saldo_final);
-            }
+            } /* Fin try */
             catch(Exception $e)
             {
                 DAO::transRollback();
