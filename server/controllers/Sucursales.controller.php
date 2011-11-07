@@ -3242,13 +3242,25 @@ Creo que este metodo tiene que estar bajo sucursal.
                 Logger::error("El almacen no esta activo, no puede ser editado");
                 throw new Exception("El almacen no esta activo, no puede ser editado");
             }
+            
+            //Si un parametro no es nulo, se toma como actualizacion
             if(!is_null($descripcion))
             {
                 $almacen->setDescripcion($descripcion);
             }
             if(!is_null($nombre))
             {
-                $almacen->setNombre($nombre);
+                //Se verifica que el nombre del almacen no se repita
+                $almacenes = AlmacenDAO::search(new Almacen( array( "id_sucursal" => $id_sucursal ) ) );
+                foreach($almacenes as $almacen)
+                {
+                    if($almacen->getNombre()==trim($nombre))
+                    {
+                        Logger::log("El nombre (".$nombre.") ya esta siendo usado por el almacen: ".$almacen->getIdAlmacen());
+                        throw new Exception("El nombre ya esta en uso");
+                    }
+                }
+                $almacen->setNombre(trim($nombre));
             }
             
             //El tipo de almacen no puede ser cambiado a un almacen de consignacion, 
@@ -3299,17 +3311,22 @@ Creo que este metodo tiene que estar bajo sucursal.
 	)
 	{
             Logger::log("Editando caja");
-            $caja=CajaDAO::getByPK($id_caja);
-            if(is_null($caja))
+            
+            //Valida los parametros de la caja y que la caja este activa
+            $validar = self::validarParametrosCaja($id_caja,null,$token,$descripcion);
+            if(is_string($validar))
             {
-                Logger::error("La caja con id: ".$id_caja." no existe");
-                throw new Exception("La caja con id: ".$id_caja." no existe");
+                Logger::error($validar);
+                throw new Exception($validar);
             }
+            $caja=CajaDAO::getByPK($id_caja);
             if(!$caja->getActiva())
             {
                 Logger::error("La caja no esta activa, no se puede editar");
                 throw new Exception("La caja no esta activa, no se puede editar");
             }
+            
+            //Si un parametro no es nulo, se toma como actualizacion
             if(!is_null($descripcion))
             {
                 $caja->setDescripcion($descripcion);
