@@ -3417,6 +3417,8 @@ Creo que este metodo tiene que estar bajo sucursal.
 	)
 	{
             Logger::log("Eliminando sucursal ".$id_sucursal);
+            
+            //verifica que la caja exista y este activa
             $sucursal=SucursalDAO::getByPK($id_sucursal);
             if(is_null($sucursal))
             {
@@ -3428,6 +3430,8 @@ Creo que este metodo tiene que estar bajo sucursal.
                 Logger::warn("La sucursal ya ha sido eliminada");
                 throw new Exception("La sucursal ya ha sido eliminada");
             }
+            
+            //Si el saldo a favor de la sucursal no es cero, no se puede eliminar
             if($sucursal->getSaldoAFavor()!=0)
             {
                 Logger::error("La sucursal no tiene un saldo de 0 y no puede ser eliminada");
@@ -3439,11 +3443,16 @@ Creo que este metodo tiene que estar bajo sucursal.
             try
             {
                 SucursalDAO::save($sucursal);
+                
+                //busca las cajas asociadas con esta sucursal y las cierra con el metodo EliminarCaja,
+                //si alguna presenta un error habra un rollback y no se eliminara la sucursal
                 $cajas=CajaDAO::search(new Caja(array( "id_sucursal" => $id_sucursal )));
                 foreach($cajas as $c)
                 {
                     self::EliminarCaja($c->getIdCaja());
                 }
+                
+                //Elimina la relacion con los impuestos, paquetes, retenciones y servicios referidos a esta sucursal
                 $impuestos_sucursal=ImpuestoSucursalDAO::search(new ImpuestoSucursal(array( "id_sucursal" => $id_sucursal )));
                 foreach($impuestos_sucursal as $i_e)
                 {
