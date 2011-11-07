@@ -3362,6 +3362,8 @@ Creo que este metodo tiene que estar bajo sucursal.
 	)
 	{  
             Logger::log("Eliminando caja ".$id_caja);
+            
+            //verifica que la caja exista y que este activa
             $caja=CajaDAO::getByPK($id_caja);
             if(is_null($caja))
             {
@@ -3373,11 +3375,15 @@ Creo que este metodo tiene que estar bajo sucursal.
                 Logger::warn("La caja ya ha sido eliminada");
                 throw new Exception("La caja ya ha sido eliminada");
             }
+            
+            //Si la caja esta abierta, mandas una excepcion, pues solo se pueden eliminar cajas cerradas
             if($caja->getAbierta())
             {
                 Logger::error("La caja esta abierta y no puede ser eliminada");
                 throw new Exception("La caja esta abierta y no puede ser eliminada");
             }
+            
+            //Si el saldo de la caja no es cero, no se puede eliminar
             if($caja->getSaldo()!=0)
             {
                 Logger::error("El saldo de la caja no esta en 0, no se puede eliminar");
