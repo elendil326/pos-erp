@@ -2544,6 +2544,12 @@ require_once("interfaces/Sucursales.interface.php");
             }
             
             $sucursal=SucursalDAO::getByPK($id_sucursal);
+            
+            if(!$sucursal->getActiva())
+            {
+                Logger::error("La sucursal no esta activa");
+                throw new Exception("La sucursal no esta activa");
+            }
             $gerente=UsuarioDAO::getByPK($id_gerente);
             
             //Se verifica que el usuario realmente tenga rol de gerente
