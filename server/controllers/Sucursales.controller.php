@@ -3228,12 +3228,15 @@ Creo que este metodo tiene que estar bajo sucursal.
 	)
 	{
             Logger::log("Editando almacen");
-            $almacen=AlmacenDAO::getByPK($id_almacen);
-            if(is_null($almacen))
+            
+            //valida los parametros de editar almacen
+            $validar = self::validarParametrosAlmacen($id_almacen,null,null,$id_tipo_almacen,$nombre,$descripcion);
+            if(is_string($validar))
             {
-                Logger::error("El almacen con id: ".$id_almacen." no existe");
-                throw new Exception("El almacen con id: ".$id_almacen." no existe");
+                Logger::error($validar);
+                throw new Exception($validar);
             }
+            $almacen=AlmacenDAO::getByPK($id_almacen);
             if(!$almacen->getActivo())
             {
                 Logger::error("El almacen no esta activo, no puede ser editado");
@@ -3247,13 +3250,11 @@ Creo que este metodo tiene que estar bajo sucursal.
             {
                 $almacen->setNombre($nombre);
             }
+            
+            //El tipo de almacen no puede ser cambiado a un almacen de consignacion, 
+            //ni un almacen de consignacion puede ser cambiado a otro tipo de almacen.
             if(!is_null($id_tipo_almacen))
             {
-                if(is_null(TipoAlmacenDAO::getByPK($id_tipo_almacen)))
-                {
-                    Logger::error("El tipo de almacen con id: ".$id_tipo_almacen." no existe");
-                    throw new Exception("El tipo de almacen con id: ".$id_tipo_almacen." no existe");
-                }
                 if($id_tipo_almacen==2)
                 {
                     Logger::warn("Se busca cambiar el tipo de almacen para volverse un almacen de consignacion, no se hara nada pues esto no esta permitido");
