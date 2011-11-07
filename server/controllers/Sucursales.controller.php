@@ -2847,16 +2847,26 @@ Creo que este metodo tiene que estar bajo sucursal.
 	)
 	{
             Logger::log("Creando nueva caja");
-            if(!is_null($id_sucursal))
+            
+            //Se validan los parametros de caja, si no se recibe sucursal, se intenta
+            //tomar de la sesion
+            $validar = self::validarParametrosCaja(null,$id_sucursal,$token,$descripcion);
+            if(is_string($validar))
             {
-                if(is_null(SucursalDAO::getByPK($id_sucursal)))
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            if(is_null($id_sucursal))
+            {
+                $id_sucursal=self::getSucursal();
+                if(is_null($id_sucursal))
                 {
-                    Logger::error("La sucursal con id: ".$id_sucursal." no existe");
-                    throw new Exception("La sucursal con id: ".$id_sucursal." no existe");
+                    Logger::error("No se pudo btener la sucursal actual y no se obtuvo ninguna sucursal");
+                    throw new Exception("No se pudo btener la sucursal actual y no se obtuvo ninguna sucursal");
                 }
             }
-            else
-                $id_sucursal=self::getSucursal();
+            
+            //Se inicializa el registro de caja
             $caja = new Caja();
             $caja->setIdSucursal($id_sucursal);
             $caja->setAbierta(0);
@@ -2869,6 +2879,8 @@ Creo que este metodo tiene que estar bajo sucursal.
             DAO::transBegin();
             try
             {
+                //Se guarda el registro de caja y si se recibieron impresoras se registran con la caja
+                //en la tabla impresora_caja.
                 CajaDAO::save($caja);
                 $impresora_caja = new ImpresoraCaja(array( "id_caja" => $caja->getIdCaja() ));
                 foreach($impresoras as $id_impresora)
