@@ -3029,7 +3029,7 @@ Creo que este metodo tiene que estar bajo sucursal.
 	{
             Logger::log("Realizando corte de caja");
             
-            //valida que la caja exista, que este abierta y que exista
+            //valida que la caja exista, que este abierta y que este activada
             $caja=CajaDAO::getByPK($id_caja);
             if(is_null($caja))
             {
@@ -3166,6 +3166,8 @@ Creo que este metodo tiene que estar bajo sucursal.
 	{
             Logger::log("Eliminando almacen");
             $almacen=AlmacenDAO::getByPK($id_almacen);
+            
+            //verifica que el almacen exista, que este activo y que su tipo no sea de consignacion
             if(is_null($almacen))
             {
                 Logger::error("El almacen con id: ".$id_almacen." no existe");
@@ -3182,17 +3184,22 @@ Creo que este metodo tiene que estar bajo sucursal.
                 throw new Exception("No se puede eliminar con este metodo un almacen de tipo consignacion");
             }
             $almacen->setActivo(0);
+            
+            //Busca los productos del almacen, si alguno tiene una cantidad distinta a cero,
+            //el almacen no puede ser eliminado
             $productos_almacen=ProductoAlmacenDAO::search(new ProductoAlmacen(array( "id_almacen" => $id_almacen )));
+            foreach($productos_almacen as $producto_almacen)
+            {
+                if($producto_almacen->getCantidad()!=0)
+                {
+                    Logger::error("El almacen no puede ser borrado pues aun contiene productos");
+                    throw new Exception("El almacen no puede ser borrado pues aun contiene productos");
+                }
+            }
+            DAO::transBegin();
             try
             {
                 AlmacenDAO::save($almacen);
-                foreach($productos_almacen as $producto_almacen)
-                {
-                    if($producto_almacen->getCantidad()!=0)
-                    {
-                        throw new Exception("El almacen no puede ser borrado pues aun contiene productos");
-                    }
-                }
             }
             catch(Exception $e)
             {
