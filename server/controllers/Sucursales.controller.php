@@ -2295,20 +2295,30 @@ require_once("interfaces/Sucursales.interface.php");
                 $retenciones = null
 	)
 	{
-            Logger::log("Editando sucursal");
+            Logger::log("Editando sucursal ".$id_sucursal);
+            
+            //Se obtiene la sucursal a editar y se valida que exista
             $sucursal=SucursalDAO::getByPK($id_sucursal);
-            $cambio_direccion=false;
             if(is_null($sucursal))
             {
                 Logger::error("La sucursal con id: ".$id_sucursal." no existe");
                 throw new Exception("La sucursal con id: ".$id_sucursal." no existe");
             }
-            $direccion=DireccionDAO::getByPK($sucursal->getIdDireccion());
-            if(is_null($direccion))
+            if(!$sucursal->getActiva())
             {
-                Logger::error("FATAL!!! La sucursal no cuenta con una direccion");
-                throw new Exception("FATAL!!! La sucursal no cuenta con una direccion");
+                Logger::error("La sucursal no esta activa, no se puede editar una sucursal inactiva");
+                throw new Exception("La sucursal no esta activa, no se puede editar una sucursal inactiva");
             }
+            //bandera que indica si cambia algun parametro de la direccion
+            $cambio_direccion=false;
+            
+            //Se validan los demas parametros
+            $validar = self::validarParametrosSucursal(null,$sucursal->getIdDireccion(),$rfc,$razon_social,
+                    $descripcion,$id_gerente,$saldo_a_favor,null,null,null,$margen_utilidad,$descuento);
+            
+            $direccion=DireccionDAO::getByPK($sucursal->getIdDireccion());
+            
+            //Se valida cada parametro, si se recibe, se toma como actualizacion
             if(!is_null($descuento))
             {
                 $sucursal->setDescuento($descuento);
@@ -2377,6 +2387,8 @@ require_once("interfaces/Sucursales.interface.php");
                 $cambio_direccion=true;
                 $direccion->setCodigoPostal($coidgo_postal);
             }
+            
+            //Si cambio algun parametro de direccion, se actualiza el usuario que modifica y la fecha
             if($cambio_direccion)
             {
                 $direccion->setUltimaModificacion(date("Y-m-d H:i:s",time()));
@@ -2391,19 +2403,29 @@ require_once("interfaces/Sucursales.interface.php");
             DAO::transBegin();
             try
             {
+                //Se guardan los cambios hechos
                 DireccionDAO::save($direccion);
+                SucursalDAO::save($sucursal);
+                
+                //Si se recibio una lista de empresas, se actualizan las que ya estan 
+                //y se insertan las que no estaban. Al final se buscan todas las empresas
+                //que existen en la reclacion, y si alguna no esta incluida en la lista obtenida
+                //es eliminada
                 if(!is_null($empresas))
                 {
+                    //Se insertan y actualizan las ya existentes
                     foreach($empresas as $empresa)
                     {
-                        if(is_null(EmpresaDAO::getByPK($empresa["id_empresa"])))
-                        {
-                            throw new Exception("La empresa con id: ".$empresa["id_empresa"]." no existe");
-                        }
+                        $validar = self::validarParametrosSucursalEmpresa(null,$empresa["id_empresa"],$empresa["margen_utilidad"],$empresa["descuento"]);
+                        if(is_string($validar))
+                            throw new Exception($validar);
                         SucursalEmpresaDAO::save(new SucursalEmpresa(array( "id_sucursal" => $id_sucursal,
-                            "id_empresa" => $empresa["id_empresa"], "margen_utilidad" => $empresa["margen_utilidad"], "descuento" => $empresa["descuento"] )));
+                            "id_empresa" => $empresa["id_empresa"], "margen_utilidad" => $empresa["margen_utilidad"],
+                            "descuento" => $empresa["descuento"] )));
                     }
                     $sucursales_empresa_actual=SucursalEmpresaDAO::search(new SucursalEmpresa(array( "id_sucursal" => $id_sucursal)));
+                    
+                    //Se buscan aquellas que no estan contenidas en la lista obtenida para ser eliminadas
                     foreach($sucursales_empresa_actual as $sucursal_empresa)
                     {
                         $encontrado=false;
@@ -2419,8 +2441,13 @@ require_once("interfaces/Sucursales.interface.php");
                             SucursalEmpresaDAO::delete($sucursal_empresa);
                     }
                 }
+                
+                //Si se recibieron impuestos, se insertan y actualizan los que se encuentran
+                //en la lista obtenida. Al final, se recorren las relaciones ya existentes y
+                //las que no esten incluidas en la lista obtenida son eliminadas.
                 if(!is_null($impuestos))
                 {
+                    //Se inertan y actualizan las que se encuentran en la lista
                     foreach($impuestos as $impuesto)
                     {
                         if(is_null(ImpuestoDAO::getByPK($impuesto)))
@@ -2430,6 +2457,8 @@ require_once("interfaces/Sucursales.interface.php");
                         ImpuestoSucursalDAO::save(new ImpuestoSucursal(array( "id_sucursal" => $id_sucursal, "id_impuesto" => $impuesto)));
                     }
                     $impuestos_sucursal_actual = ImpuestoSucursalDAO::search(new ImpuestoSucursal(array( "id_sucursal" => $id_sucursal)));
+                    
+                    //Se recorren las relaciones actuales y se eliminan aquellas que no esten en la lista obtenida
                     foreach($impuestos_sucursal_actual as $i)
                     {
                         $encontrado=false;
@@ -2447,8 +2476,13 @@ require_once("interfaces/Sucursales.interface.php");
                         }
                     }
                 }
+                
+                //Si se recibieron retenciones, se insertan y actualizan las que se encuentran
+                //en la lista obtenida. Al final, se recorren las relaciones ya existentes y
+                //las que no esten incluidas en la lista obtenida son eliminadas.
                 if(!is_null($retenciones))
                 {
+                    //Se insertan o actualizan las retenciones obtenidas en la lista
                     foreach($retenciones as $retencion)
                     {
                         if(is_null(RetencionDAO::getByPK($retencion)))
@@ -2458,6 +2492,8 @@ require_once("interfaces/Sucursales.interface.php");
                         RetencionSucursalDAO::save(new RetencionSucursal(array( "id_sucursal" => $id_sucursal, "id_retencion" => $retencion)));
                     }
                     $retenciones_sucursal_actual = RetencionSucursalDAO::search(new RetencionSucursal(array( "id_sucursal" => $id_sucursal)));
+                    
+                    //Se eliminan las retenciones que no esten en la lista
                     foreach($retenciones_sucursal_actual as $r)
                     {
                         $encontrado=false;
@@ -2472,13 +2508,13 @@ require_once("interfaces/Sucursales.interface.php");
                         if(!$encontrado)
                             RetencionSucursalDAO::delete($r);
                     }
-                }
-            }
+                } /* Fin  if retenciones */
+            } /* Fin try */
             catch(Exception $e)
             {
                 DAO::transRollback();
                 Logger::error("No se pudo actualizar la sucursal: ".$e);
-                throw new Exception("No se pudo actualizar la sucursal: ".$e);
+                throw new Exception("No se pudo actualizar la sucursal");
             }
             DAO::transEnd();
             Logger::log("Sucursal actualizada exitosamente");
@@ -2498,23 +2534,26 @@ require_once("interfaces/Sucursales.interface.php");
 	)
 	{
             Logger::log("Editando gerencia de sucursal");
+            
+            //Se validan los parametros
+            $validar = self::validarParametrosSucursal($id_sucursal,null,null,null,null,$id_gerente);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
             $sucursal=SucursalDAO::getByPK($id_sucursal);
-            if(is_null($sucursal))
-            {
-                Logger::error("La sucursal con id: ".$id_sucursal." no existe");
-                throw new Exception("La sucursal con id: ".$id_sucursal." no existe");
-            }
             $gerente=UsuarioDAO::getByPK($id_gerente);
-            if(is_null($gerente))
-            {
-                Logger::error("El usuario con id: ".$gerente." no existe");
-                throw new Exception("El usuario con id: ".$gerente." no existe");
-            }
+            
+            //Se verifica que el usuario realmente tenga rol de gerente
             if($gerente->getIdRol()!=2)
             {
                 Logger::error("El usuario no tiene rol de gerente");
                 throw new Exception("El usuario no tiene rol de gerente");
             }
+            
+            //Se asigna el cambio y se guarda en la base de datos.
             $sucursal->setIdGerente($id_gerente);
             DAO::transBegin();
             try
@@ -2525,7 +2564,7 @@ require_once("interfaces/Sucursales.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("Error al editar la gerencia de la sucursal: ".$e);
-                throw $e;
+                throw "Error al editar la gerencia de la sucursal";
             }
             DAO::transEnd();
             Logger::log("Gerencia editada correctamente");
@@ -2580,7 +2619,7 @@ require_once("interfaces/Sucursales.interface.php");
             }
             catch(Exception $e)
             {
-                throw $e;
+                throw new Exception("No se pudo modificar la caja");
             }
             DAO::transBegin();
             try
