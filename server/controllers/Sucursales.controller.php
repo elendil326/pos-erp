@@ -2861,8 +2861,8 @@ Creo que este metodo tiene que estar bajo sucursal.
                 $id_sucursal=self::getSucursal();
                 if(is_null($id_sucursal))
                 {
-                    Logger::error("No se pudo btener la sucursal actual y no se obtuvo ninguna sucursal");
-                    throw new Exception("No se pudo btener la sucursal actual y no se obtuvo ninguna sucursal");
+                    Logger::error("No se pudo obtener la sucursal actual y no se obtuvo ninguna sucursal");
+                    throw new Exception("No se pudo obtener la sucursal actual y no se obtuvo ninguna sucursal");
                 }
             }
             
@@ -2921,17 +2921,39 @@ Creo que este metodo tiene que estar bajo sucursal.
 	)
 	{  
             Logger::log("Registrando salida de almacen");
+            
+            //Se obtiene al usuario de la sesion
             $id_usuario=LoginController::getCurrentUser();
             if(is_null($id_usuario))
             {
                 Logger::error("No se pudo obtener al usuario de la sesion, ya inicio sesion?");
                 throw new Exception("No se pudo obtener al usuario de la sesion, ya inicio sesion?");
             }
-            if(is_null(AlmacenDAO::getByPK($id_almacen)))
+            
+            //valida si el almacen existe y si esta activo
+            $almacen = AlmacenDAO::getByPK($id_almacen);
+            if(is_null($almacen))
             {
                 Logger::error("El almacen con id: ".$id_almacen." no existe");
                 throw new Exception("El almacen con id: ".$id_almacen." no existe");
             }
+            if(!$almacen->getActivo())
+            {
+                Logger::error("El almacen no esta activo, no puede salir producto de el");
+                throw new Exception("El almacen no esta activo, no puede salir producto de el");
+            }
+            
+            //Valida que el motivo sea un string valido
+            if(!is_null($motivo))
+            {
+                $validar = self::validarString($motivo, 255, "motivo");
+                if(is_string($validar))
+                {
+                    Logger::error($validar);
+                    throw new Exception($validar);
+                }
+            }
+            //Se inicializa el registro de la tabla salida_almacen
             $salida_almacen = new SalidaAlmacen(array(
                             "id_almacen" => $id_almacen,
                             "id_usuario" => $id_usuario,
@@ -2942,16 +2964,21 @@ Creo que este metodo tiene que estar bajo sucursal.
             DAO::transBegin();
             try
             {
+                //Se guarda el registro de la salida almacen y se sacan los productos solicitados
+                //del almacen
                 SalidaAlmacenDAO::save($salida_almacen);
                 $producto_salida_almacen=new ProductoSalidaAlmacen(array( "id_salida_almacen" => $salida_almacen->getIdSalidaAlmacen() ));
                 foreach($productos as $p)
                 {
+                    //Se busca en el almacen el producto solicitado, si no es encontrado, se manda una excepcion
                     $producto_almacen=ProductoAlmacenDAO::getByPK($p["id_producto"], $id_almacen, $p["id_unidad"]);
                     if(is_null($producto_almacen))
                     {
                         throw new Exception("El producto: ".$p["id_producto"]." en la unidad: ".$p["id_unidad"]."
                             no se encuentra en el almacen: ".$id_almacen.". No se puede registrar la salida");
                     }
+                    //Se analiza la cantidad actual del producto en el almacen. Si la solicitada
+                    //es mayor que la cantidad actual, se arroja una excepcion.
                     $cantidad_actual=$producto_almacen->getCantidad();
                     if($cantidad_actual<$p["cantidad"])
                     {
@@ -2963,8 +2990,8 @@ Creo que este metodo tiene que estar bajo sucursal.
                     $producto_salida_almacen->setCantidad($p["cantidad"]);
                     ProductoAlmacenDAO::save($producto_almacen);
                     ProductoSalidaAlmacenDAO::save($producto_salida_almacen);
-                }
-            }
+                }/* Fin de foreach */
+            } /* Fin de try */
             catch(Exception $e)
             {
                 DAO::transRollback();
