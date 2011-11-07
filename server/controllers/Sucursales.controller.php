@@ -2593,12 +2593,14 @@ require_once("interfaces/Sucursales.interface.php");
 		$id_cajero = null
 	)
 	{
-            Logger::log("Cerrando caja");
+            Logger::log("Cerrando caja ".$id_caja);
+            
+            //Se valida la caja obtenida, que exista, que este activa y que este abierta
             $caja=CajaDAO::getByPK($id_caja);
             if(is_null($caja))
             {
-                Logger::error("No existe la caja con id:".$id_caja." no existe");
-                throw new Exception("No existe la caja con id:".$id_caja." no existe");
+                Logger::error("La caja con id:".$id_caja." no existe");
+                throw new Exception("La caja con id:".$id_caja." no existe");
             }
             if(!$caja->getActiva())
             {
@@ -2610,6 +2612,29 @@ require_once("interfaces/Sucursales.interface.php");
                 Logger::warn("La caja proporcionada ya esta cerrada");
                 throw new Exception("La caja proporcionada ya esta cerrada");
             }
+            
+            //Se valida que el cajero exista y tenga rol de cajero
+            $cajero = UsuarioDAO::getByPK($id_cajero);
+            if(is_null($cajero))
+            {
+                Logger::error("El cajero con id: ".$id_cajero." no existe");
+                throw new Exception("El cajero no existe");
+            }
+            if($cajero->getIdRol()!=3)
+            {
+                Logger::error("El usuario ".$id_cajero." no tiene rol de cajero");
+                throw new Exception("El usuario no tiene rol de cajero");
+            }
+            
+            //Se valida el parametro saldo real.
+            $validar = self::validarNumero($saldo_real, 1.8e200, "saldo real");
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            //Se crea el registro de la tabla cierre_caja
             $cierre_caja=new CierreCaja(
                     array(
                         "id_caja" => $id_caja,
@@ -2619,6 +2644,9 @@ require_once("interfaces/Sucursales.interface.php");
                         "saldo_esperado" => $caja->getSaldo()
                     )
                     );
+            
+            //Se realizan los movimientos de la caja antes de cerrarla, pues al cerrar la caja
+            //ya no se pueden realizar movimientos sobre la misma.
             try
             {
                 CajasController::modificarCaja($id_caja, 0, $billetes, $caja->getSaldo());
@@ -2630,11 +2658,16 @@ require_once("interfaces/Sucursales.interface.php");
             DAO::transBegin();
             try
             {
+                //Se guardan los cambios en caja y cierre_caja
                 $caja->setAbierta(0);
                 CierreCajaDAO::save($cierre_caja);
                 CajaDAO::save($caja);
+                
+                //Si la caja lleva control de los billetes, se crea un registro de la tabla billete_cierre_caja
+                //y se registran cuantos billetes fueron encontrados, cuantos sobraron y cuantos faltaron.
                 if($caja->getControlBilletes())
                 {
+                    //Se regitran los billetes recibidos como cantidad encontrada.
                     $billete_cierre_caja=new BilleteCierreCaja(array( "id_cierre_caja" => $cierre_caja->getIdCierreCaja() ));
                     $billete_cierre_caja->setCantidadFaltante(0);
                     $billete_cierre_caja->setCantidadSobrante(0);
@@ -2644,6 +2677,12 @@ require_once("interfaces/Sucursales.interface.php");
                         $billete_cierre_caja->setCantidadEncontrada($b["cantidad"]);
                         BilleteCierreCajaDAO::save($billete_cierre_caja);
                     }
+                    
+                    //Se buscan los billetes de la caja y se buscan en la tabla billete_cierre_caja
+                    //Si no se encuentra, se crea un registro nuevo
+                    //Si despues de haber modificado la caja, quedan billetes en ella, significa que
+                    //esos billetes estan faltando.
+                    //En cambio, si esos billetes tienen cantidad negativa, significa que estan sobrando
                     $billetes_caja=BilleteCajaDAO::search(new BilleteCaja(array( "id_caja" => $id_caja )));
                     foreach($billetes_caja as $b_c)
                     {
@@ -2657,22 +2696,23 @@ require_once("interfaces/Sucursales.interface.php");
                                                     "cantidad_faltante" => 0
                                                     )
                                                         );
-                        if($b_c->getCantidad()>0)
+                        if($b_c->getCantidad()<0)
                         {
                             $billete_cierre_caja->setCantidadSobrante($b_c->getCantidad());
                         }
-                        else if($b_c->getCantidad()<0)
+                        else if($b_c->getCantidad()>0)
                         {
                             $billete_cierre_caja->setCantidadFaltante($b_c->getCantidad()*-1);
                         }
                         else
                             continue;
+                        //Al final pone su cantidad en cero, pues al cerrar una caja esta debe quedar vacía.
                         $b_c->setCantidad(0);
                         BilleteCierreCajaDAO::save($billete_cierre_caja);
                         BilleteCajaDAO::save($b_c);
-                    }
-                }
-            }
+                    }/* Fin foreach bil;etes_caja */
+                } /* Fin if contrik billetes */
+            } /* Fin try */
             catch(Exception $e)
             {
                 DAO::transRollback();
