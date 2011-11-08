@@ -352,7 +352,7 @@ require_once("interfaces/Sucursales.interface.php");
             //Verifica que la fecha este en el rango
             if(!is_null($fecha))
             {
-                $e = self::validarString($fecha, strlen("Y-m-d H:i:s"), "fecha");
+                $e = self::validarString($fecha, strlen("YYYY-mm-dd HH:ii:ss"), "fecha");
                 if(is_string($e))
                     return $e;
             }
@@ -604,6 +604,9 @@ require_once("interfaces/Sucursales.interface.php");
                 if(is_string($e))
                     return $e;
             }
+            
+            //No se encontraron errores, regresa true
+            return true;
         }
         
         /*
@@ -1350,7 +1353,7 @@ require_once("interfaces/Sucursales.interface.php");
             }
             DAO::transEnd();
             Logger::log("venta realizada exitosamente");
-            return $venta->getIdVenta();
+            return array ("id_venta" => $venta->getIdVenta());
 	}
 
         /*
@@ -1903,7 +1906,7 @@ require_once("interfaces/Sucursales.interface.php");
             }
             DAO::transEnd();
             Logger::log("compra realizada exitosamente");
-            return $compra->getIdCompra();
+            return array( "id_compra_cliente" => $compra->getIdCompra());
 	}
   
 	/**
@@ -2113,7 +2116,7 @@ require_once("interfaces/Sucursales.interface.php");
             }
             DAO::transEnd();
             Logger::log("Caja abierta exitosamente");
-            return $apertura_caja->getIdAperturaCaja();
+            return array( "detalles_sucursal" => $apertura_caja->getIdAperturaCaja());
 	}
   
 	/**
@@ -2246,7 +2249,7 @@ require_once("interfaces/Sucursales.interface.php");
             }
             DAO::transEnd();
             Logger::log("Sucursal creada con exito");
-            return $sucursal->getIdSucursal();
+            return array( "id_sucursal" => $sucursal->getIdSucursal());
 	}
   
 	/**
@@ -2721,7 +2724,7 @@ require_once("interfaces/Sucursales.interface.php");
             }
             DAO::transEnd();
             Logger::log("Caja cerrada exitosamente");
-            return $cierre_caja->getIdCierreCaja();
+            return array( "id_cierre" => $cierre_caja->getIdCierreCaja());
 	}
 
 
@@ -2840,7 +2843,7 @@ Creo que este metodo tiene que estar bajo sucursal.
             }
             DAO::transEnd();
             Logger::log("Entrada a almacen registrada exitosamente");
-            return $entrada_almacen->getIdEntradaAlmacen();
+            return array("id_surtido" => $entrada_almacen->getIdEntradaAlmacen());
 	}
   
 	/**
@@ -2918,7 +2921,7 @@ Creo que este metodo tiene que estar bajo sucursal.
             }
             DAO::transEnd();
             Logger::log("caja creada exitosamente");
-            return $caja->getIdCaja();
+            return array("id_caja" => $caja->getIdCaja());
 	}
   
 	/**
@@ -3017,7 +3020,7 @@ Creo que este metodo tiene que estar bajo sucursal.
             }
             DAO::transEnd();
             Logger::log("Salida de almacen registrada correctamente");
-            return $salida_almacen->getIdSalidaAlmacen();
+            return array("id_salida" => $salida_almacen->getIdSalidaAlmacen());
 	}
   
 	/**
@@ -3167,7 +3170,7 @@ Creo que este metodo tiene que estar bajo sucursal.
             }
             DAO::transEnd();
             Logger::log("Corte de caja realizado correctamente");
-            return $corte_de_caja->getIdCorteDeCaja();
+            return array( "id_corte_caja" => $corte_de_caja->getIdCorteDeCaja());
 	}
   
 	/**
@@ -3651,7 +3654,7 @@ Creo que este metodo tiene que estar bajo sucursal.
             }
             DAO::transEnd();
             Logger::log("traspaso creado exitosamente");
-            return $traspaso->getIdTraspaso();
+            return array("id_traspaso" => $traspaso->getIdTraspaso());
 	}
   
 	/**

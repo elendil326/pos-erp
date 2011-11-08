@@ -7,28 +7,172 @@ require_once("interfaces/CargosYAbonos.interface.php");
   **/
 
   class CargosYAbonosController implements ICargosYAbonos{
+      
+      /*
+         *Se valida que un string tenga longitud en un rango de un maximo inclusivo y un minimo exclusvio.
+         *Regresa true cuando es valido, y un string cuando no lo es.
+         */
+          private static function validarString($string, $max_length, $nombre_variable,$min_length=0)
+	{
+		if(strlen($string)<=$min_length||strlen($string)>$max_length)
+		{
+		    return "La longitud de la variable ".$nombre_variable." proporcionada (".$string.") no esta en el rango de ".$min_length." - ".$max_length;
+		}
+		return true;
+        }
 
-        //valida que una empresa exista y tenga su estado en activo
-        private function validarEmpresa
+
+        /*
+         * Se valida que un numero este en un rango de un maximo y un minimo inclusivos
+         * Regresa true cuando es valido, y un string cuando no lo es
+         */
+	private static function validarNumero($num, $max_length, $nombre_variable, $min_length=0)
+	{
+	    if($num<$min_length||$num>$max_length)
+	    {
+	        return "La variable ".$nombre_variable." proporcionada (".$num.") no esta en el rango de ".$min_length." - ".$max_length;
+	    }
+	    return true;
+	}
+        
+        /*
+         * Valida los parametros de la tabla ingreso. Regresa un string con el error en caso
+         * de haber uno, de lo contrario regresa verdadero.
+         */
+        private static function validarParametrosIngreso
         (
-                $id_empresa
+                $id_ingreso = null,
+                $id_empresa = null,
+                $id_concepto_ingreso = null,
+                $fecha_del_ingreso = null,
+                $id_sucursal = null,
+                $id_caja = null,
+                $nota = null,
+                $descripcion = null,
+                $folio = null,
+                $monto = null,
+                $cancelado = null,
+                $motivo_cancelacion = null
         )
         {
-            $empresa=EmpresaDAO::getByPK($id_empresa);
-            if(is_null($empresa))
+            //valida que el ingreso exista en la base de datos
+            if(!is_null($id_ingreso))
             {
-                Logger::error("La empresa con id:".$id_empresa." no existe");
-                return false;
+                $ingreso = IngresoDAO::getByPK($id_ingreso);
+                if(is_null($ingreso))
+                        return "El ingreso con id ".$id_ingreso." no existe";
+                if($ingreso->getCancelado())
+                    return "El ingreso ya ha sido cancelado";
             }
-            $activo=$empresa->getActivo();
-            if(!$activo)
-            Logger::error("La empresa con id:".$id_empresa." no esta activa");
-            return $activo;
+            
+            //valida que la empresa exista en la base de datos
+            if(!is_null($id_empresa))
+            {
+                $empresa = EmpresaDAO::getByPK($id_empresa);
+                if(is_null($empresa))
+                        return "La empresa con id ".$id_empresa." no existe";
+                if(!$empresa->getActivo())
+                    return "La empresa esta desactivada";
+            }
+            
+            //valida que el concepto de ingreso exista en la base de datos
+            if(!is_null($id_concepto_ingreso))
+            {
+                $concepto_ingreso = ConceptoIngresoDAO::getByPK($id_concepto_ingreso);
+                if(is_null($concepto_ingreso))
+                        return "El concepto de ingreso con id ".$id_concepto_ingreso." no existe";
+                if(!$concepto_ingreso->getActivo())
+                    return "El concepto de ingreso esta desactivado";
+            }
+            
+            //valida que el string fecha_del_ingreso sea valido
+            if(!is_null($fecha_del_ingreso))
+            {
+                $e = self::validarString($fecha_del_ingreso, strlen("YYYY-mm-dd HH:ii:ss"), "fecha del ingreso");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que la sucursal exista en la base de datos
+            if(!is_null($id_sucursal))
+            {
+                $sucursal = SucursalDAO::getByPK($id_sucursal); 
+                if(is_null($sucursal))
+                        return "La sucursal con id ".$id_sucursal." no existe";
+                if(!$sucursal->getActiva())
+                    return "La sucursal esta desactivada";
+            }
+            
+            //valida que la caja exista en la base de datos
+            if(!is_null($id_caja))
+            {
+                $caja =CajaDAO::getByPK($id_caja);
+                if(is_null($caja))
+                        return "La caja con id ".$id_caja." no existe";
+                
+                if(!$caja->getAbierta())
+                    return "La caja no esta abierta, no se le pueden hacer cambios";
+                
+                if(!$caja->getActiva())
+                    return "La caja esat desactivada";
+            }
+            
+            //valida que el string nota este en el rango
+            if(!is_null($nota))
+            {
+                $e = self::validarString($nota, 64, "nota");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que la descripcion este en el rango
+            if(!is_null($descripcion))
+            {
+                $e = self::validarString($descripcion, 255, "descripcion");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el folio este en el rango
+            if(!is_null($folio))
+            {
+                $e = self::validarString($folio, 50, "folio");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el monto este en el rango
+            if(!is_null($monto))
+            {
+                $e = self::validarNumero($monto, 1.8e200, "monto");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida el boleano canceldo
+            if(!is_null($cancelado))
+            {
+                $e = self::validarNumero($cancelado, 1, "cancelado");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida el motivo de cancelacion
+            if(!is_null($motivo_cancelacion))
+            {
+                $e = self::validarString($motivo_cancelacion, 255, "motivo de cancelacion");
+                if(is_string($e))
+                    return $e;
+            }
         }
+        
+        //Metodo para pruebas que simula la obtencion del id de la sucursal actual
         private static function getSucursal()
         {
             return 1;
         }
+        
+        //metodo para pruebas que simula la obtencion del id de la caja actual
         private static function getCaja()
         {
             return 1;
@@ -63,25 +207,25 @@ require_once("interfaces/CargosYAbonos.interface.php");
 	)
 	{
             Logger::log("Creando nuevo ingreso");
+            
+            //Se obtiene al usuario de la sesion
             $id_usuario=LoginController::getCurrentUser();
             if(is_null($id_usuario))
             {
                 Logger::error("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
                 throw new Exception("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
             }
-            if(!self::validarEmpresa($id_empresa))
+            
+            //Se validan los parametros obtenidos
+            $validar = self::validarParametrosIngreso(null,$id_empresa,$id_concepto_ingreso,$fecha_ingreso,$id_sucursal,$id_caja,$nota,$descripcion,$folio,$monto);
+            if(is_string($validar))
             {
-                throw new Exception("Se recibio una empresa no valida");
+                Logger::error($validar);
+                throw new Exception($validar);
             }
-            if(!is_null($id_concepto_ingreso))
-            {
-                $concepto_ingreso=ConceptoIngresoDAO::getByPK($id_concepto_ingreso);
-                if(is_null($concepto_ingreso))
-                {
-                    Logger::error("El concepto de ingreso con id:".$id_concepto_ingreso." no existe");
-                    throw new Exception("El concepto de ingreso con id:".$id_concepto_ingreso." no existe");
-                }
-            }
+            
+            //Verifica el monto del ingreso, si no se ha recibido un monto, se busca en el concepto.
+            //Si el concepto no se recibe o no tiene monto se manda una excepcion
             if(is_null($monto))
             {
                 Logger::log("No se recibio monto, se procede a buscar en el concepto de ingreso");
@@ -97,10 +241,18 @@ require_once("interfaces/CargosYAbonos.interface.php");
                     throw new Exception("El concepto de ingreso recibido no cuenta con un monto ni se recibio un monto");
                 }
             }
+            
+            //Si no se recibe sucursal, se obtiene la acutal,
+            //si no se logro obtener se registra el ingreso sin sucursal
             if(!$id_sucursal)
                 $id_sucursal=self::getSucursal();
+            
+            //Si no se recibe caja, se obtiene la actual,
+            //si no se obtiene la actual, se registra el ingreso sin caja
             if(!$id_caja)
                 $id_caja=self::getCaja();
+            
+            //Si se obtuvo una caja, se le agrega a su saldo el monto del ingreso
             if(!is_null($id_caja))
             {
                 try
@@ -112,6 +264,8 @@ require_once("interfaces/CargosYAbonos.interface.php");
                     throw $e;
                 }
             }
+            
+            //Se inicializa el registro de ingreso
             $ingreso=new Ingreso();
             $ingreso->setCancelado(0);
             $ingreso->setDescripcion($descripcion);
@@ -132,16 +286,13 @@ require_once("interfaces/CargosYAbonos.interface.php");
             }
             catch(Exception $e)
             {
-                Logger::error("Error al guardar el nuevo ingreso:".$e);
                 DAO::transRollback();
-                throw new Exception("Error al guardar el nuevo ingreso:".$e);
+                Logger::error("Error al guardar el nuevo ingreso: ".$e);
+                throw new Exception("Error al guardar el nuevo ingreso");
             }
             DAO::transEnd();
             Logger::log("Ingreso creado exitosamente!");
-            //PARA PROBAR
-            //printf('{ "success" : true , "id_ingreso" : %d }',$ingreso->getIdIngreso());
-            //
-            return $ingreso->getIdIngreso();
+            return array("id_ingreso" => $ingreso->getIdIngreso());
 	}
 
 	/**
