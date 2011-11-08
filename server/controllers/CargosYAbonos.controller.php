@@ -1650,6 +1650,8 @@ require_once("interfaces/CargosYAbonos.interface.php");
 	{
             Logger::log("Eliminando concepto de gasto");
             $concepto_gasto=ConceptoGastoDAO::getByPK($id_concepto_gasto);
+            
+            //valida que el concepto gasto exista en la base de datos y que este activo
             if(!$concepto_gasto)
             {
                 Logger::error("El concepto gasto con id: ".$id_concepto_gasto." no existe");
@@ -1670,7 +1672,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudo eliminar el concepto de gasto: ".$e);
-                throw $e;
+                throw new Exception("No se pudo eliminar el concepto de gasto");
             }
             DAO::transEnd();
             Logger::log("Concepto de gasto eliminado con exito");
