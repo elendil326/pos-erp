@@ -2349,31 +2349,25 @@ require_once("interfaces/CargosYAbonos.interface.php");
 	)
 	{
             Logger::log("Editando ingreso");
+            
+            //valida que se hayan recibido parametros para la edicion
             if(!$fecha_ingreso && !$id_concepto_ingreso && !$descripcion && !$nota && !$folio)
             {
                 Logger::warn("No se recibieron parametros para editar, no hay nada que editar");
                 throw new Exception("No se recibieron parametros para editar, no hay nada que editar");
             }
+            
+            //Valida los parametros recibidos
+            $validar = self::validarParametrosIngreso($id_ingreso,null,null,$fecha_ingreso,null,null,$nota,$descripcion,$folio);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
             $ingreso=IngresoDAO::getByPK($id_ingreso);
-            if(!$ingreso)
-            {
-                Logger::error("El ingreso con id: ".$id_ingreso." no existe");
-                throw new Exception("El ingreso con id: ".$id_ingreso." no existe");
-            }
-            if($ingreso->getCancelado())
-            {
-                Logger::error("El ingreso ya ha sido cancelado y no puede ser editado");
-                throw new Exception("El ingreso ya ha sido cancelado y no puede ser editado");
-            }
-            if(!is_null($id_concepto_ingreso))
-            {
-                $concepto_ingreso=ConceptoIngresoDAO::getByPK($id_concepto_ingreso);
-                if(is_null($concepto_ingreso))
-                {
-                    Logger::error("El concepto de ingreso con id:".$id_concepto_ingreso." no existe");
-                    throw new Exception("El concepto de ingreso con id:".$id_concepto_ingreso." no existe");
-                }
-            }
+            
+            //Los parametros que no sean nulos seran tomados como actualizacion
             if(!is_null($fecha_ingreso))
                 $ingreso->setFechaDelIngreso($fecha_ingreso);
             if(!is_null($id_concepto_ingreso))
@@ -2393,7 +2387,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             {
                 DAO::transRollBack();
                 Logger::error("No se pudo editar el ingreso: ".$e);
-                throw $e;
+                throw "No se pudo editar el ingreso";
             }
             DAO::transEnd();
             Logger::log("Ingreso editado exitosamente");
