@@ -2280,31 +2280,25 @@ require_once("interfaces/CargosYAbonos.interface.php");
 	)
 	{
             Logger::log("Editando gasto");
+            
+            //valida si se recibieron parametros a editar o no
             if(!$fecha_gasto && !$id_concepto_gasto && !$descripcion && !$nota && !$folio)
             {
                 Logger::warn("No se recibieron parametros para editar, no hay nada que editar");
                 throw new Exception("No se recibieron parametros para editar, no hay nada que editar");
             }
+            
+            //valida los parametros obtenidos
+            $validar = self::validarParametrosGasto($id_concepto_gasto,null,null,null,$fecha_gasto,null,null,$nota,$descripcion,$folio);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
             $gasto=GastoDAO::getByPK($id_gasto);
-            if(!$gasto)
-            {
-                Logger::error("El gasto con id: ".$id_gasto." no existe");
-                throw new Exception("El gasto con id: ".$id_gasto." no existe");
-            }
-            if($gasto->getCancelado())
-            {
-                Logger::error("El gasto ya ha sido cancelado y no puede ser editado");
-                throw new Exception("El gasto ya ha sido cancelado y no puede ser editado");
-            }
-            if(!is_null($id_concepto_gasto))
-            {
-                $concepto_gasto=ConceptoGastoDAO::getByPK($id_concepto_gasto);
-                if(is_null($concepto_gasto))
-                {
-                    Logger::error("El concepto de gasto con id:".$id_concepto_gasto." no existe");
-                    throw new Exception("El concepto de gasto con id:".$id_concepto_gasto." no existe");
-                }
-            }
+            
+            //Los parametros que no sean null seran tomados como actualizacion
             if(!is_null($fecha_gasto))
                 $gasto->setFechaDelGasto($fecha_gasto);
             if(!is_null($id_concepto_gasto))
