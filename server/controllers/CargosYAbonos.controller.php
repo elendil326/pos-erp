@@ -1808,17 +1808,25 @@ require_once("interfaces/CargosYAbonos.interface.php");
 	)
 	{
             Logger::log("Editando concepto de ingreso");
+            
+            //valida si ha recibido algun parametro para la edicion
             if(!$nombre && !$descripcion && !$monto)
             {
                 Logger::warn("No se ha recibido un parametro a editar, no hay nada que editar");
                 throw new Exception("No se ha recibido un parametro a editar, no hay nada que editar");
             }
-            $concepto_ingreso = ConceptoIngresoDAO::getByPK($id_concepto_ingreso);
-            if(!$concepto_ingreso)
+            
+            //valida los parametros recibidos
+            $validar = self::validarParametrosConceptoIngreso($id_concepto_ingreso, $nombre, $descripcion, $monto);
+            if(is_string($validar))
             {
-                Logger::error("El concepto de ingreso con id:".$id_concepto_ingreso." no existe");
-                throw new Exception("El concepto de ingreso con id:".$id_concepto_ingreso." no existe");
+                Logger::error($validar);
+                throw new Exception($validar);
             }
+            
+            $concepto_ingreso = ConceptoIngresoDAO::getByPK($id_concepto_ingreso);
+            
+            //se toman como actualizacion aquellos parametros que no son null
             if(!is_null($nombre))
                 $concepto_ingreso->setNombre($nombre);
             if(!is_null($descripcion))
@@ -1834,7 +1842,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudo editar el concepto de ingreso: ".$e);
-                throw $e;
+                throw new Exception("No se pudo editar el concepto de ingreso");
             }
             DAO::transEnd();
             Logger::log("Concepto de Ingreso editado exitosamente");
