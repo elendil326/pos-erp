@@ -296,6 +296,153 @@ require_once("interfaces/CargosYAbonos.interface.php");
             }
         }
         
+        /*
+         * Valida los parametros de la tabla gasto. Regresa un string con el error
+         * si es que hay uno, de lo contrario regresa verdadero
+         */
+        private static function validarParametrosGasto
+        (
+                $id_gasto = null,
+                $id_empresa = null,
+                $id_concepto_gasto = null,
+                $id_orden_de_servicio = null,
+                $fecha_del_gasto = null,
+                $id_sucursal = null,
+                $id_caja = null,
+                $nota = null,
+                $descripcion = null,
+                $folio = null,
+                $monto = null,
+                $cancelado = null,
+                $motivo_cancelacion = null
+        )
+        {
+            //valida que el ingreso exista en la base de datos
+            if(!is_null($id_gasto))
+            {
+                $gasto = GastoDAO::getByPK($id_gasto);
+                if(is_null($gasto))
+                        return "El gasto con id ".$id_gasto." no existe";
+                if($gasto->getCancelado())
+                    return "El gasto ya ha sido cancelado";
+            }
+            
+            //valida que la empresa exista en la base de datos
+            if(!is_null($id_empresa))
+            {
+                $empresa = EmpresaDAO::getByPK($id_empresa);
+                if(is_null($empresa))
+                        return "La empresa con id ".$id_empresa." no existe";
+                if(!$empresa->getActivo())
+                    return "La empresa esta desactivada";
+            }
+            
+            //valida que el concepto de ingreso exista en la base de datos
+            if(!is_null($id_concepto_gasto))
+            {
+                $concepto_gasto = ConceptoGastoDAO::getByPK($id_concepto_gasto);
+                if(is_null($concepto_gasto))
+                        return "El concepto de gasto con id ".$id_concepto_gasto." no existe";
+                if(!$concepto_gasto->getActivo())
+                    return "El concepto de gasto esta desactivado";
+            }
+            
+            //valida que la orden de servicio exista y que este activa
+            if(!is_null($id_orden_de_servicio))
+            {
+                $orden_de_servicio = OrdenDeServicioDAO::getByPK($id_orden_de_servicio);
+                if(is_null($orden_de_servicio))
+                    return "La orden de servicio ".$id_orden_de_servicio." no existe";
+                if(!$orden_de_servicio->getActiva())
+                    return "La orden de servicio ya esta desactivada";
+            }
+            
+            //valida que el string fecha_del_ingreso sea valido
+            if(!is_null($fecha_del_gasto))
+            {
+                $e = self::validarString($fecha_del_gasto, strlen("YYYY-mm-dd HH:ii:ss"), "fecha del ingreso");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que la sucursal exista en la base de datos
+            if(!is_null($id_sucursal))
+            {
+                $sucursal = SucursalDAO::getByPK($id_sucursal); 
+                if(is_null($sucursal))
+                        return "La sucursal con id ".$id_sucursal." no existe";
+                if(!$sucursal->getActiva())
+                    return "La sucursal esta desactivada";
+            }
+            
+            //valida que la caja exista en la base de datos
+            if(!is_null($id_caja))
+            {
+                $caja =CajaDAO::getByPK($id_caja);
+                if(is_null($caja))
+                        return "La caja con id ".$id_caja." no existe";
+                
+                if(!$caja->getAbierta())
+                    return "La caja no esta abierta, no se le pueden hacer cambios";
+                
+                if(!$caja->getActiva())
+                    return "La caja esat desactivada";
+            }
+            
+            //valida que el string nota este en el rango
+            if(!is_null($nota))
+            {
+                $e = self::validarString($nota, 64, "nota");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que la descripcion este en el rango
+            if(!is_null($descripcion))
+            {
+                $e = self::validarString($descripcion, 255, "descripcion");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el folio este en el rango
+            if(!is_null($folio))
+            {
+                $e = self::validarString($folio, 50, "folio");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el monto este en el rango
+            if(!is_null($monto))
+            {
+                $e = self::validarNumero($monto, 1.8e200, "monto");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida el boleano canceldo
+            if(!is_null($cancelado))
+            {
+                $e = self::validarNumero($cancelado, 1, "cancelado");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida el motivo de cancelacion
+            if(!is_null($motivo_cancelacion))
+            {
+                $e = self::validarString($motivo_cancelacion, 255, "motivo de cancelacion");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //No se encontro error, regresa verdadero
+            return true;
+        }
+        
+        
+        
         //Metodo para pruebas que simula la obtencion del id de la sucursal actual
         private static function getSucursal()
         {
@@ -364,6 +511,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
                     Logger::error("No se recibio un concepto de ingreso");
                     throw new Exception("No se recibio un concepto de ingreso ni un monto");
                 }
+                $concepto_ingreso=  ConceptoIngresoDAO::getByPK($id_concepto_ingreso);
                 $monto=$concepto_ingreso->getMonto();
                 if(is_null($monto))
                 {
@@ -2028,25 +2176,21 @@ require_once("interfaces/CargosYAbonos.interface.php");
 	)
 	{
             Logger::log("Creando nuevo gasto");
+            
+            //obtiene al usuario de la sesion actual
             $id_usuario=LoginController::getCurrentUser();
             if(is_null($id_usuario))
             {
                 Logger::error("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
                 throw new Exception("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
             }
-            if(!self::validarEmpresa($id_empresa))
-            {
-                throw new Exception("Se recibio una empresa no valida");
-            }
-            if(!is_null($id_concepto_gasto))
-            {
-                $concepto_gasto=ConceptoGastoDAO::getByPK($id_concepto_gasto);
-                if(is_null($concepto_gasto))
-                {
-                    Logger::error("El concepto de gasto con id:".$id_concepto_gasto." no existe");
-                    throw new Exception("El concepto de gasto con id:".$id_concepto_gasto." no existe");
-                }
-            }
+            
+            //Se validan los parametros
+            $validar = self::validarParametrosGasto(null,$id_empresa,$id_concepto_gasto,$id_orden_de_servicio,
+                    $fecha_gasto,$id_sucursal,$id_caja,$nota,$descripcion,$folio,$monto);
+            
+            //Si no se recibio monto, se toma del concepto de gasto.
+            //Si no se recibio concepto de gasto o este no cuenta con un monto se manda una excepcion
             if(is_null($monto))
             {
                 Logger::log("No se recibio monto, se procede a buscar en el concepto de ingreso");
@@ -2055,6 +2199,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
                     Logger::error("No se recibio un concepto de gasto");
                     throw new Exception("No se recibio un concepto de gasto ni un monto");
                 }
+                $concepto_gasto=  ConceptoGastoDAO::getByPK($id_concepto_gasto);
                 $monto=$concepto_gasto->getMonto();
                 if(is_null($monto))
                 {
@@ -2062,6 +2207,8 @@ require_once("interfaces/CargosYAbonos.interface.php");
                     throw new Exception("El concepto de gasto recibido no cuenta con un monto ni se recibio un monto");
                 }
             }
+            
+            //Si no se recibe sucursal ni caja se intenta tomar las actuales
             if(!$id_sucursal)
                 $id_sucursal=self::getSucursal();
             if(!$id_caja)
@@ -2077,6 +2224,8 @@ require_once("interfaces/CargosYAbonos.interface.php");
                     throw $e;
                 }
             }
+            
+            //Se inicializa el registro de gasto
             $gasto = new Gasto();
             $gasto->setFechaDelGasto($fecha_gasto);
             $gasto->setIdEmpresa($id_empresa);
@@ -2100,7 +2249,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudo crear el gasto: ".$e);
-                throw $e;
+                throw "No se pudo crear el gasto";
             }
             DAO::transEnd();
             Logger::log("Gasto creado exitosamente");
