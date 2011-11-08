@@ -164,6 +164,74 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 if(is_string($e))
                     return $e;
             }
+            
+            //No se encontro error, regresa verdadero
+            return true;
+        }
+        
+        /*
+         * Valida los parametros de la tabla conceptoGasto, regresa un string con el error en caso 
+         * de haber uno, de lo contrario, regresa true
+         */
+        private static function validarParametrosConceptoGasto
+        (
+                $id_concepto_gasto = null,
+                $nombre = null,
+                $descripcion = null,
+                $monto = null,
+                $activo = null
+        )
+        {
+            //valida que el concepto de gasto exista en la base de datos y que este activo
+            if(!is_null($id_concepto_gasto))
+            {
+                $concepto_gasto = ConceptoGastoDAO::getByPK($id_concepto_gasto);
+                if(is_null($concepto_gasto))
+                        return "El concepto gasto con id ".$id_concepto_gasto." no existe";
+                if(!$concepto_gasto->getActivo())
+                    return "El concepto de gasto no esta activo";
+            }
+            
+            //valida que el nombre este en rango y que no se repita
+            if(!is_null($nombre))
+            {
+                $e = self::validarString($nombre, 50, "nombre");
+                if(is_string($e))
+                    return $e;
+                $conceptos_gasto = ConceptoGastoDAO::search( new ConceptoGasto( array( "nombre" => trim($nombre) ) ) );
+                foreach($conceptos_gasto as $c_g)
+                {
+                    if($c_g->getActivo())
+                        return "El nombre (".trim($nombre).") ya esta siendo usado por el concepto_gasto ".$c_g->getIdConceptoGasto();
+                }
+            }
+            
+            //valida que la descripcion este en rango
+            if(!is_null($descripcion))
+            {
+                $e = self::validarString($descripcion, 255, "descripcion");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida el monto
+            if(!is_null($monto))
+            {
+                $e = self::validarNumero($monto, 1.8e200, "monto");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida el boleano activo
+            if(!is_null($activo))
+            {
+                $e = self::validarNumero($activo, 1, "activo");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //No se encontro error, regresa true
+            return true;
         }
         
         //Metodo para pruebas que simula la obtencion del id de la sucursal actual
@@ -1476,6 +1544,16 @@ require_once("interfaces/CargosYAbonos.interface.php");
 	)
 	{
             Logger::log("Creando concepto de gasto");
+            
+            //valida los parametros de gasto
+            $validar = self::validarParametrosConceptoGasto(null,$nombre,$descripcion,$monto);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            //se inicializa el registro de concepto gasto
             $concepto_gasto = new ConceptoGasto();
             $concepto_gasto->setNombre($nombre);
             $concepto_gasto->setDescripcion($descripcion);
