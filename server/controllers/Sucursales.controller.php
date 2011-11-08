@@ -3183,6 +3183,7 @@ Creo que este metodo tiene que estar bajo sucursal.
                 Logger::error("No se puede eliminar con este metodo un almacen de tipo consignacion");
                 throw new Exception("No se puede eliminar con este metodo un almacen de tipo consignacion");
             }
+           
             $almacen->setActivo(0);
             
             //Busca los productos del almacen, si alguno tiene una cantidad distinta a cero,
@@ -3196,10 +3197,25 @@ Creo que este metodo tiene que estar bajo sucursal.
                     throw new Exception("El almacen no puede ser borrado pues aun contiene productos");
                 }
             }
+            
+            //Se cancelaran todos los traspasos que este almacen tenga programados ya sea para enviar o para recibir
+            $traspasos_enviados = TraspasoDAO::search( new Traspaso( array( "id_almacen_envia" => $id_almacen ) ) );
+            $traspasos_recibidos = TraspasoDAO::search( new Traspaso( array( "id_almacen_recibe" => $id_almacen ) ) );
+            
             DAO::transBegin();
             try
             {
                 AlmacenDAO::save($almacen);
+                foreach($traspasos_enviados as $t_e)
+                {
+                    if($t_e->getEstado()=="Envio programado")
+                        self::CancelarTraspasoAlmacen ($t_e->getIdTraspaso());
+                }
+                foreach($traspasos_recibidos as $t_r)
+                {
+                    if(!$t_r->getCancelado()&&!$t_r->getCompleto())
+                        self::CancelarTraspasoAlmacen ($t_r->getIdTraspaso());
+                }
             }
             catch(Exception $e)
             {
@@ -3437,6 +3453,8 @@ Creo que este metodo tiene que estar bajo sucursal.
                 Logger::error("La sucursal no tiene un saldo de 0 y no puede ser eliminada");
                 throw new Exception("La sucursal no tiene un saldo de 0 y no puede ser eliminada");
             }
+            
+            
             $sucursal->setFechaBaja(date("Y-m-d H:i:s"));
             $sucursal->setActiva(0);
             DAO::transBegin();
@@ -3503,22 +3521,47 @@ Creo que este metodo tiene que estar bajo sucursal.
 	)
 	{  
             Logger::log("Creando traspaso");
+            
+            //Se obtiene al usuario de la sesion actual
             $id_usuario=LoginController::getCurrentUser();
             if(is_null($id_usuario))
             {
                 Logger::error("No se pudo obtener al usuario de la sesion, ya inicio sesion?");
                 throw new Exception("No se pudo obtener al usuario de la sesion, ya inicio sesion?");
             }
-            if(is_null(AlmacenDAO::getByPK($id_almacen_recibe)))
+            
+            //verifica que los almacenes no sean iguales, que existan en la base de datos, que esten abiertos
+            if($id_almacen_envia == $id_almacen_recibe)
             {
-                Logger::error("El almacen con id: ".$id_almacen_recibe." no existe");
-                throw new Exception("El almacen con id: ".$id_almacen_recibe." no existe");
+                Logger::error("El almacen que envia es el mismo que el que recibe");
+                throw new Exception("El almacen que envia es el mismo que el que recibe");
             }
-            if(is_null(AlmacenDAO::getByPK($id_almacen_envia)))
+            $validar = self::validarParametrosTraspaso(null, NULL, $id_almacen_recibe, $fecha_envio_programada);
+            if(is_string($validar))
             {
-                Logger::error("El almacen con id: ".$id_almacen_envia." no existe");
-                throw new Exception("El almacen con id: ".$id_almacen_envia." no existe");
+                Logger::error($validar);
+                throw new Exception($validar);
             }
+            $validar = self::validarParametrosTraspaso(null,null,$id_almacen_envia);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            $almacen_recibe = AlmacenDAO::getByPK($id_almacen_recibe);
+            if(!$almacen_recibe->getActivo())
+            {
+                Logger::error("El almacen que recibe no esta activo, no se le puede programar un traspaso");
+                throw new Exception("El almacen que recibe no esta activo, no se le puede programar un traspaso");
+            }
+            $almacen_envia = AlmacenDAO::getByPK($id_almacen_envia);
+            if(!$almacen_envia->getActivo())
+            {
+                Logger::error("El almacen que envia no esta activo, no se le puede programar un traspaso");
+                throw new Exception("El almacen que envia no esta activo, no se le puede programar un traspaso");
+            }
+            
+            //Inicializa el registro de traspaso
             $traspaso=new Traspaso(array(
                             "id_usuario_programa"   => $id_usuario,
                             "id_usuario_envia"      => 0,
@@ -3536,6 +3579,7 @@ Creo que este metodo tiene que estar bajo sucursal.
             DAO::transBegin();
             try
             {
+                //Se guarda el registro de traspaso y se insertan los registros de traspaso_producto.
                 TraspasoDAO::save($traspaso);
                 $traspaso_producto=new TraspasoProducto(array(
                                     "id_traspaso"       => $traspaso->getIdTraspaso(),
@@ -3544,6 +3588,7 @@ Creo que este metodo tiene que estar bajo sucursal.
                                     );
                 foreach($productos as $p)
                 {
+                    //Se validan los parametros de producto
                     if(is_null(ProductoDAO::getByPK($p["id_producto"])))
                     {
                         throw new Exception("El producto con id: ".$p["id_producto"]." no existe");
@@ -3552,12 +3597,17 @@ Creo que este metodo tiene que estar bajo sucursal.
                     {
                         throw new Exception("La unidad con id: ".$p["id_unidad"]." no existe");
                     }
+                    $validar = self::validarNumero($p["cantidad"], 1.8e200, "cantidad");
+                    if(is_string($validar))
+                    {
+                        throw new Exception($validar);
+                    }
                     $traspaso_producto->setIdProducto($p["id_producto"]);
                     $traspaso_producto->setIdUnidad($p["id_unidad"]);
                     $traspaso_producto->setCantidadEnviada($p["cantidad"]);
                     TraspasoProductoDAO::save($traspaso_producto);
-                }
-            }
+                }/* Fin de foreach */
+            }/* Fin de try */
             catch(Exception $e)
             {
                 DAO::transRollback();
