@@ -3975,12 +3975,15 @@ Creo que este metodo tiene que estar bajo sucursal.
 	)
 	{  
             Logger::log("Editando traspaso ".$id_traspaso);
-            $traspaso=TraspasoDAO::getByPK($id_traspaso);
-            if(is_null($traspaso))
+            
+            //valida que el traspaso exista, que no haya sido cancelado y que no se hayan efectuado operaciones sobre el.
+            $validar = self::validarParametrosTraspaso($id_traspaso, null, null, $fecha_envio_programada);
+            if(is_string($validar))
             {
-                Logger::error("El traspaso con id: ".$id_traspaso." no existe");
-                throw new Exception("El traspaso con id: ".$id_traspaso." no existe");
+                Logger::error($validar);
+                throw new Exception($validar);
             }
+            $traspaso=TraspasoDAO::getByPK($id_traspaso);
             if($traspaso->getCancelado())
             {
                 Logger::error("El traspaso ya ha sido cancelado, no puede ser editado");
@@ -3991,6 +3994,8 @@ Creo que este metodo tiene que estar bajo sucursal.
                 Logger::error("No se puede editar el traspaso de almacen pues ya se han realizado acciones sobre el");
                 throw new Exception("No se puede editar el traspaso de almacen pues ya se han realizado acciones sobre el");
             }
+            
+            //Si se recibe el parametro fecha de envio se toma como actualizacion.
             if(!is_null($fecha_envio_programada))
             {
                 $traspaso->setFechaEnvioProgramada($fecha_envio_programada);
@@ -4001,11 +4006,32 @@ Creo que este metodo tiene que estar bajo sucursal.
                 TraspasoDAO::save($traspaso);
                 if(!is_null($productos))
                 {
+                    //Se actualiza la cantidad de cada producto programado para este traspaso, si el producto
+                    //no se encuentra, se verifica que su empresa concuerde con la del almacen de recibo y 
+                    //se crea el nuevo registro.
+                    //
+                    //Despues, se recorren los productos que se encuentran actualmente programados a enviarse en el traspaso,
+                    //los productos que no se encuentre en la nueva lista obtenida seran eliminados.
                     foreach($productos as $p)
                     {
                         $traspaso_producto=TraspasoProductoDAO::getByPK($id_traspaso, $p["id_producto"],$p["id_unidad"]);
                         if(is_null($traspaso_producto))
                         {
+                            $almacen_recibe = AlmacenDAO::getByPK($traspaso->getIdAlmacenRecibe());
+                            $productos_empresa = ProductoEmpresaDAO::search( new ProductoEmpresa( array( "id_producto" => $p["id_producto"] ) ) );
+                            $encontrado = false;
+                            foreach($productos_empresa as $p_e)
+                            {
+                                if($p_e->getIdEmpresa() == $almacen_recibe->getIdEmpresa())
+                                {
+                                    $encontrado = true;
+                                    break;
+                                }
+                            }
+                            if(!$encontrado)
+                            {
+                                throw new Exception("Se busca enviar un producto que no es de la empresa del almacen que recibe");
+                            }
                             $traspaso_producto=new TraspasoProducto(array(
                                                             "id_traspaso"       => $id_traspaso,
                                                             "id_producto"       => $p["id_producto"],
@@ -4016,7 +4042,7 @@ Creo que este metodo tiene que estar bajo sucursal.
                         }
                         $traspaso_producto->setCantidadEnviada($p["id_unidad"]);
                         TraspasoProductoDAO::save($traspaso_producto);
-                    }
+                    }/* Fin de foreach de productos*/
                     $traspasos_producto=TraspasoProductoDAO::search(new TraspasoProducto(array( "id_traspaso" => $id_traspaso )));
 
                     foreach($traspasos_producto as $t_p)
@@ -4034,9 +4060,9 @@ Creo que este metodo tiene que estar bajo sucursal.
                         {
                             TraspasoProductoDAO::delete($t_p);
                         }
-                    }
-                }
-            }
+                    }/* Fin de foreach de traspaso_producto*/
+                } /* Fin de if de productos */
+            } /* Fin de try */
             catch(Exception $e)
             {
                 DAO::transRollback();
