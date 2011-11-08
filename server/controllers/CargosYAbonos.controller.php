@@ -786,6 +786,8 @@ require_once("interfaces/CargosYAbonos.interface.php");
 	)
 	{
             Logger::log("Inicia lista de abonos");
+            
+            //verifica que se haya recibido almenos un tipo de abono a listar
             if(!$compra&&!$venta&&!$prestamo)
             {
                 Logger::warn("No se recibio si se listaran compras, ventas o prestamos, no se lista nada");
