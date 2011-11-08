@@ -3858,6 +3858,8 @@ Creo que este metodo tiene que estar bajo sucursal.
 	)
 	{  
            Logger::log("Cancelando traspaso: ".$id_traspaso);
+           
+           //verifica que el traspaso exista, que no haya sido cancelado, o que no hayan efectuado cambios sobre el
            $traspaso=TraspasoDAO::getByPK($id_traspaso);
            if(is_null($traspaso))
            {
@@ -3874,6 +3876,8 @@ Creo que este metodo tiene que estar bajo sucursal.
                Logger::error("El traspaso no puede ser cancelado pues ya se han realizado acciones sobre el");
                throw new Exception("El traspaso no puede ser cancelado pues ya se han realizado acciones sobre el");
            }
+           
+           //Actualiza el registro de traspaso
            $traspaso->setCancelado(1);
            $traspaso->setEstado("Cancelado");
            DAO::transBegin();
@@ -3884,11 +3888,11 @@ Creo que este metodo tiene que estar bajo sucursal.
            catch(Exception $e)
            {
                DAO::transRollback();
-               Logger::error("No se pudo cancelar el traslado ".$e);
-               throw new Exception("No se pudo cancelar el traslado");
+               Logger::error("No se pudo cancelar el traspaso: ".$e);
+               throw new Exception("No se pudo cancelar el traspaso");
            }
            DAO::transEnd();
-           Logger::log("Traslado cancelado exitosamente");
+           Logger::log("Traspaso cancelado exitosamente");
 	}
   
 	/**
