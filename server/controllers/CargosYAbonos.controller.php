@@ -1906,10 +1906,32 @@ require_once("interfaces/CargosYAbonos.interface.php");
             Logger::log("Listando conceptos de gasto");
             $conceptos_gasto=null;
             $concepto_gasto_criterio = new ConceptoGasto();
+            
+            //valida los parametros
+            $validar = self::validarParametrosConceptoGasto(null,null,null,null,$activo);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            if
+            (
+                    $orden != "id_concepto_gasto" &&
+                    $orden != "nombre" &&
+                    $orden != "descripcion" &&
+                    $orden != "monto" &&
+                    $orden != "activo"
+            )
+            {
+                Logger::error("La variable orden (".$orden.") no es valida");
+                throw new Exception("La variable orden (".$orden.") no es valida");
+            }
+            
             if(!is_null($activo))
             {
                 $concepto_gasto_criterio->setActivo($activo);
-                $conceptos_gasto=ConceptoGastoDAO::byRange($concepto_gasto_criterio, new ConceptoGasto(),$orden);
+                $conceptos_gasto=ConceptoGastoDAO::search($concepto_gasto_criterio, $orden);
             }
             else
             {
