@@ -3921,6 +3921,8 @@ Creo que este metodo tiene que estar bajo sucursal.
 	)
 	{  
             Logger::log("Listando traspaso de almacenes");
+            
+            //verifica si se recibieron parametros
             $parametros=false;
             if(
                     !is_null($cancelado)        ||
@@ -3931,6 +3933,10 @@ Creo que este metodo tiene que estar bajo sucursal.
             )
                 $parametros=true;
             $traspasos_almacen=null;
+            
+            //Si se reciberon parametros, se crea una variable criterio y en base a esa variable se buscan
+            //en la base de datos con el metodo search().
+            //Si no se reciben parametros se listan todos los traspasos con el metodo getAll().
             if($parametros)
             {
                 Logger::log("Se recibieron parametros, se listan los traspasos en rango");
