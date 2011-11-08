@@ -2796,6 +2796,23 @@ Creo que este metodo tiene que estar bajo sucursal.
                 $producto_entrada_almacen=new ProductoEntradaAlmacen(array( "id_entrada_almacen" => $entrada_almacen->getIdEntradaAlmacen() ));
                 foreach($productos as $p)
                 {
+                    //valida que el producto a ingresar pertenezca a la misma empresa que el almacen
+                    //pues un almacen solo puede ocntener producto de la empresa a la que pertenece.
+                    $productos_empresa = ProductoEmpresaDAO::search( new ProductoEmpresa( array( "id_producto" => $p["id_producto"] ) ) );
+                    $encontrado = false;
+                    foreach($productos_empresa as $p_e)
+                    {
+                        if($p_e->getIdEmpresa() == $almacen->getIdEmpresa())
+                        {
+                            $encontrado = true;
+                            break;
+                        }
+                    }
+                    if(!$encontrado)
+                    {
+                        throw new Excpetion("Se quiere agregar un producto que no es de la empresa de este almacen");
+                    }
+                    
                     if(is_null(ProductoDAO::getByPK($p["id_producto"])))
                         throw new Exception("El producto con id: ".$p["id_producto"]." no existe");
 
@@ -3602,6 +3619,24 @@ Creo que este metodo tiene que estar bajo sucursal.
                     {
                         throw new Exception($validar);
                     }
+                    
+                    //Se valida que los productos enviados pertenezcan a la empresa del almacen que recibe,
+                    //pues un almacen no puede tener producto de una empresa que no es la suya.
+                    $productos_empresa = ProductoEmpresaDAO::search( new ProductoEmpresa( array( "id_producto" => $p["id_producto"] ) ) );
+                    $encontrado = false;
+                    foreach($productos_empresa as $p_e)
+                    {
+                        if($p_e->getIdEmpresa() == $almacen_recibe->getIdEmpresa())
+                        {
+                            $encontrado = true;
+                            break;
+                        }
+                    }
+                    if(!$encontrado)
+                    {
+                        throw new Exception("Se quiere enviar producto que pertenece a otra empresa");
+                    }
+                        
                     $traspaso_producto->setIdProducto($p["id_producto"]);
                     $traspaso_producto->setIdUnidad($p["id_unidad"]);
                     $traspaso_producto->setCantidadEnviada($p["cantidad"]);
@@ -3724,18 +3759,22 @@ Creo que este metodo tiene que estar bajo sucursal.
 	)
 	{  
             Logger::log("Recibiendo traspaso ".$id_traspaso);
+            
+            //Se obtiene al usuario de la sesion
             $id_usuario=LoginController::getCurrentUser();
             if(is_null($id_usuario))
             {
                 Logger::error("El usuario no puede ser obtenido de la sesion, ya inicio sesion?");
                 throw new Exception("El usuario no puede ser obtenido de la sesion, ya inicio sesion?");
             }
-            $traspaso=TraspasoDAO::getByPK($id_traspaso);
-            if(is_null($traspaso))
+            //Valida que el traspaso exista, que no haya sido cancelado ni completado y que su estado sea el de enviado
+            $validar = self::validarParametrosTraspaso($id_traspaso);
+            if(is_string($validar))
             {
-                Logger::error("El traspaso con id: ".$id_traspaso." no existe");
-                throw new Exception("El traspaso con id: ".$id_traspaso." no existe");
+                Logger::error($validar);
+                throw new Exception($validar);
             }
+            $traspaso=TraspasoDAO::getByPK($id_traspaso);
             if($traspaso->getCancelado())
             {
                 Logger::error("El traspaso ya ha sido cancelado, no puede ser recibido");
@@ -3746,11 +3785,13 @@ Creo que este metodo tiene que estar bajo sucursal.
                 Logger::error("El traspaso ya ha sido completado, no puede volver a ser recibido");
                 throw new Exception("El traspaso ya ha sido completado, no puede volver a ser recibido");
             }
-            if($traspaso->getEstado()!=="Enviado")
+            if($traspaso->getEstado()!== "Enviado")
             {
                 Logger::error("El traspaso no ha sido enviado");
                 throw new Exception("El traspaso no ha sido enviado");
             }
+            
+            //Actualiza el registro de traspaso
             $traspaso->setIdUsuarioRecibe($id_usuario);
             $traspaso->setFechaRecibo(date("Y-m-d H:i:s"));
             $traspaso->setEstado("Recibido");
@@ -3758,10 +3799,13 @@ Creo que este metodo tiene que estar bajo sucursal.
             DAO::transBegin();
             try
             {
+                //Guarda el traspaso e inserta los productos en el almacen que recibe
                 TraspasoDAO::save($traspaso);
                 foreach($productos as $p)
                 {
                     $producto_traspaso=TraspasoProductoDAO::getByPK($id_traspaso, $p["id_producto"],$p["id_unidad"]);
+                    
+                    //Si el producto que recibe no esta en el registro de productos enviados, se crea su registro
                     if(is_null($producto_traspaso))
                     {
                         $producto_traspaso= new TraspasoProducto(array(
@@ -3772,6 +3816,8 @@ Creo que este metodo tiene que estar bajo sucursal.
                                                         )
                                                     );
                     }
+                    
+                    //Se busca el producto que sera isnertado en el almacen, si no existe se crea su registro
                     $producto_almacen=ProductoAlmacenDAO::getByPK($p["id_producto"], $traspaso->getIdAlmacenRecibe(), $p["id_unidad"]);
                     if(is_null($producto_almacen))
                     {
@@ -3783,12 +3829,13 @@ Creo que este metodo tiene que estar bajo sucursal.
                                                     )
                                                 );
                     }
+                    //Se incrementa la cantidad del producto y se guarda el registro.
                     $producto_almacen->setCantidad($producto_almacen->getCantidad()+$p["cantidad"]);
                     $producto_traspaso->setCantidadRecibida($p["cantidad"]);
                     ProductoAlmacenDAO::save($producto_almacen);
                     TraspasoProductoDAO::save($producto_traspaso);
-                }
-            }
+                }/* Fin de foreach  */
+            } /* Fin del try */
             catch(Exception $e)
             {
                 DAO::transRollback();
@@ -3796,7 +3843,7 @@ Creo que este metodo tiene que estar bajo sucursal.
                 throw new Exception("No se pudo recibir el traspaso");
             }
             DAO::transEnd();
-            Logger::log("Eltraspaso ha sido recibido exitosamente");
+            Logger::log("El traspaso ha sido recibido exitosamente");
 	}
   
 	/**
