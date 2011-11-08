@@ -314,6 +314,16 @@ require_once("interfaces/CargosYAbonos.interface.php");
 	)
 	{
             Logger::log("Cancelando abono");
+            
+            /*
+             * Se comprueba que el abono sea de compra, de venta o de prestamo.
+             * 
+             * En los 3 casos, se busca el abono en su repectiva tabla y se verifica que 
+             * este activo.
+             * 
+             * Despues, se le cambia el estado a inactivo, se obtiene la caja actual en caso
+             * de que no haya sido pasada y se llama al metodo cancelarAbono.
+             */
             if($compra)
             {
                 $abono=AbonoCompraDAO::getByPK($id_abono);
@@ -327,6 +337,16 @@ require_once("interfaces/CargosYAbonos.interface.php");
                     Logger::log("El abono ya ha sido cancelado antes");
                     throw new Exception("El abono ya ha sido cancelado antes");
                 }
+                
+                //valida el parametro motivo de cancelcion
+                $validar = self::validarString($motivo_cancelacion, 255, "motivo de cancelacion");
+                if(is_string($validar))
+                {
+                    Logger::error($validar);
+                    throw new Exception($validar);
+                }
+                
+                //Actualiza el abono
                 $abono->setCancelado(1);
                 $abono->setMotivoCancelacion($motivo_cancelacion);
                 if(!$id_caja)
@@ -359,6 +379,8 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 }
                 $abono->setCancelado(1);
                 $abono->setMotivoCancelacion($motivo_cancelacion);
+                if(!$id_caja)
+                    $id_caja=self::getCaja();
                 DAO::transBegin();
                 try {
                     AbonoVentaDAO::save($abono);
@@ -387,6 +409,8 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 }
                 $abono->setCancelado(1);
                 $abono->setMotivoCancelacion($motivo_cancelacion);
+                if(!$id_caja)
+                    $id_caja=self::getCaja();
                 DAO::transBegin();
                 try {
                     AbonoPrestamoDAO::save($abono);
@@ -395,7 +419,8 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 catch(Exception $e)
                 {
                     DAO::transRollback();
-                    throw new Exception("Error al cancelar el abono:".$e);
+                    Logger::error("Error al cancelar el abono ".$id_abono.": ".$e);
+                    throw new Exception("Error al cancelar el abono");
                 }
                 DAO::transEnd();
                 Logger::log("Abono cancelado exitosamente");
@@ -405,8 +430,20 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 Logger::error("No se recibio el parametro compra, venta ni prestamo, no se sabe que abono cancelar");
                 throw new Exception("No se recibio el parametro compra, venta ni prestamo, no se sabe que abono cancelar");
             }
-	}
-
+	}/* Fin metodo Eliminar Abono */
+        
+        
+        
+        /*
+         * Los metodos cancelarAbonoCompra,cancelarAbonoVenta y cancelarAbonoPrestamo
+         * son muy parecidos, solo cambian en las tablas en las que efectuan los cambios.
+         * 
+         * Primero se verifica la operacion (compra,venta,prestamo) a la que hacen referencia,
+         * despues al usuario que realiza dicha operacion(id_vendedor,id_comprador,id_deduor),
+         * 
+         * Despues proceden a efectuar los cambios a los saldos de acuerdo al monto del abono.
+         */
+        
         private static function cancelarAbonoCompra
         (
                 AbonoCompra $abono,
@@ -449,6 +486,9 @@ require_once("interfaces/CargosYAbonos.interface.php");
                     throw $e;
                 }
             }
+            
+            //Si la compra no ha sido cancelada, quiere decir que solo se cancela este abono y por ende
+            //los cheques se le regresan al usuario
             if(!$compra->getCancelada())
             {
                 try
@@ -473,8 +513,8 @@ require_once("interfaces/CargosYAbonos.interface.php");
             catch(Exception $e)
             {
                 DAO::transRollback();
-                Logger::error("No se ha podido actualizar al usuario ni la compra");
-                throw $e;
+                Logger::error("No se ha podido actualizar al usuario ni la compra: ".$e);
+                throw "No se ha podido actualizar al usuario ni la compra: ";
             }
             DAO::transEnd();
         }
@@ -550,6 +590,9 @@ require_once("interfaces/CargosYAbonos.interface.php");
             DAO::transEnd();
         }
 
+        //Este metodo no necesita verificar que el prestamoa haya sido cancelado o no
+        //solo tiene que verificar el id del solicitante, pues las sucursales que piden
+        //prestamos guardan su id como negativas
         private static function cancelarAbonoPrestamo
         (
                 AbonoPrestamo $abono,
@@ -631,6 +674,10 @@ require_once("interfaces/CargosYAbonos.interface.php");
             DAO::transEnd();
         }
 
+        /*
+         * Este metodo se encarga de eliminar los cheques relacionados con un abono de compra, venta
+         * o prestamo.
+         */
         private static function eliminarCheques
         (
                 $id_abono,
@@ -641,6 +688,9 @@ require_once("interfaces/CargosYAbonos.interface.php");
         {
             $resultados=null;
             $from=0;
+            
+            //valida si el abono sera de compra, de venta o de prestamo
+            //y se obtinen los cheques relacionados con dicho abono
             if($compra)
             {
                 $cheque_abono_compra=new ChequeAbonoCompra();
@@ -668,11 +718,14 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 throw new Exception("No se recibio si los cheques se eliminaran de una compra, una venta o un prestamo");
             }
             $cheque=new Cheque();
+            
+            //Si no se han encontrado cheques, regresa
             if(is_null($resultados))
                 return;
             DAO::transBegin();
             try
             {
+                //Se eliminan todos los registros encontrados para dicho abono
                 foreach($resultados as $resultado)
                 {
                     $cheque->setIdCheque($resultado->getIdCheque());
