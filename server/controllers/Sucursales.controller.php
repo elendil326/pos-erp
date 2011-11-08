@@ -3631,18 +3631,23 @@ Creo que este metodo tiene que estar bajo sucursal.
 	)
 	{  
             Logger::log("Enviando traspaso: ".$id_traspaso);
+            
+            //Se obtiene al usuario de la sesion
             $id_usuario=LoginController::getCurrentUser();
             if(is_null($id_usuario))
             {
                 Logger::error("No se puede obtener al usuario de la sesion, ya inicio sesion?");
                 throw new Exception("No se puede obtener al usuario de la sesion, ya inicio sesion?");
             }
-            $traspaso=TraspasoDAO::getByPK($id_traspaso);
-            if(is_null($traspaso))
+            
+            //Valida que el traspaso exista, que no haya sido cancelado ni completado ni que si estado sea el de enviado
+            $validar = self::validarParametrosTraspaso($id_traspaso);
+            if(is_string($validar))
             {
-                Logger::error("El traspaso con id: ".$id_traspaso." no existe");
-                throw new Exception("El traspaso con id: ".$id_traspaso." no existe");
+                Logger::error($validar);
+                throw new Exception($validar);
             }
+            $traspaso=TraspasoDAO::getByPK($id_traspaso);
             if($traspaso->getCancelado())
             {
                 Logger::error("El traspaso ya ha sido cancelado, no se puede enviar");
@@ -3658,19 +3663,28 @@ Creo que este metodo tiene que estar bajo sucursal.
                 Logger::warn("El traspaso ya ha sido enviado");
                 throw new Exception("El traspaso ya ha sido enviado");
             }
+            
+            //Actualiza el registro del traspaso
             $traspaso->setFechaEnvio(date("Y-m-d H:i:s"));
             $traspaso->setIdUsuarioEnvia($id_usuario);
             $traspaso->setEstado("Enviado");
+            
+            //Verifica que el almacen programado para el envio siga existiendo
             if(is_null(AlmacenDAO::getByPK($traspaso->getIdAlmacenEnvia())))
             {
                 Logger::error("FATAL!!! el traspaso no cuenta con un almacen q envia");
                 throw new Exception("FATAL!!! el traspaso no cuenta con un almacen q envia");
             }
+            
+            //Se obtienen los productos programados a enviarse para este traspaso
             $productos_traspaso=TraspasoProductoDAO::search(new TraspasoProducto(array( "id_traspaso" => $id_traspaso )));
             DAO::transBegin();
             try
             {
                 TraspasoDAO::save($traspaso);
+                //verifica que se puedan eliminar los productos a enviar del almacen que envia.
+                //es decir, si alguno no cuenta con suficiente cantidad o simplemente no existe
+                //el traslado no puede ser efectuado.
                 foreach($productos_traspaso as $p_t)
                 {
                     $producto_almacen=ProductoAlmacenDAO::getByPK($p_t->getIdProducto(), $traspaso->getIdAlmacenEnvia(), $p_t->getIdUnidad());
@@ -3684,8 +3698,8 @@ Creo que este metodo tiene que estar bajo sucursal.
                     }
                     $producto_almacen->setCantidad($producto_almacen->getCantidad()-$p_t->getCantidadEnviada());
                     ProductoAlmacenDAO::save($producto_almacen);
-                }
-            }
+                }/* Fin de foreach */
+            } /* Fin del try */
             catch(Exception $e)
             {
                 DAO::transRollback();
