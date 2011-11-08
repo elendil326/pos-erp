@@ -234,6 +234,68 @@ require_once("interfaces/CargosYAbonos.interface.php");
             return true;
         }
         
+        /*
+         * Valida los parametros de la tabla concepto_ingreso. Regresa un string con el error
+         * si se ha encontrado alguno, en caso contrario regresa verdadero.
+         */
+        private static function validarParametrosConceptoIngreso
+        (
+                $id_concepto_ingreso = null,
+                $nombre = null,
+                $descripcion = null,
+                $monto = null,
+                $activo = null
+        )
+        {
+            //valida que el concepto de ingreso exista en la base de datos y que este activo
+            if(!is_null($id_concepto_ingreso))
+            {
+                $concepto_ingreso = ConceptoIngresoDAO::getByPK($id_concepto_ingreso);
+                if(is_null($concepto_ingreso))
+                        return "El concepto de ingreso con id ".$id_concepto_ingreso." no existe";
+                if(!$concepto_ingreso->getActivo())
+                    return "El concepto de ingreso esta inactivo";
+            }
+            
+            //valida que el nombre este en rango y que no se repita
+            if(!is_null($nombre))
+            {
+                $e = self::validarString($nombre, 50, "nombre");
+                if(is_string($e))
+                    return $e;
+                $conceptos_ingreso = ConceptoIngresoDAO::search( new ConceptoIngreso( array( "nombre" => trim($nombre) ) ) );
+                foreach($conceptos_ingreso as $c_i)
+                {
+                    if($c_i->getActivo())
+                        return "El nombre (".$nombre.") ya esta en uso por el concepto de ingreso ".$c_i->getIdConceptoIngreso();
+                }
+            }
+            
+            //valida que la descripcion este en rango
+            if(!is_null($descripcion))
+            {
+                $e = self::validarString($descripcion, 255, "descripcion");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el monto este en rango
+            if(!is_null($monto))
+            {
+                $e = self::validarNumero($monto, 1.8e200, "monto");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida el boleano activo
+            if(!is_null($activo))
+            {
+                $e = self::validarNumero($activo, 1, "activo");
+                if(is_string($e))
+                    return $e;
+            }
+        }
+        
         //Metodo para pruebas que simula la obtencion del id de la sucursal actual
         private static function getSucursal()
         {
@@ -1572,7 +1634,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             }
             DAO::transEnd();
             Logger::log("Gasto creado exitosamente");
-            return $concepto_gasto->getIdConceptoGasto();
+            return array ( "id_concepto_gasto" => $concepto_gasto->getIdConceptoGasto());
 	}
 
 	/**
@@ -1648,7 +1710,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
 		$id_concepto_gasto
 	)
 	{
-            Logger::log("Eliminando concepto de gasto");
+            Logger::log("Eliminando concepto de gasto ".$id_concepto_gasto);
             $concepto_gasto=ConceptoGastoDAO::getByPK($id_concepto_gasto);
             
             //valida que el concepto gasto exista en la base de datos y que este activo
@@ -1697,8 +1759,18 @@ require_once("interfaces/CargosYAbonos.interface.php");
 	)
 	{
             Logger::log("Creando nuevo concepto de ingreso");
+            
+            //valida los parametros de concepto ingreso
+            $validar = self::validarParametrosConceptoIngreso(null, $nombre, $descripcion,$monto);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            //Inicializa el registro de ingreso
             $concepto_ingreso = new ConceptoIngreso();
-            $concepto_ingreso->setNombre($nombre);
+            $concepto_ingreso->setNombre(trim($nombre));
             $concepto_ingreso->setMonto($monto);
             $concepto_ingreso->setDescripcion($descripcion);
             $concepto_ingreso->setActivo(1);
@@ -1710,12 +1782,12 @@ require_once("interfaces/CargosYAbonos.interface.php");
             catch(Exception $e)
             {
                 DAO::transRollback();
-                Logger::error("No se pudo crea el nuevo concepto de ingreso: ".$e);
-                throw $e;
+                Logger::error("No se pudo crear el nuevo concepto de ingreso: ".$e);
+                throw "No se pudo crear el nuevo concepto de ingreso";
             }
             DAO::transEnd();
             Logger::log("Concepto de ingreso creado exitosamente");
-            return $concepto_ingreso->getIdConceptoIngreso();
+            return array ( "id_concepto_ingreso" => $concepto_ingreso->getIdConceptoIngreso());
 	}
 
 	/**
