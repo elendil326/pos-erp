@@ -389,7 +389,8 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 catch(Exception $e)
                 {
                     DAO::transRollback();
-                    throw new Exception("Error al cancelar el abono:".$e);
+                    Logger::error("Error al cancelar el abono: ".$e);
+                    throw new Exception("Error al cancelar el abono");
                 }
                 DAO::transEnd();
                 Logger::log("Abono cancelado exitosamente");
@@ -514,7 +515,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se ha podido actualizar al usuario ni la compra: ".$e);
-                throw "No se ha podido actualizar al usuario ni la compra: ";
+                throw new Exception("No se ha podido actualizar al usuario ni la compra");
             }
             DAO::transEnd();
         }
@@ -584,8 +585,8 @@ require_once("interfaces/CargosYAbonos.interface.php");
             catch(Exception $e)
             {
                 DAO::transRollback();
-                Logger::error("No se ha podido actualizar al usuario ni la venta");
-                throw $e;
+                Logger::error("No se ha podido actualizar al usuario ni la venta: ".$e);
+                throw new Exception("No se ha podido actualizar al usuario ni a la venta");
             }
             DAO::transEnd();
         }
@@ -668,8 +669,8 @@ require_once("interfaces/CargosYAbonos.interface.php");
             catch(Exception $e)
             {
                 DAO::transRollback();
-                Logger::error("No se ha podido actualizar al usuario ni al prestamo");
-                throw $e;
+                Logger::error("No se ha podido actualizar al usuario ni al prestamo: ".$e);
+                throw new Exception("No se ha podido actualizar al usuario ni al prestamo");
             }
             DAO::transEnd();
         }
@@ -747,7 +748,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudieron borrar los cheques: ".$e);
-                throw $e;
+                throw new Exception("No se pudieron borrar los cheques");
             }
             DAO::transEnd();
         }
@@ -1186,6 +1187,8 @@ require_once("interfaces/CargosYAbonos.interface.php");
 	{
             Logger::log("Eliminando gasto");
             $gasto=GastoDAO::getByPK($id_gasto);
+            
+            //verifica que el gasto exista en la base de datos y que no haya sido cancelado
             if(!$gasto)
             {
                 Logger::error("El gasto con id:".$id_gasto." no existe");
@@ -1196,6 +1199,16 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 Logger::log("El gasto ya ha sido cancelado");
                 throw new Exception("El gasto ya ha sido cancelado");
             }
+            
+            //valida el parametro motivo de cancelacion
+            $validar = self::validarString($motivo_cancelacion, 255, "motivo de cancelacion");
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            //Actualiza el gasto y modifica la caja si se encuentra alguna
             $gasto->setCancelado(1);
             $gasto->setMotivoCancelacion($motivo_cancelacion);
             if(!$id_caja)
@@ -1220,7 +1233,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se ha podido cancelar el gasto: ".$e);
-                throw new Exception("No se ha podido cancelar el gasto: ".$e);
+                throw new Exception("No se ha podido cancelar el gasto");
             }
             DAO::transEnd();
             Logger::log("Gasto cancelado exitosamente");
@@ -1391,14 +1404,31 @@ require_once("interfaces/CargosYAbonos.interface.php");
 	)
 	{
             Logger::log("Cancelando Ingreso");
+            
+            //valida que el ingreso exista en la base de datos y que no haya sido cancelado anteriormente
             $ingreso=IngresoDAO::getByPK($id_ingreso);
             if(!$ingreso)
             {
                 Logger::error("El ingreso con id: ".$id_ingreso." no existe");
                 throw new Exception("El ingreso con id: ".$id_ingreso." no existe");
             }
+            if($ingreso->getCancelado())
+            {
+                Logger::warn("El ingreso ya ha sido cancelado");
+                throw new Exception("El ingreso ya ha sido cancelado");
+            }
+            
+            //valida el parametro motivo de cancelacion
+            $validar = self::validarString($motivo_cancelacion, 255, "motivo de cancelacion");
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
             $ingreso->setCancelado(1);
             $ingreso->setMotivoCancelacion($motivo_cancelacion);
+            
+            //si se obtiene una caja se modifica su saldo
             if(!$id_caja)
                 $id_caja=self::getCaja();
             if(!is_null($id_caja))
