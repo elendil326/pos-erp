@@ -1957,12 +1957,34 @@ require_once("interfaces/CargosYAbonos.interface.php");
 	)
 	{
             Logger::log("Listando conceptos de ingreso");
+            
+            //valida los parametros
+            $validar = self::validarParametrosConceptoIngreso(null,null,null,null,$activo);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            if
+            (
+                    $orden != "id_concepto_ingreso" &&
+                    $orden != "nombre" &&
+                    $orden != "descripcion" &&
+                    $orden != "monto" &&
+                    $orden != "activo"
+            )
+            {
+                Logger::error("La variable orden (".$orden.") no es valida");
+                throw new Exception("La variable orden (".$orden.") no es valida");
+            }
+            
             $conceptos_ingreso=null;
             $concepto_ingreso_criterio = new ConceptoIngreso();
             if(!is_null($activo))
             {
                 $concepto_ingreso_criterio->setActivo($activo);
-                $conceptos_ingreso=ConceptoIngresoDAO::byRange($concepto_ingreso_criterio, new ConceptoIngreso(),$orden);
+                $conceptos_ingreso=ConceptoIngresoDAO::search($concepto_ingreso_criterio,$orden);
             }
             else
             {
