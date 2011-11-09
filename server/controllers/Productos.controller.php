@@ -8,7 +8,107 @@ require_once("interfaces/Productos.interface.php");
 	
   class ProductosController implements IProductos{
   
-  
+        //Metodo para pruebas que simula la obtencion del id de la sucursal actual
+        private static function getSucursal()
+        {
+            return 1;
+        }
+        
+        //metodo para pruebas que simula la obtencion del id de la caja actual
+        private static function getCaja()
+        {
+            return 1;
+        }
+      
+        
+        /*
+         *Se valida que un string tenga longitud en un rango de un maximo inclusivo y un minimo exclusvio.
+         *Regresa true cuando es valido, y un string cuando no lo es.
+         */
+          private static function validarString($string, $max_length, $nombre_variable,$min_length=0)
+	{
+		if(strlen($string)<=$min_length||strlen($string)>$max_length)
+		{
+		    return "La longitud de la variable ".$nombre_variable." proporcionada (".$string.") no esta en el rango de ".$min_length." - ".$max_length;
+		}
+		return true;
+        }
+
+
+        /*
+         * Se valida que un numero este en un rango de un maximo y un minimo inclusivos
+         * Regresa true cuando es valido, y un string cuando no lo es
+         */
+	private static function validarNumero($num, $max_length, $nombre_variable, $min_length=0)
+	{
+	    if($num<$min_length||$num>$max_length)
+	    {
+	        return "La variable ".$nombre_variable." proporcionada (".$num.") no esta en el rango de ".$min_length." - ".$max_length;
+	    }
+	    return true;
+	}
+        
+        /*
+         * Valida los parametros de la tabla unidad. Regresa un string con el error en caso de
+         * encontrarse alguno, en caso contrario regresa true.
+         */
+        private static function validarParametrosUnidad
+        (
+                $id_unidad = null,
+                $nombre = null,
+                $descripcion = null,
+                $es_entero = null,
+                $activa = null
+        )
+        {
+            //valida que la unidad exista y que este activa
+            if(!is_null($id_unidad))
+            {
+                $unidad = UnidadDAO::getByPK($id_unidad);
+                if(is_null($unidad))
+                    return "La unidad con id ".$id_unidad." no existe";
+                
+                if(!$unidad->getActiva())
+                    return "La unidad esta desactivada";
+            }
+            
+            //valida que el nombre este en el rango
+            if(!is_null($nombre))
+            {
+                $e = self::validarString($nombre, 100, "nombre");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que la descripcion este en rango
+            if(!is_null($descripcion))
+            {
+                $e = self::validarString($descripcion, 255, "descripcion");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida el boleano es_entero
+            if(!is_null($es_entero))
+            {
+                $e = self::validarNumero($es_entero, 1, "es entero");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida el boleano activa
+            if(!is_null($activa))
+            {
+                $e = self::validarNumero($activa, 1, "activa");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //No se encontro error, regresa true
+            return true;
+        }
+        
+      
 	/**
  	 *
  	 *Lista las unidades. Se puede filtrar por activas o inactivas y ordenar por sus atributos
@@ -24,6 +124,30 @@ require_once("interfaces/Productos.interface.php");
 	)
 	{  
             Logger::log("Listando unidades");
+            
+            //valida los parametros recibidos
+            $validar = self::validarParametrosUnidad(null,null,null,null,$activo);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            if(!is_null($ordenar))
+            {
+                if
+                (
+                        $ordenar != "id_unidad"     &&
+                        $ordenar != "nombre"        &&
+                        $ordenar != "descripcion"   &&
+                        $ordenar != "es_entero"     &&
+                        $ordenar != "activa"        
+                )
+                {
+                    Logger::error("La variable ordenar (".$ordenar.") es invalida");
+                    throw new Exception("La variable ordenar (".$ordenar.") es invalida");
+                }
+            }
+            
             $unidades=null;
             if(is_null($activo))
             {
@@ -33,7 +157,7 @@ require_once("interfaces/Productos.interface.php");
             else
             {
                 Logger::log("Se recibieron parametros, se listan las unidades en rango");
-                $unidades=UnidadDAO::search(new Unidad(array( "activa" => 0 )), $ordenar);
+                $unidades=UnidadDAO::search(new Unidad(array( "activa" => $activo )), $ordenar);
             }
             Logger::log("Lista de unidades obtenida con ".count($unidades)." elementos");
             return $unidades;

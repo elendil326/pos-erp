@@ -1848,7 +1848,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudo Eliminar el ingreso: ".$e);
-                throw "No se pudo eliminar el ingreso";
+                throw new Exception("No se pudo eliminar el ingreso");
             }
             DAO::transEnd();
             Logger::log("Ingreso cancelado exitosamente");
@@ -2050,7 +2050,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudo crear el nuevo concepto de ingreso: ".$e);
-                throw "No se pudo crear el nuevo concepto de ingreso";
+                throw new Exception("No se pudo crear el nuevo concepto de ingreso");
             }
             DAO::transEnd();
             Logger::log("Concepto de ingreso creado exitosamente");
@@ -2150,7 +2150,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudo desactivar el concepto de ingreso: ".$e);
-                throw $e;
+                throw new Exception("No se pudo desactivar el concepto de ingreso");
             }
             DAO::transEnd();
             Logger::log("Concepto de ingreso desactivado exitosamente");
@@ -2371,11 +2371,11 @@ require_once("interfaces/CargosYAbonos.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudo crear el gasto: ".$e);
-                throw "No se pudo crear el gasto";
+                throw new Exception("No se pudo crear el gasto");
             }
             DAO::transEnd();
             Logger::log("Gasto creado exitosamente");
-            return $gasto->getIdGasto();
+            return array ( "id_gasto" => $gasto->getIdGasto());
 	}
 
 	/**
@@ -2440,7 +2440,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             {
                 DAO::transRollBack();
                 Logger::error("No se pudo editar el gasto: ".$e);
-                throw $e;
+                throw new Exception("No se pudo editar el gasto");
             }
             DAO::transEnd();
             Logger::log("Gasto editado exitosamente");
@@ -2509,7 +2509,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             {
                 DAO::transRollBack();
                 Logger::error("No se pudo editar el ingreso: ".$e);
-                throw "No se pudo editar el ingreso";
+                throw new Exception("No se pudo editar el ingreso");
             }
             DAO::transEnd();
             Logger::log("Ingreso editado exitosamente");
@@ -2787,7 +2787,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("Error al crear el abono");
-                throw $e;
+                throw new Exception("Error al crear el abono");
             }
             DAO::transEnd();
             Logger::log("Abono creado exitosamente");
@@ -3068,7 +3068,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudo editar el abono: ".$e);
-                throw "No se pudo editar el abono";
+                throw new Exception("No se pudo editar el abono");
             }
             DAO::transEnd();
             Logger::log("Abono editado exitosamente");
