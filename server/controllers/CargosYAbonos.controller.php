@@ -294,6 +294,9 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 if(is_string($e))
                     return $e;
             }
+            
+            //No se encontro error, regresa verdadero
+            return true;
         }
         
         /*
@@ -438,6 +441,65 @@ require_once("interfaces/CargosYAbonos.interface.php");
             }
             
             //No se encontro error, regresa verdadero
+            return true;
+        }
+        
+        
+        /*
+         * Valida los parametros de un abono
+         */
+        private static function validarParametrosAbono
+        (
+                $monto = null,
+                $id_deudor  = null,
+                $nota = null,
+                $tipo_de_pago = null,
+                $motivo_cancelacion = null
+        )
+        {
+            //valida que el monto este en rango
+            if(!is_nul($monto))
+            {
+                $e = self::validarNumero($monto, 1.8e200, "monto");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el deudor exista
+            if(!is_null($id_deudor))
+            {
+                $deudor = UsuarioDAO::getByPK($id_deudor);
+                if(is_null($deudor))
+                    return "El usuario con id ".$id_deudor." no existe";
+                
+                if(!$deudor->getActivo())
+                    return "EL usuario ya esta inactivo";
+            }
+            
+            //valida que la nota este en rango
+            if(!is_null($nota))
+            {
+                $e = self::validarString($nota, 255, "nota");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el tipo de pago sea correcto
+            if(!is_null($tipo_de_pago))
+            {
+                if($tipo_de_pago!="cheque"&&$tipo_de_pago!="tarjeta"&&$tipo_de_pago!="efectivo")
+                    return "El tipo de pago (".$tipo_de_pago.") no es valido";
+            }
+            
+            //valida que el motivo de cancelacion este en rango
+            if(!is_null($motivo_cancelacion))
+            {
+                $e = self::validarString($motivo_cancelacion, 255, "motivo de cancelacion");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //no se encontro error, regresa true
             return true;
         }
         
@@ -2423,33 +2485,54 @@ require_once("interfaces/CargosYAbonos.interface.php");
 	)
 	{
             Logger::log("Creando abono");
+            
+            //Se obtiene la sesion del usuario
             $id_usuario=LoginController::getCurrentUser();
             if(is_null($id_usuario))
             {
                 Logger::error("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
                 throw new Exception("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
             }
+            
+            //Se validan los parametros obtenidos
+            $validar = self::validarParametrosAbono($monto,$id_deudor,$nota,$tipo_pago);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            //Si el tipo de pago es con cheque y no se reciben cheques, lanzas una excepcion
             if($tipo_pago==="cheque"&&is_null($cheques))
             {
                     Logger::error("No se recibio informacion del cheque");
                     throw new Exception("No se recibio informacion del cheque");   
             }
+            
+            //Se inicializan las variables de los parametros de las tablas de abonos
             $usuario=UsuarioDAO::getByPK($id_deudor);
-            if(is_null($usuario))
-            {
-                Logger::error("El deudor obtenido no existe, verifique que este correcto");
-                throw new Exception("El deudor obtenido no existe, verifique que este correcto");
-            }
             $id_sucursal=self::getSucursal();
             $id_caja=self::getCaja();
             $fecha=date("Y-m-d H:i:s",time());
             $cancelado=0;
-            $abono=null;
-            $from=0;
-            $operacion=null;
+            $abono=null;        //Nuevo regitro del abono
+            $from=0;            //Bandera que indica a que operacion pertenece el abono
+            $operacion=null;    //Objeto de la operacion, puede ser un objeto de venta, de ocmpra o de prestamo
+            
+            /*
+             * Se valida de que operacion pertenece el abono y de acuerdo a lo obtenido, se realizan 
+             * las operaciones necesarias en cada tabla.
+             * 
+             * Primero se valida que la operacion exista, que sea a credito, que no haya sido cancelada, 
+             * que no haya sido saldada y que no se abone mas del total de la operacion.
+             * 
+             * Despues se inicializa el registro de la tabla correspondiente, se modifica el saldo del deudor
+             * y se activa la bandera from
+             */
             if(!is_null($id_compra))
             {
                 $operacion=CompraDAO::getByPK($id_compra);
+                
                 if(is_null($operacion))
                 {
                     Logger::error("La compra con id: ".$id_compra." no existe");
@@ -2475,6 +2558,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
                     Logger::error("No se puede abonar esta cantidad a esta compra, pues sobrepasa el total de la misma");
                     throw new Exception("No se puede abonar esta cantidad a esta compra, pues sobrepasa el total de la misma");
                 }
+                
                 $abono=new AbonoCompra();
                 $abono->setIdCompra($id_compra);
                 $abono->setIdReceptor($id_deudor);
@@ -2547,6 +2631,9 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 Logger::error("No se recibio si el abono sera para una venta, una compra o un prestamo, no se hace nada");
                 throw new Exception("No se recibio si el abono sera para una venta, una compra o un prestamo, no se hace nada");
             }
+            
+            //Una vez hecho los cambios particulaes, se realizan los cambios generales
+            
             $operacion->setSaldo($operacion->getSaldo()+$monto);
             $abono->setCancelado($cancelado);
             $abono->setIdCaja($id_caja);
@@ -2560,6 +2647,8 @@ require_once("interfaces/CargosYAbonos.interface.php");
             DAO::transBegin();
             try
             {
+                //Si se reciben cheques y el tipo de pago es cheque, se genera el nuevo cheque y
+                //se va almacenando su id en el arreglo id_cheques
                 if($tipo_pago==="cheque"&&!is_null($cheques))
                 {
                     foreach($cheques as $cheque)
@@ -2567,6 +2656,12 @@ require_once("interfaces/CargosYAbonos.interface.php");
                         array_push($id_cheques,ChequesController::NuevoCheque($cheque["nombre_banco"],$cheque["monto"],$cheque["numero"],$cheque["expedido"]));
                     }
                 }
+                
+                //Dependiendo de que operacion se realizo se van guardando los cheques, los abonos y las operaciones
+                //pues todas cambiaron.
+                //Si se recibieron cheques, no se modifica la caja.
+                //En el caso de las ventas, al final se busca la venta en la tabla venta_empresa y se pone como saldada
+                //si ese ha sido el caso
                 switch($from)
                 {
                     case 1:
@@ -2575,14 +2670,14 @@ require_once("interfaces/CargosYAbonos.interface.php");
                         $id_abono=$abono->getIdAbonoCompra();
                         $cheque_abono_compra=new ChequeAbonoCompra();
                         $cheque_abono_compra->setIdAbonoCompra($id_abono);
+                        if(!is_null($id_caja)&& empty ($id_cheques))
+                        {
+                            CajasController::modificarCaja($id_caja, 0, $billetes, $monto);
+                        }
                         foreach($id_cheques as $id_cheque)
                         {
                             $cheque_abono_compra->setIdCheque($id_cheque);
                             ChequeAbonoCompraDAO::save($cheque_abono_compra);
-                        }
-                        if(!is_null($id_caja))
-                        {
-                            CajasController::modificarCaja($id_caja, 0, $billetes, $monto);
                         }
                         break;
                     case 2:
@@ -2591,14 +2686,14 @@ require_once("interfaces/CargosYAbonos.interface.php");
                         $id_abono=$abono->getIdAbonoPrestamo();
                         $cheque_abono_prestamo=new ChequeAbonoPrestamo();
                         $cheque_abono_prestamo->setIdAbonoPrestamo($id_abono);
+                        if(!is_null($id_caja)&& empty ($id_cheques))
+                        {
+                            CajasController::modificarCaja($id_caja, 1, $billetes, $monto);
+                        }
                         foreach($id_cheques as $id_cheque)
                         {
                             $cheque_abono_prestamo->setIdCheque($id_cheque);
                             ChequeAbonoPrestamoDAO::save($cheque_abono_prestamo);
-                        }
-                        if(!is_null($id_caja))
-                        {
-                            CajasController::modificarCaja($id_caja, 1, $billetes, $monto);
                         }
                         break;
                     case 3:
@@ -2607,14 +2702,14 @@ require_once("interfaces/CargosYAbonos.interface.php");
                         $id_abono=$abono->getIdAbonoVenta();
                         $cheque_abono_venta=new ChequeAbonoVenta();
                         $cheque_abono_venta->setIdAbonoVenta($id_abono);
+                        if(!is_null($id_caja)&& empty ($id_cheques))
+                        {
+                            CajasController::modificarCaja($id_caja, 1, $billetes, $monto);
+                        }
                         foreach($id_cheques as $id_cheque)
                         {
                             $cheque_abono_venta->setIdCheque($id_cheque);
                             ChequeAbonoVentaDAO::save($cheque_abono_venta);
-                        }
-                        if(!is_null($id_caja))
-                        {
-                            CajasController::modificarCaja($id_caja, 1, $billetes, $monto);
                         }
                         if($operacion->getSaldo()>=$operacion->getTotal())
                         {
@@ -2625,9 +2720,9 @@ require_once("interfaces/CargosYAbonos.interface.php");
                                 VentaEmpresaDAO::save($venta_empresa);
                             }
                         }
-                }
+                }/* Fin switch de from */
                 UsuarioDAO::save($usuario);
-            }
+            }/* Fin de try */
             catch(Exception $e)
             {
                 DAO::transRollback();
