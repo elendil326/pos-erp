@@ -271,6 +271,7 @@ require_once("interfaces/Productos.interface.php");
                 throw new Exception("No se pudo editar la equivalencia");
             }
             DAO::transEnd();
+            
             Logger::log("Equivalencia editada exitosamente");
 	}
   
