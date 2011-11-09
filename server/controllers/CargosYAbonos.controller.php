@@ -2988,6 +2988,15 @@ require_once("interfaces/CargosYAbonos.interface.php");
 	)
 	{
             Logger::log("Editando abono");
+            
+            //Se validan los parametros
+            $validar = self::validarParametrosAbono(null,null,$nota,null,$motivo_cancelacion);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            //verifica si el abono sera de compra, de venta o de prestamo
             $abono=null;
             $from=0;
             if($compra)
@@ -3010,6 +3019,25 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 Logger::error("No se recibio si se editara un abono de compra, venta o prestamo");
                 throw new Exception("No se recibio si se editara un abono de compra, venta o prestamo");
             }
+            
+            //valida que el abono exista
+            if(is_null($abono))
+            {
+                $texto = "";
+                switch($from)
+                {
+                    case 1: $texto = "compra";
+                        break;
+                    case 2: $texto = "venta";
+                        break;
+                    case 3: $texto = "prestamo";
+                        break;
+                }
+                Logger::error("El abono de ".$texto." con id ".$id_abono." no existe");
+                throw new Exception("El abono de ".$texto." con id ".$id_abono." no existe");
+            }
+            
+            //Los parametros que sean recibidos seran tomados como actalizacion
             if(!is_null($nota))
                 $abono->setNota($nota);
             if($abono->getCancelado())
@@ -3019,6 +3047,8 @@ require_once("interfaces/CargosYAbonos.interface.php");
             }
             else if(!is_null($motivo_cancelacion))
                 Logger::warn("No se editara el motivo de cancelacion pues el abono no ha sido cancelado aun");
+            
+            //guarda la actualizacion en la tabla correspondiente
             DAO::transBegin();
             try
             {
@@ -3038,7 +3068,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudo editar el abono: ".$e);
-                throw $e;
+                throw "No se pudo editar el abono";
             }
             DAO::transEnd();
             Logger::log("Abono editado exitosamente");
