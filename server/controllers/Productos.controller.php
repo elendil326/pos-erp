@@ -780,8 +780,60 @@ NOTA: Se crea un producto tipo = 1 que es para productos
 		$id_producto
 	)
 	{  
-  
-  
+            Logger::log("Desactivando producto ".$id_producto);
+            
+            //valida que el producto exista y que no haya sido desactivado antes
+            $validar = self::validarParametrosProducto($id_producto);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            //Si el producto forma parte de algun paquete activo no puede ser eliminado
+            $productos_paquete = ProductoPaqueteDAO::search( new ProductoPaquete( array( "id_producto" => $id_producto ) ) );
+            foreach($productos_paquete as $producto_paquete)
+            {
+                if($producto_paquete->getActivo())
+                {
+                    Logger::error("No se puede borrar este producto pues el paquete ".$producto_paquete->getIdPaquete()." aun lo contiene");
+                    throw new Exception("No se puede borrar este producto pues el paquete ".$producto_paquete->getIdPaquete()." aun lo contiene");
+                }
+            }
+            
+            $producto = ProductoDAO::getByPK($id_producto);
+            $producto->setActivo(0);
+            
+            //Se obtienen los registros de las tablas producto_empresa, producto_clasificacion e impuesto_producto
+            //pues seran eliminados
+            $productos_empresa = ProductoEmpresaDAO::search( new ProductoEmpresa( array( "id_producto" => $id_producto ) ) );
+            $productos_clasificacion = ProductoClasificacionDAO::search( new ProductoClasificacion( array( "id_producto" => $id_producto ) ) );
+            $impuestos_producto = ImpuestoProductoDAO::search( new ImpuestoProducto(  array( "id_producto" => $id_producto  ) ) );
+            
+            DAO::transBegin();
+            try
+            {
+                ProductoDAO::save($producto);
+                foreach($productos_empresa as $producto_empresa)
+                {
+                    ProductoEmpresaDAO::delete($producto_empresa);
+                }
+                foreach($productos_clasificacion as $producto_clasificacion)
+                {
+                    ProductoClasificacionDAO::delete($producto_clasificacion);
+                }
+                foreach($impuestos_producto as $impuesto_producto)
+                {
+                    ImpuestoProductoDAO::delete($impuesto_producto);
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se ha podido descativar el producto ".$id_producto." : ".$e);
+                throw new Exception("No se ha podido descativar el producto ".$id_producto);
+            }
+            DAO::transEnd();
+            LOgger::log("El producto ha sido eliminado exitosamente");
 	}
   
 	/**
