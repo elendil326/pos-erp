@@ -152,15 +152,15 @@
  	 * @param id_almacen int Id del almacen del cual se vern sus productos.
  	 * @param id_empresa int Id de la empresa de la cual se vern los productos.
  	 * @param id_sucursal int Id de la sucursal de la cual se vern los productos.
- 	 * @return productos json Objeto que contendrá el arreglo de productos en inventario.
+ 	 * @return productos json Objeto que contendrï¿½ el arreglo de productos en inventario.
  	 **/
   static function Lista
 	(
 		$activo = null, 
-		$id_lote = null, 
+		$compra_en_mostrador = null, 
 		$id_almacen = null, 
 		$id_empresa = null, 
-		$id_sucursal = null
+		$metodo_costeo = null
 	);  
   
   
@@ -192,30 +192,30 @@ NOTA: Se crea un producto tipo = 1 que es para productos
  	 * @param peso_producto float el peso de este producto en KG
  	 * @param margen_de_utilidad float Un porcentage de 0 a 100 si queremos que este producto marque utilidad en especifico
  	 * @param costo_extra_almacen float Si este producto produce un costo extra por tenerlo en almacen
- 	 * @return id_producto int Id generado por la inserción del nuevo producto
+ 	 * @return id_producto int Id generado por la inserciï¿½n del nuevo producto
  	 **/
   static function Nuevo
 	(
-		$compra_en_mostrador, 
-		$costo_estandar, 
-		$nombre_producto, 
-		$id_empresas, 
-		$codigo_producto, 
-		$metodo_costeo, 
 		$activo, 
-		$garantia = null, 
-		$foto_del_producto = null, 
-		$descuento = null, 
-		$id_unidad_no_convertible = null, 
-		$codigo_de_barras = null, 
-		$descripcion_producto = null, 
-		$impuestos = null, 
-		$clasificaciones = 0, 
-		$id_unidad_convertible = null, 
+		$codigo_producto, 
+		$id_empresas, 
+		$nombre_producto, 
+		$metodo_costeo, 
+		$costo_estandar, 
+		$compra_en_mostrador, 
+		$garantia = null,
+		$costo_extra_almacen = null, 
+		$margen_de_utilidad = null, 
 		$control_de_existencia = null, 
 		$peso_producto = null, 
-		$margen_de_utilidad = null, 
-		$costo_extra_almacen = null
+		$descripcion_producto = null, 
+		$impuestos = null, 
+		$clasificaciones = null, 
+		$id_unidad = null, 
+		$codigo_de_barras = null, 
+		$precio = null, 
+		$foto_del_producto = null, 
+		$descuento = null
 	);  
   
   
@@ -225,8 +225,8 @@ NOTA: Se crea un producto tipo = 1 que es para productos
  	 *
  	 *Agregar productos en volumen mediante un archivo CSV.
  	 *
- 	 * @param productos json Arreglo de objetos que contendrán la información del nuevo producto
- 	 * @return id_productos json Arreglo de enteros que contendrá los ids de los productos insertados.
+ 	 * @param productos json Arreglo de objetos que contendrï¿½n la informaciï¿½n del nuevo producto
+ 	 * @return id_productos json Arreglo de enteros que contendrï¿½ los ids de los productos insertados.
  	 **/
   static function En_volumenNuevo
 	(

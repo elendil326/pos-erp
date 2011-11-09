@@ -108,6 +108,219 @@ require_once("interfaces/Productos.interface.php");
             return true;
         }
         
+        /*
+         * Valida los parametros de la tabla producto. Regresa un string con el error
+         * cuando se ha encontrado alguno, regresa true en caso contrario
+         */
+        private static function validarParametrosProducto
+        (
+                $id_producto = null,
+                $compra_en_mostrador = null,
+                $metodo_costeo = null,
+                $activo = null,
+                $codigo_producto = null,
+                $nombre_producto = null,
+                $garantia = null,
+                $costo_estandar = null,
+                $control_de_existencia = null,
+                $margen_de_utilidad = null,
+                $descuento = null,
+                $descripcion = null,
+                $foto_del_producto = null,
+                $costo_extra_almacen = null,
+                $codigo_de_barras = null,
+                $peso_producto = null,
+                $id_unidad = null,
+                $precio = null
+        )
+        {
+            //valida que el producto exista y que este activo
+            if(!is_null($id_producto))
+            {
+                $producto = ProductoDAO::getByPK($id_producto);
+                if(is_null($producto))
+                {
+                    return "El producto con id ".$id_producto." no existe";
+                }
+                if(!$producto->getActivo())
+                {
+                    return "El producto esta desactivado";
+                }
+            }
+            
+            //valida el boleano compra en mostrador
+            if(!is_null($compra_en_mostrador))
+            {
+                $e = self::validarNumero($compra_en_mostrador, 1, "compra en mostrador");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el metodo de costeo sea valido
+            if(!is_null($metodo_costeo))
+            {
+                if($metodo_costeo!="precio"&&$metodo_costeo!="margen")
+                    return "E metodo de costeo (".$metodo_costeo.") es invalido";
+            }
+            
+            //valida el boleano activo
+            if(!is_null($activo))
+            {
+                $e = self::validarNumero($activo, 1, "activo");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el codigo de producto este en rango
+            if(!is_null($codigo_producto))
+            {
+                $e = self::validarString($codigo_producto, 30, "codigo de producto");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el nombre del producto este en rango y que no se repita
+            if(!is_null($nombre_producto))
+            {
+                $e = self::validarString($nombre_producto, 30, "nombre de producto");
+                if(is_string($e))
+                    return $e;
+                $productos = ProductoDAO::search( new Producto( array( "nombre_producto" => trim($nombre_producto) ) ) );
+                foreach($productos as $p)
+                {
+                    if($p->getActivo())
+                        return "El nombre (".$nombre_producto.") ya esta en uso por el producto ".$p->getIdProducto();
+                }
+            }
+            
+            //valida que la garantia este en rango
+            if(!is_null($garantia))
+            {
+                $e = self::validarNumero($garantia, PHP_INT_MAX, "garantia");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el costo estandar este en rango
+            if(!is_null($costo_estandar))
+            {
+                $e = self::validarNumero($costo_estandar, 1.8e200, "costo estandar");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el control de existencia este en rango
+            if(!is_null($control_de_existencia))
+            {
+                $e = self::validarNumero($control_de_existencia, 1.8e200, "control de existencia");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el margen de utilidad este en rango
+            if(!is_null($margen_de_utilidad))
+            {
+                $e = self::validarNumero($margen_de_utilidad, 1.8e200, "margen de utilidad");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el descuento este en rango
+            if(!is_null($descuento))
+            {
+                $e = self::validarNumero($descuento, 100, "descuento");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que la foto del producto este en rango
+            if(!is_null($foto_del_producto))
+            {
+                $e = self::validarString($foto_del_producto, 100, "foto del producto");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el costo extra de almacen este en rango
+            if(!is_null($costo_extra_almacen))
+            {
+                $e = self::validarNumero($costo_extra_almacen, 1.8e200, "costo extra de almacen");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el codigo de barras este en rango
+            if(!is_null($codigo_de_barras))
+            {
+                $e = self::validarString($codigo_de_barras, 30, "codigo de barras");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el peso del producto este en rango
+            if(!is_null($peso_producto))
+            {
+                $e = self::validarNumero($peso_producto, 1.8e200, "peso de producto");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que la unidad exista y que este activa
+            if(!is_null($id_unidad))
+            {
+                $e = self::validarParametrosUnidad($id_unidad);
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el precio este en rango
+            if(!is_null($precio))
+            {
+                $e = self::validarNumero($precio, 1.8e200, "precio");
+                if(is_string($e))
+                    return $e;
+            }
+        }
+        
+        /*
+         * Valida los parametros de la tabla producto_empresa. Regres aun string con el error si encuentra
+         * alguno, regresa verdadero en caso contrario.
+         */
+        
+        private static function validarParametrosProductoEmpresa
+        (
+                $id_empresa = null,
+                $precio_utilidad = null,
+                $es_margen_utilidad = null
+        )
+        {
+            //valida que la empresa exista y este activa
+            if(!is_null($id_empresa))
+            {
+                $empresa = EmpresaDAO::getByPK($id_empresa);
+                if(is_null($empresa))
+                    return "La empresa con id ".$id_empresa." no existe";
+                
+                if(!$empresa->getActivo())
+                    return "La empresa esta desactivada";
+            }
+            
+            //valida que el precio_utilidad este en rango
+            if(!is_null($precio_utilidad))
+            {
+                $e = self::validarNumero($precio_utilidad, 1.8e200, "precio_utilidad");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida el boleano es_margen_utilidad
+            if(!is_null($es_margen_utilidad))
+            {
+                $e = self::validarNumero($es_margen_utilidad, 1, "es margen de utilidad");
+                if(is_string($e))
+                    return $e;
+            }
+        }
       
 	/**
  	 *
@@ -289,13 +502,87 @@ require_once("interfaces/Productos.interface.php");
 	public static function Lista
 	(
 		$activo = null, 
-		$id_lote = null, 
+		$compra_en_mostrador = null, 
 		$id_almacen = null, 
 		$id_empresa = null, 
-		$id_sucursal = null
+		$metodo_costeo = null
 	)
 	{  
             Logger::log("Listando los productos");
+            $productos = array();
+            //Se verifica si se reciben parametros o no para usar el metodo getAll o search
+            $parametros = false;
+            if
+            (
+                    !is_null($activo)               ||
+                    !is_null($compra_en_mostrador)  ||
+                    !is_null($metodo_costeo)        
+            )
+            {
+                Logger::log("Se recibieron parametros, se listan los productos en rango");
+                
+                //Si se recibe el parametro id_empresa, se traen los productos de esa empresa y se intersectan
+                //con los que cumplen los demas parametros. Si no se recibe, se busca el parametro id_almacen
+                //
+                //Si se recibe el parametro id_almacen, se traen los productos de ese almacen y se intersectan
+                //con los que cumplen los demas parametros. Si no se recibe, la interseccion se hara con todos los productos
+                $productos1 = array();
+                $productos2 = array();
+                if(!is_null($id_empresa))
+                {
+                    $productos_empresa = ProductoEmpresaDAO::search( new ProductoEmpresa( array( "id_empresa" => $id_empresa ) ) );
+                    foreach($productos_empresa as $p_e)
+                    {
+                        array_push($productos1, ProductoDAO::getByPK($p_e->getIdProducto()));
+                    }
+                }
+                else if(!is_null($id_almacen))
+                {
+                    $productos_almacen = ProductoAlmacenDAO::search( new ProductoAlmacen( array( "id_almacen" => $id_almacen ) ) );
+                    foreach($productos_almacen as $p_a)
+                    {
+                        array_push($productos1, ProductoDAO::getByPK($p_a->getIdProducto()));
+                    }
+                }
+                else
+                {
+                    $productos1 = ProductoDAO::getAll();
+                }
+                $producto_criterio = new Producto( array( 
+                                                "activo"                => $activo,
+                                                "compra_en_mostrador"   => $compra_en_mostrador,
+                                                "metodo_costeo"         => $metodo_costeo
+                                                        )
+                                                    );
+                $productos2=ProductoDAO::search($producto_criterio);
+                $productos=array_intersect($productos1, $productos2);
+            }
+            else
+            {
+                Logger::log("No se recibieron parametros, se listan todos los productos");
+                if(!is_null($id_empresa))
+                {
+                    $productos_empresa = ProductoEmpresaDAO::search( new ProductoEmpresa( array( "id_empresa" => $id_empresa ) ) );
+                    foreach($productos_empresa as $p_e)
+                    {
+                        array_push($productos, ProductoDAO::getByPK($p_e->getIdProducto()));
+                    }
+                }
+                else if(!is_null($id_almacen))
+                {
+                    $productos_almacen = ProductoAlmacenDAO::search( new ProductoAlmacen( array( "id_almacen" => $id_almacen ) ) );
+                    foreach($productos_almacen as $p_a)
+                    {
+                        array_push($productos, ProductoDAO::getByPK($p_a->getIdProducto()));
+                    }
+                }
+                else
+                {
+                    $productos = ProductoDAO::getAll();
+                }
+            }
+            Logger::log("Lista obtenida exitosamente con ".count($productos)." elementos");
+            return $productos;
 	}
   
 	/**
@@ -343,15 +630,105 @@ NOTA: Se crea un producto tipo = 1 que es para productos
 		$descripcion_producto = null, 
 		$impuestos = null, 
 		$clasificaciones = null, 
-		$id_unidad_convertible = null, 
+		$id_unidad = null, 
 		$codigo_de_barras = null, 
-		$id_unidad_no_convertible = null, 
+		$precio = null, 
 		$foto_del_producto = null, 
 		$descuento = null
 	)
 	{  
-  
-  
+            Logger::log("Creando nuevo producto");
+            
+            //valida los parametros recibidos
+            $validar = self::validarParametrosProducto(null,$compra_en_mostrador,$metodo_costeo,
+                    $activo,$codigo_producto,$nombre_producto,$garantia,$costo_estandar,$control_de_existencia,
+                    $margen_de_utilidad,$descuento,$descripcion_producto,$foto_del_producto,$costo_extra_almacen,
+                    $codigo_de_barras,$peso_producto,$id_unidad,$precio);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            if(is_null($descuento))
+                $descuento = 0;
+            $producto = new Producto( array( 
+                                    "compra_en_mostrador"   => $compra_en_mostrador,
+                                    "metodo_costeo"         => $metodo_costeo,
+                                    "activo"                => $activo,
+                                    "codigo_producto"       => $codigo_producto,
+                                    "nombre_producto"       => trim($nombre_producto),
+                                    "garantia"              => $garantia,
+                                    "costo_estandar"        => $costo_estandar,
+                                    "control_de_existencia" => $control_de_existencia,
+                                    "margen_de_utilidad"    => $margen_de_utilidad,
+                                    "descuento"             => $descuento,
+                                    "descripcion"           => $descripcion_producto,
+                                    "foto_del_producto"     => $foto_del_producto,
+                                    "costo_extra_almacen"   => $costo_extra_almacen,
+                                    "codigo_de_barras"      => $codigo_de_barras,
+                                    "peso_producto"         => $peso_producto,
+                                    "id_unidad"             => $id_unidad,
+                                    "precio"                => $precio
+                                            )
+                                        );
+            
+            DAO::transBegin();
+            try
+            {
+                //Se guarda el producto creado y se asignan las empresas, los impuestos y las clasificaciones recibidas
+                ProductoDAO::save($producto);
+                if(!is_null($id_empresas))
+                {
+                    $producto_empresa = new ProductoEmpresa( array( "id_producto" => $producto->getIdProducto() ) );
+                    foreach($id_empresas as $id_empresa)
+                    {
+                        $validar = self::validarParametrosProductoEmpresa($id_empresa["id_empresa"],$id_empresa["precio_utilidad"],$id_empresa["es_margen_utilidad"]);
+                        if(is_string($validar))
+                            throw new Exception($validar);
+                        
+                        $producto_empresa->setIdEmpresa($id_empresa["id_empresa"]);
+                        $producto_empresa->setPrecioUtilidad($id_empresa["precio_utilidad"]);
+                        $producto_empresa->setEsMargenUtilidad($id_empresa["es_margen_utilidad"]);
+                        ProductoEmpresaDAO::save($producto_empresa);
+                    }
+                }/* Fin if de empresas */
+                if(!is_null($impuestos))
+                {
+                    $impuesto_producto = new ImpuestoProducto( array( "id_producto" => $producto->getIdProducto() ) );
+                    foreach($impuestos as $impuesto)
+                    {
+                        if(is_null(ImpuestoDAO::getByPK($impuesto)))
+                                throw new Exception ("El impuesto con id ".$impuesto." no existe");
+                        $impuesto_producto->setIdImpuesto($impuesto);
+                        ImpuestoProductoDAO::save($impuesto_producto);
+                    }
+                }/* Fin if de impuestos */
+                if(!is_null($clasificaciones))
+                {
+                    $producto_clasificacion = new ProductoClasificacion( array( "id_producto" => $producto->getIdProducto() ) );
+                    foreach($clasificaciones as $clasificacion)
+                    {
+                        $c = ClasificacionProductoDAO::getByPK($clasificacion);
+                        if(is_null($c))
+                                throw new Exception("La clasificacion de producto con id ".$clasificacion." no existe");
+                        
+                        if(!$c->getActiva())
+                            throw new Exception("La clasificaicon de producto con id ".$clasificacion." no esta activa");
+                        
+                        $producto_clasificacion->setIdClasificacionProducto($clasificacion);
+                        ProductoClasificacionDAO::save($producto_clasificacion);
+                    }
+                }/* Fin if de clasificaciones */
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo guardar el nuevo producto: ".$e);
+                throw new Exception("No se pudo guardar el nuevo producto");
+            }
+            DAO::transEnd();
+            Logger::log("Producto creado exitosamente");
+            return array( "id_producto" => $producto->getIdProducto() );
 	}
   
 	/**
