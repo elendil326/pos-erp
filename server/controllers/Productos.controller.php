@@ -743,8 +743,30 @@ NOTA: Se crea un producto tipo = 1 que es para productos
 		$productos
 	)
 	{  
-  
-  
+            Logger::log("Se recibieron ".count($productos)." productos, se procede a insertarlos");
+            
+            //Se llama muchas veces al metodo producto nuevo y se almacenan los ids generados
+            $id_productos = array();
+            DAO::transBegin();
+            try
+            {
+                foreach($productos as $producto)
+                {
+                    array_push
+                    (
+                            $id_productos, 
+                            self::Nuevo(1,$producto["codigo_producto"], $producto["id_empresas"], $producto["nombre_producto"], "precio", $producto["costo_estandar"], $producto["compra_en_mostrador"])
+                    );
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudieron guardar los productos: ".$e);
+                throw new Exception("No se pudieron guardar los productos");
+            }
+            DAO::transEnd();
+            Logger::log("Productos insertados exitosamente");
 	}
   
 	/**
