@@ -179,17 +179,28 @@ require_once("interfaces/Productos.interface.php");
 	)
 	{  
             Logger::log("Crenado nueva equivalencia de unidades");
-            if(is_null(UnidadDAO::getByPK($id_unidad)))
+            
+            //valida los parametros recibidos
+            $validar = self::validarParametrosUnidad($id_unidad);
+            if(is_string($validar))
             {
-                Logger::error("La unidad con id: ".$id_unidad." no existe");
-                throw new Exception("La unidad con id: ".$id_unidad." no existe");
+                Logger::error($validar);
+                throw new Exception($validar);
             }
-            if(is_null(UnidadDAO::getByPK($id_unidades)))
+            $validar = self::validarParametrosUnidad($id_unidades);
+            if(is_string($validar))
             {
-                Logger::error("La unidad con id: ".$id_unidades." no existe");
-                throw new Exception("La unidad con id: ".$id_unidades." no existe");
+                Logger::error($validar);
+                throw new Exception($validar);
             }
-            if($id_unidad===$id_unidades)
+            $valdiar = self::validarNumero($equivalencia, 1.8e200, "equivalencia");
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            if($id_unidad==$id_unidades)
             {
                 Logger::error("No se puede crear una equivalencia para la misma unidad");
                 throw new Exception("No se puede crear una equivalencia para la misma unidad");
@@ -209,7 +220,7 @@ require_once("interfaces/Productos.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudo crear la equivalencia: ".$e);
-                throw $e;
+                throw new Exception("No se pudo crear la equivalencia");
             }
             DAO::transEnd();
             Logger::log("La equivalencia fue creada exitosamente");
@@ -231,8 +242,36 @@ require_once("interfaces/Productos.interface.php");
 		$id_unidad
 	)
 	{  
-  
-  
+            Logger::log("Editando la equivalencia entre la unidad ".$id_unidad." y las unidades ".$id_unidades);
+            
+            //valida los parametros
+            $unidad_equivalencia = UnidadEquivalenciaDAO::getByPK($id_unidad, $id_unidades);
+            if(is_null($unidad_equivalencia))
+            {
+                Logger::error("La equivalencia entre la unidad ".$id_unidad." y las unidades ".$id_unidades." no existe");
+                throw new Exception("La equivalencia entre la unidad ".$id_unidad." y las unidades ".$id_unidades." no existe");
+            }
+            $validar = self::validarNumero($equivalencia, 1.8e200, "equivalencia");
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            $unidad_equivalencia->setEquivalencia($equivalencia);
+            DAO::transBegin();
+            try
+            {
+                UnidadEquivalenciaDAO::save($unidad_equivalencia);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo editar la equivalencia: ".$e);
+                throw new Exception("No se pudo editar la equivalencia");
+            }
+            DAO::transEnd();
+            Logger::log("Equivalencia editada exitosamente");
 	}
   
 	/**
@@ -255,8 +294,7 @@ require_once("interfaces/Productos.interface.php");
 		$id_sucursal = null
 	)
 	{  
-  
-  
+            Logger::log("Listando los productos");
 	}
   
 	/**
