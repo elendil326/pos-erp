@@ -1128,6 +1128,34 @@ require_once("interfaces/CargosYAbonos.interface.php");
 	{
             Logger::log("Inicia lista de abonos");
             
+            //valida la variable orden
+            if(!is_null($orden))
+            {
+                if
+                (
+                        $orden != "id_abono_compra"     &&
+                        $orden != "id_abono_venta"      &&
+                        $orden != "id_abono_prestamo"   &&
+                        $orden != "id_venta"            &&
+                        $orden != "id_compra"           &&
+                        $orden != "id_prestamo"         &&
+                        $orden != "id_sucursal"         &&
+                        $orden != "monto"               &&
+                        $orden != "id_caja"             &&
+                        $orden != "id_deudor"           &&
+                        $orden != "id_receptor"         &&
+                        $orden != "nota"                &&
+                        $orden != "fecha"               &&
+                        $orden != "tipo_de_pago"        &&
+                        $orden != "cancelado"           &&
+                        $orden != "motivo_cancelacion"  
+                )
+                {
+                    Logger::error("La variable orden (".$orden.") es invalida");
+                    throw new Exception("La variable orden (".$orden.") es invalida");
+                }
+            }
+            
             //verifica que se haya recibido almenos un tipo de abono a listar
             if(!$compra&&!$venta&&!$prestamo)
             {
@@ -1613,6 +1641,35 @@ require_once("interfaces/CargosYAbonos.interface.php");
 	)
 	{
             Logger::log("Listando Gastos");
+            
+            //valida la variable orden
+            if(!is_null($orden))
+            {
+                if
+                (
+                        $orden != "id_gasto"            &&
+                        $orden != "id_empresa"          &&
+                        $orden != "id_usuario"          &&
+                        $orden != "id_concepto_gasto"   &&
+                        $orden != "id_orden_de_servicio"&&
+                        $orden != "id_caja"             &&
+                        $orden != "fecha_del_gasto"     &&
+                        $orden != "fecha_de_registro"   &&
+                        $orden != "id_sucursal"         &&
+                        $orden != "nota"                &&
+                        $orden != "descripcion"         &&
+                        $orden != "folio"               &&
+                        $orden != "monto"               &&
+                        $orden != "cancelado"           &&
+                        $orden != "motivo_cancelacion"
+                )
+                {
+                    Logger::error("La variable orden (".$orden.") no es valida");
+                    throw new Exception("La variable orden (".$orden.") no es valida");
+                }
+            }
+            
+            //verifica que se hayan recibido parametros
             $parametros=false;
             if
             (
@@ -2124,20 +2181,21 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 Logger::error($validar);
                 throw new Exception($validar);
             }
-            
-            if
-            (
-                    $orden != "id_concepto_gasto" &&
-                    $orden != "nombre" &&
-                    $orden != "descripcion" &&
-                    $orden != "monto" &&
-                    $orden != "activo"
-            )
+            if(!is_null($orden))
             {
-                Logger::error("La variable orden (".$orden.") no es valida");
-                throw new Exception("La variable orden (".$orden.") no es valida");
+                if
+                (
+                        $orden != "id_concepto_gasto" &&
+                        $orden != "nombre" &&
+                        $orden != "descripcion" &&
+                        $orden != "monto" &&
+                        $orden != "activo"
+                )
+                {
+                    Logger::error("La variable orden (".$orden.") no es valida");
+                    throw new Exception("La variable orden (".$orden.") no es valida");
+                }
             }
-            
             if(!is_null($activo))
             {
                 $concepto_gasto_criterio->setActivo($activo);
@@ -2175,18 +2233,20 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 Logger::error($validar);
                 throw new Exception($validar);
             }
-            
-            if
-            (
-                    $orden != "id_concepto_ingreso" &&
-                    $orden != "nombre" &&
-                    $orden != "descripcion" &&
-                    $orden != "monto" &&
-                    $orden != "activo"
-            )
+            if(!is_null($orden))
             {
-                Logger::error("La variable orden (".$orden.") no es valida");
-                throw new Exception("La variable orden (".$orden.") no es valida");
+                if
+                (
+                        $orden != "id_concepto_ingreso" &&
+                        $orden != "nombre" &&
+                        $orden != "descripcion" &&
+                        $orden != "monto" &&
+                        $orden != "activo"
+                )
+                {
+                    Logger::error("La variable orden (".$orden.") no es valida");
+                    throw new Exception("La variable orden (".$orden.") no es valida");
+                }
             }
             
             $conceptos_ingreso=null;
@@ -2731,7 +2791,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             }
             DAO::transEnd();
             Logger::log("Abono creado exitosamente");
-            return $id_abono;
+            return array ( "id_abono" => $id_abono);
 	}
 
         
@@ -2768,6 +2828,34 @@ require_once("interfaces/CargosYAbonos.interface.php");
 	)
 	{
             Logger::log("Listando Ingresos");
+            
+            //verifica que el orden sea valida
+            if(!is_null($orden))
+            {
+                if
+                (
+                        $orden != "id_ingreso"          &&
+                        $orden != "id_empresa"          &&
+                        $orden != "id_usuario"          &&
+                        $orden != "id_concepto_ingreso" &&
+                        $orden != "id_caja"             &&
+                        $orden != "fecha_del_ingreso"   &&
+                        $orden != "fecha_de_registro"   &&
+                        $orden != "id_sucursal"         &&
+                        $orden != "nota"                &&
+                        $orden != "descripcion"         &&
+                        $orden != "folio"               &&
+                        $orden != "monto"               &&
+                        $orden != "cancelado"           &&
+                        $orden != "motivo_cancelacion"
+                )
+                {
+                    Logger::error("La variable orden (".$orden.") no es valida");
+                    throw new Exception("La variable orden (".$orden.") no es valida");
+                }
+            }
+            
+            //verifica que se hayan obtenido los parametros para usar getAll o getByRange
             $parametros=false;
             if
             (
