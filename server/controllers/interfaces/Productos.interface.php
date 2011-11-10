@@ -347,6 +347,7 @@ Ejemplo: 1 kg = 2.204 lb
   static function NuevaUnidad
 	(
 		$nombre, 
+                $es_entero,
 		$descripcion = ""
 	);  
   

@@ -72,12 +72,18 @@ require_once("interfaces/Productos.interface.php");
                     return "La unidad esta desactivada";
             }
             
-            //valida que el nombre este en el rango
+            //valida que el nombre este en el rango y que no se repita
             if(!is_null($nombre))
             {
                 $e = self::validarString($nombre, 100, "nombre");
                 if(is_string($e))
                     return $e;
+                $unidades = UnidadDAO::search(new Unidad( array( "nombre" => trim($nombre) ) ));
+                foreach($unidades as $unidad)
+                {
+                    if($unidad->getActiva())
+                        return "El nombre (".$nombre.") ya esta siendo usado por la unidad ".$unidad->getIdUnidad();
+                }
             }
             
             //valida que la descripcion este en rango
@@ -1552,12 +1558,42 @@ Ejemplo: 1 kg = 2.204 lb
  	 **/
 	public static function NuevaUnidad
 	(
-		$nombre, 
+		$nombre,
+                $es_entero,
 		$descripcion = null
 	)
 	{  
-  
-  
+            Logger::log("Creando una nueva unidad");
+            
+            //valida los parametros recibidos
+            $validar = self::validarParametrosUnidad(null, $nombre, $descripcion, $es_entero);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            $unidad = new Unidad( array( 
+                                "nombre"        => trim($nombre),
+                                "es_entero"     => $es_entero,
+                                "descripcion"   => $descripcion,
+                                "activa"        => 1
+                                )
+                                    );
+            DAO::transBegin();
+            try
+            {
+                UnidadDAO::save($unidad);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo crear la unidad: ".$e);
+                throw new Exception("No se pudo crear la unidad");
+            }
+            DAO::transEnd();
+            Logger::log("Unidad creada exitosamente");
+            return array( "id_unidad" => $unidad->getIdUnidad() );
 	}
   
 	/**
