@@ -1661,10 +1661,47 @@ Ejemplo: 1 kg = 2.204 lb
  	 **/
 	public static function EliminarUnidad
 	(
-		$id_unidad_convertible
+		$id_unidad
 	)
 	{  
-  
-  
+            Logger::log("Eliminando la unidad ".$id_unidad);
+            
+            //valida la unidad
+            $validar = self::validarParametrosUnidad($id_unidad);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            $unidad = UnidadDAO::getByPK($id_unidad);
+            $unidad->setActiva(0);
+            
+            //Se eliminaran los registros de la tabla unidad equivalencia que contengan a esta unidad,
+            //tanto como id_unidad como id_unidades
+            $unidades_equivalencia_unidad = UnidadEquivalenciaDAO::search( new UnidadEquivalencia( array( "id_unidad" => $id_unidad ) ) );
+            $unidades_equivalencia_unidades = UnidadEquivalenciaDAO::search( new UnidadEquivalencia( array( "id_unidades" => $id_unidad ) ) );
+            
+            DAO::transBegin();
+            try
+            {
+                UnidadDAO::save($unidad);
+                foreach($unidades_equivalencia_unidad as $unidad_equivalencia)
+                {
+                    UnidadEquivalenciaDAO::delete($unidad_equivalencia);
+                }
+                foreach($unidades_equivalencia_unidades as $unidad_equivalencia)
+                {
+                    UnidadEquivalenciaDAO::delete($unidad_equivalencia);
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("La unidad ".$id_unidad."  no pudo ser eliminada: ".$e);
+                throw new Exception("La unidad no pudo ser eliminada");
+            }
+            DAO::transEnd();
+            Logger::log("La unidad ha sido eliminada exitosamente");
 	}
   }

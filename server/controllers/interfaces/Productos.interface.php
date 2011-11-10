@@ -282,7 +282,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos
  	 **/
   static function EliminarUnidad
 	(
-		$id_unidad_convertible
+		$id_unidad
 	);  
   
   
