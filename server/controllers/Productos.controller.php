@@ -879,10 +879,11 @@ NOTA: Se crea un producto tipo = 1 que es para productos
             $productos_paquete = ProductoPaqueteDAO::search( new ProductoPaquete( array( "id_producto" => $id_producto ) ) );
             foreach($productos_paquete as $producto_paquete)
             {
-                if($producto_paquete->getActivo())
+                $paquete = PaqueteDAO::getByPK($producto_paquete->getIdProducto());
+                if($paquete->getActivo())
                 {
-                    Logger::error("No se puede borrar este producto pues el paquete ".$producto_paquete->getIdPaquete()." aun lo contiene");
-                    throw new Exception("No se puede borrar este producto pues el paquete ".$producto_paquete->getIdPaquete()." aun lo contiene");
+                    Logger::error("No se puede borrar este producto pues el paquete ".$paquete->getIdPaquete()." aun lo contiene");
+                    throw new Exception("No se puede borrar este producto pues el paquete ".$paquete->getIdPaquete()." aun lo contiene");
                 }
             }
             
@@ -1417,7 +1418,60 @@ NOTA: Se crea un producto tipo = 1 que es para productos
 		$id_categoria
 	)
 	{  
-  
+            Logger::log("Desactivando clasificacion de producto ".$id_categoria);
+            
+            //Se valida el parametro obtenido
+            $validar = self::validarParametrosClasificacionProducto($id_categoria);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            //Se verifica que ningun producto este relacionado con esta categoria
+            $productos_clasificacion = ProductoClasificacionDAO::search( new ProductoClasificacion( 
+                    array( "id_clasificacion_producto" => $id_categoria ) ) );
+            
+            foreach($productos_clasificacion as $producto_clasificacion)
+            {
+                $producto = ProductoDAO::getByPK($producto_clasificacion->getIdProducto());
+                if($producto->getActivo())
+                {
+                    Logger::error("No se puede eliminar la clasificacion de producto pues el producto ".$producto->getIdProducto()." aun lo contiene");
+                    throw new Exception("No se puede eliminar la clasificacion de producto pues el producto ".$producto->getIdProducto()." aun lo contiene");
+                }
+            }
+            
+            $clasificacion_producto = ClasificacionProductoDAO::getByPK($id_categoria);
+            $clasificacion_producto->setActiva(0);
+            
+            //Se eliminaran todos los registro de impuesto_clasificacion_producto y retencion_clasificacion_producto
+            //que contenagn a esta clasificacion
+            $impuestos_clasificacion_producto = ImpuestoClasificacionProductoDAO::search( 
+                    new ImpuestoClasificacionProducto( array("id_clasificacion_producto" => $id_categoria) ) );
+            $retenciones_clasificacion_producto = RetencionClasificacionProductoDAO::search( 
+                    new RetencionClasificacionProducto( array( "id_clasificacion_producto" => $id_categoria ) ) );
+            DAO::transBegin();
+            try
+            {
+                ClasificacionProductoDAO::save($clasificacion_producto);
+                foreach($impuestos_clasificacion_producto as $impuesto_clasificacion_producto)
+                {
+                    ImpuestoClasificacionProductoDAO::delete($impuesto_clasificacion_producto);
+                }
+                foreach($retenciones_clasificacion_producto as $retencion_clasificacion_producto)
+                {
+                    RetencionClasificacionProductoDAO::delete($retencion_clasificacion_producto);
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo eliminar la clasificacion de producto ".$id_categoria.": ".$e);
+                throw new Exception("No se pudo eliminar la clasificacion de producto");
+            }
+            DAO::transEnd();
+            Logger::log("clasificacion eliminada exitosamente");
   
 	}
   
