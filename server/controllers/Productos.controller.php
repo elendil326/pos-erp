@@ -1489,8 +1489,30 @@ Ejemplo: 1 kg = 2.204 lb
 		$id_unidad
 	)
 	{  
-  
-  
+            Logger::log("Eliminando equivalencia entre la unidad ".$id_unidad." y las unidades ".$id_unidades);
+            
+            //valida que exista la relacion
+            $unidad_equivalencia = UnidadEquivalenciaDAO::getByPK($id_unidad, $id_unidades);
+            if(is_null($unidad_equivalencia))
+            {
+                Logger::error("La equivalencia entre la unidad ".$id_unidad." y las unidades ".$id_unidades." no existe");
+                throw new Exception("La equivalencia entre la unidad ".$id_unidad." y las unidades ".$id_unidades." no existe");
+            }
+            
+            //Elimina la equivalencia
+            DAO::transBegin();
+            try
+            {
+                UnidadEquivalenciaDAO::delete($unidad_equivalencia);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo eliminar la equivalencia entre la unidad ".$id_unidad." y las unidad ".$id_unidades.": ".$e);
+                throw new Exception("No se pudo eliminar la equivalencia");
+            }
+            DAO::transEnd();
+            Logger::log("Equivalencia eliminada exitosamente");
 	}
   
 	/**
