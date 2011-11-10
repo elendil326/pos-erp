@@ -1606,13 +1606,51 @@ Ejemplo: 1 kg = 2.204 lb
  	 **/
 	public static function EditarUnidad
 	(
-		$id_unidad_convertible, 
+		$id_unidad, 
 		$descripcion = null, 
-		$nombre = null
+		$nombre = null,
+                $es_entero = null
 	)
 	{  
-  
-  
+            Logger::log("Editando unidad ".$id_unidad);
+            
+            //Se validan los parametros
+            $validar = self::validarParametrosUnidad($id_unidad, $nombre, $descripcion, $es_entero);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            //Los parametros que no sean nulos se tomaran como actualizacion
+            $unidad = UnidadDAO::getByPK($id_unidad);
+            if(!is_null($descripcion))
+            {
+                $unidad->setDescripcion($descripcion);
+            }
+            if(!is_null($nombre))
+            {
+                $unidad->setNombre($nombre);
+            }
+            if(!is_null($es_entero))
+            {
+                $unidad->setEsEntero($es_entero);
+            }
+            
+            //se guardan los cambios
+            DAO::transBegin();
+            try
+            {
+                UnidadDAO::save($unidad);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo editar la unidad ".$id_unidad.": ".$e);
+                throw new Exception("No se pudo editar la unidad");
+            }
+            DAO::transEnd();
+            Logger::log("Unidad editada exitosamente");
 	}
   
 	/**

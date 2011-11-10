@@ -246,9 +246,10 @@ NOTA: Se crea un producto tipo = 1 que es para productos
  	 **/
   static function EditarUnidad
 	(
-		$id_unidad_convertible, 
+		$id_unidad, 
 		$descripcion = "", 
-		$nombre = ""
+		$nombre = "",
+                $es_entero = null
 	);  
   
   
