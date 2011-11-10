@@ -133,6 +133,82 @@ require_once("interfaces/Servicios.interface.php");
             return true;
         }
         
+        /*
+         * Valida los parametros de la tabla orden_de_servicio. Regres aun string con el error si se ha encontrado
+         * alguno. En caso contrario regresa verdadero
+         */
+        private static function validarParametrosOrdenDeServicio
+        (
+                $id_orden_de_servicio = null,
+                $id_servicio = null,
+                $id_usuario_venta = null,
+                $descripcion = null,
+                $motivo_cancelacion = null,
+                $adelanto = null
+        )
+        {
+            //valida que la orden de servicio exista y que este activa
+            if(!is_null($id_orden_de_servicio))
+            {
+                $orden_de_servicio = OrdenDeServicioDAO::getByPK($id_orden_de_servicio);
+                if(is_null($orden_de_servicio))
+                {
+                    return "La orden de servicio ".$id_orden_de_servicio." no existe";
+                }
+                if(!$orden_de_servicio->getActiva())
+                {
+                    return "La orden de servicio ".$id_orden_de_servicio." no esta activa";
+                }
+            }
+            
+            //valida que el servicio exista y este activo
+            if(!is_null($id_servicio))
+            {
+                $servicio = ServicioDAO::getByPK($id_servicio);
+                if(is_null($servicio))
+                    return "El servicio ".$id_servicio." no existe";
+                
+                if($servicio->getActivo())
+                    return "El servicio ".$id_servicio." no esta activo";
+            }
+            
+            //valida que el usuario al que se le vende exista 
+            if(!is_null($id_usuario_venta))
+            {
+                $usuario = UsuarioDAO::getByPK($id_usuario_venta);
+                if(!is_null($usuario))
+                    return "EL usuario ".$id_usuario_venta." no existe";
+                
+                if(!$usuario->getActivo())
+                    return "El usuario ".$id_usuario_venta." esta inactivo";
+            }
+            
+            //valida que la descripcion este en rango
+            if(!is_null($descripcion))
+            {
+                $e = self::validarString($descripcion, 255, "descripcion");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el motivo de cancelacion este en rango
+            if(!is_null($motivo_cancelacion))
+            {
+                $e = self::validarString($motivo_cancelacion, 255, "motivo de cancelacion");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el adelanto este en rango
+            if(!is_null($adelanto))
+            {
+                $e = self::validarNumero($adelanto, 1.8e200, "adelanto");
+                if(is_string($e))
+                    return $e;
+            }
+            
+        }
+        
         
       
       
@@ -337,8 +413,34 @@ require_once("interfaces/Servicios.interface.php");
 		$motivo_cancelacion = ""
 	)
 	{  
-  
-  
+            Logger::log("Cancelando orden de servicio ".$id_orden_de_servicio);
+            
+            //valida los parametros recibidos
+            $validar = self::validarParametrosOrdenDeServicio($id_orden_de_servicio, null, null, null, $motivo_cancelacion);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            $orden_de_servicio = OrdenDeServicioDAO::getByPK($id_orden_de_servicio);
+            $orden_de_servicio->setCancelada(1);
+            $orden_de_servicio->setActiva(0);
+            $orden_de_servicio->setMotivoCancelacion($motivo_cancelacion);
+            
+            DAO::transBegin();
+            try
+            {
+                OrdenDeServicioDAO::save($orden_de_servicio);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo cancela la orden de servicio ".$id_orden_de_servicio." : ".$e);
+                throw new Exception("No se pudo cancela la orden de servicio ".$id_orden_de_servicio);
+            }
+            DAO::transEnd();    
+            Logger::log("Orden de servicio cancelada exitosamente");
 	}
   
 	/**
