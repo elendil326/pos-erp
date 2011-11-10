@@ -1093,7 +1093,6 @@ NOTA: Se crea un producto tipo = 1 que es para productos
                             if($empresa["id_empresa"]==$p_e->getIdEmpresa())
                             {
                                 $encontrado = true;
-                                break;
                             }
                         }
                         if(!$encontrado)
@@ -1124,7 +1123,6 @@ NOTA: Se crea un producto tipo = 1 que es para productos
                             if($clasificacion == $p_c->getIdClasificacionProducto() )
                             {
                                 $encontrado = true;
-                                break;
                             }
                         }
                         if(!$encontrado)
@@ -1150,7 +1148,6 @@ NOTA: Se crea un producto tipo = 1 que es para productos
                             if($impuesto == $i_p->getIdImpuesto())
                             {
                                 $encontrado = true;
-                                break;
                             }
                         }
                         if(!$encontrado)
@@ -1283,8 +1280,130 @@ NOTA: Se crea un producto tipo = 1 que es para productos
 		$retenciones = null
 	)
 	{  
-  
-  
+            Logger::log("Editando la clasificacion de producto ".$id_categoria);
+            
+            //Se validan los parametros recibidos
+            $validar = self::validarParametrosClasificacionProducto($id_categoria,$nombre,$descripcion,$garantia,null,$margen_utilidad,$descuento);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            //Los parametros que no sean nulos seran tomados como actualizacion
+            $clasificacion_producto = ClasificacionProductoDAO::getByPK($id_categoria);
+            
+            if(!is_null($nombre))
+            {
+                $clasificacion_producto->setNombre(trim($nombre));
+            }
+            
+            if(!is_null($garantia))
+            {
+                $clasificacion_producto->setGarantia($garantia);
+            }
+            
+            if(!is_null($descuento))
+            {
+                $clasificacion_producto->setDescuento($descuento);
+            }
+            
+            if(is_null($margen_utilidad))
+            {
+                $clasificacion_producto->setMargenUtilidad($margen_utilidad);
+            }
+            
+            if(is_null($descripcion))
+            {
+                $clasificacion_producto->setDescripcion($descripcion);
+            }
+            
+            //Se actualiza la clasificacion de producto. Si se reciben impuestos y/o retenciones
+            //se recorre la lista recibida y se guardan o actualizan. Despues se recorre la lista
+            //de los impuestos y retenciones actuales y se buscan en la lista recibida. Si no son encontrados
+            //se eliminan
+            DAO::transBegin();
+            try
+            {
+                ClasificacionProductoDAO::save($clasificacion_producto);
+                if(!is_null($impuestos))
+                {
+                    $impuesto_clasificacion_producto = new ImpuestoClasificacionProducto( 
+                            array( "id_clasificacion_producto" => $clasificacion_producto->getIdClasificacionProducto() ) );
+                    
+                    foreach($impuestos as $impuesto)
+                    {
+                        if(is_null(ImpuestoDAO::getByPK($impuesto)))
+                                throw new Exception("El impuesto con id ".$impuesto." no existe");
+                        
+                        $impuesto_clasificacion_producto->setIdImpuesto($impuesto);
+                        ImpuestoClasificacionProductoDAO::save($impuesto_clasificacion_producto);
+                    }
+                    
+                    $impuestos_clasificacion_producto = ImpuestoClasificacionProductoDAO::search(
+                            new ImpuestoClasificacionProducto( array( "id_clasificacion_producto" => $id_categoria ) ) );
+                    
+                    foreach($impuestos_clasificacion_producto as $i_c_p)
+                    {
+                        var_dump($i_c_p);
+                        $encontrado = false;
+                        foreach($impuestos as $impuesto);
+                        {
+                            var_dump($impuesto);
+                            if($impuesto == $i_c_p->getIdImpuesto())
+                            {
+                                $encontrado = true;
+                            }
+                        }
+                        if(!$encontrado)
+                        {
+                            ImpuestoClasificacionProductoDAO::delete($i_c_p);
+                        }
+                    }
+                    
+                }/* Fin if de impuestos */
+                if(!is_null($retenciones))
+                {
+                    $retencion_clasificacion_producto = new RetencionClasificacionProducto( 
+                            array( "id_clasificacion_producto" => $clasificacion_producto->getIdClasificacionProducto() ));
+                    
+                    foreach($retenciones as $retencion)
+                    {
+                        if(is_null(RetencionDAO::getByPK($retencion)))
+                                throw new Exception("La retencion con id ".$retencion." no existe");
+                        
+                        $retencion_clasificacion_producto->setIdRetencion($retencion);
+                        RetencionClasificacionProductoDAO::save($retencion_clasificacion_producto);
+                    }
+                    
+                    $retenciones_clasificacion_producto = RetencionClasificacionProductoDAO::search(
+                            new RetencionClasificacionProducto( array( "id_clasificacion_producto" => $id_categoria) ) );
+                    
+                    foreach($retenciones_clasificacion_producto as $r_c_p)
+                    {
+                        $encontrado = false;
+                        foreach($retenciones as $retencion)
+                        {
+                            if($retencion == $r_c_p->getIdRetencion())
+                            {
+                                $encontrado = true;
+                            }
+                        }
+                        if(!$encontrado)
+                        {
+                            RetencionClasificacionProductoDAO::delete($r_c_p);
+                        }
+                    }
+                }/*Fin if de retenciones*/
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo editar la clasificacion de producto: ".$e);
+                throw new Exception("No se pudo editar la clasificacion de producto");
+            }
+            DAO::transEnd();
+            Logger::log("Clasificacion de producto editada exitosamente");
 	}
   
 	/**

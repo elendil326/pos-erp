@@ -890,7 +890,6 @@ require_once("interfaces/Empresas.interface.php");
                             if($id_impuesto==$impuesto_empresa->getIdImpuesto())
                             {
                                     $encontrado=true;
-                                    break;
                             }
                         }
                         if(!$encontrado)
@@ -929,7 +928,6 @@ require_once("interfaces/Empresas.interface.php");
                             if($id_retencion==$retencion_empresa->getIdRetencion())
                             {
                                 $encontrado=true;
-                                break;
                             }
                         }
                         if(!$encontrado)

@@ -1332,7 +1332,6 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                             if($id_impuesto == $impuesto_usuario->getIdImpuesto())
                             {
                                 $encontrado = true;
-                                break;
                             }
                         }
                         if(!$encontrado)
@@ -1362,7 +1361,6 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                             if($id_retencion == $retencion_usuario->getIdRetencion())
                             {
                                 $encontrado = true;
-                                break;
                             }
                         }
                         if(!$encontrado)

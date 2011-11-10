@@ -2445,7 +2445,6 @@ require_once("interfaces/Sucursales.interface.php");
                             if($empresa["id_empresa"]==$sucursal_empresa->getIdEmpresa())
                             {
                                 $encontrado=true;
-                                break;
                             }
                         }
                         if(!$encontrado)
@@ -2478,7 +2477,6 @@ require_once("interfaces/Sucursales.interface.php");
                             if($impuesto==$i->getIdImpuesto())
                             {
                                 $encontrado=true;
-                                break;
                             }
                         }
                         if(!$encontrado)
@@ -2513,7 +2511,6 @@ require_once("interfaces/Sucursales.interface.php");
                             if($retencion==$r->getIdRetencion())
                             {
                                 $encontrado=true;
-                                break;
                             }
                         }
                         if(!$encontrado)
@@ -2816,7 +2813,6 @@ Creo que este metodo tiene que estar bajo sucursal.
                         if($p_e->getIdEmpresa() == $almacen->getIdEmpresa())
                         {
                             $encontrado = true;
-                            break;
                         }
                     }
                     if(!$encontrado)
@@ -4036,7 +4032,6 @@ Creo que este metodo tiene que estar bajo sucursal.
                                 if($p_e->getIdEmpresa() == $almacen_recibe->getIdEmpresa())
                                 {
                                     $encontrado = true;
-                                    break;
                                 }
                             }
                             if(!$encontrado)
@@ -4064,7 +4059,6 @@ Creo que este metodo tiene que estar bajo sucursal.
                             if($t_p->getIdProducto()==$p["id_producto"]&&$t_p->getIdUnidad()==$p["id_unidad"])
                             {
                                 $encontrado=true;
-                                break;
                             }
                         }
                         if(!$encontrado)
