@@ -321,7 +321,93 @@ require_once("interfaces/Productos.interface.php");
                     return $e;
             }
         }
+        
+        /*
+         * Valida los parametros de la tabla clasificacion_produco. Regres aun string con el error
+         * en caso de encontrar alguno. Regresa verdadero en caso contrario.
+         */
+        private static function validarParametrosClasificacionProducto
+        (
+                $id_clasificacion_producto = null,
+                $nombre = null,
+                $descripcion = null,
+                $garantia = null,
+                $activa = null,
+                $margen_utilidad = null,
+                $descuento = null
+        )
+        {
+            //valida que la clasificacion de producto exista y este activa
+            if(!is_null($id_clasificacion_producto))
+            {
+                $clasificacion_producto = ClasificacionProductoDAO::getByPK($id_clasificacion_producto);
+                if(is_null($clasificacion_producto))
+                    return "La clasificacion de producto con id ".$id_clasificacion_producto." no existe";
+                
+                if(!$clasificacion_producto->getActiva())
+                    return "La clasificacion de producto con id ".$id_clasificacion_producto." esta desactivada";
+            }
+            
+            //valida que el nombre este en rango y que no se repita
+            if(!is_null($nombre))
+            {
+                $e = self::validarString($nombre, 64, "nombre");
+                if(is_string($e))
+                    return $e;
+                $clasificaciones_producto = ClasificacionProductoDAO::search( new ClasificacionProducto( array("nombre" => trim($nombre)) ) );
+                foreach($clasificaciones_producto as $c_p)
+                {
+                    if($c_p->getActiva())
+                        return "El nombre (".$nombre.") ya esta siendo usado por la clasificacion ".$c_p->getIdClasificacionProducto();
+                }
+            }
+            
+            //valida que la descripcion este en rango
+            if(!is_null($descripcion))
+            {
+                $e = self::validarString($descripcion, 255, "descripcion");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que la garantia este en rango
+            if(!is_null($garantia))
+            {
+                $e = self::validarNumero($garantia, PHP_INT_MAX, "Garantia");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida el boleano activa
+            if(!is_null($activa))
+            {
+                $e = self::validarNumero($activa, 1, "activa");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el margen de utilidad este en rango
+            if(!is_null($margen_utilidad))
+            {
+                $e = self::validarNumero($margen_utilidad, 1.8e200, "margen de utilidad");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el descuento este en rango
+            if(!is_null($descuento))
+            {
+                $e = self::validarNumero($descuento, 100, "Descuento");
+                if(is_string($e))
+                    return $e;
+            }
+        }
       
+        
+        
+        
+        
+        
 	/**
  	 *
  	 *Lista las unidades. Se puede filtrar por activas o inactivas y ordenar por sus atributos
@@ -1107,8 +1193,69 @@ NOTA: Se crea un producto tipo = 1 que es para productos
 		$retenciones = null
 	)
 	{  
-  
-  
+            Logger::log("Creando nueva categoria");
+            
+            //se validan los parametros obtenidos
+            $validar = self::validarParametrosClasificacionProducto(null,$nombre,$descripcion,$garantia,null,$margen_utilidad,$descuento);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            //Se inicializa el registro
+            $clasificacion_producto = new ClasificacionProducto( array(
+                                                "nombre"            => trim($nombre),
+                                                "descripcion"       => $descripcion,
+                                                "garantia"          => $garantia,
+                                                "activa"            => 1,
+                                                "margen_utilidad"   => $margen_utilidad,
+                                                "descuento"         => $descuento
+                                            )
+                                        );
+            //Se guarda la nueva clasificacion. Si se reciben impuesto y/o retenciones, se crean los registros correspondientes
+            DAO::transBegin();
+            try
+            {
+                ClasificacionProductoDAO::save($clasificacion_producto);
+                if(!is_null($impuestos))
+                {
+                    $impuesto_clasificacion_producto = new ImpuestoClasificacionProducto( 
+                            array( "id_clasificacion_producto" => $clasificacion_producto->getIdClasificacionProducto() ) );
+                    
+                    foreach($impuestos as $impuesto)
+                    {
+                        if(is_null(ImpuestoDAO::getByPK($impuesto)))
+                                throw new Exception("El impuesto con id ".$impuesto." no existe");
+                        
+                        $impuesto_clasificacion_producto->setIdImpuesto($impuesto);
+                        ImpuestoClasificacionProductoDAO::save($impuesto_clasificacion_producto);
+                    }
+                }/* Fin if de impuestos */
+                if(!is_null($retenciones))
+                {
+                    $retencion_clasificacion_producto = new RetencionClasificacionProducto( 
+                            array( "id_clasificacion_producto" => $clasificacion_producto->getIdClasificacionProducto() ));
+                    
+                    foreach($retenciones as $retencion)
+                    {
+                        if(is_null(RetencionDAO::getByPK($retencion)))
+                                throw new Exception("La retencion con id ".$retencion." no existe");
+                        
+                        $retencion_clasificacion_producto->setIdRetencion($retencion);
+                        RetencionClasificacionProductoDAO::save($retencion_clasificacion_producto);
+                    }
+                }/*Fin if de retenciones*/
+            }/* Fin try */
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se ha podido guardar la nueva clasificacion: ".$e);
+                throw new Exception("No se ha podido guardar la nueva clasificacion");
+            }
+            DAO::transEnd();
+            Logger::log("Clasificacion guardada exitosamente");
+            return array( "id_categoria" => $clasificacion_producto->getIdClasificacionProducto());
 	}
   
 	/**
