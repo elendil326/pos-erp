@@ -131,11 +131,11 @@
 		$compra_en_mostrador = "", 
 		$margen_de_utilidad = "", 
 		$garantia = null, 
-		$id_unidad_convertible = null, 
+		$id_unidad = null, 
 		$clasificaciones = "", 
 		$impuestos = "", 
 		$descripcion_producto = "", 
-		$id_unidad_no_convertible = null, 
+		$precio = null, 
 		$metodo_costeo = "", 
 		$descuento = null
 	);  

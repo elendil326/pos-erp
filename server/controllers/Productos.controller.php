@@ -867,10 +867,10 @@ NOTA: Se crea un producto tipo = 1 que es para productos
 		$descuento = null, 
 		$metodo_costeo = null, 
 		$descripcion_producto = null, 
-		$id_unidad_no_convertible = null, 
+		$id_unidad = null, 
 		$impuestos = null, 
 		$clasificaciones = null, 
-		$id_unidad_convertible = null, 
+		$precio = null, 
 		$margen_de_utilidad = null, 
 		$garantia = null,
 		$compra_en_mostrador = null, 
@@ -885,8 +885,123 @@ NOTA: Se crea un producto tipo = 1 que es para productos
 		$codigo_producto = null
 	)
 	{  
-  
-  
+            Logger::log("Editando producto ".$id_producto);
+            
+            //se validan los parametros recibidos
+            $validar = self::validarParametrosProducto($id_producto,$compra_en_mostrador,
+                    $metodo_costeo,null,$codigo_producto,$nombre_producto,$garantia,
+                    $costo_estandar,$control_de_existencia,$margen_de_utilidad,$descuento,
+                    $descripcion_producto,$foto_del_producto,$costo_extra_almacen,$codigo_de_barras,
+                    $peso_producto,$id_unidad,$precio);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            $producto = ProductoDAO::getByPK($id_producto);
+            //Los parametros que no sean nulos seran tomados como una actualizacion
+            if(!is_null($compra_en_mostrador))
+            {
+                $producto->setCompraEnMostrador($compra_en_mostrador);
+            }
+            
+            if(!is_null($metodo_costeo))
+            {
+                $producto->setMetodoCosteo($metodo_costeo);
+            }
+            
+            if(!is_null($activo))
+            {
+                $producto->setActivo($activo);
+            }
+            
+            if(!is_null($codigo_producto))
+            {
+                $producto->setCodigoProducto($codigo_producto);
+            }
+            
+            if(!is_null($nombre_producto))
+            {
+                $producto->setNombreProducto(trim($nombre_producto));
+            }
+            
+            if(!is_null($garantia))
+            {
+                $producto->setGarantia($garantia);
+            }
+            
+            if(!is_null($costo_estandar))
+            {
+                $producto->setCostoEstandar($costo_estandar);
+            }
+            
+            if(!is_null($control_de_existencia))
+            {
+                $producto->setControlDeExistencia($control_de_existencia);
+            }
+            
+            if(!is_null($margen_de_utilidad))
+            {
+                $producto->setMargenDeUtilidad($margen_de_utilidad);
+            }
+            
+            if(!is_null($descuento))
+            {
+                $producto->setDescuento($descuento);
+            }
+            
+            if(!is_null($foto_del_producto))
+            {
+                $producto->setFotoDelProducto($foto_del_producto);
+            }
+            
+            if(!is_null($costo_extra_almacen))
+            {
+                $producto->setCostoExtraAlmacen($costo_extra_almacen);
+            }
+            
+            if(!is_null($codigo_de_barras))
+            {
+                $producto->setCodigoDeBarras($codigo_de_barras);
+            }
+            
+            if(!is_null($peso_producto))
+            {
+                $producto->setPesoProducto($peso_producto);
+            }
+            
+            if(!is_null($id_unidad))
+            {
+                $producto->setIdUnidad($id_unidad);
+            }
+            
+            if(!is_null($precio))
+            {
+                $producto->setPrecio($precio);
+            }
+            
+            DAO::transBegin();
+            try
+            {
+                ProductoDAO::save($producto);
+                //Si se reciben empresas, clasificaciones y/o impuestos se modifican en sus respectivas tablas
+                //
+                //Primero se guardan o actualizan los registros pasados en la lista, despues se recorren los registros
+                //actuales y si alguno no se encuentra en la lista se elimina.
+                if(!is_null($empresas))
+                {
+                    foreach($empresas as $empresa)
+                    {
+                        
+                    }
+                }
+            }
+            catch(Exception $e)
+            {
+                
+            }
+            
 	}
   
 	/**
