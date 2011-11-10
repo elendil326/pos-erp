@@ -280,8 +280,48 @@ require_once("interfaces/Servicios.interface.php");
 		$id_clasificacion_servicio
 	)
 	{  
-  
-  
+            Logger::log("Eliminando clasificacion de servicio ".$id_clasificacion_servicio);
+            
+            //valida el parametro
+            $validar = self::validarParametrosClasificacionServicio($id_clasificacion_servicio);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            //Se eliminaran los registros de impuesto_clasificacion_servicio y retencion_clasificacion_servicio que contengan 
+            //a esta clasificaicon
+            $clasificacion_servicio = ClasificacionServicioDAO::getByPK($id_clasificacion_servicio);
+            $clasificacion_servicio->setActiva(0);
+            
+            $impuestos_clasificacion_servicio = ImpuestoClasificacionServicioDAO::search( 
+                    new ImpuestoClasificacionServicio( array( "id_clasificacion_servicio" => $id_clasificacion_servicio ) ) );
+            
+            $retenciones_clasificacion_servicio = RetencionClasificacionServicioDAO::search(
+                    new RetencionClasificacionServicio( array( "id_clasificacion_servicio" => $id_clasificacion_servicio ) ) );
+            
+            DAO::transBegin();
+            try
+            {
+                ClasificacionServicioDAO::save($clasificacion_servicio);
+                foreach($impuestos_clasificacion_servicio as $impuesto_clasificacion_servicio)
+                {
+                    ImpuestoClasificacionServicioDAO::delete($impuesto_clasificacion_servicio);
+                }
+                foreach($retenciones_clasificacion_servicio as $retencion_clasificacion_servicio)
+                {
+                    RetencionClasificacionServicioDAO::delete($retencion_clasificacion_servicio);
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo eliminar la clasificacion del servicio ".$id_clasificacion_servicio." : ".$e);
+                throw new Exception("No se pudo eliminar la clasificacion del servicio");
+            }
+            DAO::transEnd();
+            Logger::log("Se elimino la clasificacion de servicio exitosamente");
 	}
   
 	/**
