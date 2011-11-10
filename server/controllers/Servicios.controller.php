@@ -8,6 +8,135 @@ require_once("interfaces/Servicios.interface.php");
 	
   class ServiciosController implements IServicios{
   
+      
+        //Metodo para pruebas que simula la obtencion del id de la sucursal actual
+        private static function getSucursal()
+        {
+            return 1;
+        }
+        
+        //metodo para pruebas que simula la obtencion del id de la caja actual
+        private static function getCaja()
+        {
+            return 1;
+        }
+      
+        
+        /*
+         *Se valida que un string tenga longitud en un rango de un maximo inclusivo y un minimo exclusvio.
+         *Regresa true cuando es valido, y un string cuando no lo es.
+         */
+          private static function validarString($string, $max_length, $nombre_variable,$min_length=0)
+	{
+		if(strlen($string)<=$min_length||strlen($string)>$max_length)
+		{
+		    return "La longitud de la variable ".$nombre_variable." proporcionada (".$string.") no esta en el rango de ".$min_length." - ".$max_length;
+		}
+		return true;
+        }
+
+
+        /*
+         * Se valida que un numero este en un rango de un maximo y un minimo inclusivos
+         * Regresa true cuando es valido, y un string cuando no lo es
+         */
+	private static function validarNumero($num, $max_length, $nombre_variable, $min_length=0)
+	{
+	    if($num<$min_length||$num>$max_length)
+	    {
+	        return "La variable ".$nombre_variable." proporcionada (".$num.") no esta en el rango de ".$min_length." - ".$max_length;
+	    }
+	    return true;
+	}
+        
+        /*
+         * Valida los parametros de la tabla clasificacion_servicio. Regresa un string con el error si se encuentra
+         * alguno, regresa verdadero en caso contrario
+         */
+        private static function validarParametrosClasificacionServicio
+        (
+                $id_clasificacion_servicio = null,
+                $nombre = null,
+                $garantia = null,
+                $descripcion = null,
+                $margen_utilidad = null,
+                $descuento = null,
+                $activa = null
+        )
+        {
+            //valida que la clasificacion exista y este activa
+            if(!is_null($id_clasificacion_servicio))
+            {
+                $clasificacion_servicio = ClasificacionServicioDAO::getByPK($id_clasificacion_servicio);
+                if(is_null($clasificacion_servicio))
+                    return "La clasificacion servicio ".$id_clasificacion_servicio." no existe";
+                
+                if(!$clasificacion_servicio->getActiva())
+                    return "La clasificacion servicio ".$id_clasificacion_servicio." esta desactivada";
+            }
+            
+            //valida que el nombre este en rango y que no se repita
+            if(!is_null($nombre))
+            {
+                $e = self::validarString($nombre, 50, "nombre");
+                if(is_string($e))
+                    return $e;
+                $clasificaciones_servicio = ClasificacionServicioDAO::search( new ClasificacionServicio( array("nombre" => trim($nombre)) ) );
+                foreach($clasificaciones_servicio as $clasificacion_servicio)
+                {
+                    if($clasificacion_servicio->getActiva())
+                        return "El nombre (".$nombre.") ya esta en uso por la clasificacion ".$clasificacion_servicio->getIdClasificacionServicio();
+                }
+            }
+            
+            //valida que la garantia este en rango
+            if(!is_null($garantia))
+            {
+                $e = self::validarNumero($garantia, PHP_INT_MAX, "garantia");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que la descripcion este en rango
+            if(!is_null($descripcion))
+            {
+                $e = self::validarString($descripcion, 255, "descripcion");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el margen de utilidad este en ango
+            if(!is_null($margen_utilidad))
+            {
+                $e = self::validarNumero($margen_utilidad, 1.8e200, "margen de utilidad");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida qe el descuento este en rango
+            if(!is_null($descuento))
+            {
+                $e = self::validarNumero($descuento, 100, "descuento");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida el boleano activa
+            if(!is_null($activa))
+            {
+                $e = self::validarNumero($activa, 1, "activa");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //No se encontro error, regresa true.
+            return true;
+        }
+        
+        
+      
+      
+      
   
 	/**
  	 *
@@ -34,8 +163,110 @@ require_once("interfaces/Servicios.interface.php");
 		$nombre = ""
 	)
 	{  
-  
-  
+            Logger::log("Editando clasificacion de servicio ".$id_clasificacion_servicio);
+            
+            //se validan los parametros
+            $validar = self::validarParametrosClasificacionServicio($id_clasificacion_servicio,$nombre,$garantia,$descripcion,$margen_utilidad,$descuento);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            //Los parametros que no sean nulos seran tomados como actualizacion
+            $clasificacion_servicio = ClasificacionServicioDAO::getByPK($id_clasificacion_servicio);
+            if(!is_null($descuento))
+            {
+                $clasificacion_servicio->setDescuento($descuento);
+            }
+            if(!is_null($margen_utilidad))
+            {
+                $clasificacion_servicio->setMargenUtilidad($margen_utilidad);
+            }
+            if(!is_null($descripcion))
+            {
+                $clasificacion_servicio->setMargenUtilidad($margen_utilidad);
+            }
+            if(!is_null($garantia))
+            {
+                $clasificacion_servicio->setDescripcion($garantia);
+            }
+            if(!is_null($nombre))
+            {
+                $clasificacion_servicio->setNombre(trim($nombre));
+            }
+            
+            //Se guardan los cambios realizados en la clasificacion de servicio.
+            //Si se obtienen impuestos y/o retenciones, se actualizan o guardan los elementos obtenidos
+            //de la lista. Despues, se recorren aquellos que hay actualmente y se buscan en la lista obtenida,
+            //se eliminana aquellos que no se encuentren en la lista obtenida.
+            DAO::transBegin();
+            try
+            {
+                ClasificacionServicioDAO::save($clasificacion_servicio);
+                if(!is_null($impuestos))
+                {
+                    $impuesto_clasificacion_servicio = new ImpuestoClasificacionServicio(
+                            array( "id_clasificacion_servicio" => $id_clasificacion_servicio ) );
+                    foreach($impuestos as $impuesto)
+                    {
+                        if(is_null(ImpuestoDAO::getByPK($impuesto)))
+                                throw new Exception("El impuesto con id ".$impuesto." no existe");
+                        $impuesto_clasificacion_servicio->setIdImpuesto($impuesto);
+                        ImpuestoClasificacionServicioDAO::save($impuesto_clasificacion_servicio);
+                    }
+                    $impuestos_clasificacion_servicio = ImpuestoClasificacionServicioDAO::search(
+                            new ImpuestoClasificacionServicio( array( "id_clasificacion_servicio" => $id_clasificacion_servicio ) ) );
+                    foreach($impuestos_clasificacion_servicio as $i_c_s)
+                    {
+                        $encontrado = false;
+                        foreach($impuestos as $impuesto)
+                        {
+                            if($impuesto == $i_c_s->getIdImpuesto())
+                                $encontrado = true;
+                        }
+                        if(!$encontrado)
+                        {
+                            ImpuestoClasificacionServicioDAO::delete($i_c_s);
+                        }
+                    }
+                }/* Fin if de impuestos */
+                if(!is_null($retenciones))
+                {
+                    $retencion_clasificacion_servicio = new RetencionClasificacionServicio( 
+                            array( "id_clasificacion_servicio" => $id_clasificacion_servicio ) );
+                    foreach($retenciones as $retencion)
+                    {
+                        if(is_null(RetencionDAO::getByPK($retencion)))
+                                throw new Exception("La retencion con id ".$retencion." no existe");
+                        $retencion_clasificacion_servicio->setIdRetencion($retencion);
+                        RetencionClasificacionServicioDAO::save($retencion_clasificacion_servicio);
+                    }
+                    $retenciones_clasificacion_servicio = RetencionClasificacionServicioDAO::search(
+                            new RetencionClasificacionServicio( array( "id_clasificacion_servicio" => $id_clasificacion_servicio ) ) );
+                    foreach($retenciones_clasificacion_servicio as $r_c_s)
+                    {
+                        $encontrado = false;
+                        foreach($retenciones as $retencion)
+                        {
+                            if($retencion == $r_c_s->getIdRetencion())
+                                $encontrado = true;
+                        }
+                        if(!$encontrado)
+                        {
+                            RetencionClasificacionServicioDAO::delete($r_c_s);
+                        }
+                    }
+                }/* Fin if de retenciones */
+            }/* Fin try */
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo editar la clasificacion de servicio ".$id_clasificacion_servicio." : ".$e);
+                throw new Exception("No se pudo editar la clasificacion de servicio ");
+            }
+            DAO::transEnd();
+            Logger::log("Clasificacion de servicio editado exitosamente");
 	}
   
 	/**
@@ -223,7 +454,7 @@ require_once("interfaces/Servicios.interface.php");
  	 * @param id_sucursal int Id de la sucursal de la cual se listaran sus ordenes
  	 * @param fecha_desde string Fecha en que se realizo la orden
  	 * @param fecha_hasta string fecha en que se entregara una orden
- 	 * @return ordenes json Objeto que contendrá las ordenes.
+ 	 * @return ordenes json Objeto que contendrï¿½ las ordenes.
  	 **/
 	public static function ListaOrden
 	(
@@ -315,7 +546,7 @@ require_once("interfaces/Servicios.interface.php");
  	 *
  	 *Da de baja un servicio que ofrece una empresa
  	 *
- 	 * @param id_servicio int Id del servicio que será eliminado
+ 	 * @param id_servicio int Id del servicio que serï¿½ eliminado
  	 **/
 	public static function Eliminar
 	(

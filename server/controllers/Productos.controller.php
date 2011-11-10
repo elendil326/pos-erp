@@ -286,6 +286,9 @@ require_once("interfaces/Productos.interface.php");
                 if(is_string($e))
                     return $e;
             }
+            
+            //No se encontro error, regresa verdadero
+            return true;
         }
         
         /*
@@ -326,6 +329,9 @@ require_once("interfaces/Productos.interface.php");
                 if(is_string($e))
                     return $e;
             }
+            
+            //No se encontro error, regresa true
+            return true;
         }
         
         /*
@@ -407,6 +413,9 @@ require_once("interfaces/Productos.interface.php");
                 if(is_string($e))
                     return $e;
             }
+            
+            //No se encontro error, regresa true
+            return true;
         }
       
         
@@ -1630,7 +1639,7 @@ Ejemplo: 1 kg = 2.204 lb
             }
             if(!is_null($nombre))
             {
-                $unidad->setNombre($nombre);
+                $unidad->setNombre(trim($nombre));
             }
             if(!is_null($es_entero))
             {
