@@ -1508,7 +1508,7 @@ Ejemplo: 1 kg = 2.204 lb
             catch(Exception $e)
             {
                 DAO::transRollback();
-                Logger::error("No se pudo eliminar la equivalencia entre la unidad ".$id_unidad." y las unidad ".$id_unidades.": ".$e);
+                Logger::error("No se pudo eliminar la equivalencia entre la unidad ".$id_unidad." y las unidades ".$id_unidades.": ".$e);
                 throw new Exception("No se pudo eliminar la equivalencia");
             }
             DAO::transEnd();
@@ -1527,8 +1527,19 @@ Ejemplo: 1 kg = 2.204 lb
 		$orden = null
 	)
 	{  
-  
-  
+            Logger::log("Listando equivalencias");
+            
+            //valida la variable orden
+            if(!is_null($orden))
+            {
+                if( $orden != "id_unidad" && $orden != "equivalencia" && $orden != "id_unidades")
+                {
+                    Logger::error("La variable orden (".$orden.") es invalida");
+                    throw new Exception("La variable orden (".$orden.") es invalida");
+                }
+            }
+            
+            return UnidadEquivalenciaDAO::getAll(null,null,$orden);
 	}
   
 	/**
