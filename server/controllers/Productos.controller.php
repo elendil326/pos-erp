@@ -911,11 +911,6 @@ NOTA: Se crea un producto tipo = 1 que es para productos
                 $producto->setMetodoCosteo($metodo_costeo);
             }
             
-            if(!is_null($activo))
-            {
-                $producto->setActivo($activo);
-            }
-            
             if(!is_null($codigo_producto))
             {
                 $producto->setCodigoProducto($codigo_producto);
@@ -991,16 +986,100 @@ NOTA: Se crea un producto tipo = 1 que es para productos
                 //actuales y si alguno no se encuentra en la lista se elimina.
                 if(!is_null($empresas))
                 {
+                    $producto_empresa = new ProductoEmpresa( array( "id_producto" => $id_producto ) );
                     foreach($empresas as $empresa)
                     {
-                        
+                        $validar = self::validarParametrosProductoEmpresa($empresa["id_empresa"],$empresa["precio_utilidad"],$empresa["es_margen_utilidad"]);
+                        if(is_string($validar))
+                            throw new Exception($validar);
+
+                        $producto_empresa->setIdEmpresa($empresa["id_empresa"]);
+                        $producto_empresa->setPrecioUtilidad($empresa["precio_utilidad"]);
+                        $producto_empresa->setEsMargenUtilidad($empresa["es_margen_utilidad"]);
+                        ProductoEmpresaDAO::save($producto_empresa);
                     }
-                }
+                    $productos_empresa = ProductoEmpresaDAO::search( new ProductoEmpresa( array ( "id_producto" => $id_producto ) ) );
+                    foreach($productos_empresa as $p_e)
+                    {
+                        $encontrado = false;
+                        foreach($empresas as $empresa)
+                        {
+                            if($empresa["id_empresa"]==$p_e->getIdEmpresa())
+                            {
+                                $encontrado = true;
+                                break;
+                            }
+                        }
+                        if(!$encontrado)
+                            ProductoEmpresaDAO::delete ($p_e);
+                    }
+                }/* Fin if de empresas */
+                if(!is_null($clasificaciones))
+                {
+                    $producto_clasificacion = new ProductoClasificacion( array( "id_producto" => $id_producto ) );
+                    foreach($clasificaciones as $clasificacion)
+                    {
+                        $c = ClasificacionProductoDAO::getByPK($clasificacion);
+                        if(is_null($c))
+                                throw new Exception("La clasificacion de producto con id ".$clasificacion." no existe");
+                        
+                        if(!$c->getActiva())
+                            throw new Exception("La clasificaicon de producto con id ".$clasificacion." no esta activa");
+                        
+                        $producto_clasificacion->setIdClasificacionProducto($clasificacion);
+                        ProductoClasificacionDAO::save($producto_clasificacion);
+                    }
+                    $productos_clasificacion = ProductoClasificacionDAO::search( new ProductoClasificacion( array("id_producto" => $id_producto) ) );
+                    foreach($productos_clasificacion as $p_c)
+                    {
+                        $encontrado = false;
+                        foreach($clasificaciones as $clasificacion)
+                        {
+                            if($clasificacion == $p_c->getIdClasificacionProducto() )
+                            {
+                                $encontrado = true;
+                                break;
+                            }
+                        }
+                        if(!$encontrado)
+                            ProductoClasificacionDAO::delete ($p_c);
+                    }
+                }/* Fin if de clasificaciones */
+                if(!is_null($impuestos))
+                {
+                    $impuesto_producto = new ImpuestoProducto( array( "id_producto" => $producto->getIdProducto() ) );
+                    foreach($impuestos as $impuesto)
+                    {
+                        if(is_null(ImpuestoDAO::getByPK($impuesto)))
+                                throw new Exception ("El impuesto con id ".$impuesto." no existe");
+                        $impuesto_producto->setIdImpuesto($impuesto);
+                        ImpuestoProductoDAO::save($impuesto_producto);
+                    }
+                    $impuestos_producto = ImpuestoProductoDAO::search( new ImpuestoProducto( array( "id_producto" => $id_producto ) ) );
+                    foreach($impuestos_producto as $i_p)
+                    {
+                        $encontrado = false;
+                        foreach($impuestos as $impuesto)
+                        {
+                            if($impuesto == $i_p->getIdImpuesto())
+                            {
+                                $encontrado = true;
+                                break;
+                            }
+                        }
+                        if(!$encontrado)
+                            ImpuestoProductoDAO::delete ($i_p);
+                    }
+                }/* Fin if de impuestos */
             }
             catch(Exception $e)
             {
-                
+                DAO::transRollback();
+                Logger::error("El producto no pudo ser editado: ".$e);
+                throw new Exception("El producto no pudo ser editado");
             }
+            DAO::transEnd();
+            Logger::log("Producto editado exitosamente");
             
 	}
   
