@@ -460,17 +460,75 @@ require_once("interfaces/Servicios.interface.php");
 	public static function NuevaClasificacion
 	(
 		$nombre, 
-		$garantia = "", 
-		$descripcion = "", 
-		$margen_utilidad = "", 
-		$descuento = "", 
+		$garantia = null, 
+		$descripcion = null, 
+		$margen_utilidad = null, 
+		$descuento = null, 
 		$activa = 1, 
-		$impuestos = "", 
-		$retenciones = ""
+		$impuestos = null, 
+		$retenciones = null
 	)
 	{  
-  
-  
+            Logger::log("Creando nueva clasificacion de servicio");
+            
+            //se validan los parametros obtendios
+            $validar = self::validarParametrosClasificacionServicio(null,$nombre,$garantia,$descripcion,$margen_utilidad,$descuento,$activa);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            //se inicializa el registro de clasificacion servicio
+            $clasificacion_servicio = new ClasificacionServicio( array( 
+                                            "nombre"            => trim($nombre),
+                                            "garantia"          => $garantia,
+                                            "descripcion"       => $descripcion,
+                                            "margen_utilidad"   => $margen_utilidad,
+                                            "descuento"         => $descuento,
+                                            "activa"            => $activa
+                                                        )
+                                                    );
+            
+            //Se guarda el registro. Si se recibieron impuestos y/o retenciones 
+            //se crean los registros y se guardan
+            DAO::transBegin();
+            try
+            {
+                ClasificacionServicioDAO::save($clasificacion_servicio);
+                
+                if(!is_null($impuestos))
+                {
+                    $impuesto_clasificacion_servicio = new ImpuestoClasificacionServicio(
+                            array( "id_clasificacion_servicio" => $clasificacion_servicio->getIdClasificacionServicio() ) );
+                    foreach($impuestos as $impuesto)
+                    {
+                        if(is_null(ImpuestoDAO::getByPK($impuesto)))
+                                throw new Exception("El impuesto con id ".$impuesto." no existe");
+                        $impuesto_clasificacion_servicio->setIdImpuesto($impuesto);
+                        ImpuestoClasificacionServicioDAO::save($impuesto_clasificacion_servicio);
+                    }
+                }/* Fin if de impuestos*/
+                if(!is_null($retenciones))
+                {
+                    $retencion_clasificacion_servicio = new RetencionClasificacionServicio( 
+                            array( "id_clasificacion_servicio" => $clasificacion_servicio->getIdClasificacionServicio() ) );
+                    foreach($retenciones as $retencion)
+                    {
+                        if(is_null(RetencionDAO::getByPK($retencion)))
+                                throw new Exception("La retencion con id ".$retencion." no existe");
+                        $retencion_clasificacion_servicio->setIdRetencion($retencion);
+                        RetencionClasificacionServicioDAO::save($retencion_clasificacion_servicio);
+                    }
+                }/* Fin if de retenciones */
+            }/* Fin try */
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo crear la nueva clasificacion de servicio: ".$e);
+                throw new Exception("No se pudo crear la nueva clasificacion de servicio");
+            }
+            DAO::transEnd();
 	}
   
 	/**
