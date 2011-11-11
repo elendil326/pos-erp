@@ -529,6 +529,8 @@ require_once("interfaces/Servicios.interface.php");
                 throw new Exception("No se pudo crear la nueva clasificacion de servicio");
             }
             DAO::transEnd();
+            Logger::log("Clasificacion de servicio creada exitosamente");
+            return array( "id_clasificacion_servicio" => $clasificacion_servicio->getIdClasificacionServicio() );
 	}
   
 	/**
@@ -546,11 +548,84 @@ require_once("interfaces/Servicios.interface.php");
 		$id_empresa = null, 
 		$id_sucursal = null, 
 		$activo = null, 
-		$orden = ""
+		$orden = null
 	)
 	{  
-  
-  
+            Logger::log("Listando servicios");
+            
+            //valida el parametro orden
+            if(!is_null($orden))
+            {
+                if
+                (
+                        $orden != "id_servicio"         &&
+                        $orden != "nombre_servicio"     &&
+                        $orden != "metodo_costeo"       &&
+                        $orden != "codigo_servicio"     &&
+                        $orden != "compra_en_mostrador" &&
+                        $orden != "activo"              &&
+                        $orden != "margen_de_utilidad"  &&
+                        $orden != "descripcion_servicio"&&
+                        $orden != "costo_estandar"      &&
+                        $orden != "garantia"            &&
+                        $orden != "control_existencia"  &&
+                        $orden != "foto_servicio"       &&
+                        $orden != "precio"
+                )
+                {
+                    Logger::error("La variable orden (".$orden.") no es valida");
+                    throw new Exception("La variable orden (".$orden.") no es valida");
+                }
+            }/* Fin if de orden */
+            
+            /*
+             * A continuacion, se validan los demas parametros. Si mas de uno fue recibido,
+             * se realiza una interseccion entre sus busquedas separadas. Los parametros que no se
+             * reciban traeran a todos los elementos o seran igual a alguno anterior para mantener las propiedades 
+             * de la interseccion.
+             */
+            $servicio_criterio_1 = array();
+            $servicio_criterio_2 = array();
+            $servicio_criterio_3 = array();
+            
+            if(!is_null($activo))
+            {
+                $servicio_criterio_1 = ServicioDAO::search( new Servicio( array( "activo" => $activo ) ) , $orden);
+            }
+            else
+            {
+                $servicio_criterio_1 = ServicioDAO::getAll(null,null,$orden);
+            }
+            
+            if(!is_null($id_empresa))
+            {
+                $servicios_empresa = ServicioEmpresaDAO::search( new ServicioEmpresa( array( "id_empresa" => $id_empresa ) ) );
+                foreach($servicios_empresa as $servicio_empresa)
+                {
+                    array_push($servicio_criterio_2,  ServicioDAO::getByPK($servicio_empresa->getIdServicio()));
+                }
+            }
+            else
+            {
+                $servicio_criterio_2 = $servicio_criterio_1;
+            }
+            
+            if(!is_null($id_sucursal))
+            {
+                $servicios_sucursal = ServicioSucursalDAO::search( new ServicioSucursal( array( "id_sucursal" => $id_sucursal ) ) );
+                foreach($servicios_sucursal as $servicio_sucursal)
+                {
+                    array_push($servicio_criterio_3, ServicioDAO::getByPK($servicio_sucursal->getIdServicio()));
+                }
+            }
+            else
+            {
+                $servicio_criterio_3 = $servicio_criterio_2;
+            }
+            
+            $servicios = array_intersect($servicio_criterio_1, $servicio_criterio_2, $servicio_criterio_3);
+            Logger::log("Lista recuperada exitosamente con ".count($servicios)." elementos");
+            return $servicios;
 	}
   
 	/**
