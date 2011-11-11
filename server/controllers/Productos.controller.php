@@ -177,12 +177,18 @@ require_once("interfaces/Productos.interface.php");
                     return $e;
             }
             
-            //valida que el codigo de producto este en rango
+            //valida que el codigo de producto este en rango y que no se repita
             if(!is_null($codigo_producto))
             {
                 $e = self::validarString($codigo_producto, 30, "codigo de producto");
                 if(is_string($e))
                     return $e;
+                $productos = ProductoDAO::search( new Producto( array( "codigo_producto" => trim($codigo_producto) ) ) );
+                foreach($productos as $producto)
+                {
+                    if($producto->getActivo())
+                        return "El codigo de producto (".$codigo_producto.") ya esta en uso por el producto ".$producto->getIdProducto();
+                }
             }
             
             //valida que el nombre del producto este en rango y que no se repita
@@ -255,12 +261,18 @@ require_once("interfaces/Productos.interface.php");
                     return $e;
             }
             
-            //valida que el codigo de barras este en rango
+            //valida que el codigo de barras este en rango y que no se repita
             if(!is_null($codigo_de_barras))
             {
                 $e = self::validarString($codigo_de_barras, 30, "codigo de barras");
                 if(is_string($e))
                     return $e;
+                $productos = ProductoDAO::search( new Producto( array( "codigo_de_barras" => trim($codigo_de_barras) ) ) );
+                foreach($productos as $producto)
+                {
+                    if($producto->getActivo())
+                        return "El codigo de barras (".$codigo_de_barras.") ya esta en uso por el producto ".$producto->getIdProducto();
+                }
             }
             
             //valida que el peso del producto este en rango
@@ -756,7 +768,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos
                                     "compra_en_mostrador"   => $compra_en_mostrador,
                                     "metodo_costeo"         => $metodo_costeo,
                                     "activo"                => $activo,
-                                    "codigo_producto"       => $codigo_producto,
+                                    "codigo_producto"       => trim($codigo_producto),
                                     "nombre_producto"       => trim($nombre_producto),
                                     "garantia"              => $garantia,
                                     "costo_estandar"        => $costo_estandar,
@@ -766,7 +778,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos
                                     "descripcion"           => $descripcion_producto,
                                     "foto_del_producto"     => $foto_del_producto,
                                     "costo_extra_almacen"   => $costo_extra_almacen,
-                                    "codigo_de_barras"      => $codigo_de_barras,
+                                    "codigo_de_barras"      => trim($codigo_de_barras),
                                     "peso_producto"         => $peso_producto,
                                     "id_unidad"             => $id_unidad,
                                     "precio"                => $precio
@@ -1015,7 +1027,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos
             
             if(!is_null($codigo_producto))
             {
-                $producto->setCodigoProducto($codigo_producto);
+                $producto->setCodigoProducto(trim($codigo_producto));
             }
             
             if(!is_null($nombre_producto))
@@ -1060,7 +1072,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos
             
             if(!is_null($codigo_de_barras))
             {
-                $producto->setCodigoDeBarras($codigo_de_barras);
+                $producto->setCodigoDeBarras(trim($codigo_de_barras));
             }
             
             if(!is_null($peso_producto))

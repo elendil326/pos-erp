@@ -207,6 +207,235 @@ require_once("interfaces/Servicios.interface.php");
                     return $e;
             }
             
+            //no se encontro error, regresa verdadero
+            return true;
+            
+        }
+        
+        /*
+         * Validar parametros de la tabla servicio. Regresa un string con el error en caso de
+         * encontrarse alguno. En caso contrario regresa verdadero
+         */
+        private static function validarParametrosServicio
+        (
+                $id_servicio = null,
+                $nombre_servicio = null,
+                $metodo_costeo = null,
+                $codigo_servicio = null,
+                $compra_en_mostrador = null,
+                $activo = null,
+                $margen_de_utilidad = null,
+                $descripcion_servicio = null,
+                $costo_estandar = null,
+                $garantia = null,
+                $control_existencia = null,
+                $foto_servicio = null,
+                $precio = null
+        )
+        {
+            //valida que el servicio exista y que este activo
+            if(!is_null($id_servicio))
+            {
+                $servicio = ServicioDAO::getByPK($id_servicio);
+                if(is_null($servicio))
+                    return "El servicio ".$id_servicio." no existe";
+                if(!$servicio->getActivo())
+                    return "El servicio ".$id_servicio." esta inactivo";
+            }
+            
+            //valida el rango del nombre de servicio y que no se repita
+            if(!is_null($nombre_servicio))
+            {
+                $e = self::validarString($nombre_servicio, 50, "nombre de servicio");
+                if(is_string($e))
+                    return $e;
+                $servicios = ServicioDAO::search( new Servicio( array( "nombre_servicio" => trim($nombre_servicio) ) ) );
+                foreach($servicios as $servicio)
+                {
+                    if($servicio->getActivo())
+                        return "El nombre de servicio (".$nombre_servicio.") ya esta en uso por el servicio ".$servicio->getIdServicio();
+                }
+            }
+            
+            //valida el metodo de costeo
+            if(!is_null($metodo_costeo))
+            {
+                if($metodo_costeo!="precio" && $metodo_costeo!="margen")
+                    return "El metodo de costeo (".$metodo_costeo.") es invalido";
+            }
+            
+            //valida que el codigo de servicio este en rango y que no se repita
+            if(!is_null($codigo_servicio))
+            {
+                $e = self::validarString($codigo_servicio, 20, "codigo de servicio");
+                if(is_string($e))
+                    return $e;
+                $servicios = ServicioDAO::search( new Servicio( array( "codigo_servicio" => $codigo_servicio ) ) );
+                foreach($servicios as $servicio)
+                {
+                    if($servicio->getActivo())
+                        return "El codigo de servicio (".$codigo_servicio.") esta siendo usado por el servicio ".$servicio->getIdServicio ();
+                }
+            }
+            
+            //valida el boleano compra en mostrador
+            if(!is_null($compra_en_mostrador))
+            {
+                $e = self::validarNumero($compra_en_mostrador, 1, "compra en mostrador");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida el boleano activo
+            if(!is_null($activo))
+            {
+                $e = self::validarNumero($activo, 1, "activo");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida el margen de utilidad
+            if(!is_null($margen_de_utilidad))
+            {
+                $e = self::validarNumero($margen_de_utilidad, 1.8e200, "margen de utilidad");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida la descripcion del servicio
+            if(!is_null($descripcion_servicio))
+            {
+                $e = self::validarString($descripcion_servicio, 255, "descripcion de servicio");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida el costo estandar
+            if(!is_null($costo_estandar))
+            {
+                $e = self::validarNumero($costo_estandar, 1.8e200, "costo estandar");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida la garantia
+            if(!is_null($garantia))
+            {
+                $e = self::validarNumero($garantia, PHP_INT_MAX, "garantia");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida el control de existencia
+            if(!is_null($control_existencia))
+            {
+                $e = self::validarNumero($control_existencia, PHP_INT_MAX, "control de existencia");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida la foto del servicio
+            if(!is_null($foto_servicio))
+            {
+                $e = self::validarString($foto_servicio, 50, "foto del servicio");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida el precio
+            if(!is_null($precio))
+            {
+                $e = self::validarNumero($precio, 1.8e200, "precio");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //No se encontro error, regresa verdadero
+            return true;
+        }
+        
+        /*
+         * Valida los parametros de la tabla servicio_empresa. Regresa un string con el error
+         * en caso de encontrarse alguno, de lo contrario regresa verdadero
+         */
+        private static function validarParametrosServicioEmpresa
+        (
+                $id_empresa = null,
+                $precio_utilidad = null,
+                $es_margen_utilidad = null
+        )
+        {
+            //valida que la empresa exista y q este activa
+            if(!is_null($id_empresa))
+            {
+                $empresa = EmpresaDAO::getByPK($id_empresa);
+                if(is_null($empresa))
+                    return "La empresa con id ".$id_empresa." no existe";
+                
+                if(!$empresa->getActivo())
+                    return "La empresa ".$id_empresa." no esta activa";
+            }
+            
+            //valida que el precio_utilidad este en rango
+            if(!is_null($precio_utilidad))
+            {
+                $e = self::validarNumero($precio_utilidad, 1.8e200, "precio utilidad");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida el boleano es_margen_utilidad
+            if(!is_null($es_margen_utilidad))
+            {
+                $e = self::validarNumero($es_margen_utilidad, 1, "es margen de utilidad");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //No se encontro error
+            return true;
+        }
+        
+        /*
+         * Valida los parametros de la tabla servicio_sucursal. Regresa un string con el error
+         * si se encuentra alguno. De lo contrario regresa verdadero
+         */
+        private static function validarParametrosServicioSucursal
+        (
+                $id_sucursal = null,
+                $precio_utilidad = null,
+                $es_margen_utilidad = null
+        )
+        {
+            //valida que la sucursal exista y q este activa
+            if(!is_null($id_sucursal))
+            {
+                $sucursal = SucursalDAO::getByPK($id_sucursal);
+                if(is_null($sucursal))
+                    return "La sucursal con id ".$id_sucursal." no existe";
+                
+                if(!$sucursal->getActiva())
+                    return "La sucursal ".$id_sucursal." no esta activa";
+            }
+            
+            //valida que el precio_utilidad este en rango
+            if(!is_null($precio_utilidad))
+            {
+                $e = self::validarNumero($precio_utilidad, 1.8e200, "precio utilidad");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida el boleano es_margen_utilidad
+            if(!is_null($es_margen_utilidad))
+            {
+                $e = self::validarNumero($es_margen_utilidad, 1, "es margen de utilidad");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //No se encontro error
+            return true;
         }
         
         
@@ -667,11 +896,121 @@ require_once("interfaces/Servicios.interface.php");
 		$clasificaciones = null, 
 		$margen_de_utilidad = null, 
 		$control_de_existencia = null, 
-		$foto_servicio = null
+		$foto_servicio = null,
+                $precio = null
 	)
 	{  
-  
-  
+            Logger::log("Creando nuevo servicio");
+            
+            //se validan los parametros recibidos
+            $validar = self::validarParametrosServicio(null,$nombre_servicio,$metodo_costeo,
+                    $codigo_servicio,$compra_en_mostrador,$activo,$margen_de_utilidad,$descripcion_servicio,
+                    $costo_estandar,$garantia,$control_de_existencia,$foto_servicio,$precio);
+            
+            //valida que se haya recibido el parametro esperado por el metodo de costeo
+            if( ( $metodo_costeo == "precio" && is_null($precio) ) || ( $metodo_costeo == "margen" && is_null($margen_de_utilidad) ) )
+            {
+                Logger::error("No se recibio el parametro correspondiente al metodo de costeo (".$metodo_costeo.")");
+                throw new Exception("No se recibio el parametro correspondiente al metodo de costeo (".$metodo_costeo.")");
+            }
+            
+            //Se inicializa el registro de servicio
+            $servicio = new Servicio( array( 
+                                "costo_estandar"            => $costo_estandar,
+                                "metodo_costeo"             => $metodo_costeo,
+                                "nombre_servicio"           => trim($nombre_servicio),
+                                "codigo_servicio"           => trim($codigo_servicio),
+                                "compra_en_mostrador"       => $compra_en_mostrador,
+                                "activo"                    => $activo,
+                                "margen_de_utilidad"        => $margen_de_utilidad,
+                                "descripcion_de_servicio"   => $descripcion_servicio,
+                                "costo_estandar"            => $costo_estandar,
+                                "garantia"                  => $garantia,
+                                "control_existencia"        => $control_de_existencia,
+                                "foto_servicio"             => $foto_servicio,
+                                "precio"                    => $precio
+                                    ) 
+                                        );
+            
+            //Se guarda el registro. Si se reciben empresas, sucursales, impuestos y/o retenciones, se guardan 
+            //los respectivos registros con la informacion obtenida
+            
+            DAO::transBegin();
+            try
+            {
+                ServicioDAO::save($servicio);
+                if(!is_null($empresas))
+                {
+                    $servicio_empresa = new ServicioEmpresa( array( "id_servicio" => $servicio->getIdServicio() ) );
+                    foreach($empresas as $empresa)
+                    {
+                        $validar = self::validarParametrosServicioEmpresa($empresa["id_empresa"],$empresa["precio_utilidad"],$empresa["es_margen_utilidad"]);
+                        if(is_string($validar))
+                            throw new Exception($validar);
+                        $servicio_empresa->setIdEmpresa($empresa["id_empresa"]);
+                        $servicio_empresa->setPrecioUtilidad($empresa["precio_utilidad"]);
+                        $servicio_empresa->setEsMargenUtilidad($empresa["es_margen_utilidad"]);
+                        ServicioEmpresaDAO::save($servicio_empresa);
+                    }
+                }/* Fin if de empresas */
+                if(!is_null($sucursales))
+                {
+                    $servicio_sucursal = new ServicioSucursal( array( "id_servicio" => $servicio->getIdServicio() ) );
+                    foreach($sucursales as $sucursal)
+                    {
+                        $validar = self::validarParametrosServicioSucursal($sucursal["id_sucursal"],$sucursal["precio_utilidad"],$sucursal["es_margen_utilidad"]);
+                        if(is_string($validar))
+                            throw new Exception($validar);
+                        $servicio_sucursal->setIdSucursal($sucursal["id_sucursal"]);
+                        $servicio_sucursal->setPrecioUtilidad($sucursal["precio_utilidad"]);
+                        $servicio_sucursal->setEsMargenUtilidad($sucursal["es_margen_utilidad"]);
+                        ServicioSucursalDAO::save($servicio_sucursal);
+                    }
+                }/* Fin if de sucursales */
+                if(!is_null($clasificaciones))
+                {
+                    $servicio_clasificacion = new ServicioClasificacion( array( "id_servicio" => $servicio->getIdServicio() ) );
+                    foreach($clasificaciones as $clasificacion)
+                    {
+                        if(is_null(ClasificacionServicioDAO::getByPK($clasificacion)))
+                                throw new Exception("La clasificacion ".$clasificacion." no existe");
+                        $servicio_clasificacion->setIdClasificacionServicio($clasificacion);
+                        ServicioClasificacionDAO::save($servicio_clasificacion);
+                    }
+                }/* Fin if de clasificaciones */
+                if(!is_null($impuestos))
+                {
+                    $impuesto_servicio = new ImpuestoServicio( array( "id_servicio" => $servicio->getIdServicio() ) );
+                    foreach($impuestos as $impuesto)
+                    {
+                        if(is_null(ImpuestoDAO::getByPK($impuesto)))
+                                throw new Exception("El impuesto ".$impuesto." no existe");
+                    }
+                    $impuesto_servicio->setIdImpuesto($impuesto);
+                    ImpuestoServicioDAO::save($impuesto_servicio);
+                }/* Fin if de impuestos */
+                if(!is_null($retenciones))
+                {
+                    $retencion_servicio = new RetencionServicio( array( "id_servicio" => $servicio->getIdServicio() ) );
+                    foreach($retenciones as $retencion)
+                    {
+                        if(is_null(RetencionDAO::getByPK($retencion)))
+                                throw new Exception("La retencion ".$retencion." no existe");
+                    }
+                    $retencion_servicio->setIdRetencion($retencion);
+                    RetencionServicioDAO::save($retencion_servicio);
+                }/* Fin if de impuestos */
+            }/* Fin try */
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo crear el nuevo servicio: ".$e);
+                throw new Exception("No se pudo crear el nuevo servicio");
+            }
+            DAO::transEnd();
+            Logger::log("Servicio creado exitosamente");
+            return array( "id_servicio" => $servicio->getIdServicio() );
+            
 	}
   
 	/**
@@ -714,7 +1053,8 @@ require_once("interfaces/Servicios.interface.php");
 		$margen_de_utilidad = null, 
 		$clasificaciones = null, 
 		$retenciones = null, 
-		$costo_estandar = null
+		$costo_estandar = null,
+                $precio = null
 	)
 	{  
   

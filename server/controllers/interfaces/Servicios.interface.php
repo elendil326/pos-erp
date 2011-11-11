@@ -119,7 +119,8 @@
 		$margen_de_utilidad = null, 
 		$clasificaciones = null, 
 		$retenciones = null, 
-		$costo_estandar = null
+		$costo_estandar = null,
+                $precio = null
 	);  
   
   
@@ -129,7 +130,7 @@
  	 *
  	 *Da de baja un servicio que ofrece una empresa
  	 *
- 	 * @param id_servicio int Id del servicio que será eliminado
+ 	 * @param id_servicio int Id del servicio que serï¿½ eliminado
  	 **/
   static function Eliminar
 	(
@@ -199,7 +200,8 @@
 		$clasificaciones = null, 
 		$margen_de_utilidad = null, 
 		$control_de_existencia = null, 
-		$foto_servicio = null
+		$foto_servicio = null,
+                $precio = null
 	);  
   
   
@@ -244,7 +246,7 @@
  	 * @param id_sucursal int Id de la sucursal de la cual se listaran sus ordenes
  	 * @param fecha_desde string Fecha en que se realizo la orden
  	 * @param fecha_hasta string fecha en que se entregara una orden
- 	 * @return ordenes json Objeto que contendrá las ordenes.
+ 	 * @return ordenes json Objeto que contendrï¿½ las ordenes.
  	 **/
   static function ListaOrden
 	(
