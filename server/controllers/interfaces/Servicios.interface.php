@@ -248,10 +248,12 @@
  	 **/
   static function ListaOrden
 	(
-		$id_empresa = "", 
-		$id_sucursal = "", 
-		$fecha_desde = "", 
-		$fecha_hasta = ""
+		$fecha_hasta = null, 
+		$fecha_desde = null,
+                $id_servicio = null,
+                $id_usuario_venta = null,
+                $activa = null,
+                $cancelada = null
 	);  
   
   

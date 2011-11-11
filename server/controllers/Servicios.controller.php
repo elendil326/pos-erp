@@ -1275,14 +1275,63 @@ require_once("interfaces/Servicios.interface.php");
  	 **/
 	public static function ListaOrden
 	(
-		$id_empresa = "", 
-		$id_sucursal = "", 
-		$fecha_desde = "", 
-		$fecha_hasta = ""
+		$fecha_hasta = null, 
+		$fecha_desde = null,
+                $id_servicio = null,
+                $id_usuario_venta = null,
+                $activa = null,
+                $cancelada = null
 	)
 	{  
-  
-  
+            Logger::log("listando las ordenes");
+            
+            //se valida si se recibieron paametros o no para saber que metodo usar
+            $parametros = false;
+            if
+            (
+                    !is_null($fecha_hasta)      ||
+                    !is_null($fecha_desde)      ||
+                    !is_null($id_servicio)      ||
+                    !is_null($id_usuario_venta) ||
+                    !is_null($activa)           ||
+                    !is_null($cancelada)        
+            )
+                $parametros = true;
+            $ordenes = array();
+            if($parametros)
+            {
+                //Si se reciben parametros, se usan dos objetos para comparar las fechas, el primero alamcena los demas parametros
+                //y el otro almacena limites de fechas para traer solo las ordenes en rango
+                $orden_criterio_1 = new OrdenDeServicio(
+                        array(
+                            "id_servicio"       => $id_servicio,
+                            "id_usuario_venta"  => $id_usuario_venta,
+                            "activa"            => $activa,
+                            "cancelada"         => $cancelada
+                        )
+                        );
+                $orden_criterio_2 = new OrdenDeServicio();
+                if(!is_null($fecha_desde))
+                {
+                    $orden_criterio_1->setFechaOrden($fecha_desde);
+                    if(!is_null($fecha_hasta))
+                        $orden_criterio_2->setFechaOrden ($fecha_hasta);
+                    else
+                        $orden_criterio_2->setFechaOrden (date("Y-m-d H:i:s"));
+                }
+                else if(!is_null($fecha_hasta))
+                {
+                    $orden_criterio_1->setFechaOrden($fecha_hasta);
+                    $orden_criterio_2->setFechaOrden("1000-01-01 00:00:01");
+                }
+                $ordenes = OrdenDeServicioDAO::byRange($orden_criterio_1, $orden_criterio_2);
+            }
+            else
+            {
+                $ordenes = OrdenDeServicioDAO::getAll();
+            }
+            Logger::log("Lista de ordenes traida exitosamente con ".count($ordenes)." elementos");
+            return $ordenes;
 	}
   
 	/**
