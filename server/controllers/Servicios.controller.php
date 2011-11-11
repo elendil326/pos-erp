@@ -985,9 +985,9 @@ require_once("interfaces/Servicios.interface.php");
                     {
                         if(is_null(ImpuestoDAO::getByPK($impuesto)))
                                 throw new Exception("El impuesto ".$impuesto." no existe");
+                        $impuesto_servicio->setIdImpuesto($impuesto);
+                        ImpuestoServicioDAO::save($impuesto_servicio);
                     }
-                    $impuesto_servicio->setIdImpuesto($impuesto);
-                    ImpuestoServicioDAO::save($impuesto_servicio);
                 }/* Fin if de impuestos */
                 if(!is_null($retenciones))
                 {
@@ -996,9 +996,9 @@ require_once("interfaces/Servicios.interface.php");
                     {
                         if(is_null(RetencionDAO::getByPK($retencion)))
                                 throw new Exception("La retencion ".$retencion." no existe");
+                        $retencion_servicio->setIdRetencion($retencion);
+                        RetencionServicioDAO::save($retencion_servicio);
                     }
-                    $retencion_servicio->setIdRetencion($retencion);
-                    RetencionServicioDAO::save($retencion_servicio);
                 }/* Fin if de impuestos */
             }/* Fin try */
             catch(Exception $e)
@@ -1047,7 +1047,6 @@ require_once("interfaces/Servicios.interface.php");
 		$codigo_servicio = null, 
 		$descripcion_servicio = null, 
 		$compra_en_mostrador = null, 
-		$activo = null, 
 		$control_de_existencia = null, 
 		$foto_servicio = null, 
 		$margen_de_utilidad = null, 
@@ -1057,8 +1056,211 @@ require_once("interfaces/Servicios.interface.php");
                 $precio = null
 	)
 	{  
-  
-  
+            Logger::log("Editando servicio ".$id_servicio);
+            
+            //valida los parametros recibidos
+            $validar = self::validarParametrosServicio($id_servicio,$nombre_servicio,
+                    $metodo_costeo,$codigo_servicio,$compra_en_mostrador,null,
+                    $margen_de_utilidad,$descripcion_servicio,$costo_estandar,$garantia,
+                    $control_de_existencia,$foto_servicio,$precio);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            //Los parametros que no sean nulos seran tomados como actualizacion
+            $servicio = ServicioDAO::getByPK($id_servicio);
+            if(!is_null($nombre_servicio))
+            {
+                $servicio->setNombreServicio(trim($nombre_servicio));
+            }
+            if(!is_null($garantia))
+            {
+                $servicio->setGarantia($garantia);
+            }
+            if(!is_null($metodo_costeo))
+            {
+                $servicio->setMetodoCosteo($metodo_costeo);
+            }
+            if(!is_null($codigo_servicio))
+            {
+                $servicio->setCodigoServicio(trim($codigo_servicio));
+            }
+            if(!is_null($descripcion_servicio))
+            {
+                $servicio->setDescripcionServicio($descripcion_servicio);
+            }
+            if(!is_null($compra_en_mostrador))
+            {
+                $servicio->setCompraEnMostrador($compra_en_mostrador);
+            }
+            if(!is_null($control_de_existencia))
+            {
+                $servicio->setControlExistencia($control_de_existencia);
+            }
+            if(!is_null($foto_servicio))
+            {
+                $servicio->setFotoServicio($foto_servicio);
+            }
+            if(!is_null($margen_de_utilidad))
+            {
+                $servicio->setMargenDeUtilidad($margen_de_utilidad);
+            }
+            if(!is_null($costo_estandar))
+            {
+                $servicio->setCostoEstandar($costo_estandar);
+            }
+            if(!is_null($precio))
+            {
+                $servicio->setPrecio($precio);
+            }
+            
+            //Se verifica que se cuente con el atributo que busca el metodo de costeo
+            if( ( $servicio->getMetodoCosteo() == "precio" && is_null($servicio->getPrecio()) ) || $servicio->getMetodoCosteo() == "margen" && is_null($servicio->getMargenDeUtilidad()) )
+            {
+                Logger::error("No se cuenta con el parametro ".$metodo_costeo);
+                throw new Exception("No se cuenta con el parametro ".$metodo_costeo);
+            }
+            
+            //Se actualiza el registro de servicio. Si se reciben listas de empresas, sucursales, clasificaciones, impuestos
+            //y/o retenciones, se recorre la lista y se guardan o actualizan los que se encuentren.
+            //Despues se recorren los registros acutales y se buscan en las listas recibidas, si no son encontrados son eliminados
+            //de la base de datos
+            DAO::transBegin();
+            try
+            {
+                ServicioDAO::save($servicio);
+                if(!is_null($empresas))
+                {
+                    $servicio_empresa = new ServicioEmpresa( array( "id_servicio" => $servicio->getIdServicio() ) );
+                    foreach($empresas as $empresa)
+                    {
+                        $validar = self::validarParametrosServicioEmpresa($empresa["id_empresa"],$empresa["precio_utilidad"],$empresa["es_margen_utilidad"]);
+                        if(is_string($validar))
+                            throw new Exception($validar);
+                        $servicio_empresa->setIdEmpresa($empresa["id_empresa"]);
+                        $servicio_empresa->setPrecioUtilidad($empresa["precio_utilidad"]);
+                        $servicio_empresa->setEsMargenUtilidad($empresa["es_margen_utilidad"]);
+                        ServicioEmpresaDAO::save($servicio_empresa);
+                    }
+                    $servicios_empresa = ServicioEmpresaDAO::search( new ServicioEmpresa( array( "id_servicio" => $id_servicio ) ) );
+                    foreach($servicios_empresa as $s_e)
+                    {
+                        $encontrado = false;
+                        foreach($empresas as $empresa)
+                        {
+                            if($empresa["id_empresa"] == $s_e->getIdEmpresa())
+                                $encontrado=true;
+                        }
+                        if(!$encontrado)
+                            ServicioEmpresaDAO::delete ($s_e);
+                    }
+                }/* Fin if de empresas */
+                if(!is_null($sucursales))
+                {
+                    $servicio_sucursal = new ServicioSucursal( array( "id_servicio" => $servicio->getIdServicio() ) );
+                    foreach($sucursales as $sucursal)
+                    {
+                        $validar = self::validarParametrosServicioSucursal($sucursal["id_sucursal"],$sucursal["precio_utilidad"],$sucursal["es_margen_utilidad"]);
+                        if(is_string($validar))
+                            throw new Exception($validar);
+                        $servicio_sucursal->setIdSucursal($sucursal["id_sucursal"]);
+                        $servicio_sucursal->setPrecioUtilidad($sucursal["precio_utilidad"]);
+                        $servicio_sucursal->setEsMargenUtilidad($sucursal["es_margen_utilidad"]);
+                        ServicioSucursalDAO::save($servicio_sucursal);
+                    }
+                    $servicios_sucursal = ServicioSucursalDAO::search( new ServicioSucursal( array( "id_servicio" => $id_servicio ) ) );
+                    foreach($servicios_sucursal as $s_s)
+                    {
+                        $encontrado = false;
+                        foreach($sucursales as $sucursal)
+                        {
+                            if($sucursal["id_sucursal"] == $s_s->getIdSucursal())
+                                $encontrado=true;
+                        }
+                        if(!$encontrado)
+                            ServicioSucursalDAO::delete ($s_s);
+                    }
+                }/* Fin if de sucursales */
+                if(!is_null($clasificaciones))
+                {
+                    $servicio_clasificacion = new ServicioClasificacion( array( "id_servicio" => $servicio->getIdServicio() ) );
+                    foreach($clasificaciones as $clasificacion)
+                    {
+                        if(is_null(ClasificacionServicioDAO::getByPK($clasificacion)))
+                                throw new Exception("La clasificacion ".$clasificacion." no existe");
+                        $servicio_clasificacion->setIdClasificacionServicio($clasificacion);
+                        ServicioClasificacionDAO::save($servicio_clasificacion);
+                    }
+                    $servicios_clasificacion = ServicioClasificacionDAO::search( new ServicioClasificacion( array( "id_servicio" => $id_servicio ) ) );
+                    foreach($servicios_clasificacion as $s_c)
+                    {
+                        $encontrado = false;
+                        foreach($clasificaciones as $clasificacion)
+                        {
+                            if($clasificacion == $s_c->getIdClasificacionServicio())
+                                $encontrado=true;
+                        }
+                        if(!$encontrado)
+                            ServicioClasificacionDAO::delete ($s_c);
+                    }
+                }/* Fin if de clasificaciones */
+                if(!is_null($impuestos))
+                {
+                    $impuesto_servicio = new ImpuestoServicio( array( "id_servicio" => $servicio->getIdServicio() ) );
+                    foreach($impuestos as $impuesto)
+                    {
+                        if(is_null(ImpuestoDAO::getByPK($impuesto)))
+                                throw new Exception("El impuesto ".$impuesto." no existe");
+                        $impuesto_servicio->setIdImpuesto($impuesto);
+                        ImpuestoServicioDAO::save($impuesto_servicio);
+                    }
+                    $impuesto_servicio = ImpuestoServicioDAO::search( new ImpuestoServicio( array( "id_servicio" => $id_servicio ) ) );
+                    foreach($impuesto_servicio as $i_s)
+                    {
+                        $encontrado = false;
+                        foreach($impuestos as $impuesto)
+                        {
+                            if($impuesto == $i_s->getIdImpuesto())
+                                $encontrado=true;
+                        }
+                        if(!$encontrado)
+                            ImpuestoServicioDAO::delete ($i_s);
+                    }
+                }/* Fin if de impuestos */
+                if(!is_null($retenciones))
+                {
+                    $retencion_servicio = new RetencionServicio( array( "id_servicio" => $servicio->getIdServicio() ) );
+                    foreach($retenciones as $retencion)
+                    {
+                        if(is_null(RetencionDAO::getByPK($retencion)))
+                                throw new Exception("La retencion ".$retencion." no existe");
+                        $retencion_servicio->setIdRetencion($retencion);
+                        RetencionServicioDAO::save($retencion_servicio);
+                    }
+                    $retencion_servicio = RetencionServicioDAO::search( new RetencionServicio( array( "id_servicio" => $id_servicio ) ) );
+                    foreach($retencion_servicio as $r_s)
+                    {
+                        $encontrado = false;
+                        foreach($retenciones as $retencion)
+                        {
+                            if($retencion == $r_s->getIdRetencion())
+                                $encontrado=true;
+                        }
+                        if(!$encontrado)
+                            RetencionServicioDAO::delete ($r_s);
+                    }
+                }/* Fin if de impuestos */
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo editar el servicio ".$id_servicio." : ".$e);
+                throw new Exception("No se pudo editar el servicio");
+            }
+            DAO::transEnd();
+            Logger::log("Servicio editado exitosamente");
 	}
   
 	/**
