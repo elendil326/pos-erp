@@ -1578,8 +1578,34 @@ require_once("interfaces/Servicios.interface.php");
 		$id_orden
 	)
 	{  
-  
-  
+            Logger::log("Terminando orden de servicio ".$id_orden);
+            
+            //valida que la orden exista y que etse activa
+            $validar = self::validarParametrosOrdenDeServicio($id_orden);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            $orden_de_servicio = OrdenDeServicioDAO::getByPK($id_orden);
+            
+            $orden_de_servicio->setActiva(0);
+            $orden_de_servicio->setFechaEntrega(date("Y-m-d H:i:s"));
+            
+            DAO::transBegin();
+            try
+            {
+                OrdenDeServicioDAO::save($orden_de_servicio);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo terminar la orden de servicio ".$e);
+                throw new Exception("No se pudo terminar la orden de servicio");
+            }
+            DAO::transEnd();
+            Logger::log("La orden de servicio se ha terminado exitosamente");
 	}
   
 	/**
