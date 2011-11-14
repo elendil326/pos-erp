@@ -53,13 +53,15 @@
   static function Editar
 	(
 		$id_paquete, 
-		$foto_paquete = "", 
-		$productos = "", 
-		$descuento = "", 
-		$servicios = "", 
-		$nombre = "", 
-		$margen_utilidad = "", 
-		$descripcion = ""
+		$foto_paquete = null, 
+		$productos = null, 
+		$descuento = null, 
+		$servicios = null, 
+		$nombre = null, 
+		$margen_utilidad = null, 
+		$descripcion = null,
+                $costo_estandar = null,
+                $precio = null
 	);  
   
   

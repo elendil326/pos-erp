@@ -254,7 +254,7 @@ require_once("interfaces/Paquetes.interface.php");
                     return "El producto ".$id_producto." no existe";
                 
                 if(!$producto->getActivo())
-                    return "El producto ".$id_roducto." no esta activo";
+                    return "El producto ".$id_producto." no esta activo";
             }
             
             //valida que la unidad exista y este activa
@@ -405,11 +405,11 @@ require_once("interfaces/Paquetes.interface.php");
                     $orden_de_servicio_paquete = new OrdenDeServicioPaquete( array( "id_paquete" => $paquete->getIdPaquete() ) );
                     foreach($servicios as $servicio)
                     {
-                        $servicio = ServicioDAO::getByPK($servicio["id_servicio"]);
-                        if(is_null($servicio))
+                        $serv = ServicioDAO::getByPK($servicio["id_servicio"]);
+                        if(is_null($serv))
                             throw new Exception("El servicio ".$servicio["id_servicio"]." no existe");
                         
-                        if(!$servicio->getActivo())
+                        if(!$serv->getActivo())
                             throw new Exception("El servicio ".$servicio["id_servicio"]." no esta activo");
                         
                         if(is_string($validar = self::validarNumero($servicio["cantidad"], 1.8e200, "cantidad")))
@@ -424,8 +424,12 @@ require_once("interfaces/Paquetes.interface.php");
             catch(Exception $e)
             {
                 DAO::transRollback();
+                Logger::error("No se pudo crear el nuevo paquete ".$e);
+                throw new Exception("No se pudo crear el nuevo paquete");
             }
             DAO::transEnd();
+            Logger::log("paquete creado exitosamente");
+            return array( "id_paquete" => $paquete->getIdPaquete() );
             
 	}
   
@@ -445,17 +449,137 @@ require_once("interfaces/Paquetes.interface.php");
 	public static function Editar
 	(
 		$id_paquete, 
-		$foto_paquete = "", 
-		$productos = "", 
-		$descuento = "", 
-		$servicios = "", 
-		$nombre = "", 
-		$margen_utilidad = "", 
-		$descripcion = ""
+		$foto_paquete = null, 
+		$productos = null, 
+		$descuento = null, 
+		$servicios = null, 
+		$nombre = null, 
+		$margen_utilidad = null, 
+		$descripcion = null,
+                $costo_estandar = null,
+                $precio = null
 	)
 	{  
-  
-  
+            Logger::log("Editando paquete ".$id_paquete);
+            
+            //se validan los parametros recibidos
+            $validar = self::validarParametrosPaquete($id_paquete,$nombre,$descripcion,$margen_utilidad,$descuento,$foto_paquete,$costo_estandar,$precio);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            //Los parametros que no sean nulos seran tomados como actualizacion
+            $paquete = PaqueteDAO::getByPK($id_paquete);
+            
+            if(!is_null($foto_paquete))
+            {
+                $paquete->setFotoPaquete($foto_paquete);
+            }
+            if(!is_null($descuento))
+            {
+                $paquete->setDescuento($descuento);
+            }
+            if(!is_null($nombre))
+            {
+                $paquete->setNombre($nombre);
+            }
+            if(!is_null($margen_utilidad))
+            {
+                $paquete->setMargenUtilidad($margen_utilidad);
+            }
+            if(!is_null($descripcion))
+            {
+                $paquete->setDescripcion($descripcion);
+            }
+            if(!is_null($costo_estandar))
+            {
+                $paquete->setCostoEstandar($costo_estandar);
+            }
+            if(!is_null($precio))
+            {
+                $paquete->setPrecio($precio);
+            }
+            
+            //Se realiza la actualizacion al paquete, si se recibio una lista de productos y/o servicios
+            //Se actualizan o agregan los recibidos en la base de datos y despues se traen aquellos que esten
+            //en la base de datos y se buscan en la lista recibida. Si no se encuentran, son eliminados.
+            DAO::transBegin();
+            try
+            {
+                PaqueteDAO::save($paquete);
+                if(!is_null($productos))
+                {
+                    $producto_paquete = new ProductoPaquete( array( "id_paquete" => $paquete->getIdPaquete() ) );
+                    foreach($productos as $producto)
+                    {
+                        $validar = self::validarParametrosProductoPaquete($producto["id_producto"], $producto["id_unidad"], $producto["cantidad"]);
+                        if(is_string($validar))
+                            throw new Exception($validar);
+                        
+                        $producto_paquete->setIdProducto($producto["id_producto"]);
+                        $producto_paquete->setIdUnidad($producto["id_unidad"]);
+                        $producto_paquete->setCantidad($producto["cantidad"]);
+                        ProductoPaqueteDAO::save($producto_paquete);
+                    }
+                    
+                    $productos_paquete = ProductoPaqueteDAO::search( new ProductoPaquete( array( "id_paquete" => $id_paquete ) ) );
+                    foreach($productos_paquete as $p_p)
+                    {
+                        $encontrado = false;
+                        foreach($productos as $producto)
+                        {
+                            if($producto["id_producto"] == $p_p->getIdProducto())
+                                $encontrado=true;
+                        }
+                        if(!$encontrado)
+                            ProductoPaqueteDAO::delete($p_p);
+                    }
+                }/* Fin if de productos */
+                
+                if(!is_null($servicios))
+                {
+                    $orden_de_servicio_paquete = new OrdenDeServicioPaquete( array( "id_paquete" => $paquete->getIdPaquete() ) );
+                    foreach($servicios as $servicio)
+                    {
+                        $serv = ServicioDAO::getByPK($servicio["id_servicio"]);
+                        if(is_null($serv))
+                            throw new Exception("El servicio ".$servicio["id_servicio"]." no existe");
+                        
+                        if(!$serv->getActivo())
+                            throw new Exception("El servicio ".$servicio["id_servicio"]." no esta activo");
+                        
+                        if(is_string($validar = self::validarNumero($servicio["cantidad"], 1.8e200, "cantidad")))
+                                throw new Exception($validar);
+                        
+                        $orden_de_servicio_paquete->setIdServicio($servicio["id_servicio"]);
+                        $orden_de_servicio_paquete->setCantidad($servicio["cantidad"]);
+                        OrdenDeServicioPaqueteDAO::save($orden_de_servicio_paquete);
+                    }
+                    
+                    $servicios_paquete = OrdenDeServicioPaqueteDAO::search( new OrdenDeServicioPaquete( array( "id_paquete" => $paquete->getIdPaquete() ) ) );
+                    foreach($servicios_paquete as $s_p)
+                    {
+                        $encontrado = false;
+                        foreach($servicios as $servicio)
+                        {
+                            if($servicio["id_servicio"] == $s_p->getIdServicio())
+                                $encontrado = true;
+                        }
+                        if(!$encontrado)
+                            OrdenDeServicioPaqueteDAO::delete ($s_p);
+                    }
+                }/* Fin if de servicios */
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo editar el paquete ".$e);
+                throw new Exception("No se pudo editar el paquete");
+            }
+            DAO::transEnd();
+            Logger::log("El paquete ha sido editado exitosamente");
 	}
   
 	/**
@@ -469,8 +593,33 @@ require_once("interfaces/Paquetes.interface.php");
 		$id_paquete
 	)
 	{  
-  
-  
+            Logger::log("Eliminando el paquete ".$id_paquete);
+            
+            ///valida que el paquete exista y que este activo
+            $validar = self::validarParametrosPaquete($id_paquete);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            $paquete = PaqueteDAO::getByPK($id_paquete);
+            $paquete->setActivo(0);
+            
+            //Se desactiva el paquete
+            DAO::transBegin();
+            try
+            {
+                PaqueteDAO::save($paquete);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("El paquete no ha podido ser eliminado: ".$id_paquete);
+                throw new Exception("El paquete no ha podido ser eliminado");
+            }
+            DAO::transEnd();
+            Logger::log("Paquete eliminado exitosamente");
 	}
   
 	/**
@@ -484,8 +633,35 @@ require_once("interfaces/Paquetes.interface.php");
 		$id_paquete
 	)
 	{  
-  
-  
+            Logger::log("Activando el paquete ".$id_paquete);
+            
+            //valida que el paquete exista y este desactivado
+            $paquete = PaqueteDAO::getByPK($id_paquete);
+            if(is_null($paquete))
+            {
+                Logger::error("El paquete ".$id_paquete." esta desactivado");
+                throw new Exception("El paquete ".$id_paquete." esta desactivado");
+            }
+            if($paquete->getActivo())
+            {
+                Logger::warn("El paquete ".$id_paquete." ya esta activo");
+                throw new Exception("El paquete ".$id_paquete." ya esta activo");
+            }
+            
+            $paquete->setActivo(1);
+            DAO::transBegin();
+            try
+            {
+                PaqueteDAO::save($paquete);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se ha podido activar el paquete ".$id_paquete." : ".$e);
+                throw new Exception("No se ha podudo activar el paquete");   
+            }
+            DAO::transEnd();
+            Logger::log("El paquete ha sido activado exitosamente");
 	}
   
 	/**
