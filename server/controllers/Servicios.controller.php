@@ -1346,8 +1346,26 @@ require_once("interfaces/Servicios.interface.php");
 		$id_orden
 	)
 	{  
-  
-  
+            Logger::log("Obtienendo detalles de orden");
+            
+            //Se valida que exista la orden de servicio
+            $orden = OrdenDeServicioDAO::getByPK($id_orden);
+            if(is_null($orden))
+            {
+                Logger::error("La orden de servicio ".$id_orden." no existe");
+                throw new Exception("La orden de servicio ".$id_orden." no existe");
+            }
+            
+            //Se crea el arreglo de detalle, donde el primer elemento sera la orden en si, y los siguientes seran los seguimientos que se le han dado
+            $detalle_orden = array();
+            array_push($detalle_orden,$orden);
+            
+            array_push($detalle_orden, SeguimientoDeServicioDAO::search( new SeguimientoDeServicio( array( "id_orden_de_servicio" => $id_orden ) ) ));
+            
+            Logger::log("Se obtuvo el detalle de la orden con ".count($detalle_orden[1])." seguimientos");
+            
+            return $detalle_orden;
+            
 	}
   
 	/**
