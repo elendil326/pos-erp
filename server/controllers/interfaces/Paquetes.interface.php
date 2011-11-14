@@ -94,11 +94,9 @@
  	 **/
   static function Lista
 	(
-		$id_empresa = "", 
-		$id_sucursal = "", 
-		$id_producto = "", 
-		$id_servicio = "", 
-		$activo = ""
+		$id_empresa = null, 
+		$id_sucursal = null,  
+		$activo = null
 	);  
   
   

@@ -677,15 +677,61 @@ require_once("interfaces/Paquetes.interface.php");
  	 **/
 	public static function Lista
 	(
-		$id_empresa = "", 
-		$id_sucursal = "", 
-		$id_producto = "", 
-		$id_servicio = "", 
-		$activo = ""
+		$id_empresa = null, 
+		$id_sucursal = null, 
+		$activo = null
 	)
 	{  
-  
-  
+            Logger::log("Listando paquetes");
+            
+            //El resultado de la busqueda sera la interseccion de 3 arreglos diferentes, cada uno
+            //tendra una lista de paquetes que cumple la especificacion de cada parametro. Si uno de 
+            //los parametros no es recibido sera sustituido por la lista de todos los paquetes para no afectar
+            //la interseccion.
+            
+            $paquetes = array();
+            $paquetes_1 = array();
+            $paquetes_2 = array();
+            $paquetes_3 = array();
+            
+            if(!is_null($id_empresa))
+            {
+               $paquetes_empresa = PaqueteEmpresaDAO::search( new PaqueteEmpresa( array( "id_empresa" => $id_empresa ) ) );
+               foreach($paquetes_empresa as $paquete_empresa)
+               {
+                   array_push($paquetes_1,  PaqueteDAO::getByPK($paquete_empresa->getIdPaquete()));
+               }
+            }
+            else
+            {
+                $paquetes_1 = PaqueteDAO::getAll();
+            }
+            
+            if(!is_null($id_sucursal))
+            {
+                $paquetes_sucursal = PaqueteSucursalDAO::search( new PaqueteSucursal( array( "id_sucursal" => $id_sucursal ) ) );
+                foreach($paquetes_sucursal as $paquete_sucursal)
+                {
+                    array_push($paquetes_2,PaqueteDAO::getByPK($paquete_sucursal->getIdPaquete()));
+                }
+            }
+            else
+            {
+                $paquetes_2 = $paquetes_1;
+            }
+            
+            if(!is_null($activo))
+            {
+                $paquetes_3 = PaqueteDAO::search( new Paquete( array( "activo" => $activo ) ) );
+            }
+            else
+            {
+                $paquetes_3 = $paquetes_2;
+            }
+            
+            $paquetes = array_intersect($paquetes_1, $paquetes_2, $paquetes_3);
+            Logger::log("Lista obtenida exitosamente con ".count($paquetes)." elementos");
+            return $paquetes;
 	}
   
 	/**
