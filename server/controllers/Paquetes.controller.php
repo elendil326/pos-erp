@@ -530,7 +530,7 @@ require_once("interfaces/Paquetes.interface.php");
                         $encontrado = false;
                         foreach($productos as $producto)
                         {
-                            if($producto["id_producto"] == $p_p->getIdProducto())
+                            if($producto["id_producto"] == $p_p->getIdProducto() && $producto["id_unidad"] == $p_p->getIdUnidad())
                                 $encontrado=true;
                         }
                         if(!$encontrado)
@@ -746,7 +746,58 @@ require_once("interfaces/Paquetes.interface.php");
 		$id_paquete
 	)
 	{  
-  
-  
+            Logger::log("consiguiendo los detalles del paquete");
+            
+            //valida que el paquete exista
+            $paquete = PaqueteDAO::getByPK($id_paquete);
+            if(is_null($paquete))
+            {
+                Logger::error("El paquete ".$id_paquete." no existe");
+                throw new Exception("El paquete ".$id_paquete." no existe");
+            }
+            
+            //En el primer campo de un arreglo se almacena el paquete en sí, en el segundo las empresas en las que esta disponible el paquete,
+            //en el tercero las sucursales en las que esta disponible, en el cuarto los productos que contiene y en el quinto los servicios
+            
+            $detalle_paquete = array();
+            
+            array_push($detalle_paquete,$paquete);
+            
+            $empresas = array();
+            $paquetes_empresa = PaqueteEmpresaDAO::search( new PaqueteEmpresa( array( "id_paquete" => $id_paquete ) ));
+            foreach($paquetes_empresa as $paquete_empresa)
+            {
+                array_push($empresas,  EmpresaDAO::getByPK($paquete_empresa->getIdEmpresa()));
+            }
+            array_push($detalle_paquete,$empresas);
+            
+            $sucursales = array();
+            $paquetes_sucursal = PaqueteSucursalDAO::search( new PaqueteSucursal( array( "id_paquete" => $id_paquete ) ) );
+            foreach($paquetes_sucursal as $paquete_sucursal)
+            {
+                array_push($sucursales,  SucursalDAO::getByPK($paquete_sucursal->getIdSucursal()));
+            }
+            array_push($detalle_paquete,$sucursales);
+            
+            $productos = array();
+            $productos_paquete = ProductoPaqueteDAO::search( new ProductoPaquete( array( "id_paquete" => $id_paquete ) ) );
+            foreach($productos_paquete as $producto_paquete)
+            {
+                array_push($productos, ProductoDAO::getByPK($producto_paquete->getIdProducto()));
+            }
+            array_push($detalle_paquete,$productos);
+            
+            $servicios = array();
+            $servicios_paquete = OrdenDeServicioPaqueteDAO::search( new OrdenDeServicioPaquete( array( "id_paquete" => $id_paquete ) ) );
+            foreach($servicios_paquete as $servicio_paquete)
+            {
+                array_push($servicios, ServicioDAO::getByPK($servicio_paquete->getIdServicio()));
+            }
+            array_push($detalle_paquete,$servicios);
+            
+            Logger::log("Detalle de paquete ".$id_paquete." conseguido exitosamente con ".count($empresas)."
+                empresas, ".count($sucursales)." sucursales, ".count($productos)." productos y ".count($servicios)." servicios");
+            
+            return $detalle_paquete;
 	}
   }
