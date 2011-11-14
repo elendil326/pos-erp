@@ -122,12 +122,14 @@
 		$nombre, 
 		$empresas, 
 		$sucursales, 
-		$productos = "", 
-		$sericios = "", 
-		$descripcion = "", 
-		$margen_utilidad = "", 
-		$descuento = "", 
-		$foto_paquete = ""
+		$productos = null, 
+		$servicios = null, 
+		$descripcion = null, 
+		$margen_utilidad = null, 
+		$descuento = null, 
+		$foto_paquete = null,
+                $costo_estandar = null,
+                $precio = null
 	);  
   
   
