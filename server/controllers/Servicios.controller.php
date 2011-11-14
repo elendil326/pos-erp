@@ -914,7 +914,7 @@ require_once("interfaces/Servicios.interface.php");
  	 *Crear un nuevo concepto de servicio.
  	 *
  	 * @param costo_estandar float Valor del costo estandar del servicio
- 	 * @param metodo_costeo string Mtodo de costeo del producto: 1 = Costo Promedio en Base a Entradas.2 = Costo Promedio en Base a Entradas Almacn.3 = ltimo costo.4 = UEPS.5 = PEPS.6 = Costo especfico.7 = Costo Estndar
+ 	 * @param metodo_costeo string Mtodo de costeo del servicio: 1 = Costo Promedio en Base a Entradas.2 = Costo Promedio en Base a Entradas Almacn.3 = ltimo costo.4 = UEPS.5 = PEPS.6 = Costo especfico.7 = Costo Estndar
  	 * @param nombre_servicio string Nombre del servicio
  	 * @param codigo_servicio string Codigo de control del servicio manejado por la empresa, no se puede repetir
  	 * @param empresas json Objeto que contiene los ids de las empresas a las que pertenece este servicio
@@ -1074,7 +1074,7 @@ require_once("interfaces/Servicios.interface.php");
  	 * @param nombre_servicio string Nombre del servicio
  	 * @param garantia int Si este servicio tiene una garanta en meses.
  	 * @param impuestos json array de ids de impuestos que tiene este servico
- 	 * @param metodo_costeo string Mtodo de costeo del producto: 1 = Costo Promedio en Base a Entradas.2 = Costo Promedio en Base a Entradas Almacn.3 = ltimo costo.4 = UEPS.5 = PEPS.6 = Costo especfico.7 = Costo Estndar
+ 	 * @param metodo_costeo string Mtodo de costeo del servicio: 1 = Costo Promedio en Base a Entradas.2 = Costo Promedio en Base a Entradas Almacn.3 = ltimo costo.4 = UEPS.5 = PEPS.6 = Costo especfico.7 = Costo Estndar
  	 * @param empresas string Objeto que contiene los ids de las empresas a las que pertenece este servicio
  	 * @param codigo_servicio string Codigo de control del servicio manejado por la empresa, no se puede repetir
  	 * @param descripcion_servicio string Descripcion del servicio
@@ -1619,7 +1619,60 @@ require_once("interfaces/Servicios.interface.php");
 		$id_servicio
 	)
 	{  
-  
-  
+            Logger::log("Desactivando servicio ".$id_servicio);
+            
+            //valida que el servicio exista y que no haya sido desactivado antes
+            $validar = self::validarParametrosServicio($id_servicio);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            //Si el servicio forma parte de algun paquete activo no puede ser eliminado
+            $servicios_paquete = OrdenDeServicioPaqueteDAO::search( new OrdenDeServicioPaquete( array( "id_servicio" => $id_servicio ) ) );
+            foreach($servicios_paquete as $servicio_paquete)
+            {
+                $paquete = PaqueteDAO::getByPK($servicio_paquete->getIdServicio());
+                if($paquete->getActivo())
+                {
+                    Logger::error("No se puede borrar este servicio pues el paquete ".$paquete->getIdPaquete()." aun lo contiene");
+                    throw new Exception("No se puede borrar este servicio pues el paquete ".$paquete->getIdPaquete()." aun lo contiene");
+                }
+            }
+            
+            $servicio = ServicioDAO::getByPK($id_servicio);
+            $servicio->setActivo(0);
+            
+            //Se obtienen los registros de las tablas servicio_empresa, servicio_clasificacion e impuesto_servicio
+            //pues seran eliminados
+            $servicios_empresa = ServicioEmpresaDAO::search( new ServicioEmpresa( array( "id_servicio" => $id_servicio ) ) );
+            $servicios_clasificacion = ServicioClasificacionDAO::search( new ServicioClasificacion( array( "id_servicio" => $id_servicio ) ) );
+            $impuestos_servicio = ImpuestoServicioDAO::search( new ImpuestoServicio(  array( "id_servicio" => $id_servicio  ) ) );
+            
+            DAO::transBegin();
+            try
+            {
+                ServicioDAO::save($servicio);
+                foreach($servicios_empresa as $servicio_empresa)
+                {
+                    ServicioEmpresaDAO::delete($servicio_empresa);
+                }
+                foreach($servicios_clasificacion as $servicio_clasificacion)
+                {
+                    ServicioClasificacionDAO::delete($servicio_clasificacion);
+                }
+                foreach($impuestos_servicio as $impuesto_servicio)
+                {
+                    ImpuestoServicioDAO::delete($impuesto_servicio);
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se ha podido descativar el servicio ".$id_servicio." : ".$e);
+                throw new Exception("No se ha podido descativar el servicio ".$id_servicio);
+            }
+            DAO::transEnd();
+            LOgger::log("El servicio ha sido eliminado exitosamente");
 	}
   }
