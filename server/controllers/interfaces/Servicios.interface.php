@@ -275,7 +275,7 @@
 		$id_cliente, 
 		$id_servicio, 
 		$fecha_entrega, 
-		$descripcion = null, 
+		$descripcion, 
 		$adelanto = null
 	);  
   

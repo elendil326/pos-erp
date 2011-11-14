@@ -168,7 +168,7 @@ require_once("interfaces/Servicios.interface.php");
                 if(is_null($servicio))
                     return "El servicio ".$id_servicio." no existe";
                 
-                if($servicio->getActivo())
+                if(!$servicio->getActivo())
                     return "El servicio ".$id_servicio." no esta activo";
             }
             
@@ -176,7 +176,7 @@ require_once("interfaces/Servicios.interface.php");
             if(!is_null($id_usuario_venta))
             {
                 $usuario = UsuarioDAO::getByPK($id_usuario_venta);
-                if(!is_null($usuario))
+                if(is_null($usuario))
                     return "EL usuario ".$id_usuario_venta." no existe";
                 
                 if(!$usuario->getActivo())
@@ -430,6 +430,58 @@ require_once("interfaces/Servicios.interface.php");
             if(!is_null($es_margen_utilidad))
             {
                 $e = self::validarNumero($es_margen_utilidad, 1, "es margen de utilidad");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //No se encontro error
+            return true;
+        }
+        
+        
+        /*
+         * Valida los parametros de la tabla seguimiento. Regresa un string con el error y se encuentra
+         * alguno, si no, regresa verdadero
+         */
+        private static function validarParametrosSeguimiento
+        (
+                $id_seguimiento_de_servicio = null,
+                $id_orden_de_servicio = null,
+                $id_localizacion = null,
+                $estado = null
+        )
+        {
+            //valida que el seguimiento exista
+            if(!is_null($id_seguimiento_de_servicio))
+            {
+                $seguimiento = SeguimientoDeServicioDAO::getByPK($id_seguimiento_de_servicio);
+                if(is_null($seguimiento))
+                    return "El seguimiento ".$id_seguimiento_de_servicio." no existe";
+            }
+            
+            //valida que la orden de servicio exista y este activa
+            if(!is_null($id_orden_de_servicio))
+            {
+                $orden_de_servicio = OrdenDeServicioDAO::getByPK($id_orden_de_servicio);
+                if(is_null($orden_de_servicio))
+                    return "La orden de servicio ".$id_orden_de_servicio." no existe";
+                
+                if(!$orden_de_servicio->getActiva())
+                    return "La orden de servicio ".$id_orden_de_servicio." esta desactivada";
+            }
+            
+            //valida que la localizacion sea una sucursal valida o sea un -1 para indicar que esta en movimiento
+            if(!is_null($id_localizacion))
+            {
+                $sucursal = SucursalDAO::getByPK($id_localizacion);
+                if(is_null($sucursal)&&$id_localizacion!=-1)
+                    return "La localizacion ".$id_localizacion." no es valida";
+            }
+            
+            //valida que el estado este en rango
+            if(!is_null($estado))
+            {
+                $e = self::validarString($estado, 255, "estado");
                 if(is_string($e))
                     return $e;
             }
@@ -1356,13 +1408,17 @@ require_once("interfaces/Servicios.interface.php");
                 throw new Exception("La orden de servicio ".$id_orden." no existe");
             }
             
-            //Se crea el arreglo de detalle, donde el primer elemento sera la orden en si, y los siguientes seran los seguimientos que se le han dado
+            //Se crea el arreglo de detalle, donde el primer elemento sera la orden en si,
+            //el siguiente seran todos los seguimientos que se le han dado y
+            //el ultimo seran los gastos que ha generado
             $detalle_orden = array();
             array_push($detalle_orden,$orden);
             
             array_push($detalle_orden, SeguimientoDeServicioDAO::search( new SeguimientoDeServicio( array( "id_orden_de_servicio" => $id_orden ) ) ));
             
-            Logger::log("Se obtuvo el detalle de la orden con ".count($detalle_orden[1])." seguimientos");
+            array_push($detalle_orden, GastoDAO::search( new Gasto( array( "id_orden_de_servicio" => $id_orden ) ) ));
+            
+            Logger::log("Se obtuvo el detalle de la orden con ".count($detalle_orden[1])." seguimientos y ".count($detalle_orden[2])." gastos");
             
             return $detalle_orden;
             
@@ -1384,12 +1440,63 @@ require_once("interfaces/Servicios.interface.php");
 		$id_cliente, 
 		$id_servicio, 
 		$fecha_entrega, 
-		$descripcion = null, 
+		$descripcion, 
 		$adelanto = null
 	)
 	{  
-  
-  
+            Logger::log("Creando nueva orden de servicio");
+            
+            //Se obtiene al usuario de la sesion actual
+            $id_usuario = LoginController::getCurrentUser();
+            if(is_null($id_usuario))
+            {
+                Logger::error("No se ha podido obtener al usuario de la sesion. Ya inicio sesion?");
+                throw new Exception("No se ha podido obtener al usuario de la sesion. Ya inicio sesion?");
+            }
+            
+            //Valida que los datos sean correctos
+            $validar = self::validarParametrosOrdenDeServicio(null, $id_servicio, $id_cliente, $descripcion, null, $adelanto);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            //Si no se recibe adelanto se toma como cero
+            if(is_null($adelanto))
+                $adelanto=0;
+            
+            //Se inicializa el registro de orden de servicio
+            $orden_de_servicio = new OrdenDeServicio( array( 
+                                                            
+                                                            "id_servicio"       => $id_servicio,
+                                                            "id_usuario_venta"  => $id_cliente,
+                                                            "id_usuario"        => $id_usuario,
+                                                            "fecha_orden"       => date("Y-m-d H:i:s"),
+                                                            "fecha_entrega"     => $fecha_entrega,
+                                                            "activa"            => 1,
+                                                            "cancelada"         => 0,
+                                                            "descripcion"       => $descripcion,
+                                                            "adelanto"          => $adelanto
+                                                            
+                                                            )
+                                                    );
+            
+            DAO::transBegin();
+            try
+            {
+                OrdenDeServicioDAO::save($orden_de_servicio);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo crear la nueva orden de servicio ".$e);
+                throw new Exception("No se pudo crear la nueva orden de servicio");
+            }
+            DAO::transEnd();
+            Logger::log("Orden de servicio creada exitosamente");
+            return array( "id_orden" => $orden_de_servicio->getIdOrdenDeServicio() );
+            
 	}
   
 	/**
@@ -1407,8 +1514,57 @@ require_once("interfaces/Servicios.interface.php");
 		$id_orden_de_servicio
 	)
 	{  
-  
-  
+            Logger::log("Creando nuevo seguimiento de orden");
+            
+            //Se obtiene al usuario de la sesion
+            $id_usuario = LoginController::getCurrentUser();
+            if(is_null($id_usuario))
+            {
+                Logger::error("El usuario no pudo ser obtenido de la sesion. Ya inicio sesion?");
+                throw new Exception("El usuario no pudo ser obtenido de la sesion. Ya inicio sesion?");
+            }
+            
+            //Se obtiene la sucursal de la sesion
+            $id_sucural = self::getSucursal();
+            if(is_null($id_sucural))
+            {
+                Logger::error("La sucursal no pudo ser obtenida de la sesion");
+                throw new Exception("La sucursal no pudo ser obtenida de la seion");
+            }
+            
+            //Se validan los parametros recibidos
+            $validar = self::validarParametrosSeguimiento(null, $id_orden_de_servicio, $id_localizacion, $estado);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            $seguimiento_de_servicio = new SeguimientoDeServicio( array(  
+            
+                                                                        "id_localizacion"       => $id_localizacion,
+                                                                        "id_orden_de_servicio"  => $id_orden_de_servicio,
+                                                                        "estado"                => $estado,
+                                                                        "id_usuario"            => $id_usuario,
+                                                                        "id_sucursal"           => $id_sucural,
+                                                                        "fecha_seguimiento"     => date("Y-m-d H:i:s")
+                                                                        )
+                                                                );
+            
+            DAO::transBegin();
+            try
+            {
+                SeguimientoDeServicioDAO::save($seguimiento_de_servicio);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo crear el seguimiento de servicio ". $e);
+                throw new Exception("No se pudo crear el seguimiento de servicio");
+            }
+            DAO::transEnd();
+            Logger::log("Seguimiento creado exitosamente");
+            return array( "id_seguimiento" => $seguimiento_de_servicio->getIdSeguimientoDeServicio() );
 	}
   
 	/**
