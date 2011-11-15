@@ -163,7 +163,6 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 		$texto_extra = null, 
 		$lim_credito = null, 
 		$razon_social = null, 
-		$estatus = null, 
 		$dias_de_credito = null, 
 		$mensajeria = null, 
 		$dia_de_pago = null, 

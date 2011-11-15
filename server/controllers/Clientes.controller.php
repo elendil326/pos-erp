@@ -441,7 +441,6 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 		$texto_extra = null, 
 		$lim_credito = null, 
 		$razon_social = null, 
-		$estatus = null, 
 		$dias_de_credito = null, 
 		$mensajeria = null, 
 		$dia_de_pago = null, 
@@ -455,8 +454,26 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
                 $descuento = null
 	)
 	{  
-  
-  
+            Logger::log("Editando cliente");
+            
+            //Se llama al metodo Editar usuario
+            try
+            {
+                PersonalYAgentesController::EditarUsuario($id_cliente,null,null,
+                        null,$descuento,$telefono_personal1,$lim_credito,$direccion_web,
+                        null,$facturar_a_terceros,$mensajeria,$telefono_personal2,$ventas_a_credito,null,$impuestos,
+                        $retenciones,$saldo_del_ejercicio,null,$dia_de_pago,$calle,null,$codigo_postal,$texto_extra,
+                        $numero_interior,$municipio,$password,null,$codigo_cliente,
+                        $razon_social,$colonia,null,$email,$representante_legal,null,
+                        null,$telefono2,$dias_de_credito,$rfc,$curp,null,$numero_exterior,$denominacion_comercial,
+                        $clasificacion_cliente,null,$dia_de_revision,$cuenta_de_mensajeria,$telefono1,null,$sucursal,null,$intereses_moratorios,$moneda_del_cliente);
+            }
+            catch( Exception $e)
+            {
+                Logger::error("El cliente no pudo ser modificado: ".$e);
+                throw new Exception("El cliente no pudo er modificado");
+            }
+            Logger::log("Cliente editado exitosamente");
 	}
   
 	/**
