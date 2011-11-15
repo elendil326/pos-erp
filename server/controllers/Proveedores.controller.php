@@ -8,6 +8,109 @@ require_once("interfaces/Proveedores.interface.php");
 	
   class ProveedoresController implements IProveedores{
   
+      
+        //Metodo para pruebas que simula la obtencion del id de la sucursal actual
+        private static function getSucursal()
+        {
+            return 1;
+        }
+        
+        //metodo para pruebas que simula la obtencion del id de la caja actual
+        private static function getCaja()
+        {
+            return 1;
+        }
+      
+        
+        /*
+         *Se valida que un string tenga longitud en un rango de un maximo inclusivo y un minimo exclusvio.
+         *Regresa true cuando es valido, y un string cuando no lo es.
+         */
+          private static function validarString($string, $max_length, $nombre_variable,$min_length=0)
+	{
+		if(strlen($string)<=$min_length||strlen($string)>$max_length)
+		{
+		    return "La longitud de la variable ".$nombre_variable." proporcionada (".$string.") no esta en el rango de ".$min_length." - ".$max_length;
+		}
+		return true;
+        }
+
+
+        /*
+         * Se valida que un numero este en un rango de un maximo y un minimo inclusivos
+         * Regresa true cuando es valido, y un string cuando no lo es
+         */
+	private static function validarNumero($num, $max_length, $nombre_variable, $min_length=0)
+	{
+	    if($num<$min_length||$num>$max_length)
+	    {
+	        return "La variable ".$nombre_variable." proporcionada (".$num.") no esta en el rango de ".$min_length." - ".$max_length;
+	    }
+	    return true;
+	}
+      
+        /*
+         * Valida los parametros de la tabla clasificacion proveedor. Regresa un string con el error en caso de haber uno,
+         * de lo contrario regresa verdadero.
+         */
+        private static function validarParametrosClasificacionProveedor
+        (
+                $id_clasificacion_proveedor = null,
+                $nombre = null,
+                $descripcion = null,
+                $activa = null
+        )
+        {
+            //valida que la clasificacion exista y este activa
+            if(!is_null($id_clasificacion_proveedor))
+            {
+                $clasificacion_proveedor = ClasificacionProveedorDAO::getByPK($id_clasificacion_proveedor);
+                if(is_null($clasificacion_proveedor))
+                    return "La clasificacion proveedor ".$id_clasificacion_proveedor." no existe";
+                
+                if(!$clasificacion_proveedor->getActiva())
+                    return "La clasificacion proveedor ".$id_clasificacion_proveedor." no esta activa";
+            }
+            
+            //valida que el nombre este en rango y que no se repita
+            if(!is_null($nombre))
+            {
+                $e = self::validarString($nombre, 100, "nombre");
+                if(is_string($e))
+                    return $e;
+                
+                $clasificaciones_proveedor = ClasificacionProveedorDAO::search( new ClasificacionProveedor( array( "nombre" => trim($nombre) ) ) );
+                foreach($clasificaciones_proveedor as $clasificacion_proveedor)
+                {
+                    if($clasificacion_proveedor->getActiva())
+                        return "El nombre (".$nombre.") esta siendo usado por la clasificacion de proveedor ".$clasificacion_proveedor->getIdClasificacionProveedor();
+                }
+            }
+            
+            //valida que la descripcion este en rango
+            if(!is_null($descripcion))
+            {
+                $e = self::validarString($descripcion, 255, "descripcion");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida el boleano activa
+            if(!is_null($activa))
+            {
+                $e = self::validarNumero($activa, 1, "activa");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //no se encontro error, regresa verdadero
+            return true;
+        }
+        
+      
+      
+      
+        
   
 	/**
  	 *
@@ -20,8 +123,47 @@ require_once("interfaces/Proveedores.interface.php");
 		$id_clasificacion_proveedor
 	)
 	{  
-  
-  
+            Logger::log("Eliminando la clasificacion de proveedor ".$id_clasificacion_proveedor);
+            
+            //valida que la clasificacion exista y este activa
+            $validar = self::validarParametrosClasificacionProveedor($id_clasificacion_proveedor);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            //Desactiva la clasificacion proveedor y elimina los registros de las tablas impuesto_clasificacion_proveedor
+            //y retencion_clasificacion_proveedor que lo contengan
+            $clasificacion_proveedor = ClasificacionProveedorDAO::getByPK($id_clasificacion_proveedor);
+            $clasificacion_proveedor->setActiva(0);
+            
+            $impuestos_clasificacion_proveedor = ImpuestoClasificacionProveedorDAO::search( 
+                    new ImpuestoClasificacionProveedor( array( "id_clasificacion_proveedor" => $id_clasificacion_proveedor ) ) );
+            
+            $retenciones_clasificacion_proveedor = RetencionClasificacionProveedorDAO::search( 
+                    new RetencionClasificacionProveedor( array( "id_clasificacion_proveedor" => $id_clasificacion_proveedor ) ) );
+            
+            DAO::transBegin();
+            try
+            {
+                ClasificacionProveedorDAO::save($clasificacion_proveedor);
+                
+                foreach($impuestos_clasificacion_proveedor as $impuesto_clasificacion_proveedor)
+                    ImpuestoClasificacionProveedorDAO::delete ($impuesto_clasificacion_proveedor);
+                
+                foreach($retenciones_clasificacion_proveedor as $retencion_clasificacion_proveedor)
+                    RetencionClasificacionProveedorDAO::delete ($retencion_clasificacion_proveedor);
+                
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("Error al desactivar la clasificacion proveedor ".$e);
+                throw new Exception("Error al desactivar la clasificacion proveedor");
+            }
+            DAO::transEnd();
+            Logger::log("La clasificacion de proveedor ha sido eliminada exitosamente");
 	}
   
 	/**
@@ -42,8 +184,65 @@ require_once("interfaces/Proveedores.interface.php");
 		$retenciones = null
 	)
 	{  
-  
-  
+            Logger::log("Creando nueva clasificacion de proveedor");
+            
+            //Se validan los parametros recibidos
+            $validar = self::validarParametrosClasificacionProveedor(null, $nombre, $descripcion);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            $clasificacion_proveedor = new ClasificacionProveedor( array( 
+                                                
+                                                                        "nombre"        => $nombre,
+                                                                        "descripcion"   => $descripcion,
+                                                                        "activa"        => 1
+                                                                        
+                                                                        )
+                                                                    );
+            
+            //Se almacena la nueva clasificacion proveedor y si se recibieron impuestos o retenciones,
+            //se guardan en sus respectivas tablas
+            DAO::transBegin();
+            try
+            {
+                ClasificacionProveedorDAO::save($clasificacion_proveedor);
+                if(!is_null($impuestos))
+                {
+                    $impuesto_clasificacion_proveedor = new ImpuestoClasificacionProveedor(
+                            array( "id_clasificacion_proveedor" => $clasificacion_proveedor->getIdClasificacionProveedor() ));
+                    foreach ($impuestos as $impuesto)
+                    {
+                        if(is_null(ImpuestoDAO::getByPK($impuesto)))
+                                throw new Exception ("El impuesto ".$impuesto." no existe");
+                        $impuesto_clasificacion_proveedor->setIdImpuesto($impuesto);
+                        ImpuestoClasificacionProveedorDAO::save($impuesto_clasificacion_proveedor);
+                    }
+                }/* Fin if de impuestos */
+                if(!is_null($retenciones))
+                {
+                    $retencion_clasificacion_proveedor = new RetencionClasificacionProveedor(
+                            array ( "id_clasificacion_proveedor" => $clasificacion_proveedor->getIdClasificacionProveedor() ) );
+                    foreach( $retenciones as $retencion )
+                    {
+                        if(is_null(RetencionDAO::getByPK($retencion)))
+                                throw new Exception("La retencion ".$retencion." no existe");
+                        $retencion_clasificacion_proveedor->setIdRetencion($retencion);
+                        RetencionClasificacionProveedorDAO::save($retencion_clasificacion_proveedor);
+                    }
+                }/* Fin if de retenciones */
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se ha podido crear la nueva clasificacion de proveedor ".$e);
+                throw new Exception("No se ha podido crear la nueva clasificacion de proveedor");
+            }
+            DAO::transEnd();
+            Logger::log("Clasificacion de proveedor creada exitosamente");
+            return array( "id_clasificacion_proveedor" => $clasificacion_proveedor->getIdClasificacionProveedor() );
 	}
   
 	/**
@@ -59,14 +258,99 @@ require_once("interfaces/Proveedores.interface.php");
 	public static function EditarClasificacion
 	(
 		$id_clasificacion_proveedor, 
-		$retenciones = "", 
-		$impuestos = "", 
-		$descripcion = "", 
-		$nombre = ""
+		$retenciones = null, 
+		$impuestos = null, 
+		$descripcion = null, 
+		$nombre = null
 	)
 	{  
-  
-  
+            Logger::log("Editando la clasificacion de proveedor ".$id_clasificacion_proveedor);
+            
+            //valida los parametros recibidos
+            $validar = self::validarParametrosClasificacionProveedor($id_clasificacion_proveedor, $nombre, $descripcion);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            //Los parametros que no sean nulos seran tomados como actualizacion
+            $clasificacion_proveedor = ClasificacionProveedorDAO::getByPK($id_clasificacion_proveedor);
+            if(!is_null($descripcion))
+            {
+                $clasificacion_proveedor->setDescripcion($descripcion);
+            }
+            if(!is_null($nombre))
+            {
+                $clasificacion_proveedor->setNombre($nombre);
+            }
+            
+            //Se actualiza el registro. Si se reciben listas de impuestos y/o registros se guardan los
+            //que estan en la lista, despues se recorren los registros de la base de datos y aquellos que no
+            //se encuentren en la lista nueva seran eliminados.
+            DAO::transBegin();
+            try
+            {
+                ClasificacionProveedorDAO::save($clasificacion_proveedor);
+                if(!is_null($impuestos))
+                {
+                    $impuesto_clasificacion_proveedor = new ImpuestoClasificacionProveedor(
+                            array( "id_clasificacion_proveedor" => $clasificacion_proveedor->getIdClasificacionProveedor() ));
+                    foreach ($impuestos as $impuesto)
+                    {
+                        if(is_null(ImpuestoDAO::getByPK($impuesto)))
+                                throw new Exception ("El impuesto ".$impuesto." no existe");
+                        $impuesto_clasificacion_proveedor->setIdImpuesto($impuesto);
+                        ImpuestoClasificacionProveedorDAO::save($impuesto_clasificacion_proveedor);
+                    }
+                    
+                    $impuestos_clasificacion_proveedor = ImpuestoClasificacionProveedorDAO::search( 
+                            new ImpuestoClasificacionProveedor( array( "id_clasificacion_proveedor" => $id_clasificacion_proveedor ) ) );
+                    foreach($impuestos_clasificacion_proveedor as $impuesto_clasificacion_proveedor)
+                    {
+                        $encontrado = false;
+                        foreach($impuestos as $impuesto)
+                        {
+                            if($impuesto == $impuesto_clasificacion_proveedor->getIdImpuesto())
+                                $encontrado = true;
+                        }
+                        if(!$encontrado)
+                            ImpuestoClasificacionProveedorDAO::delete ($impuesto_clasificacion_proveedor);
+                    }
+                }/* Fin if de impuestos */
+                if(!is_null($retenciones))
+                {
+                    $retencion_clasificacion_proveedor = new RetencionClasificacionProveedor(
+                            array ( "id_clasificacion_proveedor" => $clasificacion_proveedor->getIdClasificacionProveedor() ) );
+                    foreach( $retenciones as $retencion )
+                    {
+                        if(is_null(RetencionDAO::getByPK($retencion)))
+                                throw new Exception("La retencion ".$retencion." no existe");
+                        $retencion_clasificacion_proveedor->setIdRetencion($retencion);
+                        RetencionClasificacionProveedorDAO::save($retencion_clasificacion_proveedor);
+                    }
+                    
+                    $retenciones_clasificacion_proveedor = RetencionClasificacionProveedorDAO::search( 
+                            new RetencionClasificacionProveedor( array( "id_clasificacion_proveedor" => $id_clasificacion_proveedor ) ) );
+                    foreach($retenciones_clasificacion_proveedor as $retencion_clasificacion_proveedor)
+                    {
+                        $encontrado = false;
+                        foreach($retenciones as $retencion)
+                        {
+                            if($retencion == $retencion_clasificacion_proveedor->getIdRetencion())
+                                $encontrado = true;
+                        }
+                        if(!$encontrado)
+                            RetencionClasificacionProveedorDAO::delete ($retencion_clasificacion_proveedor);
+                    }
+                }/* Fin if de retenciones */
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+            }
+            DAO::transEnd();
+            
 	}
   
 	/**
@@ -104,7 +388,7 @@ require_once("interfaces/Proveedores.interface.php");
  	 * @param retenciones json Retenciones que afectan a este proveedor
  	 * @param impuestos json Ids de los impuestos que afectan a este proveedor
  	 * @param dias_embarque int Dias en que el proveedor embarca ( Lunes, Martes, Miercoles, Jueves..)
- 	 * @param telefono_personal string Telefono personal del cliente
+ 	 * @param telefono_personal string Telefono personal del proveedor
  	 * @param rfc string RFC del proveedor
  	 * @param calle string Calle de la direccion del proveedor
  	 * @param email string Correo electronico del proveedor
@@ -117,7 +401,7 @@ require_once("interfaces/Proveedores.interface.php");
  	 * @param dias_de_credito int Dias de credito que otorga el proveedor
  	 * @param telefono1 string Telefono 1 de la direccion del proveedor
  	 * @param telefono2 string Telefono 2 de la direccion del proveedor
- 	 * @return id_proveedor int Id autogenerado por la inserción del nuevo proveedor.
+ 	 * @return id_proveedor int Id autogenerado por la inserciï¿½n del nuevo proveedor.
  	 **/
 	public static function Nuevo
 	(
