@@ -632,7 +632,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
             
             $clasificacion_cliente = new ClasificacionCliente( array( 
                                             "clave_interna"     => $clave_interna,
-                                            "nombre"            => $nombre,
+                                            "nombre"            => trim($nombre),
                                             "descripcion"       => $descripcion,
                                             "margen_utilidad"   => $utilidad,
                                             "descuento"         => $descuento
@@ -739,7 +739,106 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 		$margen_de_utilidad = null
 	)
 	{  
-  
-  
+            Logger::log("Editando clasificacion de cliente ".$id_clasificacion_cliente);
+            
+            //Se validan los parametros recibidos
+            $validar = self::validarParametrosClasificacionCliente($id_clasificacion_cliente,$clave_interna,$nombre,$descripcion,$margen_de_utilidad,$descuento);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            //Los parametros que no sean nulos seran tomados como actualizacion
+            $clasificacion_cliente = ClasificacionClienteDAO::getByPK($id_clasificacion_cliente);
+            if(!is_null($descuento))
+            {
+                $clasificacion_cliente->setDescuento($descuento);
+            }
+            if(!is_null($clave_interna))
+            {
+                $clasificacion_cliente->setClaveInterna($clave_interna);
+            }
+            if(!is_null($nombre))
+            {
+                $clasificacion_cliente->setNombre(trim($nombre));
+            }
+            if(!is_null($descripcion))
+            {
+                $clasificacion_cliente->setDescripcion($descripcion);
+            }
+            if(!is_null($margen_de_utilidad))
+            {
+                $clasificacion_cliente->setMargenUtilidad($margen_de_utilidad);
+            }
+            
+            //Se actualiza el registro. Si se recibe una lista de impuestos y/o retenciones, se almacenan los
+            //registros recibidos, despues, se recorren los registro de la base de datos y se buscan en la lista recibida.
+            //Aquellos que no sean encontrados seran eliminados
+            
+            DAO::transBegin();
+            try
+            {
+                ClasificacionClienteDAO::save($clasificacion_cliente);
+                if(!is_null($impuestos))
+                {
+                    $impuesto_clasificacion_cliente = new ImpuestoClasificacionCliente(
+                            array( "id_clasificacion_cliente" => $clasificacion_cliente->getIdClasificacionCliente() ));
+                    foreach ($impuestos as $impuesto)
+                    {
+                        if(is_null(ImpuestoDAO::getByPK($impuesto)))
+                                throw new Exception ("El impuesto ".$impuesto." no existe");
+                        $impuesto_clasificacion_cliente->setIdImpuesto($impuesto);
+                        ImpuestoClasificacionClienteDAO::save($impuesto_clasificacion_cliente);
+                    }
+                    
+                    $impuestos_clasificacion_cliente = ImpuestoClasificacionClienteDAO::search( 
+                            new ImpuestoClasificacionCliente( array( "id_clasificacion_cliente" => $id_clasificacion_cliente ) ) );
+                    foreach($impuestos_clasificacion_cliente as $impuesto_clasificacion_cliente)
+                    {
+                        $encontrado = false;
+                        foreach($impuestos as $impuesto)
+                        {
+                            if($impuesto == $impuesto_clasificacion_cliente->getIdImpuesto())
+                                $encontrado = true;
+                        }
+                        if(!$encontrado)
+                            ImpuestoClasificacionClienteDAO::delete ($impuesto_clasificacion_cliente);
+                    }
+                }/* Fin if de impuestos */
+                if(!is_null($retenciones))
+                {
+                    $retencion_clasificacion_cliente = new RetencionClasificacionCliente(
+                            array ( "id_clasificacion_cliente" => $clasificacion_cliente->getIdClasificacionCliente() ) );
+                    foreach( $retenciones as $retencion )
+                    {
+                        if(is_null(RetencionDAO::getByPK($retencion)))
+                                throw new Exception("La retencion ".$retencion." no existe");
+                        $retencion_clasificacion_cliente->setIdRetencion($retencion);
+                        RetencionClasificacionClienteDAO::save($retencion_clasificacion_cliente);
+                    }
+                    
+                    $retenciones_clasificacion_cliente = RetencionClasificacionClienteDAO::search( 
+                            new RetencionClasificacionCliente( array( "id_clasificacion_cliente" => $id_clasificacion_cliente ) ) );
+                    foreach($retenciones_clasificacion_cliente as $retencion_clasificacion_cliente)
+                    {
+                        $encontrado = false;
+                        foreach($retenciones as $retencion)
+                        {
+                            if($retencion == $retencion_clasificacion_cliente->getIdRetencion())
+                                $encontrado = true;
+                        }
+                        if(!$encontrado)
+                            RetencionClasificacionClienteDAO::delete ($retencion_clasificacion_cliente);
+                    }
+                }/* Fin if de retenciones */
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se ha podido editar la clasificacion de cliente ".$id_clasificacion_cliente." : ".$e);
+                throw new Exception("No se ha podido editar la clasificacion de cliente");
+            }
+            DAO::transEnd();
 	}
   }
