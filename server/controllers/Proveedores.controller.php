@@ -624,10 +624,27 @@ require_once("interfaces/Proveedores.interface.php");
 		$retenciones = null, 
 		$codigo_proveedor = null,
                 $telefono_personal2 = null,
-                $descuento = null
+                $descuento = null,
+                $colonia = null
 	)
 	{  
+            Logger::log("Editando proveedor ".$id_proveedor);
             
+            //Se utiliza el metodo editar usuario de personalyagentes, este se encarga de las validaciones
+            try
+            {
+                $provedores = PersonalYAgentesController::EditarUsuario($id_proveedor,null,null,null,$descuento,$telefono_personal1,
+                        $limite_credito,$direccion_web,null,null,null,$telefono_personal2,null,null,$impuestos,$retenciones,null,null,
+                        null,$calle,null,$codigo_postal,$texto_extra,$numero_interior,$id_ciudad,$password,$id_tipo_proveedor,$codigo_proveedor,
+                        $nombre,$colonia,null,$email,$representante_legal,null,$dias_embarque,$telefono2,$dias_de_credito,$rfc,null,null,$numero_exterior,
+                        null,null,$cuenta_bancaria,null,null,$telefono1,null,null,null,null,$id_moneda,$tiempo_entrega);
+            }
+            catch(Exception $e)
+            {
+                Logger::error("No se pudo editar al proveedor: ".$e);
+                throw new Exception("No se pudo editar al proveedor");
+            }
+            Logger::log("Proveedor editado exitosamente");
 	}
   
 	/**

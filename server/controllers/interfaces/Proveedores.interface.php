@@ -135,7 +135,8 @@
 		$retenciones = null, 
 		$codigo_proveedor = null,
                 $telefono_personal2 = null,
-                $descuento = null
+                $descuento = null,
+                $colonia = null
 	);  
   
   
@@ -233,7 +234,8 @@
 		$telefono1 = null, 
 		$telefono2 = null,
                 $telefono_personal2 = null,
-                $descuento = null
+                $descuento = null,
+                $colonia = null
 	);  
   
   
