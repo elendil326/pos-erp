@@ -61,7 +61,15 @@
 		$impuestos = null, 
 		$retenciones = null
 	);  
+        
   
+  
+  
+        static function ListaClasificacion
+	(
+                $activo = null,
+		$orden = null
+	);
   
 	
   
@@ -192,7 +200,7 @@
  	 * @param dias_de_credito int Dias de credito que otorga el proveedor
  	 * @param telefono1 string Telefono 1 de la direccion del proveedor
  	 * @param telefono2 string Telefono 2 de la direccion del proveedor
- 	 * @return id_proveedor int Id autogenerado por la inserción del nuevo proveedor.
+ 	 * @return id_proveedor int Id autogenerado por la inserciï¿½n del nuevo proveedor.
  	 **/
   static function Nuevo
 	(

@@ -348,8 +348,41 @@ require_once("interfaces/Proveedores.interface.php");
             catch(Exception $e)
             {
                 DAO::transRollback();
+                Logger::error("La clasificacion de proveedor no ha podido ser editada: ".$e);
+                throw new Exception("La clasificacion de proveedor no ha podido ser editada");
             }
             DAO::transEnd();
+            Logger::log("La clasificacion de proveedor ha sido eeditada exitosamente ");
+            
+	}
+        
+        public static function ListaClasificacion
+	(
+                $activo = null,
+		$orden = null
+	)
+	{  
+            Logger::log("Listando las clasificaciones de proveedor");
+            
+            //Se valida el parametro orden
+            if
+            (
+                    !is_null($orden)                        &&
+                    $orden != "id_clasificacion_proveedor"  &&
+                    $orden != "nombre"                      &&
+                    $orden != "descripcion"                 &&
+                    $orden != "activa"
+            )
+            {
+                Logger::error("La variable orden (".$orden.") es invalida");
+                throw new Exception("La variable orden (".$orden.") es invalida");
+            }
+            if(is_null($activo))
+                $clasificaciones_proveedor = ClasificacionProveedorDAO::getAll(null,null,$orden);
+            else
+                $clasificaciones_proveedor = ClasificacionProveedorDAO::search( new ClasificacionProveedor( array( "activa" => $activo ) ) );
+            Logger::log("Se obtuvieron ".count($clasificaciones_proveedor)." clasificaciones de proveedor");
+            return $clasificaciones_proveedor;
             
 	}
   
@@ -367,8 +400,7 @@ require_once("interfaces/Proveedores.interface.php");
 		$ordenar = null
 	)
 	{  
-  
-  
+            Logger::log("Listando los proveedores");
 	}
   
 	/**
