@@ -73,7 +73,7 @@ require_once("interfaces/Clientes.interface.php");
         )
         {
             //valida los parametros llamando al metodo validarParametrosUsuario
-            $validar = PersonalYAgentesController::validarParametrosUsuario($id_cliente,null,null,null,$clasificacion_cliente,nulll,$moneda_del_cliente,
+            $validar = PersonalYAgentesController::validarParametrosUsuario($id_cliente,null,null,null,$clasificacion_cliente,null,$moneda_del_cliente,
                     null,$razon_social,$rfc,$curp,null,$telefono_personal1,$telefono_personal2,null,null,$password,null,$email,$direccion_web,
                     null,null,$representante_legal,null,null,$mensajeria,null,$denominacion_comercial,null,$cuenta_de_mensajeria,null,$codigo_cliente);
             if(is_string($validar))
@@ -488,8 +488,38 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 		$id_cliente
 	)
 	{  
-  
-  
+            Logger::log("Listando los detalles del cliente");
+            
+            //valida que el cliente exista, que sea cliente y que este activo
+            $validar = self::validarParametrosCliente($id_cliente);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            //Se regresa un arreglo que contendra en el primer campo el cliente en si, en segundo campo estara
+            //su direccion, el tercero sera su direccion alterna, el cuarto sera la sucursal en la que fue dado de alta,
+            //la quinta sera el rol que tiene, la sexta sera su clasificacion, la septima la moneda que prefiere.
+            
+            $cliente = array();
+            $c = UsuarioDAO::getByPK($id_cliente);
+            
+            array_push($cliente, $c);
+            
+            array_push($cliente, DireccionDAO::getByPK($c->getIdDireccion()));
+            
+            array_push($cliente, DireccionDAO::getByPK($c->getIdDireccionAlterna()));
+            
+            array_push($cliente, SucursalDAO::getByPK($c->getIdSucursal()));
+            
+            array_push($cliente, RolDAO::getByPK($c->getIdRol()));
+            
+            array_push($cliente, ClasificacionClienteDAO::getByPK($c->getIdClasificacionCliente()));
+            
+            array_push($cliente, MonedaDAO::getByPK($c->getIdMoneda()));
+            
+            return $cliente;
 	}
   
 	/**
