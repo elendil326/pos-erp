@@ -249,7 +249,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
           //valida el password, El pasword tiene que tener una longitud mayor o igual a 4
           if(!is_null($password))
           {
-              $e=self::validarString($password, 1.8e200, "password",4);
+              $e=self::validarString($password, 1.8e200, "password",3);
               if(is_string($e))
                   return $e;
           }

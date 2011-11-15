@@ -521,9 +521,9 @@ require_once("interfaces/Proveedores.interface.php");
 		$retenciones = null, 
 		$impuestos = null, 
 		$dias_embarque = true, 
-		$telefono_personal = null, 
+		$telefono_personal1 = null, 
 		$rfc = null, 
-		$calle = 1, 
+		$calle = null, 
 		$email = null, 
 		$id_moneda = null, 
 		$cuenta_bancaria = null, 
@@ -533,11 +533,33 @@ require_once("interfaces/Proveedores.interface.php");
 		$limite_credito = null, 
 		$dias_de_credito = null, 
 		$telefono1 = null, 
-		$telefono2 = null
+		$telefono2 = null,
+                $telefono_personal2 = null,
+                $descuento = null,
+                $colonia = null
 	)
 	{  
-  
-  
+            Logger::log("Creando nuevo proveedor");
+            
+            //Se utiliza el metodo de nuevo usuario, este se encarga de las validaciones.
+            //El rol numero 6 es tomado como el rol de proveedor
+            
+            try
+            {
+                $proveedor = PersonalYAgentesController::NuevoUsuario($codigo_proveedor, $password, 6, $nombre,
+                    null,null,null,$numero_exterior,null,self::getSucursal(),$dias_embarque,0,$representante_legal,
+                    null,$impuestos,null,null,$cuenta_bancaria,null,null,$direccion_web,$telefono_personal1,$descuento,null,
+                    0,$telefono_personal2,null,$codigo_postal,null,null,$calle,null,$id_ciudad,null,null,$numero_interior,
+                    $email,$telefono2,$dias_de_credito,$texto_extra,null,null,null,null,$telefono1,null,$rfc,$id_tipo_proveedor,
+                    $retenciones,$colonia,$id_moneda,$tiempo_entrega);
+            }
+            catch(Exception $e)
+            {
+                Logger::error("No se pudo crear al nuevo proveedor: ".$e);
+                throw new Exception("No se pudo crear al nuevo proveedor");
+            }
+            Logger::log("Proveedor creado exitosamente");
+            return array( "id_proveedor" => $proveedor["id_usuario"] );
 	}
   
 	/**
@@ -590,7 +612,7 @@ require_once("interfaces/Proveedores.interface.php");
 		$id_tipo_proveedor = null, 
 		$dias_de_credito = null, 
 		$calle = null, 
-		$telefono_personal = null, 
+		$telefono_personal1 = null, 
 		$nombre = null, 
 		$email = null, 
 		$dias_embarque = null, 
@@ -600,11 +622,12 @@ require_once("interfaces/Proveedores.interface.php");
 		$cuenta_bancaria = null, 
 		$id_moneda = null, 
 		$retenciones = null, 
-		$codigo_proveedor = null
+		$codigo_proveedor = null,
+                $telefono_personal2 = null,
+                $descuento = null
 	)
 	{  
-  
-  
+            
 	}
   
 	/**

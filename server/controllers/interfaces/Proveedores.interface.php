@@ -123,7 +123,7 @@
 		$id_tipo_proveedor = null, 
 		$dias_de_credito = null, 
 		$calle = null, 
-		$telefono_personal = null, 
+		$telefono_personal1 = null, 
 		$nombre = null, 
 		$email = null, 
 		$dias_embarque = null, 
@@ -133,7 +133,9 @@
 		$cuenta_bancaria = null, 
 		$id_moneda = null, 
 		$retenciones = null, 
-		$codigo_proveedor = null
+		$codigo_proveedor = null,
+                $telefono_personal2 = null,
+                $descuento = null
 	);  
   
   
@@ -217,9 +219,9 @@
 		$retenciones = null, 
 		$impuestos = null, 
 		$dias_embarque = true, 
-		$telefono_personal = null, 
+		$telefono_personal1 = null, 
 		$rfc = null, 
-		$calle = 1, 
+		$calle = null, 
 		$email = null, 
 		$id_moneda = null, 
 		$cuenta_bancaria = null, 
@@ -229,7 +231,9 @@
 		$limite_credito = null, 
 		$dias_de_credito = null, 
 		$telefono1 = null, 
-		$telefono2 = null
+		$telefono2 = null,
+                $telefono_personal2 = null,
+                $descuento = null
 	);  
   
   
