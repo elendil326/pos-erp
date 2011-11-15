@@ -251,7 +251,7 @@ Update :  �Es correcto que contenga el argumento id_sucursal? Ya que as?omo es
                 
                 //Solo se obtendran los usuarios cuya clasificacion de cliente no sea nula.
                 $usuario_clientes = UsuarioDAO::byRange(new Usuario( array( "id_clasificacion_cliente" => 1 ) ),
-                        new Usuario( array( "id_clasificacion_cliente" => PHP_INT_MAX) ));
+                        new Usuario( array( "id_clasificacion_cliente" => PHP_INT_MAX) ),$orden);
                 
                 //Si no se reciben parametros, la lista final sera la variable usuario_clientes,
                 //pero si se reciben parametros se hace una interseccion y se regresa lal ista

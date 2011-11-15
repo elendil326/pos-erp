@@ -164,7 +164,7 @@
   static function Lista
 	(
 		$activo = null, 
-		$ordenar = null
+		$orden = null
 	);  
   
   

@@ -397,10 +397,81 @@ require_once("interfaces/Proveedores.interface.php");
 	public static function Lista
 	(
 		$activo = null, 
-		$ordenar = null
+		$orden = null
 	)
 	{  
             Logger::log("Listando los proveedores");
+            
+            //valida que el parametro orden sea valido
+                if
+                (
+                        !is_null($orden)                        &&
+                        $orden != "id_usuario"                  &&
+                        $orden != "id_direccion"                &&
+                        $orden != "id_direccion_alterna"        &&
+                        $orden != "id_sucursal"                 &&
+                        $orden != "id_rol"                      &&
+                        $orden != "id_clasificacion_cliente"    &&
+                        $orden != "id_clasificacion_proveedor"  &&
+                        $orden != "id_moneda"                   &&
+                        $orden != "fecha_asignacion_rol"        &&
+                        $orden != "nombre"                      &&
+                        $orden != "rfc"                         &&
+                        $orden != "curp"                        &&
+                        $orden != "comision_ventas"             &&
+                        $orden != "telefono_personal1"          &&
+                        $orden != "telefono_personal2"          &&
+                        $orden != "fecha_alta"                  &&
+                        $orden != "fecha_baja"                  &&
+                        $orden != "activo"                      &&
+                        $orden != "limite_credito"              &&
+                        $orden != "descuento"                   &&
+                        $orden != "password"                    &&
+                        $orden != "last_login"                  &&
+                        $orden != "consignatario"               &&
+                        $orden != "salario"                     &&
+                        $orden != "correo_electronico"          &&
+                        $orden != "pagina_web"                  &&
+                        $orden != "saldo_del_ejercicio"         &&
+                        $orden != "ventas_a_credito"            &&
+                        $orden != "representante_legal"         &&
+                        $orden != "facturar_a_terceros"         &&
+                        $orden != "dia_de_pago"                 &&
+                        $orden != "mensajeria"                  &&
+                        $orden != "intereses_moratorios"        &&
+                        $orden != "denominacion_comercial"      &&
+                        $orden != "dias_de_credito"             &&
+                        $orden != "cuenta_de_mensajeria"        &&
+                        $orden != "dia_de_revision"             &&
+                        $orden != "codigo_usuario"              &&
+                        $orden != "dias_de_embarque"            &&
+                        $orden != "tiempo_entrega"              &&
+                        $orden != "cuenta_bancaria"
+                )
+                {
+                    Logger::error("La variable orden (".$orden.") no es valido");
+                    throw new Exception("La variable orden (".$orden.") no es valido");
+                }
+                $proveedores = array();
+                
+                //Solo se obtendran los usuarios cuya clasificacion de cliente no sea nula.
+                $usuario_proveedores = UsuarioDAO::byRange(new Usuario( array( "id_clasificacion_proveedor" => 1 ) ),
+                        new Usuario( array( "id_clasificacion_proveedor" => PHP_INT_MAX) ),$orden);
+                
+                //Si no se reciben parametros, la lista final sera la variable usuario_clientes,
+                //pero si se reciben parametros se hace una interseccion y se regresa lal ista
+                if(!is_null($activo))
+                {
+                    $proveedores_rango = UsuarioDAO::search(new Usuario( array( "activo" => $activo ) ), $orden);
+                    $proveedores = array_intersect($usuario_proveedores, $proveedores_rango);
+                }
+                else
+                {
+                    $proveedores = $usuario_proveedores;
+                }
+                Logger::log("La lista de proveedores fue obtenida exitosamente con ".count($proveedores)." elementos");
+                return $proveedores;
+            
 	}
   
 	/**
