@@ -297,12 +297,12 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
 	(
 		$codigo_cliente, 
 		$razon_social, 
-		$clasificacion_cliente = "", 
+		$clasificacion_cliente, 
+                $password,
 		$rfc = null, 
 		$telefono2 = null, 
 		$curp = null, 
-		$mensajeria = null, 
-		$password = null, 
+		$mensajeria = null,  
 		$numero_exterior = null, 
 		$colonia = null, 
 		$denominacion_comercial = null, 
@@ -310,16 +310,18 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
 		$representante_legal = null, 
 		$texto_extra = null, 
 		$telefono1 = null, 
-		$referencia = "", 
+		$referencia = null, 
 		$codigo_postal = null, 
 		$id_ciudad = null, 
 		$retenciones = null, 
 		$impuestos = null, 
-		$moneda_del_cliente = "", 
+		$moneda_del_cliente = null, 
 		$numero_interior = null, 
 		$calle = null, 
 		$email = null, 
-		$direccion_web = null
+		$direccion_web = null,
+                $telefono_personal1 = null,
+                $telefono_personal2 = null
 	);  
   
   

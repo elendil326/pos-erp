@@ -94,7 +94,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
        * se aplican validaciones extras de acuerdo a su uso
        * Regresa true cuando son validos, un string con el error cuando no lo es
        */
-      private static function validarParametrosUsuario
+      public static function validarParametrosUsuario
       (
               $id_usuario = null,
               $id_direccion = null,
@@ -266,7 +266,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
               $e=self::validarString($correo_electronico, 30, "correo electronico");
               if(is_string($e))
                   return $e;
-              if(!is_string(filter_var($email, FILTER_VALIDATE_EMAIL)))
+              if(!is_string(filter_var($correo_electronico, FILTER_VALIDATE_EMAIL)))
                       return "El correo electronico ".$correo_electronico." no es valido";
           }
           //valida que una pagina web tenga un formato valido.
@@ -740,7 +740,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                         $validar=self::validarParametrosRetencionUsuario($id_retencion);
                         if(is_string($validar))
                             throw $validar;
-                        RetencionEmpresaDAO::save(new RetencionEmpresa(array( "id_retencion" => $id_retencion , "id_usuario" => $usuario->getIdUsuario() )));
+                        RetencionUsuarioDAO::save(new RetencionUsuario(array( "id_retencion" => $id_retencion , "id_usuario" => $usuario->getIdUsuario() )));
                     }
                 }
 

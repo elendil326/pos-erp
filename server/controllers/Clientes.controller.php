@@ -48,6 +48,54 @@ require_once("interfaces/Clientes.interface.php");
 	    return true;
 	}
         
+        /*
+         * valida los parametros para los clientes. Regresa un string con el error en caso de encontrase
+         * alguno, de lo contrario regresa verdadero. Hace uso del metodo validarParametrosUsuario
+         */
+        private static function validarParametrosCliente
+        (
+                $id_cliente = null,
+                $codigo_cliente = null, 
+		$razon_social = null, 
+		$direccion_web = null, 
+		$clasificacion_cliente = null, 
+		$rfc = null,  
+		$curp = null, 
+		$mensajeria = null, 
+		$password = null,
+		$denominacion_comercial = null, 
+		$cuenta_de_mensajeria = null, 
+		$representante_legal = null, 
+		$moneda_del_cliente = null, 
+		$email = null,
+                $telefono_personal1 = null,
+                $telefono_personal2 = null
+        )
+        {
+            //valida los parametros llamando al metodo validarParametrosUsuario
+            $validar = PersonalYAgentesController::validarParametrosUsuario($id_cliente,null,null,null,$clasificacion_cliente,nulll,$moneda_del_cliente,
+                    null,$razon_social,$rfc,$curp,null,$telefono_personal1,$telefono_personal2,null,null,$password,null,$email,$direccion_web,
+                    null,null,$representante_legal,null,null,$mensajeria,null,$denominacion_comercial,null,$cuenta_de_mensajeria,null,$codigo_cliente);
+            if(is_string($validar))
+            {
+                return $validar;
+            }
+            
+            //valida que el cliente este activo y sea un cliente realmente
+            if(!is_null($id_cliente))
+            {
+                $cliente = UsuarioDAO::getByPK($id_cliente);
+                if(!$cliente->getActivo())
+                    return "El cliente ".$id_cliente." no esta activo";
+                
+                if(is_null($cliente->getIdClasificacionCliente()))
+                        return "El cliente ".$id_cliente." no es un cliente";
+            }
+            
+            //No se encontro error
+            return true;
+        }
+        
       
       
       
@@ -188,14 +236,14 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
 	(
 		$codigo_cliente, 
 		$razon_social, 
+                $clasificacion_cliente,
+                $password,
 		$direccion_web = null, 
-		$calle = null, 
-		$clasificacion_cliente = null, 
+		$calle = null,  
 		$rfc = null, 
 		$telefono2 = null, 
 		$curp = null, 
-		$mensajeria = null, 
-		$password = null, 
+		$mensajeria = null,  
 		$numero_exterior = null, 
 		$colonia = null, 
 		$denominacion_comercial = null, 
@@ -210,104 +258,34 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
 		$impuestos = null, 
 		$codigo_postal = null, 
 		$email = null, 
-		$referencia = null
+		$referencia = null,
+                $telefono_personal1 = null,
+                $telefono_personal2 = null
 	)
 	{
-	
-		//buscar este codigo de cliente
-		$cliente = new Usuario();
-		$cliente->setCodigoCliente($codigo_cliente);
-
-		if( sizeof( UsuarioDAO::search( $cliente ) ) !== 0 ) 
-		{
-			//ya existe un usuario con este codigo de cliente
-			return false;
-		}
-
-
-
-
-		//crear el objeto de direccion
-		$addr = new Direccion();
-		$addr->setCalle 		($calle);
-		$addr->setNumeroExterior($numero_exterior);
-		$addr->setNumeroInterior($numero_interior);
-		//$addr->setReferencia	($referencia);
-		$addr->setColonia		($colonia);
-		$addr->setIdCiudad		($id_ciudad);
-		$addr->setCodigoPostal	($codigo_postal);
-		$addr->setTelefono 		($telefono1);
-		$addr->setTelefono2		($telefono2);
-		
-
-		//validar la direccion
-		$dc = new DireccionController(  );
-
-		try{
-			$dc->validarDireccion( $addr );	
-
-		}catch(Exception $e){
-			//direccion invalida
-			return false;
-		}
-		
-		//iniciar transaccion
-		DAO::transBegin();
-
-		//insertar direccion
-		try{
-			DireccionDAO::save( $addr );
-
-		}catch(Exception $e){
-			DAO::transRollback();
-			return false;
-
-		}
-
-		//si no hay contrase�a, generar una
-		if( is_null( $password ))
-		{
-			$password = md5( "THIS_IS_A_RANDOM_PASSWORD" );
-		}
-
-
-
-
-		//validar datos del usuario
-		$cliente->setRazonSocial		( $razon_social);
-		$cliente->setPassword 			( $password);
-		$cliente->setRFC 				( $rfc);
-		$cliente->setCurp 				( $curp);
-		$cliente->setTelefono 			( $telefono);
-		$cliente->setTelefono2 			( $telefono2);
-		$cliente->setDenominacionComercial( $denominacion_comercial);
-		$cliente->setRepresentanteLegal	( $representante_legal);
-		$cliente->setMonedaDelCliente	( $monenda_del_cliente);
-		$cliente->setEmail 				( $email);
-		$cliente->setTextoExtra 		( $texto_extra);
-		$cliente->setRetenciones 		( $retenciones);
-		$cliente->setdireccion_web 		( $direccion_web);
-		$cliente->setClasificacionCliente( $clasificacion_cliente);
-		$cliente->setCuentaDeMensajeria	( $cuent_de_mensajeria);
-		$cliente->setImpuestos 			( $impuestos);
-
-
-
-		//insertar usuario
-		try{
-			UsuarioDAO::save( $cliente );
-
-		}catch(Exception $e){
-			DAO::transRollback( );
-			return false;
-
-		}
-
-
-
-  		DAO::transEnd();
-  		return true;
-  
+            Logger::log("Creando nuevo cliente");
+            
+            //se crea la cliente utilizando el metodo Nuevo usuario, este se encarga de la validacion
+            //y se toma como rol de cliente el 5
+            try 
+            {
+                $cliente = PersonalYAgentesController::NuevoUsuario($codigo_cliente,$password,5,$razon_social,
+                        $curp,null,$clasificacion_cliente,$numero_exterior,null,self::getSucursal(),null,null,
+                        $representante_legal,null,$impuestos,$mensajeria,null,null,null,null,$direccion_web,
+                        $telefono_personal1,null,null,0,$telefono_personal2,$telefono1,$codigo_postal,null,null,
+                        $calle,null,$id_ciudad,null,null,$numero_interior,$email,$telefono2,null,$texto_extra,null,
+                        $denominacion_comercial,null,null,$telefono1,$cuenta_de_mensajeria,$rfc,null,$retenciones,
+                        $colonia,$moneda_del_cliente);
+            }
+            catch(Exception $e)
+            {
+                Logger::error("No se pudo crear al cliente: ".$e);
+                throw new Exception("No se pudo crear al cliente: ".$e);
+            }
+            
+            Logger::log("El cliente fue creado exitosamente");
+            return array( "id_cliente" => $cliente["id_usuario"]);
+            
 	}
   
 	/**
