@@ -83,7 +83,7 @@
  	 *Obtener los detalles de un cliente.
  	 *
  	 * @param id_cliente int Id del cliente del cual se listarn sus datos.
- 	 * @return cliente json Arreglo que contendrá la información del cliente. 
+ 	 * @return cliente json Arreglo que contendrï¿½ la informaciï¿½n del cliente. 
  	 **/
   static function Detalle
 	(
@@ -247,14 +247,14 @@ Update :  ?Es correcto que contenga el argumento id_sucursal? Ya que as? como es
  	 * @param id_empresa int Filtrara los resultados solo para los clientes que se dieron de alta en la empresa dada.
  	 * @param id_sucursal int Filtrara los resultados solo para los clientes que se dieron de alta en la sucursal dada.
  	 * @param mostrar_inactivos bool Si el valor es obtenido, cuando sea true, mostrar solo los clientes que estn activos, false si solo mostrar clientes inactivos.
- 	 * @return clientes json Arreglo de objetos que contendrá la información de los clientes.
+ 	 * @return clientes json Arreglo de objetos que contendrï¿½ la informaciï¿½n de los clientes.
  	 **/
   static function Lista
 	(
 		$orden = null, 
-		$id_empresa = null, 
 		$id_sucursal = null, 
-		$mostrar_inactivos = null
+		$activo = null,
+                $id_clasificacion_cliente = null
 	);  
   
   
@@ -291,7 +291,7 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
  	 * @param calle string Calle del cliente
  	 * @param email string E-mail del cliente
  	 * @param direccion_web string Direccin web del cliente.
- 	 * @return id_cliente int Id autogenerado del cliente que se insertó
+ 	 * @return id_cliente int Id autogenerado del cliente que se insertï¿½
  	 **/
   static function Nuevo
 	(

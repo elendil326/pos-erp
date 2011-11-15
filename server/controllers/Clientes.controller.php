@@ -7,7 +7,51 @@ require_once("interfaces/Clientes.interface.php");
   **/
 	
   class ClientesController implements IClientes{
-  
+        
+        //Metodo para pruebas que simula la obtencion del id de la sucursal actual
+        private static function getSucursal()
+        {
+            return 1;
+        }
+        
+        //metodo para pruebas que simula la obtencion del id de la caja actual
+        private static function getCaja()
+        {
+            return 1;
+        }
+      
+        
+        /*
+         *Se valida que un string tenga longitud en un rango de un maximo inclusivo y un minimo exclusvio.
+         *Regresa true cuando es valido, y un string cuando no lo es.
+         */
+          private static function validarString($string, $max_length, $nombre_variable,$min_length=0)
+	{
+		if(strlen($string)<=$min_length||strlen($string)>$max_length)
+		{
+		    return "La longitud de la variable ".$nombre_variable." proporcionada (".$string.") no esta en el rango de ".$min_length." - ".$max_length;
+		}
+		return true;
+        }
+
+
+        /*
+         * Se valida que un numero este en un rango de un maximo y un minimo inclusivos
+         * Regresa true cuando es valido, y un string cuando no lo es
+         */
+	private static function validarNumero($num, $max_length, $nombre_variable, $min_length=0)
+	{
+	    if($num<$min_length||$num>$max_length)
+	    {
+	        return "La variable ".$nombre_variable." proporcionada (".$num.") no esta en el rango de ".$min_length." - ".$max_length;
+	    }
+	    return true;
+	}
+        
+      
+      
+      
+      
   
 	/**
  	 *
@@ -24,14 +68,88 @@ Update :  �Es correcto que contenga el argumento id_sucursal? Ya que as?omo es
 	public static function Lista
 	(
 		$orden = null, 
-		$id_empresa = null, 
 		$id_sucursal = null, 
-		$mostrar_inactivos = null
+		$activo = null,
+                $id_clasificacion_cliente = null
 	)
 	{  
-  		  		
-  		return UsuarioDAO::listarClientes(  );
-
+  		Logger::log("Listando clientes");
+                
+                //valida que el parametro orden sea valido
+                if
+                (
+                        !is_null($orden)                        &&
+                        $orden != "id_usuario"                  &&
+                        $orden != "id_direccion"                &&
+                        $orden != "id_direccion_alterna"        &&
+                        $orden != "id_sucursal"                 &&
+                        $orden != "id_rol"                      &&
+                        $orden != "id_clasificacion_cliente"    &&
+                        $orden != "id_clasificacion_proveedor"  &&
+                        $orden != "id_moneda"                   &&
+                        $orden != "fecha_asignacion_rol"        &&
+                        $orden != "nombre"                      &&
+                        $orden != "rfc"                         &&
+                        $orden != "curp"                        &&
+                        $orden != "comision_ventas"             &&
+                        $orden != "telefono_personal1"          &&
+                        $orden != "telefono_personal2"          &&
+                        $orden != "fecha_alta"                  &&
+                        $orden != "fecha_baja"                  &&
+                        $orden != "activo"                      &&
+                        $orden != "limite_credito"              &&
+                        $orden != "descuento"                   &&
+                        $orden != "password"                    &&
+                        $orden != "last_login"                  &&
+                        $orden != "consignatario"               &&
+                        $orden != "salario"                     &&
+                        $orden != "correo_electronico"          &&
+                        $orden != "pagina_web"                  &&
+                        $orden != "saldo_del_ejercicio"         &&
+                        $orden != "ventas_a_credito"            &&
+                        $orden != "representante_legal"         &&
+                        $orden != "facturar_a_terceros"         &&
+                        $orden != "dia_de_pago"                 &&
+                        $orden != "mensajeria"                  &&
+                        $orden != "intereses_moratorios"        &&
+                        $orden != "denominacion_comercial"      &&
+                        $orden != "dias_de_credito"             &&
+                        $orden != "cuenta_de_mensajeria"        &&
+                        $orden != "dia_de_revision"             &&
+                        $orden != "codigo_usuario"              &&
+                        $orden != "dias_de_embarque"            &&
+                        $orden != "tiempo_entrega"              &&
+                        $orden != "cuenta_bancaria"
+                )
+                {
+                    Logger::error("La variable orden (".$orden.") no es valido");
+                    throw new Exception("La variable orden (".$orden.") no es valido");
+                }
+                $clientes = array();
+                
+                //Solo se obtendran los usuarios cuya clasificacion de cliente no sea nula.
+                $usuario_clientes = UsuarioDAO::byRange(new Usuario( array( "id_clasificacion_cliente" => 1 ) ),
+                        new Usuario( array( "id_clasificacion_cliente" => PHP_INT_MAX) ));
+                
+                //Si no se reciben parametros, la lista final sera la variable usuario_clientes,
+                //pero si se reciben parametros se hace una interseccion y se regresa lal ista
+                if(!is_null($id_sucursal) || !is_null($id_clasificacion_cliente) || !is_null($activo))
+                {
+                    $clientes_rango = UsuarioDAO::search(new Usuario( array( 
+                                                    "id_clasificacion_cliente"  => $id_clasificacion_cliente, 
+                                                    "id_sucursal"               => $id_sucursal,
+                                                    "activo"                    => $activo
+                                                                            )
+                                                                    ),
+                                                        $orden);
+                    $clientes = array_intersect($usuario_clientes, $clientes_rango);
+                }
+                else
+                {
+                    $clientes = $usuario_clientes;
+                }
+                Logger::log("La lista de clientes fue obtenida exitosamente con ".count($clientes)." elementos");
+                return $clientes;
 	}
   
 	/**
