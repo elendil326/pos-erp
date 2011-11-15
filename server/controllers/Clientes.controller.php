@@ -96,6 +96,80 @@ require_once("interfaces/Clientes.interface.php");
             return true;
         }
         
+        /*
+         * Valida los parametros de la tabla clasificacion_cliente. Regresa un string con el error en caso
+         * de encontrarse alguno. De lo contrario regresa verdader
+         */
+        private static function validarParametrosClasificacionCliente
+        (
+                $id_clasificacion_cliente = null,
+                $clave_interna = null,
+                $nombre = null,
+                $descripcion = null,
+                $margen_utilidad = null,
+                $descuento = null
+        )
+        {
+            //valida que la clasificacion exista 
+            if(!is_null($id_clasificacion_cliente))
+            {
+                if(is_null(ClasificacionClienteDAO::getByPK($id_clasificacion_cliente)))
+                        return "La clasificacion de cliente ".$id_clasificacion_cliente." no existe";
+            }
+            
+            //valida que la clave interna sea valida y que no se repita
+            if(!is_null($clave_interna))
+            {
+                $e = self::validarString($clave_interna, 20, "clave interna");
+                if(is_string($e))
+                    return $e;
+                
+                $clasificaciones_cliente = ClasificacionClienteDAO::search( new ClasificacionCliente( array( "clave_interna" => trim($clave_interna) ) ) );
+                if(!empty($clasificaciones_cliente))
+                    return "La clave interna (".$clave_interna.") ya esta en uso";
+            }
+            
+            //valida que el nombre sea valido y que no se repita
+            if(!is_null($nombre))
+            {
+                $e = self::validarString($nombre, 16, "nombre");
+                if(is_string($e))
+                    return $e;
+                
+                $clasificaciones_cliente = ClasificacionClienteDAO::search( new ClasificacionCliente( array( "nombre" => trim($nombre) ) ) );
+                if(!empty($clasificaciones_cliente))
+                    return "El nombre (".$nombre.") ya esta en uso";
+            }
+            
+            //valida que la descripcion este en rango
+            if(!is_null($descripcion))
+            {
+                $e = self::validarString($descripcion, 255, "descripcion");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el margen de utilidad este en rango
+            if(!is_null($margen_utilidad))
+            {
+                $e = self::validarNumero($margen_utilidad, 1.8e200, "margen de utilidad");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el descuento este en rango
+            if(!is_null($descuento))
+                
+            {
+                $e = self::validarNumero($descuento, 100, "descuento");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //No se encontro error
+            return true;
+        }
+        
       
       
       
@@ -349,7 +423,7 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
                 $descuento = null
 	)
 	{  
-            Logger::log("Editando perfil de cliente");
+            Logger::log("Editando perfil de cliente ".$id_cliente);
             
             //Se usa el metodo editar usuario para editar al cliente
             try
@@ -454,7 +528,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
                 $descuento = null
 	)
 	{  
-            Logger::log("Editando cliente");
+            Logger::log("Editando cliente ".$id_cliente);
             
             //Se llama al metodo Editar usuario
             try
@@ -546,8 +620,62 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 		$utilidad = null
 	)
 	{  
-  
-  
+            Logger::log("Creando nueva clasificacion de clientes");
+            
+            //Se validan los parametros recibidos
+            $validar = self::validarParametrosClasificacionCliente(null,$clave_interna,$nombre,$descripcion,$utilidad,$descuento);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            $clasificacion_cliente = new ClasificacionCliente( array( 
+                                            "clave_interna"     => $clave_interna,
+                                            "nombre"            => $nombre,
+                                            "descripcion"       => $descripcion,
+                                            "margen_utilidad"   => $utilidad,
+                                            "descuento"         => $descuento
+                                                                    )
+                                                             );
+            DAO::transBegin();
+            try
+            {
+                ClasificacionClienteDAO::save($clasificacion_cliente);
+                if(!is_null($impuestos))
+                {
+                    $impuesto_clasificacion_cliente = new ImpuestoClasificacionCliente(
+                            array( "id_clasificacion_cliente" => $clasificacion_cliente->getIdClasificacionCliente() ));
+                    foreach ($impuestos as $impuesto)
+                    {
+                        if(is_null(ImpuestoDAO::getByPK($impuesto)))
+                                throw new Exception ("El impuesto ".$impuesto." no existe");
+                        $impuesto_clasificacion_cliente->setIdImpuesto($impuesto);
+                        ImpuestoClasificacionClienteDAO::save($impuesto_clasificacion_cliente);
+                    }
+                }/* Fin if de impuestos */
+                if(!is_null($retenciones))
+                {
+                    $retencion_clasificacion_cliente = new RetencionClasificacionCliente(
+                            array ( "id_clasificacion_cliente" => $clasificacion_cliente->getIdClasificacionCliente() ) );
+                    foreach( $retenciones as $retencion )
+                    {
+                        if(is_null(RetencionDAO::getByPK($retencion)))
+                                throw new Exception("La retencion ".$retencion." no existe");
+                        $retencion_clasificacion_cliente->setIdRetencion($retencion);
+                        RetencionClasificacionClienteDAO::save($retencion_clasificacion_cliente);
+                    }
+                }/* Fin if de retenciones */
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo crear la nueva clasificacion de cliente: ".$e);
+                throw new Exception("No se pudo crear la nueva clasificacion de cliente");
+            }
+            DAO::transEnd();
+            Logger::log("Clasificacion de cliente creada exitosamente");
+            return array( "id_categoria_cliente" => $clasificacion_cliente->getIdClasificacionCliente() );
 	}
   
 	/**
