@@ -63,8 +63,12 @@ public class PosClient{
 	{
 
 		Runtime.getRuntime().addShutdownHook( new ShutDown() );
-
-		trayIcon = new PosSystemTray();
+        try{
+            trayIcon = new PosSystemTray();
+        }catch(Exception e){
+            Logger.error(e);
+        }
+		
 		
 		String response = null;
 				

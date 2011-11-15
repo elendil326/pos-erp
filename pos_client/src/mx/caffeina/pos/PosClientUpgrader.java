@@ -39,8 +39,8 @@ public class PosClientUpgrader{
 		
 				response = HttpClient.Request(
 							
-					//"http://development.pos.caffeina.mx/proxy.php?"
-					"http://labs.caffeina.mx/alanboy/proyectos/pos/pos/trunk/www/proxy.php?"
+					"http://development.pos.caffeina.mx/proxy.php?"
+					//"http://labs.caffeina.mx/alanboy/proyectos/pos/pos/trunk/www/proxy.php?"
 					
 					// instance
 					+ "&i=1"
