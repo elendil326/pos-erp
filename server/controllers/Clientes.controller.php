@@ -690,8 +690,28 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 		$orden = null
 	)
 	{  
-  
-  
+            Logger::log("Listando las clasificaciones de cliente");
+            
+            //Se valida el parametro orden
+            if
+            (
+                    !is_null($orden)                        &&
+                    $orden != "id_clasificacion_cliente"    &&
+                    $orden != "clave_interna"               &&
+                    $orden != "nombre"                      &&
+                    $orden != "descripcion"                 &&
+                    $orden != "margen_utilidad"             &&
+                    $orden != "descuento"
+            )
+            {
+                Logger::error("La variable orden (".$orden.") es invalida");
+                throw new Exception("La variable orden (".$orden.") es invalida");
+            }
+            
+            $clasificaciones_cliente = ClasificacionClienteDAO::getAll(null,null,$orden);
+            Logger::log("Se obtuvieron ".count($clasificaciones_cliente)." clasificaciones de cliente");
+            return $clasificaciones_cliente;
+            
 	}
   
 	/**
