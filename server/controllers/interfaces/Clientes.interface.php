@@ -171,7 +171,8 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 		$intereses_moratorios = null, 
 		$codigo_postal = null, 
 		$numero_interior = null, 
-		$dia_de_revision = null
+		$dia_de_revision = null,
+                $descuento = null
 	);  
   
   
@@ -208,10 +209,10 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
  	 **/
   static function Editar_perfil
 	(
-		$password, 
-		$razon_social, 
-		$id_cliente, 
-		$codigo_cliente, 
+                $id_cliente, 
+		$password = null, 
+		$razon_social = null, 
+		$codigo_cliente = null, 
 		$moneda_del_cliente =  null, 
 		$numero_exterior =  null, 
 		$numero_interior =  null, 
@@ -225,13 +226,15 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 		$mensajeria =  null, 
 		$telefono2 =  null, 
 		$denominacion_comercial =  null, 
-		$estatus =  null, 
 		$calle =  null, 
 		$municipio =  null, 
 		$clasificacion_cliente =  null, 
 		$email =  null, 
 		$texto_extra =  null, 
-		$colonia =  null
+		$colonia =  null,
+                $telefono_personal1 = null,
+                $telefono_personal2 = null,
+                $descuento = null
 	);  
   
   
@@ -309,8 +312,7 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
 		$cuenta_de_mensajeria = null, 
 		$representante_legal = null, 
 		$texto_extra = null, 
-		$telefono1 = null, 
-		$referencia = null, 
+		$telefono1 = null,  
 		$codigo_postal = null, 
 		$id_ciudad = null, 
 		$retenciones = null, 
@@ -321,7 +323,9 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
 		$email = null, 
 		$direccion_web = null,
                 $telefono_personal1 = null,
-                $telefono_personal2 = null
+                $telefono_personal2 = null,
+                $descuento = null,
+                $limite_credito = null
 	);  
   
   

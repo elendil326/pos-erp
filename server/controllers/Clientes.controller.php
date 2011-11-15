@@ -260,7 +260,9 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
 		$email = null, 
 		$referencia = null,
                 $telefono_personal1 = null,
-                $telefono_personal2 = null
+                $telefono_personal2 = null,
+                $descuento = null,
+                $limite_credito = null
 	)
 	{
             Logger::log("Creando nuevo cliente");
@@ -272,7 +274,7 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
                 $cliente = PersonalYAgentesController::NuevoUsuario($codigo_cliente,$password,5,$razon_social,
                         $curp,null,$clasificacion_cliente,$numero_exterior,null,self::getSucursal(),null,null,
                         $representante_legal,null,$impuestos,$mensajeria,null,null,null,null,$direccion_web,
-                        $telefono_personal1,null,null,0,$telefono_personal2,$telefono1,$codigo_postal,null,null,
+                        $telefono_personal1,$descuento,null,$limite_credito,$telefono_personal2,null,$codigo_postal,null,null,
                         $calle,null,$id_ciudad,null,null,$numero_interior,$email,$telefono2,null,$texto_extra,null,
                         $denominacion_comercial,null,null,$telefono1,$cuenta_de_mensajeria,$rfc,null,$retenciones,
                         $colonia,$moneda_del_cliente);
@@ -319,10 +321,10 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
  	 **/
 	public static function Editar_perfil
 	(
-		$password, 
-		$razon_social, 
-		$id_cliente, 
-		$codigo_cliente, 
+                $id_cliente, 
+		$password = null, 
+		$razon_social = null, 
+		$codigo_cliente = null, 
 		$moneda_del_cliente = null, 
 		$numero_exterior = null, 
 		$numero_interior = null, 
@@ -336,17 +338,37 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
 		$mensajeria = null, 
 		$telefono2 = null, 
 		$denominacion_comercial = null, 
-		$estatus = null, 
 		$calle = null, 
 		$municipio = null, 
 		$clasificacion_cliente = null, 
 		$email = null, 
 		$texto_extra = null, 
-		$colonia = null
+		$colonia = null,
+                $telefono_personal1 = null,
+                $telefono_personal2 = null,
+                $descuento = null
 	)
 	{  
-  
-  
+            Logger::log("Editando perfil de cliente");
+            
+            //Se usa el metodo editar usuario para editar al cliente
+            try
+            {
+                PersonalYAgentesController::EditarUsuario($id_cliente,null,null,
+                        null,$descuento,$telefono_personal1,null,$direccion_web,
+                        null,null,$mensajeria,$telefono_personal2,null,null,null,
+                        null,null,null,null,$calle,null,$codigo_postal,$texto_extra,
+                        $numero_interior,$municipio,$password,null,$codigo_cliente,
+                        $razon_social,$colonia,null,$email,$representante_legal,null,
+                        null,$telefono2,null,$rfc,$curp,null,$numero_exterior,$denominacion_comercial,
+                        $clasificacion_cliente,null,null,$cuenta_de_mensajeria,$telefono1,null,null,null,null,$moneda_del_cliente);
+            }
+            catch(Exception $e)
+            {
+                Logger::error("No se pudo editar al cliente: ".$e);
+                throw new Exception("No se pudo editar al cliente");
+            }
+            Logger::log("Cliente editado exitosamente");
 	}
   
 	/**
@@ -427,7 +449,10 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 		$intereses_moratorios = null, 
 		$codigo_postal = null, 
 		$numero_interior = null, 
-		$dia_de_revision = null
+		$dia_de_revision = null,
+                $telefono_personal1 = null,
+                $telefono_personal2 = null,
+                $descuento = null
 	)
 	{  
   
