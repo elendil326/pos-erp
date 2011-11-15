@@ -89,7 +89,7 @@ public class PosClientUpgrader{
 
 		try{
 			
-			HttpClient.RequestBinToFile("http://labs.caffeina.mx/alanboy/proyectos/pos/pos/trunk/www/proxy.php?&i=1&action=1401&t=00-1E-52-87-A2-9E", "new_version.zip");
+			HttpClient.RequestBinToFile("http://development.pos.caffeina.mx/proxy.php?&i=1&action=1401&t=00-1E-52-87-A2-9E", "new_version.zip");
 
 			Logger.log("Descargando nueva version...[OK]");
 			
@@ -134,10 +134,12 @@ public class PosClientUpgrader{
 
 		}catch(Exception e){
 
-			Logger.error(e);
-			Logger.error("--- cerrando cliente debido a exception ---");
-			System.out.println(e);
-			System.exit(1);
+			Logger.error( e );
+			Logger.error("--- Imposible actualizar ---");
+            PosClient.trayIcon.getTrayIcon().displayMessage("Actualizando POS", 
+                                                            "Imposible actualizar",
+                                                            TrayIcon.MessageType.INFO);
+            return;
 		}
 		
 		
