@@ -8,6 +8,56 @@ require_once("interfaces/Precio.interface.php");
 	
   class PrecioController implements IPrecio{
   
+      
+        //Metodo para pruebas que simula la obtencion del id de la sucursal actual
+        private static function getSucursal()
+        {
+            return 1;
+        }
+        
+        //metodo para pruebas que simula la obtencion del id de la caja actual
+        private static function getCaja()
+        {
+            return 1;
+        }
+        
+        
+        /*
+         *Se valida que un string tenga longitud en un rango de un maximo inclusivo y un minimo exclusvio.
+         *Regresa true cuando es valido, y un string cuando no lo es.
+         */
+          private static function validarString($string, $max_length, $nombre_variable,$min_length=0)
+	{
+		if(strlen($string)<=$min_length||strlen($string)>$max_length)
+		{
+		    return "La longitud de la variable ".$nombre_variable." proporcionada (".$string.") no esta en el rango de ".$min_length." - ".$max_length;
+		}
+		return true;
+        }
+
+
+        /*
+         * Se valida que un numero este en un rango de un maximo y un minimo inclusivos
+         * Regresa true cuando es valido, y un string cuando no lo es
+         */
+	private static function validarNumero($num, $max_length, $nombre_variable, $min_length=0)
+	{
+	    if($num<$min_length||$num>$max_length)
+	    {
+	        return "La variable ".$nombre_variable." proporcionada (".$num.") no esta en el rango de ".$min_length." - ".$max_length;
+	    }
+	    return true;
+	}
+      
+        
+        
+        
+        
+        
+      
+      
+      
+      
   
 	/**
  	 *
@@ -22,8 +72,29 @@ require_once("interfaces/Precio.interface.php");
 		$servicios
 	)
 	{  
-  
-  
+            Logger::log("Eliminando el precio de los servicios para el tipo de cliente ".$id_tipo_cliente);
+            
+            //Se inicializa el registro que se borrara. Se recorrera la lista de servicios obtenida
+            //y se eliminaran los registros correspondientes
+            DAO::transBegin();
+            try
+            {
+                foreach($servicios as $servicio)
+                {
+                    $precio_servicio_tipo_cliente = PrecioServicioTipoClienteDAO::getByPK($servicio, $id_tipo_cliente);
+                    if(is_null($precio_servicio_tipo_cliente))
+                            throw new Exception("El tipo de cliente ".$id_tipo_cliente." no tiene precio preferencial con el servicio ".$servicio);
+                    PrecioServicioTipoClienteDAO::delete($precio_servicio_tipo_cliente);
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se han podido eliminar los precios: ".$e);
+                throw new Exception("No se han podido eliminar todos los precios");
+            }
+            DAO::transEnd();
+            Logger::log("Precios eliminados correctamente");
 	}
   
 	/**
