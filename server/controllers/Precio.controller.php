@@ -170,6 +170,7 @@ require_once("interfaces/Precio.interface.php");
         
         
         
+        
       
       
       
@@ -703,7 +704,7 @@ require_once("interfaces/Precio.interface.php");
 		$id_rol
 	)
 	{  
-            Logger::log("Registrando precios de los servicios para el rol ".$id_rol);
+            Logger::log("Registrando precios de los productos para el rol ".$id_rol);
             
             //valida al rol obtendio
             $validar = self::validarRol($id_rol);
@@ -1095,4 +1096,257 @@ require_once("interfaces/Precio.interface.php");
             DAO::transEnd();
             Logger::log("Precios guardados exitosamente");
 	}
+  
+  
+  
+        /**
+ 	 *
+ 	 *Edita la relacion de precio de uno o varios productos con un rol
+ 	 *
+ 	 * @param productos_precios_utlidad json Arreglo de objetos que contendran un id producto con un precio o margen de utilidad con el que se vendera este producto
+ 	 * @param id_rol int Id del rol al que se le asignara el precio preferencial
+ 	 **/
+         public static function Editar_precio_rolPaquete
+	 (
+		$paquetes_precios_utilidad, 
+		$id_rol
+	 )
+         {
+             Logger::log("Registrando precios de los paquetes para el rol ".$id_rol);
+            
+            //valida al rol obtendio
+            $validar = self::validarRol($id_rol);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            //Se inicializa el registro a guardar
+            $precio_paquete_rol = new PrecioPaqueteRol( array( "id_rol" => $id_rol ) );
+            DAO::transBegin();
+            try
+            {
+                foreach($paquetes_precios_utilidad as $paquete_precio_utilidad)
+                {
+                    $validar = self::validarPaquete($paquete_precio_utilidad["id_paquete"]);
+                    if(is_string($validar))
+                        throw new Exception($validar);
+                    
+                    $validar = self::validarPrecioUtilidad($paquete_precio_utilidad["precio_utilidad"]);
+                    if(is_string($validar))
+                        throw new Exception($validar);
+                    
+                    $validar = self::validarEsMargenUtilidad($paquete_precio_utilidad["es_margen_utilidad"]);
+                    if(is_string($validar))
+                        throw new Exception($validar);
+                    
+                    $precio_paquete_rol->setEsMargenUtilidad($paquete_precio_utilidad["es_margen_utilidad"]);
+                    $precio_paquete_rol->setIdPaquete($paquete_precio_utilidad["id_paquete"]);
+                    $precio_paquete_rol->setPrecioUtilidad($paquete_precio_utilidad["precio_utilidad"]);
+                    PrecioPaqueteRolDAO::save($precio_paquete_rol);
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se han podido guardar todos los precios para el rol ".$id_rol." : ".$e);
+                throw new Exception("No se han podido guardar todos los precios para el rol");
+            }
+            DAO::transEnd();
+            Logger::log("Precios guardados exitosamente");
+         }
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Los precios de un paquete pueden variar segun el tipo de cliente al que se le vende. Este metodo edita la relacion de un precio a uno o varios paquetes con un tipo de cliente.
+ 	 *
+ 	 * @param paquetes_precios_utlidad json Arreglo de objetos que contendran un id paquete con un precio o un margen de utilidad con el que se ofrecera dicho paquete
+ 	 * @param id_clasificacion_cliente int Id del tipo cliente al que se le editaran sus precios
+ 	 **/
+         public static function Editar_precio_tipo_clientePaquete
+	 (
+		$paquetes_precios_utilidad, 
+		$id_tipo_cliente
+	 )
+         {
+             Logger::log("Registrando precios de los paquetes para el tipo_cliente ".$id_tipo_cliente);
+            
+            //valida al tipo_cliente obtendio
+            $validar = self::validarClasificacionCliente($id_tipo_cliente);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            //Se inicializa el registro a guardar
+            $precio_paquete_tipo_cliente = new PrecioPaqueteTipoCliente( array( "id_tipo_cliente" => $id_tipo_cliente ) );
+            DAO::transBegin();
+            try
+            {
+                foreach($paquetes_precios_utilidad as $paquete_precio_utilidad)
+                {
+                    $validar = self::validarPaquete($paquete_precio_utilidad["id_paquete"]);
+                    if(is_string($validar))
+                        throw new Exception($validar);
+                    
+                    $validar = self::validarPrecioUtilidad($paquete_precio_utilidad["precio_utilidad"]);
+                    if(is_string($validar))
+                        throw new Exception($validar);
+                    
+                    $validar = self::validarEsMargenUtilidad($paquete_precio_utilidad["es_margen_utilidad"]);
+                    if(is_string($validar))
+                        throw new Exception($validar);
+                    
+                    $precio_paquete_tipo_cliente->setEsMargenUtilidad($paquete_precio_utilidad["es_margen_utilidad"]);
+                    $precio_paquete_tipo_cliente->setIdPaquete($paquete_precio_utilidad["id_paquete"]);
+                    $precio_paquete_tipo_cliente->setPrecioUtilidad($paquete_precio_utilidad["precio_utilidad"]);
+                    PrecioPaqueteTipoClienteDAO::save($precio_paquete_tipo_cliente);
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se han podido guardar todos los precios para el tipo_cliente ".$id_tipo_cliente." : ".$e);
+                throw new Exception("No se han podido guardar todos los precios para el tipo_cliente");
+            }
+            DAO::transEnd();
+            Logger::log("Precios guardados exitosamente");
+         }
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *El precio de un paquete puede varior de acuerdo al cliente al que se le venda. Este metodo relaciona uno o varios paquetes con un cliente mediante un precio o margen de utilidad especifico.
+ 	 *
+ 	 * @param id_cliente int Id del cliente al que se relacionara
+ 	 * @param paquetes_precios_utilidad json Arreglo de objetos que contendran un id paquete con un precio o un margen de utilidad con el que se ofrecera dicho paquete
+ 	 **/
+         public static function Editar_precio_usuarioPaquete
+	 (
+		$id_usuario, 
+		$paquetes_precios_utilidad
+	 )
+         {
+             
+         }
+  
+	
+  
+	/**
+ 	 *
+ 	 *Elimina la relacion del precio de un paquete con un rol
+ 	 *
+ 	 * @param id_rol int Id del rol a quitar el precio preferencial
+ 	 * @param paquetes json Arreglo de ids de paquetes a los que se les quitara el precio preferencial
+ 	 **/
+         public static function Eliminar_precio_rolPaquete
+	 (
+		$id_rol, 
+		$paquetes
+	 )
+         {
+         
+         }
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Elimina la relacion del precio de un paquete con un tipo de cliente
+ 	 *
+ 	 * @param id_tipo_cliente int 
+ 	 * @param paquetes json Arreglo de ids de paquetes a los que se les quitara el precio preferencial
+ 	 **/
+         public static function Eliminar_precio_tipo_clientePaquete
+	 (
+		$id_tipo_cliente, 
+		$paquetes
+	 )
+         {
+             
+         }
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Elimina la relacion del precio de un paquete con un usuario
+ 	 *
+ 	 * @param id_usuario int 
+ 	 * @param paquetes json Arreglo de ids de paquetes a los que se les quitara el precio preferencial
+ 	 **/
+         public static function Eliminar_precio_usuarioPaquete
+	 (
+		$id_usuario, 
+		$paquetes
+	 )
+         {
+             
+         }
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Asigna precios y margenes de utilidades a paquetes de acuerdo al rol del usuario al que se le vende. 
+ 	 *
+ 	 * @param id_rol int Id del rol al que se le asignara este precio o margen de utilidad preferencial
+ 	 * @param paquetes_precios_utlidad json Arreglo de objetos que contendran un id paquete con un precio o margen de utilidad con el que se vendera este paquete
+ 	 **/
+         public static function Nuevo_precio_rolPaquete
+	 (
+		$id_rol, 
+		$paquetes_precios_utilidad
+	 )
+         {
+             
+         }
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Los precios de un paquete pueden variar segun el tipo de cliente al que se le vende. Este metodo relaciona un precio a uno o varios paquetes con un tipo de cliente.
+ 	 *
+ 	 * @param id_tipo_cliente int Id del tipo cliente a relacionar
+ 	 * @param paquetes_precios_utilidad json Arreglo de objetos que contendran un id paquete con un precio o un margen de utilidad con el que se ofrecera dicho paquete
+ 	 **/
+         public static function Nuevo_precio_tipo_clientePaquete
+	 (
+		$id_tipo_cliente, 
+		$paquetes_precios_utilidad
+	 )
+         {
+             
+         }
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *El precio de un paquete puede varior de acuerdo al usuario al que se le venda. Este metodo relaciona uno o varios paquetes con un usuario mediante un precio o margen de utilidad especifico.
+ 	 *
+ 	 * @param id_usuario int Id del usuario al que se relacionara
+ 	 * @param paquetes_precios_utlidad json Arreglo de objetos que contendran un id paquete con un precio o un margen de utilidad con el que se ofrecera dicho paquete
+ 	 **/
+         public static function Nuevo_precio_usuarioPaquete
+         (
+		$id_usuario, 
+		$paquetes_precios_utilidad
+         )
+         {
+             
+         }
   }

@@ -292,7 +292,152 @@
 		$id_usuario, 
 		$servicios_precios_utilidad
 	);  
+        
+        
   
+  
+  
+  
+        /**
+ 	 *
+ 	 *Edita la relacion de precio de uno o varios productos con un rol
+ 	 *
+ 	 * @param productos_precios_utlidad json Arreglo de objetos que contendran un id producto con un precio o margen de utilidad con el que se vendera este producto
+ 	 * @param id_rol int Id del rol al que se le asignara el precio preferencial
+ 	 **/
+  static function Editar_precio_rolPaquete
+	(
+		$paquetes_precios_utilidad, 
+		$id_rol
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Los precios de un paquete pueden variar segun el tipo de cliente al que se le vende. Este metodo edita la relacion de un precio a uno o varios paquetes con un tipo de cliente.
+ 	 *
+ 	 * @param paquetes_precios_utlidad json Arreglo de objetos que contendran un id paquete con un precio o un margen de utilidad con el que se ofrecera dicho paquete
+ 	 * @param id_clasificacion_cliente int Id del tipo cliente al que se le editaran sus precios
+ 	 **/
+  static function Editar_precio_tipo_clientePaquete
+	(
+		$paquetes_precios_utilidad, 
+		$id_tipo_cliente
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *El precio de un paquete puede varior de acuerdo al cliente al que se le venda. Este metodo relaciona uno o varios paquetes con un cliente mediante un precio o margen de utilidad especifico.
+ 	 *
+ 	 * @param id_cliente int Id del cliente al que se relacionara
+ 	 * @param paquetes_precios_utilidad json Arreglo de objetos que contendran un id paquete con un precio o un margen de utilidad con el que se ofrecera dicho paquete
+ 	 **/
+  static function Editar_precio_usuarioPaquete
+	(
+		$id_usuario, 
+		$paquetes_precios_utilidad
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Elimina la relacion del precio de un paquete con un rol
+ 	 *
+ 	 * @param id_rol int Id del rol a quitar el precio preferencial
+ 	 * @param paquetes json Arreglo de ids de paquetes a los que se les quitara el precio preferencial
+ 	 **/
+  static function Eliminar_precio_rolPaquete
+	(
+		$id_rol, 
+		$paquetes
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Elimina la relacion del precio de un paquete con un tipo de cliente
+ 	 *
+ 	 * @param id_tipo_cliente int 
+ 	 * @param paquetes json Arreglo de ids de paquetes a los que se les quitara el precio preferencial
+ 	 **/
+  static function Eliminar_precio_tipo_clientePaquete
+	(
+		$id_tipo_cliente, 
+		$paquetes
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Elimina la relacion del precio de un paquete con un usuario
+ 	 *
+ 	 * @param id_usuario int 
+ 	 * @param paquetes json Arreglo de ids de paquetes a los que se les quitara el precio preferencial
+ 	 **/
+  static function Eliminar_precio_usuarioPaquete
+	(
+		$id_usuario, 
+		$paquetes
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Asigna precios y margenes de utilidades a paquetes de acuerdo al rol del usuario al que se le vende. 
+ 	 *
+ 	 * @param id_rol int Id del rol al que se le asignara este precio o margen de utilidad preferencial
+ 	 * @param paquetes_precios_utlidad json Arreglo de objetos que contendran un id paquete con un precio o margen de utilidad con el que se vendera este paquete
+ 	 **/
+  static function Nuevo_precio_rolPaquete
+	(
+		$id_rol, 
+		$paquetes_precios_utilidad
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Los precios de un paquete pueden variar segun el tipo de cliente al que se le vende. Este metodo relaciona un precio a uno o varios paquetes con un tipo de cliente.
+ 	 *
+ 	 * @param id_tipo_cliente int Id del tipo cliente a relacionar
+ 	 * @param paquetes_precios_utilidad json Arreglo de objetos que contendran un id paquete con un precio o un margen de utilidad con el que se ofrecera dicho paquete
+ 	 **/
+  static function Nuevo_precio_tipo_clientePaquete
+	(
+		$id_tipo_cliente, 
+		$paquetes_precios_utilidad
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *El precio de un paquete puede varior de acuerdo al usuario al que se le venda. Este metodo relaciona uno o varios paquetes con un usuario mediante un precio o margen de utilidad especifico.
+ 	 *
+ 	 * @param id_usuario int Id del usuario al que se relacionara
+ 	 * @param paquetes_precios_utlidad json Arreglo de objetos que contendran un id paquete con un precio o un margen de utilidad con el que se ofrecera dicho paquete
+ 	 **/
+  static function Nuevo_precio_usuarioPaquete
+	(
+		$id_usuario, 
+		$paquetes_precios_utilidad
+	);  
   
 	
   }
