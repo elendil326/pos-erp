@@ -608,8 +608,28 @@ require_once("interfaces/Precio.interface.php");
 		$servicios
 	)
 	{  
-  
-  
+            Logger::log("ELiminando los precios de servicio para el rol ".$id_rol);
+            
+            //Se inicializa el registro a eliminar y se elimina
+            DAO::transBegin();
+            try
+            {
+                foreach($servicios as $servicio)
+                {
+                    $precio_servicio_rol = PrecioServicioRolDAO::getByPK($servicio, $id_rol);
+                    if(is_null($precio_servicio_rol))
+                        throw new Exception("El rol ".$id_rol." no tiene precio especial para el servicio ".$servicio);
+                    PrecioServicioRolDAO::delete($precio_servicio_rol);
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudieron eliminar los precios para servicio del rol ".$id_rol." : ".$e);
+                throw new Exception("No se pudieron eliminar los precios para servicio del rol");
+            }
+            DAO::transEnd();
+            Logger::log("Precios de servicios eliminados exitosamente");
 	}
   
 	/**
