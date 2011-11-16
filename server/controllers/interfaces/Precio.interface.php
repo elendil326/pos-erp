@@ -17,7 +17,7 @@
  	 **/
   static function Editar_precio_rolProducto
 	(
-		$productos_precios_utlidad, 
+		$productos_precios_utilidad, 
 		$id_rol
 	);  
   

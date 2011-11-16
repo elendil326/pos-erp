@@ -699,12 +699,53 @@ require_once("interfaces/Precio.interface.php");
  	 **/
 	public static function Editar_precio_rolProducto
 	(
-		$productos_precios_utlidad, 
+		$productos_precios_utilidad, 
 		$id_rol
 	)
 	{  
-  
-  
+            Logger::log("Registrando precios de los servicios para el rol ".$id_rol);
+            
+            //valida al rol obtendio
+            $validar = self::validarRol($id_rol);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            //Se inicializa el registro a guardar
+            $precio_producto_rol = new PrecioProductoRol( array( "id_rol" => $id_rol ) );
+            DAO::transBegin();
+            try
+            {
+                foreach($productos_precios_utilidad as $producto_precio_utilidad)
+                {
+                    $validar = self::validarProducto($producto_precio_utilidad["id_producto"]);
+                    if(is_string($validar))
+                        throw new Exception($validar);
+                    
+                    $validar = self::validarPrecioUtilidad($producto_precio_utilidad["precio_utilidad"]);
+                    if(is_string($validar))
+                        throw new Exception($validar);
+                    
+                    $validar = self::validarEsMargenUtilidad($producto_precio_utilidad["es_margen_utilidad"]);
+                    if(is_string($validar))
+                        throw new Exception($validar);
+                    
+                    $precio_producto_rol->setEsMargenUtilidad($producto_precio_utilidad["es_margen_utilidad"]);
+                    $precio_producto_rol->setIdProducto($producto_precio_utilidad["id_producto"]);
+                    $precio_producto_rol->setPrecioUtilidad($producto_precio_utilidad["precio_utilidad"]);
+                    PrecioProductoRolDAO::save($precio_producto_rol);
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se han podido guardar todos los precios para el rol ".$id_rol." : ".$e);
+                throw new Exception("No se han podido guardar todos los precios para el rol");
+            }
+            DAO::transEnd();
+            Logger::log("Precios guardados exitosamente");
 	}
   
 	/**
