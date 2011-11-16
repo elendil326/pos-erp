@@ -322,8 +322,49 @@ require_once("interfaces/Precio.interface.php");
 		$servicios_precios_utilidad
 	)
 	{  
-  
-  
+            Logger::log("Registrando precios de los servicios para el usuario ".$id_usuario);
+            
+            //valida al usuario obtendio
+            $validar = self::validarUsuario($id_usuario);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            //Se inicializa el registro y se guarda
+            $precio_servicio_usuario = new PrecioServicioUsuario( array( "id_usuario" => $id_usuario ) );
+            DAO::transBegin();
+            try
+            {
+                foreach($servicios_precios_utilidad as $servicio_precio_utilidad)
+                {
+                    $validar = self::validarServicio($servicio_precio_utilidad["id_servicio"]);
+                    if(is_string($validar))
+                        throw new Exception($validar);
+                    
+                    $validar = self::validarPrecioUtilidad($servicio_precio_utilidad["precio_utilidad"]);
+                    if(is_string($validar))
+                        throw new Exception($validar);
+                    
+                    $validar = self::validarEsMargenUtilidad($servicio_precio_utilidad["es_margen_utilidad"]);
+                    if(is_string($validar))
+                        throw new Exception($validar);
+                    
+                    $precio_servicio_usuario->setEsMargenUtilidad($servicio_precio_utilidad["es_margen_utilidad"]);
+                    $precio_servicio_usuario->setIdServicio($servicio_precio_utilidad["id_servicio"]);
+                    $precio_servicio_usuario->setPrecioUtilidad($servicio_precio_utilidad["precio_utilidad"]);
+                    PrecioServicioUsuarioDAO::save($precio_servicio_usuario);
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se han podido guardar todos los precios para el usuario ".$id_usuario." : ".$e);
+                throw new Exception("No se han podido guardar todos los precios para el usuario");
+            }
+            DAO::transEnd();
+            Logger::log("Precios guardados exitosamente");
 	}
   
 	/**
@@ -339,8 +380,49 @@ require_once("interfaces/Precio.interface.php");
 		$servicios_precios_utilidad
 	)
 	{  
-  
-  
+            Logger::log("Editando precios de los servicios para el rol ".$id_rol);
+            
+            //valida al rol obtendio
+            $validar = self::validarRol($id_rol);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            //Se inicializa el registro a editar. Si alguno de los registros no existe, se guardara
+            $precio_servicio_rol = new PrecioServicioRol( array( "id_rol" => $id_rol ) );
+            DAO::transBegin();
+            try
+            {
+                foreach($servicios_precios_utilidad as $servicio_precio_utilidad)
+                {
+                    $validar = self::validarServicio($servicio_precio_utilidad["id_servicio"]);
+                    if(is_string($validar))
+                        throw new Exception($validar);
+                    
+                    $validar = self::validarPrecioUtilidad($servicio_precio_utilidad["precio_utilidad"]);
+                    if(is_string($validar))
+                        throw new Exception($validar);
+                    
+                    $validar = self::validarEsMargenUtilidad($servicio_precio_utilidad["es_margen_utilidad"]);
+                    if(is_string($validar))
+                        throw new Exception($validar);
+                    
+                    $precio_servicio_rol->setEsMargenUtilidad($servicio_precio_utilidad["es_margen_utilidad"]);
+                    $precio_servicio_rol->setIdServicio($servicio_precio_utilidad["id_servicio"]);
+                    $precio_servicio_rol->setPrecioUtilidad($servicio_precio_utilidad["precio_utilidad"]);
+                    PrecioServicioRolDAO::save($precio_servicio_rol);
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se han podido editar todos los precios para el rol ".$id_rol." : ".$e);
+                throw new Exception("No se han podido editar todos los precios para el rol");
+            }
+            DAO::transEnd();
+            Logger::log("Precios editados exitosamente");
 	}
   
 	/**
