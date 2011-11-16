@@ -1234,7 +1234,49 @@ require_once("interfaces/Precio.interface.php");
 		$paquetes_precios_utilidad
 	 )
          {
-             
+             Logger::log("Registrando precios de los paquetes para el usuario ".$id_usuario);
+            
+            //valida al usuario obtendio
+            $validar = self::validarUsuario($id_usuario);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            //Se inicializa el registro a guardar
+            $precio_paquete_usuario = new PrecioPaqueteUsuario( array( "id_usuario" => $id_usuario ) );
+            DAO::transBegin();
+            try
+            {
+                foreach($paquetes_precios_utilidad as $paquete_precio_utilidad)
+                {
+                    $validar = self::validarPaquete($paquete_precio_utilidad["id_paquete"]);
+                    if(is_string($validar))
+                        throw new Exception($validar);
+                    
+                    $validar = self::validarPrecioUtilidad($paquete_precio_utilidad["precio_utilidad"]);
+                    if(is_string($validar))
+                        throw new Exception($validar);
+                    
+                    $validar = self::validarEsMargenUtilidad($paquete_precio_utilidad["es_margen_utilidad"]);
+                    if(is_string($validar))
+                        throw new Exception($validar);
+                    
+                    $precio_paquete_usuario->setEsMargenUtilidad($paquete_precio_utilidad["es_margen_utilidad"]);
+                    $precio_paquete_usuario->setIdPaquete($paquete_precio_utilidad["id_paquete"]);
+                    $precio_paquete_usuario->setPrecioUtilidad($paquete_precio_utilidad["precio_utilidad"]);
+                    PrecioPaqueteUsuarioDAO::save($precio_paquete_usuario);
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se han podido guardar todos los precios para el usuario ".$id_usuario." : ".$e);
+                throw new Exception("No se han podido guardar todos los precios para el usuario");
+            }
+            DAO::transEnd();
+            Logger::log("Precios guardados exitosamente");
          }
   
 	
