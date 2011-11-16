@@ -498,7 +498,7 @@ require_once("interfaces/Precio.interface.php");
 		$productos
 	)
 	{  
-            Logger::log("ELiminando los precios de servicio para el rol ".$id_rol);
+            Logger::log("ELiminando los precios de producto para el rol ".$id_rol);
             
             //Se inicializa el registro a eliminar y se elimina
             DAO::transBegin();
@@ -1294,7 +1294,28 @@ require_once("interfaces/Precio.interface.php");
 		$paquetes
 	 )
          {
-         
+             Logger::log("ELiminando los precios de paquete para el rol ".$id_rol);
+            
+            //Se inicializa el registro a eliminar y se elimina
+            DAO::transBegin();
+            try
+            {
+                foreach($paquetes as $paquete)
+                {
+                    $precio_paquete_rol = PrecioPaqueteRolDAO::getByPK($paquete, $id_rol);
+                    if(is_null($precio_paquete_rol))
+                        throw new Exception("El rol ".$id_rol." no tiene precio especial para el paquete ".$paquete);
+                    PrecioPaqueteRolDAO::delete($precio_paquete_rol);
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudieron eliminar los precios para paquete del rol ".$id_rol." : ".$e);
+                throw new Exception("No se pudieron eliminar los precios para paquete del rol");
+            }
+            DAO::transEnd();
+            Logger::log("Precios de paquetes eliminados exitosamente");
          }
   
   
@@ -1313,7 +1334,28 @@ require_once("interfaces/Precio.interface.php");
 		$paquetes
 	 )
          {
-             
+             Logger::log("ELiminando los precios de paquete para el tipo_cliente ".$id_tipo_cliente);
+            
+            //Se inicializa el registro a eliminar y se elimina
+            DAO::transBegin();
+            try
+            {
+                foreach($paquetes as $paquete)
+                {
+                    $precio_paquete_tipo_cliente = PrecioPaqueteTipoClienteDAO::getByPK($paquete, $id_tipo_cliente);
+                    if(is_null($precio_paquete_tipo_cliente))
+                        throw new Exception("El tipo_cliente ".$id_tipo_cliente." no tiene precio especial para el paquete ".$paquete);
+                    PrecioPaqueteTipoClienteDAO::delete($precio_paquete_tipo_cliente);
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudieron eliminar los precios para paquete del tipo_cliente ".$id_tipo_cliente." : ".$e);
+                throw new Exception("No se pudieron eliminar los precios para paquete del tipo_cliente");
+            }
+            DAO::transEnd();
+            Logger::log("Precios de paquetes eliminados exitosamente");
          }
   
   
