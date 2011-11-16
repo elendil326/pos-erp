@@ -33,7 +33,7 @@
  	 **/
   static function Editar_precio_tipo_clienteProducto
 	(
-		$productos_precios_utlidad, 
+		$productos_precios_utilidad, 
 		$id_clasificacion_cliente
 	);  
   

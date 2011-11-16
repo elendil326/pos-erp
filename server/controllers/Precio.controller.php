@@ -931,12 +931,53 @@ require_once("interfaces/Precio.interface.php");
  	 **/
 	public static function Editar_precio_tipo_clienteProducto
 	(
-		$productos_precios_utlidad, 
+		$productos_precios_utilidad, 
 		$id_clasificacion_cliente
 	)
 	{  
-  
-  
+            Logger::log("Editando precios de los productos para el tipo_cliente ".$id_clasificacion_cliente);
+            
+            //valida al tipo_cliente obtendio
+            $validar = self::validarClasificacionCliente($id_clasificacion_cliente);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            //Se inicializa el registro a editar. Si alguno de los registros no existe, se guardara
+            $precio_producto_tipo_cliente = new PrecioProductoTipoCliente( array( "id_clasificacion_cliente" => $id_clasificacion_cliente ) );
+            DAO::transBegin();
+            try
+            {
+                foreach($productos_precios_utilidad as $producto_precio_utilidad)
+                {
+                    $validar = self::validarProducto($producto_precio_utilidad["id_producto"]);
+                    if(is_string($validar))
+                        throw new Exception($validar);
+                    
+                    $validar = self::validarPrecioUtilidad($producto_precio_utilidad["precio_utilidad"]);
+                    if(is_string($validar))
+                        throw new Exception($validar);
+                    
+                    $validar = self::validarEsMargenUtilidad($producto_precio_utilidad["es_margen_utilidad"]);
+                    if(is_string($validar))
+                        throw new Exception($validar);
+                    
+                    $precio_producto_tipo_cliente->setEsMargenUtilidad($producto_precio_utilidad["es_margen_utilidad"]);
+                    $precio_producto_tipo_cliente->setIdProducto($producto_precio_utilidad["id_producto"]);
+                    $precio_producto_tipo_cliente->setPrecioUtilidad($producto_precio_utilidad["precio_utilidad"]);
+                    PrecioProductoTipoClienteDAO::save($precio_producto_tipo_cliente);
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se han podido editar todos los precios para el tipo_cliente ".$id_clasificacion_cliente." : ".$e);
+                throw new Exception("No se han podido editar todos los precios para el tipo_cliente");
+            }
+            DAO::transEnd();
+            Logger::log("Precios editados exitosamente");
 	}
   
 	/**
