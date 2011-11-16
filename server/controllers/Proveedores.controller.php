@@ -658,7 +658,18 @@ require_once("interfaces/Proveedores.interface.php");
 		$id_proveedor
 	)
 	{  
-  
-  
+            Logger::log("Eliminando proveedor ".$id_proveedor);
+            
+            //Se utiliza el metodo eliminar usuario
+            try
+            {
+                PersonalYAgentesController::EliminarUsuario($id_proveedor);
+            }
+            catch(Exception $e)
+            {
+                Logger::error("No se pudo eliminar el proveedor: ".$e);
+                throw new Exception("No se pudo eliminar el proveedor");
+            }
+            LOgger::log("Proveedor eliminado exitosamente");
 	}
   }
