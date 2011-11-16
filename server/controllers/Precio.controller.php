@@ -1414,7 +1414,49 @@ require_once("interfaces/Precio.interface.php");
 		$paquetes_precios_utilidad
 	 )
          {
-             
+             Logger::log("Registrando precios de los paquetes para el rol ".$id_rol);
+            
+            //valida al rol obtendio
+            $validar = self::validarRol($id_rol);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            //Se inicializa el registro a guardar
+            $precio_paquete_rol = new PrecioPaqueteRol( array( "id_rol" => $id_rol ) );
+            DAO::transBegin();
+            try
+            {
+                foreach($paquetes_precios_utilidad as $paquete_precio_utilidad)
+                {
+                    $validar = self::validarPaquete($paquete_precio_utilidad["id_paquete"]);
+                    if(is_string($validar))
+                        throw new Exception($validar);
+                    
+                    $validar = self::validarPrecioUtilidad($paquete_precio_utilidad["precio_utilidad"]);
+                    if(is_string($validar))
+                        throw new Exception($validar);
+                    
+                    $validar = self::validarEsMargenUtilidad($paquete_precio_utilidad["es_margen_utilidad"]);
+                    if(is_string($validar))
+                        throw new Exception($validar);
+                    
+                    $precio_paquete_rol->setEsMargenUtilidad($paquete_precio_utilidad["es_margen_utilidad"]);
+                    $precio_paquete_rol->setIdPaquete($paquete_precio_utilidad["id_paquete"]);
+                    $precio_paquete_rol->setPrecioUtilidad($paquete_precio_utilidad["precio_utilidad"]);
+                    PrecioPaqueteRolDAO::save($precio_paquete_rol);
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se han podido guardar todos los precios para el rol ".$id_rol." : ".$e);
+                throw new Exception("No se han podido guardar todos los precios para el rol");
+            }
+            DAO::transEnd();
+            Logger::log("Precios guardados exitosamente");
          }
   
   
@@ -1433,7 +1475,49 @@ require_once("interfaces/Precio.interface.php");
 		$paquetes_precios_utilidad
 	 )
          {
-             
+             Logger::log("Registrando precios de los paquetes para el tipo_cliente ".$id_tipo_cliente);
+            
+            //valida al tipo_cliente obtendio
+            $validar = self::validarClasificacionCliente($id_tipo_cliente);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            //Se inicializa el registro a guardar
+            $precio_paquete_tipo_cliente = new PrecioPaqueteTipoCliente( array( "id_tipo_cliente" => $id_tipo_cliente ) );
+            DAO::transBegin();
+            try
+            {
+                foreach($paquetes_precios_utilidad as $paquete_precio_utilidad)
+                {
+                    $validar = self::validarPaquete($paquete_precio_utilidad["id_paquete"]);
+                    if(is_string($validar))
+                        throw new Exception($validar);
+                    
+                    $validar = self::validarPrecioUtilidad($paquete_precio_utilidad["precio_utilidad"]);
+                    if(is_string($validar))
+                        throw new Exception($validar);
+                    
+                    $validar = self::validarEsMargenUtilidad($paquete_precio_utilidad["es_margen_utilidad"]);
+                    if(is_string($validar))
+                        throw new Exception($validar);
+                    
+                    $precio_paquete_tipo_cliente->setEsMargenUtilidad($paquete_precio_utilidad["es_margen_utilidad"]);
+                    $precio_paquete_tipo_cliente->setIdPaquete($paquete_precio_utilidad["id_paquete"]);
+                    $precio_paquete_tipo_cliente->setPrecioUtilidad($paquete_precio_utilidad["precio_utilidad"]);
+                    PrecioPaqueteTipoClienteDAO::save($precio_paquete_tipo_cliente);
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se han podido guardar todos los precios para el tipo_cliente ".$id_tipo_cliente." : ".$e);
+                throw new Exception("No se han podido guardar todos los precios para el tipo_cliente");
+            }
+            DAO::transEnd();
+            Logger::log("Precios guardados exitosamente");
          }
   
   
@@ -1452,6 +1536,48 @@ require_once("interfaces/Precio.interface.php");
 		$paquetes_precios_utilidad
          )
          {
-             
+             Logger::log("Registrando precios de los paquetes para el usuario ".$id_usuario);
+            
+            //valida al usuario obtendio
+            $validar = self::validarUsuario($id_usuario);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            //Se inicializa el registro a guardar
+            $precio_paquete_usuario = new PrecioPaqueteUsuario( array( "id_usuario" => $id_usuario ) );
+            DAO::transBegin();
+            try
+            {
+                foreach($paquetes_precios_utilidad as $paquete_precio_utilidad)
+                {
+                    $validar = self::validarPaquete($paquete_precio_utilidad["id_paquete"]);
+                    if(is_string($validar))
+                        throw new Exception($validar);
+                    
+                    $validar = self::validarPrecioUtilidad($paquete_precio_utilidad["precio_utilidad"]);
+                    if(is_string($validar))
+                        throw new Exception($validar);
+                    
+                    $validar = self::validarEsMargenUtilidad($paquete_precio_utilidad["es_margen_utilidad"]);
+                    if(is_string($validar))
+                        throw new Exception($validar);
+                    
+                    $precio_paquete_usuario->setEsMargenUtilidad($paquete_precio_utilidad["es_margen_utilidad"]);
+                    $precio_paquete_usuario->setIdPaquete($paquete_precio_utilidad["id_paquete"]);
+                    $precio_paquete_usuario->setPrecioUtilidad($paquete_precio_utilidad["precio_utilidad"]);
+                    PrecioPaqueteUsuarioDAO::save($precio_paquete_usuario);
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se han podido guardar todos los precios para el usuario ".$id_usuario." : ".$e);
+                throw new Exception("No se han podido guardar todos los precios para el usuario");
+            }
+            DAO::transEnd();
+            Logger::log("Precios guardados exitosamente");
          }
   }
