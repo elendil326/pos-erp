@@ -146,7 +146,7 @@
   static function Nuevo_precio_usuarioProducto
 	(
 		$id_usuario, 
-		$productos_precios_utlidad
+		$productos_precios_utilidad
 	);  
   
   
