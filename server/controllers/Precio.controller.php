@@ -49,8 +49,124 @@ require_once("interfaces/Precio.interface.php");
 	    return true;
 	}
       
+        /*
+         * Valida el boleano es_margen_utilidad
+         */
+        private static function validarEsMargenUtilidad($es_margen_utilidad)
+        {
+            if(!is_null($es_margen_utilidad))
+            {
+                $e = self::validarNumero($es_margen_utilidad, 1, "es margen de utilidad");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //no se encontro error
+            return true;
+        }
         
+        /*
+         * Valida que el precio utilidad este en rango
+         */
+        private static function validarPrecioUtilidad($precio_utilidad)
+        {
+            $e = self::validarNumero($precio_utilidad, 1.8e200, "precio utilidad");
+            if(is_string($e))
+                return $e;
+            
+            //no se encontro error
+            return true;
+        }
         
+        /*
+         * Valida que el servicio exista y que este activo
+         */
+        private static function validarServicio($id_servicio)
+        {
+            $servicio = ServicioDAO::getByPK($id_servicio);
+            
+            if(is_null($servicio))
+                return "El servicio ".$id_servicio." no existe";
+
+            if(!$servicio->getActivo())
+                return "El servicio ".$id_servicio." no esta activo";
+            
+            //no se encontro error
+            return true;
+        }
+        
+        /*
+         * Valida que el usuario exista y que este activo
+         */
+        private static function validarUsuario($id_usuario)
+        {
+            $usuario = UsuarioDAO::getByPK($id_usuario);
+            
+            if(is_null($usuario))
+                return "El usuario ".$id_usuario." no existe";
+
+            if(!$usuario->getActivo())
+                return "El usuario ".$id_usuario." no esta activo";
+            
+            //no se encontro error
+            return true;
+        }
+        
+        /*
+         * Valida que el producto exista y que este activo
+         */
+        private static function validarProducto($id_producto)
+        {
+            $producto = ProductoDAO::getByPK($id_producto);
+            if(is_null($producto))
+                return "El producto ".$id_producto." no existe";
+            
+            if(!$producto->getActivo())
+                return "EL producto ".$id_producto." no esta activo";
+            
+            //no se encontro error
+            return true;
+        }
+        
+        /*
+         * Valida que el tipo de cliente exista
+         */
+        private static function validaClasificacionCliente($id_clasificacion_cliente)
+        {
+            if(is_null(ClasificacionClienteDAO::getByPK($id_clasificacion_cliente)))
+                    return "La clasificacion de cliente ".$id_clasificacion_cliente." no existe";
+            
+            //no se encontro error
+            return true;
+        }
+        
+        /*
+         * Valida que el paquete exista y este activo
+         */
+        private static function validarPaquete($id_paquete)
+        {
+            $paquete = PaqueteDAO::getByPK($id_paquete);
+            if(is_null($paquete))
+                return "El paquete ".$id_paquete." no existe";
+            
+            if(!$paquete->getActivo())
+                return "El paquete ".$id_paquete." no esta activo";
+            
+            //no se encontro error
+            return true;
+        }
+        
+        /*
+         * Valida que el rol exista
+         */
+        private static function validarRol($id_rol)
+        {
+            if(is_null(RolDAO::getByPK($id_rol)))
+                return "El rol ".$id_rol." no existe";
+            
+            //no se encontro error
+            return true;
+        }
         
         
         
@@ -110,8 +226,49 @@ require_once("interfaces/Precio.interface.php");
 		$servicios_precios_utilidad
 	)
 	{  
-  
-  
+            Logger::log("Editando precios de los servicios para el usuario ".$id_usuario);
+            
+            //valida al usuario obtendio
+            $validar = self::validarUsuario($id_usuario);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            //Se inicializa el registro a editar. Si alguno de los registros no existe, se guardara
+            $precio_servicio_usuario = new PrecioServicioUsuario( array( "id_usuario" => $id_usuario ) );
+            DAO::transBegin();
+            try
+            {
+                foreach($servicios_precios_utilidad as $servicio_precio_utilidad)
+                {
+                    $validar = self::validarServicio($servicio_precio_utilidad["id_servicio"]);
+                    if(is_string($validar))
+                        throw new Exception($validar);
+                    
+                    $validar = self::validarPrecioUtilidad($servicio_precio_utilidad["precio_utilidad"]);
+                    if(is_string($validar))
+                        throw new Exception($validar);
+                    
+                    $validar = self::validarEsMargenUtilidad($servicio_precio_utilidad["es_margen_utilidad"]);
+                    if(is_string($validar))
+                        throw new Exception($validar);
+                    
+                    $precio_servicio_usuario->setEsMargenUtilidad($servicio_precio_utilidad["es_margen_utilidad"]);
+                    $precio_servicio_usuario->setIdServicio($servicio_precio_utilidad["id_servicio"]);
+                    $precio_servicio_usuario->setPrecioUtilidad($servicio_precio_utilidad["precio_utilidad"]);
+                    PrecioServicioUsuarioDAO::save($precio_servicio_usuario);
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se han podido editar todos los precios para el usuario ".$id_usuario." : ".$e);
+                throw new Exception("No se han podido editar todos los precios para el usuario");
+            }
+            DAO::transEnd();
+            Logger::log("Precios editados exitosamente");
 	}
   
 	/**
@@ -127,8 +284,28 @@ require_once("interfaces/Precio.interface.php");
 		$servicios
 	)
 	{  
-  
-  
+            Logger::log("ELiminando los precios de servicio para el usuario ".$id_usuario);
+            
+            //Se inicializa el registro a eliminar y se elimina
+            DAO::transBegin();
+            try
+            {
+                foreach($servicios as $servicio)
+                {
+                    $precio_servicio_usuario = PrecioServicioUsuarioDAO::getByPK($servicio, $id_usuario);
+                    if(is_null($precio_servicio_usuario))
+                        throw new Exception("El usuario ".$id_usuario." no tiene precio especial para el servicio ".$servicio);
+                    PrecioServicioUsuarioDAO::delete($precio_servicio_usuario);
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudieron eliminar los precios para servicio del usuario ".$id_usuario." : ".$e);
+                throw new Exception("No se pudieron eliminar los precios para servicio del usuario");
+            }
+            DAO::transEnd();
+            Logger::log("Precios de servicios eliminados exitosamente");
 	}
   
 	/**
