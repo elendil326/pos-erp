@@ -131,7 +131,7 @@ require_once("interfaces/Precio.interface.php");
         /*
          * Valida que el tipo de cliente exista
          */
-        private static function validaClasificacionCliente($id_clasificacion_cliente)
+        private static function validarClasificacionCliente($id_clasificacion_cliente)
         {
             if(is_null(ClasificacionClienteDAO::getByPK($id_clasificacion_cliente)))
                     return "La clasificacion de cliente ".$id_clasificacion_cliente." no existe";
@@ -439,8 +439,49 @@ require_once("interfaces/Precio.interface.php");
 		$servicios_precios_utilidad
 	)
 	{  
-  
-  
+            Logger::log("Editando precios de los servicios para el tipo_cliente ".$id_tipo_cliente);
+            
+            //valida al tipo_cliente obtendio
+            $validar = self::validarClasificacionCliente($id_tipo_cliente);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            //Se inicializa el registro a editar. Si alguno de los registros no existe, se guardara
+            $precio_servicio_tipo_cliente = new PrecioServicioTipoCliente( array( "id_tipo_cliente" => $id_tipo_cliente ) );
+            DAO::transBegin();
+            try
+            {
+                foreach($servicios_precios_utilidad as $servicio_precio_utilidad)
+                {
+                    $validar = self::validarServicio($servicio_precio_utilidad["id_servicio"]);
+                    if(is_string($validar))
+                        throw new Exception($validar);
+                    
+                    $validar = self::validarPrecioUtilidad($servicio_precio_utilidad["precio_utilidad"]);
+                    if(is_string($validar))
+                        throw new Exception($validar);
+                    
+                    $validar = self::validarEsMargenUtilidad($servicio_precio_utilidad["es_margen_utilidad"]);
+                    if(is_string($validar))
+                        throw new Exception($validar);
+                    
+                    $precio_servicio_tipo_cliente->setEsMargenUtilidad($servicio_precio_utilidad["es_margen_utilidad"]);
+                    $precio_servicio_tipo_cliente->setIdServicio($servicio_precio_utilidad["id_servicio"]);
+                    $precio_servicio_tipo_cliente->setPrecioUtilidad($servicio_precio_utilidad["precio_utilidad"]);
+                    PrecioServicioTipoClienteDAO::save($precio_servicio_tipo_cliente);
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se han podido editar todos los precios para el tipo_cliente ".$id_tipo_cliente." : ".$e);
+                throw new Exception("No se han podido editar todos los precios para el tipo_cliente");
+            }
+            DAO::transEnd();
+            Logger::log("Precios editados exitosamente");
 	}
   
 	/**
@@ -456,8 +497,28 @@ require_once("interfaces/Precio.interface.php");
 		$productos
 	)
 	{  
-  
-  
+            Logger::log("ELiminando los precios de servicio para el rol ".$id_rol);
+            
+            //Se inicializa el registro a eliminar y se elimina
+            DAO::transBegin();
+            try
+            {
+                foreach($productos as $producto)
+                {
+                    $precio_producto_rol = PrecioProductoRolDAO::getByPK($producto, $id_rol);
+                    if(is_null($precio_producto_rol))
+                        throw new Exception("El rol ".$id_rol." no tiene precio especial para el producto ".$producto);
+                    PrecioProductoRolDAO::delete($precio_producto_rol);
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudieron eliminar los precios para producto del rol ".$id_rol." : ".$e);
+                throw new Exception("No se pudieron eliminar los precios para producto del rol");
+            }
+            DAO::transEnd();
+            Logger::log("Precios de productos eliminados exitosamente");
 	}
   
 	/**
