@@ -534,8 +534,28 @@ require_once("interfaces/Precio.interface.php");
 		$productos
 	)
 	{  
-  
-  
+            Logger::log("ELiminando los precios de servicio para el tipo_cliente ".$id_tipo_cliente);
+            
+            //Se inicializa el registro a eliminar y se elimina
+            DAO::transBegin();
+            try
+            {
+                foreach($productos as $producto)
+                {
+                    $precio_producto_tipo_cliente = PrecioProductoTipoClienteDAO::getByPK($producto, $id_tipo_cliente);
+                    if(is_null($precio_producto_tipo_cliente))
+                        throw new Exception("El tipo_cliente ".$id_tipo_cliente." no tiene precio especial para el producto ".$producto);
+                    PrecioProductoTipoClienteDAO::delete($precio_producto_tipo_cliente);
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudieron eliminar los precios para producto del tipo_cliente ".$id_tipo_cliente." : ".$e);
+                throw new Exception("No se pudieron eliminar los precios para producto del tipo_cliente");
+            }
+            DAO::transEnd();
+            Logger::log("Precios de productos eliminados exitosamente");
 	}
   
 	/**
