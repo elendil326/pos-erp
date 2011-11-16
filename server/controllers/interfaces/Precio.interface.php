@@ -114,7 +114,7 @@
   static function Nuevo_precio_rolProducto
 	(
 		$id_rol, 
-		$productos_precios_utlidad
+		$productos_precios_utilidad
 	);  
   
   
