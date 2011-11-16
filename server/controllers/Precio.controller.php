@@ -1374,7 +1374,28 @@ require_once("interfaces/Precio.interface.php");
 		$paquetes
 	 )
          {
-             
+             Logger::log("ELiminando los precios de paquete para el usuario ".$id_usuario);
+            
+            //Se inicializa el registro a eliminar y se elimina
+            DAO::transBegin();
+            try
+            {
+                foreach($paquetes as $paquete)
+                {
+                    $precio_paquete_usuario = PrecioPaqueteUsuarioDAO::getByPK($paquete, $id_usuario);
+                    if(is_null($precio_paquete_usuario))
+                        throw new Exception("El usuario ".$id_usuario." no tiene precio especial para el paquete ".$paquete);
+                    PrecioPaqueteUsuarioDAO::delete($precio_paquete_usuario);
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudieron eliminar los precios para paquete del usuario ".$id_usuario." : ".$e);
+                throw new Exception("No se pudieron eliminar los precios para paquete del usuario");
+            }
+            DAO::transEnd();
+            Logger::log("Precios de paquetes eliminados exitosamente");
          }
   
   
