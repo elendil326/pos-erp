@@ -1580,5 +1580,6 @@ require_once("interfaces/Precio.interface.php");
             }
             DAO::transEnd();
             Logger::log("Precios guardados exitosamente");
+            
          }
   }
