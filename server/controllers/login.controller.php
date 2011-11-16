@@ -127,7 +127,7 @@ class GerenciaLoginController extends LoginController{
 		$u->setPassword 	( md5( $password ) );
 		
 		$res = UsuarioDAO::search( $u );
-
+		
 		if( sizeof($res) == 1 && (1 == $res[0]->getIdRol()) ){
 
 			parent::login( $user_id, md5($password), "0" );
@@ -178,7 +178,7 @@ class JediLoginController extends LoginController
 		global $POS_CONFIG;
 		
 		$sql = "SELECT id_user FROM users WHERE ( email = ? AND password = ?) LIMIT 1;";
-
+		
 		$params = array( $user, md5($password) );
 
 		$rs = $POS_CONFIG["CORE_CONN"]->GetRow($sql, $params);

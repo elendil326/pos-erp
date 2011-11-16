@@ -16,7 +16,9 @@
 	$page->addComponent( new TitleComponent( "Datos personales" , 3 ) );
 
 	$form = new DAOFormComponent( array( new Usuario(), new Direccion() ) );
-	$form->addOnClick( "Nuevo cliente" , "cliente.nuevo()" );
+
+
+	$form->addOnClick( "Crear el nuevo cliente" , "cliente.nuevo()" );
 
 	$page->addComponent( $form );
 
