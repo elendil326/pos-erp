@@ -49,7 +49,7 @@
  	 **/
   static function Editar_precio_usuarioProducto
 	(
-		$id_cliente, 
+		$id_usuario, 
 		$productos_precios_utilidad
 	);  
   
