@@ -263,8 +263,11 @@ Se puede ordenar por los atributos de producto.
 		$id_sucursal
 	)
 	{  
-  
-  
+            Logger::log("Listando las compras de la sucursal ".$id_sucursal);
+            $compras = CompraDAO::search( new Compra( array( "id_sucursal" => $id_sucursal ) ) );
+            
+            Logger::log("Se listan ".count($compras)." compras");
+            return $compras;
 	}
   
 	/**
