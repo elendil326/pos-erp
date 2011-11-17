@@ -343,6 +343,7 @@ require_once("interfaces/Efectivo.interface.php");
             }
             DAO::transEnd();
             Logger::log("El billete ha sido eliminado exitosamente");
+            
 	}
   
 	/**
