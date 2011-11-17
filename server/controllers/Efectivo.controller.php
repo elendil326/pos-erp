@@ -327,6 +327,17 @@ require_once("interfaces/Efectivo.interface.php");
                 throw new Exception($validar);
             }
             
+            //Si alguna caja aun contiene uno de estos billetes, no se pueden eliminar
+            $billetes_caja = BilleteCajaDAO::search( new BilleteCaja( array("id_billete" => $id_billete) ) );
+            foreach($billetes_caja as $billete_caja)
+            {
+                if($billete_caja->getCantidad!=0)
+                {
+                    Logger::error("El billete no puede ser eliminado pues la caja ".$billete_caja->getIdCaja()." aun lo contiene");
+                    throw new Exception("El billete no puede ser eliminado pues la caja ".$billete_caja->getIdCaja()." aun lo contiene");
+                }
+            }
+            
             //Se desactiva el billete y se guarda
             $billete = BilleteDAO::getByPK($id_billete);
             $billete->setActivo(0);
@@ -500,7 +511,50 @@ require_once("interfaces/Efectivo.interface.php");
 		$id_moneda
 	)
 	{  
-            Logger::log("");
+            Logger::log("Eliminando la moneda ".$id_moneda);
+            
+            //Se valida que la moneda exista y que este activa
+            $validar = self::validarParametrosMoneda($id_moneda);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            //Si algun billete o usuario tiene asignada esta moneda, no se podra eliminar
+            $billetes = BilleteDAO::search( new Billete( array( "id_moneda" => $id_moneda ) ) );
+            foreach($billetes as $billete)
+            {
+                if($billete->getActivo())
+                {
+                    Logger::error("La moneda no puede ser eliminada pues esta asignada al billete ".$billete->getIdBillete());
+                    throw new Exception("La moneda no puede ser eliminada pues esta asignada al billete ".$billete->getIdBillete());
+                }
+            }
+            $usuarios = UsuarioDAO::search( new Usuario( array( "id_moneda" => $id_moneda ) ) );
+            foreach($usuarios as $usuario)
+            {
+                if($usuario->getActivo())
+                {
+                    Logger::error("La moneda no puede ser eliminada pues esta asignada al usuario ".$usuario->getIdUsuario());
+                    throw new Exception("La moneda no puede ser eliminada pues esta asignada al usuario ".$usuario->getIdUsuario());
+                }
+            }
+            
+            //Se elimina y se guarda
+            $moneda = MonedaDAO::getByPK($id_moneda);
+            $moneda->setActiva(0);
+            DAO::transBegin();
+            try
+            {
+                MonedaDAO::save($moneda);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo eliminar la moneda: ".$e);
+                throw new Exception("No se pudo eliminar la moneda");
+            }
 	}
   
 	/**
