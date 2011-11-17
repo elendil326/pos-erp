@@ -221,7 +221,7 @@ require_once("interfaces/Efectivo.interface.php");
             //Se crea el nuevo billete y se guarda
             $billete = new Billete(
                     array(
-                        "nombre"        => $nombre,
+                        "nombre"        => trim($nombre),
                         "valor"         => $valor,
                         "id_moneda"     => $id_moneda,
                         "foto_billete"  => $foto_billete,
@@ -285,7 +285,7 @@ require_once("interfaces/Efectivo.interface.php");
             }
             if(!is_null($nombre))
             {
-                $billete->setNombre($nombre);
+                $billete->setNombre(trim($nombre));
             }
             if(!is_null($id_moneda))
             {
@@ -419,7 +419,7 @@ require_once("interfaces/Efectivo.interface.php");
             }
             
             //Se crea la moneda y se guarda
-            $moneda = new Moneda( array( "nombre" => $nombre, "simbolo" => $simbolo, "activa" => 1 ) );
+            $moneda = new Moneda( array( "nombre" => trim($nombre), "simbolo" => $simbolo, "activa" => 1 ) );
             DAO::transBegin();
             try
             {
@@ -447,11 +447,45 @@ require_once("interfaces/Efectivo.interface.php");
 	public static function EditarMoneda
 	(
 		$id_moneda, 
-		$nombre = "", 
-		$simbolo = ""
+		$nombre = null, 
+		$simbolo = null
 	)
 	{  
-  
+            Logger::log("Editando la moneda ".$id_moneda);
+            
+            //Se validan los parametros
+            $validar = self::validarParametrosMoneda($id_moneda, $nombre, $simbolo);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            //Los parametros que no sea nulos seran tomados como actualizacion
+            $moneda = MonedaDAO::getByPK($id_moneda);
+            if(!is_null($nombre))
+            {
+                $moneda->setNombre(trim($nombre));
+            }
+            if(!is_null($simbolo))
+            {
+                $moneda->setSimbolo($simbolo);
+            }
+            
+            DAO::transBegin();
+            try
+            {
+                MonedaDAO::save($moneda);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo editar la moneda: ".$e);
+                throw new Exception("No se pudo editar la moneda");
+            }
+            DAO::transEnd();
+            Logger::log("Moneda editada exitosamente");
+            
   
 	}
   
@@ -466,8 +500,7 @@ require_once("interfaces/Efectivo.interface.php");
 		$id_moneda
 	)
 	{  
-  
-  
+            Logger::log("");
 	}
   
 	/**
