@@ -356,12 +356,42 @@ require_once("interfaces/Efectivo.interface.php");
  	 **/
 	public static function ListaBillete
 	(
-		$ordenar = "", 
-		$activo = ""
+		$ordenar = null, 
+		$activo = null
 	)
 	{  
-  
-  
+            Logger::log("Listando billetes");
+            
+            //valida los parametros
+            $validar = self::validarParametrosBillete(null, null, null, null, null, $activo);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+             if
+             (
+                     !is_null($ordenar)         &&
+                     $ordenar != "id_billete"   &&
+                     $ordenar != "id_moneda"    &&
+                     $ordenar != "nombre"       &&
+                     $ordenar != "valor"        &&
+                     $ordenar != "foto_billete" &&
+                     $ordenar != "activo"
+             )
+             {
+                 Logger::error("El parametro ordenar (".$ordenar.") es invalido");
+                 throw new Exception("El parametro ordenar (".$ordenar.") es invalido");
+             }
+             
+             $billetes = array();
+             if(!is_null($activo))
+                 $billetes = BilleteDAO::search ( new Billete( array("activo" => $activo) ), $ordenar );
+             else
+                 $billetes = BilleteDAO::getAll (null,null,$ordenar);
+             
+             Logger::log("Se obtuvieron ".count($billetes)." billetes");
+             return $billetes;
 	}
   
 	/**
