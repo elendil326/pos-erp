@@ -408,8 +408,32 @@ require_once("interfaces/Efectivo.interface.php");
 		$simbolo
 	)
 	{  
-  
-  
+            Logger::log("Creando nueva moneda");
+            
+            //Se validan los parametros recibidos
+            $validar = self::validarParametrosMoneda(null, $nombre, $simbolo);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            //Se crea la moneda y se guarda
+            $moneda = new Moneda( array( "nombre" => $nombre, "simbolo" => $simbolo, "activa" => 1 ) );
+            DAO::transBegin();
+            try
+            {
+                MonedaDAO::save($moneda);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se ha podido crear la moneda: ".$e);
+                throw new Exception("No se ha podido crear la moneda");
+            }
+            DAO::transEnd();
+            Logger::log("Moneda creada exitosamente");
+            return array( "id_moneda" => $moneda->getIdMoneda() );
 	}
   
 	/**
