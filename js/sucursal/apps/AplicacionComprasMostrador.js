@@ -25,7 +25,7 @@ Aplicacion.ComprasMostrador.bascula =
 
          },
         {
-            puerto          : "COM5",
+            puerto          : "COM4",
             desc            : "GRANDE",
             read_next       : 14,
             discard_first   : 0          
