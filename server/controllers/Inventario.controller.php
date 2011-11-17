@@ -282,7 +282,10 @@ Se puede ordenar por los atributos de producto.
 		$id_sucursal
 	)
 	{  
-  
-  
+            Logger::log("Listando las ventas de la sucursal ".$id_sucursal);
+            $ventas = VentaDAO::search( new Venta( array( "id_sucursal" => $id_sucursal ) ) );
+            
+            Logger::log("Se listan ".count($ventas)." ventas");
+            return $ventas;
 	}
   }
