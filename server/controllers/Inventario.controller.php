@@ -112,7 +112,7 @@ Se puede ordenar por los atributos de producto.
                 foreach($almacenes as $almacen)
                 {
                     //Se obtiene el arreglo de productos
-                    $productos_a = ProductoAlmacenDAO::search( new ProductoAlmacen( array( "id_producto" => $id_producto ) ) );
+                    $productos_a = ProductoAlmacenDAO::search( new ProductoAlmacen( array( "id_almacen" => $almacen->getIdAlmacen(), "id_producto" => $id_producto ) ) );
                     
                     //Se vacía el arreglo en uno general
                     foreach($productos_a as $p_a)
@@ -198,14 +198,44 @@ Se puede ordenar por los atributos de producto.
  	 **/
 	public static function Procesar_producto
 	(
-		$id_lote_nuevo, 
-		$id_producto, 
-		$id_lote_viejo, 
-		$cantidad = null
+		$id_almacen_nuevo, 
+		$id_producto_viejo, 
+		$cantidad_vieja, 
+		$id_almacen_viejo,
+                $id_unidad_vieja,
+                $id_producto_nuevo,
+                $id_unidad_nueva,
+                $cantidad_nueva
 	)
 	{  
-  
-  
+            Logger::log("Procesando ".$cantidad_vieja." productos con id:".$id_producto_viejo." 
+                en unidad:".$id_unidad_vieja." a ".$cantidad_nueva." productos con id:".$id_producto_nuevo." en unidad:".$id_unidad_nueva);
+            
+            $productos_salida = array(
+              array( "id_producto" => $id_producto_viejo, "id_unidad" => $id_unidad_vieja, "cantidad" => $cantidad_vieja )  
+            );
+            
+            $productos_entrada = array(
+              array( "id_producto" => $id_producto_nuevo, "id_unidad" => $id_unidad_nueva, "cantidad" => $cantidad_nueva )  
+            );
+            
+            //Se utilizaran los metodos de entrada y salida almacen, pues estos se encargaran de todas las validaciones
+            DAO::transBegin();
+            try
+            {
+                //primero se saca del almacen el producto a transformar
+                SucursalesController::SalidaAlmacen($productos_salida, $id_almacen_viejo,"Producto que sera procesado");
+                //Despues se inserta el nuevo producto en el nuevo almacen
+                SucursalesController::EntradaAlmacen($productos_entrada, $id_almacen_nuevo, "Producto resultado del procesado");
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se ha podido procesar todo el producto: ".$e);
+                throw new Exception("No se ha podido procesar todo el producto");
+            }
+            DAO::transEnd();
+            Logger::log("Producto procesado exitosamente");
 	}
   
 	/**

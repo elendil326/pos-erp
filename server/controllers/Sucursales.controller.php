@@ -2817,7 +2817,7 @@ Creo que este metodo tiene que estar bajo sucursal.
                     }
                     if(!$encontrado)
                     {
-                        throw new Excpetion("Se quiere agregar un producto que no es de la empresa de este almacen");
+                        throw new Exception("Se quiere agregar un producto que no es de la empresa de este almacen");
                     }
                     
                     if(is_null(ProductoDAO::getByPK($p["id_producto"])))

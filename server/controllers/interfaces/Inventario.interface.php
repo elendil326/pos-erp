@@ -60,10 +60,14 @@ Se puede ordenar por los atributos de producto.
  	 **/
   static function Procesar_producto
 	(
-		$id_lote_nuevo, 
-		$id_producto, 
-		$id_lote_viejo, 
-		$cantidad = null
+		$id_almacen_nuevo, 
+		$id_producto_viejo, 
+		$cantidad_vieja, 
+		$id_almacen_viejo,
+                $id_unidad_vieja,
+                $id_producto_nuevo,
+                $id_unidad_nueva,
+                $cantidad_nueva
 	);  
   
   
