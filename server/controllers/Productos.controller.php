@@ -914,6 +914,17 @@ NOTA: Se crea un producto tipo = 1 que es para productos
                 }
             }
             
+            //Si el producto aun esta en existencia en algun almacen, no puede ser eliminado
+            $productos_almacen = ProductoAlmacenDAO::search( new ProductoAlmacen( array("id_producto" => $id_producto) ) );
+            foreach($productos_almacen as $producto_almacen)
+            {
+                if($producto_almacen->getCantidad()!=0)
+                {
+                    Logger::error("El producto ".$id_producto." no puede ser eliminado pues aun hay existencia en el almcen ".$producto_almacen->getIdAlmacen());
+                    throw new Exception("El producto ".$id_producto." no puede ser eliminado pues aun hay existencia en el almcen ".$producto_almacen->getIdAlmacen());
+                }
+            }
+            
             $producto = ProductoDAO::getByPK($id_producto);
             $producto->setActivo(0);
             

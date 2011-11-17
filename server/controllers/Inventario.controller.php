@@ -26,19 +26,166 @@ Se puede ordenar por los atributos de producto.
  	 **/
 	public static function Existencias
 	(
-		$existencia_mayor_que = null, 
-		$existencia_igual_que = null, 
-		$existencia_menor_que = null, 
 		$id_empresa = null, 
 		$id_sucursal = null, 
 		$id_almacen	 = null, 
-		$activo	 = null, 
-		$id_lote = null
+		$id_producto	 = null
 	)
 	{  
-  
-  
+            Logger::log("Listando las existencias");
+            
+            //Si se recibe un id producto, solo se listan las existencias de dicho producto, se puede combinar con 
+            //los demas parametros. Si no se recibe ningun otro, se realiza un acumulado de este producto en todos los almacenes.
+            //
+            //Si se recibe un id almacen, solo se listan las existencias de dicho almacen
+            //
+            //Si se recibe la variable id_empresa o id_sucursal, se listara un acumulado de todos los productos
+            //con las cantidades de productos de los diferentes almacenes dentro de ella
+            //
+            //Cuando se recibe alguno de ellos, primero se consiguen todos los almacenes que le pertencen, despues
+            //se consiguen todos los productos de cada almacen y se guardan en un arreglo temporal que despues es ordenado.
+            //EL arreglo ordenado es el que se envia.
+            //
+            //Si no se recibe ningun parametro, se listaran todos los productos existentes en todos los almacenes
+            
+            $productos_almacenes = array();
+            
+            
+            if(!is_null($id_almacen))
+            {
+                //Se buscan los registros de productos que cumplan con el almacan y con el producto recibidos
+                $productos_almacenes = ProductoAlmacenDAO::search( new ProductoAlmacen( 
+                        array( "id_almacen" => $id_almacen, "id_producto" => $id_producto ) ) );
+            }
+            else if(!is_null($id_empresa))
+            {
+                //Se obtienen todos los almacenes de la empresa
+                $almacenes_empresa = AlmacenDAO::search( new Almacen( array("id_empresa" => $id_empresa) ) );
+                $productos_almacenes_empresa = array();
+                
+                //Se recorre cada almacen y se obtiene un arreglo de sus productos, para poder agruparlos, tenemos que seacarlos
+                //de su arreglo y ponerlos en un arreglo general
+                foreach($almacenes_empresa as $almacen_empresa)
+                {
+                    //Se obtiene el arreglo de productos
+                    $productos_almacen_empresa = ProductoAlmacenDAO::search( new ProductoAlmacen(
+                            array( "id_almacen" => $almacen_empresa->getIdAlmacen(), "id_producto" => $id_producto ) ) );
+                    
+                    //Se vacía el arreglo en uno general
+                    foreach($productos_almacen_empresa as $producto_almacen_empresa)
+                        array_push ($productos_almacenes_empresa, $producto_almacen_empresa);
+                }
+                
+                //Se agrupan los productos iguales
+                $productos_almacenes = self::AgruparProductos($productos_almacenes_empresa);
+            }
+            else if(!is_null($id_sucursal))
+            {
+                //Se obtienen todos los almacenes de la sucursal
+                $almacenes_sucursal = AlmacenDAO::search( new Almacen( array( "id_sucursal" => $id_sucursal ) ) );
+                $productos_almacenes_sucursal = array();
+                
+                //Se recorre cada almacen y se obtiene un arreglo de sus productos, para poder agruparlos, tenemos que sacarlos
+                //de su arreglo y ponerlos en un arreglo general
+                foreach($almacenes_sucursal as $almacen_sucursal)
+                {
+                    //Se obtiene el arreglo de productos
+                    $productos_almacen_sucursal = ProductoAlmacenDAO::search( new ProductoAlmacen( 
+                            array( "id_almacen" => $almacen_sucursal->getIdAlmacen(), "id_producto" => $id_producto ) ) );
+                    
+                    //Se vacía el arreglo en uno general
+                    foreach($productos_almacen_sucursal as $producto_almacen_sucursal)
+                        array_push($productos_almacenes_sucursal,$producto_almacen_sucursal);
+                }
+                
+                //Se agrupan los productos iguales
+                $productos_almacenes = self::AgruparProductos($productos_almacenes_sucursal);
+            }
+            else
+            {
+                //Se obtienen todos los almacenes
+                $almacenes = AlmacenDAO::getAll();
+                $productos_almacen = array();
+                
+                //Se recorre cada almacen y se obtiene un arreglo de sus productos, para poder agruparlos, tenemos que sacarlos
+                //de su arreglo y ponerlos en un arreglo general
+                foreach($almacenes as $almacen)
+                {
+                    //Se obtiene el arreglo de productos
+                    $productos_a = ProductoAlmacenDAO::search( new ProductoAlmacen( array( "id_producto" => $id_producto ) ) );
+                    
+                    //Se vacía el arreglo en uno general
+                    foreach($productos_a as $p_a)
+                        array_push($productos_almacen,$p_a);
+                }
+                
+                //Se agrupan los productos iguales
+                $productos_almacenes = self::AgruparProductos($productos_almacen);
+                
+            }
+            
+            Logger::log("Se listan ".count($productos_almacenes)." registros");
+            return $productos_almacenes;
+            
 	}
+        
+        //Este metodo es usado por el metodo existencias, pues cuando se listan las existencias
+        //de los productos de una empresa o de una sucursal, se tienen que recorrer todos sus
+        //almacenes. Cuando se recuperan estos elementos, los productos resultan divididos,
+        //y se tienen que agrupar sumando sus cantidades para que al final devuelva la lista de existencias.
+        private static function AgruparProductos( array $productos_almacenes )
+        {
+            //Se inicializa el arreglo con los productos ordenados
+            $productos_almacenes_acumulado = array();
+            //Se recupera el tamaño del arreglo de productos obtenido
+            $tamano = count($productos_almacenes);
+            
+            //Se buscan los elementos repetidos en manera de burbuja. Se recorre del
+            //primer al penultimo elemento y si el elemento no es nulo, se inserta en el 
+            //arreglo final. 
+            //
+            //Despues se procede a recorrer los siguientes elmentos en busca de otro igual.
+            //Si se encuentra uno igual, se suma su cantidad en el arreglo final y se borra del 
+            //arreglo recibido asignandole un valor de nulo.
+            for($i = 0, $k = 0; $i< $tamano-1; $i++)
+            {
+                //Se obtiene el producto de almacen actual
+                $p_a = $productos_almacenes[$i];
+                
+                //Si es nulo, se prosigue a buscar en el siguiente
+                if(is_null($p_a))
+                    continue;
+                
+                //Se inserta el registro actual en el arreglo final
+                array_push($productos_almacenes_acumulado,$p_a);
+                
+                //Se busca en los demas elementos uno igual al actual. Si es encontrado,
+                //se suma su cantidad a la del elemento actual en el arreglo final y 
+                //despues es borrado del arreglo original asignandole un valor nulo.
+                for($j = $i+1; $j < $tamano ; $j++)
+                {
+                    if(is_null($productos_almacenes[$j]))
+                        continue;
+                    if( $p_a->getIdProducto() == $productos_almacenes[$j]->getIdProducto() && $p_a->getIdUnidad() == $productos_almacenes[$j]->getIdUnidad())
+                    {
+                        $productos_almacenes_acumulado[$k]->setCantidad($productos_almacenes_acumulado[$k]->getCantidad() + $productos_almacenes[$j]->getCantidad());
+                        $productos_almacenes[$j]=null;
+                    }
+                }
+                
+                //Se usa la variable $k para llevar seguimiento de la posicion del elemento actual en el arreglo final,
+                //pues al encontrarse un elemento nulo, $i sigue incrementando, pero $k se mantiene igual.
+                $k++;
+            }
+            
+            //El ultimo elemento no es revisado, pues ya fue comparado contra todos los demas.
+            //Si el ultimo elemento no es nulo, significa que es unico y tiene que ser includio en el arreglo final.
+            if(!is_null($productos_almacenes[$tamano-1]))
+                array_push($productos_almacenes_acumulado,$productos_almacenes[$tamano-1]);
+            
+            //Se regresa el arreglo final
+            return $productos_almacenes_acumulado;
+        }
   
 	/**
  	 *
@@ -79,7 +226,7 @@ Se puede ordenar por los atributos de producto.
  	 *Lista todas las compras de una sucursal.
  	 *
  	 * @param id_sucursal int Id de la sucursal de la cual se listaran sus compras
- 	 * @return compras json Arreglo de objetos que tendr� las compras de la sucursal
+ 	 * @return compras json Arreglo de objetos que tendr� las compras de la sucursal
  	 **/
 	public static function Compras_sucursal
 	(

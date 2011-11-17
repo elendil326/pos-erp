@@ -13,7 +13,7 @@
  	 *Lista todas las compras de una sucursal.
  	 *
  	 * @param id_sucursal int Id de la sucursal de la cual se listaran sus compras
- 	 * @return compras json Arreglo de objetos que tendrá las compras de la sucursal
+ 	 * @return compras json Arreglo de objetos que tendrï¿½ las compras de la sucursal
  	 **/
   static function Compras_sucursal
 	(
@@ -40,14 +40,10 @@ Se puede ordenar por los atributos de producto.
  	 **/
   static function Existencias
 	(
-		$existencia_mayor_que = null, 
-		$existencia_igual_que = null, 
-		$existencia_menor_que = null, 
 		$id_empresa = null, 
 		$id_sucursal = null, 
 		$id_almacen	 = null, 
-		$activo	 = null, 
-		$id_lote = null
+		$id_producto	 = null
 	);  
   
   
