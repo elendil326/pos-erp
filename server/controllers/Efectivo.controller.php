@@ -257,14 +257,53 @@ require_once("interfaces/Efectivo.interface.php");
 	public static function EditarBillete
 	(
 		$id_billete, 
-		$valor = "", 
-		$foto_billete = "", 
-		$nombre = "", 
-		$id_moneda = ""
+		$valor = null, 
+		$foto_billete = null, 
+		$nombre = null, 
+		$id_moneda = null
 	)
 	{  
-  
-  
+            Logger::log("Editando billete ".$id_billete);
+            
+            //se validan los parametros recibidos
+            $validar = self::validarParametrosBillete($id_billete,$id_moneda,$nombre,$valor,$foto_billete);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            //Los parametros que no sean nulos seran tomados como actualizacion
+            $billete = BilleteDAO::getByPK($id_billete);
+            if(!is_null($valor))
+            {
+                $billete->setValor($valor);
+            }
+            if(!is_null($foto_billete))
+            {
+                $billete->setFotoBillete($foto_billete);
+            }
+            if(!is_null($nombre))
+            {
+                $billete->setNombre($nombre);
+            }
+            if(!is_null($id_moneda))
+            {
+                $billete->setIdMoneda($id_moneda);
+            }
+            DAO::transBegin();
+            try
+            {
+                BilleteDAO::save($billete);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo editar el billete: ".$e);
+                throw new Exception("No se pudo editar el billete");
+            }
+            DAO::transEnd();
+            Logger::log("Billete editado exitosamente");
 	}
   
 	/**
@@ -278,8 +317,32 @@ require_once("interfaces/Efectivo.interface.php");
 		$id_billete
 	)
 	{  
-  
-  
+            Logger::log("Eliminando el billete ".$id_billete);
+            
+            //Se valida que el billete exista y este activo
+            $validar = self::validarParametrosBillete($id_billete);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            //Se desactiva el billete y se guarda
+            $billete = BilleteDAO::getByPK($id_billete);
+            $billete->setActivo(0);
+            DAO::transBegin();
+            try
+            {
+                BilleteDAO::save($billete);
+            }
+            catch(Exception $e)
+            {
+                DAO::transEnd();
+                Logger::error("No se pudo eliminar el billete: ".$e);
+                throw new Exception("No se pudo eliminar el billete");
+            }
+            DAO::transEnd();
+            Logger::log("El billete ha sido eliminado exitosamente");
 	}
   
 	/**
