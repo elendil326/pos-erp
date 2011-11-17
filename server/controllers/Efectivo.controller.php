@@ -555,6 +555,8 @@ require_once("interfaces/Efectivo.interface.php");
                 Logger::error("No se pudo eliminar la moneda: ".$e);
                 throw new Exception("No se pudo eliminar la moneda");
             }
+            DAO::transEnd();
+            Logger::log("La moneda ha sido eliminada exitosamente");
 	}
   
 	/**
@@ -567,11 +569,42 @@ require_once("interfaces/Efectivo.interface.php");
  	 **/
 	public static function ListaMoneda
 	(
-		$orden = "", 
-		$activo = ""
+		$orden = null, 
+		$activo = null
 	)
 	{  
-  
-  
+            Logger::log("Listando las moendas");
+            
+            //Se validan los parametros
+            $validar = self::validarParametrosMoneda(null, null, NULL, $activo);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            if
+            (
+                    !is_null($orden)        &&
+                    $orden != "id_moneda"   &&
+                    $orden != "nombre"      &&
+                    $orden != "simbolo"     &&
+                    $orden != "activa"
+            )
+            {
+                Logger::error("La variable orden (".$orden.") no es valida");
+                throw new Exception("La variable orden (".$orden.") no es valida");
+            }
+            
+            $monedas = array();
+            
+            //Si se recibe el parametro activo, se usa el metodo search, de lo contrario se usa el get all
+            if(!is_null($activo))
+                $monedas = MonedaDAO::search ( new Moneda( array( "activa" => $activo ) ), $orden );
+            else
+                $monedas = MonedaDAO::getAll(null,null,$orden);
+            
+            Logger::log("Se obtuvieron ".count($monedas)." monedas");
+            return $monedas;
+            
 	}
   }
