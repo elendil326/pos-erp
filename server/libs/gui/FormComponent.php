@@ -127,8 +127,29 @@ class FormComponent implements GuiComponent
 		
 	}
 
+
+
 	public function renameField( $field_array ){
 		
+		$found = false;
+		foreach ($field_array as $old_name => $new_name) {
+			$found = false;
+			$sof = sizeof( $this->form_fields );
+
+			for ($i=0; $i < $sof; $i++) { 
+				
+				if( $this->form_fields[$i]->id === $old_name )
+				{
+					$this->form_fields[$i]->id = $new_name;
+					$found = true;
+					break;
+				}//if
+
+			}//for
+			
+			if($found === false) throw new Exception("Field `".$old_name."` not found in the VO object.");
+			
+		}//foreach field in the array
 	}
 }
 

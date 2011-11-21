@@ -15,6 +15,8 @@
 	$page->addComponent( new TitleComponent( "Datos personales" , 3 ) );
 	$form = new DAOFormComponent( array( new Usuario(), new Direccion() ) );
 	
+
+	
 	$form->hideField( array( 
 			"id_usuario",
 			"id_direccion",
@@ -41,8 +43,9 @@
 			"id_usuario_ultima_modificacion"
 		 ));
 		
-		$form->renameField( array( 
-			"codigo_usuario" => "codigo_cliente"
+	$form->renameField( array( 
+			"codigo_usuario" => "codigo_cliente",
+			"nombre" => "razon_social"
 		));
 		
 	$form->addApiCall( "api/cliente/nuevo/" );
