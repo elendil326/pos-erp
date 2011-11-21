@@ -32,8 +32,7 @@
  	 **/
   static function Detalle
 	(
-		$id_venta, 
-		$ordenar
+		$id_venta
 	);  
   
   
@@ -70,9 +69,8 @@
  	 **/
   static function Lista
 	(
-		$canceladas, 
-		$ordenar, 
-		$id_empresa = null, 
+		$canceladas = null, 
+		$ordenar = null, 
 		$id_sucursal = null, 
 		$total_superior_a = null, 
 		$total_igual_a = null, 

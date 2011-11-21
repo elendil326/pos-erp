@@ -245,12 +245,45 @@ require_once("interfaces/Ventas.interface.php");
  	 **/
 	public static function Detalle
 	(
-		$id_venta, 
-		$ordenar
+		$id_venta
 	)
 	{  
-  
-  
+            Logger::log("Listando el detalle de la venta ".$id_venta);
+            
+            //Se regresara un arreglo que contendra en la primera posicion la venta en sí, en la segunda
+            //contendra otro arreglo de arreglos, estos arreglos en la primera posicion tendran un arreglo con la informacion del producto,
+            //en la segunda un arreglo con la informacion de la unidad, y en las siguientes posiciones la demas informacion
+            //del detalle (cantidad, precio, descuento, etc.)
+            //
+            //En la tercera posicion contendra todos los abonos realizados para esta venta
+            
+            $detalle = array();
+            
+            array_push($detalle, VentaDAO::getByPK($id_venta));
+            
+            $ventas_productos = array();
+            
+            $venta_productos = VentaProductoDAO::search( new VentaProducto( array("id_venta" => $id_venta) ) );
+            foreach($venta_productos as $v_p)
+            {
+                $venta_producto = array();
+                array_push($venta_producto,ProductoDAO::getByPK($v_p->getIdProducto()));
+                array_push($venta_producto,UnidadDAO::getByPK($v_p->getIdUnidad()));
+                array_push($venta_producto,$v_p->getCantidad());
+                array_push($venta_producto,$v_p->getPrecio());
+                array_push($venta_producto,$v_p->getDescuento());
+                array_push($venta_producto,$v_p->getImpuesto());
+                array_push($venta_producto,$v_p->getRetencion());
+                array_push($ventas_productos,$venta_producto);
+            }
+            
+            array_push($detalle, $ventas_productos);
+            
+            array_push($detalle, AbonoVentaDAO::search(new AbonoVenta( array( "id_venta" => $id_venta ) )));
+            
+            
+            Logger::log("Detalle obtenido exitosamente");
+            return $detalle;
 	}
   
 	/**
@@ -269,9 +302,8 @@ require_once("interfaces/Ventas.interface.php");
  	 **/
 	public static function Lista
 	(
-		$canceladas, 
-		$ordenar, 
-		$id_empresa = null, 
+		$canceladas = null, 
+		$ordenar = null, 
 		$id_sucursal = null, 
 		$total_superior_a = null, 
 		$total_igual_a = null, 
@@ -279,8 +311,100 @@ require_once("interfaces/Ventas.interface.php");
 		$liquidados = null
 	)
 	{  
-  
-  
+            Logger::log("Obteniendo la lista de ventas");
+            
+            //valida el parametro ordenar
+            if
+            (
+                    !is_null($ordenar)              &&
+                    $ordenar != "id_venta"          &&
+                    $ordenar != "id_caja"           &&
+                    $ordenar != "id_venta_caja"     &&
+                    $ordenar != "id_comprador_venta"&&
+                    $ordenar != "tipo_venta"        &&
+                    $ordenar != "fecha"             &&
+                    $ordenar != "subtotal"          &&
+                    $ordenar != "impuesto"          &&
+                    $ordenar != "descuento"         &&
+                    $ordenar != "total"             &&
+                    $ordenar != "id_sucursal"       &&
+                    $ordenar != "id_usuario"        &&
+                    $ordenar != "saldo"             &&
+                    $ordenar != "cancelada"         &&
+                    $ordenar != "tipo_de_pago"      &&
+                    $ordenar != "retencion"
+            )
+            {
+                Logger::error("El parametro ordenar (".$ordenar.") no es valido");
+                throw new Exception("El parametro ordenar (".$ordenar.") no es valido");
+            }
+            
+            //Se verifica si se recibieron parametros para saber que metodo utilizar
+            $parametros = false;
+            if
+            (
+                    !is_null($canceladas)       ||
+                    !is_null($id_sucursal)      ||
+                    !is_null($total_superior_a) ||
+                    !is_null($total_igual_a)    ||
+                    !is_null($total_inferior_a) 
+            )
+                $parametros = true;
+            $ventas = array();
+            if($parametros)
+            {
+                //Se inicializan dos objetos que contendran los parametros recibidos, de tal forma que se obtenga el rango entre ambos
+                $venta_criterio_1 = new Venta();
+                $venta_criterio_2 = new Venta();
+                $venta_criterio_1->setCancelada($canceladas);
+                $venta_criterio_1->setIdSucursal($id_sucursal);
+                if(!is_null($total_superior_a))
+                {
+                    $venta_criterio_1->setTotal($total_superior_a);
+                    if(!is_null($total_inferior_a))
+                        $venta_criterio_2->setTotal ($total_inferior_a);
+                    else
+                        $venta_criterio_2->setTotal (1.8e200);
+                }
+                else if(!is_null($total_inferior_a))
+                {
+                    $venta_criterio_1->setTotal($total_inferior_a);
+                    $venta_criterio_2->setTotal(0);
+                }
+                else if(!is_null($total_igual_a))
+                    $venta_criterio_1->setTotal ($total_igual_a);
+                
+                $ventas = VentaDAO::byRange($venta_criterio_1, $venta_criterio_2);
+            }
+            else
+            {
+                $ventas = VentaDAO::getAll();
+            }
+            
+            //Si se recibe el parametro liquidadas, se filtra el arreglo obtenido para mostrar las que cumplan con el valor recibido
+            if(!is_null($liquidados))
+            {
+                $temp = array();
+                if($liquidados)
+                {
+                    foreach($ventas as $venta)
+                    {
+                        if($venta->getSaldo() >= $venta->getTotal())
+                            array_push($temp,$venta);
+                    }
+                }
+                else
+                {
+                    foreach($ventas as $venta)
+                    {
+                        if($venta->getSaldo() < $venta->getTotal())
+                            array_push($temp,$venta);
+                    }
+                }
+                $ventas = $temp;
+            }
+            Logger::log("Lista obtenida exitosamente con ".count($ventas)." ventas");
+            return $ventas;
 	}
   
 	/**
