@@ -579,7 +579,21 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
 		$tipo_de_pago = null
 	)
 	{  
-  
-  
+            Logger::log("Creando nueva compra");
+           
+            //Se utiliza el metodo comprar caja de sucursal
+            try
+            {
+                $compra = SucursalesController::ComprarCaja($retencion,$detalle,$id_usuario_compra,$total,
+                        $tipo_compra,$subtotal,$id_empresa,$descuento,$impuesto,null,null,$tipo_de_pago,$saldo,$cheques);
+            }
+            catch(Exception $e)
+            {
+                Logger::error("No se pudo crear la nueva compra: ".$e);
+                throw new Exception("No se pudo crear la nueva compra");
+            }
+            
+            Logger::log("Compra creada exitosamente");
+            return array( "id_compra" => $compra["id_compra_cliente"] );
 	}
   }
