@@ -7,7 +7,167 @@ require_once("interfaces/Compras.interface.php");
   **/
 	
   class ComprasController implements ICompras{
-	/**
+	
+      
+      
+      //Metodo para pruebas que simula la obtencion del id de la sucursal actual
+        private static function getSucursal()
+        {
+            return 1;
+        }
+        
+        //metodo para pruebas que simula la obtencion del id de la caja actual
+        private static function getCaja()
+        {
+            return 1;
+        }
+        
+        
+        /*
+         *Se valida que un string tenga longitud en un rango de un maximo inclusivo y un minimo exclusvio.
+         *Regresa true cuando es valido, y un string cuando no lo es.
+         */
+          private static function validarString($string, $max_length, $nombre_variable,$min_length=0)
+	{
+		if(strlen($string)<=$min_length||strlen($string)>$max_length)
+		{
+		    return "La longitud de la variable ".$nombre_variable." proporcionada (".$string.") no esta en el rango de ".$min_length." - ".$max_length;
+		}
+		return true;
+        }
+
+
+        /*
+         * Se valida que un numero este en un rango de un maximo y un minimo inclusivos
+         * Regresa true cuando es valido, y un string cuando no lo es
+         */
+	private static function validarNumero($num, $max_length, $nombre_variable, $min_length=0)
+	{
+	    if($num<$min_length||$num>$max_length)
+	    {
+	        return "La variable ".$nombre_variable." proporcionada (".$num.") no esta en el rango de ".$min_length." - ".$max_length;
+	    }
+	    return true;
+	}
+        
+        
+        /*
+         * Valida los parametros de la tabla compra_arpilla. Regresa un string con el error en caso de 
+         * encontrarse alguno, de lo contrario regresa verdadero
+         */
+        private static function validarParametrosCompraArpilla
+        (
+                $id_compra = null,
+                $peso_origen = null,
+                $folio = null,
+                $numero_de_viaje = null,
+                $peso_recibido = null,
+                $arpillas = null,
+                $peso_por_arpilla = null,
+                $productor = null,
+                $merma_por_arpilla = null,
+                $total_origen = null
+        )
+        {
+            //valida que la compra exista y que este activa
+            if(!is_null($id_compra))
+            {
+                $compra = CompraDAO::getByPK($id_compra);
+                if(is_null($compra))
+                    return "La compra ".$id_compra." no existe";
+                
+                if($compra->getCancelada())
+                    return "La compra ".$id_compra." ya esta cancelada";
+            }
+            
+            //valida el peso de origen
+            if(!is_null($peso_origen))
+            {
+                $e = self::validarNumero($peso_origen, 1.8e200, "peso de origen");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida el folio
+            if(!is_null($folio))
+            {
+                $e = self ::validarString($folio, 11, "folio");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida el numero de viaje
+            if(!is_null($numero_de_viaje))
+            {
+                $e = self::validarString($numero_de_viaje, 11, "numero de viaje");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida el peso recibido
+            if(!is_null($peso_recibido))
+            {
+                $e = self::validarNumero($peso_recibido, 1.8e200, "peso recibido");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida el numero de arpillas
+            if(!is_null($arpillas))
+            {
+                $e = self::validarNumero($arpillas, 1.8e200, "arpillas");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida el peso por arpilla
+            if(!is_null($peso_por_arpilla))
+            {
+                $e = self::validarNumero($peso_por_arpilla, 1.8e200, "peso por arpilla");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida el productor
+            if(!is_null($productor))
+            {
+                $e = self::validarString($productor, 64, "productor");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida la merma por arpilla
+            if(!is_null($merma_por_arpilla))
+            {
+                $e = self::validarNumero($merma_por_arpilla, 1.8e200, "merma por arpilla");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida el total de origen
+            if(!is_null($total_origen))
+            {
+                $e = self::validarNumero($total_origen, 1.8e200, "Total de origen");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //No se encontro error
+            return true;
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+      
+      
+      /**
  	 *
  	 *Lista las compras. Se puede filtrar por empresa, sucursal, caja, usuario que registra la compra, usuario al que se le compra, tipo de compra, si estan pagadas o no, por tipo de pago, canceladas o no, por el total, por fecha, por el tipo de pago y se puede ordenar por sus atributos.
  	 *
@@ -195,6 +355,16 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
 	)
 	{
             Logger::log("Registrando compras de arpillas");
+            
+            //Se validan los parametros recibidos
+            $validar = self::validarParametrosCompraArpilla($id_compra,$peso_origen,$folio,
+                    $numero_de_viaje,$peso_recibido,$arpillas,$peso_por_arpilla,$productor,$merma_por_arpilla,$total_origen);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
             $compra_arpilla=new CompraArpilla();
             $compra_arpilla->setPesoPorArpilla($peso_por_arpilla);
             $compra_arpilla->setArpillas($arpillas);
@@ -220,12 +390,12 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
             catch(Exception $e)
             {
                 DAO::transRollback();
-                Logger::error("No se pudo guardar la compra de arpillas");
-                throw $e;
+                Logger::error("No se pudo guardar la compra de arpillas: ".$e);
+                throw "No se pudo guardar la compra de arpillas";
             }
             DAO::transEnd();
             Logger::log("Se registro la compra de arpillas con exito ");
-            return $compra_arpilla->getIdCompraArpilla();
+            return array( "id_compra_arpilla" => $compra_arpilla->getIdCompraArpilla());
 	}
 
 	/**
