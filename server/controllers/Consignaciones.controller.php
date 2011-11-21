@@ -8,6 +8,68 @@ require_once("interfaces/Consignaciones.interface.php");
 	
   class ConsignacionesController implements IConsignaciones{
   
+      
+      //Metodo para pruebas que simula la obtencion del id de la sucursal actual
+        private static function getSucursal()
+        {
+            return 1;
+        }
+        
+        //metodo para pruebas que simula la obtencion del id de la caja actual
+        private static function getCaja()
+        {
+            return 1;
+        }
+        
+        
+        /*
+         *Se valida que un string tenga longitud en un rango de un maximo inclusivo y un minimo exclusvio.
+         *Regresa true cuando es valido, y un string cuando no lo es.
+         */
+          private static function validarString($string, $max_length, $nombre_variable,$min_length=0)
+	{
+		if(strlen($string)<=$min_length||strlen($string)>$max_length)
+		{
+		    return "La longitud de la variable ".$nombre_variable." proporcionada (".$string.") no esta en el rango de ".$min_length." - ".$max_length;
+		}
+		return true;
+        }
+
+
+        /*
+         * Se valida que un numero este en un rango de un maximo y un minimo inclusivos
+         * Regresa true cuando es valido, y un string cuando no lo es
+         */
+	private static function validarNumero($num, $max_length, $nombre_variable, $min_length=0)
+	{
+	    if($num<$min_length||$num>$max_length)
+	    {
+	        return "La variable ".$nombre_variable." proporcionada (".$num.") no esta en el rango de ".$min_length." - ".$max_length;
+	    }
+	    return true;
+	}
+        
+        /*
+         * Valida que un usuario exista y que este activo
+         */
+        private static function validarUsuario
+        (
+                $id_usuario
+        )
+        {
+            $usuario = UsuarioDAO::getByPK($id_usuario);
+            if(is_null($usuario))
+                return "El usuario ".$id_usuario." no existe";
+            
+            if(!$usuario->getActivo())
+                return "EL usuario ".$id_usuario." no esta activo";
+        }
+        
+      
+      
+      
+      
+      
   
 	/**
  	 *
@@ -20,8 +82,10 @@ require_once("interfaces/Consignaciones.interface.php");
 		$id_cliente
 	)
 	{  
-  
-  
+            Logger::log("Desactivando consignatario");
+            
+            //valida que el cliente exista, que este activo y que sea un consignatario
+            
 	}
   
 	/**
