@@ -1,13 +1,13 @@
-<?php
+<?php 
 
 
 
-	define("BYPASS_INSTANCE_CHECK", false);
+		define("BYPASS_INSTANCE_CHECK", false);
 
-	require_once("../../../../server/bootstrap.php");
+		require_once("../../../../server/bootstrap.php");
 
-	$page = new GerenciaComponentPage();
-	
+		$page = new GerenciaComponentPage();
+
 	$page->addComponent( new TitleComponent( "Nuevo cliente" ) );
 	
 
@@ -28,7 +28,7 @@
 
 	$page->addComponent( $html );
 
-	$page->render();
+		$page->render();
 
 
 
