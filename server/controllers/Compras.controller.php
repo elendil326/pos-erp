@@ -540,8 +540,9 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
 		$id_compra
 	)
 	{  
-  
-  
+            Logger::log("Mostrando detalle de la compra por arpillas");
+            $detalle_compra_arpilla = CompraArpillaDAO::search( new CompraArpilla( array( "id_compra" => $id_compra ) ) );
+            return $detalle_compra_arpilla;
 	}
   
 	/**
