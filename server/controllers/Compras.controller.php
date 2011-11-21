@@ -488,8 +488,42 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
 		$id_compra
 	)
 	{  
-  
-  
+            Logger::log("Listando el detalle de la compra ".$id_compra);
+            
+            //Se regresara un arreglo que contendra en la primera posicion la compra en sí, en la segunda
+            //contendra otro arreglo de arreglos, estos arreglos en la primera posicion tendran un arreglo con la informacion del producto,
+            //en la segunda un arreglo con la informacion de la unidad, y en las siguientes posiciones la demas informacion
+            //del detalle (cantidad, precio, descuento, etc.)
+            //
+            //En la tercera posicion contendra todos los abonos realizados para esta compra
+            
+            $detalle = array();
+            
+            array_push($detalle, CompraDAO::getByPK($id_compra));
+            
+            $compras_productos = array();
+            
+            $compra_productos = CompraProductoDAO::search( new CompraProducto( array("id_compra" => $id_compra) ) );
+            foreach($compra_productos as $c_p)
+            {
+                $compra_producto = array();
+                array_push($compra_producto,ProductoDAO::getByPK($c_p->getIdProducto()));
+                array_push($compra_producto,UnidadDAO::getByPK($c_p->getIdUnidad()));
+                array_push($compra_producto,$c_p->getCantidad());
+                array_push($compra_producto,$c_p->getPrecio());
+                array_push($compra_producto,$c_p->getDescuento());
+                array_push($compra_producto,$c_p->getImpuesto());
+                array_push($compra_producto,$c_p->getRetencion());
+                array_push($compras_productos,$compra_producto);
+            }
+            
+            array_push($detalle, $compras_productos);
+            
+            array_push($detalle, AbonoCompraDAO::search(new AbonoCompra( array( "id_compra" => $id_compra ) )));
+            
+            
+            Logger::log("Detalle obtenido exitosamente");
+            return $detalle;
 	}
   
 	/**
