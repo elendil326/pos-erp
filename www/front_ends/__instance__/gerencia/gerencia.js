@@ -88,7 +88,16 @@ POS.API =
 		var o;
 		try{
 			o = Ext.util.JSON.decode( a.responseText );
+			
 			console.error( "API SAYS :  " + o.error )
+			
+			Ext.MessageBox.show({
+			           title: 'Error',
+			           msg: o.error,
+			           buttons: Ext.MessageBox.OK,
+			           icon: "error"
+			       });
+			
 		}catch(e){
 			console.error("JSON NOT DECODABLE:" , a.responseText);
 			return;

@@ -6,12 +6,15 @@ class FormComponent implements GuiComponent
 	protected $form_fields;
 	protected $submit_form;
 	protected $on_click;
+	protected $send_to_api;
 
 	function __construct(  )
 	{
+		
+		$this->send_to_api 		= null;
 		$this->on_click 		= null;
 	 	$this->submit_form 		= null;
-		$this->form_fields      = array();
+		$this->form_fields      = array(  );
 	}
 
 
@@ -23,8 +26,31 @@ class FormComponent implements GuiComponent
 
 	function renderCmp()
 	{
+		$html = "";
+		
+		if( !is_null($this->send_to_api)){
+			
+			$html.= "<script>";
+			$html .= "function sendToApi( ){";
+			$html.= "	POS.API.POST(\"". $this->send_to_api ."\", ";
+			$html.= "	{" ;
+			
+			foreach( $this->form_fields as $f )
+			{
+				$html .= "	" . $f->id . " : Ext.get('". $f->id . "').getValue(),\n" ;
+			}
+			
+			$html.= "	},{";
+			$html.= 		"callback : function( a ){ console.log(a ); }";
+			$html.= "	});";
+			$html.= "}";
+			$html.= "</script>";			
+			
+		}
+		
 
-		$html = "<table>";
+		
+		$html .= "<table>";
 
 		if( !is_null ( $this->submit_form ) ){
 			$html .= "<form method='". $this->submit_form["method"] . "' action='". $this->submit_form["submit_form_url"] . "'>";
@@ -39,15 +65,11 @@ class FormComponent implements GuiComponent
 		{
 			if($f->type !== "hidden"){
 				$html .= "<tr><td>";
-				
 				$html .= $f->caption;
-				
 				$html .= "</td><td>";				
 			}
 
-
 			$html .= "<input id='" . $f->id .  "' name='" . $f->name .  "' value='" . $f->value .  "' type='". $f->type ."' >";
-
 			
 			if($f->type !== "hidden"){
 				$html .= "</td></tr>";	
@@ -57,11 +79,8 @@ class FormComponent implements GuiComponent
 
 		if( !is_null ( $this->submit_form ) ){
 			$html .= "<tr><td>";
-
 			$html .= "</td><td align=right>";
-
 			$html .= "<input value='" . $this->submit_form["caption"] .  "' type='submit'  >";
-
 			$html .= "</td></tr>";
 		}
 
@@ -71,14 +90,19 @@ class FormComponent implements GuiComponent
 		if( !is_null ( $this->on_click ) ){
 
 			$html .= "<tr><td>";
-
 			$html .= "</td><td align=right>";
-
 			$html .= "<input value='" . $this->on_click["caption"] .  "' type='button' onClick='". $this->on_click["function"] ."' >";
-
 			$html .= "</td></tr>";
 		}
 
+		if( !is_null($this->send_to_api)){
+			
+			$html .= "<tr><td>";
+			$html .= "</td><td align=right>";
+			$html .= "<input value='Aceptar' type='button' onClick='sendToApi()' >";
+			$html .= "</td></tr>";			
+			
+		}
 
 		$html .= "</form>";
 		$html .= "</table>";
@@ -87,13 +111,24 @@ class FormComponent implements GuiComponent
 
 	}
 
-	public function addSubmit($caption, $submit_form_url = "", $method = "GET"){
+
+	public function addSubmit( $caption, $submit_form_url = "", $method = "GET"){
 		$this->submit_form = array( "caption" => $caption, "submit_form_url" => $submit_form_url, "method" => $method );
 	}
 
 
-	public function addOnClick($caption, $js_function){
+	public function addOnClick( $caption, $js_function){
 		$this->on_click = array( "caption" => $caption, "function" => $js_function );
+	}
+
+
+	public function addApiCall( $method_name ){
+		$this->send_to_api = $method_name;
+		
+	}
+
+	public function renameField( $field_array ){
+		
 	}
 }
 

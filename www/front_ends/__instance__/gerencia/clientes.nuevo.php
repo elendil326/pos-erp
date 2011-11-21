@@ -1,36 +1,55 @@
-<?php 
+<?php
 
 
 
-		define("BYPASS_INSTANCE_CHECK", false);
+	define("BYPASS_INSTANCE_CHECK", false);
 
-		require_once("../../../../server/bootstrap.php");
+	require_once("../../../../server/bootstrap.php");
 
-		$page = new GerenciaComponentPage();
+	$page = new GerenciaComponentPage();
 
+	//titulos
 	$page->addComponent( new TitleComponent( "Nuevo cliente" ) );
-	
 
-
-
+	//forma de nuevo cliente
 	$page->addComponent( new TitleComponent( "Datos personales" , 3 ) );
-
 	$form = new DAOFormComponent( array( new Usuario(), new Direccion() ) );
-
-
-	$form->addOnClick( "Crear el nuevo cliente" , "cliente.nuevo()" );
-
+	
+	$form->hideField( array( 
+			"id_usuario",
+			"id_direccion",
+			"id_direccion_alterna",
+			"id_sucursal",
+			"id_rol",	
+			"id_clasificacion_cliente",
+			"id_clasificacion_proveedor",	
+			"id_moneda",
+			"fecha_asignacion_rol",
+			"comision_ventas",
+			"fecha_alta"	,
+			"fecha_baja",
+			"activo",
+			"password",	
+			"last_login",
+			"salario",
+			"saldo_del_ejercicio",
+			"dia_de_pago",
+			"dias_de_embarque",
+			"id_direccion",
+			"id_ciudad",
+			"ultima_modificacion",
+			"id_usuario_ultima_modificacion"
+		 ));
+		
+		$form->renameField( array( 
+			"codigo_usuario" => "codigo_cliente"
+		));
+		
+	$form->addApiCall( "api/cliente/nuevo/" );
 	$page->addComponent( $form );
 
 
-	
-	$html = new FreeHtmlComponent("");
-
-	$page->addComponent( $html );
-
-		$page->render();
-
-
-
+	//render the page
+	$page->render();
 
 

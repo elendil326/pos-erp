@@ -3,13 +3,15 @@
 class DAOFormComponent extends FormComponent
 {
 
-	
+	private $api_method_to_call;
 
 	function __construct( $vo )
 	{
 
 		parent::__construct();
-
+		
+		$this->api_method_to_call = NULL;
+		
 		if(is_array($vo)){
 			for ($a=0; $a < sizeof( $vo ); $a++) 
 			{ 
@@ -44,8 +46,16 @@ class DAOFormComponent extends FormComponent
 	}
 
 	public function hideField( $field_name ){
-		$sof = sizeof($this->form_fields);
 		
+		if( is_array( $field_name ) ){
+			foreach ($field_name as $field ) {
+				$this->hideField( $field );
+			}
+			return;
+		}
+		
+		
+		$sof = sizeof($this->form_fields);
 
 		for ($i=0; $i < $sof; $i++) { 
 
@@ -57,9 +67,10 @@ class DAOFormComponent extends FormComponent
 			}
 		}
 		
-
-		throw new Exception("Field not found in the VO object.");
+		throw new Exception("Field `".$field_name."` not found in the VO object.");
 	}
+
+
 
 }
 
