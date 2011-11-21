@@ -109,7 +109,9 @@
 		$impuesto, 
 		$subtotal, 
 		$id_comprador_venta, 
-		$detalle_venta, 
+		$detalle_venta = null,
+                $detalle_orden = null,
+                $detalle_paquete = null, 
 		$datos_cheque = null, 
 		$saldo = 0, 
 		$tipo_de_pago = null

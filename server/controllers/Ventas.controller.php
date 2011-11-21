@@ -525,13 +525,30 @@ require_once("interfaces/Ventas.interface.php");
 		$impuesto, 
 		$subtotal, 
 		$id_comprador_venta, 
-		$detalle_venta, 
+		$detalle_venta = null,
+                $detalle_orden = null,
+                $detalle_paquete = null,
 		$datos_cheque = null, 
 		$saldo = 0, 
 		$tipo_de_pago = null
 	)
 	{  
-  
-  
+            Logger::log("Creando nueva venta fuera de caja");
+            
+            //Se utiliza el metodo de Sucursal controller, dejando que tome la caja y la sucursal como nulos
+            try
+            {
+            $venta = SucursalesController::VenderCaja($retencion,$id_comprador_venta,$subtotal,$impuesto,
+                    $total,$descuento,$tipo_venta,$saldo,$datos_cheque,$tipo_de_pago,null,null,
+                    null,$detalle_venta,$detalle_orden,$detalle_paquete);
+            }
+            catch(Exception $e)
+            {
+                Logger::error("No se pudo crear la nueva venta: ".$e);
+                throw new Exception("No se pudo crear la nueva venta");
+            }
+            
+            Logger::log("Venta creada exitosamente");
+            return array( "id_venta" => $venta["id_venta"] );
 	}
   }
