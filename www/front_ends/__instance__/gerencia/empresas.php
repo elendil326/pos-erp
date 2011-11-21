@@ -11,9 +11,14 @@
 	$page->addComponent( new TitleComponent( "Empresas" ) );
 
 
-	$foo = new Usuario();
-	$cmp = new DAOFormComponent( $foo );
-	//$page->addComponent( $cmp );
+
+	$page->addComponent( 
+		new TableComponent( 
+			array("id_empresa" => "id_empresa"),
+			EmpresasController::Lista()
+		) 
+	);
+	
 	
 	$page->render();
 

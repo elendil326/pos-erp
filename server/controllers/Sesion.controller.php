@@ -65,4 +65,131 @@ Si el usuario que esta intentando iniciar sesion, esta descativado... 403 Author
   
   
 	}
+
+
+
+
+	/**
+	  * Buscar a un usuario y passwor y regresar el objeto de ese usuario
+	  *
+	  *
+	  **/
+	public static function testLogin($user, $pass)
+	{
+		Logger::log("Probando usuario y contrasena");
+
+		if( self::isLoggedIn() ) return UsuarioDAO::getByPK( $_SESSION['USER_ID'] );
+
+		//user is not logged in, look for him
+		$user = UsuarioDAO::findUser( $user, $pass );
+
+
+		if( $user === NULL ) return NULL;
+
+		//ok user is ok, log him in
+		self::login( $user->getIdUsuario(), $pass, $user->getIdRol() );
+
+		//dispatch
+		self::dispatchUser($user->getIdRol());
+		
+		
+	}
+
+
+	private static function dispatchUser( $group ){
+		switch($group){
+			case 1: die( header( "Location: gerencia/" ) );
+		}
+		
+	}
+
+
+
+
+	static function isLoggedIn()
+	{
+
+		//regresar falso si alguno de estos no esta 
+		if(
+				!isset($_SESSION['USER_ID']			)
+			|| 	!isset($_SESSION['PASSWORD']		)
+			|| 	!isset($_SESSION['HTTP_USER_AGENT']	)
+			|| 	!isset($_SESSION['USER_ROL']		)
+		) return false;
+
+
+		if( $_SESSION['HTTP_USER_AGENT'] !== $_SERVER['HTTP_USER_AGENT']  )
+		{
+			Logger::error("El user agent en sesion es diferente al que envio la peticion");
+			return false;
+		}
+
+		/*
+		if($_SESSION['USER_ROL'] === "JEDI")
+		{
+			return true;				
+		}*/
+
+
+		//ok, los valores estan ahi, vamos a buscar a ese usuario
+		$user = UsuarioDAO::getByPK( $_SESSION['USER_ID'] );
+
+		if($user === null)
+		{
+			Logger::error("El usuario que esta en sesion ya no existe en la BD.");
+			return false;
+		}
+
+
+		if($user->getActivo() === false)
+		{
+			Logger::error("El usuario que esta en sesion esta desactivado en la BD.");
+			return false;
+		}	
+		
+
+		if( $_SESSION['PASSWORD'] !== $user->getPassword())
+		{
+			Logger::error("La constrasena en sesion es diferente en la BD!");
+			return false;
+		}
+
+		return true;
+	}
+	
+
+
+	private static function login($user_id, $password, $rol_id )
+	{
+		
+		Logger::warn("Iniciando sesion");
+
+		$_SESSION['USER_ID'			] 	= $user_id; 
+		$_SESSION['PASSWORD'		]	= md5($password);
+		$_SESSION['HTTP_USER_AGENT'	]	= $_SERVER["HTTP_USER_AGENT"];
+		$_SESSION['USER_ROL'		]	= $rol_id;
+
+	}
+	
+
+
+	public static function logout()
+	{
+
+		Logger::warn("Cerrando sesion");
+
+	    unset($_SESSION['USER_ID']			);
+	    unset($_SESSION['PASSWORD']			);
+	    unset($_SESSION['HTTP_USER_AGENT']	);
+		unset($_SESSION['USER_ROL']			);
+	}
+
+
+	public static function getCurrentUser(){
+		if(self::isLoggedIn())
+			return $_SESSION['USER_ID'];
+		else
+			return null;
+	}
+
   }

@@ -8,6 +8,9 @@ class StdComponentPage extends StdPage{
 
 	function __construct()
 	{
+
+		
+		
 		parent::__construct();
 		parent::addJs( "https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js" );
 		$this->components = array();

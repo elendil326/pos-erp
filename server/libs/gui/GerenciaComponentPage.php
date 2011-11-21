@@ -11,9 +11,15 @@ class GerenciaComponentPage extends StdComponentPage{
 
 		parent::__construct();
 
-		
+		//check for user login status
+		if(SesionController::isLoggedIn() === FALSE){
 
+			die(header("Location: ../"));
+		}
 
+		return $this->bootstrap();
+
+		/*
 		//vamos a ver si estamos loggeados
 		$permisos_controller = new GerenciaLoginController();
 
@@ -69,6 +75,7 @@ class GerenciaComponentPage extends StdComponentPage{
 			$this->dieWithLogin();
 
 		}
+		*/
 
 	}//__construct
 

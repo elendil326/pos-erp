@@ -21,4 +21,27 @@ require_once("base/usuario.vo.base.php");
 class UsuarioDAO extends UsuarioDAOBase
 {
 
+    /**
+      * buscar usuario por usuario y contrasena
+      *
+      **/
+    public static function findUser($user, $password)
+    {
+
+      global $conn;
+
+      $sql = "SELECT * FROM usuario WHERE ( id_usuario = ? AND password = ?) LIMIT 1;";
+
+      $params = array( $user, md5($password) );
+
+      $rs = $conn->GetRow($sql, $params);
+
+      if(count($rs) === 0)
+      {
+        return NULL;
+      }
+
+      
+      return new Usuario($rs);
+    }
 }

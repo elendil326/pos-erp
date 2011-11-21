@@ -14,6 +14,22 @@ class StdPage implements Page{
 
 	function __construct()
 	{
+
+		//vamos a ver si me enviaron un login
+		if(isset($_POST["do_login"])){
+			//test credentials
+			$user = SesionController::testLogin( $_POST["user"], $_POST["password"] );
+		}
+
+		//vamos a ver si me enviaron un logout
+		if(isset($_REQUEST["close_session"])){
+			SesionController::logout( );
+			die(header("Location: ../"));
+
+		}
+
+
+
 		$this->js_urls 	= "";
 		$this->css_urls = "";
 		$this->header 	= "";
@@ -72,6 +88,6 @@ class StdPage implements Page{
 		print( $this->content );
 		print( $this->footer );
 		
-		?></html><?php		
+		?></body></html><?php		
 	}
 }
