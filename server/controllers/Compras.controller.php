@@ -45,6 +45,33 @@ require_once("interfaces/Compras.interface.php");
 	)
 	{
             Logger::log("Listando compras");
+            
+            //Se valida que el parametro orden sea correcto
+            if
+            (
+                    !is_null($orden)                &&
+                    $orden != "id_compra"           &&
+                    $orden != "id_caja"             &&
+                    $orden != "id_compra_caja"      &&
+                    $orden != "id_vendedor_compra"  &&
+                    $orden != "tipo_compra"         &&
+                    $orden != "fecha"               &&
+                    $orden != "subtotal"            &&
+                    $orden != "impuesto"            &&
+                    $orden != "descuento"           &&
+                    $orden != "total"               &&
+                    $orden != "id_sucursal"         &&
+                    $orden != "id_usuario"          &&
+                    $orden != "id_empresa"          &&
+                    $orden != "saldo"               &&
+                    $orden != "cancelada"           &&
+                    $orden != "tipo_de_pago"        &&
+                    $orden != "retencion"
+            )
+            {
+                Logger::error("EL parametro orden (".$orden.") no es valido");
+                throw new Exception("EL parametro orden (".$orden.") no es valido");
+            }
             $parametros=false;
             if
             (
