@@ -415,10 +415,70 @@ require_once("interfaces/Ventas.interface.php");
  	 **/
 	public static function Cancelar
 	(
-		$id_venta
+		$id_venta,
+                $id_caja = null,
+                $billetes = null
 	)
 	{  
-  
+             Logger::log("Cancenlando venta ".$id_venta);
+            
+            //valida que la venta exista y que este activa
+            $venta=VentaDAO::getByPK($id_venta);
+            if($venta==null)
+            {
+                Logger::error("La venta con id: ".$id_venta." no existe");
+                throw new Exception("La venta con id: ".$id_venta." no existe");
+            }
+            if($venta->getCancelada())
+            {
+                Logger::warn("La venta ya ha sido cancelada");
+                return;
+            }
+            
+            //Obtiene al usuario al que se le vendio
+            $usuario=UsuarioDAO::getByPK($venta->getIdCompradorVenta());
+            if($usuario==null)
+            {
+                Logger::error("FATAL!!! Esta venta apunta a un usuario que no existe");
+                throw new Exception("FATAL!!! Esta venta apunta a un usuario que no existe");
+            }
+            
+            //Deja la venta como cancelada y la guarda. 
+            $venta->setCancelada(1);
+            DAO::transBegin();
+            try
+            {
+                VentaDAO::save($venta);
+                
+                //Si la venta fue a credito, se cancelan todos los abonos hechos al mismo y el dinero se queda a cuenta del usuario.
+                if($venta->getTipoDeVenta()=="credito")
+                {
+                    $abono_venta=new AbonoVenta();
+                    $abono_venta->setIdVenta($id_venta);
+                    $abonos=AbonoVentaDAO::search($abono_venta);
+                    foreach($abonos as $abono)
+                    {
+                        if(!$abono->getCancelado())
+                            CargosYAbonosController::EliminarAbono($abono->getIdAbonoVenta(),"Venta cancelada",0,1,0,null,null);
+                    }
+                    $usuario->setSaldoDelEjercicio($usuario->getSaldoDelEjercicio()+$venta->getTotal());
+                    UsuarioDAO::save($usuario);
+                }
+                
+                //Si la venta fue de contado y se tiene la caja a la que regresera el dinero, se modifica dicha caja.
+                else if($venta->getTipoDeVenta()=="contado" && !is_null($id_caja))
+                {
+                    CajasController::modificarCaja($id_caja, 1, $billetes, $venta->getTotal());
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo cancelar la venta: ".$e);
+                throw new Exception("No se pudo cancelar la venta");
+            }
+            DAO::transEnd();
+            Logger::log("Venta cancelada exitosamente");
   
 	}
   

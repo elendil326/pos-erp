@@ -454,7 +454,8 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
                     $abonos=AbonoCompraDAO::search($abono_compra);
                     foreach($abonos as $abono)
                     {
-                        CargosYAbonosController::EliminarAbono($abono->getIdAbonoCompra(),"Compra cancelada",1,0,0,null,null);
+                        if(!$abono->getCancelado())
+                            CargosYAbonosController::EliminarAbono($abono->getIdAbonoCompra(),"Compra cancelada",1,0,0,null,null);
                     }
                     $usuario->setSaldoDelEjercicio($usuario->getSaldoDelEjercicio()-$compra->getTotal());
                     UsuarioDAO::save($usuario);

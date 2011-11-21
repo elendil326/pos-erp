@@ -16,7 +16,9 @@
  	 **/
   static function Cancelar
 	(
-		$id_venta
+		$id_venta,
+                $id_caja = null,
+                $billetes = null
 	);  
   
   
