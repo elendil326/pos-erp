@@ -232,6 +232,8 @@ require_once("interfaces/Compras.interface.php");
                 Logger::error("EL parametro orden (".$orden.") no es valido");
                 throw new Exception("EL parametro orden (".$orden.") no es valido");
             }
+            
+            //Revisa si se recibieron parametros o no para saber cual metodo usar
             $parametros=false;
             if
             (
@@ -253,6 +255,8 @@ require_once("interfaces/Compras.interface.php");
             if($parametros)
             {
                 Logger::log("Se recibieron parametros, se listan las compras en rango");
+                
+                //objetos que serviran para obtener un rango de valores
                 $compra_criterio_1 = new Compra();
                 $compra_criterio_2 = new Compra();
                 $compra_criterio_1->setTipoDeCompra($tipo_compra);
@@ -263,6 +267,8 @@ require_once("interfaces/Compras.interface.php");
                 $compra_criterio_1->setIdSucursal($id_sucursal);
                 $compra_criterio_1->setCancelada($cancelada);
                 $compra_criterio_1->setTipoDePago($tipo_pago);
+                
+                //revisa los rangos recibidos y se asignan en conjunto con limites para obtener el rango deseado
                 if($fecha_inicial!=null)
                 {
                     $compra_criterio_1->setFecha($fecha_inicial);
@@ -300,6 +306,9 @@ require_once("interfaces/Compras.interface.php");
                 Logger::log("No se recibieron parametros, se listan todas las compras");
                 $compras=CompraDAO::getAll(null,null,$orden);
             }
+            
+            //Si se recibe el parametro saldada, se tiene que hace un filtro extra donde solo se incluyan las compras 
+            //con ese valor de saldadada
             if($saldada!==null)
             {
                 $temporal=array();
@@ -365,15 +374,11 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
                 throw new Exception($validar);
             }
             
+            //Se asignan los valores y se guarda el nuevo registro
             $compra_arpilla=new CompraArpilla();
             $compra_arpilla->setPesoPorArpilla($peso_por_arpilla);
             $compra_arpilla->setArpillas($arpillas);
             $compra_arpilla->setPesoRecibido($peso_recibido);
-            if(CompraDAO::getByPK($id_compra)==null)
-            {
-                Logger::error("La compra con id: ".$id_compra." no existe");
-                throw new Exception("La compra con id: ".$id_compra." no existe");
-            }
             $compra_arpilla->setIdCompra($id_compra);
             $compra_arpilla->setTotalOrigen($total_origen);
             $compra_arpilla->setMermaPorArpilla($merma_por_arpilla);
@@ -391,7 +396,7 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
             {
                 DAO::transRollback();
                 Logger::error("No se pudo guardar la compra de arpillas: ".$e);
-                throw "No se pudo guardar la compra de arpillas";
+                throw new Exception("No se pudo guardar la compra de arpillas");
             }
             DAO::transEnd();
             Logger::log("Se registro la compra de arpillas con exito ");
@@ -406,9 +411,14 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
  	 **/
 	public static function Cancelar
 	(
-		$id_compra
+		$id_compra,
+                $id_caja = null,
+                $billetes = null
 	)
 	{
+            Logger::log("Cancenlando compra ".$id_compra);
+            
+            //valida que la compra exista y que este activa
             $compra=CompraDAO::getByPK($id_compra);
             if($compra==null)
             {
@@ -420,36 +430,47 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
                 Logger::warn("La compra ya ha sido cancelada");
                 return;
             }
+            
+            //Obtiene al usuario al que se le compro
             $usuario=UsuarioDAO::getByPK($compra->getIdVendedorCompra());
             if($usuario==null)
             {
                 Logger::error("FATAL!!! Esta compra apunta a un usuario que no existe");
                 throw new Exception("FATAL!!! Esta compra apunta a un usuario que no existe");
             }
+            
+            //Deja la compra como cancelada y la guarda. 
             $compra->setCancelada(1);
             DAO::transBegin();
             try
             {
                 CompraDAO::save($compra);
-                if($compra->getTipoDeCompra()==="credito")
+                
+                //Si la compra fue a credito, se cancelan todos los abonos hechos al mismo y el dinero se queda a cuenta del usuario.
+                if($compra->getTipoDeCompra()=="credito")
                 {
                     $abono_compra=new AbonoCompra();
                     $abono_compra->setIdCompra($id_compra);
                     $abonos=AbonoCompraDAO::search($abono_compra);
                     foreach($abonos as $abono)
                     {
-                        $cargosyabonos = new CargosYAbonosController();
-                        $cargosyabonos->EliminarAbono($abono->getIdAbonoCompra(),"Compra cancelada",1,0,0,null,null);
+                        CargosYAbonosController::EliminarAbono($abono->getIdAbonoCompra(),"Compra cancelada",1,0,0,null,null);
                     }
                     $usuario->setSaldoDelEjercicio($usuario->getSaldoDelEjercicio()-$compra->getTotal());
                     UsuarioDAO::save($usuario);
+                }
+                
+                //Si la compra fue de contado y se tiene la caja a la que regresera el dinero, se modifica dicha caja.
+                else if($compra->getTipoDeCompra()=="contado" && !is_null($id_caja))
+                {
+                    CajasController::modificarCaja($id_caja, 1, $billetes, $compra->getTotal());
                 }
             }
             catch(Exception $e)
             {
                 DAO::transRollback();
-                Logger::error("Error al cancelar la compra: ".$e);
-                throw $e;
+                Logger::error("No se pudo cancelar la compra: ".$e);
+                throw new Exception("No se pudo cancelar la compra");
             }
             DAO::transEnd();
             Logger::log("Compra cancelada exitosamente");

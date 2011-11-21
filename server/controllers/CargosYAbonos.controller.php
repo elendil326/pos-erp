@@ -805,9 +805,6 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 throw new Exception("FATAL!!!! La compra de este abono no tiene un vendedor");
             }
             $monto=$abono->getMonto();
-            $usuario->setSaldoDelEjercicio($usuario->getSaldoDelEjercicio()+$monto);
-            $compra->setSaldo($compra->getSaldo()-$monto);
-
             //
             //Si la compra ha sido cancelada, quiere decir que se cancelaran todos los abonos y
             //ese dinero solo se quedara a cuenta del usuario.
@@ -829,35 +826,27 @@ require_once("interfaces/CargosYAbonos.interface.php");
             }
             
             //Si la compra no ha sido cancelada, quiere decir que solo se cancela este abono y por ende
-            //los cheques se le regresan al usuario
+            //los cheques se le regresan al usuario. Ademas, el saldo del usuario y de la compra se modifican
+            //para eliminar este abono.
             if(!$compra->getCancelada())
             {
+                DAO::transBegin();
                 try
                 {
+                    $usuario->setSaldoDelEjercicio($usuario->getSaldoDelEjercicio()+$monto);
+                    $compra->setSaldo($compra->getSaldo()-$monto);
                     self::eliminarCheques($abono->getIdAbonoCompra(),1,null,null);
+                    UsuarioDAO::save($usuario);
+                    CompraDAO::save($compra);
                 }
                 catch(Exception $e)
                 {
-                    throw $e;
+                   DAO::transRollback();
+                    Logger::error("No se ha podido actualizar al usuario ni la compra: ".$e);
+                    throw new Exception("No se ha podido actualizar al usuario ni la compra");
                 }
+                DAO::transEnd();
             }
-            //
-            //Si no ha ocurrido ningun error con los billetes o con la caja, actualizas
-            //al usuario y a la compra
-            //
-            DAO::transBegin();
-            try
-            {
-                UsuarioDAO::save($usuario);
-                CompraDAO::save($compra);
-            }
-            catch(Exception $e)
-            {
-                DAO::transRollback();
-                Logger::error("No se ha podido actualizar al usuario ni la compra: ".$e);
-                throw new Exception("No se ha podido actualizar al usuario ni la compra");
-            }
-            DAO::transEnd();
         }
 
         private static function cancelarAbonoVenta
@@ -880,8 +869,6 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 throw new Exception("FATAL!!!! La venta de este abono no tiene un comprador");
             }
             $monto=$abono->getMonto();
-            $usuario->setSaldoDelEjercicio($usuario->getSaldoDelEjercicio()-$monto);
-            $venta->setSaldo($venta->getSaldo()-$monto);
             //
             //Si la venta ha sido cancelada, quiere decir que se cancelaran todos los abonos y
             //ese dinero solo se quedara a cuenta del usuario.
@@ -903,32 +890,23 @@ require_once("interfaces/CargosYAbonos.interface.php");
             }
             if(!$venta->getCancelada())
             {
+                DAO::transBegin();
                 try
                 {
+                    $usuario->setSaldoDelEjercicio($usuario->getSaldoDelEjercicio()-$monto);
+                    $venta->setSaldo($venta->getSaldo()-$monto);
                     self::eliminarCheques($abono->getIdAbonoVenta(),null,1,null);
+                    UsuarioDAO::save($usuario);
+                    VentaDAO::save($venta);
                 }
                 catch(Exception $e)
                 {
-                    throw $e;
+                    DAO::transRollback();
+                    Logger::error("No se ha podido actualizar al usuario ni la venta: ".$e);
+                    throw new Exception("No se ha podido actualizar al usuario ni a la venta");
                 }
+                DAO::transEnd();
             }
-            //
-            //Si no ha ocurrido ningun error con los billetes o con la caja, actualizas
-            //al usuario y a la compra
-            //
-            DAO::transBegin();
-            try
-            {
-                UsuarioDAO::save($usuario);
-                VentaDAO::save($venta);
-            }
-            catch(Exception $e)
-            {
-                DAO::transRollback();
-                Logger::error("No se ha podido actualizar al usuario ni la venta: ".$e);
-                throw new Exception("No se ha podido actualizar al usuario ni a la venta");
-            }
-            DAO::transEnd();
         }
 
         //Este metodo no necesita verificar que el prestamoa haya sido cancelado o no
