@@ -494,8 +494,9 @@ require_once("interfaces/Ventas.interface.php");
 		$id_venta
 	)
 	{  
-  
-  
+            Logger::log("Mostrando detalle de la venta por arpillas");
+            $detalle_venta_arpilla = VentaArpillaDAO::search( new VentaArpilla( array( "id_venta" => $id_venta ) ) );
+            return $detalle_venta_arpilla;
 	}
   
 	/**
