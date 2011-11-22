@@ -87,7 +87,7 @@ require_once("interfaces/Sucursales.interface.php");
                 }
             }
             
-            //Se valida que el rfc solo tenga letras de la A-Z y 0-9.
+            //Se valida que el rfc solo tenga letras de la A-Z y 0-9. No se debe repetir el rfc
             if(!is_null($rfc))
             {
                 $e=self::validarString($rfc, 30, "rfc");
@@ -95,14 +95,28 @@ require_once("interfaces/Sucursales.interface.php");
                     return $e;
                 if(preg_match('/[^A-Z0-9]/' ,$rfc))
                         return "El rfc ".$rfc." contiene caracteres fuera del rango A-Z y 0-9";
+                
+                $sucursales = SucursalDAO::search( new Sucursal( array( "rfc" => $rfc )) );
+                foreach($sucursales as $sucursal)
+                {
+                    if($sucursal->getActiva())
+                        return "El rfc (".$rfc.") ya esta en uso por la sucursal ".$sucursal->getIdSucursal();
+                }
             }
             
-            //Se valida que la razon social tenga una longitud maxima de 100
+            //Se valida que la razon social tenga una longitud maxima de 100, no se puede repetir
             if(!is_null($razon_social))
             {
                 $e=self::validarString($razon_social, 100, "razon social");
                 if(is_string($e))
                     return $e;
+                
+                $sucursales = SucursalDAO::search( new Sucursal( array( "razon_social" => trim($razon_social) )) );
+                foreach($sucursales as $sucursal)
+                {
+                    if($sucursal->getActiva())
+                        return "La razon social (".$razon_social.") ya esta en uso por la sucursal ".$sucursal->getIdSucursal();
+                }
             }
             
             //Se valida que la descripcion tenga una longitud maxima de 255
@@ -2155,7 +2169,6 @@ require_once("interfaces/Sucursales.interface.php");
 	(
 		$codigo_postal ,
                 $calle ,
-                $empresas ,
                 $activo ,
                 $colonia ,
                 $razon_social ,
@@ -2190,7 +2203,7 @@ require_once("interfaces/Sucursales.interface.php");
             $sucursal=new Sucursal();
             $sucursal->setRfc($rfc);
             $sucursal->setActiva($activo);
-            $sucursal->setRazonSocial($razon_social);
+            $sucursal->setRazonSocial(trim($razon_social));
             $sucursal->setSaldoAFavor($saldo_a_favor);
             $sucursal->setIdGerente($id_gerente);
             $sucursal->setMargenUtilidad($margen_utilidad);
@@ -2205,19 +2218,6 @@ require_once("interfaces/Sucursales.interface.php");
                 $sucursal->setIdDireccion($id_direccion);
                 SucursalDAO::save($sucursal);
                 
-                //Se asignan las empresas que fueron obtenidas a esta sucursal
-                $sucursal_empresa = new SucursalEmpresa();
-                $sucursal_empresa->setIdSucursal($sucursal->getIdSucursal());
-                foreach($empresas as $empresa)
-                {
-                    $validar = self::validarParametrosSucursalEmpresa(null,$empresa["id_empresa"],$empresa["margen_utilidad"],$empresa["descuento"]);
-                    if(is_string($validar))
-                        throw new Exception($validar);
-                    $sucursal_empresa->setIdEmpresa($empresa["id_empresa"]);
-                    $sucursal_empresa->setDescuento($empresa["descuento"]);
-                    $sucursal_empresa->setMargenUtilidad($empresa["margen_utilidad"]);
-                    SucursalEmpresaDAO::save($sucursal_empresa);
-                }
                 
                 //Si se recibieron impuestos, se crea el registro correspondiente en la tabla impuesto sucursal
                 if(!is_null($impuestos))
@@ -2289,7 +2289,6 @@ require_once("interfaces/Sucursales.interface.php");
 		$descuento = null, 
 		$margen_utilidad = null, 
 		$descripcion = null, 
-		$empresas = null, 
 		$telefono1 = null, 
 		$telefono2 = null, 
 		$numero_exterior = null, 
@@ -2359,7 +2358,7 @@ require_once("interfaces/Sucursales.interface.php");
             }
             if(!is_null($razon_social))
             {
-                $sucursal->setRazonSocial($razon_social);
+                $sucursal->setRazonSocial(trim($razon_social));
             }
             if(!is_null($id_gerente))
             {
@@ -2418,39 +2417,6 @@ require_once("interfaces/Sucursales.interface.php");
                 DireccionDAO::save($direccion);
                 SucursalDAO::save($sucursal);
                 
-                //Si se recibio una lista de empresas, se actualizan las que ya estan 
-                //y se insertan las que no estaban. Al final se buscan todas las empresas
-                //que existen en la reclacion, y si alguna no esta incluida en la lista obtenida
-                //es eliminada
-                if(!is_null($empresas))
-                {
-                    //Se insertan y actualizan las ya existentes
-                    foreach($empresas as $empresa)
-                    {
-                        $validar = self::validarParametrosSucursalEmpresa(null,$empresa["id_empresa"],$empresa["margen_utilidad"],$empresa["descuento"]);
-                        if(is_string($validar))
-                            throw new Exception($validar);
-                        SucursalEmpresaDAO::save(new SucursalEmpresa(array( "id_sucursal" => $id_sucursal,
-                            "id_empresa" => $empresa["id_empresa"], "margen_utilidad" => $empresa["margen_utilidad"],
-                            "descuento" => $empresa["descuento"] )));
-                    }
-                    $sucursales_empresa_actual=SucursalEmpresaDAO::search(new SucursalEmpresa(array( "id_sucursal" => $id_sucursal)));
-                    
-                    //Se buscan aquellas que no estan contenidas en la lista obtenida para ser eliminadas
-                    foreach($sucursales_empresa_actual as $sucursal_empresa)
-                    {
-                        $encontrado=false;
-                        foreach($empresas as $empresa)
-                        {
-                            if($empresa["id_empresa"]==$sucursal_empresa->getIdEmpresa())
-                            {
-                                $encontrado=true;
-                            }
-                        }
-                        if(!$encontrado)
-                            SucursalEmpresaDAO::delete($sucursal_empresa);
-                    }
-                }
                 
                 //Si se recibieron impuestos, se insertan y actualizan los que se encuentran
                 //en la lista obtenida. Al final, se recorren las relaciones ya existentes y

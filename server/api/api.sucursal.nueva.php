@@ -19,7 +19,6 @@
 		$this->request = array(	
 			"codigo_postal" => new ApiExposedProperty("codigo_postal", true, GET, array( "string" )),
 			"calle" => new ApiExposedProperty("calle", true, GET, array( "string" )),
-			"empresas" => new ApiExposedProperty("empresas", true, GET, array( "json" )),
 			"activo" => new ApiExposedProperty("activo", true, GET, array( "bool" )),
 			"colonia" => new ApiExposedProperty("colonia", true, GET, array( "string" )),
 			"razon_social" => new ApiExposedProperty("razon_social", true, GET, array( "string" )),
@@ -47,7 +46,6 @@
 			
 			isset($_GET['codigo_postal'] ) ? $_GET['codigo_postal'] : null,
 			isset($_GET['calle'] ) ? $_GET['calle'] : null,
-			isset($_GET['empresas'] ) ? $_GET['empresas'] : null,
 			isset($_GET['activo'] ) ? $_GET['activo'] : null,
 			isset($_GET['colonia'] ) ? $_GET['colonia'] : null,
 			isset($_GET['razon_social'] ) ? $_GET['razon_social'] : null,

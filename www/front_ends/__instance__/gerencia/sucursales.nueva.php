@@ -42,8 +42,8 @@
                         "codigo_postal"
 		));
 	
-        $form->addField("id_impuesto", "Impuestos", "text","","impuestos");
-        $form->addField("id_retencion", "Retenciones", "text","","retenciones");
+        $form->addField("id_impuesto", "Impuestos", "text","","impuestos[]");
+        $form->addField("id_retencion", "Retenciones", "text","","retenciones[]");
         
 	$form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll() );
         
@@ -52,9 +52,11 @@
         $form->createListBoxJoin("id_retencion", "nombre", RetencionDAO::getAll());
 	
         $form->renameField( array( 
-			"id_ciudad" => "ciudad",
+			//"id_ciudad" => "ciudad",
                         "id_usuario" => "gerente",
-                        "id_impuesto" => "impuestos" 
+                        "id_impuesto" => "impuestos",
+                        "id_retencion" => "retenciones",
+                        "activa"    => "activo"
 		));
         
 	$page->addComponent( $form );

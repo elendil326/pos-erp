@@ -426,7 +426,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 * @param detalle_producto json Objeto que contendr los id de los productos, sus cantidades, su precio y su descuento.
  	 * @param billetes_cambio json Ids de billetes que se entregaron como cambio
  	 * @param id_venta_caja int Id de la venta de esta caja, utilizado cuando se va el internet
- 	 * @return id_venta int Id autogenerado de la inserción de la venta.
+ 	 * @return id_venta int Id autogenerado de la inserciï¿½n de la venta.
  	 **/
   static function VenderCaja
 	(
@@ -489,8 +489,7 @@ Creo que este metodo tiene que estar bajo sucursal.
 		$numero_exterior = null, 
 		$razon_social = null, 
 		$telefono2 = null, 
-		$telefono1 = null, 
-		$empresas = null, 
+		$telefono1 = null,
 		$descripcion = null, 
 		$margen_utilidad = null, 
 		$descuento = null, 
@@ -586,7 +585,6 @@ Creo que este metodo tiene que estar bajo sucursal.
 	(
 		$codigo_postal, 
 		$calle, 
-		$empresas, 
 		$activo, 
 		$colonia, 
 		$razon_social, 

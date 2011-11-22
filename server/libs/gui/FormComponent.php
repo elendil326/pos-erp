@@ -129,7 +129,7 @@ class FormComponent implements GuiComponent{
 				break;
                                 
                                 case "listbox" :
-                                        $html .= "<select multiple id='". $f->id ."'>";
+                                        $html .= "<select multiple='true' id='". $f->id ."' name='".$f->name."'>";
                                         
                                         foreach($f->value as $o)
                                                 $html .= "<option value='".$o["id"]."'>".$o["caption"]."</option>";
