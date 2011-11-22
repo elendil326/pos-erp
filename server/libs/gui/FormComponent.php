@@ -102,9 +102,9 @@ class FormComponent implements GuiComponent
 			switch( $f->type ){
 				case "combo" :
 					$html .= "<select id='". $f->id  ."'>";
-					
+
 					foreach($f->value as $o)
-						$html .= "<option>".$o."</option>";
+						$html .= "<option value='".$o["id"]."'>".$o["caption"]."</option>";
 					
 					$html .= "</select>";
 					//$this->form_fields[$i]->value
@@ -215,7 +215,7 @@ class FormComponent implements GuiComponent
 		}
 	}
 
-	public function createComboBoxJoin( $field_name, $field_name_in_values, $values_array ){
+	public function createComboBoxJoin( $field_name, $field_name_in_values, $values_array){
 		if( sizeof( $values_array ) == 0 ){
 			//do something
 		}
@@ -232,7 +232,7 @@ class FormComponent implements GuiComponent
 
 				foreach ($values_array as $v ){
 					$v = $v->asArray();
-					array_push( $end_values, $v["$field_name_in_values"] );
+					array_push( $end_values,  array( "id" => $v["$field_name"], "caption" => $v["$field_name_in_values"] ) );
 
 				}
 				

@@ -35,7 +35,6 @@
 			"dia_de_pago",
 			"dias_de_embarque",
 			"id_direccion",
-			//"id_ciudad",
 			"ultima_modificacion",
 			"id_usuario_ultima_modificacion"
 		 ));
@@ -56,9 +55,6 @@
 		));
 	
 	$form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll() );
-	
-	
-	//$form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll() );
 	
 	$page->addComponent( $form );
 

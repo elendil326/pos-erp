@@ -36,9 +36,9 @@
         
         
 		
-       /* $form->renameField( array( 
+		$form->renameField( array( 
 			"id_ciudad" => "ciudad",
-		));*/
+		));
         
         $form->addApiCall( "api/personal/usuario/nuevo/" );
         
