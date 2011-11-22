@@ -48,14 +48,32 @@ class FormComponent implements GuiComponent{
 		if( !is_null($this->send_to_api)){
 			
 			$html.= "<script>";
+			$html.= "var obligatory = [];";
+			foreach( $this->form_fields as $f )
+			{
+				if( $f->obligatory )
+					$html .= "obligatory.push( '". $f->id . "' );";
+			}
+				
 			$html .= "function getParams(){";
+			
 			$html .= "var p = {};";
 				foreach( $this->form_fields as $f )
 				{
-					$html .= "console.log('". $f->id . "', Ext.get('". $f->id . "').getValue() );";
-					$html .= "if( Ext.get('". $f->id . "').getValue().length > 0 ){ p." . $f->id . " = Ext.get('". $f->id . "').getValue() ; }" ;
+					//$html .= "console.log('". $f->id . "', Ext.get('". $f->id . "').getValue() );";
+					$html .= "if( Ext.get('". $f->id . "').getValue().length > 0 ){ p." . $f->id . " = Ext.get('". $f->id . "').getValue() ; } else{" ;
+						//else si no esta lleno de datos, vamos a buscarlo en los obligatorios, 
+						//si esta en los obligatorios entonces mandamos el error
+						$html .= "for (var i = obligatory.length - 1; i >= 0; i--){";
+						$html .= "	if(obligatory[i] == '". $f->id . "') {";
+						$html .= "		/*alert('campo obligatorio' + obligatory[i]);*/";
+						$html .= "		Ext.get('". $f->id . "').highlight('#ee0000');";
+						$html .= "		return;";
+						$html .= "	}";
+						$html .= "};";
+					$html .= "}" ;
 				}
-			$html .= "console.warn(p);sendToApi(p);";
+			$html .= "sendToApi(p);";
 			$html .= "}";
 			
 			$html .= "function sendToApi( params ){";
