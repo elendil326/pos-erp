@@ -21,7 +21,7 @@
 
 
 	
-	$form->addApiCall( "api/efectivo/moneda/nueva/" );
+	$form->addApiCall( "api/efectivo/moneda/nueva/", "GET" );
 	
 	$form->makeObligatory(array( 
 			"nombre",

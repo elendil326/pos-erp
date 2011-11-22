@@ -30,7 +30,7 @@
 			"id_ciudad" => "ciudad",
 		));
         
-        //$form->createComboBoxJoin( "ciudad", "nombre", CiudadDAO::getAll() );
+        $form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll() );
 		
 	$form->addApiCall( "api/empresa/nuevo/" );
 	$page->addComponent( $form );

@@ -21,7 +21,7 @@
 
 
 	
-	$form->addApiCall( "api/efectivo/billete/nuevo/" );
+	$form->addApiCall( "api/efectivo/billete/nuevo/", "GET" );
 	
 	$form->makeObligatory(array( 
 			"nombre",
