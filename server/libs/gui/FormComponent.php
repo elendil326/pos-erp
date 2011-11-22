@@ -60,11 +60,15 @@ class FormComponent implements GuiComponent
 			
 		}
 		
-
+		$new_row = 0;
+		$html .= "<tr>";
 		foreach( $this->form_fields as $f )
 		{
+			//incrementar el calculo de la fila actual
+			$new_row++;
+			
 			if($f->type !== "hidden"){
-				$html .= "<tr><td>";
+				$html .= "<td>";
 				if($f->obligatory === true) $html .= "<b>";
 				$html .= $f->caption;
 				if($f->obligatory === true) $html .= "</b>";
@@ -88,10 +92,16 @@ class FormComponent implements GuiComponent
 
 			
 			if($f->type !== "hidden"){
-				$html .= "</td></tr>";	
+				$html .= "</td>";
+			}
+			
+			if($new_row == 2){
+				$html .= "</tr><tr>";
+				$new_row = 0;
 			}
 		}
-
+		
+		$html .= "</tr>";
 
 		if( !is_null ( $this->submit_form 	) ){
 			$html .= "<tr><td>";

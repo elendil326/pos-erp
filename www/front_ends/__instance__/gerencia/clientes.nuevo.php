@@ -12,10 +12,7 @@
 	$page->addComponent( new TitleComponent( "Nuevo cliente" ) );
 
 	//forma de nuevo cliente
-	$page->addComponent( new TitleComponent( "Datos personales" , 3 ) );
 	$form = new DAOFormComponent( array( new Usuario(), new Direccion() ) );
-	
-
 	
 	$form->hideField( array( 
 			"id_usuario",
@@ -56,7 +53,7 @@
 			"clasificacion_cliente",
 			"codigo_cliente",
 			"razon_social"
-		));	
+		));
 	
 	$form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll() );
 	
