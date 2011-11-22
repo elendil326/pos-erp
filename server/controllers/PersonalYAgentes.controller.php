@@ -695,6 +695,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             DAO::transBegin();
             try
             {
+                Logger::debug($calle." --- es string --- ".  is_string($calle)." ------ es nulo  ---- ".is_null($calle)." ------- no es nulo ------ ".!is_null($calle));
                 //si se paso un parametro obligatorio de la direccion, se intenta crear la misma
                 if(!is_null($calle))
                 {

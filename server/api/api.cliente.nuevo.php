@@ -55,11 +55,11 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
 			isset($_POST['codigo_cliente'] ) ? $_POST['codigo_cliente'] : null,
 			isset($_POST['razon_social'] ) ? $_POST['razon_social'] : null,
 			isset($_POST['clasificacion_cliente'] ) ? $_POST['clasificacion_cliente'] : null,
+                        isset($_POST['password'] ) ? $_POST['password'] : null,
 			isset($_POST['rfc'] ) ? $_POST['rfc'] : null,
 			isset($_POST['telefono2'] ) ? $_POST['telefono2'] : null,
 			isset($_POST['curp'] ) ? $_POST['curp'] : null,
 			isset($_POST['mensajeria'] ) ? $_POST['mensajeria'] : null,
-			isset($_POST['password'] ) ? $_POST['password'] : null,
 			isset($_POST['numero_exterior'] ) ? $_POST['numero_exterior'] : null,
 			isset($_POST['colonia'] ) ? $_POST['colonia'] : null,
 			isset($_POST['denominacion_comercial'] ) ? $_POST['denominacion_comercial'] : null,
@@ -67,7 +67,6 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
 			isset($_POST['representante_legal'] ) ? $_POST['representante_legal'] : null,
 			isset($_POST['texto_extra'] ) ? $_POST['texto_extra'] : null,
 			isset($_POST['telefono1'] ) ? $_POST['telefono1'] : null,
-			isset($_POST['referencia'] ) ? $_POST['referencia'] : null,
 			isset($_POST['codigo_postal'] ) ? $_POST['codigo_postal'] : null,
 			isset($_POST['id_ciudad'] ) ? $_POST['id_ciudad'] : null,
 			isset($_POST['retenciones'] ) ? $_POST['retenciones'] : null,
@@ -76,7 +75,11 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
 			isset($_POST['numero_interior'] ) ? $_POST['numero_interior'] : null,
 			isset($_POST['calle'] ) ? $_POST['calle'] : null,
 			isset($_POST['email'] ) ? $_POST['email'] : null,
-			isset($_POST['direccion_web'] ) ? $_POST['direccion_web'] : null
+			isset($_POST['direccion_web'] ) ? $_POST['direccion_web'] : null,
+                        isset($_POST['telefono_personal1'] ) ? $_POST['telefono_personal1'] : null,
+                        isset($_POST['telefono_personal2'] ) ? $_POST['telefono_personal2'] : null,
+                        isset($_POST['descuento'] ) ? $_POST['descuento'] : null,
+                        isset($_POST['limite_credito'] ) ? $_POST['limite_credito'] : null
 			
 			);
 		}catch(Exception $e){
