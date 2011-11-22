@@ -72,7 +72,7 @@
   static function NuevoRol
 	(
 		$nombre, 
-		$descripcion, 
+		$descripcion = null, 
 		$descuento = 0, 
 		$salario = 0
 	);  

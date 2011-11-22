@@ -1650,7 +1650,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	public static function NuevoRol
 	(
 		$nombre, 
-		$descripcion, 
+		$descripcion = null, 
 		$descuento = 0, 
 		$salario = 0
 	)
