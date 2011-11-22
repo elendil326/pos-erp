@@ -48,16 +48,19 @@ class FormComponent implements GuiComponent{
 		if( !is_null($this->send_to_api)){
 			
 			$html.= "<script>";
-			$html .= "function sendToApi( ){";
-			$html.= "	POS.API.". $this->send_to_api_http_method ."(\"". $this->send_to_api ."\", ";
-			$html.= "	{" ;
+			$html .= "function getParams(){";
+			$html .= "var p = {};";
+				foreach( $this->form_fields as $f )
+				{
+					$html .= "console.log('". $f->id . "', Ext.get('". $f->id . "').getValue() );";
+					$html .= "if( Ext.get('". $f->id . "').getValue().length > 0 ){ p." . $f->id . " = Ext.get('". $f->id . "').getValue() ; }" ;
+				}
+			$html .= "console.warn(p);sendToApi(p);";
+			$html .= "}";
 			
-			foreach( $this->form_fields as $f )
-			{
-				$html .= "	" . $f->id . " : Ext.get('". $f->id . "').getValue()," ;
-			}
-			
-			$html.= "	},{";
+			$html .= "function sendToApi( params ){";
+			$html.= "	POS.API.". $this->send_to_api_http_method ."(\"". $this->send_to_api ."\", params, ";
+			$html.= "	{";
 			$html.= "		callback : function( a ){ ";
 			$html.= "			";
 			$html.= "			console.log('OKAY');";
@@ -153,7 +156,7 @@ class FormComponent implements GuiComponent{
 		if( !is_null ( $this->send_to_api	) ){
 			$html .= "<td>";
 			$html .= "</td><td align=right>";
-			$html .= "<input value='Aceptar' type='button' onClick='sendToApi()' >";
+			$html .= "<input value='Aceptar' type='button' onClick='getParams()' >";
 			$html .= "</td></tr>";			
 			
 		}

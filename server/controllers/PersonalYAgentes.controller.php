@@ -562,6 +562,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	)
 	{  
             Logger::log("Creando nuevo usuario");
+
             $validar = self::validarParametrosUsuario( null, null, $id_sucursal, $id_rol,
                     $id_clasificacion_cliente, $id_clasificacion_proveedor, $id_moneda,
                     null, $nombre, $rfc, $curp, $comision_ventas, $telefono_personal1,
@@ -574,9 +575,8 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             //se verifica que la validacion haya sido correcta
             if(is_string($validar))
             {
-                Logger::error("Imposible crear a nuevo usuario:" . $validar);
-
-                throw new Exception($validar,901);
+                Logger::error("Imposible crear a nuevo usuario: " . $validar);
+                throw new Exception($validar, 901);
             }
 
             //se verifica que el codigo de usuario no sea repetido

@@ -7,6 +7,7 @@
 		require_once("../../../../server/bootstrap.php");
 
 		$page = new GerenciaComponentPage();
+		
 		$page->addComponent( new TitleComponent( "Empresas" ) );
 
 		$tabla = new TableComponent( 
@@ -19,6 +20,7 @@
 			),
 			EmpresasController::Lista()
 		);
-		$tabla->addOnClick( $actionField , $actionFunction, $sendJSON = false, $sendId = false )
+		
+		$tabla->addOnClick( "id_empresa", "(function(a){window.location = '';})", false, true );
 		$page->addComponent( $tabla );
 		$page->render();

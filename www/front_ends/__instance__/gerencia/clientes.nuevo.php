@@ -20,7 +20,6 @@
 			"id_direccion_alterna",
 			"id_sucursal",
 			"id_rol",	
-			"id_clasificacion_cliente",
 			"id_clasificacion_proveedor",	
 			"id_moneda",
 			"fecha_asignacion_rol",
@@ -28,7 +27,6 @@
 			"fecha_alta"	,
 			"fecha_baja",
 			"activo",
-			"password",	
 			"last_login",
 			"salario",
 			"saldo_del_ejercicio",
@@ -54,7 +52,8 @@
 			"razon_social"
 		));
 	
-	$form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll() );
+	$form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll( ) );
+	$form->createComboBoxJoin( "id_clasificacion_cliente", "nombre", ClasificacionClienteDAO::getAll( ) );
 	
 	$page->addComponent( $form );
 
