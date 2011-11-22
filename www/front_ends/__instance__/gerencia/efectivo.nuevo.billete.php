@@ -28,6 +28,10 @@
 			"valor",
 			"id_moneda"
 		));
+        
+        $form->createComboBoxJoin("id_moneda", "nombre", MonedaDAO::getAll());
+        
+        
 	
 	$page->addComponent( $form );
 

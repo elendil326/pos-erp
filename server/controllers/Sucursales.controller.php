@@ -2153,26 +2153,26 @@ require_once("interfaces/Sucursales.interface.php");
  	 **/
 	public static function Nueva
 	(
-		$codigo_postal, 
-		$rfc, 
-		$activo, 
-		$colonia, 
-		$razon_social, 
-		$calle, 
-		$empresas, 
-		$numero_exterior, 
-		$id_ciudad, 
-		$saldo_a_favor, 
-		$id_gerente = null, 
-		$margen_utilidad = null, 
-		$numero_interior = null, 
-		$telefono2 = null, 
-		$telefono1 = null, 
-		$descripcion = null, 
-		$impuestos = null, 
-		$descuento = null,
+		$codigo_postal ,
+                $calle ,
+                $empresas ,
+                $activo ,
+                $colonia ,
+                $razon_social ,
+                $numero_exterior ,
+                $rfc ,
+                $id_ciudad ,
+                $saldo_a_favor ,
+                $id_gerente = null,
+                $referencia = null,
                 $retenciones = null,
-                $referencia = null
+                $numero_interior = null,
+                $telefono2 = null,
+                $telefono1 = null,
+                $margen_utilidad = null,
+                $descripcion = null,
+                $impuestos = null,
+                $descuento = null
 	)
 	{
             Logger::log("Creando nueva sucursal");

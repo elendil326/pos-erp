@@ -25,12 +25,13 @@
 			"ultima_modificacion",
 			"id_usuario_ultima_modificacion"
 		 ));
-		
+	
+        $form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll() );
+        
         $form->renameField( array( 
 			"id_ciudad" => "ciudad",
 		));
         
-        $form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll() );
 		
 	$form->addApiCall( "api/empresa/nuevo/" );
 	$page->addComponent( $form );
