@@ -11,13 +11,13 @@ require_once("interfaces/Clientes.interface.php");
         //Metodo para pruebas que simula la obtencion del id de la sucursal actual
         private static function getSucursal()
         {
-            return 1;
+            return NULL;
         }
         
         //metodo para pruebas que simula la obtencion del id de la caja actual
         private static function getCaja()
         {
-            return 1;
+            return NULL;
         }
       
         

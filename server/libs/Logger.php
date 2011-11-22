@@ -154,6 +154,12 @@ class Logger
     self::log(  "WARN:" . $msg );
   }
 
+
+  public static final function debug ($msg )
+  {
+    self::log(  "		-->DEBUG:" . $msg );
+  }
+
   public static final function log( $msg, $level = 0 )
   {
         if(!POS_CONFIG_LOG_TO_FILE)

@@ -73,7 +73,7 @@ class FormComponent implements GuiComponent
 
 			switch( $f->type ){
 				case "combo" :
-					$html .= "<select>";
+					$html .= "<select id='". $f->id  ."'>";
 					
 					foreach($f->value as $o)
 						$html .= "<option>".$o."</option>";
@@ -206,6 +206,11 @@ class FormComponent implements GuiComponent
 		}//for
 
 	}
+
+	public function createComboBox( $field_name, $values){
+		
+	}
+
 }
 
 

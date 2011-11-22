@@ -60,6 +60,9 @@
 	
 	$form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll() );
 	
+	
+	//$form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll() );
+	
 	$page->addComponent( $form );
 
 

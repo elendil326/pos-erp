@@ -1138,12 +1138,6 @@ class GerenciaComponentPage extends StdComponentPage{
 
 		$this->createMainMenu();
 
-		/*
-		$m = new MenuComponent();
-		$m->addItem("Home", "home.php");
-		$m->addItem("Cerrar sesion", "./&close_session");
-		self::addComponent( $m );
-		*/
 	}
 
 
@@ -1265,19 +1259,28 @@ class GerenciaComponentPage extends StdComponentPage{
 
 									echo "><a href='". $item->url  ."'><div clas='navSectionTitle'>" . $item->title . "</div></a>";
 
-									if(isset( $item->children ))
-									{
+									$foo = explode( "/" ,  $_SERVER["SCRIPT_FILENAME"] );
+									$foo = array_pop( $foo );
+									
+									$foo = explode( "." , $foo );
+									$foo = $foo[0];
+									
 
-										foreach( $item->children as $subitem )
-										{
-											echo '<ul class="subsections">';
-											echo "<li>";
-											echo '<a href="'. $subitem->url .'">' . $subitem->title . '</a>';
-											echo "</li>";
-											echo "</ul>";
-										}
+									if(strtolower( $foo ) == strtolower( $item->title )){
+										if(isset( $item->children ) ){
 
+											foreach( $item->children as $subitem )
+											{
+												echo '<ul class="subsections">';
+												echo "<li>";
+												echo '<a href="'. $subitem->url .'">' . $subitem->title . '</a>';
+												echo "</li>";
+												echo "</ul>";
+											}
+
+										}										
 									}
+
 
 									echo "</li>";
 

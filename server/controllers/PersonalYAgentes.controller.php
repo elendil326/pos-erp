@@ -561,11 +561,12 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 		$tiempo_entrega = null
 	)
 	{  
-            Logger::log("Creando usuario nuevo");
+
 
             //Se validan los parametros obtenidos
-
-            $validar=self::validarParametrosUsuario(null, null, $id_sucursal, $id_rol,
+			Logger::debug( $id_sucursal );
+			
+            $validar = self::validarParametrosUsuario( null, null, $id_sucursal, $id_rol,
                     $id_clasificacion_cliente, $id_clasificacion_proveedor, $id_moneda,
                     null, $nombre, $rfc, $curp, $comision_ventas, $telefono_personal1,
                     $telefono_personal2, $limite_credito, $descuento, $password, $salario,
@@ -577,7 +578,8 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             //se verifica que la validacion haya sido correcta
             if(is_string($validar))
             {
-                Logger::error($validar);
+                Logger::error("Imposible crear a nuevo usuario:" . $validar);
+
                 throw new Exception($validar,901);
             }
 
