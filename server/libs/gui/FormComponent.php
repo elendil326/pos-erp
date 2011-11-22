@@ -65,11 +65,17 @@ class FormComponent implements GuiComponent
 		{
 			if($f->type !== "hidden"){
 				$html .= "<tr><td>";
+				
+				if($f->obligatory === true) echo "<b>";
 				$html .= $f->caption;
+				if($f->obligatory === true) echo "</b>";
+								
 				$html .= "</td><td>";				
 			}
 
+
 			$html .= "<input id='" . $f->id .  "' name='" . $f->name .  "' value='" . $f->value .  "' type='". $f->type ."' >";
+
 			
 			if($f->type !== "hidden"){
 				$html .= "</td></tr>";	
@@ -141,6 +147,9 @@ class FormComponent implements GuiComponent
 				if( $this->form_fields[$i]->id === $old_name )
 				{
 					$this->form_fields[$i]->id = $new_name;
+					$this->form_fields[$i]->caption = ucwords(str_replace ( "_" , " " , $new_name ));
+
+					
 					$found = true;
 					break;
 				}//if
@@ -151,7 +160,29 @@ class FormComponent implements GuiComponent
 			
 		}//foreach field in the array
 	}
+
+
+
+
+	public function makeObligatory( $field_array ){
+		
+		foreach ($field_array as $field) {
+			
+			$sof = sizeof( $this->form_fields );
+
+			for ($i=0; $i < $sof; $i++) { 
+
+				if( $this->form_fields[$i]->id === $field )
+				{
+					$this->form_fields[$i]->obligatory = true;
+				}//if
+
+			}//for
+		}
+	}
 }
+
+
 
 
 class FormComponentField{
@@ -161,13 +192,15 @@ class FormComponentField{
 	public $type;
 	public $value;
 	public $name;
+	public $obligatory;
 
-	public function __construct( $id, $caption, $type, $value = "", $name = null ){
+	public function __construct( $id, $caption, $type, $value = "", $name = null, $obligatory = false ){
 			$this->id 		= $id;
 			$this->caption 	= $caption;
 			$this->type 	= $type;
 			$this->value 	= $value;
 			$this->name 	= $name;
+			$this->obligatory 	= $obligatory;
 	}
 }
 

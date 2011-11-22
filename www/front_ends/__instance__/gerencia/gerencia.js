@@ -2,18 +2,10 @@
 var main = function ()
 {
 	console.log("JS FRWK READY");
-
-	//POS.API.POST("api/personal/rol/nuevo/", { descripcion :"a", nombre : "asdf" }, function(a ){ console.log(a ); });
-
-
-
 }
 
+
 Ext.onReady(main);
-
-
-
-
 
 var POS = 
 {
@@ -61,13 +53,13 @@ var POS =
 
 
 
-Ext.Ajax.on('beforerequest', function (){ Ext.get("ajax_loader").show(); }, this);
-Ext.Ajax.on('requestcomplete', function (){ Ext.get("ajax_loader").hide(); }, this);
+Ext.Ajax.on('beforerequest', 	function (){ Ext.get("ajax_loader").show(); }, this);
+Ext.Ajax.on('requestcomplete', 	function (){ Ext.get("ajax_loader").hide(); }, this);
 Ext.Ajax.on('requestexception', function (){ Ext.get("ajax_loader").hide(); }, this);
 
 POS.API = 
 {
-	ajaxCallBack : function (callback, a, b, c)
+	ajaxCallBack 	: function (callback, a, b, c)
 	{
 		var o;
 		try{
@@ -81,7 +73,7 @@ POS.API =
 		callback.call( null, o );
 	},
 
-	ajaxFailure : function ( callback, a,b,c )
+	ajaxFailure 	: function ( callback, a,b,c )
 	{
 		
 
@@ -106,7 +98,7 @@ POS.API =
 		callback.call( null, o );
 	},
 
-	actualAjax : function (  method, url, params, callback  )
+	actualAjax 		: function (  method, url, params, callback  )
 	{
 		Ext.Ajax.request({
 			method 	: method,
@@ -117,14 +109,12 @@ POS.API =
 		});
 	},
 
-
-	GET : function( url, params, o)
+	GET 			: function( url, params, o)
 	{
 		POS.API.actualAjax("GET", url, params, o.callback);
 	},
 
-
-	POST : function( url, params, o)
+	POST 			: function( url, params, o)
 	{
 		POS.API.actualAjax("POST", url, params, o.callback);
 	}

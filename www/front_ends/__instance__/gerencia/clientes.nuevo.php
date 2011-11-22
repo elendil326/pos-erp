@@ -44,11 +44,22 @@
 		 ));
 		
 	$form->renameField( array( 
-			"codigo_usuario" => "codigo_cliente",
-			"nombre" => "razon_social"
+			"nombre" => "razon_social",
+			"codigo_usuario" => "codigo_cliente"
+			
 		));
-		
+	
+	
 	$form->addApiCall( "api/cliente/nuevo/" );
+	
+	
+	$form->makeObligatory(array( 
+			"password",
+			"clasificacion_cliente",
+			"codigo_cliente",
+			"razon_social"
+		));	
+	
 	$page->addComponent( $form );
 
 
