@@ -7,6 +7,7 @@ class FormComponent implements GuiComponent
 	protected $submit_form;
 	protected $on_click;
 	protected $send_to_api;
+	private $send_to_api_http_method;
 
 	function __construct(  )
 	{
@@ -52,7 +53,7 @@ class FormComponent implements GuiComponent
 			
 			$html.= "<script>";
 			$html .= "function sendToApi( ){";
-			$html.= "	POS.API.POST(\"". $this->send_to_api ."\", ";
+			$html.= "	POS.API.". $this->send_to_api_http_method ."(\"". $this->send_to_api ."\", ";
 			$html.= "	{" ;
 			
 			foreach( $this->form_fields as $f )
@@ -163,8 +164,13 @@ class FormComponent implements GuiComponent
 		$this->on_click = array( "caption" => $caption, "function" => $js_function );
 	}
 
-	public function addApiCall( $method_name ){
+	public function addApiCall( $method_name, $http_method = "POST" ){
+		if( !($http_method === "POST" || $http_method === "GET") ){
+			throw new Exception("Http method must be POST or GET");
+		}
+		
 		$this->send_to_api = $method_name;
+		$this->send_to_api_http_method = $http_method;		
 		
 	}
 
