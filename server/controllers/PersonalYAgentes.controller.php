@@ -556,7 +556,9 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 $rfc = null,
                 $id_clasificacion_proveedor = null,
                 $colonia = null,
-                $retenciones = null
+                $retenciones = null,
+                $id_moneda = null,
+                $tiempo_entrega = null
 	)
 	{  
             Logger::log("Creando nuevo usuario");

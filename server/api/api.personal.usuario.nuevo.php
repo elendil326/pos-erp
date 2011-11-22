@@ -124,7 +124,9 @@
 			isset($_POST['rfc'] ) ? $_POST['rfc'] : null,
 			isset($_POST['id_clasificacion_proveedor'] ) ? $_POST['id_clasificacion_proveedor'] : null,
 			isset($_POST['colonia'] ) ? $_POST['colonia'] : null,
-			isset($_POST['retenciones'] ) ? $_POST['retenciones'] : null
+			isset($_POST['retenciones'] ) ? $_POST['retenciones'] : null,
+                        isset($_POST['id_moneda'] ) ? $_POST['id_moneda'] : null,
+                        isset($_POST['tiempo_entrega'] ) ? $_POST['tiempo_entrega'] : null
 			
 			);
 		}catch(Exception $e){
