@@ -9,7 +9,7 @@ var main = function ()
 	
 	for (var i = els.length - 1; i >= 0; i--){
 		Ext.get(els[i]).on(
-			"change",
+			"keydown",
 			function(){
 					window.onbeforeunload = function(){ 
 						return 'Usted ha modificado el formulario. Si sale de esta pagina perdera los cambios. Esta seguro que desea salir?';

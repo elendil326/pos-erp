@@ -1,16 +1,14 @@
 <?php 
 
-class FormComponent implements GuiComponent
-{
+class FormComponent implements GuiComponent{
 
-	protected $form_fields;
-	protected $submit_form;
-	protected $on_click;
-	protected $send_to_api;
-	private $send_to_api_http_method;
+	protected 	$form_fields;
+	protected	$submit_form;
+	protected 	$on_click;
+	protected 	$send_to_api;
+	private 	$send_to_api_http_method;
 
-	function __construct(  )
-	{
+	function __construct(  ){
 		
 		$this->send_to_api 		= null;
 		$this->on_click 		= null;
@@ -18,8 +16,7 @@ class FormComponent implements GuiComponent
 		$this->form_fields      = array(  );
 	}
 
-	function addField( $id, $caption, $type, $value = "", $name = null )
-	{
+	function addField( $id, $caption, $type, $value = "", $name = null ){
 		array_push( $this->form_fields, new FormComponentField($id, $caption, $type, $value, $name ) );
 	}
 
@@ -38,8 +35,7 @@ class FormComponent implements GuiComponent
 		$this->form_fields =  array_slice( $this->form_fields, 0,  $top_i, true);
 	}
 
-	function renderCmp()
-	{
+	function renderCmp(){
 		
 		//remove fields with the same id
 		$this->removeDuplicates();
@@ -102,7 +98,7 @@ class FormComponent implements GuiComponent
 			switch( $f->type ){
 				case "combo" :
 					$html .= "<select id='". $f->id  ."'>";
-
+					
 					foreach($f->value as $o)
 						$html .= "<option value='".$o["id"]."'>".$o["caption"]."</option>";
 					
@@ -125,7 +121,12 @@ class FormComponent implements GuiComponent
 			}
 		}
 		
-		$html .= "</tr><tr><td></td><td></td>";
+		$html .= "</tr><tr>";
+		
+		if($new_row == 2)
+			$html .= "<td></td><td></td>";
+
+			
 
 		if( !is_null ( $this->submit_form 	) ){
 			$html .= "<td>";
@@ -155,8 +156,7 @@ class FormComponent implements GuiComponent
 
 	}
 
-
-	public function addSubmit( $caption, $submit_form_url = "", $method = "GET"){
+	public function addSubmit( $caption, $submit_form_url = "", $method = "POST"){
 		$this->submit_form = array( "caption" => $caption, "submit_form_url" => $submit_form_url, "method" => $method );
 	}
 
@@ -215,7 +215,7 @@ class FormComponent implements GuiComponent
 		}
 	}
 
-	public function createComboBoxJoin( $field_name, $field_name_in_values, $values_array){
+	public function createComboBoxJoin( $field_name, $field_name_in_values, $values_array ){
 		if( sizeof( $values_array ) == 0 ){
 			//do something
 		}
@@ -244,7 +244,7 @@ class FormComponent implements GuiComponent
 
 	}
 
-	public function createComboBox( $field_name, $values){
+	public function createComboBox( $field_name, $values ){
 		
 	}
 
