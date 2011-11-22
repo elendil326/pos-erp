@@ -25,14 +25,24 @@ class FormComponent implements GuiComponent{
 		$top_i = 0;
 		
 		for ($i=0; $i < sizeof( $this->form_fields ); $i++) {
-			if( $i != 0 && ( $this->form_fields[$i]->id != $this->form_fields[$i-1]->id) ){
-				Logger::log( "repetido // " . $this->form_fields[$i]->id );
-				$this->form_fields[$top_i] = $this->form_fields[$i];
-				$top_i++;
+			Logger::debug( $this->form_fields[$i]->id );
+		}
+		
+		for ($i=1; $i < sizeof( $this->form_fields ); $i++) {
+			if( ( $this->form_fields[$i]->id != $this->form_fields[$top_i]->id) ){
+				Logger::debug( "agregando [". $i ."] en [". $top_i ."]-> " . $this->form_fields[$i]->id );
+				$this->form_fields[++$top_i] = $this->form_fields[$i];
+
 			}
 		}
 		
+		Logger::debug("top fue " . $top_i);
+
 		$this->form_fields =  array_slice( $this->form_fields, 0,  $top_i+1, true);
+		
+		for ($i=0; $i < sizeof( $this->form_fields ); $i++) {
+			Logger::debug( $this->form_fields[$i]->id );
+		}
 	}
 
 	function renderCmp(){
