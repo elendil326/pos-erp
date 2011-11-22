@@ -30,12 +30,12 @@ class CajasController{
             if(is_null($caja))
             {
                 Logger::error("La caja especificada no existe");
-                throw new Exception("La caja especificada no existe");
+                throw new Exception("La caja especificada no existe",901);
             }
             if(!$caja->getAbierta())
             {
                 Logger::error("La caja especificada esta cerrada, tiene que abrirla para realizar movimientos");
-                throw new Exception("La caja especificada esta cerrada, tiene que abrirla para realizar movimientos");
+                throw new Exception("La caja especificada esta cerrada, tiene que abrirla para realizar movimientos",901);
             }
             //
             //Actualizas el saldo de la caja
@@ -57,8 +57,7 @@ class CajasController{
                 {
                     if(is_null($billetes))
                     {
-                        Logger::error("No se recibieron los billetes para esta caja");
-                        throw new Exception("No se recibieron los billetes para esta caja");
+                        throw new Exception("No se recibieron los billetes para esta caja",901);
                     }
                     $numero_billetes=count($billetes);
                     //
@@ -69,11 +68,11 @@ class CajasController{
                     {
                         if(is_null(BilleteDAO::getByPK($billetes[$i]["id_billete"])))
                         {
-                            throw new Exception("El billete con id: ".$billetes[$i]["id_billete"]." no existe");
+                            throw new Exception("El billete con id: ".$billetes[$i]["id_billete"]." no existe",901);
                         }
                         if(is_string($validar=self::validarNumero($billetes[$i]["cantidad"], PHP_INT_MAX, "cantidad")))
                         {
-                                throw new Exception($validar);
+                                throw new Exception($validar,901);
                         }
                         $billete_caja[$i]=new BilleteCaja();
                         $billete_caja[$i]->setIdBillete($billetes[$i]["id_billete"]);
@@ -108,7 +107,9 @@ class CajasController{
             {
                 DAO::transRollback();
                 Logger::error("No se pudo actualizar la caja: ".$e);
-                throw new Exception("No se pudo actualizar la caja");
+                if($e->getCode()==901)
+                    throw new Exception("No se pudo actualizar la caja: ".$e->getMessage(),901);
+                throw new Exception("No se pudo actualizar la caja, consulte a su administrador de sistema",901);
             }
             DAO::transEnd();
             Logger::log("Caja actualizada exitosamente");

@@ -264,7 +264,7 @@ require_once("interfaces/Empresas.interface.php");
                 if(is_string($validar))
                 {
                     Logger::error($validar);
-                    throw new Exception($validar);
+                    throw new Exception($validar,901);
                 }
 
                 //Se listan las empresas con el valor de activa obtenido
@@ -294,7 +294,7 @@ require_once("interfaces/Empresas.interface.php");
             if(is_string($validar))
             {
                 Logger::error($validar);
-                throw new Exception($validar);
+                throw new Exception($validar,901);
             }
 
             //Se crea un registro de sucursal-empresa y se le asigna como empresa la obtenida.
@@ -310,7 +310,7 @@ require_once("interfaces/Empresas.interface.php");
                     $validar=self::validarParametrosSucursalEmpresa($sucursal["id_sucursal"], null,$sucursal["margen_utilidad"], $sucursal["descuento"]);
                     if(is_string($validar))
                     {
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     }
                     $sucursal_empresa->setIdSucursal($sucursal["id_sucursal"]);
                     $sucursal_empresa->setDescuento($sucursal["descuento"]);
@@ -322,7 +322,9 @@ require_once("interfaces/Empresas.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudieron agregar las sucursales a la empresa: ".$e);
-                throw new Exception("NO se pudieron agregar las sucursales a la empresa");
+                if($e->getCode()==901)
+                    throw new Exception("NO se pudieron agregar las sucursales a la empresa: ".$e->getMessage(),901);
+                throw new Exception("NO se pudieron agregar las sucursales a la empresa, consulte a su administrador de sistema",901);
             }
             DAO::transEnd();
             Logger::log("Sucursales agregadas exitosamente");
@@ -383,7 +385,7 @@ require_once("interfaces/Empresas.interface.php");
             if(is_string($validar))
             {
                 Logger::error($validar);
-                throw new Exception($validar);
+                throw new Exception($validar,901);
             }
 
             //Se crea la empresa con los parametros obtenidos.
@@ -408,7 +410,7 @@ require_once("interfaces/Empresas.interface.php");
                 if($empresa->getActivo())
                 {
                     Logger::error("El curp: ".$curp." ya esta en uso por la empresa: ".$empresa->getIdEmpresa());
-                    throw new Exception("El curp: ".$curp." ya esta en uso");
+                    throw new Exception("El curp: ".$curp." ya esta en uso",901);
                 }
             }
 
@@ -420,7 +422,7 @@ require_once("interfaces/Empresas.interface.php");
                 if($empresa->getActivo())
                 {
                     Logger::error("El rfc: ".$rfc." ya esta en uso por la empresa: ".$empresa->getIdEmpresa());
-                    throw new Exception("El rfc: ".$rfc." ya esta en uso");
+                    throw new Exception("El rfc: ".$rfc." ya esta en uso",901);
                 }
             }
             
@@ -433,7 +435,7 @@ require_once("interfaces/Empresas.interface.php");
                 if($empresa->getActivo())
                 {
                     Logger::error("La razon social: ".$razon_social." ya esta en uso por la empresa: ".$empresa->getIdEmpresa());
-                    throw new Exception("La razon social: ".$razon_social." ya esta en uso");
+                    throw new Exception("La razon social: ".$razon_social." ya esta en uso",901);
                 }
             }
              DAO::transBegin();
@@ -468,8 +470,7 @@ require_once("interfaces/Empresas.interface.php");
                          $validar=self::validarParametrosImpuestoEmpresa($id_impuesto);
                          if(is_sring($validar))
                          {
-                             Logger::error($validar);
-                             throw new Exception($validar);
+                             throw new Exception($validar,901);
                          }
                          $impuesto_empresa->setIdImpuesto($id_impuesto);
                          ImpuestoEmpresaDAO::save($impuesto_empresa);
@@ -488,8 +489,7 @@ require_once("interfaces/Empresas.interface.php");
                          $validar = self::validarParametrosRetencionEmpresa($id_retencion);
                          if(is_string($validar))
                          {
-                             Logger::error($validar);
-                             throw new Exception($validar);
+                             throw new Exception($validar,901);
                          }
                          $retencion_empresa->setIdRetencion($id_retencion);
                          RetencionEmpresaDAO::save($retencion_empresa);
@@ -500,7 +500,9 @@ require_once("interfaces/Empresas.interface.php");
              {
                  DAO::transRollback();
                  Logger::error("No se pudo crear la empresa: ".$e);
-                 throw new Exception("No se pudo crear la empresa");
+                 if($e->getCode()==901)
+                     throw new Exception("No se pudo crear la empresa: ".$e->getCode(),901);
+                 throw new Exception("No se pudo crear la empresa, consulte a su administrador de sistema",901);
              }
              DAO::transEnd();
              Logger::log("Empresa creada exitosamente");
@@ -526,7 +528,7 @@ require_once("interfaces/Empresas.interface.php");
             if(is_string($validar))
             {
                 Logger::error($validar);
-                throw new Exception($valdiar);
+                throw new Exception($validar,901);
             }
             
             //Se guarda el registro de la empresa y se verifica si esat activa
@@ -534,7 +536,7 @@ require_once("interfaces/Empresas.interface.php");
             if(!$empresa->getActivo())
             {
                 Logger::warn("La empresa ya esta cancelada");
-                throw new Exception("La empresa ya esta cancelada");
+                throw new Exception("La empresa ya esta cancelada",901);
             }
             
             //Se cambia el campo activo a falso y se registra la fecha de baja como hoy
@@ -673,7 +675,9 @@ require_once("interfaces/Empresas.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudo eliminar la empresa: ".$e);
-                throw "No se pudo eliminar la empresa";
+                if($e->getCode()==901)
+                    throw new Exception ("No se pudo eliminar la empresa: ".$e->getMessage (), 901);
+                throw new Exception("No se pudo eliminar la empresa, consulte a su administrador de sistema",901);
             }
             DAO::transEnd();
             Logger::log("Empresa eliminada exitosamente");
@@ -736,7 +740,7 @@ require_once("interfaces/Empresas.interface.php");
             if(is_string($validar))
             {
                 Logger::error($validar);
-                throw new Exception($validar);
+                throw new Exception($validar,901);
             }
             
             //Se validan los parametros de direccion recibidos
@@ -744,7 +748,7 @@ require_once("interfaces/Empresas.interface.php");
             if(is_string($validar))
             {
                 Logger::error($validar);
-                throw new Exception($validar);
+                throw new Exception($validar,901);
             }
             
             //se guarda el registro de la empresa y se verifica que este activa
@@ -752,7 +756,7 @@ require_once("interfaces/Empresas.interface.php");
             if(!$empresa->getActivo())
             {
                 Logger::error("La empresa no esta activa, no se puede editar una empresa desactivada");
-                throw new Exception("La empresa no esta activa, no se puede editar una empresa desactivada");
+                throw new Exception("La empresa no esta activa, no se puede editar una empresa desactivada",901);
             }
             
             //se guarda el registro de la direccion perteneciente a esta empresa
@@ -760,7 +764,7 @@ require_once("interfaces/Empresas.interface.php");
             if(is_null($direccion))
             {
                 Logger::error("FATAL!!! La empresa no cuenta con una direccion");
-                throw new Exception("FATAL!!! La empresa no cuenta con una direccion");
+                throw new Exception("FATAL!!! La empresa no cuenta con una direccion",901);
             }
             
             //bandera para saber si se modifico algun campo de la direccion
@@ -850,7 +854,7 @@ require_once("interfaces/Empresas.interface.php");
                 if(is_null($id_usuario))
                 {
                     Logger::error("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
-                    throw new Exception("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
+                    throw new Exception("No se pudo obtener el usuario de la sesion, ya inicio sesion?",901);
                 }
             }
             
@@ -877,7 +881,7 @@ require_once("interfaces/Empresas.interface.php");
                     {
                         if(is_null(ImpuestoDAO::getByPK($id_impuesto)))
                         {
-                            throw new Exception("El impuesto con id: ".$id_impuesto." no existe");
+                            throw new Exception("El impuesto con id: ".$id_impuesto." no existe",901);
                         }
                         $i_empresa->setIdImpuesto($id_impuesto);
                         ImpuestoEmpresaDAO::save($i_empresa);

@@ -578,7 +578,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             if(is_string($validar))
             {
                 Logger::error($validar);
-                throw new Exception($validar);
+                throw new Exception($validar,901);
             }
 
             //se verifica que el codigo de usuario no sea repetido
@@ -588,7 +588,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 if($usuario->getActivo())
                 {
                     Logger::error("El codigo de usuario ".$codigo_usuario." ya esta en uso");
-                    throw new Exception("El codigo de usuario ".$codigo_usuario." ya esta en uso");
+                    throw new Exception("El codigo de usuario ".$codigo_usuario." ya esta en uso",901);
                 }
             }
 
@@ -599,7 +599,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 if($usuario->getActivo())
                 {
                     Logger::error("El rfc ".$rfc." ya existe");
-                    throw new Exception("El rfc ".$rfc." ya existe");
+                    throw new Exception("El rfc ".$rfc." ya existe",901);
                 }
             }
 
@@ -610,7 +610,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 if($usuario->getActivo())
                 {
                     Logger::error("La curp ".$curp." ya existe");
-                    throw new Exception("La curp ".$curp." ya existe");
+                    throw new Exception("La curp ".$curp." ya existe",901);
                 }
             }
 
@@ -618,7 +618,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             if(!is_null($telefono_personal1)&&$telefono_personal1==$telefono_personal2)
             {
                 Logger::error("El telefono personal es igual al telefno personal alterno: ".$telefono_personal1."  ".$telefono_personal2);
-                throw new Exception("El telefono personal es igual al telefno personal alterno: ".$telefono_personal1."  ".$telefono_personal2);
+                throw new Exception("El telefono personal es igual al telefno personal alterno: ".$telefono_personal1."  ".$telefono_personal2,901);
             }
 
             //se verifica que el correo electronico no se repita
@@ -630,7 +630,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                     if($usuario->getActivo())
                     {
                         Logger::error("El correo electronico ".$correo_electronico." ya esta en uso");
-                        throw new Exception("El correo electronico ".$correo_electronico." ya esta en uso");
+                        throw new Exception("El correo electronico ".$correo_electronico." ya esta en uso",901);
                     }
                 }
             }
@@ -641,7 +641,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 Logger::error("El password (".$password.") no puede ser igual al codigo de usuario
                     (".$codigo_usuario.") ni al correo electronico (".$correo_electronico.")");
                 throw new Exception("El password (".$password.") no puede ser igual al codigo de usuario
-                    (".$codigo_usuario.") ni al correo electronico (".$correo_electronico.")");
+                    (".$codigo_usuario.") ni al correo electronico (".$correo_electronico.")",901);
             }
 
             //se ponen los valores por default en limite de credito y saldo del ejercicio
@@ -727,7 +727,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                     {
                         $validar=self::validarParametrosImpuestoUsuario($id_impuesto);
                         if(is_string($validar))
-                            throw $validar;
+                            throw new Exception($validar,901);
                         ImpuestoUsuarioDAO::save(new ImpuestoUsuario(array( "id_impuesto" => $id_impuesto , "id_usuario" => $usuario->getIdUsuario())));
                     }
                 }
@@ -739,7 +739,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                     {
                         $validar=self::validarParametrosRetencionUsuario($id_retencion);
                         if(is_string($validar))
-                            throw $validar;
+                            throw new Exception($validar,901);
                         RetencionUsuarioDAO::save(new RetencionUsuario(array( "id_retencion" => $id_retencion , "id_usuario" => $usuario->getIdUsuario() )));
                     }
                 }
@@ -755,7 +755,9 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudo crear al usuario: ".$e);
-                throw new Exception("No se pudo crear al usuario");
+                if($e->getCode()==901)
+                    throw new Exception("No se pudo crear al usuario: ".$e->getMessage(),901);
+                throw new Exception("No se pudo crear al usuario, consulte a su administrador de sistema",901);
             }
             DAO::transEnd();
             Logger::log("Usuario creado exitosamente con id".$usuario->getIdUsuario());
@@ -782,7 +784,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             if(is_string($validar))
             {
                 Logger::error($validar);
-                throw new Exception($validar);
+                throw new Exception($validar,901);
             }
             //inicializamos el arreglo que contendra la lista.
             $usuarios=array();
@@ -795,7 +797,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 if(is_string($e))
                 {
                     Logger::error($e);
-                    throw new Exception($e);
+                    throw new Exception($e,901);
                 }
                 if
                 (
@@ -843,7 +845,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 )
                 {
                     Logger::error("El parametro ordenar: ".$ordenar." no es una columna de la tabla usuario");
-                    throw new Exception("El parametro ordenar es invalido");
+                    throw new Exception("El parametro ordenar es invalido",901);
                 }
             }
             //Si se paso el parametro activo, se llama al metodo search
@@ -989,7 +991,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             if(is_string($validar))
             {
                 Logger::error($validar);
-                throw new Exception($validar);
+                throw new Exception($validar,901);
             }
 
             //valida los parametros correspondientes a direccion
@@ -998,7 +1000,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             if(is_string($validar))
             {
                 Logger::error($validar);
-                throw new Exception($validar);
+                throw new Exception($validar,901);
             }
 
             //valida los parametros correspondientes a direccion
@@ -1006,7 +1008,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             if(is_string($validar))
             {
                 Logger::error($validar);
-                throw new Exception($validar);
+                throw new Exception($validar,901);
             }
 
             //Se trae el registro con el id obtenido
@@ -1276,7 +1278,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                     $id_u=LoginController::getCurrentUser();
                     if(is_null($id_u))
                     {
-                        throw new Exception("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
+                        throw new Exception("No se pudo obtener el usuario de la sesion, ya inicio sesion?",901);
                     }
                     $direccion1->setIdUsuarioUltimaModificacion($id_u);
                     DireccionDAO::save($direccion1);
@@ -1297,7 +1299,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                     $id_u=LoginController::getCurrentUser();
                     if(is_null($id_u))
                     {
-                        throw new Exception("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
+                        throw new Exception("No se pudo obtener el usuario de la sesion, ya inicio sesion?",901);
                     }
                     $direccion2->setIdUsuarioUltimaModificacion($id_u);
                     DireccionDAO::save($direccion2);
@@ -1387,7 +1389,9 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("El usuario ".$id_usuario." no ha podido se editado: ".$e);
-                throw new Exception("No se pudo editar al usuario");
+                if($e->getCode()==901)
+                    throw new Exception("No se pudo editar al usuario: ".$e->getMessage(),901);
+                throw new Exception("No se pudo editar al usuario, consulte a su administrador de sistema",901);
             }
             DAO::transEnd();
             Logger::log("Usuario ".$id_usuario." editado exitosamente");
@@ -1420,7 +1424,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 )
                 {
                     Logger::log("La variable orden: ".$orden." no es una columna de la tabla rol");
-                    throw new Exception("La variable orden no es valida");
+                    throw new Exception("La variable orden no es valida",901);
                 }
 
                 //Se traen todos los roles d ela base de datos.
@@ -1448,7 +1452,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             if(is_null(PermisoDAO::getByPK($id_permiso)))
             {
                 Logger::error("El permiso con id:".$id_permiso." no existe");
-                throw new Exception("El permiso no existe");
+                throw new Exception("El permiso no existe",901);
             }
 
             //Se valida que el usuario exista en la base de datos.
@@ -1456,14 +1460,14 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             if(is_null($usuario))
             {
                 Logger::error("El usuario con id:".$id_usuario." no existe");
-                throw new Exception("El usuario no existe");
+                throw new Exception("El usuario no existe",901);
             }
 
             //Si el usuario no esta activo no se le pueden asignar permisos
             if(!$usuario->getActivo())
             {
                 Logger::error("El usuario con id:".$id_usuario." esta inactivo");
-                throw new Exception("El usuario esta inactivo y no se puede modificar");
+                throw new Exception("El usuario esta inactivo y no se puede modificar",901);
             }
             DAO::transBegin();
             try
@@ -1475,7 +1479,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudo asignar el permiso al usuario: ".$e);
-                throw new Exception("No se pudo asignar el permiso al usuario");
+                throw new Exception("No se pudo asignar el permiso al usuario, consulte a su administrador de sistema",901);
             }
             DAO::transEnd();
             Logger::log("Permiso asignado exitosamente");
@@ -1500,14 +1504,14 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             if(is_null(PermisoDAO::getByPK($id_permiso)))
             {
                 Logger::error("El permiso con id: ".$id_permiso." no existe");
-                throw new Exception("El permiso no existe");
+                throw new Exception("El permiso no existe",901);
             }
 
             //Se valida que el rol exista en la base de datos
             if(is_null(RolDAO::getByPK($id_rol)))
             {
                 Logger::error("El rol con id: ".$id_rol." no existe");
-                throw new Exception("El rol no existe");
+                throw new Exception("El rol no existe",901);
             }
 
             //Se obtiene la lisa de usuarios que pertenecen a este rol
@@ -1530,7 +1534,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudo asignar el permiso al rol: ".$e);
-                throw new Excpetion("No se pudo asignar el permiso al rol");
+                throw new Excpetion("No se pudo asignar el permiso al rol, consulte a su administrador de sistema");
             }
             DAO::transEnd();
             Logger::log("Permiso asignado exitosamente");
@@ -1556,7 +1560,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             if(is_null($permiso_rol))
             {
                 Logger::error("El rol ".$id_rol." no tiene el permiso ".$id_permiso);
-                throw new Exception("El rol no tiene ese permiso");
+                throw new Exception("El rol no tiene ese permiso",901);
             }
 
             //Se obtienen los usuarios de ese rol
@@ -1604,7 +1608,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             if(is_null($permiso_usuario))
             {
                 Logger::error("El usuario ".$id_usuario." no tiene el permiso ".$id_permiso);
-                throw new Exception("El usuario no tiene ese permiso");
+                throw new Exception("El usuario no tiene ese permiso",901);
             }
 
             //Se valida que el usuario exista en la base de datos.
@@ -1612,14 +1616,14 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             if(is_null($usuario))
             {
                 Logger::error("El usuario con id:".$id_usuario." no existe");
-                throw new Exception("El usuario no existe");
+                throw new Exception("El usuario no existe",901);
             }
 
             //Si el usuario no esta activo no se puede cambiar su relacion.
             if(!$usuario->getActivo())
             {
                 Logger::error("El usuario con id:".$id_usuario." esta inactivo");
-                throw new Exception("El usuario esta inactivo y no se puede modificar");
+                throw new Exception("El usuario esta inactivo y no se puede modificar",901);
             }
             DAO::transBegin();
             try
@@ -1631,7 +1635,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudo eliminar el permiso del usuario: ".$e);
-                throw new Exception("No se pudo quitar el permiso del usuario");
+                throw new Exception("No se pudo quitar el permiso del usuario, consulte a su administrador de sistema",901);
             }
             DAO::transEnd();
             Logger::log("Permiso eliminado exitosamente");
@@ -1662,7 +1666,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             if(is_string($validar))
             {
                 Logger::error($validar);
-                throw new Exception($validar);
+                throw new Exception($validar,901);
             }
 
             //Se inicializa el nuevo rol con los parametros obtenidos
@@ -1682,7 +1686,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             if(!empty($roles))
             {
                 Logger::error("No se puede crear un rol con el mismo nombre que uno ya existente: ".$roles[0]->getNombre());
-                throw new Exception("No se puede crear un rol con el mismo nombre que uno ya existente: ".$roles[0]->getNombre());
+                throw new Exception("No se puede crear un rol con el mismo nombre que uno ya existente: ".$roles[0]->getNombre(),901);
             }
             DAO::transBegin();
             try
@@ -1694,7 +1698,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("Error al crear el nuevo rol: ".$e);
-                throw $e;
+                throw new Exception("Error al crear el nuevo rol, consulte a su administrador de sistema",901);
             }
             DAO::transEnd();
             Logger::log("Rol creado exitosamente con id: ".$rol->getIdRol());
@@ -1727,7 +1731,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             if(is_string($validar))
             {
                 Logger::error($validar);
-                throw new Exception($validar);
+                throw new Exception($validar,901);
             }
 
             //Se obtiene el rol de la base de datos.
@@ -1760,7 +1764,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudo editar el rol: ".$e);
-                throw new Exception("No se pudo editar el rol");
+                throw new Exception("No se pudo editar el rol, consulte a su administrador de sistema",901);
             }
             DAO::transEnd();
             Logger::log("Rol editado exitosamente");
@@ -1784,14 +1788,14 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             if(is_null($usuario))
             {
                 Logger::error("El usuario con id ".$id_usuario." no existe");
-                throw new Exception("El usuario no existe");
+                throw new Exception("El usuario no existe",901);
             }
 
             //Si el usuario ya esta inactivo, no se le hacen cambios.
             if(!$usuario->getActivo())
             {
                 Logger::warn("El usuario con id: ".$id_usuario." ya esta inactivo");
-                throw new Exception("El usuario ya esta inactivo");
+                throw new Exception("El usuario ya esta inactivo",901);
             }
 
             //Si el saldo del ejercicio del usuario no es cero, siginifica que debe o que
@@ -1799,7 +1803,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             if($usuario->getSaldoDelEjercicio()!=0)
             {
                 Logger::error("El usuario con id: ".$id_usuario." no tiene un saldo en ceros");
-                throw new Exception("El usuario no tiene un saldo en ceros");
+                throw new Exception("El usuario no tiene un saldo en ceros",901);
             }
 
             //Se cambia su estado activo a falso y se le asigna como hoy la fecha de baja.
@@ -1822,7 +1826,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudo eliminar el usuario: ".$e);
-                throw new Exception("No se pudo eliminar el usuario");
+                throw new Exception("No se pudo eliminar el usuario, consulte a su administrador de sistema",901);
             }
             DAO::transEnd();
             Logger::log("Usuario eliminado exitosamente");
@@ -1848,7 +1852,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             if(is_string($validar))
             {
                 Logger::error($validar);
-                throw new Exception($validar);
+                throw new Exception($validar,901);
             }
 
             //Se obtiene la lista de usuarios con este rol. Si almenos uno aun sigue activo,
@@ -1860,7 +1864,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 if($usuario->getActivo())
                 {
                     Logger::error("No se puede eliminar este rol pues el usuario ".$usuario->getIdUsuario." lo tiene asignado");
-                    throw new Exception("No se puede eliminar este rol pues hay almenos un usuario asignado a el");
+                    throw new Exception("No se puede eliminar este rol pues hay almenos un usuario asignado a el",901);
                 }
             }
 
@@ -1881,7 +1885,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             }catch(Exception $e){
                 DAO::transRollback();
                 Logger::error("Error al eliminar el rol: ".$e);
-                throw $e;
+                throw new Exception("Error al eliminar el rol, consulte a su administrador de sistema",901);
 
             }
 

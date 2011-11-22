@@ -138,6 +138,7 @@ class DireccionController{
                 throw new Exception($validar);
             }
             $direccion = new Direccion();
+            Logger::log(LoginController::getCurrentUser());
             $id_usuario=LoginController::getCurrentUser();
             if($id_usuario==null)
             {

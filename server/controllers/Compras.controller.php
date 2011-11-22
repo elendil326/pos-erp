@@ -230,7 +230,7 @@ require_once("interfaces/Compras.interface.php");
             )
             {
                 Logger::error("EL parametro orden (".$orden.") no es valido");
-                throw new Exception("EL parametro orden (".$orden.") no es valido");
+                throw new Exception("EL parametro orden (".$orden.") no es valido",901);
             }
             
             //Revisa si se recibieron parametros o no para saber cual metodo usar
@@ -371,7 +371,7 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
             if(is_string($validar))
             {
                 Logger::error($validar);
-                throw new Exception($validar);
+                throw new Exception($validar,901);
             }
             
             //Se asignan los valores y se guarda el nuevo registro
@@ -396,7 +396,7 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
             {
                 DAO::transRollback();
                 Logger::error("No se pudo guardar la compra de arpillas: ".$e);
-                throw new Exception("No se pudo guardar la compra de arpillas");
+                throw new Exception("No se pudo guardar la compra de arpillas, consulte a su administrador de sistema",901);
             }
             DAO::transEnd();
             Logger::log("Se registro la compra de arpillas con exito ");
@@ -423,7 +423,7 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
             if($compra==null)
             {
                 Logger::error("La compra con id: ".$id_compra." no existe");
-                throw new Exception("La compra con id: ".$id_compra." no existe");
+                throw new Exception("La compra con id: ".$id_compra." no existe",901);
             }
             if($compra->getCancelada())
             {
@@ -436,7 +436,7 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
             if($usuario==null)
             {
                 Logger::error("FATAL!!! Esta compra apunta a un usuario que no existe");
-                throw new Exception("FATAL!!! Esta compra apunta a un usuario que no existe");
+                throw new Exception("FATAL!!! Esta compra apunta a un usuario que no existe",901);
             }
             
             //Deja la compra como cancelada y la guarda. 
@@ -471,7 +471,9 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
             {
                 DAO::transRollback();
                 Logger::error("No se pudo cancelar la compra: ".$e);
-                throw new Exception("No se pudo cancelar la compra");
+                if($e->getCode()==901)
+                    throw new Exception("No se pudo cancelar la compra: ".$e->getMessage(),901);
+                throw new Exception("No se pudo cancelar la compra, consulte a su administrador de sistema",901);
             }
             DAO::transEnd();
             Logger::log("Compra cancelada exitosamente");
@@ -591,7 +593,9 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
             catch(Exception $e)
             {
                 Logger::error("No se pudo crear la nueva compra: ".$e);
-                throw new Exception("No se pudo crear la nueva compra");
+                if($e->getCode()==901)
+                    throw new Exception("No se pudo crear la nueva compra: ".$e->getMessage(),901);
+                throw new Exception("No se pudo crear la nueva compra, consulte a su administrador de sistema",901);
             }
             
             Logger::log("Compra creada exitosamente");

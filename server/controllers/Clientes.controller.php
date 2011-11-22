@@ -244,8 +244,8 @@ Update :  �Es correcto que contenga el argumento id_sucursal? Ya que as?omo es
                         $orden != "cuenta_bancaria"
                 )
                 {
-                    Logger::error("La variable orden (".$orden.") no es valido");
-                    throw new Exception("La variable orden (".$orden.") no es valido");
+                    Logger::error("La variable orden (".$orden.") no es valida");
+                    throw new Exception("La variable orden (".$orden.") no es valida",901);
                 }
                 $clientes = array();
                 
@@ -356,7 +356,9 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
             catch(Exception $e)
             {
                 Logger::error("No se pudo crear al cliente: ".$e);
-                throw new Exception("No se pudo crear al cliente: ".$e);
+                if($e->getCode()==901)
+                    throw new Exception("No se pudo crear al cliente: ".$e->getMessage());
+                throw new Exception("No se pudo crear al cliente, consulte a su administrador de sistema");
             }
             
             Logger::log("El cliente fue creado exitosamente");
@@ -440,7 +442,9 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
             catch(Exception $e)
             {
                 Logger::error("No se pudo editar al cliente: ".$e);
-                throw new Exception("No se pudo editar al cliente");
+                if($e->getCode()==901)
+                    throw new Exception("No se pudo editar al cliente: ".$e->getMessage());
+                throw new Exception("No se pudo editar al cliente, consulte a su administrador de sistema");
             }
             Logger::log("Cliente editado exitosamente");
 	}
@@ -545,7 +549,9 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
             catch( Exception $e)
             {
                 Logger::error("El cliente no pudo ser modificado: ".$e);
-                throw new Exception("El cliente no pudo er modificado");
+                if($e->getCode()==901)
+                    throw new Exception("El cliente no pudo ser modificado: ".$e->getMessage());
+                throw new Exception("El cliente no pudo ser modificado, consulte a su administrador de sistema");
             }
             Logger::log("Cliente editado exitosamente");
 	}
@@ -569,7 +575,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
             if(is_string($validar))
             {
                 Logger::error($validar);
-                throw new Exception($validar);
+                throw new Exception($validar,901);
             }
             
             //Se regresa un arreglo que contendra en el primer campo el cliente en si, en segundo campo estara
@@ -627,7 +633,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
             if(is_string($validar))
             {
                 Logger::error($validar);
-                throw new Exception($validar);
+                throw new Exception($validar,901);
             }
             
             $clasificacion_cliente = new ClasificacionCliente( array( 
@@ -649,7 +655,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
                     foreach ($impuestos as $impuesto)
                     {
                         if(is_null(ImpuestoDAO::getByPK($impuesto)))
-                                throw new Exception ("El impuesto ".$impuesto." no existe");
+                                throw new Exception ("El impuesto ".$impuesto." no existe",901);
                         $impuesto_clasificacion_cliente->setIdImpuesto($impuesto);
                         ImpuestoClasificacionClienteDAO::save($impuesto_clasificacion_cliente);
                     }
@@ -661,7 +667,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
                     foreach( $retenciones as $retencion )
                     {
                         if(is_null(RetencionDAO::getByPK($retencion)))
-                                throw new Exception("La retencion ".$retencion." no existe");
+                                throw new Exception("La retencion ".$retencion." no existe",901);
                         $retencion_clasificacion_cliente->setIdRetencion($retencion);
                         RetencionClasificacionClienteDAO::save($retencion_clasificacion_cliente);
                     }
@@ -671,7 +677,9 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
             {
                 DAO::transRollback();
                 Logger::error("No se pudo crear la nueva clasificacion de cliente: ".$e);
-                throw new Exception("No se pudo crear la nueva clasificacion de cliente");
+                if($e->getCode()==901)
+                    throw new Exception("No se pudo crear la nueva clasificacion de cliente: ".$e->getMessage());
+                throw new Exception("No se pudo crear la nueva clasificacion de cliente, consulte a su administrador de sistema");
             }
             DAO::transEnd();
             Logger::log("Clasificacion de cliente creada exitosamente");
@@ -705,7 +713,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
             )
             {
                 Logger::error("La variable orden (".$orden.") es invalida");
-                throw new Exception("La variable orden (".$orden.") es invalida");
+                throw new Exception("La variable orden (".$orden.") es invalida",901);
             }
             
             $clasificaciones_cliente = ClasificacionClienteDAO::getAll(null,null,$orden);
@@ -746,7 +754,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
             if(is_string($validar))
             {
                 Logger::error($validar);
-                throw new Exception($validar);
+                throw new Exception($validar,901);
             }
             
             //Los parametros que no sean nulos seran tomados como actualizacion
@@ -787,7 +795,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
                     foreach ($impuestos as $impuesto)
                     {
                         if(is_null(ImpuestoDAO::getByPK($impuesto)))
-                                throw new Exception ("El impuesto ".$impuesto." no existe");
+                                throw new Exception ("El impuesto ".$impuesto." no existe",901);
                         $impuesto_clasificacion_cliente->setIdImpuesto($impuesto);
                         ImpuestoClasificacionClienteDAO::save($impuesto_clasificacion_cliente);
                     }
@@ -813,7 +821,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
                     foreach( $retenciones as $retencion )
                     {
                         if(is_null(RetencionDAO::getByPK($retencion)))
-                                throw new Exception("La retencion ".$retencion." no existe");
+                                throw new Exception("La retencion ".$retencion." no existe",901);
                         $retencion_clasificacion_cliente->setIdRetencion($retencion);
                         RetencionClasificacionClienteDAO::save($retencion_clasificacion_cliente);
                     }
@@ -837,7 +845,9 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
             {
                 DAO::transRollback();
                 Logger::error("No se ha podido editar la clasificacion de cliente ".$id_clasificacion_cliente." : ".$e);
-                throw new Exception("No se ha podido editar la clasificacion de cliente");
+                if($e->getCode()==901)
+                    throw new Exception("No se ha podido editar la clasificacion de cliente: ".$e->getMessage());
+                throw new Exception("No se ha podido editar la clasificacion de cliente, consulte a su administrador de sistema");
             }
             DAO::transEnd();
 	}

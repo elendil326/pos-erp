@@ -232,7 +232,9 @@ Se puede ordenar por los atributos de producto.
             {
                 DAO::transRollback();
                 Logger::error("No se ha podido procesar todo el producto: ".$e);
-                throw new Exception("No se ha podido procesar todo el producto");
+                if($e->getCode()==901)
+                    throw new Exception("No se ha podido procesar todo el producto: ".$e->getMessage(),901);
+                throw new Exception("No se ha podido procesar todo el producto, consulte a su administrador de sistema",901);
             }
             DAO::transEnd();
             Logger::log("Producto procesado exitosamente");
