@@ -29,6 +29,8 @@
         $form->renameField( array( 
 			"id_ciudad" => "ciudad",
 		));
+        
+        //$form->createComboBoxJoin( "ciudad", "nombre", CiudadDAO::getAll() );
 		
 	$form->addApiCall( "api/empresa/nuevo/" );
 	$page->addComponent( $form );

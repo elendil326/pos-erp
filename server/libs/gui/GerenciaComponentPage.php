@@ -147,7 +147,7 @@ class GerenciaComponentPage extends StdComponentPage{
             ]
         },
         {
-            "title": "Cargos y abonos",
+            "title": "Cargos_y_abonos",
             "url": "cargos_y_abonos.php",
             "children": [
                 {
@@ -467,7 +467,7 @@ class GerenciaComponentPage extends StdComponentPage{
             ]
         },
         {
-            "title": "Impuestos y retenciones",
+            "title": "Impuestos",
             "url": "impuestos.php",
             "children": [
                 {
@@ -497,7 +497,7 @@ class GerenciaComponentPage extends StdComponentPage{
             ]
         },
         {
-            "title": "Inventarios",
+            "title": "Inventario",
             "url": "inventario.php",
             "children": [
                 {
@@ -623,7 +623,7 @@ class GerenciaComponentPage extends StdComponentPage{
             ]
         },
         {
-            "title": "Personal y agentes",
+            "title": "Personal",
             "url": "personal.php",
             "children": [
                 {
@@ -1031,7 +1031,7 @@ class GerenciaComponentPage extends StdComponentPage{
             ]
         },
         {
-            "title": "Transportacion y fletes",
+            "title": "Transportacion",
             "url": "transportacion.php",
             "children": [
                 {
@@ -1257,7 +1257,7 @@ class GerenciaComponentPage extends StdComponentPage{
 										echo "class='withsubsections'";
 									}
 
-									echo "><a href='". $item->url  ."'><div clas='navSectionTitle'>" . $item->title . "</div></a>";
+									echo "><a href='". $item->url  ."'><div class='navSectionTitle'>" . $item->title . "</div></a>";
 
 									$foo = explode( "/" ,  $_SERVER["SCRIPT_FILENAME"] );
 									$foo = array_pop( $foo );

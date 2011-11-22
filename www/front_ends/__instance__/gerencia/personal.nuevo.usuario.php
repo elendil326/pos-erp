@@ -33,12 +33,37 @@
                         "ultima_modificacion",
                         "id_usuario_ultima_modificacion"
 		 ));
+        
+        
 		
         $form->renameField( array( 
 			"id_ciudad" => "ciudad",
+                        "id_ciudad" => "ciudad"
+		));
+        
+        $form->addApiCall( "api/personal/usuario/nuevo/" );
+        
+        $form->makeObligatory(array( 
+			"nombre",
+			"id_rol",
+			"password",
+			"codigo_usuario"
 		));
 		
-	$form->addApiCall( "api/empresa/nuevo/" );
+	
+        
+        //$form->createComboBoxJoin( "ciudad", "nombre", CiudadDAO::getAll() );
+        
+        //$form->createComboBoxJoin( "id_rol", "nombre", RolDAO::getAll() );
+        
+        //$form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll() );
+        
+        //$form->createComboBoxJoin( "id_moneda", "nombre", MonedaDAO::getAll() );
+        
+        //$form->createComboBoxJoin( "id_clasificacion_cliente", "nombre", ClasificacionClienteDAO::getAll() );
+        
+        //$form->createComboBoxJoin( "id_clasificacion_proveedor", "nombre", ClasificacionProveedorDAO::getAll() );
+        
 	$page->addComponent( $form );
 
 
