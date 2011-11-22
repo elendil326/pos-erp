@@ -1,11 +1,30 @@
 <?php 
 
+	define("BYPASS_INSTANCE_CHECK", false);
 
+	require_once("../../../../server/bootstrap.php");
 
-		define("BYPASS_INSTANCE_CHECK", false);
+	$page = new GerenciaComponentPage();
 
-		require_once("../../../../server/bootstrap.php");
+	$form = new DAOFormComponent( new  Producto() );
 
-		$page = new GerenciaComponentPage();
+	$form->addApiCall("api/producto/nuevo/");
 
-		$page->render();
+	$form->hideField( array( 
+			"id_unidad",
+			"foto_del_producto"
+		 ));
+
+	$form->makeObligatory(array( 
+			"compra_en_mostrador",
+			"costo_estandar",
+			"nombre_producto",
+			"id_empresas",
+			"codigo_producto",
+			"metodo_costeo",
+			"activo"
+		));
+	
+	$page->addComponent( $form );
+
+	$page->render();

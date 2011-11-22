@@ -106,24 +106,24 @@ class FormComponent implements GuiComponent
 			}
 		}
 		
-		$html .= "</tr>";
+		$html .= "</tr><tr><td></td><td></td>";
 
 		if( !is_null ( $this->submit_form 	) ){
-			$html .= "<tr><td>";
+			$html .= "<td>";
 			$html .= "</td><td align=right>";
 			$html .= "<input value='" . $this->submit_form["caption"] .  "' type='submit'  >";
 			$html .= "</td></tr>";
 		}
 
 		if( !is_null ( $this->on_click 		) ){
-			$html .= "<tr><td>";
+			$html .= "<td>";
 			$html .= "</td><td align=right>";
 			$html .= "<input value='" . $this->on_click["caption"] .  "' type='button' onClick='". $this->on_click["function"] ."' >";
 			$html .= "</td></tr>";
 		}
 
 		if( !is_null ( $this->send_to_api	) ){
-			$html .= "<tr><td>";
+			$html .= "<td>";
 			$html .= "</td><td align=right>";
 			$html .= "<input value='Aceptar' type='button' onClick='sendToApi()' >";
 			$html .= "</td></tr>";			
