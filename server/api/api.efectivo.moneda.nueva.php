@@ -16,6 +16,7 @@
 	protected function CheckAuthorization() {}
 	protected function GetRequest()
 	{
+
 		$this->request = array(	
 			"nombre" => new ApiExposedProperty("nombre", true, GET, array( "string" )),
 			"simbolo" => new ApiExposedProperty("simbolo", true, GET, array( "string" )),
