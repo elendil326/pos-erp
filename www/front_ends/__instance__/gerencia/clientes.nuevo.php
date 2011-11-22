@@ -38,20 +38,18 @@
 			"dia_de_pago",
 			"dias_de_embarque",
 			"id_direccion",
-			"id_ciudad",
+			//"id_ciudad",
 			"ultima_modificacion",
 			"id_usuario_ultima_modificacion"
 		 ));
-		
+
+
 	$form->renameField( array( 
-			"nombre" => "razon_social",
-			"codigo_usuario" => "codigo_cliente"
-			
+			"nombre" 			=> "razon_social",
+			"codigo_usuario"	=> "codigo_cliente"
 		));
 	
-	
 	$form->addApiCall( "api/cliente/nuevo/" );
-	
 	
 	$form->makeObligatory(array( 
 			"password",

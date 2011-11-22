@@ -24,8 +24,14 @@ class FormComponent implements GuiComponent
 	}
 
 
+
+
 	function renderCmp()
 	{
+		
+		//sort fields by the necesary attribute
+		usort( $this->form_fields, array( "FormComponentField", "obligatorySort"  ));
+		
 		$html = "";
 		
 		if( !is_null($this->send_to_api)){
@@ -66,9 +72,9 @@ class FormComponent implements GuiComponent
 			if($f->type !== "hidden"){
 				$html .= "<tr><td>";
 				
-				if($f->obligatory === true) echo "<b>";
+				if($f->obligatory === true) $html .= "<b>";
 				$html .= $f->caption;
-				if($f->obligatory === true) echo "</b>";
+				if($f->obligatory === true) $html .= "</b>";
 								
 				$html .= "</td><td>";				
 			}
@@ -122,18 +128,14 @@ class FormComponent implements GuiComponent
 		$this->submit_form = array( "caption" => $caption, "submit_form_url" => $submit_form_url, "method" => $method );
 	}
 
-
 	public function addOnClick( $caption, $js_function){
 		$this->on_click = array( "caption" => $caption, "function" => $js_function );
 	}
-
 
 	public function addApiCall( $method_name ){
 		$this->send_to_api = $method_name;
 		
 	}
-
-
 
 	public function renameField( $field_array ){
 		
@@ -160,9 +162,6 @@ class FormComponent implements GuiComponent
 			
 		}//foreach field in the array
 	}
-
-
-
 
 	public function makeObligatory( $field_array ){
 		
@@ -201,6 +200,18 @@ class FormComponentField{
 			$this->value 	= $value;
 			$this->name 	= $name;
 			$this->obligatory 	= $obligatory;
+	}
+	
+	
+	public static function obligatorySort( $f1, $f2 ){
+	
+		if ($f1->obligatory == $f2->obligatory) {
+			return 0;
+		}
+		
+		if( $f1->obligatory ) return -1;
+
+		return 1;
 	}
 }
 
