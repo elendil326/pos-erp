@@ -345,12 +345,11 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
             try 
             {
                 $cliente = PersonalYAgentesController::NuevoUsuario($codigo_cliente,$password,5,$razon_social,
-                        $curp,null,$clasificacion_cliente,$numero_exterior,null,self::getSucursal(),null,null,
-                        $representante_legal,null,$impuestos,$mensajeria,null,null,null,null,$direccion_web,
-                        $telefono_personal1,$descuento,null,$limite_credito,$telefono_personal2,null,$codigo_postal,null,null,
-                        $calle,null,$id_ciudad,null,null,$numero_interior,$email,$telefono2,null,$texto_extra,null,
-                        $denominacion_comercial,null,null,$telefono1,$cuenta_de_mensajeria,$rfc,null,$retenciones,
-                        $colonia,$moneda_del_cliente);
+                        $curp,null,$clasificacion_cliente,$numero_exterior,null,null,self::getSucursal(),$mensajeria,null,
+                        $impuestos,$representante_legal,null,null,null,null,null,$telefono_personal1,$direccion_web,
+                        $descuento,$limite_credito,$telefono_personal2,null,null,$codigo_postal,null,null,null,$id_ciudad,$calle,null,
+                        $numero_interior,null,$email,$texto_extra,$telefono2,$denominacion_comercial,null,null,null,$telefono1,
+                        $cuenta_de_mensajeria,null,$rfc,null,$colonia,$retenciones,$moneda_del_cliente);
             }
             catch(Exception $e)
             {
