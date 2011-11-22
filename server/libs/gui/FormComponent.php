@@ -39,18 +39,23 @@ class FormComponent implements GuiComponent
 			
 			foreach( $this->form_fields as $f )
 			{
-				$html .= "	" . $f->id . " : Ext.get('". $f->id . "').getValue(),\n" ;
+				$html .= "	" . $f->id . " : Ext.get('". $f->id . "').getValue()," ;
 			}
 			
 			$html.= "	},{";
-			$html.= 		"callback : function( a ){ console.log(a ); }";
+			$html.= "		callback : function( a ){ ";
+			$html.= "			";
+			$html.= "			console.log('OKAY');";
+			$html.= "			";
+			$html.= "			";									
+			$html.= "	 	}";
 			$html.= "	});";
 			$html.= "}";
 			$html.= "</script>";			
 			
 		}
 			
-		$html .= "<table>";
+		$html .= "<table width=100%>";
 
 		if( !is_null ( $this->submit_form ) ){
 			$html .= "<form method='". $this->submit_form["method"] . "' action='". $this->submit_form["submit_form_url"] . "'>";

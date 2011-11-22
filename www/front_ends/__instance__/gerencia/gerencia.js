@@ -2,6 +2,22 @@
 var main = function ()
 {
 	console.log("JS FRWK READY");
+	
+
+	//window.onbeforeunload = function(){}
+	var els = Ext.select("input").elements;
+	
+	for (var i = els.length - 1; i >= 0; i--){
+		Ext.get(els[i]).on(
+			"change",
+			function(){
+					window.onbeforeunload = function(){ 
+						return 'Usted ha modificado el formulario. Si sale de esta pagina perdera los cambios. Esta seguro que desea salir?';
+					}
+			});
+	};
+	
+
 }
 
 
