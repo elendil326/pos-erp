@@ -32,7 +32,7 @@ class FormComponent implements GuiComponent{
 			}
 		}
 		
-		$this->form_fields =  array_slice( $this->form_fields, 0,  $top_i, true);
+		$this->form_fields =  array_slice( $this->form_fields, 0,  $top_i+1, true);
 	}
 
 	function renderCmp(){
@@ -87,6 +87,7 @@ class FormComponent implements GuiComponent{
 			//incrementar el calculo de la fila actual
 			$new_row++;
 			
+	
 			if($f->type !== "hidden"){
 				$html .= "<td>";
 				if($f->obligatory === true) $html .= "<b>";
@@ -122,15 +123,13 @@ class FormComponent implements GuiComponent{
 		}
 		
 		$html .= "</tr><tr>";
-		
-		if($new_row == 2)
-			$html .= "<td></td><td></td>";
+
+		$html .= "<td></td><td></td>";
 
 			
 
 		if( !is_null ( $this->submit_form 	) ){
-			$html .= "<td>";
-			$html .= "</td><td align=right>";
+			$html .= "<td align=right>";
 			$html .= "<input value='" . $this->submit_form["caption"] .  "' type='submit'  >";
 			$html .= "</td></tr>";
 		}
