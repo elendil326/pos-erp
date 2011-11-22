@@ -20,9 +20,6 @@
 		 ));
 
 
-	$form->renameField( array( 
-			"nombre" 			=> "nombre"
-		));
 	
 	$form->addApiCall( "api/efectivo/billete/nuevo/" );
 	
