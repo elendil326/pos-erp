@@ -122,7 +122,7 @@
             $cheque->setExpedido($expedido);
             if($expedido)
             {
-                $id_usuario=LoginController::getCurrentUser();
+                $id_usuario=SesionController::getCurrentUser();
                 if(is_null($id_usuario))
                 {
                     Logger::error("No se pudo obtener el usuario de la sesion, ya inicio sesion?");

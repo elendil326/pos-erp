@@ -138,8 +138,7 @@ class DireccionController{
                 throw new Exception($validar);
             }
             $direccion = new Direccion();
-            Logger::log(LoginController::getCurrentUser());
-            $id_usuario=LoginController::getCurrentUser();
+            $id_usuario=  SesionController::getCurrentUser();
             if($id_usuario==null)
             {
                 throw new Exception("No se pudo obtener la sesion del usuario, ya inicio sesion?");

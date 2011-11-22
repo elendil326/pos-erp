@@ -1447,7 +1447,7 @@ require_once("interfaces/Servicios.interface.php");
             Logger::log("Creando nueva orden de servicio");
             
             //Se obtiene al usuario de la sesion actual
-            $id_usuario = LoginController::getCurrentUser();
+            $id_usuario = SesionController::getCurrentUser();
             if(is_null($id_usuario))
             {
                 Logger::error("No se ha podido obtener al usuario de la sesion. Ya inicio sesion?");
@@ -1517,7 +1517,7 @@ require_once("interfaces/Servicios.interface.php");
             Logger::log("Creando nuevo seguimiento de orden");
             
             //Se obtiene al usuario de la sesion
-            $id_usuario = LoginController::getCurrentUser();
+            $id_usuario = SesionController::getCurrentUser();
             if(is_null($id_usuario))
             {
                 Logger::error("El usuario no pudo ser obtenido de la sesion. Ya inicio sesion?");

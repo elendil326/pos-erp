@@ -548,7 +548,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             Logger::log("Creando nuevo ingreso");
             
             //Se obtiene al usuario de la sesion
-            $id_usuario=LoginController::getCurrentUser();
+            $id_usuario=SesionController::getCurrentUser();
             if(is_null($id_usuario))
             {
                 Logger::error("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
@@ -2278,7 +2278,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             Logger::log("Creando nuevo gasto");
             
             //obtiene al usuario de la sesion actual
-            $id_usuario=LoginController::getCurrentUser();
+            $id_usuario=SesionController::getCurrentUser();
             if(is_null($id_usuario))
             {
                 Logger::error("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
@@ -2525,7 +2525,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             Logger::log("Creando abono");
             
             //Se obtiene la sesion del usuario
-            $id_usuario=LoginController::getCurrentUser();
+            $id_usuario=SesionController::getCurrentUser();
             if(is_null($id_usuario))
             {
                 Logger::error("No se pudo obtener el usuario de la sesion, ya inicio sesion?");

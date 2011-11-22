@@ -1147,7 +1147,7 @@ require_once("interfaces/Sucursales.interface.php");
             Logger::log("Realizando la venta");
             
             //Se obtiene el id del usuario actualmente logueado
-            $id_usuario=LoginController::getCurrentUser();
+            $id_usuario=SesionController::getCurrentUser();
             if(is_null($id_usuario))
             {
                 Logger::error("No se pudo obtener al usuario de la sesion actual, ya inicio sesion?");
@@ -1727,7 +1727,7 @@ require_once("interfaces/Sucursales.interface.php");
             Logger::log("Realizando la compra");
             
             //Se obtiene el id del usuario de la sesion actual
-            $id_usuario=LoginController::getCurrentUser();
+            $id_usuario=SesionController::getCurrentUser();
             if(is_null($id_usuario))
             {
                 Logger::error("No se pudo obtener al usuario de la sesion actual, ya inicio sesion?");
@@ -2403,7 +2403,7 @@ require_once("interfaces/Sucursales.interface.php");
             if($cambio_direccion)
             {
                 $direccion->setUltimaModificacion(date("Y-m-d H:i:s",time()));
-                $id_usuario=LoginController::getCurrentUser();
+                $id_usuario=SesionController::getCurrentUser();
                 if(is_null($id_usuario))
                 {
                     Logger::error("No se pudo obtener al usuario de la sesion, ya inicio sesion?");
@@ -2756,7 +2756,7 @@ Creo que este metodo tiene que estar bajo sucursal.
             $entrada_almacen = new EntradaAlmacen();
             
             //Se obtiene el usuario de la sesion
-            $id_usuario=LoginController::getCurrentUser();
+            $id_usuario=SesionController::getCurrentUser();
             if(is_null($id_usuario))
             {
                 Logger::error("No se puede obtener al usuario de la sesion, ya inicio sesion?");
@@ -2947,7 +2947,7 @@ Creo que este metodo tiene que estar bajo sucursal.
             Logger::log("Registrando salida de almacen");
             
             //Se obtiene al usuario de la sesion
-            $id_usuario=LoginController::getCurrentUser();
+            $id_usuario=SesionController::getCurrentUser();
             if(is_null($id_usuario))
             {
                 Logger::error("No se pudo obtener al usuario de la sesion, ya inicio sesion?");
@@ -3547,7 +3547,7 @@ Creo que este metodo tiene que estar bajo sucursal.
             Logger::log("Creando traspaso");
             
             //Se obtiene al usuario de la sesion actual
-            $id_usuario=LoginController::getCurrentUser();
+            $id_usuario=SesionController::getCurrentUser();
             if(is_null($id_usuario))
             {
                 Logger::error("No se pudo obtener al usuario de la sesion, ya inicio sesion?");
@@ -3675,7 +3675,7 @@ Creo que este metodo tiene que estar bajo sucursal.
             Logger::log("Enviando traspaso: ".$id_traspaso);
             
             //Se obtiene al usuario de la sesion
-            $id_usuario=LoginController::getCurrentUser();
+            $id_usuario=SesionController::getCurrentUser();
             if(is_null($id_usuario))
             {
                 Logger::error("No se puede obtener al usuario de la sesion, ya inicio sesion?");
@@ -3768,7 +3768,7 @@ Creo que este metodo tiene que estar bajo sucursal.
             Logger::log("Recibiendo traspaso ".$id_traspaso);
             
             //Se obtiene al usuario de la sesion
-            $id_usuario=LoginController::getCurrentUser();
+            $id_usuario=SesionController::getCurrentUser();
             if(is_null($id_usuario))
             {
                 Logger::error("El usuario no puede ser obtenido de la sesion, ya inicio sesion?");

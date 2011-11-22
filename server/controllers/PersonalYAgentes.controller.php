@@ -1273,7 +1273,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                     $direccion1->setUltimaModificacion(date("Y-m-d H:i:s"));
 
                     //Se busca el id del usuario loggeado. Si no hay ningun muestra un error.
-                    $id_u=LoginController::getCurrentUser();
+                    $id_u=SesionController::getCurrentUser();
                     if(is_null($id_u))
                     {
                         throw new Exception("No se pudo obtener el usuario de la sesion, ya inicio sesion?",901);
@@ -1294,7 +1294,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                     $direccion2->setUltimaModificacion(date("Y-m-d H:i:s"));
 
                     //Se busca el id del usuario loggeado. Si no hay ningun muestra un error.
-                    $id_u=LoginController::getCurrentUser();
+                    $id_u=SesionController::getCurrentUser();
                     if(is_null($id_u))
                     {
                         throw new Exception("No se pudo obtener el usuario de la sesion, ya inicio sesion?",901);
