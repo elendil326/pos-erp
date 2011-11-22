@@ -58,6 +58,8 @@
 			"razon_social"
 		));	
 	
+	$form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll() );
+	
 	$page->addComponent( $form );
 
 

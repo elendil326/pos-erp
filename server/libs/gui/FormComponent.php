@@ -17,14 +17,10 @@ class FormComponent implements GuiComponent
 		$this->form_fields      = array(  );
 	}
 
-
 	function addField( $id, $caption, $type, $value = "", $name = null )
 	{
 		array_push( $this->form_fields, new FormComponentField($id, $caption, $type, $value, $name ) );
 	}
-
-
-
 
 	function renderCmp()
 	{
@@ -53,9 +49,7 @@ class FormComponent implements GuiComponent
 			$html.= "</script>";			
 			
 		}
-		
-
-		
+			
 		$html .= "<table>";
 
 		if( !is_null ( $this->submit_form ) ){
@@ -71,16 +65,26 @@ class FormComponent implements GuiComponent
 		{
 			if($f->type !== "hidden"){
 				$html .= "<tr><td>";
-				
 				if($f->obligatory === true) $html .= "<b>";
 				$html .= $f->caption;
 				if($f->obligatory === true) $html .= "</b>";
-								
 				$html .= "</td><td>";				
 			}
 
-
-			$html .= "<input id='" . $f->id .  "' name='" . $f->name .  "' value='" . $f->value .  "' type='". $f->type ."' >";
+			switch( $f->type ){
+				case "combo" :
+					$html .= "<select>";
+					
+					foreach($f->value as $o)
+						$html .= "<option>".$o."</option>";
+					
+					$html .= "</select>";
+					//$this->form_fields[$i]->value
+				break;
+				
+				default:
+					$html .= "<input id='" . $f->id .  "' name='" . $f->name .  "' value='" . $f->value .  "' type='". $f->type ."' >";				
+			}
 
 			
 			if($f->type !== "hidden"){
@@ -89,26 +93,21 @@ class FormComponent implements GuiComponent
 		}
 
 
-		if( !is_null ( $this->submit_form ) ){
+		if( !is_null ( $this->submit_form 	) ){
 			$html .= "<tr><td>";
 			$html .= "</td><td align=right>";
 			$html .= "<input value='" . $this->submit_form["caption"] .  "' type='submit'  >";
 			$html .= "</td></tr>";
 		}
 
-
-
-
-		if( !is_null ( $this->on_click ) ){
-
+		if( !is_null ( $this->on_click 		) ){
 			$html .= "<tr><td>";
 			$html .= "</td><td align=right>";
 			$html .= "<input value='" . $this->on_click["caption"] .  "' type='button' onClick='". $this->on_click["function"] ."' >";
 			$html .= "</td></tr>";
 		}
 
-		if( !is_null($this->send_to_api)){
-			
+		if( !is_null ( $this->send_to_api	) ){
 			$html .= "<tr><td>";
 			$html .= "</td><td align=right>";
 			$html .= "<input value='Aceptar' type='button' onClick='sendToApi()' >";
@@ -116,8 +115,7 @@ class FormComponent implements GuiComponent
 			
 		}
 
-		$html .= "</form>";
-		$html .= "</table>";
+		$html .= "</form></table>";
 
 		return $html;
 
@@ -178,6 +176,35 @@ class FormComponent implements GuiComponent
 
 			}//for
 		}
+	}
+
+	public function createComboBoxJoin( $field_name, $field_name_in_values, $values_array ){
+		if( sizeof( $values_array ) == 0 ){
+			//do something
+		}
+
+		$sof = sizeof( $this->form_fields );
+
+		for ($i=0; $i < $sof; $i++) { 
+			
+			if( $this->form_fields[$i]->id === $field_name )
+			{
+				$this->form_fields[$i]->type  = "combo";
+				
+				$end_values = array();
+
+				foreach ($values_array as $v ){
+					$v = $v->asArray();
+					array_push( $end_values, $v["$field_name_in_values"] );
+
+				}
+				
+				$this->form_fields[$i]->value =  $end_values;
+
+				break;
+			}//if
+		}//for
+
 	}
 }
 

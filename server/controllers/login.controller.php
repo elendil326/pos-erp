@@ -26,9 +26,6 @@ interface IPermission
 
 
 
-
-
-
 abstract class LoginController implements IPermission
 {
 	
