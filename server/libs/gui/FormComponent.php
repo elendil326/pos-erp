@@ -22,8 +22,26 @@ class FormComponent implements GuiComponent
 		array_push( $this->form_fields, new FormComponentField($id, $caption, $type, $value, $name ) );
 	}
 
+	private function removeDuplicates(){
+		usort( $this->form_fields, array( "FormComponentField", "idSort"  ));
+		$top_i = 0;
+		
+		for ($i=0; $i < sizeof( $this->form_fields ); $i++) {
+			if( $i != 0 && ( $this->form_fields[$i]->id != $this->form_fields[$i-1]->id) ){
+				Logger::log( "repetido // " . $this->form_fields[$i]->id );
+				$this->form_fields[$top_i] = $this->form_fields[$i];
+				$top_i++;
+			}
+		}
+		
+		$this->form_fields =  array_slice( $this->form_fields, 0,  $top_i, true);
+	}
+
 	function renderCmp()
 	{
+		
+		//remove fields with the same id
+		$this->removeDuplicates();
 		
 		//sort fields by the necesary attribute
 		usort( $this->form_fields, array( "FormComponentField", "obligatorySort"  ));
@@ -163,10 +181,8 @@ class FormComponent implements GuiComponent
 				{
 					$this->form_fields[$i]->id = $new_name;
 					$this->form_fields[$i]->caption = ucwords(str_replace ( "_" , " " , $new_name ));
-
-					
 					$found = true;
-					break;
+					//no break since there could be plenty of same id's
 				}//if
 
 			}//for
@@ -259,6 +275,14 @@ class FormComponentField{
 		if( $f1->obligatory ) return -1;
 
 		return 1;
+	}
+	
+	public static function idSort( $f1, $f2 ){
+		if ($f1->id == $f2->id) {
+			return 0;
+		}
+		
+		return strcmp( $f1->id, $f2->id );
 	}
 }
 
