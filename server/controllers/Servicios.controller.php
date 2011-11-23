@@ -759,7 +759,8 @@ require_once("interfaces/Servicios.interface.php");
                 Logger::error($validar);
                 throw new Exception($validar);
             }
-            
+            if(is_null($activa))
+                $activa=1;
             //se inicializa el registro de clasificacion servicio
             $clasificacion_servicio = new ClasificacionServicio( array( 
                                             "nombre"            => trim($nombre),
