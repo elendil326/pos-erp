@@ -970,6 +970,9 @@ require_once("interfaces/Servicios.interface.php");
                 throw new Exception("No se recibio el parametro correspondiente al metodo de costeo (".$metodo_costeo.")");
             }
             
+            if(is_null($activo))
+                $activo = 1;
+            
             //Se inicializa el registro de servicio
             $servicio = new Servicio( array( 
                                 "costo_estandar"            => $costo_estandar,
