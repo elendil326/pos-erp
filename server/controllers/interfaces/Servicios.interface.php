@@ -185,21 +185,20 @@
   static function Nuevo
 	(
 		$costo_estandar, 
-		$metodo_costeo, 
 		$nombre_servicio, 
-		$codigo_servicio, 
-		$empresas, 
 		$compra_en_mostrador, 
-		$sucursales, 
-		$descripcion_servicio = null, 
-		$garantia = null, 
-		$retenciones = null, 
-		$impuestos = null, 
-		$clasificaciones = null, 
+		$metodo_costeo, 
+		$codigo_servicio, 
 		$margen_de_utilidad = null, 
-		$control_de_existencia = null, 
-		$foto_servicio = null,
-                $precio = null
+		$precio = null, 
+		$descripcion_servicio = null, 
+		$activo = true, 
+		$clasificaciones = null, 
+		$impuestos = null, 
+		$retenciones = null, 
+		$garantia = null, 
+		$foto_servicio = null, 
+		$control_de_existencia = null
 	);  
   
   

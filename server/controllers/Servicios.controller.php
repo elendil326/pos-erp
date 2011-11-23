@@ -934,22 +934,20 @@ require_once("interfaces/Servicios.interface.php");
 	public static function Nuevo
 	(
 		$costo_estandar, 
-		$metodo_costeo, 
 		$nombre_servicio, 
-		$codigo_servicio, 
-		$empresas, 
 		$compra_en_mostrador, 
-		$sucursales, 
+		$metodo_costeo, 
+		$codigo_servicio, 
+		$margen_de_utilidad = null, 
+		$precio = null, 
 		$descripcion_servicio = null, 
-		$garantia = null, 
-		$retenciones = null, 
-		$impuestos = null, 
 		$activo = true, 
 		$clasificaciones = null, 
-		$margen_de_utilidad = null, 
-		$control_de_existencia = null, 
-		$foto_servicio = null,
-                $precio = null
+		$impuestos = null, 
+		$retenciones = null, 
+		$garantia = null, 
+		$foto_servicio = null, 
+		$control_de_existencia = null
 	)
 	{  
             Logger::log("Creando nuevo servicio");
@@ -958,6 +956,11 @@ require_once("interfaces/Servicios.interface.php");
             $validar = self::validarParametrosServicio(null,$nombre_servicio,$metodo_costeo,
                     $codigo_servicio,$compra_en_mostrador,$activo,$margen_de_utilidad,$descripcion_servicio,
                     $costo_estandar,$garantia,$control_de_existencia,$foto_servicio,$precio);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
             
             //valida que se haya recibido el parametro esperado por el metodo de costeo
             if( ( $metodo_costeo == "precio" && is_null($precio) ) || ( $metodo_costeo == "margen" && is_null($margen_de_utilidad) ) )
@@ -991,34 +994,34 @@ require_once("interfaces/Servicios.interface.php");
             try
             {
                 ServicioDAO::save($servicio);
-                if(!is_null($empresas))
-                {
-                    $servicio_empresa = new ServicioEmpresa( array( "id_servicio" => $servicio->getIdServicio() ) );
-                    foreach($empresas as $empresa)
-                    {
-                        $validar = self::validarParametrosServicioEmpresa($empresa["id_empresa"],$empresa["precio_utilidad"],$empresa["es_margen_utilidad"]);
-                        if(is_string($validar))
-                            throw new Exception($validar);
-                        $servicio_empresa->setIdEmpresa($empresa["id_empresa"]);
-                        $servicio_empresa->setPrecioUtilidad($empresa["precio_utilidad"]);
-                        $servicio_empresa->setEsMargenUtilidad($empresa["es_margen_utilidad"]);
-                        ServicioEmpresaDAO::save($servicio_empresa);
-                    }
-                }/* Fin if de empresas */
-                if(!is_null($sucursales))
-                {
-                    $servicio_sucursal = new ServicioSucursal( array( "id_servicio" => $servicio->getIdServicio() ) );
-                    foreach($sucursales as $sucursal)
-                    {
-                        $validar = self::validarParametrosServicioSucursal($sucursal["id_sucursal"],$sucursal["precio_utilidad"],$sucursal["es_margen_utilidad"]);
-                        if(is_string($validar))
-                            throw new Exception($validar);
-                        $servicio_sucursal->setIdSucursal($sucursal["id_sucursal"]);
-                        $servicio_sucursal->setPrecioUtilidad($sucursal["precio_utilidad"]);
-                        $servicio_sucursal->setEsMargenUtilidad($sucursal["es_margen_utilidad"]);
-                        ServicioSucursalDAO::save($servicio_sucursal);
-                    }
-                }/* Fin if de sucursales */
+//                if(!is_null($empresas))
+//                {
+//                    $servicio_empresa = new ServicioEmpresa( array( "id_servicio" => $servicio->getIdServicio() ) );
+//                    foreach($empresas as $empresa)
+//                    {
+//                        $validar = self::validarParametrosServicioEmpresa($empresa["id_empresa"],$empresa["precio_utilidad"],$empresa["es_margen_utilidad"]);
+//                        if(is_string($validar))
+//                            throw new Exception($validar);
+//                        $servicio_empresa->setIdEmpresa($empresa["id_empresa"]);
+//                        $servicio_empresa->setPrecioUtilidad($empresa["precio_utilidad"]);
+//                        $servicio_empresa->setEsMargenUtilidad($empresa["es_margen_utilidad"]);
+//                        ServicioEmpresaDAO::save($servicio_empresa);
+//                    }
+//                }/* Fin if de empresas */
+//                if(!is_null($sucursales))
+//                {
+//                    $servicio_sucursal = new ServicioSucursal( array( "id_servicio" => $servicio->getIdServicio() ) );
+//                    foreach($sucursales as $sucursal)
+//                    {
+//                        $validar = self::validarParametrosServicioSucursal($sucursal["id_sucursal"],$sucursal["precio_utilidad"],$sucursal["es_margen_utilidad"]);
+//                        if(is_string($validar))
+//                            throw new Exception($validar);
+//                        $servicio_sucursal->setIdSucursal($sucursal["id_sucursal"]);
+//                        $servicio_sucursal->setPrecioUtilidad($sucursal["precio_utilidad"]);
+//                        $servicio_sucursal->setEsMargenUtilidad($sucursal["es_margen_utilidad"]);
+//                        ServicioSucursalDAO::save($servicio_sucursal);
+//                    }
+//                }/* Fin if de sucursales */
                 if(!is_null($clasificaciones))
                 {
                     $servicio_clasificacion = new ServicioClasificacion( array( "id_servicio" => $servicio->getIdServicio() ) );
