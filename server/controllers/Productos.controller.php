@@ -729,25 +729,24 @@ NOTA: Se crea un producto tipo = 1 que es para productos
 	public static function Nuevo
 	(
 		$activo, 
-		$codigo_producto, 
-		$id_empresas, 
-		$nombre_producto, 
-		$metodo_costeo, 
 		$costo_estandar, 
 		$compra_en_mostrador, 
-		$garantia = null,
+		$nombre_producto, 
+		$codigo_producto, 
+		$metodo_costeo, 
 		$costo_extra_almacen = null, 
 		$margen_de_utilidad = null, 
-		$control_de_existencia = null, 
-		$peso_producto = null, 
+		$foto_del_producto = null, 
+		$garantia = null, 
+		$descuento = null, 
+		$precio = null, 
+		$codigo_de_barras = null, 
 		$descripcion_producto = null, 
 		$impuestos = null, 
-		$clasificaciones = null, 
 		$id_unidad = null, 
-		$codigo_de_barras = null, 
-		$precio = null, 
-		$foto_del_producto = null, 
-		$descuento = null
+		$clasificaciones = 0, 
+		$control_de_existencia = null, 
+		$peso_producto = null
 	)
 	{  
             Logger::log("Creando nuevo producto");
@@ -790,21 +789,21 @@ NOTA: Se crea un producto tipo = 1 que es para productos
             {
                 //Se guarda el producto creado y se asignan las empresas, los impuestos y las clasificaciones recibidas
                 ProductoDAO::save($producto);
-                if(!is_null($id_empresas))
-                {
-                    $producto_empresa = new ProductoEmpresa( array( "id_producto" => $producto->getIdProducto() ) );
-                    foreach($id_empresas as $id_empresa)
-                    {
-                        $validar = self::validarParametrosProductoEmpresa($id_empresa["id_empresa"],$id_empresa["precio_utilidad"],$id_empresa["es_margen_utilidad"]);
-                        if(is_string($validar))
-                            throw new Exception($validar);
-                        
-                        $producto_empresa->setIdEmpresa($id_empresa["id_empresa"]);
-                        $producto_empresa->setPrecioUtilidad($id_empresa["precio_utilidad"]);
-                        $producto_empresa->setEsMargenUtilidad($id_empresa["es_margen_utilidad"]);
-                        ProductoEmpresaDAO::save($producto_empresa);
-                    }
-                }/* Fin if de empresas */
+//                if(!is_null($id_empresas))
+//                {
+//                    $producto_empresa = new ProductoEmpresa( array( "id_producto" => $producto->getIdProducto() ) );
+//                    foreach($id_empresas as $id_empresa)
+//                    {
+//                        $validar = self::validarParametrosProductoEmpresa($id_empresa["id_empresa"],$id_empresa["precio_utilidad"],$id_empresa["es_margen_utilidad"]);
+//                        if(is_string($validar))
+//                            throw new Exception($validar);
+//                        
+//                        $producto_empresa->setIdEmpresa($id_empresa["id_empresa"]);
+//                        $producto_empresa->setPrecioUtilidad($id_empresa["precio_utilidad"]);
+//                        $producto_empresa->setEsMargenUtilidad($id_empresa["es_margen_utilidad"]);
+//                        ProductoEmpresaDAO::save($producto_empresa);
+//                    }
+//                }/* Fin if de empresas */
                 if(!is_null($impuestos))
                 {
                     $impuesto_producto = new ImpuestoProducto( array( "id_producto" => $producto->getIdProducto() ) );

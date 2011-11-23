@@ -197,25 +197,24 @@ NOTA: Se crea un producto tipo = 1 que es para productos
   static function Nuevo
 	(
 		$activo, 
-		$codigo_producto, 
-		$id_empresas, 
-		$nombre_producto, 
-		$metodo_costeo, 
 		$costo_estandar, 
 		$compra_en_mostrador, 
-		$garantia = null,
+		$nombre_producto, 
+		$codigo_producto, 
+		$metodo_costeo, 
 		$costo_extra_almacen = null, 
 		$margen_de_utilidad = null, 
-		$control_de_existencia = null, 
-		$peso_producto = null, 
+		$foto_del_producto = null, 
+		$garantia = null, 
+		$descuento = null, 
+		$precio = null, 
+		$codigo_de_barras = null, 
 		$descripcion_producto = null, 
 		$impuestos = null, 
-		$clasificaciones = null, 
 		$id_unidad = null, 
-		$codigo_de_barras = null, 
-		$precio = null, 
-		$foto_del_producto = null, 
-		$descuento = null
+		$clasificaciones = 0, 
+		$control_de_existencia = null, 
+		$peso_producto = null
 	);  
   
   
