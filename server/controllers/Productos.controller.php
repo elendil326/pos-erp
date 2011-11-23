@@ -1221,12 +1221,12 @@ NOTA: Se crea un producto tipo = 1 que es para productos
 	public static function NuevaCategoria
 	(
 		$nombre, 
-		$descripcion = null, 
-		$garantia = null,
-		$margen_utilidad = null, 
-		$descuento = null, 
+		$retenciones = null, 
 		$impuestos = null, 
-		$retenciones = null
+		$descuento = null, 
+		$margen_utilidad = null, 
+		$garantia = null, 
+		$descripcion = null
 	)
 	{  
             Logger::log("Creando nueva categoria");

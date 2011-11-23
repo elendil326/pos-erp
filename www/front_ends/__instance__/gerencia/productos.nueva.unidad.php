@@ -35,4 +35,6 @@
 	
 	
 	$page->addComponent( $form );
+        
+        //render the page
 		$page->render();

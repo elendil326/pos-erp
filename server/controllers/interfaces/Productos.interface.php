@@ -70,7 +70,7 @@
 		$impuestos = null, 
 		$descuento = null, 
 		$margen_utilidad = null, 
-		$garantia = "", 
+		$garantia = null, 
 		$descripcion = null
 	);  
   

@@ -7,5 +7,33 @@
 		require_once("../../../../server/bootstrap.php");
 
 		$page = new GerenciaComponentPage();
+                
+                //titulos
+	$page->addComponent( new TitleComponent( "Nueva categoria de producto" ) );
 
+	//forma de nueva categoria de producto
+	$form = new DAOFormComponent( array( new ClasificacionProducto() ) );
+	
+	$form->hideField( array( 
+			"id_clasificacion_producto",
+                        "activa"
+		 ));
+
+//
+//	$form->renameField( array( 
+//			"nombre" 			=> "razon_social",
+//			"codigo_usuario"	=> "codigo_cliente"
+//		));
+	
+	$form->addApiCall( "api/producto/categoria/nueva/" , "GET");
+	
+	$form->makeObligatory(array( 
+			"nombre"
+		));
+	
+	
+	
+	$page->addComponent( $form );
+        
+        //render the page
 		$page->render();
