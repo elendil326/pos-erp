@@ -12,7 +12,9 @@
 		
 		$form->addApiCall("api/cliente/clasificacion/nueva/");
 		
-		$form->hideField( array( 
+		$form->renameField( array( "margen_utilidad" => "utilidad" ) );
+                
+                $form->hideField( array( 
 				"id_clasificacion_cliente"
 			 ));
 
@@ -20,6 +22,7 @@
 				"nombre",
 				"clave_interna"
 			));
+                
 			
 		$page->addComponent( $form );
 		
