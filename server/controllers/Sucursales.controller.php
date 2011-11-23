@@ -276,7 +276,8 @@ require_once("interfaces/Sucursales.interface.php");
                         return "La sucursal con id: ".$id_sucursal." no existe";
             }
             
-            //Valida que el token tenga un maximo de 32 caracteres y que solo tenga letras mayusculas, minusculas y numeros
+            //Valida que el token tenga un maximo de 32 caracteres y que solo tenga letras mayusculas, minusculas y numeros.
+            //El token no pede ser repetido
             if(!is_null($token))
             {
                 $e = self::validarString($token, 32, "token");
@@ -284,6 +285,13 @@ require_once("interfaces/Sucursales.interface.php");
                     return $e;
                 if(preg_match('/[^a-zA-Z0-9]/' ,$token))
                             return "El token (".$token.") contiene caracteres que no son alfanumericos";
+                
+                $cajas = CajaDAO::search( new Caja( array("token" => $token) ) );
+                foreach($cajas as $caja)
+                {
+                    if($caja->getActiva())
+                        return "El token (".$token.") ya esta en uso por la caja ".$caja->getIdCaja();
+                }
             }
             
             //Valida que la descripcion tenga un maximo de 32 caracteres
@@ -2834,10 +2842,10 @@ Creo que este metodo tiene que estar bajo sucursal.
 	public static function NuevaCaja
 	(
 		$token, 
-		$impresoras = null, 
+		$descripcion = null, 
+		$id_sucursal = null, 
 		$basculas = null, 
-		$descripcion = null,
-                $id_sucursal = null
+		$impresoras = null
 	)
 	{
             Logger::log("Creando nueva caja");
@@ -2876,15 +2884,18 @@ Creo que este metodo tiene que estar bajo sucursal.
                 //Se guarda el registro de caja y si se recibieron impresoras se registran con la caja
                 //en la tabla impresora_caja.
                 CajaDAO::save($caja);
-                $impresora_caja = new ImpresoraCaja(array( "id_caja" => $caja->getIdCaja() ));
-                foreach($impresoras as $id_impresora)
+                if(!is_null($impresoras))
                 {
-                    if(is_null(ImpresoraDAO::getByPK($id_impresora)))
+                    $impresora_caja = new ImpresoraCaja(array( "id_caja" => $caja->getIdCaja() ));
+                    foreach($impresoras as $id_impresora)
                     {
-                        throw new Exception("La impresora con id: ".$id_impresora." no existe");
+                        if(is_null(ImpresoraDAO::getByPK($id_impresora)))
+                        {
+                            throw new Exception("La impresora con id: ".$id_impresora." no existe");
+                        }
+                        $impresora_caja->setIdImpresora($id_impresora);
+                        ImpresoraCajaDAO::save($impresora_caja);
                     }
-                    $impresora_caja->setIdImpresora($id_impresora);
-                    ImpresoraCajaDAO::save($impresora_caja);
                 }
             }
             catch(Exception $e)
