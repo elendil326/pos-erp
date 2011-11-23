@@ -55,11 +55,11 @@
         
         $form->createComboBoxJoin( "id_rol", "nombre", RolDAO::getAll() );
         
-        $form->createComboBoxJoin( "id_moneda", "nombre", MonedaDAO::getAll() );
+        $form->createComboBoxJoin( "id_moneda", "nombre", MonedaDAO::search( new Moneda( array( "activa" => 1 ) ) ) );
         
         $form->createComboBoxJoin( "id_clasificacion_cliente", "nombre", ClasificacionClienteDAO::getAll() );
         
-        $form->createComboBoxJoin( "id_clasificacion_proveedor", "nombre", ClasificacionProveedorDAO::getAll() );
+        $form->createComboBoxJoin( "id_clasificacion_proveedor", "nombre", ClasificacionProveedorDAO::search( new ClasificacionProveedor( array( "activa" => 1 ) ) ) );
         
 	$page->addComponent( $form );
 
