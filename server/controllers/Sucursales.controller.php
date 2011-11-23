@@ -1021,17 +1021,21 @@ require_once("interfaces/Sucursales.interface.php");
                 }
             }
             
-            //Solo puede haber un almacen por tipo por cada empresa en una sucursal.
-            //Sin embargo, puede haber muchos almacenes de consignacion de la misma empresa en la misma sucursal.
-            if($id_tipo_almacen!=2)
+            //Si se recibe un tipo de almacen de consignacion, se manda una excepcion, pues no se puede crear un almacen
+            //de consignacion con este metodo.
+            if($id_tipo_almacen==2)
             {
-                $almacenes = AlmacenDAO::search( new Almacen( array( "id_sucursal" => $id_sucursal ,
-                    "id_empresa" => $id_empresa , "id_tipo_almacen" => $id_tipo_almacen ) ) );
-                if(!empty($almacenes))
-                {
-                    Logger::error("Ya existe un almacen (".$almacenes[0]->getIdAlmacen().") de este tipo (".$id_tipo_almacen.") en esta sucursal (".$id_sucursal.") para esta empresa (".$id_empresa.")");
-                    throw new Exception("Ya existe un almacen de este tipo en esta sucursal para esta empresa");
-                }
+                Logger::error("No se puede crear un almacen de consignacion con este metodo");
+                throw new Exception("No se puede crear un almacen de consignacion con este metodo");
+            }
+            
+            //Solo puede haber un almacen por tipo por cada empresa en una sucursal.
+            $almacenes = AlmacenDAO::search( new Almacen( array( "id_sucursal" => $id_sucursal ,
+                "id_empresa" => $id_empresa , "id_tipo_almacen" => $id_tipo_almacen ) ) );
+            if(!empty($almacenes))
+            {
+                Logger::error("Ya existe un almacen (".$almacenes[0]->getIdAlmacen().") de este tipo (".$id_tipo_almacen.") en esta sucursal (".$id_sucursal.") para esta empresa (".$id_empresa.")");
+                throw new Exception("Ya existe un almacen de este tipo en esta sucursal para esta empresa");
             }
             
             //Se inicializa el registro a guardar con los datos obtenidos.
