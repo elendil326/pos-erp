@@ -273,6 +273,35 @@ class FormComponent implements GuiComponent{
 
 	}
         
+        public function createComboBoxJoinDistintName( $field_name,$table_name, $field_name_in_values, $values_array ){
+		if( sizeof( $values_array ) == 0 ){
+			//do something
+		}
+
+		$sof = sizeof( $this->form_fields );
+
+		for ($i=0; $i < $sof; $i++) { 
+			
+			if( $this->form_fields[$i]->id === $field_name )
+			{
+				$this->form_fields[$i]->type  = "combo";
+				
+				$end_values = array();
+
+				foreach ($values_array as $v ){
+					$v = $v->asArray();
+					array_push( $end_values,  array( "id" => $v["$table_name"], "caption" => $v["$field_name_in_values"] ) );
+
+				}
+				
+				$this->form_fields[$i]->value =  $end_values;
+
+				break;
+			}//if
+		}//for
+
+	}
+        
         public function createListBoxJoin( $field_name, $field_name_in_values, $values_array ){
 		if( sizeof( $values_array ) == 0 ){
 			//do something
