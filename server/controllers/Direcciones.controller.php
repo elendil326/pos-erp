@@ -63,16 +63,16 @@ class DireccionController{
                 $e=self::validarString($numero_exterior, 8, "numero exterior");
                 if(is_string($e))
                     return $e;
-                if(preg_match('/[^a-zA-Z0-9\(\)\-]/',$numero_exterior))
-                        return "El numero exterior ".$numero_exterior." tiene caracteres fuera del rango a-z,A-Z,0-9,(,),-";
+                if(preg_match('/[^a-zA-Z0-9\(\)\- ]/',$numero_exterior))
+                        return "El numero exterior ".$numero_exterior." tiene caracteres fuera del rango a-z,A-Z,0-9,(,),- y espacio vacio";
             }
             if(!is_null($numero_interior))
             {
                 $e=self::validarString($numero_interior, 8, "numero interior");
                 if(is_string($e))
                     return $e;
-                if(preg_match('/[^a-zA-Z0-9\(\)\-]/',$numero_interior))
-                        return "El numero interior ".$numero_interior." tiene caracteres fuera del rango a-z,A-Z,0-9,(,),-";
+                if(preg_match('/[^a-zA-Z0-9\(\)\- ]/',$numero_interior))
+                        return "El numero interior ".$numero_interior." tiene caracteres fuera del rango a-z,A-Z,0-9,(,),-, y espacio vacio";
             }
             if(!is_null($referencia))
             {
