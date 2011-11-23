@@ -1652,9 +1652,9 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	public static function NuevoRol
 	(
 		$nombre, 
-		$descripcion = null, 
+                $salario = 0,
 		$descuento = 0, 
-		$salario = 0
+                $descripcion = null
 	)
 	{  
             Logger::log("Creando nuevo rol");
