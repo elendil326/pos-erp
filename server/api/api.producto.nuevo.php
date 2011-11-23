@@ -22,7 +22,6 @@ NOTA: Se crea un producto tipo = 1 que es para productos
 			"compra_en_mostrador" => new ApiExposedProperty("compra_en_mostrador", true, GET, array( "bool" )),
 			"costo_estandar" => new ApiExposedProperty("costo_estandar", true, GET, array( "float" )),
 			"nombre_producto" => new ApiExposedProperty("nombre_producto", true, GET, array( "string" )),
-			"id_empresas" => new ApiExposedProperty("id_empresas", true, GET, array( "json" )),
 			"codigo_producto" => new ApiExposedProperty("codigo_producto", true, GET, array( "string" )),
 			"metodo_costeo" => new ApiExposedProperty("metodo_costeo", true, GET, array( "string" )),
 			"activo" => new ApiExposedProperty("activo", true, GET, array( "bool" )),
@@ -47,26 +46,26 @@ NOTA: Se crea un producto tipo = 1 que es para productos
  		$this->response = ProductosController::Nuevo( 
  			
 			
-			isset($_GET['compra_en_mostrador'] ) ? $_GET['compra_en_mostrador'] : null,
-			isset($_GET['costo_estandar'] ) ? $_GET['costo_estandar'] : null,
-			isset($_GET['nombre_producto'] ) ? $_GET['nombre_producto'] : null,
-			isset($_GET['id_empresas'] ) ? $_GET['id_empresas'] : null,
-			isset($_GET['codigo_producto'] ) ? $_GET['codigo_producto'] : null,
-			isset($_GET['metodo_costeo'] ) ? $_GET['metodo_costeo'] : null,
 			isset($_GET['activo'] ) ? $_GET['activo'] : null,
-			isset($_GET['garantia'] ) ? $_GET['garantia'] : null,
-			isset($_GET['foto_del_producto'] ) ? $_GET['foto_del_producto'] : null,
-			isset($_GET['descuento'] ) ? $_GET['descuento'] : null,
-			isset($_GET['id_unidad_no_convertible'] ) ? $_GET['id_unidad_no_convertible'] : null,
-			isset($_GET['codigo_de_barras'] ) ? $_GET['codigo_de_barras'] : null,
-			isset($_GET['descripcion_producto'] ) ? $_GET['descripcion_producto'] : null,
-			isset($_GET['impuestos'] ) ? $_GET['impuestos'] : null,
-			isset($_GET['clasificaciones'] ) ? $_GET['clasificaciones'] : null,
-			isset($_GET['id_unidad_convertible'] ) ? $_GET['id_unidad_convertible'] : null,
-			isset($_GET['control_de_existencia'] ) ? $_GET['control_de_existencia'] : null,
-			isset($_GET['peso_producto'] ) ? $_GET['peso_producto'] : null,
-			isset($_GET['margen_de_utilidad'] ) ? $_GET['margen_de_utilidad'] : null,
-			isset($_GET['costo_extra_almacen'] ) ? $_GET['costo_extra_almacen'] : null
+                        isset($_GET['codigo_producto'] ) ? $_GET['codigo_producto'] : null,
+                        isset($_GET['id_empresas'] ) ? $_GET['id_empresas'] : null,
+                        isset($_GET['nombre_producto'] ) ? $_GET['nombre_producto'] : null,
+                        isset($_GET['metodo_costeo'] ) ? $_GET['metodo_costeo'] : null,
+                        isset($_GET['costo_estandar'] ) ? $_GET['costo_estandar'] : null,
+                        isset($_GET['compra_en_mostrador'] ) ? $_GET['compra_en_mostrador'] : null,
+                        isset($_GET['garantia'] ) ? $_GET['garantia'] : null,
+                        isset($_GET['costo_extra_almacen'] ) ? $_GET['costo_extra_almacen'] : null,
+                        isset($_GET['margen_de_utilidad'] ) ? $_GET['margen_de_utilidad'] : null,
+                        isset($_GET['control_de_existencia'] ) ? $_GET['control_de_existencia'] : null,
+                        isset($_GET['peso_producto'] ) ? $_GET['peso_producto'] : null,
+                        isset($_GET['descripcion_producto'] ) ? $_GET['descripcion_producto'] : null,
+                        isset($_GET['impuestos'] ) ? $_GET['impuestos'] : null,
+                        isset($_GET['clasificaciones'] ) ? $_GET['clasificaciones'] : null,
+                        isset($_GET['id_unidad'] ) ? $_GET['id_unidad'] : null,
+                        isset($_GET['codigo_de_barras'] ) ? $_GET['codigo_de_barras'] : null,
+                        isset($_GET['precio'] ) ? $_GET['precio'] : null,
+                        isset($_GET['foto_del_producto'] ) ? $_GET['foto_del_producto'] : null,
+                        isset($_GET['descuento'] ) ? $_GET['descuento'] : null
 			
 			);
 		}catch(Exception $e){

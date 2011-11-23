@@ -8,11 +8,10 @@
 
 	$form = new DAOFormComponent( new  Producto() );
 
-	$form->addApiCall("api/producto/nuevo/");
+	$form->addApiCall("api/producto/nuevo/", "GET");
 
 	$form->hideField( array( 
-			"id_unidad",
-			"foto_del_producto"
+			"id_producto",
 		 ));
 
 	$form->makeObligatory(array( 
@@ -25,6 +24,8 @@
 			"activo"
 		));
 	
+        $form->createComboBoxJoin("id_unidad", "nombre", UnidadDAO::search( new Unidad( array( "activa" => 1 ) ) ));
+        
 	$page->addComponent( $form );
 
 	$page->render();
