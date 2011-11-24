@@ -139,10 +139,12 @@ class DireccionController{
             }
             $direccion = new Direccion();
             $id_usuario=  SesionController::getCurrentUser();
+
             if($id_usuario==null)
             {
                 throw new Exception("No se pudo obtener la sesion del usuario, ya inicio sesion?");
             }
+
             if(!is_null($telefono)&&$telefono==$telefono2)
             {
                 throw new Exception("El telefono ".$telefono." es igual al telefono alterno ".$telefono2);

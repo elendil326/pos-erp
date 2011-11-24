@@ -7,7 +7,7 @@ class FormComponent implements GuiComponent{
 	protected 	$on_click;
 	protected 	$send_to_api;
 	private 	$send_to_api_http_method;
-
+	private		$send_to_api_callback;
 	function __construct(  ){
 		
 		$this->send_to_api 		= null;
@@ -81,7 +81,10 @@ class FormComponent implements GuiComponent{
 			$html.= "	{";
 			$html.= "		callback : function( a ){ ";
 			$html.= "			";
+			$html.= "			/* remove unload event */";			
+			$html.= "			window.onbeforeunload = function(){ return;	};";			
 			$html.= "			console.log('OKAY');";
+			$html.= "			" . $this->send_to_api_callback . "( a );";
 			$html.= "			";
 			$html.= "			";									
 			$html.= "	 	}";
@@ -201,6 +204,15 @@ class FormComponent implements GuiComponent{
 		$this->send_to_api = $method_name;
 		$this->send_to_api_http_method = $http_method;		
 		
+	}
+	
+	/**
+	 * Esta es una funcion en js que se llamara 
+	 * cuando la llamada al api sea exitosa.
+	 *
+	 * */
+	public function onApiCallSuccess( $jscallback ){
+		$this->send_to_api_callback = $jscallback;
 	}
 
 	public function renameField( $field_array ){

@@ -2,14 +2,15 @@
 
 
 
-		define("BYPASS_INSTANCE_CHECK", false);
+	define("BYPASS_INSTANCE_CHECK", false);
 
-		require_once("../../../../server/bootstrap.php");
+	require_once("../../../../server/bootstrap.php");
 
-		$page = new GerenciaComponentPage();
+	$page = new GerenciaComponentPage();
 	
-        //titulos
+    //titulos
 	$page->addComponent( new TitleComponent( "Nueva empresa" ) );
+
 
 	//forma de nueva empresa
 	$page->addComponent( new TitleComponent( "Datos de la empresa" , 3 ) );
@@ -26,14 +27,21 @@
 			"id_usuario_ultima_modificacion"
 		 ));
 	
-        $form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll() );
-        
-        $form->renameField( array( 
+	$form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll() );
+
+	$form->renameField( array( 
 			"id_ciudad" => "ciudad",
 		));
         
 		
 	$form->addApiCall( "api/empresa/nuevo/" );
+	
+	$form->makeObligatory(array(
+		"rfc",
+		"razon_social",
+		"curp"
+	));
+	
 	$page->addComponent( $form );
 
 

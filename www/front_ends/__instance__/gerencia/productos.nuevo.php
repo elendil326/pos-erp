@@ -6,9 +6,13 @@
 
 	$page = new GerenciaComponentPage();
 
+	$page->addComponent( new TitleComponent( "Nuevo Producto" , 2 ));
+
 	$form = new DAOFormComponent( new  Producto() );
 
 	$form->addApiCall("api/producto/nuevo/", "GET");
+	
+	$form->onApiCallSuccess("console.log" );
 
 	$form->hideField( array( 
 			"id_producto",
@@ -24,7 +28,7 @@
 			"activo"
 		));
 	
-        $form->createComboBoxJoin("id_unidad", "nombre", UnidadDAO::search( new Unidad( array( "activa" => 1 ) ) ));
+    $form->createComboBoxJoin("id_unidad", "nombre", UnidadDAO::search( new Unidad( array( "activa" => 1 ) ) ));
         
 	$page->addComponent( $form );
 
