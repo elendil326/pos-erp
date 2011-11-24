@@ -509,34 +509,33 @@ require_once("interfaces/Proveedores.interface.php");
 	public static function Nuevo
 	(
 		$id_tipo_proveedor, 
-		$password, 
 		$nombre, 
+		$password, 
 		$codigo_proveedor, 
+		$dias_de_credito = null, 
+		$limite_credito = null, 
 		$codigo_postal = null, 
 		$id_ciudad = null, 
 		$texto_extra = null, 
 		$numero_interior = null, 
 		$numero_exterior = null, 
-		$direccion_web = null, 
 		$retenciones = null, 
+		$direccion_web = null, 
 		$impuestos = null, 
 		$dias_embarque = true, 
 		$telefono_personal1 = null, 
 		$rfc = null, 
-		$calle = null, 
+		$calle = 1, 
 		$email = null, 
 		$id_moneda = null, 
-		$cuenta_bancaria = null, 
-		$activo = null, 
-		$representante_legal = null, 
-		$tiempo_entrega = null, 
-		$limite_credito = null, 
-		$dias_de_credito = null, 
+		$telefono_personal2 = null, 
+		$colonia = null, 
+		$telefono2 = null, 
 		$telefono1 = null, 
-		$telefono2 = null,
-                $telefono_personal2 = null,
-                $descuento = null,
-                $colonia = null
+		$activo = null, 
+		$cuenta_bancaria = null, 
+		$representante_legal = null, 
+		$tiempo_entrega = null
 	)
 	{  
             Logger::log("Creando nuevo proveedor");
@@ -547,11 +546,11 @@ require_once("interfaces/Proveedores.interface.php");
             try
             {
                 $proveedor = PersonalYAgentesController::NuevoUsuario($codigo_proveedor, $password, 6, $nombre,
-                    null,null,null,$numero_exterior,null,self::getSucursal(),$dias_embarque,0,$representante_legal,
-                    null,$impuestos,null,null,$cuenta_bancaria,null,null,$direccion_web,$telefono_personal1,$descuento,null,
-                    0,$telefono_personal2,null,$codigo_postal,null,null,$calle,null,$id_ciudad,null,null,$numero_interior,
-                    $email,$telefono2,$dias_de_credito,$texto_extra,null,null,null,null,$telefono1,null,$rfc,$id_tipo_proveedor,
-                    $retenciones,$colonia,$id_moneda,$tiempo_entrega);
+                    null,null,null,$numero_exterior,$dias_embarque,null,self::getSucursal(),0,null,
+                    $impuestos,$representante_legal,$cuenta_bancaria,null,null,null,null,$telefono_personal1,$direccion_web,null,
+                    $limite_credito,$telefono_personal2,null,null,$codigo_postal,null,null,null,$id_ciudad,$calle,null,$numero_interior,
+                    null,$email,$texto_extra,$telefono2,null,$dias_de_credito,null,null,$telefono1,null,null,$rfc,$id_tipo_proveedor,
+                    $colonia,$retenciones,$id_moneda,$tiempo_entrega);
             }
             catch(Exception $e)
             {

@@ -53,7 +53,8 @@
                         "telefono"          => "telefono1",
                         "correo_electronico"    => "email",
                         "id_clasificacion_cliente"  => "clasificacion_cliente",
-                        "id_moneda"     => "moneda_del_cliente"
+                        "id_moneda"     => "moneda_del_cliente",
+                        "pagina_web"    => "direccion_web"
 		));
 	
 	$form->addApiCall( "api/cliente/nuevo/" );
