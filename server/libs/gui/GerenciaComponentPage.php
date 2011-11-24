@@ -4,6 +4,9 @@
 class GerenciaComponentPage extends StdComponentPage{
 
 	private $permisos_controller;
+	private $main_menu_json;
+
+
 
 
 	function __construct()
@@ -13,77 +16,16 @@ class GerenciaComponentPage extends StdComponentPage{
 
 		//check for user login status
 		if(SesionController::isLoggedIn() === FALSE){
-
 			die(header("Location: ../"));
 		}
-
-		return $this->bootstrap();
-
-		/*
-		//vamos a ver si estamos loggeados
-		$permisos_controller = new GerenciaLoginController();
-
-
-		//user is logged in, go ahead
-		if($permisos_controller->isLoggedIn()) 
-		{
-			
-			//usuario esta loggeado, 
-			//vamos a ver si quiere 
-			//cerrar sesion
-			if(isset($_GET["close_session"]))
-			{
-				
-				//si quiere cerrar la sesion ! 
-				$permisos_controller->logout();
-				die(header("Location: ./&bye"));
-			}
-
-
-			return $this->bootstrap();
-				
-		}
-
-
-		//ok no esta loggeado,
-		//vamos a ver si se quiere 
-		//iniciar sesion
-		if(
-				isset($_POST["do_login"]	) 
-			&& 	$_POST["do_login"] == 1
-			&& 	isset( $_POST["user"] 		)
-			&& 	isset( $_POST["password"] 	)
-		)
-		{
-			//user wants to login
-			if($permisos_controller->login($_POST["user"], $_POST["password"]))
-			{
-				// login was succesful,
-				// lets refresh the page
-				// se we change from POST(login)
-				// to GET
-				die(header("Location: ."));
-				
-
-			}else{
-				//unsuccessful login
-				$this->dieWithLogin("Credenciales invalidas");	
-
-			}
-
-		}else{
-			$this->dieWithLogin();
-
-		}
-		*/
-
+		
+		$this->createMainMenu();
+		
+		return;
+		
 	}//__construct
 
 
-
-
-
-	private $main_menu_json;
 
 
 
@@ -1133,16 +1075,6 @@ class GerenciaComponentPage extends StdComponentPage{
 	}
 
 
-	function bootstrap()
-	{
-
-		$this->createMainMenu();
-
-	}
-
-
-
-
 
 
 	/**
@@ -1164,7 +1096,7 @@ class GerenciaComponentPage extends StdComponentPage{
 	}
 
 
-	function render()
+	function render(  )
 	{
 		?>
 		<!DOCTYPE html>
@@ -1172,14 +1104,13 @@ class GerenciaComponentPage extends StdComponentPage{
 		<head>
 		<title>POS</title>
 
-
-
 			<link rel="stylesheet" type="text/css" href="http://api.caffeina.mx/ext-latest/resources/css/ext-all.css" /> 
 		    <script type="text/javascript" src="http://api.caffeina.mx/ext-latest/adapter/ext/ext-base.js"></script> 
 		    <script type="text/javascript" src="http://api.caffeina.mx/ext-latest/ext-all.js"></script> 
 
 			<link type="text/css" rel="stylesheet" href="../../../css/basic.css"/>
 			<script type="text/javascript" src="./gerencia.js"></script>
+			
 		</head>
 		<body class="">
 		<div id="FB_HiddenContainer" style="position:absolute; top:-10000px; width:0px; height:0px;"></div>

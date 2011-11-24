@@ -22,8 +22,9 @@
 			ProductosController::Lista()
 		);
 		
-		$tabla->addOnClick( "id_producto", "(function(a){window.location = '';})", false, true );
+		$tabla->addOnClick( "id_producto", "(function(a){ window.location = 'productos.ver.php?pid=' + a; })" );
 		
+			
 		$page->addComponent( $tabla );
 
 		$page->render();

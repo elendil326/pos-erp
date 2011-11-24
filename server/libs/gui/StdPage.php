@@ -10,9 +10,9 @@ class StdPage implements Page{
 	private $content;
 	private $footer;
 	private $page_title;
+	
 
-
-	function __construct()
+	function __construct(  )
 	{
 
 		//vamos a ver si me enviaron un login
@@ -38,6 +38,8 @@ class StdPage implements Page{
 		$this->footer 	= "";
 		$this->page_title = "POS ERP";
 	}
+
+
 
 	public function addJs( $url )
 	{

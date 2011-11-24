@@ -6,13 +6,13 @@ RewriteEngine on
 Options +FollowSymlinks 
 #-Indexes
 
-RewriteRule ^([0-9]*)/ingenieria/(.*\.php)?(.*)$	__instance__/ingenieria/$2?_instance_=$1&$3 [L]
+RewriteRule ^([0-9]*)/ingenieria/(.*\.php)?(.*)$	__instance__/ingenieria/$2?_instance_=$1&%{QUERY_STRING} [L]
 
 
 RewriteRule ^([0-9]*)/gerencia/gerencia.js$			__instance__/gerencia/gerencia.js [L]
-RewriteRule ^([0-9]*)/gerencia/(.*\.php)?(.*)$		__instance__/gerencia/$2?_instance_=$1&$3 [L]
+RewriteRule ^([0-9]*)/gerencia/(.*\.php)?(.*)$		__instance__/gerencia/$2?_instance_=$1&%{QUERY_STRING} [L]
 
-RewriteRule ^([0-9]*)/api/(.*)$				__instance__/api/$2/?_instance_=$1&%{QUERY_STRING} [L]
+RewriteRule ^([0-9]*)/api/(.*)$						__instance__/api/$2/?_instance_=$1&%{QUERY_STRING} [L]
 
 
 RewriteRule ^([0-9]*)/$ 				__instance__/?_instance_=$1

@@ -17,6 +17,39 @@ class StdComponentPage extends StdPage{
 		
 	}
 
+	public function requireParam(  $param_name, $method = "GET", $on_error_message = "ERROR" ) 
+	{
+		switch( $method ){
+			case "GET" : 
+				if(!isset($_GET[$param_name])){
+					
+					$this->components = array(
+						new TitleComponent("Error", 2),
+						new TitleComponent( $on_error_message , 4)
+					);
+					
+					if( isset($_SERVER['HTTP_REFERER'])){
+						array_push(
+								$this->components,
+								new TitleComponent( "Regrese a <a href='".$_SERVER['HTTP_REFERER']."'>la pagina anterior.</a>", 4)
+							);
+					}
+					
+					$this->render();
+					exit;
+				}
+			break;
+			case "POST":
+				if(!isset($_POST[$param_name])){
+				
+				}
+			break;
+			default:
+				throw new Exception("Invalid method. Should be POST or GET");
+		}
+
+	}
+
 	public function addComponent( $cmp )
 	{
 		if( $cmp instanceof GuiComponent ){
