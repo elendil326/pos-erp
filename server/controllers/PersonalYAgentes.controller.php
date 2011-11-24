@@ -1428,7 +1428,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 //Se traen todos los roles d ela base de datos.
 		$roles = RolDAO::getAll(null,null,$orden);
                 Logger::log("Lista de roles obtenida con ".count($roles)." elementos");
-  		return array( "roles" => $roles );
+  		return $roles;
 	}
   
 	/**
