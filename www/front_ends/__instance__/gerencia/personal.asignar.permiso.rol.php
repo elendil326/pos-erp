@@ -11,7 +11,7 @@
                 //titulos
 	$page->addComponent( new TitleComponent( "Asignacion de permiso a un rol" ) );
 
-	//forma de nuevo cliente
+	//forma de asignacion de permiso a un rol
 	$form = new DAOFormComponent( array( new Rol(), new Permiso() ) );
 	
 	$form->hideField( array( 
