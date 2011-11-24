@@ -19,7 +19,7 @@ class MenuComponent implements GuiComponent
 
 	function renderCmp()
 	{
-		$out = "<div>";
+		$out = "<div style='margin-bottom: 5px'>";
 		foreach($this->items as $item)
 		{
 			$out .= "<a href=". $item->url ."><div class='POS Boton' >" . $item->caption . "</div></a>";

@@ -6,12 +6,17 @@
 
 	$page = new GerenciaComponentPage();
 
+	//
+	// Titulo
+	// 
 	$page->addComponent( new TitleComponent( "Nuevo Producto" , 2 ));
 
-	$form = new DAOFormComponent( new  Producto() );
 
+	//
+	// Forma de nuevo producto
+	// 
+	$form = new DAOFormComponent( new  Producto() );
 	$form->addApiCall("api/producto/nuevo/", "GET");
-	
 	$form->onApiCallSuccessRedirect( "productos.lista.php" );
 	
 	$form->hideField( array( 
@@ -29,7 +34,10 @@
 		));
 	
     $form->createComboBoxJoin("id_unidad", "nombre", UnidadDAO::search( new Unidad( array( "activa" => 1 ) ) ));
-        
 	$page->addComponent( $form );
 
+
+	//
+	// Render the page
+	// 
 	$page->render();

@@ -73,7 +73,7 @@ html body{background:#e7e7e7}
 .dialog_body .code input,.dialog_body .code textarea{width:600px;font:12px monospace}
 .LDialog_DeveloperPluginCode .pop_container,.LDialog_DeveloperPluginCode .pop_container_advanced{width:630px}
 .LDialog_DeveloperPluginCode label{margin:5px;font-size: 12px}
-.devsitePage .body > .content{background:#fff;border:1px solid #d9d9d9;border-top:0;-webkit-box-shadow:#ddd 0 1px 1px;padding:75px 20px 20px}
+.devsitePage .body > .content{background:#fff;border:1px solid #d9d9d9;border-top:0;-webkit-box-shadow:#ddd 0 1px 1px;padding:55px 20px 20px}
 .devsitePage .nav > .content{background:#fff url(../media/coK3kMStN_j.gif) repeat-y}
 .devsitePage .body ol,.devsitePage .body ul{list-style-type:disc;padding-left:3em}
 .devsitePage .body .uiSelector ul,.devsitePage .body ul.uiList{list-style-type:none;margin:0;padding-left:0}
