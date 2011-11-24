@@ -64,22 +64,23 @@ class FormComponent implements GuiComponent{
 			$html .= "function getParams(){";
 			
 			$html .= "var p = {};";
+			$html .= "var found=false;";			
 				foreach( $this->form_fields as $f )
 				{
-					//$html .= "console.log('". $f->id . "', Ext.get('". $f->id . "').getValue() );";
+
 					$html .= "if( Ext.get('". $f->id . "').getValue().length > 0 ){ p." . $f->id . " = Ext.get('". $f->id . "').getValue() ; } else{" ;
 						//else si no esta lleno de datos, vamos a buscarlo en los obligatorios, 
 						//si esta en los obligatorios entonces mandamos el error
 						$html .= "for (var i = obligatory.length - 1; i >= 0; i--){";
 						$html .= "	if(obligatory[i] == '". $f->id . "') {";
-						$html .= "		/*alert('campo obligatorio' + obligatory[i]);*/";
-						$html .= "		Ext.get('". $f->id . "').highlight('#ee0000');";
-						$html .= "		return;";
+						$html .= "		found = true;";
+						$html .= "		Ext.get('". $f->id . "').highlight('#DD4B39');";
 						$html .= "	}";
 						$html .= "};";
+						$html .= "";
 					$html .= "}" ;
 				}
-			$html .= "sendToApi(p);";
+			$html .= "if(!found) sendToApi(p);";
 			$html .= "}";
 			
 			$html .= "function sendToApi( params ){";
@@ -182,14 +183,14 @@ class FormComponent implements GuiComponent{
 		if( !is_null ( $this->on_click 		) ){
 			$html .= "<td>";
 			$html .= "</td><td align=right>";
-			$html .= "<input value='" . $this->on_click["caption"] .  "' type='button' onClick='". $this->on_click["function"] ."' >";
+			$html .= "<div class='POS Boton' onClick='". $this->on_click["function"] ."' >".$this->on_click["caption"]."</div>";
 			$html .= "</td></tr>";
 		}
 
 		if( !is_null ( $this->send_to_api	) ){
 			$html .= "<td>";
 			$html .= "</td><td align=right>";
-			$html .= "<input value='Aceptar' type='button' onClick='getParams()' >";
+			$html .= "<div class='POS Boton OK' onClick='getParams()'  >Aceptar</div>";			
 			$html .= "</td></tr>";			
 			
 		}

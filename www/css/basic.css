@@ -346,7 +346,12 @@ img.tracking_pixel{height:1px;position:absolute;visibility:hidden;width:1px}
 
 
 
-
+.POS.Boton.OK{
+	border: 1px solid #29691D;
+	color: white;
+	text-shadow: 0 1px rgba(0, 0, 0, 0.1);
+	background: #3D9400;
+}
 
 
 .POS.Boton {

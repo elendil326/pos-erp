@@ -21,7 +21,7 @@
 			EmpresasController::Lista()
 		);
 		
-		$tabla->addOnClick( "id_empresa", "(function(a){window.location = '';})", false, true );
+		$tabla->addOnClick( "id_empresa", "(function(a){window.location = 'empresas.ver.php?eid='+a;})" );
 		
 		$page->addComponent( $tabla );
 		
