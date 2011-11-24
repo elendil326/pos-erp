@@ -13,10 +13,10 @@
 		
 		$tabla = new TableComponent( 
 			array(
-				"nombre" => "nombre",
-				"descripcion"	=> "descripcion",
-				"descuento" 		=> "desuento",
-				"salario" 			=> "salario"
+				"nombre" => "Nombre",
+				"descripcion"	=> "Descripcion",
+				"descuento" 		=> "Desuento",
+				"salario" 			=> "Salario"
 			),
                          PersonalYAgentesController::ListaRol()
 		);
