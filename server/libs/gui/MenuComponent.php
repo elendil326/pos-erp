@@ -22,7 +22,7 @@ class MenuComponent implements GuiComponent
 		$out = "<div>";
 		foreach($this->items as $item)
 		{
-			$out .= "&nbsp;&nbsp;<span><a href=". $item->url .">" . $item->caption . "</a></span>";
+			$out .= "<a href=". $item->url ."><div class='POS Boton' >" . $item->caption . "</div></a>";
 		}
 		$out .= "</div>";
 		return $out;
