@@ -5,11 +5,11 @@
 # *******************************
 # LOGS
 # *******************************
-$POS_CONFIG["LOG_TO_FILE"] 		= true;
-$POS_CONFIG["LOG_ACCESS_FILE"] 	= "/var/log/mx.caffeina.pos/access.log";
-$POS_CONFIG["LOG_ERROR_FILE"] 	= "/var/log/mx.caffeina.pos/error.log";
+$POS_CONFIG["LOG_TO_FILE"]      = true;
+$POS_CONFIG["LOG_ACCESS_FILE"] 	= "C:\\wamp\\www\\pos\\branches\\v1_5\\server\\log.txt";
+$POS_CONFIG["LOG_ERROR_FILE"] 	= "C:\\wamp\\www\\pos\\branches\\v1_5\\server\\log.txt";
 $POS_CONFIG["LOG_TRACKBACK"] 	= false;
-$POS_CONFIG["LOG_DB_QUERYS"] 	= true;
+$POS_CONFIG["LOG_DB_QUERYS"] 	= false;
 
 
 # *******************************

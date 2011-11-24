@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 21-11-2011 a las 19:47:16
+-- Tiempo de generación: 24-11-2011 a las 16:01:04
 -- Versión del servidor: 5.1.53
 -- Versión de PHP: 5.3.4
 
@@ -111,7 +111,7 @@ CREATE TABLE IF NOT EXISTS `almacen` (
   `activo` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Si el almacen esta activo o no',
   PRIMARY KEY (`id_almacen`),
   KEY `id_tipo_almacen` (`id_tipo_almacen`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
 
 -- --------------------------------------------------------
 
@@ -153,7 +153,7 @@ CREATE TABLE IF NOT EXISTS `billete` (
   `foto_billete` varchar(100) DEFAULT NULL COMMENT 'Url de la foto del billete',
   `activo` tinyint(1) NOT NULL COMMENT 'Si este billete esta activo o ya no se usa',
   PRIMARY KEY (`id_billete`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Billetes para llevar control en la caja' AUTO_INCREMENT=11 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Billetes para llevar control en la caja' AUTO_INCREMENT=12 ;
 
 -- --------------------------------------------------------
 
@@ -229,7 +229,7 @@ CREATE TABLE IF NOT EXISTS `caja` (
   `activa` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Si la caja esta activa o ha sido eliminada',
   PRIMARY KEY (`id_caja`),
   KEY `id_sucursal` (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
 
 -- --------------------------------------------------------
 
@@ -351,7 +351,7 @@ CREATE TABLE IF NOT EXISTS `clasificacion_cliente` (
   `margen_utilidad` float DEFAULT NULL COMMENT 'Margen de utilidad que se le obtendra a los productos al venderle a este tipo de cliente',
   `descuento` float DEFAULT NULL COMMENT 'Porcentaje de descuento que se le dara a este tipo de cliente',
   PRIMARY KEY (`id_clasificacion_cliente`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 -- --------------------------------------------------------
 
@@ -368,7 +368,7 @@ CREATE TABLE IF NOT EXISTS `clasificacion_producto` (
   `margen_utilidad` float DEFAULT NULL COMMENT 'Margen de utilidad que aplicara a todos los productos de esta clasificacion de productos',
   `descuento` float DEFAULT NULL COMMENT 'Descuento que se apicar a esta clasificaciond e producto',
   PRIMARY KEY (`id_clasificacion_producto`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
 
 -- --------------------------------------------------------
 
@@ -399,7 +399,7 @@ CREATE TABLE IF NOT EXISTS `clasificacion_servicio` (
   `descuento` float DEFAULT NULL COMMENT 'Porcentaje del descuento que se aplciara a los servicios de esta clasificacion',
   `activa` tinyint(1) NOT NULL COMMENT 'Si esta categoria de servicio esta fija o no',
   PRIMARY KEY (`id_clasificacion_servicio`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 -- --------------------------------------------------------
 
@@ -608,7 +608,7 @@ CREATE TABLE IF NOT EXISTS `direccion` (
   `id_usuario_ultima_modificacion` int(11) NOT NULL COMMENT 'quien fue el usuario que modifico este registro la ultima vez',
   PRIMARY KEY (`id_direccion`),
   KEY `id_ciudad` (`id_ciudad`,`id_usuario_ultima_modificacion`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=18 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=34 ;
 
 -- --------------------------------------------------------
 
@@ -677,7 +677,7 @@ CREATE TABLE IF NOT EXISTS `empresa` (
   `margen_utilidad` float DEFAULT NULL COMMENT 'Porcentaje del margen de utilidad que esta empresa le gana a todos sus productos',
   `descuento` float DEFAULT NULL COMMENT 'Descuento que se aplicara a todos los productos de esta empresa',
   PRIMARY KEY (`id_empresa`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='tabla de empresas' AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='tabla de empresas' AUTO_INCREMENT=10 ;
 
 -- --------------------------------------------------------
 
@@ -969,7 +969,7 @@ CREATE TABLE IF NOT EXISTS `orden_de_servicio` (
   `motivo_cancelacion` varchar(255) DEFAULT NULL COMMENT 'Motivo por la cual fue cancelada la orden',
   `adelanto` float NOT NULL COMMENT 'Cantidad de dinero pagada por adelantado',
   PRIMARY KEY (`id_orden_de_servicio`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 -- --------------------------------------------------------
 
@@ -997,7 +997,7 @@ CREATE TABLE IF NOT EXISTS `paquete` (
   `margen_utilidad` float DEFAULT NULL COMMENT 'Margen de utilidad que se obtendra al vender este paquete',
   `descuento` float DEFAULT NULL COMMENT 'Descuento que se aplciara a este paquete',
   `foto_paquete` varchar(255) DEFAULT NULL COMMENT 'Url de la foto del paquete',
-  `costo_estandar` float NOT NULL COMMENT 'Costo estandar del paquete',
+  `costo_estandar` float DEFAULT NULL COMMENT 'Costo estandar del paquete',
   `precio` float DEFAULT NULL COMMENT 'Precio dijo del paquete',
   `activo` tinyint(1) NOT NULL COMMENT 'Si el paquete esta activo o no',
   PRIMARY KEY (`id_paquete`)
@@ -1238,7 +1238,7 @@ CREATE TABLE IF NOT EXISTS `producto` (
   `id_unidad` int(11) DEFAULT NULL COMMENT 'Id de la unidad en la que usualmente se maneja este producto',
   `precio` float DEFAULT NULL COMMENT 'El precio fijo del producto',
   PRIMARY KEY (`id_producto`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
 
 -- --------------------------------------------------------
 
@@ -1485,7 +1485,7 @@ CREATE TABLE IF NOT EXISTS `rol` (
   `descuento` float DEFAULT NULL COMMENT 'Porcentaje del descuento del que gozaran los usuarios de este rol',
   `salario` float DEFAULT NULL COMMENT 'Si los usuarios con dicho rol contaran con un salario',
   PRIMARY KEY (`id_rol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
 
 -- --------------------------------------------------------
 
@@ -1540,7 +1540,7 @@ CREATE TABLE IF NOT EXISTS `servicio` (
   `foto_servicio` varchar(50) DEFAULT NULL COMMENT 'Url de la foto del servicio',
   `precio` float DEFAULT NULL COMMENT 'El precio fijo del servicio',
   PRIMARY KEY (`id_servicio`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=14 ;
 
 -- --------------------------------------------------------
 
@@ -1602,7 +1602,7 @@ CREATE TABLE IF NOT EXISTS `sucursal` (
   `margen_utilidad` float DEFAULT NULL COMMENT 'POrcentaje del margen de utilidad que esta sucursal le gana a todos los productos que ofrece',
   `descuento` float DEFAULT NULL COMMENT 'Descuento que se aplicara a todos los productos de esta sucursal',
   PRIMARY KEY (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='tabla de sucursales' AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='tabla de sucursales' AUTO_INCREMENT=21 ;
 
 -- --------------------------------------------------------
 
@@ -1680,7 +1680,7 @@ CREATE TABLE IF NOT EXISTS `unidad` (
   `es_entero` tinyint(1) NOT NULL COMMENT 'Si esta unidad manejara sus cantidades como enteras o como flotantes',
   `activa` tinyint(1) NOT NULL COMMENT 'Si esta unidad esa activa o no',
   PRIMARY KEY (`id_unidad`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='tabla de unidades (kilos, litros, libras, cajas, arpillas))' AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='tabla de unidades (kilos, litros, libras, cajas, arpillas))' AUTO_INCREMENT=6 ;
 
 -- --------------------------------------------------------
 
@@ -1744,7 +1744,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `tiempo_entrega` int(11) DEFAULT NULL COMMENT 'Tiempo de entrega del proveedor en días',
   `cuenta_bancaria` varchar(50) DEFAULT NULL COMMENT 'Cuenta bancaria del usuario',
   PRIMARY KEY (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='tabla de usuarios' AUTO_INCREMENT=9 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='tabla de usuarios' AUTO_INCREMENT=13 ;
 
 -- --------------------------------------------------------
 

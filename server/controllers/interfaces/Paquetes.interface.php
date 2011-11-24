@@ -120,16 +120,12 @@
   static function Nuevo
 	(
 		$nombre, 
-		$empresas, 
-		$sucursales, 
-		$productos = null, 
-		$servicios = null, 
 		$descripcion = null, 
-		$margen_utilidad = null, 
 		$descuento = null, 
-		$foto_paquete = null,
-                $costo_estandar = null,
-                $precio = null
+		$precio = null, 
+		$foto_paquete = null, 
+		$costo_estandar = null, 
+		$margen_utilidad = null
 	);  
   
   

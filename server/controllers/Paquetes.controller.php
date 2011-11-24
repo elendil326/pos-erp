@@ -307,16 +307,12 @@ require_once("interfaces/Paquetes.interface.php");
 	public static function Nuevo
 	(
 		$nombre, 
-		$empresas, 
-		$sucursales, 
-		$productos = null, 
-		$servicios = null, 
 		$descripcion = null, 
-		$margen_utilidad = null, 
 		$descuento = null, 
-		$foto_paquete = null,
-                $costo_estandar = null,
-                $precio = null
+		$precio = null, 
+		$foto_paquete = null, 
+		$costo_estandar = null, 
+		$margen_utilidad = null
 	)
 	{  
             Logger::log("Creando nuevo paquete");
@@ -348,78 +344,78 @@ require_once("interfaces/Paquetes.interface.php");
             try
             {
                 PaqueteDAO::save($paquete);
-                foreach($empresas as $empresa)
-                {
-                    $validar = self::validarParametrosPaqueteEmpresa($empresa["id_empresa"],$empresa["precio_utilidad"],$empresa["es_margen_utilidad"]);
-                    if(is_string($validar))
-                        throw new Exception($validar);
-                    
-                   $paquete_empresa = new PaqueteEmpresa( array(  
-                       
-                                                                "id_paquete"        => $paquete->getIdPaquete(),
-                                                                "id_empresa"        => $empresa["id_empresa"],
-                                                                "precio_utilidad"   => $empresa["precio_utilidad"],
-                                                                "es_margen_utilidad"=> $empresa["es_margen_utilidad"]
-                       
-                                                                ) 
-                                                               );
-                    PaqueteEmpresaDAO::save($paquete_empresa);
-                }/* Fin foreach de empresas */
+//                foreach($empresas as $empresa)
+//                {
+//                    $validar = self::validarParametrosPaqueteEmpresa($empresa["id_empresa"],$empresa["precio_utilidad"],$empresa["es_margen_utilidad"]);
+//                    if(is_string($validar))
+//                        throw new Exception($validar);
+//                    
+//                   $paquete_empresa = new PaqueteEmpresa( array(  
+//                       
+//                                                                "id_paquete"        => $paquete->getIdPaquete(),
+//                                                                "id_empresa"        => $empresa["id_empresa"],
+//                                                                "precio_utilidad"   => $empresa["precio_utilidad"],
+//                                                                "es_margen_utilidad"=> $empresa["es_margen_utilidad"]
+//                       
+//                                                                ) 
+//                                                               );
+//                    PaqueteEmpresaDAO::save($paquete_empresa);
+//                }/* Fin foreach de empresas */
                 
-                foreach($sucursales as $sucursal)
-                {
-                    $validar = self::validarParametrosPaqueteSucursal($sucursal["id_sucursal"],$sucursal["precio_utilidad"],$sucursal["es_margen_utilidad"]);
-                    if(is_string($validar))
-                        throw new Exception($validar);
-                    
-                   $paquete_sucursal = new PaqueteSucursal( array(  
-                       
-                                                                "id_paquete"        => $paquete->getIdPaquete(),
-                                                                "id_sucursal"       => $sucursal["id_sucursal"],
-                                                                "precio_utilidad"   => $sucursal["precio_utilidad"],
-                                                                "es_margen_utilidad"=> $sucursal["es_margen_utilidad"]
-                       
-                                                                ) 
-                                                               );
-                    PaqueteSucursalDAO::save($paquete_sucursal);
-                }/* Fin foreach de sucursales */
+//                foreach($sucursales as $sucursal)
+//                {
+//                    $validar = self::validarParametrosPaqueteSucursal($sucursal["id_sucursal"],$sucursal["precio_utilidad"],$sucursal["es_margen_utilidad"]);
+//                    if(is_string($validar))
+//                        throw new Exception($validar);
+//                    
+//                   $paquete_sucursal = new PaqueteSucursal( array(  
+//                       
+//                                                                "id_paquete"        => $paquete->getIdPaquete(),
+//                                                                "id_sucursal"       => $sucursal["id_sucursal"],
+//                                                                "precio_utilidad"   => $sucursal["precio_utilidad"],
+//                                                                "es_margen_utilidad"=> $sucursal["es_margen_utilidad"]
+//                       
+//                                                                ) 
+//                                                               );
+//                    PaqueteSucursalDAO::save($paquete_sucursal);
+//                }/* Fin foreach de sucursales */
                 
-                if(!is_null($productos))
-                {
-                    $producto_paquete = new ProductoPaquete( array( "id_paquete" => $paquete->getIdPaquete() ) );
-                    foreach($productos as $producto)
-                    {
-                        $validar = self::validarParametrosProductoPaquete($producto["id_producto"], $producto["id_unidad"], $producto["cantidad"]);
-                        if(is_string($validar))
-                            throw new Exception($validar);
-                        
-                        $producto_paquete->setIdProducto($producto["id_producto"]);
-                        $producto_paquete->setIdUnidad($producto["id_unidad"]);
-                        $producto_paquete->setCantidad($producto["cantidad"]);
-                        ProductoPaqueteDAO::save($producto_paquete);
-                    }
-                }/* Fin if de productos */
+//                if(!is_null($productos))
+//                {
+//                    $producto_paquete = new ProductoPaquete( array( "id_paquete" => $paquete->getIdPaquete() ) );
+//                    foreach($productos as $producto)
+//                    {
+//                        $validar = self::validarParametrosProductoPaquete($producto["id_producto"], $producto["id_unidad"], $producto["cantidad"]);
+//                        if(is_string($validar))
+//                            throw new Exception($validar);
+//                        
+//                        $producto_paquete->setIdProducto($producto["id_producto"]);
+//                        $producto_paquete->setIdUnidad($producto["id_unidad"]);
+//                        $producto_paquete->setCantidad($producto["cantidad"]);
+//                        ProductoPaqueteDAO::save($producto_paquete);
+//                    }
+//                }/* Fin if de productos */
                 
-                if(!is_null($servicios))
-                {
-                    $orden_de_servicio_paquete = new OrdenDeServicioPaquete( array( "id_paquete" => $paquete->getIdPaquete() ) );
-                    foreach($servicios as $servicio)
-                    {
-                        $serv = ServicioDAO::getByPK($servicio["id_servicio"]);
-                        if(is_null($serv))
-                            throw new Exception("El servicio ".$servicio["id_servicio"]." no existe");
-                        
-                        if(!$serv->getActivo())
-                            throw new Exception("El servicio ".$servicio["id_servicio"]." no esta activo");
-                        
-                        if(is_string($validar = self::validarNumero($servicio["cantidad"], 1.8e200, "cantidad")))
-                                throw new Exception($validar);
-                        
-                        $orden_de_servicio_paquete->setIdServicio($servicio["id_servicio"]);
-                        $orden_de_servicio_paquete->setCantidad($servicio["cantidad"]);
-                        OrdenDeServicioPaqueteDAO::save($orden_de_servicio_paquete);
-                    }
-                }/* Fin if de servicios */
+//                if(!is_null($servicios))
+//                {
+//                    $orden_de_servicio_paquete = new OrdenDeServicioPaquete( array( "id_paquete" => $paquete->getIdPaquete() ) );
+//                    foreach($servicios as $servicio)
+//                    {
+//                        $serv = ServicioDAO::getByPK($servicio["id_servicio"]);
+//                        if(is_null($serv))
+//                            throw new Exception("El servicio ".$servicio["id_servicio"]." no existe");
+//                        
+//                        if(!$serv->getActivo())
+//                            throw new Exception("El servicio ".$servicio["id_servicio"]." no esta activo");
+//                        
+//                        if(is_string($validar = self::validarNumero($servicio["cantidad"], 1.8e200, "cantidad")))
+//                                throw new Exception($validar);
+//                        
+//                        $orden_de_servicio_paquete->setIdServicio($servicio["id_servicio"]);
+//                        $orden_de_servicio_paquete->setCantidad($servicio["cantidad"]);
+//                        OrdenDeServicioPaqueteDAO::save($orden_de_servicio_paquete);
+//                    }
+//                }/* Fin if de servicios */
             }
             catch(Exception $e)
             {
