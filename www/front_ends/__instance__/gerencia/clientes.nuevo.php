@@ -21,7 +21,6 @@
 			"id_sucursal",
 			"id_rol",	
 			"id_clasificacion_proveedor",	
-			"id_moneda",
 			"fecha_asignacion_rol",
 			"comision_ventas",
 			"fecha_alta"	,
@@ -34,13 +33,27 @@
 			"dias_de_embarque",
 			"id_direccion",
 			"ultima_modificacion",
-			"id_usuario_ultima_modificacion"
+			"id_usuario_ultima_modificacion",
+                        "consignatario",
+                        "facturar_a_terceros",
+                        "dia_de_revision",
+                        "tiempo_entrega",
+                        "ventas_a_credito",
+                        "intereses_moratorios",
+                        "cuenta_bancaria",
+                        "dias_de_credito"
 		 ));
-
+        
+        $form->createComboBoxJoin( "id_moneda", "nombre", MonedaDAO::search( new Moneda(array("activa" => 1)) ) );
+        $form->createComboBoxJoin( "id_clasificacion_cliente", "nombre", ClasificacionClienteDAO::getAll( ) );
 
 	$form->renameField( array( 
 			"nombre" 			=> "razon_social",
-			"codigo_usuario"	=> "codigo_cliente"
+			"codigo_usuario"	=> "codigo_cliente",
+                        "telefono"          => "telefono1",
+                        "correo_electronico"    => "email",
+                        "id_clasificacion_cliente"  => "clasificacion_cliente",
+                        "id_moneda"     => "moneda_del_cliente"
 		));
 	
 	$form->addApiCall( "api/cliente/nuevo/" );
@@ -53,7 +66,6 @@
 		));
 	
 	$form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll( ) );
-	$form->createComboBoxJoin( "id_clasificacion_cliente", "nombre", ClasificacionClienteDAO::getAll( ) );
 	
 	$page->addComponent( $form );
 
