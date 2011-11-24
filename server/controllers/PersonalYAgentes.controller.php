@@ -1911,7 +1911,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             else
                 $permisos_roles = PermisoRolDAO::getAll();
             Logger::log("Lista de roles con sus permisos obtenida exitosamente con ".count($permisos_roles)." elementos");
-            return array( "permisos_roles" => $permisos_roles);
+            return $permisos_roles;
 	}
 
         public static function ListaPermisoUsuario
@@ -1929,6 +1929,6 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             else
                 $permisos_usuario = PermisoUsuarioDAO::getAll();
             Logger::log("Lista de usuarios con sus permisos obtenida exitosamente con ".count($permisos_usuario)." elementos");
-            return array( "permisos_usuario" => $permisos_usuario);
+            return $permisos_usuario;
         }
   }
