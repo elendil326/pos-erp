@@ -12,12 +12,12 @@
 		// Parametros necesarios
 		// 
 		$page->requireParam(  "pid", "GET", "Este producto no existe." );
-		$este_producto = ProductoDAO::getByPK( $_GET["pid"] );
+		$este_rol = ProductoDAO::getByPK( $_GET["pid"] );
 		
 		//
 		// Titulo de la pagina
 		// 
-		$page->addComponent( new TitleComponent( "Detalles de " . $este_producto->getNombreProducto() , 2 ));
+		$page->addComponent( new TitleComponent( "Detalles de " . $este_rol->getNombreProducto() , 2 ));
 
 		
 		//
@@ -31,7 +31,7 @@
 		//
 		// Forma de producto
 		// 
-		$form = new DAOFormComponent( $este_producto );
+		$form = new DAOFormComponent( $este_rol );
 		$form->hideField( array( 
 				"id_producto",
 			 ));

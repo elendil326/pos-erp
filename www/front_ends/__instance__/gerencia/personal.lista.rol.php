@@ -21,7 +21,7 @@
                          PersonalYAgentesController::ListaRol()
 		);
 		
-		$tabla->addOnClick( "nombre", "(function(a){window.location = '';})", false, true );
+		$tabla->addOnClick( "id_rol", "(function(a){window.location = 'personal.rol.ver.php?pid=' + a;})", false, true );
 		
 		$page->addComponent( $tabla );
                 
