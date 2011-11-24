@@ -13,7 +13,6 @@
 		
 		$tabla = new TableComponent( 
 			array(
-				"id_producto" 	=> "id_producto",
 				"codigo_producto" => "codigo_producto",
 				"nombre_producto"	=> "nombre_producto",
 				"descripcion" 		=> "descripcion",
