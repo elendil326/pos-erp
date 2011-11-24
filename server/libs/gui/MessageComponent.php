@@ -9,7 +9,7 @@ class MessageComponent implements GuiComponent{
 	}
 	
 	function renderCmp(){
-		return "<div align=center>" . $this->msg . "</div>";
+		return "<p >" . $this->msg . "</p>";
 	}
 
 

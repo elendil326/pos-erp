@@ -22,5 +22,7 @@
 		);
 		
 		$tabla->addOnClick( "id_empresa", "(function(a){window.location = '';})", false, true );
+		
 		$page->addComponent( $tabla );
+		
 		$page->render();

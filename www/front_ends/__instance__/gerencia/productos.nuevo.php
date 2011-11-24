@@ -12,8 +12,8 @@
 
 	$form->addApiCall("api/producto/nuevo/", "GET");
 	
-	$form->onApiCallSuccess("console.log" );
-
+	$form->onApiCallSuccessRedirect( "productos.lista.php" );
+	
 	$form->hideField( array( 
 			"id_producto",
 		 ));

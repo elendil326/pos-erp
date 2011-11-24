@@ -8,11 +8,17 @@ class FormComponent implements GuiComponent{
 	protected 	$send_to_api;
 	private 	$send_to_api_http_method;
 	private		$send_to_api_callback;
+	private 	$send_to_api_redirect;
+	
+	
 	function __construct(  ){
 		
 		$this->send_to_api 		= null;
 		$this->on_click 		= null;
 	 	$this->submit_form 		= null;
+		$this->send_to_api_callback = null;
+		$this->send_to_api_redirect = null;	
+		
 		$this->form_fields      = array(  );
 	}
 
@@ -83,8 +89,14 @@ class FormComponent implements GuiComponent{
 			$html.= "			";
 			$html.= "			/* remove unload event */";			
 			$html.= "			window.onbeforeunload = function(){ return;	};";			
-			$html.= "			console.log('OKAY');";
-			$html.= "			" . $this->send_to_api_callback . "( a );";
+			$html.= "				/* console.log('OKAY'); */ ";
+
+			if( !is_null($this->send_to_api_callback) )
+				$html.= "			" . $this->send_to_api_callback . "( a );";
+			
+			if( !is_null($this->send_to_api_redirect) )
+				$html.= "			window.location = '".$this->send_to_api_redirect."';";
+				
 			$html.= "			";
 			$html.= "			";									
 			$html.= "	 	}";
@@ -214,7 +226,15 @@ class FormComponent implements GuiComponent{
 	public function onApiCallSuccess( $jscallback ){
 		$this->send_to_api_callback = $jscallback;
 	}
-
+	
+	/**
+	 * 
+	 * Redirect to a new page on apicall sucess
+	 * 
+	 * */
+	public function onApiCallSuccessRedirect( $url, $send_param = null ){
+		$this->send_to_api_redirect = $url;		
+	}
 	public function renameField( $field_array ){
 		
 		$found = false;

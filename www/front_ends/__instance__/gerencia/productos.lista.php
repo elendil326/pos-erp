@@ -8,4 +8,22 @@
 
 		$page = new GerenciaComponentPage();
 
+		$page->addComponent( new TitleComponent( "Productos" ) );
+		$page->addComponent( new MessageComponent( "Lista de productos en sus empresas" ) );
+		
+		$tabla = new TableComponent( 
+			array(
+				"id_producto" 	=> "id_producto",
+				"codigo_producto" => "codigo_producto",
+				"nombre_producto"	=> "nombre_producto",
+				"descripcion" 		=> "descripcion",
+				"activo" 			=> "activo"
+			),
+			ProductosController::Lista()
+		);
+		
+		$tabla->addOnClick( "id_producto", "(function(a){window.location = '';})", false, true );
+		
+		$page->addComponent( $tabla );
+
 		$page->render();
