@@ -29,7 +29,7 @@
                 $tabla->addColRender("id_almacen_envia", "funcion_almacen");
                 $tabla->addColRender("id_almacen_recibe", "funcion_almacen");
                 
-		$tabla->addOnClick( "id_traspaso", "(function(a){window.location = 'sucursales.almacen.ver.php?tid='+a;})" );
+		$tabla->addOnClick( "id_traspaso", "(function(a){window.location = 'sucursales.traspaso.ver.php?tid='+a;})" );
 		
 		$page->addComponent( $tabla );
                 

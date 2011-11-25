@@ -943,6 +943,10 @@ class GerenciaComponentPage extends StdComponentPage{
                         "url"   : "sucursales.eliminar.caja.php"
                 },
                 {
+                        "title" : "Lista caja",
+                        "url"   : "sucursales.lista.caja.php"
+                },
+                {
                         "title" : "Nueva caja",
                         "url"   : "sucursales.nueva.caja.php"
                 },

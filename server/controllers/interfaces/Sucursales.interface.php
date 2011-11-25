@@ -378,7 +378,24 @@ Creo que este metodo tiene que estar bajo sucursal.
   static function EliminarCaja
 	(
 		$id_caja
-	);  
+	);    
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Lista las cajas. Se puede filtrar por la sucursal a la que pertenecen.
+ 	 *
+ 	 * @param id_sucursal int Sucursal de la cual se listaran sus cajas
+ 	 * @param activa bool Valor de activa de las cajas que se listaran
+ 	 * @return cajas json Objeto que contendra la lista de cajas
+ 	 **/
+  static function ListaCaja
+	(
+		$id_sucursal = null, 
+		$activa = null
+	); 
   
   
 	

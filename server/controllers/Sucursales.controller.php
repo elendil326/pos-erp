@@ -4058,4 +4058,35 @@ Creo que este metodo tiene que estar bajo sucursal.
             DAO::transEnd();
             Logger::log("Traspaso editado correctamente");
 	}
+  
+	/**
+ 	 *
+ 	 *Lista las cajas. Se puede filtrar por la sucursal a la que pertenecen.
+ 	 *
+ 	 * @param id_sucursal int Sucursal de la cual se listaran sus cajas
+ 	 * @param activa bool Valor de activa de las cajas que se listaran
+ 	 * @return cajas json Objeto que contendra la lista de cajas
+ 	 **/
+	public static function ListaCaja
+	(
+		$id_sucursal = null, 
+		$activa = null
+	)
+	{  
+            Logger::log("Listando cajas");
+            //Se validan los parametros
+            $validar = self::validarParametrosCaja(null,$id_sucursal,null,null,null,null,null,$activa);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            //Si no se reciben parametros, se llama a todas las cajas
+            if(is_null($id_sucursal) && is_null($activa) )
+                $cajas = CajaDAO::getAll ();
+            else
+                $cajas = CajaDAO::search(new Caja( array("id_sucursal" => $id_sucursal, "activa" => $activa) ));
+            Logger::log("Se encontraron ".count($cajas)." de cajas");
+            return $cajas;
+	}
   }
