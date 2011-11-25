@@ -33,7 +33,7 @@
                 
                 $tabla->addColRender("id_rol", "funcion_rol");
 		
-		$tabla->addOnClick( "id_rol", "(function(a){window.location = 'personal.rol.ver.php?pid=' + a;})", false, true );
+		$tabla->addOnClick( "id_rol", "(function(a){window.location = 'personal.rol.ver.php?rid=' + a;})", false, true );
 		
 		$page->addComponent( $tabla );
                 
