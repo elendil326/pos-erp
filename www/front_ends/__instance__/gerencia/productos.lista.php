@@ -21,6 +21,13 @@
 			ProductosController::Lista()
 		);
 		
+                function funcion_activo( $activo )
+                {
+                    return $activo ? "Activo" : "Inactivo";
+                }
+                
+                $tabla->addColRender("activo", "funcion_activo");
+                
 		$tabla->addOnClick( "id_producto", "(function(a){ window.location = 'productos.ver.php?pid=' + a; })" );
 		
 			
