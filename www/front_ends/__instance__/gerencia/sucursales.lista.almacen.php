@@ -35,9 +35,15 @@
                     return TipoAlmacenDAO::getByPK($id_tipo_almacen) ? TipoAlmacenDAO::getByPK($id_tipo_almacen)->getDescripcion() : "------";
                 }
                 
+                function funcion_activo( $activo )
+                {
+                    return ($activo) ? "Activo" : "Inactivo";
+                }
+                
                 $tabla->addColRender("id_sucursal", "funcion_sucursal");
                 $tabla->addColRender("id_empresa", "funcion_empresa");
                 $tabla->addColRender("id_tipo_almacen", "funcion_tipo_almacen");
+                $tabla->addColRender("activo", "funcion_activo");
                 
 		$tabla->addOnClick( "id_almacen", "(function(a){window.location = 'sucursales.almacen.ver.php?aid='+a;})" );
 		
