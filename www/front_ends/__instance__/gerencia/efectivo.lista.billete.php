@@ -29,7 +29,7 @@
                 
                 $tabla->addColRender("id_moneda", "funcion_moneda");
                 
-		$tabla->addOnClick( "id_billete", "(function(a){ window.location = 'billete.ver.php?bid=' + a; })" );
+		$tabla->addOnClick( "id_billete", "(function(a){ window.location = 'efectivo.billete.ver.php?bid=' + a; })" );
 		
 			
 		$page->addComponent( $tabla );
