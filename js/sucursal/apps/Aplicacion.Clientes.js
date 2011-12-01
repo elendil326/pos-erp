@@ -1343,22 +1343,22 @@ Aplicacion.Clientes.prototype.creditoDeClientesOptionChange = function ( a, v )
 
 
     //fecha
-    Ext.getCmp("Clientes-DetallesVentaCredito").getComponent(0).setValue(venta.fecha);
+    //Ext.getCmp("Clientes-DetallesVentaCredito").getComponent(0).setValue(venta.fecha);
 	
     //sucursal
-    Ext.getCmp("Clientes-DetallesVentaCredito").getComponent(1).setValue(venta.sucursal);
+    Ext.getCmp("Clientes-DetallesVentaCredito").getComponent(0).setValue(venta.sucursal);
 	
     //vendedor
-    Ext.getCmp("Clientes-DetallesVentaCredito").getComponent(2).setValue(venta.cajero);
+    Ext.getCmp("Clientes-DetallesVentaCredito").getComponent(1).setValue(venta.cajero);
 	
     //total
-    Ext.getCmp("Clientes-DetallesVentaCredito").getComponent(3).setValue( POS.currencyFormat(venta.total));
+    Ext.getCmp("Clientes-DetallesVentaCredito").getComponent(2).setValue( POS.currencyFormat(venta.total));
 	
     //abonado
-    Ext.getCmp("Clientes-DetallesVentaCredito").getComponent(4).setValue( POS.currencyFormat(venta.pagado));
+    Ext.getCmp("Clientes-DetallesVentaCredito").getComponent(3).setValue( POS.currencyFormat(venta.pagado));
 
     //saldo
-    Ext.getCmp("Clientes-DetallesVentaCredito").getComponent(5).setValue( POS.currencyFormat(venta.total - venta.pagado));
+    Ext.getCmp("Clientes-DetallesVentaCredito").getComponent(4).setValue( POS.currencyFormat(venta.total - venta.pagado));
 
     //almacenamos el valor de la venta a credito
     Aplicacion.Clientes.currentInstance.detalleVentaCredito = venta;
@@ -2027,7 +2027,7 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
                             type : 'num',
                             submitText : 'Abonar',
                             callback : function(a,b,c){
-                                console.log(a)
+                                if(DEBUG){console.log(a);}
                                 Ext.Msg.confirm("Abono por cantidad", "&iquest; Esta seguro que desea abonar $" + a.value + " pesos a esta cuenta?", function(res){
                                     
                                     if(res == "yes") {
@@ -2044,7 +2044,7 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
             }]
         },{
             xtype: 'fieldset',
-            title: 'Abonar una venta ',
+            title: 'Abonar a una venta',
             id : 'Clientes-SeleccionVentaCredito',
             items: [{
                 id : "Clentes-CreditoVentasLista",
@@ -2062,10 +2062,6 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
             xtype: 'fieldset',
             id : 'Clientes-DetallesVentaCredito',
             items: [
-            new Ext.form.Text({
-                name: 'fecha',
-                label: 'Fecha'
-            }),
             new Ext.form.Text({
                 name: 'sucursal',
                 label: 'Sucursal'
