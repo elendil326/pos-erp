@@ -1263,6 +1263,11 @@ require_once("interfaces/Sucursales.interface.php");
                 //Si la venta es a credito, se modifica el saldo del ejercicio del usuario comprador.
                 else if($tipo_venta=="credito")
                 {
+                    if($usuario->getLimiteCredito()< $usuario->getSaldoDelEjercicio()*-1 + $total)
+                    {
+                        throw new Exception("Esta venta no se puede realizar a credito pues supera el limite de credito del usuario");
+                    }
+                    
                     if(is_null($saldo))
                     {
                         Logger::warn("No se recibio un saldo, se tomara 0 como saldo");
