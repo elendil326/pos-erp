@@ -10,22 +10,41 @@ class FormComponent implements GuiComponent{
 	private		$send_to_api_callback;
 	private 	$send_to_api_redirect;
 	
+	private 	$is_editable;
 	
 	function __construct(  ){
-		
 		$this->send_to_api 		= null;
 		$this->on_click 		= null;
 	 	$this->submit_form 		= null;
 		$this->send_to_api_callback = null;
 		$this->send_to_api_redirect = null;	
 		
+		//defaults
+		$this->is_editable 		= true;
 		$this->form_fields      = array(  );
 	}
 
+
+	/**
+	 * 
+	 * 
+	 * */
+	public function setEditable( $editable ){
+		$this->is_editable = $editable;
+	}
+
+	/**
+	 * 
+	 * 
+	 * */
 	function addField( $id, $caption, $type, $value = "", $name = null ){
 		array_push( $this->form_fields, new FormComponentField($id, $caption, $type, $value, $name ) );
 	}
 
+	/**
+	 * 
+	 * 
+	 * */
 	private function removeDuplicates(){
 		usort( $this->form_fields, array( "FormComponentField", "idSort"  ));
 		$top_i = 0;
@@ -41,6 +60,10 @@ class FormComponent implements GuiComponent{
 		
 	}
 
+	/**
+	 * 
+	 * 
+	 * */
 	function renderCmp(){
 		
 		//remove fields with the same id
@@ -64,10 +87,10 @@ class FormComponent implements GuiComponent{
 			$html .= "function getParams(){";
 			
 			$html .= "var p = {};";
-			$html .= "var found=false;";			
+			$html .= "var found=false;";
+	
 				foreach( $this->form_fields as $f )
 				{
-
 					$html .= "if( Ext.get('". $f->id . "').getValue().length > 0 ){ p." . $f->id . " = Ext.get('". $f->id . "').getValue() ; } else{" ;
 						//else si no esta lleno de datos, vamos a buscarlo en los obligatorios, 
 						//si esta en los obligatorios entonces mandamos el error
@@ -80,7 +103,8 @@ class FormComponent implements GuiComponent{
 						$html .= "";
 					$html .= "}" ;
 				}
-			$html .= "if(!found) sendToApi(p);";
+
+			$html .= "	if(!found) sendToApi(p);";
 			$html .= "}";
 			
 			$html .= "function sendToApi( params ){";
@@ -97,7 +121,7 @@ class FormComponent implements GuiComponent{
 			
 			if( !is_null($this->send_to_api_redirect) )
 				$html.= "			window.location = '".$this->send_to_api_redirect."';";
-				
+
 			$html.= "			";
 			$html.= "			";									
 			$html.= "	 	}";
@@ -134,27 +158,45 @@ class FormComponent implements GuiComponent{
 			}
 
 			switch( $f->type ){
+				//
+				// Combo boxes
+				// 
 				case "combo" :
 					$html .= "<select id='". $f->id  ."'>";
 					
-					foreach($f->value as $o)
+					foreach($f->value as $o){
 						$html .= "<option value='".$o["id"]."'>".$o["caption"]."</option>";
+					}
+						
 					
 					$html .= "</select>";
-					//$this->form_fields[$i]->value
+
 				break;
-                                
-                                case "listbox" :
-                                        $html .= "<select multiple='true' id='". $f->id ."' name='".$f->name."'>";
-                                        
-                                        foreach($f->value as $o)
-                                                $html .= "<option value='".$o["id"]."'>".$o["caption"]."</option>";
-                                        
-                                        $html .= "</select>";
-                                break;
+                
+				//
+				// List boxes
+				//             
+                case "listbox" :
+                        $html .= "<select multiple='true' id='". $f->id ."' name='".$f->name."'>";
+                        
+                        foreach($f->value as $o){
+							$html .= "<option value='".$o["id"]."'>".$o["caption"]."</option>";	
+						}
+
+                        
+                        $html .= "</select>";
+                break;
 				
+				//
+				// Everything else
+				// 
 				default:
-					$html .= "<input id='" . $f->id .  "' name='" . $f->name .  "' value='" . $f->value .  "' type='". $f->type ."' >";				
+					if( $this->is_editable === false ){
+						//$html .= "<input id='" . $f->id .  "' name='" . $f->name .  "' value='" . $f->value .  "' type='". $f->type ."' >";
+						$html .= $f->value ;
+					}else{
+						$html .= "<input id='" . $f->id .  "' name='" . $f->name .  "' value='" . $f->value .  "' type='". $f->type ."' >";
+					}
 			}
 
 			
@@ -194,9 +236,19 @@ class FormComponent implements GuiComponent{
 			$html .= "</td></tr>";			
 			
 		}
+		
+		if( $this->is_editable === false ){
+			$html .= "<script>var is_editable_now = false; function make_editable(  ){ ";
+			
+			$html .= " }</script>";
+			$html .= "<td></td></tr>";
+			$html .= "<tr><td colspan='4'>";
+			$html .= "<div class='POS Boton'>Editar</div>";
+			$html .="</td></tr>";
+		
+		}
 
 		$html .= "</form></table>";
-
 		return $html;
 
 	}

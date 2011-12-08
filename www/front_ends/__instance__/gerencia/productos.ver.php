@@ -8,11 +8,13 @@
 
 		$page = new GerenciaComponentPage(  );
 
+
 		//
 		// Parametros necesarios
 		// 
 		$page->requireParam(  "pid", "GET", "Este producto no existe." );
 		$este_rol = ProductoDAO::getByPK( $_GET["pid"] );
+		
 		
 		//
 		// Titulo de la pagina
@@ -26,12 +28,14 @@
 		$menu = new MenuComponent();
 		$menu->addItem("Editar este producto", "aa");
 		$menu->addItem("Desactivar este producto", "da");		
-		$page->addComponent( $menu);
+		//$page->addComponent( $menu);
 		
 		//
 		// Forma de producto
 		// 
 		$form = new DAOFormComponent( $este_rol );
+		$form->setEditable(false);
+		$form->setEditable(false);		
 		$form->hideField( array( 
 				"id_producto",
 			 ));

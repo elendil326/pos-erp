@@ -76,24 +76,29 @@ class TableComponent implements GuiComponent{
 	public function renderCmp(  )
 	{
 		
-		
+		//
+		// Si no hay datos, regresa el mensaje 
+		// 
 		if(sizeof($this->rows) == 0){
 			return $this->noDataText;
 		}
 		
-
+		
+		//
+		// Iniciar la creacion de la tabla
+		// 
 		$html = '<table border="0" style="width:100%">';
 		$html .= '<tr align = "left">';
 		
+		// Renderear los headers
 		foreach ( $this->header  as $key => $value){
 			$html .= '<th>' . $value . '</th>';			
 		}
-		
 
 		$html .= '</tr>';
 		
-		//cicle trough rows
-		for( $a = 0; $a < sizeof($this->rows) ; $a++ ){
+		// Cicle trought rows
+		for( $a = 0; $a < sizeof( $this->rows ) ; $a++ ){
 
 			//@TODO pagination should be implemented here
 			/*if($a == 50){
@@ -109,9 +114,11 @@ class TableComponent implements GuiComponent{
 			}
 
 
+			//
+			// Render action fields if necesary
+			// 
 			if( isset($this->actionField)){
 				if($this->actionSendJSON){
-					
 					$html .= '<tr style=" cursor: pointer;" onClick="' . $this->actionFunction. '( \''. urlencode(json_encode($row)) . '\' )" ';
 
 				}elseif($this->actionSendID){
@@ -123,21 +130,21 @@ class TableComponent implements GuiComponent{
 				}
 				
 			}else{
+				// or else just render the tr
 				$html .= '<tr ';
+				
 			}			
 
-			//renderear ids o no
-			if($this->renderRowIds != null)
-			{
+			// Render id's or not
+			if($this->renderRowIds != null){
 				$html .= " id=\"". $this->renderRowIds . $a ."\" ";
 			}
 
-			//efecto
+			// Render the effect
             $html .= ' onmouseover="this.style.backgroundColor = \'#D7EAFF\'" onmouseout="this.style.backgroundColor = \'white\'" >';
             
 			$i = 0;
 			
-
 			if($this->simple_render){
 				/**
 				  *
