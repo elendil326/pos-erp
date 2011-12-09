@@ -366,7 +366,7 @@ class FormComponent implements GuiComponent{
 
 	}
         
-        public function createComboBoxJoinDistintName( $field_name,$table_name, $field_name_in_values, $values_array ){
+        public function createComboBoxJoinDistintName( $field_name,$table_name, $field_name_in_values, $values_array, $selected_value=null ){
 		if( sizeof( $values_array ) == 0 ){
 			//do something
 		}
@@ -383,7 +383,10 @@ class FormComponent implements GuiComponent{
 
 				foreach ($values_array as $v ){
 					$v = $v->asArray();
-					array_push( $end_values,  array( "id" => $v["$table_name"], "caption" => $v["$field_name_in_values"] ) );
+                                        if($selected_value == $v["$table_name"])
+                                            array_push( $end_values,  array( "id" => $v["$table_name"], "caption" => $v["$field_name_in_values"], "selected" => true ) );
+                                        else
+                                            array_push( $end_values,  array( "id" => $v["$table_name"], "caption" => $v["$field_name_in_values"], "selected" => false ) );
 
 				}
 				
