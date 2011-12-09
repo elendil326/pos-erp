@@ -29,7 +29,7 @@
                                 "activo"
 			 ));
                 
-                $form->addApiCall( "api/sucursal/almacen/editar/" );
+                $form->addApiCall( "api/sucursal/almacen/editar/", "GET" );
                 
                 //$form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll(), $esta_direccion->getIdCiudad() );
                 

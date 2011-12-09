@@ -34,7 +34,7 @@
                                 "id_usuario_ultima_modificacion"
 			 ));
                 
-                $form->addApiCall( "api/empresa/editar/" );
+                $form->addApiCall( "api/empresa/editar/" , "GET");
                 
                 $form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll(), $esta_direccion->getIdCiudad() );
                 

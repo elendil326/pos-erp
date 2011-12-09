@@ -38,7 +38,7 @@
                                 "id_almacen_recibe"
 			 ));
                 
-                $form->addApiCall( "api/sucursal/almacen/traspaso/editar/" );
+                $form->addApiCall( "api/sucursal/almacen/traspaso/editar/", "GET" );
                 
                 $form->addField("id_producto", "Productos", "text","","productos");
                 $form->createListBoxJoin("id_producto", "nombre_producto", ProductoDAO::search( new Producto( array( "activo" => 1 ) ) ));
