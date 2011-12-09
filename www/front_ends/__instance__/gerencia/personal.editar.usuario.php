@@ -22,6 +22,8 @@
 		//
 		// Forma de usuario
 		// 
+                if(is_null($esta_direccion))
+                    $esta_direccion = new Direccion();
 		$form = new DAOFormComponent( array( $este_usuario, $esta_direccion ) );
 		$form->hideField( array( 
 				"id_usuario",
