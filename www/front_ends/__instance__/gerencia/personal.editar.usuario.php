@@ -13,7 +13,7 @@
 		// 
 		$page->requireParam(  "uid", "GET", "Este usuario no existe." );
 		$este_usuario = UsuarioDAO::getByPK( $_GET["uid"] );
-		
+		$esta_direccion = DireccionDAO::getByPK($este_usuario->getIdDireccion());
 		//
 		// Titulo de la pagina
 		// 
@@ -22,11 +22,21 @@
 		//
 		// Forma de usuario
 		// 
-		$form = new DAOFormComponent( $este_usuario );
+		$form = new DAOFormComponent( array( $este_usuario, $esta_direccion ) );
 		$form->hideField( array( 
 				"id_usuario",
                                 "id_direccion",
-                                "id_direccion_alterna"
+                                "id_direccion_alterna",
+                                "id_sucursal",
+                                "fecha_asignacion_rol",
+                                "fecha_alta",
+                                "fecha_baja",
+                                "activo",
+                                "last_login",
+                                "consignatario",
+                                "id_direccion",
+                                "ultima_modificacion",
+                                "id_usuario_ultima_modificacion"
 			 ));
                 
                 $form->addApiCall( "api/personal/rol/editar/" );
