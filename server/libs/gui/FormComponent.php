@@ -163,7 +163,7 @@ class FormComponent implements GuiComponent{
 				// 
 				case "combo" :
 					$html .= "<select id='". $f->id  ."'>";
-					
+					$html .= "<option value=''>------------</option>";
 					foreach($f->value as $o){
                                         {
                                                 if($o["selected"])
