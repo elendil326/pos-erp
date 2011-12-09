@@ -54,6 +54,8 @@
 //                    "id_ciudad" => "municipio"
 //		));
                 
+                $form->makeObligatory( array( "id_sucursal", "id_gerente" ) );
+                
 		$page->addComponent( $form );
                 
 		$page->render();
