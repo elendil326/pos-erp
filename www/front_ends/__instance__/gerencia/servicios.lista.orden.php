@@ -53,7 +53,7 @@
                 
                 $tabla->addColRender("id_usuario_venta", "funcion_usuario_venta");
                 
-		$tabla->addOnClick( "id_servicio", "(function(a){ window.location = 'servicio.orden.ver.php?oid=' + a; })" );
+		$tabla->addOnClick( "id_orden_de_servicio", "(function(a){ window.location = 'servicios.detalle.orden.php?oid=' + a; })" );
 		
 			
 		$page->addComponent( $tabla );

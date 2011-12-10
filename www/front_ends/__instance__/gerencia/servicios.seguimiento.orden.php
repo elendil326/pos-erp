@@ -8,6 +8,12 @@
 
 		$page = new GerenciaComponentPage();
 
+                //
+		// Parametros necesarios
+		// 
+		$page->requireParam(  "oid", "GET", "Esta orden de servicio no existe." );
+		$esta_orden = OrdenDeServicioDAO::getByPK( $_GET["oid"] );
+                
 		//
 		// Titulo de la pagina
 		// 
@@ -31,7 +37,7 @@
 //                $form->createListBoxJoin("id_producto", "nombre_producto", ProductoDAO::search( new Producto( array( "activo" => 1 ) ) ));
 //
                 
-                $form->createComboBoxJoin( "id_orden_de_servicio", "id_orden_de_servicio", OrdenDeServicioDAO::search(new OrdenDeServicio( array( "activa" => 1 ) )) );
+                $form->createComboBoxJoin( "id_orden_de_servicio", "id_orden_de_servicio", OrdenDeServicioDAO::getAll(), $esta_orden->getIdOrdenDeServicio() );
                 
                 $form->createComboBoxJoinDistintName( "id_localizacion", "id_sucursal" , "razon_social", SucursalDAO::search(new Sucursal( array( "activa" => 1 ) )) );
                 

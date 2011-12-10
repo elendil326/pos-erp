@@ -681,28 +681,12 @@ class GerenciaComponentPage extends StdComponentPage{
                         "url"   : "servicios.nuevo.php"
                 },
                 {
-                        "title" : "Cancelar orden",
-                        "url"   : "servicios.cancelar.orden.php"
-                },
-                {
-                        "title" : "Detalle orden",
-                        "url"   : "servicios.detalle.orden.php"
-                },
-                {
                         "title" : "Lista orden",
                         "url"   : "servicios.lista.orden.php"
                 },
                 {
                         "title" : "Nueva orden",
                         "url"   : "servicios.nueva.orden.php"
-                },
-                {
-                        "title" : "Seguimiento orden",
-                        "url"   : "servicios.seguimiento.orden.php"
-                },
-                {
-                        "title" : "Terminar orden",
-                        "url"   : "servicios.terminar.orden.php"
                 }
             ]
         },
