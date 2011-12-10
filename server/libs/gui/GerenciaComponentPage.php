@@ -475,6 +475,10 @@ class GerenciaComponentPage extends StdComponentPage{
                 {
                         "title" : "Lista permiso de usuario",
                         "url"   : "personal.lista.permiso.usuario.php"
+                },
+                {
+                        "title" : "Remover permiso de usuario",
+                        "url"   : "personal.remover.permiso.usuario.php"
                 }
             ]
         },

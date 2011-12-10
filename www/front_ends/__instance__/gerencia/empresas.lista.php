@@ -21,6 +21,13 @@
 			EmpresasController::Lista()
 		);
 		
+                function funcion_activa($activa)
+                {
+                    return ($activa? "Activa" : "Inactiva");
+                }
+                
+                $tabla->addColRender("activo", "funcion_activa");
+                
 		$tabla->addOnClick( "id_empresa", "(function(a){window.location = 'empresas.ver.php?eid='+a;})" );
 		
 		$page->addComponent( $tabla );
