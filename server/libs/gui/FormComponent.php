@@ -162,7 +162,10 @@ class FormComponent implements GuiComponent{
 				// Combo boxes
 				// 
 				case "combo" :
-					$html .= "<select id='". $f->id  ."'>";
+					$html .= "<select id='". $f->id ."'" ;
+                                        if($this->is_editable===false)
+                                            $html .= " disabled='disabled' ";
+                                        $html .= ">";
 					$html .= "<option value=''>------------</option>";
 					foreach($f->value as $o){
                                         {
@@ -242,16 +245,16 @@ class FormComponent implements GuiComponent{
 			
 		}
 		
-		if( $this->is_editable === false ){
-			$html .= "<script>var is_editable_now = false; function make_editable(  ){ ";
-			
-			$html .= " }</script>";
-			$html .= "<td></td></tr>";
-			$html .= "<tr><td colspan='4'>";
-			$html .= "<div class='POS Boton'>Editar</div>";
-			$html .="</td></tr>";
-		
-		}
+//		if( $this->is_editable === false ){
+//			$html .= "<script>var is_editable_now = false; function make_editable(  ){ ";
+//			
+//			$html .= " }</script>";
+//			$html .= "<td></td></tr>";
+//			$html .= "<tr><td colspan='4'>";
+//			$html .= "<div class='POS Boton'>Editar</div>";
+//			$html .="</td></tr>";
+//		
+//		}
 
 		$html .= "</form></table>";
 		return $html;
