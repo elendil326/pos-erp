@@ -423,6 +423,14 @@ class GerenciaComponentPage extends StdComponentPage{
                         "url"   : "productos.nuevo.en_volumen.php"
                 },
                 {
+                        "title" : "Editar equivalencia de unidad",
+                        "url"   : "productos.editar.equivalencia.unidad.php"
+                },
+                {
+                        "title" : "Eliminar equivalencia de unidad",
+                        "url"   : "productos.eliminar.equivalencia.unidad.php"
+                },
+                {
                         "title" : "Lista unidad",
                         "url"   : "productos.lista.unidad.php"
                 },
@@ -656,6 +664,10 @@ class GerenciaComponentPage extends StdComponentPage{
             "title": "Servicios",
             "url": "servicios.php",
             "children": [
+                {
+                        "title" : "Lista clasificacion",
+                        "url"   : "servicios.lista.clasificacion.php"
+                },
                 {
                         "title" : "Nueva clasificacion",
                         "url"   : "servicios.nueva.clasificacion.php"

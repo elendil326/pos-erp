@@ -28,7 +28,7 @@
                 $tabla->addColRender("id_unidad", "funcion_unidad");
                 $tabla->addColRender("id_unidades", "funcion_unidad");
                 
-		$tabla->addOnClick( "id_unidad", "(function(a){ window.location = 'unidad.ver.php?uid=' + a; })" );
+		$tabla->addOnClick( "id_unidad", "(function(a){ window.location = 'productos.unidad.ver.php?uid=' + a; })" );
 		
 			
 		$page->addComponent( $tabla );
