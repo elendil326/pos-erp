@@ -457,6 +457,10 @@ class GerenciaComponentPage extends StdComponentPage{
                         "url"   : "personal.lista.permiso.rol.php"
                 },
                 {
+                        "title" : "Remover permiso de rol",
+                        "url"   : "personal.remover.permiso.rol.php"
+                },
+                {
                         "title" : "Lista usuario",
                         "url"   : "personal.lista.usuario.php"
                 },
