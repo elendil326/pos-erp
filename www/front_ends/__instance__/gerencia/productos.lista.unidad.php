@@ -34,7 +34,7 @@
                 $tabla->addColRender("activa", "funcion_activa");
                 $tabla->addColRender("es_entero", "funcion_es_entero");
                 
-		$tabla->addOnClick( "id_unidad", "(function(a){ window.location = 'unidad.ver.php?uid=' + a; })" );
+		$tabla->addOnClick( "id_unidad", "(function(a){ window.location = 'productos.unidad.ver.php?uid=' + a; })" );
 		
 			
 		$page->addComponent( $tabla );
