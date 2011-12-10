@@ -403,6 +403,10 @@ class GerenciaComponentPage extends StdComponentPage{
             "url": "productos.php",
             "children": [
                 {
+                        "title" : "Lista categoria",
+                        "url"   : "productos.lista.categoria.php"
+                },
+                {
                         "title" : "Nueva categoria",
                         "url"   : "productos.nueva.categoria.php"
                 },
