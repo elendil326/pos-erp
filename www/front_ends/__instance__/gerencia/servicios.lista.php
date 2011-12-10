@@ -30,7 +30,7 @@
                 
                 $tabla->addColRender("activo", "funcion_activo");
                 
-		$tabla->addOnClick( "id_servicio", "(function(a){ window.location = 'servicio.ver.php?sid=' + a; })" );
+		$tabla->addOnClick( "id_servicio", "(function(a){ window.location = 'servicios.ver.php?sid=' + a; })" );
 		
 			
 		$page->addComponent( $tabla );
