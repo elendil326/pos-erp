@@ -93,28 +93,12 @@ class GerenciaComponentPage extends StdComponentPage{
             "url": "cargos_y_abonos.php",
             "children": [
                 {
-                    "title": "Editar abono",
-                    "url": "cargos_y_abonos.editar.abono.php"
-                },
-                {
-                    "title": "Eliminar abono",
-                    "url": "cargos_y_abonos.eliminar.abono.php"
-                },
-                {
                     "title": "Lista abono",
                     "url": "cargos_y_abonos.lista.abono.php"
                 },
                 {
                     "title": "Nuevo abono",
                     "url": "cargos_y_abonos.nuevo.abono.php"
-                },
-                {
-                    "title": "Editar concepto de gasto",
-                    "url": "cargos_y_abonos.editar.concepto.gasto.php"
-                },
-                {
-                    "title": "Eliminar concepto de gasto",
-                    "url": "cargos_y_abonos.eliminar.concepto.gasto.php"
                 },
                 {
                     "title": "Lista concepto de gasto",
@@ -125,14 +109,6 @@ class GerenciaComponentPage extends StdComponentPage{
                     "url": "cargos_y_abonos.nuevo.concepto.gasto.php"
                 },
                 {
-                    "title": "Editar gasto",
-                    "url": "cargos_y_abonos.editar.gasto.php"
-                },
-                {
-                    "title": "Eliminar gasto",
-                    "url": "cargos_y_abonos.eliminar.gasto.php"
-                },
-                {
                     "title": "Lista gasto",
                     "url": "cargos_y_abonos.lista.gasto.php"
                 },
@@ -141,28 +117,12 @@ class GerenciaComponentPage extends StdComponentPage{
                     "url": "cargos_y_abonos.nuevo.gasto.php"
                 },
                 {
-                    "title": "Editar concepto de ingreso",
-                    "url": "cargos_y_abonos.editar.concepto.ingreso.php"
-                },
-                {
-                    "title": "Eliminar concepto de ingreso",
-                    "url": "cargos_y_abonos.eliminar.concepto.ingreso.php"
-                },
-                {
                     "title": "Lista concepto de ingreso",
                     "url": "cargos_y_abonos.lista.concepto.ingreso.php"
                 },
                 {
                     "title": "Nuevo concepto de ingreso",
                     "url": "cargos_y_abonos.nuevo.concepto.ingreso.php"
-                },
-                {
-                    "title": "Editar ingreso",
-                    "url": "cargos_y_abonos.editar.ingreso.php"
-                },
-                {
-                    "title": "Eliminar ingreso",
-                    "url": "cargos_y_abonos.eliminar.ingreso.php"
                 },
                 {
                     "title": "Lista ingreso",
@@ -179,10 +139,6 @@ class GerenciaComponentPage extends StdComponentPage{
             "url": "clientes.php",
             "children" : [
                 {
-            		"title" : "Editar clasificacion",
-            		"url"   : "clientes.editar.clasificacion.php"
-            	},
-                {
             		"title" : "Lista clasificacion",
             		"url"   : "clientes.lista.clasificacion.php"
             	},
@@ -193,14 +149,6 @@ class GerenciaComponentPage extends StdComponentPage{
                 {
             		"title" : "Detalle",
             		"url"   : "clientes.detalle.php"
-            	},
-                {
-            		"title" : "Editar",
-            		"url"   : "clientes.editar.php"
-            	},
-                {
-            		"title" : "Editar perfil",
-            		"url"   : "clientes.editar.perfil.php"
             	},
                 {
             		"title" : "Lista",
@@ -349,28 +297,12 @@ class GerenciaComponentPage extends StdComponentPage{
             "url": "efectivo.php",
             "children" : [
                 {
-                        "title" : "Editar billete",
-                        "url"   : "efectivo.editar.billete.php"
-                },
-                {
-                        "title" : "Eliminar billete",
-                        "url"   : "efectivo.eliminar.billete.php"
-                },
-                {
                         "title" : "Lista billete",
                         "url"   : "efectivo.lista.billete.php"
                 },
                 {
                         "title" : "Nuevo billete",
                         "url"   : "efectivo.nuevo.billete.php"
-                },
-                {
-                        "title" : "Editar moneda",
-                        "url"   : "efectivo.editar.moneda.php"
-                },
-                {
-                        "title" : "Eliminar moneda",
-                        "url"   : "efectivo.eliminar.moneda.php"
                 },
                 {
                         "title" : "Lista moneda",
@@ -391,14 +323,6 @@ class GerenciaComponentPage extends StdComponentPage{
             		"url" 	: "empresas.agregar.sucursales.php"
             	},
                 {
-            		"title" : "Editar",
-            		"url" 	: "empresas.editar.php"
-            	},
-                {
-            		"title" : "Eliminar",
-            		"url" 	: "empresas.eliminar.php"
-            	},
-                {
             		"title" : "Lista",
             		"url" 	: "empresas.lista.php"
             	},
@@ -413,20 +337,12 @@ class GerenciaComponentPage extends StdComponentPage{
             "url": "impuestos.php",
             "children": [
                 {
-                        "title" : "Editar impuesto",
-                        "url"   : "impuestos.editar.impuesto.php"
-                },
-                {
                         "title" : "Lista impuestos",
                         "url"   : "impuestos.lista.impuesto.php"
                 },
                 {
                         "title" : "Nuevo impuesto",
                         "url"   : "impuestos.nuevo.impuesto.php"
-                },
-                {
-                        "title" : "Editar retencion",
-                        "url"   : "impuestos.editar.retencion.php"
                 },
                 {
                         "title" : "Lista retenciones",
@@ -469,20 +385,8 @@ class GerenciaComponentPage extends StdComponentPage{
             "url": "paquetes.php",
             "children": [
                 {
-                        "title" : "Activar",
-                        "url"   : "paquetes.activar.php"
-                },
-                {
                         "title" : "Detalle",
                         "url"   : "paquetes.detalle.php"
-                },
-                {
-                        "title" : "Editar",
-                        "url"   : "paquetes.editar.php"
-                },
-                {
-                        "title" : "Eliminar",
-                        "url"   : "paquetes.eliminar.php"
                 },
                 {
                         "title" : "Lista",
@@ -499,24 +403,8 @@ class GerenciaComponentPage extends StdComponentPage{
             "url": "productos.php",
             "children": [
                 {
-                        "title" : "Desactivar categoria",
-                        "url"   : "productos.desactivar.categoria.php"
-                },
-                {
-                        "title" : "Editar categoria",
-                        "url"   : "productos.editar.categoria.php"
-                },
-                {
                         "title" : "Nueva categoria",
                         "url"   : "productos.nueva.categoria.php"
-                },
-                {
-                        "title" : "Desactivar",
-                        "url"   : "productos.desactivar.php"
-                },
-                {
-                        "title" : "Editar",
-                        "url"   : "productos.editar.php"
                 },
                 {
                         "title" : "Lista",
@@ -529,22 +417,6 @@ class GerenciaComponentPage extends StdComponentPage{
                 {
                         "title" : "Nuevo en volumen",
                         "url"   : "productos.nuevo.en_volumen.php"
-                },
-                {
-                        "title" : "Editar unidad",
-                        "url"   : "productos.editar.unidad.php"
-                },
-                {
-                        "title" : "Editar equivalencia de unidad",
-                        "url"   : "productos.editar.equivalencia.unidad.php"
-                },
-                {
-                        "title" : "Eliminar unidad",
-                        "url"   : "productos.eliminar.unidad.php"
-                },
-                {
-                        "title" : "Eliminar equivalencia de unidad",
-                        "url"   : "productos.eliminar.equivalencia.unidad.php"
                 },
                 {
                         "title" : "Lista unidad",
@@ -569,14 +441,6 @@ class GerenciaComponentPage extends StdComponentPage{
             "url": "personal.php",
             "children": [
                 {
-                        "title" : "Editar rol",
-                        "url"   : "personal.editar.rol.php"
-                },
-                {
-                        "title" : "Eliminar rol",
-                        "url"   : "personal.eliminar.rol.php"
-                },
-                {
                         "title" : "Lista rol",
                         "url"   : "personal.lista.rol.php"
                 },
@@ -593,18 +457,6 @@ class GerenciaComponentPage extends StdComponentPage{
                         "url"   : "personal.lista.permiso.rol.php"
                 },
                 {
-                        "title" : "Remover permiso de rol",
-                        "url"   : "personal.remover.permiso.rol.php"
-                },
-                {
-                        "title" : "Editar usuario",
-                        "url"   : "personal.editar.usuario.php"
-                },
-                {
-                        "title" : "Eliminar usuario",
-                        "url"   : "personal.eliminar.usuario.php"
-                },
-                {
                         "title" : "Lista usuario",
                         "url"   : "personal.lista.usuario.php"
                 },
@@ -619,10 +471,6 @@ class GerenciaComponentPage extends StdComponentPage{
                 {
                         "title" : "Lista permiso de usuario",
                         "url"   : "personal.lista.permiso.usuario.php"
-                },
-                {
-                        "title" : "Remover permiso de usuario",
-                        "url"   : "personal.remover.permiso.usuario.php"
                 }
             ]
         },
@@ -745,28 +593,12 @@ class GerenciaComponentPage extends StdComponentPage{
             "url": "proveedores.php",
             "children": [
                 {
-                        "title" : "Editar clasificacion",
-                        "url"   : "proveedores.editar.clasificacion.php"
-                },
-                {
-                        "title" : "Eliminar clasificacion",
-                        "url"   : "proveedores.eliminar.clasificacion.php"
-                },
-                {
                         "title" : "Lista clasificacion",
                         "url"   : "proveedores.lista.clasificacion.php"
                 },
                 {
                         "title" : "Nueva clasificacion",
                         "url"   : "proveedores.nueva.clasificacion.php"
-                },
-                {
-                        "title" : "Editar",
-                        "url"   : "proveedores.editar.php"
-                },
-                {
-                        "title" : "Eliminar",
-                        "url"   : "proveedores.eliminar.php"
                 },
                 {
                         "title" : "Lista",
@@ -813,24 +645,8 @@ class GerenciaComponentPage extends StdComponentPage{
             "url": "servicios.php",
             "children": [
                 {
-                        "title" : "Editar clasificacion",
-                        "url"   : "servicios.editar.clasificacion.php"
-                },
-                {
-                        "title" : "Eliminar clasificacion",
-                        "url"   : "servicios.eliminar.clasificacion.php"
-                },
-                {
                         "title" : "Nueva clasificacion",
                         "url"   : "servicios.nueva.clasificacion.php"
-                },
-                {
-                        "title" : "Editar",
-                        "url"   : "servicios.editar.php"
-                },
-                {
-                        "title" : "Eliminar",
-                        "url"   : "servicios.eliminar.php"
                 },
                 {
                         "title" : "Lista",
@@ -871,14 +687,6 @@ class GerenciaComponentPage extends StdComponentPage{
             "url": "sucursales.php",
             "children": [
                 {
-                        "title" : "Editar almacen",
-                        "url"   : "sucursales.editar.almacen.php"
-                },
-                {
-                        "title" : "Eliminar almacen",
-                        "url"   : "sucursales.eliminar.almacen.php"
-                },
-                {
                         "title" : "Entrada a almacen",
                         "url"   : "sucursales.entrada.almacen.php"
                 },
@@ -895,28 +703,12 @@ class GerenciaComponentPage extends StdComponentPage{
                         "url"   : "sucursales.salida.almacen.php"
                 },
                 {
-                        "title" : "Cancelar traspaso a almacen",
-                        "url"   : "sucursales.cancelar.traspaso.almacen.php"
-                },
-                {
-                        "title" : "Editar traspaso a almacen",
-                        "url"   : "sucursales.editar.traspaso.almacen.php"
-                },
-                {
-                        "title" : "Enviar traspaso a almacen",
-                        "url"   : "sucursales.enviar.traspaso.almacen.php"
-                },
-                {
                         "title" : "Lista traspaso de almacen",
                         "url"   : "sucursales.lista.traspaso.almacen.php"
                 },
                 {
                         "title" : "Programar traspaso a almacen",
                         "url"   : "sucursales.programar.traspaso.almacen.php"
-                },
-                {
-                        "title" : "Recibir traspaso a almacen",
-                        "url"   : "sucursales.recibir.traspaso.almacen.php"
                 },
                 {
                         "title" : "Abrir caja",
@@ -935,14 +727,6 @@ class GerenciaComponentPage extends StdComponentPage{
                         "url"   : "sucursales.corte.caja.php"
                 },
                 {
-                        "title" : "Editar caja",
-                        "url"   : "sucursales.editar.caja.php"
-                },
-                {
-                        "title" : "Eliminar caja",
-                        "url"   : "sucursales.eliminar.caja.php"
-                },
-                {
                         "title" : "Lista caja",
                         "url"   : "sucursales.lista.caja.php"
                 },
@@ -953,18 +737,6 @@ class GerenciaComponentPage extends StdComponentPage{
                 {
                         "title" : "Vender caja",
                         "url"   : "sucursales.vender.caja.php"
-                },
-                {
-                        "title" : "Editar",
-                        "url"   : "sucursales.editar.php"
-                },
-                {
-                        "title" : "Eliminar",
-                        "url"   : "sucursales.eliminar.php"
-                },
-                {
-                        "title" : "Editar gerencia",
-                        "url"   : "sucursales.editar.gerencia.php"
                 },
                 {
                         "title" : "Lista",

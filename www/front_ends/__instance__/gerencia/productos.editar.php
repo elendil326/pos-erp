@@ -52,6 +52,8 @@
 //                    "id_ciudad" => "municipio"
 //		));
                 
+                $form->createComboBoxJoin("id_unidad", "nombre", UnidadDAO::search(new Unidad( array( "activa" => 1 ) )), $este_producto->getIdUnidad() );
+                
 		$page->addComponent( $form );
                 
 		$page->render();
