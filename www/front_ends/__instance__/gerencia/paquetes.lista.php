@@ -30,7 +30,7 @@
                 
                 $tabla->addColRender("activo", "funcion_activo");
                 
-		$tabla->addOnClick( "id_paquete", "(function(a){ window.location = 'paquete.ver.php?pid=' + a; })" );
+		$tabla->addOnClick( "id_paquete", "(function(a){ window.location = 'paquetes.detalle.php?pid=' + a; })" );
 		
 			
 		$page->addComponent( $tabla );
