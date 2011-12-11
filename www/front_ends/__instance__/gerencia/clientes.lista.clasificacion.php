@@ -29,7 +29,7 @@
 //                
 //                $tabla->addColRender("activo", "funcion_activo");
                 
-		$tabla->addOnClick( "id_clasificacion_cliente", "(function(a){ window.location = 'cliente.clasificacion.ver.php?cid=' + a; })" );
+		$tabla->addOnClick( "id_clasificacion_cliente", "(function(a){ window.location = 'clientes.clasificacion.ver.php?cid=' + a; })" );
 		
 			
 		$page->addComponent( $tabla );

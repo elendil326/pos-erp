@@ -147,10 +147,6 @@ class GerenciaComponentPage extends StdComponentPage{
             		"url"   : "clientes.nueva.clasificacion.php"
             	},
                 {
-            		"title" : "Detalle",
-            		"url"   : "clientes.detalle.php"
-            	},
-                {
             		"title" : "Lista",
             		"url"   : "clientes.lista.php"
             	},
