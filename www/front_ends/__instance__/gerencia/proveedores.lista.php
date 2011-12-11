@@ -49,7 +49,7 @@
                 $tabla->addColRender("activo", "funcion_activo");
                 $tabla->addColRender("consignatario", "funcion_consignatario");
                 
-		$tabla->addOnClick( "id_usuario", "(function(a){ window.location = 'proveedor.ver.php?pid=' + a; })" );
+		$tabla->addOnClick( "id_usuario", "(function(a){ window.location = 'proveedores.ver.php?pid=' + a; })" );
 		
 			
 		$page->addComponent( $tabla );
