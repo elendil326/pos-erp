@@ -27,7 +27,7 @@
                 
                 $tabla->addColRender("activa", "funcion_activa");
                 
-		$tabla->addOnClick( "id_clasificacion_proveedor", "(function(a){ window.location = 'proveedor.clasificacion.ver.php?pid=' + a; })" );
+		$tabla->addOnClick( "id_clasificacion_proveedor", "(function(a){ window.location = 'proveedores.clasificacion.ver.php?cid=' + a; })" );
 		
 			
 		$page->addComponent( $tabla );
