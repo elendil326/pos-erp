@@ -308,7 +308,32 @@ require_once("interfaces/ImpuestosYRetenciones.interface.php");
             return RetencionDAO::getAll(null, null, $ordenar);
 	}
   
-	
+	/**
+ 	 *
+ 	 *Listas los impuestos
+ 	 *
+ 	 * @param ordenar json Objeto que determinara el orden de la lista
+ 	 * @return impuestos json Lista de impuestos
+ 	 **/
+	public static function ListaImpuesto
+	(
+		$ordenar = null
+	)
+	{  
+            if($ordenar!=null)
+            {
+                $e = self::validarOrdenar($ordenar);
+                if(is_string($e))
+                {
+                    if($ordenar!="id_impuesto")
+                    {
+                        Logger::error($e);
+                        throw new Exception($e);
+                    }
+                }
+            }
+            return ImpuestoDAO::getAll(null, null, $ordenar);
+	}
   
 	/**
  	 *
