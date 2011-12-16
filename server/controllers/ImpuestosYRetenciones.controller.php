@@ -281,6 +281,33 @@ require_once("interfaces/ImpuestosYRetenciones.interface.php");
             Logger::log("Retencion editada exitosamente");
 	}
   
+	/**
+ 	 *
+ 	 *Lista las retenciones
+ 	 *
+ 	 * @param ordenar json Objeto que determinara el orde de la lista
+ 	 * @return retenciones json Objeto que contendra la lista de retenciones
+ 	 **/
+	public static function ListaRetencion
+	(
+		$ordenar = null
+	)
+	{  
+            if($ordenar!=null)
+            {
+                $e = self::validarOrdenar($ordenar);
+                if(is_string($e))
+                {
+                    if($ordenar!="id_retencion")
+                    {
+                        Logger::error($e);
+                        throw new Exception($e);
+                    }
+                }
+            }
+            return RetencionDAO::getAll(null, null, $ordenar);
+	}
+  
 	
   
 	/**
