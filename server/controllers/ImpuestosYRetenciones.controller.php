@@ -92,6 +92,25 @@ require_once("interfaces/ImpuestosYRetenciones.interface.php");
             return true;
         }
         
+        /*
+         * Valida el parametro ordenar
+         */
+        private static function validarOrdenar
+        (
+                $ordenar
+        )
+        {
+            if
+            (
+                    $ordenar != "monto_porcentaje"  &&
+                    $ordenar != "es_monto"          &&
+                    $ordenar != "nombre"            &&
+                    $ordenar != "descripcion"
+            )
+                return "La variable ordenar(".$ordenar.") es invalida";
+            return true;
+        }
+        
         
         
         
@@ -199,41 +218,70 @@ require_once("interfaces/ImpuestosYRetenciones.interface.php");
 		$nombre = ""
 	)
 	{  
-  
-  
+            Logger::log("Editando retencion ".$id_retencion);
+            $retencion = RetencionDAO::getByPK($id_retencion);
+            
+            //Se valida que el impuesto a editar exista
+            if(is_null($retencion))
+            {
+                Logger::error("La retencion ".$id_retencion." no existe");
+                throw new Exception("La retencion ".$id_retencion." no existe");
+            }
+            
+            //Se validan y actualizan solo los parametros que son recibidos.
+            if(!is_null($es_monto))
+            {
+                $e = self::validarEsMonto($es_monto);
+                if(is_string($e))
+                {
+                    Logger::error($e);
+                    throw new Exception($e);
+                }
+                $retencion->setEsMonto($es_monto);
+            }
+            if(!is_null($monto_porcentaje))
+            {
+                $e = self::validarMontoPorcentaje($monto_porcentaje);
+                if(is_string($e))
+                {
+                    Logger::error($e);
+                    throw new Exception($e);
+                }
+                $retencion->setMontoPorcentaje($monto_porcentaje);
+            }
+            if(!is_null($descripcion))
+            {
+                $e = self::validarDescripcion($descripcion);
+                if(is_string($e))
+                {
+                    Logger::error($e);
+                    throw new Exception($e);
+                }
+                $retencion->setDescripcion($descripcion);
+            }
+            if(!is_null($nombre))
+            {
+                $e = self::validarNombre($nombre);
+                if(is_string($e))
+                {
+                    Logger::error($e);
+                    throw new Exception($e);
+                }
+                $retencion->setNombre($nombre);
+            }
+            try
+            {
+                RetencionDAO::save($retencion);
+            }
+            catch(Exception $e)
+            {
+                Logger::error($e);
+                throw new Exception("No se pudo editar la retencion, consulte al administrador del sistema");
+            }
+            Logger::log("Retencion editada exitosamente");
 	}
   
-	/**
- 	 *
- 	 *Lista las retenciones
- 	 *
- 	 * @param ordenar json Objeto que determinara el orde de la lista
- 	 * @return retenciones json Objeto que contendra la lista de retenciones
- 	 **/
-	public static function ListaRetencion
-	(
-		$ordenar = ""
-	)
-	{  
-  
-  
-	}
-  
-	/**
- 	 *
- 	 *Listas los impuestos
- 	 *
- 	 * @param ordenar json Objeto que determinara el orden de la lista
- 	 * @return impuestos json Lista de impuestos
- 	 **/
-	public static function ListaImpuesto
-	(
-		$ordenar = ""
-	)
-	{  
-  
-  
-	}
+	
   
 	/**
  	 *
@@ -250,7 +298,7 @@ require_once("interfaces/ImpuestosYRetenciones.interface.php");
 		$es_monto, 
 		$monto_porcentaje, 
 		$nombre, 
-		$descripcion = ""
+		$descripcion = null
 	)
 	{  
   
