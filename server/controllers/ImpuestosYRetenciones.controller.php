@@ -8,6 +8,95 @@ require_once("interfaces/ImpuestosYRetenciones.interface.php");
 	
   class ImpuestosYRetencionesController implements IImpuestosYRetenciones{
   
+      
+      /*
+         *Se valida que un string tenga longitud en un rango de un maximo inclusivo y un minimo exclusvio.
+         *Regresa true cuando es valido, y un string cuando no lo es.
+         */
+        private static function validarString($string, $max_length, $nombre_variable,$min_length=0)
+	{
+		if(strlen($string)<=$min_length||strlen($string)>$max_length)
+		{
+		    return "La longitud de la variable ".$nombre_variable." proporcionada (".$string.") no esta en el rango de ".$min_length." - ".$max_length;
+		}
+		return true;
+        }
+
+
+        /*
+         * Se valida que un numero este en un rango de un maximo y un minimo inclusivos
+         * Regresa true cuando es valido, y un string cuando no lo es
+         */
+	private static function validarNumero($num, $max_length, $nombre_variable, $min_length=0)
+	{
+	    if($num<$min_length||$num>$max_length)
+	    {
+	        return "La variable ".$nombre_variable." proporcionada (".$num.") no esta en el rango de ".$min_length." - ".$max_length;
+	    }
+	    return true;
+	}
+        
+        /*
+         * Valida el boleano esMonto
+         */
+        private static function validarEsMonto
+        (
+                $es_monto
+        )
+        {
+            $e = self::validarNumero($es_monto, 1, "es_monto");
+            if(is_string($e))
+                return $e;
+            return true;
+        }
+        
+        /*
+         * Valida el parametro monto_procentaje
+         */
+        private static function validarMontoPorcentaje
+        (
+                $monto_porcentaje
+        )
+        {
+            $e = self::validarNumero($monto_porcentaje, 1.8e200, "monto o porcentaje");
+            if(is_string($e))
+                return $e;
+            return true;
+        }
+        
+        /*
+         * Valida la variable nombre
+         */
+        private static function validarNombre
+        (
+                $nombre
+        )
+        {
+            $e = self::validarString($nombre, 100, "nombre");
+            if(is_string($e))
+                return $e;
+            return true;
+        }
+        
+        /*
+         * Valida la variable descricpion
+         */
+        private static function validarDescripcion
+        (
+                $descripcion
+        )
+        {
+            $e = self::validarString($descripcion, 255, "descripcion");
+            if(is_string($e))
+                return $e;
+            return true;
+        }
+        
+        
+        
+        
+        
+        
   
 	/**
  	 *
@@ -22,14 +111,73 @@ require_once("interfaces/ImpuestosYRetenciones.interface.php");
 	public static function EditarImpuesto
 	(
 		$id_impuesto, 
-		$es_monto = "", 
-		$monto_porcentaje = "", 
-		$descripcion = "", 
-		$nombre = ""
+		$es_monto = null, 
+		$monto_porcentaje = null, 
+		$descripcion = null, 
+		$nombre = null
 	)
 	{  
-  
-  
+            Logger::log("Editando impuesto ".$id_impuesto);
+            $impuesto = ImpuestoDAO::getByPK($id_impuesto);
+            
+            //Se valida que el impuesto a editar exista
+            if(is_null($impuesto))
+            {
+                Logger::error("El impuesto ".$id_impuesto." no existe");
+                throw new Exception("El impuesto ".$id_impuesto." no existe");
+            }
+            
+            //Se validan y actualizan solo los parametros que son recibidos.
+            if(!is_null($es_monto))
+            {
+                $e = self::validarEsMonto($es_monto);
+                if(is_string($e))
+                {
+                    Logger::error($e);
+                    throw new Exception($e);
+                }
+                $impuesto->setEsMonto($es_monto);
+            }
+            if(!is_null($monto_porcentaje))
+            {
+                $e = self::validarMontoPorcentaje($monto_porcentaje);
+                if(is_string($e))
+                {
+                    Logger::error($e);
+                    throw new Exception($e);
+                }
+                $impuesto->setMontoPorcentaje($monto_porcentaje);
+            }
+            if(!is_null($descripcion))
+            {
+                $e = self::validarDescripcion($descripcion);
+                if(is_string($e))
+                {
+                    Logger::error($e);
+                    throw new Exception($e);
+                }
+                $impuesto->setDescripcion($descripcion);
+            }
+            if(!is_null($nombre))
+            {
+                $e = self::validarNombre($nombre);
+                if(is_string($e))
+                {
+                    Logger::error($e);
+                    throw new Exception($e);
+                }
+                $impuesto->setNombre($nombre);
+            }
+            try
+            {
+                ImpuestoDAO::save($impuesto);
+            }
+            catch(Exception $e)
+            {
+                Logger::error($e);
+                throw new Exception("No se pudo editar el impuesto, consulte al administrador del sistema");
+            }
+            Logger::log("Impuesto editado exitosamente");
 	}
   
 	/**
