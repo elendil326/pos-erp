@@ -187,15 +187,18 @@ require_once("interfaces/ImpuestosYRetenciones.interface.php");
                 }
                 $impuesto->setNombre($nombre);
             }
+            DAO::transBegin();
             try
             {
                 ImpuestoDAO::save($impuesto);
             }
             catch(Exception $e)
             {
-                Logger::error($e);
+                DAO::transRollback();
+                Logger::error("No se pudo editar el impuesto: ".$e);
                 throw new Exception("No se pudo editar el impuesto, consulte al administrador del sistema");
             }
+            DAO::transEnd();
             Logger::log("Impuesto editado exitosamente");
 	}
   
@@ -212,10 +215,10 @@ require_once("interfaces/ImpuestosYRetenciones.interface.php");
 	public static function EditarRetencion
 	(
 		$id_retencion, 
-		$es_monto = "", 
-		$monto_porcentaje = "", 
-		$descripcion = "", 
-		$nombre = ""
+		$es_monto = null, 
+		$monto_porcentaje = null, 
+		$descripcion = null, 
+		$nombre = null
 	)
 	{  
             Logger::log("Editando retencion ".$id_retencion);
@@ -269,15 +272,18 @@ require_once("interfaces/ImpuestosYRetenciones.interface.php");
                 }
                 $retencion->setNombre($nombre);
             }
+            DAO::transBegin();
             try
             {
                 RetencionDAO::save($retencion);
             }
             catch(Exception $e)
             {
-                Logger::error($e);
+                DAO::transRollback();
+                Logger::error("No se pudo editar la retencion: ".$e);
                 throw new Exception("No se pudo editar la retencion, consulte al administrador del sistema");
             }
+            DAO::transEnd();
             Logger::log("Retencion editada exitosamente");
 	}
   
@@ -293,6 +299,9 @@ require_once("interfaces/ImpuestosYRetenciones.interface.php");
 		$ordenar = null
 	)
 	{  
+            Logger::log("Listando todas las retenciones");
+            
+            //Si se recibio el parametro ordenar, se valida
             if($ordenar!=null)
             {
                 $e = self::validarOrdenar($ordenar);
@@ -319,7 +328,10 @@ require_once("interfaces/ImpuestosYRetenciones.interface.php");
 	(
 		$ordenar = null
 	)
-	{  
+	{
+            Logger::log("Listando todos los impuestos");
+            
+            //Si se recibio el parametro ordenar, se valida
             if($ordenar!=null)
             {
                 $e = self::validarOrdenar($ordenar);
@@ -353,29 +365,60 @@ require_once("interfaces/ImpuestosYRetenciones.interface.php");
 		$descripcion = null
 	)
 	{  
-  
-  
+            Logger::log("Creando una nueva retencion");
+            
+            //Se validan los parametros recibidos
+            $e = self::validarEsMonto($es_monto);
+            if(is_string($e))
+            {
+                Logger::error($e);
+                throw new Exception($e);
+            }
+            $e = self::validarMontoPorcentaje($monto_porcentaje);
+            if(is_string($e))
+            {
+                Logger::error($e);
+                throw new Exception($e);
+            }
+            $e = self::validarNombre($nombre);
+            if(is_string($e))
+            {
+                Logger::error($e);
+                throw new Exception($e);
+            }
+            if(!is_null($descripcion))
+            {
+                $e = self::validarDescripcion($descripcion);
+                if(is_string($e))
+                {
+                    Logger::error($e);
+                    throw new Exception($e);
+                }
+            }
+            
+            $retencion = new Retencion(
+                    array(
+                        "es_monto"          => $es_monto,
+                        "monto_porcentaje"  => $monto_porcentaje,
+                        "nombre"            => $nombre,
+                        "descripcion"       => $descripcion
+                    )
+                    );
+            DAO::transBegin();
+            try
+            {
+                RetencionDAO::save($retencion);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se ha podido crear la nueva retencion: ".$e);
+                throw new Exception("No se ha podido crear la nueva retencion, consulte a su administrador de sistema");
+            }
+            DAO::transEnd();
+            Logger::log("Retencion creada exitosamente");
+            return array( "id_retencion" => $retencion->getIdRetencion() );
 	}
   
-	/**
- 	 *
- 	 *Crear un nuevo impuesto.
- 	 *
- 	 * @param monto_porcentaje float monto o porcentaje que representa este impuesto
- 	 * @param nombre string Nombre del impuesto
- 	 * @param es_monto bool Si es verdadero, el campo de monto_porcentaje sera tomado como un monto fijo, si es falso, sera tomado como un porcentaje
- 	 * @param descripcion string Descripcion del impuesto
- 	 * @return id_impuesto int Id del impuesto insertado.
- 	 **/
-	public static function NuevoImpuesto
-	(
-		$monto_porcentaje, 
-		$nombre, 
-		$es_monto, 
-		$descripcion = ""
-	)
-	{  
-  
-  
-	}
+	
   }
