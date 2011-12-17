@@ -52,17 +52,22 @@ require_once("interfaces/Consignaciones.interface.php");
         /*
          * Valida que un usuario exista y que este activo
          */
-        private static function validarUsuario
+        private static function validarCliente
         (
-                $id_usuario
+                $id_cliente
         )
         {
-            $usuario = UsuarioDAO::getByPK($id_usuario);
+            $usuario = UsuarioDAO::getByPK($id_cliente);
             if(is_null($usuario))
-                return "El usuario ".$id_usuario." no existe";
+                return "El cliente ".$id_cliente." no existe";
             
             if(!$usuario->getActivo())
-                return "EL usuario ".$id_usuario." no esta activo";
+                return "EL cliente ".$id_cliente." no esta activo";
+            
+            if(is_null($usuario->getIdClasificacionCliente()))
+                return "El usuario ".$id_cliente." no es un cliente";
+            
+            return true;
         }
         
       
@@ -82,10 +87,48 @@ require_once("interfaces/Consignaciones.interface.php");
 		$id_cliente
 	)
 	{  
-            Logger::log("Desactivando consignatario");
+            Logger::log("Desactivando consignatario ".$id_cliente);
             
-            //valida que el cliente exista, que este activo y que sea un consignatario
+            //valida que el cliente exista, que este activo y que sea un cliente
+            $e = self::validarCliente($id_cliente);
+            if(is_string($e))
+            {
+                Logger::error($e);
+                throw new Exception($e);
+            }
             
+            $cliente = UsuarioDAO::getByPK($id_cliente);
+            if(!$cliente->getConsignatario())
+            {
+                Logger::error("El cliente ".$id_cliente." no es un consignatario");
+                throw new Exception("El cliente no es un consignatario");
+            }
+            
+            $consignaciones = ConsignacionDAO::search( new Consignacion( array( "id_cliente" => $id_cliente ) ) );
+            foreach($consignaciones as $consignacion)
+            {
+                if($consignacion->getActiva())
+                {
+                    Logger::error("El consignatario no puede ser desactivado pues aun tiene consignaciones activas: id_consignacion= ".$consignacion->getIdConsignacion());
+                    throw new Exception("El consignatario no puede ser desactivado pues aun tiene consignaciones activas");
+                }
+            }
+            
+            $cliente->setConsignatario(0);
+            
+            DAO::transBegin();
+            try
+            {
+                UsuarioDAO::save($cliente);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se ha podido desactivar al consignatario: ".$e);
+                throw new Exception("No se ha podido desactivar al consignatario");
+            }
+            DAO::transEnd();
+            Logger::log("Consignatario desactivado exitosamente");
 	}
   
 	/**
