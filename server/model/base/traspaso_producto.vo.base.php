@@ -94,7 +94,7 @@ class TraspasoProducto extends VO
 	  * 
 	  * cantidad de producto a traspasar<br>
 	  * @access public
-	  * @var int(11)
+	  * @var float
 	  */
 	public $cantidad_enviada;
 
@@ -103,7 +103,7 @@ class TraspasoProducto extends VO
 	  * 
 	  * Cantidad de producto recibida<br>
 	  * @access public
-	  * @var int(11)
+	  * @var float
 	  */
 	public $cantidad_recibida;
 
@@ -189,7 +189,7 @@ class TraspasoProducto extends VO
 	  * getCantidadEnviada
 	  * 
 	  * Get the <i>cantidad_enviada</i> property for this object. Donde <i>cantidad_enviada</i> es cantidad de producto a traspasar
-	  * @return int(11)
+	  * @return float
 	  */
 	final public function getCantidadEnviada()
 	{
@@ -200,9 +200,9 @@ class TraspasoProducto extends VO
 	  * setCantidadEnviada( $cantidad_enviada )
 	  * 
 	  * Set the <i>cantidad_enviada</i> property for this object. Donde <i>cantidad_enviada</i> es cantidad de producto a traspasar.
-	  * Una validacion basica se hara aqui para comprobar que <i>cantidad_enviada</i> es de tipo <i>int(11)</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>cantidad_enviada</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param int(11)
+	  * @param float
 	  */
 	final public function setCantidadEnviada( $cantidad_enviada )
 	{
@@ -213,7 +213,7 @@ class TraspasoProducto extends VO
 	  * getCantidadRecibida
 	  * 
 	  * Get the <i>cantidad_recibida</i> property for this object. Donde <i>cantidad_recibida</i> es Cantidad de producto recibida
-	  * @return int(11)
+	  * @return float
 	  */
 	final public function getCantidadRecibida()
 	{
@@ -224,9 +224,9 @@ class TraspasoProducto extends VO
 	  * setCantidadRecibida( $cantidad_recibida )
 	  * 
 	  * Set the <i>cantidad_recibida</i> property for this object. Donde <i>cantidad_recibida</i> es Cantidad de producto recibida.
-	  * Una validacion basica se hara aqui para comprobar que <i>cantidad_recibida</i> es de tipo <i>int(11)</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>cantidad_recibida</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param int(11)
+	  * @param float
 	  */
 	final public function setCantidadRecibida( $cantidad_recibida )
 	{

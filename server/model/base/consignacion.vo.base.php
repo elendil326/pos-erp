@@ -31,9 +31,6 @@ class Consignacion extends VO
 			if( isset($data['id_usuario']) ){
 				$this->id_usuario = $data['id_usuario'];
 			}
-			if( isset($data['id_almacen']) ){
-				$this->id_almacen = $data['id_almacen'];
-			}
 			if( isset($data['id_usuario_cancelacion']) ){
 				$this->id_usuario_cancelacion = $data['id_usuario_cancelacion'];
 			}
@@ -80,7 +77,6 @@ class Consignacion extends VO
 			"id_consignacion" => $this->id_consignacion,
 			"id_cliente" => $this->id_cliente,
 			"id_usuario" => $this->id_usuario,
-			"id_almacen" => $this->id_almacen,
 			"id_usuario_cancelacion" => $this->id_usuario_cancelacion,
 			"fecha_creacion" => $this->fecha_creacion,
 			"activa" => $this->activa,
@@ -123,15 +119,6 @@ class Consignacion extends VO
 	  * @var int(11)
 	  */
 	public $id_usuario;
-
-	/**
-	  * id_almacen
-	  * 
-	  * Id del almacen generado por la consignacion<br>
-	  * @access public
-	  * @var int(11)
-	  */
-	public $id_almacen;
 
 	/**
 	  * id_usuario_cancelacion
@@ -297,30 +284,6 @@ class Consignacion extends VO
 	final public function setIdUsuario( $id_usuario )
 	{
 		$this->id_usuario = $id_usuario;
-	}
-
-	/**
-	  * getIdAlmacen
-	  * 
-	  * Get the <i>id_almacen</i> property for this object. Donde <i>id_almacen</i> es Id del almacen generado por la consignacion
-	  * @return int(11)
-	  */
-	final public function getIdAlmacen()
-	{
-		return $this->id_almacen;
-	}
-
-	/**
-	  * setIdAlmacen( $id_almacen )
-	  * 
-	  * Set the <i>id_almacen</i> property for this object. Donde <i>id_almacen</i> es Id del almacen generado por la consignacion.
-	  * Una validacion basica se hara aqui para comprobar que <i>id_almacen</i> es de tipo <i>int(11)</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param int(11)
-	  */
-	final public function setIdAlmacen( $id_almacen )
-	{
-		$this->id_almacen = $id_almacen;
 	}
 
 	/**

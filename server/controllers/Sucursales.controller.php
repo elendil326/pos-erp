@@ -1022,7 +1022,7 @@ require_once("interfaces/Sucursales.interface.php");
             $almacenes = AlmacenDAO::search(new Almacen( array( "id_sucursal" => $id_sucursal ) ) );
             foreach($almacenes as $almacen)
             {
-                if($almacen->getNombre()==trim($nombre))
+                if($almacen->getNombre()==trim($nombre)&&$almacen->getActivo())
                 {
                     Logger::log("El nombre (".$nombre.") ya esta siendo usado por el almacen: ".$almacen->getIdAlmacen());
                     throw new Exception("El nombre ya esta en uso");

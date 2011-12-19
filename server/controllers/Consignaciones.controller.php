@@ -50,7 +50,7 @@ require_once("interfaces/Consignaciones.interface.php");
 	}
         
         /*
-         * Valida que un usuario exista y que este activo
+         * Valida que un usuario exista, que este activo y que sea cliente
          */
         private static function validarCliente
         (
@@ -66,6 +66,22 @@ require_once("interfaces/Consignaciones.interface.php");
             
             if(is_null($usuario->getIdClasificacionCliente()))
                 return "El usuario ".$id_cliente." no es un cliente";
+            
+            return true;
+        }
+        
+        private static function validarConsignatario
+        (
+                $id_cliente
+        )
+        {
+            $e = self::validarCliente($id_cliente);
+            if(is_string($e))
+                return $e;
+            
+            $cliente  = UsuarioDAO::getByPK($id_cliente);
+            if(!$cliente->getConsignatario())
+                return "El cliente ".$id_cliente." no es un consignatario";
             
             return true;
         }
@@ -90,19 +106,14 @@ require_once("interfaces/Consignaciones.interface.php");
             Logger::log("Desactivando consignatario ".$id_cliente);
             
             //valida que el cliente exista, que este activo y que sea un cliente
-            $e = self::validarCliente($id_cliente);
+            $e = self::validarConsignatario($id_cliente);
             if(is_string($e))
             {
                 Logger::error($e);
                 throw new Exception($e);
             }
             
-            $cliente = UsuarioDAO::getByPK($id_cliente);
-            if(!$cliente->getConsignatario())
-            {
-                Logger::error("El cliente ".$id_cliente." no es un consignatario");
-                throw new Exception("El cliente no es un consignatario");
-            }
+            $cliente = UsuarioDAO::getByPK($id_ciente);
             
             $consignaciones = ConsignacionDAO::search( new Consignacion( array( "id_cliente" => $id_cliente ) ) );
             foreach($consignaciones as $consignacion)
@@ -115,11 +126,23 @@ require_once("interfaces/Consignaciones.interface.php");
             }
             
             $cliente->setConsignatario(0);
+            $almacenes = AlmacenDAO::search(new Almacen( array( "nombre" => $cliente->getCodigoUsuario() , "activo" => 1 ) ));
             
             DAO::transBegin();
             try
             {
                 UsuarioDAO::save($cliente);
+                foreach($almacenes as $almacen)
+                {
+                    $productos_almacen = ProductoAlmacenDAO::search(new ProductoAlmacen( array( "id_almacen" => $almacen->getIdAlmacen() ) ));
+                    foreach($productos_almacen as $producto_almacen)
+                    {
+                        if($producto_almacen->getCantidad()!=0)
+                            throw new Exception("El almacen no puede ser borrado pues aun contiene productos");
+                    }
+                    $almacen->setActivo(0);
+                    AlmacenDAO::save($almacen);
+                }
             }
             catch(Exception $e)
             {
@@ -145,8 +168,16 @@ require_once("interfaces/Consignaciones.interface.php");
 		$id_consignatario
 	)
 	{  
-  
-  
+            Logger::log("Creando nueva consignacion");
+            
+            $e = self::validarConsignatario($id_consignatario);
+            if(is_string($e))
+            {
+                Logger::error($e);
+                throw new Exception($e);
+            }
+            
+            
 	}
   
 	/**

@@ -175,7 +175,7 @@ class Traspaso extends VO
 	  * 
 	  * Si el traspaso esta en solicitud, en envio o si ya fue recibida<br>
 	  * @access public
-	  * @var varchar(30)
+	  * @var enum('Envio
 	  */
 	public $estado;
 
@@ -421,7 +421,7 @@ class Traspaso extends VO
 	  * getEstado
 	  * 
 	  * Get the <i>estado</i> property for this object. Donde <i>estado</i> es Si el traspaso esta en solicitud, en envio o si ya fue recibida
-	  * @return varchar(30)
+	  * @return enum('Envio
 	  */
 	final public function getEstado()
 	{
@@ -432,9 +432,9 @@ class Traspaso extends VO
 	  * setEstado( $estado )
 	  * 
 	  * Set the <i>estado</i> property for this object. Donde <i>estado</i> es Si el traspaso esta en solicitud, en envio o si ya fue recibida.
-	  * Una validacion basica se hara aqui para comprobar que <i>estado</i> es de tipo <i>varchar(30)</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>estado</i> es de tipo <i>enum('Envio</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param varchar(30)
+	  * @param enum('Envio
 	  */
 	final public function setEstado( $estado )
 	{
