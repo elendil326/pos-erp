@@ -28,17 +28,17 @@ class InspeccionConsignacionProducto extends VO
 			if( isset($data['id_producto']) ){
 				$this->id_producto = $data['id_producto'];
 			}
-			if( isset($data['cantidad']) ){
-				$this->cantidad = $data['cantidad'];
+			if( isset($data['id_unidad']) ){
+				$this->id_unidad = $data['id_unidad'];
 			}
-			if( isset($data['actual']) ){
-				$this->actual = $data['actual'];
+			if( isset($data['cantidad_actual']) ){
+				$this->cantidad_actual = $data['cantidad_actual'];
 			}
-			if( isset($data['solicitado']) ){
-				$this->solicitado = $data['solicitado'];
+			if( isset($data['cantidad_solicitada']) ){
+				$this->cantidad_solicitada = $data['cantidad_solicitada'];
 			}
-			if( isset($data['devuelto']) ){
-				$this->devuelto = $data['devuelto'];
+			if( isset($data['cantidad_devuelta']) ){
+				$this->cantidad_devuelta = $data['cantidad_devuelta'];
 			}
 		}
 	}
@@ -55,10 +55,10 @@ class InspeccionConsignacionProducto extends VO
 		$vec = array( 
 			"id_inspeccion_consignacion" => $this->id_inspeccion_consignacion,
 			"id_producto" => $this->id_producto,
-			"cantidad" => $this->cantidad,
-			"actual" => $this->actual,
-			"solicitado" => $this->solicitado,
-			"devuelto" => $this->devuelto
+			"id_unidad" => $this->id_unidad,
+			"cantidad_actual" => $this->cantidad_actual,
+			"cantidad_solicitada" => $this->cantidad_solicitada,
+			"cantidad_devuelta" => $this->cantidad_devuelta
 		); 
 	return json_encode($vec); 
 	}
@@ -84,40 +84,41 @@ class InspeccionConsignacionProducto extends VO
 	public $id_producto;
 
 	/**
-	  * cantidad
+	  * id_unidad
 	  * 
-	  * cantidad del producto<br>
+	  * Id de la unidad del producto<br>
+	  * <b>Llave Primaria</b><br>
+	  * @access public
+	  * @var int(11)
+	  */
+	public $id_unidad;
+
+	/**
+	  * cantidad_actual
+	  * 
+	  * cantidad del producto actualmente<br>
 	  * @access public
 	  * @var float
 	  */
-	public $cantidad;
+	public $cantidad_actual;
 
 	/**
-	  * actual
+	  * cantidad_solicitada
 	  * 
-	  * true si la cantidad se refiere a la cantidad actual de ese producto<br>
+	  * cantidad del producto solicitado<br>
 	  * @access public
-	  * @var tinyint(1)
+	  * @var float
 	  */
-	public $actual;
+	public $cantidad_solicitada;
 
 	/**
-	  * solicitado
+	  * cantidad_devuelta
 	  * 
-	  * true si la cantidad se refiere a la cantidad de ese producto que se solicita<br>
+	  * cantidad del producto devuelto<br>
 	  * @access public
-	  * @var tinyint(1)
+	  * @var float
 	  */
-	public $solicitado;
-
-	/**
-	  * devuelto
-	  * 
-	  * true si la cantidad de ese producto es devuelta<br>
-	  * @access public
-	  * @var tinyint(1)
-	  */
-	public $devuelto;
+	public $cantidad_devuelta;
 
 	/**
 	  * getIdInspeccionConsignacion
@@ -172,99 +173,101 @@ class InspeccionConsignacionProducto extends VO
 	}
 
 	/**
-	  * getCantidad
+	  * getIdUnidad
 	  * 
-	  * Get the <i>cantidad</i> property for this object. Donde <i>cantidad</i> es cantidad del producto
-	  * @return float
+	  * Get the <i>id_unidad</i> property for this object. Donde <i>id_unidad</i> es Id de la unidad del producto
+	  * @return int(11)
 	  */
-	final public function getCantidad()
+	final public function getIdUnidad()
 	{
-		return $this->cantidad;
+		return $this->id_unidad;
 	}
 
 	/**
-	  * setCantidad( $cantidad )
+	  * setIdUnidad( $id_unidad )
 	  * 
-	  * Set the <i>cantidad</i> property for this object. Donde <i>cantidad</i> es cantidad del producto.
-	  * Una validacion basica se hara aqui para comprobar que <i>cantidad</i> es de tipo <i>float</i>. 
+	  * Set the <i>id_unidad</i> property for this object. Donde <i>id_unidad</i> es Id de la unidad del producto.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_unidad</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
+	  * No deberias usar setIdUnidad( ) a menos que sepas exactamente lo que estas haciendo.<br>
+	  * @param int(11)
+	  */
+	final public function setIdUnidad( $id_unidad )
+	{
+		$this->id_unidad = $id_unidad;
+	}
+
+	/**
+	  * getCantidadActual
+	  * 
+	  * Get the <i>cantidad_actual</i> property for this object. Donde <i>cantidad_actual</i> es cantidad del producto actualmente
+	  * @return float
+	  */
+	final public function getCantidadActual()
+	{
+		return $this->cantidad_actual;
+	}
+
+	/**
+	  * setCantidadActual( $cantidad_actual )
+	  * 
+	  * Set the <i>cantidad_actual</i> property for this object. Donde <i>cantidad_actual</i> es cantidad del producto actualmente.
+	  * Una validacion basica se hara aqui para comprobar que <i>cantidad_actual</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
 	  */
-	final public function setCantidad( $cantidad )
+	final public function setCantidadActual( $cantidad_actual )
 	{
-		$this->cantidad = $cantidad;
+		$this->cantidad_actual = $cantidad_actual;
 	}
 
 	/**
-	  * getActual
+	  * getCantidadSolicitada
 	  * 
-	  * Get the <i>actual</i> property for this object. Donde <i>actual</i> es true si la cantidad se refiere a la cantidad actual de ese producto
-	  * @return tinyint(1)
+	  * Get the <i>cantidad_solicitada</i> property for this object. Donde <i>cantidad_solicitada</i> es cantidad del producto solicitado
+	  * @return float
 	  */
-	final public function getActual()
+	final public function getCantidadSolicitada()
 	{
-		return $this->actual;
+		return $this->cantidad_solicitada;
 	}
 
 	/**
-	  * setActual( $actual )
+	  * setCantidadSolicitada( $cantidad_solicitada )
 	  * 
-	  * Set the <i>actual</i> property for this object. Donde <i>actual</i> es true si la cantidad se refiere a la cantidad actual de ese producto.
-	  * Una validacion basica se hara aqui para comprobar que <i>actual</i> es de tipo <i>tinyint(1)</i>. 
+	  * Set the <i>cantidad_solicitada</i> property for this object. Donde <i>cantidad_solicitada</i> es cantidad del producto solicitado.
+	  * Una validacion basica se hara aqui para comprobar que <i>cantidad_solicitada</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param tinyint(1)
+	  * @param float
 	  */
-	final public function setActual( $actual )
+	final public function setCantidadSolicitada( $cantidad_solicitada )
 	{
-		$this->actual = $actual;
+		$this->cantidad_solicitada = $cantidad_solicitada;
 	}
 
 	/**
-	  * getSolicitado
+	  * getCantidadDevuelta
 	  * 
-	  * Get the <i>solicitado</i> property for this object. Donde <i>solicitado</i> es true si la cantidad se refiere a la cantidad de ese producto que se solicita
-	  * @return tinyint(1)
+	  * Get the <i>cantidad_devuelta</i> property for this object. Donde <i>cantidad_devuelta</i> es cantidad del producto devuelto
+	  * @return float
 	  */
-	final public function getSolicitado()
+	final public function getCantidadDevuelta()
 	{
-		return $this->solicitado;
+		return $this->cantidad_devuelta;
 	}
 
 	/**
-	  * setSolicitado( $solicitado )
+	  * setCantidadDevuelta( $cantidad_devuelta )
 	  * 
-	  * Set the <i>solicitado</i> property for this object. Donde <i>solicitado</i> es true si la cantidad se refiere a la cantidad de ese producto que se solicita.
-	  * Una validacion basica se hara aqui para comprobar que <i>solicitado</i> es de tipo <i>tinyint(1)</i>. 
+	  * Set the <i>cantidad_devuelta</i> property for this object. Donde <i>cantidad_devuelta</i> es cantidad del producto devuelto.
+	  * Una validacion basica se hara aqui para comprobar que <i>cantidad_devuelta</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param tinyint(1)
+	  * @param float
 	  */
-	final public function setSolicitado( $solicitado )
+	final public function setCantidadDevuelta( $cantidad_devuelta )
 	{
-		$this->solicitado = $solicitado;
-	}
-
-	/**
-	  * getDevuelto
-	  * 
-	  * Get the <i>devuelto</i> property for this object. Donde <i>devuelto</i> es true si la cantidad de ese producto es devuelta
-	  * @return tinyint(1)
-	  */
-	final public function getDevuelto()
-	{
-		return $this->devuelto;
-	}
-
-	/**
-	  * setDevuelto( $devuelto )
-	  * 
-	  * Set the <i>devuelto</i> property for this object. Donde <i>devuelto</i> es true si la cantidad de ese producto es devuelta.
-	  * Una validacion basica se hara aqui para comprobar que <i>devuelto</i> es de tipo <i>tinyint(1)</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param tinyint(1)
-	  */
-	final public function setDevuelto( $devuelto )
-	{
-		$this->devuelto = $devuelto;
+		$this->cantidad_devuelta = $cantidad_devuelta;
 	}
 
 }

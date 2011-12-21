@@ -17,8 +17,10 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"productos" => new ApiExposedProperty("productos", true, GET, array( "json" )),
+			"fecha_termino" => new ApiExposedProperty("fecha_termino", true, GET, array( "string" )),
+			"folio" => new ApiExposedProperty("folio", true, GET, array( "string" )),
 			"id_consignatario" => new ApiExposedProperty("id_consignatario", true, GET, array( "int" )),
+			"productos" => new ApiExposedProperty("productos", true, GET, array( "json" )),
 		);
 	}
 
@@ -27,8 +29,10 @@
  		$this->response = ConsignacionesController::Nueva( 
  			
 			
-			isset($_GET['productos'] ) ? $_GET['productos'] : null,
-			isset($_GET['id_consignatario'] ) ? $_GET['id_consignatario'] : null
+			isset($_GET['fecha_termino'] ) ? $_GET['fecha_termino'] : null,
+			isset($_GET['folio'] ) ? $_GET['folio'] : null,
+			isset($_GET['id_consignatario'] ) ? $_GET['id_consignatario'] : null,
+			isset($_GET['productos'] ) ? $_GET['productos'] : null
 			
 			);
 		}catch(Exception $e){

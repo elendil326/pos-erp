@@ -28,6 +28,9 @@ class ConsignacionProducto extends VO
 			if( isset($data['id_producto']) ){
 				$this->id_producto = $data['id_producto'];
 			}
+			if( isset($data['id_unidad']) ){
+				$this->id_unidad = $data['id_unidad'];
+			}
 			if( isset($data['cantidad']) ){
 				$this->cantidad = $data['cantidad'];
 			}
@@ -58,6 +61,7 @@ class ConsignacionProducto extends VO
 		$vec = array( 
 			"id_consignacion" => $this->id_consignacion,
 			"id_producto" => $this->id_producto,
+			"id_unidad" => $this->id_unidad,
 			"cantidad" => $this->cantidad,
 			"impuesto" => $this->impuesto,
 			"descuento" => $this->descuento,
@@ -86,6 +90,16 @@ class ConsignacionProducto extends VO
 	  * @var int(11)
 	  */
 	public $id_producto;
+
+	/**
+	  * id_unidad
+	  * 
+	  * Id de la unidad del producto<br>
+	  * <b>Llave Primaria</b><br>
+	  * @access public
+	  * @var int(11)
+	  */
+	public $id_unidad;
 
 	/**
 	  * cantidad
@@ -182,6 +196,32 @@ class ConsignacionProducto extends VO
 	final public function setIdProducto( $id_producto )
 	{
 		$this->id_producto = $id_producto;
+	}
+
+	/**
+	  * getIdUnidad
+	  * 
+	  * Get the <i>id_unidad</i> property for this object. Donde <i>id_unidad</i> es Id de la unidad del producto
+	  * @return int(11)
+	  */
+	final public function getIdUnidad()
+	{
+		return $this->id_unidad;
+	}
+
+	/**
+	  * setIdUnidad( $id_unidad )
+	  * 
+	  * Set the <i>id_unidad</i> property for this object. Donde <i>id_unidad</i> es Id de la unidad del producto.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_unidad</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
+	  * No deberias usar setIdUnidad( ) a menos que sepas exactamente lo que estas haciendo.<br>
+	  * @param int(11)
+	  */
+	final public function setIdUnidad( $id_unidad )
+	{
+		$this->id_unidad = $id_unidad;
 	}
 
 	/**

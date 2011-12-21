@@ -14,22 +14,25 @@ abstract class ConsignacionProductoDAOBase extends DAO
 
 		private static $loadedRecords = array();
 
-		private static function recordExists(  $id_consignacion, $id_producto ){
+		private static function recordExists(  $id_consignacion, $id_producto, $id_unidad ){
 			$pk = "";
 			$pk .= $id_consignacion . "-";
 			$pk .= $id_producto . "-";
+			$pk .= $id_unidad . "-";
 			return array_key_exists ( $pk , self::$loadedRecords );
 		}
-		private static function pushRecord( $inventario,  $id_consignacion, $id_producto){
+		private static function pushRecord( $inventario,  $id_consignacion, $id_producto, $id_unidad){
 			$pk = "";
 			$pk .= $id_consignacion . "-";
 			$pk .= $id_producto . "-";
+			$pk .= $id_unidad . "-";
 			self::$loadedRecords [$pk] = $inventario;
 		}
-		private static function getRecord(  $id_consignacion, $id_producto ){
+		private static function getRecord(  $id_consignacion, $id_producto, $id_unidad ){
 			$pk = "";
 			$pk .= $id_consignacion . "-";
 			$pk .= $id_producto . "-";
+			$pk .= $id_unidad . "-";
 			return self::$loadedRecords[$pk];
 		}
 	/**
@@ -47,7 +50,7 @@ abstract class ConsignacionProductoDAOBase extends DAO
 	  **/
 	public static final function save( &$consignacion_producto )
 	{
-		if( ! is_null ( self::getByPK(  $consignacion_producto->getIdConsignacion() , $consignacion_producto->getIdProducto() ) ) )
+		if( ! is_null ( self::getByPK(  $consignacion_producto->getIdConsignacion() , $consignacion_producto->getIdProducto() , $consignacion_producto->getIdUnidad() ) ) )
 		{
 			try{ return ConsignacionProductoDAOBase::update( $consignacion_producto) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -65,18 +68,18 @@ abstract class ConsignacionProductoDAOBase extends DAO
 	  *	@static
 	  * @return @link ConsignacionProducto Un objeto del tipo {@link ConsignacionProducto}. NULL si no hay tal registro.
 	  **/
-	public static final function getByPK(  $id_consignacion, $id_producto )
+	public static final function getByPK(  $id_consignacion, $id_producto, $id_unidad )
 	{
-		if(self::recordExists(  $id_consignacion, $id_producto)){
-			return self::getRecord( $id_consignacion, $id_producto );
+		if(self::recordExists(  $id_consignacion, $id_producto, $id_unidad)){
+			return self::getRecord( $id_consignacion, $id_producto, $id_unidad );
 		}
-		$sql = "SELECT * FROM consignacion_producto WHERE (id_consignacion = ? AND id_producto = ? ) LIMIT 1;";
-		$params = array(  $id_consignacion, $id_producto );
+		$sql = "SELECT * FROM consignacion_producto WHERE (id_consignacion = ? AND id_producto = ? AND id_unidad = ? ) LIMIT 1;";
+		$params = array(  $id_consignacion, $id_producto, $id_unidad );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new ConsignacionProducto( $rs );
-			self::pushRecord( $foo,  $id_consignacion, $id_producto );
+			self::pushRecord( $foo,  $id_consignacion, $id_producto, $id_unidad );
 			return $foo;
 	}
 
@@ -113,7 +116,8 @@ abstract class ConsignacionProductoDAOBase extends DAO
     		array_push( $allData, $bar);
 			//id_consignacion
 			//id_producto
-    		self::pushRecord( $bar, $foo["id_consignacion"],$foo["id_producto"] );
+			//id_unidad
+    		self::pushRecord( $bar, $foo["id_consignacion"],$foo["id_producto"],$foo["id_unidad"] );
 		}
 		return $allData;
 	}
@@ -157,6 +161,11 @@ abstract class ConsignacionProductoDAOBase extends DAO
 			array_push( $val, $consignacion_producto->getIdProducto() );
 		}
 
+		if( ! is_null( $consignacion_producto->getIdUnidad() ) ){
+			$sql .= " id_unidad = ? AND";
+			array_push( $val, $consignacion_producto->getIdUnidad() );
+		}
+
 		if( ! is_null( $consignacion_producto->getCantidad() ) ){
 			$sql .= " cantidad = ? AND";
 			array_push( $val, $consignacion_producto->getCantidad() );
@@ -194,7 +203,7 @@ abstract class ConsignacionProductoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new ConsignacionProducto($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_consignacion"],$foo["id_producto"] );
+    		self::pushRecord( $bar, $foo["id_consignacion"],$foo["id_producto"],$foo["id_unidad"] );
 		}
 		return $ar;
 	}
@@ -213,14 +222,14 @@ abstract class ConsignacionProductoDAOBase extends DAO
 	  **/
 	private static final function update( $consignacion_producto )
 	{
-		$sql = "UPDATE consignacion_producto SET  cantidad = ?, impuesto = ?, descuento = ?, retencion = ?, precio = ? WHERE  id_consignacion = ? AND id_producto = ?;";
+		$sql = "UPDATE consignacion_producto SET  cantidad = ?, impuesto = ?, descuento = ?, retencion = ?, precio = ? WHERE  id_consignacion = ? AND id_producto = ? AND id_unidad = ?;";
 		$params = array( 
 			$consignacion_producto->getCantidad(), 
 			$consignacion_producto->getImpuesto(), 
 			$consignacion_producto->getDescuento(), 
 			$consignacion_producto->getRetencion(), 
 			$consignacion_producto->getPrecio(), 
-			$consignacion_producto->getIdConsignacion(),$consignacion_producto->getIdProducto(), );
+			$consignacion_producto->getIdConsignacion(),$consignacion_producto->getIdProducto(),$consignacion_producto->getIdUnidad(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
@@ -243,10 +252,11 @@ abstract class ConsignacionProductoDAOBase extends DAO
 	  **/
 	private static final function create( &$consignacion_producto )
 	{
-		$sql = "INSERT INTO consignacion_producto ( id_consignacion, id_producto, cantidad, impuesto, descuento, retencion, precio ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO consignacion_producto ( id_consignacion, id_producto, id_unidad, cantidad, impuesto, descuento, retencion, precio ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$consignacion_producto->getIdConsignacion(), 
 			$consignacion_producto->getIdProducto(), 
+			$consignacion_producto->getIdUnidad(), 
 			$consignacion_producto->getCantidad(), 
 			$consignacion_producto->getImpuesto(), 
 			$consignacion_producto->getDescuento(), 
@@ -317,6 +327,17 @@ abstract class ConsignacionProductoDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_producto = ? AND"; 
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( ( !is_null (($a = $consignacion_productoA->getIdUnidad()) ) ) & ( ! is_null ( ($b = $consignacion_productoB->getIdUnidad()) ) ) ){
+				$sql .= " id_unidad >= ? AND id_unidad <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " id_unidad = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
@@ -407,9 +428,9 @@ abstract class ConsignacionProductoDAOBase extends DAO
 	  **/
 	public static final function delete( &$consignacion_producto )
 	{
-		if( is_null( self::getByPK($consignacion_producto->getIdConsignacion(), $consignacion_producto->getIdProducto()) ) ) throw new Exception('Campo no encontrado.');
-		$sql = "DELETE FROM consignacion_producto WHERE  id_consignacion = ? AND id_producto = ?;";
-		$params = array( $consignacion_producto->getIdConsignacion(), $consignacion_producto->getIdProducto() );
+		if( is_null( self::getByPK($consignacion_producto->getIdConsignacion(), $consignacion_producto->getIdProducto(), $consignacion_producto->getIdUnidad()) ) ) throw new Exception('Campo no encontrado.');
+		$sql = "DELETE FROM consignacion_producto WHERE  id_consignacion = ? AND id_producto = ? AND id_unidad = ?;";
+		$params = array( $consignacion_producto->getIdConsignacion(), $consignacion_producto->getIdProducto(), $consignacion_producto->getIdUnidad() );
 		global $conn;
 
 		$conn->Execute($sql, $params);

@@ -17,12 +17,12 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"productos_actuales" => new ApiExposedProperty("productos_actuales", true, GET, array( "json" )),
 			"id_inspeccion" => new ApiExposedProperty("id_inspeccion", true, GET, array( "int" )),
-			"id_inspector" => new ApiExposedProperty("id_inspector", true, GET, array( "int" )),
-			"monto_abonado" => new ApiExposedProperty("monto_abonado", false, GET, array( "float" )),
-			"producto_solicitado" => new ApiExposedProperty("producto_solicitado", false, GET, array( "json" )),
+			"productos_actuales" => new ApiExposedProperty("productos_actuales", true, GET, array( "json" )),
 			"producto_devuelto" => new ApiExposedProperty("producto_devuelto", false, GET, array( "json" )),
+			"producto_solicitado" => new ApiExposedProperty("producto_solicitado", false, GET, array( "json" )),
+			"monto_abonado" => new ApiExposedProperty("monto_abonado", false, GET, array( "float" )),
+			"id_inspector" => new ApiExposedProperty("id_inspector", false, GET, array( "int" )),
 		);
 	}
 
@@ -31,12 +31,12 @@
  		$this->response = ConsignacionesController::RegistrarInspeccion( 
  			
 			
-			isset($_GET['productos_actuales'] ) ? $_GET['productos_actuales'] : null,
 			isset($_GET['id_inspeccion'] ) ? $_GET['id_inspeccion'] : null,
-			isset($_GET['id_inspector'] ) ? $_GET['id_inspector'] : null,
-			isset($_GET['monto_abonado'] ) ? $_GET['monto_abonado'] : null,
+			isset($_GET['productos_actuales'] ) ? $_GET['productos_actuales'] : null,
+			isset($_GET['producto_devuelto'] ) ? $_GET['producto_devuelto'] : null,
 			isset($_GET['producto_solicitado'] ) ? $_GET['producto_solicitado'] : null,
-			isset($_GET['producto_devuelto'] ) ? $_GET['producto_devuelto'] : null
+			isset($_GET['monto_abonado'] ) ? $_GET['monto_abonado'] : null,
+			isset($_GET['id_inspector'] ) ? $_GET['id_inspector'] : null
 			
 			);
 		}catch(Exception $e){

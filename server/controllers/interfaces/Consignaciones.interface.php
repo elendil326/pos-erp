@@ -10,6 +10,20 @@
   
 	/**
  	 *
+ 	 *Este metodo solo debe ser usado cuando no se ha vendido ningun producto de la consginacion y todos seran devueltos
+ 	 *
+ 	 * @param productos_almacen json Arreglo que contendra los ids de producto, ids de unidad, cantidad y el id del almacen al que iran.
+ 	 **/
+  static function Cancelar
+	(
+		$productos_almacen
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
  	 *Desactiva la bandera de consignatario a un cliente y elimina su almacen correspondiente. Para poder hacer esto, el almacen debera estar vacio.
  	 *
  	 * @param id_cliente int Id del cliente a desactivar como consignatario
@@ -126,21 +140,21 @@
  	 *
  	 *Se llama cuando se realiza una revision a una orden de consigacion. Actualiza el estado del almacen del cliente, se facturan a credito o de contado las ventas realizadas y se registra la entrada de dinero. La fecha sera tomada del servidor.
  	 *
- 	 * @param productos_actuales json Ojeto que contendra los ids de los productos con sus cantidades con los que cuenta actualmente el cliente, puede ser un json vacio. Este campo no se ve afectado por los campos producto_solicitado ni producto_devuelto.
  	 * @param id_inspeccion int Id de la inspeccion realizada
- 	 * @param id_inspector int Id del usuario que realiza la inspeccion
- 	 * @param monto_abonado float Si la consignacion fue de contado, el cobrador debe registrar el monto equivalente a las ventas del cliente
- 	 * @param producto_solicitado json Objeto que contendra los ids de los productos y sus cantidades que el cliente solicita, si este campo es obtenido, se editara la consignacion original agregando estos productos
+ 	 * @param productos_actuales json Ojeto que contendra los ids de los productos con sus cantidades con los que cuenta actualmente el cliente, puede ser un json vacio. Este campo no se ve afectado por los campos producto_solicitado ni producto_devuelto.
  	 * @param producto_devuelto json Objeto que contendra los ids de los productos y sus cantidades que seran devueltos. Estos productos seran devueltos al almacen  de la sucursal de donde fueron extraidos.
+ 	 * @param producto_solicitado json Objeto que contendra los ids de los productos y sus cantidades que el cliente solicita, si este campo es obtenido, se editara la consignacion original agregando estos productos
+ 	 * @param monto_abonado float Si la consignacion fue de contado, el cobrador debe registrar el monto equivalente a las ventas del cliente
+ 	 * @param id_inspector int Id del usuario que realiza la inspeccion
  	 **/
   static function RegistrarInspeccion
 	(
-		$productos_actuales, 
 		$id_inspeccion, 
-		$id_inspector, 
-		$monto_abonado = null, 
+		$productos_actuales, 
+		$producto_devuelto = null, 
 		$producto_solicitado = null, 
-		$producto_devuelto = null
+		$monto_abonado = null, 
+		$id_inspector = null
 	);  
   
   
@@ -173,14 +187,18 @@
  	 *
  	 *Iniciar una orden de consignaci?n. La fecha sera tomada del servidor.
  	 *
- 	 * @param productos json Objeto que contendra los ids de los productos que se daran a consignacion a ese cliente con sus cantidades. Se incluira el id del almacen del cual seran tomados para determinar a que empresa pertenece esta consignacion
+ 	 * @param fecha_termino string Fecha en el que se termina la consignacion
+ 	 * @param folio string Folio de la consignacion
  	 * @param id_consignatario int Id del cliente al que se le hace la consignacion
+ 	 * @param productos json Objeto que contendra los ids de los productos que se daran a consignacion a ese cliente con sus cantidades. Se incluira el id del almacen del cual seran tomados para determinar a que empresa pertenece esta consignacion
  	 * @return id_consignacion int Id de la consignacion autogenerado por la insercion.
  	 **/
   static function Nueva
 	(
-		$productos, 
-		$id_consignatario
+		$fecha_termino, 
+		$folio, 
+		$id_consignatario, 
+		$productos
 	);  
   
   
@@ -191,12 +209,16 @@
  	 *Dar por terminada una consignacion, bien se termino el inventario en consigacion o se va a regresar al inventario de alguna sucursal.
  	 *
  	 * @param id_consignacion int identifiacdor de consignacion
+ 	 * @param productos_actuales json Objeto que contendra los productos actuales de la consignacion.
  	 * @param motivo string Motivo por el cual se termino la consignacion, por que el cliente no vendia, o a peticion del cliente, etc.
+ 	 * @param tipo_pago string Si el tipo de pago es en cheque, tarjeta o en efectivo
  	 **/
   static function Terminar
 	(
 		$id_consignacion, 
-		$motivo = null
+		$productos_actuales, 
+		$motivo = null, 
+		$tipo_pago = null
 	);  
   
   

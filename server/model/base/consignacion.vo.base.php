@@ -37,6 +37,9 @@ class Consignacion extends VO
 			if( isset($data['fecha_creacion']) ){
 				$this->fecha_creacion = $data['fecha_creacion'];
 			}
+			if( isset($data['tipo_consignacion']) ){
+				$this->tipo_consignacion = $data['tipo_consignacion'];
+			}
 			if( isset($data['activa']) ){
 				$this->activa = $data['activa'];
 			}
@@ -61,6 +64,9 @@ class Consignacion extends VO
 			if( isset($data['retencion']) ){
 				$this->retencion = $data['retencion'];
 			}
+			if( isset($data['saldo']) ){
+				$this->saldo = $data['saldo'];
+			}
 		}
 	}
 
@@ -79,6 +85,7 @@ class Consignacion extends VO
 			"id_usuario" => $this->id_usuario,
 			"id_usuario_cancelacion" => $this->id_usuario_cancelacion,
 			"fecha_creacion" => $this->fecha_creacion,
+			"tipo_consignacion" => $this->tipo_consignacion,
 			"activa" => $this->activa,
 			"cancelada" => $this->cancelada,
 			"motivo_cancelacion" => $this->motivo_cancelacion,
@@ -86,7 +93,8 @@ class Consignacion extends VO
 			"fecha_termino" => $this->fecha_termino,
 			"impuesto" => $this->impuesto,
 			"descuento" => $this->descuento,
-			"retencion" => $this->retencion
+			"retencion" => $this->retencion,
+			"saldo" => $this->saldo
 		); 
 	return json_encode($vec); 
 	}
@@ -137,6 +145,15 @@ class Consignacion extends VO
 	  * @var datetime
 	  */
 	public $fecha_creacion;
+
+	/**
+	  * tipo_consignacion
+	  * 
+	  * Si al terminar la consignacion la venta sera a credito o de contado<br>
+	  * @access public
+	  * @var enum('credito','contado')
+	  */
+	public $tipo_consignacion;
 
 	/**
 	  * activa
@@ -209,6 +226,15 @@ class Consignacion extends VO
 	  * @var float
 	  */
 	public $retencion;
+
+	/**
+	  * saldo
+	  * 
+	  * Saldo que ha sido abonado a la consignacion<br>
+	  * @access public
+	  * @var float
+	  */
+	public $saldo;
 
 	/**
 	  * getIdConsignacion
@@ -332,6 +358,30 @@ class Consignacion extends VO
 	final public function setFechaCreacion( $fecha_creacion )
 	{
 		$this->fecha_creacion = $fecha_creacion;
+	}
+
+	/**
+	  * getTipoConsignacion
+	  * 
+	  * Get the <i>tipo_consignacion</i> property for this object. Donde <i>tipo_consignacion</i> es Si al terminar la consignacion la venta sera a credito o de contado
+	  * @return enum('credito','contado')
+	  */
+	final public function getTipoConsignacion()
+	{
+		return $this->tipo_consignacion;
+	}
+
+	/**
+	  * setTipoConsignacion( $tipo_consignacion )
+	  * 
+	  * Set the <i>tipo_consignacion</i> property for this object. Donde <i>tipo_consignacion</i> es Si al terminar la consignacion la venta sera a credito o de contado.
+	  * Una validacion basica se hara aqui para comprobar que <i>tipo_consignacion</i> es de tipo <i>enum('credito','contado')</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param enum('credito','contado')
+	  */
+	final public function setTipoConsignacion( $tipo_consignacion )
+	{
+		$this->tipo_consignacion = $tipo_consignacion;
 	}
 
 	/**
@@ -524,6 +574,30 @@ class Consignacion extends VO
 	final public function setRetencion( $retencion )
 	{
 		$this->retencion = $retencion;
+	}
+
+	/**
+	  * getSaldo
+	  * 
+	  * Get the <i>saldo</i> property for this object. Donde <i>saldo</i> es Saldo que ha sido abonado a la consignacion
+	  * @return float
+	  */
+	final public function getSaldo()
+	{
+		return $this->saldo;
+	}
+
+	/**
+	  * setSaldo( $saldo )
+	  * 
+	  * Set the <i>saldo</i> property for this object. Donde <i>saldo</i> es Saldo que ha sido abonado a la consignacion.
+	  * Una validacion basica se hara aqui para comprobar que <i>saldo</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param float
+	  */
+	final public function setSaldo( $saldo )
+	{
+		$this->saldo = $saldo;
 	}
 
 }

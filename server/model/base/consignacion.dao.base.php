@@ -168,6 +168,11 @@ abstract class ConsignacionDAOBase extends DAO
 			array_push( $val, $consignacion->getFechaCreacion() );
 		}
 
+		if( ! is_null( $consignacion->getTipoConsignacion() ) ){
+			$sql .= " tipo_consignacion = ? AND";
+			array_push( $val, $consignacion->getTipoConsignacion() );
+		}
+
 		if( ! is_null( $consignacion->getActiva() ) ){
 			$sql .= " activa = ? AND";
 			array_push( $val, $consignacion->getActiva() );
@@ -208,6 +213,11 @@ abstract class ConsignacionDAOBase extends DAO
 			array_push( $val, $consignacion->getRetencion() );
 		}
 
+		if( ! is_null( $consignacion->getSaldo() ) ){
+			$sql .= " saldo = ? AND";
+			array_push( $val, $consignacion->getSaldo() );
+		}
+
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
@@ -239,12 +249,13 @@ abstract class ConsignacionDAOBase extends DAO
 	  **/
 	private static final function update( $consignacion )
 	{
-		$sql = "UPDATE consignacion SET  id_cliente = ?, id_usuario = ?, id_usuario_cancelacion = ?, fecha_creacion = ?, activa = ?, cancelada = ?, motivo_cancelacion = ?, folio = ?, fecha_termino = ?, impuesto = ?, descuento = ?, retencion = ? WHERE  id_consignacion = ?;";
+		$sql = "UPDATE consignacion SET  id_cliente = ?, id_usuario = ?, id_usuario_cancelacion = ?, fecha_creacion = ?, tipo_consignacion = ?, activa = ?, cancelada = ?, motivo_cancelacion = ?, folio = ?, fecha_termino = ?, impuesto = ?, descuento = ?, retencion = ?, saldo = ? WHERE  id_consignacion = ?;";
 		$params = array( 
 			$consignacion->getIdCliente(), 
 			$consignacion->getIdUsuario(), 
 			$consignacion->getIdUsuarioCancelacion(), 
 			$consignacion->getFechaCreacion(), 
+			$consignacion->getTipoConsignacion(), 
 			$consignacion->getActiva(), 
 			$consignacion->getCancelada(), 
 			$consignacion->getMotivoCancelacion(), 
@@ -253,6 +264,7 @@ abstract class ConsignacionDAOBase extends DAO
 			$consignacion->getImpuesto(), 
 			$consignacion->getDescuento(), 
 			$consignacion->getRetencion(), 
+			$consignacion->getSaldo(), 
 			$consignacion->getIdConsignacion(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -276,13 +288,14 @@ abstract class ConsignacionDAOBase extends DAO
 	  **/
 	private static final function create( &$consignacion )
 	{
-		$sql = "INSERT INTO consignacion ( id_consignacion, id_cliente, id_usuario, id_usuario_cancelacion, fecha_creacion, activa, cancelada, motivo_cancelacion, folio, fecha_termino, impuesto, descuento, retencion ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO consignacion ( id_consignacion, id_cliente, id_usuario, id_usuario_cancelacion, fecha_creacion, tipo_consignacion, activa, cancelada, motivo_cancelacion, folio, fecha_termino, impuesto, descuento, retencion, saldo ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$consignacion->getIdConsignacion(), 
 			$consignacion->getIdCliente(), 
 			$consignacion->getIdUsuario(), 
 			$consignacion->getIdUsuarioCancelacion(), 
 			$consignacion->getFechaCreacion(), 
+			$consignacion->getTipoConsignacion(), 
 			$consignacion->getActiva(), 
 			$consignacion->getCancelada(), 
 			$consignacion->getMotivoCancelacion(), 
@@ -291,6 +304,7 @@ abstract class ConsignacionDAOBase extends DAO
 			$consignacion->getImpuesto(), 
 			$consignacion->getDescuento(), 
 			$consignacion->getRetencion(), 
+			$consignacion->getSaldo(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -394,6 +408,17 @@ abstract class ConsignacionDAOBase extends DAO
 			
 		}
 
+		if( ( !is_null (($a = $consignacionA->getTipoConsignacion()) ) ) & ( ! is_null ( ($b = $consignacionB->getTipoConsignacion()) ) ) ){
+				$sql .= " tipo_consignacion >= ? AND tipo_consignacion <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " tipo_consignacion = ? AND"; 
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
 		if( ( !is_null (($a = $consignacionA->getActiva()) ) ) & ( ! is_null ( ($b = $consignacionB->getActiva()) ) ) ){
 				$sql .= " activa >= ? AND activa <= ? AND";
 				array_push( $val, min($a,$b)); 
@@ -477,6 +502,17 @@ abstract class ConsignacionDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " retencion = ? AND"; 
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( ( !is_null (($a = $consignacionA->getSaldo()) ) ) & ( ! is_null ( ($b = $consignacionB->getSaldo()) ) ) ){
+				$sql .= " saldo >= ? AND saldo <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " saldo = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

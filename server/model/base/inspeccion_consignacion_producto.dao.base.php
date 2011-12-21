@@ -14,22 +14,25 @@ abstract class InspeccionConsignacionProductoDAOBase extends DAO
 
 		private static $loadedRecords = array();
 
-		private static function recordExists(  $id_inspeccion_consignacion, $id_producto ){
+		private static function recordExists(  $id_inspeccion_consignacion, $id_producto, $id_unidad ){
 			$pk = "";
 			$pk .= $id_inspeccion_consignacion . "-";
 			$pk .= $id_producto . "-";
+			$pk .= $id_unidad . "-";
 			return array_key_exists ( $pk , self::$loadedRecords );
 		}
-		private static function pushRecord( $inventario,  $id_inspeccion_consignacion, $id_producto){
+		private static function pushRecord( $inventario,  $id_inspeccion_consignacion, $id_producto, $id_unidad){
 			$pk = "";
 			$pk .= $id_inspeccion_consignacion . "-";
 			$pk .= $id_producto . "-";
+			$pk .= $id_unidad . "-";
 			self::$loadedRecords [$pk] = $inventario;
 		}
-		private static function getRecord(  $id_inspeccion_consignacion, $id_producto ){
+		private static function getRecord(  $id_inspeccion_consignacion, $id_producto, $id_unidad ){
 			$pk = "";
 			$pk .= $id_inspeccion_consignacion . "-";
 			$pk .= $id_producto . "-";
+			$pk .= $id_unidad . "-";
 			return self::$loadedRecords[$pk];
 		}
 	/**
@@ -47,7 +50,7 @@ abstract class InspeccionConsignacionProductoDAOBase extends DAO
 	  **/
 	public static final function save( &$inspeccion_consignacion_producto )
 	{
-		if( ! is_null ( self::getByPK(  $inspeccion_consignacion_producto->getIdInspeccionConsignacion() , $inspeccion_consignacion_producto->getIdProducto() ) ) )
+		if( ! is_null ( self::getByPK(  $inspeccion_consignacion_producto->getIdInspeccionConsignacion() , $inspeccion_consignacion_producto->getIdProducto() , $inspeccion_consignacion_producto->getIdUnidad() ) ) )
 		{
 			try{ return InspeccionConsignacionProductoDAOBase::update( $inspeccion_consignacion_producto) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -65,18 +68,18 @@ abstract class InspeccionConsignacionProductoDAOBase extends DAO
 	  *	@static
 	  * @return @link InspeccionConsignacionProducto Un objeto del tipo {@link InspeccionConsignacionProducto}. NULL si no hay tal registro.
 	  **/
-	public static final function getByPK(  $id_inspeccion_consignacion, $id_producto )
+	public static final function getByPK(  $id_inspeccion_consignacion, $id_producto, $id_unidad )
 	{
-		if(self::recordExists(  $id_inspeccion_consignacion, $id_producto)){
-			return self::getRecord( $id_inspeccion_consignacion, $id_producto );
+		if(self::recordExists(  $id_inspeccion_consignacion, $id_producto, $id_unidad)){
+			return self::getRecord( $id_inspeccion_consignacion, $id_producto, $id_unidad );
 		}
-		$sql = "SELECT * FROM inspeccion_consignacion_producto WHERE (id_inspeccion_consignacion = ? AND id_producto = ? ) LIMIT 1;";
-		$params = array(  $id_inspeccion_consignacion, $id_producto );
+		$sql = "SELECT * FROM inspeccion_consignacion_producto WHERE (id_inspeccion_consignacion = ? AND id_producto = ? AND id_unidad = ? ) LIMIT 1;";
+		$params = array(  $id_inspeccion_consignacion, $id_producto, $id_unidad );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new InspeccionConsignacionProducto( $rs );
-			self::pushRecord( $foo,  $id_inspeccion_consignacion, $id_producto );
+			self::pushRecord( $foo,  $id_inspeccion_consignacion, $id_producto, $id_unidad );
 			return $foo;
 	}
 
@@ -113,7 +116,8 @@ abstract class InspeccionConsignacionProductoDAOBase extends DAO
     		array_push( $allData, $bar);
 			//id_inspeccion_consignacion
 			//id_producto
-    		self::pushRecord( $bar, $foo["id_inspeccion_consignacion"],$foo["id_producto"] );
+			//id_unidad
+    		self::pushRecord( $bar, $foo["id_inspeccion_consignacion"],$foo["id_producto"],$foo["id_unidad"] );
 		}
 		return $allData;
 	}
@@ -157,24 +161,24 @@ abstract class InspeccionConsignacionProductoDAOBase extends DAO
 			array_push( $val, $inspeccion_consignacion_producto->getIdProducto() );
 		}
 
-		if( ! is_null( $inspeccion_consignacion_producto->getCantidad() ) ){
-			$sql .= " cantidad = ? AND";
-			array_push( $val, $inspeccion_consignacion_producto->getCantidad() );
+		if( ! is_null( $inspeccion_consignacion_producto->getIdUnidad() ) ){
+			$sql .= " id_unidad = ? AND";
+			array_push( $val, $inspeccion_consignacion_producto->getIdUnidad() );
 		}
 
-		if( ! is_null( $inspeccion_consignacion_producto->getActual() ) ){
-			$sql .= " actual = ? AND";
-			array_push( $val, $inspeccion_consignacion_producto->getActual() );
+		if( ! is_null( $inspeccion_consignacion_producto->getCantidadActual() ) ){
+			$sql .= " cantidad_actual = ? AND";
+			array_push( $val, $inspeccion_consignacion_producto->getCantidadActual() );
 		}
 
-		if( ! is_null( $inspeccion_consignacion_producto->getSolicitado() ) ){
-			$sql .= " solicitado = ? AND";
-			array_push( $val, $inspeccion_consignacion_producto->getSolicitado() );
+		if( ! is_null( $inspeccion_consignacion_producto->getCantidadSolicitada() ) ){
+			$sql .= " cantidad_solicitada = ? AND";
+			array_push( $val, $inspeccion_consignacion_producto->getCantidadSolicitada() );
 		}
 
-		if( ! is_null( $inspeccion_consignacion_producto->getDevuelto() ) ){
-			$sql .= " devuelto = ? AND";
-			array_push( $val, $inspeccion_consignacion_producto->getDevuelto() );
+		if( ! is_null( $inspeccion_consignacion_producto->getCantidadDevuelta() ) ){
+			$sql .= " cantidad_devuelta = ? AND";
+			array_push( $val, $inspeccion_consignacion_producto->getCantidadDevuelta() );
 		}
 
 		if(sizeof($val) == 0){return array();}
@@ -189,7 +193,7 @@ abstract class InspeccionConsignacionProductoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new InspeccionConsignacionProducto($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_inspeccion_consignacion"],$foo["id_producto"] );
+    		self::pushRecord( $bar, $foo["id_inspeccion_consignacion"],$foo["id_producto"],$foo["id_unidad"] );
 		}
 		return $ar;
 	}
@@ -208,13 +212,12 @@ abstract class InspeccionConsignacionProductoDAOBase extends DAO
 	  **/
 	private static final function update( $inspeccion_consignacion_producto )
 	{
-		$sql = "UPDATE inspeccion_consignacion_producto SET  cantidad = ?, actual = ?, solicitado = ?, devuelto = ? WHERE  id_inspeccion_consignacion = ? AND id_producto = ?;";
+		$sql = "UPDATE inspeccion_consignacion_producto SET  cantidad_actual = ?, cantidad_solicitada = ?, cantidad_devuelta = ? WHERE  id_inspeccion_consignacion = ? AND id_producto = ? AND id_unidad = ?;";
 		$params = array( 
-			$inspeccion_consignacion_producto->getCantidad(), 
-			$inspeccion_consignacion_producto->getActual(), 
-			$inspeccion_consignacion_producto->getSolicitado(), 
-			$inspeccion_consignacion_producto->getDevuelto(), 
-			$inspeccion_consignacion_producto->getIdInspeccionConsignacion(),$inspeccion_consignacion_producto->getIdProducto(), );
+			$inspeccion_consignacion_producto->getCantidadActual(), 
+			$inspeccion_consignacion_producto->getCantidadSolicitada(), 
+			$inspeccion_consignacion_producto->getCantidadDevuelta(), 
+			$inspeccion_consignacion_producto->getIdInspeccionConsignacion(),$inspeccion_consignacion_producto->getIdProducto(),$inspeccion_consignacion_producto->getIdUnidad(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
@@ -237,14 +240,14 @@ abstract class InspeccionConsignacionProductoDAOBase extends DAO
 	  **/
 	private static final function create( &$inspeccion_consignacion_producto )
 	{
-		$sql = "INSERT INTO inspeccion_consignacion_producto ( id_inspeccion_consignacion, id_producto, cantidad, actual, solicitado, devuelto ) VALUES ( ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO inspeccion_consignacion_producto ( id_inspeccion_consignacion, id_producto, id_unidad, cantidad_actual, cantidad_solicitada, cantidad_devuelta ) VALUES ( ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$inspeccion_consignacion_producto->getIdInspeccionConsignacion(), 
 			$inspeccion_consignacion_producto->getIdProducto(), 
-			$inspeccion_consignacion_producto->getCantidad(), 
-			$inspeccion_consignacion_producto->getActual(), 
-			$inspeccion_consignacion_producto->getSolicitado(), 
-			$inspeccion_consignacion_producto->getDevuelto(), 
+			$inspeccion_consignacion_producto->getIdUnidad(), 
+			$inspeccion_consignacion_producto->getCantidadActual(), 
+			$inspeccion_consignacion_producto->getCantidadSolicitada(), 
+			$inspeccion_consignacion_producto->getCantidadDevuelta(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -315,45 +318,45 @@ abstract class InspeccionConsignacionProductoDAOBase extends DAO
 			
 		}
 
-		if( ( !is_null (($a = $inspeccion_consignacion_productoA->getCantidad()) ) ) & ( ! is_null ( ($b = $inspeccion_consignacion_productoB->getCantidad()) ) ) ){
-				$sql .= " cantidad >= ? AND cantidad <= ? AND";
+		if( ( !is_null (($a = $inspeccion_consignacion_productoA->getIdUnidad()) ) ) & ( ! is_null ( ($b = $inspeccion_consignacion_productoB->getIdUnidad()) ) ) ){
+				$sql .= " id_unidad >= ? AND id_unidad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " cantidad = ? AND"; 
+			$sql .= " id_unidad = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( ( !is_null (($a = $inspeccion_consignacion_productoA->getActual()) ) ) & ( ! is_null ( ($b = $inspeccion_consignacion_productoB->getActual()) ) ) ){
-				$sql .= " actual >= ? AND actual <= ? AND";
+		if( ( !is_null (($a = $inspeccion_consignacion_productoA->getCantidadActual()) ) ) & ( ! is_null ( ($b = $inspeccion_consignacion_productoB->getCantidadActual()) ) ) ){
+				$sql .= " cantidad_actual >= ? AND cantidad_actual <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " actual = ? AND"; 
+			$sql .= " cantidad_actual = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( ( !is_null (($a = $inspeccion_consignacion_productoA->getSolicitado()) ) ) & ( ! is_null ( ($b = $inspeccion_consignacion_productoB->getSolicitado()) ) ) ){
-				$sql .= " solicitado >= ? AND solicitado <= ? AND";
+		if( ( !is_null (($a = $inspeccion_consignacion_productoA->getCantidadSolicitada()) ) ) & ( ! is_null ( ($b = $inspeccion_consignacion_productoB->getCantidadSolicitada()) ) ) ){
+				$sql .= " cantidad_solicitada >= ? AND cantidad_solicitada <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " solicitado = ? AND"; 
+			$sql .= " cantidad_solicitada = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( ( !is_null (($a = $inspeccion_consignacion_productoA->getDevuelto()) ) ) & ( ! is_null ( ($b = $inspeccion_consignacion_productoB->getDevuelto()) ) ) ){
-				$sql .= " devuelto >= ? AND devuelto <= ? AND";
+		if( ( !is_null (($a = $inspeccion_consignacion_productoA->getCantidadDevuelta()) ) ) & ( ! is_null ( ($b = $inspeccion_consignacion_productoB->getCantidadDevuelta()) ) ) ){
+				$sql .= " cantidad_devuelta >= ? AND cantidad_devuelta <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " devuelto = ? AND"; 
+			$sql .= " cantidad_devuelta = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
@@ -389,9 +392,9 @@ abstract class InspeccionConsignacionProductoDAOBase extends DAO
 	  **/
 	public static final function delete( &$inspeccion_consignacion_producto )
 	{
-		if( is_null( self::getByPK($inspeccion_consignacion_producto->getIdInspeccionConsignacion(), $inspeccion_consignacion_producto->getIdProducto()) ) ) throw new Exception('Campo no encontrado.');
-		$sql = "DELETE FROM inspeccion_consignacion_producto WHERE  id_inspeccion_consignacion = ? AND id_producto = ?;";
-		$params = array( $inspeccion_consignacion_producto->getIdInspeccionConsignacion(), $inspeccion_consignacion_producto->getIdProducto() );
+		if( is_null( self::getByPK($inspeccion_consignacion_producto->getIdInspeccionConsignacion(), $inspeccion_consignacion_producto->getIdProducto(), $inspeccion_consignacion_producto->getIdUnidad()) ) ) throw new Exception('Campo no encontrado.');
+		$sql = "DELETE FROM inspeccion_consignacion_producto WHERE  id_inspeccion_consignacion = ? AND id_producto = ? AND id_unidad = ?;";
+		$params = array( $inspeccion_consignacion_producto->getIdInspeccionConsignacion(), $inspeccion_consignacion_producto->getIdProducto(), $inspeccion_consignacion_producto->getIdUnidad() );
 		global $conn;
 
 		$conn->Execute($sql, $params);

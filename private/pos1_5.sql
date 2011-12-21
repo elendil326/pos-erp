@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 19-12-2011 a las 19:27:52
+-- Tiempo de generación: 21-12-2011 a las 20:02:44
 -- Versión del servidor: 5.1.53
 -- Versión de PHP: 5.3.4
 
@@ -510,6 +510,7 @@ CREATE TABLE IF NOT EXISTS `consignacion` (
   `id_usuario` int(11) NOT NULL COMMENT 'el usuario que inicio la consigacion',
   `id_usuario_cancelacion` int(11) DEFAULT NULL COMMENT 'Id del usuario que cancela la consignacion',
   `fecha_creacion` datetime NOT NULL COMMENT 'la fecha que se creo esta consignacion',
+  `tipo_consignacion` enum('credito','contado') NOT NULL COMMENT 'Si al terminar la consignacion la venta sera a credito o de contado',
   `activa` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Si la consignacion esta activa',
   `cancelada` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Si esta consignacion fue cancelada o no',
   `motivo_cancelacion` varchar(255) DEFAULT NULL COMMENT 'Justificacion de la cancelacion si esta consginacion fue cancelada',
@@ -518,6 +519,7 @@ CREATE TABLE IF NOT EXISTS `consignacion` (
   `impuesto` float DEFAULT NULL COMMENT 'Monto generado por impuestos para esta consignacion',
   `descuento` float DEFAULT NULL COMMENT 'Monto a descontar de esta consignacion',
   `retencion` float DEFAULT NULL COMMENT 'Monto generado por retenciones',
+  `saldo` float NOT NULL DEFAULT '0' COMMENT 'Saldo que ha sido abonado a la consignacion',
   PRIMARY KEY (`id_consignacion`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
@@ -530,12 +532,13 @@ CREATE TABLE IF NOT EXISTS `consignacion` (
 CREATE TABLE IF NOT EXISTS `consignacion_producto` (
   `id_consignacion` int(11) NOT NULL COMMENT 'Id de la consignacion',
   `id_producto` int(11) NOT NULL COMMENT 'Id del producto consignado',
+  `id_unidad` int(11) NOT NULL COMMENT 'Id de la unidad del producto',
   `cantidad` float NOT NULL COMMENT 'Cantidad de ese producto en esa consignacion',
   `impuesto` float DEFAULT NULL COMMENT 'Monto generado por impuestos para este producto',
   `descuento` float DEFAULT NULL COMMENT 'Monto a descontar de este producto',
   `retencion` float DEFAULT NULL COMMENT 'Monto generado por retenciones',
-  `precio` float DEFAULT NULL COMMENT 'Precio del producto por ser de consignacion',
-  PRIMARY KEY (`id_consignacion`,`id_producto`)
+  `precio` float NOT NULL COMMENT 'Precio del producto por ser de consignacion',
+  PRIMARY KEY (`id_consignacion`,`id_producto`,`id_unidad`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle de la consignacion con su producto';
 
 -- --------------------------------------------------------
@@ -928,11 +931,11 @@ CREATE TABLE IF NOT EXISTS `inspeccion_consignacion` (
 CREATE TABLE IF NOT EXISTS `inspeccion_consignacion_producto` (
   `id_inspeccion_consignacion` int(11) NOT NULL COMMENT 'Id de la isnpeccion de consignacion',
   `id_producto` int(11) NOT NULL COMMENT 'id del producto',
-  `cantidad` float NOT NULL COMMENT 'cantidad del producto',
-  `actual` tinyint(1) NOT NULL COMMENT 'true si la cantidad se refiere a la cantidad actual de ese producto',
-  `solicitado` tinyint(1) NOT NULL COMMENT 'true si la cantidad se refiere a la cantidad de ese producto que se solicita',
-  `devuelto` tinyint(1) NOT NULL COMMENT 'true si la cantidad de ese producto es devuelta',
-  PRIMARY KEY (`id_inspeccion_consignacion`,`id_producto`)
+  `id_unidad` int(11) NOT NULL COMMENT 'Id de la unidad del producto',
+  `cantidad_actual` float NOT NULL COMMENT 'cantidad del producto actualmente',
+  `cantidad_solicitada` float NOT NULL COMMENT 'cantidad del producto solicitado',
+  `cantidad_devuelta` float NOT NULL COMMENT 'cantidad del producto devuelto',
+  PRIMARY KEY (`id_inspeccion_consignacion`,`id_producto`,`id_unidad`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla detalle entre una inspeccion de consignacion y los pro';
 
 -- --------------------------------------------------------

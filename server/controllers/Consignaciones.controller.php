@@ -164,18 +164,60 @@ require_once("interfaces/Consignaciones.interface.php");
  	 **/
 	public static function Nueva
 	(
-		$productos, 
-		$id_consignatario
+		$fecha_termino, 
+		$folio, 
+		$id_consignatario, 
+		$productos
 	)
 	{  
             Logger::log("Creando nueva consignacion");
-            
+            //Se valida al consignatario
             $e = self::validarConsignatario($id_consignatario);
             if(is_string($e))
             {
                 Logger::error($e);
                 throw new Exception($e);
             }
+            
+            //Se obtiene al usuario de la sesion actual
+            $id_usuario = LoginController::getCurrentUser();
+            if(is_null($id_usuario))
+            {
+                Logger::error("No se pudo obtener al usuario de la sesion, ya inicio sesion?");
+                throw new Exception("No se pudo obtener al usuario de la sesion, ya inicio sesion?");
+            }
+            
+            $consignacion = new Consignacion( 
+                    array(
+                        "id_cliente"        => $id_consignatario,
+                        "id_usuario"        => $id_usuario,
+                        "fecha_creacion"    => date( "Y-m-d H:i:s" ),
+                        "activa"            => 1,
+                        "cancelada"         => 0,
+                        "folio"             => $folio,
+                        "fecha_termino"     => $fecha_termino
+                    ) );
+            DAO::transBegin();
+            try
+            {
+                ConsignacionDAO::save($consignacion);
+                $consignacion_producto = new ConsignacionProducto( array( "id_consignacion" => $consignacion->getIdConsignacion() ) );
+                
+                foreach($productos as $producto)
+                {
+                    
+                }
+                
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo crear la nueva consignacion: ".$e);
+                throw new Exception("No se pudo crear la nueva consignacion");
+            }
+            DAO::transEnd();
+            Logger::log("Consignacion creada exitosamente");
+            return array( "id_consignacion" => $consignacion->getIdConsignacion() );
             
             
 	}
@@ -233,12 +275,12 @@ require_once("interfaces/Consignaciones.interface.php");
  	 **/
 	public static function RegistrarInspeccion
 	(
-		$productos_actuales, 
 		$id_inspeccion, 
-		$id_inspector, 
-		$monto_abonado = null, 
+		$productos_actuales, 
+		$producto_devuelto = null, 
 		$producto_solicitado = null, 
-		$producto_devuelto = null
+		$monto_abonado = null, 
+		$id_inspector = null
 	)
 	{  
   
@@ -255,7 +297,9 @@ require_once("interfaces/Consignaciones.interface.php");
 	public static function Terminar
 	(
 		$id_consignacion, 
-		$motivo = null
+		$productos_actuales, 
+		$motivo = null, 
+		$tipo_pago = null
 	)
 	{  
   
