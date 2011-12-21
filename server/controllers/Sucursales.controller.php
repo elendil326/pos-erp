@@ -3464,7 +3464,6 @@ Creo que este metodo tiene que estar bajo sucursal.
                 throw new Exception("La sucursal no tiene un saldo de 0 y no puede ser eliminada");
             }
             
-            
             $sucursal->setFechaBaja(date("Y-m-d H:i:s"));
             $sucursal->setActiva(0);
             DAO::transBegin();
@@ -3500,6 +3499,28 @@ Creo que este metodo tiene que estar bajo sucursal.
                 foreach($servicio_sucursal as $s_s)
                 {
                     ServicioSucursalDAO::delete($s_s);
+                }
+                
+                //Se eliminan los almacenes de esta sucursal
+                foreach($almacenes as $almacen)
+                {
+                    if($almacen->getActivo())
+                    {
+                         $flag = false;
+                        if($almacen->getIdTipoAlmacen()==2)
+                        {
+                            $flag=true;
+                            $almacen->setIdTipoAlmacen(1);
+                            AlmacenDAO::save($almacen);
+                        }
+                        self::EliminarAlmacen($almacen->getIdAlmacen());
+                        if($flag)
+                        {
+                            $flag = false;
+                            $almacen->setIdTipoAlmacen(2);
+                            AlmacenDAO::save($almacen);
+                        }
+                    }
                 }
             }
             catch(Exception $e)

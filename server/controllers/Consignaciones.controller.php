@@ -288,10 +288,12 @@ require_once("interfaces/Consignaciones.interface.php");
  	 **/
 	public static function Nueva
 	(
+		$id_consignatario, 
+		$productos, 
+		$tipo_consignacion, 
 		$fecha_termino, 
 		$folio, 
-		$id_consignatario, 
-		$productos
+		$fecha_envio_programada = null
 	)
 	{  
             Logger::log("Creando nueva consignacion");
@@ -303,6 +305,8 @@ require_once("interfaces/Consignaciones.interface.php");
                 throw new Exception($e);
             }
             
+            $consignatario = UsuarioDAO::getByPK($id_consignatario);
+            
             //Se obtiene al usuario de la sesion actual
             $id_usuario = LoginController::getCurrentUser();
             if(is_null($id_usuario))
@@ -310,6 +314,20 @@ require_once("interfaces/Consignaciones.interface.php");
                 Logger::error("No se pudo obtener al usuario de la sesion, ya inicio sesion?");
                 throw new Exception("No se pudo obtener al usuario de la sesion, ya inicio sesion?");
             }
+            
+            //Valida el parametro tipo de consignacion
+            if($tipo_consignacion!="credito"&&$tipo_consignacion!="contado")
+            {
+                Logger::error("El parametro tipo de consignacion (".$tipo_consignacion.") es invalido");
+                throw new Exception("El parametro tipo de consignacion (".$tipo_consignacion.") es invalido");
+            }
+            
+            //Si no se recibio fecha de envio, se toma la fecha actual
+            if(is_null($fecha_envio_programada))
+            {
+                $fecha_envio_programada = date ("Y-m-d H:i:s");
+            }
+                
             
             $consignacion = new Consignacion( 
                     array(
@@ -320,16 +338,111 @@ require_once("interfaces/Consignaciones.interface.php");
                         "cancelada"         => 0,
                         "folio"             => $folio,
                         "fecha_termino"     => $fecha_termino,
-                        "saldo"             => 0
+                        "saldo"             => 0,
+                        "tipo_consignacion" => $tipo_consignacion
                     ) );
+            
+            //Se agrupan los productos que vienen del mismo almacen en subarreglos para
+            //programar un solo traspaso por almacen.
+            $productos_por_almacen = array();
+            $num_productos = count($productos);
+            for($i = 0; $i < $num_productos; $i++)
+            {
+                if($productos[i]==null)
+                    continue;
+                $temp = array();
+                array_push($temp,$productos[i]);
+                for($j = $i+1; $j < $num_productos;$j++)
+                {
+                    if($productos[$i]["id_almacen"]==$productos[$j]["id_almacen"])
+                    {
+                        array_push($temp,$productos[$j]);
+                        $productos[$j]=null;
+                    }
+                }
+                $productos[$i]=null;
+                array_push($productos_por_almacen,$temp);
+            }
+            
             DAO::transBegin();
             try
             {
                 ConsignacionDAO::save($consignacion);
                 $consignacion_producto = new ConsignacionProducto( array( "id_consignacion" => $consignacion->getIdConsignacion() ) );
                 
-                foreach($productos as $producto)
+                foreach($productos_por_almacen as $producto_por_almacen)
                 {
+                    //Se validan los parametros obtenidos del arreglo de productos
+                    foreach($producto_por_almacen as $producto)
+                    {
+                        $validar = self::validarConsignacionProducto($producto["id_producto"], $producto["id_unidad"], $producto["cantidad"],
+                                $producto["impuesto"], $producto["descuento"], $producto["retencion"], $producto["precio"]);
+                        if(is_string($validar))
+                            throw new Exception($validar);
+
+                        $validar = self::validarAlmacen($producto["id_almacen"]);
+                        if(is_string($validar))
+                            throw new Eception($validar);
+                    }
+                    
+                    /*
+                     * El consignatario puede contar con algún o ningún almacen de tipo consignacion,
+                     * pero solo tendra uno por empresa, esto quiere decir que todos los productos recibidos
+                     * seran repartidos en estos almacenes de acuerdo a la empresa a la que pertenece
+                     * el almacen de donde son extraidos.
+                     * 
+                     * Si el consignatario no cuenta con un almacen para la empresa de ese producto, se creara uno
+                     * nuevo y se realizara la transferencia.
+                     */
+                    
+                    //Se obtiene el id de la empresa de la cual vienen los productos
+                    $id_empresa = AlmacenDAO::getByPK($producto_por_almacen[0]["id_almacen"])->getIdEmpresa();
+                    
+                    //Se busca el almacen de consignacion de este cliente para esta empresa
+                    $almacen = null;
+                    $almacenes = AlmacenDAO::search( new Almacen( 
+                            array(
+                                "id_empresa"    => $id_empresa,
+                                "nombre"        => $consignatario->getCodigoUsuario(),
+                                "id_sucursal"   => 0 //La sucursal 0 es la sucursal a donde pertenecen todos los almacenes de consignacion
+                            ) 
+                            ) );
+                    
+                    //Si no existe, se crea
+                    if(empty($almacenes))
+                    {
+                        $almacen = new Almacen(
+                                array(
+                                    "id_sucursal"       => 0,
+                                    "id_empresa"        => $id_empresa,
+                                    "id_tipo_almacen"   => 2,
+                                    "nombre"            => $consignatario->getCodigoUsuario(),
+                                    "descripcion"       => "Almacen de consignacion del usuario ".$consignatario->getNombre()." con clave ".
+                                                            $consignatario->getCodigoUsuario()." para la empresa ".$id_empresa,
+                                    "activo"            => 1
+                                )
+                                );
+                         AlmacenDAO::save($almacen);
+                    }
+                    
+                    //Se encontro el almacen
+                    else
+                        $almacen = $almacenes[0];
+                    
+                    //Se prepara el arreglo de productos para crear el traspaso de un almacen a otro
+                    $productos_para_traspaso = array();
+                    foreach($producto_por_almacen as $producto)
+                    {
+                        $p = array(
+                            "id_producto"   => $producto["id_producto"],
+                            "id_unidad"     => $producto["id_unidad"],
+                            "cantidad"      => $producto["cantidad"]
+                        );
+                        array_push($productos_para_traspaso, $p);
+                    }
+                    
+                    //Se programa el traspaso del almacen de donde se tomaron estos productos al almacen de consignacion
+                    SucursalesController::ProgramarTraspasoAlmacen($almacen->getIdAlmacen(), $producto_por_almacen[0]["id_almacen"], $fecha_envio_programada, $productos_para_traspaso);
                     
                 }
                 

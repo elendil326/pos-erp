@@ -154,7 +154,7 @@
 		$producto_devuelto = null, 
 		$producto_solicitado = null, 
 		$monto_abonado = null, 
-		$id_inspector = null
+		$id_inspector = ""
 	);  
   
   
@@ -187,18 +187,22 @@
  	 *
  	 *Iniciar una orden de consignaci?n. La fecha sera tomada del servidor.
  	 *
- 	 * @param fecha_termino string Fecha en el que se termina la consignacion
- 	 * @param folio string Folio de la consignacion
  	 * @param id_consignatario int Id del cliente al que se le hace la consignacion
  	 * @param productos json Objeto que contendra los ids de los productos que se daran a consignacion a ese cliente con sus cantidades. Se incluira el id del almacen del cual seran tomados para determinar a que empresa pertenece esta consignacion
+ 	 * @param tipo_consignacion string Especifica si la venta generada por esta consignacion se hara a credito o de contado
+ 	 * @param fecha_termino string Fecha en el que se termina la consignacion
+ 	 * @param folio string Folio de la consignacion
+ 	 * @param fecha_envio_programada string Sera la fecha de envio de los productos de los almacenes de los que seran tomados al almacen del consignatario. Si no se recibe se toma la fecha actual como la fecha de envio 
  	 * @return id_consignacion int Id de la consignacion autogenerado por la insercion.
  	 **/
   static function Nueva
 	(
+		$id_consignatario, 
+		$productos, 
+		$tipo_consignacion, 
 		$fecha_termino, 
 		$folio, 
-		$id_consignatario, 
-		$productos
+		$fecha_envio_programada = null
 	);  
   
   

@@ -535,8 +535,8 @@ require_once("interfaces/Empresas.interface.php");
             $empresa=EmpresaDAO::getByPK($id_empresa);
             if(!$empresa->getActivo())
             {
-                Logger::warn("La empresa ya esta cancelada");
-                throw new Exception("La empresa ya esta cancelada",901);
+                Logger::warn("La empresa ya esta desactivada");
+                throw new Exception("La empresa ya esta desactivada",901);
             }
             
             //Se cambia el campo activo a falso y se registra la fecha de baja como hoy
@@ -664,7 +664,20 @@ require_once("interfaces/Empresas.interface.php");
                         {
                             if($a->getActivo())
                             {
+                                $flag = false;
+                                if($a->getIdTipoAlmacen()==2)
+                                {
+                                    $flag=true;
+                                    $a->setIdTipoAlmacen(1);
+                                    AlmacenDAO::save($a);
+                                }
                                 SucursalesController::EliminarAlmacen($a->getIdAlmacen());
+                                if($flag)
+                                {
+                                    $flag = false;
+                                    $a->setIdTipoAlmacen(2);
+                                    AlmacenDAO::save($a);
+                                }
                             }
                         }
                     }
