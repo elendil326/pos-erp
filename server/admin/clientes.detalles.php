@@ -439,6 +439,19 @@ if($activo && (sizeof($ventasCredito) > 0)){
     ?><h2>Abonos</h2><?php
 
     $abonos = listarAbonos( $_REQUEST['id'] );
+	$foo = array();
+	$i = 1;
+	for ( ; $i < sizeof($abonos); $i++) { 
+		if( $abonos[$i]["fecha"] == $abonos[$i-1]["fecha"] ){
+			$abonos[$i]["monto"] += $abonos[$i-1]["monto"];
+			$abonos[$i]["id_venta"] = "-";
+		}else{
+			array_push($foo, $abonos[$i-1]);
+		}
+	}
+	
+	array_push($foo, $abonos[$i-1]);
+
 
     $header = array( 
 	    "id_pago" => "Pago", 
@@ -448,7 +461,7 @@ if($activo && (sizeof($ventasCredito) > 0)){
 	    "fecha" => "Fecha",
 	    "monto" => "Monto" );
 
-    $tabla = new Tabla( $header, $abonos );
+    $tabla = new Tabla( $header, $foo );
     $tabla->addColRender( "monto", "moneyFormat" ); 
     $tabla->addNoData("Este cliente no ha realizado ningun abono.");
 	$tabla->addColRender( "fecha", "toDate" );	

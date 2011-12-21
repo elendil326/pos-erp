@@ -888,11 +888,12 @@ function imprimirSaldo($args) {
 
 
 function cmp_by_date($a, $b){
-	if ($a == $b) { 
-	        return 0; 
+	
+	if ($a["fecha"] == $b["fecha"]) { 
+	        return 0;
 	    } else {  
-	        $a = strtotime($a); 
-	        $b = strtotime($b); 
+	        $a = strtotime($a["fecha"]); 
+	        $b = strtotime($b["fecha"]); 
 	        if($a<$b) { 
 	            return -1; 
 	        } else { 
@@ -949,7 +950,7 @@ function listarAbonos($cid, $vid = null) {
         }
     }
 
-	uasort( $abonos, "cmp_by_date" );
+	usort( $abonos, "cmp_by_date" );
 	
 	
 	
