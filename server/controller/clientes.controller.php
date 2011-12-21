@@ -885,6 +885,23 @@ function imprimirSaldo($args) {
     }
 }
 
+
+
+function cmp_by_date($a, $b){
+	if ($a == $b) { 
+	        return 0; 
+	    } else {  
+	        $a = strtotime($a); 
+	        $b = strtotime($b); 
+	        if($a<$b) { 
+	            return -1; 
+	        } else { 
+	            return 1; 
+	        } 
+	    }
+}
+
+
 /*
  * Lista los abonos de un cliente especifico y de ser necesario una venta especifica
  * */
@@ -906,15 +923,14 @@ function listarAbonos($cid, $vid = null) {
         $pagosVenta = PagosVentaDAO::search($pago);
 
         foreach ($pagosVenta as $p) {
+
             //make readable data
+            $sucursal = SucursalDAO::getByPK(	$p->getIdSucursal());
+            $cajero = UsuarioDAO::getByPK(		$p->getIdUsuario());
 
-            $sucursal = SucursalDAO::getByPK($p->getIdSucursal());
-            $cajero = UsuarioDAO::getByPK($p->getIdUsuario());
-
-
-            if ($vid != null && $vid != $p->getIdVenta()
-            )
-                continue;
+            if ($vid != null && $vid != $p->getIdVenta()){
+	    		continue;
+			}
 
             $data = array(
                 "cajero" => $cajero ? $cajero->getNombre() : "<b>Error</b>",
@@ -933,6 +949,10 @@ function listarAbonos($cid, $vid = null) {
         }
     }
 
+	uasort( $abonos, "cmp_by_date" );
+	
+	
+	
     return $abonos;
 }
 
