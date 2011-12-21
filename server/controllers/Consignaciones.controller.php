@@ -70,6 +70,9 @@ require_once("interfaces/Consignaciones.interface.php");
             return true;
         }
         
+        /*
+         * Valida que el consignatario sea valido.
+         */
         private static function validarConsignatario
         (
                 $id_cliente
@@ -82,6 +85,127 @@ require_once("interfaces/Consignaciones.interface.php");
             $cliente  = UsuarioDAO::getByPK($id_cliente);
             if(!$cliente->getConsignatario())
                 return "El cliente ".$id_cliente." no es un consignatario";
+            
+            return true;
+        }
+        
+        /*
+         * Valida que la consignacion exista y este activa
+         */
+        private static function validarConsignacion
+        (
+                $id_consignacion
+        )
+        {
+            $consignacion = ConsignacionDAO::getByPK($id_consignacion);
+            if(is_null($consignacion))
+            {
+                return "La consignacion ".$id_consignacion." no existe";
+            }
+            
+            if(!$consignacion->getActiva())
+                return "La consignacion ".$id_consignacion." no existe";
+            
+            return true;
+            
+        }
+        
+        /*
+         * Valida los parametros de la tabla consignacion producto
+         */
+        private static function validarConsignacionProducto
+        (
+                $id_producto = null,
+                $id_unidad = null,
+                $cantidad = null,
+                $impuesto = null,
+                $descuento = null,
+                $retencion = null,
+                $precio = null
+        )
+        {
+            //Se valida que el producto exista y que este activo
+            if(!is_null($id_producto))
+            {
+                $producto = ProductoDAO::getByPK($id_producto);
+                if(is_null($producto))
+                    return "El producto ".$id_producto." no existe";
+                
+                if(!$producto->getActivo())
+                    return "El producto ".$id_producto." no esta activo";
+                
+            }
+            
+            //Se valida que la unidad exista y que este activa
+            if(!is_null($id_unidad))
+            {
+                $unidad = UnidadDAO::getByPK($id_unidad);
+                if(is_null($unidad))
+                    return "La unidad ".$id_unidad." no existe";
+                
+                if(is_null($unidad->getActiva()))
+                        return "La unidad ".$id_unidad." no esta activa";
+            }
+            
+            //Se valida que la cantidad este en rango
+            if(!is_null($cantidad))
+            {
+                $e = self::validarNumero($cantidad, 1.8e200, "cantidad");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //Se valida que el impuesto este en rango
+            if(!is_null($impuesto))
+            {
+                $e = self::validarNumero($impuesto, 1.8e200, "impuesto");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //Se valida que el descuento este en rango
+            if(!is_null($descuento))
+            {
+                $e = self::validarNumero($descuento, 100, "descuento");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //Se valida que la retencion este en rango
+            if(!is_null($retencion))
+            {
+                $e = self::validarNumero($retencion, 1.8e200, "retencion");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //Se valida que el precio este en rango
+            if(!is_null($precio))
+            {
+                $e = self::validarNumero($precio, 1.8e200, "precio");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //No se encontro error
+            return true;
+            
+        }
+        
+        /*
+         * Valida que el almacen exista y este activo
+         */
+        private static function validarAlmacen
+        (
+                $id_almacen
+        )
+        {
+            $almacen = AlmacenDAO::getByPK($id_almacen);
+            if(is_null($almacen))
+                return "El almacen ".$id_almacen." no existe";
+            
+            if(!$almacen->getActivo())
+                return "El almacen ".$id_almacen." no esta activo";
             
             return true;
         }
@@ -195,7 +319,8 @@ require_once("interfaces/Consignaciones.interface.php");
                         "activa"            => 1,
                         "cancelada"         => 0,
                         "folio"             => $folio,
-                        "fecha_termino"     => $fecha_termino
+                        "fecha_termino"     => $fecha_termino,
+                        "saldo"             => 0
                     ) );
             DAO::transBegin();
             try
