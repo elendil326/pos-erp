@@ -12,14 +12,16 @@
 		//
 		// Parametros necesarios
 		// 
-		$page->requireParam(  "oid", "GET", "Este producto no existe." );
+		$page->requireParam(  "oid", "GET", "Esta orden de servicio no existe." );
 		$esta_orden = OrdenDeServicioDAO::getByPK( $_GET["oid"] );
 		
 		
 		//
 		// Titulo de la pagina
 		// 
-		$page->addComponent( new TitleComponent( "Detalles de la orden del servicio " . ServicioDAO::getByPK($esta_orden->getIdServicio())->getCodigoServicio()
+		$page->addComponent( 
+			new TitleComponent( 
+					"Orden del servicio " . ServicioDAO::getByPK($esta_orden->getIdServicio())->getCodigoServicio()
                         ." al usuario ". UsuarioDAO::getByPK($esta_orden->getIdUsuarioVenta())->getNombre(), 2 ));
 
 		
@@ -28,7 +30,7 @@
 		// 
 		$menu = new MenuComponent();
 		$menu->addItem("Nuevo seguimiento a esta orden de servicio", "servicios.seguimiento.orden.php?oid=".$_GET["oid"]);
-		//$menu->addItem("Desactivar este producto", null);
+
                 
                 $btn_eliminar = new MenuItem("Cancelar esta orden de servicio", null);
                 $btn_eliminar->addApiCall("api/servicios/orden/cancelar", "GET");
@@ -81,22 +83,30 @@
 		// 
 		$form = new DAOFormComponent( $esta_orden );
 		$form->setEditable(false);
-		//$form->setEditable(false);		
+		
 		$form->hideField( array( 
 				"id_orden_de_servicio",
 			 ));
-//		$form->makeObligatory(array( 
-//				"compra_en_mostrador",
-//				"costo_estandar",
-//				"nombre_producto",
-//				"id_empresas",
-//				"codigo_producto",
-//				"metodo_costeo",
-//				"activo"
-//			));
+
+
 	    $form->createComboBoxJoin("id_servicio", "nombre_servicio", ServicioDAO::getAll(), $esta_orden->getIdServicio() );
-            $form->createComboBoxJoin("id_usuario", "nombre", UsuarioDAO::getAll(), $esta_orden->getIdUsuario() );
-            $form->createComboBoxJoinDistintName("id_usuario_venta", "id_usuario", "nombre", UsuarioDAO::getAll(), $esta_orden->getIdUsuarioVenta() );
+		$form->createComboBoxJoin("id_usuario", "nombre", UsuarioDAO::getAll(), $esta_orden->getIdUsuario() );
+		$form->createComboBoxJoinDistintName("id_usuario_venta", "id_usuario", "nombre", UsuarioDAO::getAll(), $esta_orden->getIdUsuarioVenta() );
 		$page->addComponent( $form );
+		
+		
+		$page->addComponent( new TitleComponent( "Seguimientos de esta orden", 2 ) );
+		
+		$seguimientos = SeguimientoDeServicioDAO::seguimientosPorServicio( $_GET["oid"] );
+		
+		$header = array(
+			"fecha_seguimiento" 			=> "fecha_seguimiento", 
+			"id_localizacion" 				=> "id_localizacion" ,
+			"id_usuario" 					=> "id_usuario" ,
+			"id_sucursal" 					=> "id_sucursal" ,
+			"estado" 						=> "estado" 
+		);
+		
+		$page->addComponent( new TableComponent($header, $seguimientos) );
 		
 		$page->render();
