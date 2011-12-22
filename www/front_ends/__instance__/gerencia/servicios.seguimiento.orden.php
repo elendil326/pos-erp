@@ -13,7 +13,13 @@
 		// 
 		$page->requireParam(  "oid", "GET", "Esta orden de servicio no existe." );
 		$esta_orden = OrdenDeServicioDAO::getByPK( $_GET["oid"] );
-                
+
+        if(is_null($esta_orden)){
+			$page->addComponent( new TitleComponent("Ups", 2) );
+			$page->addComponent( new TitleComponent("La orden ". $_GET["oid"] ." no existe", 3) );
+			$page->render();
+		}
+
 		//
 		// Titulo de la pagina
 		// 
@@ -24,7 +30,8 @@
 		//
 		// Forma de usuario
 		// 
-		$form = new DAOFormComponent( new SeguimientoDeServicio() );
+		$form = new DAOFormComponent( new SeguimientoDeServicio( array("id_orden_de_servicio"=> $_GET["oid"]) ) );
+		
 		$form->hideField( array( 
                 "id_seguimiento_de_servicio",
                 "id_usuario",
@@ -32,12 +39,14 @@
                 "fecha_seguimiento"               
 		));
         
+		$form->makeObligatory( array("estado", "id_localizacion") );
+
 		$form->sendHidden( "id_orden_de_servicio" );
         
 		$form->addApiCall( "api/servicios/orden/seguimiento/", "GET" );
 
                 
-        $form->createComboBoxJoin( "id_orden_de_servicio", "id_orden_de_servicio", OrdenDeServicioDAO::getAll(), $esta_orden->getIdOrdenDeServicio() );
+        //$form->createComboBoxJoin( "id_orden_de_servicio", "id_orden_de_servicio", OrdenDeServicioDAO::getAll(), $esta_orden->getIdOrdenDeServicio() );
                 
         $form->createComboBoxJoinDistintName( "id_localizacion", "id_sucursal" , "razon_social", SucursalDAO::search(new Sucursal( array( "activa" => 1 ) )) );
 

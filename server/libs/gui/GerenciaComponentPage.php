@@ -139,7 +139,7 @@ class GerenciaComponentPage extends StdComponentPage{
             "url": "clientes.lista.php",
             "children" : [
                 {
-            		"title" : "Lista clasificacion",
+            		"title" : "Clasificacion de clientes",
             		"url"   : "clientes.lista.clasificacion.php"
             	},
                 {
@@ -147,11 +147,11 @@ class GerenciaComponentPage extends StdComponentPage{
             		"url"   : "clientes.nueva.clasificacion.php"
             	},
                 {
-            		"title" : "Lista",
+            		"title" : "Lista de clientes",
             		"url"   : "clientes.lista.php"
             	},
             	{
-            		"title" : "Nuevo",
+            		"title" : "Nuevo cliente",
             		"url"   : "clientes.nuevo.php"
             	}
             ]
@@ -1079,6 +1079,7 @@ class GerenciaComponentPage extends StdComponentPage{
 		</body>
 		</html>
 		<?php
+		exit;
 	}
 
 

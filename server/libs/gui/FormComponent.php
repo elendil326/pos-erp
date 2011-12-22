@@ -346,7 +346,16 @@ class FormComponent implements GuiComponent{
 		}//foreach field in the array
 	}
 
+	/**
+	  *
+	  * @param array or string
+	  *
+	  **/
 	public function makeObligatory( $field_array ){
+		
+		if( !is_array($field_array)){
+			$field_array = array( $field_array );
+		}
 		
 		foreach ($field_array as $field) {
 			

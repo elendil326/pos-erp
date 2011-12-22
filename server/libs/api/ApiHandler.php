@@ -187,6 +187,7 @@ abstract class ApiHandler
         catch (ApiException $e)
         {
             // Propagate the exception
+			Logger::error($e);
             throw $e;
         }
         

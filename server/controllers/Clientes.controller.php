@@ -849,4 +849,21 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
             }
             DAO::transEnd();
 	}
-  }
+	
+	
+	
+	
+
+	
+	/**
+	  * Buscar clientes
+	  *
+	  **/
+	public static function Buscar($query){
+		$resultados = UsuarioDAO::buscarClientes( $query );
+		return array( "resultados" => $resultados );
+		
+	}
+	
+	
+}
