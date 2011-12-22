@@ -140,6 +140,10 @@ Se puede ordenar por los atributos de producto.
             //Se recupera el tamaño del arreglo de productos obtenido
             $tamano = count($productos_almacenes);
             
+            //Si el arreglo de productos recibido esta vacio entonces no hay nada que agrupar y se regresa un arreglo vacio.
+            if($tamano==0)
+                return $productos_almacenes_acumulado;
+            
             //Se buscan los elementos repetidos en manera de burbuja. Se recorre del
             //primer al penultimo elemento y si el elemento no es nulo, se inserta en el 
             //arreglo final. 
