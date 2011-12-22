@@ -7,7 +7,7 @@
 	********************************************************************************* 
 	********************************************************************************* */
 
-
+/*
 class PermsissionDeniedException extends Exception { } 
 
 
@@ -182,7 +182,7 @@ class JediLoginController extends LoginController
 
 		global $POS_CONFIG;
 		
-		$sql = "SELECT id_user FROM users WHERE ( email = ? AND password = ?) LIMIT 1;";
+		$sql = "SELECT id_user FROM users WHERE ( email = ? AND password = ? ) LIMIT 1;";
 		
 		$params = array( $user, md5($password) );
 
@@ -202,3 +202,4 @@ class JediLoginController extends LoginController
 
 
 
+*/

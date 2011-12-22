@@ -6,6 +6,7 @@ var main = function ()
 
 	//window.onbeforeunload = function(){}
 	var els = Ext.select("input").elements;
+	console.log("ataching on before unload events...");
 	
 	for (var i = els.length - 1; i >= 0; i--){
 		Ext.get(els[i]).on(
@@ -21,7 +22,8 @@ var main = function ()
 }
 
 
-Ext.onReady(main);
+//Ext.onReady(main);
+
 
 var POS = 
 {

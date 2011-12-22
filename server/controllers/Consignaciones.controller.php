@@ -633,4 +633,19 @@ require_once("interfaces/Consignaciones.interface.php");
   
   
 	}
+	
+	
+	/**
+ 	 *
+ 	 *Este metodo solo debe ser usado cuando no se ha vendido ningun producto de la consginacion y todos seran devueltos
+ 	 *
+ 	 * @param productos_almacen json Arreglo que contendra los ids de producto, ids de unidad, cantidad y el id del almacen al que iran.
+ 	 **/
+  static function Cancelar
+	(
+		$productos_almacen
+	){
+		
+	}
+	
   }

@@ -884,9 +884,16 @@ class GerenciaComponentPage extends StdComponentPage{
 		<head>
 		<title>POS</title>
 
+			<!--
 			<link rel="stylesheet" type="text/css" href="http://api.caffeina.mx/ext-latest/resources/css/ext-all.css" /> 
 		    <script type="text/javascript" src="http://api.caffeina.mx/ext-latest/adapter/ext/ext-base.js"></script> 
 		    <script type="text/javascript" src="http://api.caffeina.mx/ext-latest/ext-all.js"></script> 
+			-->
+			
+			<link rel="stylesheet" type="text/css" href="http://api.caffeina.mx/ext-4.0.0/resources/css/ext-all.css" /> 
+
+		    <script type="text/javascript" src="http://api.caffeina.mx/ext-4.0.0/ext-all.js"></script>
+					
 
 			<link type="text/css" rel="stylesheet" href="../../../css/basic.css"/>
 			<script type="text/javascript" src="./gerencia.js"></script>

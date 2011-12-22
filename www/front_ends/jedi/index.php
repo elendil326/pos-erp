@@ -8,14 +8,11 @@
 
 
 	$p = new JediComponentPage( );
-	echo "asdf";
+
 	$p->addComponent( new TitleComponent( "Estado del servidor" ) );
 
 	
 	$t = new SimpleTableComponent();
-
-
-	
 	
 	$t->addRow("PHP"	, "OK");
 	$t->addRow("MySQL"	, "OK");

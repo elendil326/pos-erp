@@ -8,4 +8,8 @@
 
 		$page = new GerenciaComponentPage();
 
+		
+		$page->addComponent( new ShoppingCartComponent(  ) );
+
+
 		$page->render();

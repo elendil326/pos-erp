@@ -139,6 +139,7 @@
 	require_once("libs/gui/TableComponent.php");
 	require_once("libs/gui/GerenciaComponentPage.php");
 	require_once("libs/gui/FreeHtmlComponent.php");
+	require_once("libs/gui/ShoppingCartComponent.php");	
 
 
 
@@ -210,8 +211,6 @@
 	//que sea validada la instancia
 	if(defined("BYPASS_INSTANCE_CHECK") && BYPASS_INSTANCE_CHECK)
 	{
-		
-
 		//saltar el checkeo siguiente
 		return;
 	}
@@ -277,5 +276,9 @@
 		die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));
 	}
 
-
+	if($POS_CONFIG["INSTANCE_CONN"] === NULL){
+		Logger::error("Imposible conectarse con la base de datos de la instancia...");
+		die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));
+	}
+	
 	$conn = $POS_CONFIG["INSTANCE_CONN"];
