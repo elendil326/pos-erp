@@ -1600,10 +1600,64 @@ require_once("interfaces/Servicios.interface.php");
                 throw new Exception($validar);
             }
             
+            //valida el parametro descuento
+            if(!is_null($descuento))
+            {
+                $validar = self::validarNumero($descuento, 1.8e200, "descuento");
+                if(is_string($validar))
+                {
+                    Logger::error($validar);
+                    throw new Exception($validar,901);
+                }
+            }
+            
+            //valida el parametro saldo
+            if(!is_null($saldo))
+            {
+                $validar = self::validarNumero($saldo, 1.8e200, "saldo");
+                if(is_string($validar))
+                {
+                    Logger::error($validar);
+                    throw new Exception($validar,901);
+                }
+            }
+            
+            //valida el parametro tipo de pago
+            if(!is_null($tipo_de_pago))
+            {
+                if($tipo_de_pago!="cheque"&&$tipo_de_pago!="efectivo"&&$tipo_de_pago!="tarjeta")
+                {
+                    Logger::error("El tipo de pago (".$tipo_de_pago.") no es valido, tiene que ser cheque, efectivo o tarjeta");
+                    throw new Exception("El tipo de pago (".$tipo_de_pago.") no es valido, tiene que ser cheque, efectivo o tarjeta",901);
+                }
+            }
+            
+            //Da por terminada la orden y cambia la fecha de entrega a la fecha actual.
             $orden_de_servicio = OrdenDeServicioDAO::getByPK($id_orden);
             
             $orden_de_servicio->setActiva(0);
             $orden_de_servicio->setFechaEntrega(date("Y-m-d H:i:s"));
+            
+            //valida el parametro tipo_venta
+            if($tipo_venta!="credito"&&$tipo_venta!="contado")
+            {
+                Logger::error("El parametro tipo de venta (".$tipo_venta.") tiene que ser 'credito' o 'contado'");
+                throw new Exception("El parametro tipo de venta (".$tipo_venta.") tiene que ser 'credito' o 'contado'",901);
+            }
+            
+            //Se calcula el subtotal de la venta
+            
+            //Se calcula el impuesto que se cargara a la venta
+            
+            //Se calcula la retencion que se caragara a la venta
+            
+            //Se calcula el total de la venta
+            
+            //Inicia el arreglo que se le pasara al metodo de venta
+            $detalle_orden = array(
+                "descuento"             => $descuento,
+                "id_orden_de_servicio"  => $id_orden
+            );
             
             DAO::transBegin();
             try
