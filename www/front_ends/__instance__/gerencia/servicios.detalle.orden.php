@@ -104,13 +104,29 @@
 		$seguimientos = SeguimientoDeServicioDAO::seguimientosPorServicio( $_GET["oid"] );
 		
 		$header = array(
-			"fecha_seguimiento" 			=> "fecha_seguimiento", 
-			"id_localizacion" 				=> "id_localizacion" ,
-			"id_usuario" 					=> "id_usuario" ,
-			"id_sucursal" 					=> "id_sucursal" ,
-			"estado" 						=> "estado" 
+			"fecha_seguimiento" 			=> "Fecha", 
+			"id_localizacion" 				=> "Sucursal actual" ,
+			"id_usuario" 					=> "Usuario que registro" ,
+			"estado" 						=> "Estado" 
 		);
+                
+                $table = new TableComponent($header, $seguimientos);
+                
+                function funcion_sucursal($id_sucursal)
+                {
+                    return ( SucursalDAO::getByPK($id_sucursal) ? SucursalDAO::getByPK($id_sucursal)->getRazonSocial() : "---------" );
+                }
+                
+                function funcion_usuario($id_usuario)
+                {
+                    return ( UsuarioDAO::getByPK($id_usuario) ? UsuarioDAO::getByPK($id_usuario)->getNombre() : "----------" );
+                }
+                
+                $table->addColRender("id_localizacion", "funcion_sucursal");
+                
+                $table->addColRender("id_usuario", "funcion_usuario");
+                
 		
-		$page->addComponent( new TableComponent($header, $seguimientos) );
+		$page->addComponent( $table );
 		
 		$page->render();
