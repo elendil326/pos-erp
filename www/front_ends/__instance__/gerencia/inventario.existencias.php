@@ -40,7 +40,7 @@
                 $tabla->addColRender("id_almacen", "funcion_almacen");
                 $tabla->addColRender("id_unidad", "funcion_unidad");
                 
-		$tabla->addOnClick( "id_producto", "(function(a){ window.location = 'producto.ver.php?pid=' + a; })" );
+		$tabla->addOnClick( "id_producto", "(function(a){ window.location = 'productos.ver.php?pid=' + a; })" );
 		
 			
 		$page->addComponent( $tabla );
