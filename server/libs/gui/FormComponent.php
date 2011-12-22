@@ -131,7 +131,11 @@ class FormComponent implements GuiComponent{
 			$html.= "			";
 			$html.= "			/* remove unload event */";			
 			$html.= "			window.onbeforeunload = function(){ return;	};";			
-			$html.= "				/* console.log('OKAY'); */ ";
+			$html.= "			Ext.MessageBox.show({
+			           title: 'OK',
+			           msg: 'OK.',
+			           buttons: Ext.MessageBox.OK
+			       });	/* console.log('OKAY'); */ ";
 
 			if( !is_null($this->send_to_api_callback) )
 				$html.= "			" . $this->send_to_api_callback . "( a );";
@@ -259,7 +263,7 @@ class FormComponent implements GuiComponent{
 			$html .= "<td>";
 			$html .= "</td><td align=right>";
 			$html .= "<div class='POS Boton' onClick=''  >Cancelar</div>";						
-			$html .= "<div class='POS Boton OK' onClick='getParams()'  >Aceptar</div>";			
+			$html .= "<div class='POS Boton OK' onClick='this.onClick=null;getParams()'  >Aceptar</div>";			
 			$html .= "</td></tr>";			
 		}
 		
@@ -372,14 +376,39 @@ class FormComponent implements GuiComponent{
 			{
 				$this->form_fields[$i]->type  = "combo";
 				
-				$end_values = array();
+				$end_values = array(  );
 
 				foreach ($values_array as $v ){
-					$v = $v->asArray();
-                                        if($selected_value == $v["$field_name"])
-                                            array_push( $end_values,  array( "id" => $v["$field_name"], "caption" => $v["$field_name_in_values"], "selected" => true ) );
-                                        else
-                                            array_push( $end_values,  array( "id" => $v["$field_name"], "caption" => $v["$field_name_in_values"], "selected" => false ) );
+					
+					if( !($v instanceof VO)  ){
+						
+	                    if( $selected_value == $v ){
+	                        array_push( 
+								$end_values,  
+								array( "id" => $v, "caption" => $v, "selected" => true ) );
+	                    }else{
+	                        array_push( 
+								$end_values,  
+								array( "id" => $v, "caption" => $v, "selected" => false ) );
+						}
+										
+					}else{
+						
+						$v = $v->asArray();
+						
+	                    if( $selected_value == $v["$field_name"] ){
+	                        array_push( 
+								$end_values,  
+								array( "id" => $v["$field_name"], "caption" => $v["$field_name_in_values"], "selected" => true ) );
+	                    }else{
+	                        array_push( 
+								$end_values,  
+								array( "id" => $v["$field_name"], "caption" => $v["$field_name_in_values"], "selected" => false ) );
+						}
+					}
+						
+					
+
 
 				}
 				

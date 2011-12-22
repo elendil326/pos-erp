@@ -8,17 +8,17 @@
 
 		$page = new GerenciaComponentPage();
 
-                $page->addComponent( new TitleComponent( "Servicios" ) );
+		$page->addComponent( new TitleComponent( "Servicios" ) );
 		$page->addComponent( new MessageComponent( "Lista de servicios" ) );
 		
 		$tabla = new TableComponent( 
 			array(
-                                "codigo_servicio" => "Codigo de servicio",
+				"codigo_servicio" => "Codigo de servicio",
 				"nombre_servicio" => "Nombre",
-                                "metodo_costeo" => "Metodo de costeo",
-                                "precio" => "Precio",
-                                "margen_de_utilidad" => "Margen de Utilidad",
-                                "activo" => "Activo"
+				"metodo_costeo" => "Metodo de costeo",
+				"precio" => "Precio",
+				"margen_de_utilidad" => "Margen de Utilidad",
+				"activo" => "Activo"
 			),
 			ServiciosController::Lista()
 		);

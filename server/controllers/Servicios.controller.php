@@ -957,6 +957,7 @@ require_once("interfaces/Servicios.interface.php");
             $validar = self::validarParametrosServicio(null,$nombre_servicio,$metodo_costeo,
                     $codigo_servicio,$compra_en_mostrador,$activo,$margen_de_utilidad,$descripcion_servicio,
                     $costo_estandar,$garantia,$control_de_existencia,$foto_servicio,$precio);
+
             if(is_string($validar))
             {
                 Logger::error($validar);

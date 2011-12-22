@@ -127,7 +127,8 @@ POS.API =
 			return;
 
 		}
-		callback.call( null, o );
+		
+		//callback.call( null, o );
 	},
 
 	actualAjax 		: function (  method, url, params, callback  )
