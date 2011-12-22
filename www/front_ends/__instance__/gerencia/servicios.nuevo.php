@@ -20,6 +20,8 @@
 
 	
 	$form->addApiCall( "api/servicios/nuevo/", "GET" );
+        
+        $form->onApiCallSuccessRedirect( "servicios.lista.php" );
 	
 	$form->makeObligatory(array( 
 			"costo_estandar",
@@ -32,9 +34,12 @@
 		));
 	
 	$form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll( ) );
-	$form->createComboBoxJoin( "id_clasificacion_cliente", "nombre", ClasificacionClienteDAO::getAll( ) );
+	//$form->createComboBoxJoin( "id_clasificacion_cliente", "nombre", ClasificacionClienteDAO::getAll( ) );
 	$form->createComboBoxJoin( "metodo_costeo", "metodo_costeo", array("precio", "margen") );
-	$form->createComboBoxJoin( "compra_en_mostrador", "compra_en_mostrador", array("si", "no") );
+	$form->createComboBoxJoin( "compra_en_mostrador", "compra_en_mostrador", array( array( "id" => 1 , "caption" => "si" ), 
+                                    array( "id" => 0 , "caption" => "no" ) ), 1 );
+        $form->createComboBoxJoin( "activo", "activo", array( array( "id" => 1 , "caption" => "si" ), 
+                                    array( "id" => 0 , "caption" => "no" ) ), 1 );
 			
 	$page->addComponent( $form );
 

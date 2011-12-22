@@ -34,6 +34,11 @@
 		));
 	
     $form->createComboBoxJoin("id_unidad", "nombre", UnidadDAO::search( new Unidad( array( "activa" => 1 ) ) ));
+    $form->createComboBoxJoin( "metodo_costeo", "metodo_costeo", array( "precio" , "margen" ) );
+	$form->createComboBoxJoin( "compra_en_mostrador", "compra_en_mostrador", array( array( "id" => 1 , "caption" => "si" ), 
+                                    array( "id" => 0 , "caption" => "no" ) ), 1 );
+        $form->createComboBoxJoin( "activo", "activo", array( array( "id" => 1 , "caption" => "si" ), 
+                                    array( "id" => 0 , "caption" => "no" ) ), 1 );
 	$page->addComponent( $form );
 
 

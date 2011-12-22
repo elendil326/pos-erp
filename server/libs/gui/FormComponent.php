@@ -391,6 +391,22 @@ class FormComponent implements GuiComponent{
 					
 					if( !($v instanceof VO)  ){
 						
+                                            if(is_array($v))
+                                            {
+                                                
+                            if( $selected_value == $v["id"] ){
+	                        array_push( 
+								$end_values,  
+								array( "id" => $v["id"], "caption" => $v["caption"], "selected" => true ) );
+	                    }else{
+	                        array_push( 
+								$end_values,  
+								array( "id" => $v["id"], "caption" => $v["caption"], "selected" => false ) );
+						}
+                                            }
+                                            else
+                                            {
+                                            
 	                    if( $selected_value == $v ){
 	                        array_push( 
 								$end_values,  
@@ -400,6 +416,7 @@ class FormComponent implements GuiComponent{
 								$end_values,  
 								array( "id" => $v, "caption" => $v, "selected" => false ) );
 						}
+                                            }
 										
 					}else{
 						
