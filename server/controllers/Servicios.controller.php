@@ -511,13 +511,13 @@ require_once("interfaces/Servicios.interface.php");
 	public static function EditarClasificacion
 	(
 		$id_clasificacion_servicio, 
-		$retenciones = "", 
-		$impuestos = "", 
-		$descuento = "", 
-		$margen_utilidad = "", 
-		$descripcion = "", 
-		$garantia = "", 
-		$nombre = ""
+		$retenciones = null, 
+		$impuestos = null, 
+		$descuento = null, 
+		$margen_utilidad = null, 
+		$descripcion = null, 
+		$garantia = null, 
+		$nombre = null
 	)
 	{  
             Logger::log("Editando clasificacion de servicio ".$id_clasificacion_servicio);
@@ -691,7 +691,7 @@ require_once("interfaces/Servicios.interface.php");
 	public static function CancelarOrden
 	(
 		$id_orden_de_servicio, 
-		$motivo_cancelacion = ""
+		$motivo_cancelacion = null
 	)
 	{  
             Logger::log("Cancelando orden de servicio ".$id_orden_de_servicio);
@@ -934,21 +934,21 @@ require_once("interfaces/Servicios.interface.php");
  	 **/
 	public static function Nuevo
 	(
+		$codigo_servicio, 
+		$metodo_costeo, 
+		$compra_en_mostrador, 
 		$costo_estandar, 
 		$nombre_servicio, 
-		$compra_en_mostrador, 
-		$metodo_costeo, 
-		$codigo_servicio, 
-		$margen_de_utilidad = null, 
 		$precio = null, 
+		$retenciones = null, 
+		$garantia = null, 
+		$foto_servicio = null, 
+		$control_de_existencia = null, 
 		$descripcion_servicio = null, 
 		$activo = true, 
 		$clasificaciones = null, 
 		$impuestos = null, 
-		$retenciones = null, 
-		$garantia = null, 
-		$foto_servicio = null, 
-		$control_de_existencia = null
+		$margen_de_utilidad = null
 	)
 	{  
             Logger::log("Creando nuevo servicio");
@@ -1098,22 +1098,22 @@ require_once("interfaces/Servicios.interface.php");
 	public static function Editar
 	(
 		$id_servicio, 
+		$costo_estandar = null, 
+		$retenciones = null, 
 		$sucursales = null, 
-		$nombre_servicio = null, 
+		$clasificaciones = null, 
 		$garantia = null, 
 		$impuestos = null, 
+		$nombre_servicio = null, 
 		$metodo_costeo = null, 
+		$descripcion_servicio = null, 
 		$empresas = null, 
 		$codigo_servicio = null, 
-		$descripcion_servicio = null, 
 		$compra_en_mostrador = null, 
 		$control_de_existencia = null, 
 		$foto_servicio = null, 
 		$margen_de_utilidad = null, 
-		$clasificaciones = null, 
-		$retenciones = null, 
-		$costo_estandar = null,
-                $precio = null
+		$precio = null
 	)
 	{  
             Logger::log("Editando servicio ".$id_servicio);
@@ -1335,12 +1335,12 @@ require_once("interfaces/Servicios.interface.php");
  	 **/
 	public static function ListaOrden
 	(
+		$id_servicio = null, 
 		$fecha_hasta = null, 
-		$fecha_desde = null,
-                $id_servicio = null,
-                $id_usuario_venta = null,
-                $activa = null,
-                $cancelada = null
+		$fecha_desde = null, 
+		$id_usuario_venta = null, 
+		$activa = null, 
+		$cancelada = null
 	)
 	{  
             Logger::log("listando las ordenes");
@@ -1445,10 +1445,10 @@ require_once("interfaces/Servicios.interface.php");
  	 **/
 	public static function NuevaOrden
 	(
-		$id_cliente, 
-		$id_servicio, 
-		$fecha_entrega, 
 		$descripcion, 
+		$id_servicio, 
+		$id_cliente, 
+		$fecha_entrega, 
 		$adelanto = null
 	)
 	{  
@@ -1583,7 +1583,11 @@ require_once("interfaces/Servicios.interface.php");
  	 **/
 	public static function TerminarOrden
 	(
-		$id_orden
+		$id_orden, 
+		$tipo_venta, 
+		$descuento = null, 
+		$saldo = null, 
+		$tipo_de_pago = null
 	)
 	{  
             Logger::log("Terminando orden de servicio ".$id_orden);

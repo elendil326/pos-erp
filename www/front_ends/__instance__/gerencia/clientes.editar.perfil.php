@@ -58,16 +58,9 @@
         
         $form->createComboBoxJoin( "id_moneda", "nombre", MonedaDAO::search( new Moneda(array("activa" => 1)) ), $este_cliente->getIdMoneda() );
         $form->createComboBoxJoin( "id_clasificacion_cliente", "nombre", ClasificacionClienteDAO::getAll( ), $este_cliente->getIdClasificacionCliente() );
-        //$form->createComboBoxJoin( "id_sucursal", "razon_social", SucursalDAO::search( new Sucursal(array("activa" => 1)) ), $este_cliente->getIdSucursal() );
 	
 	$form->addApiCall( "api/cliente/editar_perfil/" );
 	
-//	$form->makeObligatory(array( 
-//			"password",
-//			"clasificacion_cliente",
-//			"codigo_cliente",
-//			"razon_social"
-//		));
 	
 	$form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll( ), $esta_direccion->getIdCiudad() );
         
