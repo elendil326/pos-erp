@@ -1,26 +1,25 @@
 <?php 
 
+	define("BYPASS_INSTANCE_CHECK", false);
 
+	require_once("../../../../server/bootstrap.php");
 
-		define("BYPASS_INSTANCE_CHECK", false);
+	$page = new GerenciaComponentPage();
 
-		require_once("../../../../server/bootstrap.php");
-
-		$page = new GerenciaComponentPage();
-
-                //
-		// Parametros necesarios
-		// 
-		$page->requireParam(  "cid", "GET", "Este cliente no existe." );
-		$este_cliente = UsuarioDAO::getByPK( $_GET["cid"] );
-                $esta_direccion = DireccionDAO::getByPK($este_cliente->getIdDireccion());
+	// Parametros necesarios
+	// 
+	$page->requireParam(  "cid", "GET", "Este cliente no existe." );
+	$este_cliente = UsuarioDAO::getByPK( $_GET["cid"] );
+	$esta_direccion = DireccionDAO::getByPK($este_cliente->getIdDireccion());
                 
-                //titulos
+	//titulos
 	$page->addComponent( new TitleComponent( "Editar cliente: ".$este_cliente->getNombre() ) );
 
 	//forma de nuevo cliente
-        if(is_null($esta_direccion))
-            $esta_direccion = new Direccion();
+	if(is_null($esta_direccion)){
+		$esta_direccion = new Direccion();
+	}
+    
 	$form = new DAOFormComponent( array( $este_cliente, $esta_direccion ) );
 	
 	$form->hideField( array( 
@@ -40,24 +39,21 @@
 			"id_direccion",
 			"ultima_modificacion",
 			"id_usuario_ultima_modificacion",
-                        "consignatario",
-                        "tiempo_entrega",
-                        "cuenta_bancaria"
+            "consignatario",
+            "tiempo_entrega",
+            "cuenta_bancaria"
 		 ));
-        
-        $form->createComboBoxJoin( "id_moneda", "nombre", MonedaDAO::search( new Moneda(array("activa" => 1)) ), $este_cliente->getIdMoneda() );
-        $form->createComboBoxJoin( "id_clasificacion_cliente", "nombre", ClasificacionClienteDAO::getAll( ), $este_cliente->getIdClasificacionCliente() );
-        $form->createComboBoxJoin( "id_sucursal", "razon_social", SucursalDAO::search( new Sucursal(array("activa" => 1)) ), $este_cliente->getIdSucursal() );
+
+    $form->renameField(array("id_usuario"=>"id_cliente"));
+	$form->sendHidden("id_cliente");
+
+
+    $form->createComboBoxJoin( "id_moneda", "nombre", MonedaDAO::search( new Moneda(array("activa" => 1)) ), $este_cliente->getIdMoneda() );
+    $form->createComboBoxJoin( "id_clasificacion_cliente", "nombre", ClasificacionClienteDAO::getAll( ), $este_cliente->getIdClasificacionCliente() );
+    $form->createComboBoxJoin( "id_sucursal", "razon_social", SucursalDAO::search( new Sucursal(array("activa" => 1)) ), $este_cliente->getIdSucursal() );
 	
 	$form->addApiCall( "api/cliente/editar/" );
-	
-//	$form->makeObligatory(array( 
-//			"password",
-//			"clasificacion_cliente",
-//			"codigo_cliente",
-//			"razon_social"
-//		));
-	
+
 	$form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll( ), $esta_direccion->getIdCiudad() );
         
         $form->renameField( array( 
@@ -77,4 +73,4 @@
 
 
 	//render the page
-		$page->render();
+	$page->render();

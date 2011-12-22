@@ -136,7 +136,7 @@ class GerenciaComponentPage extends StdComponentPage{
         },
         {
             "title": "Clientes",
-            "url": "clientes.php",
+            "url": "clientes.lista.php",
             "children" : [
                 {
             		"title" : "Lista clasificacion",
@@ -312,7 +312,7 @@ class GerenciaComponentPage extends StdComponentPage{
         },
         {
             "title": "Empresas",
-            "url": "empresas.php",
+            "url": "empresas.lista.php",
             "children" : [
                 {
             		"title" : "Agregar sucursales",
@@ -396,7 +396,7 @@ class GerenciaComponentPage extends StdComponentPage{
         },
         {
             "title": "Productos",
-            "url": "productos.php",
+            "url": "productos.lista.php",
             "children": [
                 {
                         "title" : "Lista categoria",

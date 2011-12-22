@@ -314,6 +314,10 @@ class FormComponent implements GuiComponent{
 	public function onApiCallSuccessRedirect( $url, $send_param = null ){
 		$this->send_to_api_redirect = $url;		
 	}
+	
+	
+	
+	
 	public function renameField( $field_array ){
 		
 		$found = false;

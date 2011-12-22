@@ -27,6 +27,8 @@
                                 "activo",
                                 
 			 ));
+			
+		$form->sendHidden("id_producto");
                 
                 $form->addApiCall( "api/producto/editar/", "GET" );
                 
