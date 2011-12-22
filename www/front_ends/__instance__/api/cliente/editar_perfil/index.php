@@ -11,6 +11,6 @@
 require_once("../../../../../../server/bootstrap.php");
 require_once("api/api.cliente.editar_perfil.php");
 
-$api = new ApiClienteEditar_perfil();
+$api = new ApiClienteEditarPerfil();
 $apiOutput = ApiOutputFormatter::getInstance();
 $apiOutput->PrintOuput($api);

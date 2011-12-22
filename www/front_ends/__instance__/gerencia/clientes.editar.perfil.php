@@ -53,6 +53,8 @@
                         "dias_de_credito",
                         "limite_credito"
 		 ));
+        $form->renameField(array("id_usuario"=>"id_cliente"));
+	$form->sendHidden("id_cliente");
         
         $form->createComboBoxJoin( "id_moneda", "nombre", MonedaDAO::search( new Moneda(array("activa" => 1)) ), $este_cliente->getIdMoneda() );
         $form->createComboBoxJoin( "id_clasificacion_cliente", "nombre", ClasificacionClienteDAO::getAll( ), $este_cliente->getIdClasificacionCliente() );

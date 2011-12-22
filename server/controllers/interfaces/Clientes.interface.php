@@ -10,21 +10,6 @@
   
 	/**
  	 *
- 	 *Busca una lista de clientes dada una busqueda
- 	 *
- 	 * @param query string El texto a buscar
- 	 * @return json string Lista de clientes que clientes que satisfacen la busqueda
- 	 **/
-  static function Buscar
-	(
-		$query
-	);  
-  
-  
-	
-  
-	/**
- 	 *
  	 *Edita la informacion de la clasificacion de cliente
  	 *
  	 * @param id_clasificacion_cliente int Id de la clasificacion del cliente a modificar
