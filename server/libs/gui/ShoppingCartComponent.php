@@ -42,136 +42,137 @@ class ShoppingCartComponent implements GuiComponent {
 		?>
 			<script>
 
-				Ext.require([
-				    'Ext.data.*',
-				    'Ext.form.*'
-				]);
+	Ext.require([
+	    'Ext.data.*',
+	    'Ext.form.*'
+	]);
 
 
 
-				Ext.onReady(function(){
+	Ext.onReady(function(){
 
 
 
-					/**
-					  *
-					  *
-					  **/
-				    Ext.define("Post", {
-				        extend: 'Ext.data.Model',
-				        proxy: {
-				            type: 'jsonp',
-				            url : 'http://www.sencha.com/forum/topics-remote.php',
-				            reader: {
-				                type: 'json',
-				                root: 'topics',
-				                totalProperty: 'totalCount'
-				            }
-				        },
+		/**
+		  *
+		  *
+		  **/
+	    Ext.define("Post", {
+	        extend: 'Ext.data.Model',
+	        proxy: {
+	            type: 'ajax',
+				url : '../api/cliente/buscar/',
+	            reader: {
+	                type: 'json',
+	                root: 'resultados',
+	                totalProperty: 'numero_de_resultados'
+	            }
+	        },
 
-				        fields: [
-				            {name: 'id', mapping: 'post_id'},
-				            {name: 'title', mapping: 'topic_title'},
-				            {name: 'topicId', mapping: 'topic_id'},
-				            {name: 'author', mapping: 'author'},
-				            {name: 'lastPost', mapping: 'post_time', type: 'date', dateFormat: 'timestamp'},
-				            {name: 'excerpt', mapping: 'post_text'}
-				        ]
-				    });
-				
-				
-				
-				
+	        fields: [
+	            {name: 'id', mapping: 'id_usuario'},
+	            {name: 'title', mapping: 'nombre'},
+	            {name: 'topicId', mapping: 'rfc'},
+	            {name: 'lastPost', mapping: 'fecha_alta', type: 'date', dateFormat: 'timestamp'}
+	        ]
+	    });
+	
+	
+	
+	
 
-				    ds = Ext.create('Ext.data.Store', {
-				        pageSize: 10,
-				        model: 'Post'
-				    });
+	    ds = Ext.create('Ext.data.Store', {
+	        pageSize: 10,
+	        model: 'Post'
+	    });
 
 
 
-					/**
-					  *
-					  *
-					  **/
-				    panel = Ext.create('Ext.panel.Panel', {
-				        renderTo: "ShoppingCartComponent_001",
-				        title: '',
-				        width: '100%',
-				        bodyPadding: 10,
-				        layout: 'anchor',
-
-				        items: [{
-				            xtype: 'combo',
-				            store: ds,
-				            displayField: 'title',
-				            typeAhead: true,
-				            hideLabel: true,
-				            hideTrigger:false,
-				            anchor: '100%',
-
-				            listConfig: {
-				                loadingText: 'Buscando...',
-				                emptyText: 'No se encontraron productos.',
-
-				                // Custom rendering template for each item
-				                getInnerTpl: function() {
-				                    return '<a class="search-item" href="http://www.sencha.com/forum/showthread.php?t={topicId}&p={id}">' +
-				                        '<h3><span>{[Ext.Date.format(values.lastPost, "M j, Y")]}<br />by {author}</span>{title}</h3>' +
-				                        '{excerpt}' +
-				                    '</a>';
-				                }
-				            },
-				            pageSize: 10
-				        }, {
-				            xtype: 'component',
-				            style: 'margin-top:10px',
-				            html: 'Buscando por descripcion, nombre o codigo de barras.'
-				        }]
-				    });/* Ext.create */
 
 
 
-					/**
-					  *
-					  *
-					  **/
-				    panel = Ext.create('Ext.panel.Panel', {
-				        renderTo: "ShoppingCartComponent_002",
-				        title: '',
-				        width: '100%',
-				        bodyPadding: 10,
-				        layout: 'anchor',
+		/**
+		  *
+		  *
+		  **/
+	    Ext.create('Ext.panel.Panel', {
+	        renderTo: "ShoppingCartComponent_002",
+	        title: '',
+	        width: '100%',
+	        bodyPadding: 10,
+	        layout: 'anchor',
 
-				        items: [{
-				            xtype: 'combo',
-				            store: ds,
-				            displayField: 'title',
-				            typeAhead: true,
-				            hideLabel: true,
-				            hideTrigger:false,
-				            anchor: '100%',
+	        items: [{
+	            xtype: 'combo',
+	            store: ds,
+	            displayField: 'title',
+	            typeAhead: true,
+	            hideLabel: true,
+	            hideTrigger:false,
+	            anchor: '100%',
 
-				            listConfig: {
-				                loadingText: 'Buscando...',
-				                emptyText: 'No se encontraron clientes.',
+	            listConfig: {
+	                loadingText: 'Buscando...',
+	                emptyText: 'No se encontraron clientes.',
 
-				                // Custom rendering template for each item
-				                getInnerTpl: function() {
-				                    return '<a class="search-item" href="http://www.sencha.com/forum/showthread.php?t={topicId}&p={id}">' +
-				                        '<h3><span>{[Ext.Date.format(values.lastPost, "M j, Y")]}<br />by {author}</span>{title}</h3>' +
-				                        '{excerpt}' +
-				                    '</a>';
-				                }
-				            },
-				            pageSize: 10
-				        }]
-				    });/* Ext.create */
-								
-				}); /* Ext.onReady */
-					
+	                // Custom rendering template for each item
+	                 getInnerTpl: function() {
+		                    return '<p>{title}</p>';
+		                }
+	            },
+	            pageSize: 10
+	        }]
+	    });/* Ext.create */
+		
+		
+		
+		
+		
+		
+		
+		/**
+		  *
+		  *
+		  **/
+	    Ext.create('Ext.panel.Panel', {
+	        renderTo: "ShoppingCartComponent_001",
+	        title: '',
+	        width: '100%',
+	        bodyPadding: 10,
+	        layout: 'anchor',
 
-			</script>
+	        items: [{
+	            xtype: 'combo',
+	            store: ds,
+	            displayField: 'title',
+	            typeAhead: true,
+	            hideLabel: true,
+	            hideTrigger:false,
+	            anchor: '100%',
+
+	            listConfig: {
+	                loadingText: 'Buscando...',
+	                emptyText: 'No se encontraron productos.',
+
+	                // Custom rendering template for each item
+	                getInnerTpl: function() {
+	                    return '<a class="search-item" href="">' +
+	                        '<h3><span>hola<br />by {title}</span>{title}</h3>' +
+	                        'ok' +
+	                    '</a>';
+	                }
+	            },
+	            pageSize: 10
+	        }, {
+	            xtype: 'component',
+	            style: 'margin-top:10px',
+	            html: 'Buscando por descripcion, nombre o codigo de barras.'
+	        }]
+	    });/* Ext.create */
+	}); /* Ext.onReady */
+		
+
+</script>
 			
 
 			<p style="margin-bottom: 0px;">Buscar cliente</p>

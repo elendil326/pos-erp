@@ -861,7 +861,10 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 	  **/
 	public static function Buscar($query){
 		$resultados = UsuarioDAO::buscarClientes( $query );
-		return array( "resultados" => $resultados );
+		return array( 
+			"resultados" => $resultados ,
+			"numero_de_resultados" => sizeof($resultados)
+			);
 		
 	}
 	
