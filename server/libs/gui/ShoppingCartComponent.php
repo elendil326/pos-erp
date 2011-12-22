@@ -55,7 +55,7 @@ class ShoppingCartComponent implements GuiComponent {
 		
 		Ext.get("buscar_cliente_01").enableDisplayMode('block').hide();
 		var pphtml = "<h2 style='margin-bottom:0px'>Venta para <a href='clientes.ver.php?cid="+cliente_seleccionado.get("id_cliente")+"'>" + cliente_seleccionado.get("nombre") + "</a></h2>"
-			+ "<p>" + cliente_seleccionado.get("rfc") + "</p>";
+			+ "<p>" + cliente_seleccionado.get("rfc") + "</p>"
 			+ "<div class='POS Boton' onClick='buscar_cliente()'  >Buscar otro cliente</div>"
 		
 		Ext.get("buscar_cliente_02").update(pphtml).show();
@@ -67,6 +67,11 @@ class ShoppingCartComponent implements GuiComponent {
 
 	}
 	
+	var productos_en_carrito = [];
+	var seleccionar_producto = function( a, p ){
+		console.log( "seleccionando producto", p );
+	}
+	
 	Ext.onReady(function(){
 
 
@@ -75,7 +80,7 @@ class ShoppingCartComponent implements GuiComponent {
 		  *
 		  *
 		  **/
-	    Ext.define("Post", {
+	    Ext.define("Cliente", {
 	        extend: 'Ext.data.Model',
 	        proxy: {
 	            type: 'ajax',
@@ -95,24 +100,11 @@ class ShoppingCartComponent implements GuiComponent {
 	        ]
 	    });
 	
-	
-	
-	
-
 	    ds = Ext.create('Ext.data.Store', {
 	        pageSize: 10,
-	        model: 'Post'
+	        model: 'Cliente'
 	    });
 
-
-
-
-		
-
-		/**
-		  *
-		  *
-		  **/
 	    Ext.create('Ext.panel.Panel', {
 	        renderTo: "ShoppingCartComponent_002",
 	        title: '',
@@ -147,14 +139,34 @@ class ShoppingCartComponent implements GuiComponent {
 		
 		
 		
-		
-		
-		
-		
+
 		/**
 		  *
 		  *
 		  **/
+	    Ext.define("Producto", {
+	        extend: 'Ext.data.Model',
+	        proxy: {
+	            type: 'ajax',
+				url : '../api/producto/buscar/',
+	            reader: {
+	                type: 'json',
+	                root: 'resultados',
+	                totalProperty: 'numero_de_resultados'
+	            }
+	        },
+
+	        fields: [
+	            {name: 'id_producto', mapping: 'id_producto'},
+	            {name: 'nombre_producto', mapping: 'nombre_producto'}
+	        ]
+	    });
+	
+	    pdts = Ext.create('Ext.data.Store', {
+	        pageSize: 10,
+	        model: 'Producto'
+	    });		
+		
 	    Ext.create('Ext.panel.Panel', {
 	        renderTo: "ShoppingCartComponent_001",
 	        title: '',
@@ -164,23 +176,22 @@ class ShoppingCartComponent implements GuiComponent {
 
 	        items: [{
 	            xtype: 'combo',
-	            store: ds,
+	            store: pdts,
 	            displayField: 'title',
 	            typeAhead: true,
 	            hideLabel: true,
 	            hideTrigger:false,
 	            anchor: '100%',
-
+				listeners :{
+					"select" : seleccionar_producto
+				},
 	            listConfig: {
 	                loadingText: 'Buscando...',
 	                emptyText: 'No se encontraron productos.',
 
 	                // Custom rendering template for each item
 	                getInnerTpl: function() {
-	                    return '<a class="search-item" href="">' +
-	                        '<h3><span>hola<br />by {title}</span>{title}</h3>' +
-	                        'ok' +
-	                    '</a>';
+	                    return '<h3>{nombre_producto}-{id_producto}</h3>';
 	                }
 	            },
 	            pageSize: 10
@@ -206,6 +217,11 @@ class ShoppingCartComponent implements GuiComponent {
 
 			<p style="margin-bottom: 0px;">Buscar productos</p>				
 			<div id="ShoppingCartComponent_001"><!-- buscar productos --></div>
+			
+			
+			<div id="carrito_de_compras">
+				
+			</div>
 		<?php
 	}
 }

@@ -10,6 +10,22 @@
   
 	/**
  	 *
+ 	 *Buscar productos
+ 	 *
+ 	 * @param query string el campo a buscar
+ 	 * @return resultados json productos
+ 	 * @return numero_de_ resultados int numero de resultados en la respuesta
+ 	 **/
+  static function Buscar
+	(
+		$query
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
  	 *Este metodo desactiva una categoria de tal forma que ya no se vuelva a usar como categoria sobre un producto.
  	 *
  	 * @param id_categoria int Id de la categoria a desactivar
@@ -42,7 +58,7 @@
 		$garantia = null, 
 		$descuento = null, 
 		$margen_utilidad = null, 
-		$descripcion = "", 
+		$descripcion = null, 
 		$impuestos = null, 
 		$retenciones = null
 	);  
@@ -96,47 +112,47 @@
  	 *Edita la informaci?n de un producto
  	 *
  	 * @param id_producto int Id del producto a editar
- 	 * @param codigo_producto string Codigo del producto
- 	 * @param foto_del_producto string url a una foto de este producto
- 	 * @param control_de_existencia int 00000001 = Unidades. 00000010 = Caractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = Lote
- 	 * @param nombre_producto string Nombre del producto
- 	 * @param costo_extra_almacen float Si este producto produce un costo extra por tenerlo en almacen
- 	 * @param costo_estandar float Valor del costo estndar del producto.
- 	 * @param empresas json arreglo de empresas a las que pertenece este producto
- 	 * @param peso_producto float el peso de este producto en KG
- 	 * @param codigo_de_barras string El Codigo de barras para este producto
- 	 * @param compra_en_mostrador bool Verdadero si este producto se puede comprar en mostrador, para aquello de compra-venta. Para poder hacer esto, el sistema debe poder hacer compras en mostrador
- 	 * @param margen_de_utilidad float Un porcentage de 0 a 100 si queremos que este producto marque utilidad en especifico
- 	 * @param garantia int Si este producto cuenta con un nmero de meses de garantia que no aplican a los demas productos de su categoria
- 	 * @param id_unidad_convertible int Si este producto se relacionara con una unidad convertible (kilos, libras, litros, etc.) 
- 	 * @param clasificaciones json Uno o varios id_clasificacion de este producto, esta clasificacion esta dada por el usuarioArray
+ 	 * @param metodo_costeo string Mtodo de costeo del producto: 1 = Costo Promedio en Base a Entradas.2 = Costo Promedio en Base a Entradas Almacn.3 = ltimo costo.4 = UEPS.5 = PEPS.6 = Costo especfico.7 = Costo Estndar
+ 	 * @param precio int El precio de este producto
  	 * @param impuestos json array de ids de impuestos que tiene este producto
  	 * @param descripcion_producto string Descripcion larga del producto
- 	 * @param id_unidad_no_convertible int Si este producto se relacionara con una unidad no convertible ( lotes, cajas, costales, etc.)
- 	 * @param metodo_costeo string Mtodo de costeo del producto: 1 = Costo Promedio en Base a Entradas.2 = Costo Promedio en Base a Entradas Almacn.3 = ltimo costo.4 = UEPS.5 = PEPS.6 = Costo especfico.7 = Costo Estndar
+ 	 * @param clasificaciones json Uno o varios id_clasificacion de este producto, esta clasificacion esta dada por el usuarioArray
+ 	 * @param id_unidad int La unidad preferente de este producto
+ 	 * @param garantia int Si este producto cuenta con un nmero de meses de garantia que no aplican a los demas productos de su categoria
+ 	 * @param margen_de_utilidad float Un porcentage de 0 a 100 si queremos que este producto marque utilidad en especifico
+ 	 * @param compra_en_mostrador bool Verdadero si este producto se puede comprar en mostrador, para aquello de compra-venta. Para poder hacer esto, el sistema debe poder hacer compras en mostrador
+ 	 * @param codigo_de_barras string El Codigo de barras para este producto
+ 	 * @param empresas json arreglo de empresas a las que pertenece este producto
+ 	 * @param peso_producto float el peso de este producto en KG
+ 	 * @param costo_estandar float Valor del costo estndar del producto.
+ 	 * @param costo_extra_almacen float Si este producto produce un costo extra por tenerlo en almacen
+ 	 * @param nombre_producto string Nombre del producto
+ 	 * @param foto_del_producto string url a una foto de este producto
+ 	 * @param control_de_existencia int 00000001 = Unidades. 00000010 = Caractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = Lote
+ 	 * @param codigo_producto string Codigo del producto
  	 * @param descuento float Descuento que tendra este producot
  	 **/
   static function Editar
 	(
 		$id_producto, 
-		$codigo_producto = "", 
-		$foto_del_producto = "", 
-		$control_de_existencia = "", 
-		$nombre_producto = "", 
-		$costo_extra_almacen = null, 
-		$costo_estandar = "", 
-		$empresas = null, 
-		$peso_producto = "", 
-		$codigo_de_barras = "", 
-		$compra_en_mostrador = "", 
-		$margen_de_utilidad = "", 
-		$garantia = null, 
-		$id_unidad = null, 
-		$clasificaciones = "", 
-		$impuestos = "", 
-		$descripcion_producto = "", 
+		$metodo_costeo = null, 
 		$precio = null, 
-		$metodo_costeo = "", 
+		$impuestos = null, 
+		$descripcion_producto = null, 
+		$clasificaciones = null, 
+		$id_unidad = null, 
+		$garantia = null, 
+		$margen_de_utilidad = null, 
+		$compra_en_mostrador = null, 
+		$codigo_de_barras = null, 
+		$empresas = null, 
+		$peso_producto = null, 
+		$costo_estandar = null, 
+		$costo_extra_almacen = null, 
+		$nombre_producto = null, 
+		$foto_del_producto = null, 
+		$control_de_existencia = null, 
+		$codigo_producto = null, 
 		$descuento = null
 	);  
   
@@ -147,18 +163,18 @@
  	 *
  	 *Se puede ordenar por los atributos de producto. 
  	 *
- 	 * @param activo bool Si es true, mostrar solo los productos que estn activos, si es false mostrar solo los productos que no lo sean.
- 	 * @param id_lote int Id del lote del cual se vern sus productos.
  	 * @param id_almacen int Id del almacen del cual se vern sus productos.
+ 	 * @param compra_en_mostrador bool True si se listaran los productos que se pueden comprar en mostrador, false si se listaran los que no se pueden comprar en mostrador
+ 	 * @param activo bool Si es true, mostrar solo los productos que estn activos, si es false mostrar solo los productos que no lo sean.
  	 * @param id_empresa int Id de la empresa de la cual se vern los productos.
- 	 * @param id_sucursal int Id de la sucursal de la cual se vern los productos.
- 	 * @return productos json Objeto que contendrï¿½ el arreglo de productos en inventario.
+ 	 * @param metodo_costeo string Se listaran los productos que coincidan con este metodo de costeo
+ 	 * @return productos json Objeto que contendrá el arreglo de productos en inventario.
  	 **/
   static function Lista
 	(
-		$activo = null, 
-		$compra_en_mostrador = null, 
 		$id_almacen = null, 
+		$compra_en_mostrador = null, 
+		$activo = null, 
 		$id_empresa = null, 
 		$metodo_costeo = null
 	);  
@@ -172,27 +188,26 @@
 
 NOTA: Se crea un producto tipo = 1 que es para productos
  	 *
- 	 * @param compra_en_mostrador bool Verdadero si este producto se puede comprar en mostrador, para aquello de compra-venta. Para poder hacer esto, el sistema debe poder hacer compras en mostrador
+ 	 * @param activo bool Si queremos que este activo o no este producto despues de crearlo.
  	 * @param costo_estandar float Valor del costo estndar del producto.
+ 	 * @param compra_en_mostrador bool Verdadero si este producto se puede comprar en mostrador, para aquello de compra-venta. Para poder hacer esto, el sistema debe poder hacer compras en mostrador
  	 * @param nombre_producto string Nombre del producto
- 	 * @param id_empresas json Objeto que contendra el arreglo de ids de las empresas a la que pertenece este producto
  	 * @param codigo_producto string El codigo de control de la empresa para este producto, no se puede repetir
  	 * @param metodo_costeo string  Mtodo de costeo del producto: 1 = Costo Promedio en Base a Entradas.2 = Costo Promedio en Base a Entradas Almacn.3 = ltimo costo.4 = UEPS.5 = PEPS.6 = Costo especfico.7 = Costo Estndar
- 	 * @param activo bool Si queremos que este activo o no este producto despues de crearlo.
- 	 * @param garantia int Si este producto cuenta con un nmero de meses de garanta  que no aplica a los productos de su categora
+ 	 * @param costo_extra_almacen float Si este producto produce un costo extra por tenerlo en almacen
+ 	 * @param margen_de_utilidad float Un porcentage de 0 a 100 si queremos que este producto marque utilidad en especifico
  	 * @param foto_del_producto string url a una foto de este producto
+ 	 * @param garantia int Si este producto cuenta con un nmero de meses de garanta  que no aplica a los productos de su categora
  	 * @param descuento float Descuento que se aplicara a este producot
- 	 * @param id_unidad_no_convertible int Si este producto se relacionara con una unidad no convertible ( lotes, cajas, costales, etc.)
+ 	 * @param precio int El precio de este producto
  	 * @param codigo_de_barras string El Codigo de barras para este producto
  	 * @param descripcion_producto string Descripcion larga del producto
  	 * @param impuestos json array de ids de impuestos que tiene este producto
+ 	 * @param id_unidad int La unidad preferida para este producto
  	 * @param clasificaciones json Uno o varios id_clasificacion de este producto, esta clasificacion esta dada por el usuarioArray
- 	 * @param id_unidad_convertible int Si este producto se relacionara con una unidad convertible ( kilos, litros, libras, etc.)
  	 * @param control_de_existencia int 00000001 = Unidades. 00000010 = Caractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = Lote
  	 * @param peso_producto float el peso de este producto en KG
- 	 * @param margen_de_utilidad float Un porcentage de 0 a 100 si queremos que este producto marque utilidad en especifico
- 	 * @param costo_extra_almacen float Si este producto produce un costo extra por tenerlo en almacen
- 	 * @return id_producto int Id generado por la inserciï¿½n del nuevo producto
+ 	 * @return id_producto int Id generado por la inserción del nuevo producto
  	 **/
   static function Nuevo
 	(
@@ -224,8 +239,8 @@ NOTA: Se crea un producto tipo = 1 que es para productos
  	 *
  	 *Agregar productos en volumen mediante un archivo CSV.
  	 *
- 	 * @param productos json Arreglo de objetos que contendrï¿½n la informaciï¿½n del nuevo producto
- 	 * @return id_productos json Arreglo de enteros que contendrï¿½ los ids de los productos insertados.
+ 	 * @param productos json Arreglo de objetos que contendrán la información del nuevo producto
+ 	 * @return id_productos json Arreglo de enteros que contendrá los ids de los productos insertados.
  	 **/
   static function En_volumenNuevo
 	(
@@ -239,16 +254,17 @@ NOTA: Se crea un producto tipo = 1 que es para productos
  	 *
  	 *Este metodo modifica la informacion de una unidad
  	 *
- 	 * @param id_unidad_convertible string Id de la unidad convertible a editar
+ 	 * @param id_unidad string Id de la unidad a editar
  	 * @param descripcion string Descripcion de la unidad convertible
  	 * @param nombre string Nombre de la unidad convertible
+ 	 * @param es_entero bool Si la unidad se manejara solo como enteros o con decimales
  	 **/
   static function EditarUnidad
 	(
 		$id_unidad, 
-		$descripcion = "", 
-		$nombre = "",
-                $es_entero = null
+		$descripcion = null, 
+		$nombre = null, 
+		$es_entero = null
 	);  
   
   
@@ -277,7 +293,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos
  	 *
  	 *Descativa una unidad para que no sea usada por otro metodo
  	 *
- 	 * @param id_unidad_convertible int Id de la unidad convertible a eliminar
+ 	 * @param id_unidad int Id de la unidad convertible a eliminar
  	 **/
   static function EliminarUnidad
 	(
@@ -314,8 +330,8 @@ Ejemplo: 1 kg = 2.204 lb
  	 **/
   static function ListaUnidad
 	(
-		$activo = "", 
-		$ordenar = ""
+		$activo = null, 
+		$ordenar = null
 	);  
   
   
@@ -330,7 +346,7 @@ Ejemplo: 1 kg = 2.204 lb
  	 **/
   static function Lista_equivalenciaUnidad
 	(
-		$orden = ""
+		$orden = null
 	);  
   
   
@@ -341,14 +357,15 @@ Ejemplo: 1 kg = 2.204 lb
  	 *Este metodo crea unidades, como son Kilogramos, Libras, Toneladas, Litros, costales, cajas, arpillas, etc.
  	 *
  	 * @param nombre string Nombre de la unidad convertible
+ 	 * @param es_entero bool Boleano que indica si la unidad se manejara solo en enteros o con decimales
  	 * @param descripcion string Descripcion de la unidad convertible
  	 * @return id_unidad_convertible string Id de la unidad convertible
  	 **/
   static function NuevaUnidad
 	(
 		$nombre, 
-                $es_entero,
-		$descripcion = ""
+		$es_entero, 
+		$descripcion = null
 	);  
   
   

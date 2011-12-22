@@ -1735,4 +1735,15 @@ Ejemplo: 1 kg = 2.204 lb
             DAO::transEnd();
             Logger::log("La unidad ha sido eliminada exitosamente");
 	}
+	
+	
+	
+	public static function Buscar($query){
+		
+		$resultados = ProductoDAO::buscarProductos( $query );
+		return array( 
+			"resultados" => $resultados ,
+			"numero_de_resultados" => sizeof($resultados)
+			);
+	}
   }
