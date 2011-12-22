@@ -19,11 +19,15 @@
 		//
 		// Titulo de la pagina
 		// 
-		$page->addComponent( 
-			new TitleComponent( 
-					"Orden del servicio " . ServicioDAO::getByPK($esta_orden->getIdServicio())->getCodigoServicio()
-                        ." al usuario ". UsuarioDAO::getByPK($esta_orden->getIdUsuarioVenta())->getNombre(), 2 ));
 
+		
+		$customer = UsuarioDAO::getByPK($esta_orden->getIdUsuarioVenta() );
+		$link_to_customer = "<a href='clientes.ver.php?cid=". $esta_orden->getIdUsuarioVenta() . "'>";
+		$link_to_customer .= $customer->getNombre();
+		$link_to_customer .= "</a>";
+
+
+		$page->addComponent( new TitleComponent( "Orden de servicio " . $_GET["oid"] ." para " . $link_to_customer, 2 ));
 		
 		//
 		// Menu de opciones

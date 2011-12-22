@@ -658,7 +658,7 @@ class GerenciaComponentPage extends StdComponentPage{
         },
         {
             "title": "Servicios",
-            "url": "servicios.php",
+            "url": "servicios.lista.orden.php",
             "children": [
                 {
                         "title" : "Lista clasificacion",
