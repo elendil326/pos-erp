@@ -9,19 +9,21 @@ class FormComponent implements GuiComponent{
 	private 	$send_to_api_http_method;
 	private		$send_to_api_callback;
 	private 	$send_to_api_redirect;
-	
 	private 	$is_editable;
+
+
 	
 	function __construct(  ){
-		$this->send_to_api 		= null;
-		$this->on_click 		= null;
-	 	$this->submit_form 		= null;
+		$this->send_to_api 			= null;
+		$this->on_click 			= null;
+	 	$this->submit_form 			= null;
 		$this->send_to_api_callback = null;
 		$this->send_to_api_redirect = null;	
 		
 		//defaults
 		$this->is_editable 		= true;
 		$this->form_fields      = array(  );
+
 	}
 
 
@@ -88,9 +90,24 @@ class FormComponent implements GuiComponent{
 			
 			$html .= "var p = {};";
 			$html .= "var found=false;";
-	
+			
+
+				
 				foreach( $this->form_fields as $f )
 				{
+
+					
+					if( $f->hidden === true ){
+						Logger::debug( $f->id );
+						Logger::debug( $f->hidden );
+						Logger::debug( $f->send_as_hidden );
+						if($f->send_as_hidden === true){
+							$html .= "p." . $f->id . " = " . $f->value . ";" ;
+						}
+						continue;								
+					}
+
+					
 					$html .= "if( Ext.get('". $f->id . "').getValue().length > 0 ){ p." . $f->id . " = Ext.get('". $f->id . "').getValue() ; } else{" ;
 						//else si no esta lleno de datos, vamos a buscarlo en los obligatorios, 
 						//si esta en los obligatorios entonces mandamos el error
@@ -145,6 +162,7 @@ class FormComponent implements GuiComponent{
 		$html .= "<tr>";
 		foreach( $this->form_fields as $f )
 		{
+			if($f->hidden) continue;
 			//incrementar el calculo de la fila actual
 			$new_row++;
 			
@@ -369,7 +387,8 @@ class FormComponent implements GuiComponent{
 
 	}
         
-        public function createComboBoxJoinDistintName( $field_name,$table_name, $field_name_in_values, $values_array, $selected_value=null ){
+
+	public function createComboBoxJoinDistintName( $field_name,$table_name, $field_name_in_values, $values_array, $selected_value=null ){
 		if( sizeof( $values_array ) == 0 ){
 			//do something
 		}
@@ -400,8 +419,10 @@ class FormComponent implements GuiComponent{
 		}//for
 
 	}
-        
-        public function createListBoxJoin( $field_name, $field_name_in_values, $values_array ){
+    
+
+    
+	public function createListBoxJoin( $field_name, $field_name_in_values, $values_array ){
 		if( sizeof( $values_array ) == 0 ){
 			//do something
 		}
@@ -448,17 +469,22 @@ class FormComponentField{
 	public $value;
 	public $name;
 	public $obligatory;
+	public $send_as_hidden;
+	public $hidden;
 
-	public function __construct( $id, $caption, $type, $value = "", $name = null, $obligatory = false ){
-			$this->id 		= $id;
-			$this->caption 	= $caption;
-			$this->type 	= $type;
-			$this->value 	= $value;
-			$this->name 	= $name;
+
+	public function __construct( $id, $caption, $type, $value = "", $name = null, $obligatory = false, $hidden = false, $send_as_hidden = false ){
+			$this->id 			= $id;
+			$this->caption 		= $caption;
+			$this->type 		= $type;
+			$this->value 		= $value;
+			$this->name 		= $name;
 			$this->obligatory 	= $obligatory;
+			$this->hidden	 	= $hidden;
+			$this->send_as_hidden 	= $send_as_hidden;
 	}
-	
-	
+
+
 	public static function obligatorySort( $f1, $f2 ){
 	
 		if ($f1->obligatory == $f2->obligatory) {
@@ -469,7 +495,8 @@ class FormComponentField{
 
 		return 1;
 	}
-	
+
+
 	public static function idSort( $f1, $f2 ){
 		if ($f1->id == $f2->id) {
 			return 0;
@@ -477,6 +504,7 @@ class FormComponentField{
 		
 		return strcmp( $f1->id, $f2->id );
 	}
-}
+	
+}//FormComponentField
 
 

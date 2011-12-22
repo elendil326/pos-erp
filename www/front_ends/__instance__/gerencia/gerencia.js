@@ -81,7 +81,7 @@ POS.API =
 	{
 		var o;
 		try{
-			o = Ext.util.JSON.decode( a.responseText );
+			o = Ext.JSON.decode( a.responseText );
 
 		}catch(e){
 			console.error("JSON NOT DECODABLE:" , a.responseText);
