@@ -258,9 +258,9 @@ class FormComponent implements GuiComponent{
 		if( !is_null ( $this->send_to_api	) ){
 			$html .= "<td>";
 			$html .= "</td><td align=right>";
+			$html .= "<div class='POS Boton' onClick=''  >Cancelar</div>";						
 			$html .= "<div class='POS Boton OK' onClick='getParams()'  >Aceptar</div>";			
 			$html .= "</td></tr>";			
-			
 		}
 		
 //		if( $this->is_editable === false ){

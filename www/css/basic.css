@@ -353,6 +353,14 @@ img.tracking_pixel{height:1px;position:absolute;visibility:hidden;width:1px}
 	background: #3D9400;
 }
 
+/*
+.POS.Boton.OK:hover{
+	border: 1px solid green;
+	background: #3D9400 !important; 	
+	color: white;	
+}
+
+*/
 
 .POS.Boton {
 	-webkit-user-select: none;

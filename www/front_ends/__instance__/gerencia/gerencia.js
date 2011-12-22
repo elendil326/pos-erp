@@ -22,7 +22,7 @@ var main = function ()
 }
 
 
-//Ext.onReady(main);
+Ext.onReady(main);
 
 
 var POS = 
@@ -75,6 +75,8 @@ Ext.Ajax.on('beforerequest', 	function (){ Ext.get("ajax_loader").show(); }, thi
 Ext.Ajax.on('requestcomplete', 	function (){ Ext.get("ajax_loader").hide(); }, this);
 Ext.Ajax.on('requestexception', function (){ Ext.get("ajax_loader").hide(); }, this);
 
+
+
 POS.API = 
 {
 	ajaxCallBack 	: function (callback, a, b, c)
@@ -103,7 +105,7 @@ POS.API =
 
 		var o;
 		try{
-			o = Ext.util.JSON.decode( a.responseText );
+			o = Ext.JSON.decode( a.responseText );
 			
 			console.error( "API SAYS :  " + o.error )
 			
@@ -118,7 +120,7 @@ POS.API =
 			console.error("JSON NOT DECODABLE:" , a.responseText);
 			Ext.MessageBox.show({
 			           title: 'Error',
-			           msg: "Ocurrio un problema con la peticion porfavor intente de nuevo.",
+			           msg: "Ocurrio un problema con la solicitud, porfavor intente de nuevo en un momento.",
 			           buttons: Ext.MessageBox.OK,
 			           icon: "error"
 			       });
