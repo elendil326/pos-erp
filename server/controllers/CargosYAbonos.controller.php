@@ -2340,10 +2340,23 @@ require_once("interfaces/CargosYAbonos.interface.php");
             $gasto->setFechaDeRegistro(date("Y-m-d H:i:s", time()));
             $gasto->setIdUsuario($id_usuario);
             $gasto->setCancelado(0);
+            
+            //Se incrementa el costo de la orden de servicio si este gasto se le asigna a alguna
+            $orden_de_servicio = null;
+            if(!is_null($id_orden_de_servicio))
+            {
+                $orden_de_servicio = OrdenDeServicioDAO::getByPK($id_orden_de_servicio);
+                $orden_de_servicio->setPrecio($monto+$orden_de_servicio->getPrecio());
+            }
+            
             DAO::transBegin();
             try
             {
                 GastoDAO::save($gasto);
+                if(!is_null($orden_de_servicio))
+                {
+                    OrdenDeServicioDAO::save($orden_de_servicio);
+                }
             }
             catch(Exception $e)
             {

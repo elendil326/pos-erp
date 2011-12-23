@@ -86,6 +86,7 @@ require_once ('producto_almacen.dao.php');
 require_once ('producto_clasificacion.dao.php');
 require_once ('producto_empresa.dao.php');
 require_once ('producto_entrada_almacen.dao.php');
+require_once ('producto_orden_de_servicio.dao.php');
 require_once ('producto_paquete.dao.php');
 require_once ('producto_salida_almacen.dao.php');
 require_once ('reporte.dao.php');

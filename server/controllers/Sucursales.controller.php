@@ -659,9 +659,15 @@ require_once("interfaces/Sucursales.interface.php");
             //valida que el producto exista en la base de datos
             if(!is_null($id_producto))
             {
-                if(is_null(ProductoDAO::getByPK($id_producto)))
+                $producto =ProductoDAO::getByPK($id_producto) ;
+                if(is_null($producto))
                 {
                     return "El producto con id ".$id_producto." no existe";
+                }
+                
+                if(!$producto->getActivo())
+                {
+                    return "El producto ".$id_producto." no esta activo";
                 }
             }
             
@@ -708,8 +714,15 @@ require_once("interfaces/Sucursales.interface.php");
             //valida que la unidad exista en la base de datos
             if(!is_null($id_unidad))
             {
-                if(is_null(UnidadDAO::getByPK($id_unidad)))
+                $unidad = UnidadDAO::getByPK($id_unidad);
+                if(is_null($unidad))
+                {
                         return "La unidad con id ".$id_unidad." no existe";
+                }
+                if(!$unidad->getActiva())
+                {
+                    return "La unidad ".$id_unidad." no esta activa";
+                }
             }
             
             //no se encontro error, regresa true

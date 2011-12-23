@@ -55,6 +55,9 @@ class OrdenDeServicio extends VO
 			if( isset($data['adelanto']) ){
 				$this->adelanto = $data['adelanto'];
 			}
+			if( isset($data['precio']) ){
+				$this->precio = $data['precio'];
+			}
 		}
 	}
 
@@ -78,7 +81,8 @@ class OrdenDeServicio extends VO
 			"cancelada" => $this->cancelada,
 			"descripcion" => $this->descripcion,
 			"motivo_cancelacion" => $this->motivo_cancelacion,
-			"adelanto" => $this->adelanto
+			"adelanto" => $this->adelanto,
+			"precio" => $this->precio
 		); 
 	return json_encode($vec); 
 	}
@@ -183,6 +187,15 @@ class OrdenDeServicio extends VO
 	  * @var float
 	  */
 	public $adelanto;
+
+	/**
+	  * precio
+	  * 
+	  * El precio de esta orden de servicio<br>
+	  * @access public
+	  * @var float
+	  */
+	public $precio;
 
 	/**
 	  * getIdOrdenDeServicio
@@ -450,6 +463,30 @@ class OrdenDeServicio extends VO
 	final public function setAdelanto( $adelanto )
 	{
 		$this->adelanto = $adelanto;
+	}
+
+	/**
+	  * getPrecio
+	  * 
+	  * Get the <i>precio</i> property for this object. Donde <i>precio</i> es El precio de esta orden de servicio
+	  * @return float
+	  */
+	final public function getPrecio()
+	{
+		return $this->precio;
+	}
+
+	/**
+	  * setPrecio( $precio )
+	  * 
+	  * Set the <i>precio</i> property for this object. Donde <i>precio</i> es El precio de esta orden de servicio.
+	  * Una validacion basica se hara aqui para comprobar que <i>precio</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param float
+	  */
+	final public function setPrecio( $precio )
+	{
+		$this->precio = $precio;
 	}
 
 }

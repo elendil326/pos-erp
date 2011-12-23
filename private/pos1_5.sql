@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 21-12-2011 a las 20:02:44
+-- Tiempo de generación: 23-12-2011 a las 19:15:33
 -- Versión del servidor: 5.1.53
 -- Versión de PHP: 5.3.4
 
@@ -970,6 +970,7 @@ CREATE TABLE IF NOT EXISTS `orden_de_servicio` (
   `descripcion` varchar(255) NOT NULL COMMENT 'Descripcion de la orden',
   `motivo_cancelacion` varchar(255) DEFAULT NULL COMMENT 'Motivo por la cual fue cancelada la orden',
   `adelanto` float NOT NULL COMMENT 'Cantidad de dinero pagada por adelantado',
+  `precio` float NOT NULL COMMENT 'El precio de esta orden de servicio',
   PRIMARY KEY (`id_orden_de_servicio`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
@@ -1240,7 +1241,7 @@ CREATE TABLE IF NOT EXISTS `producto` (
   `id_unidad` int(11) DEFAULT NULL COMMENT 'Id de la unidad en la que usualmente se maneja este producto',
   `precio` float DEFAULT NULL COMMENT 'El precio fijo del producto',
   PRIMARY KEY (`id_producto`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
 
 -- --------------------------------------------------------
 
@@ -1311,6 +1312,24 @@ CREATE TABLE IF NOT EXISTS `producto_entrada_almacen` (
   `cantidad` float NOT NULL COMMENT 'Cantidad de producto que sale del almacen en cierta unidad',
   PRIMARY KEY (`id_entrada_almacen`,`id_producto`,`id_unidad`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle producto entrada almacen';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `producto_orden_de_servicio`
+--
+
+CREATE TABLE IF NOT EXISTS `producto_orden_de_servicio` (
+  `id_orden_de_servicio` int(11) NOT NULL COMMENT 'id de la orden de servicio',
+  `id_producto` int(11) NOT NULL COMMENT 'id del producto a vender',
+  `precio` float NOT NULL COMMENT 'precio unitario con el que se va a vender el producto',
+  `cantidad` int(11) NOT NULL COMMENT 'cantidad de producto que se vendera',
+  `descuento` float NOT NULL COMMENT 'descuento que se aplicara al producto',
+  `impuesto` float NOT NULL COMMENT 'impuesto que se aplicara al producto',
+  `retencion` float NOT NULL COMMENT 'Retencion unitaria en el producto',
+  `id_unidad` int(11) NOT NULL COMMENT 'Id de la unidad del producto',
+  PRIMARY KEY (`id_orden_de_servicio`,`id_producto`,`id_unidad`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla detalle entre una orden de servicio y los productos qu';
 
 -- --------------------------------------------------------
 
@@ -1542,7 +1561,7 @@ CREATE TABLE IF NOT EXISTS `servicio` (
   `foto_servicio` varchar(50) DEFAULT NULL COMMENT 'Url de la foto del servicio',
   `precio` float DEFAULT NULL COMMENT 'El precio fijo del servicio',
   PRIMARY KEY (`id_servicio`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=14 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=21 ;
 
 -- --------------------------------------------------------
 

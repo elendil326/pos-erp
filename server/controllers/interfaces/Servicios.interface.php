@@ -205,6 +205,22 @@
   
 	/**
  	 *
+ 	 *En algunos servicios, se realiza la venta de productos de manera indirecta, por lo que se tiene que agregar a la orden de servicio. Este metodo puede ser usado apra agregar mas cantidad de un producto a uno ya existente, en este caso se ignoran los campos impuesto, descuento y retencion del arreglo de productos.
+ 	 *
+ 	 * @param productos json Arreglo de objetos con ids de producto, de unidad, sus cantidades, su precio, su impuesto, retencion y descuento.
+ 	 * @param id_orden_de_servicio int Id de la orden de servicio a la cual se le agregaran los productos
+ 	 **/
+  static function Agregar_productosOrden
+	(
+		$productos, 
+		$id_orden_de_servicio
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
  	 *Cancela una orden de servicio. Cuando se cancela un servicio, se cancelan tambien las ventas en las que aparece este servicio.
  	 *
  	 * @param id_orden_de_servicio int Id de la orden del servicio a cancelar
@@ -277,6 +293,22 @@
 		$id_cliente, 
 		$fecha_entrega, 
 		$adelanto = null
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Este metodo se usa para quitar productos de una orden de servicio. Puede ser usado para reducir su cantidad o para retirarlo por completo
+ 	 *
+ 	 * @param id_orden_de_servicio int Id de la orden de servicio de la cual se moveran los productos
+ 	 * @param productos json Arreglo que contendra los ids de productos, de unidades y  sus cantidades a retirar
+ 	 **/
+  static function Quitar_productosOrden
+	(
+		$id_orden_de_servicio, 
+		$productos
 	);  
   
   

@@ -198,6 +198,11 @@ abstract class OrdenDeServicioDAOBase extends DAO
 			array_push( $val, $orden_de_servicio->getAdelanto() );
 		}
 
+		if( ! is_null( $orden_de_servicio->getPrecio() ) ){
+			$sql .= " precio = ? AND";
+			array_push( $val, $orden_de_servicio->getPrecio() );
+		}
+
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
@@ -229,7 +234,7 @@ abstract class OrdenDeServicioDAOBase extends DAO
 	  **/
 	private static final function update( $orden_de_servicio )
 	{
-		$sql = "UPDATE orden_de_servicio SET  id_servicio = ?, id_usuario_venta = ?, id_usuario = ?, fecha_orden = ?, fecha_entrega = ?, activa = ?, cancelada = ?, descripcion = ?, motivo_cancelacion = ?, adelanto = ? WHERE  id_orden_de_servicio = ?;";
+		$sql = "UPDATE orden_de_servicio SET  id_servicio = ?, id_usuario_venta = ?, id_usuario = ?, fecha_orden = ?, fecha_entrega = ?, activa = ?, cancelada = ?, descripcion = ?, motivo_cancelacion = ?, adelanto = ?, precio = ? WHERE  id_orden_de_servicio = ?;";
 		$params = array( 
 			$orden_de_servicio->getIdServicio(), 
 			$orden_de_servicio->getIdUsuarioVenta(), 
@@ -241,6 +246,7 @@ abstract class OrdenDeServicioDAOBase extends DAO
 			$orden_de_servicio->getDescripcion(), 
 			$orden_de_servicio->getMotivoCancelacion(), 
 			$orden_de_servicio->getAdelanto(), 
+			$orden_de_servicio->getPrecio(), 
 			$orden_de_servicio->getIdOrdenDeServicio(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -264,7 +270,7 @@ abstract class OrdenDeServicioDAOBase extends DAO
 	  **/
 	private static final function create( &$orden_de_servicio )
 	{
-		$sql = "INSERT INTO orden_de_servicio ( id_orden_de_servicio, id_servicio, id_usuario_venta, id_usuario, fecha_orden, fecha_entrega, activa, cancelada, descripcion, motivo_cancelacion, adelanto ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO orden_de_servicio ( id_orden_de_servicio, id_servicio, id_usuario_venta, id_usuario, fecha_orden, fecha_entrega, activa, cancelada, descripcion, motivo_cancelacion, adelanto, precio ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$orden_de_servicio->getIdOrdenDeServicio(), 
 			$orden_de_servicio->getIdServicio(), 
@@ -277,6 +283,7 @@ abstract class OrdenDeServicioDAOBase extends DAO
 			$orden_de_servicio->getDescripcion(), 
 			$orden_de_servicio->getMotivoCancelacion(), 
 			$orden_de_servicio->getAdelanto(), 
+			$orden_de_servicio->getPrecio(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -441,6 +448,17 @@ abstract class OrdenDeServicioDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " adelanto = ? AND"; 
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( ( !is_null (($a = $orden_de_servicioA->getPrecio()) ) ) & ( ! is_null ( ($b = $orden_de_servicioB->getPrecio()) ) ) ){
+				$sql .= " precio >= ? AND precio <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " precio = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

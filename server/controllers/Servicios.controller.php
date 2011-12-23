@@ -50,6 +50,94 @@ require_once("interfaces/Servicios.interface.php");
 	}
         
         /*
+         * Valida los parametros de la tabla productos_orden_de_servicio.
+         */
+        private static function validarParametrosProductoOrdenDeServicio
+        (
+                $id_producto = null,
+                $precio = null,
+                $cantidad = null,
+                $descuento = null,
+                $impuesto = null,
+                $retencion = null,
+                $id_unidad = null
+        )
+        {
+            
+            //valida que el producto exista en la base de datos
+            if(!is_null($id_producto))
+            {
+                $producto =ProductoDAO::getByPK($id_producto) ;
+                if(is_null($producto))
+                {
+                    return "El producto con id ".$id_producto." no existe";
+                }
+                
+                if(!$producto->getActivo())
+                {
+                    return "El producto ".$id_producto." no esta activo";
+                }
+            }
+            
+            //valida que el precio este en el rango
+            if(!is_null($precio))
+            {
+                $e = self::validarNumero($precio,1.8e200,"precio");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que la cantidad este en el rango
+            if(!is_null($cantidad))
+            {
+                $e = self::validarNumero($cantidad, PHP_INT_MAX, "cantidad");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el descuento este en el rango
+            if(!is_null($descuento))
+            {
+                $e = self::validarNumero($descuento, 1.8e200, "descuento");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el impuesto este en rango
+            if(!is_null($impuesto))
+            {
+                $e = self::validarNumero($impuesto, 1.8e200, "impuesto");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que la retencion este en rango
+            if(!is_null($retencion))
+            {
+                $e = self::validarNumero($retencion, 1.8e200, "retencion");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que la unidad exista en la base de datos
+            if(!is_null($id_unidad))
+            {
+                $unidad = UnidadDAO::getByPK($id_unidad);
+                if(is_null($unidad))
+                {
+                        return "La unidad con id ".$id_unidad." no existe";
+                }
+                if(!$unidad->getActiva())
+                {
+                    return "La unidad ".$id_unidad." no esta activa";
+                }
+            }
+            
+            //no se encontro error, regresa true
+            return true;
+        }
+        
+        /*
          * Valida los parametros de la tabla clasificacion_servicio. Regresa un string con el error si se encuentra
          * alguno, regresa verdadero en caso contrario
          */
@@ -1474,6 +1562,79 @@ require_once("interfaces/Servicios.interface.php");
             if(is_null($adelanto))
                 $adelanto=0;
             
+            //Se calcula el precio de la orden de servicio
+            
+            $prec = 0;
+            
+            $servicio = ServicioDAO::getByPK($id_servicio);
+            
+            $p = false; //bandera para precio
+            $m = false; //bandera para margen
+            
+            $precio = 0;
+            $margen = 0;
+            
+            //Se verifica si existe un precio especial para este usuario con este servicio, o para el tipo de usuario.
+            $precio_servicio = PrecioServicioUsuarioDAO::getByPK($id_servicio, $id_ciente);
+            
+            if(is_null($precio_servicio))
+            {
+                $usuario = UsuarioDAO::getByPK($id_cliente);
+                $precio_servicio = PrecioServicioTipoClienteDAO::getByPK($id_servicio, $usuario->getIdClasificacionCliente());
+                
+                if(is_null($precio_servicio))
+                {
+                    //Si no hay precio especial, se toma el del servicio
+                    if($servicio->getMetodoCosteo()=="precio")
+                    {
+                        $p = true;
+                        $precio += $servicio->getPrecio();
+                    }
+                    else
+                    {
+                        $m = true;
+                        $margen += $servicio->getMargenDeUtilidad();
+                    }
+                }
+                else
+                {
+                    if($precio_servicio->getEsMargenUtilidad())
+                    {
+                        $m = true;
+                        $margen +=$precio_servicio->getPrecioUtilidad();
+                    }
+                    else
+                    {
+                        $p = true;
+                        $precio +=$precio_servicio->getPrecioUtilidad();
+                    }
+                }
+            }
+            else
+            {
+                if($precio_servicio->getEsMargenUtilidad())
+                {
+                    $m = true;
+                    $margen +=$precio_servicio->getPrecioUtilidad();
+                }
+                else
+                {
+                    $p = true;
+                    $precio +=$precio_servicio->getPrecioUtilidad();
+                }
+            }
+            
+            //Si el servicio esta en terminos de precio, se toma el precio,
+            //si es un margen, se multiplica el margen por su costo y se suma su costo.
+            if($p)
+            {
+                $prec+=$precio;
+            }
+            else
+            {
+                $prec+=($margen/100)*($servicio->getCostoEstandar())+$servicio->getCostoEstandar();
+            }
+            
             //Se inicializa el registro de orden de servicio
             $orden_de_servicio = new OrdenDeServicio( array( 
                                                             
@@ -1485,7 +1646,8 @@ require_once("interfaces/Servicios.interface.php");
                                                             "activa"            => 1,
                                                             "cancelada"         => 0,
                                                             "descripcion"       => $descripcion,
-                                                            "adelanto"          => $adelanto
+                                                            "adelanto"          => $adelanto,
+                                                            "precio"            => $prec
                                                             
                                                             )
                                                     );
@@ -1645,9 +1807,13 @@ require_once("interfaces/Servicios.interface.php");
                 throw new Exception("El parametro tipo de venta (".$tipo_venta.") tiene que ser 'credito' o 'contado'",901);
             }
             
-            //Se calcula el subtotal de la venta
+            //El subtotal de la venta es el costo acumulado registrado en la orden de servicio
+            $subtotal = $orden_de_servicio->getPrecio();
+            
             
             //Se calcula el impuesto que se cargara a la venta
+            
+            
             
             //Se calcula la retencion que se caragara a la venta
             
@@ -1741,4 +1907,195 @@ require_once("interfaces/Servicios.interface.php");
             DAO::transEnd();
             LOgger::log("El servicio ha sido eliminado exitosamente");
 	}
+        
+  
+	
+  
+	/**
+ 	 *
+ 	 *En algunos servicios, se realiza la venta de productos de manera indirecta, por lo que se tiene que agregar a la orden de servicio.
+ 	 *
+ 	 * @param id_orden_de_servicio int Id de la orden de servicio a la cual se le agregaran los productos
+ 	 * @param productos json Arreglo de objetos con ids de producto, de unidad, sus cantidades, su precio, su impuesto, retencion y descuento.
+ 	 **/
+        public static function Agregar_productosOrden
+	(
+		$id_orden_de_servicio, 
+		$productos
+	)
+        {
+            Logger::log("Agregando productos a la orden de servicio ".$id_orden_de_servicio);
+            
+            //Se valida la orden de servicio
+            $validar = self::validarParametrosOrdenDeServicio($id_orden_de_servicio);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar,901);
+            }
+            
+            //El precio de la orden de servicio se incrementara por cada precio encontrado en los productos
+            $orden_de_servicio = OrdenDeServicioDAO::getByPK($id_orden_de_servicio);
+            
+            //Se almacenaran todos los productos obtenidos con us informacion
+            $producto_orden_de_servicio = new ProductoOrdenDeServicio( array( "id_orden_de_servicio" => $id_orden_de_servicio ) );
+            
+            DAO::transBegin();
+            try
+            {
+                /*
+                 * Por cada producto en el arreglo, se busca en la tabla de productos orden,
+                 * pues puede ser que el usuario haya querido agregar mas producto al que ya habia.
+                 * 
+                 * Si no se encuentra en la tabla, simplemente se crea un nuevo registro
+                 */
+                foreach($productos as $producto)
+                {
+                    $producto_anterior = ProductoOrdenDeServicioDAO::getByPK(
+                            $id_orden_de_servicio, $producto["id_producto"], $producto["id_unidad"]);
+                    
+                    if(!is_null($producto_anterior))
+                    {
+                        $producto_orden_de_servicio=$producto_anterior;
+                        $cantidad_anterior = $producto_orden_de_servicio->getCantidad();
+                        
+                        $producto_orden_de_servicio->setCantidad($cantidad_anterior+$producto["cantidad"]);
+                    }
+                    else
+                    {
+                        $validar = self::validarParametrosProductoOrdenDeServicio(
+                                $producto["id_producto"], $producto["precio"], $producto["cantidad"],
+                                $producto["descuento"], $producto["impuesto"], $producto["retencion"], $producto["id_unidad"]);
+                        if(is_string($validar))
+                        {
+                            throw new Exception($validar,901);
+                        }
+
+                        $producto_orden_de_servicio->setCantidad($producto["cantidad"]);
+                        $producto_orden_de_servicio->setDescuento($producto["descuento"]);
+                        $producto_orden_de_servicio->setIdProducto($producto["id_producto"]);
+                        $producto_orden_de_servicio->setIdUnidad($producto["id_unidad"]);
+                        $producto_orden_de_servicio->setImpuesto($producto["impuesto"]);
+                        $producto_orden_de_servicio->setPrecio($producto["precio"]);
+                        $producto_orden_de_servicio->setRetencion($producto["retencion"]);
+                    }
+                    //@TODO 
+                    //La linea de codigo siguiente puede causar problemas, pues el precio de un producto puede cmabiar a lo largo del tiempo.
+                    //Si este metodo fue llamado para agregar mas cantidad a uno ya existente para esta orden en un rango de tiempo
+                    //donde el precio del producto cambio de la primera vez que fue agregado a esta, el precio registrado en la tabla
+                    //sera el de la primera vez, pero el producto agregado recientemente ya tiene otro precio.
+                    //
+                    //Si este producto es retirado con el metodo Quitar_productoOrden se tiene que pasar el precio que tenia este 
+                    //producto a la hora de agregarlo para que el precio total de la orden de servicio no se vea alterada.
+                    //
+                    $orden_de_servicio->setPrecio( $orden_de_servicio->getPrecio() + $producto["cantidad"]*$producto["precio"]);
+                    
+                    ProductoOrdenDeServicioDAO::save($producto_orden_de_servicio);
+                    OrdenDeServicioDAO::save($orden_de_servicio);
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo agregar el producto a la orden: ".$e);
+                if($e->getCode()==901)
+                    throw new Exception("No se pudo agregar el producto a la orden: ".$e->getMessage(),901);
+                throw new Exception("No se pudo agregar el producto a la orden, consulte al administrador del sistema",901);
+            }
+            DAO::transEnd();
+            Logger::log("Producto agregado exitosamente");
+           
+        }
+        
+        
+  
+	
+  
+	/**
+ 	 *
+ 	 *Este metodo se usa para quitar productos de una orden de servicio. Puede ser usado para reducir su cantidad o para retirarlo por completo
+ 	 *
+ 	 * @param id_orden_de_servicio int Id de la orden de servicio de la cual se moveran los productos
+ 	 * @param productos json Arreglo que contendra los ids de productos, de unidades y  sus cantidades a retirar
+ 	 **/
+        public static function Quitar_productosOrden
+	(
+		$id_orden_de_servicio, 
+		$productos
+	)
+        {
+            Logger::log("Quitando productos a la orden de servicio ".$id_orden_de_servicio);
+            
+            //Se valida la orden de servicio
+            $validar = self::validarParametrosOrdenDeServicio($id_orden_de_servicio);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar,901);
+            }
+            
+            //El precio de la orden de servicio se decrementara por cada producto encontrado
+            $orden_de_servicio = OrdenDeServicioDAO::getByPK($id_orden_de_servicio);
+            
+            DAO::transBegin();
+            try
+            {
+                /*
+                 * Por cada producto en el arreglo, se busca en la tabla de productos orden,
+                 * si se editara su cantidad o se eliminara el registro depende de la cantidad
+                 * recibida. Si es menor, solo se editara, si es igual o mayor se eliminara.
+                 * 
+                 * Si no se encuentra en la tabla, se regresa un error
+                 */
+                foreach($productos as $producto)
+                {
+                    $producto_orden_de_servicio = ProductoOrdenDeServicioDAO::getByPK(
+                            $id_orden_de_servicio, $producto["id_producto"], $producto["id_unidad"]);
+                    
+                    if(!is_null($producto_orden_de_servicio))
+                    {
+                        $cantidad_anterior = $producto_orden_de_servicio->getCantidad();
+                        
+                        if($cantidad_anterior>$producto["cantidad"])
+                        {
+                            $producto_orden_de_servicio->setCantidad($cantidad_anterior - $producto["cantidad"]);
+                            ProductoOrdenDeServicioDAO::save($producto_orden_de_servicio);
+                        }
+                        else
+                        {
+                            ProductoOrdenDeServicioDAO::delete($producto_orden_de_servicio);
+                        }
+                        
+                        //@TODO
+                        //La siguiente linea de codigo puede causar problemas, pues el precio de un producto puede cambiar con el tiempo.
+                        //Si se agrego producto a uno que ya habia sido registrado anteriormente, el costo que manipulo al precio
+                        //de la orden de servicio varío en cada una de las inserciones. El usuario debe tener en cuenta que
+                        //el precio que pase a este metodo debe ser el correspondiente a esa cantidad, o si esta quitando todos 
+                        //los productos tiene que tener mucho cuidado pues los precios de diferentes cantidades son distintos, y 
+                        //el precio de la orden de servicio puede resultar incongruente.
+                        //
+                        
+                        $orden_de_servicio->setPrecio($orden_de_servicio->getPrecio() - $producto["cantidad"]*$producto["precio"]);
+                        
+                        OrdenDeServicioDAO::save($orden_de_servicio);
+                    }
+                    else
+                    {
+                        throw new Exception("El producto recibido no ha sido encontrado",901);
+                    }
+                    
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo retirar el producto de la orden: ".$e);
+                if($e->getCode()==901)
+                    throw new Exception("No se pudo retirar el producto de la orden: ".$e->getMessage(),901);
+                throw new Exception("No se pudo retirar el producto de la orden, consulte al administrador del sistema",901);
+            }
+            DAO::transEnd();
+            Logger::log("Producto agregado exitosamente");
+        }
+        
   }
