@@ -1803,6 +1803,17 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 Logger::error("El usuario con id: ".$id_usuario." no tiene un saldo en ceros");
                 throw new Exception("El usuario no tiene un saldo en ceros",901);
             }
+            
+            //Si el usuario tiene una orden de servicio activa, no se puede eliminar
+            $ordenes_de_servicio = OrdenDeServicioDAO::search( new OrdenDeServicio( array( "id_usuario_venta" => $id_usuario ) ) );
+            foreach($ordenes_de_servicio as $orden_de_servicio)
+            {
+                if($orden_de_servicio->getActiva())
+                {
+                    Logger::error("El usuario ".$id_usuario." no puede ser desactivado, tiene la orden ".$orden_de_servicio->getIdOrdenDeServicio()." activa");
+                    throw new Exception("El usuario no puede ser desactivado pues aun cuenta con ordenes de servicio activas",901);
+                }
+            }
 
             //Se cambia su estado activo a falso y se le asigna como hoy la fecha de baja.
             $usuario->setActivo(0);
@@ -1810,6 +1821,12 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             DAO::transBegin();
             try
             {
+                //Si el usuario era consignatario se desactiva como tal.
+                if($usuario->getConsignatario())
+                {
+                    ConsignacionesController::DesactivarConsignatario($id_usuario);
+                }
+                
                 //Se actualiza el usuario
                 UsuarioDAO::save($usuario);
 
@@ -1824,6 +1841,8 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudo eliminar el usuario: ".$e);
+                if($e->getCode()==901)
+                    throw new Exception("No se pudo eliminar el usuario: ".$e->getMessage());
                 throw new Exception("No se pudo eliminar el usuario, consulte a su administrador de sistema",901);
             }
             DAO::transEnd();

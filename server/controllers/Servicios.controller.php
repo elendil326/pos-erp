@@ -1824,6 +1824,7 @@ require_once("interfaces/Servicios.interface.php");
             //Se calcula el impuesto que se cargara a la venta
             
             $impuesto = 0;
+            $impuesto_orden = 0;
             
             //Se toman los ids de los impuestos que afectan al servicio, a las clasificaciones del servicio,
             //a los productos, al cliente y a la clasificacion del cliente. 
@@ -1907,6 +1908,7 @@ require_once("interfaces/Servicios.interface.php");
                 $impuesto+=$producto_orden->getImpuesto();
             }
             
+            
             //Por cada impuesto recabado se realiza su operacion y se suma al impuesto final
             foreach($id_impuestos as $id_impuesto)
             {
@@ -1919,10 +1921,12 @@ require_once("interfaces/Servicios.interface.php");
                 if($imp->getEsMonto())
                 {
                     $impuesto+=($imp->getMontoPorcentaje()/100)*$subtotal;
+                    $impuesto_orden+=($imp->getMontoPorcentaje()/100)*$subtotal;
                 }
                 else
                 {
                     $impuesto+=$imp->getMontoPorcentaje();
+                    $impuesto_orden+=$imp->getMontoPorcentaje();
                 }
             }
             
@@ -1930,6 +1934,7 @@ require_once("interfaces/Servicios.interface.php");
             //Se calcula la retencion que se caragara a la venta
             
             $retencion = 0;
+            $retencion_orden = 0;
             
             //Se toman los ids de las retenciones que afectan al servicio, a las clasificaciones del servicio,
             //a los productos, al cliente y a la clasificacion del cliente. 
@@ -2025,23 +2030,30 @@ require_once("interfaces/Servicios.interface.php");
                 if($ret->getEsMonto())
                 {
                     $retencion+=($ret->getMontoPorcentaje()/100)*$subtotal;
+                    $retencion_orden+=($ret->getMontoPorcentaje()/100)*$subtotal;
                 }
                 else
                 {
                     $retencion+=$ret->getMontoPorcentaje();
+                    $retencion_orden+=$ret->getMontoPorcentaje();
                 }
             }
             
             
             //Se calcula el total de la venta
             
-            $total = $subtotal + $impuesto + $retencion - ($descuento/100)*$subtotal;
+            $total = $subtotal + $impuesto + $retencion - $descuento;
             
             //Inicia el arreglo que se le pasara al metodo de venta para ordenes y para productos
             
             $detalle_orden = array(
-                "descuento"             => $descuento,
-                "id_orden_de_servicio"  => $id_orden
+                array(
+                    "descuento"             => $descuento,
+                    "id_orden_de_servicio"  => $id_orden,
+                    "precio"                => $subtotal,
+                    "impuesto"              => $impuesto_orden,
+                    "retencion"             => $retencion_orden
+                    )
             );
             
             $detalle_productos = array();

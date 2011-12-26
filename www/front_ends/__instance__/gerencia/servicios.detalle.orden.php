@@ -66,9 +66,7 @@
                 $funcion_terminar = " function terminar_orden(btn){".
                             "if(btn == 'yes')".
                             "{".
-                                "var p = {};".
-                                "p.id_orden = ".$_GET["oid"].";".
-                                "sendToApi_terminar(p);".
+                                "window.location = \"servicios.terminar.orden.php?oid=".$_GET["oid"]."\";".
                             "}".
                         "}".
                         "      ".

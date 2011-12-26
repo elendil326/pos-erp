@@ -39,19 +39,19 @@
 			"id_direccion",
 			"ultima_modificacion",
 			"id_usuario_ultima_modificacion",
-            "consignatario",
-            "tiempo_entrega",
-            "cuenta_bancaria"
+                        "consignatario",
+                        "tiempo_entrega",
+                        "cuenta_bancaria"
 		 ));
 
-    $form->renameField(array("id_usuario"=>"id_cliente"));
+        $form->renameField(array("id_usuario"=>"id_cliente"));
 	$form->sendHidden("id_cliente");
 
 
-    $form->createComboBoxJoin( "id_moneda", "nombre", MonedaDAO::search( new Moneda(array("activa" => 1)) ), $este_cliente->getIdMoneda() );
-    $form->createComboBoxJoin( "id_clasificacion_cliente", "nombre", ClasificacionClienteDAO::getAll( ), $este_cliente->getIdClasificacionCliente() );
-    $form->createComboBoxJoin( "id_sucursal", "razon_social", SucursalDAO::search( new Sucursal(array("activa" => 1)) ), $este_cliente->getIdSucursal() );
-	
+        $form->createComboBoxJoin( "id_moneda", "nombre", MonedaDAO::search( new Moneda(array("activa" => 1)) ), $este_cliente->getIdMoneda() );
+        $form->createComboBoxJoin( "id_clasificacion_cliente", "nombre", ClasificacionClienteDAO::getAll( ), $este_cliente->getIdClasificacionCliente() );
+        $form->createComboBoxJoin( "id_sucursal", "razon_social", SucursalDAO::search( new Sucursal(array("activa" => 1)) ), $este_cliente->getIdSucursal() );
+
 	$form->addApiCall( "api/cliente/editar/" );
 
 	$form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll( ), $esta_direccion->getIdCiudad() );
