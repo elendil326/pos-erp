@@ -34,6 +34,10 @@
 		// 
 		$menu = new MenuComponent();
 		$menu->addItem("Nuevo seguimiento a esta orden de servicio", "servicios.seguimiento.orden.php?oid=".$_GET["oid"]);
+                
+                $menu->addItem("Agregar productos a esta orden de servicio", "servicios.agregar_productos.orden.php?oid=".$_GET["oid"]);
+                
+                $menu->addItem("Quitar productos a esta orden de servicio", "servicios.quitar_productos.orden.php?oid=".$_GET["oid"]);
 
                 
                 $btn_eliminar = new MenuItem("Cancelar esta orden de servicio", null);

@@ -1880,7 +1880,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             {
                 if($usuario->getActivo())
                 {
-                    Logger::error("No se puede eliminar este rol pues el usuario ".$usuario->getIdUsuario." lo tiene asignado");
+                    Logger::error("No se puede eliminar este rol pues el usuario ".$usuario->getIdUsuario()." lo tiene asignado");
                     throw new Exception("No se puede eliminar este rol pues hay almenos un usuario asignado a el",901);
                 }
             }

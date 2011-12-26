@@ -21,6 +21,7 @@
         
         
         $form->addApiCall( "api/personal/rol/nuevo/" );
+        $form->onApiCallSuccessRedirect("personal.lista.rol.php");
         
         $form->makeObligatory(array( 
 			"nombre"

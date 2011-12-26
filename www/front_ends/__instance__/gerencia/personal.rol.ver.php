@@ -14,6 +14,7 @@
 		$page->requireParam(  "rid", "GET", "Este rol no existe." );
 		$este_rol = RolDAO::getByPK( $_GET["rid"] );
 		
+                $usuarios_rol = UsuarioDAO::search( new Usuario( array( "id_rol" => $_GET["rid"] , "activo" => 1 ) ) );
                 
 		//
 		// Titulo de la pagina
@@ -27,27 +28,31 @@
 		$menu = new MenuComponent();
 		$menu->addItem("Editar este rol", "personal.editar.rol.php?rid=".$_GET["rid"]);
                 
-                $btn_eliminar = new MenuItem("Eliminar este rol", null);
-                $btn_eliminar->addApiCall("api/personal/rol/eliminar");
-                $btn_eliminar->onApiCallSuccessRedirect("personal.lista.rol.php");
-                $btn_eliminar->addName("eliminar");
+                if(empty ($usuarios_rol))
+                {
                 
-                $funcion_eliminar = " function eliminar_rol(btn){".
-                            "if(btn == 'yes')".
-                            "{".
-                                "var p = {};".
-                                "p.id_rol = ".$_GET["rid"].";".
-                                "sendToApi_eliminar(p);".
+                    $btn_eliminar = new MenuItem("Eliminar este rol", null);
+                    $btn_eliminar->addApiCall("api/personal/rol/eliminar");
+                    $btn_eliminar->onApiCallSuccessRedirect("personal.lista.rol.php");
+                    $btn_eliminar->addName("eliminar");
+
+                    $funcion_eliminar = " function eliminar_rol(btn){".
+                                "if(btn == 'yes')".
+                                "{".
+                                    "var p = {};".
+                                    "p.id_rol = ".$_GET["rid"].";".
+                                    "sendToApi_eliminar(p);".
+                                "}".
                             "}".
-                        "}".
-                        "      ".
-                        "function confirmar(){".
-                        " Ext.MessageBox.confirm('Eliminar', 'Desea eliminar este rol?', eliminar_rol );".
-                        "}";
-                
-                $btn_eliminar->addOnClick("confirmar", $funcion_eliminar);
-                
-                $menu->addMenuItem($btn_eliminar);
+                            "      ".
+                            "function confirmar(){".
+                            " Ext.MessageBox.confirm('Eliminar', 'Desea eliminar este rol?', eliminar_rol );".
+                            "}";
+
+                    $btn_eliminar->addOnClick("confirmar", $funcion_eliminar);
+
+                    $menu->addMenuItem($btn_eliminar);
+                }
                 
 		$page->addComponent( $menu);
 		
@@ -59,16 +64,19 @@
 		$form->hideField( array( 
 				"id_rol",
 			 ));
-//		$form->makeObligatory(array( 
-//				"compra_en_mostrador",
-//				"costo_estandar",
-//				"nombre_producto",
-//				"id_empresas",
-//				"codigo_producto",
-//				"metodo_costeo",
-//				"activo"
-//			));
-//	    $form->createComboBoxJoin("id_unidad", "nombre", UnidadDAO::search( new Unidad( array( "activa" => 1 ) ) ));
+                
 		$page->addComponent( $form );
+                
+                $page->addComponent( new TitleComponent( "Usuarios con este rol" ), 3 );
+                
+                $tabla = new TableComponent(
+                        array(
+                            "codigo_usuario"    => "Codigo de usuario",
+                            "nombre"            => "Nombre"
+                        ),
+                         $usuarios_rol
+                        );
+                
+                $page->addComponent($tabla);
 		
 		$page->render();

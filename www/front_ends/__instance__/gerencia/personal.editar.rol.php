@@ -26,10 +26,12 @@
 		$form->hideField( array( 
 				"id_rol",
 			 ));
+                $form->sendHidden("id_rol");
+                
                 
                 $form->addApiCall( "api/personal/rol/editar/" );
+                $form->onApiCallSuccessRedirect("personal.lista.rol.php");
                 
-	    //$form->createComboBoxJoin("id_unidad", "nombre", UnidadDAO::search( new Unidad( array( "activa" => 1 ) ) ));
 		$page->addComponent( $form );
                 
 		$page->render();
