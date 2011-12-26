@@ -336,19 +336,27 @@
  	 *
  	 *Dar por terminada una orden, al momento de terminarse una orden se genera una venta, por lo tanto, al terminar la orden hay que especificar datos de la misma.
  	 *
- 	 * @param id_orden int Id de la orden a terminar
  	 * @param tipo_venta string Si la venta que se va a generar sera a credito o de contado
- 	 * @param descuento float El monto a descontar de la venta si habra un descuento.
+ 	 * @param id_orden int Id de la orden a terminar
  	 * @param saldo float Si se saldara una parte de la venta en caso de ser a credito
+ 	 * @param descuento float El monto a descontar de la venta si habra un descuento.
  	 * @param tipo_de_pago string Si el tipo de pago sera en cheque, tarjeta o en efectivo.
+ 	 * @param cheques json Objeto que contendra la informacion de los cheques que se usan para pagar
+ 	 * @param billetes_pago json Objeto que contendra la informacion de los billetes que se usan para pagar
+ 	 * @param billetes_cambio json Objeto que contendra la informacion de billetes que se daran como cambio
+ 	 * @param id_venta_caja int Id de la venta de la caja en caso de q se haya ido el internet
  	 **/
   static function TerminarOrden
 	(
-		$id_orden, 
 		$tipo_venta, 
-		$descuento = null, 
+		$id_orden, 
 		$saldo = null, 
-		$tipo_de_pago = null
+		$descuento = null, 
+		$tipo_de_pago = null, 
+		$cheques = null, 
+		$billetes_pago = null, 
+		$billetes_cambio = null, 
+		$id_venta_caja = null
 	);  
   
   
