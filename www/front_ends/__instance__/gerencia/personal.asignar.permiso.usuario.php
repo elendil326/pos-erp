@@ -34,6 +34,7 @@
 //		));
 	
 	$form->addApiCall( "api/personal/usuario/permiso/asignar" );
+        $form->onApiCallSuccessRedirect("personal.lista.permiso.usuario.php");
 	
 	$form->makeObligatory(array( 
 			"id_usuario",

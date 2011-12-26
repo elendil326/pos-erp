@@ -28,33 +28,36 @@
 		//
 		// Menu de opciones
 		// 
-		$menu = new MenuComponent();
-		$menu->addItem("Editar este usuario", "personal.editar.usuario.php?uid=".$_GET["uid"]);
-                
-                $btn_eliminar = new MenuItem("Desactivar este usuario", null);
-                $btn_eliminar->addApiCall("api/personal/usuario/eliminar");
-                $btn_eliminar->onApiCallSuccessRedirect("personal.lista.usuario.php");
-                $btn_eliminar->addName("eliminar");
-                
-                $funcion_eliminar = " function eliminar_usuario(btn){".
-                            "if(btn == 'yes')".
-                            "{".
-                                "var p = {};".
-                                "p.id_usuario = ".$_GET["uid"].";".
-                                "sendToApi_eliminar(p);".
+                if($este_usuario->getActivo())
+                {
+                    $menu = new MenuComponent();
+                    $menu->addItem("Editar este usuario", "personal.editar.usuario.php?uid=".$_GET["uid"]);
+
+                    $btn_eliminar = new MenuItem("Desactivar este usuario", null);
+                    $btn_eliminar->addApiCall("api/personal/usuario/eliminar");
+                    $btn_eliminar->onApiCallSuccessRedirect("personal.lista.usuario.php");
+                    $btn_eliminar->addName("eliminar");
+
+                    $funcion_eliminar = " function eliminar_usuario(btn){".
+                                "if(btn == 'yes')".
+                                "{".
+                                    "var p = {};".
+                                    "p.id_usuario = ".$_GET["uid"].";".
+                                    "sendToApi_eliminar(p);".
+                                "}".
                             "}".
-                        "}".
-                        "      ".
-                        "function confirmar(){".
-                        " Ext.MessageBox.confirm('Desactivar', 'Desea eliminar este usuario?', eliminar_usuario );".
-                        "}";
+                            "      ".
+                            "function confirmar(){".
+                            " Ext.MessageBox.confirm('Desactivar', 'Desea eliminar este usuario?', eliminar_usuario );".
+                            "}";
+
+                    $btn_eliminar->addOnClick("confirmar", $funcion_eliminar);
+
+                    $menu->addMenuItem($btn_eliminar);
                 
-                $btn_eliminar->addOnClick("confirmar", $funcion_eliminar);
                 
-                $menu->addMenuItem($btn_eliminar);
-                
-		$page->addComponent( $menu);
-		
+                    $page->addComponent( $menu);
+		}
 		//
 		// Forma de producto
 		// 
@@ -87,5 +90,11 @@
 //			));
 //	    $form->createComboBoxJoin("id_unidad", "nombre", UnidadDAO::getAll(), $este_producto->getIdUnidad() );
 		$page->addComponent( $form );
+                
+                $page->addComponent( new TitleComponent("Ventas") , 2 );
+                
+                $page->addComponent( new TitleComponent("Compras") , 2 );
+                
+                $page->addComponent( new TitleComponent("Ordenes de servicio") , 2 );
 		
 		$page->render();

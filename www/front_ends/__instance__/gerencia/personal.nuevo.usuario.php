@@ -41,6 +41,7 @@
 		));
         
         $form->addApiCall( "api/personal/usuario/nuevo/" );
+        $form->onApiCallSuccessRedirect("personal.lista.usuario.php");
         
         $form->makeObligatory(array( 
 			"nombre",

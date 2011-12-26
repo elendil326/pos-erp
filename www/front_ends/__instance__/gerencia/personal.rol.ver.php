@@ -77,6 +77,8 @@
                          $usuarios_rol
                         );
                 
+                $tabla->addOnClick( "id_usuario", "(function(a){window.location = 'personal.usuario.ver.php?uid=' + a;})" );
+                
                 $page->addComponent($tabla);
 		
 		$page->render();

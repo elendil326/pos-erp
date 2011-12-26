@@ -36,6 +36,7 @@
 //		));
 	
 	$form->addApiCall( "api/personal/rol/permiso/asignar" );
+        $form->onApiCallSuccessRedirect("personal.lista.permiso.rol.php");
 	
 	$form->makeObligatory(array( 
 			"id_rol",

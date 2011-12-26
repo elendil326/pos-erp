@@ -42,6 +42,7 @@
 			 ));
                 
                 $form->addApiCall( "api/personal/rol/editar/" );
+                $form->onApiCallSuccessRedirect("personal.lista.usuario.php");
                 
                 $form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll(), $esta_direccion->getIdCiudad() );
                 
