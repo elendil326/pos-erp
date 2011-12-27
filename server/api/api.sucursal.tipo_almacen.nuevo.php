@@ -17,7 +17,7 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"descripcion" => new ApiExposedProperty("descripcion", true, GET, array( "string" )),
+			"descripcion" => new ApiExposedProperty("descripcion", true, POST, array( "string" )),
 		);
 	}
 
@@ -26,7 +26,7 @@
  		$this->response = SucursalesController::NuevoTipo_almacen( 
  			
 			
-			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] : null
 			
 			);
 		}catch(Exception $e){

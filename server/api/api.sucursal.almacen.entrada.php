@@ -1,6 +1,6 @@
 <?php
 /**
-  * GET api/sucursal/almacen/entrada
+  * POST api/sucursal/almacen/entrada
   * Surtir una sucursal
   *
   * Metodo que surte una sucursal por parte de un proveedor. La sucursal sera tomada de la sesion actual.
@@ -20,9 +20,9 @@ Creo que este metodo tiene que estar bajo sucursal.
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"productos" => new ApiExposedProperty("productos", true, GET, array( "json" )),
-			"id_almacen" => new ApiExposedProperty("id_almacen", true, GET, array( "int" )),
-			"motivo" => new ApiExposedProperty("motivo", false, GET, array( "string" )),
+			"productos" => new ApiExposedProperty("productos", true, POST, array( "json" )),
+			"id_almacen" => new ApiExposedProperty("id_almacen", true, POST, array( "int" )),
+			"motivo" => new ApiExposedProperty("motivo", false, POST, array( "string" )),
 		);
 	}
 
@@ -31,9 +31,9 @@ Creo que este metodo tiene que estar bajo sucursal.
  		$this->response = SucursalesController::EntradaAlmacen( 
  			
 			
-			isset($_GET['productos'] ) ? $_GET['productos'] : null,
-			isset($_GET['id_almacen'] ) ? $_GET['id_almacen'] : null,
-			isset($_GET['motivo'] ) ? $_GET['motivo'] : null
+			isset($_POST['productos'] ) ? $_POST['productos'] : null,
+			isset($_POST['id_almacen'] ) ? $_POST['id_almacen'] : null,
+			isset($_POST['motivo'] ) ? $_POST['motivo'] : null
 			
 			);
 		}catch(Exception $e){

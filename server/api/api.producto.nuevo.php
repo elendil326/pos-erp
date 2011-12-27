@@ -1,6 +1,6 @@
 <?php
 /**
-  * GET api/producto/nuevo
+  * POST api/producto/nuevo
   * Crear un nuevo produco
   *
   * Crear un nuevo producto, 
@@ -19,25 +19,25 @@ NOTA: Se crea un producto tipo = 1 que es para productos
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"activo" => new ApiExposedProperty("activo", true, GET, array( "bool" )),
-			"costo_estandar" => new ApiExposedProperty("costo_estandar", true, GET, array( "float" )),
-			"compra_en_mostrador" => new ApiExposedProperty("compra_en_mostrador", true, GET, array( "bool" )),
-			"nombre_producto" => new ApiExposedProperty("nombre_producto", true, GET, array( "string" )),
-			"codigo_producto" => new ApiExposedProperty("codigo_producto", true, GET, array( "string" )),
-			"metodo_costeo" => new ApiExposedProperty("metodo_costeo", true, GET, array( "string" )),
-			"costo_extra_almacen" => new ApiExposedProperty("costo_extra_almacen", false, GET, array( "float" )),
-			"margen_de_utilidad" => new ApiExposedProperty("margen_de_utilidad", false, GET, array( "float" )),
-			"foto_del_producto" => new ApiExposedProperty("foto_del_producto", false, GET, array( "string" )),
-			"garantia" => new ApiExposedProperty("garantia", false, GET, array( "int" )),
-			"descuento" => new ApiExposedProperty("descuento", false, GET, array( "float" )),
-			"precio" => new ApiExposedProperty("precio", false, GET, array( "int" )),
-			"codigo_de_barras" => new ApiExposedProperty("codigo_de_barras", false, GET, array( "string" )),
-			"descripcion_producto" => new ApiExposedProperty("descripcion_producto", false, GET, array( "string" )),
-			"impuestos" => new ApiExposedProperty("impuestos", false, GET, array( "json" )),
-			"id_unidad" => new ApiExposedProperty("id_unidad", false, GET, array( "int" )),
-			"clasificaciones" => new ApiExposedProperty("clasificaciones", false, GET, array( "json" )),
-			"control_de_existencia" => new ApiExposedProperty("control_de_existencia", false, GET, array( "int" )),
-			"peso_producto" => new ApiExposedProperty("peso_producto", false, GET, array( "float" )),
+			"activo" => new ApiExposedProperty("activo", true, POST, array( "bool" )),
+			"costo_estandar" => new ApiExposedProperty("costo_estandar", true, POST, array( "float" )),
+			"compra_en_mostrador" => new ApiExposedProperty("compra_en_mostrador", true, POST, array( "bool" )),
+			"nombre_producto" => new ApiExposedProperty("nombre_producto", true, POST, array( "string" )),
+			"codigo_producto" => new ApiExposedProperty("codigo_producto", true, POST, array( "string" )),
+			"metodo_costeo" => new ApiExposedProperty("metodo_costeo", true, POST, array( "string" )),
+			"costo_extra_almacen" => new ApiExposedProperty("costo_extra_almacen", false, POST, array( "float" )),
+			"margen_de_utilidad" => new ApiExposedProperty("margen_de_utilidad", false, POST, array( "float" )),
+			"foto_del_producto" => new ApiExposedProperty("foto_del_producto", false, POST, array( "string" )),
+			"garantia" => new ApiExposedProperty("garantia", false, POST, array( "int" )),
+			"descuento" => new ApiExposedProperty("descuento", false, POST, array( "float" )),
+			"precio" => new ApiExposedProperty("precio", false, POST, array( "int" )),
+			"codigo_de_barras" => new ApiExposedProperty("codigo_de_barras", false, POST, array( "string" )),
+			"descripcion_producto" => new ApiExposedProperty("descripcion_producto", false, POST, array( "string" )),
+			"impuestos" => new ApiExposedProperty("impuestos", false, POST, array( "json" )),
+			"id_unidad" => new ApiExposedProperty("id_unidad", false, POST, array( "int" )),
+			"clasificaciones" => new ApiExposedProperty("clasificaciones", false, POST, array( "json" )),
+			"control_de_existencia" => new ApiExposedProperty("control_de_existencia", false, POST, array( "int" )),
+			"peso_producto" => new ApiExposedProperty("peso_producto", false, POST, array( "float" )),
 		);
 	}
 
@@ -46,25 +46,25 @@ NOTA: Se crea un producto tipo = 1 que es para productos
  		$this->response = ProductosController::Nuevo( 
  			
 			
-			isset($_GET['activo'] ) ? $_GET['activo'] : null,
-			isset($_GET['costo_estandar'] ) ? $_GET['costo_estandar'] : null,
-			isset($_GET['compra_en_mostrador'] ) ? $_GET['compra_en_mostrador'] : null,
-			isset($_GET['nombre_producto'] ) ? $_GET['nombre_producto'] : null,
-			isset($_GET['codigo_producto'] ) ? $_GET['codigo_producto'] : null,
-			isset($_GET['metodo_costeo'] ) ? $_GET['metodo_costeo'] : null,
-			isset($_GET['costo_extra_almacen'] ) ? $_GET['costo_extra_almacen'] : null,
-			isset($_GET['margen_de_utilidad'] ) ? $_GET['margen_de_utilidad'] : null,
-			isset($_GET['foto_del_producto'] ) ? $_GET['foto_del_producto'] : null,
-			isset($_GET['garantia'] ) ? $_GET['garantia'] : null,
-			isset($_GET['descuento'] ) ? $_GET['descuento'] : null,
-			isset($_GET['precio'] ) ? $_GET['precio'] : null,
-			isset($_GET['codigo_de_barras'] ) ? $_GET['codigo_de_barras'] : null,
-			isset($_GET['descripcion_producto'] ) ? $_GET['descripcion_producto'] : null,
-			isset($_GET['impuestos'] ) ? $_GET['impuestos'] : null,
-			isset($_GET['id_unidad'] ) ? $_GET['id_unidad'] : null,
-			isset($_GET['clasificaciones'] ) ? $_GET['clasificaciones'] : null,
-			isset($_GET['control_de_existencia'] ) ? $_GET['control_de_existencia'] : null,
-			isset($_GET['peso_producto'] ) ? $_GET['peso_producto'] : null
+			isset($_POST['activo'] ) ? $_POST['activo'] : null,
+			isset($_POST['costo_estandar'] ) ? $_POST['costo_estandar'] : null,
+			isset($_POST['compra_en_mostrador'] ) ? $_POST['compra_en_mostrador'] : null,
+			isset($_POST['nombre_producto'] ) ? $_POST['nombre_producto'] : null,
+			isset($_POST['codigo_producto'] ) ? $_POST['codigo_producto'] : null,
+			isset($_POST['metodo_costeo'] ) ? $_POST['metodo_costeo'] : null,
+			isset($_POST['costo_extra_almacen'] ) ? $_POST['costo_extra_almacen'] : null,
+			isset($_POST['margen_de_utilidad'] ) ? $_POST['margen_de_utilidad'] : null,
+			isset($_POST['foto_del_producto'] ) ? $_POST['foto_del_producto'] : null,
+			isset($_POST['garantia'] ) ? $_POST['garantia'] : null,
+			isset($_POST['descuento'] ) ? $_POST['descuento'] : null,
+			isset($_POST['precio'] ) ? $_POST['precio'] : null,
+			isset($_POST['codigo_de_barras'] ) ? $_POST['codigo_de_barras'] : null,
+			isset($_POST['descripcion_producto'] ) ? $_POST['descripcion_producto'] : null,
+			isset($_POST['impuestos'] ) ? $_POST['impuestos'] : null,
+			isset($_POST['id_unidad'] ) ? $_POST['id_unidad'] : null,
+			isset($_POST['clasificaciones'] ) ? $_POST['clasificaciones'] : null,
+			isset($_POST['control_de_existencia'] ) ? $_POST['control_de_existencia'] : null,
+			isset($_POST['peso_producto'] ) ? $_POST['peso_producto'] : null
 			
 			);
 		}catch(Exception $e){
