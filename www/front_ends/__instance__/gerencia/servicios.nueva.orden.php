@@ -7,7 +7,8 @@
   	require_once("../../../../server/bootstrap.php");
   
   	$page = new GerenciaComponentPage();
-                
+
+
 	//titulos
 	$page->addComponent( new TitleComponent( "Nueva orden de servicio" ) );
 

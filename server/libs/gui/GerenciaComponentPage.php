@@ -606,23 +606,23 @@ class GerenciaComponentPage extends StdComponentPage{
         },
         {
             "title": "Proveedores",
-            "url": "proveedores.php",
+            "url": "proveedores.lista.php",
             "children": [
+		        {
+		                "title" : "Proveedores",
+		                "url"   : "proveedores.lista.php"
+		        },
+		        {
+		                "title" : "Nuevo proveedor",
+		                "url"   : "proveedores.nuevo.php"
+		        },
                 {
-                        "title" : "Lista clasificacion",
+                        "title" : "Clasificacion",
                         "url"   : "proveedores.lista.clasificacion.php"
                 },
                 {
                         "title" : "Nueva clasificacion",
                         "url"   : "proveedores.nueva.clasificacion.php"
-                },
-                {
-                        "title" : "Lista",
-                        "url"   : "proveedores.lista.php"
-                },
-                {
-                        "title" : "Nuevo",
-                        "url"   : "proveedores.nuevo.php"
                 }
             ]
         },

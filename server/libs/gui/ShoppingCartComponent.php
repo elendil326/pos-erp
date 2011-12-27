@@ -94,7 +94,7 @@ class ShoppingCartComponent implements GuiComponent {
 			subtotal: 5,
 			total : 5,
 			id_comprador_venta: 5,
-			asdf: 99,
+			id_sucursal: 9,
 			detalle_venta : Ext.JSON.encode( [{
 				id_producto : 5,
 				cantidad : 1,
