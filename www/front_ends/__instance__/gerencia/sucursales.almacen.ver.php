@@ -25,33 +25,36 @@
 		//
 		// Menu de opciones
 		// 
-		$menu = new MenuComponent();
-		$menu->addItem("Editar este almacen", "sucursales.editar.almacen.php?aid=".$_GET["aid"]);
-		//$menu->addItem("Desactivar este producto", null);
-                
-                $btn_eliminar = new MenuItem("Desactivar este almacen", null);
-                $btn_eliminar->addApiCall("api/sucursal/almacen/eliminar", "GET");
-                $btn_eliminar->onApiCallSuccessRedirect("sucursales.lista.almacen.php");
-                $btn_eliminar->addName("eliminar");
-                
-                $funcion_eliminar = " function eliminar_almacen(btn){".
-                            "if(btn == 'yes')".
-                            "{".
-                                "var p = {};".
-                                "p.id_almacen = ".$_GET["aid"].";".
-                                "sendToApi_eliminar(p);".
+                if($este_almacen->getActivo())
+                {
+                    $menu = new MenuComponent();
+                    $menu->addItem("Editar este almacen", "sucursales.editar.almacen.php?aid=".$_GET["aid"]);
+                    //$menu->addItem("Desactivar este producto", null);
+
+                    $btn_eliminar = new MenuItem("Desactivar este almacen", null);
+                    $btn_eliminar->addApiCall("api/sucursal/almacen/eliminar", "GET");
+                    $btn_eliminar->onApiCallSuccessRedirect("sucursales.lista.almacen.php");
+                    $btn_eliminar->addName("eliminar");
+
+                    $funcion_eliminar = " function eliminar_almacen(btn){".
+                                "if(btn == 'yes')".
+                                "{".
+                                    "var p = {};".
+                                    "p.id_almacen = ".$_GET["aid"].";".
+                                    "sendToApi_eliminar(p);".
+                                "}".
                             "}".
-                        "}".
-                        "      ".
-                        "function confirmar(){".
-                        " Ext.MessageBox.confirm('Desactivar', 'Desea eliminar este almacen?', eliminar_almacen );".
-                        "}";
-                
-                $btn_eliminar->addOnClick("confirmar", $funcion_eliminar);
-                
-                $menu->addMenuItem($btn_eliminar);
-                
-		$page->addComponent( $menu);
+                            "      ".
+                            "function confirmar(){".
+                            " Ext.MessageBox.confirm('Desactivar', 'Desea eliminar este almacen?', eliminar_almacen );".
+                            "}";
+
+                    $btn_eliminar->addOnClick("confirmar", $funcion_eliminar);
+
+                    $menu->addMenuItem($btn_eliminar);
+
+                    $page->addComponent( $menu);
+                }
 		
 		//
 		// Forma de producto

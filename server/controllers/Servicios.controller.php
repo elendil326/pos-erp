@@ -1788,6 +1788,7 @@ require_once("interfaces/Servicios.interface.php");
                 }
             }
             
+            
             //valida el parametro tipo de pago
             if(!is_null($tipo_de_pago))
             {
@@ -1810,6 +1811,13 @@ require_once("interfaces/Servicios.interface.php");
                 Logger::error("El parametro tipo de venta (".$tipo_venta.") tiene que ser 'credito' o 'contado'");
                 throw new Exception("El parametro tipo de venta (".$tipo_venta.") tiene que ser 'credito' o 'contado'",901);
             }
+            
+            if(is_null($saldo))
+            {
+                $saldo = 0;
+            }
+            
+            $saldo+=$orden_de_servicio->getAdelanto();
             
             $servicio = ServicioDAO::getByPK($orden_de_servicio->getIdServicio());
             

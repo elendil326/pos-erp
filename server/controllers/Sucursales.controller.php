@@ -3339,12 +3339,12 @@ Creo que este metodo tiene que estar bajo sucursal.
             if(!is_null($nombre))
             {
                 //Se verifica que el nombre del almacen no se repita
-                $almacenes = AlmacenDAO::search(new Almacen( array( "id_sucursal" => $id_sucursal ) ) );
-                foreach($almacenes as $almacen)
+                $almacenes = AlmacenDAO::search(new Almacen( array( "id_sucursal" => $almacen->getIdSucursal() ) ) );
+                foreach($almacenes as $a)
                 {
-                    if($almacen->getNombre()==trim($nombre))
+                    if($a->getNombre()==trim($nombre) && $a->getIdAlmacen()!=$id_almacen)
                     {
-                        Logger::log("El nombre (".$nombre.") ya esta siendo usado por el almacen: ".$almacen->getIdAlmacen());
+                        Logger::log("El nombre (".$nombre.") ya esta siendo usado por el almacen: ".$a->getIdAlmacen());
                         throw new Exception("El nombre ya esta en uso");
                     }
                 }

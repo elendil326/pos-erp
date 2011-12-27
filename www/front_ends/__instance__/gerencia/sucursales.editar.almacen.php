@@ -30,7 +30,7 @@
 			 ));
                 
                 $form->addApiCall( "api/sucursal/almacen/editar/", "GET" );
-                $form->onApiCallSuccess("sucursales.lista.almacen.php");
+                $form->onApiCallSuccessRedirect("sucursales.lista.almacen.php");
                 $form->sendHidden("id_almacen");
                 
             
