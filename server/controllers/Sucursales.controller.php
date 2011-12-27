@@ -1326,8 +1326,13 @@ require_once("interfaces/Sucursales.interface.php");
                 
                 if(!is_null($detalle_producto))
                 {
+
                     $d_producto=new VentaProducto();
                     $d_producto->setIdVenta($venta->getIdVenta());
+					
+					$detalle_producto = json_decode($detalle_producto);
+					$detalle_producto = object_to_array($detalle_producto);
+
                     foreach($detalle_producto as $d_p)
                     {
                         $validar = self::validarParametrosVentaProducto(null,$d_p["id_producto"],$d_p["precio"],$d_p["cantidad"],$d_p["descuento"],$d_p["impuesto"],$d_p["retencion"],$d_p["id_unidad"]);

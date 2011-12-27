@@ -44,7 +44,10 @@ class ShoppingCartComponent implements GuiComponent {
 
 	Ext.require([
 	    'Ext.data.*',
-	    'Ext.form.*'
+	    'Ext.form.*',
+	    'Ext.grid.*',
+	    'Ext.util.*',
+	    'Ext.state.*'	
 	]);
 
 
@@ -69,17 +72,59 @@ class ShoppingCartComponent implements GuiComponent {
 	
 	var productos_en_carrito = [];
 	var seleccionar_producto = function( a, p ){
-		console.log( "seleccionando producto", p );
+		
+		console.log( "Seleccionando producto", p );
+		//al seleccionar el producto
+		//agergarlo al store del carrito
+		carrito_store.add( p[0] );
 	}
+	
+	
+	
+	var carrito_store;
+
+	
+	var doVenta = function (){
+		
+		obj = {
+			retencion : 0,
+			descuento : 0,
+			tipo_venta : "contado",
+			impuesto : 0,
+			subtotal: 5,
+			total : 5,
+			id_comprador_venta: 5,
+			asdf: 99,
+			detalle_venta : Ext.JSON.encode( [{
+				id_producto : 5,
+				cantidad : 1,
+				id_almacen : 0,
+				precio: 5,
+				descuento: 0,
+				impuesto: 0,
+				retencion: 0,
+				id_unidad: 1
+			}] )
+		};
+		
+		POS.API.GET("api/ventas/nueva/", obj, function(r){
+			console.log(r);
+		});
+		
+	}
+	
+	
+	
+	
 	
 	Ext.onReady(function(){
 
 
 
-		/**
+		/** *****************************************************************
+		  * CLIENTES
 		  *
-		  *
-		  **/
+		  * ***************************************************************** */
 	    Ext.define("Cliente", {
 	        extend: 'Ext.data.Model',
 	        proxy: {
@@ -136,14 +181,17 @@ class ShoppingCartComponent implements GuiComponent {
 	            pageSize: 10
 	        }]
 	    });/* Ext.create */
-		
+		/** *****************************************************************
+		  * /CLIENTES
+		  *
+		  * ***************************************************************** */		
 		
 		
 
-		/**
+		/** *****************************************************************
+		  * PRODUCTOS
 		  *
-		  *
-		  **/
+		  * ***************************************************************** */
 	    Ext.define("Producto", {
 	        extend: 'Ext.data.Model',
 	        proxy: {
@@ -201,6 +249,78 @@ class ShoppingCartComponent implements GuiComponent {
 	            html: 'Buscando por descripcion, nombre o codigo de barras.'
 	        }]
 	    });/* Ext.create */
+		/** *****************************************************************
+		  * /PRODUCTOS
+		  *
+		  * ***************************************************************** */
+		
+		
+		
+		
+		
+		
+		
+		
+		/** *****************************************************************
+		  * CARRITO
+		  *
+		  * ***************************************************************** */
+
+
+		    // create the data store
+		    carrito_store = Ext.create('Ext.data.ArrayStore', {
+		        fields: [
+		           {name: 'id_producto'},
+		           {name: 'codigo_producto',     	type: 'float'},
+		           {name: 'nombre_producto',     	type: 'string'},
+		           {name: 'descripcion',  			type: 'string'}
+		        ]
+		    });
+
+		    // create the Grid
+		    var grid = Ext.create('Ext.grid.Panel', {
+		        store: carrito_store,
+		        stateful: true,
+		        stateId: 'stateGrid',
+		        columns: [
+		            {
+		                text     : 'id_producto',
+						width	 : 75,
+		                sortable : false,
+		                dataIndex: 'id_producto'
+		            },
+		            {
+		                text     : 'codigo_producto',
+		                width    : 75,
+		                sortable : false,
+		                dataIndex: 'codigo_producto'
+		            },
+		            {
+		                text     : 'nombre_producto',
+		                flex     : 1,
+		                sortable : true,
+		                dataIndex: 'nombre_producto'
+		            },
+		            {
+		                text     : 'descripcion',
+		                width    : 75,
+		                sortable : true,
+		                dataIndex: 'descripcion'
+		            }
+		        ],
+		        height: 350,
+		        width: "100%",
+		        renderTo: 'grid-example',
+		        viewConfig: {
+		            stripeRows: true
+		        }
+		    });		
+		
+		/** *****************************************************************
+		  * CARRITO
+		  *
+		  * ***************************************************************** */
+		
 	}); /* Ext.onReady */
 		
 
@@ -219,9 +339,16 @@ class ShoppingCartComponent implements GuiComponent {
 			<div id="ShoppingCartComponent_001"><!-- buscar productos --></div>
 			
 			
-			<div id="carrito_de_compras">
+			<h2 style="margin-bottom:0px">Esta venta</h2>
+			<div id="carrito_de_compras" style="margin: 5px auto;">
+				<div id="grid-example">
+					
+				</div>
 				
 			</div>
+			<div class="POS Boton" onClick="cancelarVenta()">Cancelar</div>
+			<div class="POS Boton" onClick="doVenta()">Vender</div>
+			
 		<?php
 	}
 }

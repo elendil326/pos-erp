@@ -1,4 +1,18 @@
 <?php
+
+function object_to_array($mixed) {
+    if(is_object($mixed)) $mixed = (array) $mixed;
+    if(is_array($mixed)) {
+        $new = array();
+        foreach($mixed as $key => $val) {
+            $key = preg_replace("/^\\0(.*)\\0/","",$key);
+            $new[$key] = object_to_array($val);
+        }
+    } 
+    else $new = $mixed;
+    return $new;        
+}
+
 	
 	# *******************************
 	# Buscar la ruta de /SERVER
