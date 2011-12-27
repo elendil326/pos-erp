@@ -28,7 +28,7 @@
         
         $form->createComboBoxJoin( "id_usuario", "nombre", UsuarioDAO::search(new Usuario( array( "id_rol" => 2 ) )) );
 	
-	$form->addApiCall( "api/sucursal/nueva/", "GET" );
+	$form->addApiCall( "api/sucursal/nueva/");
         $form->onApiCallSuccessRedirect("sucursales.lista.php");
 	
 	$form->makeObligatory(array( 

@@ -596,35 +596,32 @@ require_once("interfaces/Proveedores.interface.php");
 	public static function Editar
 	(
 		$id_proveedor, 
-		$limite_credito = null, 
-		$password = null, 
-		$tiempo_entrega = null, 
-		$codigo_postal = null, 
-		$id_ciudad = null, 
-		$texto_extra = null, 
-		$direccion_web = null, 
-		$numero_interior = null, 
-		$numero_exterior = null, 
-		$representante_legal = null, 
 		$activo = 1, 
-		$rfc = null, 
-		$id_tipo_proveedor = null, 
-		$dias_de_credito = null, 
 		$calle = null, 
-		$telefono_personal1 = null, 
-		$nombre = null, 
-		$email = null, 
-		$dias_embarque = null, 
-		$impuestos = null, 
-		$telefono2 = null, 
-		$telefono1 = null, 
+		$codigo_postal = null, 
+		$codigo_proveedor = null, 
 		$cuenta_bancaria = null, 
+		$dias_de_credito = null, 
+		$dias_embarque = null, 
+		$direccion_web = null, 
+		$email = null, 
+		$id_ciudad = null, 
 		$id_moneda = null, 
+		$id_tipo_proveedor = null, 
+		$impuestos = null, 
+		$limite_credito = null, 
+		$nombre = null, 
+		$numero_exterior = null, 
+		$numero_interior = null, 
+		$password = null, 
+		$representante_legal = null, 
 		$retenciones = null, 
-		$codigo_proveedor = null,
-                $telefono_personal2 = null,
-                $descuento = null,
-                $colonia = null
+		$rfc = null, 
+		$telefono1 = null, 
+		$telefono2 = null, 
+		$telefono_personal = null, 
+		$texto_extra = null, 
+		$tiempo_entrega = null
 	)
 	{  
             Logger::log("Editando proveedor ".$id_proveedor);
@@ -632,11 +629,11 @@ require_once("interfaces/Proveedores.interface.php");
             //Se utiliza el metodo editar usuario de personalyagentes, este se encarga de las validaciones
             try
             {
-                $provedores = PersonalYAgentesController::EditarUsuario($id_proveedor,null,null,null,$descuento,$telefono_personal1,
-                        $limite_credito,$direccion_web,null,null,null,$telefono_personal2,null,null,$impuestos,$retenciones,null,null,
-                        null,$calle,null,$codigo_postal,$texto_extra,$numero_interior,$id_ciudad,$password,$id_tipo_proveedor,$codigo_proveedor,
-                        $nombre,$colonia,null,$email,$representante_legal,null,$dias_embarque,$telefono2,$dias_de_credito,$rfc,null,null,$numero_exterior,
-                        null,null,$cuenta_bancaria,null,null,$telefono1,null,null,null,null,$id_moneda,$tiempo_entrega);
+                $provedores = PersonalYAgentesController::EditarUsuario($id_proveedor,$calle,null,$codigo_postal,null,$codigo_proveedor,
+                        $colonia,null,null,$email,$cuenta_bancaria,null,null,null,null,null,$dias_de_credito,$dias_embarque,
+                        null,null,null,$id_ciudad,null,null,$id_tipo_proveedor,$id_moneda,null,null,
+                        $impuestos,null,$limite_credito,null,$nombre,$numero_exterior,null,$numero_interior,null,$direccion_web,$password,$representante_legal,$retenciones,
+                        $rfc,null,null,$telefono1,null,$telefono2,null,$telefono_personal,null,$texto_extra,null,$tiempo_entrega);
             }
             catch(Exception $e)
             {

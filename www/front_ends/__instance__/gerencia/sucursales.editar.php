@@ -34,8 +34,10 @@
                                 "referencia",
                                 "activa"
 			 ));
+                $form->sendHidden("id_sucursal");
                 
                 $form->addApiCall( "api/sucursal/editar/", "GET" );
+                $form->onApiCallSuccessRedirect("sucursales.lista.php");
                 
                 
                 $form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll(), $esta_direccion->getIdCiudad() );

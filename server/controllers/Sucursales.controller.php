@@ -2289,7 +2289,7 @@ require_once("interfaces/Sucursales.interface.php");
             $sucursal->setMargenUtilidad($margen_utilidad);
             $sucursal->setDescripcion($descripcion);
             $sucursal->setDescuento($descuento);
-            $sucursal->setFechaApertura("Y-m-d H:i:s",time());
+            $sucursal->setFechaApertura(date("Y-m-d H:i:s",time()));
             DAO::transBegin();
             try
             {
@@ -2584,8 +2584,8 @@ require_once("interfaces/Sucursales.interface.php");
  	 **/
 	public static function EditarGerencia
 	(
-		$id_sucursal, 
-		$id_gerente
+		$id_gerente, 
+		$id_sucursal
 	)
 	{
             Logger::log("Editando gerencia de sucursal");
@@ -2644,8 +2644,8 @@ require_once("interfaces/Sucursales.interface.php");
 	(
                 $id_caja, 
 		$saldo_real, 
-		$id_cajero = null, 
-		$billetes = null
+		$billetes = null, 
+		$id_cajero = null
 	)
 	{
             Logger::log("Cerrando caja ".$id_caja);
@@ -3527,6 +3527,8 @@ Creo que este metodo tiene que estar bajo sucursal.
                 Logger::error("La sucursal no tiene un saldo de 0 y no puede ser eliminada");
                 throw new Exception("La sucursal no tiene un saldo de 0 y no puede ser eliminada");
             }
+            
+            $almacenes = AlmacenDAO::search( new Almacen( array( "id_sucursal" => $id_sucursal ) ) );
             
             $sucursal->setFechaBaja(date("Y-m-d H:i:s"));
             $sucursal->setActiva(0);

@@ -62,15 +62,6 @@
 		$form->hideField( array( 
 				"id_caja",
 			 ));
-//		$form->makeObligatory(array( 
-//				"compra_en_mostrador",
-//				"costo_estandar",
-//				"nombre_producto",
-//				"id_empresas",
-//				"codigo_producto",
-//				"metodo_costeo",
-//				"activo"
-//			));
 	    $form->createComboBoxJoin("id_sucursal", "razon_social", SucursalDAO::getAll(), $esta_caja->getIdSucursal() );
 		$page->addComponent( $form );
 		
