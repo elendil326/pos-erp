@@ -70,7 +70,7 @@ class ShoppingCartComponent implements GuiComponent {
 
 	}
 	
-	var productos_en_carrito = [];
+
 	var seleccionar_producto = function( a, p ){
 		
 		console.log( "Seleccionando producto", p );

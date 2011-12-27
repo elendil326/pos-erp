@@ -1,3 +1,11 @@
+Ext.require([
+    'Ext.data.*',
+    'Ext.form.*',
+    'Ext.grid.*',
+    'Ext.util.*',
+    'Ext.state.*'	
+]);
+
 
 var main = function ()
 {
@@ -36,21 +44,13 @@ var POS =
 				
 		},
 
-		nueva : function (   ) 
+		agregar : function (   ) 
 		{
 			
-			POS.API.POST("api/empresa/nuevo/", 
+			POS.API.POST("api/sucursal/almacen/entrada/", 
 			{ 
-				codigo_postal :"a", 
-				colonia :"a", 
-				curp :"a", 
-				numero_exterior: "123",
-				razon_social : "123",
-				rfc: "123",
-				ciudad : "334",
-				calle : "Galena",
-				
-				
+				productos : Ext.JSON.encode([{ id_producto : 5,  }]), 
+				id_almacen : 3
 			},{
 				callback : function( a ){ console.log(a ); }
 			});
