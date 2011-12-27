@@ -1,6 +1,6 @@
 <?php
 /**
-  * GET api/sesion/cerrar
+  * POST api/sesion/cerrar
   * Cerrar la sesion actual.
   *
   * Regresa un url de redireccion seg?n el tipo de usuario.
@@ -17,7 +17,7 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"auth_token" => new ApiExposedProperty("auth_token", false, GET, array( "string" )),
+			"auth_token" => new ApiExposedProperty("auth_token", false, POST, array( "string" )),
 		);
 	}
 
@@ -26,7 +26,7 @@
  		$this->response = SesionController::Cerrar( 
  			
 			
-			isset($_GET['auth_token'] ) ? $_GET['auth_token'] : null
+			isset($_POST['auth_token'] ) ? $_POST['auth_token'] : null
 			
 			);
 		}catch(Exception $e){

@@ -47,9 +47,9 @@ var POS =
 		agregar : function (   ) 
 		{
 			
-			POS.API.POST("api/sucursal/almacen/entrada/", 
+			POS.API.GET("api/sucursal/almacen/entrada/", 
 			{ 
-				productos : Ext.JSON.encode([{ id_producto : 5,  }]), 
+				productos : Ext.JSON.encode([{ id_producto : 5, cantidad : 5 }]), 
 				id_almacen : 3
 			},{
 				callback : function( a ){ console.log(a ); }

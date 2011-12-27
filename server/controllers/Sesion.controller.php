@@ -46,8 +46,14 @@ Si el usuario que esta intentando iniciar sesion, esta descativado... 403 Author
 		$request_token = null
 	)
 	{  
-  
-  
+
+		//user is not logged in, look for him
+		$user = UsuarioDAO::findUser( $user, $pass );
+
+		if( $user === NULL ) throw new Exception("Credenciales invalidas");
+
+		//ok user is ok, log him in
+		self::login( $user->getIdUsuario(), $pass, $user->getIdRol() );
 	}
   
 	/**

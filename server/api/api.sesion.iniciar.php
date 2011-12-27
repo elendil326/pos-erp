@@ -1,11 +1,13 @@
 <?php
 /**
-  * GET api/sesion/iniciar
+  * POST api/sesion/iniciar
   * Validar e iniciar una sesion.
   *
-  * Valida las credenciales de un usuario y regresa un url a donde se debe de redireccionar. Este m?todo no necesita de ning?n tipo de autenticaci?n. 
+  * Valida las credenciales de un usuario. Este m?todo no necesita de ning?n tipo de autenticaci?n. 
 Si se detecta un tipo de usuario inferior a admin y no se ha llamado antes a api/sucursal/revisar_sucursal se regresar? un 403 Authorization Required y la sesi?n no se iniciar?.
-Si el usuario que esta intentando iniciar sesion, esta descativado... 403 Authorization Required supongo
+Si el usuario que esta intentando iniciar sesion, esta descativado... 403 Authorization Required.
+
+Si request_token se envia verdadero no se asociara una cookie a esta peticion, sino que se regresara un token que debera ser enviado en cada llamada subsecuente de este cliente. Los tokens expiraran segun la configuracion del sistema.
   *
   *
   *
@@ -19,9 +21,9 @@ Si el usuario que esta intentando iniciar sesion, esta descativado... 403 Author
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"password" => new ApiExposedProperty("password", true, GET, array( "string" )),
-			"usuario" => new ApiExposedProperty("usuario", true, GET, array( "string" )),
-			"request_token" => new ApiExposedProperty("request_token", false, GET, array( "bool" )),
+			"password" => new ApiExposedProperty("password", true, POST, array( "string" )),
+			"usuario" => new ApiExposedProperty("usuario", true, POST, array( "string" )),
+			"request_token" => new ApiExposedProperty("request_token", false, POST, array( "bool" )),
 		);
 	}
 
@@ -30,9 +32,9 @@ Si el usuario que esta intentando iniciar sesion, esta descativado... 403 Author
  		$this->response = SesionController::Iniciar( 
  			
 			
-			isset($_GET['password'] ) ? $_GET['password'] : null,
-			isset($_GET['usuario'] ) ? $_GET['usuario'] : null,
-			isset($_GET['request_token'] ) ? $_GET['request_token'] : null
+			isset($_POST['password'] ) ? $_POST['password'] : null,
+			isset($_POST['usuario'] ) ? $_POST['usuario'] : null,
+			isset($_POST['request_token'] ) ? $_POST['request_token'] : null
 			
 			);
 		}catch(Exception $e){
