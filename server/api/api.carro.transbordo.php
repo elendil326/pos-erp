@@ -15,7 +15,6 @@ Se movera parcial o totalmente la carga?
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
-	protected function CheckAuthorization() {}
 	protected function GetRequest()
 	{
 		$this->request = array(	

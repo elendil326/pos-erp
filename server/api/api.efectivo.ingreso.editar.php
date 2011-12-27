@@ -5,7 +5,7 @@
   *
   * Edita un ingreso
 
-Update :El usuario y la fecha de la ultima modificaci?e deber? de obtener de la sesi?
+Update :El usuario y la fecha de la ultima modificaci?n se deber?an de obtener de la sesi?n
   *
   *
   *
@@ -15,7 +15,6 @@ Update :El usuario y la fecha de la ultima modificaci?e deber? de obtener de la 
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
-	protected function CheckAuthorization() {}
 	protected function GetRequest()
 	{
 		$this->request = array(	

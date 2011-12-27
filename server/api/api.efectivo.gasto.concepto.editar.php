@@ -3,9 +3,9 @@
   * GET api/efectivo/gasto/concepto/editar
   * Edita un concepto de gasto
   *
-  * Edita la informaci?e un concepto de gasto
+  * Edita la informaci?n de un concepto de gasto
 
-Update : Se deber?de tomar de la sesi?l id del usuario que hiso la ultima modificaci? la fecha.
+Update : Se deber?a de tomar de la sesi?n el id del usuario que hiso la ultima modificaci?n y la fecha.
   *
   *
   *
@@ -15,7 +15,6 @@ Update : Se deber?de tomar de la sesi?l id del usuario que hiso la ultima modifi
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
-	protected function CheckAuthorization() {}
 	protected function GetRequest()
 	{
 		$this->request = array(	

@@ -15,7 +15,6 @@ NOTA: Se crea un producto tipo = 1 que es para productos
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
-	protected function CheckAuthorization() {}
 	protected function GetRequest()
 	{
 		$this->request = array(	

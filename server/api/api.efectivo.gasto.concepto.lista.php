@@ -14,7 +14,6 @@ Update : Falta especificar los parametros y el ejemplo de envio.
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
-	protected function CheckAuthorization() {}
 	protected function GetRequest()
 	{
 		$this->request = array(	

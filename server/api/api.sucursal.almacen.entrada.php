@@ -16,7 +16,6 @@ Creo que este metodo tiene que estar bajo sucursal.
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
-	protected function CheckAuthorization() {}
 	protected function GetRequest()
 	{
 		$this->request = array(	

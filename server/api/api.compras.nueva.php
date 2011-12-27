@@ -3,7 +3,7 @@
   * POST api/compras/nueva
   * Registra una nueva compra
   *
-  * Registra una nueva compra, la compra puede ser a cualquier usuario, siendo este un cliente, proveedor, o cualquiera. La compra siempre viene acompa?a de un detalle de productos que han sido comprados, y cada uno estipula a que almacen y a que sucursal iran a parar.
+  * Registra una nueva compra, la compra puede ser a cualquier usuario, siendo este un cliente, proveedor, o cualquiera. La compra siempre viene acompa?anda de un detalle de productos que han sido comprados, y cada uno estipula a que almacen y a que sucursal iran a parar.
   *
   *
   *
@@ -13,7 +13,6 @@
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
-	protected function CheckAuthorization() {}
 	protected function GetRequest()
 	{
 		$this->request = array(	

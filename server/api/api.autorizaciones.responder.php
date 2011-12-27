@@ -1,9 +1,9 @@
 <?php
 /**
   * POST api/autorizaciones/responder
-  * Responde a una auorizaci?n estado pendiente.
+  * Responde a una auorizaci?n en estado pendiente.
   *
-  * Responde a una autorizaci?n estado pendiente. Este m?do no se puede aplicar a una autorizaci?a resuelta.
+  * Responde a una autorizaci?n en estado pendiente. Este m?todo no se puede aplicar a una autorizaci?n ya resuelta.
   *
   *
   *
@@ -13,7 +13,6 @@
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
-	protected function CheckAuthorization() {}
 	protected function GetRequest()
 	{
 		$this->request = array(	

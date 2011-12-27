@@ -3,7 +3,7 @@
   * GET api/autorizaciones/compra/devolucion
   * Solicitud para devolver una compra.
   *
-  * Solicitud para devolver una compra. La fecha de petici?e tomar?el servidor. El usuario y la sucursal que emiten la autorizaci?er?tomadas de la sesi?
+  * Solicitud para devolver una compra. La fecha de petici?n se tomar? del servidor. El usuario y la sucursal que emiten la autorizaci?n ser?n tomadas de la sesi?n.
   *
   *
   *
@@ -13,7 +13,6 @@
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
-	protected function CheckAuthorization() {}
 	protected function GetRequest()
 	{
 		$this->request = array(	

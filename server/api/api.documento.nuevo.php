@@ -15,7 +15,6 @@ Update : Falta indicar en los argumentos el si el documeto esta activo y a que s
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
-	protected function CheckAuthorization() {}
 	protected function GetRequest()
 	{
 		$this->request = array(	

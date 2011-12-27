@@ -14,7 +14,6 @@ Update :  Tambien se deberia de tomar  de la sesion el id del usuario qeu hiso a
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
-	protected function CheckAuthorization() {}
 	protected function GetRequest()
 	{
 		$this->request = array(	

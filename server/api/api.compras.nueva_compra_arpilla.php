@@ -14,7 +14,6 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
-	protected function CheckAuthorization() {}
 	protected function GetRequest()
 	{
 		$this->request = array(	

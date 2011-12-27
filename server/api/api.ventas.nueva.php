@@ -15,7 +15,6 @@ Si hay dos productos en una misma sucursal pero disntintos almacenes entonces se
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
-	protected function CheckAuthorization() {}
 	protected function GetRequest()
 	{
 		$this->request = array(	

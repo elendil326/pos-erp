@@ -5,7 +5,7 @@
   *
   * Deshabilita un concepto de ingreso
 
-Update :Se deber?tambi?obtener de la sesi?l id del usuario y fecha de la ultima modificaci?
+Update :Se deber?a tambi?n obtener de la sesi?n el id del usuario y fecha de la ultima modificaci?n.
   *
   *
   *
@@ -15,7 +15,6 @@ Update :Se deber?tambi?obtener de la sesi?l id del usuario y fecha de la ultima 
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
-	protected function CheckAuthorization() {}
 	protected function GetRequest()
 	{
 		$this->request = array(	

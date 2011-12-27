@@ -3,7 +3,7 @@
   * GET api/efectivo/abono/editar
   * Edita un abono
   *
-  * Edita la informaci?e un abono
+  * Edita la informaci?n de un abono
   *
   *
   *
@@ -13,7 +13,6 @@
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
-	protected function CheckAuthorization() {}
 	protected function GetRequest()
 	{
 		$this->request = array(	

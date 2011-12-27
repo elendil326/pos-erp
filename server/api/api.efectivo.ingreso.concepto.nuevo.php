@@ -15,7 +15,6 @@ Update : En la respuesta basta con solo indicar success : true | false, y en cas
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
-	protected function CheckAuthorization() {}
 	protected function GetRequest()
 	{
 		$this->request = array(	

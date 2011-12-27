@@ -3,7 +3,7 @@
   * GET api/sucursal/almacen/eliminar
   * Elimina un almacen
   *
-  * Descativa un almacen. Para poder desactivar un almacen, este tiene que estar vac?
+  * Descativa un almacen. Para poder desactivar un almacen, este tiene que estar vac?o
   *
   *
   *
@@ -13,7 +13,6 @@
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
-	protected function CheckAuthorization() {}
 	protected function GetRequest()
 	{
 		$this->request = array(	

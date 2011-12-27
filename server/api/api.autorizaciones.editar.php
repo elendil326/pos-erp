@@ -1,7 +1,7 @@
 <?php
 /**
   * GET api/autorizaciones/editar
-  * Editar una autorizaci?n caso de tener permiso.
+  * Editar una autorizaci?n en caso de tener permiso.
   *
   * Editar una autorizacion en caso de tener permiso.
 
@@ -11,7 +11,7 @@ Digo que seria buena idea definir el formato de las autorizaciones para ir pensa
 
 
 
-Al momento de editar la autorizacion veo que aparentemente se podria editar el id_autorizacion, id_usuario, id_sucursal, peticion y estado, creo yo que no es prudente editar ninguno de estos campos ya que el mal uso de esta informacion puede da?gravemente la integridad del sistema.
+Al momento de editar la autorizacion veo que aparentemente se podria editar el id_autorizacion, id_usuario, id_sucursal, peticion y estado, creo yo que no es prudente editar ninguno de estos campos ya que el mal uso de esta informacion puede da?ar gravemente la integridad del sistema.
   *
   *
   *
@@ -21,7 +21,6 @@ Al momento de editar la autorizacion veo que aparentemente se podria editar el i
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
-	protected function CheckAuthorization() {}
 	protected function GetRequest()
 	{
 		$this->request = array(	

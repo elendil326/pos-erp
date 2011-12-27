@@ -59,43 +59,29 @@ abstract class ApiHandler
     
     protected function CheckAuthorization()
     {
-        // @TODO Idealy we should decouple the validation in delegates or something more mantainable
-        
-        // Check if we have a logged user.               
-        if( isset($_POST["auth_token"]) )
-        {
-                
-            // Find out the token
-            $this->auth_token = AuthTokensDAO::getByPK( $_POST["auth_token"] );
-            
-            if($this->auth_token !== null)
-            {
 
-                // Get the user_id from the auth token    
-                $this->user_id = $this->auth_token->getUserId();         
-                                
-                // Get roles of user
-                // @todo Cache this!
-                $this->user_roles = UserRolesDAO::search(new UserRoles( array (
-                    "user_id" => $this->user_id    
-                    )));
-                
+		$token = null;
 
-            }
-            else
-            {
+		if( @isset($_GET["auth_token"] )  ){
+			$token = $_GET["auth_token"];
+		}
+		
+		if( @isset($_POST["auth_token"] )  ){
+			$token = $_POST["auth_token"];
+		}
+		
+		if(is_null($token)){
+			Logger::log("No se ha enviado un auth_token");
+        	throw new ApiException( $this->error_dispatcher->invalidAuthToken() );			
+		}
 
-                // We have an invalid auth token. Dying.            
-                throw new ApiException( $this->error_dispatcher->invalidAuthToken() );
-            }
-        }
-        else
-        {
-      
-          // Login is required
-          throw new ApiException( $this->error_dispatcher->invalidAuthToken() );
-        }
-                
+		//buscar el token
+		$r = SesionDAO::search( new Sesion( array( "auth_token" => $token ) ) );
+		
+		if(sizeof($r) == 1) return true;
+		
+		Logger::log("El auth_token no se encontro en la BD");
+        throw new ApiException( $this->error_dispatcher->invalidAuthToken() );
     }
     
     protected function CheckPermissions()
@@ -105,24 +91,8 @@ abstract class ApiHandler
         { 
             return true;
         }
-        
-        foreach($this->user_roles as $rol)
-        {
-            // By default, admin rocks
-            if($rol->getRoleId() === ADMIN)
-            {
-                return true;
-            }
-                                    
-            foreach ($this->api_roles as $allowedRol)
-            {                                
-                if($allowedRol === $rol->getRoleId())
-                {
-                    return true;
-                }
-            }
-        }
-        
+
+		
         // Rol was not found
         throw new ApiException($this->error_dispatcher->forbiddenSite());
     }

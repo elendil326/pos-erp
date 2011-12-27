@@ -14,7 +14,6 @@ Ejemplo: 1 kg = 2.204 lb
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
-	protected function CheckAuthorization() {}
 	protected function GetRequest()
 	{
 		$this->request = array(	
