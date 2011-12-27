@@ -302,13 +302,13 @@ require_once("interfaces/Ventas.interface.php");
  	 **/
 	public static function Lista
 	(
-		$canceladas = null, 
 		$ordenar = null, 
 		$id_sucursal = null, 
 		$total_superior_a = null, 
-		$total_igual_a = null, 
 		$total_inferior_a = null, 
-		$liquidados = null
+		$total_igual_a = null, 
+		$liquidados = null, 
+		$canceladas = null
 	)
 	{  
             Logger::log("Obteniendo la lista de ventas");
@@ -415,9 +415,9 @@ require_once("interfaces/Ventas.interface.php");
  	 **/
 	public static function Cancelar
 	(
-		$id_venta,
-                $id_caja = null,
-                $billetes = null
+		$id_venta, 
+		$id_caja = null, 
+		$billetes = null
 	)
 	{  
              Logger::log("Cancenlando venta ".$id_venta);
@@ -518,19 +518,19 @@ require_once("interfaces/Ventas.interface.php");
  	 **/
 	public static function Nueva
 	(
+		$id_comprador_venta, 
+		$subtotal, 
+		$impuesto, 
+		$tipo_venta, 
+		$descuento, 
 		$total, 
 		$retencion, 
-		$descuento, 
-		$tipo_venta, 
-		$impuesto, 
-		$subtotal, 
-		$id_comprador_venta, 
-		$detalle_venta = null,
-                $detalle_orden = null,
-                $detalle_paquete = null,
-		$datos_cheque = null, 
+		$tipo_de_pago = null, 
 		$saldo = 0, 
-		$tipo_de_pago = null
+		$datos_cheque = null, 
+		$detalle_venta = null, 
+		$detalle_orden = null, 
+		$detalle_paquete = null
 	)
 	{  
             Logger::log("Creando nueva venta fuera de caja");
