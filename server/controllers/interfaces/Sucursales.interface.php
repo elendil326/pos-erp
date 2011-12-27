@@ -21,8 +21,8 @@
 	(
 		$id_almacen, 
 		$id_tipo_almacen = null, 
-		$nombre = "", 
-		$descripcion = ""
+		$nombre = null, 
+		$descripcion = null
 	);  
   
   
@@ -77,7 +77,7 @@ Creo que este metodo tiene que estar bajo sucursal.
   static function ListaAlmacen
 	(
 		$id_empresa = null, 
-		$id_sucursal = "", 
+		$id_sucursal = null, 
 		$id_tipo_almacen = null, 
 		$activo = null
 	);  
@@ -152,8 +152,8 @@ Creo que este metodo tiene que estar bajo sucursal.
   static function EditarTraspasoAlmacen
 	(
 		$id_traspaso, 
-		$productos = "", 
-		$fecha_envio_programada = ""
+		$productos = null, 
+		$fecha_envio_programada = null
 	);  
   
   
@@ -187,12 +187,12 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 **/
   static function ListaTraspasoAlmacen
 	(
-		$ordenar = "", 
-		$estado = "", 
-		$id_almacen_recibe = "", 
-		$id_almacen_envia = "", 
-		$completo = "", 
-		$cancelado = ""
+		$ordenar = null, 
+		$estado = null, 
+		$id_almacen_recibe = null, 
+		$id_almacen_envia = null, 
+		$completo = null, 
+		$cancelado = null
 	);  
   
   
@@ -343,7 +343,7 @@ Creo que este metodo tiene que estar bajo sucursal.
 		$saldo_real, 
 		$id_caja, 
 		$id_cajero = null, 
-		$id_cajero_nuevo = "", 
+		$id_cajero_nuevo = null, 
 		$billetes_dejados = null, 
 		$billetes_encontrados = null
 	);  
@@ -362,8 +362,8 @@ Creo que este metodo tiene que estar bajo sucursal.
   static function EditarCaja
 	(
 		$id_caja, 
-		$descripcion = "", 
-		$token = ""
+		$descripcion = null, 
+		$token = null
 	);  
   
   
@@ -378,7 +378,7 @@ Creo que este metodo tiene que estar bajo sucursal.
   static function EliminarCaja
 	(
 		$id_caja
-	);    
+	);  
   
   
 	
@@ -395,7 +395,7 @@ Creo que este metodo tiene que estar bajo sucursal.
 	(
 		$id_sucursal = null, 
 		$activa = null
-	); 
+	);  
   
   
 	
@@ -443,7 +443,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 * @param detalle_producto json Objeto que contendr los id de los productos, sus cantidades, su precio y su descuento.
  	 * @param billetes_cambio json Ids de billetes que se entregaron como cambio
  	 * @param id_venta_caja int Id de la venta de esta caja, utilizado cuando se va el internet
- 	 * @return id_venta int Id autogenerado de la inserciï¿½n de la venta.
+ 	 * @return id_venta int Id autogenerado de la inserción de la venta.
  	 **/
   static function VenderCaja
 	(
@@ -506,7 +506,8 @@ Creo que este metodo tiene que estar bajo sucursal.
 		$numero_exterior = null, 
 		$razon_social = null, 
 		$telefono2 = null, 
-		$telefono1 = null,
+		$telefono1 = null, 
+		$empresas = null, 
 		$descripcion = null, 
 		$margen_utilidad = null, 
 		$descuento = null, 
@@ -576,49 +577,48 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *
  	 *Metodo que crea una nueva sucursal
  	 *
- 	 * @param codigo_postal string Codigo postal de la empresa
- 	 * @param calle string Calle de la sucursal
- 	 * @param empresas json Objeto que contendra los ids de las empresas a las que esta sucursal pertenece, por lo menos tiene que haber una empresa. En este JSON, opcionalmente junto con el id de la empresa, aapreceran dos campos que seran margen_utilidad y descuento, que indicaran que todos los productos de esa empresa ofrecidos en esta sucursal tendran un margen de utilidad y/o un descuento con los valores en esos campos
- 	 * @param activo bool Si esta sucursal estara activa inmediatamente despues de ser creada
- 	 * @param colonia string Colonia de la sucursal
- 	 * @param razon_social string Razon social de la sucursal
+ 	 * @param saldo_a_favor float Saldo a favor de la sucursal.
+ 	 * @param id_ciudad int Id de la ciudad donde se encuentra la sucursal
  	 * @param numero_exterior string Numero exterior de la sucursal
  	 * @param rfc string RFC de la sucursal
- 	 * @param id_ciudad int Id de la ciudad donde se encuentra la sucursal
- 	 * @param saldo_a_favor float Saldo a favor de la sucursal.
- 	 * @param id_gerente int ID del usuario que sera gerente de esta sucursal. Para que sea valido este usuario debe tener el nivel de acceso apropiado.
- 	 * @param referencia string Referencia para localizar la direccion de la sucursal
- 	 * @param retenciones json Objeto que contendra el arreglo de retenciones que afectan a esta sucursal
- 	 * @param numero_interior string numero interior
- 	 * @param telefono2 string Telefono2 de la sucursal
- 	 * @param telefono1 string Telefono1 de la sucursal
+ 	 * @param razon_social string Razon social de la sucursal
+ 	 * @param colonia string Colonia de la sucursal
+ 	 * @param calle string Calle de la sucursal
+ 	 * @param activo bool Si esta sucursal estara activa inmediatamente despues de ser creada
+ 	 * @param codigo_postal string Codigo postal de la empresa
+ 	 * @param descuento float Descuento que tendran todos los productos ofrecidos por esta sucursal
  	 * @param margen_utilidad float Margen de utilidad que se le ganara a todos los productos ofrecidos por esta sucursal
  	 * @param descripcion string Descripcion de la sucursal
  	 * @param impuestos json Objeto que contendra el arreglo de impuestos que afectan a esta sucursal
- 	 * @param descuento float Descuento que tendran todos los productos ofrecidos por esta sucursal
+ 	 * @param telefono1 string Telefono1 de la sucursal
+ 	 * @param telefono2 string Telefono2 de la sucursal
+ 	 * @param numero_interior string numero interior
+ 	 * @param retenciones json Objeto que contendra el arreglo de retenciones que afectan a esta sucursal
+ 	 * @param referencia string Referencia para localizar la direccion de la sucursal
+ 	 * @param id_gerente int ID del usuario que sera gerente de esta sucursal. Para que sea valido este usuario debe tener el nivel de acceso apropiado.
  	 * @return id_sucursal int Id autogenerado de la sucursal que se creo.
  	 **/
   static function Nueva
 	(
-		$codigo_postal, 
-		$calle, 
-		$activo, 
-		$colonia, 
-		$razon_social, 
+		$saldo_a_favor, 
+		$id_ciudad, 
 		$numero_exterior, 
 		$rfc, 
-		$id_ciudad, 
-		$saldo_a_favor, 
-		$id_gerente = null, 
-		$referencia = null, 
-		$retenciones = null, 
-		$numero_interior = null, 
-		$telefono2 = null, 
-		$telefono1 = null, 
+		$razon_social, 
+		$colonia, 
+		$calle, 
+		$activo, 
+		$codigo_postal, 
+		$descuento = null, 
 		$margen_utilidad = null, 
 		$descripcion = null, 
 		$impuestos = null, 
-		$descuento = null
+		$telefono1 = null, 
+		$telefono2 = null, 
+		$numero_interior = null, 
+		$retenciones = null, 
+		$referencia = null, 
+		$id_gerente = null
 	);  
   
   

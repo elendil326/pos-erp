@@ -1165,22 +1165,22 @@ require_once("interfaces/Sucursales.interface.php");
  	 **/
 	public static function VenderCaja
 	( 
+		$impuesto, 
+		$descuento, 
+		$total, 
+		$tipo_venta, 
+		$subtotal, 
 		$retencion, 
 		$id_comprador, 
-		$subtotal, 
-		$impuesto, 
-		$total, 
-		$descuento, 
-		$tipo_venta, 
-		$saldo = null, 
 		$cheques = null, 
-		$tipo_pago = null, 
+		$detalle_orden = null, 
+		$detalle_paquete = null, 
 		$billetes_pago = null, 
-		$billetes_cambio = null,
-                $id_venta_caja = null,
-                $detalle_producto = null,
-                $detalle_orden = null,
-                $detalle_paquete = null
+		$tipo_pago = null, 
+		$saldo = 0, 
+		$detalle_producto = null, 
+		$billetes_cambio = null, 
+		$id_venta_caja = null
 	)
 	{
             Logger::log("Realizando la venta");
@@ -1753,19 +1753,19 @@ require_once("interfaces/Sucursales.interface.php");
 	(
 		$retencion, 
 		$detalle, 
-		$id_vendedor, 
-		$total, 
-		$tipo_compra, 
-		$subtotal, 
-		$id_empresa, 
 		$descuento, 
 		$impuesto, 
+		$id_empresa, 
+		$subtotal, 
+		$tipo_compra, 
+		$total, 
+		$id_vendedor, 
+		$saldo = 0, 
+		$tipo_pago = null, 
 		$billetes_pago = null, 
 		$billetes_cambio = null, 
-		$tipo_pago = null, 
-		$saldo = null, 
-		$cheques = null,
-                $id_compra_caja = null
+		$cheques = null, 
+		$id_compra_caja = null
 	)
 	{  
             Logger::log("Realizando la compra");
@@ -1969,11 +1969,11 @@ require_once("interfaces/Sucursales.interface.php");
  	 **/
 	public static function Lista
 	(
-		$activo = null,
-		$id_empresa = null, 
 		$saldo_inferior_que = null, 
+		$id_empresa = null, 
 		$saldo_superior_que = null, 
 		$fecha_apertura_inferior_que = null, 
+		$activo = null, 
 		$fecha_apertura_superior_que = null
 	)
 	{
@@ -2083,11 +2083,11 @@ require_once("interfaces/Sucursales.interface.php");
  	 **/
 	public static function AbrirCaja
 	(
-                $id_caja,
-		$billetes, 
+                $id_caja, 
 		$saldo, 
 		$client_token, 
 		$control_billetes, 
+		$billetes, 
 		$id_cajero = null
 	)
 	{
@@ -2197,25 +2197,25 @@ require_once("interfaces/Sucursales.interface.php");
  	 **/
 	public static function Nueva
 	(
-		$codigo_postal ,
-                $calle ,
-                $activo ,
-                $colonia ,
-                $razon_social ,
-                $numero_exterior ,
-                $rfc ,
-                $id_ciudad ,
-                $saldo_a_favor ,
-                $id_gerente = null,
-                $referencia = null,
-                $retenciones = null,
-                $numero_interior = null,
-                $telefono2 = null,
-                $telefono1 = null,
-                $margen_utilidad = null,
-                $descripcion = null,
-                $impuestos = null,
-                $descuento = null
+		$saldo_a_favor, 
+		$id_ciudad, 
+		$numero_exterior, 
+		$rfc, 
+		$razon_social, 
+		$colonia, 
+		$calle, 
+		$activo, 
+		$codigo_postal, 
+		$descuento = null, 
+		$margen_utilidad = null, 
+		$descripcion = null, 
+		$impuestos = null, 
+		$telefono1 = null, 
+		$telefono2 = null, 
+		$numero_interior = null, 
+		$retenciones = null, 
+		$referencia = null, 
+		$id_gerente = null
 	)
 	{
             Logger::log("Creando nueva sucursal");
@@ -2316,13 +2316,7 @@ require_once("interfaces/Sucursales.interface.php");
 	public static function Editar
 	(
 		$id_sucursal, 
-		$descuento = null, 
-		$margen_utilidad = null, 
-		$descripcion = null, 
-		$telefono1 = null, 
-		$telefono2 = null, 
-		$numero_exterior = null, 
-		$razon_social = null, 
+		$calle = null, 
 		$id_gerente = null, 
 		$municipio = null, 
 		$impuestos = null, 
@@ -2330,9 +2324,16 @@ require_once("interfaces/Sucursales.interface.php");
 		$saldo_a_favor = null, 
 		$numero_interior = null, 
 		$colonia = null, 
-		$calle = null, 
-		$coidgo_postal = null,
-                $retenciones = null
+		$numero_exterior = null, 
+		$razon_social = null, 
+		$telefono2 = null, 
+		$telefono1 = null, 
+		$empresas = null, 
+		$descripcion = null, 
+		$margen_utilidad = null, 
+		$descuento = null, 
+		$coidgo_postal = null, 
+		$retenciones = null
 	)
 	{
             Logger::log("Editando sucursal ".$id_sucursal);
@@ -2591,10 +2592,10 @@ require_once("interfaces/Sucursales.interface.php");
  	 **/
 	public static function CerrarCaja
 	(
-                $id_caja,
+                $id_caja, 
 		$saldo_real, 
-		$billetes = null,
-		$id_cajero = null
+		$id_cajero = null, 
+		$billetes = null
 	)
 	{
             Logger::log("Cerrando caja ".$id_caja);
@@ -3042,12 +3043,12 @@ Creo que este metodo tiene que estar bajo sucursal.
 	public static function CorteCaja
 	(
 		$saldo_final, 
-		$id_caja, 
 		$saldo_real, 
-		$billetes_encontrados = null,
-		$billetes_dejados = null,
+		$id_caja, 
 		$id_cajero = null, 
-		$id_cajero_nuevo = null
+		$id_cajero_nuevo = null, 
+		$billetes_dejados = null, 
+		$billetes_encontrados = null
 	)
 	{
             Logger::log("Realizando corte de caja");
@@ -3261,9 +3262,9 @@ Creo que este metodo tiene que estar bajo sucursal.
 	public static function EditarAlmacen
 	(
 		$id_almacen, 
-		$descripcion = null, 
-		$nombre = null,
-                $id_tipo_almacen = null
+		$id_tipo_almacen = null, 
+		$nombre = null, 
+		$descripcion = null
 	)
 	{
             Logger::log("Editando almacen");
@@ -3939,12 +3940,12 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 **/
 	public static function ListaTraspasoAlmacen
 	(
-		$cancelado = null, 
-		$completo = null, 
-		$id_almacen_envia = null,
-                $id_almacen_recibe = null,
+		$ordenar = null, 
 		$estado = null, 
-		$ordenar = null
+		$id_almacen_recibe = null, 
+		$id_almacen_envia = null, 
+		$completo = null, 
+		$cancelado = null
 	)
 	{  
             Logger::log("Listando traspaso de almacenes");

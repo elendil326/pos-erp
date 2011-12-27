@@ -538,14 +538,16 @@ require_once("interfaces/Ventas.interface.php");
             //Se utiliza el metodo de Sucursal controller, dejando que tome la caja y la sucursal como nulos
             try
             {
-            $venta = SucursalesController::VenderCaja($retencion,$id_comprador_venta,$subtotal,$impuesto,
-                    $total,$descuento,$tipo_venta,$saldo,$datos_cheque,$tipo_de_pago,null,null,
-                    null,$detalle_venta,$detalle_orden,$detalle_paquete);
+            $venta = SucursalesController::VenderCaja($impuesto,$descuento,$total,$tipo_venta,
+                    $subtotal,$retencion,$id_comprador_venta,$datos_cheque,$detalle_orden,$detalle_paquete,null,$tipo_de_pago,
+                    $saldo,$detalle_venta,null,null);
             }
             catch(Exception $e)
             {
                 Logger::error("No se pudo crear la nueva venta: ".$e);
-                throw new Exception("No se pudo crear la nueva venta");
+                if($e->getCode()==901)
+                    throw new Exception("No se pudo crear la nueva venta: ".$e->getMessage(),901);
+                throw new Exception("No se pudo crear la nueva venta",901);
             }
             
             Logger::log("Venta creada exitosamente");

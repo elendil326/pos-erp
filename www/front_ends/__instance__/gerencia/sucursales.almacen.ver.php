@@ -57,26 +57,15 @@
 		// Forma de producto
 		// 
 		$form = new DAOFormComponent( $este_almacen );
-		$form->setEditable(false);
-		//$form->setEditable(false);		
+		$form->setEditable(false);		
 		$form->hideField( array( 
 				"id_almacen",
 			 ));
                 
-                $form->createComboBoxJoin( "id_sucursal", "razon_social", SucursalDAO::search( new Sucursal( array( "activa" => 1 ) ) ), $este_almacen->getIdSucursal() );
-	$form->createComboBoxJoin( "id_empresa", "razon_social", EmpresaDAO::search( new Empresa( array( "activo" => 1 ) ) ), $este_almacen->getIdEmpresa() );
-        $form->createComboBoxJoin("id_tipo_almacen", "descripcion", array_diff(TipoAlmacenDAO::getAll(), TipoAlmacenDAO::search( new TipoAlmacen( array( "id_tipo_almacen" => 2 ) ) ) ), $este_almacen->getIdTipoAlmacen() );
+                $form->createComboBoxJoin( "id_sucursal", "razon_social", SucursalDAO::getAll(), $este_almacen->getIdSucursal() );
+                $form->createComboBoxJoin( "id_empresa", "razon_social", EmpresaDAO::search( new Empresa( array( "activo" => 1 ) ) ), $este_almacen->getIdEmpresa() );
+                $form->createComboBoxJoin("id_tipo_almacen", "descripcion", TipoAlmacenDAO::getAll(), $este_almacen->getIdTipoAlmacen() );
                 
-//		$form->makeObligatory(array( 
-//				"compra_en_mostrador",
-//				"costo_estandar",
-//				"nombre_producto",
-//				"id_empresas",
-//				"codigo_producto",
-//				"metodo_costeo",
-//				"activo"
-//			));
-//	    $form->createComboBoxJoin("id_unidad", "nombre", UnidadDAO::getAll(), $este_producto->getIdUnidad() );
 		$page->addComponent( $form );
 		
 		$page->render();
