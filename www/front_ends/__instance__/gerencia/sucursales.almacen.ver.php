@@ -30,7 +30,7 @@
                     $menu = new MenuComponent();
                     $menu->addItem("Editar este almacen", "sucursales.editar.almacen.php?aid=".$_GET["aid"]);
                     //$menu->addItem("Desactivar este producto", null);
-
+                    
                     $btn_eliminar = new MenuItem("Desactivar este almacen", null);
                     $btn_eliminar->addApiCall("api/sucursal/almacen/eliminar", "GET");
                     $btn_eliminar->onApiCallSuccessRedirect("sucursales.lista.almacen.php");
