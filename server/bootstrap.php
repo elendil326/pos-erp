@@ -258,7 +258,7 @@
 	$params = array( $_GET["_instance_"] );
 
 	$rs = $POS_CONFIG["CORE_CONN"]->GetRow($sql, $params);
-		
+
 	if(count($rs) === 0)
 	{
 		Logger::warn("La instancia para el token {". $_GET["_instance_"] ."} no exite !");

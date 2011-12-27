@@ -48,14 +48,58 @@ Si el usuario que esta intentando iniciar sesion, esta descativado... 403 Author
 	{  
 
 		//user is not logged in, look for him
-		$user = UsuarioDAO::findUser( $user, $pass );
+		$user = UsuarioDAO::findUser( $usuario, $password );
 
-		if( $user === NULL ) throw new Exception("Credenciales invalidas");
+		if( $user === NULL ) {
+			Logger::warn("Credenciales invalidas para usuario {$user}");
+			throw new Exception("Credenciales invalidas");	
+		}
 
-		//ok user is ok, log him in
-		self::login( $user->getIdUsuario(), $pass, $user->getIdRol() );
+		//ok user is ok, buscar su usuario en los tokens actuales
+		$sesiones_actuales  = SesionDAO::search( new Sesion( array( "id_usuario" => $user->getIdUsuario() ) ) );
+		if(sizeof($sesiones_actuales) > 0){
+			Logger::warn("Este usuario ya tiene sesiones actuales");
+			foreach($sesiones_actuales	as $s ){
+				try{
+					SesionDAO::delete( $s );
+				}catch(Exception $e){
+					throw $e;
+				}
+			}
+		}
+		
+		
+		//si tiene un token actualmente que es valido, regenerar el token actualizar la fecha y darle el nuevo token
+		$nueva_sesion = new Sesion();
+		$nueva_sesion->setIdUsuario( $user->getIdUsuario() );
+		$nueva_sesion->setAuthToken( self::GenerarAuthToken() );
+		$nueva_sesion->setFechaDeVencimiento( date( "Y-m-d H:i:s", time() + 3600 ) );
+
+		
+		try{
+			SesionDAO::save( $nueva_sesion );
+			
+		}catch(Exception $e){
+			Logger::error( "Imposible escribir la sesion en la bd " );
+			Logger::error( $e );
+			throw new Exception("Imposible iniciar la sesion");
+		}
+		
+		return array( "auth_token" => $nueva_sesion->getAuthToken() );
 	}
   
+
+	private static function GenerarAuthToken
+	(
+		$salt = null,
+		$vencimiento = null
+	){
+		return md5( rand(  ) );
+	}
+
+
+
+
 	/**
  	 *
  	 *Obtener las sesiones activas.
@@ -82,9 +126,12 @@ Si el usuario que esta intentando iniciar sesion, esta descativado... 403 Author
 	  **/
 	public static function testLogin($user, $pass)
 	{
-		Logger::log("Probando usuario y contrasena");
+		Logger::log("testLogin( {$user} )");
 
-		if( self::isLoggedIn() ) return UsuarioDAO::getByPK( $_SESSION['USER_ID'] );
+		if( self::isLoggedIn() ) {
+			Logger::log( "Ya hay una sesion activa" );
+			return UsuarioDAO::getByPK( $_SESSION['USER_ID'] );	
+		}
 
 		//user is not logged in, look for him
 		$user = UsuarioDAO::findUser( $user, $pass );

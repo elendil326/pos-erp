@@ -18,11 +18,11 @@ class LoginComponent implements GuiComponent
 
 
 
-
 	public function submitTo( $submit_to )
 	{
 		$this->next_hop = $submit_to;
 	}
+
 
 
 	function renderCmp()
