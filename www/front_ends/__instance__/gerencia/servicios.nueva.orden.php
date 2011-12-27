@@ -23,7 +23,8 @@
 			"fecha_orden",
 			"activa",
 			"cancelada",
-			"motivo_cancelacion"
+			"motivo_cancelacion",
+                        "precio"
     	));
 
 
