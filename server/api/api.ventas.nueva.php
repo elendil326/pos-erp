@@ -17,19 +17,20 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"id_comprador_venta" => new ApiExposedProperty("id_comprador_venta", true, GET, array( "int" )),
-			"subtotal" => new ApiExposedProperty("subtotal", true, GET, array( "float" )),
-			"impuesto" => new ApiExposedProperty("impuesto", true, GET, array( "float" )),
-			"tipo_venta" => new ApiExposedProperty("tipo_venta", true, GET, array( "string" )),
 			"descuento" => new ApiExposedProperty("descuento", true, GET, array( "float" )),
 			"total" => new ApiExposedProperty("total", true, GET, array( "float" )),
 			"retencion" => new ApiExposedProperty("retencion", true, GET, array( "float" )),
-			"tipo_de_pago" => new ApiExposedProperty("tipo_de_pago", false, GET, array( "string" )),
-			"saldo" => new ApiExposedProperty("saldo", false, GET, array( "float" )),
-			"datos_cheque" => new ApiExposedProperty("datos_cheque", false, GET, array( "json" )),
-			"detalle_venta" => new ApiExposedProperty("detalle_venta", false, GET, array( "json" )),
+			"impuesto" => new ApiExposedProperty("impuesto", true, GET, array( "float" )),
+			"tipo_venta" => new ApiExposedProperty("tipo_venta", true, GET, array( "string" )),
+			"subtotal" => new ApiExposedProperty("subtotal", true, GET, array( "float" )),
+			"id_comprador_venta" => new ApiExposedProperty("id_comprador_venta", true, GET, array( "int" )),
+			"id_sucursal" => new ApiExposedProperty("id_sucursal", true, GET, array( "int" )),
 			"detalle_orden" => new ApiExposedProperty("detalle_orden", false, GET, array( "json" )),
 			"detalle_paquete" => new ApiExposedProperty("detalle_paquete", false, GET, array( "json" )),
+			"detalle_venta" => new ApiExposedProperty("detalle_venta", false, GET, array( "json" )),
+			"datos_cheque" => new ApiExposedProperty("datos_cheque", false, GET, array( "json" )),
+			"tipo_de_pago" => new ApiExposedProperty("tipo_de_pago", false, GET, array( "string" )),
+			"saldo" => new ApiExposedProperty("saldo", false, GET, array( "float" )),
 		);
 	}
 
@@ -38,19 +39,20 @@
  		$this->response = VentasController::Nueva( 
  			
 			
-			isset($_GET['id_comprador_venta'] ) ? $_GET['id_comprador_venta'] : null,
-			isset($_GET['subtotal'] ) ? $_GET['subtotal'] : null,
-			isset($_GET['impuesto'] ) ? $_GET['impuesto'] : null,
-			isset($_GET['tipo_venta'] ) ? $_GET['tipo_venta'] : null,
 			isset($_GET['descuento'] ) ? $_GET['descuento'] : null,
 			isset($_GET['total'] ) ? $_GET['total'] : null,
 			isset($_GET['retencion'] ) ? $_GET['retencion'] : null,
-			isset($_GET['tipo_de_pago'] ) ? $_GET['tipo_de_pago'] : null,
-			isset($_GET['saldo'] ) ? $_GET['saldo'] : null,
-			isset($_GET['datos_cheque'] ) ? $_GET['datos_cheque'] : null,
-			isset($_GET['detalle_venta'] ) ? $_GET['detalle_venta'] : null,
+			isset($_GET['impuesto'] ) ? $_GET['impuesto'] : null,
+			isset($_GET['tipo_venta'] ) ? $_GET['tipo_venta'] : null,
+			isset($_GET['subtotal'] ) ? $_GET['subtotal'] : null,
+			isset($_GET['id_comprador_venta'] ) ? $_GET['id_comprador_venta'] : null,
+			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null,
 			isset($_GET['detalle_orden'] ) ? $_GET['detalle_orden'] : null,
-			isset($_GET['detalle_paquete'] ) ? $_GET['detalle_paquete'] : null
+			isset($_GET['detalle_paquete'] ) ? $_GET['detalle_paquete'] : null,
+			isset($_GET['detalle_venta'] ) ? $_GET['detalle_venta'] : null,
+			isset($_GET['datos_cheque'] ) ? $_GET['datos_cheque'] : null,
+			isset($_GET['tipo_de_pago'] ) ? $_GET['tipo_de_pago'] : null,
+			isset($_GET['saldo'] ) ? $_GET['saldo'] : null
 			
 			);
 		}catch(Exception $e){

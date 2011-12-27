@@ -87,36 +87,38 @@
  	 *
  	 *Genera una venta fuera de caja, puede usarse para que el administrador venda directamente a clientes especiales. EL usuario y la sucursal seran tomados de la sesion. La fecha se tomara del servidor. La empresa sera tomada del alamacen del que fueron tomados los productos
  	 *
- 	 * @param id_comprador_venta int Id del usuario al que se le vende, si es a una sucursal, el id se pasa negativo
- 	 * @param subtotal float Subtotal de la venta antes de ser afectada por impuestos, descuentos y retenciones
- 	 * @param impuesto float Monto aportado por impuestos
- 	 * @param tipo_venta string Si esta es una venta a  credito o de contado
  	 * @param descuento float Monto descontado por descuentos
  	 * @param total float Total de la venta
  	 * @param retencion float Monto aportado por retenciones
- 	 * @param tipo_de_pago string Si la venta es pagada con tarjeta, con efectivo o con cheque
- 	 * @param saldo float Saldo que ha sido aportado a la venta
- 	 * @param datos_cheque json Si el tipo de pago fue en cheque, se pasan el nombre del banco, el monto y los ultimos 4 numeros de cada cheque que se uso para pagar la venta
- 	 * @param detalle_venta json Objeto que contendra los ids y las cantidades de los productos que se vendieron con el id almacen de donde fueron seleccionados  para determinar a que empresa pertenecen
+ 	 * @param impuesto float Monto aportado por impuestos
+ 	 * @param tipo_venta string Si esta es una venta a  credito o de contado
+ 	 * @param subtotal float Subtotal de la venta antes de ser afectada por impuestos, descuentos y retenciones
+ 	 * @param id_comprador_venta int Id del usuario al que se le vende, si es a una sucursal, el id se pasa negativo
+ 	 * @param id_sucursal int Id de la sucursal de la cual se tomaran los productos
  	 * @param detalle_orden json Objetos que contendran los ids y las cantidades de las ordenes que se venden
  	 * @param detalle_paquete json Arreglo de ids de los paquetes con sus cantidades que se venden
+ 	 * @param detalle_venta json Objeto que contendra los ids y las cantidades de los productos que se vendieron con el id almacen de donde fueron seleccionados  para determinar a que empresa pertenecen
+ 	 * @param datos_cheque json Si el tipo de pago fue en cheque, se pasan el nombre del banco, el monto y los ultimos 4 numeros de cada cheque que se uso para pagar la venta
+ 	 * @param tipo_de_pago string Si la venta es pagada con tarjeta, con efectivo o con cheque
+ 	 * @param saldo float Saldo que ha sido aportado a la venta
  	 * @return id_venta int Id autogenerado de la nueva venta
  	 **/
   static function Nueva
 	(
-		$id_comprador_venta, 
-		$subtotal, 
-		$impuesto, 
-		$tipo_venta, 
 		$descuento, 
 		$total, 
 		$retencion, 
-		$tipo_de_pago = null, 
-		$saldo = 0, 
-		$datos_cheque = null, 
-		$detalle_venta = null, 
+		$impuesto, 
+		$tipo_venta, 
+		$subtotal, 
+		$id_comprador_venta, 
+		$id_sucursal, 
 		$detalle_orden = null, 
-		$detalle_paquete = null
+		$detalle_paquete = null, 
+		$detalle_venta = null, 
+		$datos_cheque = null, 
+		$tipo_de_pago = null, 
+		$saldo = 0
 	);  
   
   

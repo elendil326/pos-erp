@@ -427,42 +427,46 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *
  	 *Vender productos desde el mostrador de una sucursal. Cualquier producto vendido aqui sera descontado del inventario de esta sucursal. La fecha ser? tomada del servidor, el usuario y la sucursal ser?n tomados del servidor. La ip ser? tomada de la m?quina que manda a llamar al m?todo. El valor del campo liquidada depender? de los campos total y pagado. La empresa se tomara del alamcen de donde salieron los productos
  	 *
- 	 * @param impuesto float Cantidad sumada por impuestos
- 	 * @param descuento float La cantidad que ser descontada a la compra
- 	 * @param total float El total de la venta
- 	 * @param tipo_venta string Si la venta es a credito o a contado
  	 * @param subtotal float El total de la venta antes de cargarle impuestos
+ 	 * @param tipo_venta string Si la venta es a credito o a contado
+ 	 * @param total float El total de la venta
+ 	 * @param descuento float La cantidad que ser descontada a la compra
+ 	 * @param impuesto float Cantidad sumada por impuestos
  	 * @param retencion float Cantidad sumada por retenciones
  	 * @param id_comprador int Id del cliente al que se le vende.
- 	 * @param cheques json Si el tipo de pago es con cheque, se almacena el nombre del banco, el monto y los ultimos 4 numeros del o de los cheques
- 	 * @param detalle_orden json Objeto que contendr los id de los servicios, sus cantidades, su precio y su descuento.
- 	 * @param detalle_paquete json Objeto que contendr los id de los paquetes, sus cantidades, su precio y su descuento.
- 	 * @param billetes_pago json Ids de los billetes que se recibieron 
- 	 * @param tipo_pago string Si el pago ser efectivo, cheque o tarjeta.
- 	 * @param saldo float La cantidad que ha sido abonada hasta el momento de la venta
- 	 * @param detalle_producto json Objeto que contendr los id de los productos, sus cantidades, su precio y su descuento.
  	 * @param billetes_cambio json Ids de billetes que se entregaron como cambio
+ 	 * @param detalle_producto json Objeto que contendr los id de los productos, sus cantidades, su precio y su descuento.
+ 	 * @param saldo float La cantidad que ha sido abonada hasta el momento de la venta
+ 	 * @param tipo_pago string Si el pago ser efectivo, cheque o tarjeta.
+ 	 * @param billetes_pago json Ids de los billetes que se recibieron 
+ 	 * @param detalle_paquete json Objeto que contendr los id de los paquetes, sus cantidades, su precio y su descuento.
+ 	 * @param detalle_orden json Objeto que contendr los id de los servicios, sus cantidades, su precio y su descuento.
+ 	 * @param cheques json Si el tipo de pago es con cheque, se almacena el nombre del banco, el monto y los ultimos 4 numeros del o de los cheques
  	 * @param id_venta_caja int Id de la venta de esta caja, utilizado cuando se va el internet
+ 	 * @param id_sucursal int Id de la sucursal de donde saldran los productos en caso de que se venda desde otra sucursal
+ 	 * @param id_caja int Id de la caja desde la que se vende, en caso de que se venda desde otra caja
  	 * @return id_venta int Id autogenerado de la inserción de la venta.
  	 **/
   static function VenderCaja
 	(
-		$impuesto, 
-		$descuento, 
-		$total, 
-		$tipo_venta, 
 		$subtotal, 
+		$tipo_venta, 
+		$total, 
+		$descuento, 
+		$impuesto, 
 		$retencion, 
 		$id_comprador, 
-		$cheques = null, 
-		$detalle_orden = null, 
-		$detalle_paquete = null, 
-		$billetes_pago = null, 
-		$tipo_pago = null, 
-		$saldo = 0, 
-		$detalle_producto = null, 
 		$billetes_cambio = null, 
-		$id_venta_caja = null
+		$detalle_producto = null, 
+		$saldo = 0, 
+		$tipo_pago = null, 
+		$billetes_pago = null, 
+		$detalle_paquete = null, 
+		$detalle_orden = null, 
+		$cheques = null, 
+		$id_venta_caja = null, 
+		$id_sucursal = null, 
+		$id_caja = null
 	);  
   
   

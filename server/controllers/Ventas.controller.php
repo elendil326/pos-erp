@@ -518,19 +518,20 @@ require_once("interfaces/Ventas.interface.php");
  	 **/
 	public static function Nueva
 	(
-		$id_comprador_venta, 
-		$subtotal, 
-		$impuesto, 
-		$tipo_venta, 
 		$descuento, 
 		$total, 
 		$retencion, 
-		$tipo_de_pago = null, 
-		$saldo = 0, 
-		$datos_cheque = null, 
-		$detalle_venta = null, 
+		$impuesto, 
+		$tipo_venta, 
+		$subtotal, 
+		$id_comprador_venta, 
+		$id_sucursal, 
 		$detalle_orden = null, 
-		$detalle_paquete = null
+		$detalle_paquete = null, 
+		$detalle_venta = null, 
+		$datos_cheque = null, 
+		$tipo_de_pago = null, 
+		$saldo = 0
 	)
 	{  
             Logger::log("Creando nueva venta fuera de caja");
@@ -538,9 +539,9 @@ require_once("interfaces/Ventas.interface.php");
             //Se utiliza el metodo de Sucursal controller, dejando que tome la caja y la sucursal como nulos
             try
             {
-            $venta = SucursalesController::VenderCaja($impuesto,$descuento,$total,$tipo_venta,
-                    $subtotal,$retencion,$id_comprador_venta,$datos_cheque,$detalle_orden,$detalle_paquete,null,$tipo_de_pago,
-                    $saldo,$detalle_venta,null,null);
+            $venta = SucursalesController::VenderCaja($subtotal,$tipo_venta,$total,$descuento,
+                    $impuesto,$retencion,$id_comprador_venta,null,$detalle_venta,$saldo,$tipo_de_pago,null,
+                    $detalle_paquete,$detalle_orden,$datos_cheque,null,$id_sucursal);
             }
             catch(Exception $e)
             {

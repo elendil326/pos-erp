@@ -1165,22 +1165,24 @@ require_once("interfaces/Sucursales.interface.php");
  	 **/
 	public static function VenderCaja
 	( 
-		$impuesto, 
-		$descuento, 
-		$total, 
-		$tipo_venta, 
 		$subtotal, 
+		$tipo_venta, 
+		$total, 
+		$descuento, 
+		$impuesto, 
 		$retencion, 
 		$id_comprador, 
-		$cheques = null, 
-		$detalle_orden = null, 
-		$detalle_paquete = null, 
-		$billetes_pago = null, 
-		$tipo_pago = null, 
-		$saldo = 0, 
-		$detalle_producto = null, 
 		$billetes_cambio = null, 
-		$id_venta_caja = null
+		$detalle_producto = null, 
+		$saldo = 0, 
+		$tipo_pago = null, 
+		$billetes_pago = null, 
+		$detalle_paquete = null, 
+		$detalle_orden = null, 
+		$cheques = null, 
+		$id_venta_caja = null, 
+		$id_sucursal = null, 
+		$id_caja = null
 	)
 	{
             Logger::log("Realizando la venta");
@@ -1204,6 +1206,49 @@ require_once("interfaces/Sucursales.interface.php");
             //Se busca al usuario comprador
             $usuario=UsuarioDAO::getByPK($id_comprador);
             
+            //Si no se recibe una sucursal, se toma la de la sesion
+            if(is_null($id_sucursal))
+            {
+                $sucursal = SucursalDAO::getByPK($id_sucursal); 
+                if(is_null( $sucursal
+                        ))
+                {
+                    Logger::error("La sucursal ".$id_sucursal." no existe");
+                    throw new Exception("La sucursal no existe",901);
+                }
+                
+                if(!$sucursal->getActiva())
+                {
+                    Logger::error("La sucursal ".$id_sucursal." esta desactivada");
+                    throw new Exception("La sucursal esta desactivada",901);
+                }
+                
+                //Si la venta que se realiza es de otra sucursal, o no se tiene que recibir una caja, o la caja que se reciba
+                //tiene que ser parte de la sucursal
+                if(!is_null($id_caja))
+                {
+                    $caja = CajaDAO::getByPK($id_caja);
+                    if(is_null($caja))
+                    {
+                        Logger::error("La caja ".$id_caja." no existe");
+                        throw new Exception("La caja no existe",901);
+                    }
+                    
+                    if($caja->getIdSucursal()!=$id_sucursal)
+                    {
+                        Logger::error("La caja (".$id_caja.") recibida para realizar la venta no pertenece a la sucursal (".$id_sucursal.")  elegida ");
+                        throw new Exception("La caja recibida para realizar la venta no pertenece a la sucursal elegida ",901);
+                    }
+                }
+                $id_sucursal = self::getSucursal();
+            }
+            
+            //Si no se recibe otra caja, se toma la de la sesion
+            if(is_null($id_caja))
+            {
+                $id_caja = self::getCaja();
+            }
+            
             //Se inicializa la venta con los parametros obtenidos
             $venta=new Venta();
             $venta->setRetencion($retencion);
@@ -1213,8 +1258,8 @@ require_once("interfaces/Sucursales.interface.php");
             $venta->setTotal($total);
             $venta->setDescuento($descuento);
             $venta->setTipoDeVenta($tipo_venta);
-            $venta->setIdCaja(self::getCaja());
-            $venta->setIdSucursal(self::getSucursal());
+            $venta->setIdCaja($id_caja);
+            $venta->setIdSucursal($id_sucursal);
             $venta->setIdUsuario($id_usuario);
             $venta->setIdVentaCaja($id_venta_caja);
             $venta->setCancelada(0);
@@ -1395,8 +1440,8 @@ require_once("interfaces/Sucursales.interface.php");
                 DAO::transRollback();
                 Logger::error("No se pudo realizar la venta: ".$e);
                 if($e->getCode()==901)
-                    throw new Exception("No se pudo realizar la venta: ".$e->getMessage());
-                throw new Exception("No se pudo realizar la venta");
+                    throw new Exception("No se pudo realizar la venta: ".$e->getMessage(),901);
+                throw new Exception("No se pudo realizar la venta",901);
             }
             DAO::transEnd();
             Logger::log("venta realizada exitosamente");
