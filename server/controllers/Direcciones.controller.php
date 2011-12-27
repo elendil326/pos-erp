@@ -131,13 +131,17 @@ class DireccionController{
         )
         {
             Logger::log("Creando nueva direccion");
-            $validar=self::validarParametrosDireccion(null, $calle, $numero_exterior, $numero_interior, $referencia,
+
+            $validar = self::validarParametrosDireccion(null, $calle, $numero_exterior, $numero_interior, $referencia,
                     $colonia, $id_ciudad, $codigo_postal, $telefono, $telefono2);
+
             if(is_string($validar))
             {
                 throw new Exception($validar);
             }
+
             $direccion = new Direccion();
+
             $id_usuario=  SesionController::getCurrentUser();
 
             if($id_usuario==null)

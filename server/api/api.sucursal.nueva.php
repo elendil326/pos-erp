@@ -1,6 +1,6 @@
 <?php
 /**
-  * GET api/sucursal/nueva
+  * POST api/sucursal/nueva
   * Crea una nueva sucursal
   *
   * Metodo que crea una nueva sucursal
@@ -17,25 +17,25 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"saldo_a_favor" => new ApiExposedProperty("saldo_a_favor", true, GET, array( "float" )),
-			"id_ciudad" => new ApiExposedProperty("id_ciudad", true, GET, array( "int" )),
-			"numero_exterior" => new ApiExposedProperty("numero_exterior", true, GET, array( "string" )),
-			"rfc" => new ApiExposedProperty("rfc", true, GET, array( "string" )),
-			"razon_social" => new ApiExposedProperty("razon_social", true, GET, array( "string" )),
-			"colonia" => new ApiExposedProperty("colonia", true, GET, array( "string" )),
-			"calle" => new ApiExposedProperty("calle", true, GET, array( "string" )),
-			"activo" => new ApiExposedProperty("activo", true, GET, array( "bool" )),
-			"codigo_postal" => new ApiExposedProperty("codigo_postal", true, GET, array( "string" )),
-			"descuento" => new ApiExposedProperty("descuento", false, GET, array( "float" )),
-			"margen_utilidad" => new ApiExposedProperty("margen_utilidad", false, GET, array( "float" )),
-			"descripcion" => new ApiExposedProperty("descripcion", false, GET, array( "string" )),
-			"impuestos" => new ApiExposedProperty("impuestos", false, GET, array( "json" )),
-			"telefono1" => new ApiExposedProperty("telefono1", false, GET, array( "string" )),
-			"telefono2" => new ApiExposedProperty("telefono2", false, GET, array( "string" )),
-			"numero_interior" => new ApiExposedProperty("numero_interior", false, GET, array( "string" )),
-			"retenciones" => new ApiExposedProperty("retenciones", false, GET, array( "json" )),
-			"referencia" => new ApiExposedProperty("referencia", false, GET, array( "string" )),
-			"id_gerente" => new ApiExposedProperty("id_gerente", false, GET, array( "int" )),
+			"saldo_a_favor" => new ApiExposedProperty("saldo_a_favor", true, POST, array( "float" )),
+			"id_ciudad" => new ApiExposedProperty("id_ciudad", true, POST, array( "int" )),
+			"numero_exterior" => new ApiExposedProperty("numero_exterior", true, POST, array( "string" )),
+			"rfc" => new ApiExposedProperty("rfc", true, POST, array( "string" )),
+			"razon_social" => new ApiExposedProperty("razon_social", true, POST, array( "string" )),
+			"colonia" => new ApiExposedProperty("colonia", true, POST, array( "string" )),
+			"calle" => new ApiExposedProperty("calle", true, POST, array( "string" )),
+			"activo" => new ApiExposedProperty("activo", true, POST, array( "bool" )),
+			"codigo_postal" => new ApiExposedProperty("codigo_postal", true, POST, array( "string" )),
+			"descuento" => new ApiExposedProperty("descuento", false, POST, array( "float" )),
+			"margen_utilidad" => new ApiExposedProperty("margen_utilidad", false, POST, array( "float" )),
+			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "string" )),
+			"impuestos" => new ApiExposedProperty("impuestos", false, POST, array( "json" )),
+			"telefono1" => new ApiExposedProperty("telefono1", false, POST, array( "string" )),
+			"telefono2" => new ApiExposedProperty("telefono2", false, POST, array( "string" )),
+			"numero_interior" => new ApiExposedProperty("numero_interior", false, POST, array( "string" )),
+			"retenciones" => new ApiExposedProperty("retenciones", false, POST, array( "json" )),
+			"referencia" => new ApiExposedProperty("referencia", false, POST, array( "string" )),
+			"id_gerente" => new ApiExposedProperty("id_gerente", false, POST, array( "int" )),
 		);
 	}
 
@@ -44,25 +44,25 @@
  		$this->response = SucursalesController::Nueva( 
  			
 			
-			isset($_GET['saldo_a_favor'] ) ? $_GET['saldo_a_favor'] : null,
-			isset($_GET['id_ciudad'] ) ? $_GET['id_ciudad'] : null,
-			isset($_GET['numero_exterior'] ) ? $_GET['numero_exterior'] : null,
-			isset($_GET['rfc'] ) ? $_GET['rfc'] : null,
-			isset($_GET['razon_social'] ) ? $_GET['razon_social'] : null,
-			isset($_GET['colonia'] ) ? $_GET['colonia'] : null,
-			isset($_GET['calle'] ) ? $_GET['calle'] : null,
-			isset($_GET['activo'] ) ? $_GET['activo'] : null,
-			isset($_GET['codigo_postal'] ) ? $_GET['codigo_postal'] : null,
-			isset($_GET['descuento'] ) ? $_GET['descuento'] : null,
-			isset($_GET['margen_utilidad'] ) ? $_GET['margen_utilidad'] : null,
-			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
-			isset($_GET['impuestos'] ) ? $_GET['impuestos'] : null,
-			isset($_GET['telefono1'] ) ? $_GET['telefono1'] : null,
-			isset($_GET['telefono2'] ) ? $_GET['telefono2'] : null,
-			isset($_GET['numero_interior'] ) ? $_GET['numero_interior'] : null,
-			isset($_GET['retenciones'] ) ? $_GET['retenciones'] : null,
-			isset($_GET['referencia'] ) ? $_GET['referencia'] : null,
-			isset($_GET['id_gerente'] ) ? $_GET['id_gerente'] : null
+			isset($_POST['saldo_a_favor'] ) ? $_POST['saldo_a_favor'] : null,
+			isset($_POST['id_ciudad'] ) ? $_POST['id_ciudad'] : null,
+			isset($_POST['numero_exterior'] ) ? $_POST['numero_exterior'] : null,
+			isset($_POST['rfc'] ) ? $_POST['rfc'] : null,
+			isset($_POST['razon_social'] ) ? $_POST['razon_social'] : null,
+			isset($_POST['colonia'] ) ? $_POST['colonia'] : null,
+			isset($_POST['calle'] ) ? $_POST['calle'] : null,
+			isset($_POST['activo'] ) ? $_POST['activo'] : null,
+			isset($_POST['codigo_postal'] ) ? $_POST['codigo_postal'] : null,
+			isset($_POST['descuento'] ) ? $_POST['descuento'] : null,
+			isset($_POST['margen_utilidad'] ) ? $_POST['margen_utilidad'] : null,
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] : null,
+			isset($_POST['impuestos'] ) ? $_POST['impuestos'] : null,
+			isset($_POST['telefono1'] ) ? $_POST['telefono1'] : null,
+			isset($_POST['telefono2'] ) ? $_POST['telefono2'] : null,
+			isset($_POST['numero_interior'] ) ? $_POST['numero_interior'] : null,
+			isset($_POST['retenciones'] ) ? $_POST['retenciones'] : null,
+			isset($_POST['referencia'] ) ? $_POST['referencia'] : null,
+			isset($_POST['id_gerente'] ) ? $_POST['id_gerente'] : null
 			
 			);
 		}catch(Exception $e){
