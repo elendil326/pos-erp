@@ -18,6 +18,7 @@
 	{
 		$this->request = array(	
 			"id_caja" => new ApiExposedProperty("id_caja", true, GET, array( "int" )),
+			"control_billetes" => new ApiExposedProperty("control_billetes", false, GET, array( "bool" )),
 			"descripcion" => new ApiExposedProperty("descripcion", false, GET, array( "string" )),
 			"token" => new ApiExposedProperty("token", false, GET, array( "string" )),
 		);
@@ -29,6 +30,7 @@
  			
 			
 			isset($_GET['id_caja'] ) ? $_GET['id_caja'] : null,
+			isset($_GET['control_billetes'] ) ? $_GET['control_billetes'] : null,
 			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
 			isset($_GET['token'] ) ? $_GET['token'] : null
 			

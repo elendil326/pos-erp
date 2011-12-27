@@ -715,20 +715,8 @@ class GerenciaComponentPage extends StdComponentPage{
                         "url"   : "sucursales.programar.traspaso.almacen.php"
                 },
                 {
-                        "title" : "Abrir caja",
-                        "url"   : "sucursales.abrir.caja.php"
-                },
-                {
-                        "title" : "Cerrar caja",
-                        "url"   : "sucursales.cerrar.caja.php"
-                },
-                {
-                        "title" : "Comprar caja",
+                        "title" : "Comprar desde caja",
                         "url"   : "sucursales.comprar.caja.php"
-                },
-                {
-                        "title" : "Corte caja",
-                        "url"   : "sucursales.corte.caja.php"
                 },
                 {
                         "title" : "Lista caja",
@@ -739,7 +727,7 @@ class GerenciaComponentPage extends StdComponentPage{
                         "url"   : "sucursales.nueva.caja.php"
                 },
                 {
-                        "title" : "Vender caja",
+                        "title" : "Vender desde caja",
                         "url"   : "sucursales.vender.caja.php"
                 },
                 {

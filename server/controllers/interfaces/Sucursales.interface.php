@@ -360,12 +360,14 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *Edita la informacion de una caja
  	 *
  	 * @param id_caja int Id de la caja a editar
+ 	 * @param control_billetes bool Si la caja llevara control de los billetes que tiene o no
  	 * @param descripcion string Descripcion de la caja
  	 * @param token string Token generado por el pos client
  	 **/
   static function EditarCaja
 	(
 		$id_caja, 
+		$control_billetes = null, 
 		$descripcion = null, 
 		$token = null
 	);  
@@ -410,15 +412,17 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *
  	 * @param token string el token que pos_client otorga por equipo
  	 * @param basculas json Un objeto con las basculas conectadas a esta caja.
+ 	 * @param control_billetes bool Si la caja llevara el control de los billetes que hay en ella
  	 * @param descripcion string Descripcion de esta caja
  	 * @param id_sucursal int Id de la sucursal a la que pertenecera esta caja. Si no es obtenido se tomara la de la sesion
  	 * @param impresoras json Un objeto con las impresoras asociadas a esta sucursal.
- 	 * @return id_caja int Id de la caja generada por la isnercion
+ 	 * @return id_caja int Id de la caja generada por la insercion
  	 **/
   static function NuevaCaja
 	(
 		$token, 
 		$basculas = null, 
+		$control_billetes = 0, 
 		$descripcion = null, 
 		$id_sucursal = null, 
 		$impresoras = null

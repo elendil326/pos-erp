@@ -27,28 +27,20 @@
                                 "id_sucursal",
                                 "abierta",
                                 "saldo",
-                                "control_billetes",
                                 "activa"
 			 ));
+                $form->sendHidden("id_caja");
                 
                 $form->addApiCall( "api/sucursal/caja/editar/", "GET" );
+                $form->onApiCallSuccessRedirect("sucursales.lista.caja.php");
                 
-//                $form->addField("id_producto", "Productos", "text","","productos");
-//                $form->createListBoxJoin("id_producto", "nombre_producto", ProductoDAO::search( new Producto( array( "activo" => 1 ) ) ));
-//
-//                $form->renameField( array( "id_producto" => "productos" ) );
-                
-                //$form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll(), $esta_direccion->getIdCiudad() );
-                
-//                $form->createComboBoxJoin( "id_rol", "nombre", RolDAO::getAll(), $este_usuario->getIdRol() );
-//
-//                $form->createComboBoxJoin( "id_moneda", "nombre", MonedaDAO::search( new Moneda( array( "activa" => 1 ) ) ),$este_usuario->getIdMoneda() );
-//
-//                $form->createComboBoxJoin( "id_clasificacion_cliente", "nombre", ClasificacionClienteDAO::getAll(), $este_usuario->getIdClasificacionCliente() );
-//
-//                $form->createComboBoxJoin( "id_clasificacion_proveedor", "nombre", ClasificacionProveedorDAO::search( new ClasificacionProveedor( array( "activa" => 1 ) ) ), $este_usuario->getIdClasificacionProveedor() );
-            
-                //$form->createComboBoxJoin("id_tipo_almacen", "descripcion", array_diff(TipoAlmacenDAO::getAll(), TipoAlmacenDAO::search( new TipoAlmacen( array( "id_tipo_almacen" => 2 ) ) ) ), $este_almacen->getIdTipoAlmacen() );
+                $form->createComboBoxJoin("control_billetes", "control_billetes", 
+                        array(
+                            array( "id" => 1, "caption" => "Llevar control" ),
+                            array( "id" => 0, "caption" => "No llevar control"  ) 
+                            ),
+                        $esta_caja->getControlBilletes()
+                        );
                 
 		$page->addComponent( $form );
                 

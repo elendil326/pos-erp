@@ -18,21 +18,23 @@
 			"id_caja",
                         "abierta",
                         "saldo",
-                        "control_billetes",
                         "activa"
 		 ));
 
-//
-//	$form->renameField( array( 
-//			"nombre" 			=> "razon_social",
-//			"codigo_usuario"	=> "codigo_cliente"
-//		));
 	
 	$form->addApiCall( "api/sucursal/caja/nueva/" );
+        $form->onApiCallSuccessRedirect("sucursales.lista.caja.php");
 	
 	$form->makeObligatory(array( 
 			"token"
 		));
+        
+        $form->createComboBoxJoin("control_billetes", "control_billetes", 
+                        array(
+                            array( "id" => 1, "caption" => "Llevar control" ),
+                            array( "id" => 0, "caption" => "No llevar control"  ) 
+                            )
+                        );
 	
 	$form->createComboBoxJoin( "id_sucursal", "razon_social", SucursalDAO::search( new Sucursal( array( "activa" => 1 ) ) ) );
 	

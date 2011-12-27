@@ -285,8 +285,14 @@ require_once("interfaces/Sucursales.interface.php");
                     return $e;
                 if(preg_match('/[^a-zA-Z0-9]/' ,$token))
                             return "El token (".$token.") contiene caracteres que no son alfanumericos";
-                
-                $cajas = CajaDAO::search( new Caja( array("token" => $token) ) );
+                if(!is_null($id_caja))
+                {
+                    $cajas = array_diff(CajaDAO::search( new Caja( array("token" => $token) ) ), array(CajaDAO::getByPK($id_caja)));
+                }
+                else
+                {
+                    $cajas = CajaDAO::search( new Caja( array("token" => $token) ) );
+                }
                 foreach($cajas as $caja)
                 {
                     if($caja->getActiva())
@@ -2912,6 +2918,7 @@ Creo que este metodo tiene que estar bajo sucursal.
 	(
 		$token, 
 		$basculas = null, 
+		$control_billetes = 0, 
 		$descripcion = null, 
 		$id_sucursal = null, 
 		$impresoras = null
@@ -2937,12 +2944,18 @@ Creo que este metodo tiene que estar bajo sucursal.
                 }
             }
             
+            //si no recibimos control de billetes, lo ponemos en cero.
+            if(is_null($control_billetes))
+            {
+                $control_billetes = 0;
+            }
+            
             //Se inicializa el registro de caja
             $caja = new Caja();
             $caja->setIdSucursal($id_sucursal);
             $caja->setAbierta(0);
             $caja->setActiva(1);
-            $caja->setControlBilletes(0);
+            $caja->setControlBilletes($control_billetes);
             $caja->setDescripcion($descripcion);
             $caja->setIdSucursal($id_sucursal);
             $caja->setSaldo(0);
@@ -3396,6 +3409,7 @@ Creo que este metodo tiene que estar bajo sucursal.
 	public static function EditarCaja
 	(
 		$id_caja, 
+		$control_billetes = null, 
 		$descripcion = null, 
 		$token = null
 	)
@@ -3425,6 +3439,11 @@ Creo que este metodo tiene que estar bajo sucursal.
             {
                 $caja->setToken($token);
             }
+            if(!is_null($control_billetes))
+            {
+                $caja->setControlBilletes($control_billetes);
+            }
+            
             DAO::transBegin();
             try
             {
