@@ -2075,9 +2075,9 @@ require_once("interfaces/Servicios.interface.php");
             try
             {
                 OrdenDeServicioDAO::save($orden_de_servicio);
-                SucursalesController::VenderCaja($retencion, $orden_de_servicio->getIdUsuarioVenta(),
-                        $subtotal, $impuesto, $total, $descuento, $tipo_venta, $saldo, $cheques,
-                        $tipo_de_pago,$billetes_pago, $billetes_cambio, $id_venta_caja, $detalle_productos, $detalle_orden);
+                SucursalesController::VenderCaja($subtotal, $tipo_venta,
+                        $total, $descuento, $impuesto, $retencion, $orden_de_servicio->getIdUsuarioVenta(), $billetes_cambio, $detalle_productos,
+                        $saldo,$tipo_de_pago, $billetes_pago, null, $detalle_orden, $cheques);
             }
             catch(Exception $e)
             {
