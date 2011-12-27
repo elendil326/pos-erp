@@ -32,28 +32,28 @@
                 {
                     $menu = new MenuComponent();
                     $menu->addItem("Editar este usuario", "personal.editar.usuario.php?uid=".$_GET["uid"]);
+                    
+                        $btn_eliminar = new MenuItem("Desactivar este usuario", null);
+                        $btn_eliminar->addApiCall("api/personal/usuario/eliminar");
+                        $btn_eliminar->onApiCallSuccessRedirect("personal.lista.usuario.php");
+                        $btn_eliminar->addName("eliminar");
 
-                    $btn_eliminar = new MenuItem("Desactivar este usuario", null);
-                    $btn_eliminar->addApiCall("api/personal/usuario/eliminar");
-                    $btn_eliminar->onApiCallSuccessRedirect("personal.lista.usuario.php");
-                    $btn_eliminar->addName("eliminar");
-
-                    $funcion_eliminar = " function eliminar_usuario(btn){".
-                                "if(btn == 'yes')".
-                                "{".
-                                    "var p = {};".
-                                    "p.id_usuario = ".$_GET["uid"].";".
-                                    "sendToApi_eliminar(p);".
+                        $funcion_eliminar = " function eliminar_usuario(btn){".
+                                    "if(btn == 'yes')".
+                                    "{".
+                                        "var p = {};".
+                                        "p.id_usuario = ".$_GET["uid"].";".
+                                        "sendToApi_eliminar(p);".
+                                    "}".
                                 "}".
-                            "}".
-                            "      ".
-                            "function confirmar(){".
-                            " Ext.MessageBox.confirm('Desactivar', 'Desea eliminar este usuario?', eliminar_usuario );".
-                            "}";
+                                "      ".
+                                "function confirmar(){".
+                                " Ext.MessageBox.confirm('Desactivar', 'Desea eliminar este usuario?', eliminar_usuario );".
+                                "}";
 
-                    $btn_eliminar->addOnClick("confirmar", $funcion_eliminar);
+                        $btn_eliminar->addOnClick("confirmar", $funcion_eliminar);
 
-                    $menu->addMenuItem($btn_eliminar);
+                        $menu->addMenuItem($btn_eliminar);
                 
                 
                     $page->addComponent( $menu);
@@ -90,6 +90,46 @@
 //			));
 //	    $form->createComboBoxJoin("id_unidad", "nombre", UnidadDAO::getAll(), $este_producto->getIdUnidad() );
 		$page->addComponent( $form );
+                
+                if(!is_null($este_usuario->getIdDireccion()))
+                {
+                    $page->addComponent( new TitleComponent("Direccion") );
+                    
+                    $form = new DAOFormComponent($esta_direccion);
+                    
+                    $form->hideField(
+                            array(
+                                "id_direccion"
+                            )
+                            );
+                    
+                    $form->setEditable(false);
+                    
+                    $form->createComboBoxJoin("id_ciudad", "nombre", CiudadDAO::getAll(), $esta_direccion->getIdCiudad());
+                    
+                    $page->addComponent($form);
+                    
+                }
+                
+                if(!is_null($este_usuario->getIdDireccionAlterna()))
+                {
+                    $page->addComponent( new TitleComponent("Direccion") );
+                    $esta_direccion = DireccionDAO::getByPK($este_usuario->getIdDireccionAlterna());
+                    $form = new DAOFormComponent($esta_direccion);
+                    
+                    $form->hideField(
+                            array(
+                                "id_direccion"
+                            )
+                            );
+                    
+                    $form->setEditable(false);
+                    
+                    $form->createComboBoxJoin("id_ciudad", "id_ciudad", CiudadDAO::getAll());
+                    
+                    $page->addComponent($form);
+                    
+                }
                 
                 $page->addComponent( new TitleComponent("Ventas") , 2 );
                 

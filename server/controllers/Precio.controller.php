@@ -932,8 +932,8 @@ require_once("interfaces/Precio.interface.php");
  	 **/
 	public static function Editar_precio_tipo_clienteProducto
 	(
-		$productos_precios_utilidad, 
-		$id_clasificacion_cliente
+		$id_clasificacion_cliente, 
+		$productos_precios_utilidad
 	)
 	{  
             Logger::log("Editando precios de los productos para el tipo_cliente ".$id_clasificacion_cliente);

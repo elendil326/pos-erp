@@ -18,7 +18,10 @@
 		$esta_empresa = EmpresaDAO::getByPK( $_GET["eid"] );
 		$esta_direccion = DireccionDAO::getByPK($esta_empresa->getIdDireccion());
 		
-		
+		if(is_null($esta_direccion))
+                {
+                    $esta_direccion = new Direccion();
+                }
 		
 		//
 		// Titulo de la pagina
@@ -48,6 +51,7 @@
 		$form->sendHidden( array( "id_empresa" ) );
                 
         $form->addApiCall( "api/empresa/editar/" , "GET");
+        $form->onApiCallSuccessRedirect("empresas.lista.php");
 
         $form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll( ), $esta_direccion->getIdCiudad( ) );
 
