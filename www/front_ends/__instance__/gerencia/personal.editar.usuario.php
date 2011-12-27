@@ -40,8 +40,9 @@
                                 "ultima_modificacion",
                                 "id_usuario_ultima_modificacion"
 			 ));
+                $form->sendHidden("id_usuario");
                 
-                $form->addApiCall( "api/personal/rol/editar/" );
+                $form->addApiCall( "api/personal/usuario/editar/" );
                 $form->onApiCallSuccessRedirect("personal.lista.usuario.php");
                 
                 $form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll(), $esta_direccion->getIdCiudad() );

@@ -507,58 +507,58 @@ require_once("interfaces/PersonalYAgentes.interface.php");
  	 **/
 	public static function NuevoUsuario
 	(
-		$codigo_usuario,
-                $password,
-                $id_rol,
-                $nombre,
-                $curp = null,
-                $dia_de_revision = null,
-                $id_clasificacion_cliente = null,
-                $numero_exterior = null,
-                $dias_de_embarque = null,
-                $facturar_a_terceros = null,
-                $id_sucursal = null,
-                $mensajeria = null,
-                $dia_de_pago = null,
-                $impuestos = null,
-                $representante_legal = null,
-                $cuenta_bancaria = null,
-                $saldo_del_ejercicio = null,
-                $salario = null,
-                $intereses_moratorios = null,
-                $ventas_a_credito = null,
-                $telefono_personal1 = null,
-                $pagina_web = null,
-                $descuento = null,
-                $limite_credito = null,
-                $telefono_personal2 = null,
-                $telefono1_2 = null,
-                $telefono2_2 = null,
-                $codigo_postal = null,
-                $codigo_postal_2 = null,
-                $texto_extra_2 = null,
-                $numero_interior_2 = null,
-                $id_ciudad = null,
-                $calle = null,
-                $colonia_2 = null,
-                $numero_interior = null,
-                $id_ciudad_2 = null,
-                $correo_electronico = null,
-                $texto_extra = null,
-                $telefono2 = null,
-                $denominacion_comercial = null,
-                $dias_de_credito = null,
-                $calle_2 = null,
-                $numero_exterior_2 = null,
-                $telefono1 = null,
-                $cuenta_mensajeria = null,
-                $comision_ventas = null,
-                $rfc = null,
-                $id_clasificacion_proveedor = null,
-                $colonia = null,
-                $retenciones = null,
-                $id_moneda = null,
-                $tiempo_entrega = null
+		$codigo_usuario, 
+		$id_rol, 
+		$nombre, 
+		$password, 
+		$calle = null, 
+		$calle_2 = null, 
+		$codigo_postal = null, 
+		$codigo_postal_2 = null, 
+		$colonia = null, 
+		$colonia_2 = null, 
+		$comision_ventas = 0, 
+		$correo_electronico = null, 
+		$cuenta_bancaria = null, 
+		$cuenta_mensajeria = null, 
+		$curp = null, 
+		$denominacion_comercial = null, 
+		$descuento = null, 
+		$dias_de_credito = null, 
+		$dias_de_embarque = null, 
+		$dia_de_pago = null, 
+		$dia_de_revision = null, 
+		$facturar_a_terceros = null, 
+		$id_ciudad = null, 
+		$id_ciudad_2 = null, 
+		$id_clasificacion_cliente = null, 
+		$id_clasificacion_proveedor = null, 
+		$id_moneda = null, 
+		$id_sucursal = null, 
+		$impuestos = null, 
+		$intereses_moratorios = null, 
+		$limite_credito = 0, 
+		$mensajeria = null, 
+		$numero_exterior = null, 
+		$numero_exterior_2 = null, 
+		$numero_interior = null, 
+		$numero_interior_2 = null, 
+		$pagina_web = null, 
+		$representante_legal = null, 
+		$retenciones = null, 
+		$rfc = null, 
+		$salario = null, 
+		$saldo_del_ejercicio = null, 
+		$telefono1 = null, 
+		$telefono1_2 = null, 
+		$telefono2 = null, 
+		$telefono2_2 = null, 
+		$telefono_personal1 = null, 
+		$telefono_personal2 = null, 
+		$texto_extra = null, 
+		$texto_extra_2 = null, 
+		$tiempo_entrega = null, 
+		$ventas_a_credito = null
 	)
 	{  
             Logger::log("Creando nuevo usuario");
@@ -1074,7 +1074,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
           if(!is_null($rfc))
           {
               //Verifica que el rfc no sea repetido
-              $usuarios = array_diff(UsuarioDAO::search( new Usuario(array( "rfc" => $rfc ) ) ), array($usuario));
+              $usuarios = array_diff(UsuarioDAO::search( new Usuario(array( "rfc" => $rfc ) ) ), array(UsuarioDAO::getByPK($id_usuario)));
               foreach($usuarios as $u)
                 {
                     if($u->getActivo())
@@ -1087,7 +1087,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
           }
           if(!is_null($curp))
           {
-              $usuarios=array_diff(UsuarioDAO::search(new Usuario(array( "curp" => $curp ))),array( $usuario ));
+              $usuarios=array_diff(UsuarioDAO::search(new Usuario(array( "curp" => $curp ))),array( UsuarioDAO::getByPK($id_usuario) ));
                 foreach($usuarios as $u)
                 {
                     if($u->getActivo())
@@ -1129,7 +1129,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
           if(!is_null($correo_electronico))
           {
               //se verifica que el correo electronico no se repita
-                $usuarios=array_diff(UsuarioDAO::search(new Usuario( array( "correo_electronico" => $correo_electronico ) )), array($usuario) );
+                $usuarios=array_diff(UsuarioDAO::search(new Usuario( array( "correo_electronico" => $correo_electronico ) )), array(UsuarioDAO::getByPK($id_usuario)) );
                 foreach($usuarios as $u)
                 {
                     if($u->getActivo())
@@ -1191,7 +1191,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
           if(!is_null($codigo_usuario))
           {
                 //se verifica que el codigo de usuario no sea repetido
-                $usuarios=array_diff(UsuarioDAO::search(new Usuario(array( "codigo_usuario" => $codigo_usuario ))), array($usuario));
+                $usuarios=array_diff(UsuarioDAO::search(new Usuario(array( "codigo_usuario" => $codigo_usuario ))), array(UsuarioDAO::getByPK($id_usuario)));
                 foreach($usuarios as $u)
                 {
                     if($u->getActivo())
@@ -1490,8 +1490,8 @@ require_once("interfaces/PersonalYAgentes.interface.php");
  	 **/
 	public static function AsignarPermisoUsuario
 	(
-		$id_usuario, 
-		$id_permiso
+		$id_permiso, 
+		$id_usuario
 	)
 	{  
             Logger::log("Asignando permiso ".$id_permiso." al usuario ".$id_usuario);

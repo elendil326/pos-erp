@@ -363,12 +363,13 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
             //y se toma como rol de cliente el 5
             try 
             {
-                $cliente = PersonalYAgentesController::NuevoUsuario($codigo_cliente,$password,5,$razon_social,
-                        $curp,null,$clasificacion_cliente,$numero_exterior,null,null,self::getSucursal(),$mensajeria,null,
-                        $impuestos,$representante_legal,null,null,null,null,null,$telefono_personal1,$direccion_web,
-                        $descuento,$limite_credito,$telefono_personal2,null,null,$codigo_postal,null,null,null,$id_ciudad,$calle,null,
-                        $numero_interior,null,$email,$texto_extra,$telefono2,$denominacion_comercial,null,null,null,$telefono1,
-                        $cuenta_de_mensajeria,null,$rfc,null,$colonia,$retenciones,$moneda_del_cliente);
+                $cliente = PersonalYAgentesController::NuevoUsuario($codigo_cliente,5,$razon_social,$password,
+                        $calle,null,$codigo_postal,null,$colonia,null,null,$email,null,$cuenta_de_mensajeria,
+                        $curp,$denominacion_comercial,$descuento,null,null,null,null,0,$id_ciudad,null,
+                        $clasificacion_cliente,null,$moneda_del_cliente,self::getSucursal(),$impuestos,null,
+                        $limite_credito,$mensajeria,$numero_exterior,null,$numero_interior,null,$direccion_web,
+                        $representante_legal,$retenciones,$rfc,null,null,$telefono1,null,$telefono2,null,
+                        $telefono_personal1,$telefono_personal2,$texto_extra);
             }
             catch(Exception $e)
             {

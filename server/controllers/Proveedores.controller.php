@@ -508,33 +508,33 @@ require_once("interfaces/Proveedores.interface.php");
  	 **/
 	public static function Nuevo
 	(
+		$codigo_proveedor, 
 		$id_tipo_proveedor, 
 		$nombre, 
 		$password, 
-		$codigo_proveedor, 
-		$dias_de_credito = null, 
-		$limite_credito = null, 
-		$codigo_postal = null, 
-		$id_ciudad = null, 
-		$texto_extra = null, 
-		$numero_interior = null, 
-		$numero_exterior = null, 
-		$retenciones = null, 
-		$direccion_web = null, 
-		$impuestos = null, 
-		$dias_embarque = true, 
-		$telefono_personal1 = null, 
-		$rfc = null, 
-		$calle = 1, 
-		$email = null, 
-		$id_moneda = null, 
-		$telefono_personal2 = null, 
-		$colonia = null, 
-		$telefono2 = null, 
-		$telefono1 = null, 
 		$activo = null, 
+		$calle = null, 
+		$codigo_postal = null, 
+		$colonia = null, 
 		$cuenta_bancaria = null, 
+		$dias_de_credito = null, 
+		$dias_embarque = true, 
+		$direccion_web = null, 
+		$email = null, 
+		$id_ciudad = null, 
+		$id_moneda = null, 
+		$impuestos = null, 
+		$limite_credito = null, 
+		$numero_exterior = null, 
+		$numero_interior = null, 
 		$representante_legal = null, 
+		$retenciones = null, 
+		$rfc = null, 
+		$telefono1 = null, 
+		$telefono2 = null, 
+		$telefono_personal1 = null, 
+		$telefono_personal2 = null, 
+		$texto_extra = null, 
 		$tiempo_entrega = null
 	)
 	{  
@@ -545,12 +545,12 @@ require_once("interfaces/Proveedores.interface.php");
             
             try
             {
-                $proveedor = PersonalYAgentesController::NuevoUsuario($codigo_proveedor, $password, 6, $nombre,
-                    null,null,null,$numero_exterior,$dias_embarque,null,self::getSucursal(),0,null,
-                    $impuestos,$representante_legal,$cuenta_bancaria,null,null,null,null,$telefono_personal1,$direccion_web,null,
-                    $limite_credito,$telefono_personal2,null,null,$codigo_postal,null,null,null,$id_ciudad,$calle,null,$numero_interior,
-                    null,$email,$texto_extra,$telefono2,null,$dias_de_credito,null,null,$telefono1,null,null,$rfc,$id_tipo_proveedor,
-                    $colonia,$retenciones,$id_moneda,$tiempo_entrega);
+                $proveedor = PersonalYAgentesController::NuevoUsuario($codigo_proveedor, 6, $nombre, $password,
+                    $calle,null,$codigo_postal,null,$colonia,null,null,$email,$cuenta_bancaria,
+                    null,null,null,null,$dias_de_credito,$dias_embarque,null,null,null,$id_ciudad,
+                    null,null,$id_tipo_proveedor,$id_moneda,self::getSucursal(),$impuestos,null,$limite_credito,null,$numero_exterior,null,$numero_interior,
+                    null,$direccion_web,$representante_legal,$retenciones,$rfc,null,null,$telefono1,null,$telefono2,null,$telefono_personal1,$telefono_personal2,
+                    $texto_extra,null,$tiempo_entrega);
             }
             catch(Exception $e)
             {
