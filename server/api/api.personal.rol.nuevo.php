@@ -18,9 +18,9 @@
 	{
 		$this->request = array(	
 			"nombre" => new ApiExposedProperty("nombre", true, POST, array( "string" )),
-			"salario" => new ApiExposedProperty("salario", false, POST, array( "float" )),
-			"descuento" => new ApiExposedProperty("descuento", false, POST, array( "float" )),
 			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "string" )),
+			"descuento" => new ApiExposedProperty("descuento", false, POST, array( "float" )),
+			"salario" => new ApiExposedProperty("salario", false, POST, array( "float" )),
 		);
 	}
 
@@ -30,9 +30,9 @@
  			
 			
 			isset($_POST['nombre'] ) ? $_POST['nombre'] : null,
-			isset($_POST['salario'] ) ? $_POST['salario'] : null,
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] : null,
 			isset($_POST['descuento'] ) ? $_POST['descuento'] : null,
-			isset($_POST['descripcion'] ) ? $_POST['descripcion'] : null
+			isset($_POST['salario'] ) ? $_POST['salario'] : null
 			
 			);
 		}catch(Exception $e){

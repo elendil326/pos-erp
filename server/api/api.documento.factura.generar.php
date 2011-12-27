@@ -3,7 +3,7 @@
   * GET api/documento/factura/generar
   * Genera una factura
   *
-  * Genera una factura seg?n la informaci?n de un cliente y la venta realizada.
+  * Genera una factura seg?a informaci?e un cliente y la venta realizada.
 
 Update : Falta especificar si seria una factura detallada (cuando en los conceptos de la factura describe a cada articulo) o generica (un solo concepto que engloba a todos los productos).
   *
@@ -19,8 +19,8 @@ Update : Falta especificar si seria una factura detallada (cuando en los concept
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"id_venta" => new ApiExposedProperty("id_venta", true, GET, array( "int" )),
 			"id_cliente" => new ApiExposedProperty("id_cliente", true, GET, array( "int" )),
+			"id_venta" => new ApiExposedProperty("id_venta", true, GET, array( "int" )),
 		);
 	}
 
@@ -29,8 +29,8 @@ Update : Falta especificar si seria una factura detallada (cuando en los concept
  		$this->response = DocumentosController::GenerarFactura( 
  			
 			
-			isset($_GET['id_venta'] ) ? $_GET['id_venta'] : null,
-			isset($_GET['id_cliente'] ) ? $_GET['id_cliente'] : null
+			isset($_GET['id_cliente'] ) ? $_GET['id_cliente'] : null,
+			isset($_GET['id_venta'] ) ? $_GET['id_venta'] : null
 			
 			);
 		}catch(Exception $e){

@@ -17,8 +17,8 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"orden" => new ApiExposedProperty("orden", false, GET, array( "json" )),
 			"activo" => new ApiExposedProperty("activo", false, GET, array( "bool" )),
+			"orden" => new ApiExposedProperty("orden", false, GET, array( "json" )),
 		);
 	}
 
@@ -27,8 +27,8 @@
  		$this->response = EfectivoController::ListaMoneda( 
  			
 			
-			isset($_GET['orden'] ) ? $_GET['orden'] : null,
-			isset($_GET['activo'] ) ? $_GET['activo'] : null
+			isset($_GET['activo'] ) ? $_GET['activo'] : null,
+			isset($_GET['orden'] ) ? $_GET['orden'] : null
 			
 			);
 		}catch(Exception $e){

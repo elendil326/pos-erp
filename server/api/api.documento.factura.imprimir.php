@@ -4,7 +4,7 @@
   * Imprime una factura
   *
   * Imprime una factura
-Update : La respuesta solo deber?a de contener success :true | false, y en caso de error, su descripcion, no se necesita apra anda en el JSON de respuesta una propiedad factura.
+Update : La respuesta solo deber?de contener success :true | false, y en caso de error, su descripcion, no se necesita apra anda en el JSON de respuesta una propiedad factura.
   *
   *
   *

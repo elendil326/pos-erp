@@ -17,8 +17,8 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"id_sucursal" => new ApiExposedProperty("id_sucursal", false, GET, array( "int" )),
 			"activa" => new ApiExposedProperty("activa", false, GET, array( "bool" )),
+			"id_sucursal" => new ApiExposedProperty("id_sucursal", false, GET, array( "int" )),
 		);
 	}
 
@@ -27,8 +27,8 @@
  		$this->response = SucursalesController::ListaCaja( 
  			
 			
-			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null,
-			isset($_GET['activa'] ) ? $_GET['activa'] : null
+			isset($_GET['activa'] ) ? $_GET['activa'] : null,
+			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null
 			
 			);
 		}catch(Exception $e){

@@ -18,9 +18,9 @@
 	{
 		$this->request = array(	
 			"token" => new ApiExposedProperty("token", true, POST, array( "string" )),
+			"basculas" => new ApiExposedProperty("basculas", false, POST, array( "json" )),
 			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "string" )),
 			"id_sucursal" => new ApiExposedProperty("id_sucursal", false, POST, array( "int" )),
-			"basculas" => new ApiExposedProperty("basculas", false, POST, array( "json" )),
 			"impresoras" => new ApiExposedProperty("impresoras", false, POST, array( "json" )),
 		);
 	}
@@ -31,9 +31,9 @@
  			
 			
 			isset($_POST['token'] ) ? $_POST['token'] : null,
+			isset($_POST['basculas'] ) ? $_POST['basculas'] : null,
 			isset($_POST['descripcion'] ) ? $_POST['descripcion'] : null,
 			isset($_POST['id_sucursal'] ) ? $_POST['id_sucursal'] : null,
-			isset($_POST['basculas'] ) ? $_POST['basculas'] : null,
 			isset($_POST['impresoras'] ) ? $_POST['impresoras'] : null
 			
 			);

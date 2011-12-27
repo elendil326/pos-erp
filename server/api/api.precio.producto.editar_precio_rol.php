@@ -17,8 +17,8 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"productos_precios_utlidad" => new ApiExposedProperty("productos_precios_utlidad", true, GET, array( "json" )),
 			"id_rol" => new ApiExposedProperty("id_rol", true, GET, array( "int" )),
+			"productos_precios_utlidad" => new ApiExposedProperty("productos_precios_utlidad", true, GET, array( "json" )),
 		);
 	}
 
@@ -27,8 +27,8 @@
  		$this->response = PrecioController::Editar_precio_rolProducto( 
  			
 			
-			isset($_GET['productos_precios_utlidad'] ) ? $_GET['productos_precios_utlidad'] : null,
-			isset($_GET['id_rol'] ) ? $_GET['id_rol'] : null
+			isset($_GET['id_rol'] ) ? $_GET['id_rol'] : null,
+			isset($_GET['productos_precios_utlidad'] ) ? $_GET['productos_precios_utlidad'] : null
 			
 			);
 		}catch(Exception $e){

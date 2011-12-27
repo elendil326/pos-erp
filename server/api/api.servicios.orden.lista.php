@@ -17,10 +17,12 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"id_empresa" => new ApiExposedProperty("id_empresa", false, GET, array( "int" )),
-			"id_sucursal" => new ApiExposedProperty("id_sucursal", false, GET, array( "int" )),
+			"activa" => new ApiExposedProperty("activa", false, GET, array( "bool" )),
+			"cancelada" => new ApiExposedProperty("cancelada", false, GET, array( "bool" )),
 			"fecha_desde" => new ApiExposedProperty("fecha_desde", false, GET, array( "string" )),
 			"fecha_hasta" => new ApiExposedProperty("fecha_hasta", false, GET, array( "string" )),
+			"id_servicio" => new ApiExposedProperty("id_servicio", false, GET, array( "int" )),
+			"id_usuario_venta" => new ApiExposedProperty("id_usuario_venta", false, GET, array( "int" )),
 		);
 	}
 
@@ -29,10 +31,12 @@
  		$this->response = ServiciosController::ListaOrden( 
  			
 			
-			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] : null,
-			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null,
+			isset($_GET['activa'] ) ? $_GET['activa'] : null,
+			isset($_GET['cancelada'] ) ? $_GET['cancelada'] : null,
 			isset($_GET['fecha_desde'] ) ? $_GET['fecha_desde'] : null,
-			isset($_GET['fecha_hasta'] ) ? $_GET['fecha_hasta'] : null
+			isset($_GET['fecha_hasta'] ) ? $_GET['fecha_hasta'] : null,
+			isset($_GET['id_servicio'] ) ? $_GET['id_servicio'] : null,
+			isset($_GET['id_usuario_venta'] ) ? $_GET['id_usuario_venta'] : null
 			
 			);
 		}catch(Exception $e){

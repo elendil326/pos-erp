@@ -17,8 +17,9 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"id_unidad_convertible" => new ApiExposedProperty("id_unidad_convertible", true, GET, array( "string" )),
+			"id_unidad" => new ApiExposedProperty("id_unidad", true, GET, array( "string" )),
 			"descripcion" => new ApiExposedProperty("descripcion", false, GET, array( "string" )),
+			"es_entero" => new ApiExposedProperty("es_entero", false, GET, array( "bool" )),
 			"nombre" => new ApiExposedProperty("nombre", false, GET, array( "string" )),
 		);
 	}
@@ -28,8 +29,9 @@
  		$this->response = ProductosController::EditarUnidad( 
  			
 			
-			isset($_GET['id_unidad_convertible'] ) ? $_GET['id_unidad_convertible'] : null,
+			isset($_GET['id_unidad'] ) ? $_GET['id_unidad'] : null,
 			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
+			isset($_GET['es_entero'] ) ? $_GET['es_entero'] : null,
 			isset($_GET['nombre'] ) ? $_GET['nombre'] : null
 			
 			);

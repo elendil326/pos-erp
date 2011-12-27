@@ -17,9 +17,9 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"id_almacen_recibe" => new ApiExposedProperty("id_almacen_recibe", true, GET, array( "int" )),
-			"id_almacen_envia" => new ApiExposedProperty("id_almacen_envia", true, GET, array( "int" )),
 			"fecha_envio_programada" => new ApiExposedProperty("fecha_envio_programada", true, GET, array( "string" )),
+			"id_almacen_envia" => new ApiExposedProperty("id_almacen_envia", true, GET, array( "int" )),
+			"id_almacen_recibe" => new ApiExposedProperty("id_almacen_recibe", true, GET, array( "int" )),
 			"productos" => new ApiExposedProperty("productos", true, GET, array( "json" )),
 		);
 	}
@@ -29,9 +29,9 @@
  		$this->response = SucursalesController::ProgramarTraspasoAlmacen( 
  			
 			
-			isset($_GET['id_almacen_recibe'] ) ? $_GET['id_almacen_recibe'] : null,
-			isset($_GET['id_almacen_envia'] ) ? $_GET['id_almacen_envia'] : null,
 			isset($_GET['fecha_envio_programada'] ) ? $_GET['fecha_envio_programada'] : null,
+			isset($_GET['id_almacen_envia'] ) ? $_GET['id_almacen_envia'] : null,
+			isset($_GET['id_almacen_recibe'] ) ? $_GET['id_almacen_recibe'] : null,
 			isset($_GET['productos'] ) ? $_GET['productos'] : null
 			
 			);

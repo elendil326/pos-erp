@@ -3,7 +3,7 @@
   * POST api/autorizaciones/venta/devolucion
   * Solicitud para devolver una venta.
   *
-  * Solicitud para devolver una venta. La fecha de petici?n se tomar? del servidor. El usuario y la sucursal que emiten la autorizaci?n ser?n tomadas de la sesi?n.
+  * Solicitud para devolver una venta. La fecha de petici?e tomar?el servidor. El usuario y la sucursal que emiten la autorizaci?er?tomadas de la sesi?
   *
   *
   *
@@ -17,8 +17,8 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"id_venta" => new ApiExposedProperty("id_venta", true, POST, array( "int" )),
 			"descripcion" => new ApiExposedProperty("descripcion", true, POST, array( "string" )),
+			"id_venta" => new ApiExposedProperty("id_venta", true, POST, array( "int" )),
 		);
 	}
 
@@ -27,8 +27,8 @@
  		$this->response = AutorizacionesController::DevolucionVenta( 
  			
 			
-			isset($_POST['id_venta'] ) ? $_POST['id_venta'] : null,
-			isset($_POST['descripcion'] ) ? $_POST['descripcion'] : null
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] : null,
+			isset($_POST['id_venta'] ) ? $_POST['id_venta'] : null
 			
 			);
 		}catch(Exception $e){

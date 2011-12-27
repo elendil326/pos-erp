@@ -17,6 +17,8 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
+			"id_permiso" => new ApiExposedProperty("id_permiso", false, GET, array( "int" )),
+			"id_rol" => new ApiExposedProperty("id_rol", false, GET, array( "int" )),
 		);
 	}
 
@@ -24,7 +26,9 @@
 		try{
  		$this->response = PersonalYAgentesController::ListaPermisoRol( 
  			
-		
+			
+			isset($_GET['id_permiso'] ) ? $_GET['id_permiso'] : null,
+			isset($_GET['id_rol'] ) ? $_GET['id_rol'] : null
 			
 			);
 		}catch(Exception $e){

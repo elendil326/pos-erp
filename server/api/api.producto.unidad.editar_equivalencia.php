@@ -18,9 +18,9 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"id_unidades" => new ApiExposedProperty("id_unidades", true, GET, array( "int" )),
 			"equivalencia" => new ApiExposedProperty("equivalencia", true, GET, array( "float" )),
 			"id_unidad" => new ApiExposedProperty("id_unidad", true, GET, array( "int" )),
+			"id_unidades" => new ApiExposedProperty("id_unidades", true, GET, array( "int" )),
 		);
 	}
 
@@ -29,9 +29,9 @@
  		$this->response = ProductosController::Editar_equivalenciaUnidad( 
  			
 			
-			isset($_GET['id_unidades'] ) ? $_GET['id_unidades'] : null,
 			isset($_GET['equivalencia'] ) ? $_GET['equivalencia'] : null,
-			isset($_GET['id_unidad'] ) ? $_GET['id_unidad'] : null
+			isset($_GET['id_unidad'] ) ? $_GET['id_unidad'] : null,
+			isset($_GET['id_unidades'] ) ? $_GET['id_unidades'] : null
 			
 			);
 		}catch(Exception $e){

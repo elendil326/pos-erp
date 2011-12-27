@@ -20,8 +20,8 @@ Update : En la respuesta basta con solo indicar success : true | false, y en cas
 	{
 		$this->request = array(	
 			"nombre" => new ApiExposedProperty("nombre", true, GET, array( "string" )),
-			"monto" => new ApiExposedProperty("monto", false, GET, array( "float" )),
 			"descripcion" => new ApiExposedProperty("descripcion", false, GET, array( "string" )),
+			"monto" => new ApiExposedProperty("monto", false, GET, array( "float" )),
 		);
 	}
 
@@ -31,8 +31,8 @@ Update : En la respuesta basta con solo indicar success : true | false, y en cas
  			
 			
 			isset($_GET['nombre'] ) ? $_GET['nombre'] : null,
-			isset($_GET['monto'] ) ? $_GET['monto'] : null,
-			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null
+			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
+			isset($_GET['monto'] ) ? $_GET['monto'] : null
 			
 			);
 		}catch(Exception $e){

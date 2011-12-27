@@ -18,9 +18,9 @@
 	{
 		$this->request = array(	
 			"id_impuesto" => new ApiExposedProperty("id_impuesto", true, GET, array( "int" )),
+			"descripcion" => new ApiExposedProperty("descripcion", false, GET, array( "string" )),
 			"es_monto" => new ApiExposedProperty("es_monto", false, GET, array( "bool" )),
 			"monto_porcentaje" => new ApiExposedProperty("monto_porcentaje", false, GET, array( "float" )),
-			"descripcion" => new ApiExposedProperty("descripcion", false, GET, array( "string" )),
 			"nombre" => new ApiExposedProperty("nombre", false, GET, array( "string" )),
 		);
 	}
@@ -31,9 +31,9 @@
  			
 			
 			isset($_GET['id_impuesto'] ) ? $_GET['id_impuesto'] : null,
+			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
 			isset($_GET['es_monto'] ) ? $_GET['es_monto'] : null,
 			isset($_GET['monto_porcentaje'] ) ? $_GET['monto_porcentaje'] : null,
-			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
 			isset($_GET['nombre'] ) ? $_GET['nombre'] : null
 			
 			);

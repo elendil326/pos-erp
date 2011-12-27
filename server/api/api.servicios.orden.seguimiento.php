@@ -1,6 +1,6 @@
 <?php
 /**
-  * GET api/servicios/orden/seguimiento
+  * POST api/servicios/orden/seguimiento
   * Realizar un seguimiento a una orden de servicio existente
   *
   * Realizar un seguimiento a una orden de servicio existente. Puede usarse para agregar detalles a una orden pero no para editar detalles previos. Puede ser que se haya hecho un abono
@@ -17,9 +17,9 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"estado" => new ApiExposedProperty("estado", true, GET, array( "string" )),
-			"id_localizacion" => new ApiExposedProperty("id_localizacion", true, GET, array( "int" )),
-			"id_orden_de_servicio" => new ApiExposedProperty("id_orden_de_servicio", true, GET, array( "int" )),
+			"id_orden_de_servicio" => new ApiExposedProperty("id_orden_de_servicio", true, POST, array( "int" )),
+			"nota" => new ApiExposedProperty("nota", true, POST, array( "string" )),
+			"id_localizacion" => new ApiExposedProperty("id_localizacion", false, POST, array( "int" )),
 		);
 	}
 
@@ -28,9 +28,9 @@
  		$this->response = ServiciosController::SeguimientoOrden( 
  			
 			
-			isset($_GET['estado'] ) ? $_GET['estado'] : null,
-			isset($_GET['id_localizacion'] ) ? $_GET['id_localizacion'] : null,
-			isset($_GET['id_orden_de_servicio'] ) ? $_GET['id_orden_de_servicio'] : null
+			isset($_POST['id_orden_de_servicio'] ) ? $_POST['id_orden_de_servicio'] : null,
+			isset($_POST['nota'] ) ? $_POST['nota'] : null,
+			isset($_POST['id_localizacion'] ) ? $_POST['id_localizacion'] : null
 			
 			);
 		}catch(Exception $e){

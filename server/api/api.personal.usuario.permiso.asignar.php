@@ -17,8 +17,8 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"id_usuario" => new ApiExposedProperty("id_usuario", true, POST, array( "int" )),
 			"id_permiso" => new ApiExposedProperty("id_permiso", true, POST, array( "int" )),
+			"id_usuario" => new ApiExposedProperty("id_usuario", true, POST, array( "int" )),
 		);
 	}
 
@@ -27,8 +27,8 @@
  		$this->response = PersonalYAgentesController::AsignarPermisoUsuario( 
  			
 			
-			isset($_POST['id_usuario'] ) ? $_POST['id_usuario'] : null,
-			isset($_POST['id_permiso'] ) ? $_POST['id_permiso'] : null
+			isset($_POST['id_permiso'] ) ? $_POST['id_permiso'] : null,
+			isset($_POST['id_usuario'] ) ? $_POST['id_usuario'] : null
 			
 			);
 		}catch(Exception $e){

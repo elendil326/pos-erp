@@ -17,11 +17,9 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
+			"activo" => new ApiExposedProperty("activo", false, GET, array( "bool" )),
 			"id_empresa" => new ApiExposedProperty("id_empresa", false, GET, array( "int" )),
 			"id_sucursal" => new ApiExposedProperty("id_sucursal", false, GET, array( "int" )),
-			"id_producto" => new ApiExposedProperty("id_producto", false, GET, array( "int" )),
-			"id_servicio" => new ApiExposedProperty("id_servicio", false, GET, array( "int" )),
-			"activo" => new ApiExposedProperty("activo", false, GET, array( "bool" )),
 		);
 	}
 
@@ -30,11 +28,9 @@
  		$this->response = PaquetesController::Lista( 
  			
 			
+			isset($_GET['activo'] ) ? $_GET['activo'] : null,
 			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] : null,
-			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null,
-			isset($_GET['id_producto'] ) ? $_GET['id_producto'] : null,
-			isset($_GET['id_servicio'] ) ? $_GET['id_servicio'] : null,
-			isset($_GET['activo'] ) ? $_GET['activo'] : null
+			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null
 			
 			);
 		}catch(Exception $e){

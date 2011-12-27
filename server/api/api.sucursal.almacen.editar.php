@@ -18,9 +18,9 @@
 	{
 		$this->request = array(	
 			"id_almacen" => new ApiExposedProperty("id_almacen", true, GET, array( "int" )),
+			"descripcion" => new ApiExposedProperty("descripcion", false, GET, array( "string" )),
 			"id_tipo_almacen" => new ApiExposedProperty("id_tipo_almacen", false, GET, array( "int" )),
 			"nombre" => new ApiExposedProperty("nombre", false, GET, array( "string" )),
-			"descripcion" => new ApiExposedProperty("descripcion", false, GET, array( "string" )),
 		);
 	}
 
@@ -30,9 +30,9 @@
  			
 			
 			isset($_GET['id_almacen'] ) ? $_GET['id_almacen'] : null,
+			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
 			isset($_GET['id_tipo_almacen'] ) ? $_GET['id_tipo_almacen'] : null,
-			isset($_GET['nombre'] ) ? $_GET['nombre'] : null,
-			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null
+			isset($_GET['nombre'] ) ? $_GET['nombre'] : null
 			
 			);
 		}catch(Exception $e){

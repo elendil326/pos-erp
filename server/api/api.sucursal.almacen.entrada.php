@@ -20,8 +20,8 @@ Creo que este metodo tiene que estar bajo sucursal.
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"productos" => new ApiExposedProperty("productos", true, POST, array( "json" )),
 			"id_almacen" => new ApiExposedProperty("id_almacen", true, POST, array( "int" )),
+			"productos" => new ApiExposedProperty("productos", true, POST, array( "json" )),
 			"motivo" => new ApiExposedProperty("motivo", false, POST, array( "string" )),
 		);
 	}
@@ -31,8 +31,8 @@ Creo que este metodo tiene que estar bajo sucursal.
  		$this->response = SucursalesController::EntradaAlmacen( 
  			
 			
-			isset($_POST['productos'] ) ? $_POST['productos'] : null,
 			isset($_POST['id_almacen'] ) ? $_POST['id_almacen'] : null,
+			isset($_POST['productos'] ) ? $_POST['productos'] : null,
 			isset($_POST['motivo'] ) ? $_POST['motivo'] : null
 			
 			);

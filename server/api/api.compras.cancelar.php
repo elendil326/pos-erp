@@ -18,6 +18,8 @@
 	{
 		$this->request = array(	
 			"id_compra" => new ApiExposedProperty("id_compra", true, GET, array( "int" )),
+			"billetes" => new ApiExposedProperty("billetes", false, GET, array( "json" )),
+			"id_caja" => new ApiExposedProperty("id_caja", false, GET, array( "int" )),
 		);
 	}
 
@@ -26,7 +28,9 @@
  		$this->response = ComprasController::Cancelar( 
  			
 			
-			isset($_GET['id_compra'] ) ? $_GET['id_compra'] : null
+			isset($_GET['id_compra'] ) ? $_GET['id_compra'] : null,
+			isset($_GET['billetes'] ) ? $_GET['billetes'] : null,
+			isset($_GET['id_caja'] ) ? $_GET['id_caja'] : null
 			
 			);
 		}catch(Exception $e){

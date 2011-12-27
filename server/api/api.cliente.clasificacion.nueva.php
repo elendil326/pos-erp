@@ -19,9 +19,9 @@
 		$this->request = array(	
 			"clave_interna" => new ApiExposedProperty("clave_interna", true, POST, array( "string" )),
 			"nombre" => new ApiExposedProperty("nombre", true, POST, array( "string" )),
-			"impuestos" => new ApiExposedProperty("impuestos", false, POST, array( "json" )),
 			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "string" )),
 			"descuento" => new ApiExposedProperty("descuento", false, POST, array( "float" )),
+			"impuestos" => new ApiExposedProperty("impuestos", false, POST, array( "json" )),
 			"retenciones" => new ApiExposedProperty("retenciones", false, POST, array( "json" )),
 			"utilidad" => new ApiExposedProperty("utilidad", false, POST, array( "float" )),
 		);
@@ -34,9 +34,9 @@
 			
 			isset($_POST['clave_interna'] ) ? $_POST['clave_interna'] : null,
 			isset($_POST['nombre'] ) ? $_POST['nombre'] : null,
-			isset($_POST['impuestos'] ) ? $_POST['impuestos'] : null,
 			isset($_POST['descripcion'] ) ? $_POST['descripcion'] : null,
 			isset($_POST['descuento'] ) ? $_POST['descuento'] : null,
+			isset($_POST['impuestos'] ) ? $_POST['impuestos'] : null,
 			isset($_POST['retenciones'] ) ? $_POST['retenciones'] : null,
 			isset($_POST['utilidad'] ) ? $_POST['utilidad'] : null
 			

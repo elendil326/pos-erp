@@ -17,7 +17,7 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"id_unidad_convertible" => new ApiExposedProperty("id_unidad_convertible", true, GET, array( "int" )),
+			"id_unidad" => new ApiExposedProperty("id_unidad", true, GET, array( "int" )),
 		);
 	}
 
@@ -26,7 +26,7 @@
  		$this->response = ProductosController::EliminarUnidad( 
  			
 			
-			isset($_GET['id_unidad_convertible'] ) ? $_GET['id_unidad_convertible'] : null
+			isset($_GET['id_unidad'] ) ? $_GET['id_unidad'] : null
 			
 			);
 		}catch(Exception $e){

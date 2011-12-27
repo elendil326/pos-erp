@@ -18,7 +18,7 @@
 	{
 		$this->request = array(	
 			"id_usuario" => new ApiExposedProperty("id_usuario", true, GET, array( "int" )),
-			"productos_precios_utlidad" => new ApiExposedProperty("productos_precios_utlidad", true, GET, array( "json" )),
+			"productos_precios_utilidad" => new ApiExposedProperty("productos_precios_utilidad", true, GET, array( "json" )),
 		);
 	}
 
@@ -28,7 +28,7 @@
  			
 			
 			isset($_GET['id_usuario'] ) ? $_GET['id_usuario'] : null,
-			isset($_GET['productos_precios_utlidad'] ) ? $_GET['productos_precios_utlidad'] : null
+			isset($_GET['productos_precios_utilidad'] ) ? $_GET['productos_precios_utilidad'] : null
 			
 			);
 		}catch(Exception $e){

@@ -520,9 +520,9 @@ require_once("interfaces/Productos.interface.php");
  	 **/
 	public static function Nueva_equivalenciaUnidad
 	(
+		$equivalencia, 
 		$id_unidad, 
-		$id_unidades, 
-		$equivalencia
+		$id_unidades
 	)
 	{  
             Logger::log("Crenado nueva equivalencia de unidades");
@@ -584,9 +584,9 @@ require_once("interfaces/Productos.interface.php");
  	 **/
 	public static function Editar_equivalenciaUnidad
 	(
-		$id_unidades, 
 		$equivalencia, 
-		$id_unidad
+		$id_unidad, 
+		$id_unidades
 	)
 	{  
             Logger::log("Editando la equivalencia entre la unidad ".$id_unidad." y las unidades ".$id_unidades);
@@ -749,25 +749,25 @@ NOTA: Se crea un producto tipo = 1 que es para productos
  	 **/
 	public static function Nuevo
 	(
-		$metodo_costeo, 
+		$activo, 
 		$codigo_producto, 
-		$nombre_producto, 
 		$compra_en_mostrador, 
 		$costo_estandar, 
-		$activo, 
-		$control_de_existencia = null, 
-		$peso_producto = null, 
-		$id_unidad = null, 
+		$metodo_costeo, 
+		$nombre_producto, 
 		$clasificaciones = 0, 
-		$descripcion_producto = null, 
-		$impuestos = null, 
 		$codigo_de_barras = null, 
-		$precio = null, 
-		$descuento = null, 
-		$garantia = null, 
-		$foto_del_producto = null, 
+		$control_de_existencia = null, 
 		$costo_extra_almacen = null, 
-		$margen_de_utilidad = null
+		$descripcion_producto = null, 
+		$descuento = null, 
+		$foto_del_producto = null, 
+		$garantia = null, 
+		$id_unidad = null, 
+		$impuestos = null, 
+		$margen_de_utilidad = null, 
+		$peso_producto = null, 
+		$precio = null
 	)
 	{  
             Logger::log("Creando nuevo producto");
@@ -1009,25 +1009,25 @@ NOTA: Se crea un producto tipo = 1 que es para productos
 	public static function Editar
 	(
 		$id_producto, 
-		$metodo_costeo = null, 
-		$precio = null, 
-		$impuestos = null, 
-		$descripcion_producto = null, 
 		$clasificaciones = null, 
-		$id_unidad = null, 
-		$garantia = null, 
-		$margen_de_utilidad = null, 
-		$compra_en_mostrador = null, 
 		$codigo_de_barras = null, 
-		$empresas = null, 
-		$peso_producto = null, 
+		$codigo_producto = null, 
+		$compra_en_mostrador = null, 
+		$control_de_existencia = null, 
 		$costo_estandar = null, 
 		$costo_extra_almacen = null, 
-		$nombre_producto = null, 
+		$descripcion_producto = null, 
+		$descuento = null, 
+		$empresas = null, 
 		$foto_del_producto = null, 
-		$control_de_existencia = null, 
-		$codigo_producto = null, 
-		$descuento = null
+		$garantia = null, 
+		$id_unidad = null, 
+		$impuestos = null, 
+		$margen_de_utilidad = null, 
+		$metodo_costeo = null, 
+		$nombre_producto = null, 
+		$peso_producto = null, 
+		$precio = null
 	)
 	{  
             Logger::log("Editando producto ".$id_producto);

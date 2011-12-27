@@ -19,8 +19,8 @@ Se movera parcial o totalmente la carga?
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"id_carro_origen" => new ApiExposedProperty("id_carro_origen", true, GET, array( "int" )),
 			"id_carro_destino" => new ApiExposedProperty("id_carro_destino", true, GET, array( "int" )),
+			"id_carro_origen" => new ApiExposedProperty("id_carro_origen", true, GET, array( "int" )),
 			"productos" => new ApiExposedProperty("productos", false, GET, array( "json" )),
 		);
 	}
@@ -30,8 +30,8 @@ Se movera parcial o totalmente la carga?
  		$this->response = TransportacionYFletesController::Transbordo( 
  			
 			
-			isset($_GET['id_carro_origen'] ) ? $_GET['id_carro_origen'] : null,
 			isset($_GET['id_carro_destino'] ) ? $_GET['id_carro_destino'] : null,
+			isset($_GET['id_carro_origen'] ) ? $_GET['id_carro_origen'] : null,
 			isset($_GET['productos'] ) ? $_GET['productos'] : null
 			
 			);

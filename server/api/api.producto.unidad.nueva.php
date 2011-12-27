@@ -17,8 +17,8 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"nombre" => new ApiExposedProperty("nombre", true, GET, array( "string" )),
 			"es_entero" => new ApiExposedProperty("es_entero", true, GET, array( "bool" )),
+			"nombre" => new ApiExposedProperty("nombre", true, GET, array( "string" )),
 			"descripcion" => new ApiExposedProperty("descripcion", false, GET, array( "string" )),
 		);
 	}
@@ -28,8 +28,8 @@
  		$this->response = ProductosController::NuevaUnidad( 
  			
 			
-			isset($_GET['nombre'] ) ? $_GET['nombre'] : null,
 			isset($_GET['es_entero'] ) ? $_GET['es_entero'] : null,
+			isset($_GET['nombre'] ) ? $_GET['nombre'] : null,
 			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null
 			
 			);

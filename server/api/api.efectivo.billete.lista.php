@@ -17,8 +17,8 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"ordenar" => new ApiExposedProperty("ordenar", false, GET, array( "json" )),
 			"activo" => new ApiExposedProperty("activo", false, GET, array( "bool" )),
+			"ordenar" => new ApiExposedProperty("ordenar", false, GET, array( "json" )),
 		);
 	}
 
@@ -27,8 +27,8 @@
  		$this->response = EfectivoController::ListaBillete( 
  			
 			
-			isset($_GET['ordenar'] ) ? $_GET['ordenar'] : null,
-			isset($_GET['activo'] ) ? $_GET['activo'] : null
+			isset($_GET['activo'] ) ? $_GET['activo'] : null,
+			isset($_GET['ordenar'] ) ? $_GET['ordenar'] : null
 			
 			);
 		}catch(Exception $e){

@@ -17,9 +17,9 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"monto" => new ApiExposedProperty("monto", true, GET, array( "float" )),
-			"id_inspeccion" => new ApiExposedProperty("id_inspeccion", true, GET, array( "int" )),
 			"id_caja" => new ApiExposedProperty("id_caja", true, GET, array( "int" )),
+			"id_inspeccion" => new ApiExposedProperty("id_inspeccion", true, GET, array( "int" )),
+			"monto" => new ApiExposedProperty("monto", true, GET, array( "float" )),
 		);
 	}
 
@@ -28,9 +28,9 @@
  		$this->response = ConsignacionesController::AbonarInspeccion( 
  			
 			
-			isset($_GET['monto'] ) ? $_GET['monto'] : null,
+			isset($_GET['id_caja'] ) ? $_GET['id_caja'] : null,
 			isset($_GET['id_inspeccion'] ) ? $_GET['id_inspeccion'] : null,
-			isset($_GET['id_caja'] ) ? $_GET['id_caja'] : null
+			isset($_GET['monto'] ) ? $_GET['monto'] : null
 			
 			);
 		}catch(Exception $e){

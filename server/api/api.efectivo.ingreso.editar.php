@@ -5,7 +5,7 @@
   *
   * Edita un ingreso
 
-Update :El usuario y la fecha de la ultima modificaci?n se deber?an de obtener de la sesi?n
+Update :El usuario y la fecha de la ultima modificaci?e deber? de obtener de la sesi?
   *
   *
   *
@@ -20,11 +20,11 @@ Update :El usuario y la fecha de la ultima modificaci?n se deber?an de obtener d
 	{
 		$this->request = array(	
 			"id_ingreso" => new ApiExposedProperty("id_ingreso", true, GET, array( "int" )),
-			"folio" => new ApiExposedProperty("folio", false, GET, array( "string" )),
-			"fecha_ingreso" => new ApiExposedProperty("fecha_ingreso", false, GET, array( "string" )),
-			"nota" => new ApiExposedProperty("nota", false, GET, array( "string" )),
 			"descripcion" => new ApiExposedProperty("descripcion", false, GET, array( "string" )),
+			"fecha_ingreso" => new ApiExposedProperty("fecha_ingreso", false, GET, array( "string" )),
+			"folio" => new ApiExposedProperty("folio", false, GET, array( "string" )),
 			"id_concepto_ingreso" => new ApiExposedProperty("id_concepto_ingreso", false, GET, array( "int" )),
+			"nota" => new ApiExposedProperty("nota", false, GET, array( "string" )),
 		);
 	}
 
@@ -34,11 +34,11 @@ Update :El usuario y la fecha de la ultima modificaci?n se deber?an de obtener d
  			
 			
 			isset($_GET['id_ingreso'] ) ? $_GET['id_ingreso'] : null,
-			isset($_GET['folio'] ) ? $_GET['folio'] : null,
-			isset($_GET['fecha_ingreso'] ) ? $_GET['fecha_ingreso'] : null,
-			isset($_GET['nota'] ) ? $_GET['nota'] : null,
 			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
-			isset($_GET['id_concepto_ingreso'] ) ? $_GET['id_concepto_ingreso'] : null
+			isset($_GET['fecha_ingreso'] ) ? $_GET['fecha_ingreso'] : null,
+			isset($_GET['folio'] ) ? $_GET['folio'] : null,
+			isset($_GET['id_concepto_ingreso'] ) ? $_GET['id_concepto_ingreso'] : null,
+			isset($_GET['nota'] ) ? $_GET['nota'] : null
 			
 			);
 		}catch(Exception $e){

@@ -18,8 +18,8 @@ Update : Falta especificar los parametros y el ejemplo de envio.
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"orden" => new ApiExposedProperty("orden", false, GET, array( "string" )),
 			"activo" => new ApiExposedProperty("activo", false, GET, array( "bool" )),
+			"orden" => new ApiExposedProperty("orden", false, GET, array( "string" )),
 		);
 	}
 
@@ -28,8 +28,8 @@ Update : Falta especificar los parametros y el ejemplo de envio.
  		$this->response = CargosYAbonosController::ListaConceptoGasto( 
  			
 			
-			isset($_GET['orden'] ) ? $_GET['orden'] : null,
-			isset($_GET['activo'] ) ? $_GET['activo'] : null
+			isset($_GET['activo'] ) ? $_GET['activo'] : null,
+			isset($_GET['orden'] ) ? $_GET['orden'] : null
 			
 			);
 		}catch(Exception $e){

@@ -18,8 +18,8 @@
 	{
 		$this->request = array(	
 			"id_traspaso" => new ApiExposedProperty("id_traspaso", true, GET, array( "int" )),
-			"productos" => new ApiExposedProperty("productos", false, GET, array( "json" )),
 			"fecha_envio_programada" => new ApiExposedProperty("fecha_envio_programada", false, GET, array( "string" )),
+			"productos" => new ApiExposedProperty("productos", false, GET, array( "json" )),
 		);
 	}
 
@@ -29,8 +29,8 @@
  			
 			
 			isset($_GET['id_traspaso'] ) ? $_GET['id_traspaso'] : null,
-			isset($_GET['productos'] ) ? $_GET['productos'] : null,
-			isset($_GET['fecha_envio_programada'] ) ? $_GET['fecha_envio_programada'] : null
+			isset($_GET['fecha_envio_programada'] ) ? $_GET['fecha_envio_programada'] : null,
+			isset($_GET['productos'] ) ? $_GET['productos'] : null
 			
 			);
 		}catch(Exception $e){

@@ -18,10 +18,10 @@
 	{
 		$this->request = array(	
 			"activo" => new ApiExposedProperty("activo", false, GET, array( "bool" )),
-			"id_lote" => new ApiExposedProperty("id_lote", false, GET, array( "int" )),
+			"compra_en_mostrador" => new ApiExposedProperty("compra_en_mostrador", false, GET, array( "bool" )),
 			"id_almacen" => new ApiExposedProperty("id_almacen", false, GET, array( "int" )),
 			"id_empresa" => new ApiExposedProperty("id_empresa", false, GET, array( "int" )),
-			"id_sucursal" => new ApiExposedProperty("id_sucursal", false, GET, array( "int" )),
+			"metodo_costeo" => new ApiExposedProperty("metodo_costeo", false, GET, array( "string" )),
 		);
 	}
 
@@ -31,10 +31,10 @@
  			
 			
 			isset($_GET['activo'] ) ? $_GET['activo'] : null,
-			isset($_GET['id_lote'] ) ? $_GET['id_lote'] : null,
+			isset($_GET['compra_en_mostrador'] ) ? $_GET['compra_en_mostrador'] : null,
 			isset($_GET['id_almacen'] ) ? $_GET['id_almacen'] : null,
 			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] : null,
-			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null
+			isset($_GET['metodo_costeo'] ) ? $_GET['metodo_costeo'] : null
 			
 			);
 		}catch(Exception $e){

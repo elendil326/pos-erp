@@ -18,8 +18,8 @@ Ejemplo: 1 kg = 2.204 lb
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"id_unidades" => new ApiExposedProperty("id_unidades", true, GET, array( "int" )),
 			"id_unidad" => new ApiExposedProperty("id_unidad", true, GET, array( "int" )),
+			"id_unidades" => new ApiExposedProperty("id_unidades", true, GET, array( "int" )),
 		);
 	}
 
@@ -28,8 +28,8 @@ Ejemplo: 1 kg = 2.204 lb
  		$this->response = ProductosController::Eliminar_equivalenciaUnidad( 
  			
 			
-			isset($_GET['id_unidades'] ) ? $_GET['id_unidades'] : null,
-			isset($_GET['id_unidad'] ) ? $_GET['id_unidad'] : null
+			isset($_GET['id_unidad'] ) ? $_GET['id_unidad'] : null,
+			isset($_GET['id_unidades'] ) ? $_GET['id_unidades'] : null
 			
 			);
 		}catch(Exception $e){

@@ -18,9 +18,9 @@
 	{
 		$this->request = array(	
 			"descripcion" => new ApiExposedProperty("descripcion", true, POST, array( "string" )),
-			"id_servicio" => new ApiExposedProperty("id_servicio", true, POST, array( "int" )),
-			"id_cliente" => new ApiExposedProperty("id_cliente", true, POST, array( "int" )),
 			"fecha_entrega" => new ApiExposedProperty("fecha_entrega", true, POST, array( "string" )),
+			"id_cliente" => new ApiExposedProperty("id_cliente", true, POST, array( "int" )),
+			"id_servicio" => new ApiExposedProperty("id_servicio", true, POST, array( "int" )),
 			"adelanto" => new ApiExposedProperty("adelanto", false, POST, array( "float" )),
 		);
 	}
@@ -31,9 +31,9 @@
  			
 			
 			isset($_POST['descripcion'] ) ? $_POST['descripcion'] : null,
-			isset($_POST['id_servicio'] ) ? $_POST['id_servicio'] : null,
-			isset($_POST['id_cliente'] ) ? $_POST['id_cliente'] : null,
 			isset($_POST['fecha_entrega'] ) ? $_POST['fecha_entrega'] : null,
+			isset($_POST['id_cliente'] ) ? $_POST['id_cliente'] : null,
+			isset($_POST['id_servicio'] ) ? $_POST['id_servicio'] : null,
 			isset($_POST['adelanto'] ) ? $_POST['adelanto'] : null
 			
 			);

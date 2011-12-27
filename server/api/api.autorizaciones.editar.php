@@ -1,7 +1,7 @@
 <?php
 /**
   * GET api/autorizaciones/editar
-  * Editar una autorizaci?n en caso de tener permiso.
+  * Editar una autorizaci?n caso de tener permiso.
   *
   * Editar una autorizacion en caso de tener permiso.
 
@@ -11,7 +11,7 @@ Digo que seria buena idea definir el formato de las autorizaciones para ir pensa
 
 
 
-Al momento de editar la autorizacion veo que aparentemente se podria editar el id_autorizacion, id_usuario, id_sucursal, peticion y estado, creo yo que no es prudente editar ninguno de estos campos ya que el mal uso de esta informacion puede da?ar gravemente la integridad del sistema.
+Al momento de editar la autorizacion veo que aparentemente se podria editar el id_autorizacion, id_usuario, id_sucursal, peticion y estado, creo yo que no es prudente editar ninguno de estos campos ya que el mal uso de esta informacion puede da?gravemente la integridad del sistema.
   *
   *
   *
@@ -26,8 +26,8 @@ Al momento de editar la autorizacion veo que aparentemente se podria editar el i
 	{
 		$this->request = array(	
 			"descripcion" => new ApiExposedProperty("descripcion", true, GET, array( "string" )),
-			"id_autorizacion	" => new ApiExposedProperty("id_autorizacion	", true, GET, array( "int" )),
 			"estado" => new ApiExposedProperty("estado", true, GET, array( "int" )),
+			"id_autorizacion	" => new ApiExposedProperty("id_autorizacion	", true, GET, array( "int" )),
 		);
 	}
 
@@ -37,8 +37,8 @@ Al momento de editar la autorizacion veo que aparentemente se podria editar el i
  			
 			
 			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
-			isset($_GET['id_autorizacion	'] ) ? $_GET['id_autorizacion	'] : null,
-			isset($_GET['estado'] ) ? $_GET['estado'] : null
+			isset($_GET['estado'] ) ? $_GET['estado'] : null,
+			isset($_GET['id_autorizacion	'] ) ? $_GET['id_autorizacion	'] : null
 			
 			);
 		}catch(Exception $e){

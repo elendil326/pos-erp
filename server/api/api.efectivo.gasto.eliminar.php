@@ -18,9 +18,9 @@
 	{
 		$this->request = array(	
 			"id_gasto" => new ApiExposedProperty("id_gasto", true, GET, array( "int" )),
-			"motivo_cancelacion" => new ApiExposedProperty("motivo_cancelacion", false, GET, array( "string" )),
-			"id_caja" => new ApiExposedProperty("id_caja", false, GET, array( "int" )),
 			"billetes" => new ApiExposedProperty("billetes", false, GET, array( "json" )),
+			"id_caja" => new ApiExposedProperty("id_caja", false, GET, array( "int" )),
+			"motivo_cancelacion" => new ApiExposedProperty("motivo_cancelacion", false, GET, array( "string" )),
 		);
 	}
 
@@ -30,9 +30,9 @@
  			
 			
 			isset($_GET['id_gasto'] ) ? $_GET['id_gasto'] : null,
-			isset($_GET['motivo_cancelacion'] ) ? $_GET['motivo_cancelacion'] : null,
+			isset($_GET['billetes'] ) ? $_GET['billetes'] : null,
 			isset($_GET['id_caja'] ) ? $_GET['id_caja'] : null,
-			isset($_GET['billetes'] ) ? $_GET['billetes'] : null
+			isset($_GET['motivo_cancelacion'] ) ? $_GET['motivo_cancelacion'] : null
 			
 			);
 		}catch(Exception $e){

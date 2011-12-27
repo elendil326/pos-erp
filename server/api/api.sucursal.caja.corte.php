@@ -17,13 +17,13 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
+			"id_caja" => new ApiExposedProperty("id_caja", true, GET, array( "int" )),
 			"saldo_final" => new ApiExposedProperty("saldo_final", true, GET, array( "float" )),
 			"saldo_real" => new ApiExposedProperty("saldo_real", true, GET, array( "float" )),
-			"id_caja" => new ApiExposedProperty("id_caja", true, GET, array( "int" )),
-			"id_cajero" => new ApiExposedProperty("id_cajero", false, GET, array( "int" )),
-			"id_cajero_nuevo" => new ApiExposedProperty("id_cajero_nuevo", false, GET, array( "int" )),
 			"billetes_dejados" => new ApiExposedProperty("billetes_dejados", false, GET, array( "json" )),
 			"billetes_encontrados" => new ApiExposedProperty("billetes_encontrados", false, GET, array( "json" )),
+			"id_cajero" => new ApiExposedProperty("id_cajero", false, GET, array( "int" )),
+			"id_cajero_nuevo" => new ApiExposedProperty("id_cajero_nuevo", false, GET, array( "int" )),
 		);
 	}
 
@@ -32,13 +32,13 @@
  		$this->response = SucursalesController::CorteCaja( 
  			
 			
+			isset($_GET['id_caja'] ) ? $_GET['id_caja'] : null,
 			isset($_GET['saldo_final'] ) ? $_GET['saldo_final'] : null,
 			isset($_GET['saldo_real'] ) ? $_GET['saldo_real'] : null,
-			isset($_GET['id_caja'] ) ? $_GET['id_caja'] : null,
-			isset($_GET['id_cajero'] ) ? $_GET['id_cajero'] : null,
-			isset($_GET['id_cajero_nuevo'] ) ? $_GET['id_cajero_nuevo'] : null,
 			isset($_GET['billetes_dejados'] ) ? $_GET['billetes_dejados'] : null,
-			isset($_GET['billetes_encontrados'] ) ? $_GET['billetes_encontrados'] : null
+			isset($_GET['billetes_encontrados'] ) ? $_GET['billetes_encontrados'] : null,
+			isset($_GET['id_cajero'] ) ? $_GET['id_cajero'] : null,
+			isset($_GET['id_cajero_nuevo'] ) ? $_GET['id_cajero_nuevo'] : null
 			
 			);
 		}catch(Exception $e){

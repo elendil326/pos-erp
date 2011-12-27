@@ -17,8 +17,8 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"productos" => new ApiExposedProperty("productos", true, GET, array( "json" )),
 			"id_almacen" => new ApiExposedProperty("id_almacen", true, GET, array( "int" )),
+			"productos" => new ApiExposedProperty("productos", true, GET, array( "json" )),
 			"motivo" => new ApiExposedProperty("motivo", false, GET, array( "string" )),
 		);
 	}
@@ -28,8 +28,8 @@
  		$this->response = SucursalesController::SalidaAlmacen( 
  			
 			
-			isset($_GET['productos'] ) ? $_GET['productos'] : null,
 			isset($_GET['id_almacen'] ) ? $_GET['id_almacen'] : null,
+			isset($_GET['productos'] ) ? $_GET['productos'] : null,
 			isset($_GET['motivo'] ) ? $_GET['motivo'] : null
 			
 			);

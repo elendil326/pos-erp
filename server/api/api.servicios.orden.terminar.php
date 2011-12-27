@@ -17,15 +17,15 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"tipo_venta" => new ApiExposedProperty("tipo_venta", true, POST, array( "string" )),
 			"id_orden" => new ApiExposedProperty("id_orden", true, POST, array( "int" )),
-			"saldo" => new ApiExposedProperty("saldo", false, POST, array( "float" )),
-			"descuento" => new ApiExposedProperty("descuento", false, POST, array( "float" )),
-			"tipo_de_pago" => new ApiExposedProperty("tipo_de_pago", false, POST, array( "string" )),
-			"cheques" => new ApiExposedProperty("cheques", false, POST, array( "json" )),
-			"billetes_pago" => new ApiExposedProperty("billetes_pago", false, POST, array( "json" )),
+			"tipo_venta" => new ApiExposedProperty("tipo_venta", true, POST, array( "string" )),
 			"billetes_cambio" => new ApiExposedProperty("billetes_cambio", false, POST, array( "json" )),
+			"billetes_pago" => new ApiExposedProperty("billetes_pago", false, POST, array( "json" )),
+			"cheques" => new ApiExposedProperty("cheques", false, POST, array( "json" )),
+			"descuento" => new ApiExposedProperty("descuento", false, POST, array( "float" )),
 			"id_venta_caja" => new ApiExposedProperty("id_venta_caja", false, POST, array( "int" )),
+			"saldo" => new ApiExposedProperty("saldo", false, POST, array( "float" )),
+			"tipo_de_pago" => new ApiExposedProperty("tipo_de_pago", false, POST, array( "string" )),
 		);
 	}
 
@@ -34,15 +34,15 @@
  		$this->response = ServiciosController::TerminarOrden( 
  			
 			
-			isset($_POST['tipo_venta'] ) ? $_POST['tipo_venta'] : null,
 			isset($_POST['id_orden'] ) ? $_POST['id_orden'] : null,
-			isset($_POST['saldo'] ) ? $_POST['saldo'] : null,
-			isset($_POST['descuento'] ) ? $_POST['descuento'] : null,
-			isset($_POST['tipo_de_pago'] ) ? $_POST['tipo_de_pago'] : null,
-			isset($_POST['cheques'] ) ? $_POST['cheques'] : null,
-			isset($_POST['billetes_pago'] ) ? $_POST['billetes_pago'] : null,
+			isset($_POST['tipo_venta'] ) ? $_POST['tipo_venta'] : null,
 			isset($_POST['billetes_cambio'] ) ? $_POST['billetes_cambio'] : null,
-			isset($_POST['id_venta_caja'] ) ? $_POST['id_venta_caja'] : null
+			isset($_POST['billetes_pago'] ) ? $_POST['billetes_pago'] : null,
+			isset($_POST['cheques'] ) ? $_POST['cheques'] : null,
+			isset($_POST['descuento'] ) ? $_POST['descuento'] : null,
+			isset($_POST['id_venta_caja'] ) ? $_POST['id_venta_caja'] : null,
+			isset($_POST['saldo'] ) ? $_POST['saldo'] : null,
+			isset($_POST['tipo_de_pago'] ) ? $_POST['tipo_de_pago'] : null
 			
 			);
 		}catch(Exception $e){

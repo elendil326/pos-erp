@@ -17,9 +17,9 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
+			"agregar" => new ApiExposedProperty("agregar", true, GET, array( "bool" )),
 			"id_consignacion" => new ApiExposedProperty("id_consignacion", true, GET, array( "int" )),
 			"productos" => new ApiExposedProperty("productos", true, GET, array( "json" )),
-			"agregar" => new ApiExposedProperty("agregar", true, GET, array( "bool" )),
 		);
 	}
 
@@ -28,9 +28,9 @@
  		$this->response = ConsignacionesController::Editar( 
  			
 			
+			isset($_GET['agregar'] ) ? $_GET['agregar'] : null,
 			isset($_GET['id_consignacion'] ) ? $_GET['id_consignacion'] : null,
-			isset($_GET['productos'] ) ? $_GET['productos'] : null,
-			isset($_GET['agregar'] ) ? $_GET['agregar'] : null
+			isset($_GET['productos'] ) ? $_GET['productos'] : null
 			
 			);
 		}catch(Exception $e){

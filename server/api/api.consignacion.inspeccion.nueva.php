@@ -17,8 +17,8 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"id_consignacion" => new ApiExposedProperty("id_consignacion", true, GET, array( "int" )),
 			"fecha_revision" => new ApiExposedProperty("fecha_revision", true, GET, array( "string" )),
+			"id_consignacion" => new ApiExposedProperty("id_consignacion", true, GET, array( "int" )),
 			"id_inspector" => new ApiExposedProperty("id_inspector", false, GET, array( "int" )),
 		);
 	}
@@ -28,8 +28,8 @@
  		$this->response = ConsignacionesController::NuevaInspeccion( 
  			
 			
-			isset($_GET['id_consignacion'] ) ? $_GET['id_consignacion'] : null,
 			isset($_GET['fecha_revision'] ) ? $_GET['fecha_revision'] : null,
+			isset($_GET['id_consignacion'] ) ? $_GET['id_consignacion'] : null,
 			isset($_GET['id_inspector'] ) ? $_GET['id_inspector'] : null
 			
 			);

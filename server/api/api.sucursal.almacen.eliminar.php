@@ -3,7 +3,7 @@
   * GET api/sucursal/almacen/eliminar
   * Elimina un almacen
   *
-  * Descativa un almacen. Para poder desactivar un almacen, este tiene que estar vac?o
+  * Descativa un almacen. Para poder desactivar un almacen, este tiene que estar vac?
   *
   *
   *

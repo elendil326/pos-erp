@@ -17,9 +17,9 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
+			"id_moneda" => new ApiExposedProperty("id_moneda", true, GET, array( "int" )),
 			"nombre" => new ApiExposedProperty("nombre", true, GET, array( "string" )),
 			"valor" => new ApiExposedProperty("valor", true, GET, array( "int" )),
-			"id_moneda" => new ApiExposedProperty("id_moneda", true, GET, array( "int" )),
 			"foto_billete" => new ApiExposedProperty("foto_billete", false, GET, array( "string" )),
 		);
 	}
@@ -29,9 +29,9 @@
  		$this->response = EfectivoController::NuevoBillete( 
  			
 			
+			isset($_GET['id_moneda'] ) ? $_GET['id_moneda'] : null,
 			isset($_GET['nombre'] ) ? $_GET['nombre'] : null,
 			isset($_GET['valor'] ) ? $_GET['valor'] : null,
-			isset($_GET['id_moneda'] ) ? $_GET['id_moneda'] : null,
 			isset($_GET['foto_billete'] ) ? $_GET['foto_billete'] : null
 			
 			);

@@ -17,10 +17,10 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
+			"fecha_llegada_tentativa" => new ApiExposedProperty("fecha_llegada_tentativa", true, GET, array( "string" )),
+			"fecha_salida" => new ApiExposedProperty("fecha_salida", true, GET, array( "string" )),
 			"id_carro" => new ApiExposedProperty("id_carro", true, GET, array( "int" )),
 			"id_sucursal_destino" => new ApiExposedProperty("id_sucursal_destino", true, GET, array( "int" )),
-			"fecha_salida" => new ApiExposedProperty("fecha_salida", true, GET, array( "string" )),
-			"fecha_llegada_tentativa" => new ApiExposedProperty("fecha_llegada_tentativa", true, GET, array( "string" )),
 		);
 	}
 
@@ -29,10 +29,10 @@
  		$this->response = TransportacionYFletesController::Enrutar( 
  			
 			
-			isset($_GET['id_carro'] ) ? $_GET['id_carro'] : null,
-			isset($_GET['id_sucursal_destino'] ) ? $_GET['id_sucursal_destino'] : null,
+			isset($_GET['fecha_llegada_tentativa'] ) ? $_GET['fecha_llegada_tentativa'] : null,
 			isset($_GET['fecha_salida'] ) ? $_GET['fecha_salida'] : null,
-			isset($_GET['fecha_llegada_tentativa'] ) ? $_GET['fecha_llegada_tentativa'] : null
+			isset($_GET['id_carro'] ) ? $_GET['id_carro'] : null,
+			isset($_GET['id_sucursal_destino'] ) ? $_GET['id_sucursal_destino'] : null
 			
 			);
 		}catch(Exception $e){

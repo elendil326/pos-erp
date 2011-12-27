@@ -17,8 +17,8 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"paquetes_precios_utilidad" => new ApiExposedProperty("paquetes_precios_utilidad", true, GET, array( "json" )),
 			"id_tipo_cliente" => new ApiExposedProperty("id_tipo_cliente", true, GET, array( "int" )),
+			"paquetes_precios_utilidad" => new ApiExposedProperty("paquetes_precios_utilidad", true, GET, array( "json" )),
 		);
 	}
 
@@ -27,8 +27,8 @@
  		$this->response = PrecioController::Editar_precio_tipo_clientePaquete( 
  			
 			
-			isset($_GET['paquetes_precios_utilidad'] ) ? $_GET['paquetes_precios_utilidad'] : null,
-			isset($_GET['id_tipo_cliente'] ) ? $_GET['id_tipo_cliente'] : null
+			isset($_GET['id_tipo_cliente'] ) ? $_GET['id_tipo_cliente'] : null,
+			isset($_GET['paquetes_precios_utilidad'] ) ? $_GET['paquetes_precios_utilidad'] : null
 			
 			);
 		}catch(Exception $e){

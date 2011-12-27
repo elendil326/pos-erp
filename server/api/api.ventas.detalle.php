@@ -18,7 +18,6 @@
 	{
 		$this->request = array(	
 			"id_venta" => new ApiExposedProperty("id_venta", true, GET, array( "int" )),
-			"ordenar" => new ApiExposedProperty("ordenar", true, GET, array( "json" )),
 		);
 	}
 
@@ -27,8 +26,7 @@
  		$this->response = VentasController::Detalle( 
  			
 			
-			isset($_GET['id_venta'] ) ? $_GET['id_venta'] : null,
-			isset($_GET['ordenar'] ) ? $_GET['ordenar'] : null
+			isset($_GET['id_venta'] ) ? $_GET['id_venta'] : null
 			
 			);
 		}catch(Exception $e){

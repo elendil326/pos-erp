@@ -17,10 +17,10 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
+			"activo" => new ApiExposedProperty("activo", false, GET, array( "bool" )),
 			"id_empresa" => new ApiExposedProperty("id_empresa", false, GET, array( "int" )),
 			"id_sucursal" => new ApiExposedProperty("id_sucursal", false, GET, array( "int" )),
 			"id_tipo_almacen" => new ApiExposedProperty("id_tipo_almacen", false, GET, array( "int" )),
-			"activo" => new ApiExposedProperty("activo", false, GET, array( "bool" )),
 		);
 	}
 
@@ -29,10 +29,10 @@
  		$this->response = SucursalesController::ListaAlmacen( 
  			
 			
+			isset($_GET['activo'] ) ? $_GET['activo'] : null,
 			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] : null,
 			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null,
-			isset($_GET['id_tipo_almacen'] ) ? $_GET['id_tipo_almacen'] : null,
-			isset($_GET['activo'] ) ? $_GET['activo'] : null
+			isset($_GET['id_tipo_almacen'] ) ? $_GET['id_tipo_almacen'] : null
 			
 			);
 		}catch(Exception $e){

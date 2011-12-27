@@ -3,7 +3,7 @@
   * GET api/empresa/lista
   * Lista todas las empresas existentes.
   *
-  * Mostrar? todas la empresas en el sistema, as? como sus sucursalse y sus gerentes[a] correspondientes. Por default no se mostraran las empresas ni sucursales inactivas. 
+  * Mostrar?odas la empresas en el sistema, as?omo sus sucursalse y sus gerentes[a] correspondientes. Por default no se mostraran las empresas ni sucursales inactivas. 
   *
   *
   *

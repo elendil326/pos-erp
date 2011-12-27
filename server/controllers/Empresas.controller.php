@@ -357,25 +357,25 @@ require_once("interfaces/Empresas.interface.php");
  	 **/
 	public static function Nuevo
 	(
-                $rfc,
-                $ciudad,
-                $curp,
-                $numero_exterior,
-                $razon_social,
-                $colonia,
-                $codigo_postal,
-                $calle,
-                $representante_legal = null,
-                $descuento = null,
-                $impuestos = null,
-                $numero_interior = null,
-                $margen_utilidad = null,
-                $texto_extra = null,
-                $telefono2 = null,
-                $email = null,
-                $retenciones = null,
-                $telefono1 = null,
-                $direccion_web = null
+		$calle, 
+		$ciudad, 
+		$codigo_postal, 
+		$colonia, 
+		$curp, 
+		$numero_exterior, 
+		$razon_social, 
+		$rfc, 
+		$descuento = null, 
+		$direccion_web = null, 
+		$email = null, 
+		$impuestos = null, 
+		$margen_utilidad = null, 
+		$numero_interior = null, 
+		$representante_legal = null, 
+		$retenciones = null, 
+		$telefono1 = null, 
+		$telefono2 = null, 
+		$texto_extra = null
 	)
 	{  
             Logger::log("Creando empresa");

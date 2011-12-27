@@ -17,8 +17,8 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"id_venta" => new ApiExposedProperty("id_venta", true, GET, array( "int" )),
 			"id_impresora" => new ApiExposedProperty("id_impresora", true, GET, array( "int" )),
+			"id_venta" => new ApiExposedProperty("id_venta", true, GET, array( "int" )),
 		);
 	}
 
@@ -27,8 +27,8 @@
  		$this->response = DocumentosController::ImprimirNota_de_venta( 
  			
 			
-			isset($_GET['id_venta'] ) ? $_GET['id_venta'] : null,
-			isset($_GET['id_impresora'] ) ? $_GET['id_impresora'] : null
+			isset($_GET['id_impresora'] ) ? $_GET['id_impresora'] : null,
+			isset($_GET['id_venta'] ) ? $_GET['id_venta'] : null
 			
 			);
 		}catch(Exception $e){

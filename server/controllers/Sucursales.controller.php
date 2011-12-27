@@ -1014,10 +1014,10 @@ require_once("interfaces/Sucursales.interface.php");
  	 **/
 	public static function NuevoAlmacen
 	(
-		$nombre, 
-		$id_sucursal, 
 		$id_empresa, 
+		$id_sucursal, 
 		$id_tipo_almacen, 
+		$nombre, 
 		$descripcion = null
 	)
 	{
@@ -1096,10 +1096,10 @@ require_once("interfaces/Sucursales.interface.php");
  	 **/
 	public static function ListaAlmacen
 	(
+		$activo = null, 
 		$id_empresa = null, 
 		$id_sucursal = null, 
-		$id_tipo_almacen = null, 
-		$activo = null
+		$id_tipo_almacen = null
 	)
 	{
             Logger::log("Listando Almacenes");
@@ -1165,24 +1165,24 @@ require_once("interfaces/Sucursales.interface.php");
  	 **/
 	public static function VenderCaja
 	( 
+		$descuento, 
+		$id_comprador, 
+		$impuesto, 
+		$retencion, 
 		$subtotal, 
 		$tipo_venta, 
 		$total, 
-		$descuento, 
-		$impuesto, 
-		$retencion, 
-		$id_comprador, 
 		$billetes_cambio = null, 
-		$detalle_producto = null, 
-		$saldo = 0, 
-		$tipo_pago = null, 
 		$billetes_pago = null, 
-		$detalle_paquete = null, 
-		$detalle_orden = null, 
 		$cheques = null, 
-		$id_venta_caja = null, 
+		$detalle_orden = null, 
+		$detalle_paquete = null, 
+		$detalle_producto = null, 
+		$id_caja = null, 
 		$id_sucursal = null, 
-		$id_caja = null
+		$id_venta_caja = null, 
+		$saldo = 0, 
+		$tipo_pago = null
 	)
 	{
             Logger::log("Realizando la venta");
@@ -1799,23 +1799,23 @@ require_once("interfaces/Sucursales.interface.php");
  	 **/
 	public static function ComprarCaja
 	(
-		$id_vendedor, 
-		$total, 
-		$tipo_compra, 
-		$subtotal, 
-		$id_empresa, 
-		$impuesto, 
 		$descuento, 
 		$detalle, 
+		$id_empresa, 
+		$id_vendedor, 
+		$impuesto, 
 		$retencion, 
-		$billetes_pago = null, 
+		$subtotal, 
+		$tipo_compra, 
+		$total, 
 		$billetes_cambio = null, 
-		$tipo_pago = null, 
-		$saldo = 0, 
+		$billetes_pago = null, 
 		$cheques = null, 
+		$id_caja = null, 
 		$id_compra_caja = null, 
 		$id_sucursal = null, 
-		$id_caja = null
+		$saldo = 0, 
+		$tipo_pago = null
 	)
 	{  
             Logger::log("Realizando la compra");
@@ -2019,12 +2019,12 @@ require_once("interfaces/Sucursales.interface.php");
  	 **/
 	public static function Lista
 	(
-		$saldo_inferior_que = null, 
-		$id_empresa = null, 
-		$saldo_superior_que = null, 
-		$fecha_apertura_inferior_que = null, 
 		$activo = null, 
-		$fecha_apertura_superior_que = null
+		$fecha_apertura_inferior_que = null, 
+		$fecha_apertura_superior_que = null, 
+		$id_empresa = null, 
+		$saldo_inferior_que = null, 
+		$saldo_superior_que = null
 	)
 	{
             Logger::log("Listando sucursales");
@@ -2133,11 +2133,11 @@ require_once("interfaces/Sucursales.interface.php");
  	 **/
 	public static function AbrirCaja
 	(
-                $id_caja, 
-		$saldo, 
+		$billetes, 
 		$client_token, 
 		$control_billetes, 
-		$billetes, 
+		$id_caja, 
+		$saldo, 
 		$id_cajero = null
 	)
 	{
@@ -2247,25 +2247,25 @@ require_once("interfaces/Sucursales.interface.php");
  	 **/
 	public static function Nueva
 	(
-		$colonia, 
-		$calle, 
 		$activo, 
+		$calle, 
 		$codigo_postal, 
-		$razon_social, 
-		$numero_exterior, 
-		$rfc, 
+		$colonia, 
 		$id_ciudad, 
+		$numero_exterior, 
+		$razon_social, 
+		$rfc, 
 		$saldo_a_favor, 
-		$id_gerente = null, 
-		$retenciones = null, 
-		$referencia = null, 
-		$telefono2 = null, 
-		$numero_interior = null, 
-		$telefono1 = null, 
-		$impuestos = null, 
 		$descripcion = null, 
+		$descuento = null, 
+		$id_gerente = null, 
+		$impuestos = null, 
 		$margen_utilidad = null, 
-		$descuento = null
+		$numero_interior = null, 
+		$referencia = null, 
+		$retenciones = null, 
+		$telefono1 = null, 
+		$telefono2 = null
 	)
 	{
             Logger::log("Creando nueva sucursal");
@@ -2367,23 +2367,23 @@ require_once("interfaces/Sucursales.interface.php");
 	(
 		$id_sucursal, 
 		$calle = null, 
+		$coidgo_postal = null, 
+		$colonia = null, 
+		$descripcion = null, 
+		$descuento = null, 
+		$empresas = null, 
 		$id_gerente = null, 
-		$municipio = null, 
 		$impuestos = null, 
+		$margen_utilidad = null, 
+		$municipio = null, 
+		$numero_exterior = null, 
+		$numero_interior = null, 
+		$razon_social = null, 
+		$retenciones = null, 
 		$rfc = null, 
 		$saldo_a_favor = null, 
-		$numero_interior = null, 
-		$colonia = null, 
-		$numero_exterior = null, 
-		$razon_social = null, 
-		$telefono2 = null, 
 		$telefono1 = null, 
-		$empresas = null, 
-		$descripcion = null, 
-		$margen_utilidad = null, 
-		$descuento = null, 
-		$coidgo_postal = null, 
-		$retenciones = null
+		$telefono2 = null
 	)
 	{
             Logger::log("Editando sucursal ".$id_sucursal);
@@ -2794,8 +2794,8 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 **/
 	public static function EntradaAlmacen
 	(
-		$productos, 
 		$id_almacen, 
+		$productos, 
 		$motivo = null
 	)
 	{
@@ -2911,9 +2911,9 @@ Creo que este metodo tiene que estar bajo sucursal.
 	public static function NuevaCaja
 	(
 		$token, 
+		$basculas = null, 
 		$descripcion = null, 
 		$id_sucursal = null, 
-		$basculas = null, 
 		$impresoras = null
 	)
 	{
@@ -2989,8 +2989,8 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 **/
 	public static function SalidaAlmacen
 	(
-		$productos, 
 		$id_almacen, 
+		$productos, 
 		$motivo = null
 	)
 	{  
@@ -3092,13 +3092,13 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 **/
 	public static function CorteCaja
 	(
+		$id_caja, 
 		$saldo_final, 
 		$saldo_real, 
-		$id_caja, 
-		$id_cajero = null, 
-		$id_cajero_nuevo = null, 
 		$billetes_dejados = null, 
-		$billetes_encontrados = null
+		$billetes_encontrados = null, 
+		$id_cajero = null, 
+		$id_cajero_nuevo = null
 	)
 	{
             Logger::log("Realizando corte de caja");
@@ -3312,9 +3312,9 @@ Creo que este metodo tiene que estar bajo sucursal.
 	public static function EditarAlmacen
 	(
 		$id_almacen, 
+		$descripcion = null, 
 		$id_tipo_almacen = null, 
-		$nombre = null, 
-		$descripcion = null
+		$nombre = null
 	)
 	{
             Logger::log("Editando almacen");
@@ -3609,9 +3609,9 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 **/
 	public static function ProgramarTraspasoAlmacen
 	(
-		$id_almacen_recibe, 
-		$id_almacen_envia, 
 		$fecha_envio_programada, 
+		$id_almacen_envia, 
+		$id_almacen_recibe, 
 		$productos
 	)
 	{  
@@ -3832,8 +3832,8 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 **/
 	public static function RecibirTraspasoAlmacen
 	(
-		$productos, 
-		$id_traspaso
+		$id_traspaso,
+		$productos
 	)
 	{  
             Logger::log("Recibiendo traspaso ".$id_traspaso);
@@ -3990,12 +3990,12 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 **/
 	public static function ListaTraspasoAlmacen
 	(
-		$ordenar = null, 
-		$estado = null, 
-		$id_almacen_recibe = null, 
-		$id_almacen_envia = null, 
+		$cancelado = null, 
 		$completo = null, 
-		$cancelado = null
+		$estado = null, 
+		$id_almacen_envia = null, 
+		$id_almacen_recibe = null, 
+		$ordenar = null
 	)
 	{  
             Logger::log("Listando traspaso de almacenes");
@@ -4048,8 +4048,8 @@ Creo que este metodo tiene que estar bajo sucursal.
 	public static function EditarTraspasoAlmacen
 	(
 		$id_traspaso, 
-		$productos = null, 
-		$fecha_envio_programada = null
+		$fecha_envio_programada = null, 
+		$productos = null
 	)
 	{  
             Logger::log("Editando traspaso ".$id_traspaso);
@@ -4159,8 +4159,8 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 **/
 	public static function ListaCaja
 	(
-		$id_sucursal = null, 
-		$activa = null
+		$activa = null,		
+		$id_sucursal = null
 	)
 	{  
             Logger::log("Listando cajas");
