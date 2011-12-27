@@ -70,5 +70,31 @@
                 $form->createComboBoxJoin("id_tipo_almacen", "descripcion", TipoAlmacenDAO::getAll(), $este_almacen->getIdTipoAlmacen() );
                 
 		$page->addComponent( $form );
+                
+                $page->addComponent( new TitleComponent( "Productos en este almacen" ), 3 );
+                
+                $tabla = new TableComponent(
+                        array(
+                            "id_producto"       => "Producto",
+                            "id_unidad"         => "Unidad",
+                            "cantidad"          => "Cantidad",
+                        ),
+                        ProductoAlmacenDAO::search( new ProductoAlmacen( array( "id_almacen" => $_GET["aid"] ) ) )
+                        );
+                function funcion_producto($id_producto)
+                {
+                    return ProductoDAO::getByPK($id_producto)? ProductoDAO::getByPK($id_producto)->getNombreProducto() : "--------";
+                }
+                
+                function funcion_unidad($id_unidad)
+                {
+                    return UnidadDAO::getByPK($id_unidad)? UnidadDAO::getByPK($id_unidad)->getNombre() : "---------";
+                }
+                
+                $tabla->addColRender("id_producto", "funcion_producto");
+                
+                $tabla->addColRender("id_unidad", "funcion_unidad");
+                
+                $page->addComponent($tabla);
 		
 		$page->render();

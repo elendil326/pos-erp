@@ -35,11 +35,17 @@
         
 		
 	$form->addApiCall( "api/empresa/nuevo/" );
+        $form->onApiCallSuccessRedirect("empresas.lista.php");
 	
 	$form->makeObligatory(array(
 		"rfc",
 		"razon_social",
-		"curp"
+		"curp",
+                "ciudad",
+                "numero_exterior",
+                "colonia",
+                "codigo_postal",
+                "calle"
 	));
 	
 	$page->addComponent( $form );

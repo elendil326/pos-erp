@@ -4177,4 +4177,193 @@ Creo que este metodo tiene que estar bajo sucursal.
             Logger::log("Se encontraron ".count($cajas)." de cajas");
             return $cajas;
 	}
+        
+        
+	/**
+ 	 *
+ 	 *Edita un tipo de almacen
+ 	 *
+ 	 * @param id_tipo_almacen int Id del tipo de almacen a editar
+ 	 * @param descripcion string Descripcion del tipo de almacen
+ 	 **/
+        public static function EditarTipo_almacen
+	(
+		$id_tipo_almacen, 
+		$descripcion = null
+	)
+        {
+            Logger::log("Editando tipo de almacen ".$id_tipo_almacen);
+            
+            //Se valida que el tipo de almacen exista
+            $tipo_almacen = TipoAlmacenDAO::getByPK($id_tipo_almacen);
+            if(is_null($tipo_almacen))
+            {
+                Logger::error("El tipo de almacen ".$id_tipo_almacen." no existe");
+                throw new Exception("El tipo de almacen ".$id_tipo_almacen." no existe");
+            }
+            
+            //Se valida el parametro descripcion
+            if(!is_null($descripcion))
+            {
+                $validar = self::validarString($descripcion, 64, "descripcion");
+                if(is_string($validar))
+                {
+                    Logger::error($validar);
+                    throw new Exception($validar,901);
+                }
+                
+                $tipos_almacen = array_diff(TipoAlmacenDAO::search(
+                        new TipoAlmacen( array( "descripcion" => trim($descripcion) ) )), array( TipoAlmacenDAO::getByPK($id_tipo_almacen) ) );
+                if(!empty($tipos_almacen))
+                {
+                    Logger::error("La descripcion (".$descripcion.") es repetida");
+                    throw new Exception("La descripcion esta repetida");
+                }
+                
+                $tipo_almacen->setDescripcion($descripcion);
+            }
+            
+            DAO::transBegin();
+            try
+            {
+                TipoAlmacenDAO::save($tipo_almacen);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo editar el tipo de almacen ".$e);
+                throw new Exception("No se pudo editar el tipo de almacen ",901);
+            }
+            DAO::transEnd();
+            Logger::log("Tipo de almacen editado correctamente");
+            
+        }
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Elimina un tipo de almacen
+ 	 *
+ 	 * @param id_tipo_almacen int Id del tipo de almacen a editar
+ 	 **/
+        public static function EliminarTipo_almacen
+	(
+		$id_tipo_almacen
+	)
+        {
+            Logger::log("Eliminando tipo de almacen ".$id_tipo_almacen);
+            
+            //El almacen de consignacion no se puede borrar
+            if($id_tipo_almacen==2)
+            {
+                Logger::error("Se intento eliminar el almacen de consginacion");
+                throw new Exception("El almacen de consignacion no puede ser eliminado",901);
+            }
+            
+            //Se valida que el tipo de almacen exista
+            $tipo_almacen = TipoAlmacenDAO::getByPK($id_tipo_almacen);
+            if(is_null($tipo_almacen))
+            {
+                Logger::error("El tipo de almacen ".$id_tipo_almacen." no existe");
+                throw new Exception("El tipo de almacen ".$id_tipo_almacen." no existe",901);
+            }
+            
+            //Si un almacen activo aun pertenece a este tipo de almacen, no se podra eliminar
+            $almacenes = AlmacenDAO::search( new Almacen( array( "id_tipo_almacen" => $id_tipo_almacen ) ) );
+            foreach($almacenes as $almacen)
+            {
+                if($almacen->getActivo())
+                {
+                    Logger::error("No se puede eliminar el tipo de almacen ".$id_tipo_almacen." pues aun es usado por almacenes activos");
+                    throw new Exception("No se puede eliminar este tipo de almacen pues aun hay almacenes activos con este tipo",901);
+                }
+            }
+            
+            
+            DAO::transBegin();
+            try
+            {
+                TipoAlmacenDAO::delete($tipo_almacen);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo eliminar el tipo de almacen: ".$e);
+                throw new Exception("No se pudo eliminar el tipo de almacen, consulte a su administrador de sistema");
+            }
+            DAO::transEnd();
+            Logger::log("Tipo de almacen eliminado exitosamente");
+            
+        }
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Imprime la lista de tipos de almacen
+ 	 *
+ 	 * @return lista_tipos_almacen json Arreglo con la lista de almacenes
+ 	 **/
+        public static function ListaTipo_almacen
+	(
+	)
+        {
+            Logger::log("Listando tipos de almacen");
+            return TipoAlmacenDAO::getAll();
+        }
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Crea un nuevo tipo de almacen
+ 	 *
+ 	 * @param descripcion string Descripcion de este tipo de almacen
+ 	 * @return id_tipo_almacen int Id del tipo de almacen
+ 	 **/
+        public static function NuevoTipo_almacen
+	(
+		$descripcion
+	)
+        {
+            Logger::log("Creando nuevo tipo de almacen");
+            
+            $validar = self::validarString($descripcion, 64, "descripcion");
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar,901);
+            }
+            
+            //No se puede repetir la descripcion del tipo de almacen
+            $tipos_almacen = TipoAlmacenDAO::search(new TipoAlmacen( array( "descripcion" => trim($descripcion) ) ));
+            if(!empty($tipos_almacen))
+            {
+                Logger::error("La descripcion (".$descripcion.") es repetida");
+                throw new Exception("La descripcion esta repetida");
+            }
+            
+            $tipo_almacen = new TipoAlmacen( array( "descripcion" => trim($descripcion) ) );
+            
+            DAO::transBegin();
+            try
+            {
+                TipoAlmacenDAO::save($tipo_almacen);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo crear el nuevo tipo de almacen: ".$e);
+                throw new Exception("No se pudo crear el nuevo tipo de almacen, contacte a su administrador de sistema");
+            }
+            DAO::transEnd();
+            Logger::log("Tipo de almacen creado exitosamente");
+            
+            return array( "id_tipo_almacen" =>  $tipo_almacen->getIdTipoAlmacen());
+            
+        }
   }

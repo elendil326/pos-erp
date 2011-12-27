@@ -749,6 +749,14 @@ class GerenciaComponentPage extends StdComponentPage{
                 {
                         "title" : "Nueva",
                         "url"   : "sucursales.nueva.php"
+                },
+                {
+                        "title" : "Lista tipo de almacen",
+                        "url"   : "sucursales.lista.tipo_almacen.php"
+                },
+                {
+                        "title" : "Nuevo tipo de almacen",
+                        "url"   : "sucursales.nuevo.tipo_almacen.php"
                 }
             ]
         },

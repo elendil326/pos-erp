@@ -29,6 +29,7 @@
         $form->createComboBoxJoin( "id_usuario", "nombre", UsuarioDAO::search(new Usuario( array( "id_rol" => 2 ) )) );
 	
 	$form->addApiCall( "api/sucursal/nueva/", "GET" );
+        $form->onApiCallSuccessRedirect("sucursales.lista.php");
 	
 	$form->makeObligatory(array( 
 			"saldo_a_favor",
@@ -42,20 +43,22 @@
                         "codigo_postal"
 		));
 	
-        $form->addField("id_impuesto", "Impuestos", "text","","impuestos[]");
-        $form->addField("id_retencion", "Retenciones", "text","","retenciones[]");
+        //$form->addField("id_impuesto", "Impuestos", "text","","impuestos[]");
+        //$form->addField("id_retencion", "Retenciones", "text","","retenciones[]");
         
 	$form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll() );
         
-        $form->createListBoxJoin("id_impuesto", "nombre", ImpuestoDAO::getAll());
+        $form->createComboBoxJoin("activa", "activa", array( array("id" => 1, "caption" => "si" ), array( "id" => 0, "caption" => "no" ) ), 1);
         
-        $form->createListBoxJoin("id_retencion", "nombre", RetencionDAO::getAll());
+        //$form->createListBoxJoin("id_impuesto", "nombre", ImpuestoDAO::getAll());
+        
+        //$form->createListBoxJoin("id_retencion", "nombre", RetencionDAO::getAll());
 	
         $form->renameField( array( 
 			//"id_ciudad" => "ciudad",
                         "id_usuario" => "gerente",
-                        "id_impuesto" => "impuestos",
-                        "id_retencion" => "retenciones",
+                        //"id_impuesto" => "impuestos",
+                        //"id_retencion" => "retenciones",
                         "activa"    => "activo"
 		));
         

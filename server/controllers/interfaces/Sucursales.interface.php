@@ -627,4 +627,62 @@ Creo que este metodo tiene que estar bajo sucursal.
   
   
 	
+  
+	/**
+ 	 *
+ 	 *Edita un tipo de almacen
+ 	 *
+ 	 * @param id_tipo_almacen int Id del tipo de almacen a editar
+ 	 * @param descripcion string Descripcion del tipo de almacen
+ 	 **/
+  static function EditarTipo_almacen
+	(
+		$id_tipo_almacen, 
+		$descripcion = null
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Elimina un tipo de almacen
+ 	 *
+ 	 * @param id_tipo_almacen int Id del tipo de almacen a editar
+ 	 **/
+  static function EliminarTipo_almacen
+	(
+		$id_tipo_almacen
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Imprime la lista de tipos de almacen
+ 	 *
+ 	 * @return lista_tipos_almacen json Arreglo con la lista de almacenes
+ 	 **/
+  static function ListaTipo_almacen
+	(
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Crea un nuevo tipo de almacen
+ 	 *
+ 	 * @param descripcion string Descripcion de este tipo de almacen
+ 	 * @return id_tipo_almacen int Id del tipo de almacen
+ 	 **/
+  static function NuevoTipo_almacen
+	(
+		$descripcion
+	);  
+  
+  
+	
   }
