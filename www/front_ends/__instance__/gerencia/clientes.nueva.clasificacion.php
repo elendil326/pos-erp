@@ -11,6 +11,8 @@
 		$form = new DAOFormComponent( new  ClasificacionCliente() );
 		
 		$form->addApiCall("api/cliente/clasificacion/nueva/");
+                
+                $form->onApiCallSuccessRedirect("clientes.lista.clasificacion.php");
 		
 		$form->renameField( array( "margen_utilidad" => "utilidad" ) );
                 

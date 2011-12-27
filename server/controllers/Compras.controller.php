@@ -188,20 +188,20 @@ require_once("interfaces/Compras.interface.php");
  	 **/
 	public static function Lista
 	(
-		$fecha_inicial = null,
-		$tipo_compra = null,
-		$id_vendedor_compra = null,
-		$id_caja = null,
-		$id_usuario = null,
-		$id_empresa = null,
-		$id_sucursal = null,
-		$fecha_final = null,
-		$total_minimo = null,
-		$total_maximo = null,
-		$saldada = null,
-		$cancelada = null,
-		$tipo_pago = null,
-                $orden = null
+		$tipo_pago = null, 
+		$fecha_inicial = null, 
+		$id_vendedor_compra = null, 
+		$tipo_compra = null, 
+		$id_caja = null, 
+		$id_usuario = null, 
+		$id_empresa = null, 
+		$id_sucursal = null, 
+		$fecha_final = null, 
+		$total_maximo = null, 
+		$saldada = null, 
+		$total_minimo = null, 
+		$cancelada = null, 
+		$orden = null
 	)
 	{
             Logger::log("Listando compras");
@@ -350,16 +350,16 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
  	 **/
 	public static function Nueva_compra_arpilla
 	(
-		$peso_por_arpilla,
-		$arpillas,
-		$peso_recibido,
-		$id_compra,
-		$total_origen,
-		$merma_por_arpilla,
-		$numero_de_viaje = null,
-		$folio = null,
-		$peso_origen = null,
-		$fecha_origen = null,
+		$peso_por_arpilla, 
+		$arpillas, 
+		$peso_recibido, 
+		$id_compra, 
+		$total_origen, 
+		$merma_por_arpilla, 
+		$numero_de_viaje = null, 
+		$folio = null, 
+		$peso_origen = null, 
+		$fecha_origen = null, 
 		$productor = null
 	)
 	{
@@ -568,18 +568,19 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
  	 **/
 	public static function Nueva
 	(
-		$descuento, 
 		$subtotal, 
-		$detalle, 
-		$impuesto, 
-		$tipo_compra, 
-		$retencion, 
+		$descuento, 
 		$id_usuario_compra, 
 		$id_empresa, 
 		$total, 
+		$detalle, 
+		$impuesto, 
+		$retencion, 
+		$tipo_compra, 
+		$tipo_de_pago = null, 
 		$cheques = null, 
 		$saldo = 0, 
-		$tipo_de_pago = null
+		$id_sucursal = null
 	)
 	{  
             Logger::log("Creando nueva compra");

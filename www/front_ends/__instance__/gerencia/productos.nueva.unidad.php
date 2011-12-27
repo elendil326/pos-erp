@@ -18,14 +18,12 @@
 			"id_unidad",
                         "activa"
 		 ));
+        
+        $form->createComboBoxJoin("es_entero", "es_entero", array( array( "id" => 1, "caption" => "Si" ), array( "id" => 0, "caption" => "NO" ) ));
 
-//
-//	$form->renameField( array( 
-//			"nombre" 			=> "razon_social",
-//			"codigo_usuario"	=> "codigo_cliente"
-//		));
-	
 	$form->addApiCall( "api/producto/unidad/nueva/" , "GET");
+        
+        $form->onApiCallSuccessRedirect("productos.lista.unidad.php");
 	
 	$form->makeObligatory(array( 
 			"nombre",

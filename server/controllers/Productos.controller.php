@@ -183,10 +183,17 @@ require_once("interfaces/Productos.interface.php");
                 $e = self::validarString($codigo_producto, 30, "codigo de producto");
                 if(is_string($e))
                     return $e;
-                $productos = ProductoDAO::search( new Producto( array( "codigo_producto" => trim($codigo_producto) ) ) );
-                foreach($productos as $producto)
+                if(!is_null($id_producto))
                 {
-                    if($producto->getActivo())
+                    $productos = array_diff(ProductoDAO::search( new Producto( array( "codigo_producto" => trim($codigo_producto) ) ) ), array($producto));
+                }
+                else
+                {
+                    $productos = ProductoDAO::search( new Producto( array( "codigo_producto" => trim($codigo_producto) ) ) );
+                }
+                foreach($productos as $p)
+                {
+                    if($p->getActivo())
                         return "El codigo de producto (".$codigo_producto.") ya esta en uso por el producto ".$producto->getIdProducto();
                 }
             }
@@ -197,7 +204,14 @@ require_once("interfaces/Productos.interface.php");
                 $e = self::validarString($nombre_producto, 30, "nombre de producto");
                 if(is_string($e))
                     return $e;
-                $productos = ProductoDAO::search( new Producto( array( "nombre_producto" => trim($nombre_producto) ) ) );
+                if(!is_null($id_producto))
+                {
+                    $productos = array_diff(ProductoDAO::search( new Producto( array( "nombre_producto" => trim($nombre_producto) ) ) ), array($producto));
+                }
+                else
+                {
+                    $productos = ProductoDAO::search( new Producto( array( "nombre_producto" => trim($nombre_producto) ) ) );
+                }
                 foreach($productos as $p)
                 {
                     if($p->getActivo())
@@ -267,7 +281,14 @@ require_once("interfaces/Productos.interface.php");
                 $e = self::validarString($codigo_de_barras, 30, "codigo de barras");
                 if(is_string($e))
                     return $e;
-                $productos = ProductoDAO::search( new Producto( array( "codigo_de_barras" => trim($codigo_de_barras) ) ) );
+                if(!is_null($id_producto))
+                {
+                    $productos = array_diff(ProductoDAO::search( new Producto( array( "codigo_de_barras" => trim($codigo_de_barras) ) ) ), array($producto));
+                }
+                else
+                {
+                    $productos = ProductoDAO::search( new Producto( array( "codigo_de_barras" => trim($codigo_de_barras) ) ) );
+                }
                 foreach($productos as $producto)
                 {
                     if($producto->getActivo())
@@ -728,25 +749,25 @@ NOTA: Se crea un producto tipo = 1 que es para productos
  	 **/
 	public static function Nuevo
 	(
-		$activo, 
-		$costo_estandar, 
-		$compra_en_mostrador, 
-		$nombre_producto, 
-		$codigo_producto, 
 		$metodo_costeo, 
-		$costo_extra_almacen = null, 
-		$margen_de_utilidad = null, 
-		$foto_del_producto = null, 
-		$garantia = null, 
-		$descuento = null, 
-		$precio = null, 
-		$codigo_de_barras = null, 
-		$descripcion_producto = null, 
-		$impuestos = null, 
+		$codigo_producto, 
+		$nombre_producto, 
+		$compra_en_mostrador, 
+		$costo_estandar, 
+		$activo, 
+		$control_de_existencia = null, 
+		$peso_producto = null, 
 		$id_unidad = null, 
 		$clasificaciones = 0, 
-		$control_de_existencia = null, 
-		$peso_producto = null
+		$descripcion_producto = null, 
+		$impuestos = null, 
+		$codigo_de_barras = null, 
+		$precio = null, 
+		$descuento = null, 
+		$garantia = null, 
+		$foto_del_producto = null, 
+		$costo_extra_almacen = null, 
+		$margen_de_utilidad = null
 	)
 	{  
             Logger::log("Creando nuevo producto");
@@ -988,25 +1009,25 @@ NOTA: Se crea un producto tipo = 1 que es para productos
 	public static function Editar
 	(
 		$id_producto, 
-		$descuento = null, 
 		$metodo_costeo = null, 
-		$descripcion_producto = null, 
-		$id_unidad = null, 
-		$impuestos = null, 
-		$clasificaciones = null, 
 		$precio = null, 
+		$impuestos = null, 
+		$descripcion_producto = null, 
+		$clasificaciones = null, 
+		$id_unidad = null, 
+		$garantia = null, 
 		$margen_de_utilidad = null, 
-		$garantia = null,
 		$compra_en_mostrador = null, 
 		$codigo_de_barras = null, 
 		$empresas = null, 
 		$peso_producto = null, 
 		$costo_estandar = null, 
-		$nombre_producto = null, 
 		$costo_extra_almacen = null, 
-		$control_de_existencia = null, 
+		$nombre_producto = null, 
 		$foto_del_producto = null, 
-		$codigo_producto = null
+		$control_de_existencia = null, 
+		$codigo_producto = null, 
+		$descuento = null
 	)
 	{  
             Logger::log("Editando producto ".$id_producto);

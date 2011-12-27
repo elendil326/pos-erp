@@ -13,12 +13,14 @@
  	 *Cancela una compra
  	 *
  	 * @param id_compra int Id de la compra a cancelar
+ 	 * @param id_caja int Id de la caja a la que regresara el dinero si es que la compra fue de contado y existe la posibilidad de que regrese el dinero
+ 	 * @param billetes json Arreglo de billetes que regresan a la caja en cas ode que la caja lleve un control de billetes
  	 **/
   static function Cancelar
 	(
-		$id_compra,
-                $id_caja = null,
-                $billetes = null
+		$id_compra, 
+		$id_caja = null, 
+		$billetes = null
 	);  
   
   
@@ -46,7 +48,7 @@
 Update : Todo este metodo esta mal, habria que definir nuevamente como se van a manejar las compras a los proveedores ya que como esta definido aqui solo funcionaria para el POS de las papas.
  	 *
  	 * @param id_compra int Id de la compra de la que se detallaran las compras por arpilla
- 	 * @return detalle_compra_arpilla json Objeto que contendrï¿½ la informaciï¿½n del detalle de la compra
+ 	 * @return detalle_compra_arpilla json Objeto que contendrá la información del detalle de la compra
  	 **/
   static function Detalle_compra_arpilla
 	(
@@ -99,36 +101,38 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
   
 	/**
  	 *
- 	 *Registra una nueva compra fuera de caja, puede usarse para que el administrador haga directamente una compra. El usuario y al sucursal seran tomados de la sesion. La fecha sera tomada del servidor. La empresa sera tomada del almacen del cual fueron tomados los productos.
+ 	 *Registra una nueva compra, la compra puede ser a cualquier usuario, siendo este un cliente, proveedor, o cualquiera. La compra siempre viene acompa?anda de un detalle de productos que han sido comprados, y cada uno estipula a que almacen y a que sucursal iran a parar.
  	 *
- 	 * @param descuento float Monto descontado por descuentos
  	 * @param subtotal float Total de la compra antes de impuestos y descuentos.
- 	 * @param detalle json Objeto que contendr el arreglo de id productos, cantidad,  precio, descuento, id de unidad y procesado que involucran esta compra.
- 	 * @param impuesto float Monto agregado por impuestos
- 	 * @param tipo_compra string Si la compra es a credito o de contado
- 	 * @param retencion float Monto agregado por retenciones
+ 	 * @param descuento float Monto descontado por descuentos
  	 * @param id_usuario_compra int Id usuario al que se le compra, si es a una sucursal, se pone el id en negativo
  	 * @param id_empresa int Id de la empresa a nombre de la cual se hace la compra
- 	 * @param total float Total de la compra
+ 	 * @param total float Total de la compra a pagar
+ 	 * @param detalle json JSON que comprende un arreglo del tipo:{    id_producto   : 8,    id_sucursal   : 5,    id_almacen    : 2,    costo_total   : 5.55,    cantidad      : 44}id_producto es el producto comprado.id_sucursal es la sucursal donde se dejara ese producto y id_sucursal es la sucursal donde se dejara de esa sucursal. El costo total es por cada producto. Esto es que se debe mandar el costo total de este producto, y la suma de todos los productos debe concocordar con total.
+ 	 * @param impuesto float Monto agregado por impuestos.
+ 	 * @param retencion float Monto agregado por retenciones
+ 	 * @param tipo_compra string Si la compra es a credito o de contado
+ 	 * @param tipo_de_pago string Si esta compra es a contado, debera especificarse el tipo de pago, este debe ser : tarjeta, checque, efectivo
  	 * @param cheques json Si el tipo de pago es con cheque, se almacena el nombre del banco, el monto y los ultimos 4 numeros del o de los cheques
  	 * @param saldo float Cantidad pagada de la 
- 	 * @param tipo_de_pago string Si el pago sera en efectivo, con cheque o tarjeta
- 	 * @return id_compra int Id autogenerado por la inserciï¿½n de la compra
+ 	 * @param id_sucursal int Id de la sucursal en nombre de la cual se hace la compra
+ 	 * @return id_compra int Id autogenerado por la inserción de la compra
  	 **/
   static function Nueva
 	(
-		$descuento, 
 		$subtotal, 
-		$detalle, 
-		$impuesto, 
-		$tipo_compra, 
-		$retencion, 
+		$descuento, 
 		$id_usuario_compra, 
 		$id_empresa, 
 		$total, 
+		$detalle, 
+		$impuesto, 
+		$retencion, 
+		$tipo_compra, 
+		$tipo_de_pago = null, 
 		$cheques = null, 
 		$saldo = 0, 
-		$tipo_de_pago = null
+		$id_sucursal = null
 	);  
   
   

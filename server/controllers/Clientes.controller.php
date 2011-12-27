@@ -124,7 +124,16 @@ require_once("interfaces/Clientes.interface.php");
                 if(is_string($e))
                     return $e;
                 
-                $clasificaciones_cliente = ClasificacionClienteDAO::search( new ClasificacionCliente( array( "clave_interna" => trim($clave_interna) ) ) );
+                if(!is_null($id_clasificacion_cliente))
+                {
+                    $clasificaciones_cliente = array_diff(ClasificacionClienteDAO::search( 
+                        new ClasificacionCliente( array( "clave_interna" => trim($clave_interna) ) ) ), array(ClasificacionClienteDAO::getByPK($id_clasificacion_cliente)));
+                }
+                else
+                {
+                    $clasificaciones_cliente = ClasificacionClienteDAO::search( 
+                        new ClasificacionCliente( array( "clave_interna" => trim($clave_interna) ) ) );
+                }
                 if(!empty($clasificaciones_cliente))
                     return "La clave interna (".$clave_interna.") ya esta en uso";
             }
@@ -136,7 +145,17 @@ require_once("interfaces/Clientes.interface.php");
                 if(is_string($e))
                     return $e;
                 
-                $clasificaciones_cliente = ClasificacionClienteDAO::search( new ClasificacionCliente( array( "nombre" => trim($nombre) ) ) );
+                if(!is_null($id_clasificacion_cliente))
+                {
+                    $clasificaciones_cliente = array_diff(ClasificacionClienteDAO::search( 
+                        new ClasificacionCliente( array( "nombre" => trim($nombre) ) ) ) , array( ClasificacionClienteDAO::getByPK($id_clasificacion_cliente) ));
+                }
+                else
+                {
+                    $clasificaciones_cliente = ClasificacionClienteDAO::search( 
+                        new ClasificacionCliente( array( "nombre" => trim($nombre) ) ) );
+                }
+                
                 if(!empty($clasificaciones_cliente))
                     return "El nombre (".$nombre.") ya esta en uso";
             }

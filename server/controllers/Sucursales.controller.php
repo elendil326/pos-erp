@@ -1799,21 +1799,23 @@ require_once("interfaces/Sucursales.interface.php");
  	 **/
 	public static function ComprarCaja
 	(
-		$retencion, 
-		$detalle, 
-		$descuento, 
-		$impuesto, 
-		$id_empresa, 
-		$subtotal, 
-		$tipo_compra, 
-		$total, 
 		$id_vendedor, 
-		$saldo = 0, 
-		$tipo_pago = null, 
+		$total, 
+		$tipo_compra, 
+		$subtotal, 
+		$id_empresa, 
+		$impuesto, 
+		$descuento, 
+		$detalle, 
+		$retencion, 
 		$billetes_pago = null, 
 		$billetes_cambio = null, 
+		$tipo_pago = null, 
+		$saldo = 0, 
 		$cheques = null, 
-		$id_compra_caja = null
+		$id_compra_caja = null, 
+		$id_sucursal = null, 
+		$id_caja = null
 	)
 	{  
             Logger::log("Realizando la compra");
@@ -2245,25 +2247,25 @@ require_once("interfaces/Sucursales.interface.php");
  	 **/
 	public static function Nueva
 	(
-		$saldo_a_favor, 
-		$id_ciudad, 
-		$numero_exterior, 
-		$rfc, 
-		$razon_social, 
 		$colonia, 
 		$calle, 
 		$activo, 
 		$codigo_postal, 
-		$descuento = null, 
-		$margen_utilidad = null, 
-		$descripcion = null, 
-		$impuestos = null, 
-		$telefono1 = null, 
-		$telefono2 = null, 
-		$numero_interior = null, 
+		$razon_social, 
+		$numero_exterior, 
+		$rfc, 
+		$id_ciudad, 
+		$saldo_a_favor, 
+		$id_gerente = null, 
 		$retenciones = null, 
 		$referencia = null, 
-		$id_gerente = null
+		$telefono2 = null, 
+		$numero_interior = null, 
+		$telefono1 = null, 
+		$impuestos = null, 
+		$descripcion = null, 
+		$margen_utilidad = null, 
+		$descuento = null
 	)
 	{
             Logger::log("Creando nueva sucursal");

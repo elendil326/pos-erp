@@ -1072,10 +1072,29 @@ require_once("interfaces/PersonalYAgentes.interface.php");
           }
           if(!is_null($rfc))
           {
+              //Verifica que el rfc no sea repetido
+              $usuarios = array_diff(UsuarioDAO::search( new Usuario(array( "rfc" => $rfc ) ) ), array($usuario));
+              foreach($usuarios as $u)
+                {
+                    if($u->getActivo())
+                    {
+                        Logger::error("El codigo de usuario ".$codigo_usuario." ya esta en uso");
+                        throw new Exception("El codigo de usuario ".$codigo_usuario." ya esta en uso",901);
+                    }
+                }
               $usuario->setRfc($rfc);
           }
           if(!is_null($curp))
           {
+              $usuarios=array_diff(UsuarioDAO::search(new Usuario(array( "curp" => $curp ))),array( $usuario ));
+                foreach($usuarios as $u)
+                {
+                    if($u->getActivo())
+                    {
+                        Logger::error("La curp ".$curp." ya existe");
+                        throw new Exception("La curp ".$curp." ya existe",901);
+                    }
+                }
               $usuario->setCurp($curp);
           }
           if(!is_null($comision_ventas))
@@ -1108,6 +1127,16 @@ require_once("interfaces/PersonalYAgentes.interface.php");
           }
           if(!is_null($correo_electronico))
           {
+              //se verifica que el correo electronico no se repita
+                $usuarios=array_diff(UsuarioDAO::search(new Usuario( array( "correo_electronico" => $correo_electronico ) )), array($usuario) );
+                foreach($usuarios as $u)
+                {
+                    if($u->getActivo())
+                    {
+                        Logger::error("El correo electronico ".$correo_electronico." ya esta en uso");
+                        throw new Exception("El correo electronico ".$correo_electronico." ya esta en uso",901);
+                    }
+                }
               $usuario->setCorreoElectronico($correo_electronico);
           }
           if(!is_null($pagina_web))
@@ -1160,6 +1189,16 @@ require_once("interfaces/PersonalYAgentes.interface.php");
           }
           if(!is_null($codigo_usuario))
           {
+                //se verifica que el codigo de usuario no sea repetido
+                $usuarios=array_diff(UsuarioDAO::search(new Usuario(array( "codigo_usuario" => $codigo_usuario ))), array($usuario));
+                foreach($usuarios as $u)
+                {
+                    if($u->getActivo())
+                    {
+                        Logger::error("El codigo de usuario ".$codigo_usuario." ya esta en uso");
+                        throw new Exception("El codigo de usuario ".$codigo_usuario." ya esta en uso",901);
+                    }
+                }
               $usuario->setCodigoUsuario($codigo_usuario);
           }
           if(!is_null($dias_de_embarque))
@@ -1264,6 +1303,16 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 $direccion2->setTelefono2($telefono2_2);
                 $cambio_direccion2=true;
             }
+            
+            //se verifica como medida de seguridad que el password no sea igual al codigo de usaurio ni al correo electronico
+            if($usuario->getPassword()==$usuario->getCodigoUsuario()||$usuario->getPassword()==$usuario->getCorreoElectronico())
+            {
+                Logger::error("El password (".$usuario->getPassword().") no puede ser igual al codigo de usuario
+                    (".$usuario->getCodigoUsuario().") ni al correo electronico (".$usuario->getCorreoElectronico().")");
+                throw new Exception("El password (".$usuario->getPassword().") no puede ser igual al codigo de usuario
+                    (".$usuario->getCodigoUsuario().") ni al correo electronico (".$usuario->getCorreoElectronico().")",901);
+            }
+            
             DAO::transBegin();
             try
             {

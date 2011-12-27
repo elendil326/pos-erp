@@ -285,40 +285,44 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *
  	 *Comprar productos en mostrador. No debe confundirse con comprar productos a un proveedor. Estos productos se agregaran al inventario de esta sucursal de manera automatica e instantanea. La IP ser? tomada de la m?quina que realiza la compra. El usuario y la sucursal ser?n tomados de la sesion activa. El estado del campo liquidada ser? tomado de acuerdo al campo total y pagado.
  	 *
- 	 * @param retencion float Cantidad sumada por retenciones
- 	 * @param detalle json Objeto que contendr la informacin de los productos comprados, sus cantidades, sus descuentos, y sus precios
- 	 * @param descuento float Cantidad restada por descuento
- 	 * @param impuesto float Cantidad sumada por impuestos
- 	 * @param id_empresa int Empresa a nombre de la cual se realiza la compra
- 	 * @param subtotal float Total de la compra antes de incluirle impuestos.
- 	 * @param tipo_compra string Si la compra es a credito o de contado
- 	 * @param total float Total de la compra despues de impuestos y descuentos
  	 * @param id_vendedor int Id del cliente al que se le compra
- 	 * @param saldo float Saldo de la compra
- 	 * @param tipo_pago string Si el pago ser en efectivo, con tarjeta o con cheque
+ 	 * @param total float Total de la compra despues de impuestos y descuentos
+ 	 * @param tipo_compra string Si la compra es a credito o de contado
+ 	 * @param subtotal float Total de la compra antes de incluirle impuestos.
+ 	 * @param id_empresa int Empresa a nombre de la cual se realiza la compra
+ 	 * @param impuesto float Cantidad sumada por impuestos
+ 	 * @param descuento float Cantidad restada por descuento
+ 	 * @param detalle json Objeto que contendr la informacin de los productos comprados, sus cantidades, sus descuentos, y sus precios
+ 	 * @param retencion float Cantidad sumada por retenciones
  	 * @param billetes_pago json Ids de billetes que se usaron para pagar
  	 * @param billetes_cambio json Ids de billetes que se recibieron como cambio
+ 	 * @param tipo_pago string Si el pago ser en efectivo, con tarjeta o con cheque
+ 	 * @param saldo float Saldo de la compra
  	 * @param cheques json Si el tipo de pago es con cheque, se almacena el nombre del banco, el monto y los ultimos 4 numeros del o de los cheques
  	 * @param id_compra_caja int Id de la compra de esta caja, sirve cuando se va el internet
+ 	 * @param id_sucursal int Id de la sucursal de la cual se hara la compra. Si no se recibe se tomara de la sesion
+ 	 * @param id_caja int Id de la caja de la cual se realizara la compra. Si no se recibe se tomara de la sesion
  	 * @return id_compra_cliente string Id de la nueva compra
  	 **/
   static function ComprarCaja
 	(
-		$retencion, 
-		$detalle, 
-		$descuento, 
-		$impuesto, 
-		$id_empresa, 
-		$subtotal, 
-		$tipo_compra, 
-		$total, 
 		$id_vendedor, 
-		$saldo = 0, 
-		$tipo_pago = null, 
+		$total, 
+		$tipo_compra, 
+		$subtotal, 
+		$id_empresa, 
+		$impuesto, 
+		$descuento, 
+		$detalle, 
+		$retencion, 
 		$billetes_pago = null, 
 		$billetes_cambio = null, 
+		$tipo_pago = null, 
+		$saldo = 0, 
 		$cheques = null, 
-		$id_compra_caja = null
+		$id_compra_caja = null, 
+		$id_sucursal = null, 
+		$id_caja = null
 	);  
   
   
@@ -581,48 +585,48 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *
  	 *Metodo que crea una nueva sucursal
  	 *
- 	 * @param saldo_a_favor float Saldo a favor de la sucursal.
- 	 * @param id_ciudad int Id de la ciudad donde se encuentra la sucursal
- 	 * @param numero_exterior string Numero exterior de la sucursal
- 	 * @param rfc string RFC de la sucursal
- 	 * @param razon_social string Razon social de la sucursal
  	 * @param colonia string Colonia de la sucursal
  	 * @param calle string Calle de la sucursal
  	 * @param activo bool Si esta sucursal estara activa inmediatamente despues de ser creada
  	 * @param codigo_postal string Codigo postal de la empresa
- 	 * @param descuento float Descuento que tendran todos los productos ofrecidos por esta sucursal
- 	 * @param margen_utilidad float Margen de utilidad que se le ganara a todos los productos ofrecidos por esta sucursal
- 	 * @param descripcion string Descripcion de la sucursal
- 	 * @param impuestos json Objeto que contendra el arreglo de impuestos que afectan a esta sucursal
- 	 * @param telefono1 string Telefono1 de la sucursal
- 	 * @param telefono2 string Telefono2 de la sucursal
- 	 * @param numero_interior string numero interior
+ 	 * @param razon_social string Razon social de la sucursal
+ 	 * @param numero_exterior string Numero exterior de la sucursal
+ 	 * @param rfc string RFC de la sucursal
+ 	 * @param id_ciudad int Id de la ciudad donde se encuentra la sucursal
+ 	 * @param saldo_a_favor float Saldo a favor de la sucursal.
+ 	 * @param id_gerente int ID del usuario que sera gerente de esta sucursal. Para que sea valido este usuario debe tener el nivel de acceso apropiado.
  	 * @param retenciones json Objeto que contendra el arreglo de retenciones que afectan a esta sucursal
  	 * @param referencia string Referencia para localizar la direccion de la sucursal
- 	 * @param id_gerente int ID del usuario que sera gerente de esta sucursal. Para que sea valido este usuario debe tener el nivel de acceso apropiado.
+ 	 * @param telefono2 string Telefono2 de la sucursal
+ 	 * @param numero_interior string numero interior
+ 	 * @param telefono1 string Telefono1 de la sucursal
+ 	 * @param impuestos json Objeto que contendra el arreglo de impuestos que afectan a esta sucursal
+ 	 * @param descripcion string Descripcion de la sucursal
+ 	 * @param margen_utilidad float Margen de utilidad que se le ganara a todos los productos ofrecidos por esta sucursal
+ 	 * @param descuento float Descuento que tendran todos los productos ofrecidos por esta sucursal
  	 * @return id_sucursal int Id autogenerado de la sucursal que se creo.
  	 **/
   static function Nueva
 	(
-		$saldo_a_favor, 
-		$id_ciudad, 
-		$numero_exterior, 
-		$rfc, 
-		$razon_social, 
 		$colonia, 
 		$calle, 
 		$activo, 
 		$codigo_postal, 
-		$descuento = null, 
-		$margen_utilidad = null, 
-		$descripcion = null, 
-		$impuestos = null, 
-		$telefono1 = null, 
-		$telefono2 = null, 
-		$numero_interior = null, 
+		$razon_social, 
+		$numero_exterior, 
+		$rfc, 
+		$id_ciudad, 
+		$saldo_a_favor, 
+		$id_gerente = null, 
 		$retenciones = null, 
 		$referencia = null, 
-		$id_gerente = null
+		$telefono2 = null, 
+		$numero_interior = null, 
+		$telefono1 = null, 
+		$impuestos = null, 
+		$descripcion = null, 
+		$margen_utilidad = null, 
+		$descuento = null
 	);  
   
   

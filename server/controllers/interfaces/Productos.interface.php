@@ -188,48 +188,48 @@
 
 NOTA: Se crea un producto tipo = 1 que es para productos
  	 *
- 	 * @param activo bool Si queremos que este activo o no este producto despues de crearlo.
- 	 * @param costo_estandar float Valor del costo estndar del producto.
- 	 * @param compra_en_mostrador bool Verdadero si este producto se puede comprar en mostrador, para aquello de compra-venta. Para poder hacer esto, el sistema debe poder hacer compras en mostrador
- 	 * @param nombre_producto string Nombre del producto
- 	 * @param codigo_producto string El codigo de control de la empresa para este producto, no se puede repetir
  	 * @param metodo_costeo string  Mtodo de costeo del producto: 1 = Costo Promedio en Base a Entradas.2 = Costo Promedio en Base a Entradas Almacn.3 = ltimo costo.4 = UEPS.5 = PEPS.6 = Costo especfico.7 = Costo Estndar
- 	 * @param costo_extra_almacen float Si este producto produce un costo extra por tenerlo en almacen
- 	 * @param margen_de_utilidad float Un porcentage de 0 a 100 si queremos que este producto marque utilidad en especifico
- 	 * @param foto_del_producto string url a una foto de este producto
- 	 * @param garantia int Si este producto cuenta con un nmero de meses de garanta  que no aplica a los productos de su categora
- 	 * @param descuento float Descuento que se aplicara a este producot
- 	 * @param precio int El precio de este producto
- 	 * @param codigo_de_barras string El Codigo de barras para este producto
- 	 * @param descripcion_producto string Descripcion larga del producto
- 	 * @param impuestos json array de ids de impuestos que tiene este producto
- 	 * @param id_unidad int La unidad preferida para este producto
- 	 * @param clasificaciones json Uno o varios id_clasificacion de este producto, esta clasificacion esta dada por el usuarioArray
+ 	 * @param codigo_producto string El codigo de control de la empresa para este producto, no se puede repetir
+ 	 * @param nombre_producto string Nombre del producto
+ 	 * @param compra_en_mostrador bool Verdadero si este producto se puede comprar en mostrador, para aquello de compra-venta. Para poder hacer esto, el sistema debe poder hacer compras en mostrador
+ 	 * @param costo_estandar float Valor del costo estndar del producto.
+ 	 * @param activo bool Si queremos que este activo o no este producto despues de crearlo.
  	 * @param control_de_existencia int 00000001 = Unidades. 00000010 = Caractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = Lote
  	 * @param peso_producto float el peso de este producto en KG
+ 	 * @param id_unidad int La unidad preferida para este producto
+ 	 * @param clasificaciones json Uno o varios id_clasificacion de este producto, esta clasificacion esta dada por el usuarioArray
+ 	 * @param descripcion_producto string Descripcion larga del producto
+ 	 * @param impuestos json array de ids de impuestos que tiene este producto
+ 	 * @param codigo_de_barras string El Codigo de barras para este producto
+ 	 * @param precio int El precio de este producto
+ 	 * @param descuento float Descuento que se aplicara a este producot
+ 	 * @param garantia int Si este producto cuenta con un nmero de meses de garanta  que no aplica a los productos de su categora
+ 	 * @param foto_del_producto string url a una foto de este producto
+ 	 * @param costo_extra_almacen float Si este producto produce un costo extra por tenerlo en almacen
+ 	 * @param margen_de_utilidad float Un porcentage de 0 a 100 si queremos que este producto marque utilidad en especifico
  	 * @return id_producto int Id generado por la inserción del nuevo producto
  	 **/
   static function Nuevo
 	(
-		$activo, 
-		$costo_estandar, 
-		$compra_en_mostrador, 
-		$nombre_producto, 
-		$codigo_producto, 
 		$metodo_costeo, 
-		$costo_extra_almacen = null, 
-		$margen_de_utilidad = null, 
-		$foto_del_producto = null, 
-		$garantia = null, 
-		$descuento = null, 
-		$precio = null, 
-		$codigo_de_barras = null, 
-		$descripcion_producto = null, 
-		$impuestos = null, 
+		$codigo_producto, 
+		$nombre_producto, 
+		$compra_en_mostrador, 
+		$costo_estandar, 
+		$activo, 
+		$control_de_existencia = null, 
+		$peso_producto = null, 
 		$id_unidad = null, 
 		$clasificaciones = 0, 
-		$control_de_existencia = null, 
-		$peso_producto = null
+		$descripcion_producto = null, 
+		$impuestos = null, 
+		$codigo_de_barras = null, 
+		$precio = null, 
+		$descuento = null, 
+		$garantia = null, 
+		$foto_del_producto = null, 
+		$costo_extra_almacen = null, 
+		$margen_de_utilidad = null
 	);  
   
   
