@@ -107,6 +107,7 @@ require_once ('servicio.dao.php');
 require_once ('servicio_clasificacion.dao.php');
 require_once ('servicio_empresa.dao.php');
 require_once ('servicio_sucursal.dao.php');
+require_once ('sesion.dao.php');
 require_once ('sucursal.dao.php');
 require_once ('sucursal_empresa.dao.php');
 require_once ('tipo_almacen.dao.php');
