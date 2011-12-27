@@ -1243,7 +1243,7 @@ require_once("interfaces/Sucursales.interface.php");
                         //Si no se recibe informacion de los cheques manda error
                         if(is_null($cheques))
                         {
-                            throw new Exception("El tipo de pago es con cheque pero no se recibio informacion del mismo");
+                            throw new Exception("El tipo de pago es con cheque pero no se recibio informacion del mismo",901);
                         }
                         
                         //Se inicializa un registro de la tabla cheque_venta con el id de la venta guardada
@@ -1278,7 +1278,7 @@ require_once("interfaces/Sucursales.interface.php");
                 {
                     if($usuario->getLimiteCredito()< $usuario->getSaldoDelEjercicio()*-1 + $total)
                     {
-                        throw new Exception("Esta venta no se puede realizar a credito pues supera el limite de credito del usuario");
+                        throw new Exception("Esta venta no se puede realizar a credito pues supera el limite de credito del usuario",901);
                     }
                     
                     if(is_null($saldo))
@@ -1288,7 +1288,7 @@ require_once("interfaces/Sucursales.interface.php");
                     }
                     else if($saldo>$total)
                     {
-                        throw new Exception("El saldo es mayor al total, no se puede pagar más por una venta que su total.");
+                        throw new Exception("El saldo es mayor al total, no se puede pagar más por una venta que su total.",901);
                     }
                     $venta->setSaldo($saldo);
                     VentaDAO::save($venta);
@@ -1301,7 +1301,7 @@ require_once("interfaces/Sucursales.interface.php");
                 //son nulos, manda error.
                 if(is_null($detalle_orden)&&is_null($detalle_paquete)&&is_null($detalle_producto))
                 {
-                    throw new Exception ("No se recibieron ni paquetes ni productos ni servicios para esta venta");
+                    throw new Exception ("No se recibieron ni paquetes ni productos ni servicios para esta venta",901);
                 }
                 
                 //Por cada detalle, se valida la informacion recibida, se guarda en un registro
@@ -1315,7 +1315,7 @@ require_once("interfaces/Sucursales.interface.php");
                     {
                         $validar = self::validarParametrosVentaPaquete(null,$d_p["id_paquete"],$d_p["cantidad"],$d_p["precio"],$d_p["descuento"]);
                         if(is_string($validar))
-                            throw new Exception($validar);
+                            throw new Exception($validar,901);
                         $d_paquete->setCantidad($d_p["cantidad"]);
                         $d_paquete->setDescuento($d_p["descuento"]);
                         $d_paquete->setIdPaquete($d_p["id_paquete"]);
@@ -1332,12 +1332,8 @@ require_once("interfaces/Sucursales.interface.php");
                     {
                         $validar = self::validarParametrosVentaProducto(null,$d_p["id_producto"],$d_p["precio"],$d_p["cantidad"],$d_p["descuento"],$d_p["impuesto"],$d_p["retencion"],$d_p["id_unidad"]);
                         if(is_string($validar))
-                            throw new Exception($validar);
+                            throw new Exception($validar,901);
                         $producto=ProductoDAO::getByPK($d_p["id_producto"]);
-                        if(!$producto->getCompraEnMostrador())
-                        {
-                            throw new Exception("No se puede vender el producto con id ".$d_p["id_producto"]." en mostrador");
-                        }
                         $d_producto->setCantidad($d_p["cantidad"]);
                         $d_producto->setDescuento($d_p["descuento"]);
                         $d_producto->setIdProducto($d_p["id_producto"]);
@@ -1361,7 +1357,7 @@ require_once("interfaces/Sucursales.interface.php");
                     {
                         $validar = self::validarParametrosVentaOrden(null,$d_p["id_orden_de_servicio"],$d_p["precio"],$d_p["descuento"],$d_p["impuesto"],$d_p["retencion"]);
                         if(is_string($validar))
-                            throw new Exception($validar);
+                            throw new Exception($validar,901);
                         $d_orden->setDescuento($d_p["descuento"]);
                         $d_orden->setIdOrdenDeServicio($d_p["id_orden_de_servicio"]);
                         $d_orden->setImpuesto($d_p["impuesto"]);
@@ -1393,6 +1389,8 @@ require_once("interfaces/Sucursales.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudo realizar la venta: ".$e);
+                if($e->getCode()==901)
+                    throw new Exception("No se pudo realizar la venta: ".$e->getMessage());
                 throw new Exception("No se pudo realizar la venta");
             }
             DAO::transEnd();
