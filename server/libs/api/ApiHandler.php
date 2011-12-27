@@ -61,7 +61,7 @@ abstract class ApiHandler
     {
 
 		$token = null;
-
+		Logger::warn("Aqui hay un notice de php suprimido ApiHandler.php->CheckAuthorization()");
 		if( @isset($_GET["auth_token"] )  ){
 			$token = $_GET["auth_token"];
 		}
