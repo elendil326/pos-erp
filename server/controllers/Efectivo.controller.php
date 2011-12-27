@@ -12,12 +12,14 @@ require_once("interfaces/Efectivo.interface.php");
         //Metodo para pruebas que simula la obtencion del id de la sucursal actual
         private static function getSucursal()
         {
+			Logger::error("Getsucursal en efectivo controller, no deberia de ser asi");
             return 1;
         }
         
         //metodo para pruebas que simula la obtencion del id de la caja actual
         private static function getCaja()
         {
+			Logger::error("Getsucursal en efectivo controller, no deberia de ser asi");
             return 1;
         }
         
@@ -257,10 +259,10 @@ require_once("interfaces/Efectivo.interface.php");
 	public static function EditarBillete
 	(
 		$id_billete, 
-		$valor = null, 
 		$foto_billete = null, 
+		$id_moneda = null, 
 		$nombre = null, 
-		$id_moneda = null
+		$valor = null
 	)
 	{  
             Logger::log("Editando billete ".$id_billete);
@@ -367,8 +369,8 @@ require_once("interfaces/Efectivo.interface.php");
  	 **/
 	public static function ListaBillete
 	(
-		$ordenar = null, 
-		$activo = null
+		$activo = null, 
+		$ordenar = null
 	)
 	{  
             Logger::log("Listando billetes");
@@ -569,8 +571,8 @@ require_once("interfaces/Efectivo.interface.php");
  	 **/
 	public static function ListaMoneda
 	(
-		$orden = null, 
-		$activo = null
+		$activo = null,
+		$orden = null
 	)
 	{  
             Logger::log("Listando las moendas");

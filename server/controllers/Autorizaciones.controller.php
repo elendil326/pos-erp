@@ -100,13 +100,13 @@ Se podr?an combinar y as? tener un solo m?todo para una compra venta preferencia
  	 **/
 	public static function Editar_precio_cliente
 	(
-		$siguiente_compra, 
-		$id_cliente, 
-		$descripcion, 
-		$id_productos, 
 		$compra, 
-		$precio = null, 
-		$id_precio = null
+		$descripcion, 
+		$id_cliente, 
+		$id_productos, 
+		$siguiente_compra, 
+		$id_precio = null, 
+		$precio = null
 	)
 	{  
   

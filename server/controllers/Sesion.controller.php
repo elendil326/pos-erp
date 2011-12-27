@@ -90,7 +90,10 @@ Si el usuario que esta intentando iniciar sesion, esta descativado... 403 Author
 		$user = UsuarioDAO::findUser( $user, $pass );
 
 
-		if( $user === NULL ) return NULL;
+		if( $user === NULL ) {
+			Logger::warn("No se encontro el usuario " . $user);
+			return NULL;	
+		}
 
 		//ok user is ok, log him in
 		self::login( $user->getIdUsuario(), $pass, $user->getIdRol() );
@@ -192,7 +195,7 @@ Si el usuario que esta intentando iniciar sesion, esta descativado... 403 Author
 
 
 	public static function getCurrentUser(){
-		return 1;
+
 		if(self::isLoggedIn())
 			return $_SESSION['USER_ID'];
 		else

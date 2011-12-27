@@ -13,18 +13,18 @@
  	 *Edita la informacion de una clasificacion de proveedor
  	 *
  	 * @param id_clasificacion_proveedor int Id de la clasificacion del proveedor a editar
- 	 * @param retenciones json Ids de las retenciones de la clasificacion de  proveedor
- 	 * @param impuestos json Ids de los impuestos de la clasificacion del proveedor
  	 * @param descripcion string Descripcion de la clasificacion del proveedor
+ 	 * @param impuestos json Ids de los impuestos de la clasificacion del proveedor
  	 * @param nombre string Nombre de la clasificacion del proveedor
+ 	 * @param retenciones json Ids de las retenciones de la clasificacion de  proveedor
  	 **/
   static function EditarClasificacion
 	(
 		$id_clasificacion_proveedor, 
-		$retenciones = "", 
-		$impuestos = "", 
-		$descripcion = "", 
-		$nombre = ""
+		$descripcion = null, 
+		$impuestos = null, 
+		$nombre = null, 
+		$retenciones = null
 	);  
   
   
@@ -39,6 +39,23 @@
   static function EliminarClasificacion
 	(
 		$id_clasificacion_proveedor
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Este emtodo lista las clasificaciones de proveedores
+ 	 *
+ 	 * @param activo bool Si este parametro es obtenido, se listaran las clasificaciones cumplan con el
+ 	 * @param orden string Nombre de la columna de la tabla mediante la cual se ordenara la lista
+ 	 * @return lista_clasificaciones json Objeto que contendra la lista de clasificaciones
+ 	 **/
+  static function ListaClasificacion
+	(
+		$activo = null, 
+		$orden = null
 	);  
   
   
@@ -61,15 +78,7 @@
 		$impuestos = null, 
 		$retenciones = null
 	);  
-        
   
-  
-  
-        static function ListaClasificacion
-	(
-                $activo = null,
-		$orden = null
-	);
   
 	
   
@@ -78,65 +87,62 @@
  	 *Edita la informacion de un proveedor. 
  	 *
  	 * @param id_proveedor int Id del proveedor a editar
- 	 * @param limite_credito float Limite de credito que otorga el proveedor
- 	 * @param password string Password del proveedor para entrar al sistema
- 	 * @param tiempo_entrega int Tiempo de entrega del proveedor en dias
- 	 * @param codigo_postal string Codigo postal de la direccion del proveedor
- 	 * @param id_ciudad int Id de la ciudad de la direccion del proveedor
- 	 * @param texto_extra string Referencia para el domicilio del proveedor
- 	 * @param direccion_web string Pagina web del proveedor
- 	 * @param numero_interior string Numero interior de la direccion del proveedor
- 	 * @param numero_exterior string Numero exterior de la direccion del proveedor
- 	 * @param representante_legal string Representante legal del proveedor
  	 * @param activo bool Si el proveedor sera tomado como activo despues de la insercion o no.
- 	 * @param rfc string RFC del proveedor
- 	 * @param id_tipo_proveedor int El id del tipo de proveedor
- 	 * @param dias_de_credito int Dias de credito que otorga el proveedor
  	 * @param calle string Calle de la direccion del proveedor
- 	 * @param telefono_personal string Telefono del proveedor
- 	 * @param nombre string Nombre del proveedor
- 	 * @param email string E-mail del proveedor
- 	 * @param dias_embarque int Dias en que el proveedor embarca ( Lunes, Martes, Miercoles, Jueves..)
- 	 * @param impuestos json Arreglo de enteros que contendr&#65533;n los ids de impuestos por comprar a este proveedor
- 	 * @param telefono2 string Telefono 2 de la direccion del proveedor
- 	 * @param telefono1 string Telefono 1 de la direccion del proveeor
- 	 * @param cuenta_bancaria string Cuenta bancaria del proveedor a la cual se le deposita
- 	 * @param id_moneda int Id de la moneda que maneja el proveedor
- 	 * @param retenciones json Retenciones que afectan a este proveedor
+ 	 * @param codigo_postal string Codigo postal de la direccion del proveedor
  	 * @param codigo_proveedor string Codigo con el que se peude identificar al proveedor
+ 	 * @param cuenta_bancaria string Cuenta bancaria del proveedor a la cual se le deposita
+ 	 * @param dias_de_credito int Dias de credito que otorga el proveedor
+ 	 * @param dias_embarque int Dias en que el proveedor embarca ( Lunes, Martes, Miercoles, Jueves..)
+ 	 * @param direccion_web string Pagina web del proveedor
+ 	 * @param email string E-mail del proveedor
+ 	 * @param id_ciudad int Id de la ciudad de la direccion del proveedor
+ 	 * @param id_moneda int Id de la moneda que maneja el proveedor
+ 	 * @param id_tipo_proveedor int El id del tipo de proveedor
+ 	 * @param impuestos json Arreglo de enteros que contendr&#65533;n los ids de impuestos por comprar a este proveedor
+ 	 * @param limite_credito float Limite de credito que otorga el proveedor
+ 	 * @param nombre string Nombre del proveedor
+ 	 * @param numero_exterior string Numero exterior de la direccion del proveedor
+ 	 * @param numero_interior string Numero interior de la direccion del proveedor
+ 	 * @param password string Password del proveedor para entrar al sistema
+ 	 * @param representante_legal string Representante legal del proveedor
+ 	 * @param retenciones json Retenciones que afectan a este proveedor
+ 	 * @param rfc string RFC del proveedor
+ 	 * @param telefono1 string Telefono 1 de la direccion del proveeor
+ 	 * @param telefono2 string Telefono 2 de la direccion del proveedor
+ 	 * @param telefono_personal string Telefono del proveedor
+ 	 * @param texto_extra string Referencia para el domicilio del proveedor
+ 	 * @param tiempo_entrega int Tiempo de entrega del proveedor en dias
  	 **/
   static function Editar
 	(
 		$id_proveedor, 
-		$limite_credito = null, 
-		$password = null, 
-		$tiempo_entrega = null, 
-		$codigo_postal = null, 
-		$id_ciudad = null, 
-		$texto_extra = null, 
-		$direccion_web = null, 
-		$numero_interior = null, 
-		$numero_exterior = null, 
-		$representante_legal = null, 
 		$activo = 1, 
-		$rfc = null, 
-		$id_tipo_proveedor = null, 
-		$dias_de_credito = null, 
 		$calle = null, 
-		$telefono_personal1 = null, 
-		$nombre = null, 
-		$email = null, 
-		$dias_embarque = null, 
-		$impuestos = null, 
-		$telefono2 = null, 
-		$telefono1 = null, 
+		$codigo_postal = null, 
+		$codigo_proveedor = null, 
 		$cuenta_bancaria = null, 
+		$dias_de_credito = null, 
+		$dias_embarque = null, 
+		$direccion_web = null, 
+		$email = null, 
+		$id_ciudad = null, 
 		$id_moneda = null, 
+		$id_tipo_proveedor = null, 
+		$impuestos = null, 
+		$limite_credito = null, 
+		$nombre = null, 
+		$numero_exterior = null, 
+		$numero_interior = null, 
+		$password = null, 
+		$representante_legal = null, 
 		$retenciones = null, 
-		$codigo_proveedor = null,
-                $telefono_personal2 = null,
-                $descuento = null,
-                $colonia = null
+		$rfc = null, 
+		$telefono1 = null, 
+		$telefono2 = null, 
+		$telefono_personal = null, 
+		$texto_extra = null, 
+		$tiempo_entrega = null
 	);  
   
   
@@ -161,7 +167,7 @@
  	 *Obtener una lista de proveedores. Puede filtrarse por activo o inactivos, y puede ordenarse por sus atributos.
  	 *
  	 * @param activo bool Si el valor no es obtenido, se listaran los proveedores tanto activos como inactivos. Si su valor es true, se mostraran solo los proveedores activos, si es false, se mostraran solo los proveedores inactivos.
- 	 * @param ordenar json Valor que determinara el orden de la lista.
+ 	 * @param orden json Valor que determinara el orden de la lista.
  	 * @return proveedores json Objeto que contendra la lista de proveedores.
  	 **/
   static function Lista
@@ -177,63 +183,65 @@
  	 *
  	 *Crea un nuevo proveedor
  	 *
- 	 * @param id_tipo_proveedor int Id del tipo proveedor al que pertenece este usuario
- 	 * @param password string Password del proveedor para entrar al sistema
- 	 * @param nombre string Nombre del proveedor
  	 * @param codigo_proveedor string Codigo interno para identificar al proveedor
- 	 * @param codigo_postal string Codigo postal de la direccion del proveedor
- 	 * @param id_ciudad int Id de la ciudad de la direccion del proveedor
- 	 * @param texto_extra string Referencia de la direcciond el proveedor
- 	 * @param numero_interior string Numero interior de la direccion del proveedor
- 	 * @param numero_exterior string Numero exterior de la direccion del proveedor
- 	 * @param direccion_web string Direccion web del proveedor
- 	 * @param retenciones json Retenciones que afectan a este proveedor
- 	 * @param impuestos json Ids de los impuestos que afectan a este proveedor
- 	 * @param dias_embarque int Dias en que el proveedor embarca ( Lunes, Martes, Miercoles, Jueves..)
- 	 * @param telefono_personal string Telefono personal del cliente
- 	 * @param rfc string RFC del proveedor
- 	 * @param calle string Calle de la direccion del proveedor
- 	 * @param email string Correo electronico del proveedor
- 	 * @param id_moneda int Id de la moneda preferente del proveedor
- 	 * @param cuenta_bancaria string Cuenta bancaria del proveedor
+ 	 * @param id_tipo_proveedor int Id del tipo proveedor al que pertenece este usuario
+ 	 * @param nombre string Nombre del proveedor
+ 	 * @param password string Password del proveedor para entrar al sistema
  	 * @param activo bool Si este proveedor esta activo o no
- 	 * @param representante_legal string Representante legal del proveedor
- 	 * @param tiempo_entrega string Tiempo de entrega del proveedor en dias
- 	 * @param limite_credito float Limite de credito que otorga el proveedor
+ 	 * @param calle string Calle de la direccion del proveedor
+ 	 * @param codigo_postal string Codigo postal de la direccion del proveedor
+ 	 * @param colonia string Colonia del proveedor
+ 	 * @param cuenta_bancaria string Cuenta bancaria del proveedor
  	 * @param dias_de_credito int Dias de credito que otorga el proveedor
+ 	 * @param dias_embarque int Dias en que el proveedor embarca ( Lunes, Martes, Miercoles, Jueves..)
+ 	 * @param direccion_web string Direccion web del proveedor
+ 	 * @param email string Correo electronico del proveedor
+ 	 * @param id_ciudad int Id de la ciudad de la direccion del proveedor
+ 	 * @param id_moneda int Id de la moneda preferente del proveedor
+ 	 * @param impuestos json Ids de los impuestos que afectan a este proveedor
+ 	 * @param limite_credito float Limite de credito que otorga el proveedor
+ 	 * @param numero_exterior string Numero exterior de la direccion del proveedor
+ 	 * @param numero_interior string Numero interior de la direccion del proveedor
+ 	 * @param representante_legal string Representante legal del proveedor
+ 	 * @param retenciones json Retenciones que afectan a este proveedor
+ 	 * @param rfc string RFC del proveedor
  	 * @param telefono1 string Telefono 1 de la direccion del proveedor
  	 * @param telefono2 string Telefono 2 de la direccion del proveedor
- 	 * @return id_proveedor int Id autogenerado por la inserciï¿½n del nuevo proveedor.
+ 	 * @param telefono_personal1 string Telefono personal del cliente
+ 	 * @param telefono_personal2 string Telefono personal alterno del proveedor
+ 	 * @param texto_extra string Referencia de la direcciond el proveedor
+ 	 * @param tiempo_entrega string Tiempo de entrega del proveedor en dias
+ 	 * @return id_proveedor int Id autogenerado por la inserción del nuevo proveedor.
  	 **/
   static function Nuevo
 	(
+		$codigo_proveedor, 
 		$id_tipo_proveedor, 
 		$nombre, 
 		$password, 
-		$codigo_proveedor, 
-		$dias_de_credito = null, 
-		$limite_credito = null, 
-		$codigo_postal = null, 
-		$id_ciudad = null, 
-		$texto_extra = null, 
-		$numero_interior = null, 
-		$numero_exterior = null, 
-		$retenciones = null, 
-		$direccion_web = null, 
-		$impuestos = null, 
-		$dias_embarque = true, 
-		$telefono_personal1 = null, 
-		$rfc = null, 
-		$calle = 1, 
-		$email = null, 
-		$id_moneda = null, 
-		$telefono_personal2 = null, 
-		$colonia = null, 
-		$telefono2 = null, 
-		$telefono1 = null, 
 		$activo = null, 
+		$calle = 1, 
+		$codigo_postal = null, 
+		$colonia = null, 
 		$cuenta_bancaria = null, 
+		$dias_de_credito = null, 
+		$dias_embarque = true, 
+		$direccion_web = null, 
+		$email = null, 
+		$id_ciudad = null, 
+		$id_moneda = null, 
+		$impuestos = null, 
+		$limite_credito = null, 
+		$numero_exterior = null, 
+		$numero_interior = null, 
 		$representante_legal = null, 
+		$retenciones = null, 
+		$rfc = null, 
+		$telefono1 = null, 
+		$telefono2 = null, 
+		$telefono_personal1 = null, 
+		$telefono_personal2 = null, 
+		$texto_extra = null, 
 		$tiempo_entrega = null
 	);  
   

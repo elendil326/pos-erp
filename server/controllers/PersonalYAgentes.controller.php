@@ -921,58 +921,59 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	public static function EditarUsuario
 	(
 		$id_usuario, 
-		$colonia_2 = null, 
-		$id_rol = null, 
-		$salario = null, 
-		$descuento = null, 
-		$telefono_personal_1 = null, 
-		$limite_de_credito = null, 
-		$pagina_web = null, 
-		$telefono2_2 = null, 
-		$facturar_a_terceros = null, 
-		$mensajeria = null, 
-		$telefono_personal_2 = null, 
-		$ventas_a_credito = null, 
-		$texto_extra_2 = null, 
-		$impuestos = null, 
-		$retenciones = null, 
-		$saldo_del_ejercicio = null, 
-		$id_ciudad_2 = null, 
-		$dia_de_pago = null, 
 		$calle = null, 
-		$numero_interior_2 = null, 
+		$calle_2 = null, 
 		$codigo_postal = null, 
-		$texto_extra = null, 
-		$numero_interior = null, 
-		$id_ciudad = null, 
-		$password = null, 
-		$id_clasificacion_proveedor = null, 
+		$codigo_postal_2 = null, 
 		$codigo_usuario = null, 
-		$nombre = null, 
 		$colonia = null, 
+		$colonia_2 = null, 
 		$comision_ventas = null, 
 		$correo_electronico = null, 
-		$representante_legal = null, 
-		$calle_2 = null, 
-		$dias_de_embarque = null, 
-		$telefono2 = null, 
-		$dias_de_credito = null, 
-		$rfc = null, 
-		$curp = null, 
-		$numero_exterior_2 = null, 
-		$numero_exterior = null, 
-		$denominacion_comercial = null,  
-		$id_clasificacion_cliente = null, 
 		$cuenta_bancaria = null, 
-		$dia_de_revision = null, 
 		$cuenta_mensajeria = null, 
-		$telefono1 = null, 
-		$codigo_postal_2 = null, 
+		$curp = null, 
+		$denominacion_comercial = null, 
+		$descuento = null, 
+		$descuento_es_porcentaje = null, 
+		$dias_de_credito = null, 
+		$dias_de_embarque = null, 
+		$dia_de_pago = null, 
+		$dia_de_revision = null, 
+		$facturar_a_terceros = null, 
+		$id_ciudad = null, 
+		$id_ciudad_2 = null, 
+		$id_clasificacion_cliente = null, 
+		$id_clasificacion_proveedor = null, 
+		$id_moneda = null, 
+		$id_rol = null, 
 		$id_sucursal = null, 
+		$impuestos = null, 
+		$intereses_moratorios = null, 
+		$limite_de_credito = null, 
+		$mensajeria = null, 
+		$nombre = null, 
+		$numero_exterior = null, 
+		$numero_exterior_2 = null, 
+		$numero_interior = null, 
+		$numero_interior_2 = null, 
+		$pagina_web = null, 
+		$password = null, 
+		$representante_legal = null, 
+		$retenciones = null, 
+		$rfc = null, 
+		$salario = null, 
+		$saldo_del_ejercicio = null, 
+		$telefono1 = null, 
 		$telefono1_2 = null, 
-		$intereses_moratorios = null,
-                $id_moneda = null,
-                $tiempo_entrega = null
+		$telefono2 = null, 
+		$telefono2_2 = null, 
+		$telefono_personal_1 = null, 
+		$telefono_personal_2 = null, 
+		$texto_extra = null, 
+		$texto_extra_2 = null, 
+		$tiempo_entrega = null, 
+		$ventas_a_credito = null
 	)
 	{  
             Logger::log("Editando usuario: ".$id_usuario);
@@ -1701,9 +1702,9 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	public static function NuevoRol
 	(
 		$nombre, 
-                $salario = 0,
+		$descripcion = null, 
 		$descuento = 0, 
-                $descripcion = null
+		$salario = 0
 	)
 	{  
             Logger::log("Creando nuevo rol");
@@ -1765,10 +1766,10 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	public static function EditarRol
 	(
 		$id_rol, 
-		$salario = null, 
-		$nombre = null,
-		$descuento = null, 
-		$descripcion = null
+		$descripcion = null, 
+		$descuento = 0, 
+		$nombre = null, 
+		$salario = 0
 	)
 	{  
             Logger::log("Editando rol ".$id_rol);
@@ -1966,8 +1967,8 @@ require_once("interfaces/PersonalYAgentes.interface.php");
  	 **/
 	public static function ListaPermisoRol
 	(
-                $id_rol = null,
-                $id_permiso = null
+		$id_permiso = null, 
+		$id_rol = null
 	)
 	{  
             Logger::log("Listando roles con sus permisos");
@@ -1984,8 +1985,8 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 
         public static function ListaPermisoUsuario
         (
-                $id_usuario = null,
-                $id_permiso = null
+			$id_permiso = null,
+			$id_usuario = null
         )
         {
             Logger::log("Listando usuarios con sus permisos");

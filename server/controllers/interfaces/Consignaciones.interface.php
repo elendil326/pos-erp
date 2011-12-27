@@ -55,15 +55,15 @@
  	 *
  	 *Edita una consignacion, ya sea que agregue o quite productos a la misma. La fecha se toma del sistema.
  	 *
+ 	 * @param agregar bool Si estos productos seran agregados a la consignacion o seran quitados de la misma.
  	 * @param id_consignacion int Id de la consignacion a editar
  	 * @param productos json Objeto que contendra los ids de los productos y sus cantidades que ahora tendra esta consignacion
- 	 * @param agregar bool Si estos productos seran agregados a la consignacion o seran quitados de la misma.
  	 **/
   static function Editar
 	(
+		$agregar, 
 		$id_consignacion, 
-		$productos, 
-		$agregar
+		$productos
 	);  
   
   
@@ -73,15 +73,15 @@
  	 *
  	 *Abona un monto de dinero a una inspeccion ya registrada. La fecha sera tomada del sistema. Este metodo sera usado cuando el inspector llegue a la sucursal y deposite el dinero en la caja, de tal forma que se lleve un registro de cuando y cuanto deposito el dinero por el pago de la consignacion, asi como saber si el inspector ya realizo el deposito del dinero que se le consigno.
  	 *
- 	 * @param monto float monto que sera abonado a la inspeccion
- 	 * @param id_inspeccion int Id de la inspeccion
  	 * @param id_caja int Id de la caja a la que se le abona
+ 	 * @param id_inspeccion int Id de la inspeccion
+ 	 * @param monto float monto que sera abonado a la inspeccion
  	 **/
   static function AbonarInspeccion
 	(
-		$monto, 
+		$id_caja, 
 		$id_inspeccion, 
-		$id_caja
+		$monto
 	);  
   
   
@@ -121,15 +121,15 @@
  	 *
  	 *Registra en que fecha se le hara una inspeccion a un cliente con consignacion 
  	 *
- 	 * @param id_consignacion int Id de la consignacion a la que se le hara la revision
  	 * @param fecha_revision string Fecha en que se hara la revision.
+ 	 * @param id_consignacion int Id de la consignacion a la que se le hara la revision
  	 * @param id_inspector int Id del usuario al que se le asignara esta inspeccion
  	 * @return id_inspeccion int Id de la inspeccion creada
  	 **/
   static function NuevaInspeccion
 	(
-		$id_consignacion, 
 		$fecha_revision, 
+		$id_consignacion, 
 		$id_inspector = null
 	);  
   
@@ -142,19 +142,19 @@
  	 *
  	 * @param id_inspeccion int Id de la inspeccion realizada
  	 * @param productos_actuales json Ojeto que contendra los ids de los productos con sus cantidades con los que cuenta actualmente el cliente, puede ser un json vacio. Este campo no se ve afectado por los campos producto_solicitado ni producto_devuelto.
+ 	 * @param id_inspector int Id del usuario que realiza la inspeccion
+ 	 * @param monto_abonado float Si la consignacion fue de contado, el cobrador debe registrar el monto equivalente a las ventas del cliente
  	 * @param producto_devuelto json Objeto que contendra los ids de los productos y sus cantidades que seran devueltos. Estos productos seran devueltos al almacen  de la sucursal de donde fueron extraidos.
  	 * @param producto_solicitado json Objeto que contendra los ids de los productos y sus cantidades que el cliente solicita, si este campo es obtenido, se editara la consignacion original agregando estos productos
- 	 * @param monto_abonado float Si la consignacion fue de contado, el cobrador debe registrar el monto equivalente a las ventas del cliente
- 	 * @param id_inspector int Id del usuario que realiza la inspeccion
  	 **/
   static function RegistrarInspeccion
 	(
 		$id_inspeccion, 
 		$productos_actuales, 
-		$producto_devuelto = null, 
-		$producto_solicitado = null, 
+		$id_inspector = "", 
 		$monto_abonado = null, 
-		$id_inspector = ""
+		$producto_devuelto = null, 
+		$producto_solicitado = null
 	);  
   
   
@@ -164,19 +164,19 @@
  	 *
  	 *Este metodo lista las consignaciones de la instancia. Puede filtrarse por empresa, por sucursal, por cliente, por producto y se puede ordenar por sus atributos.
  	 *
- 	 * @param id_empresa int Id de la empresa de la cual se mostraran las consignaciones
- 	 * @param id_sucursal int Id de la sucursal de la cual se mostraran las consignaciones
  	 * @param id_cliente int Id del cliente del cual se mostraran las consignaciones
+ 	 * @param id_empresa int Id de la empresa de la cual se mostraran las consignaciones
  	 * @param id_producto int Id del producto del cual se mostraran las consignaciones
+ 	 * @param id_sucursal int Id de la sucursal de la cual se mostraran las consignaciones
  	 * @param orden json Valor que determinara el orden de la lista
  	 * @return lista_consignaciones json Objeto que contendra la lista de consignaciones
  	 **/
   static function Lista
 	(
-		$id_empresa = null, 
-		$id_sucursal = null, 
 		$id_cliente = null, 
+		$id_empresa = null, 
 		$id_producto = null, 
+		$id_sucursal = null, 
 		$orden = null
 	);  
   
@@ -185,23 +185,23 @@
   
 	/**
  	 *
- 	 *Iniciar una orden de consignaci?n. La fecha sera tomada del servidor.
+ 	 *Iniciar una orden de consignaci?La fecha sera tomada del servidor.
  	 *
+ 	 * @param fecha_termino string Fecha en el que se termina la consignacion
+ 	 * @param folio string Folio de la consignacion
  	 * @param id_consignatario int Id del cliente al que se le hace la consignacion
  	 * @param productos json Objeto que contendra los ids de los productos que se daran a consignacion a ese cliente con sus cantidades. Se incluira el id del almacen del cual seran tomados para determinar a que empresa pertenece esta consignacion
  	 * @param tipo_consignacion string Especifica si la venta generada por esta consignacion se hara a credito o de contado
- 	 * @param fecha_termino string Fecha en el que se termina la consignacion
- 	 * @param folio string Folio de la consignacion
  	 * @param fecha_envio_programada string Sera la fecha de envio de los productos de los almacenes de los que seran tomados al almacen del consignatario. Si no se recibe se toma la fecha actual como la fecha de envio 
  	 * @return id_consignacion int Id de la consignacion autogenerado por la insercion.
  	 **/
   static function Nueva
 	(
+		$fecha_termino, 
+		$folio, 
 		$id_consignatario, 
 		$productos, 
 		$tipo_consignacion, 
-		$fecha_termino, 
-		$folio, 
 		$fecha_envio_programada = null
 	);  
   

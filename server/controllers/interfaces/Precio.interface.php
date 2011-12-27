@@ -12,13 +12,13 @@
  	 *
  	 *Edita la relacion de precio de uno o varios paquetes con un rol
  	 *
- 	 * @param paquetes_precios_utilidad json Arreglo de objetos que contendran un id paquete con un precio o margen de utilidad con el que se vendera este producto
  	 * @param id_rol int Id del rol al que se le asignara el precio preferencial
+ 	 * @param paquetes_precios_utilidad json Arreglo de objetos que contendran un id paquete con un precio o margen de utilidad con el que se vendera este producto
  	 **/
   static function Editar_precio_rolPaquete
 	(
-		$paquetes_precios_utilidad, 
-		$id_rol
+		$id_rol, 
+		$paquetes_precios_utilidad
 	);  
   
   
@@ -28,13 +28,13 @@
  	 *
  	 *Edita la relacion de precio con uno o varios paquetes para un tipo de cliente
  	 *
- 	 * @param paquetes_precios_utilidad json Arreglo de objetos que contendran un id paquete con un precio o un margen de utilidad con el que se ofrecera dicho paquete
  	 * @param id_tipo_cliente int Id del tipo cliente al que se le editaran sus precios
+ 	 * @param paquetes_precios_utilidad json Arreglo de objetos que contendran un id paquete con un precio o un margen de utilidad con el que se ofrecera dicho paquete
  	 **/
   static function Editar_precio_tipo_clientePaquete
 	(
-		$paquetes_precios_utilidad, 
-		$id_tipo_cliente
+		$id_tipo_cliente, 
+		$paquetes_precios_utilidad
 	);  
   
   
@@ -156,13 +156,13 @@
  	 *
  	 *Edita la relacion de precio de uno o varios productos con un rol
  	 *
- 	 * @param productos_precios_utlidad json Arreglo de objetos que contendran un id producto con un precio o margen de utilidad con el que se vendera este producto
  	 * @param id_rol int Id del rol al que se le asignara el precio preferencial
+ 	 * @param productos_precios_utlidad json Arreglo de objetos que contendran un id producto con un precio o margen de utilidad con el que se vendera este producto
  	 **/
   static function Editar_precio_rolProducto
 	(
-		$productos_precios_utlidad, 
-		$id_rol
+		$id_rol, 
+		$productos_precios_utlidad
 	);  
   
   

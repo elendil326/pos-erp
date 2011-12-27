@@ -53,18 +53,18 @@
   
 	/**
  	 *
- 	 *Genera una factura seg?n la informaci?n de un cliente y la venta realizada.
+ 	 *Genera una factura seg?a informaci?e un cliente y la venta realizada.
 
 Update : Falta especificar si seria una factura detallada (cuando en los conceptos de la factura describe a cada articulo) o generica (un solo concepto que engloba a todos los productos).
  	 *
- 	 * @param id_venta int Id de la venta sobre la cual se facturara
  	 * @param id_cliente int Id del cliente al cual se le va a facturar
+ 	 * @param id_venta int Id de la venta sobre la cual se facturara
  	 * @return id_folio int Id de la factura generada
  	 **/
   static function GenerarFactura
 	(
-		$id_venta, 
-		$id_cliente
+		$id_cliente, 
+		$id_venta
 	);  
   
   
@@ -73,7 +73,7 @@ Update : Falta especificar si seria una factura detallada (cuando en los concept
 	/**
  	 *
  	 *Imprime una factura
-Update : La respuesta solo deber?a de contener success :true | false, y en caso de error, su descripcion, no se necesita apra anda en el JSON de respuesta una propiedad factura.
+Update : La respuesta solo deber?de contener success :true | false, y en caso de error, su descripcion, no se necesita apra anda en el JSON de respuesta una propiedad factura.
  	 *
  	 * @param id_folio int Id de la factura que se desea imprimir.
  	 * @return factura json Objeto con la informacion de la factura
@@ -111,7 +111,7 @@ Update : No se si este metodo tenga una utilidad real, ya que cuando se recibe e
   static function Lista
 	(
 		$activos, 
-		$id_empresa = ""
+		$id_empresa = null
 	);  
   
   
@@ -121,13 +121,13 @@ Update : No se si este metodo tenga una utilidad real, ya que cuando se recibe e
  	 *
  	 *Imprime una nota de venta de acuerdo al id_venta y al id_impresora
  	 *
- 	 * @param id_venta int Id de la venta que se imprimira
  	 * @param id_impresora int Id de la impresora en la que se imprimira
+ 	 * @param id_venta int Id de la venta que se imprimira
  	 **/
   static function ImprimirNota_de_venta
 	(
-		$id_venta, 
-		$id_impresora
+		$id_impresora, 
+		$id_venta
 	);  
   
   

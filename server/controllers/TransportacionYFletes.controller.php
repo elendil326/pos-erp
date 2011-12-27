@@ -49,35 +49,35 @@ require_once("interfaces/TransportacionYFletes.interface.php");
  	 *
  	 *Crea un nuevo carro. La fecha de creacion sera tomada del servidor.
  	 *
- 	 * @param imagen string url del a imagen del vehiculo
  	 * @param id_estado int Id del estado del vehiculo, debera contener [en servicio], [accidentado], [averiado], [baja definitiva], [taller]
  	 * @param id_localizacion int Id de la sucursal en la que se encuentra, se tomara un entero especial para determinar que se encuentra en una ruta.
- 	 * @param id_modelo_vehiculo int Id del modelo del vehiculo
  	 * @param id_marca_carro int Id de la marca del vehiculo (Nissan, Mazda)
+ 	 * @param id_modelo_vehiculo int Id del modelo del vehiculo
  	 * @param id_tipo_carro int Id del tipo de carro (camioneta, coche, camion)
- 	 * @param kilometros float Kilometros recorridos por el vehiculo
+ 	 * @param imagen string url del a imagen del vehiculo
  	 * @param codigo string Codigo interno del vehiculo
+ 	 * @param combustible float Cantidad de combustible que tiene el vehiculo
+ 	 * @param ids_empresas json Los ids de las empresas a las que este vehiculo pertenece. Si este valor no se pasa, se tomara que el vehiculo pertenece a todas las empresas.
+ 	 * @param kilometros float Kilometros recorridos por el vehiculo
+ 	 * @param km_por_litro float numero de kilometros que puede trnasitar el vehiculo por un litro de combustible
  	 * @param matricula string Matricula del vehiculo
  	 * @param num_neumaticos int Numero de neumaticos del vehiculo
- 	 * @param combustible float Cantidad de combustible que tiene el vehiculo
- 	 * @param km_por_litro float numero de kilometros que puede trnasitar el vehiculo por un litro de combustible
- 	 * @param ids_empresas json Los ids de las empresas a las que este vehiculo pertenece. Si este valor no se pasa, se tomara que el vehiculo pertenece a todas las empresas.
  	 **/
 	public static function Nuevo
 	(
-		$imagen, 
 		$id_estado, 
 		$id_localizacion, 
-		$id_modelo_vehiculo, 
 		$id_marca_carro, 
+		$id_modelo_vehiculo, 
 		$id_tipo_carro, 
-		$kilometros = null, 
+		$imagen, 
 		$codigo = null, 
-		$matricula = null, 
-		$num_neumaticos = null, 
 		$combustible = null, 
+		$ids_empresas = null, 
+		$kilometros = null, 
 		$km_por_litro = null, 
-		$ids_empresas = null
+		$matricula = null, 
+		$num_neumaticos = null
 	)
 	{  
   
@@ -88,13 +88,13 @@ require_once("interfaces/TransportacionYFletes.interface.php");
  	 *
  	 *Realizar un cargamento a un carro. El id de la sucursal sera tomada de la sesion actual. La fecha sera tomada del servidor. El inventario de la sucursal que carga el camion se vera afectado por esta operacion.
  	 *
- 	 * @param productos json Objeto que contendra los id de productos como sus cantidades en las que son cargados al vehiculo
  	 * @param id_carro int Id del carro que sera cargado
+ 	 * @param productos json Objeto que contendra los id de productos como sus cantidades en las que son cargados al vehiculo
  	 **/
 	public static function Cargar
 	(
-		$productos, 
-		$id_carro
+		$id_carro, 
+		$productos
 	)
 	{  
   
@@ -124,14 +124,14 @@ require_once("interfaces/TransportacionYFletes.interface.php");
 UPDATE
 Se movera parcial o totalmente la carga?
  	 *
- 	 * @param id_carro_origen int Id del carro del cual se mueve la carga
  	 * @param id_carro_destino int Id del carro al que se mueve la carga
+ 	 * @param id_carro_origen int Id del carro del cual se mueve la carga
  	 * @param productos json Productos que se mueve de un carro a otros.
  	 **/
 	public static function Transbordo
 	(
-		$id_carro_origen, 
 		$id_carro_destino, 
+		$id_carro_origen, 
 		$productos = null
 	)
 	{  
@@ -143,17 +143,17 @@ Se movera parcial o totalmente la carga?
  	 *
  	 *Enviar un cargamento. No necesariamente debe tener cargamento. Seria excelente calcular el kilometraje. La sucursal origen sera tomada de la sesion actual.
  	 *
+ 	 * @param fecha_llegada_tentativa string Fecha tentativa en la que se espera que el carro llegue a su destino.
+ 	 * @param fecha_salida string Fecha en la que se planea que salga carro
  	 * @param id_carro int Carro que sera enrutado.
  	 * @param id_sucursal_destino int Id de la sucursal destino
- 	 * @param fecha_salida string Fecha en la que se planea que salga carro
- 	 * @param fecha_llegada_tentativa string Fecha tentativa en la que se espera que el carro llegue a su destino.
  	 **/
 	public static function Enrutar
 	(
-		$id_carro, 
-		$id_sucursal_destino, 
+		$fecha_llegada_tentativa, 
 		$fecha_salida, 
-		$fecha_llegada_tentativa
+		$id_carro, 
+		$id_sucursal_destino
 	)
 	{  
   
@@ -170,7 +170,7 @@ Se movera parcial o totalmente la carga?
 	public static function Registrar_llegada
 	(
 		$id_carro, 
-		$fecha_llegada = ""
+		$fecha_llegada = null
 	)
 	{  
   
@@ -182,36 +182,36 @@ Se movera parcial o totalmente la carga?
  	 *Edita la informacion de un carro
  	 *
  	 * @param id_carro int Id del carro a editar
- 	 * @param km_por_litro float numero de kilometros que puede trnasitar el vehiculo por un litro de combustible
- 	 * @param combustible float Cantidad de combustible que tiene el vehiculo
- 	 * @param kilometros float Kilometros recorridos por el vehiculo
- 	 * @param num_neumaticos int Numero de neumaticos del vehiculo
  	 * @param codigo string Codigo interno del vehiculo
- 	 * @param matricula string Matricula del vehiculo
- 	 * @param imagen string url del a imagen del vehiculo
+ 	 * @param combustible float Cantidad de combustible que tiene el vehiculo
+ 	 * @param ids_empresas json Los ids de las empresas a las que este vehiculo pertenece. Si este valor no se pasa, se tomara que el vehiculo pertenece a todas las empresas.
  	 * @param id_estado int Id del estado del vehiculo, debera contener [en servicio], [accidentado], [averiado], [baja definitiva], [taller]
- 	 * @param id_modelo_vehiculo int Id del modelo del vehiculo
  	 * @param id_localizacion int Id de la sucursal en la que se encuentra, se tomara un entero especial para determinar que se encuentra en una ruta.
  	 * @param id_marca_carro int Id de la marca del vehiculo (Nissan, Mazda)
+ 	 * @param id_modelo_vehiculo int Id del modelo del vehiculo
  	 * @param id_tipo_carro int Id del tipo de carro (camioneta, coche, camion)
- 	 * @param ids_empresas json Los ids de las empresas a las que este vehiculo pertenece. Si este valor no se pasa, se tomara que el vehiculo pertenece a todas las empresas.
+ 	 * @param imagen string url del a imagen del vehiculo
+ 	 * @param kilometros float Kilometros recorridos por el vehiculo
+ 	 * @param km_por_litro float numero de kilometros que puede trnasitar el vehiculo por un litro de combustible
+ 	 * @param matricula string Matricula del vehiculo
+ 	 * @param num_neumaticos int Numero de neumaticos del vehiculo
  	 **/
 	public static function Editar
 	(
 		$id_carro, 
-		$km_por_litro = "", 
-		$combustible = "", 
-		$kilometros = "", 
-		$num_neumaticos = "", 
-		$codigo = "", 
-		$matricula = "", 
-		$imagen = "", 
-		$id_estado = "", 
-		$id_modelo_vehiculo = "", 
-		$id_localizacion = "", 
-		$id_marca_carro = "", 
-		$id_tipo_carro = "", 
-		$ids_empresas = ""
+		$codigo = null, 
+		$combustible = null, 
+		$ids_empresas = null, 
+		$id_estado = null, 
+		$id_localizacion = null, 
+		$id_marca_carro = null, 
+		$id_modelo_vehiculo = null, 
+		$id_tipo_carro = null, 
+		$imagen = null, 
+		$kilometros = null, 
+		$km_por_litro = null, 
+		$matricula = null, 
+		$num_neumaticos = null
 	)
 	{  
   
@@ -248,7 +248,7 @@ Se movera parcial o totalmente la carga?
 	(
 		$id_tipo_carro, 
 		$activo = true, 
-		$nombre_tipo_carro = ""
+		$nombre_tipo_carro = null
 	)
 	{  
   
@@ -303,7 +303,7 @@ Se movera parcial o totalmente la carga?
 	public static function NuevoMarca
 	(
 		$nombre_marca, 
-		$activo = ""
+		$activo = null
 	)
 	{  
   
@@ -322,7 +322,7 @@ Se movera parcial o totalmente la carga?
 	(
 		$id_marca_carro, 
 		$activo = true, 
-		$nombre_marca = ""
+		$nombre_marca = null
 	)
 	{  
   

@@ -13,16 +13,16 @@
  	 *Edita la informacion de un almacen
  	 *
  	 * @param id_almacen int Id del almacen a editar
+ 	 * @param descripcion string Descripcion del almacen
  	 * @param id_tipo_almacen int Id del tipo de almacen al que sera cambiado. No se puede cambiar este parametro si se trata de un almacen de consignacion ni se puede editar para que sea un almacen de consignacion
  	 * @param nombre string Nombre del almacen
- 	 * @param descripcion string Descripcion del almacen
  	 **/
   static function EditarAlmacen
 	(
 		$id_almacen, 
+		$descripcion = null, 
 		$id_tipo_almacen = null, 
-		$nombre = null, 
-		$descripcion = null
+		$nombre = null
 	);  
   
   
@@ -30,7 +30,7 @@
   
 	/**
  	 *
- 	 *Descativa un almacen. Para poder desactivar un almacen, este tiene que estar vac?o
+ 	 *Descativa un almacen. Para poder desactivar un almacen, este tiene que estar vac?
  	 *
  	 * @param id_almacen int Id del almacen a desactivar
  	 **/
@@ -49,15 +49,15 @@
 Update
 Creo que este metodo tiene que estar bajo sucursal.
  	 *
- 	 * @param productos json Objeto que contendr los ids de los productos, sus unidades y sus cantidades
  	 * @param id_almacen int Id del almacen que se surte
+ 	 * @param productos json Objeto que contendr los ids de los productos, sus unidades y sus cantidades
  	 * @param motivo string Motivo del movimiento
  	 * @return id_surtido string Id generado por el registro de surtir
  	 **/
   static function EntradaAlmacen
 	(
-		$productos, 
 		$id_almacen, 
+		$productos, 
 		$motivo = null
 	);  
   
@@ -68,18 +68,18 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *
  	 *listar almacenes de la isntancia. Se pueden filtrar por empresa, por sucursal, por tipo de almacen, por activos e inactivos y ordenar por sus atributos.
  	 *
+ 	 * @param activo bool Si este valor no es obtenido, se mostraran almacenes tanto activos como inactivos. Si es verdadero, solo se lsitaran los activos, si es falso solo se lsitaran los inactivos.
  	 * @param id_empresa int Id de la empresa de la cual se listaran sus almacenes
  	 * @param id_sucursal int el id de la sucursal de la cual se listaran sus almacenes
  	 * @param id_tipo_almacen int Se listaran los almacenes de este tipo
- 	 * @param activo bool Si este valor no es obtenido, se mostraran almacenes tanto activos como inactivos. Si es verdadero, solo se lsitaran los activos, si es falso solo se lsitaran los inactivos.
  	 * @return almacenes json Almacenes de esta sucursal
  	 **/
   static function ListaAlmacen
 	(
+		$activo = null, 
 		$id_empresa = null, 
 		$id_sucursal = null, 
-		$id_tipo_almacen = null, 
-		$activo = null
+		$id_tipo_almacen = null
 	);  
   
   
@@ -89,19 +89,19 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *
  	 *Creara un nuevo almacen en una sucursal, este almacen contendra lotes.
  	 *
- 	 * @param nombre string nombre del almacen
- 	 * @param id_sucursal int El id de la sucursal a la que pertenecera este almacen.
  	 * @param id_empresa int Id de la empresa a la que pertenecen los productos de este almacen
+ 	 * @param id_sucursal int El id de la sucursal a la que pertenecera este almacen.
  	 * @param id_tipo_almacen int Id del tipo de almacen 
+ 	 * @param nombre string nombre del almacen
  	 * @param descripcion string Descripcion extesa del almacen
  	 * @return id_almacen int el id recien generado
  	 **/
   static function NuevoAlmacen
 	(
-		$nombre, 
-		$id_sucursal, 
 		$id_empresa, 
+		$id_sucursal, 
 		$id_tipo_almacen, 
+		$nombre, 
 		$descripcion = null
 	);  
   
@@ -112,15 +112,15 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *
  	 *Envia productos fuera del almacen. Ya sea que sea un traspaso de un alamcen a otro o por motivos de inventarios fisicos.
  	 *
- 	 * @param productos json Objeto que contendra los ids de los productos que seran sacados del alamcen con sus cantidades y sus unidades
  	 * @param id_almacen int Id del almacen del cual se hace el movimiento
+ 	 * @param productos json Objeto que contendra los ids de los productos que seran sacados del alamcen con sus cantidades y sus unidades
  	 * @param motivo string Motivo de la salida del producto
  	 * @return id_salida int ID de la salida del producto
  	 **/
   static function SalidaAlmacen
 	(
-		$productos, 
 		$id_almacen, 
+		$productos, 
 		$motivo = null
 	);  
   
@@ -146,14 +146,14 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *Para poder editar un traspaso,este no tuvo que haber sido enviado aun
  	 *
  	 * @param id_traspaso int Id del traspaso a editar
- 	 * @param productos json Productos a enviar con sus cantidades
  	 * @param fecha_envio_programada string Fecha de envio programada
+ 	 * @param productos json Productos a enviar con sus cantidades
  	 **/
   static function EditarTraspasoAlmacen
 	(
 		$id_traspaso, 
-		$productos = null, 
-		$fecha_envio_programada = null
+		$fecha_envio_programada = null, 
+		$productos = null
 	);  
   
   
@@ -177,22 +177,22 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *
  	 *Lista los traspasos de almacenes. Puede filtrarse por empresa, por sucursal, por almacen, por producto, cancelados, completos, estado
  	 *
- 	 * @param ordenar json Determina el orden de la lista
- 	 * @param estado string Se listaran los traspasos cuyo estado sea este, si no es obtenido este valor, se listaran los traspasos de cualqueir estado
- 	 * @param id_almacen_recibe int Se listaran los traspasos recibidos por este almacen
- 	 * @param id_almacen_envia int Se listaran los traspasos enviados por este almacen
- 	 * @param completo bool Si este valor no es obtenido, se listaran los traspasos tanto completos como no completos. Si su valor es verdadero, se listaran los traspasos completos, si es falso, se listaran los traspasos no completos
  	 * @param cancelado bool Si este valor no es obtenido, se listaran los traspasos tanto cancelados como no cancelados. Si su valor es verdadero se listaran solo los traspasos cancelados, si su valor es falso, se listaran los traspasos no cancelados
+ 	 * @param completo bool Si este valor no es obtenido, se listaran los traspasos tanto completos como no completos. Si su valor es verdadero, se listaran los traspasos completos, si es falso, se listaran los traspasos no completos
+ 	 * @param estado string Se listaran los traspasos cuyo estado sea este, si no es obtenido este valor, se listaran los traspasos de cualqueir estado
+ 	 * @param id_almacen_envia int Se listaran los traspasos enviados por este almacen
+ 	 * @param id_almacen_recibe int Se listaran los traspasos recibidos por este almacen
+ 	 * @param ordenar json Determina el orden de la lista
  	 * @return traspasos json Lista de traspasos
  	 **/
   static function ListaTraspasoAlmacen
 	(
-		$ordenar = null, 
-		$estado = null, 
-		$id_almacen_recibe = null, 
-		$id_almacen_envia = null, 
+		$cancelado = null, 
 		$completo = null, 
-		$cancelado = null
+		$estado = null, 
+		$id_almacen_envia = null, 
+		$id_almacen_recibe = null, 
+		$ordenar = null
 	);  
   
   
@@ -202,17 +202,17 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *
  	 *Crea un registro de traspaso de producto de un almacen a otro. El usuario que envia sera tomada de la sesion.
  	 *
- 	 * @param id_almacen_recibe int Id del almacen al que se envia el producto
- 	 * @param id_almacen_envia int Id del almacen que envia el producto
  	 * @param fecha_envio_programada string Fecha de envio programada para este traspaso
+ 	 * @param id_almacen_envia int Id del almacen que envia el producto
+ 	 * @param id_almacen_recibe int Id del almacen al que se envia el producto
  	 * @param productos json Productos a ser enviados con sus cantidades
  	 * @return id_traspaso int Id del traspaso autogenerado
  	 **/
   static function ProgramarTraspasoAlmacen
 	(
-		$id_almacen_recibe, 
-		$id_almacen_envia, 
 		$fecha_envio_programada, 
+		$id_almacen_envia, 
+		$id_almacen_recibe, 
 		$productos
 	);  
   
@@ -223,13 +223,13 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *
  	 *Cambia el estado de un traspaso a recibido. La  bandera de completo se prende si los productos enviados son los mismos que los recibidos. La fecha de recibo es tomada del servidor. El usuario que recibe sera tomada de la sesion actual.
  	 *
- 	 * @param productos json Productos que se reciben con sus cantidades
  	 * @param id_traspaso int Id del traspaso que se recibe
+ 	 * @param productos json Productos que se reciben con sus cantidades
  	 **/
   static function RecibirTraspasoAlmacen
 	(
-		$productos, 
-		$id_traspaso
+		$id_traspaso, 
+		$productos
 	);  
   
   
@@ -239,21 +239,21 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *
  	 *Valida si una maquina que realizara peticiones al servidor pertenece a una sucursal.
  	 *
- 	 * @param id_caja int Id de la caja a abrir
- 	 * @param saldo float Saldo con el que empieza a funcionar la caja
+ 	 * @param billetes json Ids de billetes y sus cantidades con los que inicia esta caja
  	 * @param client_token string El token generado por el POS client
  	 * @param control_billetes bool Si se quiere llevar el control de billetes en la caja
- 	 * @param billetes json Ids de billetes y sus cantidades con los que inicia esta caja
+ 	 * @param id_caja int Id de la caja a abrir
+ 	 * @param saldo float Saldo con el que empieza a funcionar la caja
  	 * @param id_cajero int Id del cajero que iniciara en esta caja en caso de que no sea este el que abre la caja
  	 * @return detalles_sucursal json Si esta es una sucursal valida, detalles sucursal contiene un objeto con informacion sobre esta sucursal.
  	 **/
   static function AbrirCaja
 	(
-		$id_caja, 
-		$saldo, 
+		$billetes, 
 		$client_token, 
 		$control_billetes, 
-		$billetes, 
+		$id_caja, 
+		$saldo, 
 		$id_cajero = null
 	);  
   
@@ -266,16 +266,16 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *
  	 * @param id_caja int Id de la caja a cerrar
  	 * @param saldo_real float Saldo que hay actualmente en la caja
- 	 * @param id_cajero int Id del cajero en caso de que no sea este el que realiza el cierre
  	 * @param billetes json Ids de billetes y sus cantidades encontrados en la caja al hacer el cierre
+ 	 * @param id_cajero int Id del cajero en caso de que no sea este el que realiza el cierre
  	 * @return id_cierre int Id del cierre autogenerado.
  	 **/
   static function CerrarCaja
 	(
 		$id_caja, 
 		$saldo_real, 
-		$id_cajero = null, 
-		$billetes = null
+		$billetes = null, 
+		$id_cajero = null
 	);  
   
   
@@ -283,46 +283,46 @@ Creo que este metodo tiene que estar bajo sucursal.
   
 	/**
  	 *
- 	 *Comprar productos en mostrador. No debe confundirse con comprar productos a un proveedor. Estos productos se agregaran al inventario de esta sucursal de manera automatica e instantanea. La IP ser? tomada de la m?quina que realiza la compra. El usuario y la sucursal ser?n tomados de la sesion activa. El estado del campo liquidada ser? tomado de acuerdo al campo total y pagado.
+ 	 *Comprar productos en mostrador. No debe confundirse con comprar productos a un proveedor. Estos productos se agregaran al inventario de esta sucursal de manera automatica e instantanea. La IP ser?omada de la m?ina que realiza la compra. El usuario y la sucursal ser?tomados de la sesion activa. El estado del campo liquidada ser?omado de acuerdo al campo total y pagado.
  	 *
- 	 * @param id_vendedor int Id del cliente al que se le compra
- 	 * @param total float Total de la compra despues de impuestos y descuentos
- 	 * @param tipo_compra string Si la compra es a credito o de contado
- 	 * @param subtotal float Total de la compra antes de incluirle impuestos.
- 	 * @param id_empresa int Empresa a nombre de la cual se realiza la compra
- 	 * @param impuesto float Cantidad sumada por impuestos
  	 * @param descuento float Cantidad restada por descuento
  	 * @param detalle json Objeto que contendr la informacin de los productos comprados, sus cantidades, sus descuentos, y sus precios
+ 	 * @param id_empresa int Empresa a nombre de la cual se realiza la compra
+ 	 * @param id_vendedor int Id del cliente al que se le compra
+ 	 * @param impuesto float Cantidad sumada por impuestos
  	 * @param retencion float Cantidad sumada por retenciones
- 	 * @param billetes_pago json Ids de billetes que se usaron para pagar
+ 	 * @param subtotal float Total de la compra antes de incluirle impuestos.
+ 	 * @param tipo_compra string Si la compra es a credito o de contado
+ 	 * @param total float Total de la compra despues de impuestos y descuentos
  	 * @param billetes_cambio json Ids de billetes que se recibieron como cambio
- 	 * @param tipo_pago string Si el pago ser en efectivo, con tarjeta o con cheque
- 	 * @param saldo float Saldo de la compra
+ 	 * @param billetes_pago json Ids de billetes que se usaron para pagar
  	 * @param cheques json Si el tipo de pago es con cheque, se almacena el nombre del banco, el monto y los ultimos 4 numeros del o de los cheques
+ 	 * @param id_caja int Id de la caja de la cual se realizara la compra. Si no se recibe se tomara de la sesion
  	 * @param id_compra_caja int Id de la compra de esta caja, sirve cuando se va el internet
  	 * @param id_sucursal int Id de la sucursal de la cual se hara la compra. Si no se recibe se tomara de la sesion
- 	 * @param id_caja int Id de la caja de la cual se realizara la compra. Si no se recibe se tomara de la sesion
+ 	 * @param saldo float Saldo de la compra
+ 	 * @param tipo_pago string Si el pago ser en efectivo, con tarjeta o con cheque
  	 * @return id_compra_cliente string Id de la nueva compra
  	 **/
   static function ComprarCaja
 	(
-		$id_vendedor, 
-		$total, 
-		$tipo_compra, 
-		$subtotal, 
-		$id_empresa, 
-		$impuesto, 
 		$descuento, 
 		$detalle, 
+		$id_empresa, 
+		$id_vendedor, 
+		$impuesto, 
 		$retencion, 
-		$billetes_pago = null, 
+		$subtotal, 
+		$tipo_compra, 
+		$total, 
 		$billetes_cambio = null, 
-		$tipo_pago = null, 
-		$saldo = 0, 
+		$billetes_pago = null, 
 		$cheques = null, 
+		$id_caja = null, 
 		$id_compra_caja = null, 
 		$id_sucursal = null, 
-		$id_caja = null
+		$saldo = 0, 
+		$tipo_pago = null
 	);  
   
   
@@ -332,24 +332,24 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *
  	 *Realiza un corte de caja. Este metodo reduce el dinero de la caja y va registrando el dinero acumulado de esa caja. Si faltase dinero se carga una deuda al cajero. La fecha sera tomada del servidor. El usuario sera tomado de la sesion.
  	 *
+ 	 * @param id_caja int Id de la caja a la que se le hace el corte
  	 * @param saldo_final float Saldo que se dejara en la caja para que continue realizando sus operaciones.
  	 * @param saldo_real float Saldo real encontrado en la caja
- 	 * @param id_caja int Id de la caja a la que se le hace el corte
- 	 * @param id_cajero int Id del cajero en caso de que no sea este el que realiza el corte
- 	 * @param id_cajero_nuevo int Id del cajero que entrara despues de realizar el corte
  	 * @param billetes_dejados json Ids de billetes dejados en la caja despues de hacer el corte
  	 * @param billetes_encontrados json Ids de billetes encontrados en la caja al hacer el corte
+ 	 * @param id_cajero int Id del cajero en caso de que no sea este el que realiza el corte
+ 	 * @param id_cajero_nuevo int Id del cajero que entrara despues de realizar el corte
  	 * @return id_corte_caja int Id generado por la insercion del nuevo corte
  	 **/
   static function CorteCaja
 	(
+		$id_caja, 
 		$saldo_final, 
 		$saldo_real, 
-		$id_caja, 
-		$id_cajero = null, 
-		$id_cajero_nuevo = null, 
 		$billetes_dejados = null, 
-		$billetes_encontrados = null
+		$billetes_encontrados = null, 
+		$id_cajero = null, 
+		$id_cajero_nuevo = null
 	);  
   
   
@@ -391,14 +391,14 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *
  	 *Lista las cajas. Se puede filtrar por la sucursal a la que pertenecen.
  	 *
- 	 * @param id_sucursal int Sucursal de la cual se listaran sus cajas
  	 * @param activa bool Valor de activa de las cajas que se listaran
+ 	 * @param id_sucursal int Sucursal de la cual se listaran sus cajas
  	 * @return cajas json Objeto que contendra la lista de cajas
  	 **/
   static function ListaCaja
 	(
-		$id_sucursal = null, 
-		$activa = null
+		$activa = null, 
+		$id_sucursal = null
 	);  
   
   
@@ -409,18 +409,18 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *Este metodo creara una caja asociada a una sucursal. Debe haber una caja por CPU. 
  	 *
  	 * @param token string el token que pos_client otorga por equipo
+ 	 * @param basculas json Un objeto con las basculas conectadas a esta caja.
  	 * @param descripcion string Descripcion de esta caja
  	 * @param id_sucursal int Id de la sucursal a la que pertenecera esta caja. Si no es obtenido se tomara la de la sesion
- 	 * @param basculas json Un objeto con las basculas conectadas a esta caja.
  	 * @param impresoras json Un objeto con las impresoras asociadas a esta sucursal.
  	 * @return id_caja int Id de la caja generada por la isnercion
  	 **/
   static function NuevaCaja
 	(
 		$token, 
+		$basculas = null, 
 		$descripcion = null, 
 		$id_sucursal = null, 
-		$basculas = null, 
 		$impresoras = null
 	);  
   
@@ -429,48 +429,48 @@ Creo que este metodo tiene que estar bajo sucursal.
   
 	/**
  	 *
- 	 *Vender productos desde el mostrador de una sucursal. Cualquier producto vendido aqui sera descontado del inventario de esta sucursal. La fecha ser? tomada del servidor, el usuario y la sucursal ser?n tomados del servidor. La ip ser? tomada de la m?quina que manda a llamar al m?todo. El valor del campo liquidada depender? de los campos total y pagado. La empresa se tomara del alamcen de donde salieron los productos
+ 	 *Vender productos desde el mostrador de una sucursal. Cualquier producto vendido aqui sera descontado del inventario de esta sucursal. La fecha ser?omada del servidor, el usuario y la sucursal ser?tomados del servidor. La ip ser?omada de la m?ina que manda a llamar al m?do. El valor del campo liquidada depender?e los campos total y pagado. La empresa se tomara del alamcen de donde salieron los productos
  	 *
+ 	 * @param descuento float La cantidad que ser descontada a la compra
+ 	 * @param id_comprador int Id del cliente al que se le vende.
+ 	 * @param impuesto float Cantidad sumada por impuestos
+ 	 * @param retencion float Cantidad sumada por retenciones
  	 * @param subtotal float El total de la venta antes de cargarle impuestos
  	 * @param tipo_venta string Si la venta es a credito o a contado
  	 * @param total float El total de la venta
- 	 * @param descuento float La cantidad que ser descontada a la compra
- 	 * @param impuesto float Cantidad sumada por impuestos
- 	 * @param retencion float Cantidad sumada por retenciones
- 	 * @param id_comprador int Id del cliente al que se le vende.
  	 * @param billetes_cambio json Ids de billetes que se entregaron como cambio
+ 	 * @param billetes_pago json Ids de los billetes que se recibieron 
+ 	 * @param cheques json Si el tipo de pago es con cheque, se almacena el nombre del banco, el monto y los ultimos 4 numeros del o de los cheques
+ 	 * @param detalle_orden json Objeto que contendr los id de los servicios, sus cantidades, su precio y su descuento.
+ 	 * @param detalle_paquete json Objeto que contendr los id de los paquetes, sus cantidades, su precio y su descuento.
  	 * @param detalle_producto json Objeto que contendr los id de los productos, sus cantidades, su precio y su descuento.
+ 	 * @param id_caja int Id de la caja desde la que se vende, en caso de que se venda desde otra caja
+ 	 * @param id_sucursal int Id de la sucursal de donde saldran los productos en caso de que se venda desde otra sucursal
+ 	 * @param id_venta_caja int Id de la venta de esta caja, utilizado cuando se va el internet
  	 * @param saldo float La cantidad que ha sido abonada hasta el momento de la venta
  	 * @param tipo_pago string Si el pago ser efectivo, cheque o tarjeta.
- 	 * @param billetes_pago json Ids de los billetes que se recibieron 
- 	 * @param detalle_paquete json Objeto que contendr los id de los paquetes, sus cantidades, su precio y su descuento.
- 	 * @param detalle_orden json Objeto que contendr los id de los servicios, sus cantidades, su precio y su descuento.
- 	 * @param cheques json Si el tipo de pago es con cheque, se almacena el nombre del banco, el monto y los ultimos 4 numeros del o de los cheques
- 	 * @param id_venta_caja int Id de la venta de esta caja, utilizado cuando se va el internet
- 	 * @param id_sucursal int Id de la sucursal de donde saldran los productos en caso de que se venda desde otra sucursal
- 	 * @param id_caja int Id de la caja desde la que se vende, en caso de que se venda desde otra caja
  	 * @return id_venta int Id autogenerado de la inserción de la venta.
  	 **/
   static function VenderCaja
 	(
+		$descuento, 
+		$id_comprador, 
+		$impuesto, 
+		$retencion, 
 		$subtotal, 
 		$tipo_venta, 
 		$total, 
-		$descuento, 
-		$impuesto, 
-		$retencion, 
-		$id_comprador, 
 		$billetes_cambio = null, 
-		$detalle_producto = null, 
-		$saldo = 0, 
-		$tipo_pago = null, 
 		$billetes_pago = null, 
-		$detalle_paquete = null, 
-		$detalle_orden = null, 
 		$cheques = null, 
-		$id_venta_caja = null, 
+		$detalle_orden = null, 
+		$detalle_paquete = null, 
+		$detalle_producto = null, 
+		$id_caja = null, 
 		$id_sucursal = null, 
-		$id_caja = null
+		$id_venta_caja = null, 
+		$saldo = 0, 
+		$tipo_pago = null
 	);  
   
   
@@ -482,45 +482,45 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *
  	 * @param id_sucursal int Id de la sucursal a modificar
  	 * @param calle string Calle de la sucursal
+ 	 * @param coidgo_postal string Codigo Postal de la sucursal
+ 	 * @param colonia string Colonia de la sucursal
+ 	 * @param descripcion string Descripcion de la sucursal
+ 	 * @param descuento float Descuento que tendran los productos ofrecidos por esta sucursal
+ 	 * @param empresas json Objeto que contendra los ids de las empresas a las que esta sucursal pertenece, por lo menos tiene que haber una empresa. En este JSON, opcionalmente junto con el id de la empresa, aapreceran dos campos que seran margen_utilidad y descuento, que indicaran que todos los productos de esa empresa ofrecidos en esta sucursal tendran un margen de utilidad y/o un descuento con los valores en esos campos
  	 * @param id_gerente int Id del gerente de la sucursal
- 	 * @param municipio int Municipio de la sucursal
  	 * @param impuestos json Objeto que contendra los ids de los impuestos que afectana esta sucursal
+ 	 * @param margen_utilidad float Porcentaje del margen de utilidad que se obtendra de los productos vendidos en esta sucursal
+ 	 * @param municipio int Municipio de la sucursal
+ 	 * @param numero_exterior string Numero exterior de la sucursal
+ 	 * @param numero_interior string Numero interior de la sucursal
+ 	 * @param razon_social string Razon social de la sucursal
+ 	 * @param retenciones json Objeto que contendra los ids de las retenciones que afectan a esta sucursal
  	 * @param rfc string Rfc de la sucursal
  	 * @param saldo_a_favor float Saldo a favor de la sucursal
- 	 * @param numero_interior string Numero interior de la sucursal
- 	 * @param colonia string Colonia de la sucursal
- 	 * @param numero_exterior string Numero exterior de la sucursal
- 	 * @param razon_social string Razon social de la sucursal
- 	 * @param telefono2 string telefono 2 de la sucursal
  	 * @param telefono1 string telefono 1 de la sucursal
- 	 * @param empresas json Objeto que contendra los ids de las empresas a las que esta sucursal pertenece, por lo menos tiene que haber una empresa. En este JSON, opcionalmente junto con el id de la empresa, aapreceran dos campos que seran margen_utilidad y descuento, que indicaran que todos los productos de esa empresa ofrecidos en esta sucursal tendran un margen de utilidad y/o un descuento con los valores en esos campos
- 	 * @param descripcion string Descripcion de la sucursal
- 	 * @param margen_utilidad float Porcentaje del margen de utilidad que se obtendra de los productos vendidos en esta sucursal
- 	 * @param descuento float Descuento que tendran los productos ofrecidos por esta sucursal
- 	 * @param coidgo_postal string Codigo Postal de la sucursal
- 	 * @param retenciones json Objeto que contendra los ids de las retenciones que afectan a esta sucursal
+ 	 * @param telefono2 string telefono 2 de la sucursal
  	 **/
   static function Editar
 	(
 		$id_sucursal, 
 		$calle = null, 
+		$coidgo_postal = null, 
+		$colonia = null, 
+		$descripcion = null, 
+		$descuento = null, 
+		$empresas = null, 
 		$id_gerente = null, 
-		$municipio = null, 
 		$impuestos = null, 
+		$margen_utilidad = null, 
+		$municipio = null, 
+		$numero_exterior = null, 
+		$numero_interior = null, 
+		$razon_social = null, 
+		$retenciones = null, 
 		$rfc = null, 
 		$saldo_a_favor = null, 
-		$numero_interior = null, 
-		$colonia = null, 
-		$numero_exterior = null, 
-		$razon_social = null, 
-		$telefono2 = null, 
 		$telefono1 = null, 
-		$empresas = null, 
-		$descripcion = null, 
-		$margen_utilidad = null, 
-		$descuento = null, 
-		$coidgo_postal = null, 
-		$retenciones = null
+		$telefono2 = null
 	);  
   
   
@@ -544,13 +544,13 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *
  	 *Edita la gerencia de una sucursal
  	 *
- 	 * @param id_sucursal int Id de la sucursal de la cual su gerencia sera cambiada
  	 * @param id_gerente string Id del nuevo gerente
+ 	 * @param id_sucursal int Id de la sucursal de la cual su gerencia sera cambiada
  	 **/
   static function EditarGerencia
 	(
-		$id_sucursal, 
-		$id_gerente
+		$id_gerente, 
+		$id_sucursal
 	);  
   
   
@@ -558,24 +558,24 @@ Creo que este metodo tiene que estar bajo sucursal.
   
 	/**
  	 *
- 	 *Lista las sucursales relacionadas con esta instancia. Se puede filtrar por empresa,  saldo inferior o superior a, fecha de apertura, ordenar por fecha de apertura u ordenar por saldo. Se agregar? un link en cada una para poder acceder a su detalle.
+ 	 *Lista las sucursales relacionadas con esta instancia. Se puede filtrar por empresa,  saldo inferior o superior a, fecha de apertura, ordenar por fecha de apertura u ordenar por saldo. Se agregar?n link en cada una para poder acceder a su detalle.
  	 *
- 	 * @param saldo_inferior_que float Si este valor es obtenido, se mostrarn las sucursales que tengan un saldo inferior a este
- 	 * @param id_empresa int Id de la empresa de la cual se listaran sus sucursales.
- 	 * @param saldo_superior_que float Si este valor es obtenido, se mostrarn las sucursales que tengan un saldo superior a este
- 	 * @param fecha_apertura_inferior_que string Si este valor es pasado, se mostraran las sucursales cuya fecha de apertura sea inferior a esta.
  	 * @param activo bool Si este valor no es pasado, se listaran sucursales tanto activas como inactivas, si su valor es true, solo se mostrarn las sucursales activas, si es false, solo se mostraran las sucursales inactivas.
+ 	 * @param fecha_apertura_inferior_que string Si este valor es pasado, se mostraran las sucursales cuya fecha de apertura sea inferior a esta.
  	 * @param fecha_apertura_superior_que string Si este valor es pasado, se mostraran las sucursales cuya fecha de apertura sea superior a esta.
+ 	 * @param id_empresa int Id de la empresa de la cual se listaran sus sucursales.
+ 	 * @param saldo_inferior_que float Si este valor es obtenido, se mostrarn las sucursales que tengan un saldo inferior a este
+ 	 * @param saldo_superior_que float Si este valor es obtenido, se mostrarn las sucursales que tengan un saldo superior a este
  	 * @return sucursales json Objeto que contendra la lista de sucursales.
  	 **/
   static function Lista
 	(
-		$saldo_inferior_que = null, 
-		$id_empresa = null, 
-		$saldo_superior_que = null, 
-		$fecha_apertura_inferior_que = null, 
 		$activo = null, 
-		$fecha_apertura_superior_que = null
+		$fecha_apertura_inferior_que = null, 
+		$fecha_apertura_superior_que = null, 
+		$id_empresa = null, 
+		$saldo_inferior_que = null, 
+		$saldo_superior_que = null
 	);  
   
   
@@ -585,48 +585,48 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *
  	 *Metodo que crea una nueva sucursal
  	 *
- 	 * @param colonia string Colonia de la sucursal
- 	 * @param calle string Calle de la sucursal
  	 * @param activo bool Si esta sucursal estara activa inmediatamente despues de ser creada
+ 	 * @param calle string Calle de la sucursal
  	 * @param codigo_postal string Codigo postal de la empresa
- 	 * @param razon_social string Razon social de la sucursal
- 	 * @param numero_exterior string Numero exterior de la sucursal
- 	 * @param rfc string RFC de la sucursal
+ 	 * @param colonia string Colonia de la sucursal
  	 * @param id_ciudad int Id de la ciudad donde se encuentra la sucursal
+ 	 * @param numero_exterior string Numero exterior de la sucursal
+ 	 * @param razon_social string Razon social de la sucursal
+ 	 * @param rfc string RFC de la sucursal
  	 * @param saldo_a_favor float Saldo a favor de la sucursal.
- 	 * @param id_gerente int ID del usuario que sera gerente de esta sucursal. Para que sea valido este usuario debe tener el nivel de acceso apropiado.
- 	 * @param retenciones json Objeto que contendra el arreglo de retenciones que afectan a esta sucursal
- 	 * @param referencia string Referencia para localizar la direccion de la sucursal
- 	 * @param telefono2 string Telefono2 de la sucursal
- 	 * @param numero_interior string numero interior
- 	 * @param telefono1 string Telefono1 de la sucursal
- 	 * @param impuestos json Objeto que contendra el arreglo de impuestos que afectan a esta sucursal
  	 * @param descripcion string Descripcion de la sucursal
- 	 * @param margen_utilidad float Margen de utilidad que se le ganara a todos los productos ofrecidos por esta sucursal
  	 * @param descuento float Descuento que tendran todos los productos ofrecidos por esta sucursal
+ 	 * @param id_gerente int ID del usuario que sera gerente de esta sucursal. Para que sea valido este usuario debe tener el nivel de acceso apropiado.
+ 	 * @param impuestos json Objeto que contendra el arreglo de impuestos que afectan a esta sucursal
+ 	 * @param margen_utilidad float Margen de utilidad que se le ganara a todos los productos ofrecidos por esta sucursal
+ 	 * @param numero_interior string numero interior
+ 	 * @param referencia string Referencia para localizar la direccion de la sucursal
+ 	 * @param retenciones json Objeto que contendra el arreglo de retenciones que afectan a esta sucursal
+ 	 * @param telefono1 string Telefono1 de la sucursal
+ 	 * @param telefono2 string Telefono2 de la sucursal
  	 * @return id_sucursal int Id autogenerado de la sucursal que se creo.
  	 **/
   static function Nueva
 	(
-		$colonia, 
-		$calle, 
 		$activo, 
+		$calle, 
 		$codigo_postal, 
-		$razon_social, 
-		$numero_exterior, 
-		$rfc, 
+		$colonia, 
 		$id_ciudad, 
+		$numero_exterior, 
+		$razon_social, 
+		$rfc, 
 		$saldo_a_favor, 
-		$id_gerente = null, 
-		$retenciones = null, 
-		$referencia = null, 
-		$telefono2 = null, 
-		$numero_interior = null, 
-		$telefono1 = null, 
-		$impuestos = null, 
 		$descripcion = null, 
+		$descuento = null, 
+		$id_gerente = null, 
+		$impuestos = null, 
 		$margen_utilidad = null, 
-		$descuento = null
+		$numero_interior = null, 
+		$referencia = null, 
+		$retenciones = null, 
+		$telefono1 = null, 
+		$telefono2 = null
 	);  
   
   
