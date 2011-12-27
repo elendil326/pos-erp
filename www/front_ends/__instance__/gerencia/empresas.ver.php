@@ -65,6 +65,7 @@
 
 		$form->hideField( array( 
 				"id_empresa",
+                                "id_direccion"
 			 ));
 		
 		$page->addComponent( $form );

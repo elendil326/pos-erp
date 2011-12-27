@@ -724,25 +724,25 @@ require_once("interfaces/Empresas.interface.php");
  	 **/
 	public static function Editar
 	(
-		$id_empresa,
-		$descuento = null,
-		$margen_utilidad = null,
-		$impuestos = null,
-		$retenciones = null,
-		$direccion_web = null,
-		$ciudad = null,
-		$razon_social = null,
-		$rfc = null,
-		$codigo_postal = null,
-		$curp = null,
-		$calle	 = null,
-		$numero_interno = null,
-		$representante_legal = null,
-		$telefono1 = null,
-		$numero_exterior	 = null,
-		$colonia	 = null,
-		$email = null,
-		$telefono2 = null,
+		$id_empresa, 
+		$calle	 = null, 
+		$ciudad = null, 
+		$codigo_postal = null, 
+		$colonia	 = null, 
+		$curp = null, 
+		$descuento = null, 
+		$direccion_web = null, 
+		$email = null, 
+		$impuestos = null, 
+		$margen_utilidad = null, 
+		$numero_exterior	 = null, 
+		$numero_interno = null, 
+		$razon_social = null, 
+		$representante_legal = null, 
+		$retenciones = null, 
+		$rfc = null, 
+		$telefono1 = null, 
+		$telefono2 = null, 
 		$texto_extra = null
 	)
 	{
@@ -862,7 +862,7 @@ require_once("interfaces/Empresas.interface.php");
             //y se toma al usuario de la sesion.
             if($modificar_direccion)
             {
-                $direccion->setUltimaModificacion("Y-m-d H:i:s",time());
+                $direccion->setUltimaModificacion(date("Y-m-d H:i:s",time()));
                 $id_usuario=SesionController::getCurrentUser();
                 if(is_null($id_usuario))
                 {
