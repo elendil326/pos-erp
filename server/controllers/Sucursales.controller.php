@@ -2139,11 +2139,11 @@ require_once("interfaces/Sucursales.interface.php");
  	 **/
 	public static function AbrirCaja
 	(
-		$billetes, 
 		$client_token, 
 		$control_billetes, 
 		$id_caja, 
 		$saldo, 
+		$billetes = null, 
 		$id_cajero = null
 	)
 	{
@@ -2154,7 +2154,7 @@ require_once("interfaces/Sucursales.interface.php");
             if(is_string($validar))
             {
                 Logger::error($validar);
-                throw new Exception($validar);
+                throw new Exception($validar,901);
             }
             $caja=CajaDAO::getByPK($id_caja);
             
@@ -2162,14 +2162,14 @@ require_once("interfaces/Sucursales.interface.php");
             if(!$caja->getActiva())
             {
                 Logger::error("La caja no esta activa y no puede ser abierta");
-                throw new Exception("La caja no esta activa y no puede ser abierta");
+                throw new Exception("La caja no esta activa y no puede ser abierta",901);
             }
             
             //verifica que la caja no este abierta
             if($caja->getAbierta())
             {
                 Logger::warn("La caja ya ha sido abierta");
-                throw new Exception("La caja ya ha sido abierta");
+                throw new Exception("La caja ya ha sido abierta",901);
             }
             
             //verifica que el id cajero exista en la base de datos
@@ -2179,12 +2179,12 @@ require_once("interfaces/Sucursales.interface.php");
                 if(is_null($cajero))
                 {
                     Logger::error("El cajero con id ".$id_cajero." no existe");
-                    throw new Excetion("El cajero no existe");
+                    throw new Excetion("El cajero no existe",901);
                 }
                 if($cajero->getIdRol()!=3)
                 {
                     Logger::error("El usuario obtenido como cajero no es un cajero, no tiene rol 3");
-                    throw new Exception("El usuario obtenido como cajero no es un cajero");
+                    throw new Exception("El usuario obtenido como cajero no es un cajero",901);
                 }
             }
             
@@ -2202,9 +2202,9 @@ require_once("interfaces/Sucursales.interface.php");
             {
                 //Inserta los billetes en la caja y guarda los cambios en apetura caja y caja
                 //El acto de abrir una caja da por hecho que no tiene ningun billete, pues al cerrar la caja se vaciaron.
+                CajaDAO::save($caja);
                 CajasController::modificarCaja($id_caja, 1, $billetes, 0);
                 AperturaCajaDAO::save($apertura_caja);
-                CajaDAO::save($caja);
                 if($control_billetes)
                 {
                     $billete_apertura_caja=new BilleteAperturaCaja(array( "id_apertura_caja" => $apertura_caja->getIdAperturaCaja()));
@@ -2219,8 +2219,10 @@ require_once("interfaces/Sucursales.interface.php");
             catch(Exception $e)
             {
                 DAO::transRollback();
-                Logger::error("No se pudo abrir la caja: ".$e);
-                throw new Exception("No se pudo abrir la caja");
+                Logger::error("No se pudo abrir la caja: ".$e,901);
+                if($e->getCode()==901)
+                    throw new Exception("No se pudo abrir la caja: ".$e->getMessage(),901);
+                throw new Exception("No se pudo abrir la caja",901);
             }
             DAO::transEnd();
             Logger::log("Caja abierta exitosamente");
@@ -2675,16 +2677,19 @@ require_once("interfaces/Sucursales.interface.php");
             }
             
             //Se valida que el cajero exista y tenga rol de cajero
-            $cajero = UsuarioDAO::getByPK($id_cajero);
-            if(is_null($cajero))
+            if(!is_null($id_cajero))
             {
-                Logger::error("El cajero con id: ".$id_cajero." no existe");
-                throw new Exception("El cajero no existe");
-            }
-            if($cajero->getIdRol()!=3)
-            {
-                Logger::error("El usuario ".$id_cajero." no tiene rol de cajero");
-                throw new Exception("El usuario no tiene rol de cajero");
+                $cajero = UsuarioDAO::getByPK($id_cajero);
+                if(is_null($cajero))
+                {
+                    Logger::error("El cajero con id: ".$id_cajero." no existe");
+                    throw new Exception("El cajero no existe");
+                }
+                if($cajero->getIdRol()!=3)
+                {
+                    Logger::error("El usuario ".$id_cajero." no tiene rol de cajero");
+                    throw new Exception("El usuario no tiene rol de cajero");
+                }
             }
             
             //Se valida el parametro saldo real.

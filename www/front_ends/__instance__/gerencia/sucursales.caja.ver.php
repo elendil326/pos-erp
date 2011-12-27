@@ -105,8 +105,55 @@
                 
                 $page->addComponent( new TitleComponent( "Aperturas" ) );
                 
+                $tabla = new TableComponent(
+                        array(
+                            "fecha"     => "Fecha",
+                            "saldo"     => "Saldo",
+                            "id_cajero" => "Cajero"
+                        ), 
+                         AperturaCajaDAO::search( new AperturaCaja( array( "id_caja" => $_GET["cid"] ) ) )
+                        );
+
+                function funcion_cajero($id_cajero)
+                {
+                    return UsuarioDAO::getByPK($id_cajero)? UsuarioDAO::getByPK($id_cajero)->getNombre() : "------";
+                }
+
+                $tabla->addColRender("id_cajero", "funcion_cajero");
+
+                $page->addComponent($tabla);
+                
                 $page->addComponent( new TitleComponent( "Cortes" ) );
                 
+                $tabla = new TableComponent(
+                        array(
+                            "fecha"         => "Fecha",
+                            "saldo_real"    => "Saldo Encontrado",
+                            "saldo_esperado"=> "Saldo Esperado",
+                            "saldo_final"   => "Saldo Final",
+                            "id_cajero"     => "Cajero"
+                        ), 
+                         CorteDeCajaDAO::search( new CorteDeCaja( array( "id_caja" => $_GET["cid"] ) ) )
+                        );
+
+                $tabla->addColRender("id_cajero", "funcion_cajero");
+
+                $page->addComponent($tabla);
+                
                 $page->addComponent( new TitleComponent( "Cierres" ) );
+                
+                $tabla = new TableComponent(
+                        array(
+                            "fecha"         => "Fecha",
+                            "saldo_real"    => "Saldo Encontrado",
+                            "saldo_esperado"=> "Saldo Esperado",
+                            "id_cajero"     => "Cajero"
+                        ), 
+                         CierreCajaDAO::search( new CierreCaja( array( "id_caja" => $_GET["cid"] ) ) )
+                        );
+
+                $tabla->addColRender("id_cajero", "funcion_cajero");
+
+                $page->addComponent($tabla);
                 
 		$page->render();

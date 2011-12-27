@@ -239,21 +239,21 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *
  	 *Valida si una maquina que realizara peticiones al servidor pertenece a una sucursal.
  	 *
- 	 * @param billetes json Ids de billetes y sus cantidades con los que inicia esta caja
  	 * @param client_token string El token generado por el POS client
  	 * @param control_billetes bool Si se quiere llevar el control de billetes en la caja
  	 * @param id_caja int Id de la caja a abrir
  	 * @param saldo float Saldo con el que empieza a funcionar la caja
+ 	 * @param billetes json Ids de billetes y sus cantidades con los que inicia esta caja
  	 * @param id_cajero int Id del cajero que iniciara en esta caja en caso de que no sea este el que abre la caja
  	 * @return detalles_sucursal json Si esta es una sucursal valida, detalles sucursal contiene un objeto con informacion sobre esta sucursal.
  	 **/
   static function AbrirCaja
 	(
-		$billetes, 
 		$client_token, 
 		$control_billetes, 
 		$id_caja, 
 		$saldo, 
+		$billetes = null, 
 		$id_cajero = null
 	);  
   

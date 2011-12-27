@@ -1921,6 +1921,13 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 Logger::error($validar);
                 throw new Exception($validar,901);
             }
+            
+            //Los roles de administrador (1), gerente (2), cajero(3), cliente (5) y proveedor(6) no pueden ser eliminados
+            if(($id_rol>=1&&$id_rol<=3)||$id_rol>=5&&$id_rol<=6)
+            {
+                Logger::error("El rol predeterminado ".$id_rol." no puede ser eliminado");
+                throw new Exception("Los roles predeterminados no pueden ser eliminado",901);
+            }
 
             //Se obtiene la lista de usuarios con este rol. Si almenos uno aun sigue activo,
             //entonces no se puede eliminar el rol.

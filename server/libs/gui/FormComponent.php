@@ -514,6 +514,20 @@ class FormComponent implements GuiComponent{
 		
 	}
         
+        public function setValueField( $field_name, $value )
+        {
+            $sof = sizeof( $this->form_fields );
+
+		for ($i=0; $i < $sof; $i++) { 
+                    
+                    if( $this->form_fields[$i]->id === $field_name )
+                    {
+                        $this->form_fields[$i]->value = $value;
+                    }
+                    
+                }
+        }
+        
 
 }
 
