@@ -1297,6 +1297,13 @@ require_once("interfaces/Sucursales.interface.php");
                             throw new Exception("El tipo de pago es con cheque pero no se recibio informacion del mismo",901);
                         }
                         
+                        $cheques = object_to_array($cheques);
+                        
+                        if(!is_array($cheques))
+                        {
+                            throw new Exception("Los cheques son invalidos",901);
+                        }
+                        
                         //Se inicializa un registro de la tabla cheque_venta con el id de la venta guardada
                         //Se guarda un cheque por cada uno de los recibidos y se usa el id de la insercion para
                         //guardar el registro cheque_venta.
@@ -1304,6 +1311,17 @@ require_once("interfaces/Sucursales.interface.php");
                         $cheque_venta->setIdVenta($venta->getIdVenta());
                         foreach($cheques as $cheque)
                         {
+                            
+                            if
+                            (
+                                    !array_key_exists("nombre_banco", $cheque)  ||
+                                    !array_key_exists("monto", $cheque)         ||
+                                    !array_key_exists("numero", $cheque)
+                            )
+                            {
+                                throw new Exception("Los cheques son invalidos",901);
+                            }
+                            
                             $id_cheque=ChequesController::NuevoCheque($cheque["nombre_banco"], $cheque["monto"], $cheque["numero"], 0);
                             $cheque_venta->setIdCheque($id_cheque);
                             ChequeVentaDAO::save($cheque_venta);
@@ -1360,10 +1378,29 @@ require_once("interfaces/Sucursales.interface.php");
                 
                 if(!is_null($detalle_paquete))
                 {
+                    
+                    $detalle_paquete = object_to_array($detalle_paquete);
+                    
+                    if(!is_array($detalle_paquete))
+                    {
+                        throw new Exception("El detalle de paquete recibido es invalido",901);
+                    }
+                    
                     $d_paquete=new VentaPaquete();
                     $d_paquete->setIdVenta($venta->getIdVenta());
                     foreach($detalle_paquete as $d_p)
                     {
+                        if
+                        (
+                                !array_key_exists("id_paquete", $d_p)   ||
+                                !array_key_exists("cantidad", $d_p)     ||
+                                !array_key_exists("precio", $d_p)       ||
+                                !array_key_exists("descuento", $d_p)    
+                        )
+                        {
+                            throw new Exception("El detalle de paquete recibido es invalido",901);
+                        }
+                        
                         $validar = self::validarParametrosVentaPaquete(null,$d_p["id_paquete"],$d_p["cantidad"],$d_p["precio"],$d_p["descuento"]);
                         if(is_string($validar))
                             throw new Exception($validar,901);
@@ -1377,15 +1414,34 @@ require_once("interfaces/Sucursales.interface.php");
                 
                 if(!is_null($detalle_producto))
                 {
+                    
+                    $detalle_producto = object_to_array($detalle_producto);
+                    
+                    if(!is_array($detalle_producto))
+                    {
+                        throw new Exception("El detalle del producto es invalido",901);
+                    }
 
                     $d_producto=new VentaProducto();
                     $d_producto->setIdVenta($venta->getIdVenta());
-					
-					$detalle_producto = json_decode($detalle_producto);
-					$detalle_producto = object_to_array($detalle_producto);
 
                     foreach($detalle_producto as $d_p)
                     {
+                        
+                        if
+                        (
+                                !array_key_exists("id_producto", $d_p)   ||
+                                !array_key_exists("cantidad", $d_p)     ||
+                                !array_key_exists("precio", $d_p)       ||
+                                !array_key_exists("descuento", $d_p)    ||
+                                !array_key_exists("impuesto", $d_p)     ||
+                                !array_key_exists("retencion", $d_p)    ||
+                                !array_key_exists("id_unidad", $d_p)
+                        )
+                        {
+                            throw new Exception("El detalle del producto es invalido",901);
+                        }
+                        
                         $validar = self::validarParametrosVentaProducto(null,$d_p["id_producto"],$d_p["precio"],$d_p["cantidad"],$d_p["descuento"],$d_p["impuesto"],$d_p["retencion"],$d_p["id_unidad"]);
                         if(is_string($validar))
                             throw new Exception($validar,901);
@@ -1407,10 +1463,31 @@ require_once("interfaces/Sucursales.interface.php");
                 
                 if(!is_null($detalle_orden))
                 {
+                    
+                    $detalle_orden = object_to_array($detalle_orden);
+                    
+                    if(!is_array($detalle_orden))
+                    {
+                        throw new Exception("El detalle de la orden es invalido");
+                    }
+                    
                     $d_orden = new VentaOrden();
                     $d_orden->setIdVenta($venta->getIdVenta());
                     foreach($detalle_orden as $d_p)
                     {
+                        
+                        if
+                        (
+                                !array_key_exists("id_orden_de_servicio", $d_p)     ||
+                                !array_key_exists("precio", $d_p)                   ||
+                                !array_key_exists("descuento", $d_p)                ||
+                                !array_key_exists("impuesto",$d_p)                  ||
+                                !array_key_exists("retencion",$d_p)                 
+                        )
+                        {
+                            throw new Exception("El detalle de la orden es invalido");
+                        }
+                        
                         $validar = self::validarParametrosVentaOrden(null,$d_p["id_orden_de_servicio"],$d_p["precio"],$d_p["descuento"],$d_p["impuesto"],$d_p["retencion"]);
                         if(is_string($validar))
                             throw new Exception($validar,901);
@@ -1884,6 +1961,14 @@ require_once("interfaces/Sucursales.interface.php");
                         {
                             throw new Exception("El tipo de pago es con cheque pero no se recibio informacion del mismo");
                         }
+                        
+                        $cheques = object_to_array($cheques);
+                        
+                        if(!is_array($cheques))
+                        {
+                            throw new Exception("Los cheques son invalidos",901);
+                        }
+                        
                         $cheque_compra = new ChequeCompra();
                         $cheque_compra->setIdCompra($compra->getIdCompra());
                         foreach($cheques as $cheque)
@@ -1931,6 +2016,13 @@ require_once("interfaces/Sucursales.interface.php");
                 //dentro de esta sucursal. Tambien se guarda el detalle en la tabla compra_producto
                 if(!is_null($detalle))
                 {
+                    $detalle = object_to_array($detalle);
+                    
+                    if(!is_array($detalle))
+                    {
+                        throw new Exception("El detalle del producto es invalido",901);
+                    }
+                    
                     //Se inicializan variables para el almacenamiento de los registros.
                     $d_producto=new CompraProducto();
                     $d_producto->setIdCompra($compra->getIdCompra());
@@ -1955,6 +2047,21 @@ require_once("interfaces/Sucursales.interface.php");
                     //almacen de la empresa
                     foreach($detalle as $d_p)
                     {
+                        
+                        if
+                        (
+                                !array_key_exists("id_producto", $d_p)   ||
+                                !array_key_exists("cantidad", $d_p)     ||
+                                !array_key_exists("precio", $d_p)       ||
+                                !array_key_exists("descuento", $d_p)    ||
+                                !array_key_exists("impuesto", $d_p)     ||
+                                !array_key_exists("retencion", $d_p)    ||
+                                !array_key_exists("id_unidad", $d_p)
+                        )
+                        {
+                            throw new Exception("El detalle de paquete recibido es invalido",901);
+                        }
+                        
                         $validar = self::validarParametrosCompraProducto(null,$d_p["id_producto"],$d_p["precio"],$d_p["cantidad"],$d_p["descuento"],$d_p["impuesto"],$d_p["retencion"],$d_p["id_unidad"]);
                         if(is_string($validar))
                         {
@@ -2208,6 +2315,9 @@ require_once("interfaces/Sucursales.interface.php");
                 if($control_billetes)
                 {
                     $billete_apertura_caja=new BilleteAperturaCaja(array( "id_apertura_caja" => $apertura_caja->getIdAperturaCaja()));
+                    
+                    $billetes = object_to_array($billetes);
+                    
                     foreach($billetes as $billete)
                     {
                         $billete_apertura_caja->setIdBillete($billete["id_billete"]);
@@ -2512,6 +2622,14 @@ require_once("interfaces/Sucursales.interface.php");
                 //las que no esten incluidas en la lista obtenida son eliminadas.
                 if(!is_null($impuestos))
                 {
+                    
+                    $impuestos = object_to_array($impuestos);
+                    
+                    if(!is_array($impuestos))
+                    {
+                        throw new Exception("Los impuestos son invalidos",901);
+                    }
+                    
                     //Se inertan y actualizan las que se encuentran en la lista
                     foreach($impuestos as $impuesto)
                     {
@@ -2546,6 +2664,14 @@ require_once("interfaces/Sucursales.interface.php");
                 //las que no esten incluidas en la lista obtenida son eliminadas.
                 if(!is_null($retenciones))
                 {
+                    
+                    $retenciones = object_to_array($retenciones);
+                    
+                    if(!is_array($retenciones))
+                    {
+                        throw new Exception("Las retenciones son invalidas",901);
+                    }
+                    
                     //Se insertan o actualizan las retenciones obtenidas en la lista
                     foreach($retenciones as $retencion)
                     {
@@ -2733,6 +2859,9 @@ require_once("interfaces/Sucursales.interface.php");
                 //y se registran cuantos billetes fueron encontrados, cuantos sobraron y cuantos faltaron.
                 if($caja->getControlBilletes())
                 {
+                    
+                    $billetes = object_to_array($billetes);
+                    
                     //Se regitran los billetes recibidos como cantidad encontrada.
                     $billete_cierre_caja=new BilleteCierreCaja(array( "id_cierre_caja" => $cierre_caja->getIdCierreCaja() ));
                     $billete_cierre_caja->setCantidadFaltante(0);
@@ -2870,6 +2999,17 @@ Creo que este metodo tiene que estar bajo sucursal.
                 
                 foreach($productos as $p)
                 {
+                    
+                    if
+                    (
+                            !array_key_exists("id_producto", $p)    ||
+                            !array_key_exists("id_unidad", $p)      ||
+                            !array_key_exists("cantidad", $p)
+                    )
+                    {
+                        throw new Exception("Los productos fueron recibidos incorrectamente",901);
+                    }
+                    
                     //valida que el producto a ingresar pertenezca a la misma empresa que el almacen
                     //pues un almacen solo puede ocntener producto de la empresa a la que pertenece.
                     $productos_empresa = ProductoEmpresaDAO::search( new ProductoEmpresa( array( "id_producto" => $p["id_producto"] ) ) );
@@ -3068,8 +3208,27 @@ Creo que este metodo tiene que estar bajo sucursal.
                 //del almacen
                 SalidaAlmacenDAO::save($salida_almacen);
                 $producto_salida_almacen=new ProductoSalidaAlmacen(array( "id_salida_almacen" => $salida_almacen->getIdSalidaAlmacen() ));
+                
+                $productos = object_to_array($productos);
+                
+                if(!is_array($productos))
+                {
+                    throw new Exception("Los productos son invalidos",901);
+                }
+                
                 foreach($productos as $p)
                 {
+                    
+                    if
+                    (
+                            !array_key_exists("id_producto", $p)    ||
+                            !array_key_exists("id_unidad", $p)      ||
+                            !array_key_exists("cantidad", $p)
+                    )
+                    {
+                        throw new Exception("Los productos son invalidos",901);
+                    }
+                    
                     //Se busca en el almacen el producto solicitado, si no es encontrado, se manda una excepcion
                     $producto_almacen=ProductoAlmacenDAO::getByPK($p["id_producto"], $id_almacen, $p["id_unidad"]);
                     if(is_null($producto_almacen))
@@ -3165,6 +3324,8 @@ Creo que este metodo tiene que estar bajo sucursal.
                 CorteDeCajaDAO::save($corte_de_caja);
                 CajasController::modificarCaja($id_caja, 0, $billetes_encontrados, $caja->getSaldo());
                 
+                CajasController::modificarCaja($id_caja, 1, $billetes_dejados, $saldo_final);
+                
                 //Si se lleva control de billetes, se hac eun registro por cada tipo de billete encontrado.
                 //Despues, se buscan los billetes que quedan en la caja entre los tipos de billetes encontrados,
                 //si no se encuentran, se crea su registro.
@@ -3179,6 +3340,9 @@ Creo que este metodo tiene que estar bajo sucursal.
                                         "cantidad_faltante" => 0
                                                 )
                                             );
+                    
+                    $billetes_encontrados = object_to_array($billetes_encontrados);
+                    
                     foreach($billetes_encontrados as $billete)
                     {
                         $billete_corte_caja->setIdBillete($billete["id_billete"]);
@@ -3221,6 +3385,8 @@ Creo que este metodo tiene que estar bajo sucursal.
                         throw new Exception("No se encontro el parametro billetes_dejados cuando se esta llevando control de los billetes en esta caja y su saldo no quedara en 0");
                     }
                     
+                    $billetes_dejados = object_to_array($billetes_dejados);
+                    
                     //Por cada billete dejado se busca su registro en la tabla billete_corte_caja, si no existe se crea,
                     //si existe, se actualiza su parametro cantidad_dejada
                     foreach($billetes_dejados as $b_d)
@@ -3240,7 +3406,6 @@ Creo que este metodo tiene que estar bajo sucursal.
                          BilleteCorteCajaDAO::save($billete_corte_caja);
                     }
                 }/* Fin if control billetes*/
-                CajasController::modificarCaja($id_caja, 1, $billetes_dejados, $saldo_final);
             } /* Fin try */
             catch(Exception $e)
             {
@@ -3715,8 +3880,26 @@ Creo que este metodo tiene que estar bajo sucursal.
                                     "cantidad_recibida" => 0
                                         )
                                     );
+                
+                $productos = object_to_array($productos);
+                
+                if(!is_array($productos))
+                {
+                    throw new Exception("Los productos son invalidos",901);
+                }
+                
                 foreach($productos as $p)
                 {
+                    if
+                    (
+                            !array_key_exists("id_producto", $p)        ||
+                            !array_key_exists("id_unidad", $p)          ||
+                            !array_key_exists("cantidad", $p)
+                    )
+                    {
+                        throw new Exception("Los productos son invalidos",901);
+                    }
+                    
                     //Se validan los parametros de producto
                     if(is_null(ProductoDAO::getByPK($p["id_producto"])))
                     {
@@ -3913,8 +4096,27 @@ Creo que este metodo tiene que estar bajo sucursal.
             {
                 //Guarda el traspaso e inserta los productos en el almacen que recibe
                 TraspasoDAO::save($traspaso);
+                
+                $productos = object_to_array($productos);
+                
+                if(!is_array($productos))
+                {
+                    throw new Exception("Los productos son invalidos",901);
+                }
+                
                 foreach($productos as $p)
                 {
+                    
+                    if
+                    (
+                            !array_key_exists("id_producto", $p)        ||
+                            !array_key_exists("id_unidad", $p)          ||
+                            !array_key_exists("cantidad", $p)
+                    )
+                    {
+                        
+                    }
+                    
                     $producto_traspaso=TraspasoProductoDAO::getByPK($id_traspaso, $p["id_producto"],$p["id_unidad"]);
                     
                     //Si el producto que recibe no esta en el registro de productos enviados, se crea su registro
@@ -4118,6 +4320,14 @@ Creo que este metodo tiene que estar bajo sucursal.
                 TraspasoDAO::save($traspaso);
                 if(!is_null($productos))
                 {
+                    
+                    $productos = object_to_array($productos);
+                    
+                    if(!is_array($productos))
+                    {
+                        throw new Exception("Los productos son invalidos",901);
+                    }
+                    
                     //Se actualiza la cantidad de cada producto programado para este traspaso, si el producto
                     //no se encuentra, se verifica que su empresa concuerde con la del almacen de recibo y 
                     //se crea el nuevo registro.
@@ -4126,6 +4336,16 @@ Creo que este metodo tiene que estar bajo sucursal.
                     //los productos que no se encuentre en la nueva lista obtenida seran eliminados.
                     foreach($productos as $p)
                     {
+                        
+                        if
+                        (
+                                !array_key_exists("id_producto", $p)    ||
+                                !array_key_exists("id_unidad", $p)      
+                        )
+                        {
+                            
+                        }
+                        
                         $traspaso_producto=TraspasoProductoDAO::getByPK($id_traspaso, $p["id_producto"],$p["id_unidad"]);
                         if(is_null($traspaso_producto))
                         {
