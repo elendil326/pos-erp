@@ -1131,12 +1131,32 @@ require_once("interfaces/Servicios.interface.php");
                 ServicioDAO::save($servicio);
                 if(!is_null($empresas))
                 {
+                    
+                    $empresas = object_to_array($empresas);
+                    
+                    if(!is_array($empresas))
+                    {
+                        throw new Exception("Las empresas son invalidas",901);
+                    }
+                    
                     $servicio_empresa = new ServicioEmpresa( array( "id_servicio" => $servicio->getIdServicio() ) );
                     foreach($empresas as $empresa)
                     {
+                        
+                        if
+                        (
+                                !array_key_exists("id_empresa", $empresa)          ||
+                                !array_key_exists("precio_utilidad", $empresa)      ||
+                                !array_key_exists("es_margen_utilidad", $empresa)   
+                        )
+                        {
+                            throw new Exception("Las empresas son invalidas",901);
+                        }
+                        
                         $validar = self::validarParametrosServicioEmpresa($empresa["id_empresa"],$empresa["precio_utilidad"],$empresa["es_margen_utilidad"]);
                         if(is_string($validar))
-                            throw new Exception($validar);
+                            throw new Exception($validar,901);
+                        
                         $servicio_empresa->setIdEmpresa($empresa["id_empresa"]);
                         $servicio_empresa->setPrecioUtilidad($empresa["precio_utilidad"]);
                         $servicio_empresa->setEsMargenUtilidad($empresa["es_margen_utilidad"]);
@@ -1145,12 +1165,32 @@ require_once("interfaces/Servicios.interface.php");
                 }/* Fin if de empresas */
                 if(!is_null($sucursales))
                 {
+                    
+                    $sucursales = object_to_array($sucursales);
+                    
+                    if(!is_array($sucursales))
+                    {
+                        throw new Exception("Las sucursales no son validas",901);
+                    }
+                    
                     $servicio_sucursal = new ServicioSucursal( array( "id_servicio" => $servicio->getIdServicio() ) );
                     foreach($sucursales as $sucursal)
                     {
+                        
+                        if
+                        (
+                                !array_key_exists("id_sucursal", $sucursal)         ||
+                                !array_key_exists("precio_utilidad", $sucursal)     ||
+                                !array_key_exists("es_margen_utilidad", $sucursal)  
+                        )
+                        {
+                            throw new Exception("Las sucursales no son validas",901);
+                        }
+                        
                         $validar = self::validarParametrosServicioSucursal($sucursal["id_sucursal"],$sucursal["precio_utilidad"],$sucursal["es_margen_utilidad"]);
                         if(is_string($validar))
-                            throw new Exception($validar);
+                            throw new Exception($validar,901);
+                        
                         $servicio_sucursal->setIdSucursal($sucursal["id_sucursal"]);
                         $servicio_sucursal->setPrecioUtilidad($sucursal["precio_utilidad"]);
                         $servicio_sucursal->setEsMargenUtilidad($sucursal["es_margen_utilidad"]);
@@ -1159,33 +1199,60 @@ require_once("interfaces/Servicios.interface.php");
                 }/* Fin if de sucursales */
                 if(!is_null($clasificaciones))
                 {
+                    
+                    $clasificaciones = object_to_array($clasificaciones);
+                    
+                    if(!is_array($clasificaciones))
+                    {
+                        throw new Exception("Las clasificaciones son invalidas",901);
+                    }
+                    
                     $servicio_clasificacion = new ServicioClasificacion( array( "id_servicio" => $servicio->getIdServicio() ) );
                     foreach($clasificaciones as $clasificacion)
                     {
                         if(is_null(ClasificacionServicioDAO::getByPK($clasificacion)))
-                                throw new Exception("La clasificacion ".$clasificacion." no existe");
+                                throw new Exception("La clasificacion ".$clasificacion." no existe",901);
+                        
                         $servicio_clasificacion->setIdClasificacionServicio($clasificacion);
                         ServicioClasificacionDAO::save($servicio_clasificacion);
                     }
                 }/* Fin if de clasificaciones */
                 if(!is_null($impuestos))
                 {
+                    
+                    $impuestos = object_to_array($impuestos);
+                    
+                    if(!is_array($impuestos))
+                    {
+                        throw new Exception("Los impuestos son invalidos",901);
+                    }
+                    
                     $impuesto_servicio = new ImpuestoServicio( array( "id_servicio" => $servicio->getIdServicio() ) );
                     foreach($impuestos as $impuesto)
                     {
                         if(is_null(ImpuestoDAO::getByPK($impuesto)))
-                                throw new Exception("El impuesto ".$impuesto." no existe");
+                                throw new Exception("El impuesto ".$impuesto." no existe",901);
+                        
                         $impuesto_servicio->setIdImpuesto($impuesto);
                         ImpuestoServicioDAO::save($impuesto_servicio);
                     }
                 }/* Fin if de impuestos */
                 if(!is_null($retenciones))
                 {
+                    
+                    $retenciones = object_to_array($retenciones);
+                    
+                    if(!is_array($retenciones))
+                    {
+                        throw new Exception("Las retenciones son invalidas",901);
+                    }
+                    
                     $retencion_servicio = new RetencionServicio( array( "id_servicio" => $servicio->getIdServicio() ) );
                     foreach($retenciones as $retencion)
                     {
                         if(is_null(RetencionDAO::getByPK($retencion)))
-                                throw new Exception("La retencion ".$retencion." no existe");
+                                throw new Exception("La retencion ".$retencion." no existe",901);
+                        
                         $retencion_servicio->setIdRetencion($retencion);
                         RetencionServicioDAO::save($retencion_servicio);
                     }
@@ -1195,7 +1262,9 @@ require_once("interfaces/Servicios.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudo crear el nuevo servicio: ".$e);
-                throw new Exception("No se pudo crear el nuevo servicio");
+                if($e->getCode()==901)
+                    throw new Exception("No se pudo crear el nuevo servicio: ".$e->getMessage(),901);
+                throw new Exception("No se pudo crear el nuevo servicio",901);
             }
             DAO::transEnd();
             Logger::log("Servicio creado exitosamente");
@@ -1323,12 +1392,32 @@ require_once("interfaces/Servicios.interface.php");
                 ServicioDAO::save($servicio);
                 if(!is_null($empresas))
                 {
+                    
+                    $empresas = object_to_array($empresas);
+                    
+                    if(!is_array($empresas))
+                    {
+                        throw new Exception("Las empresas son invalidas",901);
+                    }
+                    
                     $servicio_empresa = new ServicioEmpresa( array( "id_servicio" => $servicio->getIdServicio() ) );
                     foreach($empresas as $empresa)
                     {
+                        
+                        if
+                        (
+                                !array_key_exists("id_empresa", $empresa)          ||
+                                !array_key_exists("precio_utilidad", $empresa)      ||
+                                !array_key_exists("es_margen_utilidad", $empresa)   
+                        )
+                        {
+                            throw new Exception("Las empresas son invalidas",901);
+                        }
+                        
                         $validar = self::validarParametrosServicioEmpresa($empresa["id_empresa"],$empresa["precio_utilidad"],$empresa["es_margen_utilidad"]);
                         if(is_string($validar))
-                            throw new Exception($validar);
+                            throw new Exception($validar,901);
+                        
                         $servicio_empresa->setIdEmpresa($empresa["id_empresa"]);
                         $servicio_empresa->setPrecioUtilidad($empresa["precio_utilidad"]);
                         $servicio_empresa->setEsMargenUtilidad($empresa["es_margen_utilidad"]);
@@ -1349,12 +1438,32 @@ require_once("interfaces/Servicios.interface.php");
                 }/* Fin if de empresas */
                 if(!is_null($sucursales))
                 {
+                    
+                    $sucursales = object_to_array($sucursales);
+                    
+                    if(!is_array($sucursales))
+                    {
+                        throw new Exception("Las sucursales no son validas",901);
+                    }
+                    
                     $servicio_sucursal = new ServicioSucursal( array( "id_servicio" => $servicio->getIdServicio() ) );
                     foreach($sucursales as $sucursal)
                     {
+                        
+                         if
+                        (
+                                !array_key_exists("id_sucursal", $sucursal)         ||
+                                !array_key_exists("precio_utilidad", $sucursal)     ||
+                                !array_key_exists("es_margen_utilidad", $sucursal)  
+                        )
+                        {
+                            throw new Exception("Las sucursales no son validas",901);
+                        }
+                        
                         $validar = self::validarParametrosServicioSucursal($sucursal["id_sucursal"],$sucursal["precio_utilidad"],$sucursal["es_margen_utilidad"]);
                         if(is_string($validar))
-                            throw new Exception($validar);
+                            throw new Exception($validar,901);
+                        
                         $servicio_sucursal->setIdSucursal($sucursal["id_sucursal"]);
                         $servicio_sucursal->setPrecioUtilidad($sucursal["precio_utilidad"]);
                         $servicio_sucursal->setEsMargenUtilidad($sucursal["es_margen_utilidad"]);
@@ -1375,11 +1484,20 @@ require_once("interfaces/Servicios.interface.php");
                 }/* Fin if de sucursales */
                 if(!is_null($clasificaciones))
                 {
+                    
+                     $clasificaciones = object_to_array($clasificaciones);
+                    
+                    if(!is_array($clasificaciones))
+                    {
+                        throw new Exception("Las clasificaciones son invalidas",901);
+                    }
+                    
                     $servicio_clasificacion = new ServicioClasificacion( array( "id_servicio" => $servicio->getIdServicio() ) );
                     foreach($clasificaciones as $clasificacion)
                     {
                         if(is_null(ClasificacionServicioDAO::getByPK($clasificacion)))
-                                throw new Exception("La clasificacion ".$clasificacion." no existe");
+                                throw new Exception("La clasificacion ".$clasificacion." no existe",901);
+                        
                         $servicio_clasificacion->setIdClasificacionServicio($clasificacion);
                         ServicioClasificacionDAO::save($servicio_clasificacion);
                     }
@@ -1398,11 +1516,20 @@ require_once("interfaces/Servicios.interface.php");
                 }/* Fin if de clasificaciones */
                 if(!is_null($impuestos))
                 {
+                    
+                    $impuestos = object_to_array($impuestos);
+                    
+                    if(!is_array($impuestos))
+                    {
+                        throw new Exception("Los impuestos son invalidos",901);
+                    }
+                    
                     $impuesto_servicio = new ImpuestoServicio( array( "id_servicio" => $servicio->getIdServicio() ) );
                     foreach($impuestos as $impuesto)
                     {
                         if(is_null(ImpuestoDAO::getByPK($impuesto)))
-                                throw new Exception("El impuesto ".$impuesto." no existe");
+                                throw new Exception("El impuesto ".$impuesto." no existe",901);
+                        
                         $impuesto_servicio->setIdImpuesto($impuesto);
                         ImpuestoServicioDAO::save($impuesto_servicio);
                     }
@@ -1421,11 +1548,20 @@ require_once("interfaces/Servicios.interface.php");
                 }/* Fin if de impuestos */
                 if(!is_null($retenciones))
                 {
+                    
+                    $retenciones = object_to_array($retenciones);
+                    
+                    if(!is_array($retenciones))
+                    {
+                        throw new Exception("Las retenciones son invalidas",901);
+                    }
+                    
                     $retencion_servicio = new RetencionServicio( array( "id_servicio" => $servicio->getIdServicio() ) );
                     foreach($retenciones as $retencion)
                     {
                         if(is_null(RetencionDAO::getByPK($retencion)))
-                                throw new Exception("La retencion ".$retencion." no existe");
+                                throw new Exception("La retencion ".$retencion." no existe",901);
+                        
                         $retencion_servicio->setIdRetencion($retencion);
                         RetencionServicioDAO::save($retencion_servicio);
                     }
@@ -1447,7 +1583,9 @@ require_once("interfaces/Servicios.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudo editar el servicio ".$id_servicio." : ".$e);
-                throw new Exception("No se pudo editar el servicio");
+                if($e->getCode()==901)
+                    throw new Exception("No se pudo editar el servicio: ".$e->getMessage(),901);
+                throw new Exception("No se pudo editar el servicio",901);
             }
             DAO::transEnd();
             Logger::log("Servicio editado exitosamente");
@@ -2235,6 +2373,13 @@ require_once("interfaces/Servicios.interface.php");
                 throw new Exception($validar,901);
             }
             
+            //valida que los productos sean validos
+            $productos = object_to_array($productos);
+            if(!is_array($productos))
+            {
+                throw new Exception("Los productos son invalidos",901);
+            }
+            
             //El precio de la orden de servicio se incrementara por cada precio encontrado en los productos
             $orden_de_servicio = OrdenDeServicioDAO::getByPK($id_orden_de_servicio);
             
@@ -2252,6 +2397,21 @@ require_once("interfaces/Servicios.interface.php");
                  */
                 foreach($productos as $producto)
                 {
+                    
+                    if
+                    (
+                            !array_key_exists("id_producto", $producto)     ||
+                            !array_key_exists("id_unidad", $producto)       ||
+                            !array_key_exists("cantidad", $producto)        ||
+                            !array_key_exists("precio", $producto)          ||
+                            !array_key_exists("descuento", $producto)       ||
+                            !array_key_exists("impuesto", $producto)        ||
+                            !array_key_exists("retencion", $producto)
+                    )
+                    {
+                        throw new Exception("Los productos no contienen los parametros necesarios",901);
+                    }
+                    
                     $producto_anterior = ProductoOrdenDeServicioDAO::getByPK(
                             $id_orden_de_servicio, $producto["id_producto"], $producto["id_unidad"]);
                     
@@ -2335,6 +2495,13 @@ require_once("interfaces/Servicios.interface.php");
                 throw new Exception($validar,901);
             }
             
+             //valida que los productos sean validos
+            $productos = object_to_array($productos);
+            if(!is_array($productos))
+            {
+                throw new Exception("Los productos son invalidos",901);
+            }
+            
             //El precio de la orden de servicio se decrementara por cada producto encontrado
             $orden_de_servicio = OrdenDeServicioDAO::getByPK($id_orden_de_servicio);
             
@@ -2350,6 +2517,18 @@ require_once("interfaces/Servicios.interface.php");
                  */
                 foreach($productos as $producto)
                 {
+                    
+                    if
+                    (
+                            !array_key_exists("id_producto", $producto)     ||
+                            !array_key_exists("id_unidad", $producto)       ||
+                            !array_key_exists("cantidad", $producto)        ||
+                            !array_key_exists("precio", $producto)          
+                    )
+                    {
+                        throw new Exception("Los productos no contienen los parametros necesarios",901);
+                    }
+                    
                     $producto_orden_de_servicio = ProductoOrdenDeServicioDAO::getByPK(
                             $id_orden_de_servicio, $producto["id_producto"], $producto["id_unidad"]);
                     
