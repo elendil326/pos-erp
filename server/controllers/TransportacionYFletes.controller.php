@@ -31,7 +31,7 @@ require_once("interfaces/TransportacionYFletes.interface.php");
  	 *
  	 * @param id_empresa int Id de la empresa de la cual se listaran sus vehiculos
  	 * @param id_estado int Valor que determina si se mostraran los coches de un cierto estado.
- 	 * @param orden json Valor que determinara el orden de la lista
+ 	 * @param orden string Nombre de la columan por el cual se ordenara la lista
  	 * @return carros json Lista de carros con datos generales.
  	 **/
 	public static function Lista

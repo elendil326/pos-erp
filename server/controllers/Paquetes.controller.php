@@ -307,12 +307,12 @@ require_once("interfaces/Paquetes.interface.php");
 	public static function Nuevo
 	(
 		$nombre, 
+		$costo_estandar = null, 
 		$descripcion = null, 
 		$descuento = null, 
-		$precio = null, 
 		$foto_paquete = null, 
-		$costo_estandar = null, 
-		$margen_utilidad = null
+		$margen_utilidad = null, 
+		$precio = null
 	)
 	{  
             Logger::log("Creando nuevo paquete");
@@ -445,15 +445,15 @@ require_once("interfaces/Paquetes.interface.php");
 	public static function Editar
 	(
 		$id_paquete, 
-		$foto_paquete = null, 
-		$productos = null, 
+		$costo_estandar = null, 
+		$descripcion = null, 
 		$descuento = null, 
-		$servicios = null, 
-		$nombre = null, 
+		$foto_paquete = null, 
 		$margen_utilidad = null, 
-		$descripcion = null,
-                $costo_estandar = null,
-                $precio = null
+		$nombre = null, 
+		$precio = null, 
+		$productos = null, 
+		$servicios = null
 	)
 	{  
             Logger::log("Editando paquete ".$id_paquete);
@@ -673,9 +673,9 @@ require_once("interfaces/Paquetes.interface.php");
  	 **/
 	public static function Lista
 	(
+		$activo = null, 
 		$id_empresa = null, 
-		$id_sucursal = null, 
-		$activo = null
+		$id_sucursal = null
 	)
 	{  
             Logger::log("Listando paquetes");

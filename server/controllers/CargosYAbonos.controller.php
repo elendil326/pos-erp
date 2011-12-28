@@ -533,16 +533,16 @@ require_once("interfaces/CargosYAbonos.interface.php");
  	 **/
 	public static function NuevoIngreso
 	(
-		$id_empresa,
-		$fecha_ingreso,
-		$descripcion = null,
-		$nota = null,
-		$folio = null,
-		$id_sucursal = null,
-		$id_concepto_ingreso = null,
-		$id_caja = null,
+		$fecha_ingreso, 
+		$id_empresa, 
+		$billetes = null, 
+		$descripcion = null, 
+		$folio = null, 
+		$id_caja = null, 
+		$id_concepto_ingreso = null, 
+		$id_sucursal = null, 
 		$monto = null, 
-		$billetes = null
+		$nota = null
 	)
 	{
             Logger::log("Creando nuevo ingreso");
@@ -644,13 +644,13 @@ require_once("interfaces/CargosYAbonos.interface.php");
  	 **/
 	public static function EliminarAbono
 	(
-		$id_abono,
-		$motivo_cancelacion = null,
-                $compra = null,
-                $venta = null,
-                $prestamo = null,
-                $id_caja = null,
-                $billetes = null
+		$id_abono, 
+		$billetes = null, 
+		$compra = null, 
+		$id_caja = null, 
+		$motivo_cancelacion = null, 
+		$prestamo = null, 
+		$venta = null
 	)
 	{
             Logger::log("Cancelando abono");
@@ -1084,24 +1084,24 @@ require_once("interfaces/CargosYAbonos.interface.php");
  	 **/
 	public static function ListaAbono
 	(
-                $compra,
-                $venta,
-                $prestamo,
-		$id_caja = null,
-		$id_usuario = null,
-		$orden = null,
-		$id_sucursal = null,
-		$id_empresa = null,
-                $id_compra = null,
-                $id_venta = null,
-                $id_prestamo = null,
-                $cancelado = null,
-                $fecha_minima = null,
-                $fecha_maxima = null,
-                $fecha_actual = null,
-                $monto_menor_a = null,
-                $monto_mayor_a = null,
-                $monto_igual_a = null
+                $compra, 
+		$prestamo, 
+		$venta, 
+		$cancelado = null, 
+		$fecha_actual = null, 
+		$fecha_maxima = null, 
+		$fecha_minima = null, 
+		$id_caja = null, 
+		$id_compra = null, 
+		$id_empresa = null, 
+		$id_prestamo = null, 
+		$id_sucursal = null, 
+		$id_usuario = null, 
+		$id_venta = null, 
+		$monto_igual_a = null, 
+		$monto_mayor_a = null, 
+		$monto_menor_a = null, 
+		$orden = null
 	)
 	{
             Logger::log("Inicia lista de abonos");
@@ -1525,10 +1525,10 @@ require_once("interfaces/CargosYAbonos.interface.php");
  	 **/
 	public static function EliminarGasto
 	(
-		$id_gasto,
-		$motivo_cancelacion = null,
-                $id_caja=null,
-                $billetes=null
+		$id_gasto, 
+		$billetes = null, 
+		$id_caja = null, 
+		$motivo_cancelacion = null
 	)
 	{
             Logger::log("Eliminando gasto");
@@ -1603,19 +1603,19 @@ require_once("interfaces/CargosYAbonos.interface.php");
  	 **/
 	public static function ListaGasto
 	(
-		$id_empresa = null,
-		$id_usuario = null,
-		$id_concepto_gasto = null,
-		$id_orden_servicio = null,
-		$id_caja = null,
-		$fecha_inicial = null,
-		$fecha_final = null,
-		$id_sucursal = null,
-		$cancelado = null,
-		$monto_minimo = null,
-		$monto_maximo = null,
-                $orden = null,
-                $fecha_actual = null
+		$cancelado = null, 
+		$fecha_actual = null, 
+		$fecha_final = null, 
+		$fecha_inicial = null, 
+		$id_caja = null, 
+		$id_concepto_gasto = null, 
+		$id_empresa = null, 
+		$id_orden_servicio = null, 
+		$id_sucursal = null, 
+		$id_usuario = null, 
+		$monto_maximo = null, 
+		$monto_minimo = null, 
+		$orden = null
 	)
 	{
             Logger::log("Listando Gastos");
@@ -1772,10 +1772,10 @@ require_once("interfaces/CargosYAbonos.interface.php");
  	 **/
 	public static function EliminarIngreso
 	(
-		$id_ingreso,
-		$motivo_cancelacion = null,
-                $id_caja=null,
-                $billetes=null
+		$id_ingreso, 
+		$billetes = null, 
+		$id_caja = null, 
+		$motivo_cancelacion = null
 	)
 	{
             Logger::log("Cancelando Ingreso");
@@ -1895,10 +1895,10 @@ require_once("interfaces/CargosYAbonos.interface.php");
  	 **/
 	public static function EditarConceptoGasto
 	(
-		$id_concepto_gasto,
-                $nombre = null,
-		$monto = null,
-		$descripcion = null
+		$id_concepto_gasto, 
+		$descripcion = null, 
+		$monto = null, 
+		$nombre = null
 	)
 	{
             Logger::log("Editando concepto de gasto");
@@ -1998,9 +1998,9 @@ require_once("interfaces/CargosYAbonos.interface.php");
  	 **/
 	public static function NuevoConceptoIngreso
 	(
-		$nombre,
-		$monto = null,
-		$descripcion = null
+		$nombre, 
+		$descripcion = null, 
+		$monto = null
 	)
 	{
             Logger::log("Creando nuevo concepto de ingreso");
@@ -2046,10 +2046,10 @@ require_once("interfaces/CargosYAbonos.interface.php");
  	 **/
 	public static function EditarConceptoIngreso
 	(
-                $id_concepto_ingreso,
-		$nombre = null,
-		$descripcion = null,
-		$monto = null
+                $id_concepto_ingreso, 
+		$descripcion = null, 
+		$monto = null, 
+		$nombre = null
 	)
 	{
             Logger::log("Editando concepto de ingreso");
@@ -2144,8 +2144,8 @@ require_once("interfaces/CargosYAbonos.interface.php");
  	 **/
 	public static function ListaConceptoGasto
 	(
-		$orden = null,
-                $activo = null
+		$activo = null, 
+		$orden = null
 	)
 	{
             Logger::log("Listando conceptos de gasto");
@@ -2198,8 +2198,8 @@ require_once("interfaces/CargosYAbonos.interface.php");
  	 **/
 	public static function ListaConceptoIngreso
 	(
-		$orden = null,
-                $activo = null
+		$activo = null, 
+		$orden = null
 	)
 	{
             Logger::log("Listando conceptos de ingreso");
@@ -2262,17 +2262,17 @@ require_once("interfaces/CargosYAbonos.interface.php");
  	 **/
 	public static function NuevoGasto
 	(
-		$fecha_gasto,
-		$id_empresa,
-		$monto = null,
-		$id_sucursal = null,
-		$id_caja = null,
-		$id_orden_de_servicio = null,
-		$id_concepto_gasto = null,
-		$descripcion = null,
-		$folio = null,
-		$nota = null,
-                $billetes = null
+		$fecha_gasto, 
+		$id_empresa, 
+		$billetes = null, 
+		$descripcion = null, 
+		$folio = null, 
+		$id_caja = null, 
+		$id_concepto_gasto = null, 
+		$id_orden_de_servicio = null, 
+		$id_sucursal = null, 
+		$monto = null, 
+		$nota = null
 	)
 	{
             Logger::log("Creando nuevo gasto");
@@ -2384,12 +2384,12 @@ require_once("interfaces/CargosYAbonos.interface.php");
  	 **/
 	public static function EditarGasto
 	(
-		$id_gasto,
-		$folio = null,
-		$fecha_gasto = null,
-		$descripcion = null,
-		$nota = null,
-		$id_concepto_gasto = null
+		$id_gasto, 
+		$descripcion = null, 
+		$fecha_gasto = null, 
+		$folio = null, 
+		$id_concepto_gasto = null, 
+		$nota = null
 	)
 	{
             Logger::log("Editando gasto");
@@ -2453,11 +2453,11 @@ require_once("interfaces/CargosYAbonos.interface.php");
  	 **/
 	public static function EditarIngreso
 	(
-		$id_ingreso,
-		$id_concepto_ingreso = null,
-		$descripcion = null,
-		$folio = null,
-		$fecha_ingreso = null,
+		$id_ingreso, 
+		$descripcion = null, 
+		$fecha_ingreso = null, 
+		$folio = null, 
+		$id_concepto_ingreso = null, 
 		$nota = null
 	)
 	{
@@ -2524,15 +2524,15 @@ require_once("interfaces/CargosYAbonos.interface.php");
  	 **/
 	public static function NuevoAbono
 	(
-		$monto,
-		$tipo_pago,
-		$id_deudor,
-		$id_compra = null,
-		$cheques = null,
-		$id_prestamo = null,
-		$id_venta = null,
-		$nota = null,
-                $billetes = null
+		$id_deudor, 
+		$monto, 
+		$tipo_pago, 
+		$billetes = null, 
+		$cheques = null, 
+		$id_compra = null, 
+		$id_prestamo = null, 
+		$id_venta = null, 
+		$nota = null
 	)
 	{
             Logger::log("Creando abono");
@@ -2804,18 +2804,18 @@ require_once("interfaces/CargosYAbonos.interface.php");
  	 **/
 	public static function ListaIngreso
 	(
-		$id_caja = null,
-		$fecha_inicial = null,
-		$fecha_final = null,
-		$id_sucursal = null,
-		$id_concepto_ingreso = null,
-		$id_empresa = null,
-		$id_usuario = null,
-		$cancelado = null,
-		$monto_minimo = null,
-		$monto_maximo = null,
-                $fecha_actual = null,
-                $orden = null
+		$cancelado = null, 
+		$fecha_actual = null, 
+		$fecha_final = null, 
+		$fecha_inicial = null, 
+		$id_caja = null, 
+		$id_concepto_ingreso = null, 
+		$id_empresa = null, 
+		$id_sucursal = null, 
+		$id_usuario = null, 
+		$monto_maximo = null, 
+		$monto_minimo = null, 
+		$orden = null
 	)
 	{
             Logger::log("Listando Ingresos");
@@ -2970,12 +2970,12 @@ require_once("interfaces/CargosYAbonos.interface.php");
  	 **/
 	public static function EditarAbono
 	(
-		$id_abono,
-		$motivo_cancelacion = null,
-		$nota = null,
-		$compra = null,
-		$venta = null,
-		$prestamo = null
+		$id_abono, 
+		$compra = null, 
+		$motivo_cancelacion = null, 
+		$nota = null, 
+		$prestamo = null, 
+		$venta = null
 	)
 	{
             Logger::log("Editando abono");

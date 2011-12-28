@@ -204,9 +204,9 @@ require_once("interfaces/Efectivo.interface.php");
  	 **/
 	public static function NuevoBillete
 	(
+		$id_moneda, 
 		$nombre, 
 		$valor, 
-		$id_moneda, 
 		$foto_billete = null
 	)
 	{  

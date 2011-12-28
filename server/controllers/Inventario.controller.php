@@ -26,10 +26,10 @@ Se puede ordenar por los atributos de producto.
  	 **/
 	public static function Existencias
 	(
-		$id_empresa = null, 
-		$id_sucursal = null, 
 		$id_almacen	 = null, 
-		$id_producto	 = null
+		$id_empresa = null, 
+		$id_producto = null, 
+		$id_sucursal = null
 	)
 	{  
             Logger::log("Listando las existencias");
@@ -202,14 +202,14 @@ Se puede ordenar por los atributos de producto.
  	 **/
 	public static function Procesar_producto
 	(
-		$id_almacen_nuevo, 
-		$id_producto_viejo, 
+		$cantidad_nueva, 
 		$cantidad_vieja, 
-		$id_almacen_viejo,
-                $id_unidad_vieja,
-                $id_producto_nuevo,
-                $id_unidad_nueva,
-                $cantidad_nueva
+		$id_almacen_nuevo, 
+		$id_almacen_viejo, 
+		$id_producto_nuevo, 
+		$id_producto_viejo, 
+		$id_unidad_nueva, 
+		$id_unidad_vieja
 	)
 	{  
             Logger::log("Procesando ".$cantidad_vieja." productos con id:".$id_producto_viejo." 

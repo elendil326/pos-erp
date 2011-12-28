@@ -10,7 +10,7 @@
   
 	/**
  	 *
- 	 *Solicitud para cambiar alg?ato de un cliente. La fecha de petici?e tomar?el servidor. El usuario y la sucursal que emiten la autorizaci?er?tomadas de la sesi?
+ 	 *Solicitud para cambiar alg?n dato de un cliente. La fecha de petici?n se tomar? del servidor. El usuario y la sucursal que emiten la autorizaci?n ser?n tomadas de la sesi?n.
 
 La autorizacion se guardara con los datos del usuario que la pidio. Si es aceptada, entonces el usuario podra editar al cliente una vez.
  	 *
@@ -27,7 +27,7 @@ La autorizacion se guardara con los datos del usuario que la pidio. Si es acepta
   
 	/**
  	 *
- 	 *Solicitud para devolver una compra. La fecha de petici?e tomar?el servidor. El usuario y la sucursal que emiten la autorizaci?er?tomadas de la sesi?
+ 	 *Solicitud para devolver una compra. La fecha de petici?n se tomar? del servidor. El usuario y la sucursal que emiten la autorizaci?n ser?n tomadas de la sesi?n.
  	 *
  	 * @param id_compra int Id de la compra a devolver
  	 * @param descripcion int Una descripcion para justificar esto.
@@ -71,7 +71,7 @@ Digo que seria buena idea definir el formato de las autorizaciones para ir pensa
 
 
 
-Al momento de editar la autorizacion veo que aparentemente se podria editar el id_autorizacion, id_usuario, id_sucursal, peticion y estado, creo yo que no es prudente editar ninguno de estos campos ya que el mal uso de esta informacion puede da?gravemente la integridad del sistema.
+Al momento de editar la autorizacion veo que aparentemente se podria editar el id_autorizacion, id_usuario, id_sucursal, peticion y estado, creo yo que no es prudente editar ninguno de estos campos ya que el mal uso de esta informacion puede da?ar gravemente la integridad del sistema.
  	 *
  	 * @param descripcion string Justificacin de la solicitud.
  	 * @param estado int Id del estado de la autorizacin
@@ -89,13 +89,13 @@ Al momento de editar la autorizacion veo que aparentemente se podria editar el i
   
 	/**
  	 *
- 	 *Solicitud para cambiar la relaci?ntre cliente y el precio ofrecido para cierto producto ya sea en compra o en venta. La fecha de peticion se tomar?el servidor. El usuario y la sucursal que emiten la autorizaci?er?tomadas de la sesi?
+ 	 *Solicitud para cambiar la relaci?n entre cliente y el precio ofrecido para cierto producto ya sea en compra o en venta. La fecha de peticion se tomar? del servidor. El usuario y la sucursal que emiten la autorizaci?n ser?n tomadas de la sesi?n.
 
-UPDATE : Actualmente como se maneja esto es por medio de las ventas preferenciales, es decir, se manda una autorizaci?ara que el cajero pueda editar todos los precios que desee, de todos los productos "solo para esa venta y solo para ese cliente especificamente", ya que si el cliente quisiera que le vendieran mas de un solo producto a diferente precio tendr? que generar mas de una autorizaci?esto implica un incremento considerable en el tiempo de respuesta y aplicaci?e los cambios.
+UPDATE : Actualmente como se maneja esto es por medio de las ventas preferenciales, es decir, se manda una autorizaci?n para que el cajero pueda editar todos los precios que desee, de todos los productos "solo para esa venta y solo para ese cliente especificamente", ya que si el cliente quisiera que le vendieran mas de un solo producto a diferente precio tendr?as que generar mas de una autorizaci?n, esto implica un incremento considerable en el tiempo de respuesta y aplicaci?n de los cambios.
 
 UPDATE 2: Creo que los metodos : 
 api/autorizaciones/editar_precio_cliente y api/autorizaciones/editar_siguiente_compra_venta_precio_cliente
-Se podr? combinar y as?ener un solo m?do para una compra venta preferencial.
+Se podr?an combinar y as? tener un solo m?todo para una compra venta preferencial.
  	 *
  	 * @param compra bool Si es true, el nuevo precio ser requerido para compras en el producto especificado, si es false, el nuevo precio ser requerido para ventas en el producto especificado.
  	 * @param descripcion string Justificacin del cambio de precio del cliente.
@@ -121,7 +121,7 @@ Se podr? combinar y as?ener un solo m?do para una compra venta preferencial.
   
 	/**
  	 *
- 	 *La fecha de peticion se tomar?el servidor. El usuario y la sucursal que emiten la autorizaci?er?tomadas de la sesi?
+ 	 *La fecha de peticion se tomar? del servidor. El usuario y la sucursal que emiten la autorizaci?n ser?n tomadas de la sesi?n.
  	 *
  	 * @param descripcion string Justificacin por la cual se pide el gasto.
  	 * @param monto float Monto a gastar
@@ -137,11 +137,11 @@ Se podr? combinar y as?ener un solo m?do para una compra venta preferencial.
   
 	/**
  	 *
- 	 *Muestra la lista de autorizaciones, con la opci?e filtrar por pendientes, aceptadas, rechazadas, en tr?ito, embarques recibidos y de ordenar seg?os atributos de autorizaciones. 
+ 	 *Muestra la lista de autorizaciones, con la opci?n de filtrar por pendientes, aceptadas, rechazadas, en tr?nsito, embarques recibidos y de ordenar seg?n los atributos de autorizaciones. 
 Update :  falta definir el ejemplo de envio.
  	 *
- 	 * @param filtro json Valor numrico que definir que filtro se pondr a la lista.
- 	 * @param ordenar json Valor numrico que definir el orden de la lista.
+ 	 * @param filtro string Nombre de la columna por la cual se ordenara la lista
+ 	 * @param ordenar string Nombre de la columan por el cual se ordenara la lista
  	 * @return autorizaciones json Arreglo de objetos que contendrá las autorizaciones
  	 **/
   static function Lista
@@ -155,7 +155,7 @@ Update :  falta definir el ejemplo de envio.
   
 	/**
  	 *
- 	 *Responde a una autorizaci?n estado pendiente. Este m?do no se puede aplicar a una autorizaci?a resuelta.
+ 	 *Responde a una autorizaci?n en estado pendiente. Este m?todo no se puede aplicar a una autorizaci?n ya resuelta.
  	 *
  	 * @param aceptar bool Valor booleano que indicara si se debe aceptar o no esta autorizacion.
  	 * @param id_autorizacion int Id de la autorizacin a responder
@@ -171,8 +171,8 @@ Update :  falta definir el ejemplo de envio.
   
 	/**
  	 *
- 	 *Solicitud de un producto, la fecha de peticion se tomar?el servidor. El usuario y la sucursal que emiten la autorizaci?er?tomadas de la sesi?
-Update :  Me parece que no es buena idea manejar en los argumentos solo un id_producto y cantidad, creo que seria mejor manejar un array de objetos producto, que tuvieran como propiedades el id del producto y la cantidad solicitada, ya que si por ejemplo llega un cliente grande y necesita mas de un producto, y no pudiera cubrir la cantidad solicitada, por cada producto tendr? que solicitar una autorizaci?
+ 	 *Solicitud de un producto, la fecha de peticion se tomar? del servidor. El usuario y la sucursal que emiten la autorizaci?n ser?n tomadas de la sesi?n.
+Update :  Me parece que no es buena idea manejar en los argumentos solo un id_producto y cantidad, creo que seria mejor manejar un array de objetos producto, que tuvieran como propiedades el id del producto y la cantidad solicitada, ya que si por ejemplo llega un cliente grande y necesita mas de un producto, y no pudiera cubrir la cantidad solicitada, por cada producto tendr?as que solicitar una autorizaci?n.
  
  	 *
  	 * @param descripcion string Justificacin del porqu la solicitud del producto.
@@ -189,7 +189,7 @@ Update :  Me parece que no es buena idea manejar en los argumentos solo un id_pr
   
 	/**
  	 *
- 	 *Solicitud para devolver una venta. La fecha de petici?e tomar?el servidor. El usuario y la sucursal que emiten la autorizaci?er?tomadas de la sesi?
+ 	 *Solicitud para devolver una venta. La fecha de petici?n se tomar? del servidor. El usuario y la sucursal que emiten la autorizaci?n ser?n tomadas de la sesi?n.
  	 *
  	 * @param descripcion string Justificacin de la devolucin de la compra
  	 * @param id_venta int Id de la venta a devolver

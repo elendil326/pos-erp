@@ -288,11 +288,11 @@ require_once("interfaces/Consignaciones.interface.php");
  	 **/
 	public static function Nueva
 	(
+		$fecha_termino, 
+		$folio, 
 		$id_consignatario, 
 		$productos, 
 		$tipo_consignacion, 
-		$fecha_termino, 
-		$folio, 
 		$fecha_envio_programada = null
 	)
 	{  
@@ -489,10 +489,10 @@ require_once("interfaces/Consignaciones.interface.php");
  	 **/
 	public static function Lista
 	(
-		$id_empresa = null, 
-		$id_sucursal = null, 
 		$id_cliente = null, 
+		$id_empresa = null, 
 		$id_producto = null, 
+		$id_sucursal = null, 
 		$orden = null
 	)
 	{  
@@ -515,10 +515,10 @@ require_once("interfaces/Consignaciones.interface.php");
 	(
 		$id_inspeccion, 
 		$productos_actuales, 
-		$producto_devuelto = null, 
-		$producto_solicitado = null, 
+		$id_inspector = "", 
 		$monto_abonado = null, 
-		$id_inspector = null
+		$producto_devuelto = null, 
+		$producto_solicitado = null
 	)
 	{  
   
@@ -554,9 +554,9 @@ require_once("interfaces/Consignaciones.interface.php");
  	 **/
 	public static function AbonarInspeccion
 	(
-		$monto, 
+		$id_caja, 
 		$id_inspeccion, 
-		$id_caja
+		$monto
 	)
 	{  
   
@@ -574,8 +574,8 @@ require_once("interfaces/Consignaciones.interface.php");
  	 **/
 	public static function NuevaInspeccion
 	(
-		$id_consignacion, 
 		$fecha_revision, 
+		$id_consignacion, 
 		$id_inspector = null
 	)
 	{  
@@ -625,9 +625,9 @@ require_once("interfaces/Consignaciones.interface.php");
  	 **/
 	public static function Editar
 	(
+		$agregar, 
 		$id_consignacion, 
-		$productos, 
-		$agregar
+		$productos
 	)
 	{  
   

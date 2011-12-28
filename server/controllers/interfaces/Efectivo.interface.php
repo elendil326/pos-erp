@@ -49,7 +49,7 @@
  	 *Lista los billetes de una instancia
  	 *
  	 * @param activo bool Si este valor no es obtenido, se listaran tanto activos como inactivos, si es verdadero, se listaran solo los activos, si es falso, se listaran solo los inactivos
- 	 * @param ordenar json Valor que determina el orden de la lista
+ 	 * @param ordenar string Nombre de la columan por el cual se ordenara la lista
  	 * @return billetes json Lista de billetes
  	 **/
   static function ListaBillete
@@ -119,7 +119,7 @@
  	 *Lista las monedas de una instancia
  	 *
  	 * @param activo bool Si este valor no es recibido, se listaran tanto activos como inactivos, si es verdadero, se listaran solo los activos, si es falso, se listaran solo los inactivos.
- 	 * @param orden json Valor que determinara el orden de la lista
+ 	 * @param orden string Nombre de la columan por el cual se ordenara la lista
  	 * @return monedas json Lista de monedas
  	 **/
   static function ListaMoneda

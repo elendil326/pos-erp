@@ -10,7 +10,7 @@
   
 	/**
  	 *
- 	 *Edita la informaci?e un abono
+ 	 *Edita la informaci?n de un abono
  	 *
  	 * @param id_abono int Id del abono a editar
  	 * @param compra bool Si el abono a editar fue a una compra
@@ -79,7 +79,7 @@
  	 * @param monto_igual_a float Se listaran los abonos cuyo monto sea igual a este
  	 * @param monto_mayor_a float Se listaran los abonos cuyo monto sea mayor a este
  	 * @param monto_menor_a float Se listaran los abonos cuyo monto sea menor a este
- 	 * @param orden json Objeto que indicara el orden en que se mostrara la lista
+ 	 * @param orden string Nombre de la columna por la cual se ordenara la lista
  	 * @return abonos json Objeto que contendra la lista de abonos
  	 **/
   static function ListaAbono
@@ -140,9 +140,9 @@
   
 	/**
  	 *
- 	 *Edita la informaci?e un concepto de gasto
+ 	 *Edita la informaci?n de un concepto de gasto
 
-Update : Se deber?de tomar de la sesi?l id del usuario que hiso la ultima modificaci? la fecha.
+Update : Se deber?a de tomar de la sesi?n el id del usuario que hiso la ultima modificaci?n y la fecha.
  	 *
  	 * @param id_concepto_gasto int Id del concepto de gasto a modificar
  	 * @param descripcion string Descripcion larga del concepto de gasto
@@ -163,7 +163,7 @@ Update : Se deber?de tomar de la sesi?l id del usuario que hiso la ultima modifi
 	/**
  	 *
  	 *Deshabilita un concepto de gasto
-Update :Se deber?de tomar tambi?de la sesi?l id del usuario y fecha de la ultima modificaci?
+Update :Se deber?a de tomar tambi?n de la sesi?n el id del usuario y fecha de la ultima modificaci?n
  	 *
  	 * @param id_concepto_gasto int Id del concepto que ser eliminado
  	 **/
@@ -299,12 +299,13 @@ Update :  Tambien se deberia de tomar  de la sesion el id del usuario qeu hiso a
   
 	/**
  	 *
- 	 *Registrar un gasto. El usuario y la sucursal que lo registran ser?tomados de la sesi?ctual.
+ 	 *Registrar un gasto. El usuario y la sucursal que lo registran ser?n tomados de la sesi?n actual.
 
-Update :Ademas deber?tambi?de tomar la fecha de ingreso del gasto del servidor y agregar tambi?como par?tro una fecha a la cual se deber?de aplicar el gasto. Por ejemplo si el d?09/09/11 (viernes) se tomo dinero para pagar la luz, pero resulta que ese d?se olvidaron de registrar el gasto y lo registran el 12/09/11 (lunes). Entonces tambien se deberia de tomar como parametro una fecha a la cual aplicar el gasto, tambien se deberia de enviar como parametro una nota
+Update :Ademas deber?a tambi?n de tomar la fecha de ingreso del gasto del servidor y agregar tambi?n como par?metro una fecha a la cual se deber?a de aplicar el gasto. Por ejemplo si el d?a 09/09/11 (viernes) se tomo dinero para pagar la luz, pero resulta que ese d?a se olvidaron de registrar el gasto y lo registran el 12/09/11 (lunes). Entonces tambien se deberia de tomar como parametro una fecha a la cual aplicar el gasto, tambien se deberia de enviar como parametro una nota
  	 *
  	 * @param fecha_gasto string Fecha del gasto
  	 * @param id_empresa int Id de la empresa a la que pertenece este gasto
+ 	 * @param billetes json Los billetes que se retiran de la caja por pagar este gasto
  	 * @param descripcion string Descripcion del gasto en caso de que no este contemplado en la lista de concpetos de gasto
  	 * @param folio string Folio de la factura del gasto
  	 * @param id_caja int Id de la caja de la que se sustrae el dinero para pagar el gasto
@@ -319,6 +320,7 @@ Update :Ademas deber?tambi?de tomar la fecha de ingreso del gasto del servidor y
 	(
 		$fecha_gasto, 
 		$id_empresa, 
+		$billetes = null, 
 		$descripcion = null, 
 		$folio = null, 
 		$id_caja = null, 
@@ -356,7 +358,7 @@ Update :Ademas deber?tambi?de tomar la fecha de ingreso del gasto del servidor y
  	 *
  	 *Deshabilita un concepto de ingreso
 
-Update :Se deber?tambi?obtener de la sesi?l id del usuario y fecha de la ultima modificaci?
+Update :Se deber?a tambi?n obtener de la sesi?n el id del usuario y fecha de la ultima modificaci?n.
  	 *
  	 * @param id_concepto_ingreso int Id del ingreso a eliminar
  	 **/
@@ -372,14 +374,16 @@ Update :Se deber?tambi?obtener de la sesi?l id del usuario y fecha de la ultima 
  	 *
  	 *Lista los conceptos de ingreso, se puede ordenar por los atributos del concepto de ingreso.  
 
-Update :Falta especificar la estructura del JSON que se env?como parametro
+Update :Falta especificar la estructura del JSON que se env?a como parametro
  	 *
- 	 * @param ordenar json Valor que indicar la forma en que se ordenar la lista
+ 	 * @param activo bool Si se listaran solo activos o inactivos, si no se recibe se listan ambos
+ 	 * @param orden string Nombre de la columan por el cual se ordenara la lista
  	 * @return conceptos_ingreso json Arreglo que contendrá la información de los conceptos de ingreso
  	 **/
   static function ListaConceptoIngreso
 	(
-		$ordenar = null
+		$activo = null, 
+		$orden = null
 	);  
   
   
@@ -410,7 +414,7 @@ Update : En la respuesta basta con solo indicar success : true | false, y en cas
  	 *
  	 *Edita un ingreso
 
-Update :El usuario y la fecha de la ultima modificaci?e deber? de obtener de la sesi?
+Update :El usuario y la fecha de la ultima modificaci?n se deber?an de obtener de la sesi?n
  	 *
  	 * @param id_ingreso int Id del ingreso que se editar
  	 * @param descripcion string Descripciond el ingreso en caso de que no se encentre en la lista de conceptos.
@@ -437,11 +441,15 @@ Update :El usuario y la fecha de la ultima modificaci?e deber? de obtener de la 
  	 *Cancela un ingreso
  	 *
  	 * @param id_ingreso int Id del ingreso a cancelar
+ 	 * @param billetes json Billetes usados para regresar el ingreso
+ 	 * @param id_caja int Id de la caja de la cual se toma el dinero  para regresar el ingreso
  	 * @param motivo_cancelacion string Motivo por el cual se realiza la cancelacion
  	 **/
   static function EliminarIngreso
 	(
 		$id_ingreso, 
+		$billetes = null, 
+		$id_caja = null, 
 		$motivo_cancelacion = null
 	);  
   
@@ -450,7 +458,7 @@ Update :El usuario y la fecha de la ultima modificaci?e deber? de obtener de la 
   
 	/**
  	 *
- 	 *Lista los ingresos, se puede filtrar de acuerdo a la empresa, la sucursal, el usuario que registra el ingreso, el concepto de ingreso, la caja que recibi? ingreso, de una fecha inicial a una final, por monto, por cancelacion, y se puede ordenar de acuerdo a sus atributos.
+ 	 *Lista los ingresos, se puede filtrar de acuerdo a la empresa, la sucursal, el usuario que registra el ingreso, el concepto de ingreso, la caja que recibi? el ingreso, de una fecha inicial a una final, por monto, por cancelacion, y se puede ordenar de acuerdo a sus atributos.
  	 *
  	 * @param cancelado bool Si este valor no es obtenido, se listaran tanto ingresos cancelados como no cancelados, si es true, solo se listaran los ingresos cancelados, si es false, se listaran solo los ingresos no cancelados
  	 * @param fecha_actual bool verdaderi si solo se listaran los ingresos del dia de hoy

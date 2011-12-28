@@ -181,16 +181,16 @@ require_once("interfaces/Ventas.interface.php");
  	 **/
 	public static function Nueva_venta_arpillas
 	(
-		$peso_por_arpilla, 
-		$merma_por_arpilla, 
 		$arpillas, 
-		$peso_origen, 
 		$fecha_origen, 
-		$peso_destino, 
 		$id_venta, 
-		$productor = null, 
-		$numero_de_viaje = null, 
+		$merma_por_arpilla, 
+		$peso_destino, 
+		$peso_origen, 
+		$peso_por_arpilla, 
 		$folio = null, 
+		$numero_de_viaje = null, 
+		$productor = null, 
 		$total_origen = null
 	)
 	{  
@@ -302,13 +302,13 @@ require_once("interfaces/Ventas.interface.php");
  	 **/
 	public static function Lista
 	(
-		$ordenar = null, 
+		$canceladas = null, 
 		$id_sucursal = null, 
-		$total_superior_a = null, 
-		$total_inferior_a = null, 
-		$total_igual_a = null, 
 		$liquidados = null, 
-		$canceladas = null
+		$ordenar = null, 
+		$total_igual_a = null, 
+		$total_inferior_a = null, 
+		$total_superior_a = null
 	)
 	{  
             Logger::log("Obteniendo la lista de ventas");
@@ -416,8 +416,8 @@ require_once("interfaces/Ventas.interface.php");
 	public static function Cancelar
 	(
 		$id_venta, 
-		$id_caja = null, 
-		$billetes = null
+		$billetes = null, 
+		$id_caja = null
 	)
 	{  
              Logger::log("Cancenlando venta ".$id_venta);
@@ -519,19 +519,19 @@ require_once("interfaces/Ventas.interface.php");
 	public static function Nueva
 	(
 		$descuento, 
-		$total, 
-		$retencion, 
-		$impuesto, 
-		$tipo_venta, 
-		$subtotal, 
 		$id_comprador_venta, 
 		$id_sucursal, 
+		$impuesto, 
+		$retencion, 
+		$subtotal, 
+		$tipo_venta, 
+		$total, 
+		$datos_cheque = null, 
 		$detalle_orden = null, 
 		$detalle_paquete = null, 
 		$detalle_venta = null, 
-		$datos_cheque = null, 
-		$tipo_de_pago = null, 
-		$saldo = 0
+		$saldo = 0, 
+		$tipo_de_pago = null
 	)
 	{  
             Logger::log("Creando nueva venta fuera de caja");
@@ -539,9 +539,9 @@ require_once("interfaces/Ventas.interface.php");
             //Se utiliza el metodo de Sucursal controller, dejando que tome la caja y la sucursal como nulos
             try
             {
-            $venta = SucursalesController::VenderCaja($subtotal,$tipo_venta,$total,$descuento,
-                    $impuesto,$retencion,$id_comprador_venta,null,$detalle_venta,$saldo,$tipo_de_pago,null,
-                    $detalle_paquete,$detalle_orden,$datos_cheque,null,$id_sucursal);
+            $venta = SucursalesController::VenderCaja($descuento,$id_comprador_venta,$impuesto,$retencion,
+                    $subtotal,$tipo_venta,$total,null,null,$datos_cheque,$detalle_orden,$detalle_paquete,
+                    $detalle_producto,null,$id_sucursal,null,$saldo,$tipo_de_pago);
             }
             catch(Exception $e)
             {

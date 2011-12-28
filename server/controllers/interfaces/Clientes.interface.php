@@ -55,7 +55,7 @@
  	 *
  	 *Obtener una lista de las categorias de clientes actuales en el sistema. Se puede ordenar por sus atributos
  	 *
- 	 * @param orden json Objeto que determinara el orden de la lista
+ 	 * @param orden string Nombre de la columan por el cual se ordenara la lista
  	 * @return clasifciaciones_cliente json Objeto que contendra la lista de clasificaciones de cliente
  	 **/
   static function ListaClasificacion
@@ -110,7 +110,7 @@
   
 	/**
  	 *
- 	 *Edita la informaci?e un cliente. Se diferenc?del m?do editar_perfil en qu?st??do modifica informaci??sensible del cliente. El campo fecha_ultima_modificacion ser?lenado con la fecha actual del servidor. El campo Usuario_ultima_modificacion ser?lenado con la informaci?e la sesi?ctiva.
+ 	 *Edita la informaci?n de un cliente. Se diferenc?a del m?todo editar_perfil en qu? est? m?todo modifica informaci?n m?s sensible del cliente. El campo fecha_ultima_modificacion ser? llenado con la fecha actual del servidor. El campo Usuario_ultima_modificacion ser? llenado con la informaci?n de la sesi?n activa.
 
 Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran los datos que ya tiene.
  	 *
@@ -198,7 +198,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
   
 	/**
  	 *
- 	 *Edita la informaci?e un cliente. El campo fecha_ultima_modificacion ser?lenado con la fecha actual del servidor. El campo Usuario_ultima_modificacion ser?lenado con la informaci?e la sesi?ctiva.
+ 	 *Edita la informaci?n de un cliente. El campo fecha_ultima_modificacion ser? llenado con la fecha actual del servidor. El campo Usuario_ultima_modificacion ser? llenado con la informaci?n de la sesi?n activa.
  	 *
  	 * @param id_cliente int Id del cliente a modificar.
  	 * @param calle string Calle del cliente
@@ -262,14 +262,14 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
   
 	/**
  	 *
- 	 *Regresa una lista de clientes. Puede filtrarse por empresa, sucursal, activos, as?omo ordenarse seg?us atributs con el par?tro orden. Es posible que algunos clientes sean dados de alta por un admnistrador que no les asigne algun id_empresa, o id_sucursal.
+ 	 *Regresa una lista de clientes. Puede filtrarse por empresa, sucursal, activos, as? como ordenarse seg?n sus atributs con el par?metro orden. Es posible que algunos clientes sean dados de alta por un admnistrador que no les asigne algun id_empresa, o id_sucursal.
 
-Update :  ¿Es correcto que contenga el argumento id_sucursal? Ya que as?omo esta entiendo que solo te regresara los datos de los clientes de una sola sucursal.
+Update :  ?Es correcto que contenga el argumento id_sucursal? Ya que as? como esta entiendo que solo te regresara los datos de los clientes de una sola sucursal.
  	 *
  	 * @param activo bool Si el valor es obtenido, cuando sea true, mostrar solo los clientes que estn activos, false si solo mostrar clientes inactivos.
  	 * @param id_clasificacion_cliente int Se listaran los clientes que cumplan con esta clasificacion
  	 * @param id_sucursal int Filtrara los resultados solo para los clientes que se dieron de alta en la sucursal dada.
- 	 * @param orden json Valor que definir la forma de ordenamiento de la lista. 
+ 	 * @param orden string Nombre de la columan por el cual se ordenara la lista
  	 * @return clientes json Arreglo de objetos que contendrá la información de los clientes.
  	 **/
   static function Lista
@@ -285,7 +285,7 @@ Update :  ¿Es correcto que contenga el argumento id_sucursal? Ya que as?omo esta
   
 	/**
  	 *
- 	 *Crear un nuevo cliente. Para los campos de Fecha_alta y Fecha_ultima_modificacion se usar?a fecha actual del servidor. El campo Agente y Usuario_ultima_modificacion ser?tomados de la sesi?ctiva. Para el campo Sucursal se tomar?a sucursal activa donde se est?reando el cliente. 
+ 	 *Crear un nuevo cliente. Para los campos de Fecha_alta y Fecha_ultima_modificacion se usar? la fecha actual del servidor. El campo Agente y Usuario_ultima_modificacion ser?n tomados de la sesi?n activa. Para el campo Sucursal se tomar? la sucursal activa donde se est? creando el cliente. 
 
 Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda ver sus facturas y eso, si tiene email. Al crearse se le enviara un correo electronico con el url.
  	 *

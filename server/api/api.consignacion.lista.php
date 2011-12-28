@@ -20,7 +20,7 @@
 			"id_empresa" => new ApiExposedProperty("id_empresa", false, GET, array( "int" )),
 			"id_producto" => new ApiExposedProperty("id_producto", false, GET, array( "int" )),
 			"id_sucursal" => new ApiExposedProperty("id_sucursal", false, GET, array( "int" )),
-			"orden" => new ApiExposedProperty("orden", false, GET, array( "json" )),
+			"orden" => new ApiExposedProperty("orden", false, GET, array( "string" )),
 		);
 	}
 
@@ -33,7 +33,7 @@
 			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] : null,
 			isset($_GET['id_producto'] ) ? $_GET['id_producto'] : null,
 			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null,
-			isset($_GET['orden'] ) ? json_decode($_GET['orden']) : null
+			isset($_GET['orden'] ) ? $_GET['orden'] : null
 			
 			);
 		}catch(Exception $e){

@@ -700,8 +700,8 @@ require_once("interfaces/Precio.interface.php");
  	 **/
 	public static function Editar_precio_rolProducto
 	(
-		$productos_precios_utilidad, 
-		$id_rol
+		$id_rol, 
+		$productos_precios_utlidad
 	)
 	{  
             Logger::log("Registrando precios de los productos para el rol ".$id_rol);
@@ -1108,8 +1108,8 @@ require_once("interfaces/Precio.interface.php");
  	 **/
          public static function Editar_precio_rolPaquete
 	 (
-		$paquetes_precios_utilidad, 
-		$id_rol
+		$id_rol, 
+		$paquetes_precios_utilidad
 	 )
          {
              Logger::log("Registrando precios de los paquetes para el rol ".$id_rol);
@@ -1169,8 +1169,8 @@ require_once("interfaces/Precio.interface.php");
  	 **/
          public static function Editar_precio_tipo_clientePaquete
 	 (
-		$paquetes_precios_utilidad, 
-		$id_tipo_cliente
+		$id_tipo_cliente, 
+		$paquetes_precios_utilidad
 	 )
          {
              Logger::log("Registrando precios de los paquetes para el tipo_cliente ".$id_tipo_cliente);

@@ -25,12 +25,14 @@
 			"clasificaciones" => new ApiExposedProperty("clasificaciones", false, GET, array( "json" )),
 			"control_de_existencia" => new ApiExposedProperty("control_de_existencia", false, GET, array( "int" )),
 			"descripcion_servicio" => new ApiExposedProperty("descripcion_servicio", false, GET, array( "string" )),
+			"empresas" => new ApiExposedProperty("empresas", false, GET, array( "json" )),
 			"foto_servicio" => new ApiExposedProperty("foto_servicio", false, GET, array( "string" )),
 			"garantia" => new ApiExposedProperty("garantia", false, GET, array( "int" )),
 			"impuestos" => new ApiExposedProperty("impuestos", false, GET, array( "json" )),
 			"margen_de_utilidad" => new ApiExposedProperty("margen_de_utilidad", false, GET, array( "float" )),
 			"precio" => new ApiExposedProperty("precio", false, GET, array( "float" )),
 			"retenciones" => new ApiExposedProperty("retenciones", false, GET, array( "json" )),
+			"sucursales" => new ApiExposedProperty("sucursales", false, GET, array( "json" )),
 		);
 	}
 
@@ -48,12 +50,14 @@
 			isset($_GET['clasificaciones'] ) ? json_decode($_GET['clasificaciones']) : null,
 			isset($_GET['control_de_existencia'] ) ? $_GET['control_de_existencia'] : null,
 			isset($_GET['descripcion_servicio'] ) ? $_GET['descripcion_servicio'] : null,
+			isset($_GET['empresas'] ) ? json_decode($_GET['empresas']) : null,
 			isset($_GET['foto_servicio'] ) ? $_GET['foto_servicio'] : null,
 			isset($_GET['garantia'] ) ? $_GET['garantia'] : null,
 			isset($_GET['impuestos'] ) ? json_decode($_GET['impuestos']) : null,
 			isset($_GET['margen_de_utilidad'] ) ? $_GET['margen_de_utilidad'] : null,
 			isset($_GET['precio'] ) ? $_GET['precio'] : null,
-			isset($_GET['retenciones'] ) ? json_decode($_GET['retenciones']) : null
+			isset($_GET['retenciones'] ) ? json_decode($_GET['retenciones']) : null,
+			isset($_GET['sucursales'] ) ? json_decode($_GET['sucursales']) : null
 			
 			);
 		}catch(Exception $e){

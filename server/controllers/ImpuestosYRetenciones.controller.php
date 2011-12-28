@@ -130,9 +130,9 @@ require_once("interfaces/ImpuestosYRetenciones.interface.php");
 	public static function EditarImpuesto
 	(
 		$id_impuesto, 
+		$descripcion = null, 
 		$es_monto = null, 
 		$monto_porcentaje = null, 
-		$descripcion = null, 
 		$nombre = null
 	)
 	{  
@@ -215,9 +215,9 @@ require_once("interfaces/ImpuestosYRetenciones.interface.php");
 	public static function EditarRetencion
 	(
 		$id_retencion, 
+		$descripcion = null, 
 		$es_monto = null, 
 		$monto_porcentaje = null, 
-		$descripcion = null, 
 		$nombre = null
 	)
 	{  
@@ -432,9 +432,9 @@ require_once("interfaces/ImpuestosYRetenciones.interface.php");
  	 **/
 	public static function NuevoImpuesto
 	(
+		$es_monto, 
 		$monto_porcentaje, 
 		$nombre, 
-		$es_monto, 
 		$descripcion = null
 	)
 	{  

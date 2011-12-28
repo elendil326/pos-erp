@@ -16,7 +16,7 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"ordenar" => new ApiExposedProperty("ordenar", false, GET, array( "json" )),
+			"ordenar" => new ApiExposedProperty("ordenar", false, GET, array( "string" )),
 		);
 	}
 
@@ -25,7 +25,7 @@
  		$this->response = ImpuestosYRetencionesController::ListaRetencion( 
  			
 			
-			isset($_GET['ordenar'] ) ? json_decode($_GET['ordenar']) : null
+			isset($_GET['ordenar'] ) ? $_GET['ordenar'] : null
 			
 			);
 		}catch(Exception $e){

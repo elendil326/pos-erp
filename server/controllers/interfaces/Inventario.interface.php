@@ -25,7 +25,7 @@
   
 	/**
  	 *
- 	 *Ver la lista de productos y sus existencias, se puede filtrar por empresa, sucursal, almac? y lote.
+ 	 *Ver la lista de productos y sus existencias, se puede filtrar por empresa, sucursal, almac?n, y lote.
 Se puede ordenar por los atributos de producto. 
  	 *
  	 * @param id_almacen	 int Id del almacen del cual se vern los productos. Si este valor es obtenido no se tomaran en cuenta los parametros id_empresa ni id_sucursal

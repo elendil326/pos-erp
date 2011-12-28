@@ -188,20 +188,20 @@ require_once("interfaces/Compras.interface.php");
  	 **/
 	public static function Lista
 	(
-		$tipo_pago = null, 
+		$cancelada = null, 
+		$fecha_final = null, 
 		$fecha_inicial = null, 
-		$id_vendedor_compra = null, 
-		$tipo_compra = null, 
 		$id_caja = null, 
-		$id_usuario = null, 
 		$id_empresa = null, 
 		$id_sucursal = null, 
-		$fecha_final = null, 
-		$total_maximo = null, 
+		$id_usuario = null, 
+		$id_vendedor_compra = null, 
+		$orden = null, 
 		$saldada = null, 
-		$total_minimo = null, 
-		$cancelada = null, 
-		$orden = null
+		$tipo_compra = null, 
+		$tipo_pago = null, 
+		$total_maximo = null, 
+		$total_minimo = null
 	)
 	{
             Logger::log("Listando compras");
@@ -350,16 +350,16 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
  	 **/
 	public static function Nueva_compra_arpilla
 	(
-		$peso_por_arpilla, 
 		$arpillas, 
-		$peso_recibido, 
 		$id_compra, 
-		$total_origen, 
 		$merma_por_arpilla, 
-		$numero_de_viaje = null, 
-		$folio = null, 
-		$peso_origen = null, 
+		$peso_por_arpilla, 
+		$peso_recibido, 
+		$total_origen, 
 		$fecha_origen = null, 
+		$folio = null, 
+		$numero_de_viaje = null, 
+		$peso_origen = null, 
 		$productor = null
 	)
 	{
@@ -411,9 +411,9 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
  	 **/
 	public static function Cancelar
 	(
-		$id_compra,
-                $id_caja = null,
-                $billetes = null
+		$id_compra, 
+		$billetes = null, 
+		$id_caja = null
 	)
 	{
             Logger::log("Cancenlando compra ".$id_compra);
@@ -568,19 +568,19 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
  	 **/
 	public static function Nueva
 	(
-		$subtotal, 
 		$descuento, 
-		$id_usuario_compra, 
-		$id_empresa, 
-		$total, 
 		$detalle, 
+		$id_empresa, 
+		$id_usuario_compra, 
 		$impuesto, 
 		$retencion, 
+		$subtotal, 
 		$tipo_compra, 
-		$tipo_de_pago = null, 
+		$total, 
 		$cheques = null, 
+		$id_sucursal = null, 
 		$saldo = 0, 
-		$id_sucursal = null
+		$tipo_de_pago = null
 	)
 	{  
             Logger::log("Creando nueva compra");
@@ -588,8 +588,8 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
             //Se utiliza el metodo comprar caja de sucursal
             try
             {
-                $compra = SucursalesController::ComprarCaja($retencion,$detalle,$id_usuario_compra,$total,
-                        $tipo_compra,$subtotal,$id_empresa,$descuento,$impuesto,null,null,$tipo_de_pago,$saldo,$cheques);
+                $compra = SucursalesController::ComprarCaja($descuento,$detalle,$id_empresa,$id_usuario_compra,
+                        $impuesto,$retencion,$subtotal,$tipo_compra,$total,null,null,$cheques,null,null,$id_sucursal,$saldo,$tipo_de_pago);
             }
             catch(Exception $e)
             {

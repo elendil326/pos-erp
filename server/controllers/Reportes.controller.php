@@ -60,7 +60,7 @@ require_once("interfaces/Reportes.interface.php");
  	 *
  	 * @param id_empresa int Id de la empresa de la cual se listaran sus reportes
  	 * @param id_sucursal int Id de la sucursal de la cual se listaran sus reportes
- 	 * @param orden json Valor que determinara el orden de la lista
+ 	 * @param orden string Nombre de la columan por el cual se ordenara la lista
  	 * @return reportes json Objeto que contendra la lista de reportes
  	 **/
 	public static function Lista

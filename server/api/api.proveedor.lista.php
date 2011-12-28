@@ -17,7 +17,7 @@
 	{
 		$this->request = array(	
 			"activo" => new ApiExposedProperty("activo", false, GET, array( "bool" )),
-			"orden" => new ApiExposedProperty("orden", false, GET, array( "json" )),
+			"orden" => new ApiExposedProperty("orden", false, GET, array( "string" )),
 		);
 	}
 
@@ -27,7 +27,7 @@
  			
 			
 			isset($_GET['activo'] ) ? $_GET['activo'] : null,
-			isset($_GET['orden'] ) ? json_decode($_GET['orden']) : null
+			isset($_GET['orden'] ) ? $_GET['orden'] : null
 			
 			);
 		}catch(Exception $e){

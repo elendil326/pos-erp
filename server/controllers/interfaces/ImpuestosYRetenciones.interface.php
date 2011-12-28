@@ -34,7 +34,7 @@
  	 *
  	 *Listas los impuestos
  	 *
- 	 * @param ordenar json Objeto que determinara el orden de la lista
+ 	 * @param ordenar string Nombre de la columan por el cual se ordenara la lista
  	 * @return impuestos json Lista de impuestos
  	 **/
   static function ListaImpuesto
@@ -92,7 +92,7 @@
  	 *
  	 *Lista las retenciones
  	 *
- 	 * @param ordenar json Objeto que determinara el orde de la lista
+ 	 * @param ordenar string Nombre de la columan por el cual se ordenara la lista
  	 * @return retenciones json Objeto que contendra la lista de retenciones
  	 **/
   static function ListaRetencion

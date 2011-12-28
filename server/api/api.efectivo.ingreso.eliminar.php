@@ -17,6 +17,8 @@
 	{
 		$this->request = array(	
 			"id_ingreso" => new ApiExposedProperty("id_ingreso", true, GET, array( "int" )),
+			"billetes" => new ApiExposedProperty("billetes", false, GET, array( "json" )),
+			"id_caja" => new ApiExposedProperty("id_caja", false, GET, array( "int" )),
 			"motivo_cancelacion" => new ApiExposedProperty("motivo_cancelacion", false, GET, array( "string" )),
 		);
 	}
@@ -27,6 +29,8 @@
  			
 			
 			isset($_GET['id_ingreso'] ) ? $_GET['id_ingreso'] : null,
+			isset($_GET['billetes'] ) ? json_decode($_GET['billetes']) : null,
+			isset($_GET['id_caja'] ) ? $_GET['id_caja'] : null,
 			isset($_GET['motivo_cancelacion'] ) ? $_GET['motivo_cancelacion'] : null
 			
 			);

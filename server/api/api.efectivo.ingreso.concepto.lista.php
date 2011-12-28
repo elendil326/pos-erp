@@ -18,7 +18,8 @@ Update :Falta especificar la estructura del JSON que se env?a como parametro
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"ordenar" => new ApiExposedProperty("ordenar", false, GET, array( "json" )),
+			"activo" => new ApiExposedProperty("activo", false, GET, array( "bool" )),
+			"orden" => new ApiExposedProperty("orden", false, GET, array( "string" )),
 		);
 	}
 
@@ -27,7 +28,8 @@ Update :Falta especificar la estructura del JSON que se env?a como parametro
  		$this->response = CargosYAbonosController::ListaConceptoIngreso( 
  			
 			
-			isset($_GET['ordenar'] ) ? json_decode($_GET['ordenar']) : null
+			isset($_GET['activo'] ) ? $_GET['activo'] : null,
+			isset($_GET['orden'] ) ? $_GET['orden'] : null
 			
 			);
 		}catch(Exception $e){

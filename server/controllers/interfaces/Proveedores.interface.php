@@ -167,7 +167,7 @@
  	 *Obtener una lista de proveedores. Puede filtrarse por activo o inactivos, y puede ordenarse por sus atributos.
  	 *
  	 * @param activo bool Si el valor no es obtenido, se listaran los proveedores tanto activos como inactivos. Si su valor es true, se mostraran solo los proveedores activos, si es false, se mostraran solo los proveedores inactivos.
- 	 * @param orden json Valor que determinara el orden de la lista.
+ 	 * @param orden string Nombre de la columan por el cual se ordenara la lista
  	 * @return proveedores json Objeto que contendra la lista de proveedores.
  	 **/
   static function Lista

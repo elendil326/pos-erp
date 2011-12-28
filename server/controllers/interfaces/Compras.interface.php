@@ -101,7 +101,7 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
   
 	/**
  	 *
- 	 *Registra una nueva compra, la compra puede ser a cualquier usuario, siendo este un cliente, proveedor, o cualquiera. La compra siempre viene acompa?a de un detalle de productos que han sido comprados, y cada uno estipula a que almacen y a que sucursal iran a parar.
+ 	 *Registra una nueva compra, la compra puede ser a cualquier usuario, siendo este un cliente, proveedor, o cualquiera. La compra siempre viene acompa?anda de un detalle de productos que han sido comprados, y cada uno estipula a que almacen y a que sucursal iran a parar.
  	 *
  	 * @param descuento float Monto descontado por descuentos
  	 * @param detalle json JSON que comprende un arreglo del tipo:{    id_producto   : 8,    id_sucursal   : 5,    id_almacen    : 2,    costo_total   : 5.55,    cantidad      : 44}id_producto es el producto comprado.id_sucursal es la sucursal donde se dejara ese producto y id_sucursal es la sucursal donde se dejara de esa sucursal. El costo total es por cada producto. Esto es que se debe mandar el costo total de este producto, y la suma de todos los productos debe concocordar con total.

@@ -21,7 +21,7 @@
 			"estado" => new ApiExposedProperty("estado", false, GET, array( "string" )),
 			"id_almacen_envia" => new ApiExposedProperty("id_almacen_envia", false, GET, array( "int" )),
 			"id_almacen_recibe" => new ApiExposedProperty("id_almacen_recibe", false, GET, array( "int" )),
-			"ordenar" => new ApiExposedProperty("ordenar", false, GET, array( "json" )),
+			"ordenar" => new ApiExposedProperty("ordenar", false, GET, array( "string" )),
 		);
 	}
 
@@ -35,7 +35,7 @@
 			isset($_GET['estado'] ) ? $_GET['estado'] : null,
 			isset($_GET['id_almacen_envia'] ) ? $_GET['id_almacen_envia'] : null,
 			isset($_GET['id_almacen_recibe'] ) ? $_GET['id_almacen_recibe'] : null,
-			isset($_GET['ordenar'] ) ? json_decode($_GET['ordenar']) : null
+			isset($_GET['ordenar'] ) ? $_GET['ordenar'] : null
 			
 			);
 		}catch(Exception $e){

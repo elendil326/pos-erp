@@ -17,8 +17,8 @@ Update :  falta definir el ejemplo de envio.
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"filtro" => new ApiExposedProperty("filtro", false, GET, array( "json" )),
-			"ordenar" => new ApiExposedProperty("ordenar", false, GET, array( "json" )),
+			"filtro" => new ApiExposedProperty("filtro", false, GET, array( "string" )),
+			"ordenar" => new ApiExposedProperty("ordenar", false, GET, array( "string" )),
 		);
 	}
 
@@ -27,8 +27,8 @@ Update :  falta definir el ejemplo de envio.
  		$this->response = AutorizacionesController::Lista( 
  			
 			
-			isset($_GET['filtro'] ) ? json_decode($_GET['filtro']) : null,
-			isset($_GET['ordenar'] ) ? json_decode($_GET['ordenar']) : null
+			isset($_GET['filtro'] ) ? $_GET['filtro'] : null,
+			isset($_GET['ordenar'] ) ? $_GET['ordenar'] : null
 			
 			);
 		}catch(Exception $e){

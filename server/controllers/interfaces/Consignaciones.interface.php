@@ -168,7 +168,7 @@
  	 * @param id_empresa int Id de la empresa de la cual se mostraran las consignaciones
  	 * @param id_producto int Id del producto del cual se mostraran las consignaciones
  	 * @param id_sucursal int Id de la sucursal de la cual se mostraran las consignaciones
- 	 * @param orden json Valor que determinara el orden de la lista
+ 	 * @param orden string Nombre de la columan por el cual se ordenara la lista
  	 * @return lista_consignaciones json Objeto que contendra la lista de consignaciones
  	 **/
   static function Lista
@@ -185,7 +185,7 @@
   
 	/**
  	 *
- 	 *Iniciar una orden de consignaci?La fecha sera tomada del servidor.
+ 	 *Iniciar una orden de consignaci?n. La fecha sera tomada del servidor.
  	 *
  	 * @param fecha_termino string Fecha en el que se termina la consignacion
  	 * @param folio string Folio de la consignacion

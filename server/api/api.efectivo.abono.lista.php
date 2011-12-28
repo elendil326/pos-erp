@@ -33,7 +33,7 @@
 			"monto_igual_a" => new ApiExposedProperty("monto_igual_a", false, GET, array( "float" )),
 			"monto_mayor_a" => new ApiExposedProperty("monto_mayor_a", false, GET, array( "float" )),
 			"monto_menor_a" => new ApiExposedProperty("monto_menor_a", false, GET, array( "float" )),
-			"orden" => new ApiExposedProperty("orden", false, GET, array( "json" )),
+			"orden" => new ApiExposedProperty("orden", false, GET, array( "string" )),
 		);
 	}
 
@@ -59,7 +59,7 @@
 			isset($_GET['monto_igual_a'] ) ? $_GET['monto_igual_a'] : null,
 			isset($_GET['monto_mayor_a'] ) ? $_GET['monto_mayor_a'] : null,
 			isset($_GET['monto_menor_a'] ) ? $_GET['monto_menor_a'] : null,
-			isset($_GET['orden'] ) ? json_decode($_GET['orden']) : null
+			isset($_GET['orden'] ) ? $_GET['orden'] : null
 			
 			);
 		}catch(Exception $e){

@@ -18,7 +18,7 @@
 		$this->request = array(	
 			"id_empresa" => new ApiExposedProperty("id_empresa", false, GET, array( "int" )),
 			"id_estado" => new ApiExposedProperty("id_estado", false, GET, array( "int" )),
-			"orden" => new ApiExposedProperty("orden", false, GET, array( "json" )),
+			"orden" => new ApiExposedProperty("orden", false, GET, array( "string" )),
 		);
 	}
 
@@ -29,7 +29,7 @@
 			
 			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] : null,
 			isset($_GET['id_estado'] ) ? $_GET['id_estado'] : null,
-			isset($_GET['orden'] ) ? json_decode($_GET['orden']) : null
+			isset($_GET['orden'] ) ? $_GET['orden'] : null
 			
 			);
 		}catch(Exception $e){

@@ -21,7 +21,7 @@ Update :  ?Es correcto que contenga el argumento id_sucursal? Ya que as? como es
 			"activo" => new ApiExposedProperty("activo", false, GET, array( "bool" )),
 			"id_clasificacion_cliente" => new ApiExposedProperty("id_clasificacion_cliente", false, GET, array( "int" )),
 			"id_sucursal" => new ApiExposedProperty("id_sucursal", false, GET, array( "int" )),
-			"orden" => new ApiExposedProperty("orden", false, GET, array( "json" )),
+			"orden" => new ApiExposedProperty("orden", false, GET, array( "string" )),
 		);
 	}
 
@@ -33,7 +33,7 @@ Update :  ?Es correcto que contenga el argumento id_sucursal? Ya que as? como es
 			isset($_GET['activo'] ) ? $_GET['activo'] : null,
 			isset($_GET['id_clasificacion_cliente'] ) ? $_GET['id_clasificacion_cliente'] : null,
 			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null,
-			isset($_GET['orden'] ) ? json_decode($_GET['orden']) : null
+			isset($_GET['orden'] ) ? $_GET['orden'] : null
 			
 			);
 		}catch(Exception $e){

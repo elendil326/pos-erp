@@ -48,7 +48,7 @@
  	 *
  	 *Lista los roles, se puede filtrar por empresa y ordenar por sus atributos
  	 *
- 	 * @param orden json Objeto que determinara el orden de la lista
+ 	 * @param orden string Nombre de la columna por la cual se ordenaran
  	 * @return roles json Objeto que contendra la lista de los roles
  	 **/
   static function ListaRol
@@ -268,7 +268,7 @@
  	 *Listar a todos los usuarios del sistema. Se puede ordenar por los atributos del usuario y filtrar en activos e inactivos
  	 *
  	 * @param activo bool True si se mostrarn solo los usuarios activos, false si solo se mostrarn los usuarios inactivos
- 	 * @param ordenar json Valor numrico que indicar la forma en que se ordenar la lista
+ 	 * @param ordenar string Nombre de la columna por la cual se editara la lista
  	 * @return usuarios json Arreglo de objetos que contendrá la información de los usuarios del sistema
  	 **/
   static function ListaUsuario

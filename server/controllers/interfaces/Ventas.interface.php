@@ -63,7 +63,7 @@
  	 * @param canceladas bool Si no se obtiene este valor, se listaran las ventas tanto canceladas como las que no, si es true, se listaran solo las ventas que estan canceladas, si es false, se listaran las ventas que no estan canceladas solamente.
  	 * @param id_sucursal int Id de la sucursal de la cuals e listaran sus ventas
  	 * @param liquidados bool Si este valor no es obtenido, se listaran tanto las ventas liquidadas, como las no liquidadas, si es true, se listaran solo las ventas liquidadas, si es false, se listaran las ventas no liquidadas solamente.
- 	 * @param ordenar json Valor que determinara la manera en que la lista sera ordenada.
+ 	 * @param ordenar string Nombre de la columan por el cual se ordenara la lista
  	 * @param total_igual_a float Si este valor es obtenido, se listaran las ventas cuyo total sea igual al valor obtenido
  	 * @param total_inferior_a float Si este valor es obtenido, se listaran las empresas cuyo total sea inferior al valor obtenido.
  	 * @param total_superior_a float Si ese valor es obtenido, se listaran las ventas cuyo total sea superior al valor obtenido.
@@ -128,7 +128,7 @@ Si hay dos productos en una misma sucursal pero disntintos almacenes entonces se
   
 	/**
  	 *
- 	 *Realiza una nueva venta por arpillas. Este m?do tiene que llamarse en conjunto con el metodo api/ventas/nueva.
+ 	 *Realiza una nueva venta por arpillas. Este m?todo tiene que llamarse en conjunto con el metodo api/ventas/nueva.
  	 *
  	 * @param arpillas float Nmero de arpillas enviadas
  	 * @param fecha_origen string Fecha en la que se envo el embarque

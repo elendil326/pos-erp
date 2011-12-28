@@ -10,7 +10,7 @@
   
 	/**
  	 *
- 	 *Edita la informaci?e una clasificaci?e servicio
+ 	 *Edita la informaci?n de una clasificaci?n de servicio
  	 *
  	 * @param id_clasificacion_servicio int Id de la clasificacion del servicio que se edita
  	 * @param descripcion string Descripcion de la clasificacion del servicio
@@ -129,7 +129,7 @@
  	 *
  	 *Da de baja un servicio que ofrece una empresa
  	 *
- 	 * @param id_servicio int Id del servicio que será eliminado
+ 	 * @param id_servicio int Id del servicio que serï¿½ eliminado
  	 **/
   static function Eliminar
 	(
@@ -146,7 +146,7 @@
  	 * @param activo bool Si este valor no es obtenido, se mostraran los servicios tanto activos como inactivos. Si es true, se mostraran solo los activos, si es false se mostraran solo los inactivos.
  	 * @param id_empresa int Id de la empresa de la cual se listaran sus servicios
  	 * @param id_sucursal int Id de la sucursal de la cual se listaran sus servicios
- 	 * @param orden json Valor que determinara el orden de la lista
+ 	 * @param orden string Nombre de la columna por la cual se ordenara la lista
  	 * @return servicios json Objeto que contendra la lista de servicios
  	 **/
   static function Lista
@@ -173,12 +173,38 @@
  	 * @param clasificaciones json Uno o varios id_clasificacion de este servicio, esta clasificacion esta dada por el usuario   Array
  	 * @param control_de_existencia int 00000001 = Unidades. 00000010 = Caractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = LoteCaractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = Lote
  	 * @param descripcion_servicio string Descripcion del servicio
+ 	 * @param empresas json Empresas a las cuales pertenecera este servicio. Este objeto debera contener la siguiente informacion:
+
+{
+  "empresas" : [
+                
+          {
+           "id_empresa"         : 1,
+           "precio_utilidad"    : 3,
+           "es_margen_utilidad" : 0
+          }
+     ]
+}
+
  	 * @param foto_servicio string La url de la foto del servicio
  	 * @param garantia int Si este servicio tiene una garanta en meses.
  	 * @param impuestos json array de ids de impuestos que tiene este servico
  	 * @param margen_de_utilidad float Un porcentage de 0 a 100 si queremos que este servicio marque utilidad en especifico
  	 * @param precio float Precio del servicio
  	 * @param retenciones json Ids de las retenciones que afectan este servicio
+ 	 * @param sucursales json Sucursales a las cuales pertenecera este servicio. Este objeto debera contener la siguiente informacion:
+
+{
+  "sucursales" : [
+                
+          {
+           "id_sucursal"        : 1,
+           "precio_utilidad"    : 3,
+           "es_margen_utilidad" : 0
+          }
+     ]
+}
+
  	 * @return id_servicio int Id del servicio creado
  	 **/
   static function Nuevo
@@ -192,12 +218,14 @@
 		$clasificaciones = null, 
 		$control_de_existencia = null, 
 		$descripcion_servicio = null, 
+		$empresas = null, 
 		$foto_servicio = null, 
 		$garantia = null, 
 		$impuestos = null, 
 		$margen_de_utilidad = null, 
 		$precio = null, 
-		$retenciones = null
+		$retenciones = null, 
+		$sucursales = null
 	);  
   
   
@@ -237,7 +265,7 @@
   
 	/**
  	 *
- 	 *Ver los detalles de una orden de servicio. Puede ordenarse por sus atributos. Los detalles de la orden de servicio son los seguimientos que tiene esa orden as?omo el estado y sus fechas de orden y de entrega.
+ 	 *Ver los detalles de una orden de servicio. Puede ordenarse por sus atributos. Los detalles de la orden de servicio son los seguimientos que tiene esa orden as? como el estado y sus fechas de orden y de entrega.
  	 *
  	 * @param id_orden int Id de la orden a revisar
  	 * @return detalle_orden json Objeto que contendra el detalle de la orden
@@ -260,7 +288,7 @@
  	 * @param fecha_hasta string fecha en que se entregara una orden
  	 * @param id_servicio int Se listaran las ordenes que contengan este servicio
  	 * @param id_usuario_venta int Se listaran las ordenes de este usuario
- 	 * @return ordenes json Objeto que contendrá las ordenes.
+ 	 * @return ordenes json Objeto que contendrï¿½ las ordenes.
  	 **/
   static function ListaOrden
 	(
@@ -326,7 +354,7 @@
 	(
 		$id_orden_de_servicio, 
 		$nota, 
-		$id_localizacion = ""
+		$id_localizacion = null
 	);  
   
   

@@ -1,6 +1,6 @@
 <?php
 /**
-  * GET api/sucursal/tipo_almacen/lista
+  * GET api/sucursal/almacen/tipo_almacen/lista
   * Imprime la lista de tipos de almacen
   *
   * Imprime la lista de tipos de almacen
@@ -9,23 +9,22 @@
   *
   **/
 
-  class ApiSucursalTipoAlmacenLista extends ApiHandler {
+  class ApiSucursalAlmacenTipoAlmacenLista extends ApiHandler {
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function CheckAuthorization() {}
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"orden" => new ApiExposedProperty("orden", false, GET, array( "string" )),
 		);
 	}
 
 	protected function GenerateResponse() {		
 		try{
- 		$this->response = SucursalesController::ListaTipo_almacen( 
+ 		$this->response = SucursalesController::ListaTipo_almacenAlmacen( 
  			
-			
-			isset($_GET['orden'] ) ? $_GET['orden'] : null
+		
 			
 			);
 		}catch(Exception $e){

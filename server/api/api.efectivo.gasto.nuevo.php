@@ -20,6 +20,7 @@ Update :Ademas deber?a tambi?n de tomar la fecha de ingreso del gasto del servid
 		$this->request = array(	
 			"fecha_gasto" => new ApiExposedProperty("fecha_gasto", true, GET, array( "string" )),
 			"id_empresa" => new ApiExposedProperty("id_empresa", true, GET, array( "int" )),
+			"billetes" => new ApiExposedProperty("billetes", false, GET, array( "json" )),
 			"descripcion" => new ApiExposedProperty("descripcion", false, GET, array( "string" )),
 			"folio" => new ApiExposedProperty("folio", false, GET, array( "string" )),
 			"id_caja" => new ApiExposedProperty("id_caja", false, GET, array( "int" )),
@@ -38,6 +39,7 @@ Update :Ademas deber?a tambi?n de tomar la fecha de ingreso del gasto del servid
 			
 			isset($_GET['fecha_gasto'] ) ? $_GET['fecha_gasto'] : null,
 			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] : null,
+			isset($_GET['billetes'] ) ? json_decode($_GET['billetes']) : null,
 			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
 			isset($_GET['folio'] ) ? $_GET['folio'] : null,
 			isset($_GET['id_caja'] ) ? $_GET['id_caja'] : null,

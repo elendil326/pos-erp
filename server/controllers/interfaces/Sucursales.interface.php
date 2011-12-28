@@ -182,7 +182,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 * @param estado string Se listaran los traspasos cuyo estado sea este, si no es obtenido este valor, se listaran los traspasos de cualqueir estado
  	 * @param id_almacen_envia int Se listaran los traspasos enviados por este almacen
  	 * @param id_almacen_recibe int Se listaran los traspasos recibidos por este almacen
- 	 * @param ordenar json Determina el orden de la lista
+ 	 * @param ordenar string Nombre de la columna por la cual se ordenara
  	 * @return traspasos json Lista de traspasos
  	 **/
   static function ListaTraspasoAlmacen
@@ -670,10 +670,12 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *
  	 *Imprime la lista de tipos de almacen
  	 *
+ 	 * @param orden string Nombre de la columan por el cual se ordenara la lista
  	 * @return lista_tipos_almacen json Arreglo con la lista de almacenes
  	 **/
   static function ListaTipo_almacen
 	(
+		$orden = null
 	);  
   
   

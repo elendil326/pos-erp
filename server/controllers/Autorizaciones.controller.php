@@ -14,12 +14,12 @@ require_once("interfaces/Autorizaciones.interface.php");
  	 *La fecha de peticion se tomar? del servidor. El usuario y la sucursal que emiten la autorizaci?n ser?n tomadas de la sesi?n.
  	 *
  	 * @param monto float Monto a gastar
- 	 * @param descripcion string Justificación por la cual se pide el gasto.
+ 	 * @param descripcion string Justificaciï¿½n por la cual se pide el gasto.
  	 **/
 	public static function Gasto
 	(
-		$monto, 
-		$descripcion
+		$descripcion, 
+		$monto
 	)
 	{  
   
@@ -72,8 +72,8 @@ La autorizacion se guardara con los datos del usuario que la pidio. Si es acepta
  	 **/
 	public static function DevolucionVenta
 	(
-		$id_venta, 
-		$descripcion
+		$descripcion, 
+		$id_venta
 	)
 	{  
   
@@ -120,7 +120,7 @@ Update :  falta definir el ejemplo de envio.
  	 *
  	 * @param filtro json Valor numrico que definir que filtro se pondr a la lista.
  	 * @param ordenar json Valor numrico que definir el orden de la lista.
- 	 * @return autorizaciones json Arreglo de objetos que contendrá las autorizaciones
+ 	 * @return autorizaciones json Arreglo de objetos que contendrï¿½ las autorizaciones
  	 **/
 	public static function Lista
 	(
@@ -207,8 +207,8 @@ Al momento de editar la autorizacion veo que aparentemente se podria editar el i
 	public static function Editar
 	(
 		$descripcion, 
-		$id_autorizacion	, 
-		$estado
+		$estado, 
+		$id_autorizacion
 	)
 	{  
   

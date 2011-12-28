@@ -168,7 +168,7 @@
  	 * @param id_almacen int Id del almacen del cual se vern sus productos.
  	 * @param id_empresa int Id de la empresa de la cual se vern los productos.
  	 * @param metodo_costeo string Se listaran los productos que coincidan con este metodo de costeo
- 	 * @return productos json Objeto que contendrï¿½ el arreglo de productos en inventario.
+ 	 * @return productos json Objeto que contendrá el arreglo de productos en inventario.
  	 **/
   static function Lista
 	(
@@ -202,24 +202,13 @@ NOTA: Se crea un producto tipo = 1 que es para productos
  	 * @param descuento float Descuento que se aplicara a este producot
  	 * @param foto_del_producto string url a una foto de este producto
  	 * @param garantia int Si este producto cuenta con un nmero de meses de garanta  que no aplica a los productos de su categora
- 	 * @param id_empresas json Arreglo que contendra la informaciond e las empresas. Debera contener: 
- 
-{
-   "id_empresas": [
-     {
-       "id_empresa" : 1,
-"precio_utilidad": 10,
-"es_margen_utilidad": 1
-     }
-]
-}
-
+ 	 * @param id_empresas json Arreglo que contendra la informaciond e las empresas. Debera contener:  {   "id_empresas": [     {       "id_empresa" : 1,"precio_utilidad": 10,"es_margen_utilidad": 1     }]}
  	 * @param id_unidad int La unidad preferida para este producto
  	 * @param impuestos json array de ids de impuestos que tiene este producto
  	 * @param margen_de_utilidad float Un porcentage de 0 a 100 si queremos que este producto marque utilidad en especifico
  	 * @param peso_producto float el peso de este producto en KG
  	 * @param precio int El precio de este producto
- 	 * @return id_producto int Id generado por la inserciï¿½n del nuevo producto
+ 	 * @return id_producto int Id generado por la inserción del nuevo producto
  	 **/
   static function Nuevo
 	(
@@ -252,8 +241,8 @@ NOTA: Se crea un producto tipo = 1 que es para productos
  	 *
  	 *Agregar productos en volumen mediante un archivo CSV.
  	 *
- 	 * @param productos json Arreglo de objetos que contendrï¿½n la informaciï¿½n del nuevo producto
- 	 * @return id_productos json Arreglo de enteros que contendrï¿½ los ids de los productos insertados.
+ 	 * @param productos json Arreglo de objetos que contendrán la información del nuevo producto
+ 	 * @return id_productos json Arreglo de enteros que contendrá los ids de los productos insertados.
  	 **/
   static function En_volumenNuevo
 	(
@@ -338,7 +327,7 @@ Ejemplo: 1 kg = 2.204 lb
  	 *Lista las unidades. Se puede filtrar por activas o inactivas y ordenar por sus atributos
  	 *
  	 * @param activo bool Si este valor no es obtenido, se listaran tanto activas como inactivas, si es true, se listaran solo las activas, si es false se listaran solo las inactivas
- 	 * @param ordenar json Valor que determina el orden de la lista
+ 	 * @param ordenar string Nombre de la columna por la cual se ordenara la lista
  	 * @return unidades_convertibles json Lista de unidades convertibles
  	 **/
   static function ListaUnidad

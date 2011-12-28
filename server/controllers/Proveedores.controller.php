@@ -258,10 +258,10 @@ require_once("interfaces/Proveedores.interface.php");
 	public static function EditarClasificacion
 	(
 		$id_clasificacion_proveedor, 
-		$retenciones = null, 
-		$impuestos = null, 
 		$descripcion = null, 
-		$nombre = null
+		$impuestos = null, 
+		$nombre = null, 
+		$retenciones = null
 	)
 	{  
             Logger::log("Editando la clasificacion de proveedor ".$id_clasificacion_proveedor);

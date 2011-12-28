@@ -208,10 +208,10 @@ Update :  �Es correcto que contenga el argumento id_sucursal? Ya que as?omo es
  	 **/
 	public static function Lista
 	(
-		$orden = null, 
+		$activo = null, 
+		$id_clasificacion_cliente = null, 
 		$id_sucursal = null, 
-		$activo = null,
-                $id_clasificacion_cliente = null
+		$orden = null
 	)
 	{  
   		Logger::log("Listando clientes");
@@ -327,34 +327,34 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
  	 **/
 	public static function Nuevo
 	(
-		$codigo_cliente, 
-		$razon_social, 
 		$clasificacion_cliente, 
-                $password,
-		$rfc = null, 
-		$telefono2 = null, 
-		$curp = null, 
-		$mensajeria = null,  
-		$numero_exterior = null, 
-		$colonia = null, 
-		$denominacion_comercial = null, 
-		$cuenta_de_mensajeria = null, 
-		$representante_legal = null, 
-		$texto_extra = null, 
-		$telefono1 = null,  
-		$codigo_postal = null, 
-		$id_ciudad = null, 
-		$retenciones = null, 
-		$impuestos = null, 
-		$moneda_del_cliente = null, 
-		$numero_interior = null, 
+		$codigo_cliente, 
+		$password, 
+		$razon_social, 
 		$calle = null, 
+		$codigo_postal = null, 
+		$colonia = null, 
+		$cuenta_de_mensajeria = null, 
+		$curp = null, 
+		$denominacion_comercial = null, 
+		$descuento = null, 
+		$direccion_web = null, 
 		$email = null, 
-		$direccion_web = null,
-                $telefono_personal1 = null,
-                $telefono_personal2 = null,
-                $descuento = null,
-                $limite_credito = null
+		$id_ciudad = null, 
+		$impuestos = null, 
+		$limite_credito = null, 
+		$mensajeria = null, 
+		$moneda_del_cliente = null, 
+		$numero_exterior = null, 
+		$numero_interior = null, 
+		$representante_legal = null, 
+		$retenciones = null, 
+		$rfc = null, 
+		$telefono1 = null, 
+		$telefono2 = null, 
+		$telefono_personal1 = null, 
+		$telefono_personal2 = null, 
+		$texto_extra = null
 	)
 	{
             Logger::log("Creando nuevo cliente");
@@ -637,9 +637,9 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 	(
 		$clave_interna, 
 		$nombre, 
-		$impuestos = null, 
 		$descripcion = null, 
 		$descuento = null, 
+		$impuestos = null, 
 		$retenciones = null, 
 		$utilidad = null
 	)
@@ -756,13 +756,13 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 	public static function EditarClasificacion
 	(
 		$id_clasificacion_cliente, 
-		$impuestos = null, 
-		$descuento = null, 
-		$retenciones = null, 
 		$clave_interna = null, 
-		$nombre = null, 
 		$descripcion = null, 
-		$margen_de_utilidad = null
+		$descuento = null, 
+		$impuestos = null, 
+		$margen_de_utilidad = null, 
+		$nombre = null, 
+		$retenciones = null
 	)
 	{  
             Logger::log("Editando clasificacion de cliente ".$id_clasificacion_cliente);
