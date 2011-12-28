@@ -837,20 +837,21 @@ NOTA: Se crea un producto tipo = 1 que es para productos
                         throw new Exception("Las empresas fueron enviadas incorrectamente",901);
                     }
                     
-                    //Validamos que el objeto recibido tenga 
-                    if
-                    (
-                            !array_key_exists("id_empresa", $id_empresas)           ||
-                            !array_key_exists("precio_utilidad", $id_empresas)      ||
-                            !array_key_exists("es_margen_utilidad", $id_empresas)  
-                    )
-                    {
-                        throw new Exception("Las empresas fueron enviadas incorrectamente",901);
-                    }
-                    
                     $producto_empresa = new ProductoEmpresa( array( "id_producto" => $producto->getIdProducto() ) );
                     foreach($id_empresas as $id_empresa)
                     {
+                        
+                        //Validamos que el objeto recibido tenga las llaves que buscamos
+                        if
+                        (
+                                !array_key_exists("id_empresa", $id_empresa)           ||
+                                !array_key_exists("precio_utilidad", $id_empresa)      ||
+                                !array_key_exists("es_margen_utilidad", $id_empresa)  
+                        )
+                        {
+                            throw new Exception("Las empresas fueron enviadas incorrectamente",901);
+                        }
+                        
                         $validar = self::validarParametrosProductoEmpresa($id_empresa["id_empresa"],$id_empresa["precio_utilidad"],$id_empresa["es_margen_utilidad"]);
                         if(is_string($validar))
                             throw new Exception($validar);

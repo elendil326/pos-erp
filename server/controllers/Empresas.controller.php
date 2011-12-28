@@ -305,17 +305,6 @@ require_once("interfaces/Empresas.interface.php");
                 Logger::error("El parametro sucursales recibido es invalido");
                 throw new Exception("El parametro sucursales recibido es invalido",901);
             }
-            
-            if
-            (
-                    !array_key_exists("id_sucursal", $sucursales)       ||
-                    !array_key_exists("margen_utilidad", $sucursales)   ||
-                    !array_key_exists("descuento", $sucursales)
-            )
-            {
-                Logger::error("El parametro sucursales recibido es invalido");
-                throw new Exception("El parametro sucursales recibido es invalido",901);
-            }
 
             //Se crea un registro de sucursal-empresa y se le asigna como empresa la obtenida.
             $sucursal_empresa=new SucursalEmpresa();
@@ -327,6 +316,18 @@ require_once("interfaces/Empresas.interface.php");
                 //y si son v'alidos, se almacenan en el objeto sucursal-empresa para luego guardarlo.
                 foreach($sucursales as $sucursal)
                 {
+                    
+                    if
+                    (
+                            !array_key_exists("id_sucursal", $sucursal)       ||
+                            !array_key_exists("margen_utilidad", $sucursal)   ||
+                            !array_key_exists("descuento", $sucursal)
+                    )
+                    {
+                        Logger::error("El parametro sucursales recibido es invalido");
+                        throw new Exception("El parametro sucursales recibido es invalido",901);
+                    }
+                    
                     $validar=self::validarParametrosSucursalEmpresa($sucursal["id_sucursal"], null,$sucursal["margen_utilidad"], $sucursal["descuento"]);
                     if(is_string($validar))
                     {

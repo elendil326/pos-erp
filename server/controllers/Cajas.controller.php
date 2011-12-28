@@ -59,6 +59,14 @@ class CajasController{
                     {
                         throw new Exception("No se recibieron los billetes para esta caja",901);
                     }
+                    
+                    $billetes = object_to_array($billetes);
+                    
+                    if(!is_array($billetes))
+                    {
+                        throw new Exception("Los billetes no son validos",901);
+                    }
+                    
                     $numero_billetes=count($billetes);
                     //
                     //Inicializas el arreglo de billetes_caja con los billetes que recibes
@@ -66,6 +74,14 @@ class CajasController{
                     //
                     for($i=0;$i<$numero_billetes; $i++)
                     {
+                        if
+                        (
+                                !array_key_exists("id_billete", $billetes[$i])  ||
+                                !array_key_exists("cantidad", $billetes[$i])    
+                        )
+                        {
+                            throw new Exception("Los billetes no son validos",901);
+                        }
                         if(is_null(BilleteDAO::getByPK($billetes[$i]["id_billete"])))
                         {
                             throw new Exception("El billete con id: ".$billetes[$i]["id_billete"]." no existe",901);
