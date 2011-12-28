@@ -29,7 +29,7 @@
  			
 			
 			isset($_GET['id_consignacion'] ) ? $_GET['id_consignacion'] : null,
-			isset($_GET['productos_actuales'] ) ? $_GET['productos_actuales'] : null,
+			isset($_GET['productos_actuales'] ) ? json_decode($_GET['productos_actuales']) : null,
 			isset($_GET['motivo'] ) ? $_GET['motivo'] : null,
 			isset($_GET['tipo_pago'] ) ? $_GET['tipo_pago'] : null
 			

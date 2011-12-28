@@ -29,7 +29,7 @@
 			
 			isset($_GET['agregar'] ) ? $_GET['agregar'] : null,
 			isset($_GET['id_consignacion'] ) ? $_GET['id_consignacion'] : null,
-			isset($_GET['productos'] ) ? $_GET['productos'] : null
+			isset($_GET['productos'] ) ? json_decode($_GET['productos']) : null
 			
 			);
 		}catch(Exception $e){

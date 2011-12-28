@@ -25,7 +25,7 @@
  		$this->response = ProductosController::En_volumenNuevo( 
  			
 			
-			isset($_POST['productos'] ) ? $_POST['productos'] : null
+			isset($_POST['productos'] ) ? json_decode($_POST['productos']) : null
 			
 			);
 		}catch(Exception $e){

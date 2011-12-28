@@ -35,8 +35,8 @@
 			isset($_POST['nombre'] ) ? $_POST['nombre'] : null,
 			isset($_POST['descripcion'] ) ? $_POST['descripcion'] : null,
 			isset($_POST['descuento'] ) ? $_POST['descuento'] : null,
-			isset($_POST['impuestos'] ) ? $_POST['impuestos'] : null,
-			isset($_POST['retenciones'] ) ? $_POST['retenciones'] : null,
+			isset($_POST['impuestos'] ) ? json_decode($_POST['impuestos']) : null,
+			isset($_POST['retenciones'] ) ? json_decode($_POST['retenciones']) : null,
 			isset($_POST['utilidad'] ) ? $_POST['utilidad'] : null
 			
 			);

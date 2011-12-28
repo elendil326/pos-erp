@@ -48,10 +48,10 @@ Si hay dos productos en una misma sucursal pero disntintos almacenes entonces se
 			isset($_POST['subtotal'] ) ? $_POST['subtotal'] : null,
 			isset($_POST['tipo_venta'] ) ? $_POST['tipo_venta'] : null,
 			isset($_POST['total'] ) ? $_POST['total'] : null,
-			isset($_POST['datos_cheque'] ) ? $_POST['datos_cheque'] : null,
-			isset($_POST['detalle_orden'] ) ? $_POST['detalle_orden'] : null,
-			isset($_POST['detalle_paquete'] ) ? $_POST['detalle_paquete'] : null,
-			isset($_POST['detalle_venta'] ) ? $_POST['detalle_venta'] : null,
+			isset($_POST['datos_cheque'] ) ? json_decode($_POST['datos_cheque']) : null,
+			isset($_POST['detalle_orden'] ) ? json_decode($_POST['detalle_orden']) : null,
+			isset($_POST['detalle_paquete'] ) ? json_decode($_POST['detalle_paquete']) : null,
+			isset($_POST['detalle_venta'] ) ? json_decode($_POST['detalle_venta']) : null,
 			isset($_POST['saldo'] ) ? $_POST['saldo'] : null,
 			isset($_POST['tipo_de_pago'] ) ? $_POST['tipo_de_pago'] : null
 			

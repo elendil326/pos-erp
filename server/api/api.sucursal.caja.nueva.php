@@ -31,11 +31,11 @@
  			
 			
 			isset($_POST['token'] ) ? $_POST['token'] : null,
-			isset($_POST['basculas'] ) ? $_POST['basculas'] : null,
+			isset($_POST['basculas'] ) ? json_decode($_POST['basculas']) : null,
 			isset($_POST['control_billetes'] ) ? $_POST['control_billetes'] : null,
 			isset($_POST['descripcion'] ) ? $_POST['descripcion'] : null,
 			isset($_POST['id_sucursal'] ) ? $_POST['id_sucursal'] : null,
-			isset($_POST['impresoras'] ) ? $_POST['impresoras'] : null
+			isset($_POST['impresoras'] ) ? json_decode($_POST['impresoras']) : null
 			
 			);
 		}catch(Exception $e){

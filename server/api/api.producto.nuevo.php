@@ -51,7 +51,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos
 			isset($_POST['costo_estandar'] ) ? $_POST['costo_estandar'] : null,
 			isset($_POST['metodo_costeo'] ) ? $_POST['metodo_costeo'] : null,
 			isset($_POST['nombre_producto'] ) ? $_POST['nombre_producto'] : null,
-			isset($_POST['clasificaciones'] ) ? $_POST['clasificaciones'] : null,
+			isset($_POST['clasificaciones'] ) ? json_decode($_POST['clasificaciones']) : null,
 			isset($_POST['codigo_de_barras'] ) ? $_POST['codigo_de_barras'] : null,
 			isset($_POST['control_de_existencia'] ) ? $_POST['control_de_existencia'] : null,
 			isset($_POST['costo_extra_almacen'] ) ? $_POST['costo_extra_almacen'] : null,
@@ -60,7 +60,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos
 			isset($_POST['foto_del_producto'] ) ? $_POST['foto_del_producto'] : null,
 			isset($_POST['garantia'] ) ? $_POST['garantia'] : null,
 			isset($_POST['id_unidad'] ) ? $_POST['id_unidad'] : null,
-			isset($_POST['impuestos'] ) ? $_POST['impuestos'] : null,
+			isset($_POST['impuestos'] ) ? json_decode($_POST['impuestos']) : null,
 			isset($_POST['margen_de_utilidad'] ) ? $_POST['margen_de_utilidad'] : null,
 			isset($_POST['peso_producto'] ) ? $_POST['peso_producto'] : null,
 			isset($_POST['precio'] ) ? $_POST['precio'] : null

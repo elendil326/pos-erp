@@ -42,8 +42,8 @@
 			isset($_GET['margen_utilidad'] ) ? $_GET['margen_utilidad'] : null,
 			isset($_GET['nombre'] ) ? $_GET['nombre'] : null,
 			isset($_GET['precio'] ) ? $_GET['precio'] : null,
-			isset($_GET['productos'] ) ? $_GET['productos'] : null,
-			isset($_GET['servicios'] ) ? $_GET['servicios'] : null
+			isset($_GET['productos'] ) ? json_decode($_GET['productos']) : null,
+			isset($_GET['servicios'] ) ? json_decode($_GET['servicios']) : null
 			
 			);
 		}catch(Exception $e){

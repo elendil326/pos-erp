@@ -28,7 +28,7 @@
  			
 			
 			isset($_GET['id_almacen'] ) ? $_GET['id_almacen'] : null,
-			isset($_GET['productos'] ) ? $_GET['productos'] : null,
+			isset($_GET['productos'] ) ? json_decode($_GET['productos']) : null,
 			isset($_GET['motivo'] ) ? $_GET['motivo'] : null
 			
 			);

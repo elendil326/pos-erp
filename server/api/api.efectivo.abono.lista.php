@@ -59,7 +59,7 @@
 			isset($_GET['monto_igual_a'] ) ? $_GET['monto_igual_a'] : null,
 			isset($_GET['monto_mayor_a'] ) ? $_GET['monto_mayor_a'] : null,
 			isset($_GET['monto_menor_a'] ) ? $_GET['monto_menor_a'] : null,
-			isset($_GET['orden'] ) ? $_GET['orden'] : null
+			isset($_GET['orden'] ) ? json_decode($_GET['orden']) : null
 			
 			);
 		}catch(Exception $e){

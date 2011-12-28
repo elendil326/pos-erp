@@ -27,7 +27,7 @@
  			
 			
 			isset($_GET['id_orden_de_servicio'] ) ? $_GET['id_orden_de_servicio'] : null,
-			isset($_GET['productos'] ) ? $_GET['productos'] : null
+			isset($_GET['productos'] ) ? json_decode($_GET['productos']) : null
 			
 			);
 		}catch(Exception $e){

@@ -26,8 +26,8 @@
  		$this->response = POSController::EnviarOffline( 
  			
 			
-			isset($_POST['compras'] ) ? $_POST['compras'] : null,
-			isset($_POST['ventas'] ) ? $_POST['ventas'] : null
+			isset($_POST['compras'] ) ? json_decode($_POST['compras']) : null,
+			isset($_POST['ventas'] ) ? json_decode($_POST['ventas']) : null
 			
 			);
 		}catch(Exception $e){

@@ -34,7 +34,7 @@
 			isset($_GET['canceladas'] ) ? $_GET['canceladas'] : null,
 			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null,
 			isset($_GET['liquidados'] ) ? $_GET['liquidados'] : null,
-			isset($_GET['ordenar'] ) ? $_GET['ordenar'] : null,
+			isset($_GET['ordenar'] ) ? json_decode($_GET['ordenar']) : null,
 			isset($_GET['total_igual_a'] ) ? $_GET['total_igual_a'] : null,
 			isset($_GET['total_inferior_a'] ) ? $_GET['total_inferior_a'] : null,
 			isset($_GET['total_superior_a'] ) ? $_GET['total_superior_a'] : null

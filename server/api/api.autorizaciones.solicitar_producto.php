@@ -29,7 +29,7 @@ Update :  Me parece que no es buena idea manejar en los argumentos solo un id_pr
  			
 			
 			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
-			isset($_GET['productos'] ) ? $_GET['productos'] : null
+			isset($_GET['productos'] ) ? json_decode($_GET['productos']) : null
 			
 			);
 		}catch(Exception $e){

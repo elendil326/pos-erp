@@ -25,7 +25,7 @@
  		$this->response = ReportesController::Revisar_syntaxNuevo( 
  			
 			
-			isset($_GET['nuevo_reporte'] ) ? $_GET['nuevo_reporte'] : null
+			isset($_GET['nuevo_reporte'] ) ? json_decode($_GET['nuevo_reporte']) : null
 			
 			);
 		}catch(Exception $e){

@@ -34,8 +34,8 @@
 			isset($_GET['id_caja'] ) ? $_GET['id_caja'] : null,
 			isset($_GET['saldo_final'] ) ? $_GET['saldo_final'] : null,
 			isset($_GET['saldo_real'] ) ? $_GET['saldo_real'] : null,
-			isset($_GET['billetes_dejados'] ) ? $_GET['billetes_dejados'] : null,
-			isset($_GET['billetes_encontrados'] ) ? $_GET['billetes_encontrados'] : null,
+			isset($_GET['billetes_dejados'] ) ? json_decode($_GET['billetes_dejados']) : null,
+			isset($_GET['billetes_encontrados'] ) ? json_decode($_GET['billetes_encontrados']) : null,
 			isset($_GET['id_cajero'] ) ? $_GET['id_cajero'] : null,
 			isset($_GET['id_cajero_nuevo'] ) ? $_GET['id_cajero_nuevo'] : null
 			

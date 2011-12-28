@@ -45,7 +45,7 @@
 			isset($_GET['imagen'] ) ? $_GET['imagen'] : null,
 			isset($_GET['codigo'] ) ? $_GET['codigo'] : null,
 			isset($_GET['combustible'] ) ? $_GET['combustible'] : null,
-			isset($_GET['ids_empresas'] ) ? $_GET['ids_empresas'] : null,
+			isset($_GET['ids_empresas'] ) ? json_decode($_GET['ids_empresas']) : null,
 			isset($_GET['kilometros'] ) ? $_GET['kilometros'] : null,
 			isset($_GET['km_por_litro'] ) ? $_GET['km_por_litro'] : null,
 			isset($_GET['matricula'] ) ? $_GET['matricula'] : null,

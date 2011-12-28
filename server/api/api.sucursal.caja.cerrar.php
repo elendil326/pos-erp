@@ -30,7 +30,7 @@
 			
 			isset($_GET['id_caja'] ) ? $_GET['id_caja'] : null,
 			isset($_GET['saldo_real'] ) ? $_GET['saldo_real'] : null,
-			isset($_GET['billetes'] ) ? $_GET['billetes'] : null,
+			isset($_GET['billetes'] ) ? json_decode($_GET['billetes']) : null,
 			isset($_GET['id_cajero'] ) ? $_GET['id_cajero'] : null
 			
 			);

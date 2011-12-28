@@ -31,7 +31,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  			
 			
 			isset($_POST['id_almacen'] ) ? $_POST['id_almacen'] : null,
-			isset($_POST['productos'] ) ? $_POST['productos'] : null,
+			isset($_POST['productos'] ) ? json_decode($_POST['productos']) : null,
 			isset($_POST['motivo'] ) ? $_POST['motivo'] : null
 			
 			);

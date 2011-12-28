@@ -27,7 +27,7 @@
  			
 			
 			isset($_GET['id_tipo_cliente'] ) ? $_GET['id_tipo_cliente'] : null,
-			isset($_GET['productos'] ) ? $_GET['productos'] : null
+			isset($_GET['productos'] ) ? json_decode($_GET['productos']) : null
 			
 			);
 		}catch(Exception $e){

@@ -40,7 +40,7 @@ Se podr?an combinar y as? tener un solo m?todo para una compra venta preferencia
 			isset($_GET['compra'] ) ? $_GET['compra'] : null,
 			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
 			isset($_GET['id_cliente'] ) ? $_GET['id_cliente'] : null,
-			isset($_GET['id_productos'] ) ? $_GET['id_productos'] : null,
+			isset($_GET['id_productos'] ) ? json_decode($_GET['id_productos']) : null,
 			isset($_GET['siguiente_compra'] ) ? $_GET['siguiente_compra'] : null,
 			isset($_GET['id_precio'] ) ? $_GET['id_precio'] : null,
 			isset($_GET['precio'] ) ? $_GET['precio'] : null

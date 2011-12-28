@@ -33,7 +33,7 @@
 			isset($_GET['fecha_termino'] ) ? $_GET['fecha_termino'] : null,
 			isset($_GET['folio'] ) ? $_GET['folio'] : null,
 			isset($_GET['id_consignatario'] ) ? $_GET['id_consignatario'] : null,
-			isset($_GET['productos'] ) ? $_GET['productos'] : null,
+			isset($_GET['productos'] ) ? json_decode($_GET['productos']) : null,
 			isset($_GET['tipo_consignacion'] ) ? $_GET['tipo_consignacion'] : null,
 			isset($_GET['fecha_envio_programada'] ) ? $_GET['fecha_envio_programada'] : null
 			

@@ -42,7 +42,7 @@
  			
 			
 			isset($_GET['descuento'] ) ? $_GET['descuento'] : null,
-			isset($_GET['detalle'] ) ? $_GET['detalle'] : null,
+			isset($_GET['detalle'] ) ? json_decode($_GET['detalle']) : null,
 			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] : null,
 			isset($_GET['id_vendedor'] ) ? $_GET['id_vendedor'] : null,
 			isset($_GET['impuesto'] ) ? $_GET['impuesto'] : null,
@@ -50,9 +50,9 @@
 			isset($_GET['subtotal'] ) ? $_GET['subtotal'] : null,
 			isset($_GET['tipo_compra'] ) ? $_GET['tipo_compra'] : null,
 			isset($_GET['total'] ) ? $_GET['total'] : null,
-			isset($_GET['billetes_cambio'] ) ? $_GET['billetes_cambio'] : null,
-			isset($_GET['billetes_pago'] ) ? $_GET['billetes_pago'] : null,
-			isset($_GET['cheques'] ) ? $_GET['cheques'] : null,
+			isset($_GET['billetes_cambio'] ) ? json_decode($_GET['billetes_cambio']) : null,
+			isset($_GET['billetes_pago'] ) ? json_decode($_GET['billetes_pago']) : null,
+			isset($_GET['cheques'] ) ? json_decode($_GET['cheques']) : null,
 			isset($_GET['id_caja'] ) ? $_GET['id_caja'] : null,
 			isset($_GET['id_compra_caja'] ) ? $_GET['id_compra_caja'] : null,
 			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null,

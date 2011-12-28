@@ -41,7 +41,7 @@
 			isset($_GET['id_carro'] ) ? $_GET['id_carro'] : null,
 			isset($_GET['codigo'] ) ? $_GET['codigo'] : null,
 			isset($_GET['combustible'] ) ? $_GET['combustible'] : null,
-			isset($_GET['ids_empresas'] ) ? $_GET['ids_empresas'] : null,
+			isset($_GET['ids_empresas'] ) ? json_decode($_GET['ids_empresas']) : null,
 			isset($_GET['id_estado'] ) ? $_GET['id_estado'] : null,
 			isset($_GET['id_localizacion'] ) ? $_GET['id_localizacion'] : null,
 			isset($_GET['id_marca_carro'] ) ? $_GET['id_marca_carro'] : null,

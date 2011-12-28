@@ -13,7 +13,7 @@
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
-	protected function CheckAuthorization() { /*SESION NO NECESARIA*/ return; }	
+	protected function CheckAuthorization() { /*SESION NO NECESARIA*/ return; }
 	protected function GetRequest()
 	{
 		$this->request = array(	

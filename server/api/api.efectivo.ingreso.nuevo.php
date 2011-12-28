@@ -36,7 +36,7 @@
 			
 			isset($_GET['fecha_ingreso'] ) ? $_GET['fecha_ingreso'] : null,
 			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] : null,
-			isset($_GET['billetes'] ) ? $_GET['billetes'] : null,
+			isset($_GET['billetes'] ) ? json_decode($_GET['billetes']) : null,
 			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
 			isset($_GET['folio'] ) ? $_GET['folio'] : null,
 			isset($_GET['id_caja'] ) ? $_GET['id_caja'] : null,

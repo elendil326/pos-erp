@@ -27,7 +27,7 @@
  			
 			
 			isset($_GET['id_rol'] ) ? $_GET['id_rol'] : null,
-			isset($_GET['paquetes'] ) ? $_GET['paquetes'] : null
+			isset($_GET['paquetes'] ) ? json_decode($_GET['paquetes']) : null
 			
 			);
 		}catch(Exception $e){

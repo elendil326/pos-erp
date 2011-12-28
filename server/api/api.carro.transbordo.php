@@ -31,7 +31,7 @@ Se movera parcial o totalmente la carga?
 			
 			isset($_GET['id_carro_destino'] ) ? $_GET['id_carro_destino'] : null,
 			isset($_GET['id_carro_origen'] ) ? $_GET['id_carro_origen'] : null,
-			isset($_GET['productos'] ) ? $_GET['productos'] : null
+			isset($_GET['productos'] ) ? json_decode($_GET['productos']) : null
 			
 			);
 		}catch(Exception $e){

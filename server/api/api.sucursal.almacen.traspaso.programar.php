@@ -31,7 +31,7 @@
 			isset($_GET['fecha_envio_programada'] ) ? $_GET['fecha_envio_programada'] : null,
 			isset($_GET['id_almacen_envia'] ) ? $_GET['id_almacen_envia'] : null,
 			isset($_GET['id_almacen_recibe'] ) ? $_GET['id_almacen_recibe'] : null,
-			isset($_GET['productos'] ) ? $_GET['productos'] : null
+			isset($_GET['productos'] ) ? json_decode($_GET['productos']) : null
 			
 			);
 		}catch(Exception $e){

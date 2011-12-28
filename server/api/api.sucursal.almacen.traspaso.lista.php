@@ -35,7 +35,7 @@
 			isset($_GET['estado'] ) ? $_GET['estado'] : null,
 			isset($_GET['id_almacen_envia'] ) ? $_GET['id_almacen_envia'] : null,
 			isset($_GET['id_almacen_recibe'] ) ? $_GET['id_almacen_recibe'] : null,
-			isset($_GET['ordenar'] ) ? $_GET['ordenar'] : null
+			isset($_GET['ordenar'] ) ? json_decode($_GET['ordenar']) : null
 			
 			);
 		}catch(Exception $e){

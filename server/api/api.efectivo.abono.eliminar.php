@@ -32,7 +32,7 @@
  			
 			
 			isset($_GET['id_abono'] ) ? $_GET['id_abono'] : null,
-			isset($_GET['billetes'] ) ? $_GET['billetes'] : null,
+			isset($_GET['billetes'] ) ? json_decode($_GET['billetes']) : null,
 			isset($_GET['compra'] ) ? $_GET['compra'] : null,
 			isset($_GET['id_caja'] ) ? $_GET['id_caja'] : null,
 			isset($_GET['motivo_cancelacion'] ) ? $_GET['motivo_cancelacion'] : null,

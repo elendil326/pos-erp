@@ -55,11 +55,11 @@
 			isset($_POST['descripcion'] ) ? $_POST['descripcion'] : null,
 			isset($_POST['descuento'] ) ? $_POST['descuento'] : null,
 			isset($_POST['id_gerente'] ) ? $_POST['id_gerente'] : null,
-			isset($_POST['impuestos'] ) ? $_POST['impuestos'] : null,
+			isset($_POST['impuestos'] ) ? json_decode($_POST['impuestos']) : null,
 			isset($_POST['margen_utilidad'] ) ? $_POST['margen_utilidad'] : null,
 			isset($_POST['numero_interior'] ) ? $_POST['numero_interior'] : null,
 			isset($_POST['referencia'] ) ? $_POST['referencia'] : null,
-			isset($_POST['retenciones'] ) ? $_POST['retenciones'] : null,
+			isset($_POST['retenciones'] ) ? json_decode($_POST['retenciones']) : null,
 			isset($_POST['telefono1'] ) ? $_POST['telefono1'] : null,
 			isset($_POST['telefono2'] ) ? $_POST['telefono2'] : null
 			

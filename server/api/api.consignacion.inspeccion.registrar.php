@@ -31,11 +31,11 @@
  			
 			
 			isset($_GET['id_inspeccion'] ) ? $_GET['id_inspeccion'] : null,
-			isset($_GET['productos_actuales'] ) ? $_GET['productos_actuales'] : null,
+			isset($_GET['productos_actuales'] ) ? json_decode($_GET['productos_actuales']) : null,
 			isset($_GET['id_inspector'] ) ? $_GET['id_inspector'] : null,
 			isset($_GET['monto_abonado'] ) ? $_GET['monto_abonado'] : null,
-			isset($_GET['producto_devuelto'] ) ? $_GET['producto_devuelto'] : null,
-			isset($_GET['producto_solicitado'] ) ? $_GET['producto_solicitado'] : null
+			isset($_GET['producto_devuelto'] ) ? json_decode($_GET['producto_devuelto']) : null,
+			isset($_GET['producto_solicitado'] ) ? json_decode($_GET['producto_solicitado']) : null
 			
 			);
 		}catch(Exception $e){

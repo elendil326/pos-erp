@@ -31,7 +31,7 @@
 			isset($_GET['id_cliente'] ) ? $_GET['id_cliente'] : null,
 			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] : null,
 			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null,
-			isset($_GET['orden'] ) ? $_GET['orden'] : null
+			isset($_GET['orden'] ) ? json_decode($_GET['orden']) : null
 			
 			);
 		}catch(Exception $e){

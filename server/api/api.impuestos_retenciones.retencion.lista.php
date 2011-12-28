@@ -25,7 +25,7 @@
  		$this->response = ImpuestosYRetencionesController::ListaRetencion( 
  			
 			
-			isset($_GET['ordenar'] ) ? $_GET['ordenar'] : null
+			isset($_GET['ordenar'] ) ? json_decode($_GET['ordenar']) : null
 			
 			);
 		}catch(Exception $e){

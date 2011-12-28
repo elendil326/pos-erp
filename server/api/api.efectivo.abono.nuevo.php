@@ -35,9 +35,9 @@
 			
 			isset($_GET['id_deudor'] ) ? $_GET['id_deudor'] : null,
 			isset($_GET['monto'] ) ? $_GET['monto'] : null,
-			isset($_GET['tipo_pago'] ) ? $_GET['tipo_pago'] : null,
-			isset($_GET['billetes'] ) ? $_GET['billetes'] : null,
-			isset($_GET['cheques'] ) ? $_GET['cheques'] : null,
+			isset($_GET['tipo_pago'] ) ? json_decode($_GET['tipo_pago']) : null,
+			isset($_GET['billetes'] ) ? json_decode($_GET['billetes']) : null,
+			isset($_GET['cheques'] ) ? json_decode($_GET['cheques']) : null,
 			isset($_GET['id_compra'] ) ? $_GET['id_compra'] : null,
 			isset($_GET['id_prestamo'] ) ? $_GET['id_prestamo'] : null,
 			isset($_GET['id_venta'] ) ? $_GET['id_venta'] : null,

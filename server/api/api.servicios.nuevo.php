@@ -45,15 +45,15 @@
 			isset($_GET['metodo_costeo'] ) ? $_GET['metodo_costeo'] : null,
 			isset($_GET['nombre_servicio'] ) ? $_GET['nombre_servicio'] : null,
 			isset($_GET['activo'] ) ? $_GET['activo'] : null,
-			isset($_GET['clasificaciones'] ) ? $_GET['clasificaciones'] : null,
+			isset($_GET['clasificaciones'] ) ? json_decode($_GET['clasificaciones']) : null,
 			isset($_GET['control_de_existencia'] ) ? $_GET['control_de_existencia'] : null,
 			isset($_GET['descripcion_servicio'] ) ? $_GET['descripcion_servicio'] : null,
 			isset($_GET['foto_servicio'] ) ? $_GET['foto_servicio'] : null,
 			isset($_GET['garantia'] ) ? $_GET['garantia'] : null,
-			isset($_GET['impuestos'] ) ? $_GET['impuestos'] : null,
+			isset($_GET['impuestos'] ) ? json_decode($_GET['impuestos']) : null,
 			isset($_GET['margen_de_utilidad'] ) ? $_GET['margen_de_utilidad'] : null,
 			isset($_GET['precio'] ) ? $_GET['precio'] : null,
-			isset($_GET['retenciones'] ) ? $_GET['retenciones'] : null
+			isset($_GET['retenciones'] ) ? json_decode($_GET['retenciones']) : null
 			
 			);
 		}catch(Exception $e){

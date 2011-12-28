@@ -27,7 +27,7 @@
  			
 			
 			isset($_POST['id_empresa'] ) ? $_POST['id_empresa'] : null,
-			isset($_POST['sucursales'] ) ? $_POST['sucursales'] : null
+			isset($_POST['sucursales'] ) ? json_decode($_POST['sucursales']) : null
 			
 			);
 		}catch(Exception $e){

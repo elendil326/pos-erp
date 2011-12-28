@@ -35,9 +35,9 @@
 			
 			isset($_POST['id_orden'] ) ? $_POST['id_orden'] : null,
 			isset($_POST['tipo_venta'] ) ? $_POST['tipo_venta'] : null,
-			isset($_POST['billetes_cambio'] ) ? $_POST['billetes_cambio'] : null,
-			isset($_POST['billetes_pago'] ) ? $_POST['billetes_pago'] : null,
-			isset($_POST['cheques'] ) ? $_POST['cheques'] : null,
+			isset($_POST['billetes_cambio'] ) ? json_decode($_POST['billetes_cambio']) : null,
+			isset($_POST['billetes_pago'] ) ? json_decode($_POST['billetes_pago']) : null,
+			isset($_POST['cheques'] ) ? json_decode($_POST['cheques']) : null,
 			isset($_POST['descuento'] ) ? $_POST['descuento'] : null,
 			isset($_POST['id_venta_caja'] ) ? $_POST['id_venta_caja'] : null,
 			isset($_POST['saldo'] ) ? $_POST['saldo'] : null,

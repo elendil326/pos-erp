@@ -33,7 +33,7 @@ Update :  ?Es correcto que contenga el argumento id_sucursal? Ya que as? como es
 			isset($_GET['activo'] ) ? $_GET['activo'] : null,
 			isset($_GET['id_clasificacion_cliente'] ) ? $_GET['id_clasificacion_cliente'] : null,
 			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null,
-			isset($_GET['orden'] ) ? $_GET['orden'] : null
+			isset($_GET['orden'] ) ? json_decode($_GET['orden']) : null
 			
 			);
 		}catch(Exception $e){

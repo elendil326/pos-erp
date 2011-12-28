@@ -31,9 +31,9 @@
 			
 			isset($_GET['id_clasificacion_proveedor'] ) ? $_GET['id_clasificacion_proveedor'] : null,
 			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
-			isset($_GET['impuestos'] ) ? $_GET['impuestos'] : null,
+			isset($_GET['impuestos'] ) ? json_decode($_GET['impuestos']) : null,
 			isset($_GET['nombre'] ) ? $_GET['nombre'] : null,
-			isset($_GET['retenciones'] ) ? $_GET['retenciones'] : null
+			isset($_GET['retenciones'] ) ? json_decode($_GET['retenciones']) : null
 			
 			);
 		}catch(Exception $e){

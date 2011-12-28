@@ -38,7 +38,7 @@
  			
 			
 			isset($_POST['descuento'] ) ? $_POST['descuento'] : null,
-			isset($_POST['detalle'] ) ? $_POST['detalle'] : null,
+			isset($_POST['detalle'] ) ? json_decode($_POST['detalle']) : null,
 			isset($_POST['id_empresa'] ) ? $_POST['id_empresa'] : null,
 			isset($_POST['id_usuario_compra'] ) ? $_POST['id_usuario_compra'] : null,
 			isset($_POST['impuesto'] ) ? $_POST['impuesto'] : null,
@@ -46,7 +46,7 @@
 			isset($_POST['subtotal'] ) ? $_POST['subtotal'] : null,
 			isset($_POST['tipo_compra'] ) ? $_POST['tipo_compra'] : null,
 			isset($_POST['total'] ) ? $_POST['total'] : null,
-			isset($_POST['cheques'] ) ? $_POST['cheques'] : null,
+			isset($_POST['cheques'] ) ? json_decode($_POST['cheques']) : null,
 			isset($_POST['id_sucursal'] ) ? $_POST['id_sucursal'] : null,
 			isset($_POST['saldo'] ) ? $_POST['saldo'] : null,
 			isset($_POST['tipo_de_pago'] ) ? $_POST['tipo_de_pago'] : null
