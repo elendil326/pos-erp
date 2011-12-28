@@ -211,24 +211,42 @@ require_once("interfaces/Proveedores.interface.php");
                 ClasificacionProveedorDAO::save($clasificacion_proveedor);
                 if(!is_null($impuestos))
                 {
+                    
+                    $impuestos = object_to_array($impuestos);
+                    
+                    if(!is_array($impuestos))
+                    {
+                        throw new Exception("Los impuestos son invalidos");
+                    }
+                    
                     $impuesto_clasificacion_proveedor = new ImpuestoClasificacionProveedor(
                             array( "id_clasificacion_proveedor" => $clasificacion_proveedor->getIdClasificacionProveedor() ));
                     foreach ($impuestos as $impuesto)
                     {
                         if(is_null(ImpuestoDAO::getByPK($impuesto)))
-                                throw new Exception ("El impuesto ".$impuesto." no existe");
+                                throw new Exception ("El impuesto ".$impuesto." no existe",901);
+                        
                         $impuesto_clasificacion_proveedor->setIdImpuesto($impuesto);
                         ImpuestoClasificacionProveedorDAO::save($impuesto_clasificacion_proveedor);
                     }
                 }/* Fin if de impuestos */
                 if(!is_null($retenciones))
                 {
+                    
+                     $retenciones = object_to_array($retenciones);
+                    
+                    if(!is_array($retenciones))
+                    {
+                        throw new Exception("Las retenciones son invalidas",901);
+                    }
+                    
                     $retencion_clasificacion_proveedor = new RetencionClasificacionProveedor(
                             array ( "id_clasificacion_proveedor" => $clasificacion_proveedor->getIdClasificacionProveedor() ) );
                     foreach( $retenciones as $retencion )
                     {
                         if(is_null(RetencionDAO::getByPK($retencion)))
-                                throw new Exception("La retencion ".$retencion." no existe");
+                                throw new Exception("La retencion ".$retencion." no existe",901);
+                        
                         $retencion_clasificacion_proveedor->setIdRetencion($retencion);
                         RetencionClasificacionProveedorDAO::save($retencion_clasificacion_proveedor);
                     }
@@ -238,7 +256,9 @@ require_once("interfaces/Proveedores.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se ha podido crear la nueva clasificacion de proveedor ".$e);
-                throw new Exception("No se ha podido crear la nueva clasificacion de proveedor");
+                if($e->getCode()==901)
+                    throw new Exception("No se ha podido crear la nueva clasificacion de proveedor: ".$e->getMessage(),901);
+                throw new Exception("No se ha podido crear la nueva clasificacion de proveedor",901);
             }
             DAO::transEnd();
             Logger::log("Clasificacion de proveedor creada exitosamente");
@@ -294,12 +314,21 @@ require_once("interfaces/Proveedores.interface.php");
                 ClasificacionProveedorDAO::save($clasificacion_proveedor);
                 if(!is_null($impuestos))
                 {
+                    
+                    $impuestos = object_to_array($impuestos);
+                    
+                    if(!is_array($impuestos))
+                    {
+                        throw new Exception("Los impuestos son invalidos");
+                    }
+                    
                     $impuesto_clasificacion_proveedor = new ImpuestoClasificacionProveedor(
                             array( "id_clasificacion_proveedor" => $clasificacion_proveedor->getIdClasificacionProveedor() ));
                     foreach ($impuestos as $impuesto)
                     {
                         if(is_null(ImpuestoDAO::getByPK($impuesto)))
-                                throw new Exception ("El impuesto ".$impuesto." no existe");
+                                throw new Exception ("El impuesto ".$impuesto." no existe",901);
+                        
                         $impuesto_clasificacion_proveedor->setIdImpuesto($impuesto);
                         ImpuestoClasificacionProveedorDAO::save($impuesto_clasificacion_proveedor);
                     }
@@ -320,12 +349,21 @@ require_once("interfaces/Proveedores.interface.php");
                 }/* Fin if de impuestos */
                 if(!is_null($retenciones))
                 {
+                    
+                    $retenciones = object_to_array($retenciones);
+                    
+                    if(!is_array($retenciones))
+                    {
+                        throw new Exception("Las retenciones son invalidas",901);
+                    }
+                    
                     $retencion_clasificacion_proveedor = new RetencionClasificacionProveedor(
                             array ( "id_clasificacion_proveedor" => $clasificacion_proveedor->getIdClasificacionProveedor() ) );
                     foreach( $retenciones as $retencion )
                     {
                         if(is_null(RetencionDAO::getByPK($retencion)))
-                                throw new Exception("La retencion ".$retencion." no existe");
+                                throw new Exception("La retencion ".$retencion." no existe",901);
+                        
                         $retencion_clasificacion_proveedor->setIdRetencion($retencion);
                         RetencionClasificacionProveedorDAO::save($retencion_clasificacion_proveedor);
                     }
@@ -349,7 +387,9 @@ require_once("interfaces/Proveedores.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("La clasificacion de proveedor no ha podido ser editada: ".$e);
-                throw new Exception("La clasificacion de proveedor no ha podido ser editada");
+                if($e->getCode()==901)
+                    throw new Exception("La clasificacion de proveedor no ha podido ser editada: ".$e->getCode(),901);
+                throw new Exception("La clasificacion de proveedor no ha podido ser editada",901);
             }
             DAO::transEnd();
             Logger::log("La clasificacion de proveedor ha sido eeditada exitosamente ");
