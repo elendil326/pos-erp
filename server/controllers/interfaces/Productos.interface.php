@@ -168,7 +168,7 @@
  	 * @param id_almacen int Id del almacen del cual se vern sus productos.
  	 * @param id_empresa int Id de la empresa de la cual se vern los productos.
  	 * @param metodo_costeo string Se listaran los productos que coincidan con este metodo de costeo
- 	 * @return productos json Objeto que contendrá el arreglo de productos en inventario.
+ 	 * @return productos json Objeto que contendrï¿½ el arreglo de productos en inventario.
  	 **/
   static function Lista
 	(
@@ -219,7 +219,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos
  	 * @param margen_de_utilidad float Un porcentage de 0 a 100 si queremos que este producto marque utilidad en especifico
  	 * @param peso_producto float el peso de este producto en KG
  	 * @param precio int El precio de este producto
- 	 * @return id_producto int Id generado por la inserción del nuevo producto
+ 	 * @return id_producto int Id generado por la inserciï¿½n del nuevo producto
  	 **/
   static function Nuevo
 	(
@@ -229,7 +229,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos
 		$costo_estandar, 
 		$metodo_costeo, 
 		$nombre_producto, 
-		$clasificaciones = 0, 
+		$clasificaciones = null, 
 		$codigo_de_barras = null, 
 		$control_de_existencia = null, 
 		$costo_extra_almacen = null, 
@@ -252,8 +252,8 @@ NOTA: Se crea un producto tipo = 1 que es para productos
  	 *
  	 *Agregar productos en volumen mediante un archivo CSV.
  	 *
- 	 * @param productos json Arreglo de objetos que contendrán la información del nuevo producto
- 	 * @return id_productos json Arreglo de enteros que contendrá los ids de los productos insertados.
+ 	 * @param productos json Arreglo de objetos que contendrï¿½n la informaciï¿½n del nuevo producto
+ 	 * @return id_productos json Arreglo de enteros que contendrï¿½ los ids de los productos insertados.
  	 **/
   static function En_volumenNuevo
 	(

@@ -755,7 +755,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos
 		$costo_estandar, 
 		$metodo_costeo, 
 		$nombre_producto, 
-		$clasificaciones = 0, 
+		$clasificaciones = null, 
 		$codigo_de_barras = null, 
 		$control_de_existencia = null, 
 		$costo_extra_almacen = null, 
@@ -854,7 +854,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos
                         
                         $validar = self::validarParametrosProductoEmpresa($id_empresa["id_empresa"],$id_empresa["precio_utilidad"],$id_empresa["es_margen_utilidad"]);
                         if(is_string($validar))
-                            throw new Exception($validar);
+                            throw new Exception($validar,901);
                         
                         $producto_empresa->setIdEmpresa($id_empresa["id_empresa"]);
                         $producto_empresa->setPrecioUtilidad($id_empresa["precio_utilidad"]);
@@ -876,7 +876,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos
                     foreach($impuestos as $impuesto)
                     {
                         if(is_null(ImpuestoDAO::getByPK($impuesto)))
-                                throw new Exception ("El impuesto con id ".$impuesto." no existe");
+                                throw new Exception ("El impuesto con id ".$impuesto." no existe",901);
                         $impuesto_producto->setIdImpuesto($impuesto);
                         ImpuestoProductoDAO::save($impuesto_producto);
                     }
@@ -896,10 +896,10 @@ NOTA: Se crea un producto tipo = 1 que es para productos
                     {
                         $c = ClasificacionProductoDAO::getByPK($clasificacion);
                         if(is_null($c))
-                                throw new Exception("La clasificacion de producto con id ".$clasificacion." no existe");
+                                throw new Exception("La clasificacion de producto con id ".$clasificacion." no existe",901);
                         
                         if(!$c->getActiva())
-                            throw new Exception("La clasificaicon de producto con id ".$clasificacion." no esta activa");
+                            throw new Exception("La clasificaicon de producto con id ".$clasificacion." no esta activa",901);
                         
                         $producto_clasificacion->setIdClasificacionProducto($clasificacion);
                         ProductoClasificacionDAO::save($producto_clasificacion);
@@ -910,7 +910,9 @@ NOTA: Se crea un producto tipo = 1 que es para productos
             {
                 DAO::transRollback();
                 Logger::error("No se pudo guardar el nuevo producto: ".$e);
-                throw new Exception("No se pudo guardar el nuevo producto");
+                if($e->getCode()==901)
+                    throw new Exception ("No se pudo guardar el nuevo producto: ".$e->getMessage (), 901);
+                throw new Exception("No se pudo guardar el nuevo producto",901);
             }
             DAO::transEnd();
             Logger::log("Producto creado exitosamente");
@@ -929,6 +931,16 @@ NOTA: Se crea un producto tipo = 1 que es para productos
 		$productos
 	)
 	{  
+            Logger::log("Insertando productos en volumen");
+            
+            $productos = object_to_array($productos);
+            
+            if(!is_array($productos))
+            {
+                Logger::error("Los productos recibidos son invalidos");
+                throw new Exception("Los productos recibidos son invalidos",901);
+            }
+            
             Logger::log("Se recibieron ".count($productos)." productos, se procede a insertarlos");
             
             //Se llama muchas veces al metodo producto nuevo y se almacenan los ids generados
@@ -938,10 +950,23 @@ NOTA: Se crea un producto tipo = 1 que es para productos
             {
                 foreach($productos as $producto)
                 {
+                    if
+                    (
+                            !array_key_exists("codigo_producto", $producto)     ||
+                            !array_key_exists("id_empresas",$producto)          ||
+                            !array_key_exists("nombre_producto", $producto)     ||
+                            !array_key_exists("precio", $producto)              ||
+                            !array_key_exists("costo_estandar", $producto)      ||
+                            !array_key_exists("compra_en_mostrador", $producto)
+                    )
+                    {
+                        throw new Exception("Los productos recibidos son invalidos",901);
+                    }
+                    
                     array_push
                     (
                             $id_productos, 
-                            self::Nuevo(1,$producto["codigo_producto"], $producto["id_empresas"], $producto["nombre_producto"], "precio", $producto["costo_estandar"], $producto["compra_en_mostrador"])
+                            self::Nuevo(1,$producto["codigo_producto"], $producto["id_empresas"], $producto["nombre_producto"], $producto["precio"], $producto["costo_estandar"], $producto["compra_en_mostrador"])
                     );
                 }
             }
@@ -949,10 +974,13 @@ NOTA: Se crea un producto tipo = 1 que es para productos
             {
                 DAO::transRollback();
                 Logger::error("No se pudieron guardar los productos: ".$e);
-                throw new Exception("No se pudieron guardar los productos");
+                if($e->getCode()==901)
+                    throw new Exception("No se pudieron guardar los productos: ".$e->getMessage(),901);
+                throw new Exception("No se pudieron guardar los productos",901);
             }
             DAO::transEnd();
             Logger::log("Productos insertados exitosamente");
+            return $id_productos;
 	}
   
 	/**
@@ -1196,12 +1224,31 @@ NOTA: Se crea un producto tipo = 1 que es para productos
                 //actuales y si alguno no se encuentra en la lista se elimina.
                 if(!is_null($empresas))
                 {
+                    
+                    $empresas = object_to_array($empresas);
+                    
+                    if(!is_array($empresas))
+                    {
+                        throw new Exception("Las empresas fueron enviadas incorrectamente",901);
+                    }
+                    
                     $producto_empresa = new ProductoEmpresa( array( "id_producto" => $id_producto ) );
                     foreach($empresas as $empresa)
                     {
+                        
+                        if
+                        (
+                                !array_key_exists("id_empresa", $empresa)           ||
+                                !array_key_exists("precio_utilidad", $empresa)      ||
+                                !array_key_exists("es_margen_utilidad", $empresa)  
+                        )
+                        {
+                            throw new Exception("Las empresas fueron enviadas incorrectamente",901);
+                        }
+                        
                         $validar = self::validarParametrosProductoEmpresa($empresa["id_empresa"],$empresa["precio_utilidad"],$empresa["es_margen_utilidad"]);
                         if(is_string($validar))
-                            throw new Exception($validar);
+                            throw new Exception($validar,901);
 
                         $producto_empresa->setIdEmpresa($empresa["id_empresa"]);
                         $producto_empresa->setPrecioUtilidad($empresa["precio_utilidad"]);
@@ -1225,15 +1272,23 @@ NOTA: Se crea un producto tipo = 1 que es para productos
                 }/* Fin if de empresas */
                 if(!is_null($clasificaciones))
                 {
+                    
+                    $clasificaciones = object_to_array($clasificaciones);
+                    
+                    if(!is_array($clasificaciones))
+                    {
+                        throw new Exception("Las clasificaciones fueron recibidas incorrectamente",901);
+                    }
+                    
                     $producto_clasificacion = new ProductoClasificacion( array( "id_producto" => $id_producto ) );
                     foreach($clasificaciones as $clasificacion)
                     {
                         $c = ClasificacionProductoDAO::getByPK($clasificacion);
                         if(is_null($c))
-                                throw new Exception("La clasificacion de producto con id ".$clasificacion." no existe");
+                                throw new Exception("La clasificacion de producto con id ".$clasificacion." no existe",901);
                         
                         if(!$c->getActiva())
-                            throw new Exception("La clasificaicon de producto con id ".$clasificacion." no esta activa");
+                            throw new Exception("La clasificaicon de producto con id ".$clasificacion." no esta activa",901);
                         
                         $producto_clasificacion->setIdClasificacionProducto($clasificacion);
                         ProductoClasificacionDAO::save($producto_clasificacion);
@@ -1255,11 +1310,19 @@ NOTA: Se crea un producto tipo = 1 que es para productos
                 }/* Fin if de clasificaciones */
                 if(!is_null($impuestos))
                 {
+                    
+                    $impuestos = object_to_array($impuestos);
+                    
+                    if(!is_array($impuestos))
+                    {
+                        throw new Exception("Los impuestos fueron recibidos incorrectamente",901);
+                    }
+                    
                     $impuesto_producto = new ImpuestoProducto( array( "id_producto" => $producto->getIdProducto() ) );
                     foreach($impuestos as $impuesto)
                     {
                         if(is_null(ImpuestoDAO::getByPK($impuesto)))
-                                throw new Exception ("El impuesto con id ".$impuesto." no existe");
+                                throw new Exception ("El impuesto con id ".$impuesto." no existe",901);
                         $impuesto_producto->setIdImpuesto($impuesto);
                         ImpuestoProductoDAO::save($impuesto_producto);
                     }
@@ -1283,7 +1346,9 @@ NOTA: Se crea un producto tipo = 1 que es para productos
             {
                 DAO::transRollback();
                 Logger::error("El producto no pudo ser editado: ".$e);
-                throw new Exception("El producto no pudo ser editado");
+                if($e->getCode()==901)
+                    throw new Exception("El producto no pudo ser editado: ".$e->getMessage(),901);
+                throw new Exception("El producto no pudo ser editado",901);
             }
             DAO::transEnd();
             Logger::log("Producto editado exitosamente");
@@ -1341,13 +1406,21 @@ NOTA: Se crea un producto tipo = 1 que es para productos
                 ClasificacionProductoDAO::save($clasificacion_producto);
                 if(!is_null($impuestos))
                 {
+                    
+                    $impuestos = object_to_array($impuestos);
+                    
+                    if(!is_array($impuestos))
+                    {
+                        throw new Exception("Los impuestos son invalidos",901);
+                    }
+                    
                     $impuesto_clasificacion_producto = new ImpuestoClasificacionProducto( 
                             array( "id_clasificacion_producto" => $clasificacion_producto->getIdClasificacionProducto() ) );
                     
                     foreach($impuestos as $impuesto)
                     {
                         if(is_null(ImpuestoDAO::getByPK($impuesto)))
-                                throw new Exception("El impuesto con id ".$impuesto." no existe");
+                                throw new Exception("El impuesto con id ".$impuesto." no existe",901);
                         
                         $impuesto_clasificacion_producto->setIdImpuesto($impuesto);
                         ImpuestoClasificacionProductoDAO::save($impuesto_clasificacion_producto);
@@ -1355,13 +1428,21 @@ NOTA: Se crea un producto tipo = 1 que es para productos
                 }/* Fin if de impuestos */
                 if(!is_null($retenciones))
                 {
+                    
+                    $retenciones = object_to_array($retenciones);
+                    
+                    if(!is_array($retenciones))
+                    {
+                        throw new Exception("Las retenciones son invalidas",901);
+                    }
+                    
                     $retencion_clasificacion_producto = new RetencionClasificacionProducto( 
                             array( "id_clasificacion_producto" => $clasificacion_producto->getIdClasificacionProducto() ));
                     
                     foreach($retenciones as $retencion)
                     {
                         if(is_null(RetencionDAO::getByPK($retencion)))
-                                throw new Exception("La retencion con id ".$retencion." no existe");
+                                throw new Exception("La retencion con id ".$retencion." no existe",901);
                         
                         $retencion_clasificacion_producto->setIdRetencion($retencion);
                         RetencionClasificacionProductoDAO::save($retencion_clasificacion_producto);
@@ -1372,7 +1453,9 @@ NOTA: Se crea un producto tipo = 1 que es para productos
             {
                 DAO::transRollback();
                 Logger::error("No se ha podido guardar la nueva clasificacion: ".$e);
-                throw new Exception("No se ha podido guardar la nueva clasificacion");
+                if($e->getCode()==901)
+                    throw new Exception("No se ha podido guardar la nueva clasificacion: ".$e->getMessage(),901);
+                throw new Exception("No se ha podido guardar la nueva clasificacion",901);
             }
             DAO::transEnd();
             Logger::log("Clasificacion guardada exitosamente");
@@ -1452,13 +1535,21 @@ NOTA: Se crea un producto tipo = 1 que es para productos
                 ClasificacionProductoDAO::save($clasificacion_producto);
                 if(!is_null($impuestos))
                 {
+                    
+                    $impuestos = object_to_array($impuestos);
+                    
+                    if(!is_array($impuestos))
+                    {
+                        throw new Exception("Los impuestos son invalidos",901);
+                    }
+                    
                     $impuesto_clasificacion_producto = new ImpuestoClasificacionProducto( 
                             array( "id_clasificacion_producto" => $clasificacion_producto->getIdClasificacionProducto() ) );
                     
                     foreach($impuestos as $impuesto)
                     {
                         if(is_null(ImpuestoDAO::getByPK($impuesto)))
-                                throw new Exception("El impuesto con id ".$impuesto." no existe");
+                                throw new Exception("El impuesto con id ".$impuesto." no existe",901);
                         
                         $impuesto_clasificacion_producto->setIdImpuesto($impuesto);
                         ImpuestoClasificacionProductoDAO::save($impuesto_clasificacion_producto);
@@ -1488,6 +1579,14 @@ NOTA: Se crea un producto tipo = 1 que es para productos
                 }/* Fin if de impuestos */
                 if(!is_null($retenciones))
                 {
+                    
+                    $retenciones = object_to_array($retenciones);
+                    
+                    if(!is_array($retenciones))
+                    {
+                        throw new Exception("Las retenciones son invalidas",901);
+                    }
+                    
                     $retencion_clasificacion_producto = new RetencionClasificacionProducto( 
                             array( "id_clasificacion_producto" => $clasificacion_producto->getIdClasificacionProducto() ));
                     
@@ -1524,7 +1623,9 @@ NOTA: Se crea un producto tipo = 1 que es para productos
             {
                 DAO::transRollback();
                 Logger::error("No se pudo editar la clasificacion de producto: ".$e);
-                throw new Exception("No se pudo editar la clasificacion de producto");
+                if($e->getCode()==901)
+                    throw new Exception("No se pudo editar la clasificacion de producto: ".$e->getMessage(),901);
+                throw new Exception("No se pudo editar la clasificacion de producto",901);
             }
             DAO::transEnd();
             Logger::log("Clasificacion de producto editada exitosamente");
