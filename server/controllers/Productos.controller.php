@@ -763,6 +763,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos
 		$descuento = null, 
 		$foto_del_producto = null, 
 		$garantia = null, 
+		$id_empresas = null, 
 		$id_unidad = null, 
 		$impuestos = null, 
 		$margen_de_utilidad = null, 
@@ -835,6 +836,9 @@ NOTA: Se crea un producto tipo = 1 que es para productos
                     {
                         throw new Exception("Las empresas fueron enviadas incorrectamente",901);
                     }
+                    
+                    //Validamos que el objeto recibido tenga 
+                    
                     
                     $producto_empresa = new ProductoEmpresa( array( "id_producto" => $producto->getIdProducto() ) );
                     foreach($id_empresas as $id_empresa)

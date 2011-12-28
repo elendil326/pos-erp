@@ -202,6 +202,18 @@ NOTA: Se crea un producto tipo = 1 que es para productos
  	 * @param descuento float Descuento que se aplicara a este producot
  	 * @param foto_del_producto string url a una foto de este producto
  	 * @param garantia int Si este producto cuenta con un nmero de meses de garanta  que no aplica a los productos de su categora
+ 	 * @param id_empresas json Arreglo que contendra la informaciond e las empresas. Debera contener: 
+ 
+{
+   "id_empresas": [
+     {
+       "id_empresa" : 1,
+"precio_utilidad": 10,
+"es_margen_utilidad": 1
+     }
+]
+}
+
  	 * @param id_unidad int La unidad preferida para este producto
  	 * @param impuestos json array de ids de impuestos que tiene este producto
  	 * @param margen_de_utilidad float Un porcentage de 0 a 100 si queremos que este producto marque utilidad en especifico
@@ -225,6 +237,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos
 		$descuento = null, 
 		$foto_del_producto = null, 
 		$garantia = null, 
+		$id_empresas = null, 
 		$id_unidad = null, 
 		$impuestos = null, 
 		$margen_de_utilidad = null, 
