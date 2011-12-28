@@ -838,7 +838,15 @@ NOTA: Se crea un producto tipo = 1 que es para productos
                     }
                     
                     //Validamos que el objeto recibido tenga 
-                    
+                    if
+                    (
+                            !array_key_exists("id_empresa", $id_empresas)           ||
+                            !array_key_exists("precio_utilidad", $id_empresas)      ||
+                            !array_key_exists("es_margen_utilidad", $id_empresas)  
+                    )
+                    {
+                        throw new Exception("Las empresas fueron enviadas incorrectamente",901);
+                    }
                     
                     $producto_empresa = new ProductoEmpresa( array( "id_producto" => $producto->getIdProducto() ) );
                     foreach($id_empresas as $id_empresa)
@@ -855,6 +863,14 @@ NOTA: Se crea un producto tipo = 1 que es para productos
                 }/* Fin if de empresas */
                 if(!is_null($impuestos))
                 {
+                    
+                    $impuestos = object_to_array($impuestos);
+                    
+                    if(!is_array($impuestos))
+                    {
+                        throw new Exception("Los impuestos fueron recibidos incorrectamente",901);
+                    }
+                    
                     $impuesto_producto = new ImpuestoProducto( array( "id_producto" => $producto->getIdProducto() ) );
                     foreach($impuestos as $impuesto)
                     {
@@ -866,6 +882,14 @@ NOTA: Se crea un producto tipo = 1 que es para productos
                 }/* Fin if de impuestos */
                 if(!is_null($clasificaciones))
                 {
+                    
+                    $clasificaciones = object_to_array($clasificaciones);
+                    
+                    if(!is_array($clasificaciones))
+                    {
+                        throw new Exception("Las clasificaciones del producto fueron recibidas incorrectamente",901);
+                    }
+                    
                     $producto_clasificacion = new ProductoClasificacion( array( "id_producto" => $producto->getIdProducto() ) );
                     foreach($clasificaciones as $clasificacion)
                     {

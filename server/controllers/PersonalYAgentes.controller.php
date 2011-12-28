@@ -721,6 +721,14 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 //si se pasaron impuestos, se validan y se agregan a la tabla impuesto_usuario
                 if(!is_null($impuestos))
                 {
+                    
+                    $impuestos = object_to_array($impuestos);
+                    
+                    if(!is_array($impuestos))
+                    {
+                        throw new Exception("Los impuestos no fueron recibidos correctamente",901);
+                    }
+                    
                     foreach($impuestos as $id_impuesto)
                     {
                         $validar=self::validarParametrosImpuestoUsuario($id_impuesto);
@@ -733,6 +741,14 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 //si se pasaron retenciones, se validan y se agregan a la tabla retencion_usuario
                 if(!is_null($retenciones))
                 {
+                    
+                    $retenciones = object_to_array($retenciones);
+                    
+                    if(!is_array($retenciones))
+                    {
+                        throw new Exception("Las retenciones no fueron recibidas correctamente",901);
+                    }
+                    
                     foreach($retenciones as $id_retencion)
                     {
                         $validar=self::validarParametrosRetencionUsuario($id_retencion);
@@ -1366,6 +1382,14 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 //los ya existentes y almacene los nuevos
                 if(!is_null($impuestos))
                 {
+                     $impuestos = object_to_array($impuestos);
+                    
+                    if(!is_array($impuestos))
+                    {
+                        throw new Exception("Los impuestos no fueron recibidos correctamente",901);
+                    }
+                    
+                    
                     foreach($impuestos as $id_impuesto)
                     {
                         ImpuestoUsuarioDAO::save(new ImpuestoUsuario( array( "id_impuesto" => $id_impuesto , "id_usuario" => $id_usuario ) ));
@@ -1395,6 +1419,14 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 //las ya existentes y almacene las nuevas
                 if(!is_null($retenciones))
                 {
+                    
+                    $retenciones = object_to_array($retenciones);
+                    
+                    if(!is_array($retenciones))
+                    {
+                        throw new Exception("Las retenciones no fueron recibidas correctamente",901);
+                    }
+                    
                     foreach($retenciones as $id_retencion)
                     {
                         RetencionUsuarioDAO::save(new RetencionUsuario( array( "id_retencion" => $id_retencion , "id_usuario" => $id_usuario ) ));
