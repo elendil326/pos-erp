@@ -2860,6 +2860,14 @@ Creo que este metodo tiene que estar bajo sucursal.
                 //Cada producto ingresado incrementa su cantidad en el almacen. Si aun no existe,
                 //se crea su registro y se guarda.
                 $producto_entrada_almacen=new ProductoEntradaAlmacen(array( "id_entrada_almacen" => $entrada_almacen->getIdEntradaAlmacen() ));
+                
+                $productos = object_to_array($productos);
+                
+                if(!is_array($productos))
+                {
+                    throw new Exception("Los productos fueron recibidos incorrectamente",901);
+                }
+                
                 foreach($productos as $p)
                 {
                     //valida que el producto a ingresar pertenezca a la misma empresa que el almacen
