@@ -129,7 +129,7 @@
  	 *
  	 *Da de baja un servicio que ofrece una empresa
  	 *
- 	 * @param id_servicio int Id del servicio que serï¿½ eliminado
+ 	 * @param id_servicio int Id del servicio que será eliminado
  	 **/
   static function Eliminar
 	(
@@ -288,7 +288,7 @@
  	 * @param fecha_hasta string fecha en que se entregara una orden
  	 * @param id_servicio int Se listaran las ordenes que contengan este servicio
  	 * @param id_usuario_venta int Se listaran las ordenes de este usuario
- 	 * @return ordenes json Objeto que contendrï¿½ las ordenes.
+ 	 * @return ordenes json Objeto que contendrá las ordenes.
  	 **/
   static function ListaOrden
 	(

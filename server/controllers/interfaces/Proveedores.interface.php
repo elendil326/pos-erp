@@ -211,7 +211,7 @@
  	 * @param telefono_personal2 string Telefono personal alterno del proveedor
  	 * @param texto_extra string Referencia de la direcciond el proveedor
  	 * @param tiempo_entrega string Tiempo de entrega del proveedor en dias
- 	 * @return id_proveedor int Id autogenerado por la inserciï¿½n del nuevo proveedor.
+ 	 * @return id_proveedor int Id autogenerado por la inserción del nuevo proveedor.
  	 **/
   static function Nuevo
 	(
