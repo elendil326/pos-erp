@@ -191,6 +191,15 @@ require_once("interfaces/Precio.interface.php");
 	{  
             Logger::log("Eliminando el precio de los servicios para el tipo de cliente ".$id_tipo_cliente);
             
+            //valida los servicios
+            $servicios = object_to_array($servicios);
+            
+            if(!is_array($servicios))
+            {
+                Logger::error("Los servicios son invalidos");
+                throw new Exception("Los servicios son invalidos",901);
+            }
+            
             //Se inicializa el registro que se borrara. Se recorrera la lista de servicios obtenida
             //y se eliminaran los registros correspondientes
             DAO::transBegin();
@@ -200,7 +209,8 @@ require_once("interfaces/Precio.interface.php");
                 {
                     $precio_servicio_tipo_cliente = PrecioServicioTipoClienteDAO::getByPK($servicio, $id_tipo_cliente);
                     if(is_null($precio_servicio_tipo_cliente))
-                            throw new Exception("El tipo de cliente ".$id_tipo_cliente." no tiene precio preferencial con el servicio ".$servicio);
+                            throw new Exception("El tipo de cliente ".$id_tipo_cliente." no tiene precio preferencial con el servicio ".$servicio,901);
+                    
                     PrecioServicioTipoClienteDAO::delete($precio_servicio_tipo_cliente);
                 }
             }
@@ -208,7 +218,9 @@ require_once("interfaces/Precio.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se han podido eliminar los precios: ".$e);
-                throw new Exception("No se han podido eliminar todos los precios");
+                if($e->getCode()==901)
+                    throw new Exception ("No se han podido eliminar todos los precios", 901);
+                throw new Exception("No se han podido eliminar todos los precios",901);
             }
             DAO::transEnd();
             Logger::log("Precios eliminados correctamente");
@@ -229,12 +241,21 @@ require_once("interfaces/Precio.interface.php");
 	{  
             Logger::log("Editando precios de los servicios para el usuario ".$id_usuario);
             
+            //valida el arreglo de servicios
+            $servicios_precios_utilidad = object_to_array($servicios_precios_utilidad);
+            
+            if(!is_array($servicios_precios_utilidad))
+            {
+                Logger::error("Los servicios recibidos son invalidos");
+                throw new Exception("Los servicios recibidos son invalidos",901);
+            }
+            
             //valida al usuario obtendio
             $validar = self::validarUsuario($id_usuario);
             if(is_string($validar))
             {
                 Logger::error($validar);
-                throw new Exception($validar);
+                throw new Exception($validar,901);
             }
             
             //Se inicializa el registro a editar. Si alguno de los registros no existe, se guardara
@@ -244,17 +265,28 @@ require_once("interfaces/Precio.interface.php");
             {
                 foreach($servicios_precios_utilidad as $servicio_precio_utilidad)
                 {
+                    
+                    if
+                    (
+                            !array_key_exists("id_servicio", $servicio_precio_utilidad)         ||
+                            !array_key_exists("precio_utilidad", $servicio_precio_utilidad)     ||
+                            !array_key_exists("es_margen_utilidad", $servicio_precio_utilidad)
+                    )
+                    {
+                        throw new Exception("Los servicios no tienen los parametros necesarios",901);
+                    }
+                    
                     $validar = self::validarServicio($servicio_precio_utilidad["id_servicio"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $validar = self::validarPrecioUtilidad($servicio_precio_utilidad["precio_utilidad"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $validar = self::validarEsMargenUtilidad($servicio_precio_utilidad["es_margen_utilidad"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $precio_servicio_usuario->setEsMargenUtilidad($servicio_precio_utilidad["es_margen_utilidad"]);
                     $precio_servicio_usuario->setIdServicio($servicio_precio_utilidad["id_servicio"]);
@@ -266,7 +298,9 @@ require_once("interfaces/Precio.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se han podido editar todos los precios para el usuario ".$id_usuario." : ".$e);
-                throw new Exception("No se han podido editar todos los precios para el usuario");
+                if($e->getCode()==901)
+                    throw new Exception("No se han podido editar todos los precios para el usuario: ".$e->getMessage(),901);
+                throw new Exception("No se han podido editar todos los precios para el usuario",901);
             }
             DAO::transEnd();
             Logger::log("Precios editados exitosamente");
@@ -287,6 +321,15 @@ require_once("interfaces/Precio.interface.php");
 	{  
             Logger::log("ELiminando los precios de servicio para el usuario ".$id_usuario);
             
+            //valida los servicios
+            $servicios = object_to_array($servicios);
+            
+            if(!is_array($servicios))
+            {
+                Logger::error("Los servicios son invalidos");
+                throw new Exception("Los servicios son invalidos",901);
+            }
+            
             //Se inicializa el registro a eliminar y se elimina
             DAO::transBegin();
             try
@@ -295,7 +338,8 @@ require_once("interfaces/Precio.interface.php");
                 {
                     $precio_servicio_usuario = PrecioServicioUsuarioDAO::getByPK($servicio, $id_usuario);
                     if(is_null($precio_servicio_usuario))
-                        throw new Exception("El usuario ".$id_usuario." no tiene precio especial para el servicio ".$servicio);
+                        throw new Exception("El usuario ".$id_usuario." no tiene precio especial para el servicio ".$servicio,901);
+                    
                     PrecioServicioUsuarioDAO::delete($precio_servicio_usuario);
                 }
             }
@@ -303,7 +347,9 @@ require_once("interfaces/Precio.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudieron eliminar los precios para servicio del usuario ".$id_usuario." : ".$e);
-                throw new Exception("No se pudieron eliminar los precios para servicio del usuario");
+                if($e->getCode()==901)
+                    throw new Exception("No se pudieron eliminar los precios para servicio del usuario: ".$e->getMessage(),901);
+                throw new Exception("No se pudieron eliminar los precios para servicio del usuario",901);
             }
             DAO::transEnd();
             Logger::log("Precios de servicios eliminados exitosamente");
@@ -325,12 +371,21 @@ require_once("interfaces/Precio.interface.php");
 	{  
             Logger::log("Registrando precios de los servicios para el usuario ".$id_usuario);
             
+            //valida el arreglo de servicios
+            $servicios_precios_utilidad = object_to_array($servicios_precios_utilidad);
+            
+            if(!is_array($servicios_precios_utilidad))
+            {
+                Logger::error("Los servicios recibidos son invalidos");
+                throw new Exception("Los servicios recibidos son invalidos",901);
+            }
+            
             //valida al usuario obtendio
             $validar = self::validarUsuario($id_usuario);
             if(is_string($validar))
             {
                 Logger::error($validar);
-                throw new Exception($validar);
+                throw new Exception($validar,901);
             }
             
             //Se inicializa el registro y se guarda
@@ -340,17 +395,28 @@ require_once("interfaces/Precio.interface.php");
             {
                 foreach($servicios_precios_utilidad as $servicio_precio_utilidad)
                 {
+                    
+                    if
+                    (
+                            !array_key_exists("id_servicio", $servicio_precio_utilidad)         ||
+                            !array_key_exists("precio_utilidad", $servicio_precio_utilidad)     ||
+                            !array_key_exists("es_margen_utilidad", $servicio_precio_utilidad)
+                    )
+                    {
+                        throw new Exception("Los servicios no tienen los parametros necesarios",901);
+                    }
+                    
                     $validar = self::validarServicio($servicio_precio_utilidad["id_servicio"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $validar = self::validarPrecioUtilidad($servicio_precio_utilidad["precio_utilidad"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $validar = self::validarEsMargenUtilidad($servicio_precio_utilidad["es_margen_utilidad"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $precio_servicio_usuario->setEsMargenUtilidad($servicio_precio_utilidad["es_margen_utilidad"]);
                     $precio_servicio_usuario->setIdServicio($servicio_precio_utilidad["id_servicio"]);
@@ -362,7 +428,9 @@ require_once("interfaces/Precio.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se han podido guardar todos los precios para el usuario ".$id_usuario." : ".$e);
-                throw new Exception("No se han podido guardar todos los precios para el usuario");
+                if($e->getCode()==901)
+                    throw new Exception("No se han podido guardar todos los precios para el usuario: ".$e->getMessage(),901);
+                throw new Exception("No se han podido guardar todos los precios para el usuario",901);
             }
             DAO::transEnd();
             Logger::log("Precios guardados exitosamente");
@@ -383,12 +451,21 @@ require_once("interfaces/Precio.interface.php");
 	{  
             Logger::log("Editando precios de los servicios para el rol ".$id_rol);
             
+            //valida el arreglo de servicios
+            $servicios_precios_utilidad = object_to_array($servicios_precios_utilidad);
+            
+            if(!is_array($servicios_precios_utilidad))
+            {
+                Logger::error("Los servicios recibidos son invalidos");
+                throw new Exception("Los servicios recibidos son invalidos",901);
+            }
+            
             //valida al rol obtendio
             $validar = self::validarRol($id_rol);
             if(is_string($validar))
             {
                 Logger::error($validar);
-                throw new Exception($validar);
+                throw new Exception($validar,901);
             }
             
             //Se inicializa el registro a editar. Si alguno de los registros no existe, se guardara
@@ -398,17 +475,28 @@ require_once("interfaces/Precio.interface.php");
             {
                 foreach($servicios_precios_utilidad as $servicio_precio_utilidad)
                 {
+                    
+                    if
+                    (
+                            !array_key_exists("id_servicio", $servicio_precio_utilidad)         ||
+                            !array_key_exists("precio_utilidad", $servicio_precio_utilidad)     ||
+                            !array_key_exists("es_margen_utilidad", $servicio_precio_utilidad)
+                    )
+                    {
+                        throw new Exception("Los servicios no tienen los parametros necesarios",901);
+                    }
+                    
                     $validar = self::validarServicio($servicio_precio_utilidad["id_servicio"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $validar = self::validarPrecioUtilidad($servicio_precio_utilidad["precio_utilidad"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $validar = self::validarEsMargenUtilidad($servicio_precio_utilidad["es_margen_utilidad"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $precio_servicio_rol->setEsMargenUtilidad($servicio_precio_utilidad["es_margen_utilidad"]);
                     $precio_servicio_rol->setIdServicio($servicio_precio_utilidad["id_servicio"]);
@@ -420,7 +508,9 @@ require_once("interfaces/Precio.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se han podido editar todos los precios para el rol ".$id_rol." : ".$e);
-                throw new Exception("No se han podido editar todos los precios para el rol");
+                if($e->getCode()==901)
+                    throw new Exception("No se han podido editar todos los precios para el rol: ".$e->getMessage(),901);
+                throw new Exception("No se han podido editar todos los precios para el rol",901);
             }
             DAO::transEnd();
             Logger::log("Precios editados exitosamente");
@@ -442,12 +532,21 @@ require_once("interfaces/Precio.interface.php");
 	{  
             Logger::log("Editando precios de los servicios para el tipo_cliente ".$id_tipo_cliente);
             
+            //valida el arreglo de servicios
+            $servicios_precios_utilidad = object_to_array($servicios_precios_utilidad);
+            
+            if(!is_array($servicios_precios_utilidad))
+            {
+                Logger::error("Los servicios recibidos son invalidos");
+                throw new Exception("Los servicios recibidos son invalidos",901);
+            }
+            
             //valida al tipo_cliente obtendio
             $validar = self::validarClasificacionCliente($id_tipo_cliente);
             if(is_string($validar))
             {
                 Logger::error($validar);
-                throw new Exception($validar);
+                throw new Exception($validar,901);
             }
             
             //Se inicializa el registro a editar. Si alguno de los registros no existe, se guardara
@@ -457,17 +556,28 @@ require_once("interfaces/Precio.interface.php");
             {
                 foreach($servicios_precios_utilidad as $servicio_precio_utilidad)
                 {
+                    
+                    if
+                    (
+                            !array_key_exists("id_servicio", $servicio_precio_utilidad)         ||
+                            !array_key_exists("precio_utilidad", $servicio_precio_utilidad)     ||
+                            !array_key_exists("es_margen_utilidad", $servicio_precio_utilidad)
+                    )
+                    {
+                        throw new Exception("Los servicios no tienen los parametros necesarios",901);
+                    }
+                    
                     $validar = self::validarServicio($servicio_precio_utilidad["id_servicio"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $validar = self::validarPrecioUtilidad($servicio_precio_utilidad["precio_utilidad"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $validar = self::validarEsMargenUtilidad($servicio_precio_utilidad["es_margen_utilidad"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $precio_servicio_tipo_cliente->setEsMargenUtilidad($servicio_precio_utilidad["es_margen_utilidad"]);
                     $precio_servicio_tipo_cliente->setIdServicio($servicio_precio_utilidad["id_servicio"]);
@@ -479,7 +589,9 @@ require_once("interfaces/Precio.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se han podido editar todos los precios para el tipo_cliente ".$id_tipo_cliente." : ".$e);
-                throw new Exception("No se han podido editar todos los precios para el tipo_cliente");
+                if($e->getCode()==901)
+                    throw new Exception ("No se han podido editar todos los precios para el tipo_cliente: ".$e->getMessage(),901);
+                throw new Exception("No se han podido editar todos los precios para el tipo_cliente",901);
             }
             DAO::transEnd();
             Logger::log("Precios editados exitosamente");
@@ -500,6 +612,15 @@ require_once("interfaces/Precio.interface.php");
 	{  
             Logger::log("ELiminando los precios de producto para el rol ".$id_rol);
             
+            //valida el arreglo de productos
+            $productos = object_to_array($productos);
+            
+            if(!is_array($productos))
+            {
+                Logger::error("Los productos son invalidos");
+                throw new Exception("Los productos son invalidos",901);
+            }
+            
             //Se inicializa el registro a eliminar y se elimina
             DAO::transBegin();
             try
@@ -508,7 +629,8 @@ require_once("interfaces/Precio.interface.php");
                 {
                     $precio_producto_rol = PrecioProductoRolDAO::getByPK($producto, $id_rol);
                     if(is_null($precio_producto_rol))
-                        throw new Exception("El rol ".$id_rol." no tiene precio especial para el producto ".$producto);
+                        throw new Exception("El rol ".$id_rol." no tiene precio especial para el producto ".$producto,901);
+                    
                     PrecioProductoRolDAO::delete($precio_producto_rol);
                 }
             }
@@ -516,7 +638,9 @@ require_once("interfaces/Precio.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudieron eliminar los precios para producto del rol ".$id_rol." : ".$e);
-                throw new Exception("No se pudieron eliminar los precios para producto del rol");
+                if($e->getCode()==901)
+                    throw new Exception("No se pudieron eliminar los precios para producto del rol: ".$e->getMessage (),901);
+                throw new Exception("No se pudieron eliminar los precios para producto del rol",901);
             }
             DAO::transEnd();
             Logger::log("Precios de productos eliminados exitosamente");
@@ -537,6 +661,15 @@ require_once("interfaces/Precio.interface.php");
 	{  
             Logger::log("ELiminando los precios de servicio para el tipo_cliente ".$id_tipo_cliente);
             
+            //valida el arreglo de productos
+            $productos = object_to_array($productos);
+            
+            if(!is_array($productos))
+            {
+                Logger::error("Los productos son invalidos");
+                throw new Exception("Los productos son invalidos",901);
+            }
+            
             //Se inicializa el registro a eliminar y se elimina
             DAO::transBegin();
             try
@@ -545,7 +678,8 @@ require_once("interfaces/Precio.interface.php");
                 {
                     $precio_producto_tipo_cliente = PrecioProductoTipoClienteDAO::getByPK($producto, $id_tipo_cliente);
                     if(is_null($precio_producto_tipo_cliente))
-                        throw new Exception("El tipo_cliente ".$id_tipo_cliente." no tiene precio especial para el producto ".$producto);
+                        throw new Exception("El tipo_cliente ".$id_tipo_cliente." no tiene precio especial para el producto ".$producto,901);
+                    
                     PrecioProductoTipoClienteDAO::delete($precio_producto_tipo_cliente);
                 }
             }
@@ -553,6 +687,8 @@ require_once("interfaces/Precio.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudieron eliminar los precios para producto del tipo_cliente ".$id_tipo_cliente." : ".$e);
+                if($e->getCode()==901)
+                    throw new Exception("No se pudieron eliminar los precios para producto del tipo_cliente: ".$e->getMessage(),901);
                 throw new Exception("No se pudieron eliminar los precios para producto del tipo_cliente");
             }
             DAO::transEnd();
@@ -574,6 +710,15 @@ require_once("interfaces/Precio.interface.php");
 	{  
             Logger::log("ELiminando los precios de servicio para el usuario ".$id_usuario);
             
+            //valida el arreglo de productos
+            $productos = object_to_array($productos);
+            
+            if(!is_array($productos))
+            {
+                Logger::error("Los productos son invalidos");
+                throw new Exception("Los productos son invalidos",901);
+            }
+            
             //Se inicializa el registro a eliminar y se elimina
             DAO::transBegin();
             try
@@ -582,7 +727,8 @@ require_once("interfaces/Precio.interface.php");
                 {
                     $precio_producto_usuario = PrecioProductoUsuarioDAO::getByPK($producto, $id_usuario);
                     if(is_null($precio_producto_usuario))
-                        throw new Exception("El usuario ".$id_usuario." no tiene precio especial para el producto ".$producto);
+                        throw new Exception("El usuario ".$id_usuario." no tiene precio especial para el producto ".$producto,901);
+                    
                     PrecioProductoUsuarioDAO::delete($precio_producto_usuario);
                 }
             }
@@ -590,7 +736,9 @@ require_once("interfaces/Precio.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudieron eliminar los precios para producto del usuario ".$id_usuario." : ".$e);
-                throw new Exception("No se pudieron eliminar los precios para producto del usuario");
+                if($e->getCode()==901)
+                    throw new Exception("No se pudieron eliminar los precios para producto del usuario: ".$e->getMessage(),901);
+                throw new Exception("No se pudieron eliminar los precios para producto del usuario",901);
             }
             DAO::transEnd();
             Logger::log("Precios de productos eliminados exitosamente");
@@ -611,6 +759,14 @@ require_once("interfaces/Precio.interface.php");
 	{  
             Logger::log("ELiminando los precios de servicio para el rol ".$id_rol);
             
+            $servicios = object_to_array($servicios);
+            
+            if(!is_array($servicios))
+            {
+                Logger::error("Los servicios son invalidos");
+                throw new Exception("Los servicios son invalidos",901);
+            }
+            
             //Se inicializa el registro a eliminar y se elimina
             DAO::transBegin();
             try
@@ -619,7 +775,8 @@ require_once("interfaces/Precio.interface.php");
                 {
                     $precio_servicio_rol = PrecioServicioRolDAO::getByPK($servicio, $id_rol);
                     if(is_null($precio_servicio_rol))
-                        throw new Exception("El rol ".$id_rol." no tiene precio especial para el servicio ".$servicio);
+                        throw new Exception("El rol ".$id_rol." no tiene precio especial para el servicio ".$servicio,901);
+                    
                     PrecioServicioRolDAO::delete($precio_servicio_rol);
                 }
             }
@@ -627,7 +784,9 @@ require_once("interfaces/Precio.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudieron eliminar los precios para servicio del rol ".$id_rol." : ".$e);
-                throw new Exception("No se pudieron eliminar los precios para servicio del rol");
+                if($e->getCode()==901)
+                    throw new Exception("No se pudieron eliminar los precios para servicio del rol: ".$e->getMessage (),901);
+                throw new Exception("No se pudieron eliminar los precios para servicio del rol",901);
             }
             DAO::transEnd();
             Logger::log("Precios de servicios eliminados exitosamente");
@@ -648,12 +807,21 @@ require_once("interfaces/Precio.interface.php");
 	{  
             Logger::log("Registrando precios de los servicios para el rol ".$id_rol);
             
+            //valida el arreglo de productos
+            $productos_precios_utilidad = object_to_array($productos_precios_utilidad);
+            
+            if(!is_array($productos_precios_utilidad))
+            {
+                Logger::error("Los productos son invalidos");
+                throw new Exception("Los productos son invalidos",901);
+            }
+            
             //valida al rol obtendio
             $validar = self::validarRol($id_rol);
             if(is_string($validar))
             {
                 Logger::error($validar);
-                throw new Exception($validar);
+                throw new Exception($validar,901);
             }
             
             //Se inicializa el registro a guardar
@@ -663,17 +831,28 @@ require_once("interfaces/Precio.interface.php");
             {
                 foreach($productos_precios_utilidad as $producto_precio_utilidad)
                 {
+                    
+                    if
+                    (
+                            !array_key_exists("id_prodcto", $producto_precio_utilidad)      ||
+                            !array_key_exists("precio_utilidad", $producto_precio_utilidad) ||
+                            !array_key_exists("es_margen_utilidad", $producto_precio_utilidad)
+                    )
+                    {
+                        throw new Exception("Los productos no cuentan con los parametros requeridos",901);
+                    }
+                    
                     $validar = self::validarProducto($producto_precio_utilidad["id_producto"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $validar = self::validarPrecioUtilidad($producto_precio_utilidad["precio_utilidad"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $validar = self::validarEsMargenUtilidad($producto_precio_utilidad["es_margen_utilidad"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $precio_producto_rol->setEsMargenUtilidad($producto_precio_utilidad["es_margen_utilidad"]);
                     $precio_producto_rol->setIdProducto($producto_precio_utilidad["id_producto"]);
@@ -685,7 +864,9 @@ require_once("interfaces/Precio.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se han podido guardar todos los precios para el rol ".$id_rol." : ".$e);
-                throw new Exception("No se han podido guardar todos los precios para el rol");
+                if($e->getCode()==901)
+                    throw new Exception("No se han podido guardar todos los precios para el rol: ".$e->getMessage(),901);
+                throw new Exception("No se han podido guardar todos los precios para el rol",901);
             }
             DAO::transEnd();
             Logger::log("Precios guardados exitosamente");
@@ -701,17 +882,26 @@ require_once("interfaces/Precio.interface.php");
 	public static function Editar_precio_rolProducto
 	(
 		$id_rol, 
-		$productos_precios_utlidad
+		$productos_precios_utilidad
 	)
 	{  
             Logger::log("Registrando precios de los productos para el rol ".$id_rol);
+            
+            //valida el arreglo de productos
+            $productos_precios_utilidad = object_to_array($productos_precios_utilidad);
+            
+            if(!is_array($productos_precios_utilidad))
+            {
+                Logger::error("Los productos son invalidos");
+                throw new Exception("Los productos son invalidos",901);
+            }
             
             //valida al rol obtendio
             $validar = self::validarRol($id_rol);
             if(is_string($validar))
             {
                 Logger::error($validar);
-                throw new Exception($validar);
+                throw new Exception($validar,901);
             }
             
             //Se inicializa el registro a guardar
@@ -721,17 +911,28 @@ require_once("interfaces/Precio.interface.php");
             {
                 foreach($productos_precios_utilidad as $producto_precio_utilidad)
                 {
+                    
+                    if
+                    (
+                            !array_key_exists("id_prodcto", $producto_precio_utilidad)      ||
+                            !array_key_exists("precio_utilidad", $producto_precio_utilidad) ||
+                            !array_key_exists("es_margen_utilidad", $producto_precio_utilidad)
+                    )
+                    {
+                        throw new Exception("Los productos no cuentan con los parametros requeridos",901);
+                    }
+                    
                     $validar = self::validarProducto($producto_precio_utilidad["id_producto"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $validar = self::validarPrecioUtilidad($producto_precio_utilidad["precio_utilidad"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $validar = self::validarEsMargenUtilidad($producto_precio_utilidad["es_margen_utilidad"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $precio_producto_rol->setEsMargenUtilidad($producto_precio_utilidad["es_margen_utilidad"]);
                     $precio_producto_rol->setIdProducto($producto_precio_utilidad["id_producto"]);
@@ -743,7 +944,9 @@ require_once("interfaces/Precio.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se han podido guardar todos los precios para el rol ".$id_rol." : ".$e);
-                throw new Exception("No se han podido guardar todos los precios para el rol");
+                if($e->getCode()==901)
+                    throw new Exception("No se han podido guardar todos los precios para el rol: ".$e->getMessage (),901);
+                throw new Exception("No se han podido guardar todos los precios para el rol",901);
             }
             DAO::transEnd();
             Logger::log("Precios guardados exitosamente");
@@ -764,12 +967,21 @@ require_once("interfaces/Precio.interface.php");
 	{  
             Logger::log("Editando precios de los servicios para el rol ".$id_rol);
             
+            //valida el arreglo de servicios
+            $servicios_precios_utilidad = object_to_array($servicios_precios_utilidad);
+            
+            if(!is_array($servicios_precios_utilidad))
+            {
+                Logger::error("Los servicios recibidos son invalidos");
+                throw new Exception("Los servicios recibidos son invalidos",901);
+            }
+            
             //valida al rol obtendio
             $validar = self::validarRol($id_rol);
             if(is_string($validar))
             {
                 Logger::error($validar);
-                throw new Exception($validar);
+                throw new Exception($validar,901);
             }
             
             //Se inicializa el registro a editar. Si alguno de los registros no existe, se guardara
@@ -779,17 +991,28 @@ require_once("interfaces/Precio.interface.php");
             {
                 foreach($servicios_precios_utilidad as $servicio_precio_utilidad)
                 {
+                    
+                    if
+                    (
+                            !array_key_exists("id_servicio", $servicio_precio_utilidad)         ||
+                            !array_key_exists("precio_utilidad", $servicio_precio_utilidad)     ||
+                            !array_key_exists("es_margen_utilidad", $servicio_precio_utilidad)
+                    )
+                    {
+                        throw new Exception("Los servicios no tienen los parametros necesarios",901);
+                    }
+                    
                     $validar = self::validarServicio($servicio_precio_utilidad["id_servicio"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $validar = self::validarPrecioUtilidad($servicio_precio_utilidad["precio_utilidad"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $validar = self::validarEsMargenUtilidad($servicio_precio_utilidad["es_margen_utilidad"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $precio_servicio_rol->setEsMargenUtilidad($servicio_precio_utilidad["es_margen_utilidad"]);
                     $precio_servicio_rol->setIdServicio($servicio_precio_utilidad["id_servicio"]);
@@ -801,7 +1024,9 @@ require_once("interfaces/Precio.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se han podido editar todos los precios para el rol ".$id_rol." : ".$e);
-                throw new Exception("No se han podido editar todos los precios para el rol");
+                if($e->getCode()==901)
+                    throw new Exception("No se han podido editar todos los precios para el rol: ".$e->getMessage(),901);
+                throw new Exception("No se han podido editar todos los precios para el rol",901);
             }
             DAO::transEnd();
             Logger::log("Precios editados exitosamente");
@@ -822,12 +1047,21 @@ require_once("interfaces/Precio.interface.php");
 	{  
             Logger::log("Editando precios de los servicios para el tipo_cliente ".$id_tipo_cliente);
             
+            //valida el arreglo de servicios
+            $servicios_precios_utilidad = object_to_array($servicios_precios_utilidad);
+            
+            if(!is_array($servicios_precios_utilidad))
+            {
+                Logger::error("Los servicios recibidos son invalidos");
+                throw new Exception("Los servicios recibidos son invalidos",901);
+            }
+            
             //valida al tipo_cliente obtendio
             $validar = self::validarClasificacionCliente($id_tipo_cliente);
             if(is_string($validar))
             {
                 Logger::error($validar);
-                throw new Exception($validar);
+                throw new Exception($validar,901);
             }
             
             //Se inicializa el registro a editar. Si alguno de los registros no existe, se guardara
@@ -837,17 +1071,28 @@ require_once("interfaces/Precio.interface.php");
             {
                 foreach($servicios_precios_utilidad as $servicio_precio_utilidad)
                 {
+                    
+                    if
+                    (
+                            !array_key_exists("id_servicio", $servicio_precio_utilidad)         ||
+                            !array_key_exists("precio_utilidad", $servicio_precio_utilidad)     ||
+                            !array_key_exists("es_margen_utilidad", $servicio_precio_utilidad)
+                    )
+                    {
+                        throw new Exception("Los servicios no tienen los parametros necesarios",901);
+                    }
+                    
                     $validar = self::validarServicio($servicio_precio_utilidad["id_servicio"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $validar = self::validarPrecioUtilidad($servicio_precio_utilidad["precio_utilidad"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $validar = self::validarEsMargenUtilidad($servicio_precio_utilidad["es_margen_utilidad"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $precio_servicio_tipo_cliente->setEsMargenUtilidad($servicio_precio_utilidad["es_margen_utilidad"]);
                     $precio_servicio_tipo_cliente->setIdServicio($servicio_precio_utilidad["id_servicio"]);
@@ -859,7 +1104,9 @@ require_once("interfaces/Precio.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se han podido editar todos los precios para el tipo_cliente ".$id_tipo_cliente." : ".$e);
-                throw new Exception("No se han podido editar todos los precios para el tipo_cliente");
+                if($e->getCode()==901)
+                    throw new Exception("No se han podido editar todos los precios para el tipo_cliente: ".$e->getMessage(),901);
+                throw new Exception("No se han podido editar todos los precios para el tipo_cliente",901);
             }
             DAO::transEnd();
             Logger::log("Precios editados exitosamente");
@@ -880,12 +1127,21 @@ require_once("interfaces/Precio.interface.php");
 	{  
             Logger::log("Editando precios de los productos para el tipo_cliente ".$id_tipo_cliente);
             
+            //valida el arreglo de productos
+            $productos_precios_utilidad = object_to_array($productos_precios_utilidad);
+            
+            if(!is_array($productos_precios_utilidad))
+            {
+                Logger::error("Los productos son invalidos");
+                throw new Exception("Los productos son invalidos",901);
+            }
+            
             //valida al tipo_cliente obtendio
             $validar = self::validarClasificacionCliente($id_tipo_cliente);
             if(is_string($validar))
             {
                 Logger::error($validar);
-                throw new Exception($validar);
+                throw new Exception($validar,901);
             }
             
             //Se inicializa el registro a editar. Si alguno de los registros no existe, se guardara
@@ -895,17 +1151,28 @@ require_once("interfaces/Precio.interface.php");
             {
                 foreach($productos_precios_utilidad as $producto_precio_utilidad)
                 {
+                    
+                    if
+                    (
+                            !array_key_exists("id_prodcto", $producto_precio_utilidad)      ||
+                            !array_key_exists("precio_utilidad", $producto_precio_utilidad) ||
+                            !array_key_exists("es_margen_utilidad", $producto_precio_utilidad)
+                    )
+                    {
+                        throw new Exception("Los productos no cuentan con los parametros requeridos",901);
+                    }
+                    
                     $validar = self::validarProducto($producto_precio_utilidad["id_producto"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $validar = self::validarPrecioUtilidad($producto_precio_utilidad["precio_utilidad"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $validar = self::validarEsMargenUtilidad($producto_precio_utilidad["es_margen_utilidad"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $precio_producto_tipo_cliente->setEsMargenUtilidad($producto_precio_utilidad["es_margen_utilidad"]);
                     $precio_producto_tipo_cliente->setIdProducto($producto_precio_utilidad["id_producto"]);
@@ -917,7 +1184,9 @@ require_once("interfaces/Precio.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se han podido editar todos los precios para el tipo_cliente ".$id_tipo_cliente." : ".$e);
-                throw new Exception("No se han podido editar todos los precios para el tipo_cliente");
+                if($e->getCode()==901)
+                    throw new Exception("No se han podido editar todos los precios para el tipo_cliente: ".$e->getMessage (),901);
+                throw new Exception("No se han podido editar todos los precios para el tipo_cliente",901);
             }
             DAO::transEnd();
             Logger::log("Precios editados exitosamente");
@@ -938,12 +1207,21 @@ require_once("interfaces/Precio.interface.php");
 	{  
             Logger::log("Editando precios de los productos para el tipo_cliente ".$id_clasificacion_cliente);
             
+            //valida el arreglo de productos
+            $productos_precios_utilidad = object_to_array($productos_precios_utilidad);
+            
+            if(!is_array($productos_precios_utilidad))
+            {
+                Logger::error("Los productos son invalidos");
+                throw new Exception("Los productos son invalidos",901);
+            }
+            
             //valida al tipo_cliente obtendio
             $validar = self::validarClasificacionCliente($id_clasificacion_cliente);
             if(is_string($validar))
             {
                 Logger::error($validar);
-                throw new Exception($validar);
+                throw new Exception($validar,901);
             }
             
             //Se inicializa el registro a editar. Si alguno de los registros no existe, se guardara
@@ -953,17 +1231,28 @@ require_once("interfaces/Precio.interface.php");
             {
                 foreach($productos_precios_utilidad as $producto_precio_utilidad)
                 {
+                    
+                    if
+                    (
+                            !array_key_exists("id_prodcto", $producto_precio_utilidad)      ||
+                            !array_key_exists("precio_utilidad", $producto_precio_utilidad) ||
+                            !array_key_exists("es_margen_utilidad", $producto_precio_utilidad)
+                    )
+                    {
+                        throw new Exception("Los productos no cuentan con los parametros requeridos",901);
+                    }
+                    
                     $validar = self::validarProducto($producto_precio_utilidad["id_producto"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $validar = self::validarPrecioUtilidad($producto_precio_utilidad["precio_utilidad"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $validar = self::validarEsMargenUtilidad($producto_precio_utilidad["es_margen_utilidad"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $precio_producto_tipo_cliente->setEsMargenUtilidad($producto_precio_utilidad["es_margen_utilidad"]);
                     $precio_producto_tipo_cliente->setIdProducto($producto_precio_utilidad["id_producto"]);
@@ -975,7 +1264,9 @@ require_once("interfaces/Precio.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se han podido editar todos los precios para el tipo_cliente ".$id_clasificacion_cliente." : ".$e);
-                throw new Exception("No se han podido editar todos los precios para el tipo_cliente");
+                if($e->getCode()==901)
+                    throw new Exception("No se han podido editar todos los precios para el tipo_cliente: ".$e->getMessage (),901);
+                throw new Exception("No se han podido editar todos los precios para el tipo_cliente",901);
             }
             DAO::transEnd();
             Logger::log("Precios editados exitosamente");
@@ -996,12 +1287,21 @@ require_once("interfaces/Precio.interface.php");
 	{  
             Logger::log("Registrando precios de los productos para el usuario ".$id_usuario);
             
+            //valida el arreglo de productos
+            $productos_precios_utilidad = object_to_array($productos_precios_utilidad);
+            
+            if(!is_array($productos_precios_utilidad))
+            {
+                Logger::error("Los productos son invalidos");
+                throw new Exception("Los productos son invalidos",901);
+            }
+            
             //valida al usuario obtendio
             $validar = self::validarUsuario($id_usuario);
             if(is_string($validar))
             {
                 Logger::error($validar);
-                throw new Exception($validar);
+                throw new Exception($validar,901);
             }
             
             //Se inicializa el registro y se guarda
@@ -1011,17 +1311,28 @@ require_once("interfaces/Precio.interface.php");
             {
                 foreach($productos_precios_utilidad as $producto_precio_utilidad)
                 {
+                    
+                    if
+                    (
+                            !array_key_exists("id_prodcto", $producto_precio_utilidad)      ||
+                            !array_key_exists("precio_utilidad", $producto_precio_utilidad) ||
+                            !array_key_exists("es_margen_utilidad", $producto_precio_utilidad)
+                    )
+                    {
+                        throw new Exception("Los productos no cuentan con los parametros requeridos",901);
+                    }
+                    
                     $validar = self::validarProducto($producto_precio_utilidad["id_producto"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $validar = self::validarPrecioUtilidad($producto_precio_utilidad["precio_utilidad"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $validar = self::validarEsMargenUtilidad($producto_precio_utilidad["es_margen_utilidad"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $precio_producto_usuario->setEsMargenUtilidad($producto_precio_utilidad["es_margen_utilidad"]);
                     $precio_producto_usuario->setIdProducto($producto_precio_utilidad["id_producto"]);
@@ -1033,7 +1344,9 @@ require_once("interfaces/Precio.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se han podido guardar todos los precios para el usuario ".$id_usuario." : ".$e);
-                throw new Exception("No se han podido guardar todos los precios para el usuario");
+                if($e->getCode()==901)
+                    throw new Exception("No se han podido guardar todos los precios para el usuario: ".$e->getMessage (),901);
+                throw new Exception("No se han podido guardar todos los precios para el usuario",901);
             }
             DAO::transEnd();
             Logger::log("Precios guardados exitosamente");
@@ -1054,12 +1367,21 @@ require_once("interfaces/Precio.interface.php");
 	{  
             Logger::log("Registrando precios de los productos para el usuario ".$id_usuario);
             
+            //valida el arreglo de productos
+            $productos_precios_utilidad = object_to_array($productos_precios_utilidad);
+            
+            if(!is_array($productos_precios_utilidad))
+            {
+                Logger::error("Los productos son invalidos");
+                throw new Exception("Los productos son invalidos",901);
+            }
+            
             //valida al usuario obtendio
             $validar = self::validarUsuario($id_usuario);
             if(is_string($validar))
             {
                 Logger::error($validar);
-                throw new Exception($validar);
+                throw new Exception($validar,901);
             }
             
             //Se inicializa el registro y se guarda
@@ -1069,17 +1391,28 @@ require_once("interfaces/Precio.interface.php");
             {
                 foreach($productos_precios_utilidad as $producto_precio_utilidad)
                 {
+                    
+                    if
+                    (
+                            !array_key_exists("id_prodcto", $producto_precio_utilidad)      ||
+                            !array_key_exists("precio_utilidad", $producto_precio_utilidad) ||
+                            !array_key_exists("es_margen_utilidad", $producto_precio_utilidad)
+                    )
+                    {
+                        throw new Exception("Los productos no cuentan con los parametros requeridos",901);
+                    }
+                    
                     $validar = self::validarProducto($producto_precio_utilidad["id_producto"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $validar = self::validarPrecioUtilidad($producto_precio_utilidad["precio_utilidad"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $validar = self::validarEsMargenUtilidad($producto_precio_utilidad["es_margen_utilidad"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $precio_producto_usuario->setEsMargenUtilidad($producto_precio_utilidad["es_margen_utilidad"]);
                     $precio_producto_usuario->setIdProducto($producto_precio_utilidad["id_producto"]);
@@ -1091,7 +1424,9 @@ require_once("interfaces/Precio.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se han podido guardar todos los precios para el usuario ".$id_usuario." : ".$e);
-                throw new Exception("No se han podido guardar todos los precios para el usuario");
+                if($e->getCode()==901)
+                    throw new Exception("No se han podido guardar todos los precios para el usuario: ".$e->getMessage(),901);
+                throw new Exception("No se han podido guardar todos los precios para el usuario",901);
             }
             DAO::transEnd();
             Logger::log("Precios guardados exitosamente");
@@ -1114,6 +1449,9 @@ require_once("interfaces/Precio.interface.php");
          {
              Logger::log("Registrando precios de los paquetes para el rol ".$id_rol);
             
+             //valida que el paquete sea valido
+             
+             
             //valida al rol obtendio
             $validar = self::validarRol($id_rol);
             if(is_string($validar))
