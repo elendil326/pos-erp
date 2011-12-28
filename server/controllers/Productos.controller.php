@@ -826,21 +826,29 @@ NOTA: Se crea un producto tipo = 1 que es para productos
             {
                 //Se guarda el producto creado y se asignan las empresas, los impuestos y las clasificaciones recibidas
                 ProductoDAO::save($producto);
-//                if(!is_null($id_empresas))
-//                {
-//                    $producto_empresa = new ProductoEmpresa( array( "id_producto" => $producto->getIdProducto() ) );
-//                    foreach($id_empresas as $id_empresa)
-//                    {
-//                        $validar = self::validarParametrosProductoEmpresa($id_empresa["id_empresa"],$id_empresa["precio_utilidad"],$id_empresa["es_margen_utilidad"]);
-//                        if(is_string($validar))
-//                            throw new Exception($validar);
-//                        
-//                        $producto_empresa->setIdEmpresa($id_empresa["id_empresa"]);
-//                        $producto_empresa->setPrecioUtilidad($id_empresa["precio_utilidad"]);
-//                        $producto_empresa->setEsMargenUtilidad($id_empresa["es_margen_utilidad"]);
-//                        ProductoEmpresaDAO::save($producto_empresa);
-//                    }
-//                }/* Fin if de empresas */
+                if(!is_null($id_empresas))
+                {
+                    
+                    $id_empresas = object_to_array($id_empresas);
+                    
+                    if(!is_array($id_empresas))
+                    {
+                        throw new Exception("Las empresas fueron enviadas incorrectamente",901);
+                    }
+                    
+                    $producto_empresa = new ProductoEmpresa( array( "id_producto" => $producto->getIdProducto() ) );
+                    foreach($id_empresas as $id_empresa)
+                    {
+                        $validar = self::validarParametrosProductoEmpresa($id_empresa["id_empresa"],$id_empresa["precio_utilidad"],$id_empresa["es_margen_utilidad"]);
+                        if(is_string($validar))
+                            throw new Exception($validar);
+                        
+                        $producto_empresa->setIdEmpresa($id_empresa["id_empresa"]);
+                        $producto_empresa->setPrecioUtilidad($id_empresa["precio_utilidad"]);
+                        $producto_empresa->setEsMargenUtilidad($id_empresa["es_margen_utilidad"]);
+                        ProductoEmpresaDAO::save($producto_empresa);
+                    }
+                }/* Fin if de empresas */
                 if(!is_null($impuestos))
                 {
                     $impuesto_producto = new ImpuestoProducto( array( "id_producto" => $producto->getIdProducto() ) );
