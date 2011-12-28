@@ -296,6 +296,26 @@ require_once("interfaces/Empresas.interface.php");
                 Logger::error($validar);
                 throw new Exception($validar,901);
             }
+            
+            //Se valida el objeto sucursales
+            $sucursales = object_to_array($sucursales);
+            
+            if(!is_array($sucursales))
+            {
+                Logger::error("El parametro sucursales recibido es invalido");
+                throw new Exception("El parametro sucursales recibido es invalido",901);
+            }
+            
+            if
+            (
+                    !array_key_exists("id_sucursal", $sucursales)       ||
+                    !array_key_exists("margen_utilidad", $sucursales)   ||
+                    !array_key_exists("descuento", $sucursales)
+            )
+            {
+                Logger::error("El parametro sucursales recibido es invalido");
+                throw new Exception("El parametro sucursales recibido es invalido",901);
+            }
 
             //Se crea un registro de sucursal-empresa y se le asigna como empresa la obtenida.
             $sucursal_empresa=new SucursalEmpresa();
@@ -462,8 +482,16 @@ require_once("interfaces/Empresas.interface.php");
                  //se inicializa con el id de esta empresa.
                  //Por cada uno de los impuestos como id impuesto, se verifica que el 
                  //impuesto exista, se asigna al registro y se guarda.
-                 if($impuestos)
+                 if(!is_null($impuestos))
                  {
+                     
+                     $impuestos = object_to_array($impuestos);
+                     
+                     if(!is_array($impuestos))
+                     {
+                         throw new Exception("El parametro impuestos es invalido",901);
+                     }
+                     
                      $impuesto_empresa=new ImpuestoEmpresa(array("id_empresa" => $e->getIdEmpresa()));
                      foreach($impuestos as $id_impuesto)
                      {
@@ -481,8 +509,16 @@ require_once("interfaces/Empresas.interface.php");
                  //se inicializa con el id de esta empresa.
                  //Por cada uno de las retenciones como id retencion, se verifica que la 
                  //retencion exista, se asigna al registro y se guarda.
-                 if($retenciones)
+                 if(!is_null($retenciones))
                  {
+                     
+                     $retenciones = object_to_array($retenciones);
+                     
+                     if(!is_array($retenciones))
+                     {
+                         throw new Exception("El parametro retenciones es invalido",901);
+                     }
+                     
                      $retencion_empresa=new RetencionEmpresa(array("id_empresa" => $e->getIdEmpresa()));
                      foreach($retenciones as $id_retencion)
                      {
@@ -886,6 +922,14 @@ require_once("interfaces/Empresas.interface.php");
                 //Se eliminaran aquellos impuestos qe no esten en la lista recibida.
                 if(!is_null($impuestos))
                 {
+                    
+                    $impuestos = object_to_array($impuestos);
+                     
+                     if(!is_array($impuestos))
+                     {
+                         throw new Exception("El parametro impuestos es invalido",901);
+                     }
+                    
                     $impuesto_empresa=new ImpuestoEmpresa(array("id_empresa"=>$id_empresa));
                     $impuestos_empresa=ImpuestoEmpresaDAO::search($impuesto_empresa);
                     
@@ -924,6 +968,14 @@ require_once("interfaces/Empresas.interface.php");
                 //Se eliminaran aquellas retenciones que no esten en la lista recibida.
                 if(!is_null($retenciones))
                 {
+                    
+                    $retenciones = object_to_array($retenciones);
+                     
+                     if(!is_array($retenciones))
+                     {
+                         throw new Exception("El parametro retenciones es invalido",901);
+                     }
+                    
                     $retencion_empresa=new RetencionEmpresa(array("id_empresa"=>$id_empresa));
                     $retenciones_empresa=RetencionEmpresaDAO::search($retencion_empresa);
                     
