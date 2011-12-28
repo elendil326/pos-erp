@@ -24,7 +24,7 @@
   
 	/**
  	 *
- 	 *Muestra los productos y/o servicios englobados en este paquete as?omo las sucursales y las empresas donde lo ofrecen
+ 	 *Muestra los productos y/o servicios englobados en este paquete as? como las sucursales y las empresas donde lo ofrecen
  	 *
  	 * @param id_paquete int Id del paquete a visualizar sus detalles
  	 * @return detalle_paquete json Informacion del detalle del paquete

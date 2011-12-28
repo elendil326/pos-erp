@@ -36,6 +36,10 @@
                 
                 $form->createComboBoxJoin("id_unidad", "nombre", UnidadDAO::search(new Unidad( array( "activa" => 1 ) )), $este_producto->getIdUnidad() );
                 
+                $form->createComboBoxJoin( "metodo_costeo", "metodo_costeo", array( "precio" , "margen" ), $este_producto->getMetodoCosteo());
+                $form->createComboBoxJoin( "compra_en_mostrador", "compra_en_mostrador", array( array( "id" => 1 , "caption" => "si" ), 
+                                            array( "id" => 0 , "caption" => "no" ) ), $este_producto->getCompraEnMostrador() );
+                
 		$page->addComponent( $form );
                 
 		$page->render();

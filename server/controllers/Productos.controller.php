@@ -784,6 +784,22 @@ NOTA: Se crea un producto tipo = 1 que es para productos
             }
             if(is_null($descuento))
                 $descuento = 0;
+            
+            //Se verifica que si se recibio precio como metodo de costeo, se reciba un precio,
+            //o si se recibe margen, que se reciba un margen de utilidad.
+            
+            if( $metodo_costeo == "precio" && is_null($precio) )
+            {
+                Logger::error("Se intenta registrar un producto con metodo de costeo precio sin especificar un precio");
+                throw new Exception("Se intenta registrar un producto con metodo de costeo precio sin especificar un precio",901);
+            }
+            
+            else if( $metodo_costeo == "margen" && is_null($margen_de_utilidad))
+            {
+                Logger::error("Se intenta registrar un producto con metodo de costeo margen de utilidad sin especificar un margen");
+                throw new Exception("Se intenta registrar un producto con metodo de costeo margen de utilidad sin especificar un margen",901);
+            }
+            
             $producto = new Producto( array( 
                                     "compra_en_mostrador"   => $compra_en_mostrador,
                                     "metodo_costeo"         => $metodo_costeo,
@@ -1121,6 +1137,18 @@ NOTA: Se crea un producto tipo = 1 que es para productos
                 $producto->setPrecio($precio);
             }
             
+            if( $metodo_costeo == "precio" && is_null($producto->getPrecio()) )
+            {
+                Logger::error("Se intenta registrar un producto con metodo de costeo precio sin especificar un precio");
+                throw new Exception("Se intenta registrar un producto con metodo de costeo precio sin especificar un precio",901);
+            }
+            
+            else if( $metodo_costeo == "margen" && is_null($producto->getMargenDeUtilidad()))
+            {
+                Logger::error("Se intenta registrar un producto con metodo de costeo margen de utilidad sin especificar un margen");
+                throw new Exception("Se intenta registrar un producto con metodo de costeo margen de utilidad sin especificar un margen",901);
+            }
+            
             DAO::transBegin();
             try
             {
@@ -1241,12 +1269,12 @@ NOTA: Se crea un producto tipo = 1 que es para productos
 	public static function NuevaCategoria
 	(
 		$nombre, 
-		$retenciones = null, 
-		$impuestos = null, 
+		$descripcion = null, 
 		$descuento = null, 
-		$margen_utilidad = null, 
 		$garantia = null, 
-		$descripcion = null
+		$impuestos = null, 
+		$margen_utilidad = null, 
+		$retenciones = null
 	)
 	{  
             Logger::log("Creando nueva categoria");
@@ -1331,11 +1359,11 @@ NOTA: Se crea un producto tipo = 1 que es para productos
 	(
 		$id_categoria, 
 		$nombre, 
-		$garantia = null, 
-		$descuento = null, 
-		$margen_utilidad = null, 
 		$descripcion = null, 
+		$descuento = null, 
+		$garantia = null, 
 		$impuestos = null, 
+		$margen_utilidad = null, 
 		$retenciones = null
 	)
 	{  
@@ -1543,8 +1571,8 @@ Ejemplo: 1 kg = 2.204 lb
  	 **/
 	public static function Eliminar_equivalenciaUnidad
 	(
-		$id_unidades, 
-		$id_unidad
+		$id_unidad, 
+		$id_unidades
 	)
 	{  
             Logger::log("Eliminando equivalencia entre la unidad ".$id_unidad." y las unidades ".$id_unidades);
@@ -1610,8 +1638,8 @@ Ejemplo: 1 kg = 2.204 lb
  	 **/
 	public static function NuevaUnidad
 	(
-		$nombre,
-                $es_entero,
+		$es_entero, 
+		$nombre, 
 		$descripcion = null
 	)
 	{  
@@ -1660,8 +1688,8 @@ Ejemplo: 1 kg = 2.204 lb
 	(
 		$id_unidad, 
 		$descripcion = null, 
-		$nombre = null,
-                $es_entero = null
+		$es_entero = null, 
+		$nombre = null
 	)
 	{  
             Logger::log("Editando unidad ".$id_unidad);

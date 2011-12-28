@@ -109,7 +109,7 @@
   
 	/**
  	 *
- 	 *Edita la informaci?e un producto
+ 	 *Edita la informaci?n de un producto
  	 *
  	 * @param id_producto int Id del producto a editar
  	 * @param clasificaciones json Uno o varios id_clasificacion de este producto, esta clasificacion esta dada por el usuarioArray
