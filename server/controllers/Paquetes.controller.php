@@ -334,6 +334,7 @@ require_once("interfaces/Paquetes.interface.php");
             
             if(!is_array($empresas))
             {
+                Logger::error("Las empresas son invalidas");
                 throw new Exception("Las empresas son invalidas",901);
             }
             
@@ -342,6 +343,7 @@ require_once("interfaces/Paquetes.interface.php");
             
             if(!is_array($sucursales))
             {
+                Logger::error("Las sucursales son invalidas");
                 throw new Exception("Las sucursales son invalidas",901);
             }
             

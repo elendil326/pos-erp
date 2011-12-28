@@ -668,24 +668,42 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
                 ClasificacionClienteDAO::save($clasificacion_cliente);
                 if(!is_null($impuestos))
                 {
+                    
+                    $impuestos = object_to_array($impuestos);
+                    
+                    if(!is_array($impuestos))
+                    {
+                        throw new Exception("Los impuestos son invalidos",901);
+                    }
+                    
                     $impuesto_clasificacion_cliente = new ImpuestoClasificacionCliente(
                             array( "id_clasificacion_cliente" => $clasificacion_cliente->getIdClasificacionCliente() ));
                     foreach ($impuestos as $impuesto)
                     {
                         if(is_null(ImpuestoDAO::getByPK($impuesto)))
                                 throw new Exception ("El impuesto ".$impuesto." no existe",901);
+                        
                         $impuesto_clasificacion_cliente->setIdImpuesto($impuesto);
                         ImpuestoClasificacionClienteDAO::save($impuesto_clasificacion_cliente);
                     }
                 }/* Fin if de impuestos */
                 if(!is_null($retenciones))
                 {
+                    
+                    $retenciones = object_to_array($retenciones);
+                    
+                    if(!is_array($retenciones))
+                    {
+                        throw new Exception("Las retenciones son invalidas",901);
+                    }
+                    
                     $retencion_clasificacion_cliente = new RetencionClasificacionCliente(
                             array ( "id_clasificacion_cliente" => $clasificacion_cliente->getIdClasificacionCliente() ) );
                     foreach( $retenciones as $retencion )
                     {
                         if(is_null(RetencionDAO::getByPK($retencion)))
                                 throw new Exception("La retencion ".$retencion." no existe",901);
+                        
                         $retencion_clasificacion_cliente->setIdRetencion($retencion);
                         RetencionClasificacionClienteDAO::save($retencion_clasificacion_cliente);
                     }
@@ -696,8 +714,8 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
                 DAO::transRollback();
                 Logger::error("No se pudo crear la nueva clasificacion de cliente: ".$e);
                 if($e->getCode()==901)
-                    throw new Exception("No se pudo crear la nueva clasificacion de cliente: ".$e->getMessage());
-                throw new Exception("No se pudo crear la nueva clasificacion de cliente, consulte a su administrador de sistema");
+                    throw new Exception("No se pudo crear la nueva clasificacion de cliente: ".$e->getMessage(),901);
+                throw new Exception("No se pudo crear la nueva clasificacion de cliente, consulte a su administrador de sistema",901);
             }
             DAO::transEnd();
             Logger::log("Clasificacion de cliente creada exitosamente");
@@ -808,12 +826,21 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
                 ClasificacionClienteDAO::save($clasificacion_cliente);
                 if(!is_null($impuestos))
                 {
+                    
+                    $impuestos = object_to_array($impuestos);
+                    
+                    if(!is_array($impuestos))
+                    {
+                        throw new Exception("Los impuestos son invalidos",901);
+                    }
+                    
                     $impuesto_clasificacion_cliente = new ImpuestoClasificacionCliente(
                             array( "id_clasificacion_cliente" => $clasificacion_cliente->getIdClasificacionCliente() ));
                     foreach ($impuestos as $impuesto)
                     {
                         if(is_null(ImpuestoDAO::getByPK($impuesto)))
                                 throw new Exception ("El impuesto ".$impuesto." no existe",901);
+                        
                         $impuesto_clasificacion_cliente->setIdImpuesto($impuesto);
                         ImpuestoClasificacionClienteDAO::save($impuesto_clasificacion_cliente);
                     }
@@ -834,12 +861,21 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
                 }/* Fin if de impuestos */
                 if(!is_null($retenciones))
                 {
+                    
+                     $retenciones = object_to_array($retenciones);
+                    
+                    if(!is_array($retenciones))
+                    {
+                        throw new Exception("Las retenciones son invalidas",901);
+                    }
+                    
                     $retencion_clasificacion_cliente = new RetencionClasificacionCliente(
                             array ( "id_clasificacion_cliente" => $clasificacion_cliente->getIdClasificacionCliente() ) );
                     foreach( $retenciones as $retencion )
                     {
                         if(is_null(RetencionDAO::getByPK($retencion)))
                                 throw new Exception("La retencion ".$retencion." no existe",901);
+                        
                         $retencion_clasificacion_cliente->setIdRetencion($retencion);
                         RetencionClasificacionClienteDAO::save($retencion_clasificacion_cliente);
                     }
