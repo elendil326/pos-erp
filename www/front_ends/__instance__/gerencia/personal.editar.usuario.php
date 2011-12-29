@@ -42,6 +42,8 @@
 			 ));
                 $form->sendHidden("id_usuario");
                 
+                $form->setValueField("password", "");
+                
                 $form->addApiCall( "api/personal/usuario/editar/" );
                 $form->onApiCallSuccessRedirect("personal.lista.usuario.php");
                 
