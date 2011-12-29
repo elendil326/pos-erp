@@ -25,33 +25,35 @@
 		//
 		// Menu de opciones
 		// 
-		$menu = new MenuComponent();
-		$menu->addItem("Editar esta clasificacion de servicio", "servicios.editar.clasificacion.php?cid=".$_GET["cid"]);
-		//$menu->addItem("Desactivar este producto", null);
-                
-                $btn_eliminar = new MenuItem("Desactivar esta clasificacion", null);
-                $btn_eliminar->addApiCall("api/servicios/clasificacion/eliminar/", "GET");
-                $btn_eliminar->onApiCallSuccessRedirect("servicios.lista.clasificacion.php");
-                $btn_eliminar->addName("eliminar");
-                
-                $funcion_eliminar = " function eliminar_clasificacion(btn){".
-                            "if(btn == 'yes')".
-                            "{".
-                                "var p = {};".
-                                "p.id_clasificacion_servicio = ".$_GET["cid"].";".
-                                "sendToApi_eliminar(p);".
+                if($esta_clasificacion->getActiva())
+                {
+                    $menu = new MenuComponent();
+                    $menu->addItem("Editar esta clasificacion de servicio", "servicios.editar.clasificacion.php?cid=".$_GET["cid"]);
+
+                    $btn_eliminar = new MenuItem("Desactivar esta clasificacion", null);
+                    $btn_eliminar->addApiCall("api/servicios/clasificacion/eliminar/", "GET");
+                    $btn_eliminar->onApiCallSuccessRedirect("servicios.lista.clasificacion.php");
+                    $btn_eliminar->addName("eliminar");
+
+                    $funcion_eliminar = " function eliminar_clasificacion(btn){".
+                                "if(btn == 'yes')".
+                                "{".
+                                    "var p = {};".
+                                    "p.id_clasificacion_servicio = ".$_GET["cid"].";".
+                                    "sendToApi_eliminar(p);".
+                                "}".
                             "}".
-                        "}".
-                        "      ".
-                        "function confirmar(){".
-                        " Ext.MessageBox.confirm('Desactivar', 'Desea eliminar esta clasificacion?', eliminar_clasificacion );".
-                        "}";
-                
-                $btn_eliminar->addOnClick("confirmar", $funcion_eliminar);
-                
-                $menu->addMenuItem($btn_eliminar);
-                
-		$page->addComponent( $menu);
+                            "      ".
+                            "function confirmar(){".
+                            " Ext.MessageBox.confirm('Desactivar', 'Desea eliminar esta clasificacion?', eliminar_clasificacion );".
+                            "}";
+
+                    $btn_eliminar->addOnClick("confirmar", $funcion_eliminar);
+
+                    $menu->addMenuItem($btn_eliminar);
+
+                    $page->addComponent( $menu);
+                }
 		
 		//
 		// Forma de producto

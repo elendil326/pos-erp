@@ -1212,8 +1212,7 @@ require_once("interfaces/Sucursales.interface.php");
             //Se busca al usuario comprador
             $usuario=UsuarioDAO::getByPK($id_comprador);
             
-            //Si no se recibe una sucursal, se toma la de la sesion
-            if(is_null($id_sucursal))
+            if(!is_null($id_sucursal))
             {
                 $sucursal = SucursalDAO::getByPK($id_sucursal); 
                 if(is_null( $sucursal
@@ -1229,7 +1228,7 @@ require_once("interfaces/Sucursales.interface.php");
                     throw new Exception("La sucursal esta desactivada",901);
                 }
                 
-                //Si la venta que se realiza es de otra sucursal, o no se tiene que recibir una caja, o la caja que se reciba
+                //Si la venta que se realiza es de otra sucursal, entonces no se tiene que recibir una caja, o la caja que se reciba
                 //tiene que ser parte de la sucursal
                 if(!is_null($id_caja))
                 {
@@ -1246,6 +1245,11 @@ require_once("interfaces/Sucursales.interface.php");
                         throw new Exception("La caja recibida para realizar la venta no pertenece a la sucursal elegida ",901);
                     }
                 }
+            }
+            
+            //Si no se recibe una sucursal, se toma la de la sesion
+            if(is_null($id_sucursal))
+            {
                 $id_sucursal = self::getSucursal();
             }
             
@@ -1468,7 +1472,7 @@ require_once("interfaces/Sucursales.interface.php");
                     
                     if(!is_array($detalle_orden))
                     {
-                        throw new Exception("El detalle de la orden es invalido");
+                        throw new Exception("El detalle de la orden es invalido",901);
                     }
                     
                     $d_orden = new VentaOrden();
@@ -1485,7 +1489,7 @@ require_once("interfaces/Sucursales.interface.php");
                                 !array_key_exists("retencion",$d_p)                 
                         )
                         {
-                            throw new Exception("El detalle de la orden es invalido");
+                            throw new Exception("El detalle de la orden es invalido",901);
                         }
                         
                         $validar = self::validarParametrosVentaOrden(null,$d_p["id_orden_de_servicio"],$d_p["precio"],$d_p["descuento"],$d_p["impuesto"],$d_p["retencion"]);

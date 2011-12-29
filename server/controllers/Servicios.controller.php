@@ -169,7 +169,17 @@ require_once("interfaces/Servicios.interface.php");
                 $e = self::validarString($nombre, 50, "nombre");
                 if(is_string($e))
                     return $e;
-                $clasificaciones_servicio = ClasificacionServicioDAO::search( new ClasificacionServicio( array("nombre" => trim($nombre)) ) );
+                
+                if(!is_null($id_clasificacion_servicio))
+                {
+                    $clasificaciones_servicio = array_diff(ClasificacionServicioDAO::search( 
+                            new ClasificacionServicio( array("nombre" => trim($nombre)) ) ), 
+                            array(ClasificacionServicioDAO::getByPK($id_clasificacion_servicio)));
+                }
+                else
+                {
+                    $clasificaciones_servicio = ClasificacionServicioDAO::search( new ClasificacionServicio( array("nombre" => trim($nombre)) ) );
+                }
                 foreach($clasificaciones_servicio as $clasificacion_servicio)
                 {
                     if($clasificacion_servicio->getActiva())
@@ -337,7 +347,16 @@ require_once("interfaces/Servicios.interface.php");
                 $e = self::validarString($nombre_servicio, 50, "nombre de servicio");
                 if(is_string($e))
                     return $e;
-                $servicios = ServicioDAO::search( new Servicio( array( "nombre_servicio" => trim($nombre_servicio) ) ) );
+                
+                if(!is_null($id_servicio))
+                {
+                    $servicios = array_diff(ServicioDAO::search( 
+                            new Servicio( array( "nombre_servicio" => trim($nombre_servicio) ) ) ), array(ServicioDAO::getByPK($id_servicio) ));
+                }
+                else
+                {
+                    $servicios = ServicioDAO::search( new Servicio( array( "nombre_servicio" => trim($nombre_servicio) ) ) );
+                }
                 foreach($servicios as $servicio)
                 {
                     if($servicio->getActivo())
@@ -358,7 +377,15 @@ require_once("interfaces/Servicios.interface.php");
                 $e = self::validarString($codigo_servicio, 20, "codigo de servicio");
                 if(is_string($e))
                     return $e;
-                $servicios = ServicioDAO::search( new Servicio( array( "codigo_servicio" => $codigo_servicio ) ) );
+                
+                if(!is_null($id_servicio))
+                {
+                    $servicios = array_diff(ServicioDAO::search( new Servicio( array( "codigo_servicio" => $codigo_servicio ) ) ), array(ServicioDAO::getByPK($id_servicio) ) );
+                }
+                else
+                {
+                    $servicios = ServicioDAO::search( new Servicio( array( "codigo_servicio" => $codigo_servicio ) ) );
+                }
                 foreach($servicios as $servicio)
                 {
                     if($servicio->getActivo())
@@ -1755,7 +1782,7 @@ require_once("interfaces/Servicios.interface.php");
             $margen = 0;
             
             //Se verifica si existe un precio especial para este usuario con este servicio, o para el tipo de usuario.
-            $precio_servicio = PrecioServicioUsuarioDAO::getByPK($id_servicio, $id_ciente);
+            $precio_servicio = PrecioServicioUsuarioDAO::getByPK($id_servicio, $id_cliente);
             
             if(is_null($precio_servicio))
             {
@@ -1883,7 +1910,7 @@ require_once("interfaces/Servicios.interface.php");
             }
             
             //Se validan los parametros recibidos
-            $validar = self::validarParametrosSeguimiento(null, $id_orden_de_servicio, $id_localizacion, $estado);
+            $validar = self::validarParametrosSeguimiento(null, $id_orden_de_servicio, $id_localizacion, $nota);
             if(is_string($validar))
             {
                 Logger::error($validar);
@@ -1894,7 +1921,7 @@ require_once("interfaces/Servicios.interface.php");
             
                                                                         "id_localizacion"       => $id_localizacion,
                                                                         "id_orden_de_servicio"  => $id_orden_de_servicio,
-                                                                        "estado"                => $estado,
+                                                                        "estado"                => $nota,
                                                                         "id_usuario"            => $id_usuario,
                                                                         "id_sucursal"           => $id_sucural,
                                                                         "fecha_seguimiento"     => date("Y-m-d H:i:s")
@@ -1955,6 +1982,10 @@ require_once("interfaces/Servicios.interface.php");
                     Logger::error($validar);
                     throw new Exception($validar,901);
                 }
+            }
+            else
+            {
+                $descuento = 0;
             }
             
             //valida el parametro saldo

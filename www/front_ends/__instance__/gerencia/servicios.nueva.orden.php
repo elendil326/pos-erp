@@ -33,6 +33,7 @@
 		));
 	
 	$form->addApiCall( "api/servicios/orden/nueva/" );
+        $form->onApiCallSuccessRedirect("servicios.lista.orden.php");
 	
 	$form->makeObligatory(array( 
 			"id_cliente",

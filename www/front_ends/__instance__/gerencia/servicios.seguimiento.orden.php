@@ -43,12 +43,15 @@
 
 		$form->sendHidden( "id_orden_de_servicio" );
         
-		$form->addApiCall( "api/servicios/orden/seguimiento/", "GET" );
+		$form->addApiCall( "api/servicios/orden/seguimiento/" );
+                $form->onApiCallSuccessRedirect("servicios.detalle.orden.php?oid=".$_GET["oid"]);
+                
+                $form->renameField( array( "estado" => "nota" ) );
 
                 
-        //$form->createComboBoxJoin( "id_orden_de_servicio", "id_orden_de_servicio", OrdenDeServicioDAO::getAll(), $esta_orden->getIdOrdenDeServicio() );
+        
                 
-        $form->createComboBoxJoinDistintName( "id_localizacion", "id_sucursal" , "razon_social", SucursalDAO::search(new Sucursal( array( "activa" => 1 ) )) );
+                $form->createComboBoxJoinDistintName( "id_localizacion", "id_sucursal" , "razon_social", SucursalDAO::search(new Sucursal( array( "activa" => 1 ) )) );
 
 		$page->addComponent( $form );
                 

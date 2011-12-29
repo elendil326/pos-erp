@@ -17,6 +17,7 @@
 		 ));
 
 	$form->addApiCall( "api/servicios/clasificacion/nueva/", "GET" );
+        $form->onApiCallSuccessRedirect("servicios.lista.clasificacion.php");
 	
 	$form->makeObligatory(array( 
 			"nombre"
