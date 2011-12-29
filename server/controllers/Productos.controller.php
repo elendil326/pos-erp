@@ -78,7 +78,14 @@ require_once("interfaces/Productos.interface.php");
                 $e = self::validarString($nombre, 100, "nombre");
                 if(is_string($e))
                     return $e;
-                $unidades = UnidadDAO::search(new Unidad( array( "nombre" => trim($nombre) ) ));
+                if(!is_null($id_unidad))
+                {
+                    $unidades = array_diff(UnidadDAO::search(new Unidad( array( "nombre" => trim($nombre) ) )), array(UnidadDAO::getByPK($id_unidad)) );
+                }
+                else
+                {
+                    $unidades = UnidadDAO::search(new Unidad( array( "nombre" => trim($nombre) ) ));
+                }
                 foreach($unidades as $unidad)
                 {
                     if($unidad->getActiva())
@@ -399,7 +406,17 @@ require_once("interfaces/Productos.interface.php");
                 $e = self::validarString($nombre, 64, "nombre");
                 if(is_string($e))
                     return $e;
-                $clasificaciones_producto = ClasificacionProductoDAO::search( new ClasificacionProducto( array("nombre" => trim($nombre)) ) );
+                
+                if(!is_null($id_clasificacion_producto))
+                {
+                    $clasificaciones_producto = array_diff(ClasificacionProductoDAO::search( 
+                            new ClasificacionProducto( array("nombre" => trim($nombre)) ) ), 
+                            array( ClasificacionProductoDAO::getByPK($id_clasificacion_producto) ) );
+                }
+                else
+                {
+                    $clasificaciones_producto = ClasificacionProductoDAO::search( new ClasificacionProducto( array("nombre" => trim($nombre)) ) );
+                }
                 foreach($clasificaciones_producto as $c_p)
                 {
                     if($c_p->getActiva())

@@ -19,13 +19,9 @@
                         "activa"
 		 ));
 
-//
-//	$form->renameField( array( 
-//			"nombre" 			=> "razon_social",
-//			"codigo_usuario"	=> "codigo_cliente"
-//		));
 	
 	$form->addApiCall( "api/producto/categoria/nueva/" , "GET");
+        $form->onApiCallSuccessRedirect("productos.lista.categoria.php");
 	
 	$form->makeObligatory(array( 
 			"nombre"
