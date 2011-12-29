@@ -640,6 +640,7 @@ require_once("interfaces/Proveedores.interface.php");
 		$calle = null, 
 		$codigo_postal = null, 
 		$codigo_proveedor = null, 
+		$colonia = null, 
 		$cuenta_bancaria = null, 
 		$dias_de_credito = null, 
 		$dias_embarque = null, 

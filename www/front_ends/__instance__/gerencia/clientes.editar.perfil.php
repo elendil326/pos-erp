@@ -56,10 +56,13 @@
         $form->renameField(array("id_usuario"=>"id_cliente"));
 	$form->sendHidden("id_cliente");
         
+        $form->setValueField("password", "");
+        
         $form->createComboBoxJoin( "id_moneda", "nombre", MonedaDAO::search( new Moneda(array("activa" => 1)) ), $este_cliente->getIdMoneda() );
         $form->createComboBoxJoin( "id_clasificacion_cliente", "nombre", ClasificacionClienteDAO::getAll( ), $este_cliente->getIdClasificacionCliente() );
 	
 	$form->addApiCall( "api/cliente/editar_perfil/" );
+        $form->onApiCallSuccessRedirect("clientes.lista.php");
 	
 	
 	$form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll( ), $esta_direccion->getIdCiudad() );

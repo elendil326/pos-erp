@@ -54,16 +54,12 @@
         
         $form->createComboBoxJoin( "id_moneda", "nombre", MonedaDAO::search( new Moneda(array("activa" => 1)) ), $este_proveedor->getIdMoneda() );
         $form->createComboBoxJoin( "id_clasificacion_proveedor", "nombre", ClasificacionProveedorDAO::getAll( ), $este_proveedor->getIdClasificacionProveedor() );
-        //$form->createComboBoxJoin( "id_sucursal", "razon_social", SucursalDAO::search( new Sucursal(array("activa" => 1)) ), $este_cliente->getIdSucursal() );
+        
+        $form->setValueField("password", "");
 	
-	$form->addApiCall( "api/cliente/editar/" );
+	$form->addApiCall( "api/proveedor/editar/" , "GET");
+        $form->onApiCallSuccessRedirect("proveedores.lista.php");
 	
-//	$form->makeObligatory(array( 
-//			"password",
-//			"clasificacion_cliente",
-//			"codigo_cliente",
-//			"razon_social"
-//		));
 	
 	$form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll( ), $esta_direccion->getIdCiudad() );
         
@@ -73,8 +69,11 @@
                         "correo_electronico"    => "email",
                         "id_clasificacion_proveedor"  => "id_tipo_proveedor",
                         "pagina_web"    => "direccion_web",
-                        "referencia"    => "texto_extra"
+                        "referencia"    => "texto_extra",
+                        "id_usuario"    => "id_proveedor"
 		));
+        
+        $form->sendHidden("id_proveedor");
 	
 	$page->addComponent( $form );
 

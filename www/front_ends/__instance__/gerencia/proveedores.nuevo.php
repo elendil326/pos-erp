@@ -60,6 +60,7 @@
 		));
 	
 	$form->addApiCall( "api/proveedor/nuevo/", "GET" );
+        $form->onApiCallSuccessRedirect("proveedores.lista.php");
 	
 	$form->makeObligatory(array( 
 			"nombre",

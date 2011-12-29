@@ -28,33 +28,36 @@
 		//
 		// Menu de opciones
 		// 
-		$menu = new MenuComponent();
-                
-                $menu->addItem("Editar este proveedor", "proveedores.editar.php?pid=".$_GET["pid"]);
-                
-                $btn_eliminar = new MenuItem("Desactivar este proveedor", null);
-                $btn_eliminar->addApiCall("api/proveedor/eliminar", "GET");
-                $btn_eliminar->onApiCallSuccessRedirect("proveedores.lista.php");
-                $btn_eliminar->addName("eliminar");
-                
-                $funcion_eliminar = " function eliminar_proveedor(btn){".
-                            "if(btn == 'yes')".
-                            "{".
-                                "var p = {};".
-                                "p.id_proveedor = ".$_GET["pid"].";".
-                                "sendToApi_eliminar(p);".
+                if($este_usuario->getActivo())
+                {
+                    $menu = new MenuComponent();
+
+                    $menu->addItem("Editar este proveedor", "proveedores.editar.php?pid=".$_GET["pid"]);
+
+                    $btn_eliminar = new MenuItem("Desactivar este proveedor", null);
+                    $btn_eliminar->addApiCall("api/proveedor/eliminar", "GET");
+                    $btn_eliminar->onApiCallSuccessRedirect("proveedores.lista.php");
+                    $btn_eliminar->addName("eliminar");
+
+                    $funcion_eliminar = " function eliminar_proveedor(btn){".
+                                "if(btn == 'yes')".
+                                "{".
+                                    "var p = {};".
+                                    "p.id_proveedor = ".$_GET["pid"].";".
+                                    "sendToApi_eliminar(p);".
+                                "}".
                             "}".
-                        "}".
-                        "      ".
-                        "function confirmar(){".
-                        " Ext.MessageBox.confirm('Desactivar', 'Desea eliminar este proveedor?', eliminar_proveedor );".
-                        "}";
-                
-                $btn_eliminar->addOnClick("confirmar", $funcion_eliminar);
-                
-                $menu->addMenuItem($btn_eliminar);
-                
-		$page->addComponent( $menu);
+                            "      ".
+                            "function confirmar(){".
+                            " Ext.MessageBox.confirm('Desactivar', 'Desea eliminar este proveedor?', eliminar_proveedor );".
+                            "}";
+
+                    $btn_eliminar->addOnClick("confirmar", $funcion_eliminar);
+
+                    $menu->addMenuItem($btn_eliminar);
+
+                    $page->addComponent( $menu);
+                }
 		
 		//
 		// Forma de producto

@@ -91,6 +91,7 @@
  	 * @param calle string Calle de la direccion del proveedor
  	 * @param codigo_postal string Codigo postal de la direccion del proveedor
  	 * @param codigo_proveedor string Codigo con el que se peude identificar al proveedor
+ 	 * @param colonia string La colonia del proveedor
  	 * @param cuenta_bancaria string Cuenta bancaria del proveedor a la cual se le deposita
  	 * @param dias_de_credito int Dias de credito que otorga el proveedor
  	 * @param dias_embarque int Dias en que el proveedor embarca ( Lunes, Martes, Miercoles, Jueves..)
@@ -121,6 +122,7 @@
 		$calle = null, 
 		$codigo_postal = null, 
 		$codigo_proveedor = null, 
+		$colonia = null, 
 		$cuenta_bancaria = null, 
 		$dias_de_credito = null, 
 		$dias_embarque = null, 

@@ -58,6 +58,7 @@
 		));
 	
 	$form->addApiCall( "api/cliente/nuevo/" );
+        $form->onApiCallSuccessRedirect("clientes.lista.php");
 	
 	$form->makeObligatory(array( 
 			"password",
