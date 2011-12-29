@@ -157,12 +157,12 @@
  	 *Edita la relacion de precio de uno o varios productos con un rol
  	 *
  	 * @param id_rol int Id del rol al que se le asignara el precio preferencial
- 	 * @param productos_precios_utlidad json Arreglo de objetos que contendran un id producto con un precio o margen de utilidad con el que se vendera este producto
+ 	 * @param productos_precios_utilidad json Arreglo de objetos que contendran un id producto con un precio o margen de utilidad con el que se vendera este producto
  	 **/
   static function Editar_precio_rolProducto
 	(
 		$id_rol, 
-		$productos_precios_utlidad
+		$productos_precios_utilidad
 	);  
   
   
