@@ -1450,7 +1450,13 @@ require_once("interfaces/Precio.interface.php");
              Logger::log("Registrando precios de los paquetes para el rol ".$id_rol);
             
              //valida que el paquete sea valido
+             $paquetes_precios_utilidad = object_to_array($paquetes_precios_utilidad);
              
+             if(!is_array($paquetes_precios_utilidad))
+             {
+                 Logger::error("Los paquetes son invalidos",901);
+                 throw new Exception("Los paquetes son invalidos",901);
+             }
              
             //valida al rol obtendio
             $validar = self::validarRol($id_rol);
@@ -1467,17 +1473,28 @@ require_once("interfaces/Precio.interface.php");
             {
                 foreach($paquetes_precios_utilidad as $paquete_precio_utilidad)
                 {
+                    
+                    if
+                    (
+                            !array_key_exists("id_paquete", $paquete_precio_utilidad)         ||
+                            !array_key_exists("precio_utilidad", $paquete_precio_utilidad)    ||
+                            !array_key_exists("es_margen_utilidad", $paquete_precio_utilidad)
+                    )
+                    {
+                        throw new Exception("Los paquetes no cuentan con los parametros requeridos",901);
+                    }
+                    
                     $validar = self::validarPaquete($paquete_precio_utilidad["id_paquete"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $validar = self::validarPrecioUtilidad($paquete_precio_utilidad["precio_utilidad"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $validar = self::validarEsMargenUtilidad($paquete_precio_utilidad["es_margen_utilidad"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $precio_paquete_rol->setEsMargenUtilidad($paquete_precio_utilidad["es_margen_utilidad"]);
                     $precio_paquete_rol->setIdPaquete($paquete_precio_utilidad["id_paquete"]);
@@ -1489,7 +1506,9 @@ require_once("interfaces/Precio.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se han podido guardar todos los precios para el rol ".$id_rol." : ".$e);
-                throw new Exception("No se han podido guardar todos los precios para el rol");
+                if($e->getCode()==901)
+                    throw new Exception("No se han podido guardar todos los precios para el rol: ".$e->getMessage(),901);
+                throw new Exception("No se han podido guardar todos los precios para el rol",901);
             }
             DAO::transEnd();
             Logger::log("Precios guardados exitosamente");
@@ -1513,6 +1532,12 @@ require_once("interfaces/Precio.interface.php");
          {
              Logger::log("Registrando precios de los paquetes para el tipo_cliente ".$id_tipo_cliente);
             
+             if(!is_array($paquetes_precios_utilidad))
+             {
+                 Logger::error("Los paquetes son invalidos",901);
+                 throw new Exception("Los paquetes son invalidos",901);
+             }
+             
             //valida al tipo_cliente obtendio
             $validar = self::validarClasificacionCliente($id_tipo_cliente);
             if(is_string($validar))
@@ -1528,17 +1553,28 @@ require_once("interfaces/Precio.interface.php");
             {
                 foreach($paquetes_precios_utilidad as $paquete_precio_utilidad)
                 {
+                    
+                    if
+                    (
+                            !array_key_exists("id_paquete", $paquete_precio_utilidad)         ||
+                            !array_key_exists("precio_utilidad", $paquete_precio_utilidad)    ||
+                            !array_key_exists("es_margen_utilidad", $paquete_precio_utilidad)
+                    )
+                    {
+                        throw new Exception("Los paquetes no cuentan con los parametros requeridos",901);
+                    }
+                    
                     $validar = self::validarPaquete($paquete_precio_utilidad["id_paquete"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $validar = self::validarPrecioUtilidad($paquete_precio_utilidad["precio_utilidad"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $validar = self::validarEsMargenUtilidad($paquete_precio_utilidad["es_margen_utilidad"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $precio_paquete_tipo_cliente->setEsMargenUtilidad($paquete_precio_utilidad["es_margen_utilidad"]);
                     $precio_paquete_tipo_cliente->setIdPaquete($paquete_precio_utilidad["id_paquete"]);
@@ -1550,7 +1586,9 @@ require_once("interfaces/Precio.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se han podido guardar todos los precios para el tipo_cliente ".$id_tipo_cliente." : ".$e);
-                throw new Exception("No se han podido guardar todos los precios para el tipo_cliente");
+                if($e->getCode()==901)
+                    throw new Exception("No se han podido guardar todos los precios para el tipo_cliente: ".$e->getMessage (),901);
+                throw new Exception("No se han podido guardar todos los precios para el tipo_cliente",901);
             }
             DAO::transEnd();
             Logger::log("Precios guardados exitosamente");
@@ -1574,6 +1612,12 @@ require_once("interfaces/Precio.interface.php");
          {
              Logger::log("Registrando precios de los paquetes para el usuario ".$id_usuario);
             
+             if(!is_array($paquetes_precios_utilidad))
+             {
+                 Logger::error("Los paquetes son invalidos",901);
+                 throw new Exception("Los paquetes son invalidos",901);
+             }
+             
             //valida al usuario obtendio
             $validar = self::validarUsuario($id_usuario);
             if(is_string($validar))
@@ -1589,17 +1633,28 @@ require_once("interfaces/Precio.interface.php");
             {
                 foreach($paquetes_precios_utilidad as $paquete_precio_utilidad)
                 {
+                    
+                    if
+                    (
+                            !array_key_exists("id_paquete", $paquete_precio_utilidad)         ||
+                            !array_key_exists("precio_utilidad", $paquete_precio_utilidad)    ||
+                            !array_key_exists("es_margen_utilidad", $paquete_precio_utilidad)
+                    )
+                    {
+                        throw new Exception("Los paquetes no cuentan con los parametros requeridos",901);
+                    }
+                    
                     $validar = self::validarPaquete($paquete_precio_utilidad["id_paquete"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $validar = self::validarPrecioUtilidad($paquete_precio_utilidad["precio_utilidad"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $validar = self::validarEsMargenUtilidad($paquete_precio_utilidad["es_margen_utilidad"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $precio_paquete_usuario->setEsMargenUtilidad($paquete_precio_utilidad["es_margen_utilidad"]);
                     $precio_paquete_usuario->setIdPaquete($paquete_precio_utilidad["id_paquete"]);
@@ -1611,7 +1666,9 @@ require_once("interfaces/Precio.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se han podido guardar todos los precios para el usuario ".$id_usuario." : ".$e);
-                throw new Exception("No se han podido guardar todos los precios para el usuario");
+                if($e->getCode()==901)
+                    throw new Exception("No se han podido guardar todos los precios para el usuario: ".$e->getMessage(),901);
+                throw new Exception("No se han podido guardar todos los precios para el usuario",901);
             }
             DAO::transEnd();
             Logger::log("Precios guardados exitosamente");
@@ -1633,6 +1690,14 @@ require_once("interfaces/Precio.interface.php");
 	 )
          {
              Logger::log("ELiminando los precios de paquete para el rol ".$id_rol);
+             
+             $paquetes = object_to_array($paquetes);
+             
+             if(!is_array($paquetes))
+             {
+                 Logger::error("Los paquetes son invalidos");
+                 throw new Exception("Los paquetes son invalidos",901);
+             }
             
             //Se inicializa el registro a eliminar y se elimina
             DAO::transBegin();
@@ -1642,7 +1707,8 @@ require_once("interfaces/Precio.interface.php");
                 {
                     $precio_paquete_rol = PrecioPaqueteRolDAO::getByPK($paquete, $id_rol);
                     if(is_null($precio_paquete_rol))
-                        throw new Exception("El rol ".$id_rol." no tiene precio especial para el paquete ".$paquete);
+                        throw new Exception("El rol ".$id_rol." no tiene precio especial para el paquete ".$paquete,901);
+                    
                     PrecioPaqueteRolDAO::delete($precio_paquete_rol);
                 }
             }
@@ -1650,7 +1716,10 @@ require_once("interfaces/Precio.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudieron eliminar los precios para paquete del rol ".$id_rol." : ".$e);
-                throw new Exception("No se pudieron eliminar los precios para paquete del rol");
+                if($e->getCode()==901)
+                    throw new Exception("No se pudieron eliminar los precios para paquete del rol: ".$e->getMessage(),901);
+                
+                throw new Exception("No se pudieron eliminar los precios para paquete del rol",901);
             }
             DAO::transEnd();
             Logger::log("Precios de paquetes eliminados exitosamente");
@@ -1674,6 +1743,14 @@ require_once("interfaces/Precio.interface.php");
          {
              Logger::log("ELiminando los precios de paquete para el tipo_cliente ".$id_tipo_cliente);
             
+             $paquetes = object_to_array($paquetes);
+             
+             if(!is_array($paquetes))
+             {
+                 Logger::error("Los paquetes son invalidos");
+                 throw new Exception("Los paquetes son invalidos",901);
+             }
+             
             //Se inicializa el registro a eliminar y se elimina
             DAO::transBegin();
             try
@@ -1682,7 +1759,8 @@ require_once("interfaces/Precio.interface.php");
                 {
                     $precio_paquete_tipo_cliente = PrecioPaqueteTipoClienteDAO::getByPK($paquete, $id_tipo_cliente);
                     if(is_null($precio_paquete_tipo_cliente))
-                        throw new Exception("El tipo_cliente ".$id_tipo_cliente." no tiene precio especial para el paquete ".$paquete);
+                        throw new Exception("El tipo_cliente ".$id_tipo_cliente." no tiene precio especial para el paquete ".$paquete,901);
+                    
                     PrecioPaqueteTipoClienteDAO::delete($precio_paquete_tipo_cliente);
                 }
             }
@@ -1690,7 +1768,9 @@ require_once("interfaces/Precio.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudieron eliminar los precios para paquete del tipo_cliente ".$id_tipo_cliente." : ".$e);
-                throw new Exception("No se pudieron eliminar los precios para paquete del tipo_cliente");
+                if($e->getCode()==901)
+                    throw new Exception("No se pudieron eliminar los precios para paquete del tipo_cliente: ".$e->getMessage(),901);
+                throw new Exception("No se pudieron eliminar los precios para paquete del tipo_cliente",901);
             }
             DAO::transEnd();
             Logger::log("Precios de paquetes eliminados exitosamente");
@@ -1714,6 +1794,14 @@ require_once("interfaces/Precio.interface.php");
          {
              Logger::log("ELiminando los precios de paquete para el usuario ".$id_usuario);
             
+             $paquetes = object_to_array($paquetes);
+             
+             if(!is_array($paquetes))
+             {
+                 Logger::error("Los paquetes son invalidos");
+                 throw new Exception("Los paquetes son invalidos",901);
+             }
+             
             //Se inicializa el registro a eliminar y se elimina
             DAO::transBegin();
             try
@@ -1722,7 +1810,8 @@ require_once("interfaces/Precio.interface.php");
                 {
                     $precio_paquete_usuario = PrecioPaqueteUsuarioDAO::getByPK($paquete, $id_usuario);
                     if(is_null($precio_paquete_usuario))
-                        throw new Exception("El usuario ".$id_usuario." no tiene precio especial para el paquete ".$paquete);
+                        throw new Exception("El usuario ".$id_usuario." no tiene precio especial para el paquete ".$paquete,901);
+                    
                     PrecioPaqueteUsuarioDAO::delete($precio_paquete_usuario);
                 }
             }
@@ -1730,7 +1819,9 @@ require_once("interfaces/Precio.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudieron eliminar los precios para paquete del usuario ".$id_usuario." : ".$e);
-                throw new Exception("No se pudieron eliminar los precios para paquete del usuario");
+                if($e->getCode()==901)
+                    throw new Exception("No se pudieron eliminar los precios para paquete del usuario: ".$e->getMessage(),901);
+                throw new Exception("No se pudieron eliminar los precios para paquete del usuario",901);
             }
             DAO::transEnd();
             Logger::log("Precios de paquetes eliminados exitosamente");
@@ -1754,6 +1845,12 @@ require_once("interfaces/Precio.interface.php");
          {
              Logger::log("Registrando precios de los paquetes para el rol ".$id_rol);
             
+              if(!is_array($paquetes_precios_utilidad))
+             {
+                 Logger::error("Los paquetes son invalidos",901);
+                 throw new Exception("Los paquetes son invalidos",901);
+             }
+             
             //valida al rol obtendio
             $validar = self::validarRol($id_rol);
             if(is_string($validar))
@@ -1769,17 +1866,28 @@ require_once("interfaces/Precio.interface.php");
             {
                 foreach($paquetes_precios_utilidad as $paquete_precio_utilidad)
                 {
+                    
+                    if
+                    (
+                            !array_key_exists("id_paquete", $paquete_precio_utilidad)         ||
+                            !array_key_exists("precio_utilidad", $paquete_precio_utilidad)    ||
+                            !array_key_exists("es_margen_utilidad", $paquete_precio_utilidad)
+                    )
+                    {
+                        throw new Exception("Los paquetes no cuentan con los parametros requeridos",901);
+                    }
+                    
                     $validar = self::validarPaquete($paquete_precio_utilidad["id_paquete"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $validar = self::validarPrecioUtilidad($paquete_precio_utilidad["precio_utilidad"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $validar = self::validarEsMargenUtilidad($paquete_precio_utilidad["es_margen_utilidad"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $precio_paquete_rol->setEsMargenUtilidad($paquete_precio_utilidad["es_margen_utilidad"]);
                     $precio_paquete_rol->setIdPaquete($paquete_precio_utilidad["id_paquete"]);
@@ -1791,7 +1899,9 @@ require_once("interfaces/Precio.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se han podido guardar todos los precios para el rol ".$id_rol." : ".$e);
-                throw new Exception("No se han podido guardar todos los precios para el rol");
+                if($e->getCode()==901)
+                    throw new Exception("No se han podido guardar todos los precios para el rol: ".$e->getMessage (),901);
+                throw new Exception("No se han podido guardar todos los precios para el rol",901);
             }
             DAO::transEnd();
             Logger::log("Precios guardados exitosamente");
@@ -1815,6 +1925,12 @@ require_once("interfaces/Precio.interface.php");
          {
              Logger::log("Registrando precios de los paquetes para el tipo_cliente ".$id_tipo_cliente);
             
+             if(!is_array($paquetes_precios_utilidad))
+             {
+                 Logger::error("Los paquetes son invalidos",901);
+                 throw new Exception("Los paquetes son invalidos",901);
+             }
+             
             //valida al tipo_cliente obtendio
             $validar = self::validarClasificacionCliente($id_tipo_cliente);
             if(is_string($validar))
@@ -1830,17 +1946,28 @@ require_once("interfaces/Precio.interface.php");
             {
                 foreach($paquetes_precios_utilidad as $paquete_precio_utilidad)
                 {
+                    
+                    if
+                    (
+                            !array_key_exists("id_paquete", $paquete_precio_utilidad)         ||
+                            !array_key_exists("precio_utilidad", $paquete_precio_utilidad)    ||
+                            !array_key_exists("es_margen_utilidad", $paquete_precio_utilidad)
+                    )
+                    {
+                        throw new Exception("Los paquetes no cuentan con los parametros requeridos",901);
+                    }
+                    
                     $validar = self::validarPaquete($paquete_precio_utilidad["id_paquete"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $validar = self::validarPrecioUtilidad($paquete_precio_utilidad["precio_utilidad"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $validar = self::validarEsMargenUtilidad($paquete_precio_utilidad["es_margen_utilidad"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $precio_paquete_tipo_cliente->setEsMargenUtilidad($paquete_precio_utilidad["es_margen_utilidad"]);
                     $precio_paquete_tipo_cliente->setIdPaquete($paquete_precio_utilidad["id_paquete"]);
@@ -1852,7 +1979,9 @@ require_once("interfaces/Precio.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se han podido guardar todos los precios para el tipo_cliente ".$id_tipo_cliente." : ".$e);
-                throw new Exception("No se han podido guardar todos los precios para el tipo_cliente");
+                if($e->getCode()==901)
+                    throw new Exception("No se han podido guardar todos los precios para el tipo_cliente: ".$e->getMessage(),901);
+                throw new Exception("No se han podido guardar todos los precios para el tipo_cliente",901);
             }
             DAO::transEnd();
             Logger::log("Precios guardados exitosamente");
@@ -1877,6 +2006,12 @@ require_once("interfaces/Precio.interface.php");
          {
              Logger::log("Registrando precios de los paquetes para el usuario ".$id_usuario);
             
+             if(!is_array($paquetes_precios_utilidad))
+             {
+                 Logger::error("Los paquetes son invalidos",901);
+                 throw new Exception("Los paquetes son invalidos",901);
+             }
+             
             //valida al usuario obtendio
             $validar = self::validarUsuario($id_usuario);
             if(is_string($validar))
@@ -1892,17 +2027,28 @@ require_once("interfaces/Precio.interface.php");
             {
                 foreach($paquetes_precios_utilidad as $paquete_precio_utilidad)
                 {
+                    
+                    if
+                    (
+                            !array_key_exists("id_paquete", $paquete_precio_utilidad)         ||
+                            !array_key_exists("precio_utilidad", $paquete_precio_utilidad)    ||
+                            !array_key_exists("es_margen_utilidad", $paquete_precio_utilidad)
+                    )
+                    {
+                        throw new Exception("Los paquetes no cuentan con los parametros requeridos",901);
+                    }
+                    
                     $validar = self::validarPaquete($paquete_precio_utilidad["id_paquete"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $validar = self::validarPrecioUtilidad($paquete_precio_utilidad["precio_utilidad"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $validar = self::validarEsMargenUtilidad($paquete_precio_utilidad["es_margen_utilidad"]);
                     if(is_string($validar))
-                        throw new Exception($validar);
+                        throw new Exception($validar,901);
                     
                     $precio_paquete_usuario->setEsMargenUtilidad($paquete_precio_utilidad["es_margen_utilidad"]);
                     $precio_paquete_usuario->setIdPaquete($paquete_precio_utilidad["id_paquete"]);
@@ -1914,7 +2060,9 @@ require_once("interfaces/Precio.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se han podido guardar todos los precios para el usuario ".$id_usuario." : ".$e);
-                throw new Exception("No se han podido guardar todos los precios para el usuario");
+                if($e->getCode()==901)
+                    throw new Exception("No se han podido guardar todos los precios para el usuario: ".$e->getMessage(),901);
+                throw new Exception("No se han podido guardar todos los precios para el usuario",901);
             }
             DAO::transEnd();
             Logger::log("Precios guardados exitosamente");
