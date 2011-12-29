@@ -4565,10 +4565,23 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 **/
         public static function ListaTipo_almacen
 	(
+                $orden = null
 	)
         {
             Logger::log("Listando tipos de almacen");
-            return TipoAlmacenDAO::getAll();
+            
+            if
+            (
+                    !is_null($orden)                &&
+                    $orden != "id_tipo_almacen"     &&
+                    $orden != "descripcion"
+            )
+            {
+                Logger::error("El parametro orden (".$orden.") es invalido");
+                throw new Exception("El parametro orden (".$orden.") es invalido",901);
+            }
+            
+            return TipoAlmacenDAO::getAll(null,null,$orden);
         }
   
   
