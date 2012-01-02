@@ -1,7 +1,6 @@
 <?php 
 
 
-
 		define("BYPASS_INSTANCE_CHECK", false);
 
 		require_once("../../../../server/bootstrap.php");
@@ -12,10 +11,9 @@
 		
 		$form->addApiCall("api/cliente/clasificacion/nueva/");
                 
-                $form->onApiCallSuccessRedirect("clientes.lista.clasificacion.php");
+		$form->onApiCallSuccessRedirect("clientes.lista.clasificacion.php");
 		
 		$form->renameField( array( "margen_utilidad" => "utilidad" ) );
-                
                 $form->hideField( array( 
 				"id_clasificacion_cliente"
 			 ));
