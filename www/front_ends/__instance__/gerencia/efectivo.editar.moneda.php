@@ -22,21 +22,12 @@
 	$form->hideField( array( 
 			"id_moneda"
 		 ));
+        $form->sendHidden("id_moneda");
 
-
-//	$form->renameField( array( 
-//			"nombre" 			=> "razon_social",
-//			"codigo_usuario"	=> "codigo_cliente"
-//		));
 	
 	$form->addApiCall( "api/efectivo/moneda/editar/", "GET" );
+        $form->onApiCallSuccessRedirect("efectivo.lista.moneda.php");
 	
-//	$form->makeObligatory(array( 
-//			"nombre"
-//		));
-	
-//	$form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll( ) );
-//	$form->createComboBoxJoin( "id_clasificacion_cliente", "nombre", ClasificacionClienteDAO::getAll( ) );
 	
 	$page->addComponent( $form );
 

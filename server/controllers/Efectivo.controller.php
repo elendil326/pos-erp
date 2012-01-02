@@ -90,8 +90,14 @@ require_once("interfaces/Efectivo.interface.php");
                 $e = self::validarString($nombre, 50, "nombre");
                 if(is_string($e))
                     return $e;
-                
-                $billetes = BilleteDAO::search( new Billete( array( "nombre" => trim($nombre) ) ) );
+                if(!is_null($id_billete))
+                {
+                    $billetes = array_diff(BilleteDAO::search( new Billete( array( "nombre" => trim($nombre) ) ) ), array(BilleteDAO::getByPK($id_billete)) );
+                }
+                else
+                {
+                    $billetes = BilleteDAO::search( new Billete( array( "nombre" => trim($nombre) ) ) );
+                }
                 foreach($billetes as $billete)
                 {
                     if($billete->getActivo())
@@ -157,7 +163,14 @@ require_once("interfaces/Efectivo.interface.php");
                 if(is_string($e))
                     return $e;
                 
-                $monedas = MOnedaDAO::search( new Moneda( array( "nombre" => trim($nombre) ) ) );
+                if(!is_null($id_moneda))
+                {
+                    $monedas = array_diff(MOnedaDAO::search( new Moneda( array( "nombre" => trim($nombre) ) ) ), array(MonedaDAO::getByPK($id_moneda)) );
+                }
+                else
+                {
+                    $monedas = MOnedaDAO::search( new Moneda( array( "nombre" => trim($nombre) ) ) );
+                }
                 foreach($monedas as $moneda)
                 {
                     if($moneda->getActiva())

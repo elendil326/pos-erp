@@ -25,33 +25,36 @@
 		//
 		// Menu de opciones
 		// 
-		$menu = new MenuComponent();
-		$menu->addItem("Editar esta moneda", "efectivo.editar.moneda.php?mid=".$_GET["mid"]);
-		//$menu->addItem("Desactivar este producto", null);
-                
-                $btn_eliminar = new MenuItem("Desactivar esta moneda", null);
-                $btn_eliminar->addApiCall("api/efectivo/moneda/eliminar", "GET");
-                $btn_eliminar->onApiCallSuccessRedirect("efectivo.lista.moneda.php");
-                $btn_eliminar->addName("eliminar");
-                
-                $funcion_eliminar = " function eliminar_moneda(btn){".
-                            "if(btn == 'yes')".
-                            "{".
-                                "var p = {};".
-                                "p.id_moneda = ".$_GET["mid"].";".
-                                "sendToApi_eliminar(p);".
+                if($esta_moneda->getActiva())
+                {
+                    $menu = new MenuComponent();
+                    $menu->addItem("Editar esta moneda", "efectivo.editar.moneda.php?mid=".$_GET["mid"]);
+                    //$menu->addItem("Desactivar este producto", null);
+
+                    $btn_eliminar = new MenuItem("Desactivar esta moneda", null);
+                    $btn_eliminar->addApiCall("api/efectivo/moneda/eliminar", "GET");
+                    $btn_eliminar->onApiCallSuccessRedirect("efectivo.lista.moneda.php");
+                    $btn_eliminar->addName("eliminar");
+
+                    $funcion_eliminar = " function eliminar_moneda(btn){".
+                                "if(btn == 'yes')".
+                                "{".
+                                    "var p = {};".
+                                    "p.id_moneda = ".$_GET["mid"].";".
+                                    "sendToApi_eliminar(p);".
+                                "}".
                             "}".
-                        "}".
-                        "      ".
-                        "function confirmar(){".
-                        " Ext.MessageBox.confirm('Desactivar', 'Desea eliminar esta moneda?', eliminar_moneda );".
-                        "}";
-                
-                $btn_eliminar->addOnClick("confirmar", $funcion_eliminar);
-                
-                $menu->addMenuItem($btn_eliminar);
-                
-		$page->addComponent( $menu);
+                            "      ".
+                            "function confirmar(){".
+                            " Ext.MessageBox.confirm('Desactivar', 'Desea eliminar esta moneda?', eliminar_moneda );".
+                            "}";
+
+                    $btn_eliminar->addOnClick("confirmar", $funcion_eliminar);
+
+                    $menu->addMenuItem($btn_eliminar);
+
+                    $page->addComponent( $menu);
+                }
 		
 		//
 		// Forma de producto

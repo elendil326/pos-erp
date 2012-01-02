@@ -22,6 +22,7 @@
 
 	
 	$form->addApiCall( "api/efectivo/billete/nuevo/", "GET" );
+        $form->onApiCallSuccessRedirect("efectivo.lista.billete.php");
 	
 	$form->makeObligatory(array( 
 			"nombre",

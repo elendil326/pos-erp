@@ -22,21 +22,11 @@
 	$form->hideField( array( 
 			"id_billete"
 		 ));
-
-
-//	$form->renameField( array( 
-//			"nombre" 			=> "razon_social",
-//			"codigo_usuario"	=> "codigo_cliente"
-//		));
+        $form->sendHidden("id_billete");
 	
 	$form->addApiCall( "api/efectivo/billete/editar/", "GET" );
+        $form->onApiCallSuccessRedirect("efectivo.lista.billete.php");
 	
-//	$form->makeObligatory(array( 
-//			"nombre"
-//		));
-	
-//	$form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll( ) );
-//	$form->createComboBoxJoin( "id_clasificacion_cliente", "nombre", ClasificacionClienteDAO::getAll( ) );
 	
 	$page->addComponent( $form );
 

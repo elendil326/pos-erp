@@ -25,33 +25,36 @@
 		//
 		// Menu de opciones
 		// 
-		$menu = new MenuComponent();
-		$menu->addItem("Editar este billete", "efectivo.editar.billete.php?bid=".$_GET["bid"]);
-		//$menu->addItem("Desactivar este producto", null);
-                
-                $btn_eliminar = new MenuItem("Desactivar este billete", null);
-                $btn_eliminar->addApiCall("api/efectivo/billete/eliminar", "GET");
-                $btn_eliminar->onApiCallSuccessRedirect("efectivo.lista.billete.php");
-                $btn_eliminar->addName("eliminar");
-                
-                $funcion_eliminar = " function eliminar_billete(btn){".
-                            "if(btn == 'yes')".
-                            "{".
-                                "var p = {};".
-                                "p.id_billete = ".$_GET["bid"].";".
-                                "sendToApi_eliminar(p);".
+                if($este_billete->getActivo())
+                {
+                    $menu = new MenuComponent();
+                    $menu->addItem("Editar este billete", "efectivo.editar.billete.php?bid=".$_GET["bid"]);
+                    //$menu->addItem("Desactivar este producto", null);
+
+                    $btn_eliminar = new MenuItem("Desactivar este billete", null);
+                    $btn_eliminar->addApiCall("api/efectivo/billete/eliminar", "GET");
+                    $btn_eliminar->onApiCallSuccessRedirect("efectivo.lista.billete.php");
+                    $btn_eliminar->addName("eliminar");
+
+                    $funcion_eliminar = " function eliminar_billete(btn){".
+                                "if(btn == 'yes')".
+                                "{".
+                                    "var p = {};".
+                                    "p.id_billete = ".$_GET["bid"].";".
+                                    "sendToApi_eliminar(p);".
+                                "}".
                             "}".
-                        "}".
-                        "      ".
-                        "function confirmar(){".
-                        " Ext.MessageBox.confirm('Desactivar', 'Desea eliminar este billete?', eliminar_billete );".
-                        "}";
-                
-                $btn_eliminar->addOnClick("confirmar", $funcion_eliminar);
-                
-                $menu->addMenuItem($btn_eliminar);
-                
-		$page->addComponent( $menu);
+                            "      ".
+                            "function confirmar(){".
+                            " Ext.MessageBox.confirm('Desactivar', 'Desea eliminar este billete?', eliminar_billete );".
+                            "}";
+
+                    $btn_eliminar->addOnClick("confirmar", $funcion_eliminar);
+
+                    $menu->addMenuItem($btn_eliminar);
+
+                    $page->addComponent( $menu);
+                }
 		
 		//
 		// Forma de producto

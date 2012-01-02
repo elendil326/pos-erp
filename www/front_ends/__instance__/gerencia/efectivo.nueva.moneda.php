@@ -22,6 +22,7 @@
 
 	
 	$form->addApiCall( "api/efectivo/moneda/nueva/", "GET" );
+        $form->onApiCallSuccessRedirect("efectivo.lista.moneda.php");
 	
 	$form->makeObligatory(array( 
 			"nombre",
