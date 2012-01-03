@@ -24,7 +24,7 @@
                                 "cancelada"              => "Cancelada",
                                 "fecha"                  => "Fecha"
 			),
-                         VentasController::Lista()
+                         VentaDAO::getAll(NULL, null, "fecha", "DESC")
 		);
 //                
                 function funcion_comprador($id_comprador)
@@ -40,7 +40,7 @@
                 $tabla->addColRender("id_comprador_venta", "funcion_comprador");
                 $tabla->addColRender("cancelada", "funcion_cancelada");
                 
-		$tabla->addOnClick( "id_venta", "(function(a){ window.location = 'venta.ver.php?vid=' + a; })" );
+		$tabla->addOnClick( "id_venta", "(function(a){ window.location = 'ventas.detalle.php?vid=' + a; })" );
                 
                 $page->addComponent( $tabla );
                 

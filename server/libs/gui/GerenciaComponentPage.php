@@ -161,18 +161,6 @@ class GerenciaComponentPage extends StdComponentPage{
             "url": "compras.php",
             "children": [
                 {
-                        "title" : "Cancelar",
-                        "url"   : "compras.cancelar.php"
-                },
-                {
-                        "title" : "Detalle",
-                        "url"   : "compras.detalle.php"
-                },
-                {
-                        "title" : "Detalle de compra en arpillas",
-                        "url"   : "compras.detalle.compra.arpilla.php"
-                },
-                {
                         "title" : "Lista",
                         "url"   : "compras.lista.php"
                 },
@@ -814,18 +802,6 @@ class GerenciaComponentPage extends StdComponentPage{
             "title": "Ventas",
             "url": "ventas.php",
             "children": [
-                {
-                        "title" : "Cancelar",
-                        "url"   : "ventas.cancelar.php"
-                },
-                {
-                        "title" : "Detalle",
-                        "url"   : "ventas.detalle.php"
-                },
-                {
-                        "title" : "Detalle de venta por arpilla",
-                        "url"   : "ventas.detalle.venta.arpilla.php"
-                },
                 {
                         "title" : "Lista",
                         "url"   : "ventas.lista.php"
