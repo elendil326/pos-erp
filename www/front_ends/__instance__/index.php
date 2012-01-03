@@ -3,8 +3,9 @@
 	require_once("../../../server/bootstrap.php");
 
 	$page = new StdComponentPage();
-
-	$page->addComponent( new LoginComponent() );
+	$login = new LoginComponent();
+	$login->setLoginApiCall("api/sesion/iniciar/");
+	$page->addComponent( $login  );
 
 	$page->render();
 

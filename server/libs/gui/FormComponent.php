@@ -130,18 +130,23 @@ class FormComponent implements GuiComponent{
 			$html.= "		callback : function( a ){ ";
 			$html.= "			";
 			$html.= "			/* remove unload event */";			
-			$html.= "			window.onbeforeunload = function(){ return;	};";			
-			$html.= "			Ext.MessageBox.show({
-			           title: 'OK',
-			           msg: 'OK.',
-			           buttons: Ext.MessageBox.OK
-			       });	/* console.log('OKAY'); */ ";
+			$html.= "			window.onbeforeunload = function(){ return;	};";	
+					
+
 
 			if( !is_null($this->send_to_api_callback) )
 				$html.= "			" . $this->send_to_api_callback . "( a );";
+
+				
 			
 			if( !is_null($this->send_to_api_redirect) )
-				$html.= "			window.location = '".$this->send_to_api_redirect."';";
+				$html.= "			window.location = '".$this->send_to_api_redirect."&previous_action=ok';";
+			else
+				$html.= "			Ext.MessageBox.show({
+				           				title: 'OK',
+				           				msg: 'OK.',
+				           				buttons: Ext.MessageBox.OK
+				       				});	/* console.log('OKAY'); */ ";
 
 			$html.= "			";
 			$html.= "			";									

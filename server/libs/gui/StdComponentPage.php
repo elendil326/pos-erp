@@ -8,13 +8,12 @@ class StdComponentPage extends StdPage{
 
 	function __construct()
 	{
-
-		
-		
 		parent::__construct();
-		parent::addJs( "https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js" );
+
+		parent::addCss('http://api.caffeina.mx/ext-4.0.0/resources/css/ext-all.css');
+		parent::addJs( 'http://api.caffeina.mx/ext-4.0.0/ext-all.js');
+
 		$this->components = array();
-		
 	}
 
 	public function requireParam(  $param_name, $method = "GET", $on_error_message = "ERROR" ) 

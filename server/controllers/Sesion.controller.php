@@ -85,6 +85,8 @@ Si el usuario que esta intentando iniciar sesion, esta descativado... 403 Author
 			throw new Exception("Imposible iniciar la sesion");
 		}
 		
+		self::login( $usuario, $password, 1   );
+		
 		return array( "auth_token" => $nueva_sesion->getAuthToken() );
 	}
   
@@ -242,7 +244,7 @@ Si el usuario que esta intentando iniciar sesion, esta descativado... 403 Author
 
 
 	public static function getCurrentUser(){
-		return 1;
+
 		if(self::isLoggedIn())
 			return $_SESSION['USER_ID'];
 		else
