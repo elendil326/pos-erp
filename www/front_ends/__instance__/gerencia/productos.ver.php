@@ -61,7 +61,7 @@
 		// 
 		$form = new DAOFormComponent( $este_producto );
 		$form->setEditable(false);
-		//$form->setEditable(false);		
+			
 		$form->hideField( array( 
 				"id_producto",
 			 ));

@@ -82,8 +82,14 @@ require_once("interfaces/Paquetes.interface.php");
                 $e = self::validarString($nombre, 100, "nombre");
                 if(is_string($e))
                     return $e;
-                
-                $paquetes = PaqueteDAO::search( new Paquete( array( "nombre" => trim($nombre) ) ) );
+                if(!is_null($id_paquete))
+                {
+                    $paquetes = array_diff(PaqueteDAO::search( new Paquete( array( "nombre" => trim($nombre) ) ) ), array(PaqueteDAO::getByPK($id_paquete)));
+                }
+                else
+                {
+                    $paquetes = PaqueteDAO::search( new Paquete( array( "nombre" => trim($nombre) ) ) );
+                }
                 foreach($paquetes as $paquete)
                 {
                     if($paquete->getActivo())
@@ -308,7 +314,7 @@ require_once("interfaces/Paquetes.interface.php");
 	(
 		$empresas, 
 		$nombre, 
-		$scursales, 
+		$sucursales, 
 		$costo_estandar = null, 
 		$descripcion = null, 
 		$descuento = null, 

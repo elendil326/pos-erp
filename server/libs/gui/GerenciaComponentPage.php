@@ -381,10 +381,6 @@ class GerenciaComponentPage extends StdComponentPage{
             "url": "paquetes.php",
             "children": [
                 {
-                        "title" : "Detalle",
-                        "url"   : "paquetes.detalle.php"
-                },
-                {
                         "title" : "Lista",
                         "url"   : "paquetes.lista.php"
                 },

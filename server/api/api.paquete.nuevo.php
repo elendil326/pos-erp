@@ -18,7 +18,7 @@
 		$this->request = array(	
 			"empresas" => new ApiExposedProperty("empresas", true, GET, array( "json" )),
 			"nombre" => new ApiExposedProperty("nombre", true, GET, array( "string" )),
-			"scursales" => new ApiExposedProperty("scursales", true, GET, array( "json" )),
+			"sucursales" => new ApiExposedProperty("sucursales", true, GET, array( "json" )),
 			"costo_estandar" => new ApiExposedProperty("costo_estandar", false, GET, array( "float" )),
 			"descripcion" => new ApiExposedProperty("descripcion", false, GET, array( "string" )),
 			"descuento" => new ApiExposedProperty("descuento", false, GET, array( "float" )),
@@ -37,7 +37,7 @@
 			
 			isset($_GET['empresas'] ) ? json_decode($_GET['empresas']) : null,
 			isset($_GET['nombre'] ) ? $_GET['nombre'] : null,
-			isset($_GET['scursales'] ) ? json_decode($_GET['scursales']) : null,
+			isset($_GET['sucursales'] ) ? json_decode($_GET['sucursales']) : null,
 			isset($_GET['costo_estandar'] ) ? $_GET['costo_estandar'] : null,
 			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
 			isset($_GET['descuento'] ) ? $_GET['descuento'] : null,

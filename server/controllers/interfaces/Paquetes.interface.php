@@ -127,7 +127,7 @@
 	(
 		$empresas, 
 		$nombre, 
-		$scursales, 
+		$sucursales, 
 		$costo_estandar = null, 
 		$descripcion = null, 
 		$descuento = null, 
