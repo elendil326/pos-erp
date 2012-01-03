@@ -89,7 +89,7 @@
 	# *******************************
 	# Iniciar sesion
 	# *******************************
-	session_name("POS_COOKIE");
+	session_name("ssfec"); //server side front end cookie
 	session_set_cookie_params ( 3600  , '/' );
 
 	try{

@@ -71,15 +71,22 @@ class StdComponentPage extends StdPage{
 	public function render()
 	{
 		
-		$html = "";
+		?><!DOCTYPE html><html lang="es"><head><?php
+		
+		print( $this->js_urls );
+		print( $this->css_urls );
+		print( "<title>" . $this->page_title . "</title>");
 
-		foreach( $this->components as $cmp ){
-			$html .= $cmp->renderCmp();
+		?></head><body><?php
+
+		foreach( $this->components as $cmp )
+		{
+			echo $cmp->renderCmp();
 		}
+		
+		?></body></html><?php
+		
 
-		parent::addContent( $html );
-
-		parent::render();
 	}
 
 

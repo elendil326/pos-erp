@@ -2,10 +2,15 @@
 
 	require_once("../../../server/bootstrap.php");
 
+	if(isset($_GET["cs"]) && ($_GET["cs"] == 1)){
+		SesionController::Cerrar();
+		SesionController::logout();
+
+	}
+
 	$page = new StdComponentPage();
 	$login = new LoginComponent();
 	$login->setLoginApiCall("api/sesion/iniciar/");
 	$page->addComponent( $login  );
-
 	$page->render();
 

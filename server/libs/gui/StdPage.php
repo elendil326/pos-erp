@@ -3,13 +3,13 @@
 class StdPage implements Page{
 	
 
-	private $js_urls;
-	private $css_urls;
+	protected $js_urls;
+	protected $css_urls;
 	private $header;
 	private $menu;
 	private $content;
 	private $footer;
-	private $page_title;
+	protected $page_title;
 	
 
 	function __construct(  )
