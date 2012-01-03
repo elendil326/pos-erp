@@ -7,7 +7,7 @@
 		require_once("../../../../server/bootstrap.php");
 
 		$page = new GerenciaComponentPage();
-		//forma de nuevo cliente
+		
 		$form = new DAOFormComponent( new Impuesto() );
 
 		$form->hideField( array( 
@@ -15,17 +15,16 @@
 			 ));
 
 
-		$form->addApiCall( "api/impuestos_retenciones/impuesto/nuevo", "GET" );
+		$form->addApiCall( "api/impuestos_retenciones/impuesto/nuevo" );
+                $form->onApiCallSuccessRedirect("impuestos.lista.impuesto.php");
 		
 		$form->makeObligatory( array(
 			"nombre",
 			"monto_porcentaje",
 			"es_monto"			
 		));
-
-
-//		$form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll( ) );
-//		$form->createComboBoxJoin( "id_clasificacion_cliente", "nombre", ClasificacionClienteDAO::getAll( ) );
+                
+                $form->createComboBoxJoin("es_monto", "es_monto", array( array( "id" => 1, "caption" => "Si" ), array( "id" => 0, "caption" => "No" ) ));
 
 		$page->addComponent( $form );
 		$page->render();

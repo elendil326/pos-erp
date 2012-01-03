@@ -11,6 +11,6 @@
 require_once("../../../../../../../server/bootstrap.php");
 require_once("api/api.impuestos_retenciones.retencion.lista.php");
 
-$api = new ApiImpuestos_retencionesRetencionLista();
+$api = new ApiImpuestosRetencionesRetencionLista();
 $apiOutput = ApiOutputFormatter::getInstance();
 $apiOutput->PrintOuput($api);
