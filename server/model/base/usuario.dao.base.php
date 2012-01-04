@@ -353,9 +353,19 @@ abstract class UsuarioDAOBase extends DAO
 			array_push( $val, $usuario->getIdTarifaCompra() );
 		}
 
+		if( ! is_null( $usuario->getTarifaCompraObtenida() ) ){
+			$sql .= " tarifa_compra_obtenida = ? AND";
+			array_push( $val, $usuario->getTarifaCompraObtenida() );
+		}
+
 		if( ! is_null( $usuario->getIdTarifaVenta() ) ){
 			$sql .= " id_tarifa_venta = ? AND";
 			array_push( $val, $usuario->getIdTarifaVenta() );
+		}
+
+		if( ! is_null( $usuario->getTarifaVentaObtenida() ) ){
+			$sql .= " tarifa_venta_obtenida = ? AND";
+			array_push( $val, $usuario->getTarifaVentaObtenida() );
 		}
 
 		if(sizeof($val) == 0){return array();}
@@ -389,7 +399,7 @@ abstract class UsuarioDAOBase extends DAO
 	  **/
 	private static final function update( $usuario )
 	{
-		$sql = "UPDATE usuario SET  id_direccion = ?, id_direccion_alterna = ?, id_sucursal = ?, id_rol = ?, id_clasificacion_cliente = ?, id_clasificacion_proveedor = ?, id_moneda = ?, fecha_asignacion_rol = ?, nombre = ?, rfc = ?, curp = ?, comision_ventas = ?, telefono_personal1 = ?, telefono_personal2 = ?, fecha_alta = ?, fecha_baja = ?, activo = ?, limite_credito = ?, descuento = ?, password = ?, last_login = ?, consignatario = ?, salario = ?, correo_electronico = ?, pagina_web = ?, saldo_del_ejercicio = ?, ventas_a_credito = ?, representante_legal = ?, facturar_a_terceros = ?, dia_de_pago = ?, mensajeria = ?, intereses_moratorios = ?, denominacion_comercial = ?, dias_de_credito = ?, cuenta_de_mensajeria = ?, dia_de_revision = ?, codigo_usuario = ?, dias_de_embarque = ?, tiempo_entrega = ?, cuenta_bancaria = ?, id_tarifa_compra = ?, id_tarifa_venta = ? WHERE  id_usuario = ?;";
+		$sql = "UPDATE usuario SET  id_direccion = ?, id_direccion_alterna = ?, id_sucursal = ?, id_rol = ?, id_clasificacion_cliente = ?, id_clasificacion_proveedor = ?, id_moneda = ?, fecha_asignacion_rol = ?, nombre = ?, rfc = ?, curp = ?, comision_ventas = ?, telefono_personal1 = ?, telefono_personal2 = ?, fecha_alta = ?, fecha_baja = ?, activo = ?, limite_credito = ?, descuento = ?, password = ?, last_login = ?, consignatario = ?, salario = ?, correo_electronico = ?, pagina_web = ?, saldo_del_ejercicio = ?, ventas_a_credito = ?, representante_legal = ?, facturar_a_terceros = ?, dia_de_pago = ?, mensajeria = ?, intereses_moratorios = ?, denominacion_comercial = ?, dias_de_credito = ?, cuenta_de_mensajeria = ?, dia_de_revision = ?, codigo_usuario = ?, dias_de_embarque = ?, tiempo_entrega = ?, cuenta_bancaria = ?, id_tarifa_compra = ?, tarifa_compra_obtenida = ?, id_tarifa_venta = ?, tarifa_venta_obtenida = ? WHERE  id_usuario = ?;";
 		$params = array( 
 			$usuario->getIdDireccion(), 
 			$usuario->getIdDireccionAlterna(), 
@@ -432,7 +442,9 @@ abstract class UsuarioDAOBase extends DAO
 			$usuario->getTiempoEntrega(), 
 			$usuario->getCuentaBancaria(), 
 			$usuario->getIdTarifaCompra(), 
+			$usuario->getTarifaCompraObtenida(), 
 			$usuario->getIdTarifaVenta(), 
+			$usuario->getTarifaVentaObtenida(), 
 			$usuario->getIdUsuario(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -456,7 +468,7 @@ abstract class UsuarioDAOBase extends DAO
 	  **/
 	private static final function create( &$usuario )
 	{
-		$sql = "INSERT INTO usuario ( id_usuario, id_direccion, id_direccion_alterna, id_sucursal, id_rol, id_clasificacion_cliente, id_clasificacion_proveedor, id_moneda, fecha_asignacion_rol, nombre, rfc, curp, comision_ventas, telefono_personal1, telefono_personal2, fecha_alta, fecha_baja, activo, limite_credito, descuento, password, last_login, consignatario, salario, correo_electronico, pagina_web, saldo_del_ejercicio, ventas_a_credito, representante_legal, facturar_a_terceros, dia_de_pago, mensajeria, intereses_moratorios, denominacion_comercial, dias_de_credito, cuenta_de_mensajeria, dia_de_revision, codigo_usuario, dias_de_embarque, tiempo_entrega, cuenta_bancaria, id_tarifa_compra, id_tarifa_venta ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO usuario ( id_usuario, id_direccion, id_direccion_alterna, id_sucursal, id_rol, id_clasificacion_cliente, id_clasificacion_proveedor, id_moneda, fecha_asignacion_rol, nombre, rfc, curp, comision_ventas, telefono_personal1, telefono_personal2, fecha_alta, fecha_baja, activo, limite_credito, descuento, password, last_login, consignatario, salario, correo_electronico, pagina_web, saldo_del_ejercicio, ventas_a_credito, representante_legal, facturar_a_terceros, dia_de_pago, mensajeria, intereses_moratorios, denominacion_comercial, dias_de_credito, cuenta_de_mensajeria, dia_de_revision, codigo_usuario, dias_de_embarque, tiempo_entrega, cuenta_bancaria, id_tarifa_compra, tarifa_compra_obtenida, id_tarifa_venta, tarifa_venta_obtenida ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$usuario->getIdUsuario(), 
 			$usuario->getIdDireccion(), 
@@ -500,7 +512,9 @@ abstract class UsuarioDAOBase extends DAO
 			$usuario->getTiempoEntrega(), 
 			$usuario->getCuentaBancaria(), 
 			$usuario->getIdTarifaCompra(), 
+			$usuario->getTarifaCompraObtenida(), 
 			$usuario->getIdTarifaVenta(), 
+			$usuario->getTarifaVentaObtenida(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -1011,12 +1025,34 @@ abstract class UsuarioDAOBase extends DAO
 			
 		}
 
+		if( ( !is_null (($a = $usuarioA->getTarifaCompraObtenida()) ) ) & ( ! is_null ( ($b = $usuarioB->getTarifaCompraObtenida()) ) ) ){
+				$sql .= " tarifa_compra_obtenida >= ? AND tarifa_compra_obtenida <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " tarifa_compra_obtenida = ? AND"; 
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
 		if( ( !is_null (($a = $usuarioA->getIdTarifaVenta()) ) ) & ( ! is_null ( ($b = $usuarioB->getIdTarifaVenta()) ) ) ){
 				$sql .= " id_tarifa_venta >= ? AND id_tarifa_venta <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_tarifa_venta = ? AND"; 
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( ( !is_null (($a = $usuarioA->getTarifaVentaObtenida()) ) ) & ( ! is_null ( ($b = $usuarioB->getTarifaVentaObtenida()) ) ) ){
+				$sql .= " tarifa_venta_obtenida >= ? AND tarifa_venta_obtenida <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " tarifa_venta_obtenida = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

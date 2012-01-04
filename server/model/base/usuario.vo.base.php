@@ -148,8 +148,14 @@ class Usuario extends VO
 			if( isset($data['id_tarifa_compra']) ){
 				$this->id_tarifa_compra = $data['id_tarifa_compra'];
 			}
+			if( isset($data['tarifa_compra_obtenida']) ){
+				$this->tarifa_compra_obtenida = $data['tarifa_compra_obtenida'];
+			}
 			if( isset($data['id_tarifa_venta']) ){
 				$this->id_tarifa_venta = $data['id_tarifa_venta'];
+			}
+			if( isset($data['tarifa_venta_obtenida']) ){
+				$this->tarifa_venta_obtenida = $data['tarifa_venta_obtenida'];
 			}
 		}
 	}
@@ -206,7 +212,9 @@ class Usuario extends VO
 			"tiempo_entrega" => $this->tiempo_entrega,
 			"cuenta_bancaria" => $this->cuenta_bancaria,
 			"id_tarifa_compra" => $this->id_tarifa_compra,
-			"id_tarifa_venta" => $this->id_tarifa_venta
+			"tarifa_compra_obtenida" => $this->tarifa_compra_obtenida,
+			"id_tarifa_venta" => $this->id_tarifa_venta,
+			"tarifa_venta_obtenida" => $this->tarifa_venta_obtenida
 		); 
 	return json_encode($vec); 
 	}
@@ -592,6 +600,15 @@ class Usuario extends VO
 	public $id_tarifa_compra;
 
 	/**
+	  * tarifa_compra_obtenida
+	  * 
+	  * Indica de donde fue obtenida la tarifa de compra<br>
+	  * @access public
+	  * @var enum('rol','proveedor','cliente','usuario')
+	  */
+	public $tarifa_compra_obtenida;
+
+	/**
 	  * id_tarifa_venta
 	  * 
 	  * Id de la tarifa de venta por default para este usuario<br>
@@ -599,6 +616,15 @@ class Usuario extends VO
 	  * @var int(11)
 	  */
 	public $id_tarifa_venta;
+
+	/**
+	  * tarifa_venta_obtenida
+	  * 
+	  * Indica de donde fue obtenida la tarifa de venta<br>
+	  * @access public
+	  * @var enum('rol','proveedor','cliente','usuario')
+	  */
+	public $tarifa_venta_obtenida;
 
 	/**
 	  * getIdUsuario
@@ -1613,6 +1639,30 @@ class Usuario extends VO
 	}
 
 	/**
+	  * getTarifaCompraObtenida
+	  * 
+	  * Get the <i>tarifa_compra_obtenida</i> property for this object. Donde <i>tarifa_compra_obtenida</i> es Indica de donde fue obtenida la tarifa de compra
+	  * @return enum('rol','proveedor','cliente','usuario')
+	  */
+	final public function getTarifaCompraObtenida()
+	{
+		return $this->tarifa_compra_obtenida;
+	}
+
+	/**
+	  * setTarifaCompraObtenida( $tarifa_compra_obtenida )
+	  * 
+	  * Set the <i>tarifa_compra_obtenida</i> property for this object. Donde <i>tarifa_compra_obtenida</i> es Indica de donde fue obtenida la tarifa de compra.
+	  * Una validacion basica se hara aqui para comprobar que <i>tarifa_compra_obtenida</i> es de tipo <i>enum('rol','proveedor','cliente','usuario')</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param enum('rol','proveedor','cliente','usuario')
+	  */
+	final public function setTarifaCompraObtenida( $tarifa_compra_obtenida )
+	{
+		$this->tarifa_compra_obtenida = $tarifa_compra_obtenida;
+	}
+
+	/**
 	  * getIdTarifaVenta
 	  * 
 	  * Get the <i>id_tarifa_venta</i> property for this object. Donde <i>id_tarifa_venta</i> es Id de la tarifa de venta por default para este usuario
@@ -1634,6 +1684,30 @@ class Usuario extends VO
 	final public function setIdTarifaVenta( $id_tarifa_venta )
 	{
 		$this->id_tarifa_venta = $id_tarifa_venta;
+	}
+
+	/**
+	  * getTarifaVentaObtenida
+	  * 
+	  * Get the <i>tarifa_venta_obtenida</i> property for this object. Donde <i>tarifa_venta_obtenida</i> es Indica de donde fue obtenida la tarifa de venta
+	  * @return enum('rol','proveedor','cliente','usuario')
+	  */
+	final public function getTarifaVentaObtenida()
+	{
+		return $this->tarifa_venta_obtenida;
+	}
+
+	/**
+	  * setTarifaVentaObtenida( $tarifa_venta_obtenida )
+	  * 
+	  * Set the <i>tarifa_venta_obtenida</i> property for this object. Donde <i>tarifa_venta_obtenida</i> es Indica de donde fue obtenida la tarifa de venta.
+	  * Una validacion basica se hara aqui para comprobar que <i>tarifa_venta_obtenida</i> es de tipo <i>enum('rol','proveedor','cliente','usuario')</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param enum('rol','proveedor','cliente','usuario')
+	  */
+	final public function setTarifaVentaObtenida( $tarifa_venta_obtenida )
+	{
+		$this->tarifa_venta_obtenida = $tarifa_venta_obtenida;
 	}
 
 }
