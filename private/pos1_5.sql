@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 04-01-2012 a las 03:51:45
+-- Tiempo de generación: 04-01-2012 a las 04:38:35
 -- Versión del servidor: 5.1.53
 -- Versión de PHP: 5.3.4
 
@@ -348,8 +348,8 @@ CREATE TABLE IF NOT EXISTS `clasificacion_cliente` (
   `clave_interna` varchar(20) NOT NULL COMMENT 'Clave interna del tipo de cliente',
   `nombre` varchar(16) NOT NULL COMMENT 'un nombre corto para esta clasificacion',
   `descripcion` varchar(255) DEFAULT NULL COMMENT 'Descripcion larga de la clasificacion del cliente',
-  `id_tarifa_compra` int(11) DEFAULT NULL COMMENT 'Id de la tarifa de compra por default para esta clasificacion de cliente',
-  `id_tarifa_venta` int(11) DEFAULT NULL COMMENT 'Id de la tarifa de venta por default para esta clasificacion de cliente',
+  `id_tarifa_compra` int(11) NOT NULL COMMENT 'Id de la tarifa de compra por default para esta clasificacion de cliente',
+  `id_tarifa_venta` int(11) NOT NULL COMMENT 'Id de la tarifa de venta por default para esta clasificacion de cliente',
   PRIMARY KEY (`id_clasificacion_cliente`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
 
@@ -379,8 +379,8 @@ CREATE TABLE IF NOT EXISTS `clasificacion_proveedor` (
   `nombre` varchar(100) NOT NULL COMMENT 'Nombre de la clasificacion',
   `descripcion` varchar(255) DEFAULT NULL COMMENT 'Descripcion larga de la clasificacion del proveedor',
   `activa` tinyint(1) NOT NULL COMMENT 'Si esta clasificacion esat activa o no',
-  `id_tarifa_compra` int(11) DEFAULT NULL COMMENT 'Id de la tarifa de compra por default para esta clasificacion de proveedor',
-  `id_tarifa_venta` int(11) DEFAULT NULL COMMENT 'Id de la tarifa de venta por default para esta clasificacion de proveedor',
+  `id_tarifa_compra` int(11) NOT NULL COMMENT 'Id de la tarifa de compra por default para esta clasificacion de proveedor',
+  `id_tarifa_venta` int(11) NOT NULL COMMENT 'Id de la tarifa de venta por default para esta clasificacion de proveedor',
   PRIMARY KEY (`id_clasificacion_proveedor`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Tabla que especifica las clasificaciones de proveedores' AUTO_INCREMENT=7 ;
 
@@ -1389,8 +1389,8 @@ CREATE TABLE IF NOT EXISTS `rol` (
   `nombre` varchar(30) NOT NULL COMMENT 'Nombre del rol',
   `descripcion` varchar(255) DEFAULT NULL COMMENT 'descripcion larga de este rol',
   `salario` float DEFAULT NULL COMMENT 'Si los usuarios con dicho rol contaran con un salario',
-  `id_tarifa_compra` int(11) DEFAULT NULL COMMENT 'Id de la tarifa de compra por default para los usuarios de este rol',
-  `id_tarifa_venta` int(11) DEFAULT NULL COMMENT 'Id de la tarifa de venta por default para los usuarios de este rol',
+  `id_tarifa_compra` int(11) NOT NULL COMMENT 'Id de la tarifa de compra por default para los usuarios de este rol',
+  `id_tarifa_venta` int(11) NOT NULL COMMENT 'Id de la tarifa de venta por default para los usuarios de este rol',
   PRIMARY KEY (`id_rol`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
 
