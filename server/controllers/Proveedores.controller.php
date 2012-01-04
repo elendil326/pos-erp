@@ -58,7 +58,9 @@ require_once("interfaces/Proveedores.interface.php");
                 $id_clasificacion_proveedor = null,
                 $nombre = null,
                 $descripcion = null,
-                $activa = null
+                $activa = null,
+                $id_tarifa_compra = null,
+                $id_tarifa_venta = null
         )
         {
             //valida que la clasificacion exista y este activa
@@ -102,7 +104,45 @@ require_once("interfaces/Proveedores.interface.php");
                 if(is_string($e))
                     return $e;
             }
+            //valida que la tarifa de compra exista, este activa y sea una tarifa de compra
+            if(!is_null($id_tarifa_compra))
+            {
+                $tarifa = TarifaDAO::getByPK($id_tarifa_compra);
+                if(is_null($tarifa))
+                {
+                    return "La tarifa ".$id_tarifa_compra." no existe";
+                }
+                
+                if(!$tarifa->getActiva())
+                {
+                    return "La tarifa ".$id_tarifa_compra." no esta activa";
+                }
+                
+                if($tarifa->getTipoTarifa()!="compra")
+                {
+                    return "La tarifa ".$id_tarifa_compra." no es de compra";
+                }
+            }
             
+            //valida que la tarifa de venta exista, este activa y sea una tarifa de venta
+            if(!is_null($id_tarifa_venta))
+            {
+                $tarifa = TarifaDAO::getByPK($id_tarifa_venta);
+                if(is_null($tarifa))
+                {
+                    return "La tarifa ".$id_tarifa_venta." no existe";
+                }
+                
+                if(!$tarifa->getActiva())
+                {
+                    return "La tarifa ".$id_tarifa_venta." no esta activa";
+                }
+                
+                if($tarifa->getTipoTarifa()!="venta")
+                {
+                    return "La tarifa ".$id_tarifa_venta." no es de venta";
+                }
+            }
             //no se encontro error, regresa verdadero
             return true;
         }
@@ -189,18 +229,32 @@ require_once("interfaces/Proveedores.interface.php");
             Logger::log("Creando nueva clasificacion de proveedor");
             
             //Se validan los parametros recibidos
-            $validar = self::validarParametrosClasificacionProveedor(null, $nombre, $descripcion);
+            $validar = self::validarParametrosClasificacionProveedor(null, $nombre, $descripcion,null,$id_tarifa_compra,$id_tarifa_venta);
             if(is_string($validar))
             {
                 Logger::error($validar);
                 throw new Exception($validar);
             }
             
+            //Si no se reciben tarifas se usan las default
+            
+            if(is_null($id_tarifa_compra))
+            {
+                $id_tarifa_compra=2;
+            }
+            
+            if(is_null($id_tarifa_venta))
+            {
+                $id_tarifa_venta=1;
+            }
+            
             $clasificacion_proveedor = new ClasificacionProveedor( array( 
                                                 
-                                                                        "nombre"        => $nombre,
-                                                                        "descripcion"   => $descripcion,
-                                                                        "activa"        => 1
+                                                                        "nombre"            => $nombre,
+                                                                        "descripcion"       => $descripcion,
+                                                                        "activa"            => 1,
+                                                                        "id_tarifa_compra"  => $id_tarifa_compra,
+                                                                        "id_tarifa_venta"   => $id_tarifa_venta
                                                                         
                                                                         )
                                                                     );
@@ -291,7 +345,7 @@ require_once("interfaces/Proveedores.interface.php");
             Logger::log("Editando la clasificacion de proveedor ".$id_clasificacion_proveedor);
             
             //valida los parametros recibidos
-            $validar = self::validarParametrosClasificacionProveedor($id_clasificacion_proveedor, $nombre, $descripcion);
+            $validar = self::validarParametrosClasificacionProveedor($id_clasificacion_proveedor, $nombre, $descripcion,null,$id_tarifa_compra,$id_tarifa_venta);
             if(is_string($validar))
             {
                 Logger::error($validar);
@@ -309,6 +363,26 @@ require_once("interfaces/Proveedores.interface.php");
                 $clasificacion_proveedor->setNombre($nombre);
             }
             
+            $cambio_tarifa_compra = false;
+            $cambio_tarifa_venta = false;
+            
+            if(!is_null($id_tarifa_compra))
+            {
+                if($id_tarifa_compra!=$clasificacion_proveedor->getIdTarifaCompra())
+                {
+                    $cambio_tarifa_compra= true;
+                    $clasificacion_proveedor->setIdTarifaCompra($id_tarifa_compra);
+                }
+            }
+            if(!is_null($id_tarifa_venta))
+            {
+                if($id_tarifa_venta!=$clasificacion_proveedor->getIdTarifaVenta())
+                {
+                    $cambio_tarifa_venta = true;
+                    $clasificacion_proveedor->setIdTarifaVenta($id_tarifa_venta);
+                }
+            }
+            
             //Se actualiza el registro. Si se reciben listas de impuestos y/o registros se guardan los
             //que estan en la lista, despues se recorren los registros de la base de datos y aquellos que no
             //se encuentren en la lista nueva seran eliminados.
@@ -316,6 +390,35 @@ require_once("interfaces/Proveedores.interface.php");
             try
             {
                 ClasificacionProveedorDAO::save($clasificacion_proveedor);
+                
+                //Si se cambia la tarifa de compra o de venta, se actualizan aquellos proveedores
+                //con etsa clasificacion de proveedor y cuya tarifa haya sido obtenida por el rol
+                //o por la clasificacion de proveedor.
+                if($cambio_tarifa_compra || $cambio_tarifa_venta)
+                {
+                    $proveedores = UsuarioDAO::search( new Usuario( array( "id_clasificacion_proveedor" => $id_clasificacion_proveedor ) ) );
+                    foreach($proveedores as $proveedor)
+                    {
+                        if($cambio_tarifa_compra)
+                        {
+                            if($proveedor->getTarifaCompraObtenida()=="rol" || $proveedor->getTarifaCompraObtenida()=="proveedor")
+                            {
+                                $proveedor->setIdTarifaCompra($id_tarifa_compra);
+                                $proveedor->setTarifaCompraObtenida("proveedor");
+                            }
+                        }
+                        if($cambio_tarifa_venta)
+                        {
+                            if($proveedor->getTarifaVentaObtenida()=="rol" || $proveedor->getTarifaVentaObtenida()=="proveedor")
+                            {
+                                $proveedor->setIdTarifaVenta($id_tarifa_venta);
+                                $proveedor->setTarifaVentaObtenida("proveedor");
+                            }
+                        }
+                        UsuarioDAO::save($proveedor);
+                    }
+                }
+                
                 if(!is_null($impuestos))
                 {
                     

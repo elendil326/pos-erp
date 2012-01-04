@@ -859,6 +859,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
                 if($id_tarifa_compra!=$clasificacion_cliente->getIdTarifaCompra())
                 {
                     $cambio_tarifa_compra=true;
+                    $clasificacion_cliente->setIdTarifaCompra($id_tarifa_compra);
                 }
             }
             if(!is_null($id_tarifa_venta))
@@ -866,6 +867,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
                 if($id_tarifa_venta!=$clasificacion_cliente->getIdTarifaVenta())
                 {
                     $cambio_tarifa_venta=true;
+                    $clasificacion_cliente->setIdTarifaVenta($id_tarifa_venta);
                 }
             }
             
