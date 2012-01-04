@@ -163,16 +163,6 @@ abstract class ClasificacionServicioDAOBase extends DAO
 			array_push( $val, $clasificacion_servicio->getDescripcion() );
 		}
 
-		if( ! is_null( $clasificacion_servicio->getMargenUtilidad() ) ){
-			$sql .= " margen_utilidad = ? AND";
-			array_push( $val, $clasificacion_servicio->getMargenUtilidad() );
-		}
-
-		if( ! is_null( $clasificacion_servicio->getDescuento() ) ){
-			$sql .= " descuento = ? AND";
-			array_push( $val, $clasificacion_servicio->getDescuento() );
-		}
-
 		if( ! is_null( $clasificacion_servicio->getActiva() ) ){
 			$sql .= " activa = ? AND";
 			array_push( $val, $clasificacion_servicio->getActiva() );
@@ -209,13 +199,11 @@ abstract class ClasificacionServicioDAOBase extends DAO
 	  **/
 	private static final function update( $clasificacion_servicio )
 	{
-		$sql = "UPDATE clasificacion_servicio SET  nombre = ?, garantia = ?, descripcion = ?, margen_utilidad = ?, descuento = ?, activa = ? WHERE  id_clasificacion_servicio = ?;";
+		$sql = "UPDATE clasificacion_servicio SET  nombre = ?, garantia = ?, descripcion = ?, activa = ? WHERE  id_clasificacion_servicio = ?;";
 		$params = array( 
 			$clasificacion_servicio->getNombre(), 
 			$clasificacion_servicio->getGarantia(), 
 			$clasificacion_servicio->getDescripcion(), 
-			$clasificacion_servicio->getMargenUtilidad(), 
-			$clasificacion_servicio->getDescuento(), 
 			$clasificacion_servicio->getActiva(), 
 			$clasificacion_servicio->getIdClasificacionServicio(), );
 		global $conn;
@@ -240,14 +228,12 @@ abstract class ClasificacionServicioDAOBase extends DAO
 	  **/
 	private static final function create( &$clasificacion_servicio )
 	{
-		$sql = "INSERT INTO clasificacion_servicio ( id_clasificacion_servicio, nombre, garantia, descripcion, margen_utilidad, descuento, activa ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO clasificacion_servicio ( id_clasificacion_servicio, nombre, garantia, descripcion, activa ) VALUES ( ?, ?, ?, ?, ?);";
 		$params = array( 
 			$clasificacion_servicio->getIdClasificacionServicio(), 
 			$clasificacion_servicio->getNombre(), 
 			$clasificacion_servicio->getGarantia(), 
 			$clasificacion_servicio->getDescripcion(), 
-			$clasificacion_servicio->getMargenUtilidad(), 
-			$clasificacion_servicio->getDescuento(), 
 			$clasificacion_servicio->getActiva(), 
 		 );
 		global $conn;
@@ -336,28 +322,6 @@ abstract class ClasificacionServicioDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " descripcion = ? AND"; 
-			$a = is_null ( $a ) ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
-		if( ( !is_null (($a = $clasificacion_servicioA->getMargenUtilidad()) ) ) & ( ! is_null ( ($b = $clasificacion_servicioB->getMargenUtilidad()) ) ) ){
-				$sql .= " margen_utilidad >= ? AND margen_utilidad <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " margen_utilidad = ? AND"; 
-			$a = is_null ( $a ) ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
-		if( ( !is_null (($a = $clasificacion_servicioA->getDescuento()) ) ) & ( ! is_null ( ($b = $clasificacion_servicioB->getDescuento()) ) ) ){
-				$sql .= " descuento >= ? AND descuento <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " descuento = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

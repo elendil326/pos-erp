@@ -28,7 +28,12 @@
                 if(!$esta_compra->getCancelada())
                 {
                     $menu = new MenuComponent();
-
+                    
+                    if($esta_compra->getTipoDeCompra()=="credito")
+                    {
+                        $menu->addItem("Abonar a esta compra", "cargos_y_abonos.nuevo.abono.php?cid=".$_GET["cid"]."&did=".$esta_compra->getIdVendedorCompra());
+                    }
+                    
                     $btn_eliminar = new MenuItem("Cancelar esta compra", null);
                     $btn_eliminar->addApiCall("api/compras/cancelar", "GET");
                     $btn_eliminar->onApiCallSuccessRedirect("compras.lista.php");

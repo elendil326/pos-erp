@@ -136,8 +136,6 @@ require_once("interfaces/Productos.interface.php");
                 $garantia = null,
                 $costo_estandar = null,
                 $control_de_existencia = null,
-                $margen_de_utilidad = null,
-                $descuento = null,
                 $descripcion = null,
                 $foto_del_producto = null,
                 $costo_extra_almacen = null,
@@ -172,7 +170,7 @@ require_once("interfaces/Productos.interface.php");
             //valida que el metodo de costeo sea valido
             if(!is_null($metodo_costeo))
             {
-                if($metodo_costeo!="precio"&&$metodo_costeo!="margen")
+                if($metodo_costeo!="precio"&&$metodo_costeo!="costo")
                     return "E metodo de costeo (".$metodo_costeo.") es invalido";
             }
             
@@ -250,22 +248,6 @@ require_once("interfaces/Productos.interface.php");
                     return $e;
             }
             
-            //valida que el margen de utilidad este en rango
-            if(!is_null($margen_de_utilidad))
-            {
-                $e = self::validarNumero($margen_de_utilidad, 1.8e200, "margen de utilidad");
-                if(is_string($e))
-                    return $e;
-            }
-            
-            //valida que el descuento este en rango
-            if(!is_null($descuento))
-            {
-                $e = self::validarNumero($descuento, 100, "descuento");
-                if(is_string($e))
-                    return $e;
-            }
-            
             //valida que la foto del producto este en rango
             if(!is_null($foto_del_producto))
             {
@@ -338,9 +320,7 @@ require_once("interfaces/Productos.interface.php");
         
         private static function validarParametrosProductoEmpresa
         (
-                $id_empresa = null,
-                $precio_utilidad = null,
-                $es_margen_utilidad = null
+                $id_empresa = null
         )
         {
             //valida que la empresa exista y este activa
@@ -352,22 +332,6 @@ require_once("interfaces/Productos.interface.php");
                 
                 if(!$empresa->getActivo())
                     return "La empresa esta desactivada";
-            }
-            
-            //valida que el precio_utilidad este en rango
-            if(!is_null($precio_utilidad))
-            {
-                $e = self::validarNumero($precio_utilidad, 1.8e200, "precio_utilidad");
-                if(is_string($e))
-                    return $e;
-            }
-            
-            //valida el boleano es_margen_utilidad
-            if(!is_null($es_margen_utilidad))
-            {
-                $e = self::validarNumero($es_margen_utilidad, 1, "es margen de utilidad");
-                if(is_string($e))
-                    return $e;
             }
             
             //No se encontro error, regresa true
@@ -384,9 +348,7 @@ require_once("interfaces/Productos.interface.php");
                 $nombre = null,
                 $descripcion = null,
                 $garantia = null,
-                $activa = null,
-                $margen_utilidad = null,
-                $descuento = null
+                $activa = null
         )
         {
             //valida que la clasificacion de producto exista y este activa
@@ -444,22 +406,6 @@ require_once("interfaces/Productos.interface.php");
             if(!is_null($activa))
             {
                 $e = self::validarNumero($activa, 1, "activa");
-                if(is_string($e))
-                    return $e;
-            }
-            
-            //valida que el margen de utilidad este en rango
-            if(!is_null($margen_utilidad))
-            {
-                $e = self::validarNumero($margen_utilidad, 1.8e200, "margen de utilidad");
-                if(is_string($e))
-                    return $e;
-            }
-            
-            //valida que el descuento este en rango
-            if(!is_null($descuento))
-            {
-                $e = self::validarNumero($descuento, 100, "Descuento");
                 if(is_string($e))
                     return $e;
             }
@@ -777,13 +723,11 @@ NOTA: Se crea un producto tipo = 1 que es para productos
 		$control_de_existencia = null, 
 		$costo_extra_almacen = null, 
 		$descripcion_producto = null, 
-		$descuento = null, 
 		$foto_del_producto = null, 
 		$garantia = null, 
 		$id_empresas = null, 
 		$id_unidad = null, 
 		$impuestos = null, 
-		$margen_de_utilidad = null, 
 		$peso_producto = null, 
 		$precio = null
 	)
@@ -793,15 +737,13 @@ NOTA: Se crea un producto tipo = 1 que es para productos
             //valida los parametros recibidos
             $validar = self::validarParametrosProducto(null,$compra_en_mostrador,$metodo_costeo,
                     $activo,$codigo_producto,$nombre_producto,$garantia,$costo_estandar,$control_de_existencia,
-                    $margen_de_utilidad,$descuento,$descripcion_producto,$foto_del_producto,$costo_extra_almacen,
+                    $descripcion_producto,$foto_del_producto,$costo_extra_almacen,
                     $codigo_de_barras,$peso_producto,$id_unidad,$precio);
             if(is_string($validar))
             {
                 Logger::error($validar);
                 throw new Exception($validar);
             }
-            if(is_null($descuento))
-                $descuento = 0;
             
             //Se verifica que si se recibio precio como metodo de costeo, se reciba un precio,
             //o si se recibe margen, que se reciba un margen de utilidad.
@@ -812,10 +754,10 @@ NOTA: Se crea un producto tipo = 1 que es para productos
                 throw new Exception("Se intenta registrar un producto con metodo de costeo precio sin especificar un precio",901);
             }
             
-            else if( $metodo_costeo == "margen" && is_null($margen_de_utilidad))
+            else if( $metodo_costeo == "costo" && is_null($costo_estandar))
             {
-                Logger::error("Se intenta registrar un producto con metodo de costeo margen de utilidad sin especificar un margen");
-                throw new Exception("Se intenta registrar un producto con metodo de costeo margen de utilidad sin especificar un margen",901);
+                Logger::error("Se intenta registrar un producto con metodo de costeo costo sin especificar un costo");
+                throw new Exception("Se intenta registrar un producto con metodo de costeo costo sin especificar un costo",901);
             }
             
             $producto = new Producto( array( 
@@ -827,8 +769,6 @@ NOTA: Se crea un producto tipo = 1 que es para productos
                                     "garantia"              => $garantia,
                                     "costo_estandar"        => $costo_estandar,
                                     "control_de_existencia" => $control_de_existencia,
-                                    "margen_de_utilidad"    => $margen_de_utilidad,
-                                    "descuento"             => $descuento,
                                     "descripcion"           => $descripcion_producto,
                                     "foto_del_producto"     => $foto_del_producto,
                                     "costo_extra_almacen"   => $costo_extra_almacen,
@@ -857,25 +797,12 @@ NOTA: Se crea un producto tipo = 1 que es para productos
                     $producto_empresa = new ProductoEmpresa( array( "id_producto" => $producto->getIdProducto() ) );
                     foreach($id_empresas as $id_empresa)
                     {
-                        
-                        //Validamos que el objeto recibido tenga las llaves que buscamos
-                        if
-                        (
-                                !array_key_exists("id_empresa", $id_empresa)           ||
-                                !array_key_exists("precio_utilidad", $id_empresa)      ||
-                                !array_key_exists("es_margen_utilidad", $id_empresa)  
-                        )
-                        {
-                            throw new Exception("Las empresas fueron enviadas incorrectamente",901);
-                        }
-                        
-                        $validar = self::validarParametrosProductoEmpresa($id_empresa["id_empresa"],$id_empresa["precio_utilidad"],$id_empresa["es_margen_utilidad"]);
+                       
+                        $validar = self::validarParametrosProductoEmpresa($id_empresa);
                         if(is_string($validar))
                             throw new Exception($validar,901);
                         
-                        $producto_empresa->setIdEmpresa($id_empresa["id_empresa"]);
-                        $producto_empresa->setPrecioUtilidad($id_empresa["precio_utilidad"]);
-                        $producto_empresa->setEsMargenUtilidad($id_empresa["es_margen_utilidad"]);
+                        $producto_empresa->setIdEmpresa($id_empresa);
                         ProductoEmpresaDAO::save($producto_empresa);
                     }
                 }/* Fin if de empresas */
@@ -1115,13 +1042,11 @@ NOTA: Se crea un producto tipo = 1 que es para productos
 		$costo_estandar = null, 
 		$costo_extra_almacen = null, 
 		$descripcion_producto = null, 
-		$descuento = null, 
 		$empresas = null, 
 		$foto_del_producto = null, 
 		$garantia = null, 
 		$id_unidad = null, 
 		$impuestos = null, 
-		$margen_de_utilidad = null, 
 		$metodo_costeo = null, 
 		$nombre_producto = null, 
 		$peso_producto = null, 
@@ -1133,8 +1058,8 @@ NOTA: Se crea un producto tipo = 1 que es para productos
             //se validan los parametros recibidos
             $validar = self::validarParametrosProducto($id_producto,$compra_en_mostrador,
                     $metodo_costeo,null,$codigo_producto,$nombre_producto,$garantia,
-                    $costo_estandar,$control_de_existencia,$margen_de_utilidad,$descuento,
-                    $descripcion_producto,$foto_del_producto,$costo_extra_almacen,$codigo_de_barras,
+                    $costo_estandar,$control_de_existencia,$descripcion_producto,
+                    $foto_del_producto,$costo_extra_almacen,$codigo_de_barras,
                     $peso_producto,$id_unidad,$precio);
             if(is_string($validar))
             {
@@ -1179,16 +1104,6 @@ NOTA: Se crea un producto tipo = 1 que es para productos
                 $producto->setControlDeExistencia($control_de_existencia);
             }
             
-            if(!is_null($margen_de_utilidad))
-            {
-                $producto->setMargenDeUtilidad($margen_de_utilidad);
-            }
-            
-            if(!is_null($descuento))
-            {
-                $producto->setDescuento($descuento);
-            }
-            
             if(!is_null($foto_del_producto))
             {
                 $producto->setFotoDelProducto($foto_del_producto);
@@ -1225,10 +1140,10 @@ NOTA: Se crea un producto tipo = 1 que es para productos
                 throw new Exception("Se intenta registrar un producto con metodo de costeo precio sin especificar un precio",901);
             }
             
-            else if( $metodo_costeo == "margen" && is_null($producto->getMargenDeUtilidad()))
+            else if( $metodo_costeo == "costo" && is_null($producto->getCostoEstandar()))
             {
-                Logger::error("Se intenta registrar un producto con metodo de costeo margen de utilidad sin especificar un margen");
-                throw new Exception("Se intenta registrar un producto con metodo de costeo margen de utilidad sin especificar un margen",901);
+                Logger::error("Se intenta registrar un producto con metodo de costeo costo sin especificar un costo estandar");
+                throw new Exception("Se intenta registrar un producto con metodo de costeo costo sin especificar un costo estandar",901);
             }
             
             DAO::transBegin();
@@ -1252,24 +1167,11 @@ NOTA: Se crea un producto tipo = 1 que es para productos
                     $producto_empresa = new ProductoEmpresa( array( "id_producto" => $id_producto ) );
                     foreach($empresas as $empresa)
                     {
-                        
-                        if
-                        (
-                                !array_key_exists("id_empresa", $empresa)           ||
-                                !array_key_exists("precio_utilidad", $empresa)      ||
-                                !array_key_exists("es_margen_utilidad", $empresa)  
-                        )
-                        {
-                            throw new Exception("Las empresas fueron enviadas incorrectamente",901);
-                        }
-                        
-                        $validar = self::validarParametrosProductoEmpresa($empresa["id_empresa"],$empresa["precio_utilidad"],$empresa["es_margen_utilidad"]);
+                        $validar = self::validarParametrosProductoEmpresa($empresa);
                         if(is_string($validar))
                             throw new Exception($validar,901);
 
-                        $producto_empresa->setIdEmpresa($empresa["id_empresa"]);
-                        $producto_empresa->setPrecioUtilidad($empresa["precio_utilidad"]);
-                        $producto_empresa->setEsMargenUtilidad($empresa["es_margen_utilidad"]);
+                        $producto_empresa->setIdEmpresa($empresa);
                         ProductoEmpresaDAO::save($producto_empresa);
                     }
                     $productos_empresa = ProductoEmpresaDAO::search( new ProductoEmpresa( array ( "id_producto" => $id_producto ) ) );
@@ -1278,7 +1180,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos
                         $encontrado = false;
                         foreach($empresas as $empresa)
                         {
-                            if($empresa["id_empresa"]==$p_e->getIdEmpresa())
+                            if($empresa==$p_e->getIdEmpresa())
                             {
                                 $encontrado = true;
                             }
@@ -1388,18 +1290,16 @@ NOTA: Se crea un producto tipo = 1 que es para productos
 	public static function NuevaCategoria
 	(
 		$nombre, 
-		$descripcion = null, 
-		$descuento = null, 
+		$descripcion = null,
 		$garantia = null, 
 		$impuestos = null, 
-		$margen_utilidad = null, 
 		$retenciones = null
 	)
 	{  
             Logger::log("Creando nueva categoria");
             
             //se validan los parametros obtenidos
-            $validar = self::validarParametrosClasificacionProducto(null,$nombre,$descripcion,$garantia,null,$margen_utilidad,$descuento);
+            $validar = self::validarParametrosClasificacionProducto(null,$nombre,$descripcion,$garantia);
             if(is_string($validar))
             {
                 Logger::error($validar);
@@ -1411,9 +1311,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos
                                                 "nombre"            => trim($nombre),
                                                 "descripcion"       => $descripcion,
                                                 "garantia"          => $garantia,
-                                                "activa"            => 1,
-                                                "margen_utilidad"   => $margen_utilidad,
-                                                "descuento"         => $descuento
+                                                "activa"            => 1
                                             )
                                         );
             //Se guarda la nueva clasificacion. Si se reciben impuesto y/o retenciones, se crean los registros correspondientes
@@ -1496,18 +1394,16 @@ NOTA: Se crea un producto tipo = 1 que es para productos
 	(
 		$id_categoria, 
 		$nombre, 
-		$descripcion = null, 
-		$descuento = null, 
+		$descripcion = null,
 		$garantia = null, 
 		$impuestos = null, 
-		$margen_utilidad = null, 
 		$retenciones = null
 	)
 	{  
             Logger::log("Editando la clasificacion de producto ".$id_categoria);
             
             //Se validan los parametros recibidos
-            $validar = self::validarParametrosClasificacionProducto($id_categoria,$nombre,$descripcion,$garantia,null,$margen_utilidad,$descuento);
+            $validar = self::validarParametrosClasificacionProducto($id_categoria,$nombre,$descripcion,$garantia);
             if(is_string($validar))
             {
                 Logger::error($validar);
@@ -1525,16 +1421,6 @@ NOTA: Se crea un producto tipo = 1 que es para productos
             if(!is_null($garantia))
             {
                 $clasificacion_producto->setGarantia($garantia);
-            }
-            
-            if(!is_null($descuento))
-            {
-                $clasificacion_producto->setDescuento($descuento);
-            }
-            
-            if(is_null($margen_utilidad))
-            {
-                $clasificacion_producto->setMargenUtilidad($margen_utilidad);
             }
             
             if(is_null($descripcion))

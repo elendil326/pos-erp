@@ -57,8 +57,6 @@ require_once("interfaces/Paquetes.interface.php");
                 $id_paquete = null,
                 $nombre = null,
                 $descripcion = null,
-                $margen_utilidad = null,
-                $descuento = null,
                 $foto_paquete = null,
                 $costo_estandar = null,
                 $precio = null,
@@ -105,22 +103,6 @@ require_once("interfaces/Paquetes.interface.php");
                     return $e;
             }
             
-            //valida que el margen de utilidad este en rango
-            if(!is_null($margen_utilidad))
-            {
-                $e = self::validarNumero($margen_utilidad, 1.8e200, "margen de utilidad");
-                if(is_string($e))
-                    return $e;
-            }
-            
-            //valida que el descuento este en rango
-            if(!is_null($descuento))
-            {
-                $e = self::validarNumero($descuento, 100, "descuento");
-                if(is_string($e))
-                    return $e;
-            }
-            
             //valida que la foto del paquete este en rango
             if(!is_null($foto_paquete))
             {
@@ -163,9 +145,7 @@ require_once("interfaces/Paquetes.interface.php");
          */
         private static function validarParametrosPaqueteEmpresa
         (
-                $id_empresa = null,
-                $precio_utilidad = null,
-                $es_margen_utilidad = null
+                $id_empresa = null
         )
         {
             //valida que la empresa exista y qe este activa
@@ -179,22 +159,6 @@ require_once("interfaces/Paquetes.interface.php");
                     return "La empresa ".$id_empresa." no esta activa";
             }
             
-            //valida que el precio_utilidad este en rango
-            if(!is_null($precio_utilidad))
-            {
-                $e = self::validarNumero($precio_utilidad, 1.8e200, "precio_utilidad");
-                if(is_string($e))
-                    return $e;
-            }
-            
-            //valida el boleano es_margen_utilidad
-            if(!is_null($es_margen_utilidad))
-            {
-                $e = self::validarNumero($es_margen_utilidad, 1, "es margen de utilidad");
-                if(is_string($e))
-                    return $e;
-            }
-            
             //no se encontro error
             return true;
         }
@@ -205,9 +169,7 @@ require_once("interfaces/Paquetes.interface.php");
          */
         private static function validarParametrosPaqueteSucursal
         (
-                $id_sucursal = null,
-                $precio_utilidad = null,
-                $es_margen_utilidad = null
+                $id_sucursal = null
         )
         {
             //valida que la sucursal exista y que este activa
@@ -219,22 +181,6 @@ require_once("interfaces/Paquetes.interface.php");
                 
                 if(!$sucursal->getActiva())
                     return "La sucursal ".$id_sucursal." no esta activa";
-            }
-            
-            //valida que el precio_utilidad este en rango
-            if(!is_null($precio_utilidad))
-            {
-                $e = self::validarNumero($precio_utilidad, 1.8e200, "precio_utilidad");
-                if(is_string($e))
-                    return $e;
-            }
-            
-            //valida el boleano es_margen_utilidad
-            if(!is_null($es_margen_utilidad))
-            {
-                $e = self::validarNumero($es_margen_utilidad, 1, "es margen de utilidad");
-                if(is_string($e))
-                    return $e;
             }
             
             //no se encontro error
@@ -317,9 +263,7 @@ require_once("interfaces/Paquetes.interface.php");
 		$sucursales, 
 		$costo_estandar = null, 
 		$descripcion = null, 
-		$descuento = null, 
 		$foto_paquete = null, 
-		$margen_utilidad = null, 
 		$precio = null, 
 		$productos = null, 
 		$servicios = null
@@ -328,7 +272,7 @@ require_once("interfaces/Paquetes.interface.php");
             Logger::log("Creando nuevo paquete");
             
             //valida los parametros recibidos
-            $validar = self::validarParametrosPaquete(null,$nombre,$descripcion,$margen_utilidad,$descuento,$foto_paquete,$costo_estandar,$precio);
+            $validar = self::validarParametrosPaquete(null,$nombre,$descripcion,$foto_paquete,$costo_estandar,$precio);
             if(is_string($validar))
             {
                 Logger::error($validar);
@@ -357,8 +301,6 @@ require_once("interfaces/Paquetes.interface.php");
             $paquete = new Paquete( array( 
                                             "nombre"            => $nombre,
                                             "descripcion"       => $descripcion,
-                                            "margen_utilidad"   => $margen_utilidad,
-                                            "descuento"         => $descuento,
                                             "foto_paquete"      => $foto_paquete,
                                             "costo_estandar"    => $costo_estandar,
                                             "precio"            => $precio,
@@ -375,26 +317,14 @@ require_once("interfaces/Paquetes.interface.php");
                 foreach($empresas as $empresa)
                 {
                     
-                    if
-                    (
-                            !array_key_exists("id_empresa", $empresa)           ||
-                            !array_key_exists("precio_utilidad", $empresa)      ||
-                            !array_key_exists("es_margen_utilidad", $empresa)   
-                    )
-                    {
-                        throw new Exception("Las empresas no tienen los parametros necesarios",901);
-                    }
-                    
-                    $validar = self::validarParametrosPaqueteEmpresa($empresa["id_empresa"],$empresa["precio_utilidad"],$empresa["es_margen_utilidad"]);
+                    $validar = self::validarParametrosPaqueteEmpresa($empresa);
                     if(is_string($validar))
                         throw new Exception($validar,901);
                     
                    $paquete_empresa = new PaqueteEmpresa( array(  
                        
                                                                 "id_paquete"        => $paquete->getIdPaquete(),
-                                                                "id_empresa"        => $empresa["id_empresa"],
-                                                                "precio_utilidad"   => $empresa["precio_utilidad"],
-                                                                "es_margen_utilidad"=> $empresa["es_margen_utilidad"]
+                                                                "id_empresa"        => $empresa,
                        
                                                                 ) 
                                                                );
@@ -404,26 +334,14 @@ require_once("interfaces/Paquetes.interface.php");
                 foreach($sucursales as $sucursal)
                 {
                     
-                    if
-                    (
-                            !array_key_exists("id_sucursal", $sucursal)           ||
-                            !array_key_exists("precio_utilidad", $sucursal)      ||
-                            !array_key_exists("es_margen_utilidad", $sucursal)   
-                    )
-                    {
-                        throw new Exception("Las sucursales no tienen los parametros necesarios",901);
-                    }
-                    
-                    $validar = self::validarParametrosPaqueteSucursal($sucursal["id_sucursal"],$sucursal["precio_utilidad"],$sucursal["es_margen_utilidad"]);
+                    $validar = self::validarParametrosPaqueteSucursal($sucursal);
                     if(is_string($validar))
                         throw new Exception($validar,901);
                     
                    $paquete_sucursal = new PaqueteSucursal( array(  
                        
                                                                 "id_paquete"        => $paquete->getIdPaquete(),
-                                                                "id_sucursal"       => $sucursal["id_sucursal"],
-                                                                "precio_utilidad"   => $sucursal["precio_utilidad"],
-                                                                "es_margen_utilidad"=> $sucursal["es_margen_utilidad"]
+                                                                "id_sucursal"       => $sucursal
                        
                                                                 ) 
                                                                );
@@ -490,13 +408,13 @@ require_once("interfaces/Paquetes.interface.php");
                         
                         $serv = ServicioDAO::getByPK($servicio["id_servicio"]);
                         if(is_null($serv))
-                            throw new Exception("El servicio ".$servicio["id_servicio"]." no existe");
+                            throw new Exception("El servicio ".$servicio["id_servicio"]." no existe",901);
                         
                         if(!$serv->getActivo())
-                            throw new Exception("El servicio ".$servicio["id_servicio"]." no esta activo");
+                            throw new Exception("El servicio ".$servicio["id_servicio"]." no esta activo",901);
                         
                         if(is_string($validar = self::validarNumero($servicio["cantidad"], 1.8e200, "cantidad")))
-                                throw new Exception($validar);
+                                throw new Exception($validar,901);
                         
                         $orden_de_servicio_paquete->setIdServicio($servicio["id_servicio"]);
                         $orden_de_servicio_paquete->setCantidad($servicio["cantidad"]);
@@ -536,10 +454,8 @@ require_once("interfaces/Paquetes.interface.php");
 		$id_paquete, 
 		$costo_estandar = null, 
 		$descripcion = null, 
-		$descuento = null, 
 		$empresas = null, 
 		$foto_paquete = null, 
-		$margen_utilidad = null, 
 		$nombre = null, 
 		$precio = null, 
 		$productos = null, 
@@ -550,7 +466,7 @@ require_once("interfaces/Paquetes.interface.php");
             Logger::log("Editando paquete ".$id_paquete);
             
             //se validan los parametros recibidos
-            $validar = self::validarParametrosPaquete($id_paquete,$nombre,$descripcion,$margen_utilidad,$descuento,$foto_paquete,$costo_estandar,$precio);
+            $validar = self::validarParametrosPaquete($id_paquete,$nombre,$descripcion,$foto_paquete,$costo_estandar,$precio);
             if(is_string($validar))
             {
                 Logger::error($validar);
@@ -564,17 +480,9 @@ require_once("interfaces/Paquetes.interface.php");
             {
                 $paquete->setFotoPaquete($foto_paquete);
             }
-            if(!is_null($descuento))
-            {
-                $paquete->setDescuento($descuento);
-            }
             if(!is_null($nombre))
             {
                 $paquete->setNombre($nombre);
-            }
-            if(!is_null($margen_utilidad))
-            {
-                $paquete->setMargenUtilidad($margen_utilidad);
             }
             if(!is_null($descripcion))
             {
@@ -609,26 +517,14 @@ require_once("interfaces/Paquetes.interface.php");
                     foreach($empresas as $empresa)
                     {
 
-                        if
-                        (
-                                !array_key_exists("id_empresa", $empresa)           ||
-                                !array_key_exists("precio_utilidad", $empresa)      ||
-                                !array_key_exists("es_margen_utilidad", $empresa)   
-                        )
-                        {
-                            throw new Exception("Las empresas no tienen los parametros necesarios",901);
-                        }
-
-                        $validar = self::validarParametrosPaqueteEmpresa($empresa["id_empresa"],$empresa["precio_utilidad"],$empresa["es_margen_utilidad"]);
+                        $validar = self::validarParametrosPaqueteEmpresa($empresa);
                         if(is_string($validar))
                             throw new Exception($validar,901);
 
                        $paquete_empresa = new PaqueteEmpresa( array(  
 
                                                                     "id_paquete"        => $paquete->getIdPaquete(),
-                                                                    "id_empresa"        => $empresa["id_empresa"],
-                                                                    "precio_utilidad"   => $empresa["precio_utilidad"],
-                                                                    "es_margen_utilidad"=> $empresa["es_margen_utilidad"]
+                                                                    "id_empresa"        => $empresa
 
                                                                     ) 
                                                                    );
@@ -641,7 +537,7 @@ require_once("interfaces/Paquetes.interface.php");
                         $encontrado = false;
                         foreach($empresas as $empresa)
                         {
-                            if($empresa["id_empresa"]==$p_e->getIdEmpresa())
+                            if($empresa==$p_e->getIdEmpresa())
                             {
                                 $encontrado = true;
                             }
@@ -664,26 +560,14 @@ require_once("interfaces/Paquetes.interface.php");
                     foreach($sucursales as $sucursal)
                     {
 
-                        if
-                        (
-                                !array_key_exists("id_sucursal", $sucursal)             ||
-                                !array_key_exists("precio_utilidad", $sucursal)         ||
-                                !array_key_exists("es_margen_utilidad", $sucursal)   
-                        )
-                        {
-                            throw new Exception("Las sucursales no tienen los parametros necesarios",901);
-                        }
-
-                        $validar = self::validarParametrosPaqueteSucursal($sucursal["id_sucursal"],$sucursal["precio_utilidad"],$sucursal["es_margen_utilidad"]);
+                        $validar = self::validarParametrosPaqueteSucursal($sucursal);
                         if(is_string($validar))
                             throw new Exception($validar,901);
 
                        $paquete_sucursal = new PaqueteSucursal( array(  
 
                                                                     "id_paquete"        => $paquete->getIdPaquete(),
-                                                                    "id_sucursal"       => $sucursal["id_sucursal"],
-                                                                    "precio_utilidad"   => $sucursal["precio_utilidad"],
-                                                                    "es_margen_utilidad"=> $sucursal["es_margen_utilidad"]
+                                                                    "id_sucursal"       => $sucursal
 
                                                                     ) 
                                                                    );
@@ -696,7 +580,7 @@ require_once("interfaces/Paquetes.interface.php");
                         $encontrado = false;
                         foreach($sucursales as $sucursal)
                         {
-                            if($sucursal["id_sucursal"]==$p_e->getIdSucursal())
+                            if($sucursal==$p_e->getIdSucursal())
                             {
                                 $encontrado = true;
                             }
@@ -732,7 +616,7 @@ require_once("interfaces/Paquetes.interface.php");
                         
                         $validar = self::validarParametrosProductoPaquete($producto["id_producto"], $producto["id_unidad"], $producto["cantidad"]);
                         if(is_string($validar))
-                            throw new Exception($validar);
+                            throw new Exception($validar,901);
                         
                         $producto_paquete->setIdProducto($producto["id_producto"]);
                         $producto_paquete->setIdUnidad($producto["id_unidad"]);
@@ -779,13 +663,13 @@ require_once("interfaces/Paquetes.interface.php");
                         
                         $serv = ServicioDAO::getByPK($servicio["id_servicio"]);
                         if(is_null($serv))
-                            throw new Exception("El servicio ".$servicio["id_servicio"]." no existe");
+                            throw new Exception("El servicio ".$servicio["id_servicio"]." no existe",901);
                         
                         if(!$serv->getActivo())
-                            throw new Exception("El servicio ".$servicio["id_servicio"]." no esta activo");
+                            throw new Exception("El servicio ".$servicio["id_servicio"]." no esta activo",901);
                         
                         if(is_string($validar = self::validarNumero($servicio["cantidad"], 1.8e200, "cantidad")))
-                                throw new Exception($validar);
+                                throw new Exception($validar,901);
                         
                         $orden_de_servicio_paquete->setIdServicio($servicio["id_servicio"]);
                         $orden_de_servicio_paquete->setCantidad($servicio["cantidad"]);
@@ -810,7 +694,9 @@ require_once("interfaces/Paquetes.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudo editar el paquete ".$e);
-                throw new Exception("No se pudo editar el paquete");
+                if($e->getCode()==901)
+                    throw new Exception("No se pudo editar el paquete: ".$e->getMessage(),901);
+                throw new Exception("No se pudo editar el paquete",901);
             }
             DAO::transEnd();
             Logger::log("El paquete ha sido editado exitosamente");

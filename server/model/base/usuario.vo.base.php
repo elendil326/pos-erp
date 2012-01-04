@@ -145,6 +145,12 @@ class Usuario extends VO
 			if( isset($data['cuenta_bancaria']) ){
 				$this->cuenta_bancaria = $data['cuenta_bancaria'];
 			}
+			if( isset($data['id_tarifa_compra']) ){
+				$this->id_tarifa_compra = $data['id_tarifa_compra'];
+			}
+			if( isset($data['id_tarifa_venta']) ){
+				$this->id_tarifa_venta = $data['id_tarifa_venta'];
+			}
 		}
 	}
 
@@ -198,7 +204,9 @@ class Usuario extends VO
 			"codigo_usuario" => $this->codigo_usuario,
 			"dias_de_embarque" => $this->dias_de_embarque,
 			"tiempo_entrega" => $this->tiempo_entrega,
-			"cuenta_bancaria" => $this->cuenta_bancaria
+			"cuenta_bancaria" => $this->cuenta_bancaria,
+			"id_tarifa_compra" => $this->id_tarifa_compra,
+			"id_tarifa_venta" => $this->id_tarifa_venta
 		); 
 	return json_encode($vec); 
 	}
@@ -573,6 +581,24 @@ class Usuario extends VO
 	  * @var varchar(50)
 	  */
 	public $cuenta_bancaria;
+
+	/**
+	  * id_tarifa_compra
+	  * 
+	  * Id de la tarifa de compra por default para este usuario<br>
+	  * @access public
+	  * @var int(11)
+	  */
+	public $id_tarifa_compra;
+
+	/**
+	  * id_tarifa_venta
+	  * 
+	  * Id de la tarifa de venta por default para este usuario<br>
+	  * @access public
+	  * @var int(11)
+	  */
+	public $id_tarifa_venta;
 
 	/**
 	  * getIdUsuario
@@ -1560,6 +1586,54 @@ class Usuario extends VO
 	final public function setCuentaBancaria( $cuenta_bancaria )
 	{
 		$this->cuenta_bancaria = $cuenta_bancaria;
+	}
+
+	/**
+	  * getIdTarifaCompra
+	  * 
+	  * Get the <i>id_tarifa_compra</i> property for this object. Donde <i>id_tarifa_compra</i> es Id de la tarifa de compra por default para este usuario
+	  * @return int(11)
+	  */
+	final public function getIdTarifaCompra()
+	{
+		return $this->id_tarifa_compra;
+	}
+
+	/**
+	  * setIdTarifaCompra( $id_tarifa_compra )
+	  * 
+	  * Set the <i>id_tarifa_compra</i> property for this object. Donde <i>id_tarifa_compra</i> es Id de la tarifa de compra por default para este usuario.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_tarifa_compra</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setIdTarifaCompra( $id_tarifa_compra )
+	{
+		$this->id_tarifa_compra = $id_tarifa_compra;
+	}
+
+	/**
+	  * getIdTarifaVenta
+	  * 
+	  * Get the <i>id_tarifa_venta</i> property for this object. Donde <i>id_tarifa_venta</i> es Id de la tarifa de venta por default para este usuario
+	  * @return int(11)
+	  */
+	final public function getIdTarifaVenta()
+	{
+		return $this->id_tarifa_venta;
+	}
+
+	/**
+	  * setIdTarifaVenta( $id_tarifa_venta )
+	  * 
+	  * Set the <i>id_tarifa_venta</i> property for this object. Donde <i>id_tarifa_venta</i> es Id de la tarifa de venta por default para este usuario.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_tarifa_venta</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setIdTarifaVenta( $id_tarifa_venta )
+	{
+		$this->id_tarifa_venta = $id_tarifa_venta;
 	}
 
 }

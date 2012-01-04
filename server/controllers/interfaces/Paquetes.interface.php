@@ -44,25 +44,21 @@
  	 * @param id_paquete int ID del paquete a editar
  	 * @param costo_estandar float Costo estandar del paquete
  	 * @param descripcion string Descripcion larga del paquete
- 	 * @param descuento float Descuento que sera aplicado a este paquete
- 	 * @param empresas json Objeto que contendra la informacion de las empresas a las que pertenecera este paquete
+ 	 * @param empresas json Arreglo de ids de empresas a las que pertencera este paquete
  	 * @param foto_paquete string Url de la foto del paquete
- 	 * @param margen_utilidad float Margen de utilidad que se ganara al vender este paquete
  	 * @param nombre string Nombre del paquete
  	 * @param precio float Precio del paquete
- 	 * @param productos json Objeto que contendra los ids de los productos contenidos en el paquete con sus cantidades respectivas
- 	 * @param servicios json Objeto que contendra los ids de los servicios contenidos en el paquete con sus cantidades respectivas
- 	 * @param sucursales json Objeto que contendra la informacion de las sucursales a las cuales pertenecera este paquete
+ 	 * @param productos json Arreglo de ids de productos con sus respectivas unidades y cantidades que perteneceran a este paquete
+ 	 * @param servicios json Arreglo de ids de servicios con sus cantidades que formaran parte de este paquete
+ 	 * @param sucursales json Arreglo de ids de sucursales a las que pertenecera este paquete
  	 **/
   static function Editar
 	(
 		$id_paquete, 
 		$costo_estandar = null, 
 		$descripcion = null, 
-		$descuento = null, 
 		$empresas = null, 
 		$foto_paquete = null, 
-		$margen_utilidad = null, 
 		$nombre = null, 
 		$precio = null, 
 		$productos = null, 
@@ -110,17 +106,15 @@
  	 *
  	 *Agrupa productos y/o servicios en un paquete
  	 *
- 	 * @param empresas json Objeto que contendra la informacion de las empresas a las que pertenecera este paquete
+ 	 * @param empresas json Arreglo de ids de empresas a las que pertenecera este paquete
  	 * @param nombre string Nombre del paquete
- 	 * @param scursales json Objeto que contendra la informacion de las sucursales a las que pertenecera este paquete
+ 	 * @param sucursales json Arreglo de ids de las sucursales a las que pertenecera este  paquete
  	 * @param costo_estandar float COsto estandar del paquete
  	 * @param descripcion string Descripcion larga del paquete
- 	 * @param descuento float Descuento que aplicara a este paquete
  	 * @param foto_paquete string Url de la foto del paquete
- 	 * @param margen_utilidad float Margen de utilidad que se obtendra al vender este paquete
  	 * @param precio float Precio del paquete
- 	 * @param productos json productos que contendra este paquete
- 	 * @param servicios json servicios que contendra este paquete
+ 	 * @param productos json Arreglo de ids de productos con sus unidades y sus cantidades
+ 	 * @param servicios json Arreglo de ids de servicio con su respectiva cantidad
  	 * @return id_paquete int Id autogenerado por la insercion
  	 **/
   static function Nuevo
@@ -130,9 +124,7 @@
 		$sucursales, 
 		$costo_estandar = null, 
 		$descripcion = null, 
-		$descuento = null, 
 		$foto_paquete = null, 
-		$margen_utilidad = null, 
 		$precio = null, 
 		$productos = null, 
 		$servicios = null

@@ -157,16 +157,6 @@ abstract class ServicioSucursalDAOBase extends DAO
 			array_push( $val, $servicio_sucursal->getIdSucursal() );
 		}
 
-		if( ! is_null( $servicio_sucursal->getPrecioUtilidad() ) ){
-			$sql .= " precio_utilidad = ? AND";
-			array_push( $val, $servicio_sucursal->getPrecioUtilidad() );
-		}
-
-		if( ! is_null( $servicio_sucursal->getEsMargenUtilidad() ) ){
-			$sql .= " es_margen_utilidad = ? AND";
-			array_push( $val, $servicio_sucursal->getEsMargenUtilidad() );
-		}
-
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
@@ -198,15 +188,6 @@ abstract class ServicioSucursalDAOBase extends DAO
 	  **/
 	private static final function update( $servicio_sucursal )
 	{
-		$sql = "UPDATE servicio_sucursal SET  precio_utilidad = ?, es_margen_utilidad = ? WHERE  id_servicio = ? AND id_sucursal = ?;";
-		$params = array( 
-			$servicio_sucursal->getPrecioUtilidad(), 
-			$servicio_sucursal->getEsMargenUtilidad(), 
-			$servicio_sucursal->getIdServicio(),$servicio_sucursal->getIdSucursal(), );
-		global $conn;
-		try{$conn->Execute($sql, $params);}
-		catch(Exception $e){ throw new Exception ($e->getMessage()); }
-		return $conn->Affected_Rows();
 	}
 
 
@@ -225,12 +206,10 @@ abstract class ServicioSucursalDAOBase extends DAO
 	  **/
 	private static final function create( &$servicio_sucursal )
 	{
-		$sql = "INSERT INTO servicio_sucursal ( id_servicio, id_sucursal, precio_utilidad, es_margen_utilidad ) VALUES ( ?, ?, ?, ?);";
+		$sql = "INSERT INTO servicio_sucursal ( id_servicio, id_sucursal ) VALUES ( ?, ?);";
 		$params = array( 
 			$servicio_sucursal->getIdServicio(), 
 			$servicio_sucursal->getIdSucursal(), 
-			$servicio_sucursal->getPrecioUtilidad(), 
-			$servicio_sucursal->getEsMargenUtilidad(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -296,28 +275,6 @@ abstract class ServicioSucursalDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_sucursal = ? AND"; 
-			$a = is_null ( $a ) ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
-		if( ( !is_null (($a = $servicio_sucursalA->getPrecioUtilidad()) ) ) & ( ! is_null ( ($b = $servicio_sucursalB->getPrecioUtilidad()) ) ) ){
-				$sql .= " precio_utilidad >= ? AND precio_utilidad <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " precio_utilidad = ? AND"; 
-			$a = is_null ( $a ) ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
-		if( ( !is_null (($a = $servicio_sucursalA->getEsMargenUtilidad()) ) ) & ( ! is_null ( ($b = $servicio_sucursalB->getEsMargenUtilidad()) ) ) ){
-				$sql .= " es_margen_utilidad >= ? AND es_margen_utilidad <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " es_margen_utilidad = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

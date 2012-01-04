@@ -157,16 +157,6 @@ abstract class PaqueteEmpresaDAOBase extends DAO
 			array_push( $val, $paquete_empresa->getIdEmpresa() );
 		}
 
-		if( ! is_null( $paquete_empresa->getPrecioUtilidad() ) ){
-			$sql .= " precio_utilidad = ? AND";
-			array_push( $val, $paquete_empresa->getPrecioUtilidad() );
-		}
-
-		if( ! is_null( $paquete_empresa->getEsMargenUtilidad() ) ){
-			$sql .= " es_margen_utilidad = ? AND";
-			array_push( $val, $paquete_empresa->getEsMargenUtilidad() );
-		}
-
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
@@ -198,15 +188,6 @@ abstract class PaqueteEmpresaDAOBase extends DAO
 	  **/
 	private static final function update( $paquete_empresa )
 	{
-		$sql = "UPDATE paquete_empresa SET  precio_utilidad = ?, es_margen_utilidad = ? WHERE  id_paquete = ? AND id_empresa = ?;";
-		$params = array( 
-			$paquete_empresa->getPrecioUtilidad(), 
-			$paquete_empresa->getEsMargenUtilidad(), 
-			$paquete_empresa->getIdPaquete(),$paquete_empresa->getIdEmpresa(), );
-		global $conn;
-		try{$conn->Execute($sql, $params);}
-		catch(Exception $e){ throw new Exception ($e->getMessage()); }
-		return $conn->Affected_Rows();
 	}
 
 
@@ -225,12 +206,10 @@ abstract class PaqueteEmpresaDAOBase extends DAO
 	  **/
 	private static final function create( &$paquete_empresa )
 	{
-		$sql = "INSERT INTO paquete_empresa ( id_paquete, id_empresa, precio_utilidad, es_margen_utilidad ) VALUES ( ?, ?, ?, ?);";
+		$sql = "INSERT INTO paquete_empresa ( id_paquete, id_empresa ) VALUES ( ?, ?);";
 		$params = array( 
 			$paquete_empresa->getIdPaquete(), 
 			$paquete_empresa->getIdEmpresa(), 
-			$paquete_empresa->getPrecioUtilidad(), 
-			$paquete_empresa->getEsMargenUtilidad(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -296,28 +275,6 @@ abstract class PaqueteEmpresaDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_empresa = ? AND"; 
-			$a = is_null ( $a ) ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
-		if( ( !is_null (($a = $paquete_empresaA->getPrecioUtilidad()) ) ) & ( ! is_null ( ($b = $paquete_empresaB->getPrecioUtilidad()) ) ) ){
-				$sql .= " precio_utilidad >= ? AND precio_utilidad <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " precio_utilidad = ? AND"; 
-			$a = is_null ( $a ) ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
-		if( ( !is_null (($a = $paquete_empresaA->getEsMargenUtilidad()) ) ) & ( ! is_null ( ($b = $paquete_empresaB->getEsMargenUtilidad()) ) ) ){
-				$sql .= " es_margen_utilidad >= ? AND es_margen_utilidad <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " es_margen_utilidad = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

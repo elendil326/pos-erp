@@ -1,6 +1,6 @@
 <?php
 /**
-  * GET api/sucursal/nueva
+  * POST api/sucursal/nueva
   * Crea una nueva sucursal
   *
   * Metodo que crea una nueva sucursal

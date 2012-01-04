@@ -11,6 +11,6 @@
 require_once("../../../../../../../server/bootstrap.php");
 require_once("api/api.reporte.nuevo.revisar_syntax.php");
 
-$api = new ApiReporteNuevoRevisar_syntax();
+$api = new ApiReporteNuevoRevisarSyntax();
 $apiOutput = ApiOutputFormatter::getInstance();
 $apiOutput->PrintOuput($api);

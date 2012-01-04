@@ -14,7 +14,8 @@
  	 *
  	 * @param id_rol int Id del rol a editar
  	 * @param descripcion string Descripcion larga del grupo
- 	 * @param descuento float Descuento que se le hara a este rol
+ 	 * @param id_tarifa_compra int Id de la tarifa de compora por default que aplicara a los usuarios de este rol. Si un usuario tiene otra tarifa de compra, no sera sobreescrita
+ 	 * @param id_tarifa_venta int Id de la tarifa de venta por default que aplicara a los usuarios de este rol . Si un usuario ya tiene otra tarifa de venta, no sera sobreescrita.
  	 * @param nombre string Nombre del grupo
  	 * @param salario float Salario base para este rol
  	 **/
@@ -22,7 +23,8 @@
 	(
 		$id_rol, 
 		$descripcion = null, 
-		$descuento = 0, 
+		$id_tarifa_compra = null, 
+		$id_tarifa_venta = null, 
 		$nombre = null, 
 		$salario = 0
 	);  
@@ -65,7 +67,8 @@
  	 *
  	 * @param nombre string Nombre del grupo. Este no puede existir en el sistema, no puede ser una cadena vacia y no puede ser mayor a 30 caracteres.
  	 * @param descripcion string Descripcion larga del grupo. La descripcion no puede ser una cadena vacia ni mayor a 256 caracteres.
- 	 * @param descuento float El procentaje de descuento que este grupo gozara al comprar cualquier producto. NOTA: EN COMPRA/VENTA? EN QUE PRODUCTOS? ESTE ES UN PORCENTAJE O UNA CANTIDAD? 
+ 	 * @param id_tarifa_compra int Id de la tarifa de compra por default que aplicara a los usuario de este rol
+ 	 * @param id_tarifa_venta int Id de la tarifa de venta por default que aplicara a los suarios de este rol
  	 * @param salario float El salario de este rol.
  	 * @return id_rol int El nuero id del rol que se ha generado.
  	 **/
@@ -73,7 +76,8 @@
 	(
 		$nombre, 
 		$descripcion = null, 
-		$descuento = 0, 
+		$id_tarifa_compra = null, 
+		$id_tarifa_venta = null, 
 		$salario = 0
 	);  
   
@@ -161,6 +165,8 @@
  	 * @param id_moneda int Id de la moneda preferente del usuario
  	 * @param id_rol int Id rol del usuario
  	 * @param id_sucursal int Id de la sucursal en la que fue creada este usuario o donde labora.
+ 	 * @param id_tarifa_compra int Id de la tarifa de compra por default que aplicara a este usuario.
+ 	 * @param id_tarifa_venta int Id de la tarifa de venta por default que aplicara a este usuario
  	 * @param impuestos json Objeto que contendra los ids de los impuestos que afectan a este usuario
  	 * @param intereses_moratorios float Intereses moratorios del cliente
  	 * @param limite_de_credito float Limite de credito del usuario
@@ -218,6 +224,8 @@
 		$id_moneda = null, 
 		$id_rol = null, 
 		$id_sucursal = null, 
+		$id_tarifa_compra = null, 
+		$id_tarifa_venta = null, 
 		$impuestos = null, 
 		$intereses_moratorios = null, 
 		$limite_de_credito = null, 

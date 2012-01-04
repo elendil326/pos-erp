@@ -458,7 +458,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
         )
         {
             //valida que el monto este en rango
-            if(!is_nul($monto))
+            if(!is_null($monto))
             {
                 $e = self::validarNumero($monto, 1.8e200, "monto");
                 if(is_string($e))
@@ -2777,7 +2777,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             catch(Exception $e)
             {
                 DAO::transRollback();
-                Logger::error("Error al crear el abono");
+                Logger::error("Error al crear el abono: ".$e);
                 throw new Exception("Error al crear el abono");
             }
             DAO::transEnd();

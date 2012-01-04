@@ -163,6 +163,16 @@ abstract class ClasificacionProveedorDAOBase extends DAO
 			array_push( $val, $clasificacion_proveedor->getActiva() );
 		}
 
+		if( ! is_null( $clasificacion_proveedor->getIdTarifaCompra() ) ){
+			$sql .= " id_tarifa_compra = ? AND";
+			array_push( $val, $clasificacion_proveedor->getIdTarifaCompra() );
+		}
+
+		if( ! is_null( $clasificacion_proveedor->getIdTarifaVenta() ) ){
+			$sql .= " id_tarifa_venta = ? AND";
+			array_push( $val, $clasificacion_proveedor->getIdTarifaVenta() );
+		}
+
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
@@ -194,11 +204,13 @@ abstract class ClasificacionProveedorDAOBase extends DAO
 	  **/
 	private static final function update( $clasificacion_proveedor )
 	{
-		$sql = "UPDATE clasificacion_proveedor SET  nombre = ?, descripcion = ?, activa = ? WHERE  id_clasificacion_proveedor = ?;";
+		$sql = "UPDATE clasificacion_proveedor SET  nombre = ?, descripcion = ?, activa = ?, id_tarifa_compra = ?, id_tarifa_venta = ? WHERE  id_clasificacion_proveedor = ?;";
 		$params = array( 
 			$clasificacion_proveedor->getNombre(), 
 			$clasificacion_proveedor->getDescripcion(), 
 			$clasificacion_proveedor->getActiva(), 
+			$clasificacion_proveedor->getIdTarifaCompra(), 
+			$clasificacion_proveedor->getIdTarifaVenta(), 
 			$clasificacion_proveedor->getIdClasificacionProveedor(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -222,12 +234,14 @@ abstract class ClasificacionProveedorDAOBase extends DAO
 	  **/
 	private static final function create( &$clasificacion_proveedor )
 	{
-		$sql = "INSERT INTO clasificacion_proveedor ( id_clasificacion_proveedor, nombre, descripcion, activa ) VALUES ( ?, ?, ?, ?);";
+		$sql = "INSERT INTO clasificacion_proveedor ( id_clasificacion_proveedor, nombre, descripcion, activa, id_tarifa_compra, id_tarifa_venta ) VALUES ( ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$clasificacion_proveedor->getIdClasificacionProveedor(), 
 			$clasificacion_proveedor->getNombre(), 
 			$clasificacion_proveedor->getDescripcion(), 
 			$clasificacion_proveedor->getActiva(), 
+			$clasificacion_proveedor->getIdTarifaCompra(), 
+			$clasificacion_proveedor->getIdTarifaVenta(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -315,6 +329,28 @@ abstract class ClasificacionProveedorDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " activa = ? AND"; 
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( ( !is_null (($a = $clasificacion_proveedorA->getIdTarifaCompra()) ) ) & ( ! is_null ( ($b = $clasificacion_proveedorB->getIdTarifaCompra()) ) ) ){
+				$sql .= " id_tarifa_compra >= ? AND id_tarifa_compra <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " id_tarifa_compra = ? AND"; 
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( ( !is_null (($a = $clasificacion_proveedorA->getIdTarifaVenta()) ) ) & ( ! is_null ( ($b = $clasificacion_proveedorB->getIdTarifaVenta()) ) ) ){
+				$sql .= " id_tarifa_venta >= ? AND id_tarifa_venta <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " id_tarifa_venta = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

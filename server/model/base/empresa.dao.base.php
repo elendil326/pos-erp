@@ -193,16 +193,6 @@ abstract class EmpresaDAOBase extends DAO
 			array_push( $val, $empresa->getDireccionWeb() );
 		}
 
-		if( ! is_null( $empresa->getMargenUtilidad() ) ){
-			$sql .= " margen_utilidad = ? AND";
-			array_push( $val, $empresa->getMargenUtilidad() );
-		}
-
-		if( ! is_null( $empresa->getDescuento() ) ){
-			$sql .= " descuento = ? AND";
-			array_push( $val, $empresa->getDescuento() );
-		}
-
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
@@ -234,7 +224,7 @@ abstract class EmpresaDAOBase extends DAO
 	  **/
 	private static final function update( $empresa )
 	{
-		$sql = "UPDATE empresa SET  id_direccion = ?, curp = ?, rfc = ?, razon_social = ?, representante_legal = ?, fecha_alta = ?, fecha_baja = ?, activo = ?, direccion_web = ?, margen_utilidad = ?, descuento = ? WHERE  id_empresa = ?;";
+		$sql = "UPDATE empresa SET  id_direccion = ?, curp = ?, rfc = ?, razon_social = ?, representante_legal = ?, fecha_alta = ?, fecha_baja = ?, activo = ?, direccion_web = ? WHERE  id_empresa = ?;";
 		$params = array( 
 			$empresa->getIdDireccion(), 
 			$empresa->getCurp(), 
@@ -245,8 +235,6 @@ abstract class EmpresaDAOBase extends DAO
 			$empresa->getFechaBaja(), 
 			$empresa->getActivo(), 
 			$empresa->getDireccionWeb(), 
-			$empresa->getMargenUtilidad(), 
-			$empresa->getDescuento(), 
 			$empresa->getIdEmpresa(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -270,7 +258,7 @@ abstract class EmpresaDAOBase extends DAO
 	  **/
 	private static final function create( &$empresa )
 	{
-		$sql = "INSERT INTO empresa ( id_empresa, id_direccion, curp, rfc, razon_social, representante_legal, fecha_alta, fecha_baja, activo, direccion_web, margen_utilidad, descuento ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO empresa ( id_empresa, id_direccion, curp, rfc, razon_social, representante_legal, fecha_alta, fecha_baja, activo, direccion_web ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$empresa->getIdEmpresa(), 
 			$empresa->getIdDireccion(), 
@@ -282,8 +270,6 @@ abstract class EmpresaDAOBase extends DAO
 			$empresa->getFechaBaja(), 
 			$empresa->getActivo(), 
 			$empresa->getDireccionWeb(), 
-			$empresa->getMargenUtilidad(), 
-			$empresa->getDescuento(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -437,28 +423,6 @@ abstract class EmpresaDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " direccion_web = ? AND"; 
-			$a = is_null ( $a ) ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
-		if( ( !is_null (($a = $empresaA->getMargenUtilidad()) ) ) & ( ! is_null ( ($b = $empresaB->getMargenUtilidad()) ) ) ){
-				$sql .= " margen_utilidad >= ? AND margen_utilidad <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " margen_utilidad = ? AND"; 
-			$a = is_null ( $a ) ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
-		if( ( !is_null (($a = $empresaA->getDescuento()) ) ) & ( ! is_null ( ($b = $empresaB->getDescuento()) ) ) ){
-				$sql .= " descuento >= ? AND descuento <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " descuento = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

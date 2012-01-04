@@ -173,11 +173,6 @@ abstract class ServicioDAOBase extends DAO
 			array_push( $val, $servicio->getActivo() );
 		}
 
-		if( ! is_null( $servicio->getMargenDeUtilidad() ) ){
-			$sql .= " margen_de_utilidad = ? AND";
-			array_push( $val, $servicio->getMargenDeUtilidad() );
-		}
-
 		if( ! is_null( $servicio->getDescripcionServicio() ) ){
 			$sql .= " descripcion_servicio = ? AND";
 			array_push( $val, $servicio->getDescripcionServicio() );
@@ -239,14 +234,13 @@ abstract class ServicioDAOBase extends DAO
 	  **/
 	private static final function update( $servicio )
 	{
-		$sql = "UPDATE servicio SET  nombre_servicio = ?, metodo_costeo = ?, codigo_servicio = ?, compra_en_mostrador = ?, activo = ?, margen_de_utilidad = ?, descripcion_servicio = ?, costo_estandar = ?, garantia = ?, control_existencia = ?, foto_servicio = ?, precio = ? WHERE  id_servicio = ?;";
+		$sql = "UPDATE servicio SET  nombre_servicio = ?, metodo_costeo = ?, codigo_servicio = ?, compra_en_mostrador = ?, activo = ?, descripcion_servicio = ?, costo_estandar = ?, garantia = ?, control_existencia = ?, foto_servicio = ?, precio = ? WHERE  id_servicio = ?;";
 		$params = array( 
 			$servicio->getNombreServicio(), 
 			$servicio->getMetodoCosteo(), 
 			$servicio->getCodigoServicio(), 
 			$servicio->getCompraEnMostrador(), 
 			$servicio->getActivo(), 
-			$servicio->getMargenDeUtilidad(), 
 			$servicio->getDescripcionServicio(), 
 			$servicio->getCostoEstandar(), 
 			$servicio->getGarantia(), 
@@ -276,7 +270,7 @@ abstract class ServicioDAOBase extends DAO
 	  **/
 	private static final function create( &$servicio )
 	{
-		$sql = "INSERT INTO servicio ( id_servicio, nombre_servicio, metodo_costeo, codigo_servicio, compra_en_mostrador, activo, margen_de_utilidad, descripcion_servicio, costo_estandar, garantia, control_existencia, foto_servicio, precio ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO servicio ( id_servicio, nombre_servicio, metodo_costeo, codigo_servicio, compra_en_mostrador, activo, descripcion_servicio, costo_estandar, garantia, control_existencia, foto_servicio, precio ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$servicio->getIdServicio(), 
 			$servicio->getNombreServicio(), 
@@ -284,7 +278,6 @@ abstract class ServicioDAOBase extends DAO
 			$servicio->getCodigoServicio(), 
 			$servicio->getCompraEnMostrador(), 
 			$servicio->getActivo(), 
-			$servicio->getMargenDeUtilidad(), 
 			$servicio->getDescripcionServicio(), 
 			$servicio->getCostoEstandar(), 
 			$servicio->getGarantia(), 
@@ -400,17 +393,6 @@ abstract class ServicioDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " activo = ? AND"; 
-			$a = is_null ( $a ) ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
-		if( ( !is_null (($a = $servicioA->getMargenDeUtilidad()) ) ) & ( ! is_null ( ($b = $servicioB->getMargenDeUtilidad()) ) ) ){
-				$sql .= " margen_de_utilidad >= ? AND margen_de_utilidad <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " margen_de_utilidad = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

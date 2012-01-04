@@ -11,6 +11,6 @@
 require_once("../../../../../../server/bootstrap.php");
 require_once("api/api.reporte.servicio_cliente.php");
 
-$api = new ApiReporteServicio_cliente();
+$api = new ApiReporteServicioCliente();
 $apiOutput = ApiOutputFormatter::getInstance();
 $apiOutput->PrintOuput($api);

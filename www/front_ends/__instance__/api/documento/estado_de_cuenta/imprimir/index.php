@@ -11,6 +11,6 @@
 require_once("../../../../../../../server/bootstrap.php");
 require_once("api/api.documento.estado_de_cuenta.imprimir.php");
 
-$api = new ApiDocumentoEstado_de_cuentaImprimir();
+$api = new ApiDocumentoEstadoDeCuentaImprimir();
 $apiOutput = ApiOutputFormatter::getInstance();
 $apiOutput->PrintOuput($api);

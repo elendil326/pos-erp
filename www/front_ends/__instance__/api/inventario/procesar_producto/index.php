@@ -11,6 +11,6 @@
 require_once("../../../../../../server/bootstrap.php");
 require_once("api/api.inventario.procesar_producto.php");
 
-$api = new ApiInventarioProcesar_producto();
+$api = new ApiInventarioProcesarProducto();
 $apiOutput = ApiOutputFormatter::getInstance();
 $apiOutput->PrintOuput($api);

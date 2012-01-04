@@ -11,6 +11,6 @@
 require_once("../../../../../../server/bootstrap.php");
 require_once("api/api.inventario.ventas_sucursal.php");
 
-$api = new ApiInventarioVentas_sucursal();
+$api = new ApiInventarioVentasSucursal();
 $apiOutput = ApiOutputFormatter::getInstance();
 $apiOutput->PrintOuput($api);

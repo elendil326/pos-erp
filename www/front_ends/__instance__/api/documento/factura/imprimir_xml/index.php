@@ -13,6 +13,6 @@ Update : No se si este metodo tenga una utilidad real, ya que cuando se recibe e
 require_once("../../../../../../../server/bootstrap.php");
 require_once("api/api.documento.factura.imprimir_xml.php");
 
-$api = new ApiDocumentoFacturaImprimir_xml();
+$api = new ApiDocumentoFacturaImprimirXml();
 $apiOutput = ApiOutputFormatter::getInstance();
 $apiOutput->PrintOuput($api);

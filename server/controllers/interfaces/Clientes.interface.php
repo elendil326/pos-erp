@@ -30,9 +30,9 @@
  	 * @param id_clasificacion_cliente int Id de la clasificacion del cliente a modificar
  	 * @param clave_interna string Clave interna de la clasificacion
  	 * @param descripcion string Descripcion larga de la clasificacion
- 	 * @param descuento float Descuento que se le aplicara a los productos 
+ 	 * @param id_tarifa_compra int Id de la tarifa de compra por default que se le asiganara a los clientes de esta clasificacion, si un usuario con esta clasificacion ya cuenta con otra tarifa, no se sobreescribira
+ 	 * @param id_tarifa_venta int Id de la tarifa de venta por default que se le asiganara a los clientes de esta clasificacion, si un usuario con esta clasificacion ya cuenta con otra tarifa, no se sobreescribira
  	 * @param impuestos json Ids de los impuestos que afectan a esta clasificacion
- 	 * @param margen_de_utilidad float Margen de utilidad que se le obtendra a todos los productos al venderle a este tipo de cliente
  	 * @param nombre string Nombre de la clasificacion
  	 * @param retenciones json Ids de las retenciones que afectan esta clasificacion
  	 **/
@@ -41,9 +41,9 @@
 		$id_clasificacion_cliente, 
 		$clave_interna = null, 
 		$descripcion = null, 
-		$descuento = null, 
+		$id_tarifa_compra = null, 
+		$id_tarifa_venta = null, 
 		$impuestos = null, 
-		$margen_de_utilidad = null, 
 		$nombre = null, 
 		$retenciones = null
 	);  
@@ -56,7 +56,7 @@
  	 *Obtener una lista de las categorias de clientes actuales en el sistema. Se puede ordenar por sus atributos
  	 *
  	 * @param orden string Nombre de la columan por el cual se ordenara la lista
- 	 * @return clasifciaciones_cliente json Objeto que contendra la lista de clasificaciones de cliente
+ 	 * @return clasificaciones_cliente json Objeto que contendra la lista de clasificaciones de cliente
  	 **/
   static function ListaClasificacion
 	(
@@ -73,10 +73,10 @@
  	 * @param clave_interna string Una clave interna para darle a este tipo de clientes. Y buscarlos de manera mas rapida.
  	 * @param nombre string Nombre de la clasificacion
  	 * @param descripcion string Una descripcion para este tipo de cliente
- 	 * @param descuento float Porcentaje de descuento que tendra este tipo de cliente sobre todos los productos
+ 	 * @param id_tarifa_compra int La tarifa de compra por default asiganda para esta clasificacion de clientes
+ 	 * @param id_tarifa_venta int Id de la tarifa venta por default asignada para esta clasificacion de clientes
  	 * @param impuestos json Impuestos que afectan especificamente a este tipo de clientes
  	 * @param retenciones json Retenciones que afectan a este tipo de cliente
- 	 * @param utilidad float Utilidad que se ganara a todos los productos que no cuenten con este campo. Se utiliza para calcular el precio al que se le venden los productos a este tipo de cliente.
  	 * @return id_categoria_cliente int El id para esta nueva categoria de cliente.
  	 **/
   static function NuevaClasificacion
@@ -84,10 +84,10 @@
 		$clave_interna, 
 		$nombre, 
 		$descripcion = null, 
-		$descuento = null, 
+		$id_tarifa_compra = null, 
+		$id_tarifa_venta = null, 
 		$impuestos = null, 
-		$retenciones = null, 
-		$utilidad = null
+		$retenciones = null
 	);  
   
   
@@ -130,6 +130,8 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
  	 * @param direccion_web string Direccin web del cliente.
  	 * @param email string E-mail del cliente.
  	 * @param facturar_a_terceros bool Si el cliente puede facturar a terceros.
+ 	 * @param id_tarifa_compra int Id de la tarifa de compra por default que se le asiganara a este cliente
+ 	 * @param id_tarifa_venta int Id de la tarifa de venta por default que se le asiganara a este cliente
  	 * @param impuestos json Objeto que contendra los ids de los impuestos que afecan a este cliente
  	 * @param intereses_moratorios float Interes por incumplimiento de pago.
  	 * @param lim_credito float Valor asignado al lmite del crdito para este cliente.
@@ -170,6 +172,8 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 		$direccion_web = null, 
 		$email = null, 
 		$facturar_a_terceros = null, 
+		$id_tarifa_compra = null, 
+		$id_tarifa_venta = null, 
 		$impuestos = null, 
 		$intereses_moratorios = null, 
 		$lim_credito = null, 

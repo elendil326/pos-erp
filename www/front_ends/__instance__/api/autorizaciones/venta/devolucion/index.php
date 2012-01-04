@@ -3,7 +3,7 @@
   * POST api/autorizaciones/venta/devolucion
   * Solicitud para devolver una venta.
   *
-  * Solicitud para devolver una venta. La fecha de petici?e tomar?el servidor. El usuario y la sucursal que emiten la autorizaci?er?tomadas de la sesi?
+  * Solicitud para devolver una venta. La fecha de petici?n se tomar? del servidor. El usuario y la sucursal que emiten la autorizaci?n ser?n tomadas de la sesi?n.
   *
   *
   *

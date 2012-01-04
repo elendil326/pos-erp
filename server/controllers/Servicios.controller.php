@@ -147,8 +147,6 @@ require_once("interfaces/Servicios.interface.php");
                 $nombre = null,
                 $garantia = null,
                 $descripcion = null,
-                $margen_utilidad = null,
-                $descuento = null,
                 $activa = null
         )
         {
@@ -199,22 +197,6 @@ require_once("interfaces/Servicios.interface.php");
             if(!is_null($descripcion))
             {
                 $e = self::validarString($descripcion, 255, "descripcion");
-                if(is_string($e))
-                    return $e;
-            }
-            
-            //valida que el margen de utilidad este en ango
-            if(!is_null($margen_utilidad))
-            {
-                $e = self::validarNumero($margen_utilidad, 1.8e200, "margen de utilidad");
-                if(is_string($e))
-                    return $e;
-            }
-            
-            //valida qe el descuento este en rango
-            if(!is_null($descuento))
-            {
-                $e = self::validarNumero($descuento, 100, "descuento");
                 if(is_string($e))
                     return $e;
             }
@@ -322,7 +304,6 @@ require_once("interfaces/Servicios.interface.php");
                 $codigo_servicio = null,
                 $compra_en_mostrador = null,
                 $activo = null,
-                $margen_de_utilidad = null,
                 $descripcion_servicio = null,
                 $costo_estandar = null,
                 $garantia = null,
@@ -367,7 +348,7 @@ require_once("interfaces/Servicios.interface.php");
             //valida el metodo de costeo
             if(!is_null($metodo_costeo))
             {
-                if($metodo_costeo!="precio" && $metodo_costeo!="margen")
+                if($metodo_costeo!="precio" && $metodo_costeo!="costo")
                     return "El metodo de costeo (".$metodo_costeo.") es invalido";
             }
             
@@ -405,14 +386,6 @@ require_once("interfaces/Servicios.interface.php");
             if(!is_null($activo))
             {
                 $e = self::validarNumero($activo, 1, "activo");
-                if(is_string($e))
-                    return $e;
-            }
-            
-            //valida el margen de utilidad
-            if(!is_null($margen_de_utilidad))
-            {
-                $e = self::validarNumero($margen_de_utilidad, 1.8e200, "margen de utilidad");
                 if(is_string($e))
                     return $e;
             }
@@ -475,9 +448,7 @@ require_once("interfaces/Servicios.interface.php");
          */
         private static function validarParametrosServicioEmpresa
         (
-                $id_empresa = null,
-                $precio_utilidad = null,
-                $es_margen_utilidad = null
+                $id_empresa = null
         )
         {
             //valida que la empresa exista y q este activa
@@ -491,22 +462,6 @@ require_once("interfaces/Servicios.interface.php");
                     return "La empresa ".$id_empresa." no esta activa";
             }
             
-            //valida que el precio_utilidad este en rango
-            if(!is_null($precio_utilidad))
-            {
-                $e = self::validarNumero($precio_utilidad, 1.8e200, "precio utilidad");
-                if(is_string($e))
-                    return $e;
-            }
-            
-            //valida el boleano es_margen_utilidad
-            if(!is_null($es_margen_utilidad))
-            {
-                $e = self::validarNumero($es_margen_utilidad, 1, "es margen de utilidad");
-                if(is_string($e))
-                    return $e;
-            }
-            
             //No se encontro error
             return true;
         }
@@ -517,9 +472,7 @@ require_once("interfaces/Servicios.interface.php");
          */
         private static function validarParametrosServicioSucursal
         (
-                $id_sucursal = null,
-                $precio_utilidad = null,
-                $es_margen_utilidad = null
+                $id_sucursal = null
         )
         {
             //valida que la sucursal exista y q este activa
@@ -531,22 +484,6 @@ require_once("interfaces/Servicios.interface.php");
                 
                 if(!$sucursal->getActiva())
                     return "La sucursal ".$id_sucursal." no esta activa";
-            }
-            
-            //valida que el precio_utilidad este en rango
-            if(!is_null($precio_utilidad))
-            {
-                $e = self::validarNumero($precio_utilidad, 1.8e200, "precio utilidad");
-                if(is_string($e))
-                    return $e;
-            }
-            
-            //valida el boleano es_margen_utilidad
-            if(!is_null($es_margen_utilidad))
-            {
-                $e = self::validarNumero($es_margen_utilidad, 1, "es margen de utilidad");
-                if(is_string($e))
-                    return $e;
             }
             
             //No se encontro error
@@ -626,11 +563,9 @@ require_once("interfaces/Servicios.interface.php");
 	public static function EditarClasificacion
 	(
 		$id_clasificacion_servicio, 
-		$descripcion = null, 
-		$descuento = null, 
+		$descripcion = null,
 		$garantia = null, 
 		$impuestos = null, 
-		$margen_utilidad = null, 
 		$nombre = null, 
 		$retenciones = null
 	)
@@ -638,7 +573,7 @@ require_once("interfaces/Servicios.interface.php");
             Logger::log("Editando clasificacion de servicio ".$id_clasificacion_servicio);
             
             //se validan los parametros
-            $validar = self::validarParametrosClasificacionServicio($id_clasificacion_servicio,$nombre,$garantia,$descripcion,$margen_utilidad,$descuento);
+            $validar = self::validarParametrosClasificacionServicio($id_clasificacion_servicio,$nombre,$garantia,$descripcion);
             if(is_string($validar))
             {
                 Logger::error($validar);
@@ -647,14 +582,6 @@ require_once("interfaces/Servicios.interface.php");
             
             //Los parametros que no sean nulos seran tomados como actualizacion
             $clasificacion_servicio = ClasificacionServicioDAO::getByPK($id_clasificacion_servicio);
-            if(!is_null($descuento))
-            {
-                $clasificacion_servicio->setDescuento($descuento);
-            }
-            if(!is_null($margen_utilidad))
-            {
-                $clasificacion_servicio->setMargenUtilidad($margen_utilidad);
-            }
             if(!is_null($descripcion))
             {
                 $clasificacion_servicio->setMargenUtilidad($margen_utilidad);
@@ -878,17 +805,15 @@ require_once("interfaces/Servicios.interface.php");
 		$nombre, 
 		$activa = 1, 
 		$descripcion = null, 
-		$descuento = null, 
 		$garantia = null, 
 		$impuestos = null, 
-		$margen_utilidad = null, 
 		$retenciones = null
 	)
 	{  
             Logger::log("Creando nueva clasificacion de servicio");
             
             //se validan los parametros obtendios
-            $validar = self::validarParametrosClasificacionServicio(null,$nombre,$garantia,$descripcion,$margen_utilidad,$descuento,$activa);
+            $validar = self::validarParametrosClasificacionServicio(null,$nombre,$garantia,$descripcion,$activa);
             if(is_string($validar))
             {
                 Logger::error($validar);
@@ -901,8 +826,6 @@ require_once("interfaces/Servicios.interface.php");
                                             "nombre"            => trim($nombre),
                                             "garantia"          => $garantia,
                                             "descripcion"       => $descripcion,
-                                            "margen_utilidad"   => $margen_utilidad,
-                                            "descuento"         => $descuento,
                                             "activa"            => $activa
                                                         )
                                                     );
@@ -1001,7 +924,6 @@ require_once("interfaces/Servicios.interface.php");
                         $orden != "codigo_servicio"     &&
                         $orden != "compra_en_mostrador" &&
                         $orden != "activo"              &&
-                        $orden != "margen_de_utilidad"  &&
                         $orden != "descripcion_servicio"&&
                         $orden != "costo_estandar"      &&
                         $orden != "garantia"            &&
@@ -1102,7 +1024,6 @@ require_once("interfaces/Servicios.interface.php");
 		$foto_servicio = null, 
 		$garantia = null, 
 		$impuestos = null, 
-		$margen_de_utilidad = null, 
 		$precio = null, 
 		$retenciones = null, 
 		$sucursales = null
@@ -1112,7 +1033,7 @@ require_once("interfaces/Servicios.interface.php");
             
             //se validan los parametros recibidos
             $validar = self::validarParametrosServicio(null,$nombre_servicio,$metodo_costeo,
-                    $codigo_servicio,$compra_en_mostrador,$activo,$margen_de_utilidad,$descripcion_servicio,
+                    $codigo_servicio,$compra_en_mostrador,$activo,$descripcion_servicio,
                     $costo_estandar,$garantia,$control_de_existencia,$foto_servicio,$precio);
 
             if(is_string($validar))
@@ -1122,7 +1043,7 @@ require_once("interfaces/Servicios.interface.php");
             }
             
             //valida que se haya recibido el parametro esperado por el metodo de costeo
-            if( ( $metodo_costeo == "precio" && is_null($precio) ) || ( $metodo_costeo == "margen" && is_null($margen_de_utilidad) ) )
+            if( ( $metodo_costeo == "precio" && is_null($precio) ) || ( $metodo_costeo == "costo" && is_null($costo_estandar) ) )
             {
                 Logger::error("No se recibio el parametro correspondiente al metodo de costeo (".$metodo_costeo.")");
                 throw new Exception("No se recibio el parametro correspondiente al metodo de costeo (".$metodo_costeo.")");
@@ -1139,9 +1060,7 @@ require_once("interfaces/Servicios.interface.php");
                                 "codigo_servicio"           => trim($codigo_servicio),
                                 "compra_en_mostrador"       => $compra_en_mostrador,
                                 "activo"                    => $activo,
-                                "margen_de_utilidad"        => $margen_de_utilidad,
                                 "descripcion_de_servicio"   => $descripcion_servicio,
-                                "costo_estandar"            => $costo_estandar,
                                 "garantia"                  => $garantia,
                                 "control_existencia"        => $control_de_existencia,
                                 "foto_servicio"             => $foto_servicio,
@@ -1170,23 +1089,11 @@ require_once("interfaces/Servicios.interface.php");
                     foreach($empresas as $empresa)
                     {
                         
-                        if
-                        (
-                                !array_key_exists("id_empresa", $empresa)          ||
-                                !array_key_exists("precio_utilidad", $empresa)      ||
-                                !array_key_exists("es_margen_utilidad", $empresa)   
-                        )
-                        {
-                            throw new Exception("Las empresas son invalidas",901);
-                        }
-                        
-                        $validar = self::validarParametrosServicioEmpresa($empresa["id_empresa"],$empresa["precio_utilidad"],$empresa["es_margen_utilidad"]);
+                        $validar = self::validarParametrosServicioEmpresa($empresa);
                         if(is_string($validar))
                             throw new Exception($validar,901);
                         
-                        $servicio_empresa->setIdEmpresa($empresa["id_empresa"]);
-                        $servicio_empresa->setPrecioUtilidad($empresa["precio_utilidad"]);
-                        $servicio_empresa->setEsMargenUtilidad($empresa["es_margen_utilidad"]);
+                        $servicio_empresa->setIdEmpresa($empresa);
                         ServicioEmpresaDAO::save($servicio_empresa);
                     }
                 }/* Fin if de empresas */
@@ -1203,24 +1110,11 @@ require_once("interfaces/Servicios.interface.php");
                     $servicio_sucursal = new ServicioSucursal( array( "id_servicio" => $servicio->getIdServicio() ) );
                     foreach($sucursales as $sucursal)
                     {
-                        
-                        if
-                        (
-                                !array_key_exists("id_sucursal", $sucursal)         ||
-                                !array_key_exists("precio_utilidad", $sucursal)     ||
-                                !array_key_exists("es_margen_utilidad", $sucursal)  
-                        )
-                        {
-                            throw new Exception("Las sucursales no son validas",901);
-                        }
-                        
-                        $validar = self::validarParametrosServicioSucursal($sucursal["id_sucursal"],$sucursal["precio_utilidad"],$sucursal["es_margen_utilidad"]);
+                        $validar = self::validarParametrosServicioSucursal($sucursal);
                         if(is_string($validar))
                             throw new Exception($validar,901);
                         
-                        $servicio_sucursal->setIdSucursal($sucursal["id_sucursal"]);
-                        $servicio_sucursal->setPrecioUtilidad($sucursal["precio_utilidad"]);
-                        $servicio_sucursal->setEsMargenUtilidad($sucursal["es_margen_utilidad"]);
+                        $servicio_sucursal->setIdSucursal($sucursal);
                         ServicioSucursalDAO::save($servicio_sucursal);
                     }
                 }/* Fin if de sucursales */
@@ -1334,7 +1228,6 @@ require_once("interfaces/Servicios.interface.php");
 		$foto_servicio = null, 
 		$garantia = null, 
 		$impuestos = null, 
-		$margen_de_utilidad = null, 
 		$metodo_costeo = null, 
 		$nombre_servicio = null, 
 		$precio = null, 
@@ -1347,7 +1240,7 @@ require_once("interfaces/Servicios.interface.php");
             //valida los parametros recibidos
             $validar = self::validarParametrosServicio($id_servicio,$nombre_servicio,
                     $metodo_costeo,$codigo_servicio,$compra_en_mostrador,null,
-                    $margen_de_utilidad,$descripcion_servicio,$costo_estandar,$garantia,
+                    $descripcion_servicio,$costo_estandar,$garantia,
                     $control_de_existencia,$foto_servicio,$precio);
             if(is_string($validar))
             {
@@ -1389,10 +1282,6 @@ require_once("interfaces/Servicios.interface.php");
             {
                 $servicio->setFotoServicio($foto_servicio);
             }
-            if(!is_null($margen_de_utilidad))
-            {
-                $servicio->setMargenDeUtilidad($margen_de_utilidad);
-            }
             if(!is_null($costo_estandar))
             {
                 $servicio->setCostoEstandar($costo_estandar);
@@ -1403,7 +1292,7 @@ require_once("interfaces/Servicios.interface.php");
             }
             
             //Se verifica que se cuente con el atributo que busca el metodo de costeo
-            if( ( $servicio->getMetodoCosteo() == "precio" && is_null($servicio->getPrecio()) ) || $servicio->getMetodoCosteo() == "margen" && is_null($servicio->getMargenDeUtilidad()) )
+            if( ( $servicio->getMetodoCosteo() == "precio" && is_null($servicio->getPrecio()) ) || $servicio->getMetodoCosteo() == "costo" && is_null($servicio->getCostoEstandar()) )
             {
                 Logger::error("No se cuenta con el parametro ".$metodo_costeo);
                 throw new Exception("No se cuenta con el parametro ".$metodo_costeo);
@@ -1430,24 +1319,11 @@ require_once("interfaces/Servicios.interface.php");
                     $servicio_empresa = new ServicioEmpresa( array( "id_servicio" => $servicio->getIdServicio() ) );
                     foreach($empresas as $empresa)
                     {
-                        
-                        if
-                        (
-                                !array_key_exists("id_empresa", $empresa)          ||
-                                !array_key_exists("precio_utilidad", $empresa)      ||
-                                !array_key_exists("es_margen_utilidad", $empresa)   
-                        )
-                        {
-                            throw new Exception("Las empresas son invalidas",901);
-                        }
-                        
-                        $validar = self::validarParametrosServicioEmpresa($empresa["id_empresa"],$empresa["precio_utilidad"],$empresa["es_margen_utilidad"]);
+                        $validar = self::validarParametrosServicioEmpresa($empresa);
                         if(is_string($validar))
                             throw new Exception($validar,901);
                         
-                        $servicio_empresa->setIdEmpresa($empresa["id_empresa"]);
-                        $servicio_empresa->setPrecioUtilidad($empresa["precio_utilidad"]);
-                        $servicio_empresa->setEsMargenUtilidad($empresa["es_margen_utilidad"]);
+                        $servicio_empresa->setIdEmpresa($empresa);
                         ServicioEmpresaDAO::save($servicio_empresa);
                     }
                     $servicios_empresa = ServicioEmpresaDAO::search( new ServicioEmpresa( array( "id_servicio" => $id_servicio ) ) );
@@ -1456,7 +1332,7 @@ require_once("interfaces/Servicios.interface.php");
                         $encontrado = false;
                         foreach($empresas as $empresa)
                         {
-                            if($empresa["id_empresa"] == $s_e->getIdEmpresa())
+                            if($empresa == $s_e->getIdEmpresa())
                                 $encontrado=true;
                         }
                         if(!$encontrado)
@@ -1476,24 +1352,11 @@ require_once("interfaces/Servicios.interface.php");
                     $servicio_sucursal = new ServicioSucursal( array( "id_servicio" => $servicio->getIdServicio() ) );
                     foreach($sucursales as $sucursal)
                     {
-                        
-                         if
-                        (
-                                !array_key_exists("id_sucursal", $sucursal)         ||
-                                !array_key_exists("precio_utilidad", $sucursal)     ||
-                                !array_key_exists("es_margen_utilidad", $sucursal)  
-                        )
-                        {
-                            throw new Exception("Las sucursales no son validas",901);
-                        }
-                        
-                        $validar = self::validarParametrosServicioSucursal($sucursal["id_sucursal"],$sucursal["precio_utilidad"],$sucursal["es_margen_utilidad"]);
+                        $validar = self::validarParametrosServicioSucursal($sucursal);
                         if(is_string($validar))
                             throw new Exception($validar,901);
                         
-                        $servicio_sucursal->setIdSucursal($sucursal["id_sucursal"]);
-                        $servicio_sucursal->setPrecioUtilidad($sucursal["precio_utilidad"]);
-                        $servicio_sucursal->setEsMargenUtilidad($sucursal["es_margen_utilidad"]);
+                        $servicio_sucursal->setIdSucursal($sucursal);
                         ServicioSucursalDAO::save($servicio_sucursal);
                     }
                     $servicios_sucursal = ServicioSucursalDAO::search( new ServicioSucursal( array( "id_servicio" => $id_servicio ) ) );
@@ -1502,7 +1365,7 @@ require_once("interfaces/Servicios.interface.php");
                         $encontrado = false;
                         foreach($sucursales as $sucursal)
                         {
-                            if($sucursal["id_sucursal"] == $s_s->getIdSucursal())
+                            if($sucursal == $s_s->getIdSucursal())
                                 $encontrado=true;
                         }
                         if(!$encontrado)

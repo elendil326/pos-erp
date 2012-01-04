@@ -1,9 +1,9 @@
 <?php
 /**
   * GET api/autorizaciones/gasto
-  * Solicitud de autorizaci?ara realizar un gasto.
+  * Solicitud de autorizaci?n para realizar un gasto.
   *
-  * La fecha de peticion se tomar?el servidor. El usuario y la sucursal que emiten la autorizaci?er?tomadas de la sesi?
+  * La fecha de peticion se tomar? del servidor. El usuario y la sucursal que emiten la autorizaci?n ser?n tomadas de la sesi?n.
   *
   *
   *

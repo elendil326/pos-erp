@@ -20,17 +20,5 @@ require_once("base/seguimiento_de_servicio.vo.base.php");
   */
 class SeguimientoDeServicioDAO extends SeguimientoDeServicioDAOBase
 {
-	public static function seguimientosPorServicio( $id_servicio ){
-		$sql = "select * from seguimiento_de_servicio where id_orden_de_servicio = ?; ";
-		$val = array( $id_servicio );
-		
-		global $conn;
-		$rs = $conn->Execute($sql, $val);
-		$ar = array();
-		foreach ($rs as $foo) {
-			$bar =  new SeguimientoDeServicio($foo);
-    		array_push( $ar,$bar);
-		}
-		return $ar;
-	}
+
 }

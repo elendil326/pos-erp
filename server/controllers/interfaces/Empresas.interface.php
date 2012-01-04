@@ -12,8 +12,8 @@
  	 *
  	 *Relacionar una sucursal a esta empresa. Cuando se llama a este metodo, se crea un almacen de esta sucursal para esta empresa
  	 *
- 	 * @param id_empresa int 
- 	 * @param sucursales json Arreglo de objetos que tendran los ids de sucursales, un campo opcional de  margen de utilidad que simboliza el margen de utilidad que esas sucursales ganaran para los productos de esa empresa y un campo de descuento, que indica el descuento que se aplicara a todas los productos de esa empresa en esa sucursal
+ 	 * @param id_empresa int Empresa a la que se le agregaran sucursales
+ 	 * @param sucursales json Arreglo que contendra los ids de las sucursales a relacionar con esta empresa
  	 **/
   static function Agregar_sucursales
 	(
@@ -34,11 +34,9 @@
  	 * @param codigo_postal string Codigo postal de la empresa
  	 * @param colonia	 string Colonia de la empresa
  	 * @param curp string CURP de la nueva empresa.
- 	 * @param descuento float Descuento que se aplicara a todos los productos de esta empresa
  	 * @param direccion_web string Direccin web de la empresa
  	 * @param email string Correo electronico de la empresa
  	 * @param impuestos json Objeto que contendra los ids de los impuestos que afectan a esta empresa
- 	 * @param margen_utilidad float Porcentaje del margen de utilidad que esta empresa le gana a todos sus productos
  	 * @param numero_exterior	 string Numero externo de la emresa
  	 * @param numero_interno string Numero interno de la empresa
  	 * @param razon_social string El nombre de la nueva empresa.
@@ -57,11 +55,9 @@
 		$codigo_postal = null, 
 		$colonia	 = null, 
 		$curp = null, 
-		$descuento = null, 
 		$direccion_web = null, 
 		$email = null, 
 		$impuestos = null, 
-		$margen_utilidad = null, 
 		$numero_exterior	 = null, 
 		$numero_interno = null, 
 		$razon_social = null, 
@@ -117,11 +113,9 @@
  	 * @param numero_exterior string Numero externo de la emresa
  	 * @param razon_social string El nombre de la nueva empresa.
  	 * @param rfc string RFC de la nueva empresa.
- 	 * @param descuento float Descuento que se aplciara a todos los productos de esta empresa
  	 * @param direccion_web string Direccin web de la empresa
  	 * @param email string Correo electronico de la empresa
  	 * @param impuestos json Objeto que contendra los ids de los impuestos que aplican a esta empresa 
- 	 * @param margen_utilidad float Porcentaje del margen de utilidad que le gana esta empresa a todos los productos que ofrece
  	 * @param numero_interior string Numero interno de la empresa
  	 * @param representante_legal string El nombre del representante legal de la nueva empresa.
  	 * @param retenciones json Objeto que contendra los ids de las retenciones que aplican a esta empresa
@@ -140,11 +134,9 @@
 		$numero_exterior, 
 		$razon_social, 
 		$rfc, 
-		$descuento = null, 
 		$direccion_web = null, 
 		$email = null, 
 		$impuestos = null, 
-		$margen_utilidad = null, 
 		$numero_interior = null, 
 		$representante_legal = null, 
 		$retenciones = null, 

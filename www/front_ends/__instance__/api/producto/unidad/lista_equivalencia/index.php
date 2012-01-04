@@ -11,6 +11,6 @@
 require_once("../../../../../../../server/bootstrap.php");
 require_once("api/api.producto.unidad.lista_equivalencia.php");
 
-$api = new ApiProductoUnidadLista_equivalencia();
+$api = new ApiProductoUnidadListaEquivalencia();
 $apiOutput = ApiOutputFormatter::getInstance();
 $apiOutput->PrintOuput($api);

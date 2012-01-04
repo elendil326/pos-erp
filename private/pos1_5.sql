@@ -1,22 +1,22 @@
 -- phpMyAdmin SQL Dump
--- version 3.2.4
+-- version 3.3.9
 -- http://www.phpmyadmin.net
 --
--- Host: localhost
--- Generation Time: Dec 27, 2011 at 10:06 PM
--- Server version: 5.1.44
--- PHP Version: 5.3.1
+-- Servidor: localhost
+-- Tiempo de generación: 04-01-2012 a las 01:49:51
+-- Versión del servidor: 5.1.53
+-- Versión de PHP: 5.3.4
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
 --
--- Database: `pos1_5-b`
+-- Base de datos: `pos1_5`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `abasto_proveedor`
+-- Estructura de tabla para la tabla `abasto_proveedor`
 --
 
 CREATE TABLE IF NOT EXISTS `abasto_proveedor` (
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `abasto_proveedor` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `abono_compra`
+-- Estructura de tabla para la tabla `abono_compra`
 --
 
 CREATE TABLE IF NOT EXISTS `abono_compra` (
@@ -49,12 +49,12 @@ CREATE TABLE IF NOT EXISTS `abono_compra` (
   `cancelado` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Si este abono es cancelado',
   `motivo_cancelacion` varchar(255) DEFAULT NULL COMMENT 'Motivo por el cual se realiza la cancelacion',
   PRIMARY KEY (`id_abono_compra`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle de la compra y los abonos de la misma' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Detalle de la compra y los abonos de la misma' AUTO_INCREMENT=6 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `abono_prestamo`
+-- Estructura de tabla para la tabla `abono_prestamo`
 --
 
 CREATE TABLE IF NOT EXISTS `abono_prestamo` (
@@ -71,12 +71,12 @@ CREATE TABLE IF NOT EXISTS `abono_prestamo` (
   `cancelado` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Si este abono es cancelado',
   `motivo_cancelacion` varchar(255) DEFAULT NULL COMMENT 'Motivo por el cual se realiza la cancelacion',
   PRIMARY KEY (`id_abono_prestamo`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle abono prestamo' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Detalle abono prestamo' AUTO_INCREMENT=6 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `abono_venta`
+-- Estructura de tabla para la tabla `abono_venta`
 --
 
 CREATE TABLE IF NOT EXISTS `abono_venta` (
@@ -93,12 +93,12 @@ CREATE TABLE IF NOT EXISTS `abono_venta` (
   `cancelado` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Si este abono es cancelado',
   `motivo_cancelacion` varchar(255) DEFAULT NULL COMMENT 'Motivo por el cual se realiza la cancelacion',
   PRIMARY KEY (`id_abono_venta`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle de la venta y sus abonos' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Detalle de la venta y sus abonos' AUTO_INCREMENT=7 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `almacen`
+-- Estructura de tabla para la tabla `almacen`
 --
 
 CREATE TABLE IF NOT EXISTS `almacen` (
@@ -111,12 +111,12 @@ CREATE TABLE IF NOT EXISTS `almacen` (
   `activo` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Si el almacen esta activo o no',
   PRIMARY KEY (`id_almacen`),
   KEY `id_tipo_almacen` (`id_tipo_almacen`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `apertura_caja`
+-- Estructura de tabla para la tabla `apertura_caja`
 --
 
 CREATE TABLE IF NOT EXISTS `apertura_caja` (
@@ -126,12 +126,12 @@ CREATE TABLE IF NOT EXISTS `apertura_caja` (
   `saldo` float NOT NULL COMMENT 'Saldo con que inicia operaciones la caja',
   `id_cajero` int(11) DEFAULT NULL COMMENT 'Id del usuario que realizará las funciones de cajero',
   PRIMARY KEY (`id_apertura_caja`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que lleva el control de la apertura de cajas' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Tabla que lleva el control de la apertura de cajas' AUTO_INCREMENT=6 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `autorizacion`
+-- Estructura de tabla para la tabla `autorizacion`
 --
 
 CREATE TABLE IF NOT EXISTS `autorizacion` (
@@ -142,7 +142,7 @@ CREATE TABLE IF NOT EXISTS `autorizacion` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `billete`
+-- Estructura de tabla para la tabla `billete`
 --
 
 CREATE TABLE IF NOT EXISTS `billete` (
@@ -153,12 +153,12 @@ CREATE TABLE IF NOT EXISTS `billete` (
   `foto_billete` varchar(100) DEFAULT NULL COMMENT 'Url de la foto del billete',
   `activo` tinyint(1) NOT NULL COMMENT 'Si este billete esta activo o ya no se usa',
   PRIMARY KEY (`id_billete`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Billetes para llevar control en la caja' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Billetes para llevar control en la caja' AUTO_INCREMENT=14 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `billete_apertura_caja`
+-- Estructura de tabla para la tabla `billete_apertura_caja`
 --
 
 CREATE TABLE IF NOT EXISTS `billete_apertura_caja` (
@@ -171,7 +171,7 @@ CREATE TABLE IF NOT EXISTS `billete_apertura_caja` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `billete_caja`
+-- Estructura de tabla para la tabla `billete_caja`
 --
 
 CREATE TABLE IF NOT EXISTS `billete_caja` (
@@ -184,7 +184,7 @@ CREATE TABLE IF NOT EXISTS `billete_caja` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `billete_cierre_caja`
+-- Estructura de tabla para la tabla `billete_cierre_caja`
 --
 
 CREATE TABLE IF NOT EXISTS `billete_cierre_caja` (
@@ -199,7 +199,7 @@ CREATE TABLE IF NOT EXISTS `billete_cierre_caja` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `billete_corte_caja`
+-- Estructura de tabla para la tabla `billete_corte_caja`
 --
 
 CREATE TABLE IF NOT EXISTS `billete_corte_caja` (
@@ -215,7 +215,7 @@ CREATE TABLE IF NOT EXISTS `billete_corte_caja` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `caja`
+-- Estructura de tabla para la tabla `caja`
 --
 
 CREATE TABLE IF NOT EXISTS `caja` (
@@ -229,12 +229,12 @@ CREATE TABLE IF NOT EXISTS `caja` (
   `activa` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Si la caja esta activa o ha sido eliminada',
   PRIMARY KEY (`id_caja`),
   KEY `id_sucursal` (`id_sucursal`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=18 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `cheque`
+-- Estructura de tabla para la tabla `cheque`
 --
 
 CREATE TABLE IF NOT EXISTS `cheque` (
@@ -245,12 +245,12 @@ CREATE TABLE IF NOT EXISTS `cheque` (
   `expedido` tinyint(1) NOT NULL COMMENT 'Verdadero si el cheque es expedido por la empresa, falso si es recibido',
   `id_usuario` int(11) DEFAULT NULL COMMENT 'Id del usuario que registra el cheque',
   PRIMARY KEY (`id_cheque`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=21 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `cheque_abono_compra`
+-- Estructura de tabla para la tabla `cheque_abono_compra`
 --
 
 CREATE TABLE IF NOT EXISTS `cheque_abono_compra` (
@@ -262,7 +262,7 @@ CREATE TABLE IF NOT EXISTS `cheque_abono_compra` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `cheque_abono_prestamo`
+-- Estructura de tabla para la tabla `cheque_abono_prestamo`
 --
 
 CREATE TABLE IF NOT EXISTS `cheque_abono_prestamo` (
@@ -274,7 +274,7 @@ CREATE TABLE IF NOT EXISTS `cheque_abono_prestamo` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `cheque_abono_venta`
+-- Estructura de tabla para la tabla `cheque_abono_venta`
 --
 
 CREATE TABLE IF NOT EXISTS `cheque_abono_venta` (
@@ -286,7 +286,7 @@ CREATE TABLE IF NOT EXISTS `cheque_abono_venta` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `cheque_compra`
+-- Estructura de tabla para la tabla `cheque_compra`
 --
 
 CREATE TABLE IF NOT EXISTS `cheque_compra` (
@@ -298,7 +298,7 @@ CREATE TABLE IF NOT EXISTS `cheque_compra` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `cheque_venta`
+-- Estructura de tabla para la tabla `cheque_venta`
 --
 
 CREATE TABLE IF NOT EXISTS `cheque_venta` (
@@ -310,7 +310,7 @@ CREATE TABLE IF NOT EXISTS `cheque_venta` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `cierre_caja`
+-- Estructura de tabla para la tabla `cierre_caja`
 --
 
 CREATE TABLE IF NOT EXISTS `cierre_caja` (
@@ -321,12 +321,12 @@ CREATE TABLE IF NOT EXISTS `cierre_caja` (
   `saldo_real` float NOT NULL COMMENT 'Saldo de la caja',
   `saldo_esperado` float NOT NULL COMMENT 'Saldo que debería de haber en la caja después de todos los movimientos del día',
   PRIMARY KEY (`id_cierre_caja`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que lleva el control del cierre de cajas' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Tabla que lleva el control del cierre de cajas' AUTO_INCREMENT=6 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ciudad`
+-- Estructura de tabla para la tabla `ciudad`
 --
 
 CREATE TABLE IF NOT EXISTS `ciudad` (
@@ -335,12 +335,12 @@ CREATE TABLE IF NOT EXISTS `ciudad` (
   `nombre` varchar(128) NOT NULL,
   PRIMARY KEY (`id_ciudad`),
   KEY `id_estado` (`id_estado`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `clasificacion_cliente`
+-- Estructura de tabla para la tabla `clasificacion_cliente`
 --
 
 CREATE TABLE IF NOT EXISTS `clasificacion_cliente` (
@@ -348,15 +348,15 @@ CREATE TABLE IF NOT EXISTS `clasificacion_cliente` (
   `clave_interna` varchar(20) NOT NULL COMMENT 'Clave interna del tipo de cliente',
   `nombre` varchar(16) NOT NULL COMMENT 'un nombre corto para esta clasificacion',
   `descripcion` varchar(255) DEFAULT NULL COMMENT 'Descripcion larga de la clasificacion del cliente',
-  `margen_utilidad` float DEFAULT NULL COMMENT 'Margen de utilidad que se le obtendra a los productos al venderle a este tipo de cliente',
-  `descuento` float DEFAULT NULL COMMENT 'Porcentaje de descuento que se le dara a este tipo de cliente',
+  `id_tarifa_compra` int(11) DEFAULT NULL COMMENT 'Id de la tarifa de compra por default para esta clasificacion de cliente',
+  `id_tarifa_venta` int(11) DEFAULT NULL COMMENT 'Id de la tarifa de venta por default para esta clasificacion de cliente',
   PRIMARY KEY (`id_clasificacion_cliente`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `clasificacion_producto`
+-- Estructura de tabla para la tabla `clasificacion_producto`
 --
 
 CREATE TABLE IF NOT EXISTS `clasificacion_producto` (
@@ -365,15 +365,13 @@ CREATE TABLE IF NOT EXISTS `clasificacion_producto` (
   `descripcion` varchar(255) DEFAULT NULL COMMENT 'Descripcion larga de la clasificacion del producto',
   `garantia` int(11) DEFAULT NULL COMMENT 'numero de meses que tendran los productos de esta clasificacion',
   `activa` tinyint(1) NOT NULL COMMENT 'Si esta claificacion esta activa',
-  `margen_utilidad` float DEFAULT NULL COMMENT 'Margen de utilidad que aplicara a todos los productos de esta clasificacion de productos',
-  `descuento` float DEFAULT NULL COMMENT 'Descuento que se apicar a esta clasificaciond e producto',
   PRIMARY KEY (`id_clasificacion_producto`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `clasificacion_proveedor`
+-- Estructura de tabla para la tabla `clasificacion_proveedor`
 --
 
 CREATE TABLE IF NOT EXISTS `clasificacion_proveedor` (
@@ -381,13 +379,15 @@ CREATE TABLE IF NOT EXISTS `clasificacion_proveedor` (
   `nombre` varchar(100) NOT NULL COMMENT 'Nombre de la clasificacion',
   `descripcion` varchar(255) DEFAULT NULL COMMENT 'Descripcion larga de la clasificacion del proveedor',
   `activa` tinyint(1) NOT NULL COMMENT 'Si esta clasificacion esat activa o no',
+  `id_tarifa_compra` int(11) DEFAULT NULL COMMENT 'Id de la tarifa de compra por default para esta clasificacion de proveedor',
+  `id_tarifa_venta` int(11) DEFAULT NULL COMMENT 'Id de la tarifa de venta por default para esta clasificacion de proveedor',
   PRIMARY KEY (`id_clasificacion_proveedor`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que especifica las clasificaciones de proveedores' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Tabla que especifica las clasificaciones de proveedores' AUTO_INCREMENT=7 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `clasificacion_servicio`
+-- Estructura de tabla para la tabla `clasificacion_servicio`
 --
 
 CREATE TABLE IF NOT EXISTS `clasificacion_servicio` (
@@ -395,16 +395,14 @@ CREATE TABLE IF NOT EXISTS `clasificacion_servicio` (
   `nombre` varchar(50) NOT NULL COMMENT 'Nombre del servicio',
   `garantia` int(11) DEFAULT NULL COMMENT 'Numero de meses de garantia que tendran los servicios de esta clasificacion los servicios ',
   `descripcion` varchar(255) DEFAULT NULL COMMENT 'Descripcion larga de la clasificacion del servicio',
-  `margen_utilidad` float DEFAULT NULL COMMENT 'Precio o margen de utilidad que se le asignara a los servicios de esta clasificaicon',
-  `descuento` float DEFAULT NULL COMMENT 'Porcentaje del descuento que se aplciara a los servicios de esta clasificacion',
   `activa` tinyint(1) NOT NULL COMMENT 'Si esta categoria de servicio esta fija o no',
   PRIMARY KEY (`id_clasificacion_servicio`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `compra`
+-- Estructura de tabla para la tabla `compra`
 --
 
 CREATE TABLE IF NOT EXISTS `compra` (
@@ -426,12 +424,12 @@ CREATE TABLE IF NOT EXISTS `compra` (
   `tipo_de_pago` enum('cheque','tarjeta','efectivo') DEFAULT NULL COMMENT 'Si la compra fue pagada con tarjeta, cheque o efectivo',
   `retencion` float NOT NULL COMMENT 'Monto de retencion',
   PRIMARY KEY (`id_compra`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=14 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `compra_arpilla`
+-- Estructura de tabla para la tabla `compra_arpilla`
 --
 
 CREATE TABLE IF NOT EXISTS `compra_arpilla` (
@@ -448,12 +446,12 @@ CREATE TABLE IF NOT EXISTS `compra_arpilla` (
   `merma_por_arpilla` float NOT NULL COMMENT 'La merma de producto por arpilla',
   `total_origen` float DEFAULT NULL COMMENT 'El valor del embarque según el proveedor',
   PRIMARY KEY (`id_compra_arpilla`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que detalla una compra realizada a un proveedor median' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Tabla que detalla una compra realizada a un proveedor median' AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `compra_producto`
+-- Estructura de tabla para la tabla `compra_producto`
 --
 
 CREATE TABLE IF NOT EXISTS `compra_producto` (
@@ -471,7 +469,7 @@ CREATE TABLE IF NOT EXISTS `compra_producto` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `concepto_gasto`
+-- Estructura de tabla para la tabla `concepto_gasto`
 --
 
 CREATE TABLE IF NOT EXISTS `concepto_gasto` (
@@ -481,12 +479,12 @@ CREATE TABLE IF NOT EXISTS `concepto_gasto` (
   `monto` float DEFAULT NULL COMMENT 'monto del concepto si este es fijo siempre',
   `activo` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Si este concepto de gasto esta activo',
   PRIMARY KEY (`id_concepto_gasto`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Conceptos de gasto' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Conceptos de gasto' AUTO_INCREMENT=6 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `concepto_ingreso`
+-- Estructura de tabla para la tabla `concepto_ingreso`
 --
 
 CREATE TABLE IF NOT EXISTS `concepto_ingreso` (
@@ -496,12 +494,12 @@ CREATE TABLE IF NOT EXISTS `concepto_ingreso` (
   `monto` float DEFAULT NULL COMMENT 'Si el concepto tienen un monto fijo',
   `activo` tinyint(1) NOT NULL COMMENT 'Si este concepto de ingreso esta activo',
   PRIMARY KEY (`id_concepto_ingreso`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Concepto de ingreso' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Concepto de ingreso' AUTO_INCREMENT=9 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `consignacion`
+-- Estructura de tabla para la tabla `consignacion`
 --
 
 CREATE TABLE IF NOT EXISTS `consignacion` (
@@ -521,12 +519,12 @@ CREATE TABLE IF NOT EXISTS `consignacion` (
   `retencion` float DEFAULT NULL COMMENT 'Monto generado por retenciones',
   `saldo` float NOT NULL DEFAULT '0' COMMENT 'Saldo que ha sido abonado a la consignacion',
   PRIMARY KEY (`id_consignacion`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `consignacion_producto`
+-- Estructura de tabla para la tabla `consignacion_producto`
 --
 
 CREATE TABLE IF NOT EXISTS `consignacion_producto` (
@@ -544,7 +542,7 @@ CREATE TABLE IF NOT EXISTS `consignacion_producto` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `corte_de_caja`
+-- Estructura de tabla para la tabla `corte_de_caja`
 --
 
 CREATE TABLE IF NOT EXISTS `corte_de_caja` (
@@ -557,12 +555,12 @@ CREATE TABLE IF NOT EXISTS `corte_de_caja` (
   `saldo_esperado` float NOT NULL COMMENT 'Saldo que se espera de acuerdo a las ventas realizadas apartir del último corte de caja o a la apertura de la misma',
   `saldo_final` float NOT NULL COMMENT 'Saldo que se deja en caja después de realizar el corte',
   PRIMARY KEY (`id_corte_de_caja`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `devolucion_sobre_compra`
+-- Estructura de tabla para la tabla `devolucion_sobre_compra`
 --
 
 CREATE TABLE IF NOT EXISTS `devolucion_sobre_compra` (
@@ -577,7 +575,7 @@ CREATE TABLE IF NOT EXISTS `devolucion_sobre_compra` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `devolucion_sobre_venta`
+-- Estructura de tabla para la tabla `devolucion_sobre_venta`
 --
 
 CREATE TABLE IF NOT EXISTS `devolucion_sobre_venta` (
@@ -592,7 +590,7 @@ CREATE TABLE IF NOT EXISTS `devolucion_sobre_venta` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `direccion`
+-- Estructura de tabla para la tabla `direccion`
 --
 
 CREATE TABLE IF NOT EXISTS `direccion` (
@@ -610,12 +608,12 @@ CREATE TABLE IF NOT EXISTS `direccion` (
   `id_usuario_ultima_modificacion` int(11) NOT NULL COMMENT 'quien fue el usuario que modifico este registro la ultima vez',
   PRIMARY KEY (`id_direccion`),
   KEY `id_ciudad` (`id_ciudad`,`id_usuario_ultima_modificacion`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=48 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `documento`
+-- Estructura de tabla para la tabla `documento`
 --
 
 CREATE TABLE IF NOT EXISTS `documento` (
@@ -626,7 +624,7 @@ CREATE TABLE IF NOT EXISTS `documento` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `documento_cliente`
+-- Estructura de tabla para la tabla `documento_cliente`
 --
 
 CREATE TABLE IF NOT EXISTS `documento_cliente` (
@@ -638,7 +636,7 @@ CREATE TABLE IF NOT EXISTS `documento_cliente` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `documento_compra`
+-- Estructura de tabla para la tabla `documento_compra`
 --
 
 CREATE TABLE IF NOT EXISTS `documento_compra` (
@@ -650,7 +648,7 @@ CREATE TABLE IF NOT EXISTS `documento_compra` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `documento_venta`
+-- Estructura de tabla para la tabla `documento_venta`
 --
 
 CREATE TABLE IF NOT EXISTS `documento_venta` (
@@ -662,7 +660,7 @@ CREATE TABLE IF NOT EXISTS `documento_venta` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `empresa`
+-- Estructura de tabla para la tabla `empresa`
 --
 
 CREATE TABLE IF NOT EXISTS `empresa` (
@@ -676,15 +674,13 @@ CREATE TABLE IF NOT EXISTS `empresa` (
   `fecha_baja` datetime DEFAULT NULL COMMENT 'Fecha en que se desactivo esa empresa',
   `activo` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Si esta empresa esta activa o no',
   `direccion_web` varchar(20) DEFAULT NULL COMMENT 'Direccion web de la empresa',
-  `margen_utilidad` float DEFAULT NULL COMMENT 'Porcentaje del margen de utilidad que esta empresa le gana a todos sus productos',
-  `descuento` float DEFAULT NULL COMMENT 'Descuento que se aplicara a todos los productos de esta empresa',
   PRIMARY KEY (`id_empresa`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='tabla de empresas' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='tabla de empresas' AUTO_INCREMENT=14 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `entrada_almacen`
+-- Estructura de tabla para la tabla `entrada_almacen`
 --
 
 CREATE TABLE IF NOT EXISTS `entrada_almacen` (
@@ -694,12 +690,12 @@ CREATE TABLE IF NOT EXISTS `entrada_almacen` (
   `fecha_registro` datetime NOT NULL COMMENT 'Fecha en que se registra el movimiento',
   `motivo` varchar(255) DEFAULT NULL COMMENT 'motivo por le cual entra producto al almacen',
   PRIMARY KEY (`id_entrada_almacen`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Registro de entradas de un almacen' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Registro de entradas de un almacen' AUTO_INCREMENT=13 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `estado`
+-- Estructura de tabla para la tabla `estado`
 --
 
 CREATE TABLE IF NOT EXISTS `estado` (
@@ -711,7 +707,7 @@ CREATE TABLE IF NOT EXISTS `estado` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `gasto`
+-- Estructura de tabla para la tabla `gasto`
 --
 
 CREATE TABLE IF NOT EXISTS `gasto` (
@@ -731,24 +727,24 @@ CREATE TABLE IF NOT EXISTS `gasto` (
   `cancelado` tinyint(1) NOT NULL COMMENT 'Si este gasto ha sido cancelado o no',
   `motivo_cancelacion` varchar(255) DEFAULT NULL COMMENT 'Motivo por el cual se realiza la cancelacion',
   PRIMARY KEY (`id_gasto`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `impresora`
+-- Estructura de tabla para la tabla `impresora`
 --
 
 CREATE TABLE IF NOT EXISTS `impresora` (
   `id_impresora` int(11) NOT NULL AUTO_INCREMENT,
   `puerto` varchar(16) NOT NULL,
   PRIMARY KEY (`id_impresora`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `impresora_caja`
+-- Estructura de tabla para la tabla `impresora_caja`
 --
 
 CREATE TABLE IF NOT EXISTS `impresora_caja` (
@@ -760,7 +756,7 @@ CREATE TABLE IF NOT EXISTS `impresora_caja` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `impuesto`
+-- Estructura de tabla para la tabla `impuesto`
 --
 
 CREATE TABLE IF NOT EXISTS `impuesto` (
@@ -770,12 +766,12 @@ CREATE TABLE IF NOT EXISTS `impuesto` (
   `nombre` varchar(100) NOT NULL COMMENT 'Nombre del impuesto',
   `descripcion` varchar(255) DEFAULT NULL COMMENT 'Descripcion larga del impuesto',
   PRIMARY KEY (`id_impuesto`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `impuesto_clasificacion_cliente`
+-- Estructura de tabla para la tabla `impuesto_clasificacion_cliente`
 --
 
 CREATE TABLE IF NOT EXISTS `impuesto_clasificacion_cliente` (
@@ -787,7 +783,7 @@ CREATE TABLE IF NOT EXISTS `impuesto_clasificacion_cliente` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `impuesto_clasificacion_producto`
+-- Estructura de tabla para la tabla `impuesto_clasificacion_producto`
 --
 
 CREATE TABLE IF NOT EXISTS `impuesto_clasificacion_producto` (
@@ -799,7 +795,7 @@ CREATE TABLE IF NOT EXISTS `impuesto_clasificacion_producto` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `impuesto_clasificacion_proveedor`
+-- Estructura de tabla para la tabla `impuesto_clasificacion_proveedor`
 --
 
 CREATE TABLE IF NOT EXISTS `impuesto_clasificacion_proveedor` (
@@ -811,7 +807,7 @@ CREATE TABLE IF NOT EXISTS `impuesto_clasificacion_proveedor` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `impuesto_clasificacion_servicio`
+-- Estructura de tabla para la tabla `impuesto_clasificacion_servicio`
 --
 
 CREATE TABLE IF NOT EXISTS `impuesto_clasificacion_servicio` (
@@ -823,7 +819,7 @@ CREATE TABLE IF NOT EXISTS `impuesto_clasificacion_servicio` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `impuesto_empresa`
+-- Estructura de tabla para la tabla `impuesto_empresa`
 --
 
 CREATE TABLE IF NOT EXISTS `impuesto_empresa` (
@@ -835,7 +831,7 @@ CREATE TABLE IF NOT EXISTS `impuesto_empresa` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `impuesto_producto`
+-- Estructura de tabla para la tabla `impuesto_producto`
 --
 
 CREATE TABLE IF NOT EXISTS `impuesto_producto` (
@@ -847,7 +843,7 @@ CREATE TABLE IF NOT EXISTS `impuesto_producto` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `impuesto_servicio`
+-- Estructura de tabla para la tabla `impuesto_servicio`
 --
 
 CREATE TABLE IF NOT EXISTS `impuesto_servicio` (
@@ -859,7 +855,7 @@ CREATE TABLE IF NOT EXISTS `impuesto_servicio` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `impuesto_sucursal`
+-- Estructura de tabla para la tabla `impuesto_sucursal`
 --
 
 CREATE TABLE IF NOT EXISTS `impuesto_sucursal` (
@@ -871,7 +867,7 @@ CREATE TABLE IF NOT EXISTS `impuesto_sucursal` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `impuesto_usuario`
+-- Estructura de tabla para la tabla `impuesto_usuario`
 --
 
 CREATE TABLE IF NOT EXISTS `impuesto_usuario` (
@@ -883,7 +879,7 @@ CREATE TABLE IF NOT EXISTS `impuesto_usuario` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ingreso`
+-- Estructura de tabla para la tabla `ingreso`
 --
 
 CREATE TABLE IF NOT EXISTS `ingreso` (
@@ -902,12 +898,12 @@ CREATE TABLE IF NOT EXISTS `ingreso` (
   `cancelado` tinyint(1) NOT NULL COMMENT 'Si este ingreso ha sido cancelado o no',
   `motivo_cancelacion` varchar(255) DEFAULT NULL COMMENT 'Motivo por el cual se realiza la cancelacion',
   PRIMARY KEY (`id_ingreso`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `inspeccion_consignacion`
+-- Estructura de tabla para la tabla `inspeccion_consignacion`
 --
 
 CREATE TABLE IF NOT EXISTS `inspeccion_consignacion` (
@@ -925,7 +921,7 @@ CREATE TABLE IF NOT EXISTS `inspeccion_consignacion` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `inspeccion_consignacion_producto`
+-- Estructura de tabla para la tabla `inspeccion_consignacion_producto`
 --
 
 CREATE TABLE IF NOT EXISTS `inspeccion_consignacion_producto` (
@@ -941,7 +937,7 @@ CREATE TABLE IF NOT EXISTS `inspeccion_consignacion_producto` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `moneda`
+-- Estructura de tabla para la tabla `moneda`
 --
 
 CREATE TABLE IF NOT EXISTS `moneda` (
@@ -950,12 +946,12 @@ CREATE TABLE IF NOT EXISTS `moneda` (
   `simbolo` varchar(10) NOT NULL COMMENT 'Simbolo de la moneda (US$,NP$)',
   `activa` tinyint(1) NOT NULL COMMENT 'Si esta moneda esta activa o ya no se usa',
   PRIMARY KEY (`id_moneda`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que contendrá las distintas monedas que usa el uusario' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Tabla que contendrá las distintas monedas que usa el uusario' AUTO_INCREMENT=4 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `orden_de_servicio`
+-- Estructura de tabla para la tabla `orden_de_servicio`
 --
 
 CREATE TABLE IF NOT EXISTS `orden_de_servicio` (
@@ -970,13 +966,14 @@ CREATE TABLE IF NOT EXISTS `orden_de_servicio` (
   `descripcion` varchar(255) NOT NULL COMMENT 'Descripcion de la orden',
   `motivo_cancelacion` varchar(255) DEFAULT NULL COMMENT 'Motivo por la cual fue cancelada la orden',
   `adelanto` float NOT NULL COMMENT 'Cantidad de dinero pagada por adelantado',
+  `precio` float NOT NULL COMMENT 'El precio de esta orden de servicio',
   PRIMARY KEY (`id_orden_de_servicio`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `orden_de_servicio_paquete`
+-- Estructura de tabla para la tabla `orden_de_servicio_paquete`
 --
 
 CREATE TABLE IF NOT EXISTS `orden_de_servicio_paquete` (
@@ -989,66 +986,60 @@ CREATE TABLE IF NOT EXISTS `orden_de_servicio_paquete` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `paquete`
+-- Estructura de tabla para la tabla `paquete`
 --
 
 CREATE TABLE IF NOT EXISTS `paquete` (
   `id_paquete` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Id de la tabla paquete',
   `nombre` varchar(100) NOT NULL COMMENT 'Nombre del paquete',
   `descripcion` varchar(255) DEFAULT NULL COMMENT 'Descripcion larga del paquete',
-  `margen_utilidad` float DEFAULT NULL COMMENT 'Margen de utilidad que se obtendra al vender este paquete',
-  `descuento` float DEFAULT NULL COMMENT 'Descuento que se aplciara a este paquete',
   `foto_paquete` varchar(255) DEFAULT NULL COMMENT 'Url de la foto del paquete',
   `costo_estandar` float DEFAULT NULL COMMENT 'Costo estandar del paquete',
   `precio` float DEFAULT NULL COMMENT 'Precio dijo del paquete',
   `activo` tinyint(1) NOT NULL COMMENT 'Si el paquete esta activo o no',
   PRIMARY KEY (`id_paquete`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Paquetes de productos y/o servicios' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Paquetes de productos y/o servicios' AUTO_INCREMENT=16 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `paquete_empresa`
+-- Estructura de tabla para la tabla `paquete_empresa`
 --
 
 CREATE TABLE IF NOT EXISTS `paquete_empresa` (
   `id_paquete` int(11) NOT NULL,
   `id_empresa` int(11) NOT NULL,
-  `precio_utilidad` float DEFAULT NULL COMMENT 'Precio o margen de utilidad con el que se vendera este producto en esta empresa',
-  `es_margen_utilidad` float DEFAULT NULL COMMENT 'Si el campo precio_utilidad es un precio fijo o un margen de utilidad',
   PRIMARY KEY (`id_paquete`,`id_empresa`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='detalle paquete empresa';
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `paquete_sucursal`
+-- Estructura de tabla para la tabla `paquete_sucursal`
 --
 
 CREATE TABLE IF NOT EXISTS `paquete_sucursal` (
   `id_paquete` int(11) NOT NULL,
   `id_sucursal` int(11) NOT NULL,
-  `precio_utilidad` float DEFAULT NULL COMMENT 'Precio o margen de utilidad con el que se vendera este paquete en esta sucursal',
-  `es_margen_utilidad` float DEFAULT NULL COMMENT 'Si el campo precio_utilidad es un margen de utilidad o un precio fijo',
   PRIMARY KEY (`id_paquete`,`id_sucursal`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle paquete sucursal';
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `permiso`
+-- Estructura de tabla para la tabla `permiso`
 --
 
 CREATE TABLE IF NOT EXISTS `permiso` (
   `id_permiso` int(11) NOT NULL AUTO_INCREMENT,
   `permiso` varchar(64) NOT NULL COMMENT 'el nombre de la funcion en el api a la que se le dara permiso',
   PRIMARY KEY (`id_permiso`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `permiso_rol`
+-- Estructura de tabla para la tabla `permiso_rol`
 --
 
 CREATE TABLE IF NOT EXISTS `permiso_rol` (
@@ -1060,7 +1051,7 @@ CREATE TABLE IF NOT EXISTS `permiso_rol` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `permiso_usuario`
+-- Estructura de tabla para la tabla `permiso_usuario`
 --
 
 CREATE TABLE IF NOT EXISTS `permiso_usuario` (
@@ -1072,133 +1063,7 @@ CREATE TABLE IF NOT EXISTS `permiso_usuario` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `precio_paquete_rol`
---
-
-CREATE TABLE IF NOT EXISTS `precio_paquete_rol` (
-  `id_paquete` int(11) NOT NULL COMMENT 'Id del paquete al que se le aplicara un precio de acuerdo al rol',
-  `id_rol` int(11) NOT NULL COMMENT 'Id del rol al que se le ofrecera el paquete a un cierto precio',
-  `precio_utilidad` float NOT NULL COMMENT 'Precio o porcentaje del margen de utilidad que se le ganara a este paquete para este rol',
-  `es_margen_utilidad` tinyint(1) NOT NULL COMMENT 'Verdadero si el valor del campo precio_utilidad es un margen de utilidad, false si es un precio fijo',
-  PRIMARY KEY (`id_paquete`,`id_rol`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Indica el precio o margen de utilidad de un paquete para un';
-
--- --------------------------------------------------------
-
---
--- Table structure for table `precio_paquete_tipo_cliente`
---
-
-CREATE TABLE IF NOT EXISTS `precio_paquete_tipo_cliente` (
-  `id_paquete` int(11) NOT NULL COMMENT 'Id del paquete al que se le aplicara un precio de acuerdo al rol',
-  `id_tipo_cliente` int(11) NOT NULL COMMENT 'Id del tipo de cliente al que se le ofrecera el paquete a un cierto precio',
-  `precio_utilidad` float NOT NULL COMMENT 'Precio o porcentaje del margen de utilidad que se le ganara a este paquete para este tipo de cliente',
-  `es_margen_utilidad` tinyint(1) NOT NULL COMMENT 'Verdadero si el valor del campo precio_utilidad es un margen de utilidad, false si es un precio fijo',
-  PRIMARY KEY (`id_paquete`,`id_tipo_cliente`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Indica el precio o margen de utilidad de un paquete para un';
-
--- --------------------------------------------------------
-
---
--- Table structure for table `precio_paquete_usuario`
---
-
-CREATE TABLE IF NOT EXISTS `precio_paquete_usuario` (
-  `id_paquete` int(11) NOT NULL COMMENT 'Id del paquete al que se le aplicara un precio de acuerdo al usuario',
-  `id_usuario` int(11) NOT NULL COMMENT 'Id del usuario al que se le ofrecera el paquete a un cierto precio',
-  `precio_utilidad` float NOT NULL COMMENT 'Precio o porcentaje del margen de utilidad que se le ganara a este paquete para este usuario',
-  `es_margen_utilidad` tinyint(1) NOT NULL COMMENT 'Verdadero si el valor del campo precio_utilidad es un margen de utilidad, false si es un precio fijo',
-  PRIMARY KEY (`id_paquete`,`id_usuario`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Indica el precio o margen de utilidad de un paquete para un';
-
--- --------------------------------------------------------
-
---
--- Table structure for table `precio_producto_rol`
---
-
-CREATE TABLE IF NOT EXISTS `precio_producto_rol` (
-  `id_producto` int(11) NOT NULL COMMENT 'Id del producto al que se le aplicara un precio de acuerdo al cliente',
-  `id_rol` int(11) NOT NULL COMMENT 'Id del rol al que se le ofrecera el producto a un cierto precio',
-  `precio_utilidad` float NOT NULL COMMENT 'Precio o porcentaje del margen de utilidad que se le ganara a este producto para este rol',
-  `es_margen_utilidad` tinyint(1) NOT NULL COMMENT 'Verdadero si el valor del campo precio_utilidad es un margen de utilidad, false si es un precio fijo',
-  PRIMARY KEY (`id_producto`,`id_rol`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Indica el precio o margen de utilidad de un producto para un';
-
--- --------------------------------------------------------
-
---
--- Table structure for table `precio_producto_tipo_cliente`
---
-
-CREATE TABLE IF NOT EXISTS `precio_producto_tipo_cliente` (
-  `id_producto` int(11) NOT NULL COMMENT 'Id del producto al que se le aplicara un precio de acuerdo al cliente',
-  `id_clasificacion_cliente` int(11) NOT NULL COMMENT 'Id del tipo de cliente al que se le ofrecera el producto a un cierto precio',
-  `es_margen_utilidad` tinyint(1) NOT NULL COMMENT 'Verdadero si el valor del campo precio_utilidad es un margen de utilidad, false si es un precio fijo',
-  `precio_utilidad` float NOT NULL COMMENT 'Precio o porcentaje de margen de utilidad que se le ganara a este producto al venderle a este tipo de cliente',
-  PRIMARY KEY (`id_producto`,`id_clasificacion_cliente`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Indica el precio o margen de utilidad de un producto para un';
-
--- --------------------------------------------------------
-
---
--- Table structure for table `precio_producto_usuario`
---
-
-CREATE TABLE IF NOT EXISTS `precio_producto_usuario` (
-  `id_producto` int(11) NOT NULL COMMENT 'Id del producto al que se le aplicara un precio de acuerdo al cliente',
-  `id_usuario` int(11) NOT NULL COMMENT 'Id del usuario al que s ele ofrecera el producto a un cierto precio',
-  `es_margen_utilidad` tinyint(1) NOT NULL COMMENT 'Verdadero si el valor del campo precio_utilidad es un margen de utilidad, false si es un precio fijo',
-  `precio_utilidad` float NOT NULL COMMENT 'Precio o porcentaje de margen de utilidad que se le ganara a este producto al venderle a este usuario',
-  PRIMARY KEY (`id_producto`,`id_usuario`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Indica el precio o margen de utilidad de un producto para un';
-
--- --------------------------------------------------------
-
---
--- Table structure for table `precio_servicio_rol`
---
-
-CREATE TABLE IF NOT EXISTS `precio_servicio_rol` (
-  `id_servicio` int(11) NOT NULL COMMENT 'Id del servicio al que se le aplicara un precio de acuerdo al cliente',
-  `id_rol` int(11) NOT NULL COMMENT 'Id del usuario al que se le ofrecera el servicio a un cierto precio',
-  `es_margen_utilidad` tinyint(1) NOT NULL COMMENT 'Verdadero si el valor del campo precio_utilidad es un margen de utilidad, false si es un precio fijo',
-  `precio_utilidad` float NOT NULL COMMENT 'Precio o porcentaje de margen de utilidad que se le ganara a este servicio al venderle a este rol',
-  PRIMARY KEY (`id_servicio`,`id_rol`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Indica el precio o margen de utilidad de un producto para un';
-
--- --------------------------------------------------------
-
---
--- Table structure for table `precio_servicio_tipo_cliente`
---
-
-CREATE TABLE IF NOT EXISTS `precio_servicio_tipo_cliente` (
-  `id_servicio` int(11) NOT NULL COMMENT 'Id del servicio al que se le aplicara un precio de acuerdo al cliente',
-  `id_tipo_cliente` int(11) NOT NULL COMMENT 'Id del tipo de cliente al que se le ofrecera el servicio a un cierto precio',
-  `es_margen_utilidad` tinyint(1) NOT NULL COMMENT 'Verdadero si el valor del campo precio_utilidad es un margen de utilidad, false si es un precio fijo',
-  `precio_utilidad` float NOT NULL COMMENT 'Precio o porcentaje de margen de utilidad que se le ganara a este servicio al venderle a este tipo de cliente',
-  PRIMARY KEY (`id_servicio`,`id_tipo_cliente`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Indica el precio o margen de utilidad de un producto para un';
-
--- --------------------------------------------------------
-
---
--- Table structure for table `precio_servicio_usuario`
---
-
-CREATE TABLE IF NOT EXISTS `precio_servicio_usuario` (
-  `id_servicio` int(11) NOT NULL COMMENT 'Id del servicio al que se le aplicara un precio de acuerdo al cliente',
-  `id_usuario` int(11) NOT NULL COMMENT 'Id del usuario al que se le ofrecera el servicio a un cierto precio',
-  `es_margen_utilidad` tinyint(1) NOT NULL COMMENT 'Verdadero si el valor del campo precio_utilidad es un margen de utilidad, false si es un precio fijo',
-  `precio_utilidad` float NOT NULL COMMENT 'Precio o porcentaje de margen de utilidad que se le ganara a este servicio al venderle a este usuario',
-  PRIMARY KEY (`id_servicio`,`id_usuario`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Indica el precio o margen de utilidad de un producto para un';
-
--- --------------------------------------------------------
-
---
--- Table structure for table `prestamo`
+-- Estructura de tabla para la tabla `prestamo`
 --
 
 CREATE TABLE IF NOT EXISTS `prestamo` (
@@ -1212,26 +1077,24 @@ CREATE TABLE IF NOT EXISTS `prestamo` (
   `interes_mensual` float NOT NULL COMMENT 'Porcentaje de interes mensual del prestamo',
   `fecha` datetime NOT NULL COMMENT 'Fecha en que se realiza el prestamo',
   PRIMARY KEY (`id_prestamo`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Prestamo de una sucursal a un solicitante' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Prestamo de una sucursal a un solicitante' AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `producto`
+-- Estructura de tabla para la tabla `producto`
 --
 
 CREATE TABLE IF NOT EXISTS `producto` (
   `id_producto` int(11) NOT NULL AUTO_INCREMENT,
   `compra_en_mostrador` tinyint(1) NOT NULL COMMENT 'Verdadero si el producto se puede comprar en mostrador',
-  `metodo_costeo` enum('precio','margen') NOT NULL COMMENT 'Si el precio se toma del margen de utilidad o del precio fijo',
+  `metodo_costeo` enum('precio','costo') NOT NULL COMMENT 'Si el precio se toma del precio base o del costo del producto',
   `activo` tinyint(1) NOT NULL COMMENT 'Si el producto esta activo o no',
   `codigo_producto` varchar(30) NOT NULL COMMENT 'Codigo interno del producto',
   `nombre_producto` varchar(30) NOT NULL COMMENT 'Nombre del producto',
   `garantia` int(11) DEFAULT NULL COMMENT 'Si este producto cuenta con un numero de meses de garantia',
   `costo_estandar` float NOT NULL COMMENT 'Costo estandar del producto',
   `control_de_existencia` int(11) DEFAULT NULL COMMENT '00000001 = Unidades. 00000010 = Caractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = Lote',
-  `margen_de_utilidad` float DEFAULT NULL COMMENT 'Un porcentage de 0 a 100 si queremos que este producto marque utilidad en especifico',
-  `descuento` float NOT NULL COMMENT 'Descuento que tendra este producto',
   `descripcion` varchar(255) DEFAULT NULL COMMENT 'Descripcion del producto',
   `foto_del_producto` varchar(100) DEFAULT NULL COMMENT 'Url a una foto de este producto',
   `costo_extra_almacen` float DEFAULT NULL COMMENT 'Si este producto produce un costo extra en el almacen',
@@ -1240,12 +1103,12 @@ CREATE TABLE IF NOT EXISTS `producto` (
   `id_unidad` int(11) DEFAULT NULL COMMENT 'Id de la unidad en la que usualmente se maneja este producto',
   `precio` float DEFAULT NULL COMMENT 'El precio fijo del producto',
   PRIMARY KEY (`id_producto`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=18 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `producto_abasto_proveedor`
+-- Estructura de tabla para la tabla `producto_abasto_proveedor`
 --
 
 CREATE TABLE IF NOT EXISTS `producto_abasto_proveedor` (
@@ -1259,7 +1122,7 @@ CREATE TABLE IF NOT EXISTS `producto_abasto_proveedor` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `producto_almacen`
+-- Estructura de tabla para la tabla `producto_almacen`
 --
 
 CREATE TABLE IF NOT EXISTS `producto_almacen` (
@@ -1267,15 +1130,13 @@ CREATE TABLE IF NOT EXISTS `producto_almacen` (
   `id_almacen` int(11) NOT NULL,
   `id_unidad` int(11) NOT NULL COMMENT 'Id de la unidad almacenada del producto',
   `cantidad` float NOT NULL,
-  `precio_utilidad` float DEFAULT NULL COMMENT 'Precio o margen de utilidad con el que se vendera este producto en esta sucursal',
-  `es_margen_utilidad` float DEFAULT NULL COMMENT 'Si el campo precio_utilidad es un margen de utilidad o un precio fijo',
   PRIMARY KEY (`id_producto`,`id_almacen`,`id_unidad`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `producto_clasificacion`
+-- Estructura de tabla para la tabla `producto_clasificacion`
 --
 
 CREATE TABLE IF NOT EXISTS `producto_clasificacion` (
@@ -1287,21 +1148,19 @@ CREATE TABLE IF NOT EXISTS `producto_clasificacion` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `producto_empresa`
+-- Estructura de tabla para la tabla `producto_empresa`
 --
 
 CREATE TABLE IF NOT EXISTS `producto_empresa` (
   `id_producto` int(11) NOT NULL COMMENT 'Id del producto que se vende en la empresa',
   `id_empresa` int(11) NOT NULL COMMENT 'Id de la empresa que ofrece ese producto',
-  `precio_utilidad` float DEFAULT NULL COMMENT 'Precio o margen de utilidad con el que se vendera este producto en esta empresa',
-  `es_margen_utilidad` float DEFAULT NULL COMMENT 'Si el campo precio_utilidad es un margen de utilidad o un precio fijo',
   PRIMARY KEY (`id_producto`,`id_empresa`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle producto empresa';
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `producto_entrada_almacen`
+-- Estructura de tabla para la tabla `producto_entrada_almacen`
 --
 
 CREATE TABLE IF NOT EXISTS `producto_entrada_almacen` (
@@ -1315,7 +1174,25 @@ CREATE TABLE IF NOT EXISTS `producto_entrada_almacen` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `producto_paquete`
+-- Estructura de tabla para la tabla `producto_orden_de_servicio`
+--
+
+CREATE TABLE IF NOT EXISTS `producto_orden_de_servicio` (
+  `id_orden_de_servicio` int(11) NOT NULL COMMENT 'id de la orden de servicio',
+  `id_producto` int(11) NOT NULL COMMENT 'id del producto a vender',
+  `precio` float NOT NULL COMMENT 'precio unitario con el que se va a vender el producto',
+  `cantidad` int(11) NOT NULL COMMENT 'cantidad de producto que se vendera',
+  `descuento` float NOT NULL COMMENT 'descuento que se aplicara al producto',
+  `impuesto` float NOT NULL COMMENT 'impuesto que se aplicara al producto',
+  `retencion` float NOT NULL COMMENT 'Retencion unitaria en el producto',
+  `id_unidad` int(11) NOT NULL COMMENT 'Id de la unidad del producto',
+  PRIMARY KEY (`id_orden_de_servicio`,`id_producto`,`id_unidad`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla detalle entre una orden de servicio y los productos qu';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `producto_paquete`
 --
 
 CREATE TABLE IF NOT EXISTS `producto_paquete` (
@@ -1329,7 +1206,7 @@ CREATE TABLE IF NOT EXISTS `producto_paquete` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `producto_salida_almacen`
+-- Estructura de tabla para la tabla `producto_salida_almacen`
 --
 
 CREATE TABLE IF NOT EXISTS `producto_salida_almacen` (
@@ -1343,7 +1220,34 @@ CREATE TABLE IF NOT EXISTS `producto_salida_almacen` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `reporte`
+-- Estructura de tabla para la tabla `regla`
+--
+
+CREATE TABLE IF NOT EXISTS `regla` (
+  `id_regla` int(11) NOT NULL AUTO_INCREMENT,
+  `id_version` int(11) NOT NULL COMMENT 'Id de la version a la que pertenece esta regla',
+  `nombre` varchar(100) NOT NULL COMMENT 'Nombre de la regla',
+  `id_producto` int(11) DEFAULT NULL COMMENT 'Id del producto al que se le aplicara esta regla',
+  `id_clasificacion_producto` int(11) DEFAULT NULL COMMENT 'Id de la clasificacion del producto al que se le aplicara esta regla',
+  `id_unidad` int(11) DEFAULT NULL COMMENT 'Id de la unidad a la cual aplicara esta regla',
+  `id_servicio` int(11) DEFAULT NULL COMMENT 'Id del servicio al cual se le aplicara esta regla',
+  `id_clasificacion_servicio` int(11) DEFAULT NULL COMMENT 'Id de la clasificacion del servicio a la que se le aplicara esta regla',
+  `id_paquete` int(11) DEFAULT NULL COMMENT 'Id del paquete al cual se le aplicara esta regla',
+  `cantidad_minima` int(11) NOT NULL DEFAULT '1' COMMENT 'Cantidad minima de objeto necesarios apra aplicar esta regla',
+  `id_tarifa` int(11) DEFAULT NULL COMMENT 'Id de la tarifa en la cual se basa esta tarifa para obtener el precio base',
+  `porcentaje_utilidad` float NOT NULL DEFAULT '0' COMMENT 'Porcentaje de utilidad que se le ganara al precio base del objeto',
+  `utilidad_neta` float NOT NULL DEFAULT '0' COMMENT 'Utilidad neta que se le ganara al comerciar con el objeto',
+  `metodo_redondeo` float NOT NULL DEFAULT '0' COMMENT 'Falta definir por Manuel',
+  `margen_min` float NOT NULL DEFAULT '0' COMMENT 'Falta definir por Manuel',
+  `margen_max` float NOT NULL DEFAULT '0' COMMENT 'Falta definir por Manuel',
+  `secuencia` int(11) NOT NULL COMMENT 'Secuencia de la regla',
+  PRIMARY KEY (`id_regla`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `reporte`
 --
 
 CREATE TABLE IF NOT EXISTS `reporte` (
@@ -1354,7 +1258,7 @@ CREATE TABLE IF NOT EXISTS `reporte` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `retencion`
+-- Estructura de tabla para la tabla `retencion`
 --
 
 CREATE TABLE IF NOT EXISTS `retencion` (
@@ -1364,12 +1268,12 @@ CREATE TABLE IF NOT EXISTS `retencion` (
   `nombre` varchar(100) NOT NULL COMMENT 'El nombre de la retencion',
   `descripcion` varchar(255) DEFAULT NULL COMMENT 'DEscripcion larga de la retencion',
   PRIMARY KEY (`id_retencion`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `retencion_clasificacion_cliente`
+-- Estructura de tabla para la tabla `retencion_clasificacion_cliente`
 --
 
 CREATE TABLE IF NOT EXISTS `retencion_clasificacion_cliente` (
@@ -1381,7 +1285,7 @@ CREATE TABLE IF NOT EXISTS `retencion_clasificacion_cliente` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `retencion_clasificacion_producto`
+-- Estructura de tabla para la tabla `retencion_clasificacion_producto`
 --
 
 CREATE TABLE IF NOT EXISTS `retencion_clasificacion_producto` (
@@ -1393,7 +1297,7 @@ CREATE TABLE IF NOT EXISTS `retencion_clasificacion_producto` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `retencion_clasificacion_proveedor`
+-- Estructura de tabla para la tabla `retencion_clasificacion_proveedor`
 --
 
 CREATE TABLE IF NOT EXISTS `retencion_clasificacion_proveedor` (
@@ -1405,7 +1309,7 @@ CREATE TABLE IF NOT EXISTS `retencion_clasificacion_proveedor` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `retencion_clasificacion_servicio`
+-- Estructura de tabla para la tabla `retencion_clasificacion_servicio`
 --
 
 CREATE TABLE IF NOT EXISTS `retencion_clasificacion_servicio` (
@@ -1417,7 +1321,7 @@ CREATE TABLE IF NOT EXISTS `retencion_clasificacion_servicio` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `retencion_empresa`
+-- Estructura de tabla para la tabla `retencion_empresa`
 --
 
 CREATE TABLE IF NOT EXISTS `retencion_empresa` (
@@ -1429,7 +1333,7 @@ CREATE TABLE IF NOT EXISTS `retencion_empresa` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `retencion_producto`
+-- Estructura de tabla para la tabla `retencion_producto`
 --
 
 CREATE TABLE IF NOT EXISTS `retencion_producto` (
@@ -1441,7 +1345,7 @@ CREATE TABLE IF NOT EXISTS `retencion_producto` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `retencion_servicio`
+-- Estructura de tabla para la tabla `retencion_servicio`
 --
 
 CREATE TABLE IF NOT EXISTS `retencion_servicio` (
@@ -1453,7 +1357,7 @@ CREATE TABLE IF NOT EXISTS `retencion_servicio` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `retencion_sucursal`
+-- Estructura de tabla para la tabla `retencion_sucursal`
 --
 
 CREATE TABLE IF NOT EXISTS `retencion_sucursal` (
@@ -1465,7 +1369,7 @@ CREATE TABLE IF NOT EXISTS `retencion_sucursal` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `retencion_usuario`
+-- Estructura de tabla para la tabla `retencion_usuario`
 --
 
 CREATE TABLE IF NOT EXISTS `retencion_usuario` (
@@ -1477,22 +1381,23 @@ CREATE TABLE IF NOT EXISTS `retencion_usuario` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `rol`
+-- Estructura de tabla para la tabla `rol`
 --
 
 CREATE TABLE IF NOT EXISTS `rol` (
   `id_rol` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(30) NOT NULL COMMENT 'Nombre del rol',
   `descripcion` varchar(255) DEFAULT NULL COMMENT 'descripcion larga de este rol',
-  `descuento` float DEFAULT NULL COMMENT 'Porcentaje del descuento del que gozaran los usuarios de este rol',
   `salario` float DEFAULT NULL COMMENT 'Si los usuarios con dicho rol contaran con un salario',
+  `id_tarifa_compra` int(11) DEFAULT NULL COMMENT 'Id de la tarifa de compra por default para los usuarios de este rol',
+  `id_tarifa_venta` int(11) DEFAULT NULL COMMENT 'Id de la tarifa de venta por default para los usuarios de este rol',
   PRIMARY KEY (`id_rol`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `salida_almacen`
+-- Estructura de tabla para la tabla `salida_almacen`
 --
 
 CREATE TABLE IF NOT EXISTS `salida_almacen` (
@@ -1502,12 +1407,12 @@ CREATE TABLE IF NOT EXISTS `salida_almacen` (
   `fecha_registro` datetime NOT NULL COMMENT 'Fecha en que se registra el movimiento',
   `motivo` varchar(255) NOT NULL COMMENT 'motivo por le cual sale producto del almacen',
   PRIMARY KEY (`id_salida_almacen`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Registro de salidas de un alacen' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Registro de salidas de un alacen' AUTO_INCREMENT=8 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `seguimiento_de_servicio`
+-- Estructura de tabla para la tabla `seguimiento_de_servicio`
 --
 
 CREATE TABLE IF NOT EXISTS `seguimiento_de_servicio` (
@@ -1519,22 +1424,21 @@ CREATE TABLE IF NOT EXISTS `seguimiento_de_servicio` (
   `estado` varchar(255) NOT NULL COMMENT 'Estado en la que se encuentra la orden',
   `fecha_seguimiento` datetime NOT NULL COMMENT 'Fecha en la que se realizo el seguimiento',
   PRIMARY KEY (`id_seguimiento_de_servicio`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `servicio`
+-- Estructura de tabla para la tabla `servicio`
 --
 
 CREATE TABLE IF NOT EXISTS `servicio` (
   `id_servicio` int(11) NOT NULL AUTO_INCREMENT,
   `nombre_servicio` varchar(50) NOT NULL COMMENT 'nombre del servicio',
-  `metodo_costeo` enum('precio','margen') NOT NULL COMMENT 'Si el precio se toma del margen de utilidad o del precio fijo',
+  `metodo_costeo` enum('precio','costo') NOT NULL COMMENT 'Si el precio final se tomara del precio base de este servicio o de su costo',
   `codigo_servicio` varchar(20) NOT NULL COMMENT 'Codigo de control del servicio manejado por la empresa, no se puede repetir',
   `compra_en_mostrador` tinyint(1) NOT NULL COMMENT 'Verdadero si este servicio se puede comprar en mostrador, para aquello de compra-venta. Para poder hacer esto, el sistema debe poder hacer compras en mostrador',
   `activo` tinyint(1) NOT NULL COMMENT 'Si el servicio esta activo',
-  `margen_de_utilidad` float DEFAULT NULL COMMENT 'Un porcentage de 0 a 100 si queremos que este servicio marque utilidad en especifico',
   `descripcion_servicio` varchar(255) DEFAULT NULL COMMENT 'Descripcion del servicio',
   `costo_estandar` float NOT NULL COMMENT 'Valor del costo estandar del servicio',
   `garantia` int(11) DEFAULT NULL COMMENT 'Si este servicio tiene una garantía en meses.',
@@ -1542,12 +1446,12 @@ CREATE TABLE IF NOT EXISTS `servicio` (
   `foto_servicio` varchar(50) DEFAULT NULL COMMENT 'Url de la foto del servicio',
   `precio` float DEFAULT NULL COMMENT 'El precio fijo del servicio',
   PRIMARY KEY (`id_servicio`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=22 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `servicio_clasificacion`
+-- Estructura de tabla para la tabla `servicio_clasificacion`
 --
 
 CREATE TABLE IF NOT EXISTS `servicio_clasificacion` (
@@ -1559,35 +1463,31 @@ CREATE TABLE IF NOT EXISTS `servicio_clasificacion` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `servicio_empresa`
+-- Estructura de tabla para la tabla `servicio_empresa`
 --
 
 CREATE TABLE IF NOT EXISTS `servicio_empresa` (
   `id_servicio` int(11) NOT NULL COMMENT 'Id del servicio ',
   `id_empresa` int(11) NOT NULL COMMENT 'Id de la empresa en la que se ofrece este servicio',
-  `precio_utilidad` float DEFAULT NULL COMMENT 'Precio o margen de utilidad con el que se vendera este servicio en esta empresa',
-  `es_margen_utilidad` float DEFAULT NULL COMMENT 'Si el campo precio_utilidad es un margen de utilidad o un precio fijo',
   PRIMARY KEY (`id_servicio`,`id_empresa`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle servicio empresa';
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `servicio_sucursal`
+-- Estructura de tabla para la tabla `servicio_sucursal`
 --
 
 CREATE TABLE IF NOT EXISTS `servicio_sucursal` (
   `id_servicio` int(11) NOT NULL,
   `id_sucursal` int(11) NOT NULL,
-  `precio_utilidad` float DEFAULT NULL COMMENT 'Precio o margen de utilidad con el que se vendera este servicio en esta sucursal',
-  `es_margen_utilidad` float DEFAULT NULL COMMENT 'Si el campo precio_utilidad es un margen de utilidad o un precio fijo',
   PRIMARY KEY (`id_servicio`,`id_sucursal`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle servicio sucusal';
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `sesion`
+-- Estructura de tabla para la tabla `sesion`
 --
 
 CREATE TABLE IF NOT EXISTS `sesion` (
@@ -1600,12 +1500,12 @@ CREATE TABLE IF NOT EXISTS `sesion` (
   PRIMARY KEY (`id_sesion`),
   UNIQUE KEY `id_usuario` (`id_usuario`),
   KEY `auth_token` (`auth_token`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Mantiene un seguimiento de las sesiones activas en el sistem' AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='Mantiene un seguimiento de las sesiones activas en el sistem' AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `sucursal`
+-- Estructura de tabla para la tabla `sucursal`
 --
 
 CREATE TABLE IF NOT EXISTS `sucursal` (
@@ -1619,41 +1519,55 @@ CREATE TABLE IF NOT EXISTS `sucursal` (
   `fecha_apertura` datetime NOT NULL COMMENT 'Fecha en que se creo la sucursal',
   `activa` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Si esta sucursal esta activa o no',
   `fecha_baja` datetime DEFAULT NULL COMMENT 'Fecha en que se dio de baja esta sucursal',
-  `margen_utilidad` float DEFAULT NULL COMMENT 'POrcentaje del margen de utilidad que esta sucursal le gana a todos los productos que ofrece',
-  `descuento` float DEFAULT NULL COMMENT 'Descuento que se aplicara a todos los productos de esta sucursal',
   PRIMARY KEY (`id_sucursal`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='tabla de sucursales' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='tabla de sucursales' AUTO_INCREMENT=27 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `sucursal_empresa`
+-- Estructura de tabla para la tabla `sucursal_empresa`
 --
 
 CREATE TABLE IF NOT EXISTS `sucursal_empresa` (
   `id_sucursal` int(11) NOT NULL,
   `id_empresa` int(11) NOT NULL,
-  `margen_utilidad` float DEFAULT NULL COMMENT 'Porcentaje de margen de utilidad que le gana esta sucursal a los productos de esta empresa',
-  `descuento` float DEFAULT NULL COMMENT 'Descuento que se aplicara a todos los productos de esta empresa en esta sucursal',
   PRIMARY KEY (`id_sucursal`,`id_empresa`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='tabla detalle entre sucursal y las empresas a la que pertene';
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tipo_almacen`
+-- Estructura de tabla para la tabla `tarifa`
+--
+
+CREATE TABLE IF NOT EXISTS `tarifa` (
+  `id_tarifa` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(100) NOT NULL COMMENT 'Nombre de la tarifa',
+  `tipo_tarifa` enum('compra','venta') NOT NULL COMMENT 'Si el tipo de tarifa es de compra o de venta',
+  `activa` tinyint(1) NOT NULL COMMENT 'Si la tarifa es activa o no',
+  `id_moneda` int(11) NOT NULL COMMENT 'Moneda con la que se realizan los calclos de esta tarifa',
+  `default` tinyint(1) NOT NULL COMMENT 'Si esta tarifa es la default del sistema o no',
+  `id_version_default` int(11) DEFAULT NULL COMMENT 'Id de la version default de esta tarifa',
+  `id_version_activa` int(11) DEFAULT NULL COMMENT 'Id de la version activa de esta tarifa',
+  PRIMARY KEY (`id_tarifa`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tipo_almacen`
 --
 
 CREATE TABLE IF NOT EXISTS `tipo_almacen` (
   `id_tipo_almacen` int(11) NOT NULL AUTO_INCREMENT,
   `descripcion` varchar(64) NOT NULL,
   PRIMARY KEY (`id_tipo_almacen`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `traspaso`
+-- Estructura de tabla para la tabla `traspaso`
 --
 
 CREATE TABLE IF NOT EXISTS `traspaso` (
@@ -1670,12 +1584,12 @@ CREATE TABLE IF NOT EXISTS `traspaso` (
   `cancelado` tinyint(1) NOT NULL COMMENT 'Si la solicitud de traspaso fue cancelada',
   `completo` tinyint(1) NOT NULL COMMENT 'Verdadero si se enviaron todos los productos solicitados al inicio del traspaso',
   PRIMARY KEY (`id_traspaso`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Traspasos entre un almacen y otro' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Traspasos entre un almacen y otro' AUTO_INCREMENT=6 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `traspaso_producto`
+-- Estructura de tabla para la tabla `traspaso_producto`
 --
 
 CREATE TABLE IF NOT EXISTS `traspaso_producto` (
@@ -1690,7 +1604,7 @@ CREATE TABLE IF NOT EXISTS `traspaso_producto` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `unidad`
+-- Estructura de tabla para la tabla `unidad`
 --
 
 CREATE TABLE IF NOT EXISTS `unidad` (
@@ -1700,12 +1614,12 @@ CREATE TABLE IF NOT EXISTS `unidad` (
   `es_entero` tinyint(1) NOT NULL COMMENT 'Si esta unidad manejara sus cantidades como enteras o como flotantes',
   `activa` tinyint(1) NOT NULL COMMENT 'Si esta unidad esa activa o no',
   PRIMARY KEY (`id_unidad`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='tabla de unidades (kilos, litros, libras, cajas, arpillas))' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='tabla de unidades (kilos, litros, libras, cajas, arpillas))' AUTO_INCREMENT=10 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `unidad_equivalencia`
+-- Estructura de tabla para la tabla `unidad_equivalencia`
 --
 
 CREATE TABLE IF NOT EXISTS `unidad_equivalencia` (
@@ -1718,7 +1632,7 @@ CREATE TABLE IF NOT EXISTS `unidad_equivalencia` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `usuario`
+-- Estructura de tabla para la tabla `usuario`
 --
 
 CREATE TABLE IF NOT EXISTS `usuario` (
@@ -1763,13 +1677,15 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `dias_de_embarque` int(11) DEFAULT NULL COMMENT 'Dias de embarque del proveedor (Lunes, Martes, etc)',
   `tiempo_entrega` int(11) DEFAULT NULL COMMENT 'Tiempo de entrega del proveedor en días',
   `cuenta_bancaria` varchar(50) DEFAULT NULL COMMENT 'Cuenta bancaria del usuario',
+  `id_tarifa_compra` int(11) DEFAULT NULL COMMENT 'Id de la tarifa de compra por default para este usuario',
+  `id_tarifa_venta` int(11) DEFAULT NULL COMMENT 'Id de la tarifa de venta por default para este usuario',
   PRIMARY KEY (`id_usuario`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='tabla de usuarios' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='tabla de usuarios' AUTO_INCREMENT=30 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `venta`
+-- Estructura de tabla para la tabla `venta`
 --
 
 CREATE TABLE IF NOT EXISTS `venta` (
@@ -1790,12 +1706,12 @@ CREATE TABLE IF NOT EXISTS `venta` (
   `tipo_de_pago` enum('cheque','tarjeta','efectivo') DEFAULT NULL COMMENT 'Si la venta fue pagada con tarjeta, cheque, o en efectivo',
   `retencion` float NOT NULL COMMENT 'Monto de retencion',
   PRIMARY KEY (`id_venta`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=56 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `venta_arpilla`
+-- Estructura de tabla para la tabla `venta_arpilla`
 --
 
 CREATE TABLE IF NOT EXISTS `venta_arpilla` (
@@ -1812,12 +1728,12 @@ CREATE TABLE IF NOT EXISTS `venta_arpilla` (
   `merma_por_arpilla` float NOT NULL COMMENT 'Merma por arpilla',
   `total_origen` float DEFAULT NULL COMMENT 'Valor del embarque',
   PRIMARY KEY (`id_venta_arpilla`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que detalla una venta realizada mediante un embarque d' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Tabla que detalla una venta realizada mediante un embarque d' AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `venta_empresa`
+-- Estructura de tabla para la tabla `venta_empresa`
 --
 
 CREATE TABLE IF NOT EXISTS `venta_empresa` (
@@ -1831,7 +1747,7 @@ CREATE TABLE IF NOT EXISTS `venta_empresa` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `venta_orden`
+-- Estructura de tabla para la tabla `venta_orden`
 --
 
 CREATE TABLE IF NOT EXISTS `venta_orden` (
@@ -1847,7 +1763,7 @@ CREATE TABLE IF NOT EXISTS `venta_orden` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `venta_paquete`
+-- Estructura de tabla para la tabla `venta_paquete`
 --
 
 CREATE TABLE IF NOT EXISTS `venta_paquete` (
@@ -1862,7 +1778,7 @@ CREATE TABLE IF NOT EXISTS `venta_paquete` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `venta_producto`
+-- Estructura de tabla para la tabla `venta_producto`
 --
 
 CREATE TABLE IF NOT EXISTS `venta_producto` (
@@ -1876,3 +1792,20 @@ CREATE TABLE IF NOT EXISTS `venta_producto` (
   `id_unidad` int(11) NOT NULL COMMENT 'Id de la unidad del producto',
   PRIMARY KEY (`id_venta`,`id_producto`,`id_unidad`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla detalle entre una venta y los productos que se vendier';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `version`
+--
+
+CREATE TABLE IF NOT EXISTS `version` (
+  `id_version` int(11) NOT NULL AUTO_INCREMENT,
+  `id_tarifa` int(11) NOT NULL COMMENT 'Id de la tarifa a la que pertenece esta version',
+  `nombre` varchar(100) NOT NULL COMMENT 'Nombre de la version',
+  `activa` tinyint(1) NOT NULL COMMENT 'Si la version es la version activa de esta tarifa',
+  `fecha_inicio` datetime DEFAULT NULL COMMENT 'Fecha a partir de la cual se aplican las reglas de esta version',
+  `fecha_fin` datetime DEFAULT NULL COMMENT 'Fecha a partir de la cual se dejaran de aplicar las reglas de esta version',
+  `default` tinyint(1) NOT NULL COMMENT 'Si esta version es la version default de la tarifa',
+  PRIMARY KEY (`id_version`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;

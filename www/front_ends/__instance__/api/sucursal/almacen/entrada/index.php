@@ -1,6 +1,6 @@
 <?php
 /**
-  * GET api/sucursal/almacen/entrada
+  * POST api/sucursal/almacen/entrada
   * Surtir una sucursal
   *
   * Metodo que surte una sucursal por parte de un proveedor. La sucursal sera tomada de la sesion actual.

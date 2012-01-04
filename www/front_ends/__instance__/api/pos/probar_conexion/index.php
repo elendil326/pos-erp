@@ -11,6 +11,6 @@
 require_once("../../../../../../server/bootstrap.php");
 require_once("api/api.pos.probar_conexion.php");
 
-$api = new ApiPosProbar_conexion();
+$api = new ApiPosProbarConexion();
 $apiOutput = ApiOutputFormatter::getInstance();
 $apiOutput->PrintOuput($api);

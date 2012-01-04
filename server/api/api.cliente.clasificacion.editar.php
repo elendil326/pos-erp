@@ -19,9 +19,9 @@
 			"id_clasificacion_cliente" => new ApiExposedProperty("id_clasificacion_cliente", true, GET, array( "int" )),
 			"clave_interna" => new ApiExposedProperty("clave_interna", false, GET, array( "string" )),
 			"descripcion" => new ApiExposedProperty("descripcion", false, GET, array( "string" )),
-			"descuento" => new ApiExposedProperty("descuento", false, GET, array( "float" )),
+			"id_tarifa_compra" => new ApiExposedProperty("id_tarifa_compra", false, GET, array( "int" )),
+			"id_tarifa_venta" => new ApiExposedProperty("id_tarifa_venta", false, GET, array( "int" )),
 			"impuestos" => new ApiExposedProperty("impuestos", false, GET, array( "json" )),
-			"margen_de_utilidad" => new ApiExposedProperty("margen_de_utilidad", false, GET, array( "float" )),
 			"nombre" => new ApiExposedProperty("nombre", false, GET, array( "string" )),
 			"retenciones" => new ApiExposedProperty("retenciones", false, GET, array( "json" )),
 		);
@@ -35,9 +35,9 @@
 			isset($_GET['id_clasificacion_cliente'] ) ? $_GET['id_clasificacion_cliente'] : null,
 			isset($_GET['clave_interna'] ) ? $_GET['clave_interna'] : null,
 			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
-			isset($_GET['descuento'] ) ? $_GET['descuento'] : null,
+			isset($_GET['id_tarifa_compra'] ) ? $_GET['id_tarifa_compra'] : null,
+			isset($_GET['id_tarifa_venta'] ) ? $_GET['id_tarifa_venta'] : null,
 			isset($_GET['impuestos'] ) ? json_decode($_GET['impuestos']) : null,
-			isset($_GET['margen_de_utilidad'] ) ? $_GET['margen_de_utilidad'] : null,
 			isset($_GET['nombre'] ) ? $_GET['nombre'] : null,
 			isset($_GET['retenciones'] ) ? json_decode($_GET['retenciones']) : null
 			

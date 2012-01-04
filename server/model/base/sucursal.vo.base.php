@@ -52,12 +52,6 @@ class Sucursal extends VO
 			if( isset($data['fecha_baja']) ){
 				$this->fecha_baja = $data['fecha_baja'];
 			}
-			if( isset($data['margen_utilidad']) ){
-				$this->margen_utilidad = $data['margen_utilidad'];
-			}
-			if( isset($data['descuento']) ){
-				$this->descuento = $data['descuento'];
-			}
 		}
 	}
 
@@ -80,9 +74,7 @@ class Sucursal extends VO
 			"saldo_a_favor" => $this->saldo_a_favor,
 			"fecha_apertura" => $this->fecha_apertura,
 			"activa" => $this->activa,
-			"fecha_baja" => $this->fecha_baja,
-			"margen_utilidad" => $this->margen_utilidad,
-			"descuento" => $this->descuento
+			"fecha_baja" => $this->fecha_baja
 		); 
 	return json_encode($vec); 
 	}
@@ -178,24 +170,6 @@ class Sucursal extends VO
 	  * @var datetime
 	  */
 	public $fecha_baja;
-
-	/**
-	  * margen_utilidad
-	  * 
-	  * POrcentaje del margen de utilidad que esta sucursal le gana a todos los productos que ofrece<br>
-	  * @access public
-	  * @var float
-	  */
-	public $margen_utilidad;
-
-	/**
-	  * descuento
-	  * 
-	  * Descuento que se aplicara a todos los productos de esta sucursal<br>
-	  * @access public
-	  * @var float
-	  */
-	public $descuento;
 
 	/**
 	  * getIdSucursal
@@ -439,54 +413,6 @@ class Sucursal extends VO
 	final public function setFechaBaja( $fecha_baja )
 	{
 		$this->fecha_baja = $fecha_baja;
-	}
-
-	/**
-	  * getMargenUtilidad
-	  * 
-	  * Get the <i>margen_utilidad</i> property for this object. Donde <i>margen_utilidad</i> es POrcentaje del margen de utilidad que esta sucursal le gana a todos los productos que ofrece
-	  * @return float
-	  */
-	final public function getMargenUtilidad()
-	{
-		return $this->margen_utilidad;
-	}
-
-	/**
-	  * setMargenUtilidad( $margen_utilidad )
-	  * 
-	  * Set the <i>margen_utilidad</i> property for this object. Donde <i>margen_utilidad</i> es POrcentaje del margen de utilidad que esta sucursal le gana a todos los productos que ofrece.
-	  * Una validacion basica se hara aqui para comprobar que <i>margen_utilidad</i> es de tipo <i>float</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param float
-	  */
-	final public function setMargenUtilidad( $margen_utilidad )
-	{
-		$this->margen_utilidad = $margen_utilidad;
-	}
-
-	/**
-	  * getDescuento
-	  * 
-	  * Get the <i>descuento</i> property for this object. Donde <i>descuento</i> es Descuento que se aplicara a todos los productos de esta sucursal
-	  * @return float
-	  */
-	final public function getDescuento()
-	{
-		return $this->descuento;
-	}
-
-	/**
-	  * setDescuento( $descuento )
-	  * 
-	  * Set the <i>descuento</i> property for this object. Donde <i>descuento</i> es Descuento que se aplicara a todos los productos de esta sucursal.
-	  * Una validacion basica se hara aqui para comprobar que <i>descuento</i> es de tipo <i>float</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param float
-	  */
-	final public function setDescuento( $descuento )
-	{
-		$this->descuento = $descuento;
 	}
 
 }

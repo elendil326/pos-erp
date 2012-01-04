@@ -1,6 +1,6 @@
 <?php
 /**
-  * GET api/producto/nuevo
+  * POST api/producto/nuevo
   * Crear un nuevo produco
   *
   * Crear un nuevo producto, 

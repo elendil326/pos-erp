@@ -34,6 +34,12 @@ class ClasificacionProveedor extends VO
 			if( isset($data['activa']) ){
 				$this->activa = $data['activa'];
 			}
+			if( isset($data['id_tarifa_compra']) ){
+				$this->id_tarifa_compra = $data['id_tarifa_compra'];
+			}
+			if( isset($data['id_tarifa_venta']) ){
+				$this->id_tarifa_venta = $data['id_tarifa_venta'];
+			}
 		}
 	}
 
@@ -50,7 +56,9 @@ class ClasificacionProveedor extends VO
 			"id_clasificacion_proveedor" => $this->id_clasificacion_proveedor,
 			"nombre" => $this->nombre,
 			"descripcion" => $this->descripcion,
-			"activa" => $this->activa
+			"activa" => $this->activa,
+			"id_tarifa_compra" => $this->id_tarifa_compra,
+			"id_tarifa_venta" => $this->id_tarifa_venta
 		); 
 	return json_encode($vec); 
 	}
@@ -92,6 +100,24 @@ class ClasificacionProveedor extends VO
 	  * @var tinyint(1)
 	  */
 	public $activa;
+
+	/**
+	  * id_tarifa_compra
+	  * 
+	  * Id de la tarifa de compra por default para esta clasificacion de proveedor<br>
+	  * @access public
+	  * @var int(11)
+	  */
+	public $id_tarifa_compra;
+
+	/**
+	  * id_tarifa_venta
+	  * 
+	  * Id de la tarifa de venta por default para esta clasificacion de proveedor<br>
+	  * @access public
+	  * @var int(11)
+	  */
+	public $id_tarifa_venta;
 
 	/**
 	  * getIdClasificacionProveedor
@@ -191,6 +217,54 @@ class ClasificacionProveedor extends VO
 	final public function setActiva( $activa )
 	{
 		$this->activa = $activa;
+	}
+
+	/**
+	  * getIdTarifaCompra
+	  * 
+	  * Get the <i>id_tarifa_compra</i> property for this object. Donde <i>id_tarifa_compra</i> es Id de la tarifa de compra por default para esta clasificacion de proveedor
+	  * @return int(11)
+	  */
+	final public function getIdTarifaCompra()
+	{
+		return $this->id_tarifa_compra;
+	}
+
+	/**
+	  * setIdTarifaCompra( $id_tarifa_compra )
+	  * 
+	  * Set the <i>id_tarifa_compra</i> property for this object. Donde <i>id_tarifa_compra</i> es Id de la tarifa de compra por default para esta clasificacion de proveedor.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_tarifa_compra</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setIdTarifaCompra( $id_tarifa_compra )
+	{
+		$this->id_tarifa_compra = $id_tarifa_compra;
+	}
+
+	/**
+	  * getIdTarifaVenta
+	  * 
+	  * Get the <i>id_tarifa_venta</i> property for this object. Donde <i>id_tarifa_venta</i> es Id de la tarifa de venta por default para esta clasificacion de proveedor
+	  * @return int(11)
+	  */
+	final public function getIdTarifaVenta()
+	{
+		return $this->id_tarifa_venta;
+	}
+
+	/**
+	  * setIdTarifaVenta( $id_tarifa_venta )
+	  * 
+	  * Set the <i>id_tarifa_venta</i> property for this object. Donde <i>id_tarifa_venta</i> es Id de la tarifa de venta por default para esta clasificacion de proveedor.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_tarifa_venta</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setIdTarifaVenta( $id_tarifa_venta )
+	{
+		$this->id_tarifa_venta = $id_tarifa_venta;
 	}
 
 }

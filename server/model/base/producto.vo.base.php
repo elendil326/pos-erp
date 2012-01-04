@@ -49,12 +49,6 @@ class Producto extends VO
 			if( isset($data['control_de_existencia']) ){
 				$this->control_de_existencia = $data['control_de_existencia'];
 			}
-			if( isset($data['margen_de_utilidad']) ){
-				$this->margen_de_utilidad = $data['margen_de_utilidad'];
-			}
-			if( isset($data['descuento']) ){
-				$this->descuento = $data['descuento'];
-			}
 			if( isset($data['descripcion']) ){
 				$this->descripcion = $data['descripcion'];
 			}
@@ -98,8 +92,6 @@ class Producto extends VO
 			"garantia" => $this->garantia,
 			"costo_estandar" => $this->costo_estandar,
 			"control_de_existencia" => $this->control_de_existencia,
-			"margen_de_utilidad" => $this->margen_de_utilidad,
-			"descuento" => $this->descuento,
 			"descripcion" => $this->descripcion,
 			"foto_del_producto" => $this->foto_del_producto,
 			"costo_extra_almacen" => $this->costo_extra_almacen,
@@ -134,9 +126,9 @@ class Producto extends VO
 	/**
 	  * metodo_costeo
 	  * 
-	  * Si el precio se toma del margen de utilidad o del precio fijo<br>
+	  * Si el precio se toma del precio base o del costo del producto<br>
 	  * @access public
-	  * @var enum('precio','margen')
+	  * @var enum('precio','costo')
 	  */
 	public $metodo_costeo;
 
@@ -193,24 +185,6 @@ class Producto extends VO
 	  * @var int(11)
 	  */
 	public $control_de_existencia;
-
-	/**
-	  * margen_de_utilidad
-	  * 
-	  * Un porcentage de 0 a 100 si queremos que este producto marque utilidad en especifico<br>
-	  * @access public
-	  * @var float
-	  */
-	public $margen_de_utilidad;
-
-	/**
-	  * descuento
-	  * 
-	  * Descuento que tendra este producto<br>
-	  * @access public
-	  * @var float
-	  */
-	public $descuento;
 
 	/**
 	  * descripcion
@@ -330,8 +304,8 @@ class Producto extends VO
 	/**
 	  * getMetodoCosteo
 	  * 
-	  * Get the <i>metodo_costeo</i> property for this object. Donde <i>metodo_costeo</i> es Si el precio se toma del margen de utilidad o del precio fijo
-	  * @return enum('precio','margen')
+	  * Get the <i>metodo_costeo</i> property for this object. Donde <i>metodo_costeo</i> es Si el precio se toma del precio base o del costo del producto
+	  * @return enum('precio','costo')
 	  */
 	final public function getMetodoCosteo()
 	{
@@ -341,10 +315,10 @@ class Producto extends VO
 	/**
 	  * setMetodoCosteo( $metodo_costeo )
 	  * 
-	  * Set the <i>metodo_costeo</i> property for this object. Donde <i>metodo_costeo</i> es Si el precio se toma del margen de utilidad o del precio fijo.
-	  * Una validacion basica se hara aqui para comprobar que <i>metodo_costeo</i> es de tipo <i>enum('precio','margen')</i>. 
+	  * Set the <i>metodo_costeo</i> property for this object. Donde <i>metodo_costeo</i> es Si el precio se toma del precio base o del costo del producto.
+	  * Una validacion basica se hara aqui para comprobar que <i>metodo_costeo</i> es de tipo <i>enum('precio','costo')</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param enum('precio','margen')
+	  * @param enum('precio','costo')
 	  */
 	final public function setMetodoCosteo( $metodo_costeo )
 	{
@@ -493,54 +467,6 @@ class Producto extends VO
 	final public function setControlDeExistencia( $control_de_existencia )
 	{
 		$this->control_de_existencia = $control_de_existencia;
-	}
-
-	/**
-	  * getMargenDeUtilidad
-	  * 
-	  * Get the <i>margen_de_utilidad</i> property for this object. Donde <i>margen_de_utilidad</i> es Un porcentage de 0 a 100 si queremos que este producto marque utilidad en especifico
-	  * @return float
-	  */
-	final public function getMargenDeUtilidad()
-	{
-		return $this->margen_de_utilidad;
-	}
-
-	/**
-	  * setMargenDeUtilidad( $margen_de_utilidad )
-	  * 
-	  * Set the <i>margen_de_utilidad</i> property for this object. Donde <i>margen_de_utilidad</i> es Un porcentage de 0 a 100 si queremos que este producto marque utilidad en especifico.
-	  * Una validacion basica se hara aqui para comprobar que <i>margen_de_utilidad</i> es de tipo <i>float</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param float
-	  */
-	final public function setMargenDeUtilidad( $margen_de_utilidad )
-	{
-		$this->margen_de_utilidad = $margen_de_utilidad;
-	}
-
-	/**
-	  * getDescuento
-	  * 
-	  * Get the <i>descuento</i> property for this object. Donde <i>descuento</i> es Descuento que tendra este producto
-	  * @return float
-	  */
-	final public function getDescuento()
-	{
-		return $this->descuento;
-	}
-
-	/**
-	  * setDescuento( $descuento )
-	  * 
-	  * Set the <i>descuento</i> property for this object. Donde <i>descuento</i> es Descuento que tendra este producto.
-	  * Una validacion basica se hara aqui para comprobar que <i>descuento</i> es de tipo <i>float</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param float
-	  */
-	final public function setDescuento( $descuento )
-	{
-		$this->descuento = $descuento;
 	}
 
 	/**

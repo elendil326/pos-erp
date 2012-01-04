@@ -11,6 +11,6 @@
 require_once("../../../../../../../server/bootstrap.php");
 require_once("api/api.precio.producto.eliminar_precio_usuario.php");
 
-$api = new ApiPrecioProductoEliminar_precio_usuario();
+$api = new ApiPrecioProductoEliminarPrecioUsuario();
 $apiOutput = ApiOutputFormatter::getInstance();
 $apiOutput->PrintOuput($api);

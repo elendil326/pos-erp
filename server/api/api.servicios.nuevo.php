@@ -29,7 +29,6 @@
 			"foto_servicio" => new ApiExposedProperty("foto_servicio", false, GET, array( "string" )),
 			"garantia" => new ApiExposedProperty("garantia", false, GET, array( "int" )),
 			"impuestos" => new ApiExposedProperty("impuestos", false, GET, array( "json" )),
-			"margen_de_utilidad" => new ApiExposedProperty("margen_de_utilidad", false, GET, array( "float" )),
 			"precio" => new ApiExposedProperty("precio", false, GET, array( "float" )),
 			"retenciones" => new ApiExposedProperty("retenciones", false, GET, array( "json" )),
 			"sucursales" => new ApiExposedProperty("sucursales", false, GET, array( "json" )),
@@ -54,7 +53,6 @@
 			isset($_GET['foto_servicio'] ) ? $_GET['foto_servicio'] : null,
 			isset($_GET['garantia'] ) ? $_GET['garantia'] : null,
 			isset($_GET['impuestos'] ) ? json_decode($_GET['impuestos']) : null,
-			isset($_GET['margen_de_utilidad'] ) ? $_GET['margen_de_utilidad'] : null,
 			isset($_GET['precio'] ) ? $_GET['precio'] : null,
 			isset($_GET['retenciones'] ) ? json_decode($_GET['retenciones']) : null,
 			isset($_GET['sucursales'] ) ? json_decode($_GET['sucursales']) : null

@@ -168,16 +168,6 @@ abstract class ClasificacionProductoDAOBase extends DAO
 			array_push( $val, $clasificacion_producto->getActiva() );
 		}
 
-		if( ! is_null( $clasificacion_producto->getMargenUtilidad() ) ){
-			$sql .= " margen_utilidad = ? AND";
-			array_push( $val, $clasificacion_producto->getMargenUtilidad() );
-		}
-
-		if( ! is_null( $clasificacion_producto->getDescuento() ) ){
-			$sql .= " descuento = ? AND";
-			array_push( $val, $clasificacion_producto->getDescuento() );
-		}
-
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
@@ -209,14 +199,12 @@ abstract class ClasificacionProductoDAOBase extends DAO
 	  **/
 	private static final function update( $clasificacion_producto )
 	{
-		$sql = "UPDATE clasificacion_producto SET  nombre = ?, descripcion = ?, garantia = ?, activa = ?, margen_utilidad = ?, descuento = ? WHERE  id_clasificacion_producto = ?;";
+		$sql = "UPDATE clasificacion_producto SET  nombre = ?, descripcion = ?, garantia = ?, activa = ? WHERE  id_clasificacion_producto = ?;";
 		$params = array( 
 			$clasificacion_producto->getNombre(), 
 			$clasificacion_producto->getDescripcion(), 
 			$clasificacion_producto->getGarantia(), 
 			$clasificacion_producto->getActiva(), 
-			$clasificacion_producto->getMargenUtilidad(), 
-			$clasificacion_producto->getDescuento(), 
 			$clasificacion_producto->getIdClasificacionProducto(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -240,15 +228,13 @@ abstract class ClasificacionProductoDAOBase extends DAO
 	  **/
 	private static final function create( &$clasificacion_producto )
 	{
-		$sql = "INSERT INTO clasificacion_producto ( id_clasificacion_producto, nombre, descripcion, garantia, activa, margen_utilidad, descuento ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO clasificacion_producto ( id_clasificacion_producto, nombre, descripcion, garantia, activa ) VALUES ( ?, ?, ?, ?, ?);";
 		$params = array( 
 			$clasificacion_producto->getIdClasificacionProducto(), 
 			$clasificacion_producto->getNombre(), 
 			$clasificacion_producto->getDescripcion(), 
 			$clasificacion_producto->getGarantia(), 
 			$clasificacion_producto->getActiva(), 
-			$clasificacion_producto->getMargenUtilidad(), 
-			$clasificacion_producto->getDescuento(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -347,28 +333,6 @@ abstract class ClasificacionProductoDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " activa = ? AND"; 
-			$a = is_null ( $a ) ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
-		if( ( !is_null (($a = $clasificacion_productoA->getMargenUtilidad()) ) ) & ( ! is_null ( ($b = $clasificacion_productoB->getMargenUtilidad()) ) ) ){
-				$sql .= " margen_utilidad >= ? AND margen_utilidad <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " margen_utilidad = ? AND"; 
-			$a = is_null ( $a ) ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
-		if( ( !is_null (($a = $clasificacion_productoA->getDescuento()) ) ) & ( ! is_null ( ($b = $clasificacion_productoB->getDescuento()) ) ) ){
-				$sql .= " descuento >= ? AND descuento <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " descuento = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

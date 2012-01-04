@@ -1,6 +1,6 @@
 <?php
 /**
-  * GET api/personal/usuario/editar
+  * POST api/personal/usuario/editar
   * Editar los detalles de un usuario.
   *
   * Editar los detalles de un usuario.

@@ -11,6 +11,6 @@
 require_once("../../../../../../../server/bootstrap.php");
 require_once("api/api.precio.servicio.nuevo_precio_usuario.php");
 
-$api = new ApiPrecioServicioNuevo_precio_usuario();
+$api = new ApiPrecioServicioNuevoPrecioUsuario();
 $apiOutput = ApiOutputFormatter::getInstance();
 $apiOutput->PrintOuput($api);

@@ -163,14 +163,14 @@ abstract class ClasificacionClienteDAOBase extends DAO
 			array_push( $val, $clasificacion_cliente->getDescripcion() );
 		}
 
-		if( ! is_null( $clasificacion_cliente->getMargenUtilidad() ) ){
-			$sql .= " margen_utilidad = ? AND";
-			array_push( $val, $clasificacion_cliente->getMargenUtilidad() );
+		if( ! is_null( $clasificacion_cliente->getIdTarifaCompra() ) ){
+			$sql .= " id_tarifa_compra = ? AND";
+			array_push( $val, $clasificacion_cliente->getIdTarifaCompra() );
 		}
 
-		if( ! is_null( $clasificacion_cliente->getDescuento() ) ){
-			$sql .= " descuento = ? AND";
-			array_push( $val, $clasificacion_cliente->getDescuento() );
+		if( ! is_null( $clasificacion_cliente->getIdTarifaVenta() ) ){
+			$sql .= " id_tarifa_venta = ? AND";
+			array_push( $val, $clasificacion_cliente->getIdTarifaVenta() );
 		}
 
 		if(sizeof($val) == 0){return array();}
@@ -204,13 +204,13 @@ abstract class ClasificacionClienteDAOBase extends DAO
 	  **/
 	private static final function update( $clasificacion_cliente )
 	{
-		$sql = "UPDATE clasificacion_cliente SET  clave_interna = ?, nombre = ?, descripcion = ?, margen_utilidad = ?, descuento = ? WHERE  id_clasificacion_cliente = ?;";
+		$sql = "UPDATE clasificacion_cliente SET  clave_interna = ?, nombre = ?, descripcion = ?, id_tarifa_compra = ?, id_tarifa_venta = ? WHERE  id_clasificacion_cliente = ?;";
 		$params = array( 
 			$clasificacion_cliente->getClaveInterna(), 
 			$clasificacion_cliente->getNombre(), 
 			$clasificacion_cliente->getDescripcion(), 
-			$clasificacion_cliente->getMargenUtilidad(), 
-			$clasificacion_cliente->getDescuento(), 
+			$clasificacion_cliente->getIdTarifaCompra(), 
+			$clasificacion_cliente->getIdTarifaVenta(), 
 			$clasificacion_cliente->getIdClasificacionCliente(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -234,14 +234,14 @@ abstract class ClasificacionClienteDAOBase extends DAO
 	  **/
 	private static final function create( &$clasificacion_cliente )
 	{
-		$sql = "INSERT INTO clasificacion_cliente ( id_clasificacion_cliente, clave_interna, nombre, descripcion, margen_utilidad, descuento ) VALUES ( ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO clasificacion_cliente ( id_clasificacion_cliente, clave_interna, nombre, descripcion, id_tarifa_compra, id_tarifa_venta ) VALUES ( ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$clasificacion_cliente->getIdClasificacionCliente(), 
 			$clasificacion_cliente->getClaveInterna(), 
 			$clasificacion_cliente->getNombre(), 
 			$clasificacion_cliente->getDescripcion(), 
-			$clasificacion_cliente->getMargenUtilidad(), 
-			$clasificacion_cliente->getDescuento(), 
+			$clasificacion_cliente->getIdTarifaCompra(), 
+			$clasificacion_cliente->getIdTarifaVenta(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -334,23 +334,23 @@ abstract class ClasificacionClienteDAOBase extends DAO
 			
 		}
 
-		if( ( !is_null (($a = $clasificacion_clienteA->getMargenUtilidad()) ) ) & ( ! is_null ( ($b = $clasificacion_clienteB->getMargenUtilidad()) ) ) ){
-				$sql .= " margen_utilidad >= ? AND margen_utilidad <= ? AND";
+		if( ( !is_null (($a = $clasificacion_clienteA->getIdTarifaCompra()) ) ) & ( ! is_null ( ($b = $clasificacion_clienteB->getIdTarifaCompra()) ) ) ){
+				$sql .= " id_tarifa_compra >= ? AND id_tarifa_compra <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " margen_utilidad = ? AND"; 
+			$sql .= " id_tarifa_compra = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( ( !is_null (($a = $clasificacion_clienteA->getDescuento()) ) ) & ( ! is_null ( ($b = $clasificacion_clienteB->getDescuento()) ) ) ){
-				$sql .= " descuento >= ? AND descuento <= ? AND";
+		if( ( !is_null (($a = $clasificacion_clienteA->getIdTarifaVenta()) ) ) & ( ! is_null ( ($b = $clasificacion_clienteB->getIdTarifaVenta()) ) ) ){
+				$sql .= " id_tarifa_venta >= ? AND id_tarifa_venta <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " descuento = ? AND"; 
+			$sql .= " id_tarifa_venta = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

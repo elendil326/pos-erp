@@ -64,9 +64,7 @@ require_once("interfaces/Sucursales.interface.php");
                 $saldo_a_favor = null,
                 $fecha_apertura = null,
                 $activa = null,
-                $fecha_baja = null,
-                $margen_utilidad = null,
-                $descuento = null
+                $fecha_baja = null
         )
         {
             //Se valida que la sucursal exista en la base de datos
@@ -154,23 +152,6 @@ require_once("interfaces/Sucursales.interface.php");
                 if(is_string($e))
                     return $e;
             }
-            
-            //Se valida el margen de utilidad
-            if(!is_null($margen_utilidad))
-            {
-                $e=self::validarNumero($margen_utilidad, 1.8e200, "margen de utilidad");
-                if(is_string($e))
-                    return $e;
-            }
-            
-            //Se valida el descuento. El descuento e sun porcentaje y no puede ser mayor a 100
-            if(!is_null($descuento))
-            {
-                $e=self::validarNumero($descuento, 100, "descuento");
-                if(is_string($e))
-                    return $e;
-            }
-            
             //No se encontro error, regresa true
             return true;
         }
@@ -968,9 +949,7 @@ require_once("interfaces/Sucursales.interface.php");
         private static function validarParametrosSucursalEmpresa
         (
                 $id_sucursal = null,
-                $id_empresa = null,
-                $margen_utilidad = null,
-                $descuento = null
+                $id_empresa = null
         )
         {
             //valida que la sucursal exista en la base de datos
@@ -985,22 +964,6 @@ require_once("interfaces/Sucursales.interface.php");
             {
                 if(is_null(EmpresaDAO::getByPK($id_empresa)))
                         return "La empresa con id ".$id_empresa." no existe";
-            }
-            
-            //valida el margen utilida
-            if(!is_null($margen_utilidad))
-            {
-                $e = self::validarNumero($margen_utilidad, 1.8e200, "margen de utilidad");
-                if(is_string($e))
-                    return $e;
-            }
-            
-            //valida el descuento, el descuento no puede ser mayor a 100
-            if(!is_null($descuento))
-            {
-                $e = self::validarNumero($descuento, 100, "descuento");
-                if(is_string($e))
-                    return $e;
             }
             
             //no se encontro error, regres true;
@@ -2378,11 +2341,9 @@ require_once("interfaces/Sucursales.interface.php");
 		$razon_social, 
 		$rfc, 
 		$saldo_a_favor, 
-		$descripcion = null, 
-		$descuento = null, 
+		$descripcion = null,
 		$id_gerente = null, 
 		$impuestos = null, 
-		$margen_utilidad = null, 
 		$numero_interior = null, 
 		$referencia = null, 
 		$retenciones = null, 
@@ -2394,7 +2355,7 @@ require_once("interfaces/Sucursales.interface.php");
             
             //Se validan los parametros obtenidos
             $validar = self::validarParametrosSucursal(null,null,$rfc,$razon_social,$descripcion,
-                    $id_gerente,$saldo_a_favor,null,$activo,null,$margen_utilidad,$descuento);
+                    $id_gerente,$saldo_a_favor,null,$activo);
             if(is_string($validar))
             {
                 Logger::error($validar);
@@ -2408,9 +2369,7 @@ require_once("interfaces/Sucursales.interface.php");
             $sucursal->setRazonSocial(trim($razon_social));
             $sucursal->setSaldoAFavor($saldo_a_favor);
             $sucursal->setIdGerente($id_gerente);
-            $sucursal->setMargenUtilidad($margen_utilidad);
             $sucursal->setDescripcion($descripcion);
-            $sucursal->setDescuento($descuento);
             $sucursal->setFechaApertura(date("Y-m-d H:i:s",time()));
             DAO::transBegin();
             try
@@ -2424,12 +2383,20 @@ require_once("interfaces/Sucursales.interface.php");
                 //Si se recibieron impuestos, se crea el registro correspondiente en la tabla impuesto sucursal
                 if(!is_null($impuestos))
                 {
+                    
+                    $impuestos = object_to_array($impuestos);
+                    
+                    if(!is_array($impuestos))
+                    {
+                        throw new Exception("Los impuestos son invalidos",901);
+                    }
+                    
                     $impuesto=new ImpuestoSucursal(array( "id_sucursal" => $sucursal->getIdSucursal()));
                     foreach($impuestos as $i)
                     {
                         if(is_null(ImpuestoDAO::getByPK($i)))
                         {
-                            throw new Exception("El impuesto con id: ".$i." no existe");
+                            throw new Exception("El impuesto con id: ".$i." no existe",901);
                         }
                         $impuesto->setIdImpuesto($i);
                         ImpuestoSucursalDAO::save($impuesto);
@@ -2439,12 +2406,20 @@ require_once("interfaces/Sucursales.interface.php");
                 //Si se recibieron retenciones, se crea el registro correspondiente en la tabla retencion sucursal
                 if(!is_null($retenciones))
                 {
+                    
+                    $retenciones = object_to_array($retenciones);
+                    
+                    if(!is_array($retenciones))
+                    {
+                        throw new Exception("Las retenciones son invalidas",901);
+                    }
+                    
                     $retencion= new RetencionSucursal(array( "id_sucursal" => $sucursal->getIdSucursal()));
                     foreach($retenciones as $r)
                     {
                         if(!is_null(RetencionDAO::getByPK($r)))
                         {
-                            throw new Exception("La retencion con id: ".$r." no existe");
+                            throw new Exception("La retencion con id: ".$r." no existe",901);
                         }
                         $retencion->setIdRetencion($r);
                         RetencionSucursalDAO::save($retencion);
@@ -2455,7 +2430,9 @@ require_once("interfaces/Sucursales.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudo crear la nueva sucursal ".$e);
-                throw new Exception("No se pudo crear la nueva sucursal");
+                if($e->getCode()==901)
+                    throw new Exception("No se pudo crear la nueva sucursal: ".$e->getMessage(),901);
+                throw new Exception("No se pudo crear la nueva sucursal",901);
             }
             DAO::transEnd();
             Logger::log("Sucursal creada con exito");
@@ -2491,12 +2468,10 @@ require_once("interfaces/Sucursales.interface.php");
 		$calle = null, 
 		$coidgo_postal = null, 
 		$colonia = null, 
-		$descripcion = null, 
-		$descuento = null, 
+		$descripcion = null,
 		$empresas = null, 
 		$id_gerente = null, 
 		$impuestos = null, 
-		$margen_utilidad = null, 
 		$municipio = null, 
 		$numero_exterior = null, 
 		$numero_interior = null, 
@@ -2527,19 +2502,11 @@ require_once("interfaces/Sucursales.interface.php");
             
             //Se validan los demas parametros
             $validar = self::validarParametrosSucursal(null,$sucursal->getIdDireccion(),$rfc,$razon_social,
-                    $descripcion,$id_gerente,$saldo_a_favor,null,null,null,$margen_utilidad,$descuento);
+                    $descripcion,$id_gerente,$saldo_a_favor);
             
             $direccion=DireccionDAO::getByPK($sucursal->getIdDireccion());
             
             //Se valida cada parametro, si se recibe, se toma como actualizacion
-            if(!is_null($descuento))
-            {
-                $sucursal->setDescuento($descuento);
-            }
-            if(!is_null($margen_utilidad))
-            {
-                $sucursal->setMargenUtilidad($margen_utilidad);
-            }
             if(!is_null($descripcion))
             {
                 $sucursal->setDescripcion($descripcion);
@@ -2639,7 +2606,7 @@ require_once("interfaces/Sucursales.interface.php");
                     {
                         if(is_null(ImpuestoDAO::getByPK($impuesto)))
                         {
-                            throw new Exception("El impuesto con id: ".$impuesto." no existe");
+                            throw new Exception("El impuesto con id: ".$impuesto." no existe",901);
                         }
                         ImpuestoSucursalDAO::save(new ImpuestoSucursal(array( "id_sucursal" => $id_sucursal, "id_impuesto" => $impuesto)));
                     }
@@ -2681,7 +2648,7 @@ require_once("interfaces/Sucursales.interface.php");
                     {
                         if(is_null(RetencionDAO::getByPK($retencion)))
                         {
-                            throw new Exception("La retencion con id: ".$retencion." no existe");
+                            throw new Exception("La retencion con id: ".$retencion." no existe",901);
                         }
                         RetencionSucursalDAO::save(new RetencionSucursal(array( "id_sucursal" => $id_sucursal, "id_retencion" => $retencion)));
                     }
@@ -2707,7 +2674,9 @@ require_once("interfaces/Sucursales.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudo actualizar la sucursal: ".$e);
-                throw new Exception("No se pudo actualizar la sucursal");
+                if($e->getCode()==901)
+                    throw new Exception("No se pudo actualizar la sucursal: ".$e->getMessage(),901);
+                throw new Exception("No se pudo actualizar la sucursal",901);
             }
             DAO::transEnd();
             Logger::log("Sucursal actualizada exitosamente");
@@ -3027,15 +2996,15 @@ Creo que este metodo tiene que estar bajo sucursal.
                     }
                     if(!$encontrado)
                     {
-                        throw new Exception("Se quiere agregar un producto que no es de la empresa de este almacen");
+                        throw new Exception("Se quiere agregar un producto que no es de la empresa de este almacen",901);
                     }
                     
                     if(is_null(ProductoDAO::getByPK($p["id_producto"])))
-                        throw new Exception("El producto con id: ".$p["id_producto"]." no existe");
+                        throw new Exception("El producto con id: ".$p["id_producto"]." no existe",901);
 
                     $producto_entrada_almacen->setIdProducto($p["id_producto"]);
                     if(is_null(UnidadDAO::getByPK($p["id_unidad"])))
-                        throw new Exception("La unidad con id: ".$p["id_unidad"]." no existe");
+                        throw new Exception("La unidad con id: ".$p["id_unidad"]." no existe",901);
 
                     $producto_entrada_almacen->setIdUnidad($p["id_unidad"]);
                     $producto_entrada_almacen->setCantidad($p["cantidad"]);
@@ -3053,7 +3022,9 @@ Creo que este metodo tiene que estar bajo sucursal.
             {
                 DAO::transRollback();
                 Logger::error("No se pudo registrar la entrada al almacen: ".$e);
-                throw new Exception("No se pudo registrar la entrada al almacen");
+                if($e->getCode()==901)
+                    throw new Exception("No se pudo registrar la entrada al almacen: ".$e->getCode(),901);
+                throw new Exception("No se pudo registrar la entrada al almacen",901);
             }
             DAO::transEnd();
             Logger::log("Entrada a almacen registrada exitosamente");
@@ -3125,12 +3096,19 @@ Creo que este metodo tiene que estar bajo sucursal.
                 CajaDAO::save($caja);
                 if(!is_null($impresoras))
                 {
+                    $impresoras = object_to_array($impresoras);
+                    
+                    if(!is_array($impresoras))
+                    {
+                        throw  new Exception("Las impresoras son invalidas",901);
+                    }
+                    
                     $impresora_caja = new ImpresoraCaja(array( "id_caja" => $caja->getIdCaja() ));
                     foreach($impresoras as $id_impresora)
                     {
                         if(is_null(ImpresoraDAO::getByPK($id_impresora)))
                         {
-                            throw new Exception("La impresora con id: ".$id_impresora." no existe");
+                            throw new Exception("La impresora con id: ".$id_impresora." no existe",901);
                         }
                         $impresora_caja->setIdImpresora($id_impresora);
                         ImpresoraCajaDAO::save($impresora_caja);
@@ -3141,7 +3119,9 @@ Creo que este metodo tiene que estar bajo sucursal.
             {
                 DAO::transRollback();
                 Logger::error("No se pudo crear la caja: ".$e);
-                throw new Exception("No se pudo crear la caja");
+                if($e->getCode()==901)
+                    throw new Exception("No se pudo crear la caja: ".$e->getMessage(),901);
+                throw new Exception("No se pudo crear la caja",901);
             }
             DAO::transEnd();
             Logger::log("caja creada exitosamente");
@@ -4252,6 +4232,28 @@ Creo que este metodo tiene que estar bajo sucursal.
                 $parametros=true;
             $traspasos_almacen=null;
             
+            //valida el parametro ordenar
+            if
+            (
+                    !is_null($ordenar)                  &&
+                    $ordenar!="id_traspaso"             &&
+                    $ordenar!="id_usuario_programa"     &&
+                    $ordenar!="id_usuario_envia"        &&
+                    $ordenar!="id_almacen_envia"        &&
+                    $ordenar!="fecha_envio_programada"  &&
+                    $ordenar!="fecha_envio"             &&
+                    $ordenar!="id_usuario_recibe"       &&
+                    $ordenar!="id_almacen_recibe"       &&
+                    $ordenar!="fecha_recibo"            &&
+                    $ordenar!="estado"                  &&
+                    $ordenar!="cancelado"               &&
+                    $ordenar!="completo"
+            )
+            {
+                Logger::error("El parametro ordenar (".$ordenar.") no es valido");
+                throw new Exception("El parametro ordenar (".$ordenar.") no es valido",901);
+            }
+            
             //Si se reciberon parametros, se crea una variable criterio y en base a esa variable se buscan
             //en la base de datos con el metodo search().
             //Si no se reciben parametros se listan todos los traspasos con el metodo getAll().
@@ -4344,10 +4346,11 @@ Creo que este metodo tiene que estar bajo sucursal.
                         if
                         (
                                 !array_key_exists("id_producto", $p)    ||
-                                !array_key_exists("id_unidad", $p)      
+                                !array_key_exists("id_unidad", $p)      ||
+                                !array_key_exists("cantidad", $p)
                         )
                         {
-                            
+                            throw new Exception("Los productos no tienen todos los parametros necesarios",901);
                         }
                         
                         $traspaso_producto=TraspasoProductoDAO::getByPK($id_traspaso, $p["id_producto"],$p["id_unidad"]);
@@ -4365,7 +4368,7 @@ Creo que este metodo tiene que estar bajo sucursal.
                             }
                             if(!$encontrado)
                             {
-                                throw new Exception("Se busca enviar un producto que no es de la empresa del almacen que recibe");
+                                throw new Exception("Se busca enviar un producto que no es de la empresa del almacen que recibe",901);
                             }
                             $traspaso_producto=new TraspasoProducto(array(
                                                             "id_traspaso"       => $id_traspaso,
@@ -4375,7 +4378,7 @@ Creo que este metodo tiene que estar bajo sucursal.
                                                             )
                                                         );
                         }
-                        $traspaso_producto->setCantidadEnviada($p["id_unidad"]);
+                        $traspaso_producto->setCantidadEnviada($p["cantidad"]);
                         TraspasoProductoDAO::save($traspaso_producto);
                     }/* Fin de foreach de productos*/
                     $traspasos_producto=TraspasoProductoDAO::search(new TraspasoProducto(array( "id_traspaso" => $id_traspaso )));
@@ -4401,7 +4404,9 @@ Creo que este metodo tiene que estar bajo sucursal.
             {
                 DAO::transRollback();
                 Logger::error("No se pudo editar el traspaso: ".$e);
-                throw new Exception("No se pudo editar el traspaso");
+                if($e->getCode()==901)
+                    throw new Exception("No se pudo editar el traspaso: ".$e->getMessage(),901);
+                throw new Exception("No se pudo editar el traspaso",901);
             }
             DAO::transEnd();
             Logger::log("Traspaso editado correctamente");

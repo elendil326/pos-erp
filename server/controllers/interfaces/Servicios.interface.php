@@ -14,10 +14,8 @@
  	 *
  	 * @param id_clasificacion_servicio int Id de la clasificacion del servicio que se edita
  	 * @param descripcion string Descripcion de la clasificacion del servicio
- 	 * @param descuento float Descuento que aplicara a los servicios de esta clasificacion
  	 * @param garantia int Numero de meses que tiene la garantia de este tipo de servicios
  	 * @param impuestos json Impuestos que afectan a los servicios de esta clasificacion
- 	 * @param margen_utilidad float Margen de utilidad que tendran los servicios de este tipo de servicio
  	 * @param nombre string Nombre de la clasificacion de servicio
  	 * @param retenciones json Retenciones que afectan a los servicios de esta clasificacion
  	 **/
@@ -25,10 +23,8 @@
 	(
 		$id_clasificacion_servicio, 
 		$descripcion = null, 
-		$descuento = null, 
 		$garantia = null, 
 		$impuestos = null, 
-		$margen_utilidad = null, 
 		$nombre = null, 
 		$retenciones = null
 	);  
@@ -57,10 +53,8 @@
  	 * @param nombre string Nombre de la clasificacion del servicio
  	 * @param activa bool Si esta clasificacion sera activa al momento de ser creada
  	 * @param descripcion string Descripcion de la clasificacion del servicio
- 	 * @param descuento float Descuento que aplicara a los servicios de este tipo
  	 * @param garantia int numero de meses de garantia que tienen los servicios de esta clasificacion
  	 * @param impuestos json Impuestos que afectan a este tipo de servicio
- 	 * @param margen_utilidad float Margen de utilidad que se le ganara a los servicios de este tipo
  	 * @param retenciones json Retenciones que afectana este tipo de servicio
  	 * @return id_clasificacion_servicio int Id de la clasificacion que se creo
  	 **/
@@ -69,10 +63,8 @@
 		$nombre, 
 		$activa = 1, 
 		$descripcion = null, 
-		$descuento = null, 
 		$garantia = null, 
 		$impuestos = null, 
-		$margen_utilidad = null, 
 		$retenciones = null
 	);  
   
@@ -90,16 +82,15 @@
  	 * @param control_de_existencia int 00000001 = Unidades. 00000010 = Caractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = LoteCaractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = Lote
  	 * @param costo_estandar float Valor del costo estandar del servicio
  	 * @param descripcion_servicio string Descripcion del servicio
- 	 * @param empresas string Objeto que contiene los ids de las empresas a las que pertenece este servicio
+ 	 * @param empresas string Arreglo de ids de empresas a las que pertenecera este servicio
  	 * @param foto_servicio string Url de la foto del servicio
  	 * @param garantia int Si este servicio tiene una garanta en meses.
  	 * @param impuestos json array de ids de impuestos que tiene este servico
- 	 * @param margen_de_utilidad string Un porcentage de 0 a 100 si queremos que este servicio marque utilidad en especifico
- 	 * @param metodo_costeo string Mtodo de costeo del producto: 1 = Costo Promedio en Base a Entradas.2 = Costo Promedio en Base a Entradas Almacn.3 = ltimo costo.4 = UEPS.5 = PEPS.6 = Costo especfico.7 = Costo Estndar
+ 	 * @param metodo_costeo string Puede ser "precio" o "costo" e indica si el precio final sera tomado del precio base del servicio o de su costo
  	 * @param nombre_servicio string Nombre del servicio
  	 * @param precio float Precio del servicio
  	 * @param retenciones json Ids de retenciones que afectan este servicio
- 	 * @param sucursales json Sucursales en las cuales estara disponible este servicio
+ 	 * @param sucursales json Arreglo de ids sucursales a las que pertencera este servicio
  	 **/
   static function Editar
 	(
@@ -114,7 +105,6 @@
 		$foto_servicio = null, 
 		$garantia = null, 
 		$impuestos = null, 
-		$margen_de_utilidad = null, 
 		$metodo_costeo = null, 
 		$nombre_servicio = null, 
 		$precio = null, 
@@ -167,44 +157,19 @@
  	 * @param codigo_servicio string Codigo de control del servicio manejado por la empresa, no se puede repetir
  	 * @param compra_en_mostrador bool Verdadero si este servicio se puede comprar en mostrador, para aquello de compra-venta. Para poder hacer esto, el sistema debe poder hacer compras en mostrador
  	 * @param costo_estandar float Valor del costo estandar del servicio
- 	 * @param metodo_costeo string precio o margen
+ 	 * @param metodo_costeo string Puede ser "precio" o "costo" e indica si el precio final sera tomado en base al precio base del servicio o a su costo
  	 * @param nombre_servicio string Nombre del servicio
  	 * @param activo bool Si queremos que este activo o no mientras lo insertamos
  	 * @param clasificaciones json Uno o varios id_clasificacion de este servicio, esta clasificacion esta dada por el usuario   Array
  	 * @param control_de_existencia int 00000001 = Unidades. 00000010 = Caractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = LoteCaractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = Lote
  	 * @param descripcion_servicio string Descripcion del servicio
- 	 * @param empresas json Empresas a las cuales pertenecera este servicio. Este objeto debera contener la siguiente informacion:
-
-{
-  "empresas" : [
-                
-          {
-           "id_empresa"         : 1,
-           "precio_utilidad"    : 3,
-           "es_margen_utilidad" : 0
-          }
-     ]
-}
-
+ 	 * @param empresas json Arreglo de ids de empresas a las que pertenecera este servicio
  	 * @param foto_servicio string La url de la foto del servicio
  	 * @param garantia int Si este servicio tiene una garanta en meses.
  	 * @param impuestos json array de ids de impuestos que tiene este servico
- 	 * @param margen_de_utilidad float Un porcentage de 0 a 100 si queremos que este servicio marque utilidad en especifico
  	 * @param precio float Precio del servicio
  	 * @param retenciones json Ids de las retenciones que afectan este servicio
- 	 * @param sucursales json Sucursales a las cuales pertenecera este servicio. Este objeto debera contener la siguiente informacion:
-
-{
-  "sucursales" : [
-                
-          {
-           "id_sucursal"        : 1,
-           "precio_utilidad"    : 3,
-           "es_margen_utilidad" : 0
-          }
-     ]
-}
-
+ 	 * @param sucursales json Arreglo de ids de sucursales a las que pertenecera este servicio
  	 * @return id_servicio int Id del servicio creado
  	 **/
   static function Nuevo
@@ -222,7 +187,6 @@
 		$foto_servicio = null, 
 		$garantia = null, 
 		$impuestos = null, 
-		$margen_de_utilidad = null, 
 		$precio = null, 
 		$retenciones = null, 
 		$sucursales = null

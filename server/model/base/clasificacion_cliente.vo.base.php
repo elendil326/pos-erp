@@ -34,11 +34,11 @@ class ClasificacionCliente extends VO
 			if( isset($data['descripcion']) ){
 				$this->descripcion = $data['descripcion'];
 			}
-			if( isset($data['margen_utilidad']) ){
-				$this->margen_utilidad = $data['margen_utilidad'];
+			if( isset($data['id_tarifa_compra']) ){
+				$this->id_tarifa_compra = $data['id_tarifa_compra'];
 			}
-			if( isset($data['descuento']) ){
-				$this->descuento = $data['descuento'];
+			if( isset($data['id_tarifa_venta']) ){
+				$this->id_tarifa_venta = $data['id_tarifa_venta'];
 			}
 		}
 	}
@@ -57,8 +57,8 @@ class ClasificacionCliente extends VO
 			"clave_interna" => $this->clave_interna,
 			"nombre" => $this->nombre,
 			"descripcion" => $this->descripcion,
-			"margen_utilidad" => $this->margen_utilidad,
-			"descuento" => $this->descuento
+			"id_tarifa_compra" => $this->id_tarifa_compra,
+			"id_tarifa_venta" => $this->id_tarifa_venta
 		); 
 	return json_encode($vec); 
 	}
@@ -102,22 +102,22 @@ class ClasificacionCliente extends VO
 	public $descripcion;
 
 	/**
-	  * margen_utilidad
+	  * id_tarifa_compra
 	  * 
-	  * Margen de utilidad que se le obtendra a los productos al venderle a este tipo de cliente<br>
+	  * Id de la tarifa de compra por default para esta clasificacion de cliente<br>
 	  * @access public
-	  * @var float
+	  * @var int(11)
 	  */
-	public $margen_utilidad;
+	public $id_tarifa_compra;
 
 	/**
-	  * descuento
+	  * id_tarifa_venta
 	  * 
-	  * Porcentaje de descuento que se le dara a este tipo de cliente<br>
+	  * Id de la tarifa de venta por default para esta clasificacion de cliente<br>
 	  * @access public
-	  * @var float
+	  * @var int(11)
 	  */
-	public $descuento;
+	public $id_tarifa_venta;
 
 	/**
 	  * getIdClasificacionCliente
@@ -220,51 +220,51 @@ class ClasificacionCliente extends VO
 	}
 
 	/**
-	  * getMargenUtilidad
+	  * getIdTarifaCompra
 	  * 
-	  * Get the <i>margen_utilidad</i> property for this object. Donde <i>margen_utilidad</i> es Margen de utilidad que se le obtendra a los productos al venderle a este tipo de cliente
-	  * @return float
+	  * Get the <i>id_tarifa_compra</i> property for this object. Donde <i>id_tarifa_compra</i> es Id de la tarifa de compra por default para esta clasificacion de cliente
+	  * @return int(11)
 	  */
-	final public function getMargenUtilidad()
+	final public function getIdTarifaCompra()
 	{
-		return $this->margen_utilidad;
+		return $this->id_tarifa_compra;
 	}
 
 	/**
-	  * setMargenUtilidad( $margen_utilidad )
+	  * setIdTarifaCompra( $id_tarifa_compra )
 	  * 
-	  * Set the <i>margen_utilidad</i> property for this object. Donde <i>margen_utilidad</i> es Margen de utilidad que se le obtendra a los productos al venderle a este tipo de cliente.
-	  * Una validacion basica se hara aqui para comprobar que <i>margen_utilidad</i> es de tipo <i>float</i>. 
+	  * Set the <i>id_tarifa_compra</i> property for this object. Donde <i>id_tarifa_compra</i> es Id de la tarifa de compra por default para esta clasificacion de cliente.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_tarifa_compra</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param float
+	  * @param int(11)
 	  */
-	final public function setMargenUtilidad( $margen_utilidad )
+	final public function setIdTarifaCompra( $id_tarifa_compra )
 	{
-		$this->margen_utilidad = $margen_utilidad;
+		$this->id_tarifa_compra = $id_tarifa_compra;
 	}
 
 	/**
-	  * getDescuento
+	  * getIdTarifaVenta
 	  * 
-	  * Get the <i>descuento</i> property for this object. Donde <i>descuento</i> es Porcentaje de descuento que se le dara a este tipo de cliente
-	  * @return float
+	  * Get the <i>id_tarifa_venta</i> property for this object. Donde <i>id_tarifa_venta</i> es Id de la tarifa de venta por default para esta clasificacion de cliente
+	  * @return int(11)
 	  */
-	final public function getDescuento()
+	final public function getIdTarifaVenta()
 	{
-		return $this->descuento;
+		return $this->id_tarifa_venta;
 	}
 
 	/**
-	  * setDescuento( $descuento )
+	  * setIdTarifaVenta( $id_tarifa_venta )
 	  * 
-	  * Set the <i>descuento</i> property for this object. Donde <i>descuento</i> es Porcentaje de descuento que se le dara a este tipo de cliente.
-	  * Una validacion basica se hara aqui para comprobar que <i>descuento</i> es de tipo <i>float</i>. 
+	  * Set the <i>id_tarifa_venta</i> property for this object. Donde <i>id_tarifa_venta</i> es Id de la tarifa de venta por default para esta clasificacion de cliente.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_tarifa_venta</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param float
+	  * @param int(11)
 	  */
-	final public function setDescuento( $descuento )
+	final public function setIdTarifaVenta( $id_tarifa_venta )
 	{
-		$this->descuento = $descuento;
+		$this->id_tarifa_venta = $id_tarifa_venta;
 	}
 
 }

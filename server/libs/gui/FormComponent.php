@@ -528,8 +528,14 @@ class FormComponent implements GuiComponent{
                     if( $this->form_fields[$i]->id === $field_name )
                     {
                         $this->form_fields[$i]->value = $value;
+                        break;
                     }
                     
+                }
+                
+                if($i>$sof)
+                {
+                    throw new Exception("Nombre ".$field_name." no encontrado en los elementos");
                 }
         }
         

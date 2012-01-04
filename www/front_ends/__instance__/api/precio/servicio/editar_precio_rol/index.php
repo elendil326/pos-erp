@@ -11,6 +11,6 @@
 require_once("../../../../../../../server/bootstrap.php");
 require_once("api/api.precio.servicio.editar_precio_rol.php");
 
-$api = new ApiPrecioServicioEditar_precio_rol();
+$api = new ApiPrecioServicioEditarPrecioRol();
 $apiOutput = ApiOutputFormatter::getInstance();
 $apiOutput->PrintOuput($api);

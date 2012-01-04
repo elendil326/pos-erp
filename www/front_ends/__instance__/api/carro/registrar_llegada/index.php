@@ -11,6 +11,6 @@
 require_once("../../../../../../server/bootstrap.php");
 require_once("api/api.carro.registrar_llegada.php");
 
-$api = new ApiCarroRegistrar_llegada();
+$api = new ApiCarroRegistrarLlegada();
 $apiOutput = ApiOutputFormatter::getInstance();
 $apiOutput->PrintOuput($api);

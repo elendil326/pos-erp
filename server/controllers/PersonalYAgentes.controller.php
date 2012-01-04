@@ -46,7 +46,6 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 $id_rol=null,
                 $descripcion=null,
                 $nombre = null,
-		$descuento = null,
 		$salario = null
       )
       {
@@ -71,13 +70,6 @@ require_once("interfaces/PersonalYAgentes.interface.php");
               $e=self::validarString($nombre, 30, "nombre");
               if(is_string($e))
                   return $e;
-          }
-          //valida el descuento, el descuento es un porcentaje asi que no puede ser mayor a 100
-          if(!is_null($descuento))
-          {
-              $e=self::validarNumero($descuento, 100, "descuento");
-                    if(is_string($e))
-                        return $e;
           }
           //valida e salario
           if(!is_null($salario))
@@ -1735,14 +1727,13 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	(
 		$nombre, 
 		$descripcion = null, 
-		$descuento = 0, 
 		$salario = 0
 	)
 	{  
             Logger::log("Creando nuevo rol");
 
             //Se validan lso parametros del rol
-            $validar=self::ValidarParametrosRol(null, $descripcion, $nombre, $descuento, $salario);
+            $validar=self::ValidarParametrosRol(null, $descripcion, $nombre, $salario);
             if(is_string($validar))
             {
                 Logger::error($validar);
@@ -1754,7 +1745,6 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                     array(
                         "nombre"        => trim($nombre),
                         "descripcion"   => $descripcion,
-                        "descuento"     => $descuento,
                         "salario"       => $salario
                     )
                     );
@@ -1799,7 +1789,6 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	(
 		$id_rol, 
 		$descripcion = null, 
-		$descuento = 0, 
 		$nombre = null, 
 		$salario = 0
 	)
@@ -1807,11 +1796,21 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             Logger::log("Editando rol ".$id_rol);
 
             //Se validan los parametros obtenidos.
-            $validar = self::ValidarParametrosRol($id_rol, $descripcion, $nombre, $descuento, $salario);
+            $validar = self::ValidarParametrosRol($id_rol, $descripcion, $nombre, $salario);
             if(is_string($validar))
             {
                 Logger::error($validar);
                 throw new Exception($validar,901);
+            }
+            
+            //Se busca el nombre obtenido en la base de datos quitando este mismo. Si existe
+            //se manda un error pues los nombres no se pueden repetir.
+            //Se usa trim para validar casos como "gerente" y "  gerente ".
+            $roles=array_diff(RolDAO::search(new Rol(array( "nombre" => trim($nombre) ))), array(RolDAO::getByPK($id_rol)));
+            if(!empty($roles))
+            {
+                Logger::error("No se puede crear un rol con el mismo nombre que uno ya existente: ".$roles[0]->getNombre());
+                throw new Exception("No se puede crear un rol con el mismo nombre que uno ya existente: ".$roles[0]->getNombre(),901);
             }
 
             //Se obtiene el rol de la base de datos.
@@ -1825,10 +1824,6 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             if(!is_null($nombre))
             {
                 $rol->setNombre($nombre);
-            }
-            if(!is_null($descuento))
-            {
-                $rol->setDescuento($descuento);
             }
             if(!is_null($descripcion))
             {

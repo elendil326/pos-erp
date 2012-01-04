@@ -3,7 +3,7 @@
   * GET api/paquete/detalle
   * Muestra el detalle de un paquete
   *
-  * Muestra los productos y/o servicios englobados en este paquete as?omo las sucursales y las empresas donde lo ofrecen
+  * Muestra los productos y/o servicios englobados en este paquete as? como las sucursales y las empresas donde lo ofrecen
   *
   *
   *

@@ -13,6 +13,6 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
 require_once("../../../../../../server/bootstrap.php");
 require_once("api/api.compras.detalle_compra_arpilla.php");
 
-$api = new ApiComprasDetalle_compra_arpilla();
+$api = new ApiComprasDetalleCompraArpilla();
 $apiOutput = ApiOutputFormatter::getInstance();
 $apiOutput->PrintOuput($api);

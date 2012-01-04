@@ -11,6 +11,6 @@
 require_once("../../../../../../../server/bootstrap.php");
 require_once("api/api.pos.client.check_current_client_version.php");
 
-$api = new ApiPosClientCheck_current_client_version();
+$api = new ApiPosClientCheckCurrentClientVersion();
 $apiOutput = ApiOutputFormatter::getInstance();
 $apiOutput->PrintOuput($api);

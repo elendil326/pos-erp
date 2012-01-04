@@ -489,11 +489,9 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 * @param coidgo_postal string Codigo Postal de la sucursal
  	 * @param colonia string Colonia de la sucursal
  	 * @param descripcion string Descripcion de la sucursal
- 	 * @param descuento float Descuento que tendran los productos ofrecidos por esta sucursal
  	 * @param empresas json Objeto que contendra los ids de las empresas a las que esta sucursal pertenece, por lo menos tiene que haber una empresa. En este JSON, opcionalmente junto con el id de la empresa, aapreceran dos campos que seran margen_utilidad y descuento, que indicaran que todos los productos de esa empresa ofrecidos en esta sucursal tendran un margen de utilidad y/o un descuento con los valores en esos campos
  	 * @param id_gerente int Id del gerente de la sucursal
  	 * @param impuestos json Objeto que contendra los ids de los impuestos que afectana esta sucursal
- 	 * @param margen_utilidad float Porcentaje del margen de utilidad que se obtendra de los productos vendidos en esta sucursal
  	 * @param municipio int Municipio de la sucursal
  	 * @param numero_exterior string Numero exterior de la sucursal
  	 * @param numero_interior string Numero interior de la sucursal
@@ -511,11 +509,9 @@ Creo que este metodo tiene que estar bajo sucursal.
 		$coidgo_postal = null, 
 		$colonia = null, 
 		$descripcion = null, 
-		$descuento = null, 
 		$empresas = null, 
 		$id_gerente = null, 
 		$impuestos = null, 
-		$margen_utilidad = null, 
 		$municipio = null, 
 		$numero_exterior = null, 
 		$numero_interior = null, 
@@ -599,10 +595,8 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 * @param rfc string RFC de la sucursal
  	 * @param saldo_a_favor float Saldo a favor de la sucursal.
  	 * @param descripcion string Descripcion de la sucursal
- 	 * @param descuento float Descuento que tendran todos los productos ofrecidos por esta sucursal
  	 * @param id_gerente int ID del usuario que sera gerente de esta sucursal. Para que sea valido este usuario debe tener el nivel de acceso apropiado.
  	 * @param impuestos json Objeto que contendra el arreglo de impuestos que afectan a esta sucursal
- 	 * @param margen_utilidad float Margen de utilidad que se le ganara a todos los productos ofrecidos por esta sucursal
  	 * @param numero_interior string numero interior
  	 * @param referencia string Referencia para localizar la direccion de la sucursal
  	 * @param retenciones json Objeto que contendra el arreglo de retenciones que afectan a esta sucursal
@@ -622,10 +616,8 @@ Creo que este metodo tiene que estar bajo sucursal.
 		$rfc, 
 		$saldo_a_favor, 
 		$descripcion = null, 
-		$descuento = null, 
 		$id_gerente = null, 
 		$impuestos = null, 
-		$margen_utilidad = null, 
 		$numero_interior = null, 
 		$referencia = null, 
 		$retenciones = null, 

@@ -11,6 +11,6 @@
 require_once("../../../../../../../server/bootstrap.php");
 require_once("api/api.documento.nota_de_venta.imprimir.php");
 
-$api = new ApiDocumentoNota_de_ventaImprimir();
+$api = new ApiDocumentoNotaDeVentaImprimir();
 $apiOutput = ApiOutputFormatter::getInstance();
 $apiOutput->PrintOuput($api);

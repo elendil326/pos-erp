@@ -11,6 +11,6 @@
 require_once("../../../../../../server/bootstrap.php");
 require_once("api/api.inventario.terminar_cargamento_de_compra.php");
 
-$api = new ApiInventarioTerminar_cargamento_de_compra();
+$api = new ApiInventarioTerminarCargamentoDeCompra();
 $apiOutput = ApiOutputFormatter::getInstance();
 $apiOutput->PrintOuput($api);

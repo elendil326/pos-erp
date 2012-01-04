@@ -1,6 +1,6 @@
 <?php
 /**
-  * GET api/sucursal/tipo_almacen/nuevo
+  * POST api/sucursal/tipo_almacen/nuevo
   * Crea un nuevo tipo de almacen
   *
   * Crea un nuevo tipo de almacen

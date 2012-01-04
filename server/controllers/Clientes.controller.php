@@ -105,9 +105,7 @@ require_once("interfaces/Clientes.interface.php");
                 $id_clasificacion_cliente = null,
                 $clave_interna = null,
                 $nombre = null,
-                $descripcion = null,
-                $margen_utilidad = null,
-                $descuento = null
+                $descripcion = null
         )
         {
             //valida que la clasificacion exista 
@@ -164,23 +162,6 @@ require_once("interfaces/Clientes.interface.php");
             if(!is_null($descripcion))
             {
                 $e = self::validarString($descripcion, 255, "descripcion");
-                if(is_string($e))
-                    return $e;
-            }
-            
-            //valida que el margen de utilidad este en rango
-            if(!is_null($margen_utilidad))
-            {
-                $e = self::validarNumero($margen_utilidad, 1.8e200, "margen de utilidad");
-                if(is_string($e))
-                    return $e;
-            }
-            
-            //valida que el descuento este en rango
-            if(!is_null($descuento))
-                
-            {
-                $e = self::validarNumero($descuento, 100, "descuento");
                 if(is_string($e))
                     return $e;
             }
@@ -638,16 +619,14 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 		$clave_interna, 
 		$nombre, 
 		$descripcion = null, 
-		$descuento = null, 
 		$impuestos = null, 
-		$retenciones = null, 
-		$utilidad = null
+		$retenciones = null
 	)
 	{  
             Logger::log("Creando nueva clasificacion de clientes");
             
             //Se validan los parametros recibidos
-            $validar = self::validarParametrosClasificacionCliente(null,$clave_interna,$nombre,$descripcion,$utilidad,$descuento);
+            $validar = self::validarParametrosClasificacionCliente(null,$clave_interna,$nombre,$descripcion);
             if(is_string($validar))
             {
                 Logger::error($validar);
@@ -657,9 +636,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
             $clasificacion_cliente = new ClasificacionCliente( array( 
                                             "clave_interna"     => $clave_interna,
                                             "nombre"            => trim($nombre),
-                                            "descripcion"       => $descripcion,
-                                            "margen_utilidad"   => $utilidad,
-                                            "descuento"         => $descuento
+                                            "descripcion"       => $descripcion
                                                                     )
                                                              );
             DAO::transBegin();
@@ -743,9 +720,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
                     $orden != "id_clasificacion_cliente"    &&
                     $orden != "clave_interna"               &&
                     $orden != "nombre"                      &&
-                    $orden != "descripcion"                 &&
-                    $orden != "margen_utilidad"             &&
-                    $orden != "descuento"
+                    $orden != "descripcion"                 
             )
             {
                 Logger::error("La variable orden (".$orden.") es invalida");
@@ -776,9 +751,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 		$id_clasificacion_cliente, 
 		$clave_interna = null, 
 		$descripcion = null, 
-		$descuento = null, 
 		$impuestos = null, 
-		$margen_de_utilidad = null, 
 		$nombre = null, 
 		$retenciones = null
 	)
@@ -786,7 +759,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
             Logger::log("Editando clasificacion de cliente ".$id_clasificacion_cliente);
             
             //Se validan los parametros recibidos
-            $validar = self::validarParametrosClasificacionCliente($id_clasificacion_cliente,$clave_interna,$nombre,$descripcion,$margen_de_utilidad,$descuento);
+            $validar = self::validarParametrosClasificacionCliente($id_clasificacion_cliente,$clave_interna,$nombre,$descripcion);
             if(is_string($validar))
             {
                 Logger::error($validar);
@@ -795,10 +768,6 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
             
             //Los parametros que no sean nulos seran tomados como actualizacion
             $clasificacion_cliente = ClasificacionClienteDAO::getByPK($id_clasificacion_cliente);
-            if(!is_null($descuento))
-            {
-                $clasificacion_cliente->setDescuento($descuento);
-            }
             if(!is_null($clave_interna))
             {
                 $clasificacion_cliente->setClaveInterna($clave_interna);
@@ -810,10 +779,6 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
             if(!is_null($descripcion))
             {
                 $clasificacion_cliente->setDescripcion($descripcion);
-            }
-            if(!is_null($margen_de_utilidad))
-            {
-                $clasificacion_cliente->setMargenUtilidad($margen_de_utilidad);
             }
             
             //Se actualiza el registro. Si se recibe una lista de impuestos y/o retenciones, se almacenan los

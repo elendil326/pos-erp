@@ -157,16 +157,6 @@ abstract class SucursalEmpresaDAOBase extends DAO
 			array_push( $val, $sucursal_empresa->getIdEmpresa() );
 		}
 
-		if( ! is_null( $sucursal_empresa->getMargenUtilidad() ) ){
-			$sql .= " margen_utilidad = ? AND";
-			array_push( $val, $sucursal_empresa->getMargenUtilidad() );
-		}
-
-		if( ! is_null( $sucursal_empresa->getDescuento() ) ){
-			$sql .= " descuento = ? AND";
-			array_push( $val, $sucursal_empresa->getDescuento() );
-		}
-
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
@@ -198,15 +188,6 @@ abstract class SucursalEmpresaDAOBase extends DAO
 	  **/
 	private static final function update( $sucursal_empresa )
 	{
-		$sql = "UPDATE sucursal_empresa SET  margen_utilidad = ?, descuento = ? WHERE  id_sucursal = ? AND id_empresa = ?;";
-		$params = array( 
-			$sucursal_empresa->getMargenUtilidad(), 
-			$sucursal_empresa->getDescuento(), 
-			$sucursal_empresa->getIdSucursal(),$sucursal_empresa->getIdEmpresa(), );
-		global $conn;
-		try{$conn->Execute($sql, $params);}
-		catch(Exception $e){ throw new Exception ($e->getMessage()); }
-		return $conn->Affected_Rows();
 	}
 
 
@@ -225,12 +206,10 @@ abstract class SucursalEmpresaDAOBase extends DAO
 	  **/
 	private static final function create( &$sucursal_empresa )
 	{
-		$sql = "INSERT INTO sucursal_empresa ( id_sucursal, id_empresa, margen_utilidad, descuento ) VALUES ( ?, ?, ?, ?);";
+		$sql = "INSERT INTO sucursal_empresa ( id_sucursal, id_empresa ) VALUES ( ?, ?);";
 		$params = array( 
 			$sucursal_empresa->getIdSucursal(), 
 			$sucursal_empresa->getIdEmpresa(), 
-			$sucursal_empresa->getMargenUtilidad(), 
-			$sucursal_empresa->getDescuento(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -296,28 +275,6 @@ abstract class SucursalEmpresaDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_empresa = ? AND"; 
-			$a = is_null ( $a ) ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
-		if( ( !is_null (($a = $sucursal_empresaA->getMargenUtilidad()) ) ) & ( ! is_null ( ($b = $sucursal_empresaB->getMargenUtilidad()) ) ) ){
-				$sql .= " margen_utilidad >= ? AND margen_utilidad <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " margen_utilidad = ? AND"; 
-			$a = is_null ( $a ) ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
-		if( ( !is_null (($a = $sucursal_empresaA->getDescuento()) ) ) & ( ! is_null ( ($b = $sucursal_empresaB->getDescuento()) ) ) ){
-				$sql .= " descuento >= ? AND descuento <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " descuento = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

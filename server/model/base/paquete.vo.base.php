@@ -31,12 +31,6 @@ class Paquete extends VO
 			if( isset($data['descripcion']) ){
 				$this->descripcion = $data['descripcion'];
 			}
-			if( isset($data['margen_utilidad']) ){
-				$this->margen_utilidad = $data['margen_utilidad'];
-			}
-			if( isset($data['descuento']) ){
-				$this->descuento = $data['descuento'];
-			}
 			if( isset($data['foto_paquete']) ){
 				$this->foto_paquete = $data['foto_paquete'];
 			}
@@ -65,8 +59,6 @@ class Paquete extends VO
 			"id_paquete" => $this->id_paquete,
 			"nombre" => $this->nombre,
 			"descripcion" => $this->descripcion,
-			"margen_utilidad" => $this->margen_utilidad,
-			"descuento" => $this->descuento,
 			"foto_paquete" => $this->foto_paquete,
 			"costo_estandar" => $this->costo_estandar,
 			"precio" => $this->precio,
@@ -103,24 +95,6 @@ class Paquete extends VO
 	  * @var varchar(255)
 	  */
 	public $descripcion;
-
-	/**
-	  * margen_utilidad
-	  * 
-	  * Margen de utilidad que se obtendra al vender este paquete<br>
-	  * @access public
-	  * @var float
-	  */
-	public $margen_utilidad;
-
-	/**
-	  * descuento
-	  * 
-	  * Descuento que se aplciara a este paquete<br>
-	  * @access public
-	  * @var float
-	  */
-	public $descuento;
 
 	/**
 	  * foto_paquete
@@ -232,54 +206,6 @@ class Paquete extends VO
 	final public function setDescripcion( $descripcion )
 	{
 		$this->descripcion = $descripcion;
-	}
-
-	/**
-	  * getMargenUtilidad
-	  * 
-	  * Get the <i>margen_utilidad</i> property for this object. Donde <i>margen_utilidad</i> es Margen de utilidad que se obtendra al vender este paquete
-	  * @return float
-	  */
-	final public function getMargenUtilidad()
-	{
-		return $this->margen_utilidad;
-	}
-
-	/**
-	  * setMargenUtilidad( $margen_utilidad )
-	  * 
-	  * Set the <i>margen_utilidad</i> property for this object. Donde <i>margen_utilidad</i> es Margen de utilidad que se obtendra al vender este paquete.
-	  * Una validacion basica se hara aqui para comprobar que <i>margen_utilidad</i> es de tipo <i>float</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param float
-	  */
-	final public function setMargenUtilidad( $margen_utilidad )
-	{
-		$this->margen_utilidad = $margen_utilidad;
-	}
-
-	/**
-	  * getDescuento
-	  * 
-	  * Get the <i>descuento</i> property for this object. Donde <i>descuento</i> es Descuento que se aplciara a este paquete
-	  * @return float
-	  */
-	final public function getDescuento()
-	{
-		return $this->descuento;
-	}
-
-	/**
-	  * setDescuento( $descuento )
-	  * 
-	  * Set the <i>descuento</i> property for this object. Donde <i>descuento</i> es Descuento que se aplciara a este paquete.
-	  * Una validacion basica se hara aqui para comprobar que <i>descuento</i> es de tipo <i>float</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param float
-	  */
-	final public function setDescuento( $descuento )
-	{
-		$this->descuento = $descuento;
 	}
 
 	/**

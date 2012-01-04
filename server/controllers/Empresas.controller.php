@@ -48,9 +48,7 @@ require_once("interfaces/Empresas.interface.php");
                   $razon_social=null,
                   $representante_legal=null,
                   $activo=null,
-                  $direccion_web=null,
-                  $margen_utilidad=null,
-                  $descuento=null
+                  $direccion_web=null
           )
           {
               //Se valida que la empresa exista en la base de datos
@@ -124,22 +122,8 @@ require_once("interfaces/Empresas.interface.php");
                     !preg_match('/^[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,6}'.'((:[0-9]{1,5})?\/.*)?$/i' ,$direccion_web))
                             return "La direccion web ".$direccion_web." no cumple el formato esperado";
                 }
-
-                //Se valida que el margen de utilidad este en rango
-                if(!is_null($margen_utilidad))
-                {
-                    $e=self::validarNumero($margen_utilidad, 1.8e200, "margen de utilidad");
-                    if(is_string($e))
-                        return $e;
-                }
-
-                //se valida que el descuento este en rango. Descuento es un porcentaje y no puede pasar de 100
-                if(!is_null($descuento))
-                {
-                    $e=self::validarNumero($descuento, 100, "descuento");
-                    if(is_string($e))
-                        return $e;
-                }
+                
+                //No se encontro error
                 return true;
           }
 
@@ -149,9 +133,7 @@ require_once("interfaces/Empresas.interface.php");
           private static function validarParametrosSucursalEmpresa
           (
                   $id_sucursal=null,
-                  $id_empresa=null,
-                  $margen_utilidad=null,
-                  $descuento=null
+                  $id_empresa=null
           )
           {
               //verifica que la sucursal exista en la base de datos
@@ -172,21 +154,7 @@ require_once("interfaces/Empresas.interface.php");
                   }
               }
 
-              //valida que el margen de utilidad este en el rango
-              if(!is_null($margen_utilidad))
-              {
-                  $e=self::validarNumero($margen_utilidad, 1.8e200, "margen de utilidad");
-                  if(is_string($e))
-                      return $e;
-              }
-
-              //valida que el descuento no pase de 100 pues e sun porcentaje
-              if(!is_null($descuento))
-              {
-                  $e=self::validarNumero($descuento, 100, "descuento");
-                  if(is_string($e))
-                      return $e;
-              }
+              return true;
           }
           
           /*
@@ -317,25 +285,12 @@ require_once("interfaces/Empresas.interface.php");
                 foreach($sucursales as $sucursal)
                 {
                     
-                    if
-                    (
-                            !array_key_exists("id_sucursal", $sucursal)       ||
-                            !array_key_exists("margen_utilidad", $sucursal)   ||
-                            !array_key_exists("descuento", $sucursal)
-                    )
-                    {
-                        Logger::error("El parametro sucursales recibido es invalido");
-                        throw new Exception("El parametro sucursales recibido es invalido",901);
-                    }
-                    
-                    $validar=self::validarParametrosSucursalEmpresa($sucursal["id_sucursal"], null,$sucursal["margen_utilidad"], $sucursal["descuento"]);
+                    $validar=self::validarParametrosSucursalEmpresa($sucursal);
                     if(is_string($validar))
                     {
                         throw new Exception($validar,901);
                     }
-                    $sucursal_empresa->setIdSucursal($sucursal["id_sucursal"]);
-                    $sucursal_empresa->setDescuento($sucursal["descuento"]);
-                    $sucursal_empresa->setMargenUtilidad($sucursal["margen_utilidad"]);
+                    $sucursal_empresa->setIdSucursal($sucursal);
                     SucursalEmpresaDAO::save($sucursal_empresa);
                 }
             }
@@ -344,8 +299,8 @@ require_once("interfaces/Empresas.interface.php");
                 DAO::transRollback();
                 Logger::error("No se pudieron agregar las sucursales a la empresa: ".$e);
                 if($e->getCode()==901)
-                    throw new Exception("NO se pudieron agregar las sucursales a la empresa: ".$e->getMessage(),901);
-                throw new Exception("NO se pudieron agregar las sucursales a la empresa, consulte a su administrador de sistema",901);
+                    throw new Exception("No se pudieron agregar las sucursales a la empresa: ".$e->getMessage(),901);
+                throw new Exception("No se pudieron agregar las sucursales a la empresa, consulte a su administrador de sistema",901);
             }
             DAO::transEnd();
             Logger::log("Sucursales agregadas exitosamente");
@@ -386,11 +341,9 @@ require_once("interfaces/Empresas.interface.php");
 		$numero_exterior, 
 		$razon_social, 
 		$rfc, 
-		$descuento = null, 
 		$direccion_web = null, 
 		$email = null, 
 		$impuestos = null, 
-		$margen_utilidad = null, 
 		$numero_interior = null, 
 		$representante_legal = null, 
 		$retenciones = null, 
@@ -402,7 +355,7 @@ require_once("interfaces/Empresas.interface.php");
             Logger::log("Creando empresa");
 
             //Se validan los parametros
-            $validar=self::validarParametrosEmpresa(null, null, $curp, $rfc, $razon_social, $representante_legal, null, $direccion_web, $margen_utilidad, $descuento);
+            $validar=self::validarParametrosEmpresa(null, null, $curp, $rfc, $razon_social, $representante_legal, null, $direccion_web);
             if(is_string($validar))
             {
                 Logger::error($validar);
@@ -413,11 +366,9 @@ require_once("interfaces/Empresas.interface.php");
             $e = new Empresa(array(
                             "activo"                => true,
                             "curp"                  => $curp,
-                            "descuento"             => $descuento,
                             "direccion_web"         => $direccion_web,
                             "fecha_alta"            => date("Y-m-d H:i:s",time()),
                             "fecha_baja"            => null,
-                            "margen_utilidad"       => $margen_utilidad,
                             "razon_social"          => trim($razon_social),
                             "representante_legal"   => $representante_legal,
                             "rfc"                   => $rfc
@@ -767,11 +718,9 @@ require_once("interfaces/Empresas.interface.php");
 		$codigo_postal = null, 
 		$colonia	 = null, 
 		$curp = null, 
-		$descuento = null, 
 		$direccion_web = null, 
 		$email = null, 
 		$impuestos = null, 
-		$margen_utilidad = null, 
 		$numero_exterior	 = null, 
 		$numero_interno = null, 
 		$razon_social = null, 
@@ -786,7 +735,7 @@ require_once("interfaces/Empresas.interface.php");
             Logger::log("Editando la empresa");
             
             //Se validan los parametros de empresa recibidos
-            $validar = self::validarParametrosEmpresa($id_empresa,null,$curp,$rfc,$razon_social,$representante_legal,null,$direccion_web,$margen_utilidad,$descuento);
+            $validar = self::validarParametrosEmpresa($id_empresa,null,$curp,$rfc,$razon_social,$representante_legal,null,$direccion_web);
             if(is_string($validar))
             {
                 Logger::error($validar);
@@ -821,14 +770,6 @@ require_once("interfaces/Empresas.interface.php");
             $modificar_direccion=false;
             
             //se evaluan los parametros. Los que no sean nulos seran tomados com oactualizacion
-            if(!is_null($descuento))
-            {
-                $empresa->setDescuento($descuento);
-            }
-            if(!is_null($margen_utilidad))
-            {
-                $empresa->setMargenUtilidad($margen_utilidad);
-            }
             if(!is_null($direccion_web))
             {
                 $empresa->setDireccionWeb($direccion_web);

@@ -1,0 +1,168 @@
+10:15:59pm 2 Jan | 127.0.0.1 | SQL(1): ROLLBACK
+10:15:59pm 2 Jan | 127.0.0.1 | SQL(2): SET AUTOCOMMIT=1
+10:15:59pm 2 Jan | 127.0.0.1 | SQL(3): SELECT * FROM instances WHERE ( instance_token = '123' ) LIMIT 1;
+10:15:59pm 2 Jan | 127.0.0.1 | SQL(4): ROLLBACK
+10:15:59pm 2 Jan | 127.0.0.1 | SQL(5): SET AUTOCOMMIT=1
+10:15:59pm 2 Jan | 127.0.0.1 | WARN:Aqui hay un notice de php suprimido ApiHandler.php->CheckAuthorization()
+10:15:59pm 2 Jan | 127.0.0.1 | SQL(6): SELECT * from sesion WHERE ( auth_token = '86921uhwjsn98'  )
+10:15:59pm 2 Jan | 127.0.0.1 | Creando abono
+10:15:59pm 2 Jan | 127.0.0.1 | SQL(7): SELECT * FROM usuario WHERE (id_usuario = '3' ) LIMIT 1;
+10:15:59pm 2 Jan | 127.0.0.1 | SQL(8): SELECT * FROM compra WHERE (id_compra = '13' ) LIMIT 1;
+10:15:59pm 2 Jan | 127.0.0.1 | Iniciando transaccion (1)
+10:15:59pm 2 Jan | 127.0.0.1 | SQL(9): SET AUTOCOMMIT=0
+10:15:59pm 2 Jan | 127.0.0.1 | SQL(10): BEGIN
+10:15:59pm 2 Jan | 127.0.0.1 | SQL(11): SELECT * FROM abono_compra WHERE (id_abono_compra = NULL ) LIMIT 1;
+10:15:59pm 2 Jan | 127.0.0.1 | SQL(12): INSERT INTO abono_compra ( id_abono_compra, id_compra, id_sucursal, monto, id_caja, id_deudor, id_receptor, nota, fecha, tipo_de_pago, cancelado, motivo_cancelacion ) VALUES ( NULL, '13', 1, '10', 1, 1, '3', NULL, '2012-01-02 22:15:59', NULL, 0, NULL);
+10:15:59pm 2 Jan | 127.0.0.1 | Transaccion rollback !
+10:15:59pm 2 Jan | 127.0.0.1 | ERROR:Error al crear el abono
+10:15:59pm 2 Jan | 127.0.0.1 | ERROR:exception 'ApiException' in C:\wamp\www\pos\branches\v1_5\server\api\api.efectivo.abono.nuevo.php:49
+Stack trace:
+#0 C:\wamp\www\pos\branches\v1_5\server\libs\api\ApiHandler.php(151): ApiEfectivoAbonoNuevo->GenerateResponse()
+#1 C:\wamp\www\pos\branches\v1_5\server\libs\api\ApiOutputFormatter.php(65): ApiHandler->ExecuteApi()
+#2 C:\wamp\www\pos\branches\v1_5\www\front_ends\__instance__\api\efectivo\abono\nuevo\index.php(16): ApiOutputFormatter->PrintOuput(Object(ApiEfectivoAbonoNuevo))
+#3 {main}
+10:29:14pm 2 Jan | 127.0.0.1 | SQL(1): ROLLBACK
+10:29:14pm 2 Jan | 127.0.0.1 | SQL(2): SET AUTOCOMMIT=1
+10:29:14pm 2 Jan | 127.0.0.1 | SQL(3): SELECT * FROM instances WHERE ( instance_token = '123' ) LIMIT 1;
+10:29:14pm 2 Jan | 127.0.0.1 | SQL(4): ROLLBACK
+10:29:14pm 2 Jan | 127.0.0.1 | SQL(5): SET AUTOCOMMIT=1
+10:29:14pm 2 Jan | 127.0.0.1 | WARN:Aqui hay un notice de php suprimido ApiHandler.php->CheckAuthorization()
+10:29:14pm 2 Jan | 127.0.0.1 | SQL(6): SELECT * from sesion WHERE ( auth_token = '86921uhwjsn98'  )
+10:29:14pm 2 Jan | 127.0.0.1 | Creando abono
+10:29:14pm 2 Jan | 127.0.0.1 | SQL(7): SELECT * FROM usuario WHERE (id_usuario = '3' ) LIMIT 1;
+10:29:14pm 2 Jan | 127.0.0.1 | SQL(8): SELECT * FROM compra WHERE (id_compra = '13' ) LIMIT 1;
+10:29:14pm 2 Jan | 127.0.0.1 | Iniciando transaccion (1)
+10:29:14pm 2 Jan | 127.0.0.1 | SQL(9): SET AUTOCOMMIT=0
+10:29:14pm 2 Jan | 127.0.0.1 | SQL(10): BEGIN
+10:29:14pm 2 Jan | 127.0.0.1 | SQL(11): SELECT * FROM abono_compra WHERE (id_abono_compra = NULL ) LIMIT 1;
+10:29:14pm 2 Jan | 127.0.0.1 | SQL(12): INSERT INTO abono_compra ( id_abono_compra, id_compra, id_sucursal, monto, id_caja, id_deudor, id_receptor, nota, fecha, tipo_de_pago, cancelado, motivo_cancelacion ) VALUES ( NULL, '13', 1, '10', 1, 1, '3', NULL, '2012-01-02 22:29:14', NULL, 0, NULL);
+10:29:14pm 2 Jan | 127.0.0.1 | Transaccion rollback !
+10:29:14pm 2 Jan | 127.0.0.1 | ERROR:Error al crear el abono: exception 'Exception' with message 'mysqlt error: [1048: Column 'tipo_de_pago' cannot be null] in adodb_throw(INSERT INTO abono_compra ( id_abono_compra, id_compra, id_sucursal, monto, id_caja, id_deudor, id_receptor, nota, fecha, tipo_de_pago, cancelado, motivo_cancelacion ) VALUES ( NULL, '13', 1, '10', 1, 1, '3', NULL, '2012-01-02 22:29:14', NULL, 0, NULL);, )
+' in C:\wamp\www\pos\branches\v1_5\server\model\base\abono_compra.dao.base.php:290
+Stack trace:
+#0 C:\wamp\www\pos\branches\v1_5\server\model\base\abono_compra.dao.base.php(51): AbonoCompraDAOBase::create(Object(AbonoCompra))
+#1 C:\wamp\www\pos\branches\v1_5\server\controllers\CargosYAbonos.controller.php(2719): AbonoCompraDAOBase::save(Object(AbonoCompra))
+#2 C:\wamp\www\pos\branches\v1_5\server\api\api.efectivo.abono.nuevo.php(46): CargosYAbonosController::NuevoAbono('3', '10', NULL, NULL, NULL, '13', NULL, NULL, NULL)
+#3 C:\wamp\www\pos\branches\v1_5\server\libs\api\ApiHandler.php(151): ApiEfectivoAbonoNuevo->GenerateResponse()
+#4 C:\wamp\www\pos\branches\v1_5\server\libs\api\ApiOutputFormatter.php(65): ApiHandler->ExecuteApi()
+#5 C:\wamp\www\pos\branches\v1_5\www\front_ends\__instance__\api\efectivo\abono\nuevo\index.php(16): ApiOutputFormatter->PrintOuput(Object(ApiEfectivoAbonoNuevo))
+#6 {main}
+10:29:14pm 2 Jan | 127.0.0.1 | ERROR:exception 'ApiException' in C:\wamp\www\pos\branches\v1_5\server\api\api.efectivo.abono.nuevo.php:49
+Stack trace:
+#0 C:\wamp\www\pos\branches\v1_5\server\libs\api\ApiHandler.php(151): ApiEfectivoAbonoNuevo->GenerateResponse()
+#1 C:\wamp\www\pos\branches\v1_5\server\libs\api\ApiOutputFormatter.php(65): ApiHandler->ExecuteApi()
+#2 C:\wamp\www\pos\branches\v1_5\www\front_ends\__instance__\api\efectivo\abono\nuevo\index.php(16): ApiOutputFormatter->PrintOuput(Object(ApiEfectivoAbonoNuevo))
+#3 {main}
+10:30:07pm 2 Jan | 127.0.0.1 | SQL(1): ROLLBACK
+10:30:07pm 2 Jan | 127.0.0.1 | SQL(2): SET AUTOCOMMIT=1
+10:30:07pm 2 Jan | 127.0.0.1 | SQL(3): SELECT * FROM instances WHERE ( instance_token = '123' ) LIMIT 1;
+10:30:07pm 2 Jan | 127.0.0.1 | SQL(4): ROLLBACK
+10:30:07pm 2 Jan | 127.0.0.1 | SQL(5): SET AUTOCOMMIT=1
+10:30:07pm 2 Jan | 127.0.0.1 | WARN:Aqui hay un notice de php suprimido ApiHandler.php->CheckAuthorization()
+10:30:07pm 2 Jan | 127.0.0.1 | SQL(6): SELECT * from sesion WHERE ( auth_token = '86921uhwjsn98'  )
+10:30:07pm 2 Jan | 127.0.0.1 | Creando abono
+10:30:07pm 2 Jan | 127.0.0.1 | SQL(7): SELECT * FROM usuario WHERE (id_usuario = '3' ) LIMIT 1;
+10:30:07pm 2 Jan | 127.0.0.1 | SQL(8): SELECT * FROM compra WHERE (id_compra = '13' ) LIMIT 1;
+10:30:07pm 2 Jan | 127.0.0.1 | Iniciando transaccion (1)
+10:30:07pm 2 Jan | 127.0.0.1 | SQL(9): SET AUTOCOMMIT=0
+10:30:07pm 2 Jan | 127.0.0.1 | SQL(10): BEGIN
+10:30:07pm 2 Jan | 127.0.0.1 | SQL(11): SELECT * FROM abono_compra WHERE (id_abono_compra = NULL ) LIMIT 1;
+10:30:07pm 2 Jan | 127.0.0.1 | SQL(12): INSERT INTO abono_compra ( id_abono_compra, id_compra, id_sucursal, monto, id_caja, id_deudor, id_receptor, nota, fecha, tipo_de_pago, cancelado, motivo_cancelacion ) VALUES ( NULL, '13', 1, '10', 1, 1, '3', NULL, '2012-01-02 22:30:07', NULL, 0, NULL);
+10:30:07pm 2 Jan | 127.0.0.1 | Transaccion rollback !
+10:30:07pm 2 Jan | 127.0.0.1 | ERROR:Error al crear el abono: exception 'Exception' with message 'mysqlt error: [1048: Column 'tipo_de_pago' cannot be null] in adodb_throw(INSERT INTO abono_compra ( id_abono_compra, id_compra, id_sucursal, monto, id_caja, id_deudor, id_receptor, nota, fecha, tipo_de_pago, cancelado, motivo_cancelacion ) VALUES ( NULL, '13', 1, '10', 1, 1, '3', NULL, '2012-01-02 22:30:07', NULL, 0, NULL);, )
+' in C:\wamp\www\pos\branches\v1_5\server\model\base\abono_compra.dao.base.php:290
+Stack trace:
+#0 C:\wamp\www\pos\branches\v1_5\server\model\base\abono_compra.dao.base.php(51): AbonoCompraDAOBase::create(Object(AbonoCompra))
+#1 C:\wamp\www\pos\branches\v1_5\server\controllers\CargosYAbonos.controller.php(2719): AbonoCompraDAOBase::save(Object(AbonoCompra))
+#2 C:\wamp\www\pos\branches\v1_5\server\api\api.efectivo.abono.nuevo.php(46): CargosYAbonosController::NuevoAbono('3', '10', NULL, NULL, NULL, '13', NULL, NULL, NULL)
+#3 C:\wamp\www\pos\branches\v1_5\server\libs\api\ApiHandler.php(151): ApiEfectivoAbonoNuevo->GenerateResponse()
+#4 C:\wamp\www\pos\branches\v1_5\server\libs\api\ApiOutputFormatter.php(65): ApiHandler->ExecuteApi()
+#5 C:\wamp\www\pos\branches\v1_5\www\front_ends\__instance__\api\efectivo\abono\nuevo\index.php(16): ApiOutputFormatter->PrintOuput(Object(ApiEfectivoAbonoNuevo))
+#6 {main}
+10:30:07pm 2 Jan | 127.0.0.1 | ERROR:exception 'ApiException' in C:\wamp\www\pos\branches\v1_5\server\api\api.efectivo.abono.nuevo.php:49
+Stack trace:
+#0 C:\wamp\www\pos\branches\v1_5\server\libs\api\ApiHandler.php(151): ApiEfectivoAbonoNuevo->GenerateResponse()
+#1 C:\wamp\www\pos\branches\v1_5\server\libs\api\ApiOutputFormatter.php(65): ApiHandler->ExecuteApi()
+#2 C:\wamp\www\pos\branches\v1_5\www\front_ends\__instance__\api\efectivo\abono\nuevo\index.php(16): ApiOutputFormatter->PrintOuput(Object(ApiEfectivoAbonoNuevo))
+#3 {main}
+11:17:08am 3 Jan | 127.0.0.1 | SQL(1): ROLLBACK
+11:17:08am 3 Jan | 127.0.0.1 | SQL(2): SET AUTOCOMMIT=1
+11:17:10am 3 Jan | 127.0.0.1 | SQL(1): ROLLBACK
+11:17:10am 3 Jan | 127.0.0.1 | SQL(2): SET AUTOCOMMIT=1
+11:17:25am 3 Jan | 127.0.0.1 | SQL(3): SELECT * FROM instances WHERE ( instance_token = '123' ) LIMIT 1;
+11:17:25am 3 Jan | 127.0.0.1 | SQL(3): SELECT * FROM instances WHERE ( instance_token = '123' ) LIMIT 1;
+11:17:25am 3 Jan | 127.0.0.1 | SQL(4): ROLLBACK
+11:17:25am 3 Jan | 127.0.0.1 | SQL(5): SET AUTOCOMMIT=1
+11:17:25am 3 Jan | 127.0.0.1 | SQL(1): ROLLBACK
+11:17:25am 3 Jan | 127.0.0.1 | SQL(2): SET AUTOCOMMIT=1
+11:17:26am 3 Jan | 127.0.0.1 | SQL(3): SELECT * FROM instances WHERE ( instance_token = '123' ) LIMIT 1;
+11:17:26am 3 Jan | 127.0.0.1 | SQL(4): ROLLBACK
+11:17:26am 3 Jan | 127.0.0.1 | SQL(5): SET AUTOCOMMIT=1
+11:17:26am 3 Jan | 127.0.0.1 | SQL(4): ROLLBACK
+11:17:26am 3 Jan | 127.0.0.1 | SQL(5): SET AUTOCOMMIT=1
+11:17:26am 3 Jan | 127.0.0.1 | SQL(6): SELECT * from compra ORDER BY fecha DESC
+11:21:43am 3 Jan | 127.0.0.1 | SQL(1): ROLLBACK
+11:21:43am 3 Jan | 127.0.0.1 | SQL(2): SET AUTOCOMMIT=1
+11:21:44am 3 Jan | 127.0.0.1 | SQL(3): SELECT * FROM instances WHERE ( instance_token = '123' ) LIMIT 1;
+11:21:44am 3 Jan | 127.0.0.1 | SQL(4): ROLLBACK
+11:21:44am 3 Jan | 127.0.0.1 | SQL(5): SET AUTOCOMMIT=1
+11:21:44am 3 Jan | 127.0.0.1 | testLogin( 4 )
+11:21:44am 3 Jan | 127.0.0.1 | SQL(6): SELECT * FROM usuario WHERE ( id_usuario = '4' AND password = '231badb19b93e44f47da1bd64a8147f2') LIMIT 1;
+11:21:44am 3 Jan | 127.0.0.1 | WARN:Iniciando sesion
+11:21:44am 3 Jan | 127.0.0.1 | SQL(1): ROLLBACK
+11:21:44am 3 Jan | 127.0.0.1 | SQL(2): SET AUTOCOMMIT=1
+11:21:44am 3 Jan | 127.0.0.1 | SQL(3): SELECT * FROM instances WHERE ( instance_token = '123' ) LIMIT 1;
+11:21:44am 3 Jan | 127.0.0.1 | SQL(4): ROLLBACK
+11:21:44am 3 Jan | 127.0.0.1 | SQL(5): SET AUTOCOMMIT=1
+11:21:44am 3 Jan | 127.0.0.1 | SQL(6): SELECT * FROM usuario WHERE (id_usuario = '4' ) LIMIT 1;
+2:27:07pm 3 Jan | 127.0.0.1 | SQL(1): ROLLBACK
+2:27:07pm 3 Jan | 127.0.0.1 | SQL(2): SET AUTOCOMMIT=1
+2:27:08pm 3 Jan | 127.0.0.1 | SQL(3): SELECT * FROM instances WHERE ( instance_token = '123' ) LIMIT 1;
+2:27:08pm 3 Jan | 127.0.0.1 | SQL(4): ROLLBACK
+2:27:08pm 3 Jan | 127.0.0.1 | SQL(5): SET AUTOCOMMIT=1
+2:27:08pm 3 Jan | 127.0.0.1 | SQL(1): ROLLBACK
+2:27:08pm 3 Jan | 127.0.0.1 | SQL(2): SET AUTOCOMMIT=1
+2:27:08pm 3 Jan | 127.0.0.1 | SQL(3): SELECT * FROM instances WHERE ( instance_token = '123' ) LIMIT 1;
+2:27:08pm 3 Jan | 127.0.0.1 | SQL(4): ROLLBACK
+2:27:08pm 3 Jan | 127.0.0.1 | SQL(5): SET AUTOCOMMIT=1
+2:27:13pm 3 Jan | 127.0.0.1 | SQL(1): ROLLBACK
+2:27:13pm 3 Jan | 127.0.0.1 | SQL(2): SET AUTOCOMMIT=1
+2:27:13pm 3 Jan | 127.0.0.1 | SQL(3): SELECT * FROM instances WHERE ( instance_token = '123' ) LIMIT 1;
+2:27:13pm 3 Jan | 127.0.0.1 | SQL(4): ROLLBACK
+2:27:13pm 3 Jan | 127.0.0.1 | SQL(5): SET AUTOCOMMIT=1
+2:27:13pm 3 Jan | 127.0.0.1 | testLogin( 4 )
+2:27:13pm 3 Jan | 127.0.0.1 | SQL(6): SELECT * FROM usuario WHERE ( id_usuario = '4' AND password = '231badb19b93e44f47da1bd64a8147f2') LIMIT 1;
+2:27:13pm 3 Jan | 127.0.0.1 | WARN:Iniciando sesion
+2:27:14pm 3 Jan | 127.0.0.1 | SQL(1): ROLLBACK
+2:27:14pm 3 Jan | 127.0.0.1 | SQL(2): SET AUTOCOMMIT=1
+2:27:14pm 3 Jan | 127.0.0.1 | SQL(3): SELECT * FROM instances WHERE ( instance_token = '123' ) LIMIT 1;
+2:27:14pm 3 Jan | 127.0.0.1 | SQL(4): ROLLBACK
+2:27:14pm 3 Jan | 127.0.0.1 | SQL(5): SET AUTOCOMMIT=1
+2:27:14pm 3 Jan | 127.0.0.1 | SQL(6): SELECT * FROM usuario WHERE (id_usuario = '4' ) LIMIT 1;
+2:27:56pm 3 Jan | 127.0.0.1 | SQL(1): ROLLBACK
+2:27:56pm 3 Jan | 127.0.0.1 | SQL(2): SET AUTOCOMMIT=1
+2:27:56pm 3 Jan | 127.0.0.1 | SQL(3): SELECT * FROM instances WHERE ( instance_token = '123' ) LIMIT 1;
+2:27:56pm 3 Jan | 127.0.0.1 | SQL(4): ROLLBACK
+2:27:56pm 3 Jan | 127.0.0.1 | SQL(5): SET AUTOCOMMIT=1
+2:27:56pm 3 Jan | 127.0.0.1 | SQL(6): SELECT * FROM usuario WHERE (id_usuario = '4' ) LIMIT 1;
+2:27:56pm 3 Jan | 127.0.0.1 | Listando clientes
+2:27:56pm 3 Jan | 127.0.0.1 | SQL(7): SELECT * from usuario WHERE ( id_clasificacion_cliente >= 1 AND id_clasificacion_cliente <= 2147483647  )
+2:27:56pm 3 Jan | 127.0.0.1 | La lista de clientes fue obtenida exitosamente con 12 elementos
+2:27:57pm 3 Jan | 127.0.0.1 | SQL(8): SELECT * FROM rol WHERE (id_rol = '3' ) LIMIT 1;
+2:27:57pm 3 Jan | 127.0.0.1 | SQL(9): SELECT * FROM clasificacion_cliente WHERE (id_clasificacion_cliente = '1' ) LIMIT 1;
+2:27:57pm 3 Jan | 127.0.0.1 | SQL(10): SELECT * FROM rol WHERE (id_rol = '2' ) LIMIT 1;
+2:27:57pm 3 Jan | 127.0.0.1 | SQL(11): SELECT * FROM clasificacion_cliente WHERE (id_clasificacion_cliente = '2' ) LIMIT 1;
+2:27:57pm 3 Jan | 127.0.0.1 | SQL(12): SELECT * FROM rol WHERE (id_rol = '5' ) LIMIT 1;
+2:27:57pm 3 Jan | 127.0.0.1 | SQL(13): SELECT * FROM rol WHERE (id_rol = '1' ) LIMIT 1;
+2:27:57pm 3 Jan | 127.0.0.1 | SQL(14): SELECT * FROM clasificacion_cliente WHERE (id_clasificacion_cliente = '4' ) LIMIT 1;
+2:27:57pm 3 Jan | 127.0.0.1 | SQL(15): SELECT * FROM rol WHERE (id_rol = '7' ) LIMIT 1;
+2:27:57pm 3 Jan | 127.0.0.1 | SQL(16): SELECT * FROM rol WHERE (id_rol = '12' ) LIMIT 1;
+2:27:59pm 3 Jan | 127.0.0.1 | SQL(1): ROLLBACK
+2:27:59pm 3 Jan | 127.0.0.1 | SQL(2): SET AUTOCOMMIT=1
+2:27:59pm 3 Jan | 127.0.0.1 | SQL(3): SELECT * FROM instances WHERE ( instance_token = '123' ) LIMIT 1;
+2:27:59pm 3 Jan | 127.0.0.1 | SQL(4): ROLLBACK
+2:27:59pm 3 Jan | 127.0.0.1 | SQL(5): SET AUTOCOMMIT=1
+2:27:59pm 3 Jan | 127.0.0.1 | SQL(6): SELECT * FROM usuario WHERE (id_usuario = '4' ) LIMIT 1;
+2:27:59pm 3 Jan | 127.0.0.1 | 		-->DEBUG:id_clasificacion_cliente
+2:27:59pm 3 Jan | 127.0.0.1 | 		-->DEBUG:1
+2:27:59pm 3 Jan | 127.0.0.1 | 		-->DEBUG:

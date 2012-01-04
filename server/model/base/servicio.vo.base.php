@@ -40,9 +40,6 @@ class Servicio extends VO
 			if( isset($data['activo']) ){
 				$this->activo = $data['activo'];
 			}
-			if( isset($data['margen_de_utilidad']) ){
-				$this->margen_de_utilidad = $data['margen_de_utilidad'];
-			}
 			if( isset($data['descripcion_servicio']) ){
 				$this->descripcion_servicio = $data['descripcion_servicio'];
 			}
@@ -80,7 +77,6 @@ class Servicio extends VO
 			"codigo_servicio" => $this->codigo_servicio,
 			"compra_en_mostrador" => $this->compra_en_mostrador,
 			"activo" => $this->activo,
-			"margen_de_utilidad" => $this->margen_de_utilidad,
 			"descripcion_servicio" => $this->descripcion_servicio,
 			"costo_estandar" => $this->costo_estandar,
 			"garantia" => $this->garantia,
@@ -114,9 +110,9 @@ class Servicio extends VO
 	/**
 	  * metodo_costeo
 	  * 
-	  * Si el precio se toma del margen de utilidad o del precio fijo<br>
+	  * Si el precio final se tomara del precio base de este servicio o de su costo<br>
 	  * @access public
-	  * @var enum('precio','margen')
+	  * @var enum('precio','costo')
 	  */
 	public $metodo_costeo;
 
@@ -146,15 +142,6 @@ class Servicio extends VO
 	  * @var tinyint(1)
 	  */
 	public $activo;
-
-	/**
-	  * margen_de_utilidad
-	  * 
-	  * Un porcentage de 0 a 100 si queremos que este servicio marque utilidad en especifico<br>
-	  * @access public
-	  * @var float
-	  */
-	public $margen_de_utilidad;
 
 	/**
 	  * descripcion_servicio
@@ -265,8 +252,8 @@ class Servicio extends VO
 	/**
 	  * getMetodoCosteo
 	  * 
-	  * Get the <i>metodo_costeo</i> property for this object. Donde <i>metodo_costeo</i> es Si el precio se toma del margen de utilidad o del precio fijo
-	  * @return enum('precio','margen')
+	  * Get the <i>metodo_costeo</i> property for this object. Donde <i>metodo_costeo</i> es Si el precio final se tomara del precio base de este servicio o de su costo
+	  * @return enum('precio','costo')
 	  */
 	final public function getMetodoCosteo()
 	{
@@ -276,10 +263,10 @@ class Servicio extends VO
 	/**
 	  * setMetodoCosteo( $metodo_costeo )
 	  * 
-	  * Set the <i>metodo_costeo</i> property for this object. Donde <i>metodo_costeo</i> es Si el precio se toma del margen de utilidad o del precio fijo.
-	  * Una validacion basica se hara aqui para comprobar que <i>metodo_costeo</i> es de tipo <i>enum('precio','margen')</i>. 
+	  * Set the <i>metodo_costeo</i> property for this object. Donde <i>metodo_costeo</i> es Si el precio final se tomara del precio base de este servicio o de su costo.
+	  * Una validacion basica se hara aqui para comprobar que <i>metodo_costeo</i> es de tipo <i>enum('precio','costo')</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param enum('precio','margen')
+	  * @param enum('precio','costo')
 	  */
 	final public function setMetodoCosteo( $metodo_costeo )
 	{
@@ -356,30 +343,6 @@ class Servicio extends VO
 	final public function setActivo( $activo )
 	{
 		$this->activo = $activo;
-	}
-
-	/**
-	  * getMargenDeUtilidad
-	  * 
-	  * Get the <i>margen_de_utilidad</i> property for this object. Donde <i>margen_de_utilidad</i> es Un porcentage de 0 a 100 si queremos que este servicio marque utilidad en especifico
-	  * @return float
-	  */
-	final public function getMargenDeUtilidad()
-	{
-		return $this->margen_de_utilidad;
-	}
-
-	/**
-	  * setMargenDeUtilidad( $margen_de_utilidad )
-	  * 
-	  * Set the <i>margen_de_utilidad</i> property for this object. Donde <i>margen_de_utilidad</i> es Un porcentage de 0 a 100 si queremos que este servicio marque utilidad en especifico.
-	  * Una validacion basica se hara aqui para comprobar que <i>margen_de_utilidad</i> es de tipo <i>float</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param float
-	  */
-	final public function setMargenDeUtilidad( $margen_de_utilidad )
-	{
-		$this->margen_de_utilidad = $margen_de_utilidad;
 	}
 
 	/**

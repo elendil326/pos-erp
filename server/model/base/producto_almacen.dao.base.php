@@ -171,16 +171,6 @@ abstract class ProductoAlmacenDAOBase extends DAO
 			array_push( $val, $producto_almacen->getCantidad() );
 		}
 
-		if( ! is_null( $producto_almacen->getPrecioUtilidad() ) ){
-			$sql .= " precio_utilidad = ? AND";
-			array_push( $val, $producto_almacen->getPrecioUtilidad() );
-		}
-
-		if( ! is_null( $producto_almacen->getEsMargenUtilidad() ) ){
-			$sql .= " es_margen_utilidad = ? AND";
-			array_push( $val, $producto_almacen->getEsMargenUtilidad() );
-		}
-
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
@@ -212,11 +202,9 @@ abstract class ProductoAlmacenDAOBase extends DAO
 	  **/
 	private static final function update( $producto_almacen )
 	{
-		$sql = "UPDATE producto_almacen SET  cantidad = ?, precio_utilidad = ?, es_margen_utilidad = ? WHERE  id_producto = ? AND id_almacen = ? AND id_unidad = ?;";
+		$sql = "UPDATE producto_almacen SET  cantidad = ? WHERE  id_producto = ? AND id_almacen = ? AND id_unidad = ?;";
 		$params = array( 
 			$producto_almacen->getCantidad(), 
-			$producto_almacen->getPrecioUtilidad(), 
-			$producto_almacen->getEsMargenUtilidad(), 
 			$producto_almacen->getIdProducto(),$producto_almacen->getIdAlmacen(),$producto_almacen->getIdUnidad(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -240,14 +228,12 @@ abstract class ProductoAlmacenDAOBase extends DAO
 	  **/
 	private static final function create( &$producto_almacen )
 	{
-		$sql = "INSERT INTO producto_almacen ( id_producto, id_almacen, id_unidad, cantidad, precio_utilidad, es_margen_utilidad ) VALUES ( ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO producto_almacen ( id_producto, id_almacen, id_unidad, cantidad ) VALUES ( ?, ?, ?, ?);";
 		$params = array( 
 			$producto_almacen->getIdProducto(), 
 			$producto_almacen->getIdAlmacen(), 
 			$producto_almacen->getIdUnidad(), 
 			$producto_almacen->getCantidad(), 
-			$producto_almacen->getPrecioUtilidad(), 
-			$producto_almacen->getEsMargenUtilidad(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -335,28 +321,6 @@ abstract class ProductoAlmacenDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " cantidad = ? AND"; 
-			$a = is_null ( $a ) ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
-		if( ( !is_null (($a = $producto_almacenA->getPrecioUtilidad()) ) ) & ( ! is_null ( ($b = $producto_almacenB->getPrecioUtilidad()) ) ) ){
-				$sql .= " precio_utilidad >= ? AND precio_utilidad <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " precio_utilidad = ? AND"; 
-			$a = is_null ( $a ) ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
-		if( ( !is_null (($a = $producto_almacenA->getEsMargenUtilidad()) ) ) & ( ! is_null ( ($b = $producto_almacenB->getEsMargenUtilidad()) ) ) ){
-				$sql .= " es_margen_utilidad >= ? AND es_margen_utilidad <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " es_margen_utilidad = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

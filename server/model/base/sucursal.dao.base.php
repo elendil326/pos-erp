@@ -193,16 +193,6 @@ abstract class SucursalDAOBase extends DAO
 			array_push( $val, $sucursal->getFechaBaja() );
 		}
 
-		if( ! is_null( $sucursal->getMargenUtilidad() ) ){
-			$sql .= " margen_utilidad = ? AND";
-			array_push( $val, $sucursal->getMargenUtilidad() );
-		}
-
-		if( ! is_null( $sucursal->getDescuento() ) ){
-			$sql .= " descuento = ? AND";
-			array_push( $val, $sucursal->getDescuento() );
-		}
-
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
@@ -234,7 +224,7 @@ abstract class SucursalDAOBase extends DAO
 	  **/
 	private static final function update( $sucursal )
 	{
-		$sql = "UPDATE sucursal SET  id_direccion = ?, rfc = ?, razon_social = ?, descripcion = ?, id_gerente = ?, saldo_a_favor = ?, fecha_apertura = ?, activa = ?, fecha_baja = ?, margen_utilidad = ?, descuento = ? WHERE  id_sucursal = ?;";
+		$sql = "UPDATE sucursal SET  id_direccion = ?, rfc = ?, razon_social = ?, descripcion = ?, id_gerente = ?, saldo_a_favor = ?, fecha_apertura = ?, activa = ?, fecha_baja = ? WHERE  id_sucursal = ?;";
 		$params = array( 
 			$sucursal->getIdDireccion(), 
 			$sucursal->getRfc(), 
@@ -245,8 +235,6 @@ abstract class SucursalDAOBase extends DAO
 			$sucursal->getFechaApertura(), 
 			$sucursal->getActiva(), 
 			$sucursal->getFechaBaja(), 
-			$sucursal->getMargenUtilidad(), 
-			$sucursal->getDescuento(), 
 			$sucursal->getIdSucursal(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -270,7 +258,7 @@ abstract class SucursalDAOBase extends DAO
 	  **/
 	private static final function create( &$sucursal )
 	{
-		$sql = "INSERT INTO sucursal ( id_sucursal, id_direccion, rfc, razon_social, descripcion, id_gerente, saldo_a_favor, fecha_apertura, activa, fecha_baja, margen_utilidad, descuento ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO sucursal ( id_sucursal, id_direccion, rfc, razon_social, descripcion, id_gerente, saldo_a_favor, fecha_apertura, activa, fecha_baja ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$sucursal->getIdSucursal(), 
 			$sucursal->getIdDireccion(), 
@@ -282,8 +270,6 @@ abstract class SucursalDAOBase extends DAO
 			$sucursal->getFechaApertura(), 
 			$sucursal->getActiva(), 
 			$sucursal->getFechaBaja(), 
-			$sucursal->getMargenUtilidad(), 
-			$sucursal->getDescuento(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -437,28 +423,6 @@ abstract class SucursalDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " fecha_baja = ? AND"; 
-			$a = is_null ( $a ) ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
-		if( ( !is_null (($a = $sucursalA->getMargenUtilidad()) ) ) & ( ! is_null ( ($b = $sucursalB->getMargenUtilidad()) ) ) ){
-				$sql .= " margen_utilidad >= ? AND margen_utilidad <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " margen_utilidad = ? AND"; 
-			$a = is_null ( $a ) ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
-		if( ( !is_null (($a = $sucursalA->getDescuento()) ) ) & ( ! is_null ( ($b = $sucursalB->getDescuento()) ) ) ){
-				$sql .= " descuento >= ? AND descuento <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " descuento = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

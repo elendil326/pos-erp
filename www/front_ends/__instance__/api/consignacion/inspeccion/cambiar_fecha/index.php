@@ -11,6 +11,6 @@
 require_once("../../../../../../../server/bootstrap.php");
 require_once("api/api.consignacion.inspeccion.cambiar_fecha.php");
 
-$api = new ApiConsignacionInspeccionCambiar_fecha();
+$api = new ApiConsignacionInspeccionCambiarFecha();
 $apiOutput = ApiOutputFormatter::getInstance();
 $apiOutput->PrintOuput($api);

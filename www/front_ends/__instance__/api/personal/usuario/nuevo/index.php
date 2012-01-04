@@ -1,6 +1,6 @@
 <?php
 /**
-  * GET api/personal/usuario/nuevo
+  * POST api/personal/usuario/nuevo
   * Insertar un nuevo usuario.
   *
   * Insertar un nuevo usuario. El usuario que lo crea sera tomado de la sesion actual y la fecha sera tomada del servidor. Un usuario no puede tener mas de un rol en una misma sucursal de una misma empresa.

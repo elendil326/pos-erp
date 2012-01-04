@@ -14,6 +14,8 @@
  	 *
  	 * @param id_clasificacion_proveedor int Id de la clasificacion del proveedor a editar
  	 * @param descripcion string Descripcion de la clasificacion del proveedor
+ 	 * @param id_tarifa_compra int Id de la tarifa de compra que se aplicara a los proveedores de esta clasificacion. Si un usuario tiene esta clasificacion pero tiene otra tarifa entonces no se sobreescribira
+ 	 * @param id_tarifa_venta int Id de la tarifa de venta que se aplicara a los proveedores de esta clasificacion. Si un usuario tiene esta clasificacion pero tiene otra tarifa entonces no se sobreescribira
  	 * @param impuestos json Ids de los impuestos de la clasificacion del proveedor
  	 * @param nombre string Nombre de la clasificacion del proveedor
  	 * @param retenciones json Ids de las retenciones de la clasificacion de  proveedor
@@ -22,6 +24,8 @@
 	(
 		$id_clasificacion_proveedor, 
 		$descripcion = null, 
+		$id_tarifa_compra = null, 
+		$id_tarifa_venta = null, 
 		$impuestos = null, 
 		$nombre = null, 
 		$retenciones = null
@@ -67,6 +71,8 @@
  	 *
  	 * @param nombre string Nombre de la clasificacion de proveedor
  	 * @param descripcion string Descripcion de la clasificacion del proveedor
+ 	 * @param id_tarifa_compra int Id de la tarifa de compra por default que se aplica a los proveedores de esta clasificacion
+ 	 * @param id_tarifa_venta int Id de la tarifa de venta por default que se aplica a los proveedores de esta clasificacion
  	 * @param impuestos json Ids de impuestos que afectan esta clasificacion de proveedor
  	 * @param retenciones json Ids de retenciones que afecta esta clasificacion de proveedor
  	 * @return id_clasificacion_proveedor int Id de la clasificacion del proveedor
@@ -75,6 +81,8 @@
 	(
 		$nombre, 
 		$descripcion = null, 
+		$id_tarifa_compra = null, 
+		$id_tarifa_venta = null, 
 		$impuestos = null, 
 		$retenciones = null
 	);  
@@ -99,8 +107,10 @@
  	 * @param email string E-mail del proveedor
  	 * @param id_ciudad int Id de la ciudad de la direccion del proveedor
  	 * @param id_moneda int Id de la moneda que maneja el proveedor
+ 	 * @param id_tarifa_compra int Id de la tarifa de compra por default que aplicara a este proveedor
+ 	 * @param id_tarifa_venta int Id de la tarifa de venta por default que aplicara a este proveedor
  	 * @param id_tipo_proveedor int El id del tipo de proveedor
- 	 * @param impuestos json Arreglo de enteros que contendr&#65533;n los ids de impuestos por comprar a este proveedor
+ 	 * @param impuestos json Arreglo de enteros que contendran los ids de impuestos por comprar a este proveedor
  	 * @param limite_credito float Limite de credito que otorga el proveedor
  	 * @param nombre string Nombre del proveedor
  	 * @param numero_exterior string Numero exterior de la direccion del proveedor
@@ -130,6 +140,8 @@
 		$email = null, 
 		$id_ciudad = null, 
 		$id_moneda = null, 
+		$id_tarifa_compra = null, 
+		$id_tarifa_venta = null, 
 		$id_tipo_proveedor = null, 
 		$impuestos = null, 
 		$limite_credito = null, 
@@ -200,6 +212,8 @@
  	 * @param email string Correo electronico del proveedor
  	 * @param id_ciudad int Id de la ciudad de la direccion del proveedor
  	 * @param id_moneda int Id de la moneda preferente del proveedor
+ 	 * @param id_tarifa_compra int Id de la tarifa de compra por default que aplicara a este porveedor
+ 	 * @param id_tarifa_venta int Id de la tarifa de venta por default que aplicara a etse proveedor
  	 * @param impuestos json Ids de los impuestos que afectan a este proveedor
  	 * @param limite_credito float Limite de credito que otorga el proveedor
  	 * @param numero_exterior string Numero exterior de la direccion del proveedor
@@ -232,6 +246,8 @@
 		$email = null, 
 		$id_ciudad = null, 
 		$id_moneda = null, 
+		$id_tarifa_compra = null, 
+		$id_tarifa_venta = null, 
 		$impuestos = null, 
 		$limite_credito = null, 
 		$numero_exterior = null, 

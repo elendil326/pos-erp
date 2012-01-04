@@ -8,2063 +8,497 @@ require_once("interfaces/Precio.interface.php");
 	
   class PrecioController implements IPrecio{
   
-      
-        //Metodo para pruebas que simula la obtencion del id de la sucursal actual
-        private static function getSucursal()
-        {
-            return 1;
-        }
-        
-        //metodo para pruebas que simula la obtencion del id de la caja actual
-        private static function getCaja()
-        {
-            return 1;
-        }
-        
-        
-        /*
-         *Se valida que un string tenga longitud en un rango de un maximo inclusivo y un minimo exclusvio.
-         *Regresa true cuando es valido, y un string cuando no lo es.
-         */
-          private static function validarString($string, $max_length, $nombre_variable,$min_length=0)
-	{
-		if(strlen($string)<=$min_length||strlen($string)>$max_length)
-		{
-		    return "La longitud de la variable ".$nombre_variable." proporcionada (".$string.") no esta en el rango de ".$min_length." - ".$max_length;
-		}
-		return true;
-        }
+  
+	/**
+ 	 *
+ 	 *Activa una tarifa preciamente eliminada
+ 	 *
+ 	 * @param id_tarifa int Id de la tarifa a activar
+ 	 **/
+	public static function ActivarTarifa
+	(
+		$id_tarifa
+	)
+	{  
+  
+  
+	}
+  
+	/**
+ 	 *
+ 	 *Asigna el default a una tarifa de compra. La tarifa default es la que se usara en todas las compras a menos que el usuario indique otra tarifa.
+
+Solo se puede elegir una tarifa de tipo compra.
+ 	 *
+ 	 * @param id_tarifa int Id de la tarifa de compra a elegir como default del sistema
+ 	 **/
+	public static function CompraSetDefaultTarifa
+	(
+		$id_tarifa
+	)
+	{  
+  
+  
+	}
+  
+	/**
+ 	 *
+ 	 *Crea una nueva tarifa 
+ 	 *
+ 	 * @param id_moneda int Id de la moneda en la que se manejaran los valores de precios en esta tarifa
+ 	 * @param nombre string nombre de la tarifa
+ 	 * @param tipo_tarifa string Puede ser "compra" o "venta" y sirve para identificar si la tarifa se aplicara en compras o en ventas
+ 	 * @param activa bool Si esta tarifa estara activa al momento de su creacion
+ 	 * @param default bool Si se quiere que esta tarifa sea la default del sistema
+ 	 * @return id_tarifa int Id de la tarifa creada
+ 	 **/
+	public static function NuevaTarifa
+	(
+		$id_moneda, 
+		$nombre, 
+		$tipo_tarifa, 
+		$activa = null, 
+		$default = null
+	)
+	{  
+  
+  
+	}
+  
+	/**
+ 	 *
+ 	 *Edita la informacion b?sica de una tarifa, su nombre, su tipo de tarifa o su moneda. Si se edita el tipo de tarifa se tiene que verificar que esta tarifa no este siendo usada por default en una tarifa de su tipo anterior. 
+
+Ejemplo: La tarifa 1 es tarifa de compra, el usuario 1 tiene como default de tarifa de compra la tarifa 1. Si queremos editar el tipo de tarifa de la tarifa 1 a una tarifa de venta tendra que mandar error, especificando que la tarifa esta siendo usada como tarifa de compra por el usuario 1.
+
+Los parametros que no sean explicitamente nulos seran tomados como edicion.
+ 	 *
+ 	 * @param id_tarifa int Id de la tarifa que se va a editar
+ 	 * @param id_moneda int Id de la moneda con la que se manejaran las operaciones de esta tarifa
+ 	 * @param nombre string Nombre de la tarifa
+ 	 * @param tipo_tarifa string Puede ser "compra" o "venta" e indica si la tarifa sera usada en las operaciones de compra o de venta
+ 	 **/
+	public static function EditarTarifa
+	(
+		$id_tarifa, 
+		$id_moneda = null, 
+		$nombre = null, 
+		$tipo_tarifa = null
+	)
+	{  
+  
+  
+	}
+  
+	/**
+ 	 *
+ 	 *Duplica la version obtenida junto con todas sus reglas y la guarda en otra tarifa. Este metodo sirve cuando una misma version con todas sus reglas aplica a mas de una tarifa.
+
+Al duplicar una version, las reglas duplicadas con ella actualizan su id de la version a la nueva version creada.
+
+Cuando una version activa y/o default se duplica, al guardarse en la otra tarifa pierde estas propiedades.
+ 	 *
+ 	 * @param id_tarifa int Id de la tarifa en la que se guardara la version con todas sus reglas
+ 	 * @param id_version int Id de la version a duplicar
+ 	 * @return id_version int Id de la version creada
+ 	 **/
+	public static function DuplicarVersion
+	(
+		$id_tarifa, 
+		$id_version
+	)
+	{  
+  
+  
+	}
+  
+	/**
+ 	 *
+ 	 *Selecciona como default para las ventas una tarifa de venta. Esta tarifa sera usada para todas las ventas a menos que el usuario indique otra tarifa de venta.
+
+Solo puede asignarse como default de ventas una tarifa de tipo venta
+ 	 *
+ 	 * @param id_tarifa int Id de la tarifa a poner como default
+ 	 **/
+	public static function VentaSetDefaultTarifa
+	(
+		$id_tarifa
+	)
+	{  
+  
+  
+	}
+  
+	/**
+ 	 *
+ 	 *Edita la informacion basica de una version. El nombre, la fecha de inicio y la fecha de fin.
+
+?Sera necesario permitir que el usuario cambie una version de una tarifa a otra tarifa?
+ 	 *
+ 	 * @param id_version int Id de la version a editar
+ 	 * @param fecha_fin string Fecha a aprtir de la cual se dejaran de aplicar las reglas de esta version. Si esta fecha ya paso se aplicaran las reglas de la version default de la tarifa
+ 	 * @param fecha_inicio string Fecha a partir de la cual se aplicaran las reglas de esta version. Si esta fecha aun no llega, se aplicaran las reglas de la version default de la tarifa.
+ 	 * @param nombre string Nombre de la version
+ 	 **/
+	public static function EditarVersion
+	(
+		$id_version, 
+		$fecha_fin = null, 
+		$fecha_inicio = null, 
+		$nombre = null
+	)
+	{  
+  
+  
+	}
+  
+	/**
+ 	 *
+ 	 *Activa una version. Como solo puede haber una version activa por tarifa, este metodo desactiva la version actualmente activa de la tarifa y activa la version obtenida como parametro.
+ 	 *
+ 	 * @param id_version int Id de la version a activar
+ 	 **/
+	public static function ActivarVersion
+	(
+		$id_version
+	)
+	{  
+  
+  
+	}
+  
+	/**
+ 	 *
+ 	 *Desactiva una tarifa. Para poder desactivar una tarifa, esta no tiene que estar asignada como default para ningun usuario. La tarifa default del sistema no puede ser eliminada.
+
+La tarifa instalada por default no puede ser eliminada
+ 	 *
+ 	 * @param id_tarifa int Id de la tarifa a eliminar
+ 	 **/
+	public static function EliminarTarifa
+	(
+		$id_tarifa
+	)
+	{  
+  
+  
+	}
+  
+	/**
+ 	 *
+ 	 *Pone como default a la version obtenida para esta tarifa. Solo puede haber una version default por tarifa, asi que este metodo le quita el default a la version que lo era anteriormente y lo pone en la version obtenida como parametro.
+
+Una version default no puede caducar.
+ 	 *
+ 	 * @param id_version int Id de la version a la que se le dara el default
+ 	 **/
+	public static function SetDefaultVersion
+	(
+		$id_version
+	)
+	{  
+  
+  
+	}
+  
+	/**
+ 	 *
+ 	 *Elimina una version permamentemente de la base de datos junto a todas sus reglas.
+
+La version default de la tarifa no puede ser eliminada ni la version activa.
+
+La version por default de la tarifa instalada por default no puede ser eliminada
+ 	 *
+ 	 * @param id_version int Id de la version a eliminar
+ 	 **/
+	public static function EliminarVersion
+	(
+		$id_version
+	)
+	{  
+  
+  
+	}
+  
+	/**
+ 	 *
+ 	 *Crea una nueva version para una tarifa.
+
+Si no se reciben fechas de inicio o fin, se da por hecho que la version no caduca. Si solo se recibe fecha de fin, se toma como la fecha de inicio la fecha actual del servidor. Si solo se recibe fecha de inicio, se toma como fecha final la maxima permitida por MySQL (9999-12-31 23:59:59).
+
+La version por default de una tarifa no puede caducar.
+
+Las tarifas solo pueden tener una version activa.
+ 	 *
+ 	 * @param id_tarifa int Id de la tarifa a la cual pertenece esta version
+ 	 * @param nombre string Nombre de la version
+ 	 * @param activa bool Determina si esta version sera la version activa para esta tarifa
+ 	 * @param default bool Si esta sera la version por default de esta tarifa. Una version por default no puede caducar
+ 	 * @param fecha_fin string Fecha a partir de la cual se dejaran de aplicar las reglas de esta version. Cuando pase esta fecha, se usaran las reglas de la version por default de esta tarifa
+ 	 * @param fecha_inicio string Fecha a partir de la cual se aplicaran las reglas de esta version. Si aun no llega etsa fecha, se usaran las reglas de la version por default de esta tarifa
+ 	 * @return id_version int Id de la version creada
+ 	 **/
+	public static function NuevaVersion
+	(
+		$id_tarifa, 
+		$nombre, 
+		$activa = null, 
+		$default = null, 
+		$fecha_fin = null, 
+		$fecha_inicio = null
+	)
+	{  
+  
+  
+	}
+  
+	/**
+ 	 *
+ 	 *Crea una nueva regla para una version. 
+
+Una regla que no tiene producto, categoria de producto o alguna otra relacion, es una regla que se aplica a todos los productos, servicios y paquetes.
+
+Las secuencias de las reglas no se pueden repetir.
+
+La formula que siguen las reglas para obtener el precio fina es la siguiente: 
+
+       Precio Final = Precio Base * (1 + porcentaje_utilidad) + utilidad_neta
+
+Donde :
+ 
+    Precio Base : Es obtenido de la tarifa con la que se relaciona esta regla. 
+                  Si no se relaciona con ninguna tarifa, entonces lo toma del 
+                  precio o costo (dependiendo del metodo de costeo) del producto,servicio
+                  o paquete.
+
+    porcentaje_utilidad:El porcentaje de utilidad que se le ganara al precio o costo base.
+                        Puede ser negativo
+
+    utilidad_neta: La utilidad neta que se ganara al comerciar este producto,servicio o
+                   paquete. Puede ser negativo.
 
 
-        /*
-         * Se valida que un numero este en un rango de un maximo y un minimo inclusivos
-         * Regresa true cuando es valido, y un string cuando no lo es
-         */
-	private static function validarNumero($num, $max_length, $nombre_variable, $min_length=0)
-	{
-	    if($num<$min_length||$num>$max_length)
-	    {
-	        return "La variable ".$nombre_variable." proporcionada (".$num.") no esta en el rango de ".$min_length." - ".$max_length;
-	    }
-	    return true;
-	}
-      
-        /*
-         * Valida el boleano es_margen_utilidad
-         */
-        private static function validarEsMargenUtilidad($es_margen_utilidad)
-        {
-            if(!is_null($es_margen_utilidad))
-            {
-                $e = self::validarNumero($es_margen_utilidad, 1, "es margen de utilidad");
-                if(is_string($e))
-                    return $e;
-            }
-            
-            //no se encontro error
-            return true;
-        }
-        
-        /*
-         * Valida que el precio utilidad este en rango
-         */
-        private static function validarPrecioUtilidad($precio_utilidad)
-        {
-            $e = self::validarNumero($precio_utilidad, 1.8e200, "precio utilidad");
-            if(is_string($e))
-                return $e;
-            
-            //no se encontro error
-            return true;
-        }
-        
-        /*
-         * Valida que el servicio exista y que este activo
-         */
-        private static function validarServicio($id_servicio)
-        {
-            $servicio = ServicioDAO::getByPK($id_servicio);
-            
-            if(is_null($servicio))
-                return "El servicio ".$id_servicio." no existe";
+Al asignar una tarifa base a una regla se verifica que no haya una dependencia circular.
 
-            if(!$servicio->getActivo())
-                return "El servicio ".$id_servicio." no esta activo";
-            
-            //no se encontro error
-            return true;
-        }
-        
-        /*
-         * Valida que el usuario exista y que este activo
-         */
-        private static function validarUsuario($id_usuario)
-        {
-            $usuario = UsuarioDAO::getByPK($id_usuario);
-            
-            if(is_null($usuario))
-                return "El usuario ".$id_usuario." no existe";
+Una misma regla puede aplicar a un producto, una clasificacion de producto, un servicio, una clasificacion de servicio y un paquete a la vez.
+ 	 *
+ 	 * @param id_version int Id de la version a la que pertenecera esta regla
+ 	 * @param nombre string Nombre de la regla
+ 	 * @param secuencia int Numero de secuencia de la regla, sirve para definir prioridades entre las reglas.
+ 	 * @param cantidad_minima int Cantidad minima que debe cumplirse de objetos para que esta regla se cumpla
+ 	 * @param id_clasificacion_producto int Id de la clasificacion del producto a la que se le aplicara esta regla
+ 	 * @param id_clasificacion_servicio int Id de la clasificacion del servicio a la cual se le aplicara esta regla
+ 	 * @param id_paquete int Id del paquete al cal se le aplicara esta regla
+ 	 * @param id_producto int Id del producto al que se le aplicara esta regla
+ 	 * @param id_servicio int Id del servicio al cual se le aplicara esta regla
+ 	 * @param id_tarifa int Id de la tarifa que se usara para determinar el precio base del objeto
+ 	 * @param id_unidad int La regla se aplicara a los productos (especificados por el id_producto o id_clasificacion_producto) que esten en esta unidad. Si un id de producto no ha sido especificado, este valor se ignora.
+ 	 * @param margen_max float Pendiente descripcion por Manuel
+ 	 * @param margen_min float Pendiente descripcion por Manuel
+ 	 * @param metodo_redondeo float Pendiente descricpion por manuel
+ 	 * @param porcentaje_utilidad float Porcentaje de utilidad, va de -1 a 1
+ 	 * @param utilidad_neta float La utilidad neta que se ganara, puede ser negativa indicando un descuento
+ 	 * @return id_regla int Id de la regla creada
+ 	 **/
+	public static function NuevaRegla
+	(
+		$id_version, 
+		$nombre, 
+		$secuencia, 
+		$cantidad_minima = null, 
+		$id_clasificacion_producto = null, 
+		$id_clasificacion_servicio = null, 
+		$id_paquete = null, 
+		$id_producto = null, 
+		$id_servicio = null, 
+		$id_tarifa = null, 
+		$id_unidad = null, 
+		$margen_max = 0, 
+		$margen_min = 0, 
+		$metodo_redondeo = 0, 
+		$porcentaje_utilidad = 0, 
+		$utilidad_neta = 0
+	)
+	{  
+  
+  
+	}
+  
+	/**
+ 	 *
+ 	 *Lista las versiones existentes, se puede filtrar por la tarifa y ordenar por los atributos de al tabla
+ 	 *
+ 	 * @param id_tarifa int Si este valor es obtenido, se listaran las versiones pertenecientes a esta tarifa
+ 	 * @param orden string nombre de al columna por la cual sera ordenada l alista
+ 	 * @return lista_versiones json Arreglo de versiones
+ 	 **/
+	public static function ListaVersion
+	(
+		$id_tarifa = null, 
+		$orden = null
+	)
+	{  
+  
+  
+	}
+  
+	/**
+ 	 *
+ 	 *Lista las tarifas existentes. Se puede ordenar de acuerdo a los atributos de la tabla y se puede filtrar por el tipo de tarifa, la moneda que usa y por el valor de activa.
+ 	 *
+ 	 * @param activa bool Si este valor es obtenido, se listaran las tarifas que cuyo valor de activa sea como el obtenido
+ 	 * @param id_moneda int Si es obtenido este valor, se listaran las tarifas que tengan el valor de moneda como el obtenido.
+ 	 * @param orden string El nombre de la columna de la tabla por la cual se ordenara la lista
+ 	 * @param tipo_tarifa string Si es obtenido, se listaran las tarifas que tengan el mismo valor de tipo de tarifa que este.
+ 	 * @return lista_tarifas json Arreglo de tarifas
+ 	 **/
+	public static function ListaTarifa
+	(
+		$activa = null, 
+		$id_moneda = null, 
+		$orden = null, 
+		$tipo_tarifa = null
+	)
+	{  
+  
+  
+	}
+  
+	/**
+ 	 *
+ 	 *Duplica una tarifa con todas sus versiones, y cada una de ellas con todas sus reglas. Este metodo sirve cuando se tiene una tarifa muy completa y se quiere hacer una tarifa muy similar pero con unas ligeras modificaciones.
 
-            if(!$usuario->getActivo())
-                return "El usuario ".$id_usuario." no esta activo";
-            
-            //no se encontro error
-            return true;
-        }
-        
-        /*
-         * Valida que el producto exista y que este activo
-         */
-        private static function validarProducto($id_producto)
-        {
-            $producto = ProductoDAO::getByPK($id_producto);
-            if(is_null($producto))
-                return "El producto ".$id_producto." no existe";
-            
-            if(!$producto->getActivo())
-                return "EL producto ".$id_producto." no esta activo";
-            
-            //no se encontro error
-            return true;
-        }
-        
-        /*
-         * Valida que el tipo de cliente exista
-         */
-        private static function validarClasificacionCliente($id_clasificacion_cliente)
-        {
-            if(is_null(ClasificacionClienteDAO::getByPK($id_clasificacion_cliente)))
-                    return "La clasificacion de cliente ".$id_clasificacion_cliente." no existe";
-            
-            //no se encontro error
-            return true;
-        }
-        
-        /*
-         * Valida que el paquete exista y este activo
-         */
-        private static function validarPaquete($id_paquete)
-        {
-            $paquete = PaqueteDAO::getByPK($id_paquete);
-            if(is_null($paquete))
-                return "El paquete ".$id_paquete." no existe";
-            
-            if(!$paquete->getActivo())
-                return "El paquete ".$id_paquete." no esta activo";
-            
-            //no se encontro error
-            return true;
-        }
-        
-        /*
-         * Valida que el rol exista
-         */
-        private static function validarRol($id_rol)
-        {
-            if(is_null(RolDAO::getByPK($id_rol)))
-                return "El rol ".$id_rol." no existe";
-            
-            //no se encontro error
-            return true;
-        }
-        
-        
-        
-        
-      
-      
-      
-      
-  
-	/**
+Al duplicar la tarifa, se actualizan sus versiones default y activa por los ids generados al duplicar las versiones.
+
+La tarifa duplicada pierde ela tributo default.
  	 *
- 	 *Elimina la relacion del precio de un servicio con un tipo de cliente
- 	 *
- 	 * @param id_tipo_cliente int 
- 	 * @param servicios json Arreglo de ids de servicios que perderan el precio preferencial
+ 	 * @param id_moneda int Id de la moneda que aplicara para la nueva tarifa
+ 	 * @param id_tarifa int Id de la tarifa a duplicar
+ 	 * @param nombre string Nombre de la nueva tarifa
+ 	 * @param tipo_tarifa string Puede ser "compra" o "venta" e indica si la nueva tarifa sera aplicada para compras o ventas
+ 	 * @return id_tarifa int Id de la tarifa creada
  	 **/
-	public static function Eliminar_precio_tipo_clienteServicio
+	public static function DuplicarTarifa
 	(
-		$id_tipo_cliente, 
-		$servicios
+		$id_moneda, 
+		$id_tarifa, 
+		$nombre, 
+		$tipo_tarifa
 	)
 	{  
-            Logger::log("Eliminando el precio de los servicios para el tipo de cliente ".$id_tipo_cliente);
-            
-            //valida los servicios
-            $servicios = object_to_array($servicios);
-            
-            if(!is_array($servicios))
-            {
-                Logger::error("Los servicios son invalidos");
-                throw new Exception("Los servicios son invalidos",901);
-            }
-            
-            //Se inicializa el registro que se borrara. Se recorrera la lista de servicios obtenida
-            //y se eliminaran los registros correspondientes
-            DAO::transBegin();
-            try
-            {
-                foreach($servicios as $servicio)
-                {
-                    $precio_servicio_tipo_cliente = PrecioServicioTipoClienteDAO::getByPK($servicio, $id_tipo_cliente);
-                    if(is_null($precio_servicio_tipo_cliente))
-                            throw new Exception("El tipo de cliente ".$id_tipo_cliente." no tiene precio preferencial con el servicio ".$servicio,901);
-                    
-                    PrecioServicioTipoClienteDAO::delete($precio_servicio_tipo_cliente);
-                }
-            }
-            catch(Exception $e)
-            {
-                DAO::transRollback();
-                Logger::error("No se han podido eliminar los precios: ".$e);
-                if($e->getCode()==901)
-                    throw new Exception ("No se han podido eliminar todos los precios", 901);
-                throw new Exception("No se han podido eliminar todos los precios",901);
-            }
-            DAO::transEnd();
-            Logger::log("Precios eliminados correctamente");
+  
+  
 	}
   
 	/**
  	 *
- 	 *Edita la relacion de precio con uno o varios servicios para un usuario
+ 	 *Edita la informacion basica de una regla. 
+
+Los parametros recibidos seran tomados para edicion.
+
+?Sera necesario dar la oportunidad al usuario de cambiar la version a la que pertence la regla?
  	 *
- 	 * @param id_usuario int 
- 	 * @param servicios_precios_utilidad json Arreglo de objetos que contendran un id servicio con un precio o margen de utilidad con el que se vendera este servicio
+ 	 * @param id_regla int Id de la regla a editar
+ 	 * @param cantidad_minima int Cantidad minima de objetos para que esta regla se cumpla
+ 	 * @param id_clasificacion_producto int Id de la categoria del producto sobre la cual actuara esta regla
+ 	 * @param id_clasificacion_servicio int Id de la clasificacion de servicio sobre la cual actuara esta regla
+ 	 * @param id_paquete int Id del paquete sobre el cual actuara esta regla
+ 	 * @param id_producto int Id del producto sobre el cual actuara esta regla
+ 	 * @param id_servicio int Id del servicio sobre el cual actuara esta regla
+ 	 * @param id_tarifa int Id de la tarifa de donde se obtendra el precio base
+ 	 * @param id_unidad int La regla se aplicara a los productos (especificados por el id_producto o id_clasificacion_producto) que esten en esta unidad. Si un id de producto no ha sido especificado, este valor se ignora.
+ 	 * @param margen_max float Falta definir por Manuel
+ 	 * @param margen_min float Falta definir por Manuel
+ 	 * @param metodo_redondeo float Falta definir por Manuel
+ 	 * @param nombre string Nombre del usuario
+ 	 * @param porcentaje_utilidad float Porncetaje de utilidad que se ganara al comercia con este objeto
+ 	 * @param secuencia int Numero de secuencia de esta regla
+ 	 * @param utilidad_neta float Utilidad neta que s eganara al comerciar con este objeto
  	 **/
-	public static function Editar_precio_usuarioServicio
+	public static function EditarRegla
 	(
-		$id_usuario, 
-		$servicios_precios_utilidad
+		$id_regla, 
+		$cantidad_minima = null, 
+		$id_clasificacion_producto = null, 
+		$id_clasificacion_servicio = null, 
+		$id_paquete = null, 
+		$id_producto = null, 
+		$id_servicio = null, 
+		$id_tarifa = null, 
+		$id_unidad = null, 
+		$margen_max = null, 
+		$margen_min = null, 
+		$metodo_redondeo = null, 
+		$nombre = null, 
+		$porcentaje_utilidad = null, 
+		$secuencia = null, 
+		$utilidad_neta = null
 	)
 	{  
-            Logger::log("Editando precios de los servicios para el usuario ".$id_usuario);
-            
-            //valida el arreglo de servicios
-            $servicios_precios_utilidad = object_to_array($servicios_precios_utilidad);
-            
-            if(!is_array($servicios_precios_utilidad))
-            {
-                Logger::error("Los servicios recibidos son invalidos");
-                throw new Exception("Los servicios recibidos son invalidos",901);
-            }
-            
-            //valida al usuario obtendio
-            $validar = self::validarUsuario($id_usuario);
-            if(is_string($validar))
-            {
-                Logger::error($validar);
-                throw new Exception($validar,901);
-            }
-            
-            //Se inicializa el registro a editar. Si alguno de los registros no existe, se guardara
-            $precio_servicio_usuario = new PrecioServicioUsuario( array( "id_usuario" => $id_usuario ) );
-            DAO::transBegin();
-            try
-            {
-                foreach($servicios_precios_utilidad as $servicio_precio_utilidad)
-                {
-                    
-                    if
-                    (
-                            !array_key_exists("id_servicio", $servicio_precio_utilidad)         ||
-                            !array_key_exists("precio_utilidad", $servicio_precio_utilidad)     ||
-                            !array_key_exists("es_margen_utilidad", $servicio_precio_utilidad)
-                    )
-                    {
-                        throw new Exception("Los servicios no tienen los parametros necesarios",901);
-                    }
-                    
-                    $validar = self::validarServicio($servicio_precio_utilidad["id_servicio"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $validar = self::validarPrecioUtilidad($servicio_precio_utilidad["precio_utilidad"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $validar = self::validarEsMargenUtilidad($servicio_precio_utilidad["es_margen_utilidad"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $precio_servicio_usuario->setEsMargenUtilidad($servicio_precio_utilidad["es_margen_utilidad"]);
-                    $precio_servicio_usuario->setIdServicio($servicio_precio_utilidad["id_servicio"]);
-                    $precio_servicio_usuario->setPrecioUtilidad($servicio_precio_utilidad["precio_utilidad"]);
-                    PrecioServicioUsuarioDAO::save($precio_servicio_usuario);
-                }
-            }
-            catch(Exception $e)
-            {
-                DAO::transRollback();
-                Logger::error("No se han podido editar todos los precios para el usuario ".$id_usuario." : ".$e);
-                if($e->getCode()==901)
-                    throw new Exception("No se han podido editar todos los precios para el usuario: ".$e->getMessage(),901);
-                throw new Exception("No se han podido editar todos los precios para el usuario",901);
-            }
-            DAO::transEnd();
-            Logger::log("Precios editados exitosamente");
+  
+  
 	}
   
 	/**
  	 *
- 	 *Elimina la relacion del precio de un servicio con un usuario
+ 	 *Elimina una regla. La regla por default de l aversion por default de la tarifa por default no puede ser eliminada
  	 *
- 	 * @param id_usuario string 
- 	 * @param servicios json Arreglo de ids de servicios que perderan el precio preferencial
+ 	 * @param id_regla int Id de la regla a eliminar
  	 **/
-	public static function Eliminar_precio_usuarioServicio
+	public static function EliminarRegla
 	(
-		$id_usuario, 
-		$servicios
+		$id_regla
 	)
 	{  
-            Logger::log("ELiminando los precios de servicio para el usuario ".$id_usuario);
-            
-            //valida los servicios
-            $servicios = object_to_array($servicios);
-            
-            if(!is_array($servicios))
-            {
-                Logger::error("Los servicios son invalidos");
-                throw new Exception("Los servicios son invalidos",901);
-            }
-            
-            //Se inicializa el registro a eliminar y se elimina
-            DAO::transBegin();
-            try
-            {
-                foreach($servicios as $servicio)
-                {
-                    $precio_servicio_usuario = PrecioServicioUsuarioDAO::getByPK($servicio, $id_usuario);
-                    if(is_null($precio_servicio_usuario))
-                        throw new Exception("El usuario ".$id_usuario." no tiene precio especial para el servicio ".$servicio,901);
-                    
-                    PrecioServicioUsuarioDAO::delete($precio_servicio_usuario);
-                }
-            }
-            catch(Exception $e)
-            {
-                DAO::transRollback();
-                Logger::error("No se pudieron eliminar los precios para servicio del usuario ".$id_usuario." : ".$e);
-                if($e->getCode()==901)
-                    throw new Exception("No se pudieron eliminar los precios para servicio del usuario: ".$e->getMessage(),901);
-                throw new Exception("No se pudieron eliminar los precios para servicio del usuario",901);
-            }
-            DAO::transEnd();
-            Logger::log("Precios de servicios eliminados exitosamente");
-            
+  
+  
 	}
   
 	/**
  	 *
- 	 *Relaciona un usuario con servicios a un precio o utilidad 
+ 	 *Lista las reglas existentes. Puede filtrarse por la version, por producto, por unidad, por categoria de producto o servicio, por servicio o por paquete, por tarifa base o por alguna combinacion de ellos.
  	 *
- 	 * @param id_usuario int 
- 	 * @param servicios_precios_utilidad json Arreglo de objetos que contendran un id servicio con un precio o margen de utilidad con el que se vendera este servicio
+ 	 * @param id_clasificacion_producto int Si se recibe este parametro, se lsitaran las reglas que afectan a esta clasificacion de producto
+ 	 * @param id_clasificacion_servicio int Si se recibe este parametro, se listaran las reglas que afecten a esta clasificacion de servicio
+ 	 * @param id_paquete int Si se recibe este parametro, se listaran las reglas que afecten a este paquete
+ 	 * @param id_producto int Si se recibe este parametro se listaran las reglas que afectan a este producto
+ 	 * @param id_servicio int Si se recibe este parametro se listaran las reglas que afecten a este servicio
+ 	 * @param id_tarifa int Si se recibe este parametro, se listaran las reglas que se basen en esta tarifa
+ 	 * @param id_unidad int Si se recibe este parametro, se listaran las reglas que afecten a esta unidad
+ 	 * @param id_version int Si se obtiene este parametro se listaran las relas de esta version
+ 	 * @return lista_reglas int Arreglo de reglas
  	 **/
-	public static function Nuevo_precio_usuarioServicio
+	public static function ListaRegla
 	(
-		$id_usuario, 
-		$servicios_precios_utilidad
+		$id_clasificacion_producto = null, 
+		$id_clasificacion_servicio = null, 
+		$id_paquete = null, 
+		$id_producto = null, 
+		$id_servicio = null, 
+		$id_tarifa = null, 
+		$id_unidad = null, 
+		$id_version = null
 	)
 	{  
-            Logger::log("Registrando precios de los servicios para el usuario ".$id_usuario);
-            
-            //valida el arreglo de servicios
-            $servicios_precios_utilidad = object_to_array($servicios_precios_utilidad);
-            
-            if(!is_array($servicios_precios_utilidad))
-            {
-                Logger::error("Los servicios recibidos son invalidos");
-                throw new Exception("Los servicios recibidos son invalidos",901);
-            }
-            
-            //valida al usuario obtendio
-            $validar = self::validarUsuario($id_usuario);
-            if(is_string($validar))
-            {
-                Logger::error($validar);
-                throw new Exception($validar,901);
-            }
-            
-            //Se inicializa el registro y se guarda
-            $precio_servicio_usuario = new PrecioServicioUsuario( array( "id_usuario" => $id_usuario ) );
-            DAO::transBegin();
-            try
-            {
-                foreach($servicios_precios_utilidad as $servicio_precio_utilidad)
-                {
-                    
-                    if
-                    (
-                            !array_key_exists("id_servicio", $servicio_precio_utilidad)         ||
-                            !array_key_exists("precio_utilidad", $servicio_precio_utilidad)     ||
-                            !array_key_exists("es_margen_utilidad", $servicio_precio_utilidad)
-                    )
-                    {
-                        throw new Exception("Los servicios no tienen los parametros necesarios",901);
-                    }
-                    
-                    $validar = self::validarServicio($servicio_precio_utilidad["id_servicio"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $validar = self::validarPrecioUtilidad($servicio_precio_utilidad["precio_utilidad"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $validar = self::validarEsMargenUtilidad($servicio_precio_utilidad["es_margen_utilidad"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $precio_servicio_usuario->setEsMargenUtilidad($servicio_precio_utilidad["es_margen_utilidad"]);
-                    $precio_servicio_usuario->setIdServicio($servicio_precio_utilidad["id_servicio"]);
-                    $precio_servicio_usuario->setPrecioUtilidad($servicio_precio_utilidad["precio_utilidad"]);
-                    PrecioServicioUsuarioDAO::save($precio_servicio_usuario);
-                }
-            }
-            catch(Exception $e)
-            {
-                DAO::transRollback();
-                Logger::error("No se han podido guardar todos los precios para el usuario ".$id_usuario." : ".$e);
-                if($e->getCode()==901)
-                    throw new Exception("No se han podido guardar todos los precios para el usuario: ".$e->getMessage(),901);
-                throw new Exception("No se han podido guardar todos los precios para el usuario",901);
-            }
-            DAO::transEnd();
-            Logger::log("Precios guardados exitosamente");
+  
+  
 	}
   
 	/**
  	 *
- 	 *Edita la relacion de precio de uno o varios servicios con un rol
+ 	 *Duplica una regla y la guarda en otra version. Las reglas duplicadas actualizan el id de la version a la que pertenecen y mantienen todos sus datos.
  	 *
- 	 * @param id_rol int 
- 	 * @param servicios_precios_utilidad json Arreglo de objetos que contendran un id servicio con un precio o margen de utilidad con el que se vendera este servicio
+ 	 * @param id_regla int Id de la regla a duplicar
+ 	 * @param id_version int Id de la version a la cual se duplicara la regla
+ 	 * @return id_regla int Id de la regla creada
  	 **/
-	public static function Editar_precio_rolServicio
+	public static function DuplicarRegla
 	(
-		$id_rol, 
-		$servicios_precios_utilidad
+		$id_regla, 
+		$id_version
 	)
 	{  
-            Logger::log("Editando precios de los servicios para el rol ".$id_rol);
-            
-            //valida el arreglo de servicios
-            $servicios_precios_utilidad = object_to_array($servicios_precios_utilidad);
-            
-            if(!is_array($servicios_precios_utilidad))
-            {
-                Logger::error("Los servicios recibidos son invalidos");
-                throw new Exception("Los servicios recibidos son invalidos",901);
-            }
-            
-            //valida al rol obtendio
-            $validar = self::validarRol($id_rol);
-            if(is_string($validar))
-            {
-                Logger::error($validar);
-                throw new Exception($validar,901);
-            }
-            
-            //Se inicializa el registro a editar. Si alguno de los registros no existe, se guardara
-            $precio_servicio_rol = new PrecioServicioRol( array( "id_rol" => $id_rol ) );
-            DAO::transBegin();
-            try
-            {
-                foreach($servicios_precios_utilidad as $servicio_precio_utilidad)
-                {
-                    
-                    if
-                    (
-                            !array_key_exists("id_servicio", $servicio_precio_utilidad)         ||
-                            !array_key_exists("precio_utilidad", $servicio_precio_utilidad)     ||
-                            !array_key_exists("es_margen_utilidad", $servicio_precio_utilidad)
-                    )
-                    {
-                        throw new Exception("Los servicios no tienen los parametros necesarios",901);
-                    }
-                    
-                    $validar = self::validarServicio($servicio_precio_utilidad["id_servicio"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $validar = self::validarPrecioUtilidad($servicio_precio_utilidad["precio_utilidad"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $validar = self::validarEsMargenUtilidad($servicio_precio_utilidad["es_margen_utilidad"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $precio_servicio_rol->setEsMargenUtilidad($servicio_precio_utilidad["es_margen_utilidad"]);
-                    $precio_servicio_rol->setIdServicio($servicio_precio_utilidad["id_servicio"]);
-                    $precio_servicio_rol->setPrecioUtilidad($servicio_precio_utilidad["precio_utilidad"]);
-                    PrecioServicioRolDAO::save($precio_servicio_rol);
-                }
-            }
-            catch(Exception $e)
-            {
-                DAO::transRollback();
-                Logger::error("No se han podido editar todos los precios para el rol ".$id_rol." : ".$e);
-                if($e->getCode()==901)
-                    throw new Exception("No se han podido editar todos los precios para el rol: ".$e->getMessage(),901);
-                throw new Exception("No se han podido editar todos los precios para el rol",901);
-            }
-            DAO::transEnd();
-            Logger::log("Precios editados exitosamente");
-            
+  
+  
 	}
-  
-	/**
- 	 *
- 	 *Edita la relacion de precio con uno o varios servicios para un tipo de cliente
- 	 *
- 	 * @param id_tipo_cliente json 
- 	 * @param servicios_precios_utilidad int Arreglo de objetos que contendran un id servicio con un precio o margen de utilidad con el que se vendera este servicio
- 	 **/
-	public static function Editar_precio_tipo_clienteServicio
-	(
-		$id_tipo_cliente, 
-		$servicios_precios_utilidad
-	)
-	{  
-            Logger::log("Editando precios de los servicios para el tipo_cliente ".$id_tipo_cliente);
-            
-            //valida el arreglo de servicios
-            $servicios_precios_utilidad = object_to_array($servicios_precios_utilidad);
-            
-            if(!is_array($servicios_precios_utilidad))
-            {
-                Logger::error("Los servicios recibidos son invalidos");
-                throw new Exception("Los servicios recibidos son invalidos",901);
-            }
-            
-            //valida al tipo_cliente obtendio
-            $validar = self::validarClasificacionCliente($id_tipo_cliente);
-            if(is_string($validar))
-            {
-                Logger::error($validar);
-                throw new Exception($validar,901);
-            }
-            
-            //Se inicializa el registro a editar. Si alguno de los registros no existe, se guardara
-            $precio_servicio_tipo_cliente = new PrecioServicioTipoCliente( array( "id_tipo_cliente" => $id_tipo_cliente ) );
-            DAO::transBegin();
-            try
-            {
-                foreach($servicios_precios_utilidad as $servicio_precio_utilidad)
-                {
-                    
-                    if
-                    (
-                            !array_key_exists("id_servicio", $servicio_precio_utilidad)         ||
-                            !array_key_exists("precio_utilidad", $servicio_precio_utilidad)     ||
-                            !array_key_exists("es_margen_utilidad", $servicio_precio_utilidad)
-                    )
-                    {
-                        throw new Exception("Los servicios no tienen los parametros necesarios",901);
-                    }
-                    
-                    $validar = self::validarServicio($servicio_precio_utilidad["id_servicio"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $validar = self::validarPrecioUtilidad($servicio_precio_utilidad["precio_utilidad"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $validar = self::validarEsMargenUtilidad($servicio_precio_utilidad["es_margen_utilidad"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $precio_servicio_tipo_cliente->setEsMargenUtilidad($servicio_precio_utilidad["es_margen_utilidad"]);
-                    $precio_servicio_tipo_cliente->setIdServicio($servicio_precio_utilidad["id_servicio"]);
-                    $precio_servicio_tipo_cliente->setPrecioUtilidad($servicio_precio_utilidad["precio_utilidad"]);
-                    PrecioServicioTipoClienteDAO::save($precio_servicio_tipo_cliente);
-                }
-            }
-            catch(Exception $e)
-            {
-                DAO::transRollback();
-                Logger::error("No se han podido editar todos los precios para el tipo_cliente ".$id_tipo_cliente." : ".$e);
-                if($e->getCode()==901)
-                    throw new Exception ("No se han podido editar todos los precios para el tipo_cliente: ".$e->getMessage(),901);
-                throw new Exception("No se han podido editar todos los precios para el tipo_cliente",901);
-            }
-            DAO::transEnd();
-            Logger::log("Precios editados exitosamente");
-	}
-  
-	/**
- 	 *
- 	 *Elimina la relacion del precio de un producto con un rol
- 	 *
- 	 * @param id_rol int Id del rol a quitar el precio preferencial
- 	 * @param productos json Arreglo de ids de productos a los que se les quitara el precio preferencial
- 	 **/
-	public static function Eliminar_precio_rolProducto
-	(
-		$id_rol, 
-		$productos
-	)
-	{  
-            Logger::log("ELiminando los precios de producto para el rol ".$id_rol);
-            
-            //valida el arreglo de productos
-            $productos = object_to_array($productos);
-            
-            if(!is_array($productos))
-            {
-                Logger::error("Los productos son invalidos");
-                throw new Exception("Los productos son invalidos",901);
-            }
-            
-            //Se inicializa el registro a eliminar y se elimina
-            DAO::transBegin();
-            try
-            {
-                foreach($productos as $producto)
-                {
-                    $precio_producto_rol = PrecioProductoRolDAO::getByPK($producto, $id_rol);
-                    if(is_null($precio_producto_rol))
-                        throw new Exception("El rol ".$id_rol." no tiene precio especial para el producto ".$producto,901);
-                    
-                    PrecioProductoRolDAO::delete($precio_producto_rol);
-                }
-            }
-            catch(Exception $e)
-            {
-                DAO::transRollback();
-                Logger::error("No se pudieron eliminar los precios para producto del rol ".$id_rol." : ".$e);
-                if($e->getCode()==901)
-                    throw new Exception("No se pudieron eliminar los precios para producto del rol: ".$e->getMessage (),901);
-                throw new Exception("No se pudieron eliminar los precios para producto del rol",901);
-            }
-            DAO::transEnd();
-            Logger::log("Precios de productos eliminados exitosamente");
-	}
-  
-	/**
- 	 *
- 	 *Elimina la relacion del precio de un producto con un tipo de cliente
- 	 *
- 	 * @param id_tipo_cliente int 
- 	 * @param productos json Arreglo de ids de productos a los que se les quitara el precio preferencial
- 	 **/
-	public static function Eliminar_precio_tipo_clienteProducto
-	(
-		$id_tipo_cliente, 
-		$productos
-	)
-	{  
-            Logger::log("ELiminando los precios de servicio para el tipo_cliente ".$id_tipo_cliente);
-            
-            //valida el arreglo de productos
-            $productos = object_to_array($productos);
-            
-            if(!is_array($productos))
-            {
-                Logger::error("Los productos son invalidos");
-                throw new Exception("Los productos son invalidos",901);
-            }
-            
-            //Se inicializa el registro a eliminar y se elimina
-            DAO::transBegin();
-            try
-            {
-                foreach($productos as $producto)
-                {
-                    $precio_producto_tipo_cliente = PrecioProductoTipoClienteDAO::getByPK($producto, $id_tipo_cliente);
-                    if(is_null($precio_producto_tipo_cliente))
-                        throw new Exception("El tipo_cliente ".$id_tipo_cliente." no tiene precio especial para el producto ".$producto,901);
-                    
-                    PrecioProductoTipoClienteDAO::delete($precio_producto_tipo_cliente);
-                }
-            }
-            catch(Exception $e)
-            {
-                DAO::transRollback();
-                Logger::error("No se pudieron eliminar los precios para producto del tipo_cliente ".$id_tipo_cliente." : ".$e);
-                if($e->getCode()==901)
-                    throw new Exception("No se pudieron eliminar los precios para producto del tipo_cliente: ".$e->getMessage(),901);
-                throw new Exception("No se pudieron eliminar los precios para producto del tipo_cliente");
-            }
-            DAO::transEnd();
-            Logger::log("Precios de productos eliminados exitosamente");
-	}
-  
-	/**
- 	 *
- 	 *Elimina la relacion del precio de un producto con un usuario
- 	 *
- 	 * @param id_usuario int 
- 	 * @param productos json Arreglo de ids de productos a los que se les quitara el precio preferencial
- 	 **/
-	public static function Eliminar_precio_usuarioProducto
-	(
-		$id_usuario, 
-		$productos
-	)
-	{  
-            Logger::log("ELiminando los precios de servicio para el usuario ".$id_usuario);
-            
-            //valida el arreglo de productos
-            $productos = object_to_array($productos);
-            
-            if(!is_array($productos))
-            {
-                Logger::error("Los productos son invalidos");
-                throw new Exception("Los productos son invalidos",901);
-            }
-            
-            //Se inicializa el registro a eliminar y se elimina
-            DAO::transBegin();
-            try
-            {
-                foreach($productos as $producto)
-                {
-                    $precio_producto_usuario = PrecioProductoUsuarioDAO::getByPK($producto, $id_usuario);
-                    if(is_null($precio_producto_usuario))
-                        throw new Exception("El usuario ".$id_usuario." no tiene precio especial para el producto ".$producto,901);
-                    
-                    PrecioProductoUsuarioDAO::delete($precio_producto_usuario);
-                }
-            }
-            catch(Exception $e)
-            {
-                DAO::transRollback();
-                Logger::error("No se pudieron eliminar los precios para producto del usuario ".$id_usuario." : ".$e);
-                if($e->getCode()==901)
-                    throw new Exception("No se pudieron eliminar los precios para producto del usuario: ".$e->getMessage(),901);
-                throw new Exception("No se pudieron eliminar los precios para producto del usuario",901);
-            }
-            DAO::transEnd();
-            Logger::log("Precios de productos eliminados exitosamente");
-	}
-  
-	/**
- 	 *
- 	 *Elimina la relacion del precio de un servicio con un rol
- 	 *
- 	 * @param id_rol int 
- 	 * @param servicios json Arreglo de ids de servicios que perderan el precio preferencial
- 	 **/
-	public static function Eliminar_precio_rolServicio
-	(
-		$id_rol, 
-		$servicios
-	)
-	{  
-            Logger::log("ELiminando los precios de servicio para el rol ".$id_rol);
-            
-            $servicios = object_to_array($servicios);
-            
-            if(!is_array($servicios))
-            {
-                Logger::error("Los servicios son invalidos");
-                throw new Exception("Los servicios son invalidos",901);
-            }
-            
-            //Se inicializa el registro a eliminar y se elimina
-            DAO::transBegin();
-            try
-            {
-                foreach($servicios as $servicio)
-                {
-                    $precio_servicio_rol = PrecioServicioRolDAO::getByPK($servicio, $id_rol);
-                    if(is_null($precio_servicio_rol))
-                        throw new Exception("El rol ".$id_rol." no tiene precio especial para el servicio ".$servicio,901);
-                    
-                    PrecioServicioRolDAO::delete($precio_servicio_rol);
-                }
-            }
-            catch(Exception $e)
-            {
-                DAO::transRollback();
-                Logger::error("No se pudieron eliminar los precios para servicio del rol ".$id_rol." : ".$e);
-                if($e->getCode()==901)
-                    throw new Exception("No se pudieron eliminar los precios para servicio del rol: ".$e->getMessage (),901);
-                throw new Exception("No se pudieron eliminar los precios para servicio del rol",901);
-            }
-            DAO::transEnd();
-            Logger::log("Precios de servicios eliminados exitosamente");
-	}
-  
-	/**
- 	 *
- 	 *Asigna precios y margenes de utilidades a productos de acuerdo al rol del usuario al que se le vende. 
- 	 *
- 	 * @param id_rol int Id del rol al que se le asignara este precio o margen de utilidad preferencial
- 	 * @param productos_precios_utlidad json Arreglo de objetos que contendran un id producto con un precio o margen de utilidad con el que se vendera este producto
- 	 **/
-	public static function Nuevo_precio_rolProducto
-	(
-		$id_rol, 
-		$productos_precios_utilidad
-	)
-	{  
-            Logger::log("Registrando precios de los servicios para el rol ".$id_rol);
-            
-            //valida el arreglo de productos
-            $productos_precios_utilidad = object_to_array($productos_precios_utilidad);
-            
-            if(!is_array($productos_precios_utilidad))
-            {
-                Logger::error("Los productos son invalidos");
-                throw new Exception("Los productos son invalidos",901);
-            }
-            
-            //valida al rol obtendio
-            $validar = self::validarRol($id_rol);
-            if(is_string($validar))
-            {
-                Logger::error($validar);
-                throw new Exception($validar,901);
-            }
-            
-            //Se inicializa el registro a guardar
-            $precio_producto_rol = new PrecioProductoRol( array( "id_rol" => $id_rol ) );
-            DAO::transBegin();
-            try
-            {
-                foreach($productos_precios_utilidad as $producto_precio_utilidad)
-                {
-                    
-                    if
-                    (
-                            !array_key_exists("id_prodcto", $producto_precio_utilidad)      ||
-                            !array_key_exists("precio_utilidad", $producto_precio_utilidad) ||
-                            !array_key_exists("es_margen_utilidad", $producto_precio_utilidad)
-                    )
-                    {
-                        throw new Exception("Los productos no cuentan con los parametros requeridos",901);
-                    }
-                    
-                    $validar = self::validarProducto($producto_precio_utilidad["id_producto"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $validar = self::validarPrecioUtilidad($producto_precio_utilidad["precio_utilidad"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $validar = self::validarEsMargenUtilidad($producto_precio_utilidad["es_margen_utilidad"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $precio_producto_rol->setEsMargenUtilidad($producto_precio_utilidad["es_margen_utilidad"]);
-                    $precio_producto_rol->setIdProducto($producto_precio_utilidad["id_producto"]);
-                    $precio_producto_rol->setPrecioUtilidad($producto_precio_utilidad["precio_utilidad"]);
-                    PrecioProductoRolDAO::save($precio_producto_rol);
-                }
-            }
-            catch(Exception $e)
-            {
-                DAO::transRollback();
-                Logger::error("No se han podido guardar todos los precios para el rol ".$id_rol." : ".$e);
-                if($e->getCode()==901)
-                    throw new Exception("No se han podido guardar todos los precios para el rol: ".$e->getMessage(),901);
-                throw new Exception("No se han podido guardar todos los precios para el rol",901);
-            }
-            DAO::transEnd();
-            Logger::log("Precios guardados exitosamente");
-	}
-  
-	/**
- 	 *
- 	 *Edita la relacion de precio de uno o varios productos con un rol
- 	 *
- 	 * @param productos_precios_utlidad json Arreglo de objetos que contendran un id producto con un precio o margen de utilidad con el que se vendera este producto
- 	 * @param id_rol int Id del rol al que se le asignara el precio preferencial
- 	 **/
-	public static function Editar_precio_rolProducto
-	(
-		$id_rol, 
-		$productos_precios_utilidad
-	)
-	{  
-            Logger::log("Registrando precios de los productos para el rol ".$id_rol);
-            
-            //valida el arreglo de productos
-            $productos_precios_utilidad = object_to_array($productos_precios_utilidad);
-            
-            if(!is_array($productos_precios_utilidad))
-            {
-                Logger::error("Los productos son invalidos");
-                throw new Exception("Los productos son invalidos",901);
-            }
-            
-            //valida al rol obtendio
-            $validar = self::validarRol($id_rol);
-            if(is_string($validar))
-            {
-                Logger::error($validar);
-                throw new Exception($validar,901);
-            }
-            
-            //Se inicializa el registro a guardar
-            $precio_producto_rol = new PrecioProductoRol( array( "id_rol" => $id_rol ) );
-            DAO::transBegin();
-            try
-            {
-                foreach($productos_precios_utilidad as $producto_precio_utilidad)
-                {
-                    
-                    if
-                    (
-                            !array_key_exists("id_prodcto", $producto_precio_utilidad)      ||
-                            !array_key_exists("precio_utilidad", $producto_precio_utilidad) ||
-                            !array_key_exists("es_margen_utilidad", $producto_precio_utilidad)
-                    )
-                    {
-                        throw new Exception("Los productos no cuentan con los parametros requeridos",901);
-                    }
-                    
-                    $validar = self::validarProducto($producto_precio_utilidad["id_producto"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $validar = self::validarPrecioUtilidad($producto_precio_utilidad["precio_utilidad"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $validar = self::validarEsMargenUtilidad($producto_precio_utilidad["es_margen_utilidad"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $precio_producto_rol->setEsMargenUtilidad($producto_precio_utilidad["es_margen_utilidad"]);
-                    $precio_producto_rol->setIdProducto($producto_precio_utilidad["id_producto"]);
-                    $precio_producto_rol->setPrecioUtilidad($producto_precio_utilidad["precio_utilidad"]);
-                    PrecioProductoRolDAO::save($precio_producto_rol);
-                }
-            }
-            catch(Exception $e)
-            {
-                DAO::transRollback();
-                Logger::error("No se han podido guardar todos los precios para el rol ".$id_rol." : ".$e);
-                if($e->getCode()==901)
-                    throw new Exception("No se han podido guardar todos los precios para el rol: ".$e->getMessage (),901);
-                throw new Exception("No se han podido guardar todos los precios para el rol",901);
-            }
-            DAO::transEnd();
-            Logger::log("Precios guardados exitosamente");
-	}
-  
-	/**
- 	 *
- 	 *Relaciona un rol con productos al precio o utilidad que se le seran vendidos
- 	 *
- 	 * @param id_rol int Id del rol al que se le asignara el precio preferencial
- 	 * @param servicios_precios_utilidad json Arreglo de objetos que contendran un id servicio con un precio o margen de utilidad con el que se vendera este servicio
- 	 **/
-	public static function Nuevo_precio_rolServicio
-	(
-		$id_rol, 
-		$servicios_precios_utilidad
-	)
-	{  
-            Logger::log("Editando precios de los servicios para el rol ".$id_rol);
-            
-            //valida el arreglo de servicios
-            $servicios_precios_utilidad = object_to_array($servicios_precios_utilidad);
-            
-            if(!is_array($servicios_precios_utilidad))
-            {
-                Logger::error("Los servicios recibidos son invalidos");
-                throw new Exception("Los servicios recibidos son invalidos",901);
-            }
-            
-            //valida al rol obtendio
-            $validar = self::validarRol($id_rol);
-            if(is_string($validar))
-            {
-                Logger::error($validar);
-                throw new Exception($validar,901);
-            }
-            
-            //Se inicializa el registro a editar. Si alguno de los registros no existe, se guardara
-            $precio_servicio_rol = new PrecioServicioRol( array( "id_rol" => $id_rol ) );
-            DAO::transBegin();
-            try
-            {
-                foreach($servicios_precios_utilidad as $servicio_precio_utilidad)
-                {
-                    
-                    if
-                    (
-                            !array_key_exists("id_servicio", $servicio_precio_utilidad)         ||
-                            !array_key_exists("precio_utilidad", $servicio_precio_utilidad)     ||
-                            !array_key_exists("es_margen_utilidad", $servicio_precio_utilidad)
-                    )
-                    {
-                        throw new Exception("Los servicios no tienen los parametros necesarios",901);
-                    }
-                    
-                    $validar = self::validarServicio($servicio_precio_utilidad["id_servicio"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $validar = self::validarPrecioUtilidad($servicio_precio_utilidad["precio_utilidad"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $validar = self::validarEsMargenUtilidad($servicio_precio_utilidad["es_margen_utilidad"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $precio_servicio_rol->setEsMargenUtilidad($servicio_precio_utilidad["es_margen_utilidad"]);
-                    $precio_servicio_rol->setIdServicio($servicio_precio_utilidad["id_servicio"]);
-                    $precio_servicio_rol->setPrecioUtilidad($servicio_precio_utilidad["precio_utilidad"]);
-                    PrecioServicioRolDAO::save($precio_servicio_rol);
-                }
-            }
-            catch(Exception $e)
-            {
-                DAO::transRollback();
-                Logger::error("No se han podido editar todos los precios para el rol ".$id_rol." : ".$e);
-                if($e->getCode()==901)
-                    throw new Exception("No se han podido editar todos los precios para el rol: ".$e->getMessage(),901);
-                throw new Exception("No se han podido editar todos los precios para el rol",901);
-            }
-            DAO::transEnd();
-            Logger::log("Precios editados exitosamente");
-	}
-  
-	/**
- 	 *
- 	 *Relaciona un tipo de cliente con servicios a un precio o utilidad determinados
- 	 *
- 	 * @param id_tipo_cliente int 
- 	 * @param servicios_precios_utilidad json Arreglo de objetos que contendran un id servicio con un precio o margen de utilidad con el que se vendera este servicio
- 	 **/
-	public static function Nuevo_precio_tipo_clienteServicio
-	(
-		$id_tipo_cliente, 
-		$servicios_precios_utilidad
-	)
-	{  
-            Logger::log("Editando precios de los servicios para el tipo_cliente ".$id_tipo_cliente);
-            
-            //valida el arreglo de servicios
-            $servicios_precios_utilidad = object_to_array($servicios_precios_utilidad);
-            
-            if(!is_array($servicios_precios_utilidad))
-            {
-                Logger::error("Los servicios recibidos son invalidos");
-                throw new Exception("Los servicios recibidos son invalidos",901);
-            }
-            
-            //valida al tipo_cliente obtendio
-            $validar = self::validarClasificacionCliente($id_tipo_cliente);
-            if(is_string($validar))
-            {
-                Logger::error($validar);
-                throw new Exception($validar,901);
-            }
-            
-            //Se inicializa el registro a editar. Si alguno de los registros no existe, se guardara
-            $precio_servicio_tipo_cliente = new PrecioServicioTipoCliente( array( "id_tipo_cliente" => $id_tipo_cliente ) );
-            DAO::transBegin();
-            try
-            {
-                foreach($servicios_precios_utilidad as $servicio_precio_utilidad)
-                {
-                    
-                    if
-                    (
-                            !array_key_exists("id_servicio", $servicio_precio_utilidad)         ||
-                            !array_key_exists("precio_utilidad", $servicio_precio_utilidad)     ||
-                            !array_key_exists("es_margen_utilidad", $servicio_precio_utilidad)
-                    )
-                    {
-                        throw new Exception("Los servicios no tienen los parametros necesarios",901);
-                    }
-                    
-                    $validar = self::validarServicio($servicio_precio_utilidad["id_servicio"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $validar = self::validarPrecioUtilidad($servicio_precio_utilidad["precio_utilidad"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $validar = self::validarEsMargenUtilidad($servicio_precio_utilidad["es_margen_utilidad"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $precio_servicio_tipo_cliente->setEsMargenUtilidad($servicio_precio_utilidad["es_margen_utilidad"]);
-                    $precio_servicio_tipo_cliente->setIdServicio($servicio_precio_utilidad["id_servicio"]);
-                    $precio_servicio_tipo_cliente->setPrecioUtilidad($servicio_precio_utilidad["precio_utilidad"]);
-                    PrecioServicioTipoClienteDAO::save($precio_servicio_tipo_cliente);
-                }
-            }
-            catch(Exception $e)
-            {
-                DAO::transRollback();
-                Logger::error("No se han podido editar todos los precios para el tipo_cliente ".$id_tipo_cliente." : ".$e);
-                if($e->getCode()==901)
-                    throw new Exception("No se han podido editar todos los precios para el tipo_cliente: ".$e->getMessage(),901);
-                throw new Exception("No se han podido editar todos los precios para el tipo_cliente",901);
-            }
-            DAO::transEnd();
-            Logger::log("Precios editados exitosamente");
-	}
-  
-	/**
- 	 *
- 	 *Los precios de un producto pueden variar segun el tipo de cliente al que se le vende. Este metodo relaciona un precio a uno o varios productos con un tipo de cliente.
- 	 *
- 	 * @param id_tipo_cliente int Id del tipo cliente a relacionar
- 	 * @param productos_precios_utilidad json Arreglo de objetos que contendran un id producto con un precio o un margen de utilidad con el que se ofrecera dicho producto
- 	 **/
-	public static function Nuevo_precio_tipo_clienteProducto
-	(
-		$id_tipo_cliente, 
-		$productos_precios_utilidad
-	)
-	{  
-            Logger::log("Editando precios de los productos para el tipo_cliente ".$id_tipo_cliente);
-            
-            //valida el arreglo de productos
-            $productos_precios_utilidad = object_to_array($productos_precios_utilidad);
-            
-            if(!is_array($productos_precios_utilidad))
-            {
-                Logger::error("Los productos son invalidos");
-                throw new Exception("Los productos son invalidos",901);
-            }
-            
-            //valida al tipo_cliente obtendio
-            $validar = self::validarClasificacionCliente($id_tipo_cliente);
-            if(is_string($validar))
-            {
-                Logger::error($validar);
-                throw new Exception($validar,901);
-            }
-            
-            //Se inicializa el registro a editar. Si alguno de los registros no existe, se guardara
-            $precio_producto_tipo_cliente = new PrecioProductoTipoCliente( array( "id_clasificacion_cliente" => $id_tipo_cliente ) );
-            DAO::transBegin();
-            try
-            {
-                foreach($productos_precios_utilidad as $producto_precio_utilidad)
-                {
-                    
-                    if
-                    (
-                            !array_key_exists("id_prodcto", $producto_precio_utilidad)      ||
-                            !array_key_exists("precio_utilidad", $producto_precio_utilidad) ||
-                            !array_key_exists("es_margen_utilidad", $producto_precio_utilidad)
-                    )
-                    {
-                        throw new Exception("Los productos no cuentan con los parametros requeridos",901);
-                    }
-                    
-                    $validar = self::validarProducto($producto_precio_utilidad["id_producto"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $validar = self::validarPrecioUtilidad($producto_precio_utilidad["precio_utilidad"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $validar = self::validarEsMargenUtilidad($producto_precio_utilidad["es_margen_utilidad"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $precio_producto_tipo_cliente->setEsMargenUtilidad($producto_precio_utilidad["es_margen_utilidad"]);
-                    $precio_producto_tipo_cliente->setIdProducto($producto_precio_utilidad["id_producto"]);
-                    $precio_producto_tipo_cliente->setPrecioUtilidad($producto_precio_utilidad["precio_utilidad"]);
-                    PrecioProductoTipoClienteDAO::save($precio_producto_tipo_cliente);
-                }
-            }
-            catch(Exception $e)
-            {
-                DAO::transRollback();
-                Logger::error("No se han podido editar todos los precios para el tipo_cliente ".$id_tipo_cliente." : ".$e);
-                if($e->getCode()==901)
-                    throw new Exception("No se han podido editar todos los precios para el tipo_cliente: ".$e->getMessage (),901);
-                throw new Exception("No se han podido editar todos los precios para el tipo_cliente",901);
-            }
-            DAO::transEnd();
-            Logger::log("Precios editados exitosamente");
-	}
-  
-	/**
- 	 *
- 	 *Los precios de un producto pueden variar segun el tipo de cliente al que se le vende. Este metodo edita la relacion de un precio a uno o varios productos con un tipo de cliente.
- 	 *
- 	 * @param productos_precios_utlidad json Arreglo de objetos que contendran un id producto con un precio o un margen de utilidad con el que se ofrecera dicho producto
- 	 * @param id_clasificacion_cliente int Id del tipo cliente al que se le editaran sus precios
- 	 **/
-	public static function Editar_precio_tipo_clienteProducto
-	(
-		$id_clasificacion_cliente, 
-		$productos_precios_utilidad
-	)
-	{  
-            Logger::log("Editando precios de los productos para el tipo_cliente ".$id_clasificacion_cliente);
-            
-            //valida el arreglo de productos
-            $productos_precios_utilidad = object_to_array($productos_precios_utilidad);
-            
-            if(!is_array($productos_precios_utilidad))
-            {
-                Logger::error("Los productos son invalidos");
-                throw new Exception("Los productos son invalidos",901);
-            }
-            
-            //valida al tipo_cliente obtendio
-            $validar = self::validarClasificacionCliente($id_clasificacion_cliente);
-            if(is_string($validar))
-            {
-                Logger::error($validar);
-                throw new Exception($validar,901);
-            }
-            
-            //Se inicializa el registro a editar. Si alguno de los registros no existe, se guardara
-            $precio_producto_tipo_cliente = new PrecioProductoTipoCliente( array( "id_clasificacion_cliente" => $id_clasificacion_cliente ) );
-            DAO::transBegin();
-            try
-            {
-                foreach($productos_precios_utilidad as $producto_precio_utilidad)
-                {
-                    
-                    if
-                    (
-                            !array_key_exists("id_prodcto", $producto_precio_utilidad)      ||
-                            !array_key_exists("precio_utilidad", $producto_precio_utilidad) ||
-                            !array_key_exists("es_margen_utilidad", $producto_precio_utilidad)
-                    )
-                    {
-                        throw new Exception("Los productos no cuentan con los parametros requeridos",901);
-                    }
-                    
-                    $validar = self::validarProducto($producto_precio_utilidad["id_producto"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $validar = self::validarPrecioUtilidad($producto_precio_utilidad["precio_utilidad"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $validar = self::validarEsMargenUtilidad($producto_precio_utilidad["es_margen_utilidad"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $precio_producto_tipo_cliente->setEsMargenUtilidad($producto_precio_utilidad["es_margen_utilidad"]);
-                    $precio_producto_tipo_cliente->setIdProducto($producto_precio_utilidad["id_producto"]);
-                    $precio_producto_tipo_cliente->setPrecioUtilidad($producto_precio_utilidad["precio_utilidad"]);
-                    PrecioProductoTipoClienteDAO::save($precio_producto_tipo_cliente);
-                }
-            }
-            catch(Exception $e)
-            {
-                DAO::transRollback();
-                Logger::error("No se han podido editar todos los precios para el tipo_cliente ".$id_clasificacion_cliente." : ".$e);
-                if($e->getCode()==901)
-                    throw new Exception("No se han podido editar todos los precios para el tipo_cliente: ".$e->getMessage (),901);
-                throw new Exception("No se han podido editar todos los precios para el tipo_cliente",901);
-            }
-            DAO::transEnd();
-            Logger::log("Precios editados exitosamente");
-	}
-  
-	/**
- 	 *
- 	 *El precio de un producto puede varior de acuerdo al usuario al que se le venda. Este metodo relaciona uno o varios productos con un usuario mediante un precio o margen de utilidad especifico.
- 	 *
- 	 * @param id_usuario int Id del usuario al que se relacionara
- 	 * @param productos_precios_utlidad json Arreglo de objetos que contendran un id producto con un precio o un margen de utilidad con el que se ofrecera dicho producto
- 	 **/
-	public static function Nuevo_precio_usuarioProducto
-	(
-		$id_usuario, 
-		$productos_precios_utilidad
-	)
-	{  
-            Logger::log("Registrando precios de los productos para el usuario ".$id_usuario);
-            
-            //valida el arreglo de productos
-            $productos_precios_utilidad = object_to_array($productos_precios_utilidad);
-            
-            if(!is_array($productos_precios_utilidad))
-            {
-                Logger::error("Los productos son invalidos");
-                throw new Exception("Los productos son invalidos",901);
-            }
-            
-            //valida al usuario obtendio
-            $validar = self::validarUsuario($id_usuario);
-            if(is_string($validar))
-            {
-                Logger::error($validar);
-                throw new Exception($validar,901);
-            }
-            
-            //Se inicializa el registro y se guarda
-            $precio_producto_usuario = new PrecioProductoUsuario( array( "id_usuario" => $id_usuario ) );
-            DAO::transBegin();
-            try
-            {
-                foreach($productos_precios_utilidad as $producto_precio_utilidad)
-                {
-                    
-                    if
-                    (
-                            !array_key_exists("id_prodcto", $producto_precio_utilidad)      ||
-                            !array_key_exists("precio_utilidad", $producto_precio_utilidad) ||
-                            !array_key_exists("es_margen_utilidad", $producto_precio_utilidad)
-                    )
-                    {
-                        throw new Exception("Los productos no cuentan con los parametros requeridos",901);
-                    }
-                    
-                    $validar = self::validarProducto($producto_precio_utilidad["id_producto"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $validar = self::validarPrecioUtilidad($producto_precio_utilidad["precio_utilidad"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $validar = self::validarEsMargenUtilidad($producto_precio_utilidad["es_margen_utilidad"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $precio_producto_usuario->setEsMargenUtilidad($producto_precio_utilidad["es_margen_utilidad"]);
-                    $precio_producto_usuario->setIdProducto($producto_precio_utilidad["id_producto"]);
-                    $precio_producto_usuario->setPrecioUtilidad($producto_precio_utilidad["precio_utilidad"]);
-                    PrecioProductoUsuarioDAO::save($precio_producto_usuario);
-                }
-            }
-            catch(Exception $e)
-            {
-                DAO::transRollback();
-                Logger::error("No se han podido guardar todos los precios para el usuario ".$id_usuario." : ".$e);
-                if($e->getCode()==901)
-                    throw new Exception("No se han podido guardar todos los precios para el usuario: ".$e->getMessage (),901);
-                throw new Exception("No se han podido guardar todos los precios para el usuario",901);
-            }
-            DAO::transEnd();
-            Logger::log("Precios guardados exitosamente");
-	}
-  
-	/**
- 	 *
- 	 *El precio de un producto puede varior de acuerdo al cliente al que se le venda. Este metodo relaciona uno o varios productos con un cliente mediante un precio o margen de utilidad especifico.
- 	 *
- 	 * @param id_cliente int Id del cliente al que se relacionara
- 	 * @param productos_precios_utilidad json Arreglo de objetos que contendran un id producto con un precio o un margen de utilidad con el que se ofrecera dicho producto
- 	 **/
-	public static function Editar_precio_usuarioProducto
-	(
-		$id_usuario, 
-		$productos_precios_utilidad
-	)
-	{  
-            Logger::log("Registrando precios de los productos para el usuario ".$id_usuario);
-            
-            //valida el arreglo de productos
-            $productos_precios_utilidad = object_to_array($productos_precios_utilidad);
-            
-            if(!is_array($productos_precios_utilidad))
-            {
-                Logger::error("Los productos son invalidos");
-                throw new Exception("Los productos son invalidos",901);
-            }
-            
-            //valida al usuario obtendio
-            $validar = self::validarUsuario($id_usuario);
-            if(is_string($validar))
-            {
-                Logger::error($validar);
-                throw new Exception($validar,901);
-            }
-            
-            //Se inicializa el registro y se guarda
-            $precio_producto_usuario = new PrecioProductoUsuario( array( "id_usuario" => $id_usuario ) );
-            DAO::transBegin();
-            try
-            {
-                foreach($productos_precios_utilidad as $producto_precio_utilidad)
-                {
-                    
-                    if
-                    (
-                            !array_key_exists("id_prodcto", $producto_precio_utilidad)      ||
-                            !array_key_exists("precio_utilidad", $producto_precio_utilidad) ||
-                            !array_key_exists("es_margen_utilidad", $producto_precio_utilidad)
-                    )
-                    {
-                        throw new Exception("Los productos no cuentan con los parametros requeridos",901);
-                    }
-                    
-                    $validar = self::validarProducto($producto_precio_utilidad["id_producto"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $validar = self::validarPrecioUtilidad($producto_precio_utilidad["precio_utilidad"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $validar = self::validarEsMargenUtilidad($producto_precio_utilidad["es_margen_utilidad"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $precio_producto_usuario->setEsMargenUtilidad($producto_precio_utilidad["es_margen_utilidad"]);
-                    $precio_producto_usuario->setIdProducto($producto_precio_utilidad["id_producto"]);
-                    $precio_producto_usuario->setPrecioUtilidad($producto_precio_utilidad["precio_utilidad"]);
-                    PrecioProductoUsuarioDAO::save($precio_producto_usuario);
-                }
-            }
-            catch(Exception $e)
-            {
-                DAO::transRollback();
-                Logger::error("No se han podido guardar todos los precios para el usuario ".$id_usuario." : ".$e);
-                if($e->getCode()==901)
-                    throw new Exception("No se han podido guardar todos los precios para el usuario: ".$e->getMessage(),901);
-                throw new Exception("No se han podido guardar todos los precios para el usuario",901);
-            }
-            DAO::transEnd();
-            Logger::log("Precios guardados exitosamente");
-	}
-  
-  
-  
-        /**
- 	 *
- 	 *Edita la relacion de precio de uno o varios productos con un rol
- 	 *
- 	 * @param productos_precios_utlidad json Arreglo de objetos que contendran un id producto con un precio o margen de utilidad con el que se vendera este producto
- 	 * @param id_rol int Id del rol al que se le asignara el precio preferencial
- 	 **/
-         public static function Editar_precio_rolPaquete
-	 (
-		$id_rol, 
-		$paquetes_precios_utilidad
-	 )
-         {
-             Logger::log("Registrando precios de los paquetes para el rol ".$id_rol);
-            
-             //valida que el paquete sea valido
-             $paquetes_precios_utilidad = object_to_array($paquetes_precios_utilidad);
-             
-             if(!is_array($paquetes_precios_utilidad))
-             {
-                 Logger::error("Los paquetes son invalidos",901);
-                 throw new Exception("Los paquetes son invalidos",901);
-             }
-             
-            //valida al rol obtendio
-            $validar = self::validarRol($id_rol);
-            if(is_string($validar))
-            {
-                Logger::error($validar);
-                throw new Exception($validar);
-            }
-            
-            //Se inicializa el registro a guardar
-            $precio_paquete_rol = new PrecioPaqueteRol( array( "id_rol" => $id_rol ) );
-            DAO::transBegin();
-            try
-            {
-                foreach($paquetes_precios_utilidad as $paquete_precio_utilidad)
-                {
-                    
-                    if
-                    (
-                            !array_key_exists("id_paquete", $paquete_precio_utilidad)         ||
-                            !array_key_exists("precio_utilidad", $paquete_precio_utilidad)    ||
-                            !array_key_exists("es_margen_utilidad", $paquete_precio_utilidad)
-                    )
-                    {
-                        throw new Exception("Los paquetes no cuentan con los parametros requeridos",901);
-                    }
-                    
-                    $validar = self::validarPaquete($paquete_precio_utilidad["id_paquete"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $validar = self::validarPrecioUtilidad($paquete_precio_utilidad["precio_utilidad"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $validar = self::validarEsMargenUtilidad($paquete_precio_utilidad["es_margen_utilidad"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $precio_paquete_rol->setEsMargenUtilidad($paquete_precio_utilidad["es_margen_utilidad"]);
-                    $precio_paquete_rol->setIdPaquete($paquete_precio_utilidad["id_paquete"]);
-                    $precio_paquete_rol->setPrecioUtilidad($paquete_precio_utilidad["precio_utilidad"]);
-                    PrecioPaqueteRolDAO::save($precio_paquete_rol);
-                }
-            }
-            catch(Exception $e)
-            {
-                DAO::transRollback();
-                Logger::error("No se han podido guardar todos los precios para el rol ".$id_rol." : ".$e);
-                if($e->getCode()==901)
-                    throw new Exception("No se han podido guardar todos los precios para el rol: ".$e->getMessage(),901);
-                throw new Exception("No se han podido guardar todos los precios para el rol",901);
-            }
-            DAO::transEnd();
-            Logger::log("Precios guardados exitosamente");
-         }
-  
-  
-	
-  
-	/**
- 	 *
- 	 *Los precios de un paquete pueden variar segun el tipo de cliente al que se le vende. Este metodo edita la relacion de un precio a uno o varios paquetes con un tipo de cliente.
- 	 *
- 	 * @param paquetes_precios_utlidad json Arreglo de objetos que contendran un id paquete con un precio o un margen de utilidad con el que se ofrecera dicho paquete
- 	 * @param id_clasificacion_cliente int Id del tipo cliente al que se le editaran sus precios
- 	 **/
-         public static function Editar_precio_tipo_clientePaquete
-	 (
-		$id_tipo_cliente, 
-		$paquetes_precios_utilidad
-	 )
-         {
-             Logger::log("Registrando precios de los paquetes para el tipo_cliente ".$id_tipo_cliente);
-            
-             if(!is_array($paquetes_precios_utilidad))
-             {
-                 Logger::error("Los paquetes son invalidos",901);
-                 throw new Exception("Los paquetes son invalidos",901);
-             }
-             
-            //valida al tipo_cliente obtendio
-            $validar = self::validarClasificacionCliente($id_tipo_cliente);
-            if(is_string($validar))
-            {
-                Logger::error($validar);
-                throw new Exception($validar);
-            }
-            
-            //Se inicializa el registro a guardar
-            $precio_paquete_tipo_cliente = new PrecioPaqueteTipoCliente( array( "id_tipo_cliente" => $id_tipo_cliente ) );
-            DAO::transBegin();
-            try
-            {
-                foreach($paquetes_precios_utilidad as $paquete_precio_utilidad)
-                {
-                    
-                    if
-                    (
-                            !array_key_exists("id_paquete", $paquete_precio_utilidad)         ||
-                            !array_key_exists("precio_utilidad", $paquete_precio_utilidad)    ||
-                            !array_key_exists("es_margen_utilidad", $paquete_precio_utilidad)
-                    )
-                    {
-                        throw new Exception("Los paquetes no cuentan con los parametros requeridos",901);
-                    }
-                    
-                    $validar = self::validarPaquete($paquete_precio_utilidad["id_paquete"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $validar = self::validarPrecioUtilidad($paquete_precio_utilidad["precio_utilidad"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $validar = self::validarEsMargenUtilidad($paquete_precio_utilidad["es_margen_utilidad"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $precio_paquete_tipo_cliente->setEsMargenUtilidad($paquete_precio_utilidad["es_margen_utilidad"]);
-                    $precio_paquete_tipo_cliente->setIdPaquete($paquete_precio_utilidad["id_paquete"]);
-                    $precio_paquete_tipo_cliente->setPrecioUtilidad($paquete_precio_utilidad["precio_utilidad"]);
-                    PrecioPaqueteTipoClienteDAO::save($precio_paquete_tipo_cliente);
-                }
-            }
-            catch(Exception $e)
-            {
-                DAO::transRollback();
-                Logger::error("No se han podido guardar todos los precios para el tipo_cliente ".$id_tipo_cliente." : ".$e);
-                if($e->getCode()==901)
-                    throw new Exception("No se han podido guardar todos los precios para el tipo_cliente: ".$e->getMessage (),901);
-                throw new Exception("No se han podido guardar todos los precios para el tipo_cliente",901);
-            }
-            DAO::transEnd();
-            Logger::log("Precios guardados exitosamente");
-         }
-  
-  
-	
-  
-	/**
- 	 *
- 	 *El precio de un paquete puede varior de acuerdo al cliente al que se le venda. Este metodo relaciona uno o varios paquetes con un cliente mediante un precio o margen de utilidad especifico.
- 	 *
- 	 * @param id_cliente int Id del cliente al que se relacionara
- 	 * @param paquetes_precios_utilidad json Arreglo de objetos que contendran un id paquete con un precio o un margen de utilidad con el que se ofrecera dicho paquete
- 	 **/
-         public static function Editar_precio_usuarioPaquete
-	 (
-		$id_usuario, 
-		$paquetes_precios_utilidad
-	 )
-         {
-             Logger::log("Registrando precios de los paquetes para el usuario ".$id_usuario);
-            
-             if(!is_array($paquetes_precios_utilidad))
-             {
-                 Logger::error("Los paquetes son invalidos",901);
-                 throw new Exception("Los paquetes son invalidos",901);
-             }
-             
-            //valida al usuario obtendio
-            $validar = self::validarUsuario($id_usuario);
-            if(is_string($validar))
-            {
-                Logger::error($validar);
-                throw new Exception($validar);
-            }
-            
-            //Se inicializa el registro a guardar
-            $precio_paquete_usuario = new PrecioPaqueteUsuario( array( "id_usuario" => $id_usuario ) );
-            DAO::transBegin();
-            try
-            {
-                foreach($paquetes_precios_utilidad as $paquete_precio_utilidad)
-                {
-                    
-                    if
-                    (
-                            !array_key_exists("id_paquete", $paquete_precio_utilidad)         ||
-                            !array_key_exists("precio_utilidad", $paquete_precio_utilidad)    ||
-                            !array_key_exists("es_margen_utilidad", $paquete_precio_utilidad)
-                    )
-                    {
-                        throw new Exception("Los paquetes no cuentan con los parametros requeridos",901);
-                    }
-                    
-                    $validar = self::validarPaquete($paquete_precio_utilidad["id_paquete"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $validar = self::validarPrecioUtilidad($paquete_precio_utilidad["precio_utilidad"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $validar = self::validarEsMargenUtilidad($paquete_precio_utilidad["es_margen_utilidad"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $precio_paquete_usuario->setEsMargenUtilidad($paquete_precio_utilidad["es_margen_utilidad"]);
-                    $precio_paquete_usuario->setIdPaquete($paquete_precio_utilidad["id_paquete"]);
-                    $precio_paquete_usuario->setPrecioUtilidad($paquete_precio_utilidad["precio_utilidad"]);
-                    PrecioPaqueteUsuarioDAO::save($precio_paquete_usuario);
-                }
-            }
-            catch(Exception $e)
-            {
-                DAO::transRollback();
-                Logger::error("No se han podido guardar todos los precios para el usuario ".$id_usuario." : ".$e);
-                if($e->getCode()==901)
-                    throw new Exception("No se han podido guardar todos los precios para el usuario: ".$e->getMessage(),901);
-                throw new Exception("No se han podido guardar todos los precios para el usuario",901);
-            }
-            DAO::transEnd();
-            Logger::log("Precios guardados exitosamente");
-         }
-  
-	
-  
-	/**
- 	 *
- 	 *Elimina la relacion del precio de un paquete con un rol
- 	 *
- 	 * @param id_rol int Id del rol a quitar el precio preferencial
- 	 * @param paquetes json Arreglo de ids de paquetes a los que se les quitara el precio preferencial
- 	 **/
-         public static function Eliminar_precio_rolPaquete
-	 (
-		$id_rol, 
-		$paquetes
-	 )
-         {
-             Logger::log("ELiminando los precios de paquete para el rol ".$id_rol);
-             
-             $paquetes = object_to_array($paquetes);
-             
-             if(!is_array($paquetes))
-             {
-                 Logger::error("Los paquetes son invalidos");
-                 throw new Exception("Los paquetes son invalidos",901);
-             }
-            
-            //Se inicializa el registro a eliminar y se elimina
-            DAO::transBegin();
-            try
-            {
-                foreach($paquetes as $paquete)
-                {
-                    $precio_paquete_rol = PrecioPaqueteRolDAO::getByPK($paquete, $id_rol);
-                    if(is_null($precio_paquete_rol))
-                        throw new Exception("El rol ".$id_rol." no tiene precio especial para el paquete ".$paquete,901);
-                    
-                    PrecioPaqueteRolDAO::delete($precio_paquete_rol);
-                }
-            }
-            catch(Exception $e)
-            {
-                DAO::transRollback();
-                Logger::error("No se pudieron eliminar los precios para paquete del rol ".$id_rol." : ".$e);
-                if($e->getCode()==901)
-                    throw new Exception("No se pudieron eliminar los precios para paquete del rol: ".$e->getMessage(),901);
-                
-                throw new Exception("No se pudieron eliminar los precios para paquete del rol",901);
-            }
-            DAO::transEnd();
-            Logger::log("Precios de paquetes eliminados exitosamente");
-         }
-  
-  
-	
-  
-	/**
- 	 *
- 	 *Elimina la relacion del precio de un paquete con un tipo de cliente
- 	 *
- 	 * @param id_tipo_cliente int 
- 	 * @param paquetes json Arreglo de ids de paquetes a los que se les quitara el precio preferencial
- 	 **/
-         public static function Eliminar_precio_tipo_clientePaquete
-	 (
-		$id_tipo_cliente, 
-		$paquetes
-	 )
-         {
-             Logger::log("ELiminando los precios de paquete para el tipo_cliente ".$id_tipo_cliente);
-            
-             $paquetes = object_to_array($paquetes);
-             
-             if(!is_array($paquetes))
-             {
-                 Logger::error("Los paquetes son invalidos");
-                 throw new Exception("Los paquetes son invalidos",901);
-             }
-             
-            //Se inicializa el registro a eliminar y se elimina
-            DAO::transBegin();
-            try
-            {
-                foreach($paquetes as $paquete)
-                {
-                    $precio_paquete_tipo_cliente = PrecioPaqueteTipoClienteDAO::getByPK($paquete, $id_tipo_cliente);
-                    if(is_null($precio_paquete_tipo_cliente))
-                        throw new Exception("El tipo_cliente ".$id_tipo_cliente." no tiene precio especial para el paquete ".$paquete,901);
-                    
-                    PrecioPaqueteTipoClienteDAO::delete($precio_paquete_tipo_cliente);
-                }
-            }
-            catch(Exception $e)
-            {
-                DAO::transRollback();
-                Logger::error("No se pudieron eliminar los precios para paquete del tipo_cliente ".$id_tipo_cliente." : ".$e);
-                if($e->getCode()==901)
-                    throw new Exception("No se pudieron eliminar los precios para paquete del tipo_cliente: ".$e->getMessage(),901);
-                throw new Exception("No se pudieron eliminar los precios para paquete del tipo_cliente",901);
-            }
-            DAO::transEnd();
-            Logger::log("Precios de paquetes eliminados exitosamente");
-         }
-  
-  
-	
-  
-	/**
- 	 *
- 	 *Elimina la relacion del precio de un paquete con un usuario
- 	 *
- 	 * @param id_usuario int 
- 	 * @param paquetes json Arreglo de ids de paquetes a los que se les quitara el precio preferencial
- 	 **/
-         public static function Eliminar_precio_usuarioPaquete
-	 (
-		$id_usuario, 
-		$paquetes
-	 )
-         {
-             Logger::log("ELiminando los precios de paquete para el usuario ".$id_usuario);
-            
-             $paquetes = object_to_array($paquetes);
-             
-             if(!is_array($paquetes))
-             {
-                 Logger::error("Los paquetes son invalidos");
-                 throw new Exception("Los paquetes son invalidos",901);
-             }
-             
-            //Se inicializa el registro a eliminar y se elimina
-            DAO::transBegin();
-            try
-            {
-                foreach($paquetes as $paquete)
-                {
-                    $precio_paquete_usuario = PrecioPaqueteUsuarioDAO::getByPK($paquete, $id_usuario);
-                    if(is_null($precio_paquete_usuario))
-                        throw new Exception("El usuario ".$id_usuario." no tiene precio especial para el paquete ".$paquete,901);
-                    
-                    PrecioPaqueteUsuarioDAO::delete($precio_paquete_usuario);
-                }
-            }
-            catch(Exception $e)
-            {
-                DAO::transRollback();
-                Logger::error("No se pudieron eliminar los precios para paquete del usuario ".$id_usuario." : ".$e);
-                if($e->getCode()==901)
-                    throw new Exception("No se pudieron eliminar los precios para paquete del usuario: ".$e->getMessage(),901);
-                throw new Exception("No se pudieron eliminar los precios para paquete del usuario",901);
-            }
-            DAO::transEnd();
-            Logger::log("Precios de paquetes eliminados exitosamente");
-         }
-  
-  
-	
-  
-	/**
- 	 *
- 	 *Asigna precios y margenes de utilidades a paquetes de acuerdo al rol del usuario al que se le vende. 
- 	 *
- 	 * @param id_rol int Id del rol al que se le asignara este precio o margen de utilidad preferencial
- 	 * @param paquetes_precios_utlidad json Arreglo de objetos que contendran un id paquete con un precio o margen de utilidad con el que se vendera este paquete
- 	 **/
-         public static function Nuevo_precio_rolPaquete
-	 (
-		$id_rol, 
-		$paquetes_precios_utilidad
-	 )
-         {
-             Logger::log("Registrando precios de los paquetes para el rol ".$id_rol);
-            
-              if(!is_array($paquetes_precios_utilidad))
-             {
-                 Logger::error("Los paquetes son invalidos",901);
-                 throw new Exception("Los paquetes son invalidos",901);
-             }
-             
-            //valida al rol obtendio
-            $validar = self::validarRol($id_rol);
-            if(is_string($validar))
-            {
-                Logger::error($validar);
-                throw new Exception($validar);
-            }
-            
-            //Se inicializa el registro a guardar
-            $precio_paquete_rol = new PrecioPaqueteRol( array( "id_rol" => $id_rol ) );
-            DAO::transBegin();
-            try
-            {
-                foreach($paquetes_precios_utilidad as $paquete_precio_utilidad)
-                {
-                    
-                    if
-                    (
-                            !array_key_exists("id_paquete", $paquete_precio_utilidad)         ||
-                            !array_key_exists("precio_utilidad", $paquete_precio_utilidad)    ||
-                            !array_key_exists("es_margen_utilidad", $paquete_precio_utilidad)
-                    )
-                    {
-                        throw new Exception("Los paquetes no cuentan con los parametros requeridos",901);
-                    }
-                    
-                    $validar = self::validarPaquete($paquete_precio_utilidad["id_paquete"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $validar = self::validarPrecioUtilidad($paquete_precio_utilidad["precio_utilidad"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $validar = self::validarEsMargenUtilidad($paquete_precio_utilidad["es_margen_utilidad"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $precio_paquete_rol->setEsMargenUtilidad($paquete_precio_utilidad["es_margen_utilidad"]);
-                    $precio_paquete_rol->setIdPaquete($paquete_precio_utilidad["id_paquete"]);
-                    $precio_paquete_rol->setPrecioUtilidad($paquete_precio_utilidad["precio_utilidad"]);
-                    PrecioPaqueteRolDAO::save($precio_paquete_rol);
-                }
-            }
-            catch(Exception $e)
-            {
-                DAO::transRollback();
-                Logger::error("No se han podido guardar todos los precios para el rol ".$id_rol." : ".$e);
-                if($e->getCode()==901)
-                    throw new Exception("No se han podido guardar todos los precios para el rol: ".$e->getMessage (),901);
-                throw new Exception("No se han podido guardar todos los precios para el rol",901);
-            }
-            DAO::transEnd();
-            Logger::log("Precios guardados exitosamente");
-         }
-  
-  
-	
-  
-	/**
- 	 *
- 	 *Los precios de un paquete pueden variar segun el tipo de cliente al que se le vende. Este metodo relaciona un precio a uno o varios paquetes con un tipo de cliente.
- 	 *
- 	 * @param id_tipo_cliente int Id del tipo cliente a relacionar
- 	 * @param paquetes_precios_utilidad json Arreglo de objetos que contendran un id paquete con un precio o un margen de utilidad con el que se ofrecera dicho paquete
- 	 **/
-         public static function Nuevo_precio_tipo_clientePaquete
-	 (
-		$id_tipo_cliente, 
-		$paquetes_precios_utilidad
-	 )
-         {
-             Logger::log("Registrando precios de los paquetes para el tipo_cliente ".$id_tipo_cliente);
-            
-             if(!is_array($paquetes_precios_utilidad))
-             {
-                 Logger::error("Los paquetes son invalidos",901);
-                 throw new Exception("Los paquetes son invalidos",901);
-             }
-             
-            //valida al tipo_cliente obtendio
-            $validar = self::validarClasificacionCliente($id_tipo_cliente);
-            if(is_string($validar))
-            {
-                Logger::error($validar);
-                throw new Exception($validar);
-            }
-            
-            //Se inicializa el registro a guardar
-            $precio_paquete_tipo_cliente = new PrecioPaqueteTipoCliente( array( "id_tipo_cliente" => $id_tipo_cliente ) );
-            DAO::transBegin();
-            try
-            {
-                foreach($paquetes_precios_utilidad as $paquete_precio_utilidad)
-                {
-                    
-                    if
-                    (
-                            !array_key_exists("id_paquete", $paquete_precio_utilidad)         ||
-                            !array_key_exists("precio_utilidad", $paquete_precio_utilidad)    ||
-                            !array_key_exists("es_margen_utilidad", $paquete_precio_utilidad)
-                    )
-                    {
-                        throw new Exception("Los paquetes no cuentan con los parametros requeridos",901);
-                    }
-                    
-                    $validar = self::validarPaquete($paquete_precio_utilidad["id_paquete"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $validar = self::validarPrecioUtilidad($paquete_precio_utilidad["precio_utilidad"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $validar = self::validarEsMargenUtilidad($paquete_precio_utilidad["es_margen_utilidad"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $precio_paquete_tipo_cliente->setEsMargenUtilidad($paquete_precio_utilidad["es_margen_utilidad"]);
-                    $precio_paquete_tipo_cliente->setIdPaquete($paquete_precio_utilidad["id_paquete"]);
-                    $precio_paquete_tipo_cliente->setPrecioUtilidad($paquete_precio_utilidad["precio_utilidad"]);
-                    PrecioPaqueteTipoClienteDAO::save($precio_paquete_tipo_cliente);
-                }
-            }
-            catch(Exception $e)
-            {
-                DAO::transRollback();
-                Logger::error("No se han podido guardar todos los precios para el tipo_cliente ".$id_tipo_cliente." : ".$e);
-                if($e->getCode()==901)
-                    throw new Exception("No se han podido guardar todos los precios para el tipo_cliente: ".$e->getMessage(),901);
-                throw new Exception("No se han podido guardar todos los precios para el tipo_cliente",901);
-            }
-            DAO::transEnd();
-            Logger::log("Precios guardados exitosamente");
-            
-         }
-  
-  
-	
-  
-	/**
- 	 *
- 	 *El precio de un paquete puede varior de acuerdo al usuario al que se le venda. Este metodo relaciona uno o varios paquetes con un usuario mediante un precio o margen de utilidad especifico.
- 	 *
- 	 * @param id_usuario int Id del usuario al que se relacionara
- 	 * @param paquetes_precios_utlidad json Arreglo de objetos que contendran un id paquete con un precio o un margen de utilidad con el que se ofrecera dicho paquete
- 	 **/
-         public static function Nuevo_precio_usuarioPaquete
-         (
-		$id_usuario, 
-		$paquetes_precios_utilidad
-         )
-         {
-             Logger::log("Registrando precios de los paquetes para el usuario ".$id_usuario);
-            
-             if(!is_array($paquetes_precios_utilidad))
-             {
-                 Logger::error("Los paquetes son invalidos",901);
-                 throw new Exception("Los paquetes son invalidos",901);
-             }
-             
-            //valida al usuario obtendio
-            $validar = self::validarUsuario($id_usuario);
-            if(is_string($validar))
-            {
-                Logger::error($validar);
-                throw new Exception($validar);
-            }
-            
-            //Se inicializa el registro a guardar
-            $precio_paquete_usuario = new PrecioPaqueteUsuario( array( "id_usuario" => $id_usuario ) );
-            DAO::transBegin();
-            try
-            {
-                foreach($paquetes_precios_utilidad as $paquete_precio_utilidad)
-                {
-                    
-                    if
-                    (
-                            !array_key_exists("id_paquete", $paquete_precio_utilidad)         ||
-                            !array_key_exists("precio_utilidad", $paquete_precio_utilidad)    ||
-                            !array_key_exists("es_margen_utilidad", $paquete_precio_utilidad)
-                    )
-                    {
-                        throw new Exception("Los paquetes no cuentan con los parametros requeridos",901);
-                    }
-                    
-                    $validar = self::validarPaquete($paquete_precio_utilidad["id_paquete"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $validar = self::validarPrecioUtilidad($paquete_precio_utilidad["precio_utilidad"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $validar = self::validarEsMargenUtilidad($paquete_precio_utilidad["es_margen_utilidad"]);
-                    if(is_string($validar))
-                        throw new Exception($validar,901);
-                    
-                    $precio_paquete_usuario->setEsMargenUtilidad($paquete_precio_utilidad["es_margen_utilidad"]);
-                    $precio_paquete_usuario->setIdPaquete($paquete_precio_utilidad["id_paquete"]);
-                    $precio_paquete_usuario->setPrecioUtilidad($paquete_precio_utilidad["precio_utilidad"]);
-                    PrecioPaqueteUsuarioDAO::save($precio_paquete_usuario);
-                }
-            }
-            catch(Exception $e)
-            {
-                DAO::transRollback();
-                Logger::error("No se han podido guardar todos los precios para el usuario ".$id_usuario." : ".$e);
-                if($e->getCode()==901)
-                    throw new Exception("No se han podido guardar todos los precios para el usuario: ".$e->getMessage(),901);
-                throw new Exception("No se han podido guardar todos los precios para el usuario",901);
-            }
-            DAO::transEnd();
-            Logger::log("Precios guardados exitosamente");
-         }
   }

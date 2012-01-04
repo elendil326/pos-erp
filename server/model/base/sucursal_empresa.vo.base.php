@@ -28,12 +28,6 @@ class SucursalEmpresa extends VO
 			if( isset($data['id_empresa']) ){
 				$this->id_empresa = $data['id_empresa'];
 			}
-			if( isset($data['margen_utilidad']) ){
-				$this->margen_utilidad = $data['margen_utilidad'];
-			}
-			if( isset($data['descuento']) ){
-				$this->descuento = $data['descuento'];
-			}
 		}
 	}
 
@@ -48,9 +42,7 @@ class SucursalEmpresa extends VO
 	{ 
 		$vec = array( 
 			"id_sucursal" => $this->id_sucursal,
-			"id_empresa" => $this->id_empresa,
-			"margen_utilidad" => $this->margen_utilidad,
-			"descuento" => $this->descuento
+			"id_empresa" => $this->id_empresa
 		); 
 	return json_encode($vec); 
 	}
@@ -74,24 +66,6 @@ class SucursalEmpresa extends VO
 	  * @var int(11)
 	  */
 	public $id_empresa;
-
-	/**
-	  * margen_utilidad
-	  * 
-	  * Porcentaje de margen de utilidad que le gana esta sucursal a los productos de esta empresa<br>
-	  * @access public
-	  * @var float
-	  */
-	public $margen_utilidad;
-
-	/**
-	  * descuento
-	  * 
-	  * Descuento que se aplicara a todos los productos de esta empresa en esta sucursal<br>
-	  * @access public
-	  * @var float
-	  */
-	public $descuento;
 
 	/**
 	  * getIdSucursal
@@ -143,54 +117,6 @@ class SucursalEmpresa extends VO
 	final public function setIdEmpresa( $id_empresa )
 	{
 		$this->id_empresa = $id_empresa;
-	}
-
-	/**
-	  * getMargenUtilidad
-	  * 
-	  * Get the <i>margen_utilidad</i> property for this object. Donde <i>margen_utilidad</i> es Porcentaje de margen de utilidad que le gana esta sucursal a los productos de esta empresa
-	  * @return float
-	  */
-	final public function getMargenUtilidad()
-	{
-		return $this->margen_utilidad;
-	}
-
-	/**
-	  * setMargenUtilidad( $margen_utilidad )
-	  * 
-	  * Set the <i>margen_utilidad</i> property for this object. Donde <i>margen_utilidad</i> es Porcentaje de margen de utilidad que le gana esta sucursal a los productos de esta empresa.
-	  * Una validacion basica se hara aqui para comprobar que <i>margen_utilidad</i> es de tipo <i>float</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param float
-	  */
-	final public function setMargenUtilidad( $margen_utilidad )
-	{
-		$this->margen_utilidad = $margen_utilidad;
-	}
-
-	/**
-	  * getDescuento
-	  * 
-	  * Get the <i>descuento</i> property for this object. Donde <i>descuento</i> es Descuento que se aplicara a todos los productos de esta empresa en esta sucursal
-	  * @return float
-	  */
-	final public function getDescuento()
-	{
-		return $this->descuento;
-	}
-
-	/**
-	  * setDescuento( $descuento )
-	  * 
-	  * Set the <i>descuento</i> property for this object. Donde <i>descuento</i> es Descuento que se aplicara a todos los productos de esta empresa en esta sucursal.
-	  * Una validacion basica se hara aqui para comprobar que <i>descuento</i> es de tipo <i>float</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param float
-	  */
-	final public function setDescuento( $descuento )
-	{
-		$this->descuento = $descuento;
 	}
 
 }

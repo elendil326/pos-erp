@@ -3,7 +3,7 @@
   * POST api/servicios/orden/terminar
   * Dar por terminada una orden
   *
-  * Dar por terminada una orden, cuando el cliente satisface el ultimo pago
+  * Dar por terminada una orden, al momento de terminarse una orden se genera una venta, por lo tanto, al terminar la orden hay que especificar datos de la misma.
   *
   *
   *

@@ -158,14 +158,19 @@ abstract class RolDAOBase extends DAO
 			array_push( $val, $rol->getDescripcion() );
 		}
 
-		if( ! is_null( $rol->getDescuento() ) ){
-			$sql .= " descuento = ? AND";
-			array_push( $val, $rol->getDescuento() );
-		}
-
 		if( ! is_null( $rol->getSalario() ) ){
 			$sql .= " salario = ? AND";
 			array_push( $val, $rol->getSalario() );
+		}
+
+		if( ! is_null( $rol->getIdTarifaCompra() ) ){
+			$sql .= " id_tarifa_compra = ? AND";
+			array_push( $val, $rol->getIdTarifaCompra() );
+		}
+
+		if( ! is_null( $rol->getIdTarifaVenta() ) ){
+			$sql .= " id_tarifa_venta = ? AND";
+			array_push( $val, $rol->getIdTarifaVenta() );
 		}
 
 		if(sizeof($val) == 0){return array();}
@@ -199,12 +204,13 @@ abstract class RolDAOBase extends DAO
 	  **/
 	private static final function update( $rol )
 	{
-		$sql = "UPDATE rol SET  nombre = ?, descripcion = ?, descuento = ?, salario = ? WHERE  id_rol = ?;";
+		$sql = "UPDATE rol SET  nombre = ?, descripcion = ?, salario = ?, id_tarifa_compra = ?, id_tarifa_venta = ? WHERE  id_rol = ?;";
 		$params = array( 
 			$rol->getNombre(), 
 			$rol->getDescripcion(), 
-			$rol->getDescuento(), 
 			$rol->getSalario(), 
+			$rol->getIdTarifaCompra(), 
+			$rol->getIdTarifaVenta(), 
 			$rol->getIdRol(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -228,13 +234,14 @@ abstract class RolDAOBase extends DAO
 	  **/
 	private static final function create( &$rol )
 	{
-		$sql = "INSERT INTO rol ( id_rol, nombre, descripcion, descuento, salario ) VALUES ( ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO rol ( id_rol, nombre, descripcion, salario, id_tarifa_compra, id_tarifa_venta ) VALUES ( ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$rol->getIdRol(), 
 			$rol->getNombre(), 
 			$rol->getDescripcion(), 
-			$rol->getDescuento(), 
 			$rol->getSalario(), 
+			$rol->getIdTarifaCompra(), 
+			$rol->getIdTarifaVenta(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -316,23 +323,34 @@ abstract class RolDAOBase extends DAO
 			
 		}
 
-		if( ( !is_null (($a = $rolA->getDescuento()) ) ) & ( ! is_null ( ($b = $rolB->getDescuento()) ) ) ){
-				$sql .= " descuento >= ? AND descuento <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " descuento = ? AND"; 
-			$a = is_null ( $a ) ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
 		if( ( !is_null (($a = $rolA->getSalario()) ) ) & ( ! is_null ( ($b = $rolB->getSalario()) ) ) ){
 				$sql .= " salario >= ? AND salario <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " salario = ? AND"; 
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( ( !is_null (($a = $rolA->getIdTarifaCompra()) ) ) & ( ! is_null ( ($b = $rolB->getIdTarifaCompra()) ) ) ){
+				$sql .= " id_tarifa_compra >= ? AND id_tarifa_compra <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " id_tarifa_compra = ? AND"; 
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( ( !is_null (($a = $rolA->getIdTarifaVenta()) ) ) & ( ! is_null ( ($b = $rolB->getIdTarifaVenta()) ) ) ){
+				$sql .= " id_tarifa_venta >= ? AND id_tarifa_venta <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " id_tarifa_venta = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

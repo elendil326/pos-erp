@@ -45,10 +45,8 @@
  	 * @param id_categoria int Id de la categoria del producto
  	 * @param nombre string Nombre de la categoria del producto
  	 * @param descripcion string Descripcion larga de la categoria
- 	 * @param descuento float Descuento que tendran los productos de esta categoria
  	 * @param garantia int Numero de meses de garantia con los que cuentan los productos de esta clasificacion
  	 * @param impuestos json Ids de impuestos que afectan a esta clasificacion de producto
- 	 * @param margen_utilidad float Margen de utilidad de los productos que formen parte de esta categoria
  	 * @param retenciones json Ids de retenciones que afectan a esta clasificacion de producto
  	 **/
   static function EditarCategoria
@@ -56,10 +54,8 @@
 		$id_categoria, 
 		$nombre, 
 		$descripcion = null, 
-		$descuento = null, 
 		$garantia = null, 
 		$impuestos = null, 
-		$margen_utilidad = null, 
 		$retenciones = null
 	);  
   
@@ -72,10 +68,8 @@
  	 *
  	 * @param nombre string Nombre de la categoria
  	 * @param descripcion string Descripcion larga de la categoria
- 	 * @param descuento float Descuento que tendran los productos de esta categoria
  	 * @param garantia int Numero de meses de garantia con los que cuenta esta categoria de producto
  	 * @param impuestos json Ids de impuestos que afectan a esta categoria de producto
- 	 * @param margen_utilidad float Margen de utilidad que tendran los productos de esta categoria
  	 * @param retenciones json Ids de retenciones que afectan esta clasificacion de productos
  	 * @return id_categoria int Id atogenerado por la insercion de la categoria
  	 **/
@@ -83,10 +77,8 @@
 	(
 		$nombre, 
 		$descripcion = null, 
-		$descuento = null, 
 		$garantia = null, 
 		$impuestos = null, 
-		$margen_utilidad = null, 
 		$retenciones = null
 	);  
   
@@ -112,22 +104,20 @@
  	 *Edita la informaci?n de un producto
  	 *
  	 * @param id_producto int Id del producto a editar
- 	 * @param clasificaciones json Uno o varios id_clasificacion de este producto, esta clasificacion esta dada por el usuarioArray
+ 	 * @param clasificaciones json Uno o varios id_clasificacion de este producto, esta clasificacion esta dada por el usuario
  	 * @param codigo_de_barras string El Codigo de barras para este producto
  	 * @param codigo_producto string Codigo del producto
- 	 * @param compra_en_mostrador bool Verdadero si este producto se puede comprar en mostrador, para aquello de compra-venta. Para poder hacer esto, el sistema debe poder hacer compras en mostrador
+ 	 * @param compra_en_mostrador bool Verdadero si este producto se puede comprar en mostrador, para aquello de compra-venta
  	 * @param control_de_existencia int 00000001 = Unidades. 00000010 = Caractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = Lote
  	 * @param costo_estandar float Valor del costo estndar del producto.
  	 * @param costo_extra_almacen float Si este producto produce un costo extra por tenerlo en almacen
  	 * @param descripcion_producto string Descripcion larga del producto
- 	 * @param descuento float Descuento que tendra este producot
- 	 * @param empresas json arreglo de empresas a las que pertenece este producto
+ 	 * @param empresas json arreglo de ids de empresas a las que pertenece este producto
  	 * @param foto_del_producto string url a una foto de este producto
- 	 * @param garantia int Si este producto cuenta con un nmero de meses de garantia que no aplican a los demas productos de su categoria
+ 	 * @param garantia int Numero de meses de garantia de este producto
  	 * @param id_unidad int La unidad preferente de este producto
  	 * @param impuestos json array de ids de impuestos que tiene este producto
- 	 * @param margen_de_utilidad float Un porcentage de 0 a 100 si queremos que este producto marque utilidad en especifico
- 	 * @param metodo_costeo string Mtodo de costeo del producto: 1 = Costo Promedio en Base a Entradas.2 = Costo Promedio en Base a Entradas Almacn.3 = ltimo costo.4 = UEPS.5 = PEPS.6 = Costo especfico.7 = Costo Estndar
+ 	 * @param metodo_costeo string Puede ser "precio" o "costo" e indican si el precio final sera tomado a partir del costo del producto o del precio del mismo
  	 * @param nombre_producto string Nombre del producto
  	 * @param peso_producto float el peso de este producto en KG
  	 * @param precio int El precio de este producto
@@ -143,13 +133,11 @@
 		$costo_estandar = null, 
 		$costo_extra_almacen = null, 
 		$descripcion_producto = null, 
-		$descuento = null, 
 		$empresas = null, 
 		$foto_del_producto = null, 
 		$garantia = null, 
 		$id_unidad = null, 
 		$impuestos = null, 
-		$margen_de_utilidad = null, 
 		$metodo_costeo = null, 
 		$nombre_producto = null, 
 		$peso_producto = null, 
@@ -190,22 +178,20 @@ NOTA: Se crea un producto tipo = 1 que es para productos
  	 *
  	 * @param activo bool Si queremos que este activo o no este producto despues de crearlo.
  	 * @param codigo_producto string El codigo de control de la empresa para este producto, no se puede repetir
- 	 * @param compra_en_mostrador bool Verdadero si este producto se puede comprar en mostrador, para aquello de compra-venta. Para poder hacer esto, el sistema debe poder hacer compras en mostrador
+ 	 * @param compra_en_mostrador bool Verdadero si este producto se puede comprar en mostrador, para aquello de compra-venta
  	 * @param costo_estandar float Valor del costo estndar del producto.
- 	 * @param metodo_costeo string  Mtodo de costeo del producto: 1 = Costo Promedio en Base a Entradas.2 = Costo Promedio en Base a Entradas Almacn.3 = ltimo costo.4 = UEPS.5 = PEPS.6 = Costo especfico.7 = Costo Estndar
+ 	 * @param metodo_costeo string Puede ser "precio" o "costo" e indican si el precio final se tomara del precio de este producto o de su costo
  	 * @param nombre_producto string Nombre del producto
  	 * @param clasificaciones json Uno o varios id_clasificacion de este producto, esta clasificacion esta dada por el usuarioArray
  	 * @param codigo_de_barras string El Codigo de barras para este producto
  	 * @param control_de_existencia int 00000001 = Unidades. 00000010 = Caractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = Lote
  	 * @param costo_extra_almacen float Si este producto produce un costo extra por tenerlo en almacen
  	 * @param descripcion_producto string Descripcion larga del producto
- 	 * @param descuento float Descuento que se aplicara a este producot
  	 * @param foto_del_producto string url a una foto de este producto
  	 * @param garantia int Si este producto cuenta con un nmero de meses de garanta  que no aplica a los productos de su categora
- 	 * @param id_empresas json Arreglo que contendra la informaciond e las empresas. Debera contener:  {   "id_empresas": [     {       "id_empresa" : 1,"precio_utilidad": 10,"es_margen_utilidad": 1     }]}
+ 	 * @param id_empresas json Arreglo que contendra los ids de las empresas a las que pertenece este producto
  	 * @param id_unidad int La unidad preferida para este producto
  	 * @param impuestos json array de ids de impuestos que tiene este producto
- 	 * @param margen_de_utilidad float Un porcentage de 0 a 100 si queremos que este producto marque utilidad en especifico
  	 * @param peso_producto float el peso de este producto en KG
  	 * @param precio int El precio de este producto
  	 * @return id_producto int Id generado por la inserción del nuevo producto
@@ -223,13 +209,11 @@ NOTA: Se crea un producto tipo = 1 que es para productos
 		$control_de_existencia = null, 
 		$costo_extra_almacen = null, 
 		$descripcion_producto = null, 
-		$descuento = null, 
 		$foto_del_producto = null, 
 		$garantia = null, 
 		$id_empresas = null, 
 		$id_unidad = null, 
 		$impuestos = null, 
-		$margen_de_utilidad = null, 
 		$peso_producto = null, 
 		$precio = null
 	);  

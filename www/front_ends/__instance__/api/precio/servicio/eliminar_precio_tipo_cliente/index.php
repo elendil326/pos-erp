@@ -11,6 +11,6 @@
 require_once("../../../../../../../server/bootstrap.php");
 require_once("api/api.precio.servicio.eliminar_precio_tipo_cliente.php");
 
-$api = new ApiPrecioServicioEliminar_precio_tipo_cliente();
+$api = new ApiPrecioServicioEliminarPrecioTipoCliente();
 $apiOutput = ApiOutputFormatter::getInstance();
 $apiOutput->PrintOuput($api);

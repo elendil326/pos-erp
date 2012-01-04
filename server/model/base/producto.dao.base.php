@@ -188,16 +188,6 @@ abstract class ProductoDAOBase extends DAO
 			array_push( $val, $producto->getControlDeExistencia() );
 		}
 
-		if( ! is_null( $producto->getMargenDeUtilidad() ) ){
-			$sql .= " margen_de_utilidad = ? AND";
-			array_push( $val, $producto->getMargenDeUtilidad() );
-		}
-
-		if( ! is_null( $producto->getDescuento() ) ){
-			$sql .= " descuento = ? AND";
-			array_push( $val, $producto->getDescuento() );
-		}
-
 		if( ! is_null( $producto->getDescripcion() ) ){
 			$sql .= " descripcion = ? AND";
 			array_push( $val, $producto->getDescripcion() );
@@ -264,7 +254,7 @@ abstract class ProductoDAOBase extends DAO
 	  **/
 	private static final function update( $producto )
 	{
-		$sql = "UPDATE producto SET  compra_en_mostrador = ?, metodo_costeo = ?, activo = ?, codigo_producto = ?, nombre_producto = ?, garantia = ?, costo_estandar = ?, control_de_existencia = ?, margen_de_utilidad = ?, descuento = ?, descripcion = ?, foto_del_producto = ?, costo_extra_almacen = ?, codigo_de_barras = ?, peso_producto = ?, id_unidad = ?, precio = ? WHERE  id_producto = ?;";
+		$sql = "UPDATE producto SET  compra_en_mostrador = ?, metodo_costeo = ?, activo = ?, codigo_producto = ?, nombre_producto = ?, garantia = ?, costo_estandar = ?, control_de_existencia = ?, descripcion = ?, foto_del_producto = ?, costo_extra_almacen = ?, codigo_de_barras = ?, peso_producto = ?, id_unidad = ?, precio = ? WHERE  id_producto = ?;";
 		$params = array( 
 			$producto->getCompraEnMostrador(), 
 			$producto->getMetodoCosteo(), 
@@ -274,8 +264,6 @@ abstract class ProductoDAOBase extends DAO
 			$producto->getGarantia(), 
 			$producto->getCostoEstandar(), 
 			$producto->getControlDeExistencia(), 
-			$producto->getMargenDeUtilidad(), 
-			$producto->getDescuento(), 
 			$producto->getDescripcion(), 
 			$producto->getFotoDelProducto(), 
 			$producto->getCostoExtraAlmacen(), 
@@ -306,7 +294,7 @@ abstract class ProductoDAOBase extends DAO
 	  **/
 	private static final function create( &$producto )
 	{
-		$sql = "INSERT INTO producto ( id_producto, compra_en_mostrador, metodo_costeo, activo, codigo_producto, nombre_producto, garantia, costo_estandar, control_de_existencia, margen_de_utilidad, descuento, descripcion, foto_del_producto, costo_extra_almacen, codigo_de_barras, peso_producto, id_unidad, precio ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO producto ( id_producto, compra_en_mostrador, metodo_costeo, activo, codigo_producto, nombre_producto, garantia, costo_estandar, control_de_existencia, descripcion, foto_del_producto, costo_extra_almacen, codigo_de_barras, peso_producto, id_unidad, precio ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$producto->getIdProducto(), 
 			$producto->getCompraEnMostrador(), 
@@ -317,8 +305,6 @@ abstract class ProductoDAOBase extends DAO
 			$producto->getGarantia(), 
 			$producto->getCostoEstandar(), 
 			$producto->getControlDeExistencia(), 
-			$producto->getMargenDeUtilidad(), 
-			$producto->getDescuento(), 
 			$producto->getDescripcion(), 
 			$producto->getFotoDelProducto(), 
 			$producto->getCostoExtraAlmacen(), 
@@ -468,28 +454,6 @@ abstract class ProductoDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " control_de_existencia = ? AND"; 
-			$a = is_null ( $a ) ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
-		if( ( !is_null (($a = $productoA->getMargenDeUtilidad()) ) ) & ( ! is_null ( ($b = $productoB->getMargenDeUtilidad()) ) ) ){
-				$sql .= " margen_de_utilidad >= ? AND margen_de_utilidad <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " margen_de_utilidad = ? AND"; 
-			$a = is_null ( $a ) ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
-		if( ( !is_null (($a = $productoA->getDescuento()) ) ) & ( ! is_null ( ($b = $productoB->getDescuento()) ) ) ){
-				$sql .= " descuento >= ? AND descuento <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " descuento = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

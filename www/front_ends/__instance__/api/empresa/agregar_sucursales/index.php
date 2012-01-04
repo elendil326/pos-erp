@@ -11,6 +11,6 @@
 require_once("../../../../../../server/bootstrap.php");
 require_once("api/api.empresa.agregar_sucursales.php");
 
-$api = new ApiEmpresaAgregar_sucursales();
+$api = new ApiEmpresaAgregarSucursales();
 $apiOutput = ApiOutputFormatter::getInstance();
 $apiOutput->PrintOuput($api);

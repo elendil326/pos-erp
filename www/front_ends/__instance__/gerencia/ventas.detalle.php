@@ -28,6 +28,11 @@
                 if(!$esta_venta->getCancelada())
                 {
                     $menu = new MenuComponent();
+                    
+                    if($esta_venta->getTipoDeVenta()=="credito")
+                    {
+                        $menu->addItem("Abonar a esta venta", "cargos_y_abonos.nuevo.abono.php?vid=".$_GET["vid"]."&did=".$esta_venta->getIdCompradorVenta());
+                    }
 
                     $btn_eliminar = new MenuItem("Cancelar esta venta", null);
                     $btn_eliminar->addApiCall("api/ventas/cancelar", "GET");

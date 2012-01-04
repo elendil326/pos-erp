@@ -97,10 +97,6 @@ class GerenciaComponentPage extends StdComponentPage{
                     "url": "cargos_y_abonos.lista.abono.php"
                 },
                 {
-                    "title": "Nuevo abono",
-                    "url": "cargos_y_abonos.nuevo.abono.php"
-                },
-                {
                     "title": "Lista concepto de gasto",
                     "url": "cargos_y_abonos.lista.concepto.gasto.php"
                 },

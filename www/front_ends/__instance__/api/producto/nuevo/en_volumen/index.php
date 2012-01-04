@@ -11,6 +11,6 @@
 require_once("../../../../../../../server/bootstrap.php");
 require_once("api/api.producto.nuevo.en_volumen.php");
 
-$api = new ApiProductoNuevoEn_volumen();
+$api = new ApiProductoNuevoEnVolumen();
 $apiOutput = ApiOutputFormatter::getInstance();
 $apiOutput->PrintOuput($api);

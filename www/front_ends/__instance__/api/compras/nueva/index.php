@@ -1,9 +1,9 @@
 <?php
 /**
-  * GET api/compras/nueva
-  * Registra una nueva compra fuera de caja
+  * POST api/compras/nueva
+  * Registra una nueva compra
   *
-  * Registra una nueva compra fuera de caja, puede usarse para que el administrador haga directamente una compra. El usuario y al sucursal seran tomados de la sesion. La fecha sera tomada del servidor. La empresa sera tomada del almacen del cual fueron tomados los productos.
+  * Registra una nueva compra, la compra puede ser a cualquier usuario, siendo este un cliente, proveedor, o cualquiera. La compra siempre viene acompa?anda de un detalle de productos que han sido comprados, y cada uno estipula a que almacen y a que sucursal iran a parar.
   *
   *
   *
