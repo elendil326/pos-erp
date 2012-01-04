@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 04-01-2012 a las 01:49:51
+-- Tiempo de generación: 04-01-2012 a las 03:51:45
 -- Versión del servidor: 5.1.53
 -- Versión de PHP: 5.3.4
 
@@ -1677,8 +1677,8 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `dias_de_embarque` int(11) DEFAULT NULL COMMENT 'Dias de embarque del proveedor (Lunes, Martes, etc)',
   `tiempo_entrega` int(11) DEFAULT NULL COMMENT 'Tiempo de entrega del proveedor en días',
   `cuenta_bancaria` varchar(50) DEFAULT NULL COMMENT 'Cuenta bancaria del usuario',
-  `id_tarifa_compra` int(11) DEFAULT NULL COMMENT 'Id de la tarifa de compra por default para este usuario',
-  `id_tarifa_venta` int(11) DEFAULT NULL COMMENT 'Id de la tarifa de venta por default para este usuario',
+  `id_tarifa_compra` int(11) NOT NULL COMMENT 'Id de la tarifa de compra por default para este usuario',
+  `id_tarifa_venta` int(11) NOT NULL COMMENT 'Id de la tarifa de venta por default para este usuario',
   PRIMARY KEY (`id_usuario`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='tabla de usuarios' AUTO_INCREMENT=30 ;
 
