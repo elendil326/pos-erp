@@ -11,9 +11,8 @@
 	$page->addComponent( new TitleComponent( "Bienvenido" ) );
 	$page->addComponent( new TitleComponent( "POS ERP", 2 ) );
 
-	$foo = new Usuario();
-	$cmp = new DAOFormComponent( $foo );
-	//$page->addComponent( $cmp );
+	/*$big_menu = new BigMenuComponent();
+	$big_menu->addItem(  );*/
 	
 	$page->render();
 

@@ -226,7 +226,12 @@ Si el usuario que esta intentando iniciar sesion, esta descativado... 403 Author
 
 		$_SESSION['USER_ID'			] 	= $user_id; 
 		$_SESSION['PASSWORD'		]	= md5($password);
-		$_SESSION['HTTP_USER_AGENT'	]	= $_SERVER["HTTP_USER_AGENT"];
+		
+		if(isset( $_SERVER["HTTP_USER_AGENT"] ))
+			$_SESSION['HTTP_USER_AGENT'	]	= $_SERVER["HTTP_USER_AGENT"];
+		else
+			$_SESSION['HTTP_USER_AGENT'	]	= "NOT_SET";
+			
 		$_SESSION['USER_ROL'		]	= $rol_id;
 
 	}

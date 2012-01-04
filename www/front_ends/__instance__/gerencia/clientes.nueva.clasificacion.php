@@ -13,8 +13,9 @@
                 
 		$form->onApiCallSuccessRedirect("clientes.lista.clasificacion.php");
 		
-		$form->renameField( array( "margen_utilidad" => "utilidad" ) );
-                $form->hideField( array( 
+		
+
+		$form->hideField( array( 
 				"id_clasificacion_cliente"
 			 ));
 

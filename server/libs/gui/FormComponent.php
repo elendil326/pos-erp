@@ -98,9 +98,9 @@ class FormComponent implements GuiComponent{
 
 					
 					if( $f->hidden === true ){
-						Logger::debug( $f->id );
+						/*Logger::debug( $f->id );
 						Logger::debug( $f->hidden );
-						Logger::debug( $f->send_as_hidden );
+						Logger::debug( $f->send_as_hidden );*/
 						if($f->send_as_hidden === true){
 							$html .= "p." . $f->id . " = " . $f->value . ";" ;
 						}

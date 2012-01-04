@@ -344,6 +344,7 @@ class ShoppingCartComponent implements GuiComponent {
 			<p style="margin-bottom: 0px;">Buscar productos</p>				
 			<div id="ShoppingCartComponent_001"><!-- buscar productos --></div>
 			
+			tarifa
 			
 			<h2 style="margin-bottom:0px">Esta venta</h2>
 			<div id="carrito_de_compras" style="margin: 5px auto;">
