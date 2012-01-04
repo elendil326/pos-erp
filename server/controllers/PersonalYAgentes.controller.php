@@ -46,7 +46,9 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 $id_rol=null,
                 $descripcion=null,
                 $nombre = null,
-		$salario = null
+		$salario = null,
+                $id_tarifa_compra = null,
+                $id_tarifa_venta = null
       )
       {
           //Valida si el rol existe en la base de datos
@@ -78,6 +80,40 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                     if(is_string($e))
                         return $e;
           }
+          
+          if(!is_null($id_tarifa_compra))
+          {
+              $tarifa = TarifaDAO::getByPK($id_tarifa_compra);
+              if(is_null($tarifa))
+              {
+                  return "La tarifa ".$id_tarifa_compra." no existe";
+              }
+              
+              if($tarifa->getActiva())
+              {
+                  return "La tarifa ".$id_tarifa_compra." no existe";
+              }
+              
+              if($tarifa->getTipoTarifa()!="compra")
+              {
+                  return "La tarifa ".$id_tarifa_compra." no es una tarifa de compra";
+              }
+          }
+          
+          if(!is_null($id_tarifa_venta))
+          {
+              $tarifa = TarifaDAO::getByPK($id_tarifa_venta);
+              if(is_null($tarifa))
+              {
+                  return "La tarifa ".$id_tarifa_compra." no existe";
+              }
+              
+              if($tarifa->getTipoTarifa()!="venta")
+              {
+                  return "La tarifa ".$id_tarifa_venta." no esuna tarifa de venta";
+              }
+          }
+          
           return true;
       }
 
@@ -122,7 +158,9 @@ require_once("interfaces/PersonalYAgentes.interface.php");
               $codigo_usuario = null,
               $dias_de_embarque = null,
               $tiempo_entrega = null,
-              $cuenta_bancaria = null
+              $cuenta_bancaria = null,
+              $id_tarifa_compra = null,
+              $id_tarifa_venta = null
       )
       {
           //valida que el id del usuario exista en la base de datos
@@ -378,6 +416,44 @@ require_once("interfaces/PersonalYAgentes.interface.php");
               if(is_string($e))
                   return $e;
           }
+          //valida que la tarifa de compra sea valida
+          if(!is_null($id_tarifa_compra))
+          {
+              $tarifa = TarifaDAO::getByPK($id_tarifa_compra);
+              if(is_null($tarifa))
+              {
+                  return "La tarifa ".$id_tarifa_compra." no existe";
+              }
+              
+              if($tarifa->getActiva())
+              {
+                  return "La tarifa ".$id_tarifa_compra." no esta activa";
+              }
+              
+              if($tarifa->getTipoTarifa()!="compra")
+              {
+                  return "La tarifa ".$id_tarifa_compra." no es una tarifa de compra";
+              }
+          }
+          //valida que la tarifa de venta sea valida
+          if(!is_null($id_tarifa_venta))
+          {
+              $tarifa = TarifaDAO::getByPK($id_tarifa_venta);
+              if(is_null($tarifa))
+              {
+                  return "La tarifa ".$id_tarifa_venta." no existe";
+              }
+              
+              if($tarifa->getActiva())
+              {
+                  return "La tarifa ".$id_tarifa_venta." no esta activa";
+              }
+              
+              if($tarifa->getTipoTarifa()!="venta")
+              {
+                  return "La tarifa ".$id_tarifa_venta." no es una tarifa de venta";
+              }
+          }
           return true;
       }
 
@@ -564,7 +640,8 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                     $correo_electronico,$pagina_web,$saldo_del_ejercicio,$ventas_a_credito,
                     $representante_legal,$facturar_a_terceros,$dia_de_pago,$mensajeria,
                     $intereses_moratorios,$denominacion_comercial,$dias_de_credito,
-                    $cuenta_mensajeria,$dia_de_revision,$codigo_usuario,$dias_de_embarque,$tiempo_entrega,$cuenta_bancaria);
+                    $cuenta_mensajeria,$dia_de_revision,$codigo_usuario,$dias_de_embarque,$tiempo_entrega,$cuenta_bancaria,
+                    $id_tarifa_compra,$id_tarifa_venta);
 
             //se verifica que la validacion haya sido correcta
             if(is_string($validar))
@@ -641,6 +718,32 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 $limite_credito=0;
             if(is_null($saldo_del_ejercicio))
                 $saldo_del_ejercicio=0;
+            
+            //Si la tarifa de compra o de venta es nula, entonces se tomaran las del rol recibido
+            
+            if(is_null($id_tarifa_compra))
+            {
+                $rol = RolDAO::getByPK($id_rol);
+                $id_tarifa_compra = $rol->getIdTarifaCompra();
+            }
+            
+            if(is_null($id_tarifa_venta))
+            {
+                $rol = RolDAO::getByPK($id_rol);
+                $id_tarifa_venta = $rol->getIdTarifaVenta();
+            }
+            
+            //Si la tarifa de venta sigue siendo nula, se toma la default
+            if(is_null($id_tarifa_venta))
+            {
+                $id_tarifa_venta = 1;
+            }
+            
+            //Si la tarifa de compra sigue siendo nula, se toma la default
+            if(is_null($id_tarifa_compra))
+            {
+                $id_tarifa_compra = 2;
+            }
 
             //se crea el objeto usuario con todos los parametros
             $usuario = new Usuario(
@@ -679,7 +782,9 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                                 "dias_de_embarque"          => $dias_de_embarque,
                                 "tiempo_entrega"            => $tiempo_entrega,
                                 "cuenta_bancaria"           => $cuenta_bancaria,
-                                "consignatario"             => 0
+                                "consignatario"             => 0,
+                                "id_tarifa_compra"          => $id_tarifa_compra,
+                                "id_tarifa_venta"           => $id_tarifa_venta
                             )
                         );
 
@@ -849,7 +954,9 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                         $ordenar != "codigo_usuario" &&
                         $ordenar != "dias_de_embarque" &&
                         $ordenar != "tiempo_entrega" &&
-                        $ordenar != "cuenta_bancaria"
+                        $ordenar != "cuenta_bancaria" &&
+                        $ordenar != "id_tarifa_compra"  &&
+                        $ordenar != "id_tarifa_venta"
                 )
                 {
                     Logger::error("El parametro ordenar: ".$ordenar." no es una columna de la tabla usuario");
@@ -998,7 +1105,8 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                     $correo_electronico,$pagina_web,$saldo_del_ejercicio,$ventas_a_credito,
                     $representante_legal,$facturar_a_terceros,$dia_de_pago,$mensajeria,
                     $intereses_moratorios,$denominacion_comercial,$dias_de_credito,
-                    $cuenta_mensajeria,$dia_de_revision,$codigo_usuario,$dias_de_embarque,$tiempo_entrega,$cuenta_bancaria);
+                    $cuenta_mensajeria,$dia_de_revision,$codigo_usuario,$dias_de_embarque,$tiempo_entrega,$cuenta_bancaria,
+                    $id_tarifa_compra,$id_tarifa_venta);
             if(is_string($validar))
             {
                 Logger::error($validar);
@@ -1062,6 +1170,18 @@ require_once("interfaces/PersonalYAgentes.interface.php");
           {
               if($usuario->getIdRol()!=$id_rol)
               {
+                  //Si el usuario tiene la tarifa de compra o de venta del rol anterior, quiere decir que lo tomo del rol,
+                  //lo que indica que tiene que ser actualizado al actualizarse el rol
+                $rol_anterior = RolDAO::getByPK($usuario->getIdRol());
+                $rol_nuevo = RolDAO::getByPK($id_rol);
+                if($rol_anterior->getIdTarifaCompra()==$usuario->getIdTarifaCompra())
+                {
+                    $usuario->setIdTarifaCompra($rol_nuevo->getIdTarifaCompra());
+                }
+                if($rol_anterior->getIdTarifaVenta()==$usuario->getIdTarifaVenta())
+                {
+                    $usuario->setIdTarifaVenta($rol_nuevo->getIdTarifaVenta());
+                }
                 $usuario->setIdRol($id_rol);
                 $usuario->setFechaAsignacionRol(date("Y-m-d H:i:s"));
                 $cambio_rol=true;
@@ -1325,6 +1445,15 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 throw new Exception("El password (".$usuario->getPassword().") no puede ser igual al codigo de usuario
                     (".$usuario->getCodigoUsuario().") ni al correo electronico (".$usuario->getCorreoElectronico().")",901);
             }
+            if(!is_null($id_tarifa_compra))
+            {
+                $usuario->setIdTarifaCompra($id_tarifa_compra);
+            }
+            if(!is_null($id_tarifa_venta))
+            {
+                $usuario->setIdTarifaVenta($id_tarifa_venta);
+            }
+            
             
             DAO::transBegin();
             try
@@ -1496,6 +1625,8 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                         $orden != "descripcion" &&
                         $orden != "descuento" &&
                         $orden != "salario" &&
+                        $orden != "id_tarifa_compra" &&
+                        $orden != "id_tarifa_venta" &&
                         !is_null($orden)
                 )
                 {
@@ -1739,19 +1870,33 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             Logger::log("Creando nuevo rol");
 
             //Se validan lso parametros del rol
-            $validar=self::ValidarParametrosRol(null, $descripcion, $nombre, $salario);
+            $validar=self::ValidarParametrosRol(null, $descripcion, $nombre, $salario,$id_tarifa_compra,$id_tarifa_venta);
             if(is_string($validar))
             {
                 Logger::error($validar);
                 throw new Exception($validar,901);
             }
-
+            
+            //Si no se recibe una tarifa de venta, se toma la default
+            if(is_null($id_tarifa_venta))
+            {
+                $id_tarifa_venta=1;
+            }
+            
+            //Si no se recibe una tarifa de compra, se toma la default
+            if(is_null($id_tarifa_compra))
+            {
+                $id_tarifa_compra=2;
+            }
+            
             //Se inicializa el nuevo rol con los parametros obtenidos
             $rol=new Rol(
                     array(
-                        "nombre"        => trim($nombre),
-                        "descripcion"   => $descripcion,
-                        "salario"       => $salario
+                        "nombre"            => trim($nombre),
+                        "descripcion"       => $descripcion,
+                        "salario"           => $salario,
+                        "id_tarifa_compra"  => $id_tarifa_compra,
+                        "id_tarifa_venta"   => $id_tarifa_venta
                     )
                     );
 
@@ -1804,7 +1949,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             Logger::log("Editando rol ".$id_rol);
 
             //Se validan los parametros obtenidos.
-            $validar = self::ValidarParametrosRol($id_rol, $descripcion, $nombre, $salario);
+            $validar = self::ValidarParametrosRol($id_rol, $descripcion, $nombre, $salario,$id_tarifa_compra,$id_tarifa_venta);
             if(is_string($validar))
             {
                 Logger::error($validar);
@@ -1837,11 +1982,57 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             {
                 $rol->setDescripcion($descripcion);
             }
+            
+            $cambio_tarifa_compra = false;
+            $cambio_tarifa_venta = false;
+            $tarifa_compra_vieja = null;
+            $tarifa_venta_vieja = null;
+            
+            
+            
+            if(!is_null($id_tarifa_compra))
+            {
+                $tarifa_compra_vieja = $rol->getIdTarifaCompra();
+                $rol->setIdTarifaCompra($id_tarifa_compra);
+                $cambio_tarifa_compra = true;
+            }
+            if(!is_null($id_tarifa_venta))
+            {
+                $tarifa_venta_vieja = $rol->getIdTarifaVenta();
+                $cambio_tarifa_venta = true;
+                $rol->setIdTarifaVenta($id_tarifa_venta);
+            }
             DAO::transBegin();
             try
             {
                 //Se actualiza el rol.
                 RolDAO::save($rol);
+                
+                //Si se cambia la tarifa de compra o venta del rol, se cambian las tarifas de los usuarios
+                //con este rol. Si un usuario tiene una tarifa diferente a la que tenia el rol anteriormente
+                //quiere decir que se le asigno manualmente una tarifa y no se cambia.
+                if($cambio_tarifa_compra || $cambio_tarifa_venta)
+                {
+                    $usuarios = UsuarioDAO::search( new Usuario( array( "id_rol" => $id_rol ) ) );
+                    foreach($usuarios as $usuario)
+                    {
+                        if($cambio_tarifa_compra)
+                        {
+                            if($usuario->getIdTarifaCompra()==$tarifa_compra_vieja)
+                            {
+                                $usuario->setIdTarifaCompra($id_tarifa_compra);
+                            }
+                        }
+                        if($cambio_tarifa_venta)
+                        {
+                            if($usuario->getIdTarifaVenta()==$tarifa_venta_vieja)
+                            {
+                                $usuario->setIdTarifaVenta($id_tarifa_venta);
+                            }
+                        }
+                        UsuarioDAO::save($usuario);
+                    }
+                }
             }
             catch(Exception $e)
             {
