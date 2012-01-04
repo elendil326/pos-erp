@@ -69,13 +69,16 @@ require_once("interfaces/Clientes.interface.php");
 		$moneda_del_cliente = null, 
 		$email = null,
                 $telefono_personal1 = null,
-                $telefono_personal2 = null
+                $telefono_personal2 = null,
+                $id_tarifa_compra = null,
+                $id_tarifa_venta = null
         )
         {
             //valida los parametros llamando al metodo validarParametrosUsuario
             $validar = PersonalYAgentesController::validarParametrosUsuario($id_cliente,null,null,null,$clasificacion_cliente,null,$moneda_del_cliente,
                     null,$razon_social,$rfc,$curp,null,$telefono_personal1,$telefono_personal2,null,null,$password,null,$email,$direccion_web,
-                    null,null,$representante_legal,null,null,$mensajeria,null,$denominacion_comercial,null,$cuenta_de_mensajeria,null,$codigo_cliente);
+                    null,null,$representante_legal,null,null,$mensajeria,null,$denominacion_comercial,null,$cuenta_de_mensajeria,null,$codigo_cliente,
+                    null,null,null,$id_tarifa_compra,$id_tarifa_venta);
             if(is_string($validar))
             {
                 return $validar;
@@ -105,7 +108,9 @@ require_once("interfaces/Clientes.interface.php");
                 $id_clasificacion_cliente = null,
                 $clave_interna = null,
                 $nombre = null,
-                $descripcion = null
+                $descripcion = null,
+                $id_tarifa_compra = null,
+                $id_tarifa_venta = null
         )
         {
             //valida que la clasificacion exista 
@@ -164,6 +169,46 @@ require_once("interfaces/Clientes.interface.php");
                 $e = self::validarString($descripcion, 255, "descripcion");
                 if(is_string($e))
                     return $e;
+            }
+            
+            //valida que la tarifa de compra exista, este activa y sea una tarifa de compra
+            if(!is_null($id_tarifa_compra))
+            {
+                $tarifa = TarifaDAO::getByPK($id_tarifa_compra);
+                if(is_null($tarifa))
+                {
+                    return "La tarifa ".$id_tarifa_compra." no existe";
+                }
+                
+                if(!$tarifa->getActiva())
+                {
+                    return "La tarifa ".$id_tarifa_compra." no esta activa";
+                }
+                
+                if($tarifa->getTipoTarifa()!="compra")
+                {
+                    return "La tarifa ".$id_tarifa_compra." no es de compra";
+                }
+            }
+            
+            //valida que la tarifa de venta exista, este activa y sea una tarifa de venta
+            if(!is_null($id_tarifa_venta))
+            {
+                $tarifa = TarifaDAO::getByPK($id_tarifa_venta);
+                if(is_null($tarifa))
+                {
+                    return "La tarifa ".$id_tarifa_venta." no existe";
+                }
+                
+                if(!$tarifa->getActiva())
+                {
+                    return "La tarifa ".$id_tarifa_venta." no esta activa";
+                }
+                
+                if($tarifa->getTipoTarifa()!="venta")
+                {
+                    return "La tarifa ".$id_tarifa_venta." no es de venta";
+                }
             }
             
             //No se encontro error
@@ -241,7 +286,9 @@ Update :  �Es correcto que contenga el argumento id_sucursal? Ya que as?omo es
                         $orden != "codigo_usuario"              &&
                         $orden != "dias_de_embarque"            &&
                         $orden != "tiempo_entrega"              &&
-                        $orden != "cuenta_bancaria"
+                        $orden != "cuenta_bancaria"             &&
+                        $orden != "id_tarifa_compra"            &&
+                        $orden != "id_tarifa_venta"
                 )
                 {
                     Logger::error("La variable orden (".$orden.") no es valida");
@@ -349,8 +396,8 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
                 $cliente = PersonalYAgentesController::NuevoUsuario($codigo_cliente,5,$razon_social,$password,
                         $calle,null,$codigo_postal,null,$colonia,null,null,$email,null,$cuenta_de_mensajeria,
                         $curp,$denominacion_comercial,$descuento,null,null,null,null,0,$id_ciudad,null,
-                        $clasificacion_cliente,null,$moneda_del_cliente,self::getSucursal(),$impuestos,null,
-                        $limite_credito,$mensajeria,$numero_exterior,null,$numero_interior,null,$direccion_web,
+                        $clasificacion_cliente,null,$moneda_del_cliente,self::getSucursal(),$id_tarifa_compra,$id_tarifa_venta,
+                        $impuestos,null,$limite_credito,$mensajeria,$numero_exterior,null,$numero_interior,null,$direccion_web,
                         $representante_legal,$retenciones,$rfc,null,null,$telefono1,null,$telefono2,null,
                         $telefono_personal1,$telefono_personal2,$texto_extra);
             }
@@ -435,7 +482,7 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
                         $codigo_cliente,$colonia,null,null,$email,null,$cuenta_de_mensajeria,$curp,
                         $denominacion_comercial,$descuento,null,null,null,null,null,null,$municipio,null,
                         $clasificacion_cliente,null,$moneda_del_cliente,null,null,null,null,null,
-                        $mensajeria,$razon_social,$numero_exterior,null,$numero_interior,null,$direccion_web,
+                        null,null,$mensajeria,$razon_social,$numero_exterior,null,$numero_interior,null,$direccion_web,
                         $password,$representante_legal,null,$rfc,null,null,$telefono1,null,$telefono2,null,
                         $telefono_personal1,$telefono_personal2,$texto_extra);
             }
@@ -543,8 +590,8 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
                         $codigo_cliente,$colonia,null,null,$email,null,$cuenta_de_mensajeria,$curp,
                         $denominacion_comercial,$descuento,null,$dias_de_credito,null,$dia_de_pago,
                         $dia_de_revision,$facturar_a_terceros,$municipio,null,$clasificacion_cliente,
-                        null,$moneda_del_cliente,null,$sucursal,$impuestos,$intereses_moratorios,
-                        $lim_credito,$mensajeria,$razon_social,$numero_exterior,null,$numero_interior,
+                        null,$moneda_del_cliente,null,$sucursal,$id_tarifa_compra,$id_tarifa_venta,$impuestos,
+                        $intereses_moratorios,$lim_credito,$mensajeria,$razon_social,$numero_exterior,null,$numero_interior,
                         null,$direccion_web,$password,$representante_legal,$retenciones,$rfc,null,
                         $saldo_del_ejercicio,$telefono1,null,$telefono2,null,$telefono_personal1,
                         $telefono_personal2,$texto_extra);
@@ -632,17 +679,31 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
             Logger::log("Creando nueva clasificacion de clientes");
             
             //Se validan los parametros recibidos
-            $validar = self::validarParametrosClasificacionCliente(null,$clave_interna,$nombre,$descripcion);
+            $validar = self::validarParametrosClasificacionCliente(null,$clave_interna,$nombre,$descripcion,$id_tarifa_compra,$id_tarifa_venta);
             if(is_string($validar))
             {
                 Logger::error($validar);
                 throw new Exception($validar,901);
             }
             
+            //Si no se recibe tarifa de compra, se toma la default
+            if(is_null($id_tarifa_compra))
+            {
+                $id_tarifa_compra = 2;
+            }
+            
+            //Si no se recibe tarifa de venta, se toma la default
+            if(is_null($id_tarifa_venta))
+            {
+                $id_tarifa_venta = 1;
+            }
+            
             $clasificacion_cliente = new ClasificacionCliente( array( 
                                             "clave_interna"     => $clave_interna,
                                             "nombre"            => trim($nombre),
-                                            "descripcion"       => $descripcion
+                                            "descripcion"       => $descripcion,
+                                            "id_tarifa_compra"  => $id_tarifa_compra,
+                                            "id_tarifa_venta"   => $id_tarifa_venta
                                                                     )
                                                              );
             DAO::transBegin();
@@ -726,7 +787,9 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
                     $orden != "id_clasificacion_cliente"    &&
                     $orden != "clave_interna"               &&
                     $orden != "nombre"                      &&
-                    $orden != "descripcion"                 
+                    $orden != "descripcion"                 &&
+                    $orden != "id_tarifa_compra"            &&
+                    $orden != "id_tarifa_venta"
             )
             {
                 Logger::error("La variable orden (".$orden.") es invalida");
@@ -767,12 +830,15 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
             Logger::log("Editando clasificacion de cliente ".$id_clasificacion_cliente);
             
             //Se validan los parametros recibidos
-            $validar = self::validarParametrosClasificacionCliente($id_clasificacion_cliente,$clave_interna,$nombre,$descripcion);
+            $validar = self::validarParametrosClasificacionCliente($id_clasificacion_cliente,$clave_interna,$nombre,$descripcion,$id_tarifa_compra,$id_tarifa_venta);
             if(is_string($validar))
             {
                 Logger::error($validar);
                 throw new Exception($validar,901);
             }
+            
+            $cambio_tarifa_compra = false;
+            $cambio_tarifa_venta = false;
             
             //Los parametros que no sean nulos seran tomados como actualizacion
             $clasificacion_cliente = ClasificacionClienteDAO::getByPK($id_clasificacion_cliente);
@@ -788,6 +854,20 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
             {
                 $clasificacion_cliente->setDescripcion($descripcion);
             }
+            if(!is_null($id_tarifa_compra))
+            {
+                if($id_tarifa_compra!=$clasificacion_cliente->getIdTarifaCompra())
+                {
+                    $cambio_tarifa_compra=true;
+                }
+            }
+            if(!is_null($id_tarifa_venta))
+            {
+                if($id_tarifa_venta!=$clasificacion_cliente->getIdTarifaVenta())
+                {
+                    $cambio_tarifa_venta=true;
+                }
+            }
             
             //Se actualiza el registro. Si se recibe una lista de impuestos y/o retenciones, se almacenan los
             //registros recibidos, despues, se recorren los registro de la base de datos y se buscan en la lista recibida.
@@ -797,6 +877,34 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
             try
             {
                 ClasificacionClienteDAO::save($clasificacion_cliente);
+                
+                //Si cambia la tarifa de compra o venta de una clasificacion de cliente, todos los clientes
+                //que tengan esta clasificacion y que hayan obtenido su tarifa de compra o venta de otro que no sea
+                //de usuario debe actualizar su tarifa de compra o venta
+                if($cambio_tarifa_compra || $cambio_tarifa_venta)
+                {
+                    $clientes = UsuarioDAO::getByPK(new Usuario( array( "id_clasificacion_cliente" => $id_clasificacion_cliente ) ));
+                    foreach($clientes as $c)
+                    {
+                        if($cambio_tarifa_compra)
+                        {
+                            if($c->getTarifaCompraObtenida()!="usuario")
+                            {
+                                $c->setIdTarifaCompra($id_tarifa_compra);
+                                $c->setTarifaCompraObtenida("cliente");
+                            }
+                        }
+                        if($cambio_tarifa_venta)
+                        {
+                            if($c->getTarifaVentaObtenida()!="usuario")
+                            {
+                                $c->setIdTarifaVenta($id_tarifa_venta);
+                                $c->setTarifaVentaObtenida("cliente");
+                            }
+                        }
+                        UsuarioDAO::save($c);
+                    }
+                }
                 if(!is_null($impuestos))
                 {
                     

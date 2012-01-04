@@ -89,9 +89,9 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                   return "La tarifa ".$id_tarifa_compra." no existe";
               }
               
-              if($tarifa->getActiva())
+              if(!$tarifa->getActiva())
               {
-                  return "La tarifa ".$id_tarifa_compra." no existe";
+                  return "La tarifa ".$id_tarifa_compra." no esta activa";
               }
               
               if($tarifa->getTipoTarifa()!="compra")
@@ -105,7 +105,12 @@ require_once("interfaces/PersonalYAgentes.interface.php");
               $tarifa = TarifaDAO::getByPK($id_tarifa_venta);
               if(is_null($tarifa))
               {
-                  return "La tarifa ".$id_tarifa_compra." no existe";
+                  return "La tarifa ".$id_tarifa_venta." no existe";
+              }
+              
+              if(!$tarifa->getActiva())
+              {
+                  return "La tarifa ".$id_tarifa_venta." no esta activa";
               }
               
               if($tarifa->getTipoTarifa()!="venta")
@@ -425,7 +430,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                   return "La tarifa ".$id_tarifa_compra." no existe";
               }
               
-              if($tarifa->getActiva())
+              if(!$tarifa->getActiva())
               {
                   return "La tarifa ".$id_tarifa_compra." no esta activa";
               }
@@ -444,7 +449,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                   return "La tarifa ".$id_tarifa_venta." no existe";
               }
               
-              if($tarifa->getActiva())
+              if(!$tarifa->getActiva())
               {
                   return "La tarifa ".$id_tarifa_venta." no esta activa";
               }
@@ -719,16 +724,54 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             if(is_null($saldo_del_ejercicio))
                 $saldo_del_ejercicio=0;
             
-            //Si la tarifa de compra o de venta es nula, entonces se tomaran las del rol recibido
+            //Si la tarifa de compra o de venta es nula, entonces se tomaran las del clasificaciond el cliente, del proveedor o del rol
+            // segun esten disponibles
+            
+            $origen_compra = "usuario";
+            $origen_venta = "usuario";
             
             if(is_null($id_tarifa_compra))
             {
-                $rol = RolDAO::getByPK($id_rol);
-                $id_tarifa_compra = $rol->getIdTarifaCompra();
+                $origen_compra = "rol";
+                if(!is_null($id_clasificacion_cliente))
+                {
+                    $origen_compra = "cliente";
+                    $id_tarifa_compra = ClasificacionClienteDAO::getByPK($id_clasificacion_cliente)->getIdTarifaCompra();
+                }
+                else if(!is_null($id_clasificacion_proveedor))
+                {
+                    $origen_compra = "proveedor";
+                    $id_tarifa_compra = ClasificacionProveedorDAO::getByPK($id_clasificacion_proveedor)->getIdTarifaCompra();
+                }
+                else
+                {
+                    $rol = RolDAO::getByPK($id_rol);
+                    $id_tarifa_compra = $rol->getIdTarifaCompra();
+                    $origen_compra = "rol";
+                }
             }
             
             if(is_null($id_tarifa_venta))
             {
+                
+                $origen_venta = "rol";
+                if(!is_null($id_clasificacion_cliente))
+                {
+                    $origen_venta = "cliente";
+                    $id_tarifa_compra = ClasificacionClienteDAO::getByPK($id_clasificacion_cliente)->getIdTarifaCompra();
+                }
+                else if(!is_null($id_clasificacion_proveedor))
+                {
+                    $origen_venta = "proveedor";
+                    $id_tarifa_compra = ClasificacionProveedorDAO::getByPK($id_clasificacion_proveedor)->getIdTarifaCompra();
+                }
+                else
+                {
+                    $rol = RolDAO::getByPK($id_rol);
+                    $id_tarifa_compra = $rol->getIdTarifaCompra();
+                    $origen_venta = "rol";
+                }
+                
                 $rol = RolDAO::getByPK($id_rol);
                 $id_tarifa_venta = $rol->getIdTarifaVenta();
             }
@@ -784,7 +827,9 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                                 "cuenta_bancaria"           => $cuenta_bancaria,
                                 "consignatario"             => 0,
                                 "id_tarifa_compra"          => $id_tarifa_compra,
-                                "id_tarifa_venta"           => $id_tarifa_venta
+                                "id_tarifa_venta"           => $id_tarifa_venta,
+                                "tarifa_compra_obtenida"    => $origen_compra,
+                                "tarifa_venta_obtenida"     => $origen_venta
                             )
                         );
 
@@ -1170,30 +1215,58 @@ require_once("interfaces/PersonalYAgentes.interface.php");
           {
               if($usuario->getIdRol()!=$id_rol)
               {
-                  //Si el usuario tiene la tarifa de compra o de venta del rol anterior, quiere decir que lo tomo del rol,
-                  //lo que indica que tiene que ser actualizado al actualizarse el rol
-                $rol_anterior = RolDAO::getByPK($usuario->getIdRol());
+                  //Si el usuario obtuvo la tarifa de compra o de venta del rol anterior, se actualiza su tarifa tambien
                 $rol_nuevo = RolDAO::getByPK($id_rol);
-                if($rol_anterior->getIdTarifaCompra()==$usuario->getIdTarifaCompra())
+                if($usuario->getTarifaCompraObtenida()=="rol")
                 {
                     $usuario->setIdTarifaCompra($rol_nuevo->getIdTarifaCompra());
                 }
-                if($rol_anterior->getIdTarifaVenta()==$usuario->getIdTarifaVenta())
+                if($usuario->getTarifaVentaObtenida()=="rol")
                 {
                     $usuario->setIdTarifaVenta($rol_nuevo->getIdTarifaVenta());
                 }
                 $usuario->setIdRol($id_rol);
                 $usuario->setFechaAsignacionRol(date("Y-m-d H:i:s"));
-                $cambio_rol=true;
               }
           }
           if(!is_null($id_clasificacion_cliente))
           {
               $usuario->setIdClasificacionCliente($id_clasificacion_cliente);
+              
+              //Si el usuario obtuvo su tarifa de compra o de venta de la clasificacion de cliente, de proveedor o de rol,
+              //entonces se tiene que actualizar
+              if( $usuario->getTarifaCompraObtenida()!="usuario" )
+              {
+                $clasificacion_cliente = ClasificacionClienteDAO::getByPK($id_clasificacion_cliente);
+                $usuario->setIdTarifaCompra($clasificacion_cliente->getIdTarifaCompra());
+                $usuario->setTarifaCompraObtenida("cliente");
+              }
+              if( $usuario->getTarifaVentaObtenida()!="usuario" )
+              {
+                $clasificacion_cliente = ClasificacionClienteDAO::getByPK($id_clasificacion_cliente);
+                $usuario->setIdTarifaVenta($clasificacion_cliente->getIdTarifaVenta());
+                $usuario->setTarifaVentaObtenida("cliente");
+              }
+              
           }
           if(!is_null($id_clasificacion_proveedor))
           {
               $usuario->setIdClasificacionProveedor($id_clasificacion_proveedor);
+              
+              //Si el usuario obtuvo su tarifa de compra o venta de la clasificacion de proveedor o del rol,
+              //entonces se tiene que actualizar
+              if( $usuario->getTarifaCompraObtenida()=="rol" || $usuario->getTarifaCompraObtenida()=="proveedor" )
+              {
+                $clasificacion_proveedor = ClasificacionProveedorDAO::getByPK($id_clasificacion_proveedor);
+                $usuario->setIdTarifaCompra($clasificacion_proveedor->getIdTarifaCompra());
+                $usuario->setTarifaCompraObtenida("proveedor");
+              }
+              if( $usuario->getTarifaVentaObtenida()=="rol"  ||  $usuario->getTarifaVentaObtenida()=="proveedor" )
+              {
+                $clasificacion_proveedor = ClasificacionProveedorDAO::getByPK($id_clasificacion_proveedor);
+                $usuario->setIdTarifaVenta($clasificacion_proveedor->getIdTarifaVenta());
+                $usuario->setTarifaVentaObtenida("proveedor");
+              }
           }
           if(!is_null($id_moneda))
           {
@@ -1448,10 +1521,12 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             if(!is_null($id_tarifa_compra))
             {
                 $usuario->setIdTarifaCompra($id_tarifa_compra);
+                $usuario->setTarifaCompraObtenida("usuario");
             }
             if(!is_null($id_tarifa_venta))
             {
                 $usuario->setIdTarifaVenta($id_tarifa_venta);
+                $usuario->setTarifaVentaObtenida("usuario");
             }
             
             
@@ -1985,20 +2060,16 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             
             $cambio_tarifa_compra = false;
             $cambio_tarifa_venta = false;
-            $tarifa_compra_vieja = null;
-            $tarifa_venta_vieja = null;
             
             
             
             if(!is_null($id_tarifa_compra))
             {
-                $tarifa_compra_vieja = $rol->getIdTarifaCompra();
                 $rol->setIdTarifaCompra($id_tarifa_compra);
                 $cambio_tarifa_compra = true;
             }
             if(!is_null($id_tarifa_venta))
             {
-                $tarifa_venta_vieja = $rol->getIdTarifaVenta();
                 $cambio_tarifa_venta = true;
                 $rol->setIdTarifaVenta($id_tarifa_venta);
             }
@@ -2018,14 +2089,14 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                     {
                         if($cambio_tarifa_compra)
                         {
-                            if($usuario->getIdTarifaCompra()==$tarifa_compra_vieja)
+                            if($usuario->getTarifaCompraObtenida()=="rol")
                             {
                                 $usuario->setIdTarifaCompra($id_tarifa_compra);
                             }
                         }
                         if($cambio_tarifa_venta)
                         {
-                            if($usuario->getIdTarifaVenta()==$tarifa_venta_vieja)
+                            if($usuario->getTarifaVentaObtenida()=="rol")
                             {
                                 $usuario->setIdTarifaVenta($id_tarifa_venta);
                             }
