@@ -527,6 +527,8 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 		$id_clasificacion_proveedor = null, 
 		$id_moneda = null, 
 		$id_sucursal = null, 
+		$id_tarifa_compra = null, 
+		$id_tarifa_venta = null, 
 		$impuestos = null, 
 		$intereses_moratorios = null, 
 		$limite_credito = 0, 
@@ -956,6 +958,8 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 		$id_moneda = null, 
 		$id_rol = null, 
 		$id_sucursal = null, 
+		$id_tarifa_compra = null, 
+		$id_tarifa_venta = null, 
 		$impuestos = null, 
 		$intereses_moratorios = null, 
 		$limite_de_credito = null, 
@@ -1727,6 +1731,8 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	(
 		$nombre, 
 		$descripcion = null, 
+		$id_tarifa_compra = null, 
+		$id_tarifa_venta = null, 
 		$salario = 0
 	)
 	{  
@@ -1789,6 +1795,8 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	(
 		$id_rol, 
 		$descripcion = null, 
+		$id_tarifa_compra = null, 
+		$id_tarifa_venta = null, 
 		$nombre = null, 
 		$salario = 0
 	)

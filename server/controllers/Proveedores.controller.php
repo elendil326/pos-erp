@@ -180,6 +180,8 @@ require_once("interfaces/Proveedores.interface.php");
 	(
 		$nombre, 
 		$descripcion = null, 
+		$id_tarifa_compra = null, 
+		$id_tarifa_venta = null, 
 		$impuestos = null, 
 		$retenciones = null
 	)
@@ -279,6 +281,8 @@ require_once("interfaces/Proveedores.interface.php");
 	(
 		$id_clasificacion_proveedor, 
 		$descripcion = null, 
+		$id_tarifa_compra = null, 
+		$id_tarifa_venta = null, 
 		$impuestos = null, 
 		$nombre = null, 
 		$retenciones = null
@@ -563,6 +567,8 @@ require_once("interfaces/Proveedores.interface.php");
 		$email = null, 
 		$id_ciudad = null, 
 		$id_moneda = null, 
+		$id_tarifa_compra = null, 
+		$id_tarifa_venta = null, 
 		$impuestos = null, 
 		$limite_credito = null, 
 		$numero_exterior = null, 
@@ -648,6 +654,8 @@ require_once("interfaces/Proveedores.interface.php");
 		$email = null, 
 		$id_ciudad = null, 
 		$id_moneda = null, 
+		$id_tarifa_compra = null, 
+		$id_tarifa_venta = null, 
 		$id_tipo_proveedor = null, 
 		$impuestos = null, 
 		$limite_credito = null, 

@@ -307,6 +307,8 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
  	 * @param direccion_web string Direccin web del cliente.
  	 * @param email string E-mail del cliente
  	 * @param id_ciudad int id de la ciudad
+ 	 * @param id_tarifa_compra int Id de la tarifa de compra por default para este cliente
+ 	 * @param id_tarifa_venta int Id de la tarifa de venta por default para este cliente
  	 * @param impuestos json Objeto que contendra los impuestos que afectan a este cliente
  	 * @param limite_credito float Limite de credito del usuario
  	 * @param mensajeria bool Si el cliente cuenta con un cliente de mensajera y paquetera.
@@ -339,6 +341,8 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
 		$direccion_web = null, 
 		$email = null, 
 		$id_ciudad = null, 
+		$id_tarifa_compra = null, 
+		$id_tarifa_venta = null, 
 		$impuestos = null, 
 		$limite_credito = null, 
 		$mensajeria = null, 

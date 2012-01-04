@@ -322,6 +322,8 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
 		$direccion_web = null, 
 		$email = null, 
 		$id_ciudad = null, 
+		$id_tarifa_compra = null, 
+		$id_tarifa_venta = null, 
 		$impuestos = null, 
 		$limite_credito = null, 
 		$mensajeria = null, 
@@ -507,6 +509,8 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 		$direccion_web = null, 
 		$email = null, 
 		$facturar_a_terceros = null, 
+		$id_tarifa_compra = null, 
+		$id_tarifa_venta = null, 
 		$impuestos = null, 
 		$intereses_moratorios = null, 
 		$lim_credito = null, 
@@ -619,6 +623,8 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 		$clave_interna, 
 		$nombre, 
 		$descripcion = null, 
+		$id_tarifa_compra = null, 
+		$id_tarifa_venta = null, 
 		$impuestos = null, 
 		$retenciones = null
 	)
@@ -751,6 +757,8 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 		$id_clasificacion_cliente, 
 		$clave_interna = null, 
 		$descripcion = null, 
+		$id_tarifa_compra = null, 
+		$id_tarifa_venta = null, 
 		$impuestos = null, 
 		$nombre = null, 
 		$retenciones = null

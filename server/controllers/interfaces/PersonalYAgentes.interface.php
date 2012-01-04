@@ -320,6 +320,8 @@
  	 * @param id_clasificacion_proveedor int Id de la clasificacion del proveedor
  	 * @param id_moneda int Id de la moneda del cliente
  	 * @param id_sucursal int Id de la sucursal a la que se quiere relacionar un usuario. Es decir, cual es su sucursal matriz. De omitirse se dejara nulo.
+ 	 * @param id_tarifa_compra int Id de la tarifa de compra por default que se aplicara a este usuario
+ 	 * @param id_tarifa_venta int Id de la tarifa de venta por default que se aplicara a este usuario
  	 * @param impuestos json Objeto que contendra los impuestos que afectan a este usuario
  	 * @param intereses_moratorios float Intereses moratorios del cliente
  	 * @param limite_credito float El limite de credito del usuario
@@ -376,6 +378,8 @@
 		$id_clasificacion_proveedor = null, 
 		$id_moneda = null, 
 		$id_sucursal = null, 
+		$id_tarifa_compra = null, 
+		$id_tarifa_venta = null, 
 		$impuestos = null, 
 		$intereses_moratorios = null, 
 		$limite_credito = 0, 
