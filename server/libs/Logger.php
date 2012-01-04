@@ -166,19 +166,18 @@ class Logger
             return;
         
         if(!file_exists(POS_CONFIG_LOG_ACCESS_FILE)){
-            die("POS: Unable to open logfile:" .POS_CONFIG_LOG_ACCESS_FILE );
+            //die("POS: Unable to open logfile:" .POS_CONFIG_LOG_ACCESS_FILE );
+			return;
         }
 
         if(!is_writable(POS_CONFIG_LOG_ACCESS_FILE)){
-            die("POS: Unable to write to logfile:" .POS_CONFIG_LOG_ACCESS_FILE );
+            //die("POS: Unable to write to logfile:" .POS_CONFIG_LOG_ACCESS_FILE );
+			return;
         }
 
 
         $log = fopen( POS_CONFIG_LOG_ACCESS_FILE, "a" );
 
-        
-
-        //$out = date(DATE_RFC822);
         $out = date("g:i:sa j M");
 
         $out .= " | " . $_SERVER["REMOTE_ADDR"];
