@@ -130,6 +130,9 @@ class ShoppingCartComponent implements GuiComponent {
 	        proxy: {
 	            type: 'ajax',
 				url : '../api/cliente/buscar/',
+				extraParams : {
+					auth_token : Ext.util.Cookies.get("a_t")
+				},
 	            reader: {
 	                type: 'json',
 	                root: 'resultados',
@@ -197,6 +200,9 @@ class ShoppingCartComponent implements GuiComponent {
 	        proxy: {
 	            type: 'ajax',
 				url : '../api/producto/buscar/',
+				extraParams : {
+					auth_token : Ext.util.Cookies.get("a_t")
+				},
 	            reader: {
 	                type: 'json',
 	                root: 'resultados',

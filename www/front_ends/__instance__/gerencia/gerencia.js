@@ -87,6 +87,7 @@ POS.API =
 
 		}catch(e){
 			console.error("JSON NOT DECODABLE:" , a.responseText);
+			
 			Ext.MessageBox.show({
 			           title: 'Error',
 			           msg: "Ocurrio un problema con la peticion porfavor intente de nuevo.",

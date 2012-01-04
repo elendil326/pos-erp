@@ -77,7 +77,7 @@ class StdComponentPage extends StdPage{
 		print( $this->css_urls );
 		print( "<title>" . $this->page_title . "</title>");
 
-		?></head><body><?php
+		?></head><body style="background-color: rgb( 53, 98, 162 )" ><?php
 
 		foreach( $this->components as $cmp )
 		{

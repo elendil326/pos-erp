@@ -52,7 +52,9 @@ Si el usuario que esta intentando iniciar sesion, esta descativado... 403 Author
 
 		if( $user === NULL ) {
 			Logger::warn("Credenciales invalidas para usuario {$user}");
-			throw new Exception("Credenciales invalidas");	
+			
+			return array( "login_succesful" => false );
+
 		}
 
 		//ok user is ok, buscar su usuario en los tokens actuales
@@ -87,7 +89,7 @@ Si el usuario que esta intentando iniciar sesion, esta descativado... 403 Author
 		
 		self::login( $usuario, $password, 1   );
 		
-		return array( "auth_token" => $nueva_sesion->getAuthToken() );
+		return array( "auth_token" => $nueva_sesion->getAuthToken(), "login_succesful" => true );
 	}
   
 
