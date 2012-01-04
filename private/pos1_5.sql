@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 04-01-2012 a las 17:07:37
+-- Tiempo de generación: 04-01-2012 a las 17:37:40
 -- Versión del servidor: 5.1.53
 -- Versión de PHP: 5.3.4
 
@@ -1234,7 +1234,7 @@ CREATE TABLE IF NOT EXISTS `regla` (
   `id_clasificacion_servicio` int(11) DEFAULT NULL COMMENT 'Id de la clasificacion del servicio a la que se le aplicara esta regla',
   `id_paquete` int(11) DEFAULT NULL COMMENT 'Id del paquete al cual se le aplicara esta regla',
   `cantidad_minima` float NOT NULL DEFAULT '1' COMMENT 'Cantidad minima de objeto necesarios apra aplicar esta regla',
-  `id_tarifa` int(11) DEFAULT NULL COMMENT 'Id de la tarifa en la cual se basa esta tarifa para obtener el precio base',
+  `id_tarifa` int(11) NOT NULL COMMENT 'Id de la tarifa en la cual se basa esta tarifa para obtener el precio base',
   `porcentaje_utilidad` float NOT NULL DEFAULT '0' COMMENT 'Porcentaje de utilidad que se le ganara al precio base del objeto',
   `utilidad_neta` float NOT NULL DEFAULT '0' COMMENT 'Utilidad neta que se le ganara al comerciar con el objeto',
   `metodo_redondeo` float NOT NULL DEFAULT '0' COMMENT 'Falta definir por Manuel',
