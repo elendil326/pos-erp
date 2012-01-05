@@ -65,21 +65,6 @@ require_once("interfaces/Precio.interface.php");
 	    return true;
         }
 	
-	
-	
-	/**
- 	 *
- 	 *Activa una tarifa preciamente eliminada
- 	 *
- 	 * @param id_tarifa int Id de la tarifa a activar
- 	 **/
-	public static function ActivarTarifa
-	(
-		$id_tarifa
-	)
-	{
-            
-        }
         
         /*
          * Valida los parametros de un producto
@@ -167,6 +152,21 @@ require_once("interfaces/Precio.interface.php");
             {
                 return "El paquete ".$id_paquete." no esta activo";
             }
+        }
+        
+        
+	/**
+ 	 *
+ 	 *Activa una tarifa preciamente eliminada
+ 	 *
+ 	 * @param id_tarifa int Id de la tarifa a activar
+ 	 **/
+	public static function ActivarTarifa
+	(
+		$id_tarifa
+	)
+	{
+            
         }
   
 	/**
@@ -927,21 +927,6 @@ Aplican todas las consideraciones de la documentacion del metodo nuevaTarifa
 		$id_moneda = null, 
 		$nombre = null, 
 		$tipo_tarifa = null
-	)
-	{  
-  
-  
-	}
-  
-	/**
- 	 *
- 	 *Desactiva una tarifa. una tarifa no puede ser eliminada si es la default del sistema o si esta como default para algun usuario,rol,clasificacion de cliente o proveedor.
- 	 *
- 	 * @param id_tarifa int Id de la tarifa a desactivar
- 	 **/
-	public static function EliminarTarifa
-	(
-		$id_tarifa
 	)
 	{  
   
