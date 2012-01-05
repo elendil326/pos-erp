@@ -22,16 +22,28 @@ class ReglaDAO extends ReglaDAOBase
 {
     public static function aplicarReglas( array $reglas, VO $obj, $cantidad = null,$id_unidad = null)
     {
-        if(is_nan($precio_base))
-        {
-            Logger::error("El precio base (".$precio_base.") no es un numero");
-            throw new Exception("El precio base (".$precio_base.") no es un numero",901);
-        }
         
-        if($precio_base<0)
+        $precio_base = 0;
+        
+        if(!($obj instanceof Paquete))
         {
-            Logger::error("El precio base (".$precio_base.") es negativo");
-            throw new Exception("El precio base (".$precio_base.") es negativo");
+            if($obj->getMetodoCosteo()=="costo")
+            {
+                $precio_base = $obj->getCostoEstandar();
+            }
+            else if($obj->getMetodoCosteo()=="precio")
+            {
+                $precio_base = $obj->getPrecio();
+            }
+            else
+            {
+                Logger::error("El producto o servicio tiene un metodo de costeo invalido");
+                throw new Exception("El producto o servicio tiene un metodo de costeo invalido", 901);
+            }
+        }
+        else
+        {
+            $precio_base = $obj->getPrecio();
         }
         
         $precio_final = 0;
@@ -48,11 +60,40 @@ class ReglaDAO extends ReglaDAOBase
             $precio_final = $precio_base * (1+ $regla->getPorcentajeUtilidad());
             $metodo_redondeo = $regla->getMetodoRedondeo();
             
-            //Si
+            /*
+             * 
+             */
             if($metodo_redondeo>0)
             {
                 $redondeo_1=$precio_final+$metodo_redondeo-$precio_final%$metodo_redondeo;
+                $redondeo_2=$precio_final-$precio_final%$metodo_redondeo;
+                
+                if($redondeo_1-$precio_final < $precio_final-$redondeo_2)
+                {
+                    $precio_final = $redondeo_1;
+                }
+                else
+                {
+                    $precio_final = $redondeo_2;
+                }
             }
+            
+            $precio_final += $regla->getUtilidadNeta();
+            
+            if($precio_final<$regla->getMargenMin())
+            {
+                $precio_final = $regla->getMargenMin();
+            }
+            
+            if($precio_final>$regla->getMargenMax())
+            {
+                $precio_final = $regla->getMargenMax();
+            }
+            
+            $precio_base = $precio_final;
+            
         }
+        
+        return $precio_base;
     }
 }
