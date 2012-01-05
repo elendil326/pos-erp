@@ -23,6 +23,7 @@ class TarifaDAO extends TarifaDAOBase
 
         public static function obtenerTarifasActuales($tipo_tarifa)
         {
+            Logger::log("Obteniendo tarifas de ".$tipo_tarifa);
             //Se obtienen todas las tarifas activas son su version activa, su version default, y la
             //fecha de inicio y de fin de la version activa.
             $sql = "select t.id_tarifa, t.id_version_activa, t.id_version_default, v.fecha_inicio, 
@@ -75,6 +76,8 @@ class TarifaDAO extends TarifaDAOBase
                 $regla["reglas"] = ReglaDAO::search( new Regla( array( "id_version" => $tarifa_version["id_version"] ) ) , "secuencia");
                 array_push($reglas,$regla);
             }
+            
+            Logger::log("Se obtuvieron ".count($reglas)." tarifas con sus respectivas reglas");
             
             return $reglas;
         }

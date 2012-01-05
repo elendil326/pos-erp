@@ -46,6 +46,8 @@ class ReglaDAO extends ReglaDAOBase
             $precio_base = $obj->getPrecio();
         }
         
+        Logger::log(" El precio base recibido es ".$precio_base);
+        
         $precio_final = 0;
         
         $regla = new Regla();
@@ -58,6 +60,7 @@ class ReglaDAO extends ReglaDAOBase
                 throw new Exception("La regla recibida no es un VO valido");
             }
             $precio_final = $precio_base * (1+ $regla->getPorcentajeUtilidad());
+            
             $metodo_redondeo = $regla->getMetodoRedondeo();
             
             /*
@@ -80,12 +83,12 @@ class ReglaDAO extends ReglaDAOBase
             
             $precio_final += $regla->getUtilidadNeta();
             
-            if($precio_final<$regla->getMargenMin())
+            if($precio_final<$regla->getMargenMin() && $regla->getMargenMin()!=0)
             {
                 $precio_final = $regla->getMargenMin();
             }
             
-            if($precio_final>$regla->getMargenMax())
+            if($precio_final>$regla->getMargenMax() && $regla->getMargenMax()!=0 )
             {
                 $precio_final = $regla->getMargenMax();
             }
@@ -93,6 +96,7 @@ class ReglaDAO extends ReglaDAOBase
             $precio_base = $precio_final;
             
         }
+        Logger::log("El precio despues de todas las reglas es ".$precio_base);
         
         return $precio_base;
     }
