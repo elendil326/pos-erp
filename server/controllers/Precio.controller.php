@@ -14,7 +14,7 @@ require_once("interfaces/Precio.interface.php");
 	 * 
 	 * 
 	 * */
-  	public static function calcularTarifas( VO $obj ){
+  	public static function calcularTarifas( VO $obj, $tipo ){
 		
 		if( !( ($obj instanceof Producto)
 			|| ($obj instanceof Servicio)
@@ -23,7 +23,7 @@ require_once("interfaces/Precio.interface.php");
 			throw new Excpetion( "Debes enviar una instancia de Producto, Servicio o Paquete al calcular la tarifa" );
 		}
 		
-		$tarifas = TarifaDAO::obtenerTarifasActuales();
+		$tarifas = TarifaDAO::obtenerTarifasActuales($tipo);
 
 		$respuesta = array();
 
@@ -31,7 +31,7 @@ require_once("interfaces/Precio.interface.php");
 
 			array_push( $respuesta, array(
 				"id_tarifa"  => $t["id_tarifa"],
-				"precio"	 => 55 //ReglasDAO::aplicarReglas( $t["reglas"], $obj );
+				"precio"	 => ReglaDAO::aplicarReglas( $t["reglas"], $obj )
 			));
 		}
 

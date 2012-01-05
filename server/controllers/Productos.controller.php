@@ -1839,7 +1839,7 @@ Ejemplo: 1 kg = 2.204 lb
 
 		foreach ($productos as $p) {
 			$r = $p->asArray();
-			$r["precio"] = PrecioController::calcularTarifas( $p );
+			$r["tarifas"] = PrecioController::calcularTarifas( $p, "venta" );
 			array_push( $resultado, $r );
 		}
 		

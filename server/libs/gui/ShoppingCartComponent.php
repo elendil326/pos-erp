@@ -51,15 +51,19 @@ class ShoppingCartComponent implements GuiComponent {
 	]);
 
 
-	var cliente_seleccionado;
+	var cliente_seleccionado = null;
 	var seleccion_de_cliente = function(a,c){
 		cliente_seleccionado = c[0];
+		
 		console.log("Cliente seleccionado", cliente_seleccionado);
 		
 		Ext.get("buscar_cliente_01").enableDisplayMode('block').hide();
-		var pphtml = "<h2 style='margin-bottom:0px'>Venta para <a href='clientes.ver.php?cid="+cliente_seleccionado.get("id_cliente")+"'>" + cliente_seleccionado.get("nombre") + "</a></h2>"
-			+ "<p>" + cliente_seleccionado.get("rfc") + "</p>"
-			+ "<div class='POS Boton' onClick='buscar_cliente()'  >Buscar otro cliente</div>"
+		var pphtml = "<h2 style='margin-bottom:0px'>Venta para <a href='clientes.ver.php?cid="+cliente_seleccionado.get("id_cliente")+"'>" + cliente_seleccionado.get("nombre") + "</a></h2>";
+
+		if( cliente_seleccionado.get("rfc") !== null )
+			pphtml += "<p>" + cliente_seleccionado.get("rfc") + "</p>";
+					
+		pphtml += "<br><div class='POS Boton' onClick='buscar_cliente()'  >Buscar otro cliente</div>";
 		
 		Ext.get("buscar_cliente_02").update(pphtml).show();
 	};
@@ -141,10 +145,51 @@ class ShoppingCartComponent implements GuiComponent {
 	        },
 
 	        fields: [
-	            {name: 'id_cliente', mapping: 'id_usuario'},
-	            {name: 'nombre', mapping: 'nombre'},
-	            {name: 'rfc', mapping: 'rfc'},
-	            {name: 'fecha_alta', mapping: 'fecha_alta', type: 'date', dateFormat: 'timestamp'}
+
+				{name: 'activo',		 		mapping: 'activo'},
+				{name: 'codigo_usuario', 		mapping: 'codigo_usuario'},
+				{name: 'comision_ventas', 		mapping: 'comision_ventas'},
+				{name: 'consignatario', 		mapping: 'consignatario'},
+				{name: 'correo_electronico', 	mapping: 'correo_electronico'},
+				{name: 'cuenta_bancaria', 		mapping: 'cuenta_bancaria'},
+				{name: 'cuenta_de_mensajeria', 	mapping: 'cuenta_de_mensajeria'},
+				{name: 'curp', 					mapping: 'curp'},
+				{name: 'denominacion_comercial', mapping: 'denominacion_comercial'},
+				{name: 'descuento', 			mapping: 'descuento'},
+				{name: 'dia_de_pago', 			mapping: 'dia_de_pago'},
+				{name: 'dia_de_revision', 		mapping: 'dia_de_revision'},
+				{name: 'dias_de_credito', 		mapping: 'dias_de_credito'},
+				{name: 'dias_de_embarque', 		mapping: 'dias_de_embarque'},
+				{name: 'facturar_a_terceros', 	mapping: 'facturar_a_terceros'},
+				{name: 'fecha_alta', 			mapping: 'fecha_alta'},
+				{name: 'fecha_asignacion_rol', 	mapping: 'fecha_asignacion_rol'},
+				{name: 'fecha_baja', 			mapping: 'fecha_baja'},
+				{name: 'id_clasificacion_cliente', 		mapping: 'id_clasificacion_cliente'},
+				{name: 'id_clasificacion_proveedor', 	mapping: 'id_clasificacion_proveedor'},
+				{name: 'id_direccion', 					mapping: 'id_direccion'},
+				{name: 'id_direccion_alterna', 			mapping: 'id_direccion_alterna'},
+				{name: 'id_moneda', 					mapping: 'id_moneda'},
+				{name: 'id_rol', 						mapping: 'id_rol'},
+				{name: 'id_sucursal', 					mapping: 'id_sucursal'},
+				{name: 'id_tarifa_compra', 				mapping: 'id_tarifa_compra'},
+				{name: 'id_tarifa_venta', 				mapping: 'id_tarifa_venta'},
+				{name: 'id_usuario', 					mapping: 'id_usuario'},
+				{name: 'intereses_moratorios', 			mapping: 'intereses_moratorios'},
+				{name: 'last_login',					mapping: 'last_login'},
+				{name: 'limite_credito', 				mapping: 'limite_credito'},
+				{name: 'mensajeria',					mapping: 'mensajeria'},
+				{name: 'nombre', 						mapping: 'nombre'},
+				{name: 'pagina_web', 					mapping: 'pagina_web'},
+				{name: 'representante_legal', 			mapping: 'representante_legal'},
+				{name: 'rfc', 							mapping: 'rfc'},
+				{name: 'salario', 						mapping: 'salario'},
+				{name: 'saldo_del_ejercicio', 			mapping: 'saldo_del_ejercicio'},
+				{name: 'tarifa_compra_obtenida', 		mapping: 'tarifa_compra_obtenida'},
+				{name: 'tarifa_venta_obtenida', 		mapping: 'tarifa_venta_obtenida'},
+				{name: 'telefono_personal1', 			mapping: 'telefono_personal1'},
+				{name: 'telefono_personal2', 			mapping: 'telefono_personal2'},
+				{name: 'tiempo_entrega', 				mapping: 'tiempo_entrega'},
+				{name: 'ventas_a_credito', 				mapping: 'ventas_a_credito'}
 	        ]
 	    });
 	
@@ -227,7 +272,8 @@ class ShoppingCartComponent implements GuiComponent {
 				{name: 'metodo_costeo', 		mapping: 'metodo_costeo'},
 				{name: 'nombre_producto', 		mapping: 'nombre_producto'},
 				{name: 'peso_producto', 		mapping: 'peso_producto'},
-				{name: 'precio',				mapping: 'precio'}
+				{name: 'precio',				mapping: 'precio'},
+				{name: 'tarifas',				mapping: 'tarifas'}				
 					
 	        ]
 	    });
@@ -296,7 +342,7 @@ class ShoppingCartComponent implements GuiComponent {
 		           { name: 'codigo_producto',     	type: 'int'},
 		           { name: 'nombre_producto',     	type: 'string'},
 		           { name: 'descripcion',  			type: 'string'},
-		           { name: 'precio',  			type: 'float'}		
+		           { name: 'precio',  				type: 'float'}
 		        ]
 		    });
 
@@ -332,12 +378,29 @@ class ShoppingCartComponent implements GuiComponent {
 						}
 		            },		
 		            {
-		                text     : 'precio',
+		                text     : 'tarifas',
 		                flex     : 1,
 		                sortable : true,
-		                dataIndex: 'precio',
-						renderer : function(x){
-							return x+"WA";
+		                dataIndex: 'tarifas',
+						renderer : function(tarifasArray){
+							/* ***** **** ***** 
+								tarifasArray tiene las tarifas para 
+								este producto solo hay que ver que cliente
+								esta seleccionado para mostrar la adecuada
+							***** **** ***** */
+							if(cliente_seleccionado == null){
+								return 0;
+							}
+							var tf = cliente_seleccionado.get("id_tarifa_venta");
+							
+							for (var i=0; i < tarifasArray.length; i++) {
+								console.log(tarifasArray[i].id_tarifa, tf)
+								if(tarifasArray[i].id_tarifa == tf){
+									return tarifasArray[i].precio;
+								}
+							};
+							
+							return "X";
 						}
 		            },		
 		            {
