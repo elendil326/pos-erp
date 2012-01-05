@@ -1,9 +1,9 @@
 <?php
 /**
-  * POST api/precio/tarifa/activar
+  * GET api/precio/tarifa/activar
   * Activa una tarifa previamente eliminada
   *
-  * Activa una tarifa preciamente eliminada
+  * Activa una tarifa previamente eliminada.
   *
   *
   *
@@ -16,7 +16,7 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"id_tarifa" => new ApiExposedProperty("id_tarifa", true, POST, array( "int" )),
+			"id_tarifa" => new ApiExposedProperty("id_tarifa", true, GET, array( "int" )),
 		);
 	}
 
@@ -25,7 +25,7 @@
  		$this->response = PrecioController::ActivarTarifa( 
  			
 			
-			isset($_POST['id_tarifa'] ) ? $_POST['id_tarifa'] : null
+			isset($_GET['id_tarifa'] ) ? $_GET['id_tarifa'] : null
 			
 			);
 		}catch(Exception $e){

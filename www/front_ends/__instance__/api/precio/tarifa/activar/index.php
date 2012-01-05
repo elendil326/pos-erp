@@ -1,9 +1,9 @@
 <?php
 /**
-  * POST api/precio/tarifa/activar
+  * GET api/precio/tarifa/activar
   * Activa una tarifa previamente eliminada
   *
-  * Activa una tarifa preciamente eliminada
+  * Activa una tarifa previamente eliminada.
   *
   *
   *

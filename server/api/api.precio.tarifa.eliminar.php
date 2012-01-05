@@ -3,9 +3,7 @@
   * POST api/precio/tarifa/eliminar
   * Desactiva una tarifa
   *
-  * Desactiva una tarifa. Para poder desactivar una tarifa, esta no tiene que estar asignada como default para ningun usuario. La tarifa default del sistema no puede ser eliminada.
-
-La tarifa instalada por default no puede ser eliminada
+  * Desactiva una tarifa. una tarifa no puede ser eliminada si es la default del sistema o si esta como default para algun usuario,rol,clasificacion de cliente o proveedor.
   *
   *
   *
