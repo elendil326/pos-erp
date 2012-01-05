@@ -652,20 +652,6 @@ Los parametros recibidos seran tomados para edicion.
   
 	}
           
-	/**
- 	 *
- 	 *Activa una tarifa previamente eliminada.
- 	 *
- 	 * @param id_tarifa int Id de la tarifa a activar
- 	 **/
-	public static function ActivarTarifa
-	(
-		$id_tarifa
-	)
-	{  
-  
-  
-	}
         
         /**
  	 *
