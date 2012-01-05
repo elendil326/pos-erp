@@ -1830,10 +1830,23 @@ Ejemplo: 1 kg = 2.204 lb
 	
 	public static function Buscar($query){
 		
-		$resultados = ProductoDAO::buscarProductos( $query );
+		$productos = ProductoDAO::buscarProductos( $query );
+		
+		$resultado = array();
+
+		//una vez que tengo los productos vamos a agergarle sus
+		//precios tarifarios
+		foreach ($productos as $p) {
+			$r = $p->asArray();
+			$r["precio"] = PrecioController::calcularTarifas( $p );
+			
+			//buscar todas las tarifas
+			array_push( $resultado, $r );
+		}
+		
 		return array( 
-			"resultados" => $resultados ,
-			"numero_de_resultados" => sizeof($resultados)
+				"resultados" 			=> $resultado ,
+				"numero_de_resultados" 	=> sizeof($resultado)
 			);
 	}
   }

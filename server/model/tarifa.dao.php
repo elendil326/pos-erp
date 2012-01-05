@@ -21,7 +21,7 @@ require_once("base/tarifa.vo.base.php");
 class TarifaDAO extends TarifaDAOBase
 {
 
-        public static function obtenerTarifa()
+        public static function obtenerTarifasActuales()
         {
             //Se obtienen todas las tarifas activas son su version activa, su version default, y la
             //fecha de inicio y de fin de la version activa.
@@ -35,13 +35,14 @@ class TarifaDAO extends TarifaDAOBase
             //Recorremos el resultado y guardamos el id de la version que se va a usar, si la version activa
             //ya caduco o aun no se activa entonces se toma la default.
             foreach($rs as $result)
-            {
+            { 
                 $tarifa_version = array();
                 $tarifa_version["id_tarifa"] = $result["id_tarifa"];
                 
                 if(is_null($result["fecha_inicio"]) || is_null($result["fecha_fin"]))
                 {
                     $tarifa_version["id_version"] = $result["id_version_activa"];
+					array_push($tarifas_versiones,$tarifa_version);
                     continue;
                 }
                 

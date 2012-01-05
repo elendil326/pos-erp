@@ -34,5 +34,6 @@ class ProductoDAO extends ProductoDAOBase
 		}
 		return $ar;
 	}
+	
 
 }

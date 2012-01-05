@@ -8,7 +8,38 @@ require_once("interfaces/Precio.interface.php");
 	
   class PrecioController implements IPrecio{
   
-  
+
+	/**
+	 * 
+	 * 
+	 * 
+	 * */
+  	public static function calcularTarifas( VO $obj ){
+		
+		if( !( ($obj instanceof Producto)
+			|| ($obj instanceof Servicio)
+			|| ($obj instanceof Paquete) )
+		 ){
+			throw new Excpetion( "Debes enviar una instancia de Producto, Servicio o Paquete al calcular la tarifa" );
+		}
+		
+		$tarifas = TarifaDAO::obtenerTarifasActuales();
+
+		$respuesta = array();
+
+		foreach($tarifas as $t)	{
+
+			array_push( $respuesta, array(
+				"id_tarifa"  => $t["id_tarifa"],
+				"precio"	 => 55 //ReglasDAO::aplicarReglas( $t["reglas"], $obj );
+			));
+		}
+
+		return $respuesta;
+	}
+	
+	
+	
 	/**
  	 *
  	 *Activa una tarifa preciamente eliminada

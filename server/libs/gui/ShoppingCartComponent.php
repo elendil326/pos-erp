@@ -211,8 +211,24 @@ class ShoppingCartComponent implements GuiComponent {
 	        },
 
 	        fields: [
-	            {name: 'id_producto', mapping: 'id_producto'},
-	            {name: 'nombre_producto', mapping: 'nombre_producto'}
+	
+				{name: 'activo', 				mapping: 'activo'},
+				{name: 'codigo_de_barras', 		mapping: 'codigo_de_barras'},
+				{name: 'codigo_producto', 		mapping: 'codigo_producto'},
+				{name: 'compra_en_mostrador', 	mapping: 'compra_en_mostrador'},
+				{name: 'control_de_existencia', mapping: 'control_de_existencia'},
+				{name: 'costo_estandar', 		mapping: 'costo_estandar'},
+				{name: 'costo_extra_almacen', 	mapping: 'costo_extra_almacen'},
+				{name: 'descripcion', 			mapping: 'descripcion'},
+				{name: 'foto_del_producto', 	mapping: 'foto_del_producto'},
+				{name: 'garantia', 				mapping: 'garantia'},
+				{name: 'id_producto', 			mapping: 'id_producto'},
+				{name: 'id_unidad', 			mapping: 'id_unidad'},
+				{name: 'metodo_costeo', 		mapping: 'metodo_costeo'},
+				{name: 'nombre_producto', 		mapping: 'nombre_producto'},
+				{name: 'peso_producto', 		mapping: 'peso_producto'},
+				{name: 'precio',				mapping: 'precio'}
+					
 	        ]
 	    });
 	
@@ -276,10 +292,11 @@ class ShoppingCartComponent implements GuiComponent {
 		    // create the data store
 		    carrito_store = Ext.create('Ext.data.ArrayStore', {
 		        fields: [
-		           {name: 'id_producto'},
-		           {name: 'codigo_producto',     	type: 'float'},
-		           {name: 'nombre_producto',     	type: 'string'},
-		           {name: 'descripcion',  			type: 'string'}
+		           { name: 'id_producto',			type: 'int'},
+		           { name: 'codigo_producto',     	type: 'int'},
+		           { name: 'nombre_producto',     	type: 'string'},
+		           { name: 'descripcion',  			type: 'string'},
+		           { name: 'precio',  			type: 'float'}		
 		        ]
 		    });
 
@@ -307,6 +324,22 @@ class ShoppingCartComponent implements GuiComponent {
 		                sortable : true,
 		                dataIndex: 'nombre_producto'
 		            },
+		            {
+		                text     : 'cantidad',
+		                sortable : false,
+						renderer : function(){
+							return '<input type="text" >';
+						}
+		            },		
+		            {
+		                text     : 'precio',
+		                flex     : 1,
+		                sortable : true,
+		                dataIndex: 'precio',
+						renderer : function(x){
+							return x+"WA";
+						}
+		            },		
 		            {
 		                text     : 'descripcion',
 		                width    : 75,
@@ -344,7 +377,11 @@ class ShoppingCartComponent implements GuiComponent {
 			<p style="margin-bottom: 0px;">Buscar productos</p>				
 			<div id="ShoppingCartComponent_001"><!-- buscar productos --></div>
 			
-			tarifa
+			<select name="some_name" id="some_name">
+				<option>tarifas</option>
+				<option>tarifas3</option>
+				
+			</select>
 			
 			<h2 style="margin-bottom:0px">Esta venta</h2>
 			<div id="carrito_de_compras" style="margin: 5px auto;">
@@ -359,3 +396,5 @@ class ShoppingCartComponent implements GuiComponent {
 		<?php
 	}
 }
+
+
