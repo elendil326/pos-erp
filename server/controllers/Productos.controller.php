@@ -1836,11 +1836,10 @@ Ejemplo: 1 kg = 2.204 lb
 
 		//una vez que tengo los productos vamos a agergarle sus
 		//precios tarifarios
+
 		foreach ($productos as $p) {
 			$r = $p->asArray();
 			$r["precio"] = PrecioController::calcularTarifas( $p );
-			
-			//buscar todas las tarifas
 			array_push( $resultado, $r );
 		}
 		

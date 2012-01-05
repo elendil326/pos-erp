@@ -474,114 +474,26 @@ class GerenciaComponentPage extends StdComponentPage{
             "title": "Precios",
             "url": "precios.php",
             "children": [
-                {
-                        "title" : "Editar precio de paquete para rol",
-                        "url"   : "precios.editar.precio.paquete.rol.php"
-                },
-                {
-                        "title" : "Editar precio de paquete para tipo de cliente",
-                        "url"   : "precios.editar.precio.paquete.tipo_cliente.php"
-                },
-                {
-                        "title" : "Editar precio de paquete para usuario",
-                        "url"   : "precios.editar.precio.paquete.usuario.php"
-                },
-                {
-                        "title" : "Eliminar precio de paquete para rol",
-                        "url"   : "precios.eliminar.precio.paquete.rol.php"
-                },
-                {
-                        "title" : "Eliminar precio de paquete para tipo de cliente",
-                        "url"   : "precios.eliminar.precio.paquete.tipo_cliente.php"
-                },
-                {
-                        "title" : "Eliminar precio de paquete para usuario",
-                        "url"   : "precios.eliminar.precio.paquete.usuario.php"
-                },
-                {
-                        "title" : "Nuevo precio de paquete para rol",
-                        "url"   : "precios.nuevo.precio.paquete.rol.php"
-                },
-                {
-                        "title" : "Nuevo precio de paquete para tipo de cliente",
-                        "url"   : "precios.nuevo.precio.paquete.tipo_cliente.php"
-                },
-                {
-                        "title" : "Nuevo precio de paquete para usuario",
-                        "url"   : "precios.nuevo.precio.paquete.usuario.php"
-                },
-                {
-                        "title" : "Editar precio de producto para rol",
-                        "url"   : "precios.editar.precio.producto.rol.php"
-                },
-                {
-                        "title" : "Editar precio de producto para tipo de cliente",
-                        "url"   : "precios.editar.precio.producto.tipo_cliente.php"
-                },
-                {
-                        "title" : "Editar precio de producto para usuario",
-                        "url"   : "precios.editar.precio.producto.usuario.php"
-                },
-                {
-                        "title" : "Eliminar precio de producto para rol",
-                        "url"   : "precios.eliminar.precio.producto.rol.php"
-                },
-                {
-                        "title" : "Eliminar precio de producto para tipo de cliente",
-                        "url"   : "precios.eliminar.precio.producto.tipo_cliente.php"
-                },
-                {
-                        "title" : "Eliminar precio de producto para usuario",
-                        "url"   : "precios.eliminar.precio.producto.usuario.php"
-                },
-                {
-                        "title" : "Nuevo precio de producto para rol",
-                        "url"   : "precios.nuevo.precio.producto.rol.php"
-                },
-                {
-                        "title" : "Nuevo precio de producto para tipo de cliente",
-                        "url"   : "precios.nuevo.precio.producto.tipo_cliente.php"
-                },
-                {
-                        "title" : "Nuevo precio de producto para usuario",
-                        "url"   : "precios.nuevo.precio.producto.usuario.php"
-                },
-                {
-                        "title" : "Editar precio de servicio para rol",
-                        "url"   : "precios.editar.precio.servicio.rol.php"
-                },
-                {
-                        "title" : "Editar precio de servicio para tipo de cliente",
-                        "url"   : "precios.editar.precio.servicio.tipo_cliente.php"
-                },
-                {
-                        "title" : "Editar precio de servicio para usuario",
-                        "url"   : "precios.editar.precio.servicio.usuario.php"
-                },
-                {
-                        "title" : "Eliminar precio de servicio para rol",
-                        "url"   : "precios.eliminar.precio.servicio.rol.php"
-                },
-                {
-                        "title" : "Eliminar precio de servicio para tipo de cliente",
-                        "url"   : "precios.eliminar.precio.servicio.tipo_cliente.php"
-                },
-                {
-                        "title" : "Eliminar precio de servicio para usuario",
-                        "url"   : "precios.eliminar.precio.servicio.usuario.php"
-                },
-                {
-                        "title" : "Nuevo precio de servicio para rol",
-                        "url"   : "precios.nuevo.precio.servicio.rol.php"
-                },
-                {
-                        "title" : "Nuevo precio de servicio para tipo de cliente",
-                        "url"   : "precios.nuevo.precio.servicio.tipo_cliente.php"
-                },
-                {
-                        "title" : "Nuevo precio de servicio para usuario",
-                        "url"   : "precios.nuevo.precio.servicio.usuario.php"
-                }
+				{
+					"title" : "precio.calcularPorArticulo.php",
+					"url"	: "precio.calcularPorArticulo.php"
+				},
+				{
+					"title" : "precio.tarifa.activar.php",
+					"url"	: "precio.tarifa.activar.php"
+				},
+				{
+					"title" : "precio.tarifa.editar.php",
+					"url"	: "precio.tarifa.editar.php"
+				},
+				{
+					"title" : "precio.tarifa.eliminar.php",
+					"url"	: "precio.tarifa.eliminar.php"
+				},
+				{
+					"title" : "precio.tarifa.nueva.php",
+					"url"	: "precio.tarifa.nueva.php"
+				}							
             ]
         },
         {
