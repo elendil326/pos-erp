@@ -378,7 +378,7 @@ class ShoppingCartComponent implements GuiComponent {
 						}
 		            },		
 		            {
-		                text     : 'tarifas',
+		                text     : 'Precio',
 		                flex     : 1,
 		                sortable : true,
 		                dataIndex: 'tarifas',
@@ -394,7 +394,6 @@ class ShoppingCartComponent implements GuiComponent {
 							var tf = cliente_seleccionado.get("id_tarifa_venta");
 							
 							for (var i=0; i < tarifasArray.length; i++) {
-								console.log(tarifasArray[i].id_tarifa, tf)
 								if(tarifasArray[i].id_tarifa == tf){
 									return tarifasArray[i].precio;
 								}

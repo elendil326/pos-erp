@@ -20,5 +20,21 @@ require_once("base/sesion.vo.base.php");
   */
 class SesionDAO extends SesionDAOBase
 {
+	public static function getCurrentUser( $auth_token = null ){
+		
+		global $conn;
+		$sql = "select u.* from usuario u, sesion s where u.id_usuario = s.id_usuario and s.auth_token = ?";
+      
+      	$params = array( $auth_token );
 
+      $rs = $conn->GetRow($sql, $params);
+
+      if(count($rs) === 0)
+      {
+        return NULL;
+      }
+
+
+      return new Usuario($rs);
+	}
 }

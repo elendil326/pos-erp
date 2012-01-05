@@ -251,7 +251,19 @@ Si el usuario que esta intentando iniciar sesion, esta descativado... 403 Author
 
 
 	public static function getCurrentUser(){
+	
+		if(isset($_GET["auth_token"])) {
 
+			$u = SesionDAO::getCurrentUser($_GET["auth_token"]);
+			return $u->getIdUsuario();
+		}
+		
+		if(isset($_POST["auth_token"])) {
+
+			$u = SesionDAO::getCurrentUser($_POST["auth_token"]);
+			return $u->getIdUsuario();
+		}
+		
 		if(self::isLoggedIn())
 			return $_SESSION['USER_ID'];
 		else

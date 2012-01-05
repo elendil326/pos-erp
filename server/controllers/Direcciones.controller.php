@@ -142,10 +142,11 @@ class DireccionController{
 
             $direccion = new Direccion();
 
-            $id_usuario=  SesionController::getCurrentUser();
+            $id_usuario =  SesionController::getCurrentUser();
 
-            if($id_usuario==null)
-            {
+            if($id_usuario == null)
+            {	
+				Logger::error("SesionController::getCurrentUser() regreso null");
                 throw new Exception("No se pudo obtener la sesion del usuario, ya inicio sesion?");
             }
 
