@@ -1052,7 +1052,9 @@ NOTA: Se crea un producto tipo = 1 que es para productos
 		$precio = null
 	)
 	{  
-            Logger::log("Editando producto ".$id_producto);
+            Logger::log("== Editando producto ".$id_producto . " ==");
+			
+
             
             //se validan los parametros recibidos
             $validar = self::validarParametrosProducto($id_producto,$compra_en_mostrador,
@@ -1060,17 +1062,25 @@ NOTA: Se crea un producto tipo = 1 que es para productos
                     $costo_estandar,$control_de_existencia,$descripcion_producto,
                     $foto_del_producto,$costo_extra_almacen,$codigo_de_barras,
                     $peso_producto,$id_unidad,$precio);
+
             if(is_string($validar))
             {
                 Logger::error($validar);
                 throw new Exception($validar);
             }
             
-            $producto = ProductoDAO::getByPK($id_producto);
+            $producto = ProductoDAO::getByPK( $id_producto );
+
             //Los parametros que no sean nulos seran tomados como una actualizacion
+
             if(!is_null($compra_en_mostrador))
             {
                 $producto->setCompraEnMostrador($compra_en_mostrador);
+            }
+
+            if(!is_null($descripcion_producto))
+            {
+                $producto->setDescripcion($descripcion_producto);
             }
             
             if(!is_null($metodo_costeo))

@@ -50,9 +50,53 @@ class ShoppingCartComponent implements GuiComponent {
 	    'Ext.state.*'	
 	]);
 
+	var actualizar_carrito = function(){
+		
+		console.log("Actualizando el carrito");
+		
+		//para actualizar el store del carrito
+		// y que los precios se vean reflejados		
+		grid.getView().refresh();
+		
+		
+		//seleccionar la tarifa para el cliente
+		//actual
+		
+		
+		var c = carrito_store.count();
+		var subtotal = 0;
+		var tarifaActual = 1;
+		
+		if(cliente_seleccionado !== null){
+			tarifaActual = cliente_seleccionado.get("id_tarifa_venta");
+		}
+			
 
+		
+		for (var i=0; i < c; i++) {
+			
+			var p = carrito_store.getAt(i);
+			
+			var tarifasProducto = p.get("tarifas");
+
+			for (var j=0; j < tarifasProducto.length; j++) {
+				if(tarifasProducto[j].id_tarifa == tarifaActual){
+						subtotal += parseFloat( tarifasProducto[j].precio ) * parseFloat( p.get("cantidad") ) ;
+						break;
+				}
+			}
+		};
+		
+
+		Ext.get("carrito_subtotal").update(Ext.util.Format.usMoney( subtotal ));
+		Ext.get("carrito_total").update(Ext.util.Format.usMoney( subtotal ));
+	}
+
+
+	
 	var cliente_seleccionado = null;
 	var seleccion_de_cliente = function(a,c){
+		
 		cliente_seleccionado = c[0];
 		
 		console.log("Cliente seleccionado", cliente_seleccionado);
@@ -66,21 +110,41 @@ class ShoppingCartComponent implements GuiComponent {
 		pphtml += "<br><div class='POS Boton' onClick='buscar_cliente()'  >Buscar otro cliente</div>";
 		
 		Ext.get("buscar_cliente_02").update(pphtml).show();
+
+		actualizar_carrito();	
 	};
 	
+	
+	
+	
+	
 	var buscar_cliente = function(){
+		
+		cliente_seleccionado = null;
+		
 		Ext.get("buscar_cliente_02").enableDisplayMode('block').hide();
+		
 		Ext.get("buscar_cliente_01").show();
+		
+		actualizar_carrito();
 
 	}
 	
 
+
+
+
 	var seleccionar_producto = function( a, p ){
 		
 		console.log( "Seleccionando producto", p );
-		//al seleccionar el producto
-		//agergarlo al store del carrito
+		
+		//ponerle cantidad inicial de 1
+		p[0].set("cantidad", 1);
+		
+		//agregar produco al store
 		carrito_store.add( p[0] );
+		
+		actualizar_carrito();
 	}
 	
 	
@@ -123,10 +187,10 @@ class ShoppingCartComponent implements GuiComponent {
 	        listeners: {
 	            edit: function(){
 	                // refresh summaries
-	                grid.getView().refresh();
+	                actualizar_carrito();
 	            }
 	        }
-	    });
+	});
 	
 	
 	Ext.onReady(function(){
@@ -282,8 +346,8 @@ class ShoppingCartComponent implements GuiComponent {
 				{name: 'nombre_producto', 		mapping: 'nombre_producto'},
 				{name: 'peso_producto', 		mapping: 'peso_producto'},
 				{name: 'precio',				mapping: 'precio'},
-				{name: 'tarifas',				mapping: 'tarifas'}				
-					
+				{name: 'tarifas',				mapping: 'tarifas'},			
+				{name: 'cantidad' 				/* not in the original response */ }
 	        ]
 	    });
 	
@@ -355,8 +419,12 @@ class ShoppingCartComponent implements GuiComponent {
 		           { name: 'codigo_producto',     	type: 'int'},
 		           { name: 'nombre_producto',     	type: 'string'},
 		           { name: 'descripcion',  			type: 'string'},
-		           { name: 'precio',  				type: 'float'}
-		        ]
+		           { name: 'precio',  				type: 'float'},
+		           { name: 'cantidad',  			type: 'float'}		
+		        ],
+				listeners : {
+					datachanged : actualizar_carrito
+				}
 		    });
 
 		    // create the Grid
@@ -386,6 +454,7 @@ class ShoppingCartComponent implements GuiComponent {
 		            },
 		            {
 		                text     : 'cantidad',
+						dataIndex: 'cantidad',
 		                sortable : false,
 						renderer : function(x){
 							if(x === undefined)  x = 1;
@@ -423,15 +492,30 @@ class ShoppingCartComponent implements GuiComponent {
 						}
 		            },		
 		            {
-		                text     : 'descripcion',
+		                text     : 'Importe',
 		                width    : 75,
 		                sortable : true,
-		                dataIndex: 'descripcion'
+						renderer : function(a,b,producto){
+
+							if(cliente_seleccionado == null){
+								return Ext.util.Format.usMoney( producto.get("cantidad") );
+							}
+							
+							var tf = cliente_seleccionado.get("id_tarifa_venta");
+							var tarifasArray = producto.get("tarifas");
+							
+							for (var i=0; i < tarifasArray.length; i++) {
+								if(tarifasArray[i].id_tarifa == tf){
+									return Ext.util.Format.usMoney( 
+										parseFloat(tarifasArray[i].precio ) * parseFloat(producto.get("cantidad")) );
+								}
+							};
+						}
 		            }
 		        ],
 		        height: 350,
 		        width: "100%",
-		        renderTo: 'grid-example',
+		        renderTo: 'carrito_de_compras_grid',
 		        viewConfig: {
 		            stripeRows: true
 		        }
@@ -446,7 +530,7 @@ class ShoppingCartComponent implements GuiComponent {
 		
 
 </script>
-
+<h2>Nueva venta</h2>
 			<div id="buscar_cliente_01">
 				<p style="margin-bottom: 0px;">Buscar cliente</p>
 				<div style="margin-bottom: 15px;" id="ShoppingCartComponent_002"><!-- clientes --></div>				
@@ -458,20 +542,23 @@ class ShoppingCartComponent implements GuiComponent {
 
 			<p style="margin-bottom: 0px;">Buscar productos</p>				
 			<div id="ShoppingCartComponent_001"><!-- buscar productos --></div>
-			
-			<select name="some_name" id="some_name">
-				<option>tarifas</option>
-				<option>tarifas3</option>
-				
-			</select>
-			
-			<h2 style="margin-bottom:0px">Esta venta</h2>
+
+
 			<div id="carrito_de_compras" style="margin: 5px auto;">
-				<div id="grid-example">
-					
-				</div>
-				
+				<div id="carrito_de_compras_grid"></div>
 			</div>
+			
+			<table>
+				<tr>
+					<td>Subtotal</td>
+					<td id="carrito_subtotal"></td>
+				</tr>
+				<tr>
+					<td>Total</td>
+					<td id="carrito_total"></td>
+				</tr>				
+			</table>
+			
 			<div class="POS Boton" onClick="cancelarVenta()">Cancelar</div>
 			<div class="POS Boton" onClick="doVenta()">Vender</div>
 			
