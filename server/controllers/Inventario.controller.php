@@ -68,11 +68,14 @@ Se puede ordenar por los atributos de producto.
                     $p_a = self::Existencias(null, null, $id_producto, $sucursal->getIdSucursal());
 
                     if($p_a["numero_de_resultados"] > 0){
-                        $result["id_sucursal"] = $sucursal->getIdSucursal();
-                        $result["id_producto"] = $p_a["resultados"][0]->getIdProducto();
-                        $result["id_unidad"]   = $p_a["resultados"][0]->getIdUnidad();
-                        $result["cantidad"]    = $p_a["resultados"][0]->getCantidad();
-                        array_push($productos_almacenes,$result);
+                        foreach($p_a["resultados"] as $p)
+                        {
+                            $result["id_sucursal"] = $sucursal->getIdSucursal();
+                            $result["id_producto"] = $p->getIdProducto();
+                            $result["id_unidad"]   = $p->getIdUnidad();
+                            $result["cantidad"]    = $p->getCantidad();
+                            array_push($productos_almacenes,$result);
+                        }
                     }
                 }
             }
