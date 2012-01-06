@@ -786,7 +786,6 @@ NOTA: Se crea un producto tipo = 1 que es para productos
                 ProductoDAO::save($producto);
                 if(!is_null($id_empresas))
                 {
-                    
                     $id_empresas = object_to_array($id_empresas);
                     
                     if(!is_array($id_empresas))

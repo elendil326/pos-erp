@@ -50,10 +50,30 @@ Se puede ordenar por los atributos de producto.
             
             $productos_almacenes = array();
             
-            
-            if(!is_null($id_almacen))
+            //Si solo se especifica un producto, se regresa un arreglo con las sucursales donde esta ese producto y 
+            //la cantidad total en cada una
+            if
+            (
+                    !is_null($id_producto)      &&
+                    is_null($id_almacen)        &&
+                    is_null($id_empresa)        &&
+                    is_null($id_sucursal)
+            )
             {
-                //Se buscan los registros de productos que cumplan con el almacan y con el producto recibidos
+                //Se obtienen todas las sucursales y se llama recursivamente a este metodo
+                $sucursales = SucursalDAO::search( new Sucursal( array( "activa" => 1 ) ) );
+                foreach($sucursales as $sucursal)
+                {
+                    $p_a = self::Existencias(null, null, $id_producto, $sucursal->getIdSucursal());
+                    if(!empty ($p_a))
+                    {
+                        array_push($productos_almacenes,$p_a);
+                    }
+                }
+            }
+            else if(!is_null($id_almacen))
+            {
+                //Se buscan los registros de productos que cumplan con el almacen y con el producto recibidos
                 $productos_almacenes = ProductoAlmacenDAO::search( new ProductoAlmacen( 
                         array( "id_almacen" => $id_almacen, "id_producto" => $id_producto ) ) );
             }
@@ -125,7 +145,11 @@ Se puede ordenar por los atributos de producto.
             }
             
             Logger::log("Se listan ".count($productos_almacenes)." registros");
-            return $productos_almacenes;
+            $existencias = array(
+                "resultados"            => $productos_almacenes,
+                "numero_de_resultados"  => count($productos_almacenes)
+            );
+            return $existencias;
             
 	}
         
