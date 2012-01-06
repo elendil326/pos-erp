@@ -1828,7 +1828,7 @@ Ejemplo: 1 kg = 2.204 lb
 	
 	
 	public static function Buscar($query){
-		
+		Logger::debug("buscando" . $query);
 		$productos = ProductoDAO::buscarProductos( $query );
 		
 		$resultado = array();
