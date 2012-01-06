@@ -62,12 +62,17 @@ Se puede ordenar por los atributos de producto.
             {
                 //Se obtienen todas las sucursales y se llama recursivamente a este metodo
                 $sucursales = SucursalDAO::search( new Sucursal( array( "activa" => 1 ) ) );
+                $result = array();
                 foreach($sucursales as $sucursal)
                 {
                     $p_a = self::Existencias(null, null, $id_producto, $sucursal->getIdSucursal());
                     if(!empty ($p_a))
                     {
-                        array_push($productos_almacenes,$p_a);
+                        $result["id_sucursal"] = $sucursal->getIdSucursal();
+                        $result["id_producto"] = $p_a["resultados"][0]->getIdProducto();
+                        $result["id_unidad"]   = $p_a["resultados"][0]->getIdUnidad();
+                        $result["cantidad"]    = $p_a["resultados"][0]->getCantidad();
+                        array_push($productos_almacenes,$result);
                     }
                 }
             }
