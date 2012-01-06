@@ -54,26 +54,26 @@ class ShoppingCartComponent implements GuiComponent {
 		
 		console.log("Actualizando el carrito");
 		
-		//para actualizar el store del carrito
-		// y que los precios se vean reflejados		
+		// 
+		// Actualizar la tabla de productos 
+		// seleccionados
+		//
 		grid.getView().refresh();
 		
-		
-		//seleccionar la tarifa para el cliente
-		//actual
-		
-		
-		var c = carrito_store.count();
+
+
+		// 
+		// Calcular precios e importes
+		//		
+		var carrito_store_count = carrito_store.count();
 		var subtotal = 0;
 		var tarifaActual = 1;
 		
 		if(cliente_seleccionado !== null){
 			tarifaActual = cliente_seleccionado.get("id_tarifa_venta");
 		}
-			
 
-		
-		for (var i=0; i < c; i++) {
+		for (var i=0; i < carrito_store_count; i++) {
 			
 			var p = carrito_store.getAt(i);
 			
@@ -87,9 +87,29 @@ class ShoppingCartComponent implements GuiComponent {
 			}
 		};
 		
-
 		Ext.get("carrito_subtotal").update(Ext.util.Format.usMoney( subtotal ));
 		Ext.get("carrito_total").update(Ext.util.Format.usMoney( subtotal ));
+		
+		
+		
+		// 
+		// Buscar existencias
+		//
+		if(sucursal_seleccionada !== null){
+			//si hay una sucursal seleccionada
+			//podemos calcular si hay existencias
+			for (var i=0; i < carrito_store_count; i++) {
+
+				var p = carrito_store.getAt(i);
+
+				var existencias = p.get("existencias");
+				console.log(existencias);
+				/*for (var ei=0; ei < existencias.length; ei++) {
+					console.log(existencias[ei]);
+				};*/
+				
+			};
+		}
 	}
 
 
@@ -193,12 +213,18 @@ class ShoppingCartComponent implements GuiComponent {
 	});
 	
 	
+	var sucursal_seleccionada = null;
 	
-	var sucursal_seleccionada = function( sucursalStore ){
+	var seleccionar_sucursal = function( sucursalStore ){
 		//sucursalStore
-	}
+		console.log(sucursalStore.get("id_sucursal") + " seleccionada...");
+		
+		sucursal_seleccionada = sucursalStore.get("id_sucursal");
+		
+		actualizar_carrito();
+	};
 	
-	
+
 	
 	Ext.onReady(function(){
 
@@ -354,6 +380,7 @@ class ShoppingCartComponent implements GuiComponent {
 				{name: 'peso_producto', 		mapping: 'peso_producto'},
 				{name: 'precio',				mapping: 'precio'},
 				{name: 'tarifas',				mapping: 'tarifas'},			
+				{name: 'existencias',			mapping: 'existencias'},
 				{name: 'cantidad' 				/* not in the original response */ }
 	        ]
 	    });
@@ -376,6 +403,7 @@ class ShoppingCartComponent implements GuiComponent {
 	            displayField: 'title',
 	            typeAhead: true,
 	            hideLabel: true,
+				emptyText : "Busque productos aqui",
 	            hideTrigger:false,
 	            anchor: '100%',
 				listeners :{
@@ -427,7 +455,7 @@ class ShoppingCartComponent implements GuiComponent {
 		           { name: 'nombre_producto',     	type: 'string'},
 		           { name: 'descripcion',  			type: 'string'},
 		           { name: 'precio',  				type: 'float'},
-		           { name: 'cantidad',  			type: 'float'}		
+		           { name: 'cantidad',  			type: 'float'}
 		        ],
 				listeners : {
 					datachanged : actualizar_carrito
@@ -541,7 +569,7 @@ class ShoppingCartComponent implements GuiComponent {
 	
 			<?php
 				$selector_de_suc = new SucursalSelectorComponent();
-				$selector_de_suc->addJsCallback("sucursal_seleccionada");
+				$selector_de_suc->addJsCallback("seleccionar_sucursal");
 				$selector_de_suc->renderCmp();
 			?>
 	
@@ -550,17 +578,18 @@ class ShoppingCartComponent implements GuiComponent {
 				<div style="margin-bottom: 15px;" id="ShoppingCartComponent_002"><!-- clientes --></div>				
 			</div>
 			
-			<div id="buscar_cliente_02" style="display:none; margin-bottom: 10px">
+			<div id="buscar_cliente_02" style="display:none; margin-bottom: 5px">
 			</div>
 
 
-			<p style="margin-bottom: 0px;">Buscar productos</p>				
+			
 			<div id="ShoppingCartComponent_001"><!-- buscar productos --></div>
 
 
 			<div id="carrito_de_compras" style="margin: 5px auto;">
 				<div id="carrito_de_compras_grid"></div>
 			</div>
+			
 			
 			<table>
 				<tr>

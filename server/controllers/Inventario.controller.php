@@ -150,6 +150,7 @@ Se puede ordenar por los atributos de producto.
             }
             
             Logger::log("Se listan ".count($productos_almacenes)." registros");
+
             $existencias = array(
                 "resultados"            => $productos_almacenes,
                 "numero_de_resultados"  => count($productos_almacenes)

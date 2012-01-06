@@ -1838,7 +1838,9 @@ Ejemplo: 1 kg = 2.204 lb
 	
 	
 	public static function Buscar($query){
+		
 		Logger::debug("buscando" . $query);
+		
 		$productos = ProductoDAO::buscarProductos( $query );
 		
 		$resultado = array();
@@ -1853,11 +1855,13 @@ Ejemplo: 1 kg = 2.204 lb
 			
 			//buscar sus existencias
 			
-			$r["existencias"] = InventarioController::Existencias( 
+			$existencias = InventarioController::Existencias( 
 										/* $id_almacen */ null, 
 										/* $id_empresa */ null, 
 										/* $id_producto */ $p->getIdProducto(), 
 										/* $id_sucursal */ null );
+										
+			$r["existencias"] = $existencias["resultados"];
 			
 			array_push( $resultado, $r );
 		}
