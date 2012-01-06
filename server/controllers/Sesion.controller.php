@@ -250,6 +250,8 @@ Si el usuario que esta intentando iniciar sesion, esta descativado... 403 Author
 	}
 
 
+
+
 	public static function getCurrentUser(){
 	
 		if(isset($_GET["auth_token"])) {
