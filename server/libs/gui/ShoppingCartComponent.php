@@ -96,17 +96,46 @@ class ShoppingCartComponent implements GuiComponent {
 		// Buscar existencias
 		//
 		if(sucursal_seleccionada !== null){
-			//si hay una sucursal seleccionada
-			//podemos calcular si hay existencias
+			//
+			// si hay una sucursal seleccionada
+			// podemos calcular si hay existencias
+			//
 			for (var i=0; i < carrito_store_count; i++) {
 
 				var p = carrito_store.getAt(i);
 
 				var existencias = p.get("existencias");
-				console.log(existencias);
-				/*for (var ei=0; ei < existencias.length; ei++) {
-					console.log(existencias[ei]);
-				};*/
+				
+				
+				
+				var found_existencias = false;
+				
+				for (var ei=0; ei < existencias.length; ei++) {
+					//
+					// buscar la sucursal que
+					// tengo seleccionada
+					//
+					if( existencias[ei].id_sucursal == sucursal_seleccionada ){
+						
+						console.log(existencias[ei].id_sucursal,  sucursal_seleccionada)
+						
+						found_existencias = true;
+						
+						if( p.get("cantidad") > existencias[ei].cantidad ){
+							
+							console.warn("se necesitan" + p.get("cantidad") + " pero solo tengo "+ existencias[ei].cantidad);
+						}else{
+							console.log("quiero " + p.get("cantidad") + " y tengo "+ existencias[ei].cantidad);							
+						}
+						break;
+					}
+				}
+				
+				
+				if(found_existencias === false){
+					console.warn("No hay ningun tipo de existencias");
+				}
+
 				
 			};
 		}
@@ -173,25 +202,34 @@ class ShoppingCartComponent implements GuiComponent {
 
 	
 	var doVenta = function (){
+		//
+		// crear un objeto con los productos
+		var detalle_de_venta = [];
 		
-		obj = {
-			retencion 	: 0,
-			descuento 	: 0,
-			tipo_venta 	: "contado",
-			impuesto 	: 0,
-			subtotal	: 5,
-			total 		: 5,
-			id_comprador_venta	: 3,
-			id_sucursal	: 1,
-			detalle_venta : Ext.JSON.encode( [{
-				id_producto : 1,
-				cantidad 	: 1,
-				precio		: 5,
+		for (var i=0; i < carrito_store.count(); i++) {
+
+			var p = carrito_store.getAt(i);
+			detalle_de_venta.push({
+				id_producto : p.get("id_producto"),
+				cantidad 	: p.get("cantidad"),
+				precio		: 2,
 				descuento	: 0,
 				impuesto	: 0,
 				retencion	: 0,
 				id_unidad	: 1
-			}] )
+			});
+		}
+			
+		obj = {
+			retencion 			: 0,
+			descuento 			: 0,
+			tipo_venta 			: "contado",
+			impuesto 			: 0,
+			subtotal			: 5,
+			total 				: 5,
+			id_comprador_venta	: cliente_seleccionado.get("id_usuario"),
+			id_sucursal			: sucursal_seleccionada,
+			detalle_venta 		: Ext.JSON.encode( detalle_de_venta )
 		};
 		
 		POS.API.POST("api/ventas/nueva/", 

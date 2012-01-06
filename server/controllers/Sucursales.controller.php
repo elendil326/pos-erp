@@ -417,6 +417,7 @@ require_once("interfaces/Sucursales.interface.php");
                 }
                 if(is_null($usuario->getIdClasificacionCliente()))
                 {
+
                     return "El usuario no es un cliente pues no tiene una clasificacion como tal.";
                 }     
                 if(!$usuario->getActivo())

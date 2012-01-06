@@ -16,7 +16,7 @@ class GerenciaComponentPage extends StdComponentPage{
 
 		//check for user login status
 		if(SesionController::isLoggedIn() === FALSE){
-			die(header("Location: ../?next_url=" . $_SERVER["SCRIPT_NAME"]));
+			die(header("Location: ../?next_url=" . $_SERVER["SCRIPT_FILENAME"]));
 		}
 		
 		$this->createMainMenu();
