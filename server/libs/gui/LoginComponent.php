@@ -20,7 +20,20 @@ class LoginComponent implements GuiComponent
 	private function printAPICall( ){
 		?>
 		<script type="text/javascript" charset="utf-8">
-
+		
+			function getParameterByName(name)
+			{
+			  name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+			  var regexS = "[\\?&]" + name + "=([^&#]*)";
+			  var regex = new RegExp(regexS);
+			  var results = regex.exec(window.location.href);
+			  if(results == null)
+			    return "";
+			  else
+			    return decodeURIComponent(results[1].replace(/\+/g, " "));
+			}
+			
+			
 			var snd_to_api = function (   ){
 				Ext.Ajax.request({
 					method 	: "POST",
@@ -54,8 +67,8 @@ class LoginComponent implements GuiComponent
 						
 						if(o.login_succesful === true){
 							Ext.util.Cookies.set( "a_t", o.auth_token );
-
-							if(o.status == "ok") window.location = "gerencia/";							
+							
+							if(o.status == "ok") window.location = "gerencia/" + getParameterByName("next_url");
 						}
 
 					},

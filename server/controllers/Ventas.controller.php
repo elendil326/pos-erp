@@ -12,12 +12,14 @@ require_once("interfaces/Ventas.interface.php");
       //Metodo para pruebas que simula la obtencion del id de la sucursal actual
         private static function getSucursal()
         {
+			Logger::error("getSucursal() en VentasController");
             return 1;
         }
         
         //metodo para pruebas que simula la obtencion del id de la caja actual
         private static function getCaja()
         {
+			Logger::error("getCaja() en VentasController");
             return 1;
         }
         
@@ -26,8 +28,8 @@ require_once("interfaces/Ventas.interface.php");
          *Se valida que un string tenga longitud en un rango de un maximo inclusivo y un minimo exclusvio.
          *Regresa true cuando es valido, y un string cuando no lo es.
          */
-          private static function validarString($string, $max_length, $nombre_variable,$min_length=0)
-	{
+		private static function validarString($string, $max_length, $nombre_variable,$min_length=0)
+		{
 		if(strlen($string)<=$min_length||strlen($string)>$max_length)
 		{
 		    return "La longitud de la variable ".$nombre_variable." proporcionada (".$string.") no esta en el rango de ".$min_length." - ".$max_length;
@@ -537,21 +539,39 @@ require_once("interfaces/Ventas.interface.php");
             Logger::log("Creando nueva venta fuera de caja");
             
             //Se utiliza el metodo de Sucursal controller, dejando que tome la caja y la sucursal como nulos
-            try
-            {
-            $venta = SucursalesController::VenderCaja($descuento,$id_comprador_venta,$impuesto,$retencion,
-                    $subtotal,$tipo_venta,$total,null,null,$datos_cheque,$detalle_orden,$detalle_paquete,
-                    $detalle_producto,null,$id_sucursal,null,$saldo,$tipo_de_pago);
-            }
-            catch(Exception $e)
-            {
+            try{
+            	$venta = SucursalesController::VenderCaja(
+							$descuento,
+							$id_comprador_venta,
+							$impuesto,
+							$retencion,
+                    		$subtotal,
+							$tipo_venta,
+							$total,
+							null,
+							null,
+							$datos_cheque,
+							$detalle_orden,
+							$detalle_paquete,
+                    		$detalle_venta,
+							null,
+							$id_sucursal,
+							null,
+							$saldo,
+							$tipo_de_pago
+						);
+            }catch(Exception $e){
+	
                 Logger::error("No se pudo crear la nueva venta: ".$e);
+
                 if($e->getCode()==901)
                     throw new Exception("No se pudo crear la nueva venta: ".$e->getMessage(),901);
+
                 throw new Exception("No se pudo crear la nueva venta",901);
             }
             
-            Logger::log("Venta creada exitosamente");
+            Logger::log("==== Venta " . $venta["id_venta"] . " exitosa ====" );
+
             return array( "id_venta" => $venta["id_venta"] );
 	}
   }

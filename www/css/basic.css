@@ -41,7 +41,9 @@ html body{background:#e7e7e7}
 .devsitePage .body dd,
 .devsitePage .refindex .page,
 .devsitePage .body textarea,
-.devsitePage .body td{line-height:18px}
+.devsitePage .body td{
+	/*line-height:18px*/
+}
 .devsitePage dl,
 .devsitePage dt,
 .devsitePage dd{margin:0}
@@ -89,7 +91,19 @@ html body{background:#e7e7e7}
 .devsitePage .body pre,.devsitePage .body .pre{background:#f2f2f2;border:1px solid #d8dfea;border-left-width:3px;margin:18px;padding-top:7px;padding-bottom:7px;padding-left:10px;overflow:auto}
 .devsitePage .body img.externalLink{left:5px;position:relative;top:-5px;width:10px}
 .devsitePage .body table{margin-bottom:1em}
-.devsitePage .body table td,.devsitePage .body table th{border:1px solid #eee;text-align:left;padding:6px;padding-top:4px;padding-bottom:4px;padding-right:10px;vertical-align:top}
+
+/* ESTILO DE LA TABLA */ 
+/* afecta a extjs, hay que hacerle override luego */
+.devsitePage .body table td,.devsitePage .body table th{
+		border:1px solid #eee;
+		text-align:left;
+		padding:6px;
+		padding-top:4px;
+		padding-bottom:4px;
+		padding-right:10px;
+		vertical-align:top;
+	}
+
 .devsitePage .body table td.closeButton{padding-right:0}
 .devsitePage .body table.noborder td{border:0}
 .devsitePage .body table.bordered td,.devsitePage .body table.bordered th{border:1px solid #ddd}
@@ -268,8 +282,8 @@ hr{background:#d9d9d9;border-width:0;color:#d9d9d9;height:1px}
 .aero{opacity:.5}
 .column{float:left}
 .center{margin-left:auto;margin-right:auto}
-#facebook .hidden_elem{display:none !important}
-#facebook .invisible_elem{visibility:hidden}
+/*#facebook .hidden_elem{display:none !important}
+#facebook .invisible_elem{visibility:hidden}*/
 .direction_ltr{direction:ltr}
 .direction_rtl{direction:rtl}
 .text_align_ltr{text-align:left}

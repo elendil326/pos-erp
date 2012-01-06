@@ -175,29 +175,31 @@ class ShoppingCartComponent implements GuiComponent {
 	var doVenta = function (){
 		
 		obj = {
-			retencion : 0,
-			descuento : 0,
-			tipo_venta : "contado",
-			impuesto : 0,
-			subtotal: 5,
-			total : 5,
-			id_comprador_venta: 5,
-			id_sucursal: 9,
+			retencion 	: 0,
+			descuento 	: 0,
+			tipo_venta 	: "contado",
+			impuesto 	: 0,
+			subtotal	: 5,
+			total 		: 5,
+			id_comprador_venta	: 3,
+			id_sucursal	: 1,
 			detalle_venta : Ext.JSON.encode( [{
-				id_producto : 5,
-				cantidad : 1,
-				id_almacen : 0,
-				precio: 5,
-				descuento: 0,
-				impuesto: 0,
-				retencion: 0,
-				id_unidad: 1
+				id_producto : 1,
+				cantidad 	: 1,
+				precio		: 5,
+				descuento	: 0,
+				impuesto	: 0,
+				retencion	: 0,
+				id_unidad	: 1
 			}] )
 		};
 		
-		POS.API.GET("api/ventas/nueva/", obj, function(r){
-			console.log(r);
-		});
+		POS.API.POST("api/ventas/nueva/", 
+			obj,{
+				callback : function(r){
+					console.log(r);
+				}
+			});
 		
 	}
 	
