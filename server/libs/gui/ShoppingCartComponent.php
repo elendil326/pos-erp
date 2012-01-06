@@ -49,7 +49,7 @@ class ShoppingCartComponent implements GuiComponent {
 	    'Ext.util.*',
 	    'Ext.state.*'	
 	]);
-
+	
 	var actualizar_carrito = function(){
 		
 		console.log("Actualizando el carrito");
@@ -191,6 +191,13 @@ class ShoppingCartComponent implements GuiComponent {
 	            }
 	        }
 	});
+	
+	
+	
+	var sucursal_seleccionada = function( sucursalStore ){
+		//sucursalStore
+	}
+	
 	
 	
 	Ext.onReady(function(){
@@ -530,7 +537,14 @@ class ShoppingCartComponent implements GuiComponent {
 		
 
 </script>
-<h2>Nueva venta</h2>
+	<h2>Nueva venta</h2>
+	
+			<?php
+				$selector_de_suc = new SucursalSelectorComponent();
+				$selector_de_suc->addJsCallback("sucursal_seleccionada");
+				$selector_de_suc->renderCmp();
+			?>
+	
 			<div id="buscar_cliente_01">
 				<p style="margin-bottom: 0px;">Buscar cliente</p>
 				<div style="margin-bottom: 15px;" id="ShoppingCartComponent_002"><!-- clientes --></div>				

@@ -2196,8 +2196,12 @@ require_once("interfaces/Sucursales.interface.php");
                 else
                     $sucursales=SucursalDAO::getAll();
             }
-            Logger::log("Sucursales obtenidos con exitos");
-            return $sucursales;
+            Logger::log("Sucursales obtenidas con exito");
+
+            return array(
+            	"resultados" => $sucursales,
+				"numero_de_resultados" => sizeof($sucursales)
+            );
 	}
   
 	/**

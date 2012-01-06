@@ -162,7 +162,7 @@
 	require_once("libs/gui/FreeHtmlComponent.php");
 	require_once("libs/gui/ShoppingCartComponent.php");	
 	require_once("libs/gui/SearchProductComponent.php");		
-
+	require_once("libs/gui/SucursalSelectorComponent.php");
 
 
 	# *******************************
