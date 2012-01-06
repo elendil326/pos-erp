@@ -24,7 +24,7 @@ class TarifaDAO extends TarifaDAOBase
         public static function obtenerTarifasActuales($tipo_tarifa)
         {
             Logger::log("Obteniendo tarifas de ".$tipo_tarifa);
-            //Se obtienen todas las tarifas activas son su version activa, su version default, y la
+            //Se obtienen todas las tarifas activas con su version activa, su version default, y la
             //fecha de inicio y de fin de la version activa.
             $sql = "select t.id_tarifa, t.id_version_activa, t.id_version_default, v.fecha_inicio, 
                 v.fecha_fin from tarifa t, version v where t.activa = 1 and t.tipo_tarifa = ? and v.id_version=t.id_version_activa";
@@ -42,6 +42,8 @@ class TarifaDAO extends TarifaDAOBase
                 $tarifa_version = array();
                 $tarifa_version["id_tarifa"] = $result["id_tarifa"];
                 
+                //Si la fecha de inicio o la fecha de fin es nula, entonces se da por hecho que la version
+                //no caduca y se selecciona.
                 if(is_null($result["fecha_inicio"]) || is_null($result["fecha_fin"]))
                 {
                     $tarifa_version["id_version"] = $result["id_version_activa"];
