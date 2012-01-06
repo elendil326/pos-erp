@@ -66,8 +66,8 @@ Se puede ordenar por los atributos de producto.
                 foreach($sucursales as $sucursal)
                 {
                     $p_a = self::Existencias(null, null, $id_producto, $sucursal->getIdSucursal());
-                    if(!empty ($p_a))
-                    {
+
+                    if($p_a["numero_de_resultados"] > 0){
                         $result["id_sucursal"] = $sucursal->getIdSucursal();
                         $result["id_producto"] = $p_a["resultados"][0]->getIdProducto();
                         $result["id_unidad"]   = $p_a["resultados"][0]->getIdUnidad();

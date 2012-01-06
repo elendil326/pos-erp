@@ -58,7 +58,7 @@ class ShoppingCartComponent implements GuiComponent {
 		console.log("Cliente seleccionado", cliente_seleccionado);
 		
 		Ext.get("buscar_cliente_01").enableDisplayMode('block').hide();
-		var pphtml = "<h2 style='margin-bottom:0px'>Venta para <a href='clientes.ver.php?cid="+cliente_seleccionado.get("id_cliente")+"'>" + cliente_seleccionado.get("nombre") + "</a></h2>";
+		var pphtml = "<h2 style='margin-bottom:0px'>Venta para <a target=\"_blank\" href='clientes.ver.php?cid="+cliente_seleccionado.get("id_usuario")+"'>" + cliente_seleccionado.get("nombre") + "</a></h2>";
 
 		if( cliente_seleccionado.get("rfc") !== null )
 			pphtml += "<p>" + cliente_seleccionado.get("rfc") + "</p>";
@@ -118,7 +118,15 @@ class ShoppingCartComponent implements GuiComponent {
 	}
 	
 	
-	
+	var cellEditing = Ext.create('Ext.grid.plugin.CellEditing', {
+	        clicksToEdit: 1,
+	        listeners: {
+	            edit: function(){
+	                // refresh summaries
+	                grid.getView().refresh();
+	            }
+	        }
+	    });
 	
 	
 	Ext.onReady(function(){
@@ -229,6 +237,7 @@ class ShoppingCartComponent implements GuiComponent {
 	            pageSize: 10
 	        }]
 	    });/* Ext.create */
+
 		/** *****************************************************************
 		  * /CLIENTES
 		  *
@@ -307,7 +316,11 @@ class ShoppingCartComponent implements GuiComponent {
 
 	                // Custom rendering template for each item
 	                getInnerTpl: function() {
-	                    return '<h3>{nombre_producto}-{id_producto}</h3>';
+						var html = "";
+						html += "<h3>{nombre_producto}</h3>";
+						html += "<p>{descripcion}</p>";
+						html += "{precio}";
+	                    return html;
 	                }
 	            },
 	            pageSize: 10
@@ -349,6 +362,7 @@ class ShoppingCartComponent implements GuiComponent {
 		    // create the Grid
 		    var grid = Ext.create('Ext.grid.Panel', {
 		        store: carrito_store,
+				plugins: [cellEditing],
 		        stateful: true,
 		        stateId: 'stateGrid',
 		        columns: [
@@ -373,9 +387,14 @@ class ShoppingCartComponent implements GuiComponent {
 		            {
 		                text     : 'cantidad',
 		                sortable : false,
-						renderer : function(){
-							return '<input type="text" >';
-						}
+						renderer : function(x){
+							if(x === undefined)  x = 1;
+							return x + ' Qty';
+						},
+						field: {
+			                xtype: 'numberfield'
+			            }
+						
 		            },		
 		            {
 		                text     : 'Precio',
@@ -389,13 +408,14 @@ class ShoppingCartComponent implements GuiComponent {
 								esta seleccionado para mostrar la adecuada
 							***** **** ***** */
 							if(cliente_seleccionado == null){
-								return 0;
+								return Ext.util.Format.usMoney( 0 );								
 							}
+							
 							var tf = cliente_seleccionado.get("id_tarifa_venta");
 							
 							for (var i=0; i < tarifasArray.length; i++) {
 								if(tarifasArray[i].id_tarifa == tf){
-									return tarifasArray[i].precio;
+									return Ext.util.Format.usMoney( tarifasArray[i].precio );
 								}
 							};
 							
