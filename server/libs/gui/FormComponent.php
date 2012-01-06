@@ -79,6 +79,9 @@ class FormComponent implements GuiComponent{
 		if( !is_null($this->send_to_api)){
 			
 			$html.= "<script>";
+			$html.= 'if(HtmlEncode===undefined){var HtmlEncode=function(a){var b=a.length,c=[];while(b--){var d=a[b].charCodeAt();if(d>127||d>90&&d<97){c[b]="&#"+d+";"}else{c[b]=a[b]}}return c.join("")}} ';
+
+			
 			$html.= "var obligatory = [];";
 			foreach( $this->form_fields as $f )
 			{
@@ -108,7 +111,7 @@ class FormComponent implements GuiComponent{
 					}
 
 					
-					$html .= "if( Ext.get('". $f->id . "').getValue().length > 0 ){ p." . $f->id . " = Ext.get('". $f->id . "').getValue() ; } else{" ;
+					$html .= "if( Ext.get('". $f->id . "').getValue().length > 0 ){ p." . $f->id . " = HtmlEncode( Ext.get('". $f->id . "').getValue() ); } else{" ;
 						//else si no esta lleno de datos, vamos a buscarlo en los obligatorios, 
 						//si esta en los obligatorios entonces mandamos el error
 						$html .= "for (var i = obligatory.length - 1; i >= 0; i--){";

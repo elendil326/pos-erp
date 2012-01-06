@@ -12,6 +12,7 @@
 		// Parametros necesarios
 		// 
 		$page->requireParam(  "pid", "GET", "Este producto no existe." );
+		
 		$este_producto = ProductoDAO::getByPK( $_GET["pid"] );
 		//
 		// Titulo de la pagina
@@ -33,7 +34,7 @@
 		
 		$form->renameField( array("descripcion" => "descripcion_producto") );
 		
-		//$form->onApiCallSuccessRedirect("productos.lista.php");
+		$form->onApiCallSuccessRedirect("productos.ver.php?pid=" . $este_producto->getIdProducto() );
 
 		$form->createComboBoxJoin("id_unidad", "nombre", UnidadDAO::search(new Unidad( array( "activa" => 1 ) )), $este_producto->getIdUnidad() );
 
