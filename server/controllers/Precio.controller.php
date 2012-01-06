@@ -69,91 +69,390 @@ require_once("interfaces/Precio.interface.php");
         /*
          * Valida los parametros de un producto
          */
-        private static function validarProducto
+//        private static function validarProducto
+//        (
+//                $id_producto = null,
+//                $id_unidad = null,
+//                $tipo_tarifa = null
+//        )
+//        {
+//            if(!is_null($id_producto))
+//            {
+//                //Se valida que el producto exista, que este activo y si se busca un precio de compra, que el producto se pueda comprar.
+//                $producto = ProductoDAO::getByPK($id_producto);
+//                if(is_null($producto))
+//                {
+//                    return "El producto ".$id_producto." no existe";
+//                }
+//
+//                if(!$producto->getActivo())
+//                {
+//                    return "El producto ".$id_producto."  no esta activo";
+//                }
+//
+//                if(!$producto->getCompraEnMostrador()&&$tipo_tarifa=="compra")
+//                {
+//                    return "Se quiere averiguar el precio de compra de un producto que no se puede comprar en mostrador";
+//                }
+//            }
+//
+//            //valida la unidad si es que se recibio
+//            if(!is_null($id_unidad))
+//            {
+//                $unidad = UnidadDAO::getByPK($id_unidad);
+//                if(is_null($unidad))
+//                {
+//                    Logger::error("La unidad con id ".$id_unidad." no existe");
+//                    throw new Exception("La unidad con id ".$id_unidad." no existe",901);
+//                }
+//
+//                if(!$unidad->getActiva())
+//                {
+//                    Logger::error("La unidad ".$id_unidad." no esta activa");
+//                    throw new Exception("La unidad ".$id_unidad." no esta activa",901);
+//                }
+//            }
+//        }
+//        
+//        /*
+//         * Valida los parametros de un servicio
+//         */
+//        private static function validarServicio
+//        (
+//                $id_servicio 
+//        )
+//        {
+//            $servicio = ServicioDAO::getByPK($id_servicio);
+//            if(is_null($servicio))
+//            {
+//                return "El servicio ".$id_servicio."  no existe";
+//            }
+//            
+//            if(!$servicio->getActivo())
+//            {
+//                return "El servicio ".$id_servicio." no esta activo";
+//            }
+//        }
+//        
+//        /*
+//         * Valida los parametros de un paquete
+//         */
+//        private static function validarPaquete
+//        (
+//                $id_paquete
+//        )
+//        {
+//            $paquete = PaqueteDAO::getByPK($id_paquete);
+//            if(is_null($paquete))
+//            {
+//                return "El paquete ".$id_paquete." no existe";
+//            }
+//            
+//            if(!$paquete->getActivo())
+//            {
+//                return "El paquete ".$id_paquete." no esta activo";
+//            }
+//        }
+        
+        /*
+         * Valida los parametros de la tabla tarifa
+         */
+        private static function ValidarParametrosTarifa
         (
-                $id_producto = null,
-                $id_unidad = null,
-                $tipo_tarifa = null
+                $id_tarifa = null,
+                $nombre = null,
+                $tipo_tarifa = null,
+                $id_moneda = null
         )
         {
+            //Valida que la tarifa exista y este activa
+            if(!is_null($id_tarifa))
+            {
+                $tarifa = TarifaDAO::getByPK($id_tarifa);
+                if(is_null($tarifa))
+                {
+                    return  "La tarifa ".$id_tarifa." no existe";
+                }
+                
+                if(!$tarifa->getActiva())
+                {
+                    return "La tarifa ".$id_tarifa." esta inactiva";
+                }
+            }
+            
+            //valida que el nombre sea valido y que no se repita
+            if(!is_null($nombre))
+            {
+                $e = self::validarString($nombre, 94, "nombre");
+                if(is_string($e))
+                    return $e;
+                
+                if(!is_null($id_tarifa))
+                {
+                    $tarifas = array_diff(TarifaDAO::search( new Tarifa( array( "nombre" => trim($nombre) ) ) ), array(TarifaDAO::getByPK($id_tarifa)));
+                }
+                else
+                {
+                    $tarifas = TarifaDAO::search( new Tarifa( array( "nombre" => trim($nombre) ) ) );
+                }
+                foreach($tarifas as $tarifa)
+                {
+                    if($tarifa->getActiva())
+                    {
+                        return "El nombre (".trim($nombre).") ya esta en uso por la tarifa ".$tarifa->getIdTarifa();
+                    }
+                }
+                
+            }
+            
+            //valida que el tipo de tarifa sea valido
+            if
+            (
+                    !is_null($tipo_tarifa)      &&
+                    $tipo_tarifa != "compra"    &&
+                    $tipo_tarifa != "venta"
+            )
+            {
+                return "El tipo de tarifa ".$tipo_tarifa." no es valido, tiene que ser 'compra' o 'venta'";
+            }
+            
+            //valida la moneda recibida
+            if(!is_null($id_moneda))
+            {
+                $moneda = MonedaDAO::getByPK($id_moneda);
+                if(is_null($moneda))
+                {
+                    return "La moneda ".$id_moneda." no existe";
+                }
+                
+                if(!$moneda->getActiva())
+                {
+                    return "La moneda ".$id_moneda." esta inactiva";
+                }
+            }
+            
+            //no se encontro error, regresa verdadero
+            return true;
+        }
+        
+        /*
+         * Valida los parametros de la tabla Version
+         */
+        private static function ValidarParametrosVersion
+        (
+                $id_version = null,
+                $nombre = null
+        )
+        {
+            //valida que la version exista
+            if(!is_null($id_version))
+            {
+                if(is_null(VersionDAO::getByPK($id_version)))
+                {
+                    return "La version ".$id_version." no existe";
+                }
+            }
+            
+            //valida que el nombre este en rango
+            if(!is_null($nombre))
+            {
+                $e = self::validarString($nombre, 97, "nombre");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //No se encontro error, regresa verdadero
+            return true;
+        }
+        
+        /*
+         * Valida los parametros de la tabla Regla
+         */
+        private static function ValidarParametrosRegla
+        (
+                $id_regla = null,
+                $nombre = null,
+                $id_producto = null,
+                $id_clasificacion_producto = null,
+                $id_unidad = null,
+                $id_servicio = null,
+                $id_clasificacion_servicio = null,
+                $id_paquete = null,
+                $cantidad_minima = null,
+                $porcentaje_utilidad = null,
+                $utilidad_neta = null,
+                $metodo_redondeo = null,
+                $margen_min = null,
+                $margen_max = null,
+                $secuencia = null
+                
+        )
+        {
+            //valida que la regla exista
+            if(!is_null($id_regla))
+            {
+                if(is_null(ReglaDAO::getByPK($id_regla)))
+                {
+                    return "La regla ".$id_regla." no existe";
+                }
+            }
+            
+            //valida que el nombre este en rango
+            if(!is_null($nombre))
+            {
+                $e = self::validarString($nombre, 100, "nombre");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el producto exista y este activo
             if(!is_null($id_producto))
             {
-                //Se valida que el producto exista, que este activo y si se busca un precio de compra, que el producto se pueda comprar.
                 $producto = ProductoDAO::getByPK($id_producto);
                 if(is_null($producto))
                 {
                     return "El producto ".$id_producto." no existe";
                 }
-
+                
                 if(!$producto->getActivo())
                 {
-                    return "El producto ".$id_producto."  no esta activo";
-                }
-
-                if(!$producto->getCompraEnMostrador()&&$tipo_tarifa=="compra")
-                {
-                    return "Se quiere averiguar el precio de compra de un producto que no se puede comprar en mostrador";
+                    return "El producto ".$id_producto." esta inactivo";
                 }
             }
-
-            //valida la unidad si es que se recibio
+            
+            //valida que la clasificacion de producto exista y este activa
+            if(!is_null($id_clasificacion_producto))
+            {
+                $clasificacion_producto = ClasificacionProductoDAO::getByPK($id_clasificacion_producto);
+                if(is_null($clasificacion_producto))
+                {
+                    return "La clasificacion de producto ".$id_clasificacion_producto." no existe";
+                }
+                
+                if(!$clasificacion_producto->getActiva())
+                {
+                    return "La clasificacion de producto ".$id_clasificacion_producto." no esta activa";
+                }
+            }
+            
+            //valida que la unidad exista y este activa
             if(!is_null($id_unidad))
             {
                 $unidad = UnidadDAO::getByPK($id_unidad);
                 if(is_null($unidad))
                 {
-                    Logger::error("La unidad con id ".$id_unidad." no existe");
-                    throw new Exception("La unidad con id ".$id_unidad." no existe",901);
+                    return "La unidad ".$id_unidad." no existe";
                 }
-
+                
                 if(!$unidad->getActiva())
                 {
-                    Logger::error("La unidad ".$id_unidad." no esta activa");
-                    throw new Exception("La unidad ".$id_unidad." no esta activa",901);
+                    return "La unidad ".$id_unidad." no esta activa";
                 }
             }
-        }
-        
-        /*
-         * Valida los parametros de un servicio
-         */
-        private static function validarServicio
-        (
-                $id_servicio 
-        )
-        {
-            $servicio = ServicioDAO::getByPK($id_servicio);
-            if(is_null($servicio))
+            
+            //valida que el servicio exista y este activo
+            if(!is_null($id_servicio))
             {
-                return "El servicio ".$id_servicio."  no existe";
+                $servicio = ServicioDAO::getByPK($id_servicio);
+                if(is_null($servicio))
+                {
+                    return "El servicio ".$id_servicio." no existe";
+                }
+                
+                if(!$servicio->getActivo())
+                {
+                    return "El servicio ".$id_servicio." no esta activo";
+                }
             }
             
-            if(!$servicio->getActivo())
+            //valida que la clasificacion de servicio exista y este activa
+            if(!is_null($id_clasificacion_servicio))
             {
-                return "El servicio ".$id_servicio." no esta activo";
-            }
-        }
-        
-        /*
-         * Valida los parametros de un paquete
-         */
-        private static function validarPaquete
-        (
-                $id_paquete
-        )
-        {
-            $paquete = PaqueteDAO::getByPK($id_paquete);
-            if(is_null($paquete))
-            {
-                return "El paquete ".$id_paquete." no existe";
+                $clasificacion_servicio = ClasificacionServicioDAO::getByPK($id_clasificacion_servicio);
+                if(is_null($clasificacion_servicio))
+                {
+                    return "La clasificacion de servicio ".$id_clasificacion_servicio." no existe";
+                }
+                
+                if(!$clasificacion_servicio->getActiva())
+                {
+                    return "La clasificacion de servicio ".$id_clasificacion_servicio." no esta activa";
+                }
             }
             
-            if(!$paquete->getActivo())
+            //valida que el paquete exista y este activo
+            if(!is_null($id_paquete))
             {
-                return "El paquete ".$id_paquete." no esta activo";
+                $paquete = PaqueteDAO::getByPK($id_paquete);
+                if(is_null($paquete))
+                {
+                    return "El paquete ".$id_paquete." no existe";
+                }
+                if(!$paquete->getActivo())
+                {
+                    return "El paquete ".$id_paquete." esta inactivo";
+                }
             }
+            
+            //valida que la cantidad minima este en rango
+            if(!is_null($cantidad_minima))
+            {
+                $e = self::validarNumero($cantidad_minima, 1.8e200, "cantidad minima");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el porcentaje de utilidad este en rango
+            if(!is_null($porcentaje_utilidad))
+            {
+                $e = self::validarNumero($porcentaje_utilidad, 1, "porcentaje_utilidad",-1);
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que la utilidad neta este en rango
+            if(!is_null($utilidad_neta))
+            {
+                $e = self::validarNumero($utilidad_neta, 1.8e200, "Utilidad neta", -1.8e200);
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el metodo de redondeo este en rango
+            if(!is_null($metodo_redondeo))
+            {
+                $e = self::validarNumero($metodo_redondeo, 1.8e200, "metodo_redondeo");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el margen minimo este en rango
+            if(!is_null($margen_min))
+            {
+                $e = self::validarNumero($margen_min, 1.8e200, "margen minimo");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que el margen maximo este en rango
+            if(!is_null($margen_max))
+            {
+                $e = self::validarNumero($margen_max, 1.8e200, "margen maximo");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que la secuencia este en rango
+            if(!is_null($secuencia))
+            {
+                $e = self::validarNumero($secuencia, PHP_INT_MAX, "secuencia");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //no se encontro error, regresa verdadero
+            return true;
         }
-        
         
 	/**
  	 *
@@ -182,8 +481,54 @@ Solo se puede elegir una tarifa de tipo compra.
 		$id_tarifa
 	)
 	{  
-  
-  
+            Logger::log("Cambiando la taifa de compra default del sistema por la tarifa ".$id_tarifa);
+            
+            //Se valida la tarifa recibida
+            $validar = self::ValidarParametrosTarifa($id_tarifa);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar,901);
+            }
+            
+            //Valida que la tarifa recibida sea de compra
+            $tarifa = TarifaDAO::getByPK($id_tarifa);
+            if($tarifa->getTipoTarifa()!="compra")
+            {
+                Logger::error("La tarifa ".$id_tarifa." no es de compra");
+                throw new Exception("La tarifa ".$id_tarifa." no es de compra",901);
+            }
+            
+            //Se busca la tarifa default del sistema y se desactiva su bandera
+            $tarifas_default = TarifaDAO::search( new Tarifa( array( "activa" => 1, "default" => 1, "tipo_tarifa" => "compra" ) ) );
+            
+            //Si se encuentra mas de una default o ninguna default, mandar un error fatal, pues no deberia darse este caso.
+            if(count($tarifas_default)!=1)
+            {
+                Logger::error("FATAL!!! No se encontro o se encontro mas de una tarifa de compra por default en el sistema");
+                throw new Exception("FATAL!!! No se encontro o se encontro mas de una tarifa de compra por default en el sistema",901);
+            }
+            
+            //Se da por hecho que solo hay una tarifa de compra por default en el sistema 
+            $tarifa_default = $tarifas_default[0];
+            $tarifa_default->setDefault(0);
+            
+            
+            $tarifa->setDefault(1);
+            DAO::transBegin();
+            try
+            {
+                TarifaDAO::save($tarifa_default);
+                TarifaDAO::save($tarifa);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo cambiar la tarifa de compra por default del sistema: ".$e);
+                throw new Exception("No se pudo cambiar la tarifa de compra por default del sistema. Intentelo mas tarde o consulte a su administrador del sistema",901);
+            }
+            DAO::transEnd();
+            Logger::log("Tarifa de compra por default en el sistema cambiada exitosamente. Ahora es ".$id_tarifa);
 	}
   
 	/**
@@ -206,7 +551,58 @@ Solo se puede elegir una tarifa de tipo compra.
 		$default = null
 	)
 	{  
-  
+            Logger::log("creando nueva tarifa");
+            
+            //Se validan los parametros recibidos
+            $validar = self::ValidarParametrosTarifa(null, $nombre, $tipo_tarifa, $id_moneda);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar,901);
+            }
+            
+            //Si no se recibe parametro activa, se dara por hecho que es 1
+            if(is_null($activa))
+            {
+                $activa = 1;
+            }
+            
+            $tarifa = new Tarifa( 
+                    array(
+                            "id_moneda"     => $id_moneda,
+                            "nombre"        => $nombre,
+                            "tipo_tarifa"   => $tipo_tarifa,
+                            "activa"        => $activa,
+                            "default"       => 0
+                    ) 
+                    );
+            DAO::transBegin();
+            try
+            {
+                TarifaDAO::save($tarifa);
+                //Si se recibio que esta tarifa fuera la default del sistema, entonces se llama a los metodos encargados de cambiar el default.
+                if($default)
+                {
+                    switch($tipo_tarifa)
+                    {
+                        case "compra" : self::CompraSetDefaultTarifa($tarifa->getIdTarifa());
+                            break;
+                        case "venta" :self::VentaSetDefaultTarifa($tarifa->getIdTarifa());
+                            break;
+                    }
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo crear la tarifa nueva: ".$e);
+                if($e->getCode()==901)
+                    throw new Exception("No se pudo crear la tarifa nueva: ".$e->getMessage(),901);
+                throw new Exception("No se pudo crear la tarifa nueva, intente mas tarde o contacte a su administrador del sistema",901);
+            }
+            DAO::transEnd();
+            Logger::log("Tarifa creada exitosamente");
+            return $tarifa->getIdTarifa();
   
 	}
   
@@ -270,8 +666,55 @@ Solo puede asignarse como default de ventas una tarifa de tipo venta
 		$id_tarifa
 	)
 	{  
-  
-  
+            Logger::log("Cambiando la taifa de venta default del sistema por la tarifa ".$id_tarifa);
+            
+            //Se valida la tarifa recibida
+            $validar = self::ValidarParametrosTarifa($id_tarifa);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar,901);
+            }
+            
+            //Valida que la tarifa recibida sea de venta
+            $tarifa = TarifaDAO::getByPK($id_tarifa);
+            if($tarifa->getTipoTarifa()!="venta")
+            {
+                Logger::error("La tarifa ".$id_tarifa." no es de venta");
+                throw new Exception("La tarifa ".$id_tarifa." no es de venta",901);
+            }
+            
+            //Se busca la tarifa default del sistema y se desactiva su bandera
+            $tarifas_default = TarifaDAO::search( new Tarifa( array( "activa" => 1, "default" => 1, "tipo_tarifa" => "venta" ) ) );
+            
+            //Si se encuentra mas de una default o ninguna default, mandar un error fatal, pues no deberia darse este caso.
+            if(count($tarifas_default)!=1)
+            {
+                Logger::error("FATAL!!! No se encontro o se encontro mas de una tarifa de venta por default en el sistema");
+                throw new Exception("FATAL!!! No se encontro o se encontro mas de una tarifa de venta por default en el sistema",901);
+            }
+            
+            //Se da por hecho que solo hay una tarifa de venta por default en el sistema 
+            $tarifa_default = $tarifas_default[0];
+            $tarifa_default->setDefault(0);
+            
+            
+            $tarifa->setDefault(1);
+            
+            DAO::transBegin();
+            try
+            {
+                TarifaDAO::save($tarifa_default);
+                TarifaDAO::save($tarifa);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo cambiar la tarifa de venta por default del sistema: ".$e);
+                throw new Exception("No se pudo cambiar la tarifa de venta por default del sistema. Intentelo mas tarde o consulte a su administrador del sistema",901);
+            }
+            DAO::transEnd();
+            Logger::log("Tarifa de venta por default en el sistema cambiada exitosamente. Ahora es ".$id_tarifa);
 	}
   
 	/**
@@ -347,8 +790,74 @@ Una version default no puede caducar.
 		$id_version
 	)
 	{  
-  
-  
+            Logger::log("Creando nueva version");
+            
+            //Se valida la version recibida
+            $validar = self::ValidarParametrosVersion($id_version);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar,901);
+            }
+            
+            $version = VersionDAO::getByPK($id_version);
+            
+            //Si la version recibida tiene definido una fecha de inicio o una fecha de fin, entonces no puede ser default
+            //pues esto implica que caducara
+            if( !is_null($version->getFechaFin()) || !is_null($version->getFechaInicio()) )
+            {
+                Logger::error("La version que se intenta hacer default es una con caducidad, las versiones default no pueden tener caducidad");
+                throw new Exception("La version que se intenta hacer default es una con caducidad, las versiones default no pueden tener caducidad",901);
+            }
+            
+            //Se valida la tarifa de la version
+            $id_tarifa = $version->getIdTarifa();
+            $validar = self::ValidarParametrosTarifa($id_tarifa);
+            if(is_string($validar))
+            {
+                Logger::error("FATAL!!!! ".$validar);
+                throw new Exception("FATAL!!!! ".$validar,901);
+            }
+            $tarifa = TarifaDAO::getByPK($id_tarifa);
+            
+            $versiones_default = VersionDAO::search( new Version( array( "id_tarifa" => $id_tarifa, "default" => 1 ) ) );
+            
+            //Si existe mas de una version default, se manda error fatal pues ese caso no deberia de ocurrir
+            if(count($versiones_default)>1)
+            {
+                Logger::error("FATAL!!!! Se encontro mas de una version default en la tarifa ".$id_tarifa);
+                throw new Exception("FATAL!!!! Se encontro mas de una version default en la tarifa ".$id_tarifa,901);
+            }
+            
+            $version_default = null;
+            //Puede darse el caso que no exista ninguna version default aun.
+            if(count($versiones_default)==0)
+            {
+                //Se da por hecho que solo hay una version default por tarifa
+                $version_default = $versiones_default[0];
+                $version_default->setDefault(0);
+            }
+            $version->setDefault(1);
+            $tarifa->setIdVersionDefault($version->getIdVersion());
+            DAO::transBegin();
+            try
+            {
+                if(!is_null($version_default))
+                {
+                    VersionDAO::save($version_default);
+                }
+                VersionDAO::save($version);
+                TarifaDAO::save($tarifa);
+            }
+            catch(Exception $e)
+            {
+                DAO::transBegin();
+                Logger::error("No se pudo cambiar la version default: ".$e);
+                throw new Exception("No se pudo cambiar la version default",901);
+            }
+            DAO::transEnd();
+            Logger::log("Version default cambiada exitosamente");
+            
 	}
   
 	/**
@@ -398,8 +907,23 @@ Las tarifas solo pueden tener una version activa.
 		$fecha_inicio = null
 	)
 	{  
-  
-  
+            Logger::log("Creando nueva version ");
+            
+            //Se validan los parametros recibidos, como este es un metodo interno, se da por hecho que la tarifa siempre sera valida
+            $validar = self::ValidarParametrosVersion(null, $nombre);
+            
+            $version = new Version( 
+                    array(
+                            "nombre"        => $nombre,
+                            "activa"        => $activa,
+                            "default"       => 0,
+                            "fecha_fin"     => $fecha_fin,
+                            "fecha_inicio"  => $fecha_inicio
+                    ) 
+                    );
+            
+            
+            
 	}
   
 	/**
@@ -675,122 +1199,125 @@ El precio es calculado a partir de las reglas de una tarifa.
 		$id_unidad = null
 	)
 	{  
-            Logger::log("Calculando precio de ".$tipo_tarifa."  para el producto ".$id_producto." o el servicio ".$id_servicio." o el paquete ".$id_paquete);
-            
-            //si no se recibe ningun articulo, se regresa un error
-            if(is_null($id_producto)&&is_null($id_servicio)&&  is_null($id_paquete))
-            {
-                Logger::error("No se sabe si se calculara el precio de un producto, un servicio o un paquete");
-                throw new Exception("No se sabe si se calculara el precio de un producto, un servicio o un paquete",901);
-            }
-            
-            //Se valida que el tipo de tarifa sea valido
-            if($tipo_tarifa!="compra" && $tipo_tarifa!="venta")
-            {
-                Logger::error("El tipo de tarifa (".$tipo_tarifa.") es invalido, tiene que ser 'compra' o 'venta'");
-                throw new Exception("El tipo de tarifa (".$tipo_tarifa.") es invalido, tiene que ser 'compra' o 'venta'",901);
-            }
-            
-            //Valida la cantidad recibida
-            $validar = self::validarNumero($cantidad, 1.8e200, "cantidad");
-            if(is_string($validar))
-            {
-                Logger::error($validar);
-                throw new Exception($validar,901);
-            }
-            
-            if(!is_null($id_producto))
-            {
-                $validar = self::validarProducto($id_producto, $id_unidad, $tipo_tarifa);
-                if(is_string($validar))
-                {
-                    Logger::error($validar);
-                    throw new Exception($validar,901);
-                }
-            }
-            else if(!is_null($id_servicio))
-            {
-                $validar = self::validarServicio($id_servicio);
-                if(is_string($validar))
-                {
-                    Logger::error($validar);
-                    throw new Exception($validar,901);
-                }
-            }
-            else if(!is_null($id_paquete))
-            {
-                $validar = self::validarPaquete($id_paquete);
-                if(is_string($validar))
-                {
-                    Logger::error($validar);
-                    throw new Exception($validar,901);
-                }
-            }
-            
-            //Se obtienen las reglas de cada tarifa
-            
-            $reglas = TarifaDAO::obtenerTarifa();
-
-            //Se calcula cada precio de acuerdo a las reglas obtenidas y se almacena en el arreglo final
-
-            $precios = array();
-
-            foreach($reglas as $regla)
-            {
-                $precio = array();
-
-                $precio["id_tarifa"] = $regla["id_tarifa"];
-                foreach($regla["reglas"] as $r)
-                {
-                    if($r->getIdTarifa()==-1)
-                    {
-                        if(!is_null($id_producto))
-                        {
-                            $producto = ProductoDAO::getByPK($id_producto);
-                            if($producto->getMetodoCosteo()=="costo")
-                            {
-                                $precio_base = $producto->getCostoEstandar();
-                            }
-                            else if($producto->getMetodoCosteo()=="precio")
-                            {
-                                $precio_base = $producto->getPrecio();
-                            }
-                            else
-                            {
-                                Logger::error("El producto tiene un metodo de costeo invalido");
-                                throw new Exception("El producto tiene un metodo de costeo invalido", 901);
-                            }
-                        }
-                        else if(!is_null($id_servicio))
-                        {
-                            $servicio = ServicioDAO::getByPK($id_servicio);
-                            if($servicio->getMetodoCosteo()=="costo")
-                            {
-                                $precio_base = $servicio->getCostoEstandar();
-                            }
-                            else if($servicio->getMetodoCosteo()=="precio")
-                            {
-                                $precio_base = $servicio->getPrecio();
-                            }
-                            else
-                            {
-                                Logger::error("El servicio tiene un metodo de costeo invalido");
-                                throw new Exception("El servicio tiene un metodo de costeo invalido", 901);
-                            }
-                        }
-                        else
-                        {
-                            $paquete = PaqueteDAO::getByPK($id_paquete);
-                            $precio_base = $paquete->getPrecio();
-                        }
-                    }
-                    else
-                    {
-                        
-                    }
-                }
-
-            }
+            //Deprecated
+            //
+            //
+//            Logger::log("Calculando precio de ".$tipo_tarifa."  para el producto ".$id_producto." o el servicio ".$id_servicio." o el paquete ".$id_paquete);
+//            
+//            //si no se recibe ningun articulo, se regresa un error
+//            if(is_null($id_producto)&&is_null($id_servicio)&&  is_null($id_paquete))
+//            {
+//                Logger::error("No se sabe si se calculara el precio de un producto, un servicio o un paquete");
+//                throw new Exception("No se sabe si se calculara el precio de un producto, un servicio o un paquete",901);
+//            }
+//            
+//            //Se valida que el tipo de tarifa sea valido
+//            if($tipo_tarifa!="compra" && $tipo_tarifa!="venta")
+//            {
+//                Logger::error("El tipo de tarifa (".$tipo_tarifa.") es invalido, tiene que ser 'compra' o 'venta'");
+//                throw new Exception("El tipo de tarifa (".$tipo_tarifa.") es invalido, tiene que ser 'compra' o 'venta'",901);
+//            }
+//            
+//            //Valida la cantidad recibida
+//            $validar = self::validarNumero($cantidad, 1.8e200, "cantidad");
+//            if(is_string($validar))
+//            {
+//                Logger::error($validar);
+//                throw new Exception($validar,901);
+//            }
+//            
+//            if(!is_null($id_producto))
+//            {
+//                $validar = self::validarProducto($id_producto, $id_unidad, $tipo_tarifa);
+//                if(is_string($validar))
+//                {
+//                    Logger::error($validar);
+//                    throw new Exception($validar,901);
+//                }
+//            }
+//            else if(!is_null($id_servicio))
+//            {
+//                $validar = self::validarServicio($id_servicio);
+//                if(is_string($validar))
+//                {
+//                    Logger::error($validar);
+//                    throw new Exception($validar,901);
+//                }
+//            }
+//            else if(!is_null($id_paquete))
+//            {
+//                $validar = self::validarPaquete($id_paquete);
+//                if(is_string($validar))
+//                {
+//                    Logger::error($validar);
+//                    throw new Exception($validar,901);
+//                }
+//            }
+//            
+//            //Se obtienen las reglas de cada tarifa
+//            
+//            $reglas = TarifaDAO::obtenerTarifa();
+//
+//            //Se calcula cada precio de acuerdo a las reglas obtenidas y se almacena en el arreglo final
+//
+//            $precios = array();
+//
+//            foreach($reglas as $regla)
+//            {
+//                $precio = array();
+//
+//                $precio["id_tarifa"] = $regla["id_tarifa"];
+//                foreach($regla["reglas"] as $r)
+//                {
+//                    if($r->getIdTarifa()==-1)
+//                    {
+//                        if(!is_null($id_producto))
+//                        {
+//                            $producto = ProductoDAO::getByPK($id_producto);
+//                            if($producto->getMetodoCosteo()=="costo")
+//                            {
+//                                $precio_base = $producto->getCostoEstandar();
+//                            }
+//                            else if($producto->getMetodoCosteo()=="precio")
+//                            {
+//                                $precio_base = $producto->getPrecio();
+//                            }
+//                            else
+//                            {
+//                                Logger::error("El producto tiene un metodo de costeo invalido");
+//                                throw new Exception("El producto tiene un metodo de costeo invalido", 901);
+//                            }
+//                        }
+//                        else if(!is_null($id_servicio))
+//                        {
+//                            $servicio = ServicioDAO::getByPK($id_servicio);
+//                            if($servicio->getMetodoCosteo()=="costo")
+//                            {
+//                                $precio_base = $servicio->getCostoEstandar();
+//                            }
+//                            else if($servicio->getMetodoCosteo()=="precio")
+//                            {
+//                                $precio_base = $servicio->getPrecio();
+//                            }
+//                            else
+//                            {
+//                                Logger::error("El servicio tiene un metodo de costeo invalido");
+//                                throw new Exception("El servicio tiene un metodo de costeo invalido", 901);
+//                            }
+//                        }
+//                        else
+//                        {
+//                            $paquete = PaqueteDAO::getByPK($id_paquete);
+//                            $precio_base = $paquete->getPrecio();
+//                        }
+//                    }
+//                    else
+//                    {
+//                        
+//                    }
+//                }
+//
+//            }
             
             
 	}
@@ -874,7 +1401,7 @@ La asignacion de una formula a algun producto, servicio, etc. requiere una secue
 		$formulas = null
 	)
 	{  
-  
+            Logger::log("Creando nueva tarifa");
   
 	}
   
