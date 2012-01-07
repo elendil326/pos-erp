@@ -113,7 +113,7 @@
                                 "impuesto"                  => "Impuesto",
                                 "retencion"                 => "Retencion"
                         ),
-                         VentaProductoDAO::search( new VentaProducto( array( "id_venta" => $_GET["vid"] ) ) )
+                         VentaOrdenDAO::search( new VentaOrden( array( "id_venta" => $_GET["vid"] ) ) )
                         );
                 
                 function funcion_orden_de_servicio($id_orden_de_servicio)
@@ -138,7 +138,7 @@
                                 "impuesto"          => "Impuesto",
                                 "retencion"         => "Retencion"
                         ),
-                         VentaProductoDAO::search( new VentaProducto( array( "id_venta" => $_GET["vid"] ) ) )
+                         VentaPaqueteDAO::search( new VentaPaquete( array( "id_venta" => $_GET["vid"] ) ) )
                         );
                 
                 function funcion_paquete($id_paquete)
