@@ -7,12 +7,13 @@
 	require_once("../../../../server/bootstrap.php");
 
 	$page = new GerenciaComponentPage();
-	
-	$page->addComponent( new TitleComponent( "Bienvenido" ) );
-	$page->addComponent( new TitleComponent( "POS ERP", 2 ) );
 
-	/*$big_menu = new BigMenuComponent();
-	$big_menu->addItem(  );*/
+
+	$banner = new BannerComponent("POR ERP", "Bienvenido", "https://s-static.ak.facebook.com/rsrc.php/v1/y4/r/EAbydW1M_XR.png");
+	
+	
+	
+	$page->addComponent( $banner );
 	
 	$page->render();
 

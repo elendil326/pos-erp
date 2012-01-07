@@ -529,7 +529,7 @@ class ShoppingCartComponent implements GuiComponent {
 	                // Custom rendering template for each item
 	                getInnerTpl: function(a,b,c) {
 						var html = "";
-						html += "<h3>{nombre_producto}</h3>";
+						html += "<h3 style='margin:0px'>{nombre_producto}</h3>";
 						html += "<p>{descripcion}</p>";
 						html += "{precio}";
 	                    return html;

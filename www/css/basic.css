@@ -434,3 +434,76 @@ img.tracking_pixel{height:1px;position:absolute;visibility:hidden;width:1px}
 	border: 1px solid #C6C6C6;
 	color: #333;
 }
+
+
+
+
+
+
+.uiWashLayout{
+	margin-left: -21px;
+	margin-right: -20px;
+	margin-bottom: 20px;	
+}
+
+.uiWashLayoutBlueWash, .uiWashLayoutGrayWash, .uiWashLayoutGradientWash, .uiWashLayoutEmptyGradientWash {
+min-width: 680px;
+}
+
+.uiWashLayoutGradientWash, .uiWashLayoutEmptyGradientWash {
+background: url(../media/degradado-banner.png) repeat-x;
+}
+
+.ptm {
+padding-top: 10px;
+}
+
+.badgesMarketing .mainContent {
+width: 960px;
+}
+
+.uiWashLayoutWashContent {
+margin-left: auto;
+margin-right: auto;
+}
+
+.widgets_central_header {
+	
+height: 190px;
+margin-top: 0;
+margin-bottom: -5px;
+padding-left: 20px;
+}
+
+h1.marketingHeadlineHuge {
+font-size: 32px;
+}
+
+h1.marketingHeadline {
+color: #333;
+font-weight: normal;
+}
+
+.widgets_central_header h1 {
+padding-top: 58px;
+}
+
+h2.marketingSubheaderMedium {
+font-size: 20px;
+line-height: 26px;
+}
+
+h2.marketingSubheader {
+color: gray;
+font-weight: normal;
+}
+
+
+
+
+
+
+
+
+
+

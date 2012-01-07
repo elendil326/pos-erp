@@ -165,6 +165,7 @@
 	require_once("libs/gui/SucursalSelectorComponent.php");
 	
 	
+	require_once("libs/gui/BannerComponent.php");		
 	require_once("libs/gui/ClienteSelectorComponent.php");	
 	
 

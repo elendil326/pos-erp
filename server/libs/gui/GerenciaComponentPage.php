@@ -893,6 +893,9 @@ class GerenciaComponentPage extends StdComponentPage{
 					<div id="bodyText" class="bodyText">
 						<div class="header">
 							<div class="content">
+								
+
+									
 							<!-- ----------------------------------------------------------------------
 											CONTENIDO
 								 ---------------------------------------------------------------------- -->
