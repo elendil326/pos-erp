@@ -527,7 +527,7 @@ class ShoppingCartComponent implements GuiComponent {
 	                emptyText: 'No se encontraron productos.',
 
 	                // Custom rendering template for each item
-	                getInnerTpl: function() {
+	                getInnerTpl: function(a,b,c) {
 						var html = "";
 						html += "<h3>{nombre_producto}</h3>";
 						html += "<p>{descripcion}</p>";
