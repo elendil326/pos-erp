@@ -117,6 +117,8 @@ require_once("interfaces/POS.interface.php");
 
   		$conn->Execute( "TRUNCATE TABLE `empresa`; "  );
 
+  		$conn->Execute( "TRUNCATE TABLE `clasificacion_cliente`; "  );
+
   		$conn->Execute( "TRUNCATE TABLE `sucursal`; "  );
 
   		$conn->Execute( "TRUNCATE TABLE `tipo_almacen`; "  );
