@@ -111,7 +111,7 @@ require_once("interfaces/POS.interface.php");
 
   		$conn->Execute( "TRUNCATE TABLE `rol`;"  );
 		
-		$conn->Execute( "INSERT INTO `pos1_5-d`.`rol` (`id_rol`, `nombre`, `descripcion`, `salario`, `id_tarifa_compra`, `id_tarifa_venta`) VALUES ('5', 'Clientes', 'Clientes', NULL, 0, 0);");
+		$conn->Execute( "INSERT INTO `rol` (`id_rol`, `nombre`, `descripcion`, `salario`, `id_tarifa_compra`, `id_tarifa_venta`) VALUES ('5', 'Clientes', 'Clientes', NULL, 0, 0);");
 		
   		$conn->Execute( "TRUNCATE TABLE `usuario`; "  );
 
