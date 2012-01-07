@@ -106,7 +106,6 @@
                 $tabla = new TableComponent(
                         array(
                                 "id_orden_de_servicio"      => "Orden de Servicio",
-                                "id_unidad"                 => "Unidad",
                                 "cantidad"                  => "Cantidad",
                                 "precio"                    => "Precio Unitario",
                                 "descuento"                 => "Descuento",
@@ -131,7 +130,6 @@
                 $tabla = new TableComponent(
                         array(
                                 "id_paquete"        => "Paquete",
-                                "id_unidad"         => "Unidad",
                                 "cantidad"          => "Cantidad",
                                 "precio"            => "Precio Unitario",
                                 "descuento"         => "Descuento",
