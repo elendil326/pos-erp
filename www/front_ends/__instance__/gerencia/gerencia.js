@@ -5,8 +5,10 @@ Ext.require([
     'Ext.form.*',
     'Ext.grid.*',
     'Ext.util.*',
-    'Ext.state.*'	
+    'Ext.state.*',
+	'Ext.ux.grid.TransformGrid'	
 ]);
+
 
 
 var main = function ()

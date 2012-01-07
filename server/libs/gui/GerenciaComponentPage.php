@@ -16,7 +16,7 @@ class GerenciaComponentPage extends StdComponentPage{
 
 		//check for user login status
 		if(SesionController::isLoggedIn() === FALSE){
-			die(header("Location: ../?next_url=" . $_SERVER["SCRIPT_FILENAME"]));
+			die(header("Location: ../?next_url=" . $_SERVER["SCRIPT_NAME"]));
 		}
 		
 		$this->createMainMenu();
@@ -336,7 +336,7 @@ class GerenciaComponentPage extends StdComponentPage{
         },
         {
             "title": "Inventario",
-            "url": "inventario.php",
+            "url": "inventario.existencias.php",
             "children": [
                 {
                         "title" : "Compras de sucursal",
@@ -752,6 +752,8 @@ class GerenciaComponentPage extends StdComponentPage{
 	}
 
 
+
+
 	function render(  )
 	{
 		?>
@@ -769,8 +771,9 @@ class GerenciaComponentPage extends StdComponentPage{
 			<link rel="stylesheet" type="text/css" href="http://api.caffeina.mx/ext-4.0.0/resources/css/ext-all.css" /> 
 		    <script type="text/javascript" src="http://api.caffeina.mx/ext-4.0.0/ext-all-debug.js"></script>
 			<link type="text/css" rel="stylesheet" href="../../../css/basic.css"/>
+			<script type="text/javascript" charset="utf-8" src="http://api.caffeina.mx/ext-4.0.0/examples/ux/grid/TransformGrid.js"></script>
 			<script type="text/javascript" src="./gerencia.js"></script>
-			
+
 		</head>
 		<body class="">
 		<div id="FB_HiddenContainer" style="position:absolute; top:-10000px; width:0px; height:0px;"></div>
@@ -943,9 +946,6 @@ class GerenciaComponentPage extends StdComponentPage{
 				</div>
 			</div>
 
-			<div id="fb-root"></div>
-			
-			<div id="fb-root"></div>
 			
 		</div>
 

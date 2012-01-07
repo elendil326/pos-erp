@@ -87,7 +87,7 @@ class TableComponent implements GuiComponent{
 		//
 		// Iniciar la creacion de la tabla
 		// 
-		$html = '<table border="0" style="width:100%">';
+		$html = '<table border="0" style="width:100%" >';
 		$html .= '<tr align = "left">';
 		
 		// Renderear los headers

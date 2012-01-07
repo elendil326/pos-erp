@@ -10,6 +10,8 @@
 
                 $page->addComponent( new TitleComponent( "Existencias" ) );
 		
+		$inventario = InventarioController::Existencias();
+		$inventario = $inventario["resultados"];
 
 		$tabla = new TableComponent( 
 			array(
@@ -18,7 +20,7 @@
 				"id_unidad"                     => "Unidad",
 				"cantidad"               	=> "Cantidad"
 			),
-			InventarioController::Existencias()
+			$inventario
 		);
         
 
