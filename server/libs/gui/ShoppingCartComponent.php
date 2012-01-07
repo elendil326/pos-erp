@@ -151,7 +151,7 @@ class ShoppingCartComponent implements GuiComponent {
 		console.log("Cliente seleccionado", cliente_seleccionado);
 		
 		Ext.get("buscar_cliente_01").enableDisplayMode('block').hide();
-		var pphtml = "<h2 style='margin-bottom:0px'>Venta para <a target=\"_blank\" href='clientes.ver.php?cid="+cliente_seleccionado.get("id_usuario")+"'>" + cliente_seleccionado.get("nombre") + "</a></h2>";
+		var pphtml = "<h3 style='margin:0px'>Venta para <a target=\"_blank\" href='clientes.ver.php?cid="+cliente_seleccionado.get("id_usuario")+"'>" + cliente_seleccionado.get("nombre") + "</a></h3>";
 
 		if( cliente_seleccionado.get("rfc") !== null )
 			pphtml += "<p>" + cliente_seleccionado.get("rfc") + "</p>";
@@ -165,7 +165,49 @@ class ShoppingCartComponent implements GuiComponent {
 	
 	
 	
+	var validar_venta_a_credito = function (clienteStore, carrito){
+		
+		if(clienteStore === null){
+			//no hay cliente seleccionado
+			Ext.get("SeleccionDeCliente").highlight();
+			return false;
+		}
+		
+		var vac = clienteStore.get("limite_credito");
+		
+		if((vac === null)||( parseFloat(vac) === 0) ){
+			//no tiene ventas a credito
+			Ext.MessageBox.alert("Nueva venta", "El cliente "+clienteStore.get("nombre") + " no tiene ventas a credito.");
+			return false;			
+		}
+		
+		
+		return true;
+	}
 	
+	
+	
+	//
+	// Valor default de venta
+	// 
+	var tipo_de_venta = "contado";
+	
+	var seleccion_tipo_de_venta = function(tipo){
+		switch(tipo){
+			case "credito" :
+				console.log("seleccion_tipo_de_venta(credito)");
+				validar_venta_a_credito(cliente_seleccionado, carrito_store );
+				
+			break;
+			
+			case "contado" :
+				console.log("seleccion_tipo_de_venta(contado)");			
+			break;
+			
+			default:
+				throw new Exception( "seleccion_tipo_de_venta(): tipo invalido" );
+		}
+	}
 	
 	var buscar_cliente = function(){
 		
@@ -196,16 +238,34 @@ class ShoppingCartComponent implements GuiComponent {
 		actualizar_carrito();
 	}
 	
+	var tipo_de_pago_seleccionado = "efectivo";
 	
+
 	
 	var carrito_store;
 
 	
 	var doVenta = function (){
+		
+		//
+		// Validar los datos
+		// 
+		if( sucursal_seleccionada === undefined || sucursal_seleccionada === null ){
+			
+			Ext.get("SeleccionDeSucursal").highlight();
+			return;
+			
+		}
+
+		
 		//
 		// crear un objeto con los productos
+		//
 		var detalle_de_venta = [];
 		
+		//
+		// 
+		// 
 		for (var i=0; i < carrito_store.count(); i++) {
 
 			var p = carrito_store.getAt(i);
@@ -219,23 +279,36 @@ class ShoppingCartComponent implements GuiComponent {
 				id_unidad	: 1
 			});
 		}
-			
-		obj = {
+		
+		//
+		// 
+		// 
+		ventaObj = {
 			retencion 			: 0,
 			descuento 			: 0,
-			tipo_venta 			: "contado",
 			impuesto 			: 0,
 			subtotal			: 5,
 			total 				: 5,
+			tipo_venta 			: "contado",
 			id_comprador_venta	: cliente_seleccionado.get("id_usuario"),
 			id_sucursal			: sucursal_seleccionada,
 			detalle_venta 		: Ext.JSON.encode( detalle_de_venta )
 		};
 		
-		POS.API.POST("api/ventas/nueva/", 
-			obj,{
+		//
+		// Enviar al API
+		// 
+		POS.API.POST(
+			"api/ventas/nueva/", 
+			ventaObj,
+			{
 				callback : function(r){
-					console.log(r);
+					if(r.status === "ok"){
+						window.location = "ventas.detalle.php?vid=" + r.id_venta + "&last_action=ok";
+					}else{
+						console.error(r);
+						Ext.MessageBox.alert("Nueva venta", "Algo salio mal.");
+					}
 				}
 			});
 		
@@ -605,21 +678,71 @@ class ShoppingCartComponent implements GuiComponent {
 		
 
 </script>
-	<h2>Nueva venta</h2>
+			<h2>Nueva venta</h2>
+
+			<table border="0" style="width: 100%">
+				<tr id="SeleccionDeCliente">
+					<td colspan="4">
+						<div id="buscar_cliente_01">
+							<p style="margin-bottom: 0px;">Buscar cliente</p>
+							<div style="margin-bottom: 15px;" id="ShoppingCartComponent_002"><!-- clientes --></div>				
+						</div>
+						<div id="buscar_cliente_02" style="display:none; margin-bottom: 0px"></div>						
+					</td>
+				</tr>
+				<tr>
+					<td id="SeleccionDeSucursal">
+						Sucursal:
+						<div >
+							<?php
+								$selector_de_suc = new SucursalSelectorComponent();
+								$selector_de_suc->addJsCallback("seleccionar_sucursal");
+								$selector_de_suc->renderCmp();
+							?>						
+						</div>
+					</td>
+					<td id="SeleccionDeTipoDeVenta">
+						Tipo de venta:
+						<div >
+							<select onChange="seleccion_tipo_de_venta(this.value)">
+								<option value="contado" selected>Contado</option>
+								<option value="credito">Credito</option>
+							</select>
+						</div>
+					</td>
+					<td id="SeleccionDeImpuestos">
+						Impuestos que aplicaran a esta venta:
+						<div >
 	
-			<?php
-				$selector_de_suc = new SucursalSelectorComponent();
-				$selector_de_suc->addJsCallback("seleccionar_sucursal");
-				$selector_de_suc->renderCmp();
-			?>
+						</div>
+					</td>
+					<td id="SeleccionDeTipoDePago">
+						Tipo de pago:
+						<div >
+							<select name="" onChange="tipo_de_pago_seleccionado = this.value">
+								<option value="efectivo">efectivo</option>
+								<option value="cheque">cheque</option>
+							</select>
+						</div>
+					</td>										
+				</tr>
+				<tr>
+					<td id="SeleccionDeDescuento">
+						Descuento:
+						<input type="text" name="some_name" value="" id="">
+						<select name="" id="">
+							<option value="porciento">%</option>
+							<option value="pesos">pesos</option>
+						</select>
+					</td>										
+				</tr>
+				
+			</table>
+
 	
-			<div id="buscar_cliente_01">
-				<p style="margin-bottom: 0px;">Buscar cliente</p>
-				<div style="margin-bottom: 15px;" id="ShoppingCartComponent_002"><!-- clientes --></div>				
-			</div>
+
 			
-			<div id="buscar_cliente_02" style="display:none; margin-bottom: 5px">
-			</div>
+
 
 
 			

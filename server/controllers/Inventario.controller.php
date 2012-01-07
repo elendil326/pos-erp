@@ -71,6 +71,10 @@ Se puede ordenar por los atributos de producto.
                         foreach($p_a["resultados"] as $p)
                         {
                             $result["id_sucursal"] = $sucursal->getIdSucursal();
+
+							$suc = SucursalDAO::getByPK($sucursal->getIdSucursal());
+                            $result["nombre_sucursal"] = $suc->getDescripcion();
+
                             $result["id_producto"] = $p->getIdProducto();
                             $result["id_unidad"]   = $p->getIdUnidad();
                             $result["cantidad"]    = $p->getCantidad();
@@ -140,19 +144,26 @@ Se puede ordenar por los atributos de producto.
                 foreach($almacenes as $almacen)
                 {
                     //Se obtiene el arreglo de productos
-                    $productos_a = ProductoAlmacenDAO::search( new ProductoAlmacen( array( "id_almacen" => $almacen->getIdAlmacen(), "id_producto" => $id_producto ) ) );
+                    $productos_a = ProductoAlmacenDAO::search( 
+							new ProductoAlmacen( 
+									array( 
+										"id_almacen" => $almacen->getIdAlmacen(), 
+										"id_producto" => $id_producto 
+									) ) );
                     
                     //Se vacía el arreglo en uno general
                     foreach($productos_a as $p_a)
                         array_push($productos_almacen,$p_a);
                 }
-                
+
                 //Se agrupan los productos iguales
                 $productos_almacenes = self::AgruparProductos($productos_almacen);
                 
             }
             
-            Logger::log("Se listan ".count($productos_almacenes)." registros");
+            Logger::log("Se listan ".count( $productos_almacenes )." registros");
+
+
 
             $existencias = array(
                 "resultados"            => $productos_almacenes,

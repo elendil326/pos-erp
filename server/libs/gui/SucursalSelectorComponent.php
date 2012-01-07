@@ -110,10 +110,11 @@ class SucursalSelectorComponent implements GuiComponent{
 			                    text: 'Seleccionar esta sucursal',
 			                    handler: function() {
 									this.up('window').hide();
-									Ext.get("SucursalSelectorComponent_Buscar").hide();
+									Ext.get("SucursalSelectorComponent_Buscar").update("Seleccionar otra sucursal");
 									Ext.get("SucursalSelectorComponent_Result").show();
+									
 									var info = "";
-									info += "" + Sucursal.selected.get("descripcion");
+									info += "<p>" + Sucursal.selected.get("descripcion") + "</p>";
 									
 									Ext.get("SucursalSelectorComponent_ResultData").update(info);
 									
@@ -127,11 +128,12 @@ class SucursalSelectorComponent implements GuiComponent{
 
 		};
 		</script>
-		<div class="POS Boton" id="SucursalSelectorComponent_Buscar" onClick="Sucursal.show_selector()">Seleccionar sucursal</div>
-		<div id="SucursalSelectorComponent_Result" style="display:none">
+
+		<div id="SucursalSelectorComponent_Result" >
 			<div id="SucursalSelectorComponent_ResultData"></div>
-			<div class="POS Boton" id="SucursalSelectorComponent_Buscar" onClick="Sucursal.show_selector()">Seleccionar otra sucursal</div>
+			<!--<div class="POS Boton" id="SucursalSelectorComponent_Buscar" onClick="Sucursal.show_selector()">Seleccionar otra sucursal</div>-->
 		</div>
+		<div class="POS Boton" id="SucursalSelectorComponent_Buscar" onClick="Sucursal.show_selector()">Seleccionar sucursal</div>		
 		<?php
 	}
 	
