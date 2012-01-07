@@ -454,18 +454,73 @@ require_once("interfaces/Precio.interface.php");
             return true;
         }
         
-	/**
- 	 *
- 	 *Activa una tarifa preciamente eliminada
- 	 *
- 	 * @param id_tarifa int Id de la tarifa a activar
- 	 **/
-	public static function ActivarTarifa
-	(
-		$id_tarifa
-	)
-	{
+        /*
+         * Cambia la version activa de una tarifa
+         */
+        private static function setVersionActiva
+        (
+                $id_version
+        )
+        {
+            Logger::log("Cambiando version activa por la version ".$id_version);
             
+            //Se valida la version recibida
+            $validar = self::ValidarParametrosVersion($id_version);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar,901);
+            }
+            
+            $version = VersionDAO::getByPK($id_version);
+            
+            //Se valida la tarifa de la version
+            $id_tarifa = $version->getIdTarifa();
+            $validar = self::ValidarParametrosTarifa($id_tarifa);
+            if(is_string($validar))
+            {
+                Logger::error("FATAL!!!! ".$validar);
+                throw new Exception("FATAL!!!! ".$validar,901);
+            }
+            $tarifa = TarifaDAO::getByPK($id_tarifa);
+            
+            $versiones_activas = VersionDAO::search( new Version( array( "id_tarifa" => $id_tarifa, "activa" => 1 ) ) );
+            
+            //Si existe mas de una version activa, se manda error fatal pues ese caso no deberia de ocurrir
+            if(count($versiones_activas)>1)
+            {
+                Logger::error("FATAL!!!! Se encontro mas de una version activa en la tarifa ".$id_tarifa);
+                throw new Exception("FATAL!!!! Se encontro mas de una version activa en la tarifa ".$id_tarifa,901);
+            }
+            
+            $version_activa = null;
+            //Puede darse el caso que no exista ninguna version activa aun.
+            if(count($versiones_activas)==1)
+            {
+                //Se da por hecho que solo hay una version activa por tarifa
+                $version_activa = $versiones_activas[0];
+                $version_activa->setActiva(0);
+            }
+            $version->setActiva(1);
+            $tarifa->setIdVersionActiva($version->getIdVersion());
+            DAO::transBegin();
+            try
+            {
+                if(!is_null($version_activa))
+                {
+                    VersionDAO::save($version_activa);
+                }
+                VersionDAO::save($version);
+                TarifaDAO::save($tarifa);
+            }
+            catch(Exception $e)
+            {
+                DAO::transBegin();
+                Logger::error("No se pudo cambiar la version activa: ".$e);
+                throw new Exception("No se pudo cambiar la version activa",901);
+            }
+            DAO::transEnd();
+            Logger::log("Version activa cambiada exitosamente");
         }
   
 	/**
@@ -601,7 +656,7 @@ Solo se puede elegir una tarifa de tipo compra.
                 throw new Exception("No se pudo crear la tarifa nueva, intente mas tarde o contacte a su administrador del sistema",901);
             }
             DAO::transEnd();
-            Logger::log("Tarifa creada exitosamente");
+            Logger::log("Tarifa creada exitosamente, se obtuvo el id ".$tarifa->getIdTarifa());
             return $tarifa->getIdTarifa();
   
 	}
@@ -757,27 +812,6 @@ Solo puede asignarse como default de ventas una tarifa de tipo venta
   
 	/**
  	 *
-<<<<<<< .mine
- 	 *Pone como default a la version obtenida para esta tarifa. Solo puede haber una version default por tarifa, asi que este metodo le quita el default a la version que lo era anteriormente y lo pone en la version obtenida como parametro.
-
-=======
- 	 *Desactiva una tarifa. Para poder desactivar una tarifa, esta no tiene que estar asignada como default para ningun usuario. La tarifa default del sistema no puede ser eliminada.
-
-La tarifa instalada por default no puede ser eliminada
- 	 *
- 	 * @param id_tarifa int Id de la tarifa a eliminar
- 	 **/
-	public static function EliminarTarifa
-	(
-		$id_tarifa
-	)
-	{  
-  
-  
-	}
-  
-	/**
- 	 *
  	 *Pone como default a la version obtenida para esta tarifa. Solo puede haber una version default por tarifa, asi que este metodo le quita el default a la version que lo era anteriormente y lo pone en la version obtenida como parametro.
 
 >>>>>>> .r2127
@@ -790,7 +824,7 @@ Una version default no puede caducar.
 		$id_version
 	)
 	{  
-            Logger::log("Creando nueva version");
+            Logger::log("Cambiando version default por la version ".$id_version);
             
             //Se valida la version recibida
             $validar = self::ValidarParametrosVersion($id_version);
@@ -831,7 +865,7 @@ Una version default no puede caducar.
             
             $version_default = null;
             //Puede darse el caso que no exista ninguna version default aun.
-            if(count($versiones_default)==0)
+            if(count($versiones_default)==1)
             {
                 //Se da por hecho que solo hay una version default por tarifa
                 $version_default = $versiones_default[0];
@@ -912,18 +946,54 @@ Las tarifas solo pueden tener una version activa.
             //Se validan los parametros recibidos, como este es un metodo interno, se da por hecho que la tarifa siempre sera valida
             $validar = self::ValidarParametrosVersion(null, $nombre);
             
+            //Si una de las fechas es nula, pero no ambas, se hace una sobreescritura
+            if( is_null($fecha_inicio) XOR is_null($fecha_fin))
+            {
+                if(is_null($fecha_inicio))
+                {
+                    $fehca_inicio = date("Y-m-d H:i:s");
+                }
+                else
+                {
+                    $fecha_fin = "9999-12-31 23:59:59";
+                }
+            }
+            
             $version = new Version( 
                     array(
+                            "id_tarifa"     => $id_tarifa,
                             "nombre"        => $nombre,
-                            "activa"        => $activa,
+                            "activa"        => 0,
                             "default"       => 0,
                             "fecha_fin"     => $fecha_fin,
                             "fecha_inicio"  => $fecha_inicio
                     ) 
                     );
             
-            
-            
+            DAO::transBegin();
+            try
+            {
+                VersionDAO::save($version);
+                if($default)
+                {
+                    self::SetDefaultVersion($version->getIdVersion());
+                }
+                if($activa)
+                {
+                    self::setVersionActiva($version->getIdVersion());
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo crear la nueva version: ".$e);
+                if($e->getCode()==901)
+                    throw new Exception("No se pudo crear la nueva version: ".$e->getMessage(),901);
+                throw new Exception("No se pudo crear la nueva version, intente de nuevo mas tarde o consulte a su administrador del sistema",901);
+            }
+            DAO::transEnd();
+            Logger::log("Version creada exitosamente");
+            return $version->getIdVersion();
 	}
   
 	/**
@@ -994,7 +1064,54 @@ Una misma regla puede aplicar a un producto, una clasificacion de producto, un s
 		$utilidad_neta = 0
 	)
 	{  
-  
+            Logger::log("Creando nueva regla");
+            
+            //Se validan los parametros recibidos
+            $validar = self::ValidarParametrosRegla(null, $nombre, $id_producto, 
+                    $id_clasificacion_producto, $id_unidad, $id_servicio, $id_clasificacion_servicio, 
+                    $id_paquete, $cantidad_minima, $porcentaje_utilidad, $utilidad_neta, $metodo_redondeo,
+                    $margen_min, $margen_max, $secuencia);
+            
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            $regla = new Regla( 
+                    array( 
+                            "id_version"                => $id_version,
+                            "nombre"                    => $nombre,
+                            "id_producto"               => $id_producto,
+                            "id_clasificacion_producto" => $id_clasificacion_producto,
+                            "id_clasificacion_servicio" => $id_clasificacion_servicio,
+                            "id_unidad"                 => $id_unidad,
+                            "id_servicio"               => $id_servicio,
+                            "id_paquete"                => $id_paquete,
+                            "cantidad_minima"           => $cantidad_minima,
+                            "porcentaje_utilidad"       => $porcentaje_utilidad,
+                            "utilidad_neta"             => $utilidad_neta,
+                            "metodo_redondeo"           => $metodo_redondeo,
+                            "margen_min"                => $margen_min,
+                            "margen_max"                => $margen_max,
+                            "secuencia"                 => $secuencia,
+                            "id_tarifa"                 => ($id_tarifa ? $id_tarifa : -1)
+                    ) 
+                    );
+            
+            DAO::transBegin();
+            try
+            {
+                ReglaDAO::save($regla);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo crear la nueva regla: ".$e);
+                throw new Exception("No se pudo crear la nueva regla, intenelo mas tarde o consulte a su administrador del sistema",901);
+            }
+            DAO::transEnd();
+            Logger::log("La regla ha sido creada exitosamente");
   
 	}
   
@@ -1401,8 +1518,103 @@ La asignacion de una formula a algun producto, servicio, etc. requiere una secue
 		$formulas = null
 	)
 	{  
-            Logger::log("Creando nueva tarifa");
-  
+            Logger::log("Creando nueva tarifa desde metodo publico");
+            
+            //Si se reciben formulas, se validan
+            if(!is_null($formulas))
+            {
+                $formulas = object_to_array($formulas);
+                if(!is_array($formulas))
+                {
+                    Logger::error("Las formulas son invalidas");
+                    throw new Exception("Las formulas son invalidas",901);
+                }
+            }
+            
+            /*
+             * Este metodo crea una tarifa, una version y una regla.
+             * 
+             * Si es obtenida una fecha de inicio o de fin, entonces se crea una version con esas fechas
+             * y aparte se crea una version sin fechas que sera la default de la tarifa. Esta version default
+             * tendra una unica regla que dejara los precios tal como son ( sin incrementos ni redondeos ni nada).
+             * 
+             * La version creada sera la activa en la tarifa. 
+             * 
+             * Las formulas obtenidas deberan contener los parametros de la tabla regla y por cada una se creara
+             * una regla dentro de la version activa de la tarifa.
+             */
+            DAO::transBegin();
+            try
+            {
+                //Se crea la tarifa base con los parametros obtenidos
+                $id_tarifa = self::NuevaTarifaBase($id_moneda, $nombre, $tipo_tarifa, 1, $default);
+                
+                //Despues se crea la version de la tarifa. Si se recibe una fecha de inicio o de fin,
+                //Se crea otra version que sera la default de la tazrifa con una regla sin cambios a los precios
+                if( !is_null($fecha_inicio) || !is_null($fecha_fin) )
+                {
+                    $id_version_default = self::NuevaVersion($id_tarifa, $nombre." v1", null, 1);
+                    $nombre_version = $nombre." v2";
+                    $id_version = self::NuevaVersion($id_tarifa, $nombre_version, 1, NULL, $fecha_fin, $fecha_inicio);
+                    
+                    $id_regla_default = self::NuevaRegla($id_version_default, $nombre." v1 r1", 1, 1, null, null, NULL, null, null, -1, null, 0, 0, 0, 0, 0);
+                }
+                else
+                {
+                    $nombre_version = $nombre." v1";
+                    $id_version = self::NuevaVersion($id_tarifa, $nombre_version, 1, 1, $fecha_fin, $fecha_inicio);
+                }
+                
+                //Se validan las formlas recibidas y se crean las reglas para cada una
+                $contador = 1;
+                if(!is_null($formulas))
+                {
+                    foreach($formulas as $formula)
+                    {
+                        if
+                        (array_key_exists("secuencia", $formula) )
+                        {
+                            throw new Exception("La formula recibida no cuenta con el parametro secuencia",901);
+                        }
+                        self::NuevaRegla
+                        (
+                                $id_version, 
+                                $nombre_version." r".$contador, 
+                                $formula["secuencia"], 
+                                array_key_exists("cantidad_minima", $formula) ? $formula["cantidad_minima"] : 1, 
+                                array_key_exists("id_clasificacion_producto", $formula) ? $formula["id_clasificacion_producto"] : null, 
+                                array_key_exists("id_clasificacion_servicio", $formula) ? $formula["id_clasificacion_servicio"] : null, 
+                                array_key_exists("id_paquete", $formula) ? $formula["id_paquete"] : null, 
+                                array_key_exists("id_producto", $formula) ? $formula["id_producto"] : null,
+                                array_key_exists("id_servicio", $formula) ? $formula["id_servicio"] : null,
+                                array_key_exists("id_tarifa", $formula) ? $formula["id_tarifa"] : null,
+                                array_key_exists("id_unidad", $formula) ? $formula["id_unidad"] : null,
+                                array_key_exists("margen_max", $formula) ? $formula["margen_max"] : 0,
+                                array_key_exists("margen_min", $formula) ? $formula["margen_min"] : 0,
+                                array_key_exists("metodo_redondeo", $formula) ? $formula["metodo_redondeo"] : 0,
+                                array_key_exists("porcentaje_utilidad", $formula) ? $formula["porcentaje_utilidad"] : 0,
+                                array_key_exists("utilidad_neta", $formula) ? $formula["utilidad_neta"] : 0
+                        );
+                        $contador++;
+                    }
+                }
+                else
+                {
+                    $id_regla_default = self::NuevaRegla($id_version, $nombre_version." r1", 1, 1, null, null, NULL, null, null, -1, null, 0, 0, 0, 0, 0);
+                }
+                
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo crear la tarifa: ".$e);
+                if($e->getCode()==901)
+                    throw new Exception("No se pudo crear la tarifa: ".$e->getMessage(),901);
+                throw new Exception("No se pudo crear la tarifa, intentelo de nuevo mas tarde o contacte al administrador del sistema",901);
+            }
+            DAO::transEnd();
+            Logger::log("Tarifa creada exitosamente");
+            return $id_tarifa;
 	}
   
 	/**
@@ -1459,5 +1671,40 @@ Aplican todas las consideraciones de la documentacion del metodo nuevaTarifa
   
   
 	}
+        
+        /**
+ 	 *
+<<<<<<< .mine
+ 	 *Pone como default a la version obtenida para esta tarifa. Solo puede haber una version default por tarifa, asi que este metodo le quita el default a la version que lo era anteriormente y lo pone en la version obtenida como parametro.
+
+=======
+ 	 *Desactiva una tarifa. Para poder desactivar una tarifa, esta no tiene que estar asignada como default para ningun usuario. La tarifa default del sistema no puede ser eliminada.
+
+La tarifa instalada por default no puede ser eliminada
+ 	 *
+ 	 * @param id_tarifa int Id de la tarifa a eliminar
+ 	 **/
+	public static function EliminarTarifa
+	(
+		$id_tarifa
+	)
+	{  
+  
+  
+	}
+        
+        /**
+ 	 *
+ 	 *Activa una tarifa preciamente eliminada
+ 	 *
+ 	 * @param id_tarifa int Id de la tarifa a activar
+ 	 **/
+	public static function ActivarTarifa
+	(
+		$id_tarifa
+	)
+	{
+            
+        }
 
   }
