@@ -1908,7 +1908,39 @@ La tarifa instalada por default no puede ser eliminada
 		$id_tarifa
 	)
 	{  
-  
+            Logger::log("Desactivando la tarifa ".$id_tarifa);
+            
+            //Se valida la tarifa recibida
+            $validar = self::ValidarParametrosTarifa($id_tarifa);
+            if(is_string($validar))
+            {
+                Logger::error($validar);
+                throw new Exception($validar);
+            }
+            
+            $tarifa = TarifaDAO::getByPK($id_tarifa);
+            
+            if($tarifa->getDefault())
+            {
+                Logger::error("Se quiere eliminar una tarifa por default");
+                throw new Exception("Se quiere eliminar una tarifa por default, primero cambie la tarifa default y despues vuelva a intentarlo",901);
+            }
+            
+            $tarifa->setActiva(0);
+            
+            DAO::transBegin();
+            try
+            {
+                TarifaDAO::save($tarifa);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo eliminar la tarifa: ".$e);
+                throw new Exception("No se pudo eliminar la tarifa, intentelo de nuevo mas tarde o consulte al administrado del sistema",901);
+            }
+            DAO::transEnd();
+            Logger::log("Tarifa desactivada exitosamente");
   
 	}
         
