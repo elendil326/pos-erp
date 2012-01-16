@@ -169,7 +169,7 @@ abstract class TarifaDAOBase extends DAO
 		}
 
 		if( ! is_null( $tarifa->getDefault() ) ){
-			$sql .= " default = ? AND";
+			$sql .= " `default` = ? AND";
 			array_push( $val, $tarifa->getDefault() );
 		}
 
@@ -206,7 +206,7 @@ abstract class TarifaDAOBase extends DAO
 	  *	
 	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
 	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
-	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
+	  * aqui, sin embargo. El valor de retorno indica cuï¿½ntas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
@@ -214,7 +214,7 @@ abstract class TarifaDAOBase extends DAO
 	  **/
 	private static final function update( $tarifa )
 	{
-		$sql = "UPDATE tarifa SET  nombre = ?, tipo_tarifa = ?, activa = ?, id_moneda = ?, default = ?, id_version_default = ?, id_version_activa = ? WHERE  id_tarifa = ?;";
+		$sql = "UPDATE tarifa SET  nombre = ?, tipo_tarifa = ?, activa = ?, id_moneda = ?, `default` = ?, id_version_default = ?, id_version_activa = ? WHERE  id_tarifa = ?;";
 		$params = array( 
 			$tarifa->getNombre(), 
 			$tarifa->getTipoTarifa(), 
@@ -246,7 +246,7 @@ abstract class TarifaDAOBase extends DAO
 	  **/
 	private static final function create( &$tarifa )
 	{
-		$sql = "INSERT INTO tarifa ( id_tarifa, nombre, tipo_tarifa, activa, id_moneda, default, id_version_default, id_version_activa ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO tarifa ( id_tarifa, nombre, tipo_tarifa, activa, id_moneda, `default`, id_version_default, id_version_activa ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$tarifa->getIdTarifa(), 
 			$tarifa->getNombre(), 
@@ -360,11 +360,11 @@ abstract class TarifaDAOBase extends DAO
 		}
 
 		if( ( !is_null (($a = $tarifaA->getDefault()) ) ) & ( ! is_null ( ($b = $tarifaB->getDefault()) ) ) ){
-				$sql .= " default >= ? AND default <= ? AND";
+				$sql .= " `default` >= ? AND `default` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " default = ? AND"; 
+			$sql .= " `default` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

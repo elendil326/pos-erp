@@ -325,7 +325,7 @@ require_once("interfaces/Servicios.interface.php");
             //valida el rango del nombre de servicio y que no se repita
             if(!is_null($nombre_servicio))
             {
-                $e = self::validarString($nombre_servicio, 50, "nombre de servicio");
+                $e = self::validarString($nombre_servicio, 150, "nombre de servicio");
                 if(is_string($e))
                     return $e;
                 

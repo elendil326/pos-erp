@@ -206,7 +206,7 @@ require_once("interfaces/Productos.interface.php");
             //valida que el nombre del producto este en rango y que no se repita
             if(!is_null($nombre_producto))
             {
-                $e = self::validarString($nombre_producto, 30, "nombre de producto");
+                $e = self::validarString($nombre_producto, 150, "nombre de producto");
                 if(is_string($e))
                     return $e;
                 if(!is_null($id_producto))
@@ -305,6 +305,14 @@ require_once("interfaces/Productos.interface.php");
             if(!is_null($precio))
             {
                 $e = self::validarNumero($precio, 1.8e200, "precio");
+                if(is_string($e))
+                    return $e;
+            }
+            
+            //valida que la descripcion este en rango
+            if(!is_null($descripcion))
+            {
+                $e = self::validarString($descripcion, 255, "descripcion");
                 if(is_string($e))
                     return $e;
             }

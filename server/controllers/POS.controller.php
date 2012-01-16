@@ -126,12 +126,18 @@ require_once("interfaces/POS.interface.php");
   		$conn->Execute( "TRUNCATE TABLE `almacen`; "  );
 
   		$conn->Execute( "TRUNCATE TABLE `producto`; "  );
+                
+                $conn->Execute( "TRUNCATE TABLE `servicio`; "  );
 
   		$conn->Execute( "TRUNCATE TABLE `sesion`; "  );
 
   		$conn->Execute( "TRUNCATE TABLE `entrada_almacen`; "  );
 
   		$conn->Execute( "TRUNCATE TABLE `unidad`; "  );
+                
+                $conn->Execute( "TRUNCATE TABLE `clasificacion_producto`; " );
+                
+                $conn->Execute( "TRUNCATE TABLE `clasificacion_servicio`; " );
 
   		$conn->Execute( "TRUNCATE TABLE `ciudad`; "  );
 

@@ -174,7 +174,7 @@ abstract class VersionDAOBase extends DAO
 		}
 
 		if( ! is_null( $version->getDefault() ) ){
-			$sql .= " default = ? AND";
+			$sql .= " `default` = ? AND";
 			array_push( $val, $version->getDefault() );
 		}
 
@@ -201,7 +201,7 @@ abstract class VersionDAOBase extends DAO
 	  *	
 	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
 	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
-	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
+	  * aqui, sin embargo. El valor de retorno indica cuï¿½ntas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
@@ -209,7 +209,7 @@ abstract class VersionDAOBase extends DAO
 	  **/
 	private static final function update( $version )
 	{
-		$sql = "UPDATE version SET  id_tarifa = ?, nombre = ?, activa = ?, fecha_inicio = ?, fecha_fin = ?, default = ? WHERE  id_version = ?;";
+		$sql = "UPDATE version SET  id_tarifa = ?, nombre = ?, activa = ?, fecha_inicio = ?, fecha_fin = ?, `default` = ? WHERE  id_version = ?;";
 		$params = array( 
 			$version->getIdTarifa(), 
 			$version->getNombre(), 
@@ -240,7 +240,7 @@ abstract class VersionDAOBase extends DAO
 	  **/
 	private static final function create( &$version )
 	{
-		$sql = "INSERT INTO version ( id_version, id_tarifa, nombre, activa, fecha_inicio, fecha_fin, default ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO version ( id_version, id_tarifa, nombre, activa, fecha_inicio, fecha_fin, `default` ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$version->getIdVersion(), 
 			$version->getIdTarifa(), 
@@ -364,11 +364,11 @@ abstract class VersionDAOBase extends DAO
 		}
 
 		if( ( !is_null (($a = $versionA->getDefault()) ) ) & ( ! is_null ( ($b = $versionB->getDefault()) ) ) ){
-				$sql .= " default >= ? AND default <= ? AND";
+				$sql .= " `default` >= ? AND `default` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " default = ? AND"; 
+			$sql .= " `default` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
