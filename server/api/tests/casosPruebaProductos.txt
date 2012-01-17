@@ -8,14 +8,14 @@
 #beginTest
 	#Desc Nuevo producto de importacion de AdminPAQ
 	#Method POST api/producto/nuevo
-	#Input { "codigo_producto" : "008562010253", "metodo_costeo" : "precio", "nombre_producto" : "CARGADOR+DE+PILAS+SONY+TIPO+AA+%2F%2B4+BATERIAS", "compra_en_mostrador" : "1", "costo_estandar" : "0.00000", "activo" : "0", "control_de_existencia" : "0", "clasificaciones" : "[\"<GET_VAR:ID_CATP1>\"]", "peso_producto" : "0.00000", "precio" : "374.48000", "codigo_barras" : "008562010253", "auth_token" : "<GET_VAR:AUTH_TOKEN>" }
+	#Input { "codigo_producto" : "008562010253", "metodo_costeo" : "precio", "nombre_producto" : "CARGADOR+DE+PILAS+SONY+TIPO+AA+%2F%2B4+BATERIAS", "compra_en_mostrador" : "1", "costo_estandar" : "0.00000", "activo" : "1", "control_de_existencia" : "0", "clasificaciones" : "[\"<GET_VAR:ID_CATP1>\"]", "peso_producto" : "0.00000", "precio" : "374.48000", "codigo_barras" : "008562010253", "auth_token" : "<GET_VAR:AUTH_TOKEN>" }
 	#Output { "status" : "ok" }
 #endTest
 
 #beginTest
 	#Desc Nuevo producto de importacion de AdminPAQ
 	#Method POST api/producto/nuevo
-	#Input { "codigo_producto" : "0091163227151", "metodo_costeo" : "precio", "nombre_producto" : "TABLETA+GENIUS+G-PEN+F509", "compra_en_mostrador" : "1", "costo_estandar" : "0.00000", "activo" : "0", "control_de_existencia" : "0", "clasificaciones" : "[\"<GET_VAR:ID_CATP1>\"]", "peso_producto" : "0.00000", "precio" : "0.00000", "codigo_barras" : "0091163227151", "auth_token" : "<GET_VAR:AUTH_TOKEN>" }
+	#Input { "codigo_producto" : "0091163227151", "metodo_costeo" : "precio", "nombre_producto" : "TABLETA+GENIUS+G-PEN+F509", "compra_en_mostrador" : "1", "costo_estandar" : "0.00000", "activo" : "1", "control_de_existencia" : "0", "clasificaciones" : "[\"<GET_VAR:ID_CATP1>\"]", "peso_producto" : "0.00000", "precio" : "0.00000", "codigo_barras" : "0091163227151", "auth_token" : "<GET_VAR:AUTH_TOKEN>" }
 	#Output { "status" : "ok" }
 #endTest
 
@@ -29,14 +29,14 @@
 #beginTest
 	#Desc Nuevo producto de importacion de AdminPAQ
 	#Method POST api/producto/nuevo
-	#Input { "codigo_producto" : "010343601345", "metodo_costeo" : "precio", "nombre_producto" : "CINTA+EPSON++LQ670", "compra_en_mostrador" : "1", "costo_estandar" : "0.00000", "activo" : "0", "control_de_existencia" : "0", "clasificaciones" : "[\"<GET_VAR:ID_CATP2>\"]", "peso_producto" : "0.00000", "precio" : "135.61000", "codigo_barras" : "010343601345", "auth_token" : "<GET_VAR:AUTH_TOKEN>" }
+	#Input { "codigo_producto" : "010343601345", "metodo_costeo" : "precio", "nombre_producto" : "CINTA+EPSON++LQ670", "compra_en_mostrador" : "1", "costo_estandar" : "0.00000", "activo" : "1", "control_de_existencia" : "0", "clasificaciones" : "[\"<GET_VAR:ID_CATP2>\"]", "peso_producto" : "0.00000", "precio" : "135.61000", "codigo_barras" : "010343601345", "auth_token" : "<GET_VAR:AUTH_TOKEN>" }
 	#Output { "status" : "ok" }
 #endTest
 
 #beginTest
 	#Desc Nuevo producto de importacion de AdminPAQ
 	#Method POST api/producto/nuevo
-	#Input { "codigo_producto" : "010343601802", "metodo_costeo" : "precio", "nombre_producto" : "CINTA+EPSON+S015086+FX-2180", "compra_en_mostrador" : "1", "costo_estandar" : "0.00000", "activo" : "0", "control_de_existencia" : "0", "clasificaciones" : "[\"<GET_VAR:ID_CATP2>\"]", "peso_producto" : "0.00000", "precio" : "346.62000", "codigo_barras" : "010343601802", "auth_token" : "<GET_VAR:AUTH_TOKEN>" }
+	#Input { "codigo_producto" : "010343601802", "metodo_costeo" : "precio", "nombre_producto" : "CINTA+EPSON+S015086+FX-2180", "compra_en_mostrador" : "1", "costo_estandar" : "0.00000", "activo" : "1", "control_de_existencia" : "0", "clasificaciones" : "[\"<GET_VAR:ID_CATP2>\"]", "peso_producto" : "0.00000", "precio" : "346.62000", "codigo_barras" : "010343601802", "auth_token" : "<GET_VAR:AUTH_TOKEN>" }
 	#Output { "status" : "ok" }
 #endTest
 
@@ -470,7 +470,7 @@
 #beginTest
 	#Desc Nuevo producto de importacion de AdminPAQ
 	#Method POST api/producto/nuevo
-	#Input { "codigo_producto" : "048231301480", "metodo_costeo" : "precio", "nombre_producto" : "DVD+WRITER+LG+NEGRO+22X+GH22+IDE", "compra_en_mostrador" : "1", "costo_estandar" : "0.00000", "activo" : "0", "control_de_existencia" : "0", "clasificaciones" : "[\"<GET_VAR:ID_CATP4>\"]", "peso_producto" : "0.00000", "precio" : "368.90000", "codigo_barras" : "048231301480", "auth_token" : "<GET_VAR:AUTH_TOKEN>" }
+	#Input { "codigo_producto" : "048231301480", "metodo_costeo" : "precio", "nombre_producto" : "DVD+WRITER+LG+NEGRO+22X+GH22+IDE", "compra_en_mostrador" : "1", "costo_estandar" : "0.00000", "activo" : "1", "control_de_existencia" : "0", "clasificaciones" : "[\"<GET_VAR:ID_CATP4>\"]", "peso_producto" : "0.00000", "precio" : "368.90000", "codigo_barras" : "048231301480", "auth_token" : "<GET_VAR:AUTH_TOKEN>" }
 	#Output { "status" : "ok" }
 #endTest
 
@@ -5440,14 +5440,14 @@
 #beginTest
 	#Desc Nuevo producto de importacion de AdminPAQ
 	#Method POST api/producto/nuevo
-	#Input { "codigo_producto" : "745883553860", "metodo_costeo" : "precio", "nombre_producto" : "ACCESS+POINT+LINKSYS+WAP54G", "compra_en_mostrador" : "1", "costo_estandar" : "0.00000", "activo" : "0", "control_de_existencia" : "0", "clasificaciones" : "[\"<GET_VAR:ID_CATP9>\"]", "peso_producto" : "0.00000", "precio" : "970.53000", "codigo_barras" : "745883553860", "auth_token" : "<GET_VAR:AUTH_TOKEN>" }
+	#Input { "codigo_producto" : "745883553860", "metodo_costeo" : "precio", "nombre_producto" : "ACCESS+POINT+LINKSYS+WAP54G", "compra_en_mostrador" : "1", "costo_estandar" : "0.00000", "activo" : "1", "control_de_existencia" : "0", "clasificaciones" : "[\"<GET_VAR:ID_CATP9>\"]", "peso_producto" : "0.00000", "precio" : "970.53000", "codigo_barras" : "745883553860", "auth_token" : "<GET_VAR:AUTH_TOKEN>" }
 	#Output { "status" : "ok" }
 #endTest
 
 #beginTest
 	#Desc Nuevo producto de importacion de AdminPAQ
 	#Method POST api/producto/nuevo
-	#Input { "codigo_producto" : "745883555437", "metodo_costeo" : "precio", "nombre_producto" : "ACCESS+POINT+LINKSYS+WAP54G+HIGH+SPEED+802+11GB", "compra_en_mostrador" : "1", "costo_estandar" : "0.00000", "activo" : "0", "control_de_existencia" : "0", "clasificaciones" : "[\"<GET_VAR:ID_CATP9>\"]", "peso_producto" : "0.00000", "precio" : "988.80000", "codigo_barras" : "745883555437", "auth_token" : "<GET_VAR:AUTH_TOKEN>" }
+	#Input { "codigo_producto" : "745883555437", "metodo_costeo" : "precio", "nombre_producto" : "ACCESS+POINT+LINKSYS+WAP54G+HIGH+SPEED+802+11GB", "compra_en_mostrador" : "1", "costo_estandar" : "0.00000", "activo" : "1", "control_de_existencia" : "0", "clasificaciones" : "[\"<GET_VAR:ID_CATP9>\"]", "peso_producto" : "0.00000", "precio" : "988.80000", "codigo_barras" : "745883555437", "auth_token" : "<GET_VAR:AUTH_TOKEN>" }
 	#Output { "status" : "ok" }
 #endTest
 
@@ -5867,7 +5867,7 @@
 #beginTest
 	#Desc Nuevo producto de importacion de AdminPAQ
 	#Method POST api/producto/nuevo
-	#Input { "codigo_producto" : "7502213294601", "metodo_costeo" : "precio", "nombre_producto" : "MOUSE+OPTICO+ACTECK+AM-950+USB+NEGRO+800PI", "compra_en_mostrador" : "1", "costo_estandar" : "0.00000", "activo" : "0", "control_de_existencia" : "0", "clasificaciones" : "[\"<GET_VAR:ID_CATP1>\"]", "peso_producto" : "0.00000", "precio" : "61.18000", "codigo_barras" : "7502213294601", "auth_token" : "<GET_VAR:AUTH_TOKEN>" }
+	#Input { "codigo_producto" : "7502213294601", "metodo_costeo" : "precio", "nombre_producto" : "MOUSE+OPTICO+ACTECK+AM-950+USB+NEGRO+800PI", "compra_en_mostrador" : "1", "costo_estandar" : "0.00000", "activo" : "1", "control_de_existencia" : "0", "clasificaciones" : "[\"<GET_VAR:ID_CATP1>\"]", "peso_producto" : "0.00000", "precio" : "61.18000", "codigo_barras" : "7502213294601", "auth_token" : "<GET_VAR:AUTH_TOKEN>" }
 	#Output { "status" : "ok" }
 #endTest
 
@@ -6294,7 +6294,7 @@
 #beginTest
 	#Desc Nuevo producto de importacion de AdminPAQ
 	#Method POST api/producto/nuevo
-	#Input { "codigo_producto" : "7502213300333", "metodo_costeo" : "precio", "nombre_producto" : "BOCINAS+ACTECK+AXF-200+2.1+C%2FSUBWOOFER+NEGRA", "compra_en_mostrador" : "1", "costo_estandar" : "0.00000", "activo" : "0", "control_de_existencia" : "0", "clasificaciones" : "[\"<GET_VAR:ID_CATP8>\"]", "peso_producto" : "0.00000", "precio" : "284.93000", "codigo_barras" : "7502213300333", "auth_token" : "<GET_VAR:AUTH_TOKEN>" }
+	#Input { "codigo_producto" : "7502213300333", "metodo_costeo" : "precio", "nombre_producto" : "BOCINAS+ACTECK+AXF-200+2.1+C%2FSUBWOOFER+NEGRA", "compra_en_mostrador" : "1", "costo_estandar" : "0.00000", "activo" : "1", "control_de_existencia" : "0", "clasificaciones" : "[\"<GET_VAR:ID_CATP8>\"]", "peso_producto" : "0.00000", "precio" : "284.93000", "codigo_barras" : "7502213300333", "auth_token" : "<GET_VAR:AUTH_TOKEN>" }
 	#Output { "status" : "ok" }
 #endTest
 
@@ -6371,7 +6371,7 @@
 #beginTest
 	#Desc Nuevo producto de importacion de AdminPAQ
 	#Method POST api/producto/nuevo
-	#Input { "codigo_producto" : "7502213300685", "metodo_costeo" : "precio", "nombre_producto" : "BOCINAS+ACTECK+PORTATILES+P%2FNOTEBOOK+F60+USB+NEGRAS", "compra_en_mostrador" : "1", "costo_estandar" : "0.00000", "activo" : "0", "control_de_existencia" : "0", "clasificaciones" : "[\"<GET_VAR:ID_CATP8>\"]", "peso_producto" : "0.00000", "precio" : "229.01000", "codigo_barras" : "7502213300685", "auth_token" : "<GET_VAR:AUTH_TOKEN>" }
+	#Input { "codigo_producto" : "7502213300685", "metodo_costeo" : "precio", "nombre_producto" : "BOCINAS+ACTECK+PORTATILES+P%2FNOTEBOOK+F60+USB+NEGRAS", "compra_en_mostrador" : "1", "costo_estandar" : "0.00000", "activo" : "1", "control_de_existencia" : "0", "clasificaciones" : "[\"<GET_VAR:ID_CATP8>\"]", "peso_producto" : "0.00000", "precio" : "229.01000", "codigo_barras" : "7502213300685", "auth_token" : "<GET_VAR:AUTH_TOKEN>" }
 	#Output { "status" : "ok" }
 #endTest
 
@@ -7988,7 +7988,7 @@
 #beginTest
 	#Desc Nuevo producto de importacion de AdminPAQ
 	#Method POST api/producto/nuevo
-	#Input { "codigo_producto" : "810731010991", "metodo_costeo" : "precio", "nombre_producto" : "ANTENA+ENCORE+OMNIDIRECCIONAL+ENAT-OD7", "compra_en_mostrador" : "1", "costo_estandar" : "0.00000", "activo" : "0", "control_de_existencia" : "0", "clasificaciones" : "[\"<GET_VAR:ID_CATP9>\"]", "peso_producto" : "0.00000", "precio" : "79.85000", "codigo_barras" : "810731010991", "auth_token" : "<GET_VAR:AUTH_TOKEN>" }
+	#Input { "codigo_producto" : "810731010991", "metodo_costeo" : "precio", "nombre_producto" : "ANTENA+ENCORE+OMNIDIRECCIONAL+ENAT-OD7", "compra_en_mostrador" : "1", "costo_estandar" : "0.00000", "activo" : "1", "control_de_existencia" : "0", "clasificaciones" : "[\"<GET_VAR:ID_CATP9>\"]", "peso_producto" : "0.00000", "precio" : "79.85000", "codigo_barras" : "810731010991", "auth_token" : "<GET_VAR:AUTH_TOKEN>" }
 	#Output { "status" : "ok" }
 #endTest
 
@@ -10102,7 +10102,7 @@
 #beginTest
 	#Desc Nuevo producto de importacion de AdminPAQ
 	#Method POST api/producto/nuevo
-	#Input { "codigo_producto" : "CABMAS130", "metodo_costeo" : "precio", "nombre_producto" : "CABLE+DE+EXTENCION+PS2+DE+2M+CA36", "compra_en_mostrador" : "1", "costo_estandar" : "0.00000", "activo" : "0", "control_de_existencia" : "0", "clasificaciones" : "[\"<GET_VAR:ID_CATP5>\"]", "peso_producto" : "0.00000", "precio" : "0.00000", "codigo_barras" : "CABMAS130", "auth_token" : "<GET_VAR:AUTH_TOKEN>" }
+	#Input { "codigo_producto" : "CABMAS130", "metodo_costeo" : "precio", "nombre_producto" : "CABLE+DE+EXTENCION+PS2+DE+2M+CA36", "compra_en_mostrador" : "1", "costo_estandar" : "0.00000", "activo" : "1", "control_de_existencia" : "0", "clasificaciones" : "[\"<GET_VAR:ID_CATP5>\"]", "peso_producto" : "0.00000", "precio" : "0.00000", "codigo_barras" : "CABMAS130", "auth_token" : "<GET_VAR:AUTH_TOKEN>" }
 	#Output { "status" : "ok" }
 #endTest
 
@@ -10690,7 +10690,7 @@
 #beginTest
 	#Desc Nuevo producto de importacion de AdminPAQ
 	#Method POST api/producto/nuevo
-	#Input { "codigo_producto" : "CGA01DG0003294", "metodo_costeo" : "precio", "nombre_producto" : "LECTOR+DE+CODIGOS+DE+BARRA+EC+LINE", "compra_en_mostrador" : "1", "costo_estandar" : "0.00000", "activo" : "0", "control_de_existencia" : "0", "clasificaciones" : "[\"<GET_VAR:ID_CATP1>\"]", "peso_producto" : "0.00000", "precio" : "518.78000", "codigo_barras" : "CGA01DG0003294", "auth_token" : "<GET_VAR:AUTH_TOKEN>" }
+	#Input { "codigo_producto" : "CGA01DG0003294", "metodo_costeo" : "precio", "nombre_producto" : "LECTOR+DE+CODIGOS+DE+BARRA+EC+LINE", "compra_en_mostrador" : "1", "costo_estandar" : "0.00000", "activo" : "1", "control_de_existencia" : "0", "clasificaciones" : "[\"<GET_VAR:ID_CATP1>\"]", "peso_producto" : "0.00000", "precio" : "518.78000", "codigo_barras" : "CGA01DG0003294", "auth_token" : "<GET_VAR:AUTH_TOKEN>" }
 	#Output { "status" : "ok" }
 #endTest
 
@@ -11285,7 +11285,7 @@
 #beginTest
 	#Desc Nuevo producto de importacion de AdminPAQ
 	#Method POST api/producto/nuevo
-	#Input { "codigo_producto" : "DDRKIN120", "metodo_costeo" : "precio", "nombre_producto" : "DDR+KINGSTON+1G+333+PC2700+2.5+SODIMM", "compra_en_mostrador" : "1", "costo_estandar" : "0.00000", "activo" : "0", "control_de_existencia" : "0", "clasificaciones" : "[\"<GET_VAR:ID_CATP4>\"]", "peso_producto" : "0.00000", "precio" : "679.94000", "codigo_barras" : "DDRKIN120", "auth_token" : "<GET_VAR:AUTH_TOKEN>" }
+	#Input { "codigo_producto" : "DDRKIN120", "metodo_costeo" : "precio", "nombre_producto" : "DDR+KINGSTON+1G+333+PC2700+2.5+SODIMM", "compra_en_mostrador" : "1", "costo_estandar" : "0.00000", "activo" : "1", "control_de_existencia" : "0", "clasificaciones" : "[\"<GET_VAR:ID_CATP4>\"]", "peso_producto" : "0.00000", "precio" : "679.94000", "codigo_barras" : "DDRKIN120", "auth_token" : "<GET_VAR:AUTH_TOKEN>" }
 	#Output { "status" : "ok" }
 #endTest
 
@@ -12356,7 +12356,7 @@
 #beginTest
 	#Desc Nuevo producto de importacion de AdminPAQ
 	#Method POST api/producto/nuevo
-	#Input { "codigo_producto" : "GAFU026", "metodo_costeo" : "precio", "nombre_producto" : "FUENTE+DE+PODER+ACTECK+400W", "compra_en_mostrador" : "1", "costo_estandar" : "0.00000", "activo" : "0", "control_de_existencia" : "4", "clasificaciones" : "[\"<GET_VAR:ID_CATP1>\"]", "peso_producto" : "0.00000", "precio" : "202.31000", "codigo_barras" : "GAFU026", "auth_token" : "<GET_VAR:AUTH_TOKEN>" }
+	#Input { "codigo_producto" : "GAFU026", "metodo_costeo" : "precio", "nombre_producto" : "FUENTE+DE+PODER+ACTECK+400W", "compra_en_mostrador" : "1", "costo_estandar" : "0.00000", "activo" : "1", "control_de_existencia" : "4", "clasificaciones" : "[\"<GET_VAR:ID_CATP1>\"]", "peso_producto" : "0.00000", "precio" : "202.31000", "codigo_barras" : "GAFU026", "auth_token" : "<GET_VAR:AUTH_TOKEN>" }
 	#Output { "status" : "ok" }
 #endTest
 
@@ -14554,7 +14554,7 @@
 #beginTest
 	#Desc Nuevo producto de importacion de AdminPAQ
 	#Method POST api/producto/nuevo
-	#Input { "codigo_producto" : "REDLIN040", "metodo_costeo" : "precio", "nombre_producto" : "ACCESS+POINT+INALAMBRICO+D-LINK++DWL-7700AP+80.211A%2F11G", "compra_en_mostrador" : "1", "costo_estandar" : "0.00000", "activo" : "0", "control_de_existencia" : "0", "clasificaciones" : "[\"<GET_VAR:ID_CATP9>\"]", "peso_producto" : "0.00000", "precio" : "0.00000", "codigo_barras" : "REDLIN040", "auth_token" : "<GET_VAR:AUTH_TOKEN>" }
+	#Input { "codigo_producto" : "REDLIN040", "metodo_costeo" : "precio", "nombre_producto" : "ACCESS+POINT+INALAMBRICO+D-LINK++DWL-7700AP+80.211A%2F11G", "compra_en_mostrador" : "1", "costo_estandar" : "0.00000", "activo" : "1", "control_de_existencia" : "0", "clasificaciones" : "[\"<GET_VAR:ID_CATP9>\"]", "peso_producto" : "0.00000", "precio" : "0.00000", "codigo_barras" : "REDLIN040", "auth_token" : "<GET_VAR:AUTH_TOKEN>" }
 	#Output { "status" : "ok" }
 #endTest
 
@@ -15058,14 +15058,14 @@
 #beginTest
 	#Desc Nuevo producto de importacion de AdminPAQ
 	#Method POST api/producto/nuevo
-	#Input { "codigo_producto" : "UETE172", "metodo_costeo" : "precio", "nombre_producto" : "WEB+CAM+ACTECK+ATW-800", "compra_en_mostrador" : "1", "costo_estandar" : "0.00000", "activo" : "0", "control_de_existencia" : "4", "clasificaciones" : "[\"<GET_VAR:ID_CATP1>\"]", "peso_producto" : "0.00000", "precio" : "174.30000", "codigo_barras" : "UETE172", "auth_token" : "<GET_VAR:AUTH_TOKEN>" }
+	#Input { "codigo_producto" : "UETE172", "metodo_costeo" : "precio", "nombre_producto" : "WEB+CAM+ACTECK+ATW-800", "compra_en_mostrador" : "1", "costo_estandar" : "0.00000", "activo" : "1", "control_de_existencia" : "4", "clasificaciones" : "[\"<GET_VAR:ID_CATP1>\"]", "peso_producto" : "0.00000", "precio" : "174.30000", "codigo_barras" : "UETE172", "auth_token" : "<GET_VAR:AUTH_TOKEN>" }
 	#Output { "status" : "ok" }
 #endTest
 
 #beginTest
 	#Desc Nuevo producto de importacion de AdminPAQ
 	#Method POST api/producto/nuevo
-	#Input { "codigo_producto" : "UETE179", "metodo_costeo" : "precio", "nombre_producto" : "TECLADO+ACTECK+AT-3000+MULTIMEDIA+PS2", "compra_en_mostrador" : "1", "costo_estandar" : "0.00000", "activo" : "0", "control_de_existencia" : "4", "clasificaciones" : "[\"<GET_VAR:ID_CATP1>\"]", "peso_producto" : "0.00000", "precio" : "71.88000", "codigo_barras" : "UETE179", "auth_token" : "<GET_VAR:AUTH_TOKEN>" }
+	#Input { "codigo_producto" : "UETE179", "metodo_costeo" : "precio", "nombre_producto" : "TECLADO+ACTECK+AT-3000+MULTIMEDIA+PS2", "compra_en_mostrador" : "1", "costo_estandar" : "0.00000", "activo" : "1", "control_de_existencia" : "4", "clasificaciones" : "[\"<GET_VAR:ID_CATP1>\"]", "peso_producto" : "0.00000", "precio" : "71.88000", "codigo_barras" : "UETE179", "auth_token" : "<GET_VAR:AUTH_TOKEN>" }
 	#Output { "status" : "ok" }
 #endTest
 
