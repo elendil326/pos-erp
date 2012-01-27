@@ -65,7 +65,8 @@ class LoginComponent implements GuiComponent
 						}
 						
 						if(o.login_succesful === true){
-							Ext.util.Cookies.set( "a_t", o.auth_token );
+							//the cookie should be arleady set
+							//Ext.util.Cookies.set( "a_t", o.auth_token );
 							
 							if(o.status == "ok") window.location = "gerencia/" + getParameterByName("next_url");
 						}

@@ -202,7 +202,6 @@
 	require_once("controllers/ImpuestosYRetenciones.controller.php");
 	require_once("controllers/instances.controller.php");
 	require_once("controllers/Inventario.controller.php");
-	require_once("controllers/login.controller.php");
 	require_once("controllers/Paquetes.controller.php");
 	require_once("controllers/PersonalYAgentes.controller.php");
 	require_once("controllers/POS.controller.php");

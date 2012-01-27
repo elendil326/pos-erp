@@ -353,7 +353,7 @@ class ShoppingCartComponent implements GuiComponent {
 	            type: 'ajax',
 				url : '../api/cliente/buscar/',
 				extraParams : {
-					auth_token : Ext.util.Cookies.get("a_t")
+					auth_token : Ext.util.Cookies.get("at")
 				},
 	            reader: {
 	                type: 'json',
@@ -378,7 +378,7 @@ class ShoppingCartComponent implements GuiComponent {
 				{name: 'dia_de_revision', 		mapping: 'dia_de_revision'},
 				{name: 'dias_de_credito', 		mapping: 'dias_de_credito'},
 				{name: 'dias_de_embarque', 		mapping: 'dias_de_embarque'},
-				{name: 'facturar_a_terceros', 	mapping: 'facturar_a_terceros'},
+				{name: 'facturar_a_terceroserceros', 	mapping: 'facturar_a_terceros'},
 				{name: 'fecha_alta', 			mapping: 'fecha_alta'},
 				{name: 'fecha_asignacion_rol', 	mapping: 'fecha_asignacion_rol'},
 				{name: 'fecha_baja', 			mapping: 'fecha_baja'},
@@ -465,7 +465,7 @@ class ShoppingCartComponent implements GuiComponent {
 	            type: 'ajax',
 				url : '../api/producto/buscar/',
 				extraParams : {
-					auth_token : Ext.util.Cookies.get("a_t")
+					auth_token : Ext.util.Cookies.get("at")
 				},
 	            reader: {
 	                type: 'json',

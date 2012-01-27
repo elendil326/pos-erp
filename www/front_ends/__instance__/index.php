@@ -8,6 +8,13 @@
 
 	}
 
+	//antes de crear el componente de login,
+	//vamos a revisar si el usuario tiene una
+	//sesion iniciada, y lo adentramos
+	if(SesionController::isLoggedIn()){
+		
+	}
+
 	$page = new StdComponentPage();
 	$login = new LoginComponent();
 	$login->setLoginApiCall("api/sesion/iniciar/");

@@ -138,7 +138,7 @@ POS.API =
 
 	actualAjax 		: function (  method, url, params, callback  )
 	{
-		params.auth_token = Ext.util.Cookies.get("a_t");
+		params.auth_token = Ext.util.Cookies.get("at");
 		
 		Ext.Ajax.request({
 			method 	: method,

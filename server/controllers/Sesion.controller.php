@@ -34,9 +34,13 @@ class SesionController implements ISesion{
 
 	/**
  	 *
- 	 *Valida las credenciales de un usuario y regresa un url a donde se debe de redireccionar. Este m?todo no necesita de ning?n tipo de autenticaci?n. 
-Si se detecta un tipo de usuario inferior a admin y no se ha llamado antes a api/sucursal/revisar_sucursal se regresar? un 403 Authorization Required y la sesi?n no se iniciar?.
-Si el usuario que esta intentando iniciar sesion, esta descativado... 403 Authorization Required supongo
+ 	 * Valida las credenciales de un usuario y regresa un url a donde se debe de redireccionar. 
+ 	 * Este m?todo no necesita de ning?n tipo de autenticaci?n. 
+ 	 * Si se detecta un tipo de usuario inferior a admin y no se ha llamado 
+ 	 * antes a api/sucursal/revisar_sucursal se regresar? un 403 Authorization 
+ 	 * Required y la sesi?n no se iniciar?.
+ 	 * Si el usuario que esta intentando iniciar sesion, esta descativado...
+ 	 * 403 Authorization Required supongo
  	 *
  	 * @param password string La contraseña del usuario.
  	 * @param usuario string El id de usuario a intentar iniciar sesión.
@@ -142,8 +146,7 @@ Si el usuario que esta intentando iniciar sesion, esta descativado... 403 Author
 	  *
 	  *
 	  **/
-	public static function testLogin($user, $pass)
-	{
+	public static function testLogin($user, $pass){
 		Logger::log("testLogin( {$user} )");
 
 		if( self::isLoggedIn() ) {
@@ -170,6 +173,7 @@ Si el usuario que esta intentando iniciar sesion, esta descativado... 403 Author
 	}
 
 
+
 	private static function dispatchUser( $group ){
 		switch($group){
 			case 1: die( header( "Location: gerencia/" ) );
@@ -179,9 +183,7 @@ Si el usuario que esta intentando iniciar sesion, esta descativado... 403 Author
 
 
 
-
-	static function isLoggedIn()
-	{
+	static function isLoggedIn(){
 		Logger::log("isLoggedIn() started");
 
 		$sm = SessionManager::getInstance();
@@ -253,13 +255,13 @@ Si el usuario que esta intentando iniciar sesion, esta descativado... 403 Author
 	
 
 
-	private static function login($auth_token, $user_id, $rol_id )
-	{
+	private static function login($auth_token, $user_id, $rol_id ){
 		
 		$sm = SessionManager::getInstance();
-		$sm->SetCookie( 'at',  $auth_token, time()+60*60*24, '/' );
-		$sm->SetCookie( 'rid', $user_id, time()+60*60*24, '/' );
-		$sm->SetCookie( 'uid', $rol_id, time()+60*60*24, '/' );
+		
+		$sm->SetCookie( 'at',  $auth_token, 	time()+60*60*24, '/' );
+		$sm->SetCookie( 'rid', $user_id, 		time()+60*60*24, '/' );
+		$sm->SetCookie( 'uid', $rol_id, 		time()+60*60*24, '/' );
 		
 		/*
 		Logger::warn("Iniciando sesion");
@@ -278,8 +280,7 @@ Si el usuario que esta intentando iniciar sesion, esta descativado... 403 Author
 	
 
 
-	public static function logout()
-	{
+	public static function logout(){
 
 		Logger::warn("Cerrando sesion");
 
@@ -291,7 +292,6 @@ Si el usuario que esta intentando iniciar sesion, esta descativado... 403 Author
 	    unset($_SESSION['HTTP_USER_AGENT']	);
 		unset($_SESSION['USER_ROL']			);*/
 	}
-
 
 
 
