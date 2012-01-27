@@ -4,8 +4,6 @@
 
 	if(isset($_GET["cs"]) && ($_GET["cs"] == 1)){
 		SesionController::Cerrar();
-		SesionController::logout();
-
 	}
 
 	//antes de crear el componente de login,

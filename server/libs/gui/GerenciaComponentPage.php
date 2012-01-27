@@ -781,7 +781,11 @@ class GerenciaComponentPage extends StdComponentPage{
 			<div class="menu">
 				<div class="content">
 					<a class="logo" href="index.php">
-						<img class="img" src="../../../media/N2f0JA5UPFU.png" alt="" width="166" height="17"/>
+						
+						<!--<img class="img" src="../../../media/N2f0JA5UPFU.png" alt="" width="166" height="17"/>-->
+						<div style="width:166px; height: 17px">
+							
+						</div>
 					</a>
 
 

@@ -24,7 +24,13 @@ class SesionController implements ISesion{
 		$auth_token = null
 	)
 	{  
-  		
+		
+  		Logger::warn("Cerrando sesion");
+		Logger::log("falta borrar el token de la bd");
+
+		$sm = SessionManager::getInstance();
+		
+		$sm->SetCookie( 'at', 'deleted', 1, '/' );
   		
 	}
   
@@ -280,18 +286,6 @@ class SesionController implements ISesion{
 	
 
 
-	public static function logout(){
-
-		Logger::warn("Cerrando sesion");
-
-		$sm = SessionManager::getInstance();
-		$sm->SetCookie( 'at', 'deleted', 1, '/' );
-		
-	    /*unset($_SESSION['USER_ID']			);
-	    unset($_SESSION['PASSWORD']			);
-	    unset($_SESSION['HTTP_USER_AGENT']	);
-		unset($_SESSION['USER_ROL']			);*/
-	}
 
 
 

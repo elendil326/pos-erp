@@ -35,15 +35,14 @@
 	# *******************************
 	# Buscar la configuracion y cargarla
 	# *******************************
-    	require_once("config.default.php");
-    	require_once("libs/Logger.php");
+	require_once("config.default.php");
+	require_once("libs/Logger.php");
 	
 	if(is_file(__DIR__ . "/config.php"))
 	{
 		//hay una configuracion especifica, load it
 		include(__DIR__ . "/config.php");
-	}else{
-
+		
 	}
 
 
@@ -225,11 +224,12 @@
 	# *******************************
 	define('POST', "__ISPOST__");
 	define('GET', "__ISGET__");
-	define('ADMIN', '1');
+	define('BYPASS', '-1');
+	/*define('ADMIN', '1');
 	define('CONTESTANT', '2');
 	define('JUDGE', '3');
 	define('VISITOR', '4');
-	define('BYPASS', '-1');
+	*/
 	# *******************************
 	
 
