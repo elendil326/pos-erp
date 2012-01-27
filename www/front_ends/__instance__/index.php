@@ -12,7 +12,7 @@
 	//vamos a revisar si el usuario tiene una
 	//sesion iniciada, y lo adentramos
 	if(SesionController::isLoggedIn()){
-		
+		die(header( "Location: gerencia/" ));
 	}
 
 	$page = new StdComponentPage();
