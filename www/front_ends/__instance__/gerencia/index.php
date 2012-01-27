@@ -9,7 +9,7 @@
 	$page = new GerenciaComponentPage();
 
 
-	$banner = new BannerComponent("POR ERP", "Bienvenido", "https://s-static.ak.facebook.com/rsrc.php/v1/y4/r/EAbydW1M_XR.png");
+	$banner = new BannerComponent("POS ERP", "Bienvenido", "../../../media/EAbydW1M_XR.png");
 	
 	
 	
