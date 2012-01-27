@@ -260,8 +260,8 @@ class SesionController implements ISesion{
 		$sm = SessionManager::getInstance();
 		
 		$sm->SetCookie( 'at',  $auth_token, 	time()+60*60*24, '/' );
-		$sm->SetCookie( 'rid', $user_id, 		time()+60*60*24, '/' );
-		$sm->SetCookie( 'uid', $rol_id, 		time()+60*60*24, '/' );
+		$sm->SetCookie( 'rid', $rol_id, 		time()+60*60*24, '/' );
+		$sm->SetCookie( 'uid', $user_id, 		time()+60*60*24, '/' );
 		
 		/*
 		Logger::warn("Iniciando sesion");
