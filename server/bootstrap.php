@@ -35,14 +35,15 @@
 	# *******************************
 	# Buscar la configuracion y cargarla
 	# *******************************
-    require_once("config.default.php");
-    require_once("libs/Logger.php");
+    	require_once("config.default.php");
+    	require_once("libs/Logger.php");
 	
-	if(is_file("config.php"))
+	if(is_file(__DIR__ . "/config.php"))
 	{
 		//hay una configuracion especifica, load it
-		include("config.php");
-		
+		include(__DIR__ . "/config.php");
+	}else{
+
 	}
 
 
