@@ -7,12 +7,11 @@ class LoginComponent implements GuiComponent
 
 
 	private $next_hop;
+	private $api_login_method;
 
 
 
-
-	function __construct()
-	{
+	function __construct(){
 		$this->next_hop = ".";
 	}
 
@@ -89,18 +88,18 @@ class LoginComponent implements GuiComponent
 		<?php
 	}
 
-	public function submitTo( $submit_to )
-	{
+
+	public function submitTo( $submit_to ){
 		$this->next_hop = $submit_to;
 	}
 
-	private $api_login_method;
+
 	public function setLoginApiCall($addr){
 		$this->api_login_method = $addr;
 	}
 
-	function renderCmp()
-	{
+
+	function renderCmp(){
 	
 		$this->printAPICall();
 		

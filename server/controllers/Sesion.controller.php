@@ -6,12 +6,15 @@ require_once("interfaces/Sesion.interface.php");
   *
   **/
 	
-  class SesionController implements ISesion{
+class SesionController implements ISesion{
+
   
-  
+  	
+	
+
 	/**
  	 *
- 	 *Regresa un url de redireccion seg?n el tipo de usuario.
+ 	 *Regresa un url de redireccion segun el tipo de usuario.
  	 *
  	 * @param auth_token string El token de autorizacion generado al iniciar la sesion
  	 * @return forward_to string La url de continuación de acuerdo al id que cerró sesión.
@@ -25,6 +28,10 @@ require_once("interfaces/Sesion.interface.php");
   		
 	}
   
+
+
+
+
 	/**
  	 *
  	 *Valida las credenciales de un usuario y regresa un url a donde se debe de redireccionar. Este m?todo no necesita de ning?n tipo de autenticaci?n. 
@@ -50,21 +57,26 @@ Si el usuario que esta intentando iniciar sesion, esta descativado... 403 Author
 		//user is not logged in, look for him
 		$user = UsuarioDAO::findUser( $usuario, $password );
 
+
 		if( $user === NULL ) {
 			Logger::warn("Credenciales invalidas para usuario {$user}");
-			
 			return array( "login_succesful" => false );
-
+			
 		}
 
 		//ok user is ok, buscar su usuario en los tokens actuales
 		$sesiones_actuales  = SesionDAO::search( new Sesion( array( "id_usuario" => $user->getIdUsuario() ) ) );
+		
 		if(sizeof($sesiones_actuales) > 0){
 			Logger::warn("Este usuario ya tiene sesiones actuales");
+			
 			foreach($sesiones_actuales	as $s ){
+				
 				try{
 					SesionDAO::delete( $s );
+					
 				}catch(Exception $e){
+					Logger::error($e);
 					throw $e;
 				}
 			}
@@ -73,10 +85,12 @@ Si el usuario que esta intentando iniciar sesion, esta descativado... 403 Author
 		
 		//si tiene un token actualmente que es valido, regenerar el token actualizar la fecha y darle el nuevo token
 		$nueva_sesion = new Sesion();
-		$nueva_sesion->setIdUsuario( $user->getIdUsuario() );
-		$nueva_sesion->setAuthToken( self::GenerarAuthToken() );
-		$nueva_sesion->setFechaDeVencimiento( date( "Y-m-d H:i:s", time() + 3600 ) );
-
+		$nueva_sesion->setIdUsuario			( $user->getIdUsuario() 				);
+		$nueva_sesion->setAuthToken			( self::GenerarAuthToken() 				);
+		$nueva_sesion->setFechaDeVencimiento( date( "Y-m-d H:i:s", time() + 3600 ) 	);
+		$nueva_sesion->setClientUserAgent	( $_SERVER["HTTP_USER_AGENT"]			);
+		$nueva_sesion->setIp				( $_SERVER["REMOTE_ADDR"] 				);
+		
 		
 		try{
 			SesionDAO::save( $nueva_sesion );
@@ -87,7 +101,7 @@ Si el usuario que esta intentando iniciar sesion, esta descativado... 403 Author
 			throw new Exception("Imposible iniciar la sesion");
 		}
 		
-		self::login( $usuario, $password, 1   );
+		self::login( $nueva_sesion->getAuthToken(), $nueva_sesion->getIdUsuario(), $user->getIdRol()  );
 		
 		return array( "auth_token" => $nueva_sesion->getAuthToken(), "login_succesful" => true );
 	}
@@ -168,7 +182,31 @@ Si el usuario que esta intentando iniciar sesion, esta descativado... 403 Author
 
 	static function isLoggedIn()
 	{
+		Logger::log("isLoggedIn() started");
 
+		$sm = SessionManager::getInstance();
+		$auth_token = $sm->GetCookie("at");
+		
+		if( !is_null($auth_token) ) {
+			Logger::log("There is a session token in the cookie, lets test it.");
+			
+			$user = SesionDAO::getUserByAuthToken($auth_token);
+			
+			if(is_null($user)){
+				Logger::warn("auth_token was not found in the db, why is this?");
+				return false;
+			}else{
+				Logger::log("auth_token validated, it belongs to user_id=" . $user->getIdUsuario());
+				return true;			
+			}
+		}
+
+		return false;
+
+
+		
+
+		/*
 		//regresar falso si alguno de estos no esta 
 		if(
 				!isset($_SESSION['USER_ID']			)
@@ -184,11 +222,6 @@ Si el usuario que esta intentando iniciar sesion, esta descativado... 403 Author
 			return false;
 		}
 
-		/*
-		if($_SESSION['USER_ROL'] === "JEDI")
-		{
-			return true;				
-		}*/
 
 
 		//ok, los valores estan ahi, vamos a buscar a ese usuario
@@ -215,13 +248,20 @@ Si el usuario que esta intentando iniciar sesion, esta descativado... 403 Author
 		}
 
 		return true;
+		* */
 	}
 	
 
 
-	private static function login($user_id, $password, $rol_id )
+	private static function login($auth_token, $user_id, $rol_id )
 	{
 		
+		$sm = SessionManager::getInstance();
+		$sm->SetCookie( 'at',  $auth_token, time()+60*60*24, '/' );
+		$sm->SetCookie( 'rid', $user_id, time()+60*60*24, '/' );
+		$sm->SetCookie( 'uid', $rol_id, time()+60*60*24, '/' );
+		
+		/*
 		Logger::warn("Iniciando sesion");
 
 		$_SESSION['USER_ID'			] 	= $user_id; 
@@ -233,7 +273,7 @@ Si el usuario que esta intentando iniciar sesion, esta descativado... 403 Author
 			$_SESSION['HTTP_USER_AGENT'	]	= "NOT_SET";
 			
 		$_SESSION['USER_ROL'		]	= $rol_id;
-
+		*/
 	}
 	
 
@@ -243,17 +283,50 @@ Si el usuario que esta intentando iniciar sesion, esta descativado... 403 Author
 
 		Logger::warn("Cerrando sesion");
 
-	    unset($_SESSION['USER_ID']			);
+		$sm = SessionManager::getInstance();
+		$sm->SetCookie( 'at', 'deleted', 1, '/' );
+		
+	    /*unset($_SESSION['USER_ID']			);
 	    unset($_SESSION['PASSWORD']			);
 	    unset($_SESSION['HTTP_USER_AGENT']	);
-		unset($_SESSION['USER_ROL']			);
+		unset($_SESSION['USER_ROL']			);*/
 	}
 
 
 
 
 	public static function getCurrentUser(){
-	
+		
+
+		Logger::log("SesionController::getCurrentUser(  )");
+		
+		if(self::isLoggedIn()){
+			$sm = self::getSessionManagerInstance();
+			$auth_token = $sm->GetCookie( "at" );
+			
+			//there is authtoken cookie
+			if(!is_null($auth_token)){
+				return SesionDAO::getUserByAuthToken( $auth_token );				
+			}
+			
+
+			//there is authtoken in the POST message
+			if(!is_null($_POST["auth_token"])){
+				return SesionDAO::getUserByAuthToken( $_POST["auth_token"] );
+			}
+			
+			//there is authtoken in the GET message
+			if(!is_null($_GET["auth_token"])){
+				return SesionDAO::getUserByAuthToken( $_GET["auth_token"] );
+			}
+			
+		}else{
+			return NULL;
+			
+		}
+			
+		
+		/*
 		if(isset($_GET["auth_token"])) {
 
 			$u = SesionDAO::getCurrentUser($_GET["auth_token"]);
@@ -270,6 +343,9 @@ Si el usuario que esta intentando iniciar sesion, esta descativado... 403 Author
 			return $_SESSION['USER_ID'];
 		else
 			return null;
+
+		**/			
 	}
 
-  }
+
+}

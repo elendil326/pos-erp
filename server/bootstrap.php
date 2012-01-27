@@ -173,10 +173,10 @@
 	# *******************************
 	# Cargar controladores
 	# *******************************
-	require_once("controllers/login.controller.php");
+	/*require_once("controllers/login.controller.php");*/
 	require_once("controllers/instances.controller.php");
     
-
+	require_once("libs/SessionManager.php");
 
 	# *******************************
 	# Cargar los DAO
@@ -219,6 +219,7 @@
 
 
 	require_once("libs/api/ApiHandler.php");
+
 
 	# *******************************
 	define('POST', "__ISPOST__");

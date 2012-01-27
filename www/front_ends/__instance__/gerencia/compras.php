@@ -8,7 +8,7 @@
 
 		$page = new GerenciaComponentPage();
                 
-                $page->addComponent( new TitleComponent( "Compras" ) );
+		$page->addComponent( new TitleComponent( "Compras" ) );
 		$page->addComponent( new MessageComponent( "Lista de compras" ) );
 		
 		$tabla = new TableComponent( 
