@@ -72,8 +72,9 @@
 
 
 
-	if(!is_file("config.php"))
-	{	
+	if(is_file("config.php"))
+	{
+		include 'config.php';
 		//Logger::warn("config.php no exitste. Usando config.defatult.php");
 	}
 
@@ -89,7 +90,7 @@
 	# *******************************
 	# Iniciar sesion
 	# *******************************
-	session_name("ssfec"); //server side front end cookie
+	/*session_name("ssfec"); //server side front end cookie
 	session_set_cookie_params ( 3600  , '/' );
 
 	try{
@@ -107,7 +108,7 @@
 		Logger::error("Imposible iniciar sesion !");
 		die(header('HTTP/1.1 500 INTERNAL SERVER ERROR'));
 	}
-
+	*/
 
 
 
