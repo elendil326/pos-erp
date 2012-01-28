@@ -60,8 +60,20 @@ abstract class ApiHandler
     protected function CheckAuthorization()
     {
 
-		$token = null;
+		//needs to be logged in
+		if(!SesionController::isLoggedIn()){
+        	throw new ApiException( $this->error_dispatcher->invalidAuthToken() );
+		}
+		
+		return true;
+		
+		/*
+		
 		Logger::warn("Aqui hay un notice de php suprimido ApiHandler.php->CheckAuthorization()");
+				
+		$token = null;
+		
+		
 		if( @isset($_GET["auth_token"] )  ){
 			$token = $_GET["auth_token"];
 		}
@@ -82,7 +94,9 @@ abstract class ApiHandler
 		
 		Logger::log("El auth_token no se encontro en la BD");
         throw new ApiException( $this->error_dispatcher->invalidAuthToken() );
+		*/
     }
+
     
     protected function CheckPermissions()
     {                

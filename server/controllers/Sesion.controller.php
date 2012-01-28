@@ -190,6 +190,7 @@ class SesionController implements ISesion{
 
 
 	static function isLoggedIn(){
+		
 		Logger::log("isLoggedIn() started");
 
 		$sm = SessionManager::getInstance();
