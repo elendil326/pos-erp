@@ -8,45 +8,7 @@ require_once("interfaces/Clientes.interface.php");
 	
   class ClientesController implements IClientes{
         
-        //Metodo para pruebas que simula la obtencion del id de la sucursal actual
-        private static function getSucursal()
-        {
-            return NULL;
-        }
-        
-        //metodo para pruebas que simula la obtencion del id de la caja actual
-        private static function getCaja()
-        {
-            return NULL;
-        }
-      
-        
-        /*
-         *Se valida que un string tenga longitud en un rango de un maximo inclusivo y un minimo exclusvio.
-         *Regresa true cuando es valido, y un string cuando no lo es.
-         */
-          private static function validarString($string, $max_length, $nombre_variable,$min_length=0)
-	{
-		if(strlen($string)<=$min_length||strlen($string)>$max_length)
-		{
-		    return "La longitud de la variable ".$nombre_variable." proporcionada (".$string.") no esta en el rango de ".$min_length." - ".$max_length;
-		}
-		return true;
-        }
 
-
-        /*
-         * Se valida que un numero este en un rango de un maximo y un minimo inclusivos
-         * Regresa true cuando es valido, y un string cuando no lo es
-         */
-	private static function validarNumero($num, $max_length, $nombre_variable, $min_length=0)
-	{
-	    if($num<$min_length||$num>$max_length)
-	    {
-	        return "La variable ".$nombre_variable." proporcionada (".$num.") no esta en el rango de ".$min_length." - ".$max_length;
-	    }
-	    return true;
-	}
         
         /*
          * valida los parametros para los clientes. Regresa un string con el error en caso de encontrase
@@ -56,18 +18,18 @@ require_once("interfaces/Clientes.interface.php");
         (
                 $id_cliente = null,
                 $codigo_cliente = null, 
-		$razon_social = null, 
-		$direccion_web = null, 
-		$clasificacion_cliente = null, 
-		$rfc = null,  
-		$curp = null, 
-		$mensajeria = null, 
-		$password = null,
-		$denominacion_comercial = null, 
-		$cuenta_de_mensajeria = null, 
-		$representante_legal = null, 
-		$moneda_del_cliente = null, 
-		$email = null,
+        		$razon_social = null, 
+        		$direccion_web = null, 
+        		$clasificacion_cliente = null, 
+        		$rfc = null,  
+        		$curp = null, 
+        		$mensajeria = null, 
+        		$password = null,
+        		$denominacion_comercial = null, 
+        		$cuenta_de_mensajeria = null, 
+        		$representante_legal = null, 
+        		$moneda_del_cliente = null, 
+        		$email = null,
                 $telefono_personal1 = null,
                 $telefono_personal2 = null,
                 $id_tarifa_compra = null,
