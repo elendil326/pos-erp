@@ -475,24 +475,12 @@ class GerenciaComponentPage extends StdComponentPage{
             "url": "precios.php",
             "children": [
 				{
-					"title" : "precio.calcularPorArticulo.php",
-					"url"	: "precio.calcularPorArticulo.php"
+					"title" : "Nueva tarifa",
+					"url"	: "precio.nueva.tarifa.php"
 				},
 				{
-					"title" : "precio.tarifa.activar.php",
-					"url"	: "precio.tarifa.activar.php"
-				},
-				{
-					"title" : "precio.tarifa.editar.php",
-					"url"	: "precio.tarifa.editar.php"
-				},
-				{
-					"title" : "precio.tarifa.eliminar.php",
-					"url"	: "precio.tarifa.eliminar.php"
-				},
-				{
-					"title" : "precio.tarifa.nueva.php",
-					"url"	: "precio.tarifa.nueva.php"
+					"title" : "Lista tarifa",
+					"url"	: "precio.lista.tarifa.php"
 				}							
             ]
         },

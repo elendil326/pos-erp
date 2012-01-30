@@ -32,8 +32,8 @@
         );
 
         $detalle_producto = array(
-            array( "id_producto" => 1, "id_unidad" => 1, "cantidad" => 5, "descuento" => 0, "impuesto" => 0, "precio" => 10, "retencion" => 0 ),
-            array( "id_producto" => 1, "id_unidad" => 2, "cantidad" => 5, "descuento" => 0, "impuesto" => 0, "precio" => 15, "retencion" => 0 )
+            array( "id_producto" => 1, "id_unidad" => 3, "cantidad" => 5, "descuento" => 0, "impuesto" => 0, "precio" => 10, "retencion" => 0 ),
+            array( "id_producto" => 1, "id_unidad" => 4, "cantidad" => 5, "descuento" => 0, "impuesto" => 0, "precio" => 15, "retencion" => 0 )
         );
 
         $detalle_paquete = array(
@@ -100,6 +100,11 @@
             array( "id_paquete" => 10 , "precio_utilidad" => 10, "es_margen_utilidad" => 0 ),
         );
         
+        $formulas = array(
+          array( "secuencia" => 10,"cantidad_minima" => 10 ),
+          array( "secuencia" => 20,"cantidad_minima" => 20)
+        );
+        
         $serv = array( 2 );
         
         $prod = array( 1 );
@@ -110,7 +115,12 @@
         $clasificacion_servicio = array( 1,3 );
         try
         {
-            var_dump(VentasController::Nueva(100, 0, 0, "contado", 0, 100, 6,$detalle_producto));
+            
+            var_dump(ClientesController::Nuevo("clasificacion 3", "9832103123", "123", "razon"));
+            
+//            $tarifas = TarifaDAO::obtenerTarifasActuales("compra");
+//            var_dump($tarifas[0]["reglas"]);
+//            var_dump(ReglaDAO::aplicarReglas($tarifas[0]["reglas"],ProductoDAO::getByPK(17)));
             
 //            $string="202cb962ac59075b964b07152d234b70()-.";
 //             if(preg_match('/[^a-zA-Z0-9\(\)\-]/',$string))
