@@ -1,9 +1,14 @@
 <?php
 /**
-  * GET api/autorizaciones/compra/devolucion
+  * POST api/autorizaciones/compra/devolucion
   * Solicitud para devolver una compra.
   *
-  * Solicitud para devolver una compra. La fecha de petici?n se tomar? del servidor. El usuario y la sucursal que emiten la autorizaci?n ser?n tomadas de la sesi?n.
+  * Solicitud para devolver una compra.
+
+Consideraciones:
+-Que hacer con el dinero
+-Que hacer con la mercancia
+
   *
   *
   *
@@ -16,8 +21,8 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"id_compra" => new ApiExposedProperty("id_compra", true, GET, array( "int" )),
-			"descripcion" => new ApiExposedProperty("descripcion", false, GET, array( "int" )),
+			"id_compra" => new ApiExposedProperty("id_compra", true, POST, array( "int" )),
+			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "int" )),
 		);
 	}
 
@@ -26,8 +31,8 @@
  		$this->response = AutorizacionesController::DevolucionCompra( 
  			
 			
-			isset($_GET['id_compra'] ) ? $_GET['id_compra'] : null,
-			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null
+			isset($_POST['id_compra'] ) ? $_POST['id_compra'] : null,
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] : null
 			
 			);
 		}catch(Exception $e){

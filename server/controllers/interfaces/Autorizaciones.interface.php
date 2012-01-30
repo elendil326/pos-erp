@@ -14,7 +14,7 @@
 
 La autorizacion se guardara con los datos del usuario que la pidio. Si es aceptada, entonces el usuario podra editar al cliente una vez.
  	 *
- 	 * @param id_cliente int Id del cliente al que se le pide editar el lmite de crdito.
+ 	 * @param id_cliente int Id del cliente que se desea editar
  	 * @return id_autorizacion int El id de la autorizacion creada
  	 **/
   static function EditarCliente
@@ -27,16 +27,53 @@ La autorizacion se guardara con los datos del usuario que la pidio. Si es acepta
   
 	/**
  	 *
- 	 *Solicitud para devolver una compra. La fecha de petici?n se tomar? del servidor. El usuario y la sucursal que emiten la autorizaci?n ser?n tomadas de la sesi?n.
+ 	 *Solicitud para cambiar la relaci?n entre cliente y el precio ofrecido para cierto producto ya sea en compra o en venta. La fecha de peticion se tomar? del servidor. El usuario y la sucursal que emiten la autorizaci?n ser?n tomadas de la sesi?n.
+
+UPDATE : Actualmente como se maneja esto es por medio de las ventas preferenciales, es decir, se manda una autorizaci?n para que el cajero pueda editar todos los precios que desee, de todos los productos "solo para esa venta y solo para ese cliente especificamente", ya que si el cliente quisiera que le vendieran mas de un solo producto a diferente precio tendr?as que generar mas de una autorizaci?n, esto implica un incremento considerable en el tiempo de respuesta y aplicaci?n de los cambios.
+
+UPDATE 2: Creo que los metodos : 
+api/autorizaciones/editar_precio_cliente y api/autorizaciones/editar_siguiente_compra_venta_precio_cliente
+Se podr?an combinar y as? tener un solo m?todo para una compra venta preferencial.
  	 *
- 	 * @param id_compra int Id de la compra a devolver
- 	 * @param descripcion int Una descripcion para justificar esto.
+ 	 * @param compra bool Si es true, el nuevo precio ser requerido para compras en el producto especificado, si es false, el nuevo precio ser requerido para ventas en el producto especificado.
+ 	 * @param descripcion string Justificacin del cambio de precio del cliente.
+ 	 * @param id_cliente int Id del cliente al que se le har el cambio.
+ 	 * @param id_productos json Arreglo de Ids de los productos en los que se hara el cambio 
+ 	 * @param siguiente_compra bool Si es true, el cambio solo se acplicara a la siguiente compra/venta, pero si es false, el cambio se hara sobre la relacion del cliente con el tipo de precio
+ 	 * @param id_precio int Id del nuevo precio requerido.
+ 	 * @param precio float Si el precio deseado no se encuentra en los campos del precio de acuerdo al tipo del cliente, se pued especificar el precio que se desea dar.
+ 	 **/
+  static function PrecioCliente
+	(
+		$compra, 
+		$descripcion, 
+		$id_cliente, 
+		$id_productos, 
+		$siguiente_compra, 
+		$id_precio = null, 
+		$precio = null
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Solicitud para devolver una compra.
+
+Consideraciones:
+-Que hacer con el dinero
+-Que hacer con la mercancia
+
+ 	 *
+ 	 * @param id_compra int El `id_compra` de la compra que queremos devolver.
+ 	 * @param descripcion int Una descripcion que se le mostrara al administrador que conteste esta autorizacion.
  	 * @return id_autorizacion int El id de la autorizacion recien creada
  	 **/
   static function DevolucionCompra
 	(
 		$id_compra, 
-		$descripcion = null
+		$descripcion = ""
 	);  
   
   
@@ -47,11 +84,11 @@ La autorizacion se guardara con los datos del usuario que la pidio. Si es acepta
  	 *Muestra la informacion detallada de una autorizacion.
  	 *
  	 * @param id_autorizacion	 int Id de la autorizacion a inspeccionar.
- 	 * @return fecha_respuesta string La fecha cuando la peticion se soluciono, o respondio por un administrador.
- 	 * @return fecha_peticion string La fecha cuando la peticion se hizo.
- 	 * @return id_solicitante int El id del usuario que pidio la autorizacion
- 	 * @return id_autorizacion int El id de esta autorizacion
- 	 * @return id_sucursal int El id de la sucursal donde se inicio la peticion
+ 	 * @return fecha_peticion string La fecha en tiempo Unix de cuando se creo esta peticion.
+ 	 * @return fecha_respuesta string La fecha en tiempo Unix de cuando se respondio esta peticion.
+ 	 * @return solicitante json El id del usuario que pidio la autorizacion. {            "id usuario": 24,            "nombre usuario": "Juana Escobar Martinez"        }
+ 	 * @return sucursal_origen json El id de la sucursal donde se inicio la peticion en caso de existir. En caso de que no aplique, vendra el valor null. {            "id sucursal": 24,            "nombre sucursal": "Sucursal del norte"        }
+ 	 * @return id_autorizacion int El `id_autorizacion`de esta autorizacion.
  	 **/
   static function Detalle
 	(
@@ -89,42 +126,11 @@ Al momento de editar la autorizacion veo que aparentemente se podria editar el i
   
 	/**
  	 *
- 	 *Solicitud para cambiar la relaci?n entre cliente y el precio ofrecido para cierto producto ya sea en compra o en venta. La fecha de peticion se tomar? del servidor. El usuario y la sucursal que emiten la autorizaci?n ser?n tomadas de la sesi?n.
-
-UPDATE : Actualmente como se maneja esto es por medio de las ventas preferenciales, es decir, se manda una autorizaci?n para que el cajero pueda editar todos los precios que desee, de todos los productos "solo para esa venta y solo para ese cliente especificamente", ya que si el cliente quisiera que le vendieran mas de un solo producto a diferente precio tendr?as que generar mas de una autorizaci?n, esto implica un incremento considerable en el tiempo de respuesta y aplicaci?n de los cambios.
-
-UPDATE 2: Creo que los metodos : 
-api/autorizaciones/editar_precio_cliente y api/autorizaciones/editar_siguiente_compra_venta_precio_cliente
-Se podr?an combinar y as? tener un solo m?todo para una compra venta preferencial.
- 	 *
- 	 * @param compra bool Si es true, el nuevo precio ser requerido para compras en el producto especificado, si es false, el nuevo precio ser requerido para ventas en el producto especificado.
- 	 * @param descripcion string Justificacin del cambio de precio del cliente.
- 	 * @param id_cliente int Id del cliente al que se le har el cambio.
- 	 * @param id_productos json Arreglo de Ids de los productos en los que se hara el cambio 
- 	 * @param siguiente_compra bool Si es true, el cambio solo se acplicara a la siguiente compra/venta, pero si es false, el cambio se hara sobre la relacion del cliente con el tipo de precio
- 	 * @param id_precio int Id del nuevo precio requerido.
- 	 * @param precio float Si el precio deseado no se encuentra en los campos del precio de acuerdo al tipo del cliente, se pued especificar el precio que se desea dar.
- 	 **/
-  static function Editar_precio_cliente
-	(
-		$compra, 
-		$descripcion, 
-		$id_cliente, 
-		$id_productos, 
-		$siguiente_compra, 
-		$id_precio = null, 
-		$precio = null
-	);  
-  
-  
-	
-  
-	/**
- 	 *
- 	 *La fecha de peticion se tomar? del servidor. El usuario y la sucursal que emiten la autorizaci?n ser?n tomadas de la sesi?n.
+ 	 *En caso de que el usuario no tenga persmiso para realizar gasto, puede pedir una autorizacion para registrar un gasto. 
  	 *
  	 * @param descripcion string Justificacin por la cual se pide el gasto.
  	 * @param monto float Monto a gastar
+ 	 * @return id_autorizacion int El id_autorizacion de la autorizacion recien creada.
  	 **/
   static function Gasto
 	(

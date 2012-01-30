@@ -70,6 +70,26 @@
   
 	/**
  	 *
+ 	 *Este metodo se utiliza para poder enviar un correo electronico a un tercero. 
+ 	 *
+ 	 * @param cuerpo string El cuerpo del correo electronico.
+ 	 * @param destinatario string El correo electronico a enviar.
+ 	 * @param titulo string El titulo del correo electronico. 
+ 	 * @param emisor string El correo electronico de donde se enviara este correo si es que esta configurado para esta instancia. De no enviarse se enviara un correo de la cuenta default de POS ERP.
+ 	 **/
+  static function EnviarMail
+	(
+		$cuerpo, 
+		$destinatario, 
+		$titulo, 
+		$emisor = no-reply@caffeina.mx
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
  	 *Si un perdidad de conectividad sucediera, es responsabilidad del cliente registrar las ventas o compras realizadas desde que se perdio conectividad. Cuando se restablezca la conexcion se deberan enviar las ventas o compras. 
  	 *
  	 * @param compras json Objeto que contendr la informacin de las compras as como su detalle.

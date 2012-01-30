@@ -214,4 +214,33 @@ Al momento de editar la autorizacion veo que aparentemente se podria editar el i
   
   
 	}
+        
+        /**
+ 	 *
+ 	 *Solicitud para cambiar la relaci?n entre cliente y el precio ofrecido para cierto producto ya sea en compra o en venta. La fecha de peticion se tomar? del servidor. El usuario y la sucursal que emiten la autorizaci?n ser?n tomadas de la sesi?n.
+
+UPDATE : Actualmente como se maneja esto es por medio de las ventas preferenciales, es decir, se manda una autorizaci?n para que el cajero pueda editar todos los precios que desee, de todos los productos "solo para esa venta y solo para ese cliente especificamente", ya que si el cliente quisiera que le vendieran mas de un solo producto a diferente precio tendr?as que generar mas de una autorizaci?n, esto implica un incremento considerable en el tiempo de respuesta y aplicaci?n de los cambios.
+
+UPDATE 2: Creo que los metodos : 
+api/autorizaciones/editar_precio_cliente y api/autorizaciones/editar_siguiente_compra_venta_precio_cliente
+Se podr?an combinar y as? tener un solo m?todo para una compra venta preferencial.
+ 	 *
+ 	 * @param compra bool Si es true, el nuevo precio ser requerido para compras en el producto especificado, si es false, el nuevo precio ser requerido para ventas en el producto especificado.
+ 	 * @param descripcion string Justificacin del cambio de precio del cliente.
+ 	 * @param id_cliente int Id del cliente al que se le har el cambio.
+ 	 * @param id_productos json Arreglo de Ids de los productos en los que se hara el cambio 
+ 	 * @param siguiente_compra bool Si es true, el cambio solo se acplicara a la siguiente compra/venta, pero si es false, el cambio se hara sobre la relacion del cliente con el tipo de precio
+ 	 * @param id_precio int Id del nuevo precio requerido.
+ 	 * @param precio float Si el precio deseado no se encuentra en los campos del precio de acuerdo al tipo del cliente, se pued especificar el precio que se desea dar.
+ 	 **/
+        public static function PrecioCliente
+	(
+		$compra, 
+		$descripcion, 
+		$id_cliente, 
+		$id_productos, 
+		$siguiente_compra, 
+		$id_precio = null, 
+		$precio = null
+	);  
   }

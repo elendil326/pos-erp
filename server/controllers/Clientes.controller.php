@@ -317,36 +317,23 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
  	 **/
 	public static function Nuevo
 	(
-		$clasificacion_cliente, 
-		$codigo_cliente, 
-		$password, 
 		$razon_social, 
-		$calle = null, 
-		$codigo_postal = null, 
-		$colonia = null, 
-		$cuenta_de_mensajeria = null, 
+		$clasificacion_cliente = "", 
+		$cuenta_de_mensajeria = "", 
 		$curp = null, 
 		$denominacion_comercial = null, 
-		$descuento = null, 
-		$direccion_web = null, 
+		$direcciones = null, 
+		$direccion_web = "", 
 		$email = null, 
-		$id_ciudad = null, 
+		$id_cliente_padre = null, 
+		$id_moneda = 0, 
 		$id_tarifa_compra = null, 
 		$id_tarifa_venta = null, 
-		$impuestos = null, 
-		$limite_credito = null, 
-		$mensajeria = null, 
-		$moneda_del_cliente = null, 
-		$numero_exterior = null, 
-		$numero_interior = null, 
-		$representante_legal = null, 
-		$retenciones = null, 
+		$limite_credito = 0, 
+		$password = "", 
+		$representante_legal = "", 
 		$rfc = null, 
-		$telefono1 = null, 
-		$telefono2 = null, 
-		$telefono_personal1 = null, 
-		$telefono_personal2 = null, 
-		$texto_extra = null
+		$telefono = null
 	)
 	{
             Logger::log("Creando nuevo cliente");
@@ -355,7 +342,7 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
             //y se toma como rol de cliente el 5
             try 
             {
-                $cliente = PersonalYAgentesController::NuevoUsuario($codigo_cliente,5,$razon_social,$password,
+                $cliente = PersonalYAgentesController::NuevoUsuario(null,5,$razon_social,$password,
                         $calle,null,$codigo_postal,null,$colonia,null,null,$email,null,$cuenta_de_mensajeria,
                         $curp,$denominacion_comercial,$descuento,null,null,null,null,0,$id_ciudad,null,
                         $clasificacion_cliente,null,$moneda_del_cliente,self::getSucursal(),$id_tarifa_compra,$id_tarifa_venta,
@@ -503,44 +490,27 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 	public static function Editar
 	(
 		$id_cliente, 
-		$calle = null, 
 		$clasificacion_cliente = null, 
 		$codigo_cliente = null, 
-		$codigo_postal = null, 
-		$colonia = null, 
 		$cuenta_de_mensajeria = null, 
 		$curp = null, 
 		$denominacion_comercial = null, 
-		$descuento = null, 
-		$dias_de_credito = null, 
-		$dia_de_pago = null, 
-		$dia_de_revision = null, 
+		$descuento_general = null, 
 		$direccion_web = null, 
 		$email = null, 
-		$facturar_a_terceros = null, 
 		$id_tarifa_compra = null, 
 		$id_tarifa_venta = null, 
-		$impuestos = null, 
-		$intereses_moratorios = null, 
-		$lim_credito = null, 
+		$limite_de_credito = null, 
 		$mensajeria = null, 
 		$moneda_del_cliente = null, 
-		$municipio = null, 
-		$numero_exterior = null, 
-		$numero_interior = null, 
 		$password = null, 
+		$password_actual = null, 
 		$razon_social = null, 
 		$representante_legal = null, 
-		$retenciones = null, 
 		$rfc = null, 
-		$saldo_del_ejercicio = null, 
 		$sucursal = null, 
 		$telefono1 = null, 
-		$telefono2 = null, 
-		$telefono_personal1 = null, 
-		$telefono_personal2 = null, 
-		$texto_extra = null, 
-		$ventas_a_credito = null
+		$telefono_personal2 = null
 	)
 	{  
             Logger::log("Editando cliente ".$id_cliente);
@@ -631,11 +601,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 	(
 		$clave_interna, 
 		$nombre, 
-		$descripcion = null, 
-		$id_tarifa_compra = null, 
-		$id_tarifa_venta = null, 
-		$impuestos = null, 
-		$retenciones = null
+		$descripcion = null
 	)
 	{  
             Logger::log("Creando nueva clasificacion de clientes");
@@ -782,11 +748,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 		$id_clasificacion_cliente, 
 		$clave_interna = null, 
 		$descripcion = null, 
-		$id_tarifa_compra = null, 
-		$id_tarifa_venta = null, 
-		$impuestos = null, 
-		$nombre = null, 
-		$retenciones = null
+		$nombre = null
 	)
 	{  
             Logger::log("Editando clasificacion de cliente ".$id_clasificacion_cliente);
@@ -957,10 +919,24 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 
 	
 	/**
-	  * Buscar clientes
-	  *
-	  **/
-	public static function Buscar($query){
+ 	 *
+ 	 *Busca un cliente por su razon social, denominacion comercial, rfc o representante legal y regresa un objeto que contiene un conjunto de objetos que contiene la informacion de los clientes que coincidieron con la busqueda
+ 	 *
+ 	 * @param limit int Indica el registro final del conjunto de datos que se desea mostrar
+ 	 * @param page int Indica en que pagina se encuentra dentro del conjunto de resultados que coincidieron en la bsqueda
+ 	 * @param query string El texto a buscar
+ 	 * @param start int Indica el registro inicial del conjunto de datos que se desea mostrar
+ 	 * @return numero_de_resultados int Numero de registros que regreso esta busqueda
+ 	 * @return resultados json Lista de clientes que clientes que satisfacen la busqueda
+ 	 **/
+	public static function Buscar
+        (
+                $limit = 50, 
+		$page = null, 
+		$query = null, 
+		$start = 0
+        )
+        {
 		$resultados = UsuarioDAO::buscarClientes( $query );
 		return array( 
 			"resultados" => $resultados ,
@@ -968,6 +944,28 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 			);
 		
 	}
+        
+        /**
+ 	 *
+ 	 *Busca una clasificaci?n por clave, nombre o descripci?n
+ 	 *
+ 	 * @param limit int Indica el registro final del conjunto de datos que se desea mostrar
+ 	 * @param page int Indica en que pagina se encuentra dentro del conjunto de resultados que coincidieron en la bsqueda
+ 	 * @param query string El texto a buscar
+ 	 * @param start int Indica el registro inicial del conjunto de datos que se desea mostrar
+ 	 * @return numero_de_resultados int 
+ 	 * @return resultados json Objeto que contendra la lista de clasificaciones de cliente
+ 	 **/
+        public static function BuscarClasificacion
+	(
+		$limit = 50, 
+		$page = null, 
+		$query = null, 
+		$start = 0
+	)
+        {
+            
+        }
 	
 	
 }

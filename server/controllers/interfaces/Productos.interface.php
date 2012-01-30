@@ -12,13 +12,13 @@
  	 *
  	 *Buscar productos
  	 *
- 	 * @param query string el campo a buscar
- 	 * @return resultados json productos
- 	 * @return numero_de_ resultados int numero de resultados en la respuesta
+ 	 * @param query string 
+ 	 * @param id_sucursal int Buscar las existencias de este producto en una sucursal especifica.
  	 **/
   static function Buscar
 	(
-		$query
+		$query, 
+		$id_sucursal = null
 	);  
   
   

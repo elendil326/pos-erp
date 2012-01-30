@@ -476,11 +476,11 @@ class GerenciaComponentPage extends StdComponentPage{
             "children": [
 				{
 					"title" : "Nueva tarifa",
-					"url"	: "precio.nueva.tarifa.php"
+					"url"	: "precios.nueva.tarifa.php"
 				},
 				{
 					"title" : "Lista tarifa",
-					"url"	: "precio.lista.tarifa.php"
+					"url"	: "precios.lista.tarifa.php"
 				}							
             ]
         },

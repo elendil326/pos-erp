@@ -1,15 +1,15 @@
 <?php
 /**
-  * GET api/cliente/buscar
-  * Busca un cliente por su razon social, denominacion comercial, rfc o representante legal
+  * GET api/cliente/clasificacion/buscar
+  * Lista de las clasificaciones existentes
   *
-  * Busca un cliente por su razon social, denominacion comercial, rfc o representante legal y regresa un objeto que contiene un conjunto de objetos que contiene la informacion de los clientes que coincidieron con la busqueda
+  * Busca una clasificaci?n por clave, nombre o descripci?n
   *
   *
   *
   **/
 
-  class ApiClienteBuscar extends ApiHandler {
+  class ApiClienteClasificacionBuscar extends ApiHandler {
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
@@ -25,7 +25,7 @@
 
 	protected function GenerateResponse() {		
 		try{
- 		$this->response = ClientesController::Buscar( 
+ 		$this->response = ClientesController::BuscarClasificacion( 
  			
 			
 			isset($_GET['limit'] ) ? $_GET['limit'] : null,

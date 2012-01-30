@@ -1,6 +1,6 @@
 <?php
 /**
-  * GET api/cliente/clasificacion/editar
+  * POST api/cliente/clasificacion/editar
   * Edita la clasificacion de cliente
   *
   * Edita la informacion de la clasificacion de cliente
@@ -16,14 +16,10 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"id_clasificacion_cliente" => new ApiExposedProperty("id_clasificacion_cliente", true, GET, array( "int" )),
-			"clave_interna" => new ApiExposedProperty("clave_interna", false, GET, array( "string" )),
-			"descripcion" => new ApiExposedProperty("descripcion", false, GET, array( "string" )),
-			"id_tarifa_compra" => new ApiExposedProperty("id_tarifa_compra", false, GET, array( "int" )),
-			"id_tarifa_venta" => new ApiExposedProperty("id_tarifa_venta", false, GET, array( "int" )),
-			"impuestos" => new ApiExposedProperty("impuestos", false, GET, array( "json" )),
-			"nombre" => new ApiExposedProperty("nombre", false, GET, array( "string" )),
-			"retenciones" => new ApiExposedProperty("retenciones", false, GET, array( "json" )),
+			"id_clasificacion_cliente" => new ApiExposedProperty("id_clasificacion_cliente", true, POST, array( "int" )),
+			"clave_interna" => new ApiExposedProperty("clave_interna", false, POST, array( "string" )),
+			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "string" )),
+			"nombre" => new ApiExposedProperty("nombre", false, POST, array( "string" )),
 		);
 	}
 
@@ -32,14 +28,10 @@
  		$this->response = ClientesController::EditarClasificacion( 
  			
 			
-			isset($_GET['id_clasificacion_cliente'] ) ? $_GET['id_clasificacion_cliente'] : null,
-			isset($_GET['clave_interna'] ) ? $_GET['clave_interna'] : null,
-			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
-			isset($_GET['id_tarifa_compra'] ) ? $_GET['id_tarifa_compra'] : null,
-			isset($_GET['id_tarifa_venta'] ) ? $_GET['id_tarifa_venta'] : null,
-			isset($_GET['impuestos'] ) ? json_decode($_GET['impuestos']) : null,
-			isset($_GET['nombre'] ) ? $_GET['nombre'] : null,
-			isset($_GET['retenciones'] ) ? json_decode($_GET['retenciones']) : null
+			isset($_POST['id_clasificacion_cliente'] ) ? $_POST['id_clasificacion_cliente'] : null,
+			isset($_POST['clave_interna'] ) ? $_POST['clave_interna'] : null,
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] : null,
+			isset($_POST['nombre'] ) ? $_POST['nombre'] : null
 			
 			);
 		}catch(Exception $e){

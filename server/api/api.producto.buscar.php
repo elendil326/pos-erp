@@ -17,6 +17,7 @@
 	{
 		$this->request = array(	
 			"query" => new ApiExposedProperty("query", true, GET, array( "string" )),
+			"id_sucursal" => new ApiExposedProperty("id_sucursal", false, GET, array( "int" )),
 		);
 	}
 
@@ -25,7 +26,8 @@
  		$this->response = ProductosController::Buscar( 
  			
 			
-			isset($_GET['query'] ) ? $_GET['query'] : null
+			isset($_GET['query'] ) ? $_GET['query'] : null,
+			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null
 			
 			);
 		}catch(Exception $e){

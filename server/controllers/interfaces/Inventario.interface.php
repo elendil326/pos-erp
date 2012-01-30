@@ -25,12 +25,11 @@
   
 	/**
  	 *
- 	 *Ver la lista de productos y sus existencias, se puede filtrar por empresa, sucursal, almac?n, y lote.
-Se puede ordenar por los atributos de producto. 
+ 	 *Ver la lista de productos y sus existencias, se puede filtrar por empresa, sucursal, almac?n, y producto.
  	 *
  	 * @param id_almacen	 int Id del almacen del cual se vern los productos. Si este valor es obtenido no se tomaran en cuenta los parametros id_empresa ni id_sucursal
  	 * @param id_empresa int Id de la empresa de la cual se vern los productos. Si este valor es obtenido no se tomara en cuenta el valor de id_sucursal
- 	 * @param id_producto int Mostrara las existencias de ese producto. Se puede convinar con los demas parametros
+ 	 * @param id_producto int Mostrara las existencias de ese producto. Se puede convinar con los demas parametros. Si solo se recibe este parametro, se regresara un arreglo con las existencias de este prodcto en cada sucursal de acuerdo a su unidad.
  	 * @param id_sucursal int Id de la sucursal de la cual se vern los productos.
  	 * @return existecias json Lista de existencias
  	 **/

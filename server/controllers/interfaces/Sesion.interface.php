@@ -10,6 +10,21 @@
   
 	/**
  	 *
+ 	 *Regresa informacion sobre la sesion actual.
+ 	 *
+ 	 * @return id_caja int 
+ 	 * @return id_sucursal int El id_sucursal de la sucursal donde este usuario inico sesion en caso de haberlo hecho desde un mostraodr. Un gerente no tendra id_sucursal asociada a el dado que puede iniciar sesion desde cualquier lugar.
+ 	 * @return id_usuario int 
+ 	 **/
+  static function Actual
+	(
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
  	 *Regresa un url de redireccion seg?n el tipo de usuario.
  	 *
  	 * @param auth_token string El token de autorizacion generado al iniciar la sesion

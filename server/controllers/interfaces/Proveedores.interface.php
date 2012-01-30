@@ -202,32 +202,24 @@
  	 * @param nombre string Nombre del proveedor
  	 * @param password string Password del proveedor para entrar al sistema
  	 * @param activo bool Si este proveedor esta activo o no
- 	 * @param calle string Calle de la direccion del proveedor
- 	 * @param codigo_postal string Codigo postal de la direccion del proveedor
- 	 * @param colonia string Colonia del proveedor
  	 * @param cuenta_bancaria string Cuenta bancaria del proveedor
  	 * @param dias_de_credito int Dias de credito que otorga el proveedor
  	 * @param dias_embarque int Dias en que el proveedor embarca ( Lunes, Martes, Miercoles, Jueves..)
+ 	 * @param direcciones json [{    "tipo": 1,    "calle": "Francisco I Madero",    "numero_exterior": "1009A",    "numero_interior": 12,    "colonia": "centro",    "codigo_postal": "38000",    "telefono1": "4611223312",    "telefono2": "",    "email": "tortas.rosy@gmail.com",    "id_ciudad": 3,    "referencia": "El local naranja"}]
  	 * @param direccion_web string Direccion web del proveedor
  	 * @param email string Correo electronico del proveedor
- 	 * @param id_ciudad int Id de la ciudad de la direccion del proveedor
  	 * @param id_moneda int Id de la moneda preferente del proveedor
  	 * @param id_tarifa_compra int Id de la tarifa de compra por default que aplicara a este porveedor
  	 * @param id_tarifa_venta int Id de la tarifa de venta por default que aplicara a etse proveedor
  	 * @param impuestos json Ids de los impuestos que afectan a este proveedor
  	 * @param limite_credito float Limite de credito que otorga el proveedor
- 	 * @param numero_exterior string Numero exterior de la direccion del proveedor
- 	 * @param numero_interior string Numero interior de la direccion del proveedor
  	 * @param representante_legal string Representante legal del proveedor
  	 * @param retenciones json Retenciones que afectan a este proveedor
  	 * @param rfc string RFC del proveedor
- 	 * @param telefono1 string Telefono 1 de la direccion del proveedor
- 	 * @param telefono2 string Telefono 2 de la direccion del proveedor
  	 * @param telefono_personal1 string Telefono personal del cliente
  	 * @param telefono_personal2 string Telefono personal alterno del proveedor
- 	 * @param texto_extra string Referencia de la direcciond el proveedor
  	 * @param tiempo_entrega string Tiempo de entrega del proveedor en dias
- 	 * @return id_proveedor int Id autogenerado por la inserción del nuevo proveedor.
+ 	 * @return id_proveedor int Id autogenerado por la insercin del nuevo proveedor.
  	 **/
   static function Nuevo
 	(
@@ -236,30 +228,22 @@
 		$nombre, 
 		$password, 
 		$activo = null, 
-		$calle = null, 
-		$codigo_postal = null, 
-		$colonia = null, 
 		$cuenta_bancaria = null, 
 		$dias_de_credito = null, 
 		$dias_embarque = true, 
+		$direcciones = null, 
 		$direccion_web = null, 
 		$email = null, 
-		$id_ciudad = null, 
 		$id_moneda = null, 
 		$id_tarifa_compra = null, 
 		$id_tarifa_venta = null, 
 		$impuestos = null, 
 		$limite_credito = null, 
-		$numero_exterior = null, 
-		$numero_interior = null, 
 		$representante_legal = null, 
 		$retenciones = null, 
 		$rfc = null, 
-		$telefono1 = null, 
-		$telefono2 = null, 
 		$telefono_personal1 = null, 
 		$telefono_personal2 = null, 
-		$texto_extra = null, 
 		$tiempo_entrega = null
 	);  
   

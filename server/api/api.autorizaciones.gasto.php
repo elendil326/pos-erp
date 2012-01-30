@@ -1,9 +1,9 @@
 <?php
 /**
-  * GET api/autorizaciones/gasto
+  * POST api/autorizaciones/gasto
   * Solicitud de autorizaci?n para realizar un gasto.
   *
-  * La fecha de peticion se tomar? del servidor. El usuario y la sucursal que emiten la autorizaci?n ser?n tomadas de la sesi?n.
+  * En caso de que el usuario no tenga persmiso para realizar gasto, puede pedir una autorizacion para registrar un gasto. 
   *
   *
   *
@@ -16,8 +16,8 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"descripcion" => new ApiExposedProperty("descripcion", true, GET, array( "string" )),
-			"monto" => new ApiExposedProperty("monto", true, GET, array( "float" )),
+			"descripcion" => new ApiExposedProperty("descripcion", true, POST, array( "string" )),
+			"monto" => new ApiExposedProperty("monto", true, POST, array( "float" )),
 		);
 	}
 
@@ -26,8 +26,8 @@
  		$this->response = AutorizacionesController::Gasto( 
  			
 			
-			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
-			isset($_GET['monto'] ) ? $_GET['monto'] : null
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] : null,
+			isset($_POST['monto'] ) ? $_POST['monto'] : null
 			
 			);
 		}catch(Exception $e){

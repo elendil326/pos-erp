@@ -138,13 +138,7 @@
  	 *Editar los detalles de un usuario.
  	 *
  	 * @param id_usuario int Usuario a editar
- 	 * @param calle string calle del domicilio del usuario
- 	 * @param calle_2 string Calle de la direccion alterna del usuario
- 	 * @param codigo_postal string Codigo Postal del domicilio del usuario
- 	 * @param codigo_postal_2 string Codigo postal de la direccion alterna del usuario
  	 * @param codigo_usuario string Codigo interno del usuario
- 	 * @param colonia string Colonia donde vive el usuario
- 	 * @param colonia_2 string Colonia de la direccion alterna del usuario
  	 * @param comision_ventas float El porcentaje que gana como comision por ventas este usuario
  	 * @param correo_electronico string correo electronico del usuario
  	 * @param cuenta_bancaria string Cuenta bancaria del usuario
@@ -158,8 +152,6 @@
  	 * @param dia_de_pago string Fecha de pago del cliente
  	 * @param dia_de_revision string Fecha de revision del cliente
  	 * @param facturar_a_terceros bool Si el usuario puede facturar a terceros
- 	 * @param id_ciudad int Id de la ciudad del domicilio del usuario
- 	 * @param id_ciudad_2 int Id de la ciudad de la direccion alterna del usuario
  	 * @param id_clasificacion_cliente int Id de la clasificacion del cliente
  	 * @param id_clasificacion_proveedor int Id de la clasificacion del proveedor
  	 * @param id_moneda int Id de la moneda preferente del usuario
@@ -172,10 +164,6 @@
  	 * @param limite_de_credito float Limite de credito del usuario
  	 * @param mensajeria bool Si el usuario tiene una cuenta de mensajeria
  	 * @param nombre string Nombre del usuario
- 	 * @param numero_exterior string Numero exterior del domicilio del usuario
- 	 * @param numero_exterior_2 string Numero exterior de la direccion alterna del usuario
- 	 * @param numero_interior string Numero interior del domicilio del usuario
- 	 * @param numero_interior_2 string Numero interior de la direccion alterna del usuario
  	 * @param pagina_web string Pagina web del usuario
  	 * @param password string Password del usuario
  	 * @param representante_legal string Nombre del representante legal del usuario
@@ -183,27 +171,15 @@
  	 * @param rfc string RFC del usuario
  	 * @param salario float Si el usuario contara con un salario no establecido por el rol
  	 * @param saldo_del_ejercicio float Saldo del ejercicio del cliente
- 	 * @param telefono1 string Telefono del usuario
- 	 * @param telefono1_2 string Telefono de la direccion alterna del usuario
- 	 * @param telefono2 string Otro telefono de la direccion del usuario
- 	 * @param telefono2_2 string telefono2 de la direccion alterna del usuario
  	 * @param telefono_personal_1 string telefono personal del usuario
  	 * @param telefono_personal_2 string Telefono personal alterno del usuario
- 	 * @param texto_extra string Referencia del domicilio del usuario
- 	 * @param texto_extra_2 string Texto extra para ubicar la direccion alterna del usuario
  	 * @param tiempo_entrega int Numero de dias que tarda el proveedor en realizar una entrega
  	 * @param ventas_a_credito int Ventas a credito del cliente
  	 **/
   static function EditarUsuario
 	(
 		$id_usuario, 
-		$calle = null, 
-		$calle_2 = null, 
-		$codigo_postal = null, 
-		$codigo_postal_2 = null, 
 		$codigo_usuario = null, 
-		$colonia = null, 
-		$colonia_2 = null, 
 		$comision_ventas = null, 
 		$correo_electronico = null, 
 		$cuenta_bancaria = null, 
@@ -217,8 +193,6 @@
 		$dia_de_pago = null, 
 		$dia_de_revision = null, 
 		$facturar_a_terceros = null, 
-		$id_ciudad = null, 
-		$id_ciudad_2 = null, 
 		$id_clasificacion_cliente = null, 
 		$id_clasificacion_proveedor = null, 
 		$id_moneda = null, 
@@ -231,10 +205,6 @@
 		$limite_de_credito = null, 
 		$mensajeria = null, 
 		$nombre = null, 
-		$numero_exterior = null, 
-		$numero_exterior_2 = null, 
-		$numero_interior = null, 
-		$numero_interior_2 = null, 
 		$pagina_web = null, 
 		$password = null, 
 		$representante_legal = null, 
@@ -242,14 +212,8 @@
 		$rfc = null, 
 		$salario = null, 
 		$saldo_del_ejercicio = null, 
-		$telefono1 = null, 
-		$telefono1_2 = null, 
-		$telefono2 = null, 
-		$telefono2_2 = null, 
 		$telefono_personal_1 = null, 
 		$telefono_personal_2 = null, 
-		$texto_extra = null, 
-		$texto_extra_2 = null, 
 		$tiempo_entrega = null, 
 		$ventas_a_credito = null
 	);  
@@ -296,12 +260,6 @@
  	 * @param id_rol int El rol que este usuario tomara en el sistema. 
  	 * @param nombre string Nombre del nuevo usuario.
  	 * @param password string Password del usuario. Debe ser mayor a 4 caracteres y no puede ser el mismo que el codigo de usuario.
- 	 * @param calle string Calle donde vive el agente
- 	 * @param calle_2 string Calle de la direccion alterna del usuario
- 	 * @param codigo_postal string Codigo postal del Agente
- 	 * @param codigo_postal_2 string Codigo postal de la direccion alterna del usuario
- 	 * @param colonia string Colonia donde vive el agente
- 	 * @param colonia_2 string Colonia de la direccion alterna del usuario
  	 * @param comision_ventas float El porcentaje de la comision que ganara este usuario especificamente por ventas
  	 * @param correo_electronico string Correo Electronico del agente
  	 * @param cuenta_bancaria string Cuenta bancaria del usuario
@@ -313,9 +271,8 @@
  	 * @param dias_de_embarque int Dias de embarque del proveedor ( Lunes, Miercoles, Viernes, etc)
  	 * @param dia_de_pago string Fecha de pago del cliente
  	 * @param dia_de_revision string Fecha de revision del cliente
+ 	 * @param direcciones json Arreglo de direcciones del usuario  [{    "tipo": 1,    "calle": "Francisco I Madero",    "numero_exterior": "1009A",    "numero_interior": 12,    "colonia": "centro",    "codigo_postal": "38000",    "telefono1": "4611223312",    "telefono2": "",    "email": "tortas.rosy@gmail.com",    "id_ciudad": 3,    "referencia": "El local naranja"}] 
  	 * @param facturar_a_terceros bool Si el usuario puede facturar a terceros
- 	 * @param id_ciudad int ID de la ciudad donde vive el agente
- 	 * @param id_ciudad_2 int Id de la ciudad de la direccion alterna del usuario
  	 * @param id_clasificacion_cliente int Id de la clasificacion del cliente
  	 * @param id_clasificacion_proveedor int Id de la clasificacion del proveedor
  	 * @param id_moneda int Id de la moneda del cliente
@@ -326,24 +283,14 @@
  	 * @param intereses_moratorios float Intereses moratorios del cliente
  	 * @param limite_credito float El limite de credito del usuario
  	 * @param mensajeria bool Si el cliente tiene una cuenta de mensajeria
- 	 * @param numero_exterior string Numero exterior del agente
- 	 * @param numero_exterior_2 string Numero exterior de la direccion alterna del usuario
- 	 * @param numero_interior string Numero interior del agente
- 	 * @param numero_interior_2 string Numero interior de la direccion alterna del usuario
  	 * @param pagina_web string Pagina web del usuario
  	 * @param representante_legal string Nombre del representante legal del usuario
  	 * @param retenciones json Ids de las retenciones que afectan a este usuario
  	 * @param rfc string RFC del agente
  	 * @param salario float Si el usuario contara con un salario especial no especificado por el rol
  	 * @param saldo_del_ejercicio float Saldo del ejercicio del cliente
- 	 * @param telefono1 string Telefono principal del agente
- 	 * @param telefono1_2 string Telefono de la direccion alterna del usuario
- 	 * @param telefono2 string Otro telefono del agente
- 	 * @param telefono2_2 string Telefono 2 de la direccion al terna del usuario
  	 * @param telefono_personal1 string Telefono personal del usuario
  	 * @param telefono_personal2 string Telefono personal del usuario
- 	 * @param texto_extra string Comentario sobre la direccion del agente
- 	 * @param texto_extra_2 string Texto extra para ubicar la direccion alterna del usuario
  	 * @param tiempo_entrega int Numero de dias que tarda el proveedor en realizar una entrega
  	 * @param ventas_a_credito int Ventas a credito del cliente
  	 * @return id_usuario int El nuevo identificador de este usuario.
@@ -354,12 +301,6 @@
 		$id_rol, 
 		$nombre, 
 		$password, 
-		$calle = null, 
-		$calle_2 = null, 
-		$codigo_postal = null, 
-		$codigo_postal_2 = null, 
-		$colonia = null, 
-		$colonia_2 = null, 
 		$comision_ventas = 0, 
 		$correo_electronico = null, 
 		$cuenta_bancaria = null, 
@@ -371,9 +312,8 @@
 		$dias_de_embarque = null, 
 		$dia_de_pago = null, 
 		$dia_de_revision = null, 
+		$direcciones = null, 
 		$facturar_a_terceros = null, 
-		$id_ciudad = null, 
-		$id_ciudad_2 = null, 
 		$id_clasificacion_cliente = null, 
 		$id_clasificacion_proveedor = null, 
 		$id_moneda = null, 
@@ -384,24 +324,14 @@
 		$intereses_moratorios = null, 
 		$limite_credito = 0, 
 		$mensajeria = null, 
-		$numero_exterior = null, 
-		$numero_exterior_2 = null, 
-		$numero_interior = null, 
-		$numero_interior_2 = null, 
 		$pagina_web = null, 
 		$representante_legal = null, 
 		$retenciones = null, 
 		$rfc = null, 
 		$salario = null, 
 		$saldo_del_ejercicio = null, 
-		$telefono1 = null, 
-		$telefono1_2 = null, 
-		$telefono2 = null, 
-		$telefono2_2 = null, 
 		$telefono_personal1 = null, 
 		$telefono_personal2 = null, 
-		$texto_extra = null, 
-		$texto_extra_2 = null, 
 		$tiempo_entrega = null, 
 		$ventas_a_credito = null
 	);  

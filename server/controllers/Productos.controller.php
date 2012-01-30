@@ -1845,7 +1845,12 @@ Ejemplo: 1 kg = 2.204 lb
 	
 	
 	
-	public static function Buscar($query){
+	public static function Buscar
+        (
+                $query, 
+		$id_sucursal = null
+        )
+        {
 		
 		Logger::debug("buscando" . $query);
 		
