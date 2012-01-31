@@ -609,79 +609,79 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
             Logger::log("Creando nueva clasificacion de clientes");
             
             //Se validan los parametros recibidos
-            $validar = self::validarParametrosClasificacionCliente(null,$clave_interna,$nombre,$descripcion,$id_tarifa_compra,$id_tarifa_venta);
-            if(is_string($validar))
-            {
-                Logger::error($validar);
-                throw new Exception($validar,901);
-            }
-            
-            //Si no se recibe tarifa de compra, se toma la default
-            if(is_null($id_tarifa_compra))
-            {
-                $id_tarifa_compra = 2;
-            }
-            
-            //Si no se recibe tarifa de venta, se toma la default
-            if(is_null($id_tarifa_venta))
-            {
-                $id_tarifa_venta = 1;
-            }
+//            $validar = self::validarParametrosClasificacionCliente(null,$clave_interna,$nombre,$descripcion);
+//            if(is_string($validar))
+//            {
+//                Logger::error($validar);
+//                throw new Exception($validar,901);
+//            }
+//            
+//            //Si no se recibe tarifa de compra, se toma la default
+//            if(is_null($id_tarifa_compra))
+//            {
+//                $id_tarifa_compra = 2;
+//            }
+//            
+//            //Si no se recibe tarifa de venta, se toma la default
+//            if(is_null($id_tarifa_venta))
+//            {
+//                $id_tarifa_venta = 1;
+//            }
             
             $clasificacion_cliente = new ClasificacionCliente( array( 
                                             "clave_interna"     => $clave_interna,
                                             "nombre"            => trim($nombre),
                                             "descripcion"       => $descripcion,
-                                            "id_tarifa_compra"  => $id_tarifa_compra,
-                                            "id_tarifa_venta"   => $id_tarifa_venta
+                                            "id_tarifa_compra"  => 2, //tarifa por default de compra
+                                            "id_tarifa_venta"   => 1  //tarifa por default de venta
                                                                     )
                                                              );
             DAO::transBegin();
             try
             {
                 ClasificacionClienteDAO::save($clasificacion_cliente);
-                if(!is_null($impuestos))
-                {
-                    
-                    $impuestos = object_to_array($impuestos);
-                    
-                    if(!is_array($impuestos))
-                    {
-                        throw new Exception("Los impuestos son invalidos",901);
-                    }
-                    
-                    $impuesto_clasificacion_cliente = new ImpuestoClasificacionCliente(
-                            array( "id_clasificacion_cliente" => $clasificacion_cliente->getIdClasificacionCliente() ));
-                    foreach ($impuestos as $impuesto)
-                    {
-                        if(is_null(ImpuestoDAO::getByPK($impuesto)))
-                                throw new Exception ("El impuesto ".$impuesto." no existe",901);
-                        
-                        $impuesto_clasificacion_cliente->setIdImpuesto($impuesto);
-                        ImpuestoClasificacionClienteDAO::save($impuesto_clasificacion_cliente);
-                    }
-                }/* Fin if de impuestos */
-                if(!is_null($retenciones))
-                {
-                    
-                    $retenciones = object_to_array($retenciones);
-                    
-                    if(!is_array($retenciones))
-                    {
-                        throw new Exception("Las retenciones son invalidas",901);
-                    }
-                    
-                    $retencion_clasificacion_cliente = new RetencionClasificacionCliente(
-                            array ( "id_clasificacion_cliente" => $clasificacion_cliente->getIdClasificacionCliente() ) );
-                    foreach( $retenciones as $retencion )
-                    {
-                        if(is_null(RetencionDAO::getByPK($retencion)))
-                                throw new Exception("La retencion ".$retencion." no existe",901);
-                        
-                        $retencion_clasificacion_cliente->setIdRetencion($retencion);
-                        RetencionClasificacionClienteDAO::save($retencion_clasificacion_cliente);
-                    }
-                }/* Fin if de retenciones */
+//                if(!is_null($impuestos))
+//                {
+//                    
+//                    $impuestos = object_to_array($impuestos);
+//                    
+//                    if(!is_array($impuestos))
+//                    {
+//                        throw new Exception("Los impuestos son invalidos",901);
+//                    }
+//                    
+//                    $impuesto_clasificacion_cliente = new ImpuestoClasificacionCliente(
+//                            array( "id_clasificacion_cliente" => $clasificacion_cliente->getIdClasificacionCliente() ));
+//                    foreach ($impuestos as $impuesto)
+//                    {
+//                        if(is_null(ImpuestoDAO::getByPK($impuesto)))
+//                                throw new Exception ("El impuesto ".$impuesto." no existe",901);
+//                        
+//                        $impuesto_clasificacion_cliente->setIdImpuesto($impuesto);
+//                        ImpuestoClasificacionClienteDAO::save($impuesto_clasificacion_cliente);
+//                    }
+//                }/* Fin if de impuestos */
+//                if(!is_null($retenciones))
+//                {
+//                    
+//                    $retenciones = object_to_array($retenciones);
+//                    
+//                    if(!is_array($retenciones))
+//                    {
+//                        throw new Exception("Las retenciones son invalidas",901);
+//                    }
+//                    
+//                    $retencion_clasificacion_cliente = new RetencionClasificacionCliente(
+//                            array ( "id_clasificacion_cliente" => $clasificacion_cliente->getIdClasificacionCliente() ) );
+//                    foreach( $retenciones as $retencion )
+//                    {
+//                        if(is_null(RetencionDAO::getByPK($retencion)))
+//                                throw new Exception("La retencion ".$retencion." no existe",901);
+//                        
+//                        $retencion_clasificacion_cliente->setIdRetencion($retencion);
+//                        RetencionClasificacionClienteDAO::save($retencion_clasificacion_cliente);
+//                    }
+//                }/* Fin if de retenciones */
             }
             catch(Exception $e)
             {
