@@ -681,17 +681,19 @@ require_once("interfaces/Proveedores.interface.php");
 	{  
             Logger::log("Creando nuevo proveedor");
             
+            //Se obtiene la informacion actual
+            $actual = SesionController::Actual();
+            
             //Se utiliza el metodo de nuevo usuario, este se encarga de las validaciones.
             //El rol numero 6 es tomado como el rol de proveedor
             
             try
             {
                 $proveedor = PersonalYAgentesController::NuevoUsuario($codigo_proveedor, 6, $nombre, $password,
-                    $calle,null,$codigo_postal,null,$colonia,null,null,$email,$cuenta_bancaria,
-                    null,null,null,null,$dias_de_credito,$dias_embarque,null,null,null,$id_ciudad,
-                    null,null,$id_tipo_proveedor,$id_moneda,self::getSucursal(),$impuestos,null,$limite_credito,null,$numero_exterior,null,$numero_interior,
-                    null,$direccion_web,$representante_legal,$retenciones,$rfc,null,null,$telefono1,null,$telefono2,null,$telefono_personal1,$telefono_personal2,
-                    $texto_extra,null,$tiempo_entrega);
+                    0,$email,$cuenta_bancaria,null,null,null,null,$dias_de_credito,$dias_embarque,null,null,$direcciones,0,
+                    null,$id_tipo_proveedor,$id_moneda,$actual["id_sucursal"],$id_tarifa_compra,$id_tarifa_venta,$impuestos,null,
+                    $limite_credito,null,$direccion_web,$representante_legal,$retenciones,$rfc,null,null,$telefono_personal1,$telefono_personal2,
+                    $tiempo_entrega);
             }
             catch(Exception $e)
             {
