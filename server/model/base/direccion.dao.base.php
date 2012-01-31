@@ -148,6 +148,16 @@ abstract class DireccionDAOBase extends DAO
 			array_push( $val, $direccion->getIdDireccion() );
 		}
 
+		if( ! is_null( $direccion->getIdUsuario() ) ){
+			$sql .= " id_usuario = ? AND";
+			array_push( $val, $direccion->getIdUsuario() );
+		}
+
+		if( ! is_null( $direccion->getTipo() ) ){
+			$sql .= " tipo = ? AND";
+			array_push( $val, $direccion->getTipo() );
+		}
+
 		if( ! is_null( $direccion->getCalle() ) ){
 			$sql .= " calle = ? AND";
 			array_push( $val, $direccion->getCalle() );
@@ -234,8 +244,10 @@ abstract class DireccionDAOBase extends DAO
 	  **/
 	private static final function update( $direccion )
 	{
-		$sql = "UPDATE direccion SET  calle = ?, numero_exterior = ?, numero_interior = ?, referencia = ?, colonia = ?, id_ciudad = ?, codigo_postal = ?, telefono = ?, telefono2 = ?, ultima_modificacion = ?, id_usuario_ultima_modificacion = ? WHERE  id_direccion = ?;";
+		$sql = "UPDATE direccion SET  id_usuario = ?, tipo = ?, calle = ?, numero_exterior = ?, numero_interior = ?, referencia = ?, colonia = ?, id_ciudad = ?, codigo_postal = ?, telefono = ?, telefono2 = ?, ultima_modificacion = ?, id_usuario_ultima_modificacion = ? WHERE  id_direccion = ?;";
 		$params = array( 
+			$direccion->getIdUsuario(), 
+			$direccion->getTipo(), 
 			$direccion->getCalle(), 
 			$direccion->getNumeroExterior(), 
 			$direccion->getNumeroInterior(), 
@@ -270,9 +282,11 @@ abstract class DireccionDAOBase extends DAO
 	  **/
 	private static final function create( &$direccion )
 	{
-		$sql = "INSERT INTO direccion ( id_direccion, calle, numero_exterior, numero_interior, referencia, colonia, id_ciudad, codigo_postal, telefono, telefono2, ultima_modificacion, id_usuario_ultima_modificacion ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO direccion ( id_direccion, id_usuario, tipo, calle, numero_exterior, numero_interior, referencia, colonia, id_ciudad, codigo_postal, telefono, telefono2, ultima_modificacion, id_usuario_ultima_modificacion ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$direccion->getIdDireccion(), 
+			$direccion->getIdUsuario(), 
+			$direccion->getTipo(), 
 			$direccion->getCalle(), 
 			$direccion->getNumeroExterior(), 
 			$direccion->getNumeroInterior(), 
@@ -338,6 +352,28 @@ abstract class DireccionDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_direccion = ? AND"; 
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( ( !is_null (($a = $direccionA->getIdUsuario()) ) ) & ( ! is_null ( ($b = $direccionB->getIdUsuario()) ) ) ){
+				$sql .= " id_usuario >= ? AND id_usuario <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " id_usuario = ? AND"; 
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( ( !is_null (($a = $direccionA->getTipo()) ) ) & ( ! is_null ( ($b = $direccionB->getTipo()) ) ) ){
+				$sql .= " tipo >= ? AND tipo <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " tipo = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

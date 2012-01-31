@@ -242,5 +242,8 @@ Se podr?an combinar y as? tener un solo m?todo para una compra venta preferencia
 		$siguiente_compra, 
 		$id_precio = null, 
 		$precio = null
-	);  
+	)
+        {
+            
+        }
   }

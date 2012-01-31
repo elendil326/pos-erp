@@ -621,23 +621,33 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	{  
             Logger::log("Creando nuevo usuario");
 
-            $validar = self::validarParametrosUsuario( null, null, $id_sucursal, $id_rol,
-                    $id_clasificacion_cliente, $id_clasificacion_proveedor, $id_moneda,
-                    null, $nombre, $rfc, $curp, $comision_ventas, $telefono_personal1,
-                    $telefono_personal2, $limite_credito, $descuento, $password, $salario,
-                    $correo_electronico,$pagina_web,$saldo_del_ejercicio,$ventas_a_credito,
-                    $representante_legal,$facturar_a_terceros,$dia_de_pago,$mensajeria,
-                    $intereses_moratorios,$denominacion_comercial,$dias_de_credito,
-                    $cuenta_mensajeria,$dia_de_revision,$codigo_usuario,$dias_de_embarque,$tiempo_entrega,$cuenta_bancaria,
-                    $id_tarifa_compra,$id_tarifa_venta);
-
-            //se verifica que la validacion haya sido correcta
-            if(is_string($validar))
+//            $validar = self::validarParametrosUsuario( null, null, $id_sucursal, $id_rol,
+//                    $id_clasificacion_cliente, $id_clasificacion_proveedor, $id_moneda,
+//                    null, $nombre, $rfc, $curp, $comision_ventas, $telefono_personal1,
+//                    $telefono_personal2, $limite_credito, $descuento, $password, $salario,
+//                    $correo_electronico,$pagina_web,$saldo_del_ejercicio,$ventas_a_credito,
+//                    $representante_legal,$facturar_a_terceros,$dia_de_pago,$mensajeria,
+//                    $intereses_moratorios,$denominacion_comercial,$dias_de_credito,
+//                    $cuenta_mensajeria,$dia_de_revision,$codigo_usuario,$dias_de_embarque,$tiempo_entrega,$cuenta_bancaria,
+//                    $id_tarifa_compra,$id_tarifa_venta);
+//
+//            //se verifica que la validacion haya sido correcta
+//            if(is_string($validar))
+//            {
+//                Logger::error("Imposible crear a nuevo usuario: " . $validar);
+//                throw new Exception($validar, 901);
+//            }
+            
+            //Se verifica que las direcciones recibidas sean un arreglo
+            if(!is_null($direcciones))
             {
-                Logger::error("Imposible crear a nuevo usuario: " . $validar);
-                throw new Exception($validar, 901);
+                if(!is_array($direcciones))
+                {
+                    Logger::error("Las direcciones recibidas no son un arreglo");
+                    throw new Exception("Las direcciones recibidas no son un arreglo",901);
+                }
             }
-
+            
             //se verifica que el codigo de usuario no sea repetido
             $usuarios=UsuarioDAO::search(new Usuario(array( "codigo_usuario" => $codigo_usuario )));
             foreach($usuarios as $usuario)
@@ -815,35 +825,43 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                                 "tarifa_venta_obtenida"     => $origen_venta
                             )
                         );
-
-            //se inicializan los ids de las direcciones
-            $id_direccion1=-1;
-            $id_direccion2=-1;
+            
+            
+            
             DAO::transBegin();
             try
             {
-                //si se paso un parametro obligatorio de la direccion, se intenta crear la misma
-                if(!is_null($calle))
-                {
-                    $id_direccion1 = DireccionController::NuevaDireccion($calle, $numero_exterior, $colonia,
-                            $id_ciudad, $codigo_postal, $numero_interior, $texto_extra, $telefono1, $telefono2);
-                }
-
-                //si se paso un parametro obligatorio de la direccion alterna, se intenta crear la misma
-                if(!is_null($calle_2))
-                {
-                    $id_direccion2 = DireccionController::NuevaDireccion($calle_2, $numero_exterior_2, $colonia_2,
-                            $id_ciudad_2, $codigo_postal_2, $numero_interior_2, $texto_extra_2, $telefono1_2, $telefono2_2);
-                }
-
-                //si se crearon las direcciones se asignan al usuario
-                if($id_direccion1>0)
-                    $usuario->setIdDireccion($id_direccion1);
-                if($id_direccion2>0)
-                    $usuario->setIdDireccionAlterna($id_direccion2);
 
                 //Se guarda el usuario creado.
                 UsuarioDAO::save($usuario);
+                
+                //Se crean las direcciones recibidas
+                if(!is_null($direcciones))
+                {
+                    $direccion = null;
+                    foreach($direcciones as $d)
+                    {
+                        //Se valida que la direccion tenga los parametros necesarios
+                        if
+                        (
+                                !array_key_exists("calle", $d)              ||
+                                !array_key_exists("numero_exterior", $d)    ||
+                                !array_key_exists("colonia", $d)            ||
+                                !array_key_exists("id_ciudad", $d)          ||
+                                !array_key_exists("codigo_postal", $d)      ||
+                                !array_key_exists("numero_interior", $d)    ||
+                                !array_key_exists("referencia", $d)         ||
+                                !array_key_exists("telefono1", $d)          ||
+                                !array_key_exists("telefono2", $d)
+                        )
+                        {
+                            throw new Exception("La direccion recibida no cuenta con algun parametro necesario",901);
+                        }
+                        DireccionController::NuevaDireccion($d["calle"], $d["numero_exterior"],
+                                $d["colonia"], $d["id_ciudad"], $d["codigo_postal"], $d["numero_interior"],
+                                $d["referencia"], $d["telefono1"], $d["telefono2"],$usuario->getIdUsuario());
+                    }
+                }
 
                 //si se pasaron impuestos, se validan y se agregan a la tabla impuesto_usuario
                 if(!is_null($impuestos))

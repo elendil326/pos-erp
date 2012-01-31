@@ -82,7 +82,7 @@
 		$cuerpo, 
 		$destinatario, 
 		$titulo, 
-		$emisor = no-reply@caffeina.mx
+		$emisor = "no-reply@caffeina.mx"
 	);  
   
   

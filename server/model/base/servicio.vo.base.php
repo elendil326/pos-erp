@@ -103,7 +103,7 @@ class Servicio extends VO
 	  * 
 	  * nombre del servicio<br>
 	  * @access public
-	  * @var varchar(50)
+	  * @var varchar(150)
 	  */
 	public $nombre_servicio;
 
@@ -229,7 +229,7 @@ class Servicio extends VO
 	  * getNombreServicio
 	  * 
 	  * Get the <i>nombre_servicio</i> property for this object. Donde <i>nombre_servicio</i> es nombre del servicio
-	  * @return varchar(50)
+	  * @return varchar(150)
 	  */
 	final public function getNombreServicio()
 	{
@@ -240,9 +240,9 @@ class Servicio extends VO
 	  * setNombreServicio( $nombre_servicio )
 	  * 
 	  * Set the <i>nombre_servicio</i> property for this object. Donde <i>nombre_servicio</i> es nombre del servicio.
-	  * Una validacion basica se hara aqui para comprobar que <i>nombre_servicio</i> es de tipo <i>varchar(50)</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>nombre_servicio</i> es de tipo <i>varchar(150)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param varchar(50)
+	  * @param varchar(150)
 	  */
 	final public function setNombreServicio( $nombre_servicio )
 	{

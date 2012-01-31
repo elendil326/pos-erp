@@ -155,7 +155,7 @@ class Producto extends VO
 	  * 
 	  * Nombre del producto<br>
 	  * @access public
-	  * @var varchar(30)
+	  * @var varchar(150)
 	  */
 	public $nombre_producto;
 
@@ -377,7 +377,7 @@ class Producto extends VO
 	  * getNombreProducto
 	  * 
 	  * Get the <i>nombre_producto</i> property for this object. Donde <i>nombre_producto</i> es Nombre del producto
-	  * @return varchar(30)
+	  * @return varchar(150)
 	  */
 	final public function getNombreProducto()
 	{
@@ -388,9 +388,9 @@ class Producto extends VO
 	  * setNombreProducto( $nombre_producto )
 	  * 
 	  * Set the <i>nombre_producto</i> property for this object. Donde <i>nombre_producto</i> es Nombre del producto.
-	  * Una validacion basica se hara aqui para comprobar que <i>nombre_producto</i> es de tipo <i>varchar(30)</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>nombre_producto</i> es de tipo <i>varchar(150)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param varchar(30)
+	  * @param varchar(150)
 	  */
 	final public function setNombreProducto( $nombre_producto )
 	{

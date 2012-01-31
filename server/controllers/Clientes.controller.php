@@ -338,17 +338,19 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
 	{
             Logger::log("Creando nuevo cliente");
             
+            //Se toma la sucursal actual para asignarsela al cliente
+            $actual = SesionController::Actual();
+            
             //se crea la cliente utilizando el metodo Nuevo usuario, este se encarga de la validacion
             //y se toma como rol de cliente el 5
+            
             try 
             {
                 $cliente = PersonalYAgentesController::NuevoUsuario(null,5,$razon_social,$password,
-                        $calle,null,$codigo_postal,null,$colonia,null,null,$email,null,$cuenta_de_mensajeria,
-                        $curp,$denominacion_comercial,$descuento,null,null,null,null,0,$id_ciudad,null,
-                        $clasificacion_cliente,null,$moneda_del_cliente,self::getSucursal(),$id_tarifa_compra,$id_tarifa_venta,
-                        $impuestos,null,$limite_credito,$mensajeria,$numero_exterior,null,$numero_interior,null,$direccion_web,
-                        $representante_legal,$retenciones,$rfc,null,null,$telefono1,null,$telefono2,null,
-                        $telefono_personal1,$telefono_personal2,$texto_extra);
+                        null,$email,null,$cuenta_de_mensajeria,$curp,$denominacion_comercial,null,
+                        null,null,null,null,$direcciones,0,$clasificacion_cliente,null,$id_moneda,
+                        $actual["id_sucursal"],$id_tarifa_compra,$id_tarifa_venta,null,null,$limite_credito,null,$direccion_web,
+                        $representante_legal,null,$rfc,null,null,$telefono);
             }
             catch(Exception $e)
             {

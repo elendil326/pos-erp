@@ -180,5 +180,26 @@ require_once("interfaces/POS.interface.php");
 							(29, 11, 'San Felipe'),
 							(30, 11, 'San Francisco del Rincon');");
 	}
+        
+        
+        /**
+ 	 *
+ 	 *Este metodo se utiliza para poder enviar un correo electronico a un tercero. 
+ 	 *
+ 	 * @param cuerpo string El cuerpo del correo electronico.
+ 	 * @param destinatario string El correo electronico a enviar.
+ 	 * @param titulo string El titulo del correo electronico. 
+ 	 * @param emisor string El correo electronico de donde se enviara este correo si es que esta configurado para esta instancia. De no enviarse se enviara un correo de la cuenta default de POS ERP.
+ 	 **/
+        public static function EnviarMail
+	(
+		$cuerpo, 
+		$destinatario, 
+		$titulo, 
+		$emisor = "no-reply@caffeina.mx"
+	)
+        {
+      
+        }
 	
   }

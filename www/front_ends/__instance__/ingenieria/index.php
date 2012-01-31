@@ -116,7 +116,7 @@
         try
         {
             
-            var_dump(ClientesController::Nuevo("clasificacion 3", "9832103123", "123", "razon"));
+            var_dump(ClientesController::Nuevo("Andres"));
             
 //            $tarifas = TarifaDAO::obtenerTarifasActuales("compra");
 //            var_dump($tarifas[0]["reglas"]);

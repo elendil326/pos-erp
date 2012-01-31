@@ -25,12 +25,6 @@ class Usuario extends VO
 			if( isset($data['id_usuario']) ){
 				$this->id_usuario = $data['id_usuario'];
 			}
-			if( isset($data['id_direccion']) ){
-				$this->id_direccion = $data['id_direccion'];
-			}
-			if( isset($data['id_direccion_alterna']) ){
-				$this->id_direccion_alterna = $data['id_direccion_alterna'];
-			}
 			if( isset($data['id_sucursal']) ){
 				$this->id_sucursal = $data['id_sucursal'];
 			}
@@ -171,8 +165,6 @@ class Usuario extends VO
 	{ 
 		$vec = array( 
 			"id_usuario" => $this->id_usuario,
-			"id_direccion" => $this->id_direccion,
-			"id_direccion_alterna" => $this->id_direccion_alterna,
 			"id_sucursal" => $this->id_sucursal,
 			"id_rol" => $this->id_rol,
 			"id_clasificacion_cliente" => $this->id_clasificacion_cliente,
@@ -229,24 +221,6 @@ class Usuario extends VO
 	  * @var int(11)
 	  */
 	public $id_usuario;
-
-	/**
-	  * id_direccion
-	  * 
-	  * Id de la direccion del usuario<br>
-	  * @access public
-	  * @var int(11)
-	  */
-	public $id_direccion;
-
-	/**
-	  * id_direccion_alterna
-	  * 
-	  * Id de la direccion alterna del usuario<br>
-	  * @access public
-	  * @var int(11)
-	  */
-	public $id_direccion_alterna;
 
 	/**
 	  * id_sucursal
@@ -467,7 +441,7 @@ class Usuario extends VO
 	/**
 	  * ventas_a_credito
 	  * 
-	  * Ventas a credito del cliente<br>
+	  * Numero de ventas a credito del cliente<br>
 	  * @access public
 	  * @var int(11)
 	  */
@@ -652,54 +626,6 @@ class Usuario extends VO
 	final public function setIdUsuario( $id_usuario )
 	{
 		$this->id_usuario = $id_usuario;
-	}
-
-	/**
-	  * getIdDireccion
-	  * 
-	  * Get the <i>id_direccion</i> property for this object. Donde <i>id_direccion</i> es Id de la direccion del usuario
-	  * @return int(11)
-	  */
-	final public function getIdDireccion()
-	{
-		return $this->id_direccion;
-	}
-
-	/**
-	  * setIdDireccion( $id_direccion )
-	  * 
-	  * Set the <i>id_direccion</i> property for this object. Donde <i>id_direccion</i> es Id de la direccion del usuario.
-	  * Una validacion basica se hara aqui para comprobar que <i>id_direccion</i> es de tipo <i>int(11)</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param int(11)
-	  */
-	final public function setIdDireccion( $id_direccion )
-	{
-		$this->id_direccion = $id_direccion;
-	}
-
-	/**
-	  * getIdDireccionAlterna
-	  * 
-	  * Get the <i>id_direccion_alterna</i> property for this object. Donde <i>id_direccion_alterna</i> es Id de la direccion alterna del usuario
-	  * @return int(11)
-	  */
-	final public function getIdDireccionAlterna()
-	{
-		return $this->id_direccion_alterna;
-	}
-
-	/**
-	  * setIdDireccionAlterna( $id_direccion_alterna )
-	  * 
-	  * Set the <i>id_direccion_alterna</i> property for this object. Donde <i>id_direccion_alterna</i> es Id de la direccion alterna del usuario.
-	  * Una validacion basica se hara aqui para comprobar que <i>id_direccion_alterna</i> es de tipo <i>int(11)</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param int(11)
-	  */
-	final public function setIdDireccionAlterna( $id_direccion_alterna )
-	{
-		$this->id_direccion_alterna = $id_direccion_alterna;
 	}
 
 	/**
@@ -1281,7 +1207,7 @@ class Usuario extends VO
 	/**
 	  * getVentasACredito
 	  * 
-	  * Get the <i>ventas_a_credito</i> property for this object. Donde <i>ventas_a_credito</i> es Ventas a credito del cliente
+	  * Get the <i>ventas_a_credito</i> property for this object. Donde <i>ventas_a_credito</i> es Numero de ventas a credito del cliente
 	  * @return int(11)
 	  */
 	final public function getVentasACredito()
@@ -1292,7 +1218,7 @@ class Usuario extends VO
 	/**
 	  * setVentasACredito( $ventas_a_credito )
 	  * 
-	  * Set the <i>ventas_a_credito</i> property for this object. Donde <i>ventas_a_credito</i> es Ventas a credito del cliente.
+	  * Set the <i>ventas_a_credito</i> property for this object. Donde <i>ventas_a_credito</i> es Numero de ventas a credito del cliente.
 	  * Una validacion basica se hara aqui para comprobar que <i>ventas_a_credito</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param int(11)

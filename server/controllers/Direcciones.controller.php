@@ -127,7 +127,8 @@ class DireccionController{
                 $numero_interior=null,
                 $referencia=null,
                 $telefono=null,
-                $telefono2=null
+                $telefono2=null,
+                $id_user=null
         )
         {
             Logger::log("Creando nueva direccion");
@@ -154,6 +155,7 @@ class DireccionController{
             {
                 throw new Exception("El telefono ".$telefono." es igual al telefono alterno ".$telefono2);
             }
+            $direccion->setIdUsuario($id_user);
             $direccion->setCalle($calle);
             $direccion->setNumeroExterior($numero_exterior);
             $direccion->setColonia($colonia);

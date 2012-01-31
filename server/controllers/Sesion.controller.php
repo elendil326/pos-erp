@@ -10,6 +10,22 @@ class SesionController implements ISesion{
 
   
   	
+    
+        /**
+ 	 *
+ 	 *Regresa informacion sobre la sesion actual.
+ 	 *
+ 	 * @return id_caja int 
+ 	 * @return id_sucursal int El id_sucursal de la sucursal donde este usuario inico sesion en caso de haberlo hecho desde un mostraodr. Un gerente no tendra id_sucursal asociada a el dado que puede iniciar sesion desde cualquier lugar.
+ 	 * @return id_usuario int 
+ 	 **/
+        public static function Actual
+	(
+	)
+        {
+            return array( "id_caja" => 1, "id_sucursal" => 1, "id_usuario" => 1);
+        }
+    
 	
 
 	/**
@@ -17,7 +33,7 @@ class SesionController implements ISesion{
  	 *Regresa un url de redireccion segun el tipo de usuario.
  	 *
  	 * @param auth_token string El token de autorizacion generado al iniciar la sesion
- 	 * @return forward_to string La url de continuación de acuerdo al id que cerró sesión.
+ 	 * @return forward_to string La url de continuaciï¿½n de acuerdo al id que cerrï¿½ sesiï¿½n.
  	 **/
 	public static function Cerrar
 	(
@@ -48,12 +64,12 @@ class SesionController implements ISesion{
  	 * Si el usuario que esta intentando iniciar sesion, esta descativado...
  	 * 403 Authorization Required supongo
  	 *
- 	 * @param password string La contraseña del usuario.
- 	 * @param usuario string El id de usuario a intentar iniciar sesión.
- 	 * @param request_token bool Si se envía, y es verdadero, el seguimiento de esta sesión se hará mediante un token, de lo contrario se hará mediante cookies.
+ 	 * @param password string La contraseï¿½a del usuario.
+ 	 * @param usuario string El id de usuario a intentar iniciar sesiï¿½n.
+ 	 * @param request_token bool Si se envï¿½a, y es verdadero, el seguimiento de esta sesiï¿½n se harï¿½ mediante un token, de lo contrario se harï¿½ mediante cookies.
  	 * @return usuario_grupo int El grupo al que este usuario pertenece.
  	 * @return siguiente_url string La url a donde se debe de redirigir.
- 	 * @return login_succesful	 bool Si la validación del usuario es correcta.
+ 	 * @return login_succesful	 bool Si la validaciï¿½n del usuario es correcta.
  	 * @return auth_token string El token si es que fue solicitado.
  	 **/
 	public static function Iniciar
@@ -133,7 +149,7 @@ class SesionController implements ISesion{
  	 *Obtener las sesiones activas.
  	 *
  	 * @param id_grupo int Obtener la lista de sesiones activas para un grupo de usuarios especifico.
- 	 * @return en_linea json Arreglo de objetos que contendrán la información de las sesiones activas
+ 	 * @return en_linea json Arreglo de objetos que contendrï¿½n la informaciï¿½n de las sesiones activas
  	 **/
 	public static function Lista
 	(

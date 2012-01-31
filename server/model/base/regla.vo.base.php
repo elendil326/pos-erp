@@ -195,7 +195,7 @@ class Regla extends VO
 	  * 
 	  * Cantidad minima de objeto necesarios apra aplicar esta regla<br>
 	  * @access public
-	  * @var int(11)
+	  * @var float
 	  */
 	public $cantidad_minima;
 
@@ -486,7 +486,7 @@ class Regla extends VO
 	  * getCantidadMinima
 	  * 
 	  * Get the <i>cantidad_minima</i> property for this object. Donde <i>cantidad_minima</i> es Cantidad minima de objeto necesarios apra aplicar esta regla
-	  * @return int(11)
+	  * @return float
 	  */
 	final public function getCantidadMinima()
 	{
@@ -497,9 +497,9 @@ class Regla extends VO
 	  * setCantidadMinima( $cantidad_minima )
 	  * 
 	  * Set the <i>cantidad_minima</i> property for this object. Donde <i>cantidad_minima</i> es Cantidad minima de objeto necesarios apra aplicar esta regla.
-	  * Una validacion basica se hara aqui para comprobar que <i>cantidad_minima</i> es de tipo <i>int(11)</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>cantidad_minima</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param int(11)
+	  * @param float
 	  */
 	final public function setCantidadMinima( $cantidad_minima )
 	{
