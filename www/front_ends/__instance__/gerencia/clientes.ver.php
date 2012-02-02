@@ -14,9 +14,6 @@
 		// 
 		$page->requireParam(  "cid", "GET", "Este cliente no existe." );
 		$este_usuario = UsuarioDAO::getByPK( $_GET["cid"] );
-                $esta_direccion = DireccionDAO::getByPK( $este_usuario->getIdDireccion() );
-                if(is_null($esta_direccion))
-                    $esta_direccion = new Direccion();
 		
 		
 		//
@@ -44,13 +41,12 @@
 		$form->setEditable(false);
                 
 		$form->hideField( array( 
-				"id_usuario",
-                                "id_direccion"
+				"id_usuario"
 			 ));
                 
                 
                 
-                $form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll() , $esta_direccion->getIdCiudad());
+                
                 $form->createComboBoxJoin( "id_rol", "nombre", RolDAO::getAll() , $este_usuario->getIdRol());
         
                 $form->createComboBoxJoin( "id_moneda", "nombre", MonedaDAO::getAll() , $este_usuario->getIdMoneda());

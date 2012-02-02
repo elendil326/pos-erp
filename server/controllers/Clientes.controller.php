@@ -344,6 +344,11 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
             //Se toma la sucursal actual para asignarsela al cliente
             $actual = SesionController::Actual();
             
+            if(is_null($clasificacion_cliente))
+            {
+                $clasificacion_cliente = 1; //clasificacion de cliente por default
+            }
+            
             //se crea la cliente utilizando el metodo Nuevo usuario, este se encarga de la validacion
             //y se toma como rol de cliente el 5
             
