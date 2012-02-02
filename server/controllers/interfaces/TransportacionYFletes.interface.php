@@ -145,7 +145,7 @@
   static function EditarMarca
 	(
 		$id_marca_carro, 
-		$activo = "true", 
+		$activo =  true , 
 		$nombre_marca = null
 	);  
   
@@ -181,7 +181,7 @@
 	(
 		$id_modelo_carro, 
 		$nombre_modelo_carro, 
-		$activo = "true"
+		$activo =  true 
 	);  
   
   
@@ -198,7 +198,7 @@
   static function NuevoModelo
 	(
 		$nombre_modelo, 
-		$activo = "true"
+		$activo =  true 
 	);  
   
   
@@ -269,7 +269,7 @@
   static function EditarTipo
 	(
 		$id_tipo_carro, 
-		$activo = "true", 
+		$activo =  true , 
 		$nombre_tipo_carro = null
 	);  
   
@@ -287,7 +287,7 @@
   static function NuevoTipo
 	(
 		$nombre_tipo, 
-		$activo = "true"
+		$activo =  true 
 	);  
   
   

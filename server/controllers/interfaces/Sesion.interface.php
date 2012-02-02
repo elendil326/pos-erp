@@ -58,7 +58,7 @@ Si request_token se envia verdadero no se asociara una cookie a esta peticion, s
 	(
 		$password, 
 		$usuario, 
-		$request_token = "true"
+		$request_token =  true 
 	);  
   
   

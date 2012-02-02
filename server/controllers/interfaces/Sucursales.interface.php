@@ -422,7 +422,7 @@ Creo que este metodo tiene que estar bajo sucursal.
 	(
 		$token, 
 		$basculas = null, 
-		$control_billetes = "0", 
+		$control_billetes =  0 , 
 		$descripcion = null, 
 		$id_sucursal = null, 
 		$impresoras = null

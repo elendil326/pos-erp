@@ -131,7 +131,7 @@
   static function Editar
 	(
 		$id_proveedor, 
-		$activo = "1", 
+		$activo =  1 , 
 		$codigo_proveedor = null, 
 		$cuenta_bancaria = null, 
 		$dias_de_credito = null, 
@@ -237,7 +237,7 @@
 		$activo = null, 
 		$cuenta_bancaria = null, 
 		$dias_de_credito = null, 
-		$dias_embarque = "true", 
+		$dias_embarque =  true , 
 		$direcciones = null, 
 		$direccion_web = null, 
 		$email = null, 

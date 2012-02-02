@@ -95,7 +95,7 @@
  	 **/
   static function Lista
 	(
-		$activa = "false"
+		$activa =  false 
 	);  
   
   

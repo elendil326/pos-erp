@@ -12,28 +12,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
          *Se valida que un string tenga longitud en un rango de un maximo inclusivo y un minimo exclusvio.
          *Regresa true cuando es valido, y un string cuando no lo es.
          */
-    private static function validarString($string, $max_length, $nombre_variable,$min_length=0)
-	{
-		if(strlen($string)<=$min_length||strlen($string)>$max_length)
-		{
-		    return "La longitud de la variable ".$nombre_variable." proporcionada (".$string.") no esta en el rango de ".$min_length." - ".$max_length;
-		}
-		return true;
-    }
-
-
-        /*
-         * Se valida que un numero este en un rango de un maximo y un minimo inclusivos
-         * Regresa true cuando es valido, y un string cuando no lo es
-         */
-	private static function validarNumero($num, $max_length, $nombre_variable, $min_length=0)
-	{
-	    if($num<$min_length||$num>$max_length)
-	    {
-	        return "La variable ".$nombre_variable." proporcionada (".$num.") no esta en el rango de ".$min_length." - ".$max_length;
-	    }
-	    return true;
-	}
+    
 
 
         /*
@@ -62,23 +41,23 @@ require_once("interfaces/PersonalYAgentes.interface.php");
           //valida la descripcion
           if(!is_null($descripcion))
           {
-              $e=self::validarString($descripcion, 255, "descripcion");
-                    if(is_string($e))
-                        return $e;
+              $e=ValidacionesController::validarLongitudDeCadena($descripcion, 0, 255);
+              if(!$e)
+                return "El numero de caracteres de la descripcion (".$descripcion.") no esta entre 0 y 255";
           }
           //valida el nombre
           if(!is_null($nombre))
           {
-              $e=self::validarString($nombre, 30, "nombre");
-              if(is_string($e))
-                  return $e;
+              $e=ValidacionesController::validarLongitudDeCadena($nombre, 1, 30);
+              if(!$e)
+                  return "El numero de caracteres del nombre  (".$nombre.") no esta entre 1 y 30";
           }
           //valida e salario
           if(!is_null($salario))
           {
-              $e=self::validarNumero($salario, 1.8e200, "salario");
-                    if(is_string($e))
-                        return $e;
+              $e=ValidacionesController::validarNumero($salario, 0, 1.8e200);
+              if(!$e)
+                return "El salario (".$salario.") no esta entre 0 y 1.8e200";
           }
           
           if(!is_null($id_tarifa_compra))
@@ -213,102 +192,102 @@ require_once("interfaces/PersonalYAgentes.interface.php");
           //valida el nombre
           if(!is_null($nombre))
           {
-              $e=self::validarString($nombre, 100, "nombre");
-              if(is_string($e))
-                  return $e;
+              $e=ValidacionesController::validarLongitudDeCadena($nombre, 1, 100);
+              if(!$e)
+                  return "El numero de caracteres del nombre (".$nombre.") no esta entre 1 y 100";
           }
           //valida el rfc, el rfc solo puede estar compuesto por Letras mayusculas y numeros
           if(!is_null($rfc))
           {
-              $e=self::validarString($rfc, 30, "rfc");
-              if(is_string($e))
-                  return $e;
+              $e=ValidacionesController::validarLongitudDeCadena($rfc, 1, 30);
+              if(!$e)
+                  return "El numero de caracteres del rfc (".$rfc.") no esta entre 1 y 30";
               if(preg_match('/[^A-Z0-9]/' ,$rfc))
                   return "El rfc ".$rfc." contiene caracteres fuera del rango A-Z y 0-9";
           }
           //valida el curp, el curp solo puede tener letras mayusculas y numeros
           if(!is_null($curp))
           {
-              $e=self::validarString($curp, 30, "curp");
-              if(is_string($e))
-                  return $e;
+              $e=ValidacionesController::validarLongitudDeCadena($curp, 1, 30);
+              if(!$e)
+                  return "El numero de caracteres de la curp (".$curp.") no esta entre 1 y 30";
               if(preg_match('/[^A-Z0-9]/' ,$curp))
                   return "El curp ".$curp." contiene caracteres fuera del rango A-Z y 0-9";
           }
           //valida la comision por ventas
           if(!is_null($comision_ventas))
           {
-              $e=self::validarNumero($comision_ventas, 100, "comision de ventas");
-              if(is_string($e))
-                  return $e;
+              $e=ValidacionesController::validarNumero($comision_ventas, 0, 100);
+              if(!$e)
+                  return "La comision de ventas (".$comision_ventas.") no esta entre 0 y 100";
           }
           //valida el telefono. Los telefonos solo pueden tener numeros, guiones,parentesis,asteriscos y espacios en blanco
           if(!is_null($telefono_personal1))
           {
-              $e=self::validarString($telefono_personal1, 20, "Telefono personal");
-              if(is_string($e))
-                  return $e;
+              $e=ValidacionesController::validarLongitudDeCadena($telefono_personal1, 1, 20);
+              if(!$e)
+                  return "El numero de caracteres del telefono personal (".$telefono_personal1.") no esta entre 1 y 20";
               if(preg_match('/[^0-9\- \(\)\*]/',$telefono_personal1))
                   return "El telefono ".$telefono_personal1." tiene caracteres fuera del rango 0-9,-,(,),* o espacio vacío";
           }
           //valida el telefono. Los telefonos solo pueden tener numeros, guiones,parentesis,asteriscos y espacios en blanco
           if(!is_null($telefono_personal2))
           {
-              $e=self::validarString($telefono_personal2, 20, "Telefono personal alterno");
-              if(is_string($e))
-                  return $e;
+              $e=ValidacionesController::validarLongitudDeCadena($telefono_personal2, 1, 20);
+              if(!$e)
+                  return "El numero de caracteres del telefono personal alterno (".$telefono_personal2.") no esta entre 1 y 20";
               if(preg_match('/[^0-9\- \(\)\*]/',$telefono_personal2))
                   return "El telefono ".$telefono_personal2." tiene caracteres fuera del rango 0-9,-,(,),* o espacio vacío";
           }
           //valida el activo. Activo es una variable booleana.
           if(!is_null($activo))
           {
-              $e=self::validarNumero($activo, 1, "activo");
-              if(is_string($e))
-                  return $e;
+              $e=ValidacionesController::validarEntero($activo, 0, 1);
+              if(!$e)
+                  return "La variable activo (".$activo.") no esta entre 0 y 1";
           }
           //valida el limite de credito
           if(!is_null($limite_credito))
           {
-              $e=self::validarNumero($limite_credito, 1.8e200, "limite de credito");
-              if(is_string($e))
-                  return $e;
+              $e=ValidacionesController::validarNumero($limite_credito, 0, 1.8e200);
+              if(!$e)
+                  return "El limite de credito (".$limite_credito.") no esta entre 0 y 1.8e200";
           }
           //valida el descuento. El descuento es un porcentaje y no puede ser mayor a 100
           if(!is_null($descuento))
           {
-              $e=self::validarNumero($descuento, 100, "descuento");
-              if(is_string($e))
-                  return $e;
+              $e=ValidacionesController::validarNumero($descuento, 0, 100);
+              if(!$e)
+                  return "El descuento (".$descuento.") no esta entre 0 y 100";
           }
           //valida el password, El pasword tiene que tener una longitud mayor o igual a 4
           if(!is_null($password))
           {
-              $e=self::validarString($password, 1.8e200, "password",3);
-              if(is_string($e))
-                  return $e;
+              $e=ValidacionesController::validarLongitudDeCadena($password, 4, 32);
+              if(!$e)
+                  return "El numero de caracteres del password (".$password.") no esta entre 4 y 32";
           }
           //valida el salario
           if(!is_null($salario))
           {
-              $e=self::validarNumero($salario, 1.8e200, "salario");
-              if(is_string($e))
-                  return $e;
+              $e=ValidacionesController::validarNumero($salario, 0, 1.8e200);
+              if(!$e)
+                  return "El salario (".$salario.") no esta entre 0 y 1.8e200";
           }
           //valida el correo electronico segun las especificaciones de php
           if(!is_null($correo_electronico))
           {
-              $e=self::validarString($correo_electronico, 30, "correo electronico");
-              if(is_string($e))
-                  return $e;
+              $e=ValidacionesController::validarLongitudDeCadena($correo_electronico, 3, 30);
+              if(!$e)
+                  return "El numero de caracteres del correo electronico (".$correo_electronico.") no esta entre 3 y 30";
               if(!is_string(filter_var($correo_electronico, FILTER_VALIDATE_EMAIL)))
                       return "El correo electronico ".$correo_electronico." no es valido";
           }
           //valida que una pagina web tenga un formato valido.
           if(!is_null($pagina_web))
           {
-              $e=self::validarString($pagina_web, 30, "pagina web");
-              if(is_string($e))
+              $e=ValidacionesController::validarLongitudDeCadena($pagina_web, 2, 30);
+              if(!$e)
                   return $e;
               if(!preg_match('/^(http|https|ftp):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,6}'.'((:[0-9]{1,5})?\/.*)?$/i' ,$pagina_web)&&
                     !preg_match('/^[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,6}'.'((:[0-9]{1,5})?\/.*)?$/i' ,$pagina_web))
@@ -317,109 +296,109 @@ require_once("interfaces/PersonalYAgentes.interface.php");
           //valida el saldo del ejercicio
           if(!is_null($saldo_del_ejercicio))
           {
-              $e=self::validarNumero($saldo_del_ejercicio, 1.8e200, $saldo_del_ejercicio, -1.8e200);
-              if(is_string($e))
-                  return $e;
+              $e=ValidacionesController::validarNumero($saldo_del_ejercicio, -1.8e200, 1.8e200);
+              if(!$e)
+                  return "El saldo del ejercicio (".$saldo_del_ejercicio.") no esta entre -1.8e200 y 1.8e200";
           }
           //valida las ventas a credito
           if(!is_null($ventas_a_credito))
           {
-              $e=self::validarNumero($ventas_a_credito, PHP_INT_MAX, "ventas a credito");
-              if(is_string($e))
-                  return $e;
+              $e=ValidacionesController::validarEntero($ventas_a_credito, 0, PHP_INT_MAX);
+              if(!$e)
+                  return "Las venta a credito no estan entre 0 y ".PHP_INT_MAX;
           }
           //valida el represnetante legal
           if(!is_null($representante_legal))
           {
-              $e=self::validarString($representante_legal, 100, "representante legal");
-              if(is_string($e))
-                  return $e;
+              $e=ValidacionesController::validarLongitudDeCadena($representante_legal, 0, 100);
+              if(!$e)
+                  return "El numero de caracteres del representante legal (".$representante_legal.") no esta entre 0 y 100";
           }
           //valida la facturacion a terceros. Es un boleano
           if(!is_null($facturar_a_terceros))
           {
-              $e=self::validarNumero($facturar_a_terceros, 1, "facturar a terceros");
-              if(is_string($e))
-                  return $e;
+              $e=ValidacionesController::validarEntero($facturar_a_terceros, 0, 1);
+              if(!$e)
+                  return "La variable facturar a terceros (".$facturar_a_terceros.") no esta entre 0 y 1";
           }
           //valida los dias de pago
           if(!is_null($dia_de_pago))
           {
-              $e=self::validarString($dia_de_pago, strlen("YYYY-mm-dd HH:ii:ss"), "dia de pago");
-              if(is_string($e))
-                  return $e;
+              $e=ValidacionesController::validarLongitudDeCadena($dia_de_pago, 19, 19);
+              if(!$e)
+                  return "La fecha de dia de pago (".$dia_de_pago.") es invalida, el formato valido es YYYY-MM-dd HH:mm:ss";
           }
           //valida el boleano mensajeria
           if(!is_null($mensajeria))
           {
-              $e=self::validarNumero($mensajeria, 1, "mensajeria");
-              if(is_string($e))
-                  return $e;
+              $e=ValidacionesController::validarEntero($mensajeria, 0, 1);
+              if(!$e)
+                  return "La variable mensajeria (".$mensajeria.") no esta entre 0 y 1";
           }
           //valida los intereses moratorios
           if(!is_null($intereses_moratorios))
           {
-              $e=self::validarNumero($intereses_moratorios, 1.8e200, "intereses moratorios");
-              if(is_string($e))
-                  return $e;
+              $e=ValidacionesController::validarNumero($intereses_moratorios, 0, 1.8e200);
+              if(!$e)
+                  return "Los intereses moratorios (".$intereses_moratorios.") no estan entre 0 y 1.8e200";
           }
           //valida la denominacion comercial
           if(!is_null($denominacion_comercial))
           {
-              $e=self::validarString($denominacion_comercial, 100, "denominacion comercial");
-              if(is_string($e))
-                  return $e;
+              $e=ValidacionesController::validarLongitudDeCadena($denominacion_comercial, 0, 100);
+              if(!$e)
+                  return "El numero de caracteres de la denominacion comercial (".$denominacion_comercial.") no esta entre 0 y 100";
           }
           //valida los dias de credito
           if(!is_null($dias_de_credito))
           {
-              $e=self::validarNumero($dias_de_credito, PHP_INT_MAX, "dias de credito");
-              if(is_string($e))
-                  return $e;
+              $e=ValidacionesController::validarEntero($dias_de_credito, 0, PHP_INT_MAX);
+              if(!$e)
+                  return "Los dias de credito (".$dias_de_credito.") no estan en el rango de 0 a ".PHP_INT_MAX;
           }
           //valida la cuenta de mensajeria
           if(!is_null($cuenta_de_mensajeria))
           {
-              $e=self::validarString($cuenta_de_mensajeria, 50, "cuenta de mensajeria");
-              if(is_string($e))
-                  return $e;
+              $e=ValidacionesController::validarLongitudDeCadena($cuenta_de_mensajeria, 0, 50);
+              if(!$e)
+                  return "El numero de caracteres de la cuenta de mensajeria (".$cuenta_de_mensajeria.") no etsa entre 0 y 50";
           }
           //valida lso dias de revision
           if(!is_null($dia_de_revision))
           {
-              $e=self::validarString($dia_de_revision, strlen("YYYY-mm-dd HH:ii:ss"), "dia de revision");
-              if(is_string($e))
-                  return $e;
+              $e=ValidacionesController::validarLongitudDeCadena($dia_de_revision, 19, 19);
+              if(!$e)
+                  return "El dia de revision (".$dia_de_revision.") no tiene el formato apropiado, el formato valido es YYYY-MM-dd HH:mm:ss";
           }
           //valida el codigo de usuario
           if(!is_null($codigo_usuario))
           {
-              $e=self::validarString($codigo_usuario, 50, "codigo de usuario");
-              if(is_string($e))
-                  return $e;
+              $e=ValidacionesController::validarLongitudDeCadena($codigo_usuario, 1, 50);
+              if(!$e)
+                  return "El numero de caracteres del codigo de usuario no esta entre 1 y 50";
               if(preg_match('/[^a-zA-Z0-9]/', $codigo_usuario))
-                      return "El codigo de usuario ".$codigo_usuario." no tiene solo caracteres alfanumericos";
+                      return "El codigo de usuario (".$codigo_usuario.") no tiene solo caracteres alfanumericos";
           }
           //valida los dias de embarque
           if(!is_null($dias_de_embarque))
           {
-              $e=self::validarNumero($dias_de_embarque, PHP_INT_MAX, "dias de embarque");
-              if(is_string($e))
-                  return $e;
+              $e=ValidacionesController::validarEntero($dias_de_embarque, 0, PHP_INT_MAX);
+              if(!$e)
+                  return "Los dias de embarque (".$dias_de_embarque.") no esta entre 0 y ".PHP_INT_MAX;
           }
           //valida el tiempo de entrega
           if(!is_null($tiempo_entrega))
           {
-              $e=self::validarNumero($tiempo_entrega, PHP_INT_MAX, "tiempo de entrega");
-              if(is_string($e))
-                  return $e;
+              $e=ValidacionesController::validarEntero($tiempo_entrega, 0, PHP_INT_MAX);
+              if(!$e)
+                  return "El tiempo de entrega (".$tiempo_entrega.") no esta entre 0 y ".PHP_INT_MAX;
           }
           //valida la cuenta bancaria
           if(!is_null($cuenta_bancaria))
           {
-              $e=self::validarString($cuenta_bancaria, 50, "cuenta bancaria");
-              if(is_string($e))
-                  return $e;
+              $e=ValidacionesController::validarLongitudDeCadena($cuenta_bancaria, 0, 50);
+              if(!$e)
+                  return "El numero de caracteres de la cuenta bancaria (".$cuenta_bancaria.") no esta entre 0 y 50";
           }
           //valida que la tarifa de compra sea valida
           if(!is_null($id_tarifa_compra))
@@ -603,6 +582,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 		$id_sucursal = null, 
 		$id_tarifa_compra = null, 
 		$id_tarifa_venta = null, 
+		$id_usuario_padre = null, 
 		$impuestos = null, 
 		$intereses_moratorios = null, 
 		$limite_credito = 0, 
@@ -621,22 +601,22 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	{  
             Logger::log("Creando nuevo usuario");
 
-//            $validar = self::validarParametrosUsuario( null, null, $id_sucursal, $id_rol,
-//                    $id_clasificacion_cliente, $id_clasificacion_proveedor, $id_moneda,
-//                    null, $nombre, $rfc, $curp, $comision_ventas, $telefono_personal1,
-//                    $telefono_personal2, $limite_credito, $descuento, $password, $salario,
-//                    $correo_electronico,$pagina_web,$saldo_del_ejercicio,$ventas_a_credito,
-//                    $representante_legal,$facturar_a_terceros,$dia_de_pago,$mensajeria,
-//                    $intereses_moratorios,$denominacion_comercial,$dias_de_credito,
-//                    $cuenta_mensajeria,$dia_de_revision,$codigo_usuario,$dias_de_embarque,$tiempo_entrega,$cuenta_bancaria,
-//                    $id_tarifa_compra,$id_tarifa_venta);
-//
-//            //se verifica que la validacion haya sido correcta
-//            if(is_string($validar))
-//            {
-//                Logger::error("Imposible crear a nuevo usuario: " . $validar);
-//                throw new Exception($validar, 901);
-//            }
+            $validar = self::validarParametrosUsuario( null, null, $id_sucursal, $id_rol,
+                    $id_clasificacion_cliente, $id_clasificacion_proveedor, $id_moneda,
+                    null, $nombre, $rfc, $curp, $comision_ventas, $telefono_personal1,
+                    $telefono_personal2, $limite_credito, $descuento, $password, $salario,
+                    $correo_electronico,$pagina_web,$saldo_del_ejercicio,$ventas_a_credito,
+                    $representante_legal,$facturar_a_terceros,$dia_de_pago,$mensajeria,
+                    $intereses_moratorios,$denominacion_comercial,$dias_de_credito,
+                    $cuenta_mensajeria,$dia_de_revision,$codigo_usuario,$dias_de_embarque,$tiempo_entrega,$cuenta_bancaria,
+                    $id_tarifa_compra,$id_tarifa_venta);
+
+            //se verifica que la validacion haya sido correcta
+            if(is_string($validar))
+            {
+                Logger::error("Imposible crear a nuevo usuario: " . $validar);
+                throw new Exception($validar, 901);
+            }
             
             //Se verifica que las direcciones recibidas sean un arreglo
             if(!is_null($direcciones))
@@ -1106,6 +1086,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 		$id_sucursal = null, 
 		$id_tarifa_compra = null, 
 		$id_tarifa_venta = null, 
+		$id_usuario_padre = null, 
 		$impuestos = null, 
 		$intereses_moratorios = null, 
 		$limite_de_credito = null, 

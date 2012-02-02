@@ -61,7 +61,7 @@
   static function NuevaClasificacion
 	(
 		$nombre, 
-		$activa = "1", 
+		$activa =  1 , 
 		$descripcion = null, 
 		$garantia = null, 
 		$impuestos = null, 
@@ -179,7 +179,7 @@
 		$costo_estandar, 
 		$metodo_costeo, 
 		$nombre_servicio, 
-		$activo = "true", 
+		$activo =  true , 
 		$clasificaciones = null, 
 		$control_de_existencia = null, 
 		$descripcion_servicio = null, 
