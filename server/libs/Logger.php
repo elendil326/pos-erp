@@ -180,7 +180,14 @@ class Logger
 
         $out = date("g:i:sa j M");
 
-        $out .= " | " . $_SERVER["REMOTE_ADDR"];
+		if(isset($_SERVER["REMOTE_ADDR"])){
+        	$out .= " | " . $_SERVER["REMOTE_ADDR"];
+
+		}else{
+	        $out .= " | CLI"  ;
+
+		}
+
 
         
         if(isset($_SESSION["INSTANCE_ID"])){
@@ -192,15 +199,15 @@ class Logger
             $out .= " | USERID:" . $_SESSION['userid'];
         }
 
-    /*
+    	/*
         if(isset($_SESSION['sucursal']) 
-      && method_exists($_SESSION['sucursal'], '__toString') //bug #121
-    ){
-      try{
-              $out .= " | SUC:" . $_SESSION['sucursal'];
-      }catch(Exception $e){
-        return Logger::log($e);
-      }
+	      && method_exists($_SESSION['sucursal'], '__toString') //bug #121
+	    ){
+	      try{
+	              $out .= " | SUC:" . $_SESSION['sucursal'];
+	      }catch(Exception $e){
+	        return Logger::log($e);
+	      }
 
         }*/
 
