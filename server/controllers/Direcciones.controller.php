@@ -128,7 +128,8 @@ class DireccionController{
                 $referencia=null,
                 $telefono=null,
                 $telefono2=null,
-                $id_user=null
+                $id_user=null,
+                $tipo = null
         )
         {
             Logger::log("Creando nueva direccion");
@@ -138,7 +139,7 @@ class DireccionController{
 
             if(is_string($validar))
             {
-                throw new Exception($validar);
+                throw new Exception($validar,901);
             }
 
             $direccion = new Direccion();
@@ -148,13 +149,24 @@ class DireccionController{
             if($id_usuario == null)
             {	
 				Logger::error("SesionController::getCurrentUser() regreso null");
-                throw new Exception("No se pudo obtener la sesion del usuario, ya inicio sesion?");
+                throw new Exception("No se pudo obtener la sesion del usuario, ya inicio sesion?",901);
             }
 
             if(!is_null($telefono)&&$telefono==$telefono2)
             {
-                throw new Exception("El telefono ".$telefono." es igual al telefono alterno ".$telefono2);
+                throw new Exception("El telefono ".$telefono." es igual al telefono alterno ".$telefono2,901);
             }
+            
+            //valida que el usuario no tenga otra direccion del mismo tipo
+            if(!is_null($tipo))
+            {
+                $direc = DireccionDAO::search(new Direccion( array( "id_usuario" => $id_user, "tipo" => trim($tipo) ) ));
+                if(!empty ($direc))
+                {
+                    throw new Exception("El usuario ".$id_user." ya tiene una direccion del tipo ".trim($tipo),901);
+                }
+            }
+            
             $direccion->setIdUsuario($id_user);
             $direccion->setCalle($calle);
             $direccion->setNumeroExterior($numero_exterior);
@@ -167,6 +179,7 @@ class DireccionController{
             $direccion->setTelefono2($telefono2);
             $direccion->setUltimaModificacion( date( "Y-m-d H:i:s" , time() ));
             $direccion->setIdUsuarioUltimaModificacion($id_usuario);
+            $direccion->setTipo(trim($tipo));
             DAO::transBegin();
             try
             {

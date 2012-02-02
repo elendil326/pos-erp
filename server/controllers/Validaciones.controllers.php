@@ -45,7 +45,7 @@ class ValidacionesController {
      *
      */
      public static function validarEntero($n, $i, $j){
-     	return ( is_int($n) && ( $n <= $i && $n >= $j )  );
+     	return ( is_int($n) && ( $n >= $i && $n <= $j )  );
      }
      
      /*
@@ -55,7 +55,7 @@ class ValidacionesController {
      *
      */
      public static function validarNumero($n, $i, $j){
-     	return ( is_numeric($n) && ( $n <= $i && $n >= $j )  );
+     	return ( is_numeric($n) && ( $n >= $i && $n <= $j )  );
      }
 
 

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 02-02-2012 a las 16:43:04
+-- Tiempo de generación: 02-02-2012 a las 19:28:08
 -- Versión del servidor: 5.1.53
 -- Versión de PHP: 5.3.4
 
@@ -1502,7 +1502,7 @@ CREATE TABLE IF NOT EXISTS `sesion` (
   PRIMARY KEY (`id_sesion`),
   UNIQUE KEY `id_usuario` (`id_usuario`),
   KEY `auth_token` (`auth_token`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='Mantiene un seguimiento de las sesiones activas en el sistem' AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='Mantiene un seguimiento de las sesiones activas en el sistem' AUTO_INCREMENT=4 ;
 
 -- --------------------------------------------------------
 
@@ -1657,7 +1657,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `activo` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'si este usuario esta activo o no',
   `limite_credito` float NOT NULL DEFAULT '0' COMMENT 'Limite de credito del usuario',
   `descuento` float DEFAULT NULL COMMENT 'Porcentaje del descuento del usuario',
-  `password` varchar(64) NOT NULL COMMENT 'Password del usuario',
+  `password` varchar(64) DEFAULT NULL COMMENT 'Password del usuario',
   `last_login` datetime DEFAULT NULL COMMENT 'Fecha en la que ingreso el usuario por ultima vez',
   `consignatario` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Si el usuario es consignatario',
   `salario` float DEFAULT NULL COMMENT 'El salario que recibe el usuaario actualmente',
@@ -1674,7 +1674,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `dias_de_credito` int(11) DEFAULT NULL COMMENT 'Días de crédito que se le darán al cliente',
   `cuenta_de_mensajeria` varchar(50) DEFAULT NULL COMMENT 'Cuenta de mensajeria del cliente',
   `dia_de_revision` datetime DEFAULT NULL COMMENT 'Fecha de revisión del cliente',
-  `codigo_usuario` varchar(50) NOT NULL COMMENT 'Codigo del usuario para uso interno de la empresa',
+  `codigo_usuario` varchar(50) DEFAULT NULL COMMENT 'Codigo del usuario para uso interno de la empresa',
   `dias_de_embarque` int(11) DEFAULT NULL COMMENT 'Dias de embarque del proveedor (Lunes, Martes, etc)',
   `tiempo_entrega` int(11) DEFAULT NULL COMMENT 'Tiempo de entrega del proveedor en días',
   `cuenta_bancaria` varchar(50) DEFAULT NULL COMMENT 'Cuenta bancaria del usuario',

@@ -25,7 +25,7 @@
                 $form->sendHidden("id_clasificacion_cliente");
 
 
-                $form->addApiCall( "api/cliente/clasificacion/editar/", "GET" );
+                $form->addApiCall( "api/cliente/clasificacion/editar/" );
                 $form->onApiCallSuccessRedirect("clientes.lista.clasificacion.php");
 
                 $page->addComponent( $form );

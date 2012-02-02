@@ -144,7 +144,8 @@ require_once("interfaces/PersonalYAgentes.interface.php");
               $tiempo_entrega = null,
               $cuenta_bancaria = null,
               $id_tarifa_compra = null,
-              $id_tarifa_venta = null
+              $id_tarifa_venta = null,
+              $id_usuario_padre = null
       )
       {
           //valida que el id del usuario exista en la base de datos
@@ -438,6 +439,19 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                   return "La tarifa ".$id_tarifa_venta." no es una tarifa de venta";
               }
           }
+          //valida que el usuario padre exista y este activo
+          if(!is_null($id_usuario_padre))
+          {
+              $usuario_padre = UsuarioDAO::getByPK($id_usuario_padre);
+              if(is_null($usuario_padre))
+              {
+                  return "El usuario padre ".$id_usuario_padre." no existe";
+              }
+              if($usuario_padre->getActivo())
+              {
+                  return "El usuario padre ".$usuario_padre->getNombre()." no esta activo";
+              }
+          }
           return true;
       }
 
@@ -609,7 +623,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                     $representante_legal,$facturar_a_terceros,$dia_de_pago,$mensajeria,
                     $intereses_moratorios,$denominacion_comercial,$dias_de_credito,
                     $cuenta_mensajeria,$dia_de_revision,$codigo_usuario,$dias_de_embarque,$tiempo_entrega,$cuenta_bancaria,
-                    $id_tarifa_compra,$id_tarifa_venta);
+                    $id_tarifa_compra,$id_tarifa_venta,$id_usuario_padre);
 
             //se verifica que la validacion haya sido correcta
             if(is_string($validar))
@@ -629,35 +643,44 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             }
             
             //se verifica que el codigo de usuario no sea repetido
-            $usuarios=UsuarioDAO::search(new Usuario(array( "codigo_usuario" => $codigo_usuario )));
-            foreach($usuarios as $usuario)
+            if(!is_null($codigo_usuario))
             {
-                if($usuario->getActivo())
+                $usuarios=UsuarioDAO::search(new Usuario(array( "codigo_usuario" => $codigo_usuario )));
+                foreach($usuarios as $usuario)
                 {
-                    Logger::error("El codigo de usuario ".$codigo_usuario." ya esta en uso");
-                    throw new Exception("El codigo de usuario ".$codigo_usuario." ya esta en uso",901);
+                    if($usuario->getActivo())
+                    {
+                        Logger::error("El codigo de usuario ".$codigo_usuario." ya esta en uso");
+                        throw new Exception("El codigo de usuario ".$codigo_usuario." ya esta en uso",901);
+                    }
                 }
             }
 
             //se verifica que el rfc no sea repetido
-            $usuarios=UsuarioDAO::search(new Usuario(array( "rfc" => $rfc )));
-            foreach($usuarios as $usuario)
+            if(!is_null($rfc))
             {
-                if($usuario->getActivo())
+                $usuarios=UsuarioDAO::search(new Usuario(array( "rfc" => $rfc )));
+                foreach($usuarios as $usuario)
                 {
-                    Logger::error("El rfc ".$rfc." ya existe");
-                    throw new Exception("El rfc ".$rfc." ya existe",901);
+                    if($usuario->getActivo())
+                    {
+                        Logger::error("El rfc ".$rfc." ya existe");
+                        throw new Exception("El rfc ".$rfc." ya existe",901);
+                    }
                 }
             }
 
             //se verifica que la curp no sea repetida
-            $usuarios=UsuarioDAO::search(new Usuario(array( "curp" => $curp )));
-            foreach($usuarios as $usuario)
+            if(!is_null($curp))
             {
-                if($usuario->getActivo())
+                $usuarios=UsuarioDAO::search(new Usuario(array( "curp" => $curp )));
+                foreach($usuarios as $usuario)
                 {
-                    Logger::error("La curp ".$curp." ya existe");
-                    throw new Exception("La curp ".$curp." ya existe",901);
+                    if($usuario->getActivo())
+                    {
+                        Logger::error("La curp ".$curp." ya existe");
+                        throw new Exception("La curp ".$curp." ya existe",901);
+                    }
                 }
             }
 
@@ -683,12 +706,15 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             }
 
             //se verifica como medida de seguridad que el password no sea igual al codigo de usaurio ni al correo electronico
-            if($password==$codigo_usuario||$password==$correo_electronico)
+            if(!is_null($password))
             {
-                Logger::error("El password (".$password.") no puede ser igual al codigo de usuario
-                    (".$codigo_usuario.") ni al correo electronico (".$correo_electronico.")");
-                throw new Exception("El password (".$password.") no puede ser igual al codigo de usuario
-                    (".$codigo_usuario.") ni al correo electronico (".$correo_electronico.")",901);
+                if($password==$codigo_usuario||$password==$correo_electronico)
+                {
+                    Logger::error("El password (".$password.") no puede ser igual al codigo de usuario
+                        (".$codigo_usuario.") ni al correo electronico (".$correo_electronico.")");
+                    throw new Exception("El password (".$password.") no puede ser igual al codigo de usuario
+                        (".$codigo_usuario.") ni al correo electronico (".$correo_electronico.")",901);
+                }
             }
 
             //se ponen los valores por default en limite de credito y saldo del ejercicio
@@ -802,7 +828,8 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                                 "id_tarifa_compra"          => $id_tarifa_compra,
                                 "id_tarifa_venta"           => $id_tarifa_venta,
                                 "tarifa_compra_obtenida"    => $origen_compra,
-                                "tarifa_venta_obtenida"     => $origen_venta
+                                "tarifa_venta_obtenida"     => $origen_venta,
+                                "id_usuario_padre"          => $id_usuario_padre
                             )
                         );
             
@@ -818,7 +845,6 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 //Se crean las direcciones recibidas
                 if(!is_null($direcciones))
                 {
-                    $direccion = null;
                     foreach($direcciones as $d)
                     {
                         //Se valida que la direccion tenga los parametros necesarios
@@ -1116,61 +1142,22 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                     $representante_legal,$facturar_a_terceros,$dia_de_pago,$mensajeria,
                     $intereses_moratorios,$denominacion_comercial,$dias_de_credito,
                     $cuenta_mensajeria,$dia_de_revision,$codigo_usuario,$dias_de_embarque,$tiempo_entrega,$cuenta_bancaria,
-                    $id_tarifa_compra,$id_tarifa_venta);
+                    $id_tarifa_compra,$id_tarifa_venta,$id_usuario_padre);
             if(is_string($validar))
             {
                 Logger::error($validar);
                 throw new Exception($validar,901);
             }
 
-            //valida los parametros correspondientes a direccion
-            $validar=DireccionController::validarParametrosDireccion(null, $calle, $numero_exterior, $numero_interior,
-                    $texto_extra, $colonia, $id_ciudad, $codigo_postal, $telefono1, $telefono2);
-            if(is_string($validar))
-            {
-                Logger::error($validar);
-                throw new Exception($validar,901);
-            }
 
-            //valida los parametros correspondientes a direccion
-            $validar=DireccionController::validarParametrosDireccion(null, $calle_2, $numero_exterior_2, $numero_interior_2, $texto_extra_2, $colonia_2, $id_ciudad_2, $codigo_postal_2, $telefono1_2, $telefono2_2);
-            if(is_string($validar))
-            {
-                Logger::error($validar);
-                throw new Exception($validar,901);
-            }
 
             //Se trae el registro con el id obtenido
             $usuario = UsuarioDAO::getByPK($id_usuario);
 
-            //Se intenta traer las direcciones actualmente registradas del usuario
-            $direccion1 = DireccionDAO::getByPK($usuario->getIdDireccion());
-            $direccion2 = DireccionDAO::getByPK($usuario->getIdDireccionAlterna());
-
-            //banderas que indican si se cambió un campo de una direccion
-            //o si la direccion es nueva
-            $cambio_direccion1 = false;
-            $cambio_direccion2 = false;
-            $nueva_direccion1 = false;
-            $nueva_direccion2 = false;
-
             //bandera que indica si el rol se cambio o no.
             $cambio_rol = false;
 
-            //Si no se obtuvo direccion 1, se crea
-            if(is_null($direccion1))
-            {
-                $nueva_direccion1=true;
-                $direccion1=new Direccion();
-            }
-
-            //Si no se obtuvo direccion 2, se crea
-            if(is_null($direccion2))
-            {
-                $nueva_direccion2=true;
-                $direccion2=new Direccion();
-            }
-
+            
             // se validan los campos, si no son nulos, se cambia el registro.
           if(!is_null($id_sucursal))
           {
@@ -1384,105 +1371,18 @@ require_once("interfaces/PersonalYAgentes.interface.php");
           {
               $usuario->setCuentaBancaria($cuenta_bancaria);
           }
-            if(!is_null($calle))
-            {
-                $direccion1->setCalle($calle);
-                $cambio_direccion1=true;
-            }
-            if(!is_null($numero_exterior))
-            {
-                $direccion1->setNumeroExterior($numero_exterior);
-                $cambio_direccion1=true;
-            }
-            if(!is_null($numero_interior))
-            {
-                $direccion1->setNumeroInterior($numero_interior);
-                $cambio_direccion1=true;
-            }
-            if(!is_null($texto_extra))
-            {
-                $direccion1->setReferencia($texto_extra);
-                $cambio_direccion1=true;
-            }
-            if(!is_null($colonia))
-            {
-                $direccion1->setColonia($colonia);
-                $cambio_direccion1=true;
-            }
-            if(!is_null($id_ciudad))
-            {
-                $direccion1->setIdCiudad($id_ciudad);
-                $cambio_direccion1=true;
-            }
-            if(!is_null($codigo_postal))
-            {
-                $direccion1->setCodigoPostal($codigo_postal);
-                $cambio_direccion1=true;
-            }
-            if(!is_null($telefono1))
-            {
-                $direccion1->setTelefono($telefono1);
-                $cambio_direccion1=true;
-            }
-            if(!is_null($telefono2))
-            {
-                $direccion1->setTelefono2($telefono2);
-                $cambio_direccion1=true;
-            }
-            if(!is_null($calle_2))
-            {
-                $direccion2->setCalle($calle_2);
-                $cambio_direccion2=true;
-            }
-            if(!is_null($numero_exterior_2))
-            {
-                $direccion2->setNumeroExterior($numero_exterior_2);
-                $cambio_direccion2=true;
-            }
-            if(!is_null($numero_interior_2))
-            {
-                $direccion2->setNumeroInterior($numero_interior_2);
-                $cambio_direccion2=true;
-            }
-            if(!is_null($texto_extra_2))
-            {
-                $direccion2->setReferencia($texto_extra_2);
-                $cambio_direccion2=true;
-            }
-            if(!is_null($colonia_2))
-            {
-                $direccion2->setColonia($colonia_2);
-                $cambio_direccion2=true;
-            }
-            if(!is_null($id_ciudad_2))
-            {
-                $direccion2->setIdCiudad($id_ciudad_2);
-                $cambio_direccion2=true;
-            }
-            if(!is_null($codigo_postal_2))
-            {
-                $direccion2->setCodigoPostal($codigo_postal_2);
-                $cambio_direccion2=true;
-            }
-            if(!is_null($telefono1_2))
-            {
-                $direccion2->setTelefono($telefono1_2);
-                $cambio_direccion2=true;
-            }
-            if(!is_null($telefono2_2))
-            {
-                $direccion2->setTelefono2($telefono2_2);
-                $cambio_direccion2=true;
-            }
             
             //se verifica como medida de seguridad que el password no sea igual al codigo de usaurio ni al correo electronico
-            if($usuario->getPassword()==$usuario->getCodigoUsuario()||$usuario->getPassword()==$usuario->getCorreoElectronico())
-            {
-                Logger::error("El password (".$usuario->getPassword().") no puede ser igual al codigo de usuario
-                    (".$usuario->getCodigoUsuario().") ni al correo electronico (".$usuario->getCorreoElectronico().")");
-                throw new Exception("El password (".$usuario->getPassword().") no puede ser igual al codigo de usuario
-                    (".$usuario->getCodigoUsuario().") ni al correo electronico (".$usuario->getCorreoElectronico().")",901);
-            }
+          if(!is_null($usuario->getPassword()))
+          {
+                if($usuario->getPassword()==$usuario->getCodigoUsuario()||$usuario->getPassword()==$usuario->getCorreoElectronico())
+                {
+                    Logger::error("El password (".$usuario->getPassword().") no puede ser igual al codigo de usuario
+                        (".$usuario->getCodigoUsuario().") ni al correo electronico (".$usuario->getCorreoElectronico().")");
+                    throw new Exception("El password (".$usuario->getPassword().") no puede ser igual al codigo de usuario
+                        (".$usuario->getCodigoUsuario().") ni al correo electronico (".$usuario->getCorreoElectronico().")",901);
+                }
+          }
             if(!is_null($id_tarifa_compra))
             {
                 $usuario->setIdTarifaCompra($id_tarifa_compra);
@@ -1498,50 +1398,49 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             DAO::transBegin();
             try
             {
-                //Si hubo un cambio en la direccion 1, se realiza el cambio
-                if($cambio_direccion1)
-                {
-                    $direccion1->setUltimaModificacion(date("Y-m-d H:i:s"));
-
-                    //Se busca el id del usuario loggeado. Si no hay ningun muestra un error.
-                    $id_u=SesionController::getCurrentUser();
-                    if(is_null($id_u))
-                    {
-                        throw new Exception("No se pudo obtener el usuario de la sesion, ya inicio sesion?",901);
-                    }
-                    $direccion1->setIdUsuarioUltimaModificacion($id_u);
-                    DireccionDAO::save($direccion1);
-
-                    //Si la direccion es nueva, se relaciona con el usuario.
-                    if($nueva_direccion1)
-                    {
-                        $usuario->setIdDireccion($direccion1->getIdDireccion());
-                    }
-                }
-
-                //Si hubo un cambio en la direccion alterna, se realiza el cambio
-                if($cambio_direccion2)
-                {
-                    $direccion2->setUltimaModificacion(date("Y-m-d H:i:s"));
-
-                    //Se busca el id del usuario loggeado. Si no hay ningun muestra un error.
-                    $id_u=SesionController::getCurrentUser();
-                    if(is_null($id_u))
-                    {
-                        throw new Exception("No se pudo obtener el usuario de la sesion, ya inicio sesion?",901);
-                    }
-                    $direccion2->setIdUsuarioUltimaModificacion($id_u);
-                    DireccionDAO::save($direccion2);
-
-                    //Si la direccion es nueva, se relaciona con el usuario.
-                    if($nueva_direccion2)
-                    {
-                        $usuario->setIdDireccion($direccion2->getIdDireccion());
-                    }
-                }
 
                 //guarda los cambios en el usuario
                 UsuarioDAO::save($usuario);
+                
+                //Si se reciben direcciones, se borran todas las direcciones de este usuario y se agregan las recibidas.
+                if(!is_null($direcciones))
+                {
+                    if(!is_array($direcciones))
+                    {
+                        throw new Exception("Las direcciones recibidas no son un arreglo",901);
+                    }
+                    
+                    //Se eliminan las direcciones de este usuario
+                    $dirs = DireccionDAO::search( new Direccion( array("id_usuario" => $id_usuario) ) );
+                    foreach($dirs as $d)
+                    {
+                        DireccionDAO::delete($d);
+                    }
+                    
+                    //Se crean las direcciones recibidas
+                    foreach($direcciones as $d)
+                    {
+                        //Se valida que la direccion tenga los parametros necesarios
+                        if
+                        (
+                                !array_key_exists("calle", $d)              ||
+                                !array_key_exists("numero_exterior", $d)    ||
+                                !array_key_exists("colonia", $d)            ||
+                                !array_key_exists("id_ciudad", $d)          ||
+                                !array_key_exists("codigo_postal", $d)      ||
+                                !array_key_exists("numero_interior", $d)    ||
+                                !array_key_exists("referencia", $d)         ||
+                                !array_key_exists("telefono1", $d)          ||
+                                !array_key_exists("telefono2", $d)
+                        )
+                        {
+                            throw new Exception("La direccion recibida no cuenta con algun parametro necesario",901);
+                        }
+                        DireccionController::NuevaDireccion($d["calle"], $d["numero_exterior"],
+                                $d["colonia"], $d["id_ciudad"], $d["codigo_postal"], $d["numero_interior"],
+                                $d["referencia"], $d["telefono1"], $d["telefono2"],$usuario->getIdUsuario());
+                    }
+                }
 
                 //si se han obtenido nuevos impuestos se llama al metodo save para que actualice
                 //los ya existentes y almacene los nuevos

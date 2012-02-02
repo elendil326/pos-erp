@@ -16,8 +16,6 @@
 	
 	$form->hideField( array( 
 			"id_usuario",
-			"id_direccion",
-			"id_direccion_alterna",
 			"id_sucursal",
 			"id_rol",	
 			"id_clasificacion_proveedor",	
@@ -61,9 +59,6 @@
         $form->onApiCallSuccessRedirect("clientes.lista.php");
 	
 	$form->makeObligatory(array( 
-			"password",
-			"clasificacion_cliente",
-			"codigo_cliente",
 			"razon_social"
 		));
 	

@@ -186,6 +186,8 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 
 
 Al crear un cliente en el sistema tambi?n creara un usuario para la interfaz de cliente, en caso de especificar un email se enviara un correo con los datos de acceso para la interfaz de clientes.
+
+No se puede asignar como cliente padre un cliente que esta inactivo
  	 *
  	 * @param razon_social string Se refiere al nombre con la que est registrada la empresa o cooperativa en el Registro Mercantil o bien el nombre del cliente en caso de no estar registrado.
  	 * @param clasificacion_cliente int Id de la clasificacion del cliente.
@@ -204,7 +206,7 @@ Al crear un cliente en el sistema tambi?n creara un usuario para la interfaz de 
  	 * @param password string Password del cliente, si no se envia se le creara uno automaticamente.
  	 * @param representante_legal string Nombre del representante legal del cliente.
  	 * @param rfc string RFC del cliente.
- 	 * @param sito_web string Direccin web del cliente.
+ 	 * @param sitio_web string Direccin web del cliente.
  	 * @param telefono_personal1 string Telefono del cliente
  	 * @param telefono_personal2 string Otro telefono del cliente
  	 * @return id_cliente int Id autogenerado del cliente que se insert
@@ -228,7 +230,7 @@ Al crear un cliente en el sistema tambi?n creara un usuario para la interfaz de 
 		$password = null, 
 		$representante_legal = null, 
 		$rfc = null, 
-		$sito_web = null, 
+		$sitio_web = null, 
 		$telefono_personal1 = null, 
 		$telefono_personal2 = null
 	);  

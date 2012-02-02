@@ -348,7 +348,7 @@
 			"password" => new ApiExposedProperty("password", false, POST, array( "string" )),
 			"representante_legal" => new ApiExposedProperty("representante_legal", false, POST, array( "string" )),
 			"rfc" => new ApiExposedProperty("rfc", false, POST, array( "string" )),
-			"sito_web" => new ApiExposedProperty("sito_web", false, POST, array( "string" )),
+			"sitio_web" => new ApiExposedProperty("sitio_web", false, POST, array( "string" )),
 			"telefono_personal1" => new ApiExposedProperty("telefono_personal1", false, POST, array( "string" )),
 			"telefono_personal2" => new ApiExposedProperty("telefono_personal2", false, POST, array( "string" )),
 		);
@@ -376,7 +376,7 @@
 			isset($_POST['password'] ) ? $_POST['password'] : null,
 			isset($_POST['representante_legal'] ) ? $_POST['representante_legal'] : null,
 			isset($_POST['rfc'] ) ? $_POST['rfc'] : null,
-			isset($_POST['sito_web'] ) ? $_POST['sito_web'] : null,
+			isset($_POST['sitio_web'] ) ? $_POST['sitio_web'] : null,
 			isset($_POST['telefono_personal1'] ) ? $_POST['telefono_personal1'] : null,
 			isset($_POST['telefono_personal2'] ) ? $_POST['telefono_personal2'] : null
 			

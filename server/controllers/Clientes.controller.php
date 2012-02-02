@@ -334,7 +334,7 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
 		$password = null, 
 		$representante_legal = null, 
 		$rfc = null, 
-		$sito_web = null, 
+		$sitio_web = null, 
 		$telefono_personal1 = null, 
 		$telefono_personal2 = null
 	)
@@ -350,10 +350,10 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
             try 
             {
                 $cliente = PersonalYAgentesController::NuevoUsuario(null,5,$razon_social,$password,
-                        null,$email,null,$cuenta_de_mensajeria,$curp,$denominacion_comercial,null,
+                        null,$email,null,$cuenta_de_mensajeria,$curp,$denominacion_comercial,$descuento_general,
                         null,null,null,null,$direcciones,0,$clasificacion_cliente,null,$id_moneda,
-                        $actual["id_sucursal"],$id_tarifa_compra,$id_tarifa_venta,null,null,$limite_credito,null,$direccion_web,
-                        $representante_legal,null,$rfc,null,null,$telefono);
+                        $actual["id_sucursal"],$id_tarifa_compra,$id_tarifa_venta,$id_cliente_padre,null,null,$limite_credito,null,$sitio_web,
+                        $representante_legal,null,$rfc,null,null,null,$telefono_personal1,$telefono_personal2);
             }
             catch(Exception $e)
             {
@@ -546,7 +546,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
             {
                 PersonalYAgentesController::EditarUsuario($id_cliente,$codigo_cliente,null,$email,null,$cuenta_de_mensajeria,$curp,
                         $denominacion_comercial,$descuento_general,null,null,null,null,null,$direcciones,null,$clasificacion_cliente,
-                        null,$id_moneda,null,null,$id_tarifa_compra,$id_tarifa_venta,null,null,$limite_credito,null,$razon_social,
+                        null,$id_moneda,null,null,$id_tarifa_compra,$id_tarifa_venta,$id_cliente_padre,null,null,$limite_credito,null,$razon_social,
                         $sitio_web,$password,$representante_legal,null,$rfc,null,null,$telefono_personal1,$telefono_personal2);
             }
             catch( Exception $e)
