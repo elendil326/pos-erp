@@ -96,16 +96,24 @@
  	 *
  	 * @param id_proveedor int Id del proveedor a editar
  	 * @param activo bool Si el proveedor sera tomado como activo despues de la insercion o no.
- 	 * @param calle string Calle de la direccion del proveedor
- 	 * @param codigo_postal string Codigo postal de la direccion del proveedor
  	 * @param codigo_proveedor string Codigo con el que se peude identificar al proveedor
- 	 * @param colonia string La colonia del proveedor
  	 * @param cuenta_bancaria string Cuenta bancaria del proveedor a la cual se le deposita
  	 * @param dias_de_credito int Dias de credito que otorga el proveedor
  	 * @param dias_embarque int Dias en que el proveedor embarca ( Lunes, Martes, Miercoles, Jueves..)
+ 	 * @param direcciones json [{    
+"tipo": 1,
+    "calle": "Francisco I Madero",
+    "numero_exterior": "1009A",
+    "numero_interior": 12,
+    "colonia": "centro",
+    "codigo_postal": "38000",
+    "telefono1": "4611223312",
+    "telefono2": "",
+       "id_ciudad": 3,
+    "referencia": "El local naranja"
+}] 
  	 * @param direccion_web string Pagina web del proveedor
  	 * @param email string E-mail del proveedor
- 	 * @param id_ciudad int Id de la ciudad de la direccion del proveedor
  	 * @param id_moneda int Id de la moneda que maneja el proveedor
  	 * @param id_tarifa_compra int Id de la tarifa de compra por default que aplicara a este proveedor
  	 * @param id_tarifa_venta int Id de la tarifa de venta por default que aplicara a este proveedor
@@ -113,32 +121,24 @@
  	 * @param impuestos json Arreglo de enteros que contendran los ids de impuestos por comprar a este proveedor
  	 * @param limite_credito float Limite de credito que otorga el proveedor
  	 * @param nombre string Nombre del proveedor
- 	 * @param numero_exterior string Numero exterior de la direccion del proveedor
- 	 * @param numero_interior string Numero interior de la direccion del proveedor
  	 * @param password string Password del proveedor para entrar al sistema
  	 * @param representante_legal string Representante legal del proveedor
  	 * @param retenciones json Retenciones que afectan a este proveedor
  	 * @param rfc string RFC del proveedor
- 	 * @param telefono1 string Telefono 1 de la direccion del proveeor
- 	 * @param telefono2 string Telefono 2 de la direccion del proveedor
  	 * @param telefono_personal string Telefono del proveedor
- 	 * @param texto_extra string Referencia para el domicilio del proveedor
  	 * @param tiempo_entrega int Tiempo de entrega del proveedor en dias
  	 **/
   static function Editar
 	(
 		$id_proveedor, 
-		$activo = 1, 
-		$calle = null, 
-		$codigo_postal = null, 
+		$activo = "1", 
 		$codigo_proveedor = null, 
-		$colonia = null, 
 		$cuenta_bancaria = null, 
 		$dias_de_credito = null, 
 		$dias_embarque = null, 
+		$direcciones = null, 
 		$direccion_web = null, 
 		$email = null, 
-		$id_ciudad = null, 
 		$id_moneda = null, 
 		$id_tarifa_compra = null, 
 		$id_tarifa_venta = null, 
@@ -146,16 +146,11 @@
 		$impuestos = null, 
 		$limite_credito = null, 
 		$nombre = null, 
-		$numero_exterior = null, 
-		$numero_interior = null, 
 		$password = null, 
 		$representante_legal = null, 
 		$retenciones = null, 
 		$rfc = null, 
-		$telefono1 = null, 
-		$telefono2 = null, 
 		$telefono_personal = null, 
-		$texto_extra = null, 
 		$tiempo_entrega = null
 	);  
   
@@ -205,7 +200,19 @@
  	 * @param cuenta_bancaria string Cuenta bancaria del proveedor
  	 * @param dias_de_credito int Dias de credito que otorga el proveedor
  	 * @param dias_embarque int Dias en que el proveedor embarca ( Lunes, Martes, Miercoles, Jueves..)
- 	 * @param direcciones json [{    "tipo": 1,    "calle": "Francisco I Madero",    "numero_exterior": "1009A",    "numero_interior": 12,    "colonia": "centro",    "codigo_postal": "38000",    "telefono1": "4611223312",    "telefono2": "",    "email": "tortas.rosy@gmail.com",    "id_ciudad": 3,    "referencia": "El local naranja"}]
+ 	 * @param direcciones json [{
+    "tipo": 1,
+    "calle": "Francisco I Madero",
+    "numero_exterior": "1009A",
+
+    "numero_interior": 12,
+    "colonia": "centro",
+    "codigo_postal": "38000",
+    "telefono1": "4611223312",
+    "telefono2": "",
+        "id_ciudad": 3,
+    "referencia": "El local naranja"
+}]
  	 * @param direccion_web string Direccion web del proveedor
  	 * @param email string Correo electronico del proveedor
  	 * @param id_moneda int Id de la moneda preferente del proveedor
@@ -230,7 +237,7 @@
 		$activo = null, 
 		$cuenta_bancaria = null, 
 		$dias_de_credito = null, 
-		$dias_embarque = true, 
+		$dias_embarque = "true", 
 		$direcciones = null, 
 		$direccion_web = null, 
 		$email = null, 

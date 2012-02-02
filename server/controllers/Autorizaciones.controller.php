@@ -55,7 +55,7 @@ La autorizacion se guardara con los datos del usuario que la pidio. Si es acepta
 	public static function DevolucionCompra
 	(
 		$id_compra, 
-		$descripcion = null
+		$descripcion = ""
 	)
 	{  
   
@@ -158,7 +158,7 @@ Update :  Me parece que no es buena idea manejar en los argumentos solo un id_pr
  	 * @param descripcion string Justificacin del porqu la solicitud del producto.
  	 * @param productos json Json que contendra los ids de los productos con sus respectivas cantidades.
  	 **/
-	public static function Solicitar_producto
+	public static function ProductoSolicitar
 	(
 		$descripcion, 
 		$productos

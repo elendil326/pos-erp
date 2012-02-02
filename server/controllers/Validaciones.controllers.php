@@ -29,23 +29,33 @@ class ValidacionesController {
 
     /*
      * Valida que la longitud de la cadena $a, sea entre
-     * $i y $j. 
+     * $i y $j inclusivo. 
      *
      *
      */
     public static function validarLongitudDeCadena($a, $i, $j){
-    	
+    	return (is_string($a) && (strlen($a) >= $i && strlen($a) <= $j ) );
     }
 
 
     /*
      *
      * Validar que un numero $n sea entero y este entre el rango
-     * de $i y $j
+     * de $i y $j inclusivo.
      *
      */
      public static function validarEntero($n, $i, $j){
-     	
+     	return ( is_int($n) && ( $n <= $i && $n >= $j )  );
+     }
+     
+     /*
+     *
+     * Validar que un numero $n este entre el rango
+     * de $i y $j inclusivo.
+     *
+     */
+     public static function validarNumero($n, $i, $j){
+     	return ( is_numeric($n) && ( $n <= $i && $n >= $j )  );
      }
 
 

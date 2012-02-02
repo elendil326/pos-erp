@@ -29,7 +29,7 @@
  	 * @param id_cliente int Id del cliente del cual se imprimirán 
  	 * @return estado_cuenta json Objeto que contendrá la información del estado de cuenta del cliente
  	 **/
-  static function ImprimirEstado_de_cuenta
+  static function ImprimirCuentaDeEstado
 	(
 		$id_cliente
 	);  
@@ -93,7 +93,7 @@ Update : La respuesta solo deber?a de contener success :true | false, y en caso 
 Update : No se si este metodo tenga una utilidad real, ya que cuando se recibe el XML timbrado, se crea el archivo .xml y en el unico momento que se vuelve a ocupar es para enviarlo por correo al cliente.
  	 *
  	 **/
-  static function Imprimir_xmlFactura
+  static function XmlImprimirFactura
 	(
 	);  
   
@@ -124,7 +124,7 @@ Update : No se si este metodo tenga una utilidad real, ya que cuando se recibe e
  	 * @param id_impresora int Id de la impresora en la que se imprimira
  	 * @param id_venta int Id de la venta que se imprimira
  	 **/
-  static function ImprimirNota_de_venta
+  static function ImprimirVentaDeNota
 	(
 		$id_impresora, 
 		$id_venta

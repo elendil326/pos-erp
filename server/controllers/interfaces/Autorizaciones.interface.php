@@ -184,7 +184,7 @@ Update :  Me parece que no es buena idea manejar en los argumentos solo un id_pr
  	 * @param descripcion string Justificacin del porqu la solicitud del producto.
  	 * @param productos json Json que contendra los ids de los productos con sus respectivas cantidades.
  	 **/
-  static function Solicitar_producto
+  static function ProductoSolicitar
 	(
 		$descripcion, 
 		$productos

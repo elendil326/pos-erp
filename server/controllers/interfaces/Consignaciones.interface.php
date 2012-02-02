@@ -94,7 +94,7 @@
  	 * @param id_inspeccion int Id de la inspeccion a cambiar de fecha
  	 * @param nueva_fecha string Nueva fecha en que se llevara acabo la inspeccion
  	 **/
-  static function Cambiar_fechaInspeccion
+  static function FechaCambiarInspeccion
 	(
 		$id_inspeccion, 
 		$nueva_fecha

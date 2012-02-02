@@ -50,7 +50,7 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
  	 * @param id_compra int Id de la compra de la que se detallaran las compras por arpilla
  	 * @return detalle_compra_arpilla json Objeto que contendrá la información del detalle de la compra
  	 **/
-  static function Detalle_compra_arpilla
+  static function ArpillaCompraDetalle
 	(
 		$id_compra
 	);  
@@ -131,7 +131,7 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
 		$total, 
 		$cheques = null, 
 		$id_sucursal = null, 
-		$saldo = 0, 
+		$saldo = "0", 
 		$tipo_de_pago = null
 	);  
   
@@ -156,7 +156,7 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
  	 * @param productor string Nombre del productor
  	 * @return id_compra_arpilla int ID autogenerado por la insercion
  	 **/
-  static function Nueva_compra_arpilla
+  static function ArpillaCompraNueva
 	(
 		$arpillas, 
 		$id_compra, 

@@ -228,7 +228,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos
  	 * @param productos json Arreglo de objetos que contendrán la información del nuevo producto
  	 * @return id_productos json Arreglo de enteros que contendrá los ids de los productos insertados.
  	 **/
-  static function En_volumenNuevo
+  static function VolumenEnNuevo
 	(
 		$productos
 	);  
@@ -265,7 +265,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos
  	 * @param id_unidad int Id de la unidad, en el ejemplo son kilogramos
  	 * @param id_unidades int Id de la segunda unidad, en el ejemplo son libras
  	 **/
-  static function Editar_equivalenciaUnidad
+  static function EquivalenciaEditarUnidad
 	(
 		$equivalencia, 
 		$id_unidad, 
@@ -297,7 +297,7 @@ Ejemplo: 1 kg = 2.204 lb
  	 * @param id_unidad int En el ejemplo es el kilogramo
  	 * @param id_unidades int En el ejemplo son las libras
  	 **/
-  static function Eliminar_equivalenciaUnidad
+  static function EquivalenciaEliminarUnidad
 	(
 		$id_unidad, 
 		$id_unidades
@@ -330,7 +330,7 @@ Ejemplo: 1 kg = 2.204 lb
  	 * @param orden string Nombre de la columna de la tabla por la cual se ordenara la lista
  	 * @return unidades_equivalencia json Lista de unidades
  	 **/
-  static function Lista_equivalenciaUnidad
+  static function EquivalenciaListaUnidad
 	(
 		$orden = null
 	);  
@@ -365,7 +365,7 @@ Ejemplo: 1 kg = 2.204 lb
  	 * @param id_unidad int Id de la unidad. Esta unidad es tomada con coeficiente 1 en la ecuacion de, en el ejemplo es el kilogramo equivalencia
  	 * @param id_unidades int Id de la unidad equivalente, en el ejemplo es la libra
  	 **/
-  static function Nueva_equivalenciaUnidad
+  static function EquivalenciaNuevaUnidad
 	(
 		$equivalencia, 
 		$id_unidad, 

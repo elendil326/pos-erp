@@ -48,7 +48,7 @@
  	 * @param id_venta int Id de la venta de la cual se listaran las ventas por arpilla
  	 * @return detalle_venta_arpilla json Objeto que contendra los detalles de las ventas por arpilla
  	 **/
-  static function Detalle_venta_arpilla
+  static function ArpillaVentaDetalle
 	(
 		$id_venta
 	);  
@@ -119,7 +119,7 @@ Si hay dos productos en una misma sucursal pero disntintos almacenes entonces se
 		$detalle_orden = null, 
 		$detalle_paquete = null, 
 		$detalle_venta = null, 
-		$saldo = 0, 
+		$saldo = "0", 
 		$tipo_de_pago = null
 	);  
   
@@ -143,7 +143,7 @@ Si hay dos productos en una misma sucursal pero disntintos almacenes entonces se
  	 * @param total_origen float Valor del embarque segun el origen
  	 * @return id_venta_arpilla int Id autogenerado por la insercion
  	 **/
-  static function Nueva_venta_arpillas
+  static function ArpillasVentaNueva
 	(
 		$arpillas, 
 		$fecha_origen, 

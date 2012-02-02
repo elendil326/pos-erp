@@ -61,7 +61,7 @@
   static function NuevaClasificacion
 	(
 		$nombre, 
-		$activa = 1, 
+		$activa = "1", 
 		$descripcion = null, 
 		$garantia = null, 
 		$impuestos = null, 
@@ -179,7 +179,7 @@
 		$costo_estandar, 
 		$metodo_costeo, 
 		$nombre_servicio, 
-		$activo = true, 
+		$activo = "true", 
 		$clasificaciones = null, 
 		$control_de_existencia = null, 
 		$descripcion_servicio = null, 
@@ -202,7 +202,7 @@
  	 * @param id_orden_de_servicio int Id de la orden de servicio a la cual se le agregaran los productos
  	 * @param productos json Arreglo de objetos con ids de producto, de unidad, sus cantidades, su precio, su impuesto, retencion y descuento.
  	 **/
-  static function Agregar_productosOrden
+  static function ProductosAgregarOrden
 	(
 		$id_orden_de_servicio, 
 		$productos
@@ -297,7 +297,7 @@
  	 * @param id_orden_de_servicio int Id de la orden de servicio de la cual se moveran los productos
  	 * @param productos json Arreglo que contendra los ids de productos, de unidades y  sus cantidades a retirar
  	 **/
-  static function Quitar_productosOrden
+  static function ProductosQuitarOrden
 	(
 		$id_orden_de_servicio, 
 		$productos

@@ -26,7 +26,7 @@
 		$id_tarifa_compra = null, 
 		$id_tarifa_venta = null, 
 		$nombre = null, 
-		$salario = 0
+		$salario = "0"
 	);  
   
   
@@ -78,7 +78,7 @@
 		$descripcion = null, 
 		$id_tarifa_compra = null, 
 		$id_tarifa_venta = null, 
-		$salario = 0
+		$salario = "0"
 	);  
   
   
@@ -151,6 +151,18 @@
  	 * @param dias_de_embarque int Dias de emabrque del proveedor ( Lunes, Miercoles, etc)
  	 * @param dia_de_pago string Fecha de pago del cliente
  	 * @param dia_de_revision string Fecha de revision del cliente
+ 	 * @param direcciones json [{    
+"tipo": 1,
+    "calle": "Francisco I Madero",
+    "numero_exterior": "1009A",
+    "numero_interior": 12,
+    "colonia": "centro",
+    "codigo_postal": "38000",
+    "telefono1": "4611223312",
+    "telefono2": "",
+       "id_ciudad": 3,
+    "referencia": "El local naranja"
+}] 
  	 * @param facturar_a_terceros bool Si el usuario puede facturar a terceros
  	 * @param id_clasificacion_cliente int Id de la clasificacion del cliente
  	 * @param id_clasificacion_proveedor int Id de la clasificacion del proveedor
@@ -192,6 +204,7 @@
 		$dias_de_embarque = null, 
 		$dia_de_pago = null, 
 		$dia_de_revision = null, 
+		$direcciones = null, 
 		$facturar_a_terceros = null, 
 		$id_clasificacion_cliente = null, 
 		$id_clasificacion_proveedor = null, 
@@ -271,7 +284,19 @@
  	 * @param dias_de_embarque int Dias de embarque del proveedor ( Lunes, Miercoles, Viernes, etc)
  	 * @param dia_de_pago string Fecha de pago del cliente
  	 * @param dia_de_revision string Fecha de revision del cliente
- 	 * @param direcciones json Arreglo de direcciones del usuario  [{    "tipo": 1,    "calle": "Francisco I Madero",    "numero_exterior": "1009A",    "numero_interior": 12,    "colonia": "centro",    "codigo_postal": "38000",    "telefono1": "4611223312",    "telefono2": "",    "email": "tortas.rosy@gmail.com",    "id_ciudad": 3,    "referencia": "El local naranja"}] 
+ 	 * @param direcciones json Arreglo de direcciones del usuario 
+ [{    
+"tipo": 1,
+    "calle": "Francisco I Madero",
+    "numero_exterior": "1009A",
+    "numero_interior": 12,
+    "colonia": "centro",
+    "codigo_postal": "38000",
+    "telefono1": "4611223312",
+    "telefono2": "",
+       "id_ciudad": 3,
+    "referencia": "El local naranja"
+}] 
  	 * @param facturar_a_terceros bool Si el usuario puede facturar a terceros
  	 * @param id_clasificacion_cliente int Id de la clasificacion del cliente
  	 * @param id_clasificacion_proveedor int Id de la clasificacion del proveedor
@@ -301,7 +326,7 @@
 		$id_rol, 
 		$nombre, 
 		$password, 
-		$comision_ventas = 0, 
+		$comision_ventas = "0", 
 		$correo_electronico = null, 
 		$cuenta_bancaria = null, 
 		$cuenta_mensajeria = null, 
@@ -322,7 +347,7 @@
 		$id_tarifa_venta = null, 
 		$impuestos = null, 
 		$intereses_moratorios = null, 
-		$limite_credito = 0, 
+		$limite_credito = "0", 
 		$mensajeria = null, 
 		$pagina_web = null, 
 		$representante_legal = null, 

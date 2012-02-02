@@ -348,7 +348,7 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
  	 * @param productor string Nombre del productor
  	 * @return id_compra_arpilla int ID autogenerado por la insercion
  	 **/
-	public static function Nueva_compra_arpilla
+	public static function ArpillaCompraNueva
 	(
 		$arpillas, 
 		$id_compra, 
@@ -538,7 +538,7 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
  	 * @param id_compra int Id de la compra de la que se detallaran las compras por arpilla
  	 * @return detalle_compra_arpilla json Objeto que contendr� la informaci�n del detalle de la compra
  	 **/
-	public static function Detalle_compra_arpilla
+	public static function ArpillaCompraDetalle
 	(
 		$id_compra
 	)

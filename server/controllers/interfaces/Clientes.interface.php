@@ -23,11 +23,11 @@
  	 **/
   static function Buscar
 	(
-		$id_sucursal = "null", 
-		$id_usuario = "null", 
+		$id_sucursal = null, 
+		$id_usuario = null, 
 		$limit = "50", 
-		$page = "null", 
-		$query = "null", 
+		$page = null, 
+		$query = null, 
 		$start = "0"
 	);  
   
@@ -48,8 +48,8 @@
   static function BuscarClasificacion
 	(
 		$limit = "50", 
-		$page = "null", 
-		$query = "null", 
+		$page = null, 
+		$query = null, 
 		$start = "0"
 	);  
   
@@ -68,9 +68,9 @@
   static function EditarClasificacion
 	(
 		$id_clasificacion_cliente, 
-		$clave_interna = "null", 
-		$descripcion = "null", 
-		$nombre = "null"
+		$clave_interna = null, 
+		$descripcion = null, 
+		$nombre = null
 	);  
   
   
@@ -89,7 +89,7 @@
 	(
 		$clave_interna, 
 		$nombre, 
-		$descripcion = "null"
+		$descripcion = null
 	);  
   
   
@@ -153,27 +153,27 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
   static function Editar
 	(
 		$id_cliente, 
-		$clasificacion_cliente = "null", 
-		$codigo_cliente = "null", 
-		$cuenta_de_mensajeria = "null", 
-		$curp = "null", 
-		$denominacion_comercial = "null", 
-		$descuento_general = "null", 
-		$direcciones = "null", 
-		$email = "null", 
-		$id_cliente_padre = "null", 
+		$clasificacion_cliente = null, 
+		$codigo_cliente = null, 
+		$cuenta_de_mensajeria = null, 
+		$curp = null, 
+		$denominacion_comercial = null, 
+		$descuento_general = null, 
+		$direcciones = null, 
+		$email = null, 
+		$id_cliente_padre = null, 
 		$id_moneda = "0", 
-		$id_tarifa_compra = "null", 
-		$id_tarifa_venta = "null", 
-		$limite_credito = "null", 
-		$password = "null", 
-		$password_anterior = "null", 
-		$razon_social = "null", 
-		$representante_legal = "null", 
-		$rfc = "null", 
-		$sitio_web = "null", 
-		$telefono_personal1 = "null", 
-		$telefono_personal2 = "null"
+		$id_tarifa_compra = null, 
+		$id_tarifa_venta = null, 
+		$limite_credito = null, 
+		$password = null, 
+		$password_anterior = null, 
+		$razon_social = null, 
+		$representante_legal = null, 
+		$rfc = null, 
+		$sitio_web = null, 
+		$telefono_personal1 = null, 
+		$telefono_personal2 = null
 	);  
   
   
@@ -224,24 +224,24 @@ Al crear un cliente en el sistema tambi?n creara un usuario para la interfaz de 
 	(
 		$razon_social, 
 		$clasificacion_cliente = "", 
-		$codigo_cliente = "null", 
+		$codigo_cliente = null, 
 		$cuenta_de_mensajeria = "", 
-		$curp = "null", 
-		$denominacion_comercial = "null", 
+		$curp = null, 
+		$denominacion_comercial = null, 
 		$descuento_general = "0", 
-		$direcciones = "null", 
-		$email = "null", 
-		$id_cliente_padre = "null", 
+		$direcciones = null, 
+		$email = null, 
+		$id_cliente_padre = null, 
 		$id_moneda = "0", 
-		$id_tarifa_compra = "null", 
-		$id_tarifa_venta = "null", 
+		$id_tarifa_compra = null, 
+		$id_tarifa_venta = null, 
 		$limite_credito = "0", 
 		$password = "", 
 		$representante_legal = "", 
-		$rfc = "null", 
+		$rfc = null, 
 		$sito_web = "", 
-		$telefono_personal1 = "null", 
-		$telefono_personal2 = "null"
+		$telefono_personal1 = null, 
+		$telefono_personal2 = null
 	);  
   
   

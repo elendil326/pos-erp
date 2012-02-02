@@ -82,7 +82,7 @@
  	 *
  	 * @param nuevo_reporte json JSON a analizar
  	 **/
-  static function Revisar_syntaxNuevo
+  static function SyntaxRevisarNuevo
 	(
 		$nuevo_reporte
 	);  
@@ -100,7 +100,7 @@
  	 * @param orden json Valor que determinara el orden de la lista
  	 * @return Lista_servicios_cliente json Objeto que contendra la lista de servicios y clientes que los han comprado.
  	 **/
-  static function Servicio_cliente
+  static function ClienteServicio
 	(
 		$id_cliente = null, 
 		$id_empresa = null, 

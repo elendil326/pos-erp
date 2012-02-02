@@ -37,7 +37,7 @@
  	 *Revisar la version que esta actualmente en el servidor. 
  	 *
  	 **/
-  static function Check_current_client_versionClient
+  static function VersionClientCurrentCheckClient
 	(
 	);  
   
@@ -111,7 +111,7 @@
  	 *Cuando un cliente pierde comunicacion se lanzan peticiones a intervalos pequenos de tiempo para revisar conectividad. Esos requests deberan hacerse a este metodo para que el servidor se de cuenta de que el cliente perdio conectvidad y tome medidas aparte como llenar estadistica de conectividad, ademas esto asegurara que el cliente puede enviar cambios ( compras, ventas, nuevos clientes ) de regreso al servidor. 
  	 *
  	 **/
-  static function Probar_conexion
+  static function ConexionProbar
 	(
 	);  
   

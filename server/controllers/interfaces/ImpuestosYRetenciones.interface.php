@@ -18,7 +18,7 @@
  	 * @param monto_porcentaje float Monto o porcentaje que representa este impuesto
  	 * @param nombre string Nombre del impuesto
  	 **/
-  static function EditarImpuesto
+  static function EditarImpuestoRetenciones
 	(
 		$id_impuesto, 
 		$descripcion = null, 
@@ -37,7 +37,7 @@
  	 * @param ordenar string Nombre de la columan por el cual se ordenara la lista
  	 * @return impuestos json Lista de impuestos
  	 **/
-  static function ListaImpuesto
+  static function ListaImpuestoRetenciones
 	(
 		$ordenar = null
 	);  
@@ -55,7 +55,7 @@
  	 * @param descripcion string Descripcion del impuesto
  	 * @return id_impuesto int Id del impuesto insertado.
  	 **/
-  static function NuevoImpuesto
+  static function NuevoImpuestoRetenciones
 	(
 		$es_monto, 
 		$monto_porcentaje, 
@@ -76,7 +76,7 @@
  	 * @param monto_porcentaje float Monto o porcentaje de la retencion
  	 * @param nombre string Nombre de la retencion
  	 **/
-  static function EditarRetencion
+  static function EditarRetencionRetenciones
 	(
 		$id_retencion, 
 		$descripcion = null, 
@@ -95,7 +95,7 @@
  	 * @param ordenar string Nombre de la columan por el cual se ordenara la lista
  	 * @return retenciones json Objeto que contendra la lista de retenciones
  	 **/
-  static function ListaRetencion
+  static function ListaRetencionRetenciones
 	(
 		$ordenar = null
 	);  
@@ -113,7 +113,7 @@
  	 * @param descripcion string Descripcion larga de la retencion
  	 * @return id_retencion int Id de la retencion creada
  	 **/
-  static function NuevaRetencion
+  static function NuevaRetencionRetenciones
 	(
 		$es_monto, 
 		$monto_porcentaje, 

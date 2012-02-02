@@ -15,7 +15,7 @@
  	 * @param id_empresa int Empresa a la que se le agregaran sucursales
  	 * @param sucursales json Arreglo que contendra los ids de las sucursales a relacionar con esta empresa
  	 **/
-  static function Agregar_sucursales
+  static function SucursalesAgregar
 	(
 		$id_empresa, 
 		$sucursales
@@ -95,7 +95,7 @@
  	 **/
   static function Lista
 	(
-		$activa = false
+		$activa = "false"
 	);  
   
   

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 31-01-2012 a las 16:44:53
+-- Tiempo de generación: 02-02-2012 a las 16:43:04
 -- Versión del servidor: 5.1.53
 -- Versión de PHP: 5.3.4
 
@@ -351,7 +351,7 @@ CREATE TABLE IF NOT EXISTS `clasificacion_cliente` (
   `id_tarifa_compra` int(11) NOT NULL COMMENT 'Id de la tarifa de compra por default para esta clasificacion de cliente',
   `id_tarifa_venta` int(11) NOT NULL COMMENT 'Id de la tarifa de venta por default para esta clasificacion de cliente',
   PRIMARY KEY (`id_clasificacion_cliente`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 -- --------------------------------------------------------
 
@@ -1639,6 +1639,7 @@ CREATE TABLE IF NOT EXISTS `unidad_equivalencia` (
 
 CREATE TABLE IF NOT EXISTS `usuario` (
   `id_usuario` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Id de la tabla usuario',
+  `id_usuario_padre` int(11) DEFAULT NULL COMMENT 'Id del usuario padre de este usuario',
   `id_sucursal` int(11) DEFAULT NULL COMMENT 'Id sucursal en la que labora este usuario o dodne se dio de alta',
   `id_rol` int(11) NOT NULL COMMENT 'Id del rol que desempeñara el usuario en la instancia',
   `id_clasificacion_cliente` int(11) DEFAULT NULL COMMENT 'Id de la clasificaiocn del cliente',
@@ -1682,7 +1683,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `id_tarifa_venta` int(11) NOT NULL COMMENT 'Id de la tarifa de venta por default para este usuario',
   `tarifa_venta_obtenida` enum('rol','proveedor','cliente','usuario') NOT NULL COMMENT 'Indica de donde fue obtenida la tarifa de venta',
   PRIMARY KEY (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='tabla de usuarios' AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='tabla de usuarios' AUTO_INCREMENT=4 ;
 
 -- --------------------------------------------------------
 

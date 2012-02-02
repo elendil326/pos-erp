@@ -25,6 +25,9 @@ class Usuario extends VO
 			if( isset($data['id_usuario']) ){
 				$this->id_usuario = $data['id_usuario'];
 			}
+			if( isset($data['id_usuario_padre']) ){
+				$this->id_usuario_padre = $data['id_usuario_padre'];
+			}
 			if( isset($data['id_sucursal']) ){
 				$this->id_sucursal = $data['id_sucursal'];
 			}
@@ -165,6 +168,7 @@ class Usuario extends VO
 	{ 
 		$vec = array( 
 			"id_usuario" => $this->id_usuario,
+			"id_usuario_padre" => $this->id_usuario_padre,
 			"id_sucursal" => $this->id_sucursal,
 			"id_rol" => $this->id_rol,
 			"id_clasificacion_cliente" => $this->id_clasificacion_cliente,
@@ -221,6 +225,15 @@ class Usuario extends VO
 	  * @var int(11)
 	  */
 	public $id_usuario;
+
+	/**
+	  * id_usuario_padre
+	  * 
+	  * Id del usuario padre de este usuario<br>
+	  * @access public
+	  * @var int(11)
+	  */
+	public $id_usuario_padre;
 
 	/**
 	  * id_sucursal
@@ -626,6 +639,30 @@ class Usuario extends VO
 	final public function setIdUsuario( $id_usuario )
 	{
 		$this->id_usuario = $id_usuario;
+	}
+
+	/**
+	  * getIdUsuarioPadre
+	  * 
+	  * Get the <i>id_usuario_padre</i> property for this object. Donde <i>id_usuario_padre</i> es Id del usuario padre de este usuario
+	  * @return int(11)
+	  */
+	final public function getIdUsuarioPadre()
+	{
+		return $this->id_usuario_padre;
+	}
+
+	/**
+	  * setIdUsuarioPadre( $id_usuario_padre )
+	  * 
+	  * Set the <i>id_usuario_padre</i> property for this object. Donde <i>id_usuario_padre</i> es Id del usuario padre de este usuario.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_usuario_padre</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setIdUsuarioPadre( $id_usuario_padre )
+	{
+		$this->id_usuario_padre = $id_usuario_padre;
 	}
 
 	/**

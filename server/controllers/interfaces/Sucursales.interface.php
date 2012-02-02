@@ -321,7 +321,7 @@ Creo que este metodo tiene que estar bajo sucursal.
 		$id_caja = null, 
 		$id_compra_caja = null, 
 		$id_sucursal = null, 
-		$saldo = 0, 
+		$saldo = "0", 
 		$tipo_pago = null
 	);  
   
@@ -422,7 +422,7 @@ Creo que este metodo tiene que estar bajo sucursal.
 	(
 		$token, 
 		$basculas = null, 
-		$control_billetes = 0, 
+		$control_billetes = "0", 
 		$descripcion = null, 
 		$id_sucursal = null, 
 		$impresoras = null
@@ -473,7 +473,7 @@ Creo que este metodo tiene que estar bajo sucursal.
 		$id_caja = null, 
 		$id_sucursal = null, 
 		$id_venta_caja = null, 
-		$saldo = 0, 
+		$saldo = "0", 
 		$tipo_pago = null
 	);  
   
@@ -635,7 +635,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 * @param id_tipo_almacen int Id del tipo de almacen a editar
  	 * @param descripcion string Descripcion del tipo de almacen
  	 **/
-  static function EditarTipo_almacen
+  static function EditarAlmacenTipo
 	(
 		$id_tipo_almacen, 
 		$descripcion = null
@@ -650,7 +650,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *
  	 * @param id_tipo_almacen int Id del tipo de almacen a editar
  	 **/
-  static function EliminarTipo_almacen
+  static function EliminarAlmacenTipo
 	(
 		$id_tipo_almacen
 	);  
@@ -665,7 +665,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 * @param orden string Nombre de la columan por el cual se ordenara la lista
  	 * @return lista_tipos_almacen json Arreglo con la lista de almacenes
  	 **/
-  static function ListaTipo_almacen
+  static function ListaAlmacenTipo
 	(
 		$orden = null
 	);  
@@ -680,7 +680,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 * @param descripcion string Descripcion de este tipo de almacen
  	 * @return id_tipo_almacen int Id del tipo de almacen
  	 **/
-  static function NuevoTipo_almacen
+  static function NuevoAlmacenTipo
 	(
 		$descripcion
 	);  
