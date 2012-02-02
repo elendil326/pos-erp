@@ -1,0 +1,6 @@
+RewriteEngine on
+
+Options +FollowSymlinks
+
+
+RewriteRule ^(.*)$						ApiLoader.php?_api_=$1&%{QUERY_STRING} [L]
