@@ -1,16 +1,176 @@
 <?php
 
+class PosComponentPage extends StdComponentPage{
 
-class GerenciaComponentPage extends StdComponentPage{
 
-	private $permisos_controller;
 	private $main_menu_json;
 
+	function __construct(){
+		parent::__construct();
+		
+	}
+
+	private function _renderWrapper(){
+		?>
+		<!DOCTYPE html>
+		<html xmlns="http://www.w3.org/1999/xhtml" lang="en" >
+		<head>
+		<title>POS</title>
+
+			<link rel="stylesheet" type="text/css" href="http://api.caffeina.mx/ext-4.0.0/resources/css/ext-all.css" /> 
+		    <script type="text/javascript" src="http://api.caffeina.mx/ext-4.0.0/ext-all-debug.js"></script>
+			<link type="text/css" rel="stylesheet" href="../../../css/basic.css"/>
+			<script type="text/javascript" charset="utf-8" src="http://api.caffeina.mx/ext-4.0.0/examples/ux/grid/TransformGrid.js"></script>
+			<script type="text/javascript" src="./gerencia.js"></script>
+
+		</head>
+		<body class="">
+		<!-- <div id="FB_HiddenContainer" style="position:absolute; top:-10000px; width:0px; height:0px;"></div> -->
+		<div class="devsitePage">
+			<div class="menu">
+				<div class="content">
+					<a class="logo" href="index.php">
+						
+						<!--<img class="img" src="../../../media/N2f0JA5UPFU.png" alt="" width="166" height="17"/>-->
+						<div style="width:166px; height: 17px">
+							
+						</div>
+					</a>
+
+					
+					<a class="l" href="./config.php">Configuracion</a>
+					<a class="l" href="./../?cs=1">Salir</a>
+
+					<a class="l">
+						<img style="margin-top:8px; display: none;" id="ajax_loader" src="../../../media/loader.gif">
+					</a>
+
+					<!--
+					<div class="search">
+						<form method="get" action="/search">
+							<div class="uiTypeahead" id="u272751_1">
+								<div class="wrap">
+									<input type="hidden" autocomplete="off" class="hiddenInput" name="path" value=""/>
+									<div class="innerWrap">
+										<span class="uiSearchInput textInput">
+										<span>
+										
+										<input 
+											type="text" 
+											class="inputtext DOMControl_placeholder" 
+											name="selection" 
+											placeholder="Buscar" 
+											autocomplete="off" 
+											onfocus="" 
+											spellcheck="false"
+											title="Search Documentation / Apps"/>
+										<button type="submit" title="Search Documentation / Apps">
+										<span class="hidden_elem">
+										</span>
+										</button>
+										</span>
+										</span>
+									</div>
+								</div>
+											
+								
+
+
+							</div>
+						</form>
+					</div>
+					-->
+					<div class="clear">
+					</div>
+				</div>
+			</div>
+			<div class="body nav">
+				<div class="content">
+
+					<!-- ----------------------------------------------------------------------
+									MENU
+						 ---------------------------------------------------------------------- -->
+					<div id="bodyMenu" class="bodyMenu"><div class="toplevelnav">
+						<?php $this->_renderMenu(); ?>
+					</div></div>
+					
+
+					
+					<!-- ----------------------------------------------------------------------
+									CONTENIDO
+						 ---------------------------------------------------------------------- -->
+					<div id="bodyText" class="bodyText">
+						<div class="header">
+							<div class="content">
+								<?php  $this->_renderComponents(); ?>
+							</div>
+						</div>
+
+
+						<div class="mtm pvm uiBoxWhite topborder">
+							<div class="mbm"></div>
+							<!--<abbr class="timestamp">Generado <?php echo date("r",time()); ?></abbr>-->
+						</div>
+					</div>
+
+					<div class="clear"></div>
+
+				</div>
+			</div>
+			<div class="footer">
+				<div class="content">
+					
+					<div class="copyright">
+					Caffeina Software
+					</div>
+
+					<div class="links">
+						<a href="">About</a>
+						<a href="">Platform Policies</a>
+						<a href="">Privacy Policy</a>
+					</div>
+				</div>
+			</div>
+
+			
+		</div>
+
+		</body>
+		</html>
+	
+		<?php
+	}
+
+	protected function _renderMenu(){ return NULL; }
+	
+	private function _renderComponents(){
+
+			foreach( $this->components as $cmp )
+			{
+				echo $cmp->renderCmp();
+			}
+
+	}
+
+	public function render(){
+		$this->_renderWrapper();
+		exit;
+	}
+
+
+}
 
 
 
-	function __construct()
-	{
+
+
+
+class GerenciaComponentPage extends PosComponentPage{
+
+
+	private $main_menu_json;
+
+	function __construct(){
 
 		parent::__construct();
 
@@ -23,24 +183,12 @@ class GerenciaComponentPage extends StdComponentPage{
 		
 		return;
 		
-	}//__construct
+	}
 
-
-
-
-
-	/**
-	 *
-	 *	Crear los menues gracias a un json,
-	 *  en un futuro este json puede
-	 *  estar en la base de datos y ser diferente 
-	 *  para cada usuario ! nice ! 
-	 **/
-	private function createMainMenu()
-	{
+	private function createMainMenu(){
 		$this->main_menu_json = '
 				{
-    "main_menu": [
+    				"main_menu": [
         {
             "title": "Autorizaciones",
             "url": "autorizaciones.php",
@@ -718,15 +866,55 @@ class GerenciaComponentPage extends StdComponentPage{
 		
 	}
 
+	protected function _renderMenu(){
+			################ Main Menu ################
+			echo "<ul>";
+			
+			$mm = json_decode( $this->main_menu_json );
+
+			foreach ( $mm->main_menu as $item )
+			{
+
+				echo "<li ";
+
+				if(isset( $item->children ))
+				{
+					echo "class='withsubsections'";
+				}
+
+				echo "><a href='". $item->url  ."'><div class='navSectionTitle'>" . $item->title . "</div></a>";
+
+				$foo = explode( "/" ,  $_SERVER["SCRIPT_FILENAME"] );
+				$foo = array_pop( $foo );
+
+				$foo = explode( "." , $foo );
+				$foo = $foo[0];
 
 
+				if(strtolower( $foo ) == strtolower( $item->title )){
+					if(isset( $item->children ) ){
 
-	/**
-      * End page creation and ask for login
-      * optionally sending a message to user
-	  **/
-	private function dieWithLogin($message = null)
-	{
+						foreach( $item->children as $subitem )
+						{
+							echo '<ul class="subsections">';
+							echo "<li>";
+							echo '<a href="'. $subitem->url .'">' . $subitem->title . '</a>';
+							echo "</li>";
+							echo "</ul>";
+						}
+
+					}										
+				}
+
+
+				echo "</li>";
+
+			}
+			return 1;
+			################ Main Menu ################
+	}
+
+	private function dieWithLogin($message = null){
 		$login_cmp = new LoginComponent();
 
 		if( $message != null )
@@ -738,217 +926,5 @@ class GerenciaComponentPage extends StdComponentPage{
 		parent::render();
 		exit();
 	}
-
-
-
-
-	function render(  )
-	{
-		?>
-		<!DOCTYPE html>
-		<html xmlns="http://www.w3.org/1999/xhtml" lang="en" >
-		<head>
-		<title>POS</title>
-
-			<!--
-			<link rel="stylesheet" type="text/css" href="http://api.caffeina.mx/ext-latest/resources/css/ext-all.css" /> 
-		    <script type="text/javascript" src="http://api.caffeina.mx/ext-latest/adapter/ext/ext-base.js"></script> 
-		    <script type="text/javascript" src="http://api.caffeina.mx/ext-latest/ext-all.js"></script> 
-			-->
-			
-			<link rel="stylesheet" type="text/css" href="http://api.caffeina.mx/ext-4.0.0/resources/css/ext-all.css" /> 
-		    <script type="text/javascript" src="http://api.caffeina.mx/ext-4.0.0/ext-all-debug.js"></script>
-			<link type="text/css" rel="stylesheet" href="../../../css/basic.css"/>
-			<script type="text/javascript" charset="utf-8" src="http://api.caffeina.mx/ext-4.0.0/examples/ux/grid/TransformGrid.js"></script>
-			<script type="text/javascript" src="./gerencia.js"></script>
-
-		</head>
-		<body class="">
-		<div id="FB_HiddenContainer" style="position:absolute; top:-10000px; width:0px; height:0px;"></div>
-		<div class="devsitePage">
-			<div class="menu">
-				<div class="content">
-					<a class="logo" href="index.php">
-						
-						<!--<img class="img" src="../../../media/N2f0JA5UPFU.png" alt="" width="166" height="17"/>-->
-						<div style="width:166px; height: 17px">
-							
-						</div>
-					</a>
-
-
-					<a class="l" href="./configuracion.php">Configuracion</a>
-					<a class="l" href="./../?cs=1">Salir</a>
-
-					<a class="l">
-						<img style="margin-top:8px; display: none;" id="ajax_loader" src="../../../media/loader.gif">
-					</a>
-
-
-					<div class="search">
-						<form method="get" action="/search">
-							<div class="uiTypeahead" id="u272751_1">
-								<div class="wrap">
-									<input type="hidden" autocomplete="off" class="hiddenInput" name="path" value=""/>
-									<div class="innerWrap">
-										<span class="uiSearchInput textInput">
-										<span>
-										
-										<input 
-											type="text" 
-											class="inputtext DOMControl_placeholder" 
-											name="selection" 
-											placeholder="Buscar" 
-											autocomplete="off" 
-											onfocus="" 
-											spellcheck="false"
-											title="Search Documentation / Apps"/>
-										<button type="submit" title="Search Documentation / Apps">
-										<span class="hidden_elem">
-										</span>
-										</button>
-										</span>
-										</span>
-									</div>
-								</div>
-											
-								
-
-
-							</div>
-						</form>
-					</div>
-					<div class="clear">
-					</div>
-				</div>
-			</div>
-			<div class="body nav">
-				<div class="content">
-					<div id="bodyMenu" class="bodyMenu">
-						<div class="toplevelnav">
-							<ul>
-
-							<?php
-							################ Main Menu ################
-
-								$mm = json_decode( $this->main_menu_json );
-
-								foreach ( $mm->main_menu as $item )
-								{
-
-									echo "<li ";
-
-									if(isset( $item->children ))
-									{
-										echo "class='withsubsections'";
-									}
-
-									echo "><a href='". $item->url  ."'><div class='navSectionTitle'>" . $item->title . "</div></a>";
-
-									$foo = explode( "/" ,  $_SERVER["SCRIPT_FILENAME"] );
-									$foo = array_pop( $foo );
-									
-									$foo = explode( "." , $foo );
-									$foo = $foo[0];
-									
-
-									if(strtolower( $foo ) == strtolower( $item->title )){
-										if(isset( $item->children ) ){
-
-											foreach( $item->children as $subitem )
-											{
-												echo '<ul class="subsections">';
-												echo "<li>";
-												echo '<a href="'. $subitem->url .'">' . $subitem->title . '</a>';
-												echo "</li>";
-												echo "</ul>";
-											}
-
-										}										
-									}
-
-
-									echo "</li>";
-
-								}
-
-							################ Main Menu ################
-							?>
-
-						</div>
-						<!--
-						<ul id="navsubsectionpages">
-							<li>asdf</li>
-						</ul>
-						-->
-					</div>
-					<div id="bodyText" class="bodyText">
-						<div class="header">
-							<div class="content">
-								
-
-									
-							<!-- ----------------------------------------------------------------------
-											CONTENIDO
-								 ---------------------------------------------------------------------- -->
-
-								 <?php
-									foreach( $this->components as $cmp )
-									{
-										echo $cmp->renderCmp();
-									}
-								 ?>
-
-								 <!--
-								<div class="breadcrumbs">
-									<a href=".">POS ERP</a> 
-									&rsaquo; <a href=".">Cargos y abonos</a>							
-								</div>								
-								-->
-
-								
-									
-							</div>
-						</div>
-
-
-						<div class="mtm pvm uiBoxWhite topborder">
-							<div class="mbm">
-								
-							</div>
-							<abbr class="timestamp">Generado <?php echo date("r",time()); ?></abbr>
-						</div>
-
-					</div>
-
-					<div class="clear">
-					</div>
-
-				</div>
-			</div>
-			<div class="footer">
-				<div class="content">
-					
-					<div class="copyright">
-					Caffeina
-					</div>
-
-					<div class="links">
-						<a href="">About</a>
-						<a href="">Platform Policies</a>
-						<a href="">Privacy Policy</a>
-					</div>
-				</div>
-			</div>
-
-			
-		</div>
-
-		</body>
-		</html>
-		<?php
-		exit;
-	}
-
 
 }

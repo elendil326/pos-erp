@@ -192,7 +192,7 @@
 	require_once("controllers/Clientes.controller.php");
 	require_once("controllers/Sesion.controller.php");
 	require_once("controllers/PersonalYAgentes.controller.php");
-        require_once("controllers/Validaciones.controllers.php");
+    require_once("controllers/Validaciones.controllers.php");
 	
 	/*
 	require_once("controllers/Autorizaciones.controller.php");
