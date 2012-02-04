@@ -7,13 +7,13 @@ Options +FollowSymlinks
 #RewriteRule ^([0-9]*)/ingenieria/(.*\.php)?(.*)$	__instance__/ingenieria/$2?_instance_=$1&%{QUERY_STRING} [L]
 
 
-RewriteRule ^([a-zA-Z0-9_-]+)/gerencia/gerencia.js$			__instance__/gerencia/gerencia.js [L]
-RewriteRule ^([a-zA-Z0-9_-]+)/gerencia/(.*\.php)?(.*)$		__instance__/gerencia/$2?_instance_=$1&%{QUERY_STRING} [L]
+RewriteRule ^([a-zA-Z0-9_-]+)/g/gerencia.js$			__instance__/gerencia/gerencia.js [L]
+RewriteRule ^([a-zA-Z0-9_-]+)/g/(.*\.php)?(.*)$			__instance__/gerencia/$2?_instance_=$1&%{QUERY_STRING} [L]
 
-#RewriteRule ^([0-9]*)/sucursal.caffeina$			__instance__/sucursal/index.php?_instance_=$1&%{QUERY_STRING} [L]
+RewriteRule ^([a-zA-Z0-9_-]+)/s/(.*)$					__instance__/sucursal/$2?_instance_=$1&%{QUERY_STRING} [L]
 
-RewriteRule ^([a-zA-Z0-9_-]+)/api/(.*)$						__instance__/api/$2?_instance_=$1&%{QUERY_STRING} [L]
+RewriteRule ^([a-zA-Z0-9_-]+)/api/(.*)$					__instance__/api/$2?_instance_=$1&%{QUERY_STRING} [L]
 
-RewriteRule ^([a-zA-Z0-9_-]+)/$ 							__instance__/?_instance_=$1&%{QUERY_STRING} [L]
-RewriteRule ^([a-zA-Z0-9_-]+)$ 								__instance__/?_instance_=$1&%{QUERY_STRING} [L]
+RewriteRule ^([a-zA-Z0-9_-]+)/$ 						__instance__/?_instance_=$1&%{QUERY_STRING} [L]
+RewriteRule ^([a-zA-Z0-9_-]+)$ 							__instance__/?_instance_=$1&%{QUERY_STRING} [L]
 
