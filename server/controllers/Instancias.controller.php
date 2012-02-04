@@ -132,6 +132,23 @@
 				return null;
 		    }
 			
+			//llenar los datos
+			$instalation_script = file_get_contents( POS_PATH_TO_SERVER_ROOT . DIRECTORY_SEPARATOR .  ".." . DIRECTORY_SEPARATOR . "private" . DIRECTORY_SEPARATOR . "pos_instance_foundation.sql");
+			$queries = explode(  ";", $instalation_script);
+			try {
+				//$POS_CONFIG["CORE_CONN"]->BeginTrans();
+				
+				for ($i=0; $i < sizeof($queries); $i++) { 
+					if(strlen( trim( $queries[$i] ) ) == 0) continue;
+					$i_conn->Execute(  $queries[$i] . ";" );
+				}
+
+				
+				
+			}catch(ADODB_Exception $e){
+		        Logger::error($e->msg);
+				return null;
+		    }
 	        
 			$sql = "UPDATE  `instances` SET  
 					`db_user` 		=  ?,
@@ -140,7 +157,7 @@
 					`db_driver` 	=  ?,
 					`db_host` 		=  ? WHERE  `instances`.`instance_id` = ?;";
 
-			try {
+			try{
 
 				$POS_CONFIG["CORE_CONN"]->Execute(  $sql, array( $DB_NAME, $DB_NAME, $DB_NAME, $POS_CONFIG["CORE_DB_DRIVER"], $POS_CONFIG["CORE_DB_HOST"], $I_ID ));
 
@@ -173,8 +190,6 @@
 				
 			}
 
-			
-			//var_dump( $res);
 			
 			if(empty($res)) return NULL;
 			
