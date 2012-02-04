@@ -1,94 +1,113 @@
-<?php 
+<?php
 
-class JediComponentPage extends StdComponentPage{
+class JediComponentPage extends PosComponentPage{
 
-	private $permisos_controller;
+	private $main_menu_json;
 
-
-	function __construct()
-	{
-
+	function __construct(){
 
 		parent::__construct();
 
+
+		$this->createMainMenu();
 		
-
-		//vamos a ver si tengo permiso para 
-		//crear una pagina jedi
-		$jedi_login = new JediLoginController();
-
+		return;
 		
-		//user is logged in, go ahead
-		if($jedi_login->isLoggedIn()) 
-		{
-			//usuario esta loggeado, 
-			//vamos a ver si quiere 
-			//cerrar sesion
-			if(isset($_GET["close_session"]))
-			{
-				//si quiere cerrar la sesion ! 
-				$jedi_login->logout();
-				die(header("Location: ./?bye"));
-			}
-
-			return $this->bootstrap();
-				
-		}
-		
-
-		//ok no esta loggeado, pero 
-		//vamos a ver si se quiere loggear
-		if(
-				isset($_POST["do_login"]	) 
-			&& 	$_POST["do_login"] == 1
-			&& 	isset( $_POST["user"] 		)
-			&& 	isset( $_POST["password"] 	)
-		)
-		{
-			//user wants to login
-			if($jedi_login->login($_POST["user"], $_POST["password"]))
-			{
-				//login was succesful, keep building this object
-				return $this->bootstrap();
-
-			}else{
-				//unsuccessful login
-				$this->dieWithLogin("Credenciales invalidas");	
-
-			}
-
-		}else{
-			$this->dieWithLogin();
-
-		}
-
-		//there should be no path ending here!
-		Logger::error("JEDI component page : there should be no path ending here!");
-
-	}//__construct()
-
-
-
-
-
-	function bootstrap()
-	{
-		$m = new MenuComponent();
-		$m->addItem("Cerrar sesion", "./?close_session");
-		$m->addItem("Instancias", "instancias.php");
-		self::addComponent( $m );
 	}
 
+	private function createMainMenu()	{
+		$this->main_menu_json = '
+		{
+		    "main_menu": [
+		        {
+		            "title": "Instancias",
+		            "url": "instancias.lista.php",
+		            "children": [
+		                {
+		                    "title": "Ver instancias",
+		                    "url": "instancias.lista.php"
+		                },
+		                {
+		                    "title": "Nueva instancia",
+		                    "url": "instancias.nueva.php"
+		                }
+		            ]
+		        },
+		        {
+		            "title": "Cargos y abonos",
+		            "url": "cargos_y_abonos.php",
+		            "children": [
+		                {
+		                    "title": "Lista abono",
+		                    "url": "cargos_y_abonos.lista.abono.php"
+		                },
+		                {
+		                    "title": "Lista concepto de gasto",
+		                    "url": "cargos_y_abonos.lista.concepto.gasto.php"
+		                }
+		            ]
+		        }
+		    ]
+		}';
+		
+	}
+
+	protected function _renderTopMenu()	{
+		?>
+			<a class="l" href="./config.php">Configuracion</a>
+			<a class="l" href="./../?cs=1">Salir</a>
+		<?php
+	}
+	
+	protected function _renderMenu()	{
+			################ Main Menu ################
+			echo "<ul>";
+			
+			$mm = json_decode( $this->main_menu_json );
+
+			foreach ( $mm->main_menu as $item )
+			{
+
+				echo "<li ";
+
+				if(isset( $item->children ))
+				{
+					echo "class='withsubsections'";
+				}
+
+				echo "><a href='". $item->url  ."'><div class='navSectionTitle'>" . $item->title . "</div></a>";
+
+				$foo = explode( "/" ,  $_SERVER["SCRIPT_FILENAME"] );
+				$foo = array_pop( $foo );
+
+				$foo = explode( "." , $foo );
+				$foo = $foo[0];
 
 
+				if(strtolower( $foo ) == strtolower( $item->title )){
+					if(isset( $item->children ) ){
+
+						foreach( $item->children as $subitem )
+						{
+							echo '<ul class="subsections">';
+							echo "<li>";
+							echo '<a href="'. $subitem->url .'">' . $subitem->title . '</a>';
+							echo "</li>";
+							echo "</ul>";
+						}
+
+					}										
+				}
 
 
-	/**
-      * End page creation and ask for login
-      * optionally sending a message to user
-	  **/
-	private function dieWithLogin($message = null)
-	{
+				echo "</li>";
+
+			}
+			return 1;
+			################ Main Menu ################
+	}
+
+	private function dieWithLogin($message = null){
 		$login_cmp = new LoginComponent();
 
 		if( $message != null )
@@ -101,18 +120,4 @@ class JediComponentPage extends StdComponentPage{
 		exit();
 	}
 
-
-	/**
-	  *
-	  *
-	  **/
-	function render()
-	{
-		parent::render();
-	}
-
 }
-
-
-
-

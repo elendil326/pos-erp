@@ -9,7 +9,7 @@
 
 	$p = new JediComponentPage( );
 
-	$p->addComponent( new TitleComponent( "Estado del servidor" ) );
+	$p->addComponent( new TitleComponent( "Welcome" ) );
 
 	
 	$t = new SimpleTableComponent();

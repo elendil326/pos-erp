@@ -22,7 +22,9 @@ class PosComponentPage extends StdComponentPage{
 			<link type="text/css" rel="stylesheet" href="../../../css/basic.css"/>
 			<script type="text/javascript" charset="utf-8" src="http://api.caffeina.mx/ext-4.0.0/examples/ux/grid/TransformGrid.js"></script>
 			<script type="text/javascript" src="./gerencia.js"></script>
-
+			<script type="text/javascript" charset="utf-8">
+				if(HtmlEncode===undefined){var HtmlEncode=function(a){var b=a.length,c=[];while(b--){var d=a[b].charCodeAt();if(d>127||d>90&&d<97){c[b]="&#"+d+";"}else{c[b]=a[b]}}return c.join("")}} 
+			</script>
 		</head>
 		<body class="">
 		<!-- <div id="FB_HiddenContainer" style="position:absolute; top:-10000px; width:0px; height:0px;"></div> -->
@@ -938,3 +940,10 @@ class GerenciaComponentPage extends PosComponentPage{
 	}
 
 }
+
+
+
+
+
+
+

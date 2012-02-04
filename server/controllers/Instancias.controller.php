@@ -1,7 +1,7 @@
 <?php
 
 
-
+          
 	class InstanciasController {
 		
 		/**
@@ -9,7 +9,7 @@
 		 * 
 		 * 
 		 * */
-		public function Nueva(
+		public static function Nueva(
 			$instance_token = null,
 			$descripcion = null
 		){
@@ -173,7 +173,7 @@
 		
 		
 		
-		public function BuscarPorId( $I_ID ){
+		public static function BuscarPorId( $I_ID ){
 			global $POS_CONFIG;
 			
 			$sql = "select * from instances where instance_id = ?;";
@@ -197,7 +197,7 @@
 		}
 		
 		
-		public function BuscarPorToken($instance_token = null){
+		public static function BuscarPorToken($instance_token = null){
 			
 			global $POS_CONFIG;
 			
@@ -214,7 +214,7 @@
 		
 		
 		
-		public function Eliminar($instance_token){
+		public static function Eliminar($instance_token){
 			
 		}
 	}

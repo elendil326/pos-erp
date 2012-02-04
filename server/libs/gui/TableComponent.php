@@ -17,11 +17,7 @@ class TableComponent implements GuiComponent{
 
 	protected $simple_render;
 
-	public function __construct
-	(
-			$header = array(), 
-			$rows = array()
-	){
+	public function __construct( $header = array(), $rows = array()	){
 		$this->header = $header;
 		$this->rows = $rows;
 		$this->specialRender = array();
@@ -73,8 +69,7 @@ class TableComponent implements GuiComponent{
 	
 
 
-	public function renderCmp(  )
-	{
+	public function renderCmp(  ){
 		
 		//
 		// Si no hay datos, regresa el mensaje 
@@ -219,14 +214,13 @@ class TableComponent implements GuiComponent{
 
 class SimpleTableComponent extends TableComponent{
 	
-	function __construct()
-	{
+	function __construct(){
 		parent::__construct();
 		$this->simple_render = true;
 	}
 
-	function addRow( $var_args )
-	{
+
+	function addRow( $var_args ){
 		$row = array();
 		
 		$n_args =  func_num_args();
@@ -240,8 +234,7 @@ class SimpleTableComponent extends TableComponent{
 	}
 
 
-	function setRows( $rows )
-	{
+	function setRows( $rows ){
 		$this->rows = $rows;
 	}	
 

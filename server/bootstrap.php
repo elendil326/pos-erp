@@ -150,7 +150,7 @@
 	require_once("libs/gui/Page.php");
 	require_once("libs/gui/StdPage.php");
 	require_once("libs/gui/StdComponentPage.php");
-	require_once("libs/gui/JediComponentPage.php");
+
 	require_once("libs/gui/GuiComponent.php");
 	require_once("libs/gui/LoginComponent.php");
 	require_once("libs/gui/FormComponent.php");
@@ -160,6 +160,7 @@
 	require_once("libs/gui/TitleComponent.php");
 	require_once("libs/gui/TableComponent.php");
 	require_once("libs/gui/GerenciaComponentPage.php");
+	require_once("libs/gui/JediComponentPage.php");
 	require_once("libs/gui/FreeHtmlComponent.php");
 	require_once("libs/gui/ShoppingCartComponent.php");	
 	require_once("libs/gui/SearchProductComponent.php");		
@@ -189,6 +190,7 @@
 	# *******************************
 	# Cargar los Controllers
 	# *******************************
+    require_once("controllers/Instancias.controller.php");
 	require_once("controllers/Clientes.controller.php");
 	require_once("controllers/Sesion.controller.php");
 	require_once("controllers/PersonalYAgentes.controller.php");
