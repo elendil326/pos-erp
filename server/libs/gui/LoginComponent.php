@@ -108,7 +108,7 @@ class LoginComponent implements GuiComponent
 			.LoginComponent{
 
 				width: 500px;
-				margin : 150px auto;
+				margin : 35px auto;
 				background-color: white;
 				color: rgb( 53, 98, 162 );
 				-moz-border-radius: 15px;
@@ -167,12 +167,23 @@ class LoginComponent implements GuiComponent
 				<tr>
 					<td></td>
 					<td align="right">Usuario</td>
-					<td><input type="text" name="user" id="user" size="10"/></td>
+					<td>
+						<input 
+							type="text" 
+							name="user" 
+							id="user" 
+							size="10" 
+							onkeypress="(function(e){var k=e.keyCode || e.which;if (k==13){snd_to_api();}})(event)"/></td>
 				</tr><tr>
 					<td></td>
 					<td align="right">Contrase&ntilde;a</td><td>
-						<input type="password" id="password" name="password" size="10" onkeypress=""/>
-					</td>
+						<input 
+							type="password" 
+							id="password" 
+							name="password" 
+							size="10" 
+							onkeypress="(function(e){var k=e.keyCode || e.which;if (k==13){snd_to_api();}})(event)"/></td>
+
 				</tr><tr valign="top">
 					<td></td>
 					<td></td>
