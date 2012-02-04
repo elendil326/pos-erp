@@ -176,7 +176,7 @@
 	# Cargar controladores
 	# *******************************
 	/*require_once("controllers/login.controller.php");*/
-	require_once("controllers/instances.controller.php");
+	//require_once("controllers/instances.controller.php");
     
 	require_once("libs/SessionManager.php");
 

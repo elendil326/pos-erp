@@ -16,27 +16,40 @@ class StdComponentPage extends StdPage{
 		$this->components = array();
 	}
 
-	public function requireParam(  $param_name, $method = "GET", $on_error_message = "ERROR" ) 
+
+	private function dieWithError( $on_error_message ){
+		$this->components = array(
+			new TitleComponent("Error", 2),
+			new TitleComponent( $on_error_message , 4)
+		);
+		
+		
+		
+		if( isset($_SERVER['HTTP_REFERER'])){
+			array_push(
+					$this->components,
+					new TitleComponent( "Regrese a <a href='".$_SERVER['HTTP_REFERER']."'>la pagina anterior.</a>", 4)
+				);
+		}
+		
+		$this->render();
+		exit;
+	}
+
+	public function requireParam(  $param_name, $method = "GET", $on_error_message = "ERROR", $validator_fn = null ) 
 	{
 		switch( $method ){
 			case "GET" : 
-				if(!isset($_GET[$param_name])){
-					
-					$this->components = array(
-						new TitleComponent("Error", 2),
-						new TitleComponent( $on_error_message , 4)
-					);
-					
-					if( isset($_SERVER['HTTP_REFERER'])){
-						array_push(
-								$this->components,
-								new TitleComponent( "Regrese a <a href='".$_SERVER['HTTP_REFERER']."'>la pagina anterior.</a>", 4)
-							);
-					}
-					
-					$this->render();
-					exit;
+				if(	!isset($_GET[$param_name] ) ){
+					self::dieWithError( $on_error_message );
 				}
+					
+				if( !is_null( $validator_fn ) ){
+					if(is_null( call_user_func( $validator_fn, $_GET[$param_name])  )){
+						self::dieWithError( $on_error_message );							
+					}
+				}
+
 			break;
 			case "POST":
 				if(!isset($_POST[$param_name])){
