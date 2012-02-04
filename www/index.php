@@ -6,5 +6,7 @@
 	require_once("../server/bootstrap.php");
 	
 	$page = new PosComponentPage();
-
+	
+	$page->addComponent( new LoginComponent( ) );
+	
 	$page->render();

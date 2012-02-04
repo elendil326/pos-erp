@@ -41,11 +41,10 @@ class SesionController implements ISesion{
 	)
 	{  
 		
-  		Logger::warn("Cerrando sesion");
-		Logger::log("falta borrar el token de la bd");
+  		Logger::log("Cerrando sesion");
+		Logger::warn("Falta borrar el token de la bd");
 
 		$sm = SessionManager::getInstance();
-		
 		$sm->SetCookie( 'at', 'deleted', 1, '/' );
   		
 	}

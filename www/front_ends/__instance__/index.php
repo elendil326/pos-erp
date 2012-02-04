@@ -10,12 +10,12 @@
 	//vamos a revisar si el usuario tiene una
 	//sesion iniciada, y lo adentramos
 	if(SesionController::isLoggedIn()){
-		die(header( "Location: gerencia/" ));
+		die(header( "Location: g/" ));
 	}
 
-	$page = new StdComponentPage();
+	$page = new PosComponentPage();
 	$login = new LoginComponent();
 	$login->setLoginApiCall("api/sesion/iniciar/");
-	$page->addComponent( $login  );
+	$page->addComponent( $login );
 	$page->render();
 

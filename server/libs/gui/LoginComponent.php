@@ -20,8 +20,7 @@ class LoginComponent implements GuiComponent
 		?>
 		<script type="text/javascript" charset="utf-8">
 		
-			function getParameterByName(name)
-			{
+			var getParameterByName = function (name){
 			  name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
 			  var regexS = "[\\?&]" + name + "=([^&#]*)";
 			  var regex = new RegExp(regexS);
@@ -68,7 +67,7 @@ class LoginComponent implements GuiComponent
 							//the cookie should be arleady set
 							//Ext.util.Cookies.set( "a_t", o.auth_token );
 							
-							if(o.status == "ok") window.location = "gerencia/" + getParameterByName("next_url");
+							if(o.status == "ok") window.location = "g/" + getParameterByName("next_url");
 						}
 
 					},

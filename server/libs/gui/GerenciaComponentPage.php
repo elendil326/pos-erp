@@ -10,7 +10,7 @@ class PosComponentPage extends StdComponentPage{
 		
 	}
 
-	private function _renderWrapper(){
+	private function _renderWrapper()	{
 		?>
 		<!DOCTYPE html>
 		<html xmlns="http://www.w3.org/1999/xhtml" lang="en" >
@@ -37,9 +37,9 @@ class PosComponentPage extends StdComponentPage{
 						</div>
 					</a>
 
+					<?php echo $this->_renderTopMenu(); ?>
 					
-					<a class="l" href="./config.php">Configuracion</a>
-					<a class="l" href="./../?cs=1">Salir</a>
+
 
 					<a class="l">
 						<img style="margin-top:8px; display: none;" id="ajax_loader" src="../../../media/loader.gif">
@@ -141,7 +141,9 @@ class PosComponentPage extends StdComponentPage{
 		<?php
 	}
 
-	protected function _renderMenu(){ return NULL; }
+	protected function _renderTopMenu( ){ return ""; }
+	
+	protected function _renderMenu( )	{ return ""; }
 	
 	private function _renderComponents(){
 
@@ -167,7 +169,6 @@ class PosComponentPage extends StdComponentPage{
 
 class GerenciaComponentPage extends PosComponentPage{
 
-
 	private $main_menu_json;
 
 	function __construct(){
@@ -176,7 +177,9 @@ class GerenciaComponentPage extends PosComponentPage{
 
 		//check for user login status
 		if(SesionController::isLoggedIn() === FALSE){
-			die(header("Location: ../?next_url=" . $_SERVER["SCRIPT_NAME"]));
+			$a = explode("/", $_SERVER["SCRIPT_NAME"]);
+			
+			die(header("Location: ../?next_url=" . $a[sizeof($a)-1]));
 		}
 		
 		$this->createMainMenu();
@@ -185,7 +188,7 @@ class GerenciaComponentPage extends PosComponentPage{
 		
 	}
 
-	private function createMainMenu(){
+	private function createMainMenu()	{
 		$this->main_menu_json = '
 				{
     				"main_menu": [
@@ -866,7 +869,14 @@ class GerenciaComponentPage extends PosComponentPage{
 		
 	}
 
-	protected function _renderMenu(){
+	protected function _renderTopMenu()	{
+		?>
+			<a class="l" href="./config.php">Configuracion</a>
+			<a class="l" href="./../?cs=1">Salir</a>
+		<?php
+	}
+	
+	protected function _renderMenu()	{
 			################ Main Menu ################
 			echo "<ul>";
 			
