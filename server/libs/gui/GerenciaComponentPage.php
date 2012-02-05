@@ -4,9 +4,11 @@ class PosComponentPage extends StdComponentPage{
 
 
 	private $main_menu_json;
-
-	function __construct(){
-		parent::__construct();
+	private $title;
+	
+	function __construct( $title ){
+		$this->title = $title;
+		parent::__construct( $title );
 		
 	}
 
@@ -15,7 +17,7 @@ class PosComponentPage extends StdComponentPage{
 		<!DOCTYPE html>
 		<html xmlns="http://www.w3.org/1999/xhtml" lang="en" >
 		<head>
-		<title>POS</title>
+		<title><?php echo $this->title; ?></title>
 
 			<link rel="stylesheet" type="text/css" href="http://api.caffeina.mx/ext-4.0.0/resources/css/ext-all.css" /> 
 		    <script type="text/javascript" src="http://api.caffeina.mx/ext-4.0.0/ext-all-debug.js"></script>

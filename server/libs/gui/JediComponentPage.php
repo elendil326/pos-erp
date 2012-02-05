@@ -4,9 +4,9 @@ class JediComponentPage extends PosComponentPage{
 
 	private $main_menu_json;
 
-	function __construct(){
+	function __construct( $title = "Jedi" ){
 
-		parent::__construct();
+		parent::__construct( $title );
 
 
 		$this->createMainMenu();

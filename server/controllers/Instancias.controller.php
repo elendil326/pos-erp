@@ -212,7 +212,26 @@
 			
 		}
 		
-		
+		public static function Buscar(  ){
+			
+			global $POS_CONFIG;
+			
+			$sql = "select * from instances";
+											//($sql,$inputarr=false,$force_array=false,$first2cols=false)
+			$res = $POS_CONFIG["CORE_CONN"]->GetAssoc( $sql, false, false, false );
+			
+			if(empty($res)) return NULL;
+			
+			$a = array();
+			
+			foreach ($res as $v) {
+				array_push( $a, $v );
+			}
+			
+			return $a;
+			
+			
+		}
 		
 		public static function Eliminar($instance_token){
 			
