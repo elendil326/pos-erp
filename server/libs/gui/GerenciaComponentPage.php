@@ -6,7 +6,7 @@ class PosComponentPage extends StdComponentPage{
 	private $main_menu_json;
 	private $title;
 	
-	function __construct( $title ){
+	function __construct( $title = "Gerencia"){
 		$this->title = $title;
 		parent::__construct( $title );
 		
@@ -175,9 +175,9 @@ class GerenciaComponentPage extends PosComponentPage{
 
 	private $main_menu_json;
 
-	function __construct(){
+	function __construct( $title = "Gerencia"){
 
-		parent::__construct();
+		parent::__construct( $title );
 
 		//check for user login status
 		if(SesionController::isLoggedIn() === FALSE){
