@@ -2,7 +2,7 @@
 /** Value Object file for table billete_caja.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author Andres
+  * @author Alan Gonzalez
   * @access public
   * @package docs
   * 

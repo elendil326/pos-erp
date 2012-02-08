@@ -11,25 +11,7 @@
   **/        
 class DireccionController{
 	
-        private static function validarString($string, $max_length, $nombre_variable,$min_length=0)
-	{
-		if(strlen($string)<=$min_length||strlen($string)>$max_length)
-		{
-		    return "La longitud de la variable ".$nombre_variable." proporcionada (".$string.") no esta en el rango de ".$min_length." - ".$max_length;
-		}
-		return true;
-    }
 
-
-
-	private static function validarNumero($num, $max_length, $nombre_variable, $min_length=0)
-	{
-	    if($num<$min_length||$num>$max_length)
-	    {
-	        return "La variable ".$nombre_variable." proporcionada (".$num.") no esta en el rango de ".$min_length." - ".$max_length;
-	    }
-	    return true;
-	}
 
 	public static function validarParametrosDireccion
         (
@@ -132,7 +114,7 @@ class DireccionController{
                 $tipo = null
         )
         {
-            Logger::log("Creando nueva direccion");
+            Logger::log("Insertando nueva direccion...");
 
             $validar = self::validarParametrosDireccion(null, $calle, $numero_exterior, $numero_interior, $referencia,
                     $colonia, $id_ciudad, $codigo_postal, $telefono, $telefono2);
@@ -144,7 +126,7 @@ class DireccionController{
 
             $direccion = new Direccion();
 
-            $id_usuario =  SesionController::getCurrentUser();
+            $id_usuario =  SesionController::getCurrentUser(   );
 
             if($id_usuario == null)
             {	
@@ -167,8 +149,7 @@ class DireccionController{
                 }
             }
             
-            $direccion->setIdUsuario($id_user);
-            $direccion->setCalle($calle);
+           	$direccion->setCalle($calle);
             $direccion->setNumeroExterior($numero_exterior);
             $direccion->setColonia($colonia);
             $direccion->setIdCiudad($id_ciudad);

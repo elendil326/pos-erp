@@ -195,7 +195,8 @@
 	require_once("controllers/Sesion.controller.php");
 	require_once("controllers/PersonalYAgentes.controller.php");
     require_once("controllers/Validaciones.controllers.php");
-	
+	require_once("controllers/Empresas.controller.php");
+	require_once("controllers/Direcciones.controller.php");		
 	/*
 	require_once("controllers/Autorizaciones.controller.php");
 	require_once("controllers/CargosYAbonos.controller.php");
@@ -206,9 +207,8 @@
 	require_once("controllers/Contabilidad.controller.php");
 	require_once("controllers/Documentos.controller.php");
 	require_once("controllers/Efectivo.controller.php");
-	require_once("controllers/Empresas.controller.php");
+
 	require_once("controllers/ImpuestosYRetenciones.controller.php");
-	require_once("controllers/instances.controller.php");
 	require_once("controllers/Inventario.controller.php");
 	require_once("controllers/Paquetes.controller.php");
 	require_once("controllers/POS.controller.php");
@@ -220,7 +220,7 @@
 	require_once("controllers/Sucursales.controller.php");
 	require_once("controllers/TransportacionYFletes.controller.php");
 	require_once("controllers/Ventas.controller.php");
-	require_once("controllers/Direcciones.controller.php");
+
 	*/
 
 	require_once("libs/api/ApiHandler.php");

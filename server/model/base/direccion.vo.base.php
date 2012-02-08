@@ -2,7 +2,7 @@
 /** Value Object file for table direccion.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author Andres
+  * @author Alan Gonzalez
   * @access public
   * @package docs
   * 
@@ -24,12 +24,6 @@ class Direccion extends VO
 		{
 			if( isset($data['id_direccion']) ){
 				$this->id_direccion = $data['id_direccion'];
-			}
-			if( isset($data['id_usuario']) ){
-				$this->id_usuario = $data['id_usuario'];
-			}
-			if( isset($data['tipo']) ){
-				$this->tipo = $data['tipo'];
 			}
 			if( isset($data['calle']) ){
 				$this->calle = $data['calle'];
@@ -78,8 +72,6 @@ class Direccion extends VO
 	{ 
 		$vec = array( 
 			"id_direccion" => $this->id_direccion,
-			"id_usuario" => $this->id_usuario,
-			"tipo" => $this->tipo,
 			"calle" => $this->calle,
 			"numero_exterior" => $this->numero_exterior,
 			"numero_interior" => $this->numero_interior,
@@ -105,24 +97,6 @@ class Direccion extends VO
 	  * @var int(11)
 	  */
 	public $id_direccion;
-
-	/**
-	  * id_usuario
-	  * 
-	  * Id del usuario al que pertenece esta direccion<br>
-	  * @access public
-	  * @var int(11)
-	  */
-	public $id_usuario;
-
-	/**
-	  * tipo
-	  * 
-	  *  [Campo no documentado]<br>
-	  * @access public
-	  * @var varchar(100)
-	  */
-	public $tipo;
 
 	/**
 	  * calle
@@ -249,54 +223,6 @@ class Direccion extends VO
 	final public function setIdDireccion( $id_direccion )
 	{
 		$this->id_direccion = $id_direccion;
-	}
-
-	/**
-	  * getIdUsuario
-	  * 
-	  * Get the <i>id_usuario</i> property for this object. Donde <i>id_usuario</i> es Id del usuario al que pertenece esta direccion
-	  * @return int(11)
-	  */
-	final public function getIdUsuario()
-	{
-		return $this->id_usuario;
-	}
-
-	/**
-	  * setIdUsuario( $id_usuario )
-	  * 
-	  * Set the <i>id_usuario</i> property for this object. Donde <i>id_usuario</i> es Id del usuario al que pertenece esta direccion.
-	  * Una validacion basica se hara aqui para comprobar que <i>id_usuario</i> es de tipo <i>int(11)</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param int(11)
-	  */
-	final public function setIdUsuario( $id_usuario )
-	{
-		$this->id_usuario = $id_usuario;
-	}
-
-	/**
-	  * getTipo
-	  * 
-	  * Get the <i>tipo</i> property for this object. Donde <i>tipo</i> es  [Campo no documentado]
-	  * @return varchar(100)
-	  */
-	final public function getTipo()
-	{
-		return $this->tipo;
-	}
-
-	/**
-	  * setTipo( $tipo )
-	  * 
-	  * Set the <i>tipo</i> property for this object. Donde <i>tipo</i> es  [Campo no documentado].
-	  * Una validacion basica se hara aqui para comprobar que <i>tipo</i> es de tipo <i>varchar(100)</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param varchar(100)
-	  */
-	final public function setTipo( $tipo )
-	{
-		$this->tipo = $tipo;
 	}
 
 	/**

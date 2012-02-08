@@ -2,7 +2,7 @@
 /** Value Object file for table venta_arpilla.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author Andres
+  * @author Alan Gonzalez
   * @access public
   * @package docs
   * 
@@ -119,7 +119,7 @@ class VentaArpilla extends VO
 	/**
 	  * fecha_origen
 	  * 
-	  * Fecha en la que se envía el embarque<br>
+	  * Fecha en la que se env’a el embarque<br>
 	  * @access public
 	  * @var datetime
 	  */
@@ -276,7 +276,7 @@ class VentaArpilla extends VO
 	/**
 	  * getFechaOrigen
 	  * 
-	  * Get the <i>fecha_origen</i> property for this object. Donde <i>fecha_origen</i> es Fecha en la que se envía el embarque
+	  * Get the <i>fecha_origen</i> property for this object. Donde <i>fecha_origen</i> es Fecha en la que se env’a el embarque
 	  * @return datetime
 	  */
 	final public function getFechaOrigen()
@@ -287,7 +287,7 @@ class VentaArpilla extends VO
 	/**
 	  * setFechaOrigen( $fecha_origen )
 	  * 
-	  * Set the <i>fecha_origen</i> property for this object. Donde <i>fecha_origen</i> es Fecha en la que se envía el embarque.
+	  * Set the <i>fecha_origen</i> property for this object. Donde <i>fecha_origen</i> es Fecha en la que se env’a el embarque.
 	  * Una validacion basica se hara aqui para comprobar que <i>fecha_origen</i> es de tipo <i>datetime</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param datetime

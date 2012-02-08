@@ -2,7 +2,7 @@
 /** Value Object file for table usuario.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author Andres
+  * @author Alan Gonzalez
   * @access public
   * @package docs
   * 
@@ -25,8 +25,11 @@ class Usuario extends VO
 			if( isset($data['id_usuario']) ){
 				$this->id_usuario = $data['id_usuario'];
 			}
-			if( isset($data['id_usuario_padre']) ){
-				$this->id_usuario_padre = $data['id_usuario_padre'];
+			if( isset($data['id_direccion']) ){
+				$this->id_direccion = $data['id_direccion'];
+			}
+			if( isset($data['id_direccion_alterna']) ){
+				$this->id_direccion_alterna = $data['id_direccion_alterna'];
 			}
 			if( isset($data['id_sucursal']) ){
 				$this->id_sucursal = $data['id_sucursal'];
@@ -168,7 +171,8 @@ class Usuario extends VO
 	{ 
 		$vec = array( 
 			"id_usuario" => $this->id_usuario,
-			"id_usuario_padre" => $this->id_usuario_padre,
+			"id_direccion" => $this->id_direccion,
+			"id_direccion_alterna" => $this->id_direccion_alterna,
 			"id_sucursal" => $this->id_sucursal,
 			"id_rol" => $this->id_rol,
 			"id_clasificacion_cliente" => $this->id_clasificacion_cliente,
@@ -227,13 +231,22 @@ class Usuario extends VO
 	public $id_usuario;
 
 	/**
-	  * id_usuario_padre
+	  * id_direccion
 	  * 
-	  * Id del usuario padre de este usuario<br>
+	  * Id de la direccion del usuario<br>
 	  * @access public
 	  * @var int(11)
 	  */
-	public $id_usuario_padre;
+	public $id_direccion;
+
+	/**
+	  * id_direccion_alterna
+	  * 
+	  * Id de la direccion alterna del usuario<br>
+	  * @access public
+	  * @var int(11)
+	  */
+	public $id_direccion_alterna;
 
 	/**
 	  * id_sucursal
@@ -247,7 +260,7 @@ class Usuario extends VO
 	/**
 	  * id_rol
 	  * 
-	  * Id del rol que desempeñara el usuario en la instancia<br>
+	  * Id del rol que desempe–ara el usuario en la instancia<br>
 	  * @access public
 	  * @var int(11)
 	  */
@@ -454,7 +467,7 @@ class Usuario extends VO
 	/**
 	  * ventas_a_credito
 	  * 
-	  * Numero de ventas a credito del cliente<br>
+	  * Ventas a credito del cliente<br>
 	  * @access public
 	  * @var int(11)
 	  */
@@ -490,7 +503,7 @@ class Usuario extends VO
 	/**
 	  * mensajeria
 	  * 
-	  * Si el cliente cuenta con una cuenta de mensajería y paquetería<br>
+	  * Si el cliente cuenta con una cuenta de mensajer’a y paqueter’a<br>
 	  * @access public
 	  * @var tinyint(1)
 	  */
@@ -508,7 +521,7 @@ class Usuario extends VO
 	/**
 	  * denominacion_comercial
 	  * 
-	  * Denominación comercial del cliente<br>
+	  * Denominaci—n comercial del cliente<br>
 	  * @access public
 	  * @var varchar(100)
 	  */
@@ -517,7 +530,7 @@ class Usuario extends VO
 	/**
 	  * dias_de_credito
 	  * 
-	  * Días de crédito que se le darán al cliente<br>
+	  * D’as de crŽdito que se le dar‡n al cliente<br>
 	  * @access public
 	  * @var int(11)
 	  */
@@ -535,7 +548,7 @@ class Usuario extends VO
 	/**
 	  * dia_de_revision
 	  * 
-	  * Fecha de revisión del cliente<br>
+	  * Fecha de revisi—n del cliente<br>
 	  * @access public
 	  * @var datetime
 	  */
@@ -562,7 +575,7 @@ class Usuario extends VO
 	/**
 	  * tiempo_entrega
 	  * 
-	  * Tiempo de entrega del proveedor en días<br>
+	  * Tiempo de entrega del proveedor en d’as<br>
 	  * @access public
 	  * @var int(11)
 	  */
@@ -642,27 +655,51 @@ class Usuario extends VO
 	}
 
 	/**
-	  * getIdUsuarioPadre
+	  * getIdDireccion
 	  * 
-	  * Get the <i>id_usuario_padre</i> property for this object. Donde <i>id_usuario_padre</i> es Id del usuario padre de este usuario
+	  * Get the <i>id_direccion</i> property for this object. Donde <i>id_direccion</i> es Id de la direccion del usuario
 	  * @return int(11)
 	  */
-	final public function getIdUsuarioPadre()
+	final public function getIdDireccion()
 	{
-		return $this->id_usuario_padre;
+		return $this->id_direccion;
 	}
 
 	/**
-	  * setIdUsuarioPadre( $id_usuario_padre )
+	  * setIdDireccion( $id_direccion )
 	  * 
-	  * Set the <i>id_usuario_padre</i> property for this object. Donde <i>id_usuario_padre</i> es Id del usuario padre de este usuario.
-	  * Una validacion basica se hara aqui para comprobar que <i>id_usuario_padre</i> es de tipo <i>int(11)</i>. 
+	  * Set the <i>id_direccion</i> property for this object. Donde <i>id_direccion</i> es Id de la direccion del usuario.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_direccion</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param int(11)
 	  */
-	final public function setIdUsuarioPadre( $id_usuario_padre )
+	final public function setIdDireccion( $id_direccion )
 	{
-		$this->id_usuario_padre = $id_usuario_padre;
+		$this->id_direccion = $id_direccion;
+	}
+
+	/**
+	  * getIdDireccionAlterna
+	  * 
+	  * Get the <i>id_direccion_alterna</i> property for this object. Donde <i>id_direccion_alterna</i> es Id de la direccion alterna del usuario
+	  * @return int(11)
+	  */
+	final public function getIdDireccionAlterna()
+	{
+		return $this->id_direccion_alterna;
+	}
+
+	/**
+	  * setIdDireccionAlterna( $id_direccion_alterna )
+	  * 
+	  * Set the <i>id_direccion_alterna</i> property for this object. Donde <i>id_direccion_alterna</i> es Id de la direccion alterna del usuario.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_direccion_alterna</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setIdDireccionAlterna( $id_direccion_alterna )
+	{
+		$this->id_direccion_alterna = $id_direccion_alterna;
 	}
 
 	/**
@@ -692,7 +729,7 @@ class Usuario extends VO
 	/**
 	  * getIdRol
 	  * 
-	  * Get the <i>id_rol</i> property for this object. Donde <i>id_rol</i> es Id del rol que desempeñara el usuario en la instancia
+	  * Get the <i>id_rol</i> property for this object. Donde <i>id_rol</i> es Id del rol que desempe–ara el usuario en la instancia
 	  * @return int(11)
 	  */
 	final public function getIdRol()
@@ -703,7 +740,7 @@ class Usuario extends VO
 	/**
 	  * setIdRol( $id_rol )
 	  * 
-	  * Set the <i>id_rol</i> property for this object. Donde <i>id_rol</i> es Id del rol que desempeñara el usuario en la instancia.
+	  * Set the <i>id_rol</i> property for this object. Donde <i>id_rol</i> es Id del rol que desempe–ara el usuario en la instancia.
 	  * Una validacion basica se hara aqui para comprobar que <i>id_rol</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param int(11)
@@ -1244,7 +1281,7 @@ class Usuario extends VO
 	/**
 	  * getVentasACredito
 	  * 
-	  * Get the <i>ventas_a_credito</i> property for this object. Donde <i>ventas_a_credito</i> es Numero de ventas a credito del cliente
+	  * Get the <i>ventas_a_credito</i> property for this object. Donde <i>ventas_a_credito</i> es Ventas a credito del cliente
 	  * @return int(11)
 	  */
 	final public function getVentasACredito()
@@ -1255,7 +1292,7 @@ class Usuario extends VO
 	/**
 	  * setVentasACredito( $ventas_a_credito )
 	  * 
-	  * Set the <i>ventas_a_credito</i> property for this object. Donde <i>ventas_a_credito</i> es Numero de ventas a credito del cliente.
+	  * Set the <i>ventas_a_credito</i> property for this object. Donde <i>ventas_a_credito</i> es Ventas a credito del cliente.
 	  * Una validacion basica se hara aqui para comprobar que <i>ventas_a_credito</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param int(11)
@@ -1340,7 +1377,7 @@ class Usuario extends VO
 	/**
 	  * getMensajeria
 	  * 
-	  * Get the <i>mensajeria</i> property for this object. Donde <i>mensajeria</i> es Si el cliente cuenta con una cuenta de mensajería y paquetería
+	  * Get the <i>mensajeria</i> property for this object. Donde <i>mensajeria</i> es Si el cliente cuenta con una cuenta de mensajer’a y paqueter’a
 	  * @return tinyint(1)
 	  */
 	final public function getMensajeria()
@@ -1351,7 +1388,7 @@ class Usuario extends VO
 	/**
 	  * setMensajeria( $mensajeria )
 	  * 
-	  * Set the <i>mensajeria</i> property for this object. Donde <i>mensajeria</i> es Si el cliente cuenta con una cuenta de mensajería y paquetería.
+	  * Set the <i>mensajeria</i> property for this object. Donde <i>mensajeria</i> es Si el cliente cuenta con una cuenta de mensajer’a y paqueter’a.
 	  * Una validacion basica se hara aqui para comprobar que <i>mensajeria</i> es de tipo <i>tinyint(1)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param tinyint(1)
@@ -1388,7 +1425,7 @@ class Usuario extends VO
 	/**
 	  * getDenominacionComercial
 	  * 
-	  * Get the <i>denominacion_comercial</i> property for this object. Donde <i>denominacion_comercial</i> es Denominación comercial del cliente
+	  * Get the <i>denominacion_comercial</i> property for this object. Donde <i>denominacion_comercial</i> es Denominaci—n comercial del cliente
 	  * @return varchar(100)
 	  */
 	final public function getDenominacionComercial()
@@ -1399,7 +1436,7 @@ class Usuario extends VO
 	/**
 	  * setDenominacionComercial( $denominacion_comercial )
 	  * 
-	  * Set the <i>denominacion_comercial</i> property for this object. Donde <i>denominacion_comercial</i> es Denominación comercial del cliente.
+	  * Set the <i>denominacion_comercial</i> property for this object. Donde <i>denominacion_comercial</i> es Denominaci—n comercial del cliente.
 	  * Una validacion basica se hara aqui para comprobar que <i>denominacion_comercial</i> es de tipo <i>varchar(100)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param varchar(100)
@@ -1412,7 +1449,7 @@ class Usuario extends VO
 	/**
 	  * getDiasDeCredito
 	  * 
-	  * Get the <i>dias_de_credito</i> property for this object. Donde <i>dias_de_credito</i> es Días de crédito que se le darán al cliente
+	  * Get the <i>dias_de_credito</i> property for this object. Donde <i>dias_de_credito</i> es D’as de crŽdito que se le dar‡n al cliente
 	  * @return int(11)
 	  */
 	final public function getDiasDeCredito()
@@ -1423,7 +1460,7 @@ class Usuario extends VO
 	/**
 	  * setDiasDeCredito( $dias_de_credito )
 	  * 
-	  * Set the <i>dias_de_credito</i> property for this object. Donde <i>dias_de_credito</i> es Días de crédito que se le darán al cliente.
+	  * Set the <i>dias_de_credito</i> property for this object. Donde <i>dias_de_credito</i> es D’as de crŽdito que se le dar‡n al cliente.
 	  * Una validacion basica se hara aqui para comprobar que <i>dias_de_credito</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param int(11)
@@ -1460,7 +1497,7 @@ class Usuario extends VO
 	/**
 	  * getDiaDeRevision
 	  * 
-	  * Get the <i>dia_de_revision</i> property for this object. Donde <i>dia_de_revision</i> es Fecha de revisión del cliente
+	  * Get the <i>dia_de_revision</i> property for this object. Donde <i>dia_de_revision</i> es Fecha de revisi—n del cliente
 	  * @return datetime
 	  */
 	final public function getDiaDeRevision()
@@ -1471,7 +1508,7 @@ class Usuario extends VO
 	/**
 	  * setDiaDeRevision( $dia_de_revision )
 	  * 
-	  * Set the <i>dia_de_revision</i> property for this object. Donde <i>dia_de_revision</i> es Fecha de revisión del cliente.
+	  * Set the <i>dia_de_revision</i> property for this object. Donde <i>dia_de_revision</i> es Fecha de revisi—n del cliente.
 	  * Una validacion basica se hara aqui para comprobar que <i>dia_de_revision</i> es de tipo <i>datetime</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param datetime
@@ -1532,7 +1569,7 @@ class Usuario extends VO
 	/**
 	  * getTiempoEntrega
 	  * 
-	  * Get the <i>tiempo_entrega</i> property for this object. Donde <i>tiempo_entrega</i> es Tiempo de entrega del proveedor en días
+	  * Get the <i>tiempo_entrega</i> property for this object. Donde <i>tiempo_entrega</i> es Tiempo de entrega del proveedor en d’as
 	  * @return int(11)
 	  */
 	final public function getTiempoEntrega()
@@ -1543,7 +1580,7 @@ class Usuario extends VO
 	/**
 	  * setTiempoEntrega( $tiempo_entrega )
 	  * 
-	  * Set the <i>tiempo_entrega</i> property for this object. Donde <i>tiempo_entrega</i> es Tiempo de entrega del proveedor en días.
+	  * Set the <i>tiempo_entrega</i> property for this object. Donde <i>tiempo_entrega</i> es Tiempo de entrega del proveedor en d’as.
 	  * Una validacion basica se hara aqui para comprobar que <i>tiempo_entrega</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param int(11)

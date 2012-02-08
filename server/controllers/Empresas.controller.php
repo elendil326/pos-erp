@@ -8,32 +8,7 @@ require_once("interfaces/Empresas.interface.php");
 	
   class EmpresasController implements IEmpresas{
 
-        /*
-         *Se valida que un string tenga longitud en un rango de un maximo inclusivo y un minimo exclusvio.
-         *Regresa true cuando es valido, y un string cuando no lo es.
-         */
-          private static function validarString($string, $max_length, $nombre_variable,$min_length=0)
-	{
-		if(strlen($string)<=$min_length||strlen($string)>$max_length)
-		{
-		    return "La longitud de la variable ".$nombre_variable." proporcionada (".$string.") no esta en el rango de ".$min_length." - ".$max_length;
-		}
-		return true;
-    }
 
-
-        /*
-         * Se valida que un numero este en un rango de un maximo y un minimo inclusivos
-         * Regresa true cuando es valido, y un string cuando no lo es
-         */
-	private static function validarNumero($num, $max_length, $nombre_variable, $min_length=0)
-	{
-	    if($num<$min_length||$num>$max_length)
-	    {
-	        return "La variable ".$nombre_variable." proporcionada (".$num.") no esta en el rango de ".$min_length." - ".$max_length;
-	    }
-	    return true;
-	}
 
         /*
          * Valida los parametros de la tabla empresa haciendo uso de las validaciones basicas
@@ -214,9 +189,13 @@ require_once("interfaces/Empresas.interface.php");
  	 * @param activa bool Si no se obtiene este valor, se listaran tanto empresas activas como inactivas, si su valor es true, se mostraran solo las empresas activas, si es false, se mostraran solo las inactivas
  	 * @return empresas json Arreglo de objetos que contendr� las empresas de la instancia
  	 **/
-	public static function Lista
+	public static function Buscar
 	(
-		$activa = null
+		$activa =  false , 
+		$limit = null, 
+		$query = null, 
+		$sort = null, 
+		$start = null
 	)
 	{
             Logger::log("Listando empresas");
@@ -310,124 +289,101 @@ require_once("interfaces/Empresas.interface.php");
  	 *
  	 *Crear una nueva empresa. Por default una nueva empresa no tiene sucursales.
  	 *
- 	 * @param colonia string Colonia de la empresa
- 	 * @param telefono1 string telefono de la empresa
- 	 * @param codigo_postal string Codigo postal de la empresa
- 	 * @param curp string CURP de la nueva empresa.
+ 	 * @param direccion string [{    "tipo": "fiscal",    "calle": "Francisco I Madero",    "numero_exterior": "1009A",    "numero_interior": 12,    "colonia": "centro",    "codigo_postal": "38000",    "telefono1": "4611223312",    "telefono2": "",       "id_ciudad": 3,    "referencia": "El local naranja"}]
+ 	 * @param id_moneda int Id de la moneda base que manejaran las sucursales
+ 	 * @param impuestos_compra json Impuestos de compra por default que se heredan a las sucursales y estas a su vez a los productos
+ 	 * @param impuestos_venta json Impuestos de venta por default que se heredan a las sucursales y estas a su vez a los productos
  	 * @param razon_social string El nombre de la nueva empresa.
- 	 * @param numero_exterior string Numero externo de la emresa
- 	 * @param ciudad	 int Identificacor de la ciudad
  	 * @param rfc string RFC de la nueva empresa.
- 	 * @param calle string Calle de la empresa
- 	 * @param numero_interior string Numero interno de la empresa
- 	 * @param telefono2 string Telefono 2 de la empresa
- 	 * @param e-mail string Correo electronico de la empresa
- 	 * @param texto_extra string Comentarios sobre la ubicacin de la empresa.
- 	 * @param direccion_web string Direccin web de la empresa
- 	 * @param retenciones json Objeto que contendra los ids de las retenciones que aplican a esta empresa
- 	 * @param margen_utilidad float Porcentaje del margen de utilidad que le gana esta empresa a todos los productos que ofrece
- 	 * @param descuento float Descuento que se aplciara a todos los productos de esta empresa
+ 	 * @param cedula string url de la imagen de la cedula
+ 	 * @param email string Correo electronico de la empresa
+ 	 * @param logo string url del logo de la empresa
  	 * @param representante_legal string El nombre del representante legal de la nueva empresa.
- 	 * @param impuestos json Objeto que contendra los ids de los impuestos que aplican a esta empresa 
+ 	 * @param sucursales json Arreglo de objetos con un `id_sucursal` cada uno que indicara que sucursales pertenecen a esta empresa.
+ 	 * @param texto_extra string Comentarios sobre la ubicacin de la empresa.
  	 * @return id_empresa int El ID autogenerado de la nueva empresa.
  	 **/
-	public static function Nuevo
+  static function Nuevo
 	(
-		$calle, 
-		$ciudad, 
-		$codigo_postal, 
-		$colonia, 
-		$curp, 
-		$numero_exterior, 
+		$direccion, 
+		$id_moneda, 
+		$impuestos_compra, 
+		$impuestos_venta, 
 		$razon_social, 
 		$rfc, 
-		$direccion_web = null, 
+		$cedula = null, 
 		$email = null, 
-		$impuestos = null, 
-		$numero_interior = null, 
+		$logo = null, 
 		$representante_legal = null, 
-		$retenciones = null, 
-		$telefono1 = null, 
-		$telefono2 = null, 
+		$sucursales = null, 
 		$texto_extra = null
 	)
 	{  
-            Logger::log("Creando empresa");
+			
+            Logger::log("Creando nueva empresa...");
 
             //Se validan los parametros
-            $validar=self::validarParametrosEmpresa(null, null, $curp, $rfc, $razon_social, $representante_legal, null, $direccion_web);
+            /*$validar=self::validarParametrosEmpresa(null, null, $curp, $rfc, $razon_social, $representante_legal, null, $direccion_web);
             if(is_string($validar))
             {
                 Logger::error($validar);
                 throw new Exception($validar,901);
-            }
+            }*/
 
             //Se crea la empresa con los parametros obtenidos.
             $e = new Empresa(array(
                             "activo"                => true,
-                            "curp"                  => $curp,
-                            "direccion_web"         => $direccion_web,
                             "fecha_alta"            => date("Y-m-d H:i:s",time()),
                             "fecha_baja"            => null,
-                            "razon_social"          => trim($razon_social),
+                            "razon_social"          => trim( $razon_social ),
                             "representante_legal"   => $representante_legal,
                             "rfc"                   => $rfc
                     ));
 
-            //Se busca la curp en la base de datos. Si hay una empresa activa
-            //con esa misma curp se lanza un error
-            $empresas=EmpresaDAO::search(new Empresa( array( "curp" => $curp ) ));
-            foreach($empresas as $empresa)
-            {
-                if($empresa->getActivo())
-                {
-                    Logger::error("El curp: ".$curp." ya esta en uso por la empresa: ".$empresa->getIdEmpresa());
-                    throw new Exception("El curp: ".$curp." ya esta en uso",901);
-                }
-            }
+
 
             //Se busca el rfc en la base de datos. Si hay una empresa activa
             //con el mismo rfc se lanza un error
-            $empresas=EmpresaDAO::search( new Empresa( array( "rfc" => $rfc ) ) );
-            foreach($empresas as $empresa)
-            {
-                if($empresa->getActivo())
-                {
-                    Logger::error("El rfc: ".$rfc." ya esta en uso por la empresa: ".$empresa->getIdEmpresa());
-                    throw new Exception("El rfc: ".$rfc." ya esta en uso",901);
-                }
-            }
+            $empresas = EmpresaDAO::search( new Empresa( array( "rfc" => $rfc ) ) );
+
+			if(sizeof($empresas) > 0){
+                Logger::error("El rfc: ".$rfc." ya esta en uso por la empresa: ".$empresa->getIdEmpresa());
+                throw new Exception("El rfc: ".$rfc." ya esta en uso",901);				
+			}
+
             
             //Se busca la razon social en la base de datos. Si hay una empresa activa
             //con la misma razon zocial se lanza un error. Se usa trim para cubrir 
             //los casos "caffeina" y "    caffeina    ".
             $empresas=EmpresaDAO::search( new Empresa( array( "razon_social" => trim($razon_social) ) ) );
-            foreach($empresas as $empresa)
-            {
-                if($empresa->getActivo())
-                {
-                    Logger::error("La razon social: ".$razon_social." ya esta en uso por la empresa: ".$empresa->getIdEmpresa());
-                    throw new Exception("La razon social: ".$razon_social." ya esta en uso",901);
-                }
-            }
+			if(sizeof($empresas) > 0){
+                Logger::error("La razon social: ".$razon_social." ya esta en uso por la empresa: ".$empresa->getIdEmpresa());
+                throw new Exception("La razon social: ".$razon_social." ya esta en uso",901);				
+			}
+
              DAO::transBegin();
-             try
-             {
-                 //Se crea la nueva direccion con los parametros obtenidos.
-                 $id_direccion = DireccionController::NuevaDireccion( 
-                    $calle,
-                    $numero_exterior,
-                    $colonia,
-                    $ciudad,
-                    $codigo_postal,
-                    $numero_interior,
-                    $texto_extra,
-                    $telefono1,
-                    $telefono2
-                  );
-                 
-                 //Se agrega la direccion a la empresa y se guarda
-                 $e->setIdDireccion($id_direccion);
+
+			//guardar direccion
+			
+			$d = object_to_array($direccion);
+			
+			$id_direccion = DireccionController::NuevaDireccion( 
+                isset($d["calle"]) ? $d["calle"] : null,
+                isset($d["numero_exterior"]) ? $d["numero_exterior"] : null,
+                isset($d["colonia"]) ? $d["colonia"] : null,
+                isset($d["id_ciudad"]) ? $d["id_ciudad"] : null,
+                isset($d["codigo_postal"]) ? $d["codigo_postal"] : null,
+                isset($d["numero_interior"]) ? $d["numero_interior"] : null,
+                isset($d["texto_extra"]) ? $d["texto_extra"] : null,
+                isset($d["telefono1"]) ? $d["telefono1"] : null,
+                isset($d["telefono2"]) ? $d["telefono2"] : null
+              );
+			
+			$e->setIdDireccion($id_direccion);
+
+            try{
+               
+
                  EmpresaDAO::save($e);
                  
                  //Si se recibieron impuestos se genera un registro impuesto-empresa y 
@@ -483,16 +439,16 @@ require_once("interfaces/Empresas.interface.php");
                          RetencionEmpresaDAO::save($retencion_empresa);
                      }
                  }
-             }
-             catch(Exception $e)
-             {
+             }catch(Exception $e){
                  DAO::transRollback();
                  Logger::error("No se pudo crear la empresa: ".$e);
                  if($e->getCode()==901)
                      throw new Exception("No se pudo crear la empresa: ".$e->getCode(),901);
                  throw new Exception("No se pudo crear la empresa, consulte a su administrador de sistema",901);
              }
+
              DAO::transEnd();
+
              Logger::log("Empresa creada exitosamente");
 
             return array ( "id_empresa" => $e->getIdEmpresa() );

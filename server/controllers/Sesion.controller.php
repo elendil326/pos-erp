@@ -8,10 +8,11 @@ require_once("interfaces/Sesion.interface.php");
 	
 class SesionController implements ISesion{
 
-  
+  	private static $_is_logged_in;
+	private static $_current_user;
   	
     
-        /**
+	/**
  	 *
  	 *Regresa informacion sobre la sesion actual.
  	 *
@@ -22,9 +23,9 @@ class SesionController implements ISesion{
         public static function Actual
 	(
 	)
-        {
+	{
             return array( "id_caja" => 1, "id_sucursal" => 1, "id_usuario" => 1);
-        }
+	}
     
 	
 
@@ -79,6 +80,7 @@ class SesionController implements ISesion{
 	)
 	{  
 
+		
 		//user is not logged in, look for him
 		$user = UsuarioDAO::findUser( $usuario, $password );
 
@@ -113,8 +115,23 @@ class SesionController implements ISesion{
 		$nueva_sesion->setIdUsuario			( $user->getIdUsuario() 				);
 		$nueva_sesion->setAuthToken			( self::GenerarAuthToken() 				);
 		$nueva_sesion->setFechaDeVencimiento( date( "Y-m-d H:i:s", time() + 3600 ) 	);
-		$nueva_sesion->setClientUserAgent	( $_SERVER["HTTP_USER_AGENT"]			);
-		$nueva_sesion->setIp				( $_SERVER["REMOTE_ADDR"] 				);
+		
+		if(isset($_SERVER["HTTP_USER_AGENT"])){
+			$nueva_sesion->setClientUserAgent	( $_SERVER["HTTP_USER_AGENT"] );
+			
+		}else{
+			$nueva_sesion->setClientUserAgent	( "CLI" );
+			
+		}
+			
+		if(isset($_SERVER["REMOTE_ADDR"])){
+			$nueva_sesion->setIp				( $_SERVER["REMOTE_ADDR"] );
+			
+		}else{
+			$nueva_sesion->setIp				( "CLI" );			
+			
+		}
+
 		
 		
 		try{
@@ -124,9 +141,13 @@ class SesionController implements ISesion{
 			Logger::error( "Imposible escribir la sesion en la bd " );
 			Logger::error( $e );
 			throw new Exception("Imposible iniciar la sesion");
+			
 		}
 		
 		self::login( $nueva_sesion->getAuthToken(), $nueva_sesion->getIdUsuario(), $user->getIdRol()  );
+
+		self::$_is_logged_in = true;
+		self::$_current_user = SesionDAO::getUserByAuthToken( $nueva_sesion->getAuthToken() );
 		
 		return array( "auth_token" => $nueva_sesion->getAuthToken(), "login_succesful" => true );
 	}
@@ -207,8 +228,13 @@ class SesionController implements ISesion{
 	static function isLoggedIn(){
 		
 		Logger::log("isLoggedIn() started");
-
+		
+		if(isset(self::$_is_logged_in) && !is_null(self::$_is_logged_in) && self::$_is_logged_in){
+			return true;
+		}
+		
 		$sm = SessionManager::getInstance();
+		
 		$auth_token = $sm->GetCookie("at");
 		
 		if( !is_null($auth_token) ) {
@@ -221,6 +247,7 @@ class SesionController implements ISesion{
 				return false;
 			}else{
 				Logger::log("auth_token validated, it belongs to user_id=" . $user->getIdUsuario());
+				self::$_is_logged_in = true;
 				return true;			
 			}
 		}
@@ -279,6 +306,11 @@ class SesionController implements ISesion{
 
 	private static function login($auth_token, $user_id, $rol_id ){
 		
+		if(headers_sent()){
+			Logger::warn("Headers already sent while doing login.");
+			return;
+		}
+		
 		$sm = SessionManager::getInstance();
 		
 		$sm->SetCookie( 'at',  $auth_token, 	time()+60*60*24, '/' );
@@ -305,8 +337,10 @@ class SesionController implements ISesion{
 
 
 
-	public static function getCurrentUser(){
-		
+	public static function getCurrentUser(  ){
+		if(isset(self::$_current_user) && !is_null(self::$_current_user) ){
+			return self::$_current_user;
+		}		
 
 		Logger::log("SesionController::getCurrentUser(  )");
 		
@@ -316,19 +350,22 @@ class SesionController implements ISesion{
 			
 			//there is authtoken cookie
 			if(!is_null($auth_token)){
-				return SesionDAO::getUserByAuthToken( $auth_token );				
+				self::$_current_user = SesionDAO::getUserByAuthToken( $auth_token );				
 			}
 			
 
 			//there is authtoken in the POST message
 			if(!is_null($_POST["auth_token"])){
-				return SesionDAO::getUserByAuthToken( $_POST["auth_token"] );
+				self::$_current_user = SesionDAO::getUserByAuthToken( $_POST["auth_token"] );
 			}
 			
 			//there is authtoken in the GET message
 			if(!is_null($_GET["auth_token"])){
-				return SesionDAO::getUserByAuthToken( $_GET["auth_token"] );
+				self::$_current_user = SesionDAO::getUserByAuthToken( $_GET["auth_token"] );
+				
 			}
+			
+			return self::$_current_user;
 			
 		}else{
 			return NULL;
