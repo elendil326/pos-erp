@@ -57,3 +57,5 @@ INSERT INTO `usuario` (`id_usuario`, `id_direccion`, `id_direccion_alterna`, `id
 
 INSERT INTO `version` (`id_version`, `id_tarifa`, `nombre`, `activa`, `fecha_inicio`, `fecha_fin`, `default`) VALUES
 (1, 1, 'none', 1, NULL, NULL, 1);
+
+INSERT INTO `moneda` (`id_moneda`, `nombre`, `simbolo`, `activa`) VALUES ('1', 'Peso', 'MXN', '1');

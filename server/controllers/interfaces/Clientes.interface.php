@@ -223,7 +223,7 @@ No se puede asignar como cliente padre un cliente que esta inactivo
 		$direcciones = null, 
 		$email = null, 
 		$id_cliente_padre = null, 
-		$id_moneda =  0 , 
+		$id_moneda =  1 , 
 		$id_tarifa_compra = null, 
 		$id_tarifa_venta = null, 
 		$limite_credito = "0", 

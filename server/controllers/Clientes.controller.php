@@ -327,7 +327,7 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
 		$direcciones = null, 
 		$email = null, 
 		$id_cliente_padre = null, 
-		$id_moneda =  0 , 
+		$id_moneda =  1 , 
 		$id_tarifa_compra = null, 
 		$id_tarifa_venta = null, 
 		$limite_credito = 0, 
@@ -339,14 +339,13 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
 		$telefono_personal2 = null
 	)
 	{
-            Logger::log("Creando nuevo cliente");
+            Logger::log("Creando nuevo cliente...");
             
             //Se toma la sucursal actual para asignarsela al cliente
             $actual = SesionController::Actual();
             
-            if(is_null($clasificacion_cliente))
-            {
-                $clasificacion_cliente = 1; //clasificacion de cliente por default
+            if(is_null($clasificacion_cliente)){
+                $clasificacion_cliente = 1;
             }
             
             //se crea la cliente utilizando el metodo Nuevo usuario, este se encarga de la validacion
@@ -354,11 +353,44 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
             
             try 
             {
-                $cliente = PersonalYAgentesController::NuevoUsuario(null,5,$razon_social,$password,
-                        null,$email,null,$cuenta_de_mensajeria,$curp,$denominacion_comercial,$descuento_general,
-                        null,null,null,null,$direcciones,0,$clasificacion_cliente,null,$id_moneda,
-                        $actual["id_sucursal"],$id_tarifa_compra,$id_tarifa_venta,$id_cliente_padre,null,null,$limite_credito,null,$sitio_web,
-                        $representante_legal,null,$rfc,null,null,null,$telefono_personal1,$telefono_personal2);
+                $cliente = PersonalYAgentesController::NuevoUsuario(
+								null,
+								5,
+								$razon_social,
+								$password,
+                        		null,
+								$email,
+								null,
+								$cuenta_de_mensajeria,
+								$curp,
+								$denominacion_comercial,
+								$descuento_general,
+                        		null,
+								null,
+								null,
+								null,
+								$direcciones,
+								0,
+								$clasificacion_cliente,
+								null,
+								$id_moneda,
+                        		$actual["id_sucursal"],
+								$id_tarifa_compra,
+								$id_tarifa_venta,
+								$id_cliente_padre,
+								null,
+								null,
+								$limite_credito,
+								null,
+								$sitio_web,
+                        		$representante_legal,
+								null,
+								$rfc,
+								null,
+								null,
+								null,
+								$telefono_personal1,
+								$telefono_personal2);
             }
             catch(Exception $e)
             {

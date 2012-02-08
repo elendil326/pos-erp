@@ -20,4 +20,7 @@ class SucursalesControllerTest extends PHPUnit_Framework_TestCase {
 		$r = SesionController::Iniciar(123, 1, true);
 	}
 	
+	
+
+	
 }
