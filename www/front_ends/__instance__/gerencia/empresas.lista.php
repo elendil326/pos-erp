@@ -10,6 +10,8 @@
 		
 		$page->addComponent( new TitleComponent( "Empresas" ) );
 
+		$results = EmpresasController::Buscar();
+
 		$tabla = new TableComponent( 
 			array(
 				"razon_social"=> "Razon Social",
@@ -18,15 +20,14 @@
 				"fecha_alta" => "Fecha Alta",
 				"activo"=> "Activa"
 			),
-			EmpresasController::Lista()
+			$results["resultados"]
 		);
 		
-                function funcion_activa($activa)
-                {
-                    return ($activa? "Activa" : "Inactiva");
-                }
-                
-                $tabla->addColRender("activo", "funcion_activa");
+		function funcion_activa($activa){
+			return $activa ? "Activa" : "Inactiva";
+		}
+
+		$tabla->addColRender("activo", "funcion_activa");
                 
 		$tabla->addOnClick( "id_empresa", "(function(a){window.location = 'empresas.ver.php?eid='+a;})" );
 		

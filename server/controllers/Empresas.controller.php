@@ -151,27 +151,19 @@ require_once("interfaces/Empresas.interface.php");
 		$start = null
 	)
 	{
-            Logger::log("Listando empresas");
-            //Si activa no es obtenida, se regresan todas las empresas.
-  		if(is_null($activa))
-                {
-                    Logger::log("Se listan todas las empresas");
-  			return EmpresaDAO::getAll();
-                }
+		Logger::log("Listando empresas ...");
+		//Si activa no es obtenida, se regresan todas las empresas.
 
-                //Se valida el boleano activa
-                $validar=self::validarParametrosEmpresa(null, null, null, null, null, null, $activa);
-                if(is_string($validar))
-                {
-                    Logger::error($validar);
-                    throw new Exception($validar,901);
-                }
-
-                //Se listan las empresas con el valor de activa obtenido
+        //Se listan las empresas con el valor de activa obtenido
   		$e = new Empresa();
-  		$e->setActivo( $activa );
-                Logger::log("Listando empresas con activo = ".$activa);
-  		return EmpresaDAO::search( $e );
+
+		if($activa){
+  			$e->setActivo( true );
+		}
+Logger::debug("--");
+		$r = EmpresaDAO::search( $e );
+Logger::debug("--");
+  		return array("resultados" => $r, "numero_de_resultados" => sizeof($r) );
   	}
   
 	/**
@@ -418,8 +410,7 @@ require_once("interfaces/Empresas.interface.php");
 	{
             Logger::log("Desactivando  empresa $id_empresa...");
             
-			
-            
+           
             //Se guarda el registro de la empresa y se verifica si esat activa
             $empresa = EmpresaDAO::getByPK( $id_empresa );
 

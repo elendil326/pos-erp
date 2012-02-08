@@ -76,7 +76,7 @@ abstract class EmpresaDAOBase extends DAO
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new Empresa( $rs );
-			self::pushRecord( $foo,  $id_empresa );
+			 //self::pushRecord( $foo,  $id_empresa );
 			return $foo;
 	}
 
@@ -112,7 +112,7 @@ abstract class EmpresaDAOBase extends DAO
 			$bar = new Empresa($foo);
     		array_push( $allData, $bar);
 			//id_empresa
-    		self::pushRecord( $bar, $foo["id_empresa"] );
+    		 //self::pushRecord( $bar, $foo["id_empresa"] );
 		}
 		return $allData;
 	}
@@ -191,7 +191,7 @@ abstract class EmpresaDAOBase extends DAO
 			array_push( $val, $empresa->getDireccionWeb() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */) ;}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -203,7 +203,7 @@ abstract class EmpresaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Empresa($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_empresa"] );
+    		 //self::pushRecord( $bar, $foo["id_empresa"] );
 		}
 		return $ar;
 	}

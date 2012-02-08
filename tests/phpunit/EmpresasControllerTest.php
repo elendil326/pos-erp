@@ -37,13 +37,6 @@ class EmpresasControllerTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($r->getIdUsuario(), 1);
 	}
 
-
-	public function testBootstrap2(){
-		$r = SesionController::getCurrentUser(  );
-		
-		$this->assertEquals( $r->getIdUsuario(), 1);
-	}
-
 	public function testNuevo(){
 
 		$direccion = Array(
@@ -95,7 +88,7 @@ class EmpresasControllerTest extends PHPUnit_Framework_TestCase {
 
 			
 		}catch(Exception $e){
-			Logger::error($e);
+			Logger::error($e);
 		}
 
 
@@ -118,7 +111,31 @@ class EmpresasControllerTest extends PHPUnit_Framework_TestCase {
 		$this->assertInternalType('int', $this->_empresa["id_empresa"] );
 	}
 	
-	
+	public function testBuscar(){
+		try{
+			$busqueda = EmpresasController::Buscar();			
+		}catch(Exception $e){
+			Logger::error($e);
+		}
 
+
+		
+		//debe haber por lo menos un resultado
+		$this->assertGreaterThan( 0, $busqueda["numero_de_resultados"]);
+		$this->assertInternalType('int', $busqueda["numero_de_resultados"]);
+		$this->assertEquals( $busqueda["numero_de_resultados"], sizeof( $busqueda["resultados"]));
+	}
+	
+	public function testBuscarWithParams(){
+		$busqueda = EmpresasController::Buscar( true );
+		//solo debe haber empresas activas
+		$res = $busqueda["resultados"];
+		
+		foreach ($res as $emp) {
+			$this->assertEquals(1, $emp->getActivo());
+		}
+		
+	}
+	
 
 }
