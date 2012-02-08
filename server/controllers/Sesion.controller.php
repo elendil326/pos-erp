@@ -136,6 +136,8 @@ class SesionController implements ISesion{
 		
 		try{
 			SesionDAO::save( $nueva_sesion );
+			Logger::log("Setting _is_logged_in");
+			self::$_is_logged_in = true;
 			
 		}catch(Exception $e){
 			Logger::error( "Imposible escribir la sesion en la bd " );
@@ -146,7 +148,6 @@ class SesionController implements ISesion{
 		
 		self::login( $nueva_sesion->getAuthToken(), $nueva_sesion->getIdUsuario(), $user->getIdRol()  );
 
-		self::$_is_logged_in = true;
 		self::$_current_user = SesionDAO::getUserByAuthToken( $nueva_sesion->getAuthToken() );
 		
 		return array( "auth_token" => $nueva_sesion->getAuthToken(), "login_succesful" => true );
@@ -227,9 +228,10 @@ class SesionController implements ISesion{
 
 	static function isLoggedIn(){
 		
-		Logger::log("isLoggedIn() started");
+		Logger::log("isLoggedIn() started...");
 		
 		if(isset(self::$_is_logged_in) && !is_null(self::$_is_logged_in) && self::$_is_logged_in){
+			Logger::log("isLoggedIn() already set ...");
 			return true;
 		}
 		
@@ -339,6 +341,7 @@ class SesionController implements ISesion{
 
 	public static function getCurrentUser(  ){
 		if(isset(self::$_current_user) && !is_null(self::$_current_user) ){
+			Logger::log("GetCurrentUser already in cache");
 			return self::$_current_user;
 		}		
 

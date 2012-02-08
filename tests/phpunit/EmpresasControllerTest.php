@@ -15,11 +15,21 @@ require_once("../../server/bootstrap.php");
 class EmpresasControllerTest extends PHPUnit_Framework_TestCase {
 	
 	
+	private $_empresa;
+
+
+	public function testBootstrap(){
+		$r = SesionController::Iniciar(123, 1, true);
+
+
+	 	$this->assertEquals($r["login_succesful"], true);
+	}
+
+
+
 
 	public function testNuevo(){
-		
-		SesionController::Iniciar(123, 1, true);		
-		
+
 		$direccion = Array(
 			"calle"  			=> "Monte Balcanes",
 	        "numero_exterior"   => "107",
@@ -33,24 +43,66 @@ class EmpresasControllerTest extends PHPUnit_Framework_TestCase {
 		);
 		
 		$id_moneda = 1;
-		
 		$impuestos_compra = Array();
-		
 		$impuestos_venta = Array();
-		
 		$razon_social = "Caffeina Software";
-
 		$rfc  = "GOHA8801317";
 		
-		$eid = EmpresasController::Nuevo(
-				$direccion, 
-				$id_moneda, 
-				$impuestos_compra, 
-				$impuestos_venta, 
-				$razon_social, 
-				$rfc
-			);
-	}
+		try{
+			$this->_empresa = EmpresasController::Nuevo(
+					$direccion, 
+					$id_moneda, 
+					$impuestos_compra, 
+					$impuestos_venta, 
+					$razon_social, 
+					$rfc
+				);
+				
+			$this->assertInternalType('int', $this->_empresa["id_empresa"] );
+			return;
+			
+		}catch(Exception $e){
+
+			
+
+		}
+			
 		
+		$e = EmpresaDAO::getByRFC($rfc);
+		
+		try{
+			EmpresasController::Eliminar( $e->getIdEmpresa() );
+			
+		}catch(Exception $e){
+			
+		}
+
+
+
+		try{
+			$this->_empresa = EmpresasController::Nuevo(
+					$direccion, 
+					$id_moneda, 
+					$impuestos_compra, 
+					$impuestos_venta, 
+					$razon_social, 
+					$rfc
+				);
+				
+			$this->assertInternalType('int', $this->_empresa["id_empresa"] );
+			return;
+			
+		}catch(Exception $e){
+			
+			
+
+		}
+		
+		
+		$this->assertInternalType('int', $this->_empresa["id_empresa"] );
+	}
+	
+	
+
 
 }

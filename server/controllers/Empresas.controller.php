@@ -297,20 +297,21 @@ require_once("interfaces/Empresas.interface.php");
 
             //Se busca el rfc en la base de datos. Si hay una empresa activa
             //con el mismo rfc se lanza un error
-            $empresas = EmpresaDAO::search( new Empresa( array( "rfc" => $rfc ) ) );
+            $empresas = EmpresaDAO::search( new Empresa( array( "rfc" => $rfc, "activo" => 1 ) ) );
 
 			if(sizeof($empresas) > 0){
-                Logger::error("El rfc: ".$rfc." ya esta en uso por la empresa: ".$empresa->getIdEmpresa());
-                throw new Exception("El rfc: ".$rfc." ya esta en uso",901);				
+                Logger::error("Este rfc ya esta en uso por la empresa activa");
+                throw new Exception("El rfc: ".$rfc." ya esta en uso", 901);
 			}
 
             
             //Se busca la razon social en la base de datos. Si hay una empresa activa
             //con la misma razon zocial se lanza un error. Se usa trim para cubrir 
             //los casos "caffeina" y "    caffeina    ".
-            $empresas=EmpresaDAO::search( new Empresa( array( "razon_social" => trim($razon_social) ) ) );
+            $empresas = EmpresaDAO::search( new Empresa( array( "razon_social" => trim($razon_social), "activo" => 1 ) ) );
+
 			if(sizeof($empresas) > 0){
-                Logger::error("La razon social: ".$razon_social." ya esta en uso por la empresa: ".$empresa->getIdEmpresa());
+                Logger::error("La razon social: ".$razon_social." ya esta en uso por la empresa: ". $empresa[0]->getIdEmpresa());
                 throw new Exception("La razon social: ".$razon_social." ya esta en uso",901);				
 			}
 
@@ -352,8 +353,7 @@ require_once("interfaces/Empresas.interface.php");
                      
                      $impuestos = object_to_array($impuestos_venta);
                      
-                     if(!is_array($impuestos))
-                     {
+                     if(!is_array($impuestos)){
                          throw new Exception("El parametro impuestos es invalido",901);
                      }
                      
@@ -416,19 +416,18 @@ require_once("interfaces/Empresas.interface.php");
 		$id_empresa
 	)
 	{
-            Logger::log("Eliminando empresa");
+            Logger::log("Desactivando  empresa...");
             
-            //se valida que la empresa exista en la base de datos
-            $validar = self::validarParametrosEmpresa($id_empresa);
-            if(is_string($validar))
-            {
-                Logger::error($validar);
-                throw new Exception($validar,901);
-            }
+			
             
             //Se guarda el registro de la empresa y se verifica si esat activa
-            $empresa=EmpresaDAO::getByPK($id_empresa);
-            if(!$empresa->getActivo())
+            $empresa = EmpresaDAO::getByPK( $id_empresa );
+
+			if(is_null($empresa)){
+				throw new Exception ("Esta empresa no existe");
+			}
+
+            if( $empresa->getActivo() )
             {
                 Logger::warn("La empresa ya esta desactivada");
                 throw new Exception("La empresa ya esta desactivada",901);
