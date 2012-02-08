@@ -15,16 +15,19 @@ abstract class EmpresaDAOBase extends DAO
 		private static $loadedRecords = array();
 
 		private static function recordExists(  $id_empresa ){
+			return false;
 			$pk = "";
 			$pk .= $id_empresa . "-";
 			return array_key_exists ( $pk , self::$loadedRecords );
 		}
 		private static function pushRecord( $inventario,  $id_empresa){
+			return;
 			$pk = "";
 			$pk .= $id_empresa . "-";
 			self::$loadedRecords [$pk] = $inventario;
 		}
 		private static function getRecord(  $id_empresa ){
+			return;			
 			$pk = "";
 			$pk .= $id_empresa . "-";
 			return self::$loadedRecords[$pk];

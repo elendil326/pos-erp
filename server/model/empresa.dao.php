@@ -22,13 +22,9 @@ class EmpresaDAO extends EmpresaDAOBase
 {
 
 	public function getByRFC( $rfc ){
-		$r = self::search( new Empresa( array( "rfc" => $rfc ) ) );
 
-		if(sizeof($r) > 0){
-			return $r[0];
-		}
-		
-		return NULL;
+		return self::search( new Empresa( array( "rfc" => $rfc ) ) );
+
 	}
 
 }

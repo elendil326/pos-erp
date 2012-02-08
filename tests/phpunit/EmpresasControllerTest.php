@@ -17,16 +17,32 @@ class EmpresasControllerTest extends PHPUnit_Framework_TestCase {
 	
 	private $_empresa;
 
-
+	protected function setUp(){
+		Logger::log("-----------------------------");
+		$r = SesionController::Iniciar(123, 1, true);
+	}
+	
+	protected function tearDown(){
+		//SesionController::Cerrar();
+	}
+	
 	public function testBootstrap(){
+		
 		$r = SesionController::Iniciar(123, 1, true);
 
-
 	 	$this->assertEquals($r["login_succesful"], true);
+	
+		$r = SesionController::getCurrentUser(  );
+		
+		$this->assertEquals($r->getIdUsuario(), 1);
 	}
 
 
-
+	public function testBootstrap2(){
+		$r = SesionController::getCurrentUser(  );
+		
+		$this->assertEquals( $r->getIdUsuario(), 1);
+	}
 
 	public function testNuevo(){
 
@@ -68,13 +84,18 @@ class EmpresasControllerTest extends PHPUnit_Framework_TestCase {
 		}
 			
 		
-		$e = EmpresaDAO::getByRFC($rfc);
-		
+		$empresas_con_rfc = EmpresaDAO::getByRFC($rfc);
+		//var_dump($e);
 		try{
-			EmpresasController::Eliminar( $e->getIdEmpresa() );
+			foreach ($empresas_con_rfc as $empObj) {
+				Logger::log("*");
+				EmpresasController::Eliminar( $empObj->getIdEmpresa() );
+				Logger::log("*");				
+			}
+
 			
 		}catch(Exception $e){
-			
+			Logger::error($e);
 		}
 
 
@@ -88,13 +109,8 @@ class EmpresasControllerTest extends PHPUnit_Framework_TestCase {
 					$razon_social, 
 					$rfc
 				);
-				
-			$this->assertInternalType('int', $this->_empresa["id_empresa"] );
-			return;
-			
+
 		}catch(Exception $e){
-			
-			
 
 		}
 		

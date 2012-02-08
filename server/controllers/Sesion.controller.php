@@ -147,7 +147,7 @@ class SesionController implements ISesion{
 		}
 		
 		self::login( $nueva_sesion->getAuthToken(), $nueva_sesion->getIdUsuario(), $user->getIdRol()  );
-
+		Logger::log("Setting _current_user");
 		self::$_current_user = SesionDAO::getUserByAuthToken( $nueva_sesion->getAuthToken() );
 		
 		return array( "auth_token" => $nueva_sesion->getAuthToken(), "login_succesful" => true );
@@ -340,7 +340,8 @@ class SesionController implements ISesion{
 
 
 	public static function getCurrentUser(  ){
-		if(isset(self::$_current_user) && !is_null(self::$_current_user) ){
+
+		if( !is_null(self::$_current_user) ){
 			Logger::log("GetCurrentUser already in cache");
 			return self::$_current_user;
 		}		

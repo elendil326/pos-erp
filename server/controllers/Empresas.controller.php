@@ -402,7 +402,7 @@ require_once("interfaces/Empresas.interface.php");
 
              Logger::log("Empresa creada exitosamente");
 
-            return array ( "id_empresa" => $e->getIdEmpresa() );
+            return array ( "id_empresa" => ((int)$e->getIdEmpresa()) );
 	}
   
 	/**
@@ -416,7 +416,7 @@ require_once("interfaces/Empresas.interface.php");
 		$id_empresa
 	)
 	{
-            Logger::log("Desactivando  empresa...");
+            Logger::log("Desactivando  empresa $id_empresa...");
             
 			
             
@@ -427,10 +427,11 @@ require_once("interfaces/Empresas.interface.php");
 				throw new Exception ("Esta empresa no existe");
 			}
 
-            if( $empresa->getActivo() )
+            if( $empresa->getActivo() == "0" )
             {
-                Logger::warn("La empresa ya esta desactivada");
-                throw new Exception("La empresa ya esta desactivada",901);
+                Logger::warn("La empresa $id_empresa ya esta desactivada");
+                //throw new Exception("La empresa ya esta desactivada",901);
+				return;
             }
             
             //Se cambia el campo activo a falso y se registra la fecha de baja como hoy
@@ -587,7 +588,7 @@ require_once("interfaces/Empresas.interface.php");
                 throw new Exception("No se pudo eliminar la empresa, consulte a su administrador de sistema",901);
             }
             DAO::transEnd();
-            Logger::log("Empresa eliminada exitosamente");
+            Logger::log("Empresa desactivada exitosamente...");
 	}
 
   
