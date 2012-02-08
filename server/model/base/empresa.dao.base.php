@@ -153,11 +153,6 @@ abstract class EmpresaDAOBase extends DAO
 			array_push( $val, $empresa->getIdDireccion() );
 		}
 
-		if( ! is_null( $empresa->getCurp() ) ){
-			$sql .= " curp = ? AND";
-			array_push( $val, $empresa->getCurp() );
-		}
-
 		if( ! is_null( $empresa->getRfc() ) ){
 			$sql .= " rfc = ? AND";
 			array_push( $val, $empresa->getRfc() );
@@ -224,10 +219,9 @@ abstract class EmpresaDAOBase extends DAO
 	  **/
 	private static final function update( $empresa )
 	{
-		$sql = "UPDATE empresa SET  id_direccion = ?, curp = ?, rfc = ?, razon_social = ?, representante_legal = ?, fecha_alta = ?, fecha_baja = ?, activo = ?, direccion_web = ? WHERE  id_empresa = ?;";
+		$sql = "UPDATE empresa SET  id_direccion = ?, rfc = ?, razon_social = ?, representante_legal = ?, fecha_alta = ?, fecha_baja = ?, activo = ?, direccion_web = ? WHERE  id_empresa = ?;";
 		$params = array( 
 			$empresa->getIdDireccion(), 
-			$empresa->getCurp(), 
 			$empresa->getRfc(), 
 			$empresa->getRazonSocial(), 
 			$empresa->getRepresentanteLegal(), 
@@ -258,11 +252,10 @@ abstract class EmpresaDAOBase extends DAO
 	  **/
 	private static final function create( &$empresa )
 	{
-		$sql = "INSERT INTO empresa ( id_empresa, id_direccion, curp, rfc, razon_social, representante_legal, fecha_alta, fecha_baja, activo, direccion_web ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO empresa ( id_empresa, id_direccion, rfc, razon_social, representante_legal, fecha_alta, fecha_baja, activo, direccion_web ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$empresa->getIdEmpresa(), 
 			$empresa->getIdDireccion(), 
-			$empresa->getCurp(), 
 			$empresa->getRfc(), 
 			$empresa->getRazonSocial(), 
 			$empresa->getRepresentanteLegal(), 
@@ -335,17 +328,6 @@ abstract class EmpresaDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_direccion = ? AND"; 
-			$a = is_null ( $a ) ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
-		if( ( !is_null (($a = $empresaA->getCurp()) ) ) & ( ! is_null ( ($b = $empresaB->getCurp()) ) ) ){
-				$sql .= " curp >= ? AND curp <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " curp = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

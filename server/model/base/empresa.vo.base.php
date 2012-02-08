@@ -28,9 +28,6 @@ class Empresa extends VO
 			if( isset($data['id_direccion']) ){
 				$this->id_direccion = $data['id_direccion'];
 			}
-			if( isset($data['curp']) ){
-				$this->curp = $data['curp'];
-			}
 			if( isset($data['rfc']) ){
 				$this->rfc = $data['rfc'];
 			}
@@ -67,7 +64,6 @@ class Empresa extends VO
 		$vec = array( 
 			"id_empresa" => $this->id_empresa,
 			"id_direccion" => $this->id_direccion,
-			"curp" => $this->curp,
 			"rfc" => $this->rfc,
 			"razon_social" => $this->razon_social,
 			"representante_legal" => $this->representante_legal,
@@ -98,15 +94,6 @@ class Empresa extends VO
 	  * @var int(11)
 	  */
 	public $id_direccion;
-
-	/**
-	  * curp
-	  * 
-	  * CURP de la empresa<br>
-	  * @access public
-	  * @var varchar(30)
-	  */
-	public $curp;
 
 	/**
 	  * rfc
@@ -221,30 +208,6 @@ class Empresa extends VO
 	final public function setIdDireccion( $id_direccion )
 	{
 		$this->id_direccion = $id_direccion;
-	}
-
-	/**
-	  * getCurp
-	  * 
-	  * Get the <i>curp</i> property for this object. Donde <i>curp</i> es CURP de la empresa
-	  * @return varchar(30)
-	  */
-	final public function getCurp()
-	{
-		return $this->curp;
-	}
-
-	/**
-	  * setCurp( $curp )
-	  * 
-	  * Set the <i>curp</i> property for this object. Donde <i>curp</i> es CURP de la empresa.
-	  * Una validacion basica se hara aqui para comprobar que <i>curp</i> es de tipo <i>varchar(30)</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param varchar(30)
-	  */
-	final public function setCurp( $curp )
-	{
-		$this->curp = $curp;
 	}
 
 	/**

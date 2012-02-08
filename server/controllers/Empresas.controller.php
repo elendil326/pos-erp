@@ -132,55 +132,8 @@ require_once("interfaces/Empresas.interface.php");
               return true;
           }
           
-          /*
-           * Valida los parametros de la tabla impuesto_empresa
-           */
-          private static function validarParametrosImpuestoEmpresa
-          (
-                  $id_impuesto = null,
-                  $id_empresa = null
-          )
-          {
-              //valida que el impuesto exista en la base de datos
-              if(!is_null($id_impuesto))
-              {
-                  if(is_null(ImpuestoDAO::getByPK($id_impuesto)))
-                          return "El impuesto con id: ".$id_impuesto." no existe";
-              }
-              
-              //valida que la empresa exista en la base de datos
-              if(!is_null($id_empresa))
-              {
-                  if(is_null(EmpresaDAO::getByPK($id_empresa)))
-                          return "La empresa con id: ".$id_empresa." no existe";
-              }
-              return true;
-          }
+
           
-           /*
-           * Valida los parametros de la tabla retencion_empresa
-           */
-          private static function validarParametrosRetencionEmpresa
-          (
-                  $id_retencion = null,
-                  $id_empresa = null
-          )
-          {
-              //valida que la retencion exista en la base de datos
-              if(!is_null($id_retencion))
-              {
-                  if(is_null(ImpuestoDAO::getByPK($id_retencion)))
-                          return "La retencion con id: ".$id_retencion." no existe";
-              }
-              
-              //valida que la empresa exista en la base de datos
-              if(!is_null($id_empresa))
-              {
-                  if(is_null(EmpresaDAO::getByPK($id_empresa)))
-                          return "La empresa con id: ".$id_empresa." no existe";
-              }
-              return true;
-          }
 
 	/**
  	 *
@@ -365,6 +318,10 @@ require_once("interfaces/Empresas.interface.php");
 
 			//guardar direccion
 			
+			if(is_null($direccion)){
+				throw new Exception ("Missing direccion");
+			}
+			
 			$d = object_to_array($direccion);
 			
 			$id_direccion = DireccionController::NuevaDireccion( 
@@ -390,10 +347,10 @@ require_once("interfaces/Empresas.interface.php");
                  //se inicializa con el id de esta empresa.
                  //Por cada uno de los impuestos como id impuesto, se verifica que el 
                  //impuesto exista, se asigna al registro y se guarda.
-                 if(!is_null($impuestos))
+                 if(!is_null($impuestos_venta))
                  {
                      
-                     $impuestos = object_to_array($impuestos);
+                     $impuestos = object_to_array($impuestos_venta);
                      
                      if(!is_array($impuestos))
                      {
@@ -401,14 +358,12 @@ require_once("interfaces/Empresas.interface.php");
                      }
                      
                      $impuesto_empresa=new ImpuestoEmpresa(array("id_empresa" => $e->getIdEmpresa()));
+
                      foreach($impuestos as $id_impuesto)
                      {
-                         $validar=self::validarParametrosImpuestoEmpresa($id_impuesto);
-                         if(is_sring($validar))
-                         {
-                             throw new Exception($validar,901);
-                         }
+                         
                          $impuesto_empresa->setIdImpuesto($id_impuesto);
+
                          ImpuestoEmpresaDAO::save($impuesto_empresa);
                      }
                  }
@@ -417,10 +372,10 @@ require_once("interfaces/Empresas.interface.php");
                  //se inicializa con el id de esta empresa.
                  //Por cada uno de las retenciones como id retencion, se verifica que la 
                  //retencion exista, se asigna al registro y se guarda.
-                 if(!is_null($retenciones))
+                 if(!is_null($impuestos_compra))
                  {
                      
-                     $retenciones = object_to_array($retenciones);
+                     $retenciones = object_to_array($impuestos_compra);
                      
                      if(!is_array($retenciones))
                      {
@@ -430,11 +385,7 @@ require_once("interfaces/Empresas.interface.php");
                      $retencion_empresa=new RetencionEmpresa(array("id_empresa" => $e->getIdEmpresa()));
                      foreach($retenciones as $id_retencion)
                      {
-                         $validar = self::validarParametrosRetencionEmpresa($id_retencion);
-                         if(is_string($validar))
-                         {
-                             throw new Exception($validar,901);
-                         }
+
                          $retencion_empresa->setIdRetencion($id_retencion);
                          RetencionEmpresaDAO::save($retencion_empresa);
                      }

@@ -379,7 +379,7 @@ CREATE TABLE IF NOT EXISTS `direccion` (
   `id_usuario_ultima_modificacion` int(11) NOT NULL COMMENT 'quien fue el usuario que modifico este registro la ultima vez',
   PRIMARY KEY (`id_direccion`),
   KEY `id_ciudad` (`id_ciudad`,`id_usuario_ultima_modificacion`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=215 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=217 ;
 
 CREATE TABLE IF NOT EXISTS `documento` (
   `id_documento` int(11) NOT NULL AUTO_INCREMENT,
@@ -407,7 +407,6 @@ CREATE TABLE IF NOT EXISTS `documento_venta` (
 CREATE TABLE IF NOT EXISTS `empresa` (
   `id_empresa` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Id de la tabla empresa',
   `id_direccion` int(11) NOT NULL COMMENT 'Id de la direccion de la empresa',
-  `curp` varchar(30) NOT NULL COMMENT 'CURP de la empresa',
   `rfc` varchar(30) NOT NULL COMMENT 'RFC de la empresa',
   `razon_social` varchar(100) NOT NULL COMMENT 'Razon social de la empresa',
   `representante_legal` varchar(100) DEFAULT NULL COMMENT 'Representante legal de la empresa, puede ser persona o empresa',
@@ -899,7 +898,7 @@ CREATE TABLE IF NOT EXISTS `sesion` (
   PRIMARY KEY (`id_sesion`),
   UNIQUE KEY `id_usuario` (`id_usuario`),
   KEY `auth_token` (`auth_token`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='Mantiene un seguimiento de las sesiones activas en el sistem' AUTO_INCREMENT=45 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='Mantiene un seguimiento de las sesiones activas en el sistem' AUTO_INCREMENT=52 ;
 
 CREATE TABLE IF NOT EXISTS `sucursal` (
   `id_sucursal` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Id de la tabla sucursal',

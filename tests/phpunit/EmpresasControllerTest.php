@@ -20,7 +20,17 @@ class EmpresasControllerTest extends PHPUnit_Framework_TestCase {
 		
 		SesionController::Iniciar(123, 1, true);		
 		
-		$direccion = Array();
+		$direccion = Array(
+			"calle"  			=> "Monte Balcanes",
+	        "numero_exterior"   => "107",
+	        "colonia"  			=> "Arboledas",
+	        "id_ciudad"  		=> 334,
+	        "codigo_postal"  	=> "38060",
+	        "numero_interior"  	=> null,
+	        "texto_extra"  		=> "Calle cerrada",
+	        "telefono1"  		=> "4616149974",
+	        "telefono2"			=> "45*451*454"
+		);
 		
 		$id_moneda = 1;
 		
