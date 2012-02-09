@@ -25,6 +25,24 @@ class SucursalesControllerTest extends PHPUnit_Framework_TestCase {
 
 	public function testNueva(){
 		
+		$direccion = Array(
+			"calle"  			=> "Monte Balcanes",
+	        "numero_exterior"   => "107",
+	        "colonia"  			=> "Arboledas",
+	        "id_ciudad"  		=> 334,
+	        "codigo_postal"  	=> "38060",
+	        "numero_interior"  	=> null,
+	        "referencia"  		=> "Calle cerrada",
+	        "telefono1"  		=> "4616149974",
+	        "telefono2"			=> "45*451*454"
+		);
+		
+		$empresa = SucursalesController::Nueva($direccion, "Las Fuentes");
+		
+		$this->assertInternalType('int', $empresa["id_sucursal"]);
+		
 	}
+	
+
 	
 }

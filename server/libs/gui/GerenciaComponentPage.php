@@ -723,32 +723,8 @@ class GerenciaComponentPage extends PosComponentPage{
         },
         {
             "title": "Sucursales",
-            "url": "sucursales.php",
+            "url": "sucursales.lista.php",
             "children": [
-                {
-                        "title" : "Entrada a almacen",
-                        "url"   : "sucursales.entrada.almacen.php"
-                },
-                {
-                        "title" : "Lista almacen",
-                        "url"   : "sucursales.lista.almacen.php"
-                },
-                {
-                        "title" : "Nuevo almacen",
-                        "url"   : "sucursales.nuevo.almacen.php"
-                },
-                {
-                        "title" : "Salida de almacen",
-                        "url"   : "sucursales.salida.almacen.php"
-                },
-                {
-                        "title" : "Lista traspaso de almacen",
-                        "url"   : "sucursales.lista.traspaso.almacen.php"
-                },
-                {
-                        "title" : "Programar traspaso a almacen",
-                        "url"   : "sucursales.programar.traspaso.almacen.php"
-                },
                 {
                         "title" : "Comprar desde caja",
                         "url"   : "sucursales.comprar.caja.php"

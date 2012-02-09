@@ -196,7 +196,8 @@
 	require_once("controllers/PersonalYAgentes.controller.php");
     require_once("controllers/Validaciones.controllers.php");
 	require_once("controllers/Empresas.controller.php");
-	require_once("controllers/Direcciones.controller.php");		
+	require_once("controllers/Direcciones.controller.php");	
+	require_once("controllers/Sucursales.controller.php");		
 	/*
 	require_once("controllers/Autorizaciones.controller.php");
 	require_once("controllers/CargosYAbonos.controller.php");
@@ -217,7 +218,7 @@
 	require_once("controllers/Proveedores.controller.php");
 	require_once("controllers/Reportes.controller.php");
 	require_once("controllers/Servicios.controller.php");
-	require_once("controllers/Sucursales.controller.php");
+
 	require_once("controllers/TransportacionYFletes.controller.php");
 	require_once("controllers/Ventas.controller.php");
 

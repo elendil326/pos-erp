@@ -8,18 +8,20 @@
 
 		$page = new GerenciaComponentPage();
 
-                $page->addComponent( new TitleComponent( "Sucursales" ) );
+		$page->addComponent( new TitleComponent( "Sucursales" ) );
+
+		$sucursales = SucursalesController::Buscar();
 
 		$tabla = new TableComponent( 
 			array(
-                                "rfc" => "RFC",
-				"razon_social"=> "Razon Social",
-                                "descripcion"=> "Descripcion",
-                                "id_gerente" => "Gerente",
-				"saldo_a_favor"=> "Saldo",
-                                "activa"=>"Activa"
+				"rfc" 			=> "RFC",
+				"razon_social"	=> "Razon Social",
+				"descripcion"	=> "Descripcion",
+				"id_gerente" 	=> "Gerente",
+				"saldo_a_favor"	=> "Saldo",
+				"activa"		=>"Activa"
 			),
-                         SucursalesController::Lista()
+            $sucursales["resultados"]
 		);
 		function funcion_gerente( $id_gerente )
                 {

@@ -10,50 +10,13 @@ require_once("interfaces/Sucursales.interface.php");
 	
   class SucursalesController implements ISucursales{
 
-      //funcion para pruebas que obtiene el id de la caja de la sesion.
-      private static function getCaja()
-      {
-          return 1;
-      }
 
-      //funcion para pruebas que obtiene el id de la sucursal de la sesion.
-      private static function getSucursal()
-      {
-          return 1;
-      }
-      
-      /*
-         *Se valida que un string tenga longitud en un rango de un maximo inclusivo y un minimo exclusvio.
-         *Regresa true cuando es valido, y un string cuando no lo es.
-         */
-          private static function validarString($string, $max_length, $nombre_variable,$min_length=0)
-	{
-		if(strlen($string)<=$min_length||strlen($string)>$max_length)
-		{
-		    return "La longitud de la variable ".$nombre_variable." proporcionada (".$string.") no esta en el rango de ".$min_length." - ".$max_length;
-		}
-		return true;
-    }
-
-
-        /*
-         * Se valida que un numero este en un rango de un maximo y un minimo inclusivos
-         * Regresa true cuando es valido, y un string cuando no lo es
-         */
-	private static function validarNumero($num, $max_length, $nombre_variable, $min_length=0)
-	{
-	    if($num<$min_length||$num>$max_length)
-	    {
-	        return "La variable ".$nombre_variable." proporcionada (".$num.") no esta en el rango de ".$min_length." - ".$max_length;
-	    }
-	    return true;
-	}
         
         /*
          * Valida los parametros de la tabla sucursal. Cuando algun parametro es incorrecto regresa
          * un string, cuando no hay error regresa true
          */
-        private static function validarParametrosSucursal
+	private static function validarParametrosSucursal
         (
                 $id_sucursal = null,
                 $id_direccion = null,
@@ -2098,29 +2061,19 @@ require_once("interfaces/Sucursales.interface.php");
  	 * @param fecha_apertura_superior_que string Si este valor es pasado, se mostraran las sucursales cuya fecha de apertura sea superior a esta.
  	 * @return sucursales json Objeto que contendra la lista de sucursales.
  	 **/
-	public static function Lista
+	public static function Buscar
 	(
 		$activo = null, 
-		$fecha_apertura_inferior_que = null, 
-		$fecha_apertura_superior_que = null, 
 		$id_empresa = null, 
-		$saldo_inferior_que = null, 
-		$saldo_superior_que = null
+		$limit = null, 
+		$query = null, 
+		$sort = null, 
+		$start = null
 	)
 	{
             Logger::log("Listando sucursales");
             
-            //bandera para saber si se recibieron parametros o no
-            $parametros=false;
-            if
-            (
-                    !is_null($activo) ||
-                    !is_null($saldo_inferior_que) ||
-                    !is_null($saldo_superior_que) ||
-                    !is_null($fecha_apertura_inferior_que) ||
-                    !is_null($fecha_apertura_superior_que)
-            )
-                $parametros=true;
+
             
             //obejtos que almacenaran las comparaciones
             $sucursales=array();
@@ -2130,61 +2083,8 @@ require_once("interfaces/Sucursales.interface.php");
             //Los parametros de comparacion como saldo inferior que o superior que proponen limites
             //y cuando solo es pasado alguno de ellos, el otro objeto almacena el mayor o menor posible
             //para conseguir la mejor comparacion.
-            if($parametros)
-            {
-                Logger::log("se recibieron parametros, se listan las sucursales en rango");
-                
-                //Cuando se recibe el parametro id_empresa, ademas de traer las sucursales con en el rango de los demas parametros
-                //se traen todas las sucursales de esa empresa y se hace una interseccion.
-                if(!is_null($id_empresa))
-                {
-                    $sucursales_empresa=SucursalEmpresaDAO::search(new SucursalEmpresa(array( "id_empresa" => $id_empresa )));
-                    foreach($sucursales_empresa as $sucursal_empresa)
-                    {
-                        array_push($sucursales1,SucursalDAO::getByPK($sucursal_empresa->getIdSucursal()));
-                    }
-                }
-                else
-                {
-                    $sucursales1=SucursalDAO::getAll();
-                }
-                $sucursal_criterio1=new Sucursal();
-                $sucursal_criterio2=new Sucursal();
-
-                $sucursal_criterio1->setActiva($activo);
-                if(!is_null($saldo_superior_que))
-                {
-                    $sucursal_criterio1->setSaldoAFavor($saldo_superior_que);
-                    if(!is_null($saldo_inferior_que))
-                        $sucursal_criterio2->setSaldoAFavor($saldo_inferior_que);
-                    else
-                        $sucursal_criterio2->setSaldoAFavor(1.8e100);
-                }
-                else if(!is_null($saldo_inferior_que))
-                {
-                    $sucursal_criterio1->setSaldoAFavor($saldo_inferior_que);
-                    $sucursal_criterio2->setSaldoAFavor(0);
-                }
-                if(!is_null($fecha_apertura_superior_que))
-                {
-                    $sucursal_criterio1->setFechaApertura($fecha_apertura_superior_que);
-                    if(!is_null($fecha_apertura_inferior_que))
-                        $sucursal_criterio2->setFechaApertura($fecha_apertura_inferior_que);
-                    else
-                        $sucursal_criterio2->setFechaApertura(date("Y-m-d H:i:s",time()));
-                }
-                else if(!is_null($fecha_apertura_inferior_que))
-                {
-                    $sucursal_criterio1->setFechaApertura($fecha_apertura_inferior_que);
-                    $sucursal_criterio2->setFechaApertura("1001-01-01 00:00:00");
-                }
-                $sucursales2=SucursalDAO::byRange($sucursal_criterio1, $sucursal_criterio2);
-                $sucursales=array_intersect($sucursales1, $sucursales2);
-            } /* fin if de parametros*/
             
-            //Si no se recibieron parametros, se listan todas las sucursales
-            else
-            {
+
                 Logger::log("No se recibieron parametros, se listan todas las sucursales");
                 if(!is_null($id_empresa))
                 {
@@ -2196,7 +2096,7 @@ require_once("interfaces/Sucursales.interface.php");
                 }
                 else
                     $sucursales=SucursalDAO::getAll();
-            }
+            
             Logger::log("Sucursales obtenidas con exito");
 
             return array(
@@ -2337,35 +2237,21 @@ require_once("interfaces/Sucursales.interface.php");
  	 **/
 	public static function Nueva
 	(
-		$activo, 
-		$calle, 
-		$codigo_postal, 
-		$colonia, 
-		$id_ciudad, 
-		$numero_exterior, 
+		$direccion,
 		$razon_social, 
-		$rfc, 
-		$saldo_a_favor, 
-		$descripcion = null,
+		$activo =  1 , 
+		$descripcion = null, 
+		$empresas = null, 
 		$id_gerente = null, 
-		$impuestos = null, 
-		$numero_interior = null, 
-		$referencia = null, 
-		$retenciones = null, 
-		$telefono1 = null, 
-		$telefono2 = null
+		$id_moneda =  1 , 
+		$impuestos_compra = null, 
+		$impuestos_venta = null, 
+		$rfc = null, 
+		$saldo_a_favor = "0"
 	)
 	{
-            Logger::log("Creando nueva sucursal");
+            Logger::log("Creando nueva sucursal...");
             
-            //Se validan los parametros obtenidos
-            $validar = self::validarParametrosSucursal(null,null,$rfc,$razon_social,$descripcion,
-                    $id_gerente,$saldo_a_favor,null,$activo);
-            if(is_string($validar))
-            {
-                Logger::error($validar);
-                throw new Exception($validar);
-            }
             
             //Se inicializa el objeto sucursal con los parametros obtenidos
             $sucursal=new Sucursal();
@@ -2376,20 +2262,38 @@ require_once("interfaces/Sucursales.interface.php");
             $sucursal->setIdGerente($id_gerente);
             $sucursal->setDescripcion($descripcion);
             $sucursal->setFechaApertura(date("Y-m-d H:i:s",time()));
+
             DAO::transBegin();
-            try
-            {
+
+            try{
                 //Se crea la nueva direccion y se le asigna a la nueva sucursal
-                $id_direccion=DireccionController::NuevaDireccion($calle,$numero_exterior,$colonia,$id_ciudad,$codigo_postal,$numero_interior,$referencia,$telefono1,$telefono2);
-                $sucursal->setIdDireccion($id_direccion);
+				if(!is_null($direccion)){
+	                $id_direccion = DireccionController::NuevaDireccion(
+							$direccion["calle"],
+							$direccion["numero_exterior"],
+							$direccion["colonia"],
+							$direccion["id_ciudad"],
+							$direccion["codigo_postal"],
+							$direccion["numero_interior"],
+							$direccion["referencia"],
+							$direccion["telefono1"],
+							$direccion["telefono2"]);
+							
+					$sucursal->setIdDireccion($id_direccion);
+					
+				}
+
+
+                
+
                 SucursalDAO::save($sucursal);
                 
                 
                 //Si se recibieron impuestos, se crea el registro correspondiente en la tabla impuesto sucursal
-                if(!is_null($impuestos))
+                if(!is_null($impuestos_venta))
                 {
                     
-                    $impuestos = object_to_array($impuestos);
+                    $impuestos = object_to_array($impuestos_venta);
                     
                     if(!is_array($impuestos))
                     {
@@ -2409,10 +2313,10 @@ require_once("interfaces/Sucursales.interface.php");
                 }
                 
                 //Si se recibieron retenciones, se crea el registro correspondiente en la tabla retencion sucursal
-                if(!is_null($retenciones))
+                if(!is_null($impuestos_compra))
                 {
                     
-                    $retenciones = object_to_array($retenciones);
+                    $retenciones = object_to_array($impuestos_compra);
                     
                     if(!is_array($retenciones))
                     {
@@ -2430,18 +2334,24 @@ require_once("interfaces/Sucursales.interface.php");
                         RetencionSucursalDAO::save($retencion);
                     }
                 }
-            }/* Fin del try */
-            catch(Exception $e)
-            {
+            }catch(Exception $e){
+	
                 DAO::transRollback();
-                Logger::error("No se pudo crear la nueva sucursal ".$e);
-                if($e->getCode()==901)
-                    throw new Exception("No se pudo crear la nueva sucursal: ".$e->getMessage(),901);
+
+                Logger::error( $e );
+
+                if($e->getCode()==901){
+	    			throw new Exception("No se pudo crear la nueva sucursal: ".$e->getMessage(),901);
+				}
+                
                 throw new Exception("No se pudo crear la nueva sucursal",901);
             }
+
             DAO::transEnd();
-            Logger::log("Sucursal creada con exito");
-            return array( "id_sucursal" => $sucursal->getIdSucursal());
+
+            Logger::log("Sucursal {$sucursal->getIdSucursal()} creada exitosamente.");
+
+            return array( "id_sucursal" => (int)$sucursal->getIdSucursal());
 	}
   
 	/**

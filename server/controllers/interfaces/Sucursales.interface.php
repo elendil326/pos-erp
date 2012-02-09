@@ -10,226 +10,25 @@
   
 	/**
  	 *
- 	 *Edita la informacion de un almacen
+ 	 *Lista las sucursales relacionadas con esta instancia. Se puede filtrar por empresa,  saldo inferior o superior a, fecha de apertura, ordenar por fecha de apertura u ordenar por saldo. Se agregar? un link en cada una para poder acceder a su detalle.
  	 *
- 	 * @param id_almacen int Id del almacen a editar
- 	 * @param descripcion string Descripcion del almacen
- 	 * @param id_tipo_almacen int Id del tipo de almacen al que sera cambiado. No se puede cambiar este parametro si se trata de un almacen de consignacion ni se puede editar para que sea un almacen de consignacion
- 	 * @param nombre string Nombre del almacen
+ 	 * @param activo bool Si este valor no es pasado, se listaran sucursales tanto activas como inactivas, si su valor es true, solo se mostrarn las sucursales activas, si es false, solo se mostraran las sucursales inactivas.
+ 	 * @param id_empresa int Id de la empresa de la cual se listaran sus sucursales.
+ 	 * @param limit int Indica hasta que registro se desea obtener a partir del conjunto de resultados productos de la bsqueda.
+ 	 * @param query string Valor que se buscara en la consulta
+ 	 * @param sort string Propiedad por la cual se ordenaran el conjunto de registros: `asc` o `desc`
+ 	 * @param start int Indica desde que registro se desea obtener a partir del conjunto de resultados productos de la bsqueda.
+ 	 * @return resultados json Objeto que contendra la lista de sucursales.
+ 	 * @return numero_de_resultados int 
  	 **/
-  static function EditarAlmacen
-	(
-		$id_almacen, 
-		$descripcion = null, 
-		$id_tipo_almacen = null, 
-		$nombre = null
-	);  
-  
-  
-	
-  
-	/**
- 	 *
- 	 *Descativa un almacen. Para poder desactivar un almacen, este tiene que estar vac?o
- 	 *
- 	 * @param id_almacen int Id del almacen a desactivar
- 	 **/
-  static function EliminarAlmacen
-	(
-		$id_almacen
-	);  
-  
-  
-	
-  
-	/**
- 	 *
- 	 *Metodo que surte una sucursal por parte de un proveedor. La sucursal sera tomada de la sesion actual.
-
-Update
-Creo que este metodo tiene que estar bajo sucursal.
- 	 *
- 	 * @param id_almacen int Id del almacen que se surte
- 	 * @param productos json Objeto que contendr los ids de los productos, sus unidades y sus cantidades
- 	 * @param motivo string Motivo del movimiento
- 	 * @return id_surtido string Id generado por el registro de surtir
- 	 **/
-  static function EntradaAlmacen
-	(
-		$id_almacen, 
-		$productos, 
-		$motivo = null
-	);  
-  
-  
-	
-  
-	/**
- 	 *
- 	 *listar almacenes de la isntancia. Se pueden filtrar por empresa, por sucursal, por tipo de almacen, por activos e inactivos y ordenar por sus atributos.
- 	 *
- 	 * @param activo bool Si este valor no es obtenido, se mostraran almacenes tanto activos como inactivos. Si es verdadero, solo se lsitaran los activos, si es falso solo se lsitaran los inactivos.
- 	 * @param id_empresa int Id de la empresa de la cual se listaran sus almacenes
- 	 * @param id_sucursal int el id de la sucursal de la cual se listaran sus almacenes
- 	 * @param id_tipo_almacen int Se listaran los almacenes de este tipo
- 	 * @return almacenes json Almacenes de esta sucursal
- 	 **/
-  static function ListaAlmacen
+  static function Buscar
 	(
 		$activo = null, 
 		$id_empresa = null, 
-		$id_sucursal = null, 
-		$id_tipo_almacen = null
-	);  
-  
-  
-	
-  
-	/**
- 	 *
- 	 *Creara un nuevo almacen en una sucursal, este almacen contendra lotes.
- 	 *
- 	 * @param id_empresa int Id de la empresa a la que pertenecen los productos de este almacen
- 	 * @param id_sucursal int El id de la sucursal a la que pertenecera este almacen.
- 	 * @param id_tipo_almacen int Id del tipo de almacen 
- 	 * @param nombre string nombre del almacen
- 	 * @param descripcion string Descripcion extesa del almacen
- 	 * @return id_almacen int el id recien generado
- 	 **/
-  static function NuevoAlmacen
-	(
-		$id_empresa, 
-		$id_sucursal, 
-		$id_tipo_almacen, 
-		$nombre, 
-		$descripcion = null
-	);  
-  
-  
-	
-  
-	/**
- 	 *
- 	 *Envia productos fuera del almacen. Ya sea que sea un traspaso de un alamcen a otro o por motivos de inventarios fisicos.
- 	 *
- 	 * @param id_almacen int Id del almacen del cual se hace el movimiento
- 	 * @param productos json Objeto que contendra los ids de los productos que seran sacados del alamcen con sus cantidades y sus unidades
- 	 * @param motivo string Motivo de la salida del producto
- 	 * @return id_salida int ID de la salida del producto
- 	 **/
-  static function SalidaAlmacen
-	(
-		$id_almacen, 
-		$productos, 
-		$motivo = null
-	);  
-  
-  
-	
-  
-	/**
- 	 *
- 	 *Para poder cancelar un traspaso, este no tuvo que haber sido enviado aun.
- 	 *
- 	 * @param id_traspaso int Id del traspaso a cancelar
- 	 **/
-  static function CancelarTraspasoAlmacen
-	(
-		$id_traspaso
-	);  
-  
-  
-	
-  
-	/**
- 	 *
- 	 *Para poder editar un traspaso,este no tuvo que haber sido enviado aun
- 	 *
- 	 * @param id_traspaso int Id del traspaso a editar
- 	 * @param fecha_envio_programada string Fecha de envio programada
- 	 * @param productos json Productos a enviar con sus cantidades
- 	 **/
-  static function EditarTraspasoAlmacen
-	(
-		$id_traspaso, 
-		$fecha_envio_programada = null, 
-		$productos = null
-	);  
-  
-  
-	
-  
-	/**
- 	 *
- 	 *Cambia el estado del traspaso a enviado y captura la fecha de envio del servidor. El usuario que envia sera tomado del servidor.
- 	 *
- 	 * @param id_traspaso int Id del traspaso a enviar
- 	 **/
-  static function EnviarTraspasoAlmacen
-	(
-		$id_traspaso
-	);  
-  
-  
-	
-  
-	/**
- 	 *
- 	 *Lista los traspasos de almacenes. Puede filtrarse por empresa, por sucursal, por almacen, por producto, cancelados, completos, estado
- 	 *
- 	 * @param cancelado bool Si este valor no es obtenido, se listaran los traspasos tanto cancelados como no cancelados. Si su valor es verdadero se listaran solo los traspasos cancelados, si su valor es falso, se listaran los traspasos no cancelados
- 	 * @param completo bool Si este valor no es obtenido, se listaran los traspasos tanto completos como no completos. Si su valor es verdadero, se listaran los traspasos completos, si es falso, se listaran los traspasos no completos
- 	 * @param estado string Se listaran los traspasos cuyo estado sea este, si no es obtenido este valor, se listaran los traspasos de cualqueir estado
- 	 * @param id_almacen_envia int Se listaran los traspasos enviados por este almacen
- 	 * @param id_almacen_recibe int Se listaran los traspasos recibidos por este almacen
- 	 * @param ordenar string Nombre de la columna por la cual se ordenara
- 	 * @return traspasos json Lista de traspasos
- 	 **/
-  static function ListaTraspasoAlmacen
-	(
-		$cancelado = null, 
-		$completo = null, 
-		$estado = null, 
-		$id_almacen_envia = null, 
-		$id_almacen_recibe = null, 
-		$ordenar = null
-	);  
-  
-  
-	
-  
-	/**
- 	 *
- 	 *Crea un registro de traspaso de producto de un almacen a otro. El usuario que envia sera tomada de la sesion.
- 	 *
- 	 * @param fecha_envio_programada string Fecha de envio programada para este traspaso
- 	 * @param id_almacen_envia int Id del almacen que envia el producto
- 	 * @param id_almacen_recibe int Id del almacen al que se envia el producto
- 	 * @param productos json Productos a ser enviados con sus cantidades
- 	 * @return id_traspaso int Id del traspaso autogenerado
- 	 **/
-  static function ProgramarTraspasoAlmacen
-	(
-		$fecha_envio_programada, 
-		$id_almacen_envia, 
-		$id_almacen_recibe, 
-		$productos
-	);  
-  
-  
-	
-  
-	/**
- 	 *
- 	 *Cambia el estado de un traspaso a recibido. La  bandera de completo se prende si los productos enviados son los mismos que los recibidos. La fecha de recibo es tomada del servidor. El usuario que recibe sera tomada de la sesion actual.
- 	 *
- 	 * @param id_traspaso int Id del traspaso que se recibe
- 	 * @param productos json Productos que se reciben con sus cantidades
- 	 **/
-  static function RecibirTraspasoAlmacen
-	(
-		$id_traspaso, 
-		$productos
+		$limit = null, 
+		$query = null, 
+		$sort = null, 
+		$start = null
 	);  
   
   
@@ -485,42 +284,32 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *Edita los datos de una sucursal
  	 *
  	 * @param id_sucursal int Id de la sucursal a modificar
- 	 * @param calle string Calle de la sucursal
- 	 * @param coidgo_postal string Codigo Postal de la sucursal
- 	 * @param colonia string Colonia de la sucursal
+ 	 * @param activo bool Indica si esta sucursal estar activa
  	 * @param descripcion string Descripcion de la sucursal
- 	 * @param empresas json Objeto que contendra los ids de las empresas a las que esta sucursal pertenece, por lo menos tiene que haber una empresa. En este JSON, opcionalmente junto con el id de la empresa, aapreceran dos campos que seran margen_utilidad y descuento, que indicaran que todos los productos de esa empresa ofrecidos en esta sucursal tendran un margen de utilidad y/o un descuento con los valores en esos campos
+ 	 * @param direccion json Arreglo de direcciones de la sucursal, pueden ser direcciones de tipo fiscal, postal, de envio, etc
+ 	 * @param empresas json (DE ESTO ES LO QUE VEREMOS EL MARTES CON IRATZIO) Objeto que contendra los ids de las empresas a las que esta sucursal pertenece, por lo menos tiene que haber una empresa. En este JSON, opcionalmente junto con el id de la empresa, aapreceran dos campos que seran margen_utilidad y descuento, que indicaran que todos los productos de esa empresa ofrecidos en esta sucursal tendran un margen de utilidad y/o un descuento con los valores en esos campos
  	 * @param id_gerente int Id del gerente de la sucursal
- 	 * @param impuestos json Objeto que contendra los ids de los impuestos que afectana esta sucursal
- 	 * @param municipio int Municipio de la sucursal
- 	 * @param numero_exterior string Numero exterior de la sucursal
- 	 * @param numero_interior string Numero interior de la sucursal
+ 	 * @param id_moneda int Id de la moneda base que manejaran las sucursales
+ 	 * @param impuestos_compra json Impuestos de compra por default que se heredan a las sucursales y estas a su vez a los productos-
+ 	 * @param impuestos_venta json Objeto que contendra los ids de los impuestos que afectana esta sucursal
  	 * @param razon_social string Razon social de la sucursal
- 	 * @param retenciones json Objeto que contendra los ids de las retenciones que afectan a esta sucursal
  	 * @param rfc string Rfc de la sucursal
  	 * @param saldo_a_favor float Saldo a favor de la sucursal
- 	 * @param telefono1 string telefono 1 de la sucursal
- 	 * @param telefono2 string telefono 2 de la sucursal
  	 **/
   static function Editar
 	(
 		$id_sucursal, 
-		$calle = null, 
-		$coidgo_postal = null, 
-		$colonia = null, 
+		$activo = null, 
 		$descripcion = null, 
+		$direccion = null, 
 		$empresas = null, 
 		$id_gerente = null, 
-		$impuestos = null, 
-		$municipio = null, 
-		$numero_exterior = null, 
-		$numero_interior = null, 
+		$id_moneda = null, 
+		$impuestos_compra = "[]", 
+		$impuestos_venta = "[]", 
 		$razon_social = null, 
-		$retenciones = null, 
 		$rfc = null, 
-		$saldo_a_favor = null, 
-		$telefono1 = null, 
-		$telefono2 = null
+		$saldo_a_favor = null
 	);  
   
   
@@ -558,131 +347,34 @@ Creo que este metodo tiene que estar bajo sucursal.
   
 	/**
  	 *
- 	 *Lista las sucursales relacionadas con esta instancia. Se puede filtrar por empresa,  saldo inferior o superior a, fecha de apertura, ordenar por fecha de apertura u ordenar por saldo. Se agregar? un link en cada una para poder acceder a su detalle.
+ 	 *M?todo que crea una nueva sucursal
  	 *
- 	 * @param activo bool Si este valor no es pasado, se listaran sucursales tanto activas como inactivas, si su valor es true, solo se mostrarn las sucursales activas, si es false, solo se mostraran las sucursales inactivas.
- 	 * @param fecha_apertura_inferior_que string Si este valor es pasado, se mostraran las sucursales cuya fecha de apertura sea inferior a esta.
- 	 * @param fecha_apertura_superior_que string Si este valor es pasado, se mostraran las sucursales cuya fecha de apertura sea superior a esta.
- 	 * @param id_empresa int Id de la empresa de la cual se listaran sus sucursales.
- 	 * @param saldo_inferior_que float Si este valor es obtenido, se mostrarn las sucursales que tengan un saldo inferior a este
- 	 * @param saldo_superior_que float Si este valor es obtenido, se mostrarn las sucursales que tengan un saldo superior a este
- 	 * @return sucursales json Objeto que contendra la lista de sucursales.
- 	 **/
-  static function Lista
-	(
-		$activo = null, 
-		$fecha_apertura_inferior_que = null, 
-		$fecha_apertura_superior_que = null, 
-		$id_empresa = null, 
-		$saldo_inferior_que = null, 
-		$saldo_superior_que = null
-	);  
-  
-  
-	
-  
-	/**
- 	 *
- 	 *Metodo que crea una nueva sucursal
- 	 *
- 	 * @param activo bool Si esta sucursal estara activa inmediatamente despues de ser creada
- 	 * @param calle string Calle de la sucursal
- 	 * @param codigo_postal string Codigo postal de la empresa
- 	 * @param colonia string Colonia de la sucursal
- 	 * @param id_ciudad int Id de la ciudad donde se encuentra la sucursal
- 	 * @param numero_exterior string Numero exterior de la sucursal
+ 	 * @param direccion json Arreglo de direcciones de la sucursal, pueden ser direcciones de tipo fiscal, postal, de envo, etc.
  	 * @param razon_social string Razon social de la sucursal
+ 	 * @param activo bool Si esta sucursal estara activa inmediatamente despues de ser creada
+ 	 * @param descripcion string Descripcion de la sucursal
+ 	 * @param empresas json Arreglo de `id_empresa` de las empresas a las que pertenece esta sucursal.
+ 	 * @param id_gerente int ID del usuario que sera gerente de esta sucursal. Para que sea valido este usuario debe tener el nivel de acceso apropiado.
+ 	 * @param id_moneda int Id de la moneda base que manejaran las sucursales
+ 	 * @param impuestos_compra json Impuestos de compra por default que se heredan a las sucursales y estas a su vez a los productos
+ 	 * @param impuestos_venta json Impuestos de venta por default que se heredan a las sucursales y estas a su vez a los productos
  	 * @param rfc string RFC de la sucursal
  	 * @param saldo_a_favor float Saldo a favor de la sucursal.
- 	 * @param descripcion string Descripcion de la sucursal
- 	 * @param id_gerente int ID del usuario que sera gerente de esta sucursal. Para que sea valido este usuario debe tener el nivel de acceso apropiado.
- 	 * @param impuestos json Objeto que contendra el arreglo de impuestos que afectan a esta sucursal
- 	 * @param numero_interior string numero interior
- 	 * @param referencia string Referencia para localizar la direccion de la sucursal
- 	 * @param retenciones json Objeto que contendra el arreglo de retenciones que afectan a esta sucursal
- 	 * @param telefono1 string Telefono1 de la sucursal
- 	 * @param telefono2 string Telefono2 de la sucursal
  	 * @return id_sucursal int Id autogenerado de la sucursal que se creo.
  	 **/
   static function Nueva
 	(
-		$activo, 
-		$calle, 
-		$codigo_postal, 
-		$colonia, 
-		$id_ciudad, 
-		$numero_exterior, 
+		$direccion, 
 		$razon_social, 
-		$rfc, 
-		$saldo_a_favor, 
+		$activo =  1 , 
 		$descripcion = null, 
+		$empresas = null, 
 		$id_gerente = null, 
-		$impuestos = null, 
-		$numero_interior = null, 
-		$referencia = null, 
-		$retenciones = null, 
-		$telefono1 = null, 
-		$telefono2 = null
-	);  
-  
-  
-	
-  
-	/**
- 	 *
- 	 *Edita un tipo de almacen
- 	 *
- 	 * @param id_tipo_almacen int Id del tipo de almacen a editar
- 	 * @param descripcion string Descripcion del tipo de almacen
- 	 **/
-  static function EditarAlmacenTipo
-	(
-		$id_tipo_almacen, 
-		$descripcion = null
-	);  
-  
-  
-	
-  
-	/**
- 	 *
- 	 *Elimina un tipo de almacen
- 	 *
- 	 * @param id_tipo_almacen int Id del tipo de almacen a editar
- 	 **/
-  static function EliminarAlmacenTipo
-	(
-		$id_tipo_almacen
-	);  
-  
-  
-	
-  
-	/**
- 	 *
- 	 *Imprime la lista de tipos de almacen
- 	 *
- 	 * @param orden string Nombre de la columan por el cual se ordenara la lista
- 	 * @return lista_tipos_almacen json Arreglo con la lista de almacenes
- 	 **/
-  static function ListaAlmacenTipo
-	(
-		$orden = null
-	);  
-  
-  
-	
-  
-	/**
- 	 *
- 	 *Crea un nuevo tipo de almacen
- 	 *
- 	 * @param descripcion string Descripcion de este tipo de almacen
- 	 * @return id_tipo_almacen int Id del tipo de almacen
- 	 **/
-  static function NuevoAlmacenTipo
-	(
-		$descripcion
+		$id_moneda =  1 , 
+		$impuestos_compra = null, 
+		$impuestos_venta = null, 
+		$rfc = null, 
+		$saldo_a_favor = "0"
 	);  
   
   
