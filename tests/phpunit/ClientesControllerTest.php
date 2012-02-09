@@ -36,9 +36,13 @@
 		
 		
 		public function testNuevoCliente(){
-			ClientesController::nuevo("Alan Gonzalez");
+			$c = ClientesController::nuevo("Alan Gonzalez");
+			$this->assertInternalType("int" , $c["id_cliente"]);
 		}
 
+		public function testNuevoClienteConMismoNombre(){
+			ClientesController::nuevo("Alan Gonzalez");
+		}
 		
 	}
 

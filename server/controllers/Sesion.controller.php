@@ -20,11 +20,17 @@ class SesionController implements ISesion{
  	 * @return id_sucursal int El id_sucursal de la sucursal donde este usuario inico sesion en caso de haberlo hecho desde un mostraodr. Un gerente no tendra id_sucursal asociada a el dado que puede iniciar sesion desde cualquier lugar.
  	 * @return id_usuario int 
  	 **/
-        public static function Actual
-	(
-	)
-	{
-            return array( "id_caja" => 1, "id_sucursal" => 1, "id_usuario" => 1);
+        public static function Actual(){
+			if(self::$_is_logged_in){
+				if(self::$_current_user){
+	            	return array( "id_caja" => null, "id_sucursal" => null, "id_usuario" => self::$_current_user->getIdUsuario() );					
+				}
+	            return array( "id_caja" => null, "id_sucursal" => null, "id_usuario" => null);
+	
+			}else{
+            	return array( "id_caja" => null, "id_sucursal" => null, "id_usuario" => null);				
+			}
+
 	}
     
 	
@@ -42,9 +48,10 @@ class SesionController implements ISesion{
 	)
 	{  
 		
-  		Logger::log("Cerrando sesion");
+  		Logger::log("Cerrando sesion para toek {$aut_token}...");
 		Logger::warn("Falta borrar el token de la bd");
-
+	  	self::$_is_logged_in = null;
+		self::$_current_user = null;
 		$sm = SessionManager::getInstance();
 		$sm->SetCookie( 'at', 'deleted', 1, '/' );
   		
@@ -146,7 +153,9 @@ class SesionController implements ISesion{
 			
 		}
 		
+		Logger::log("Actual login...");
 		self::login( $nueva_sesion->getAuthToken(), $nueva_sesion->getIdUsuario(), $user->getIdRol()  );
+		
 		Logger::log("Setting _current_user");
 		self::$_current_user = SesionDAO::getUserByAuthToken( $nueva_sesion->getAuthToken() );
 		
@@ -228,7 +237,7 @@ class SesionController implements ISesion{
 
 	static function isLoggedIn(){
 		
-		Logger::log("isLoggedIn() started...");
+		//Logger::log("isLoggedIn() started...");
 		
 		if(isset(self::$_is_logged_in) && !is_null(self::$_is_logged_in) && self::$_is_logged_in){
 			Logger::log("isLoggedIn() already set ...");
@@ -342,7 +351,6 @@ class SesionController implements ISesion{
 	public static function getCurrentUser(  ){
 
 		if( !is_null(self::$_current_user) ){
-			Logger::log("GetCurrentUser already in cache");
 			return self::$_current_user;
 		}		
 

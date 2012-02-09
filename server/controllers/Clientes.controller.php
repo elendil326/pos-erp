@@ -400,8 +400,9 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
                 throw new Exception("No se pudo crear al cliente, consulte a su administrador de sistema");
             }
             
-            Logger::log("El cliente fue creado exitosamente");
-            return array( "id_cliente" => $cliente["id_usuario"]);
+            Logger::log("Cliente creado correctamente...");
+
+            return array( "id_cliente" => (int)$cliente["id_usuario"]);
             
 	}
   

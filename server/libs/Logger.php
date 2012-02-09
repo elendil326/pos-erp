@@ -188,8 +188,23 @@ class Logger
 
 		}
 
+		if(isset($_GET["_instance_"]))
+		{
+			$out .= " | IID = " . $_GET["_instance_"];
+		}
 
-        
+		
+		if(class_exists("SesionController") ){
+			$a = SesionController::Actual();
+			if(!is_null( $a["id_usuario"] )){
+				$out .= " | UID = " . $a["id_usuario"];				
+			}
+
+		}
+
+
+
+        /*
         if(isset($_SESSION["INSTANCE_ID"])){
             $out .= " | INSTANCE:" . $_SESSION["INSTANCE_ID"];
         }
@@ -197,7 +212,7 @@ class Logger
 
         if(isset($_SESSION['userid'])){
             $out .= " | USERID:" . $_SESSION['userid'];
-        }
+        }*/
 
     	/*
         if(isset($_SESSION['sucursal']) 
