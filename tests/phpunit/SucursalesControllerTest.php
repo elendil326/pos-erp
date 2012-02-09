@@ -3,7 +3,8 @@
 
 date_default_timezone_set ( "America/Mexico_City" );
 
-define("BYPASS_INSTANCE_CHECK", false);
+if(!defined("BYPASS_INSTANCE_CHECK"))
+	define("BYPASS_INSTANCE_CHECK", false);
 
 $_GET["_instance_"] = 123;
 
@@ -22,5 +23,8 @@ class SucursalesControllerTest extends PHPUnit_Framework_TestCase {
 	
 	
 
+	public function testNueva(){
+		
+	}
 	
 }
