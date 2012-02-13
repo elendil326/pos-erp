@@ -5,8 +5,7 @@ class Logger
 
   private static $db_querys = 0;
 
-  public static final function read($lines = 100)
-  {
+  public static final function read($lines = 100){
 
         if(!file_exists(POS_CONFIG_LOG_ACCESS_FILE)){
             die("POS: Unable to open logfile:" .POS_CONFIG_LOG_ACCESS_FILE );
@@ -133,45 +132,52 @@ class Logger
   
   
   
-  public static final function logSQL( $sql )
-  {
-    
+  public static final function logSQL( $sql ){
     if(POS_CONFIG_LOG_DB_QUERYS){
-      self::$db_querys ++;
-      self::log( "SQL(" . self::$db_querys . "): " . $sql );
-      
+		self::$db_querys ++;
+		self::log( "SQL(" . self::$db_querys . "): " . $sql );
     }
   }
 
 
-  public static final function error ($msg )
-  {
-    self::log(  "ERROR:" . $msg );
-  }
-
-  public static final function warn ($msg )
-  {
-    self::log(  "WARN:" . $msg );
+  public static final function error ( $msg ){
+    self::log(  "ERROR: " . $msg, true );
   }
 
 
-  public static final function debug ($msg )
-  {
-    self::log(  "		-->DEBUG:" . $msg );
+  public static final function warn ($msg ){
+    self::log(  "WARN: " . $msg );
   }
 
-  public static final function log( $msg, $level = 0 )
-  {
+
+  public static final function debug ($msg ){
+    self::log(  "------->DEBUG: " . $msg );
+  }
+
+
+  public static final function log( $msg, $toError = false ){
+	
+
+	
         if(!POS_CONFIG_LOG_TO_FILE)
             return;
         
+		if($msg instanceof Exception ){
+			return self::error($msg);
+		}
+
+		if($toError && file_exists(POS_CONFIG_LOG_ERROR_FILE) && is_writable(POS_CONFIG_LOG_ERROR_FILE)){
+        	$err_log = fopen( POS_CONFIG_LOG_ERROR_FILE, "a" );
+        }else{
+			$err_log = null;
+		}
+
+
         if(!file_exists(POS_CONFIG_LOG_ACCESS_FILE)){
-            //die("POS: Unable to open logfile:" .POS_CONFIG_LOG_ACCESS_FILE );
 			return;
         }
 
         if(!is_writable(POS_CONFIG_LOG_ACCESS_FILE)){
-            //die("POS: Unable to write to logfile:" .POS_CONFIG_LOG_ACCESS_FILE );
 			return;
         }
 
@@ -203,48 +209,31 @@ class Logger
 		}
 
 
-
-        /*
-        if(isset($_SESSION["INSTANCE_ID"])){
-            $out .= " | INSTANCE:" . $_SESSION["INSTANCE_ID"];
-        }
-
-
-        if(isset($_SESSION['userid'])){
-            $out .= " | USERID:" . $_SESSION['userid'];
-        }*/
-
-    	/*
-        if(isset($_SESSION['sucursal']) 
-	      && method_exists($_SESSION['sucursal'], '__toString') //bug #121
-	    ){
-	      try{
-	              $out .= " | SUC:" . $_SESSION['sucursal'];
-	      }catch(Exception $e){
-	        return Logger::log($e);
-	      }
-
-        }*/
-
     if(POS_CONFIG_LOG_TRACKBACK){
-          $d = debug_backtrace();
-      $track = " | TRACK : ";
-      for ($i= 1; $i < sizeof($d) -1 ; $i++) { 
-//        $track .= isset($d[$i]["function"]) ? "->" . $d[$i]["function"] : "*" ;
-        $track .= isset($d[$i]["file"]) ? substr( strrchr( $d[$i]["file"], "/" ), 1 )  : "*"; 
-        $track .= isset($d[$i]["line"]) ? ":" .  $d[$i]["line"] ." "  : "* " ;
-      }
-      $out .=  $track ;      
+		$d = debug_backtrace();
+		
+		$track = " | TRACK : ";
+		
+		for ($i= 1; $i < sizeof($d) -1 ; $i++) { 
+			//        $track .= isset($d[$i]["function"]) ? "->" . $d[$i]["function"] : "*" ;
+			$track .= isset($d[$i]["file"]) ? substr( strrchr( $d[$i]["file"], "/" ), 1 )  : "*"; 
+			$track .= isset($d[$i]["line"]) ? ":" .  $d[$i]["line"] ." "  : "* " ;
+		}
+		
+		$out .=  $track ;      
     }
 
-        
-        
 
-        fwrite($log, $out. " | " . $msg . "\n");
+	fwrite($log, $out. " | " . $msg . "\n");
+	fclose($log);
 
-        fclose($log);
+	if($err_log){
+		fwrite($err_log, $out. " | " . $msg . "\n");
+		fclose($err_log);
+	}
+	
 
-  }
+}
   
   
   

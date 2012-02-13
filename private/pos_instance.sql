@@ -144,7 +144,7 @@ CREATE TABLE IF NOT EXISTS `apertura_caja` (
   `id_caja` int(11) NOT NULL COMMENT 'Id de la caja que se abre',
   `fecha` datetime NOT NULL COMMENT 'Fecha en que se realizo la apertura de caja',
   `saldo` float NOT NULL COMMENT 'Saldo con que inicia operaciones la caja',
-  `id_cajero` int(11) DEFAULT NULL COMMENT 'Id del usuario que realizará las funciones de cajero',
+  `id_cajero` int(11) DEFAULT NULL COMMENT 'Id del usuario que realizara las funciones de cajero',
   PRIMARY KEY (`id_apertura_caja`),
   KEY `id_caja` (`id_caja`),
   KEY `id_cajero` (`id_cajero`)
@@ -352,7 +352,7 @@ CREATE TABLE IF NOT EXISTS `cierre_caja` (
   `id_cajero` int(11) DEFAULT NULL COMMENT 'Id del usuario que realiza las funciones de cajero al momento de cerrar la caja',
   `fecha` datetime NOT NULL COMMENT 'fecha en que se realiza la operacion',
   `saldo_real` float NOT NULL COMMENT 'Saldo de la caja',
-  `saldo_esperado` float NOT NULL COMMENT 'Saldo que debería de haber en la caja después de todos los movimientos del día',
+  `saldo_esperado` float NOT NULL COMMENT 'Saldo que deberia de haber en la caja despues de todos los movimientos del dia',
   PRIMARY KEY (`id_cierre_caja`),
   KEY `id_caja` (`id_caja`),
   KEY `id_cajero` (`id_cajero`)
@@ -480,7 +480,7 @@ CREATE TABLE IF NOT EXISTS `compra_arpilla` (
   `id_compra_arpilla` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Id de la tabla compra por arpilla',
   `id_compra` int(11) NOT NULL COMMENT 'Id de la compra a la que se refiere',
   `peso_origen` float DEFAULT NULL COMMENT 'El peso del camion en el origen',
-  `fecha_origen` datetime DEFAULT NULL COMMENT 'Fecha en la que se envío el embarque',
+  `fecha_origen` datetime DEFAULT NULL COMMENT 'Fecha en la que se envio el embarque',
   `folio` varchar(11) DEFAULT NULL COMMENT 'Folio del camion',
   `numero_de_viaje` varchar(11) DEFAULT NULL COMMENT 'Número de viaje',
   `peso_recibido` float NOT NULL COMMENT 'Peso del camion al llegar',
@@ -605,7 +605,7 @@ CREATE TABLE IF NOT EXISTS `corte_de_caja` (
   `fecha` datetime NOT NULL COMMENT 'fecha en la que se realiza el corte de caja',
   `saldo_real` float NOT NULL COMMENT 'Saldo actual de la caja',
   `saldo_esperado` float NOT NULL COMMENT 'Saldo que se espera de acuerdo a las ventas realizadas apartir del último corte de caja o a la apertura de la misma',
-  `saldo_final` float NOT NULL COMMENT 'Saldo que se deja en caja después de realizar el corte',
+  `saldo_final` float NOT NULL COMMENT 'Saldo que se deja en caja despues de realizar el corte',
   PRIMARY KEY (`id_corte_de_caja`),
   KEY `id_caja` (`id_caja`),
   KEY `id_cajero` (`id_cajero`),
@@ -1037,7 +1037,7 @@ CREATE TABLE IF NOT EXISTS `moneda` (
   `simbolo` varchar(10) NOT NULL COMMENT 'Simbolo de la moneda (US$,NP$)',
   `activa` tinyint(1) NOT NULL COMMENT 'Si esta moneda esta activa o ya no se usa',
   PRIMARY KEY (`id_moneda`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que contendrá las distintas monedas que usa el uusario' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que contendra las distintas monedas que usa el uusario' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1379,7 +1379,7 @@ CREATE TABLE IF NOT EXISTS `regla` (
 CREATE TABLE IF NOT EXISTS `reporte` (
   `id_reporte` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Id del reporte',
   PRIMARY KEY (`id_reporte`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que contendrá los reportes generados' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que contendra los reportes generados' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1584,7 +1584,7 @@ CREATE TABLE IF NOT EXISTS `servicio` (
   `activo` tinyint(1) NOT NULL COMMENT 'Si el servicio esta activo',
   `descripcion_servicio` varchar(255) DEFAULT NULL COMMENT 'Descripcion del servicio',
   `costo_estandar` float NOT NULL COMMENT 'Valor del costo estandar del servicio',
-  `garantia` int(11) DEFAULT NULL COMMENT 'Si este servicio tiene una garantía en meses.',
+  `garantia` int(11) DEFAULT NULL COMMENT 'Si este servicio tiene una garantia en meses.',
   `control_existencia` int(11) DEFAULT NULL COMMENT '00000001 = Unidades. 00000010 = Caractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = LoteCaractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = Lote',
   `foto_servicio` varchar(50) DEFAULT NULL COMMENT 'Url de la foto del servicio',
   `precio` float DEFAULT NULL COMMENT 'El precio fijo del servicio',
@@ -1827,15 +1827,15 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `representante_legal` varchar(100) DEFAULT NULL COMMENT 'Nombre del representante legal del usuario',
   `facturar_a_terceros` tinyint(1) DEFAULT NULL COMMENT 'Si el cliente puede facturar a terceros',
   `dia_de_pago` datetime DEFAULT NULL COMMENT 'Fecha de pago del cliente',
-  `mensajeria` tinyint(1) DEFAULT NULL COMMENT 'Si el cliente cuenta con una cuenta de mensajería y paquetería',
+  `mensajeria` tinyint(1) DEFAULT NULL COMMENT 'Si el cliente cuenta con una cuenta de mensajeria y paqueteria',
   `intereses_moratorios` float DEFAULT NULL COMMENT 'Intereses moratorios del cliente',
   `denominacion_comercial` varchar(100) DEFAULT NULL COMMENT 'Denominación comercial del cliente',
-  `dias_de_credito` int(11) DEFAULT NULL COMMENT 'Días de crédito que se le darán al cliente',
+  `dias_de_credito` int(11) DEFAULT NULL COMMENT 'Dias de credito que se le daran al cliente',
   `cuenta_de_mensajeria` varchar(50) DEFAULT NULL COMMENT 'Cuenta de mensajeria del cliente',
   `dia_de_revision` datetime DEFAULT NULL COMMENT 'Fecha de revisión del cliente',
   `codigo_usuario` varchar(50) NOT NULL COMMENT 'Codigo del usuario para uso interno de la empresa',
   `dias_de_embarque` int(11) DEFAULT NULL COMMENT 'Dias de embarque del proveedor (Lunes, Martes, etc)',
-  `tiempo_entrega` int(11) DEFAULT NULL COMMENT 'Tiempo de entrega del proveedor en días',
+  `tiempo_entrega` int(11) DEFAULT NULL COMMENT 'Tiempo de entrega del proveedor en dias',
   `cuenta_bancaria` varchar(50) DEFAULT NULL COMMENT 'Cuenta bancaria del usuario',
   `id_tarifa_compra` int(11) NOT NULL COMMENT 'Id de la tarifa de compra por default para este usuario',
   `tarifa_compra_obtenida` enum('rol','proveedor','cliente','usuario') NOT NULL COMMENT 'Indica de donde fue obtenida la tarifa de compra',
@@ -1893,7 +1893,7 @@ CREATE TABLE IF NOT EXISTS `venta_arpilla` (
   `id_venta_arpilla` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Id de la venta por arpilla',
   `id_venta` int(11) NOT NULL COMMENT 'Id de la venta en arpillas',
   `peso_destino` float NOT NULL COMMENT 'Peso del embarque en el destino',
-  `fecha_origen` datetime NOT NULL COMMENT 'Fecha en la que se envía el embarque',
+  `fecha_origen` datetime NOT NULL COMMENT 'Fecha en la que se envia el embarque',
   `folio` varchar(11) DEFAULT NULL COMMENT 'Folio de la entrega',
   `numero_de_viaje` varchar(11) DEFAULT NULL COMMENT 'Numero de viaje',
   `peso_origen` float NOT NULL COMMENT 'Peso del embarque en el origen',
