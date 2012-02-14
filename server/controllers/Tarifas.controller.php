@@ -1,12 +1,12 @@
 <?php
-require_once("interfaces/Precio.interface.php");
+require_once("interfaces/Tarifas.interface.php");
 /**
   *
   *
   *
   **/
 	
-  class PrecioController implements IPrecio{
+  class TarifasController implements ITarifas{
 
       
 	/**
@@ -14,7 +14,7 @@ require_once("interfaces/Precio.interface.php");
 	 * 
 	 * 
 	 * */
-  	public static function calcularTarifas( VO $obj, $tipo ){
+  	public static function _CalcularTarifa( VO $obj, $tipo ){
 		
 		if( !( ($obj instanceof Producto)
 			|| ($obj instanceof Servicio)
@@ -37,34 +37,20 @@ require_once("interfaces/Precio.interface.php");
 
 		return $respuesta;
 	}
-      
-        /*
-         *Se valida que un string tenga longitud en un rango de un maximo inclusivo y un minimo exclusvio.
-         *Regresa true cuando es valido, y un string cuando no lo es.
-         */
-          private static function validarString($string, $max_length, $nombre_variable,$min_length=0)
-	{
-		if(strlen($string)<=$min_length||strlen($string)>$max_length)
-		{
-		    return "La longitud de la variable ".$nombre_variable." proporcionada (".$string.") no esta en el rango de ".$min_length." - ".$max_length;
-		}
-		return true;
-        }
+
+    public static function Calcular(
+        $tipo_tarifa, 
+        $cantidad = null, 
+        $id_paquete = null, 
+        $id_producto = null, 
+        $id_servicio = null, 
+        $id_tarifa = null, 
+        $id_unidad = null
+    ){
+        
+    }
 
 
-        /*
-         * Se valida que un numero este en un rango de un maximo y un minimo inclusivos
-         * Regresa true cuando es valido, y un string cuando no lo es
-         */
-	private static function validarNumero($num, $max_length, $nombre_variable, $min_length=0)
-	{
-	    if($num<$min_length||$num>$max_length)
-	    {
-	        return "La variable ".$nombre_variable." proporcionada (".$num.") no esta en el rango de ".$min_length." - ".$max_length;
-	    }
-	    return true;
-        }
-	
         
         /*
          * Valida los parametros de un producto
@@ -234,6 +220,8 @@ require_once("interfaces/Precio.interface.php");
             //no se encontro error, regresa verdadero
             return true;
         }
+       
+       
         
         /*
          * Valida los parametros de la tabla Version
@@ -1639,7 +1627,7 @@ La asignacion de una formula a algun producto, servicio, etc. requiere una secue
    Para mas informacion de estos parametros consulte la documentacionde este metodo. El parametro id_tarifa es la tarifa base de donde se sacara el Precio Base para la formula.
  	 * @return id_tarifa int Id de la tarifa creada
  	 **/
-	public static function NuevaTarifa
+	public static function Nueva
 	(
 		$id_moneda, 
 		$nombre, 
@@ -1788,7 +1776,7 @@ Aplican todas las consideraciones de la documentacion del metodo nuevaTarifa
  	 * @param nombre string Nombre de la tarifa
  	 * @param tipo_tarifa string Puede ser "compra" o "venta" e indica si la tarifa sera de compra o de venta
  	 **/
-	public static function EditarTarifa
+	public static function Editar
 	(
 		$id_tarifa, 
 		$default = null, 
@@ -1903,7 +1891,7 @@ La tarifa instalada por default no puede ser eliminada
  	 *
  	 * @param id_tarifa int Id de la tarifa a eliminar
  	 **/
-	public static function EliminarTarifa
+	public static function Desactivar
 	(
 		$id_tarifa
 	)
@@ -1950,7 +1938,7 @@ La tarifa instalada por default no puede ser eliminada
  	 *
  	 * @param id_tarifa int Id de la tarifa a activar
  	 **/
-	public static function ActivarTarifa
+	public static function Activar
 	(
 		$id_tarifa
 	)

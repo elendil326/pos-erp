@@ -175,7 +175,8 @@
 	require_once("controllers/Direcciones.controller.php");	
 	require_once("controllers/Sucursales.controller.php");		
 	require_once("controllers/Productos.controller.php");
-	
+	require_once("controllers/Tarifas.controller.php");
+
 	/*
 	require_once("controllers/Autorizaciones.controller.php");
 	require_once("controllers/CargosYAbonos.controller.php");
@@ -190,7 +191,7 @@
 	require_once("controllers/Inventario.controller.php");
 	require_once("controllers/Paquetes.controller.php");
 	require_once("controllers/POS.controller.php");
-	require_once("controllers/Precio.controller.php");
+	
 
 	require_once("controllers/Proveedores.controller.php");
 	require_once("controllers/Reportes.controller.php");

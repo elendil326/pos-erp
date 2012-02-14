@@ -1884,7 +1884,7 @@ Ejemplo: 1 kg = 2.204 lb
 
         }
 
-        Logger::debug("buscando producto: " . $query);
+        Logger::log("Buscando producto: " . $query);
 		
         $productos = ProductoDAO::buscarProductos( $query );
 		
@@ -1896,7 +1896,7 @@ Ejemplo: 1 kg = 2.204 lb
 			
 			//una vez que tengo los productos vamos a agergarle sus
 			//precios tarifarios
-			$r["tarifas"] = PrecioController::calcularTarifas( $p, "venta" );
+			$r["tarifas"] = TarifasController::_CalcularTarifa( $p, "venta" );
 			
 			//buscar sus existencias
 			

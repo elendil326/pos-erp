@@ -33,7 +33,7 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 			//ya existe el producto hay que eliminarlo
 			var_dump($p["resultados"][0]);
 
-			//ProductosController::Desa
+			//ProductosController::Desactivar();
 		}
 
 	}
