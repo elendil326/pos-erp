@@ -156,8 +156,8 @@ require_once("interfaces/Productos.interface.php");
             if(!is_null($codigo_producto))
             {
                  
-                if(FALSE === self::validarLongitudDeCadena($codigo_producto, 2, 30 )){
-                    return "El codigo de producto es muy corto";
+                if(FALSE === self::validarLongitudDeCadena($codigo_producto, 2, 32 )){
+                    return "El codigo de producto $codigo_producto debe ser entre 2 y 30";
                 }
 
 
@@ -1861,17 +1861,32 @@ Ejemplo: 1 kg = 2.204 lb
 	}
 	
 	
-	
+    /**
+     *
+     * Buscar productos por codigo_producto, nombre_producto, descripcion_producto.
+     *
+     * @param query string Buscar productos por codigo_producto, nombre_producto, descripcion_producto.
+     * @param id_producto int Si estoy buscando un producto del cual ya tengo conocido su id. Si se envia `id_producto` todos los demas campos seran ignorados.
+     * @param id_sucursal int Buscar las existencias de este producto en una sucursal especifica.
+     * @return resultados json 
+     * @return numero_de_resultados int 
+     **/
 	public static function Buscar
-        (
-            $query, 
-            $id_sucursal = null
-        )
-        {
+    (
+        $query, 
+        $id_producto = null, 
+        $id_sucursal = null
+    )
+    {
+
+
+        if(!is_null($id_producto)){
+
+        }
+
+        Logger::debug("buscando producto: " . $query);
 		
-		Logger::debug("buscando" . $query);
-		
-		$productos = ProductoDAO::buscarProductos( $query );
+        $productos = ProductoDAO::buscarProductos( $query );
 		
 		$resultado = array();
 

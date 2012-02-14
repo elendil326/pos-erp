@@ -20,6 +20,7 @@ require_once("base/producto.vo.base.php");
   */
 class ProductoDAO extends ProductoDAOBase
 {
+
 	public static function buscarProductos($query, $how_many = 100){
 		$sql = "select * from producto where ( nombre_producto like ? or codigo_producto like ? ) and activo = 1 limit ?; ";
 
@@ -34,4 +35,5 @@ class ProductoDAO extends ProductoDAOBase
 		}
 		return $ar;
 	}
+  
 }
