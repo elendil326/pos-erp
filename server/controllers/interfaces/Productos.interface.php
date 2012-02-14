@@ -156,7 +156,7 @@
  	 * @param id_almacen int Id del almacen del cual se vern sus productos.
  	 * @param id_empresa int Id de la empresa de la cual se vern los productos.
  	 * @param metodo_costeo string Se listaran los productos que coincidan con este metodo de costeo
- 	 * @return productos json Objeto que contendrá el arreglo de productos en inventario.
+ 	 * @return productos json Objeto que contendr el arreglo de productos en inventario.
  	 **/
   static function Lista
 	(
@@ -180,7 +180,10 @@ NOTA: Se crea un producto tipo = 1 que es para productos
  	 * @param codigo_producto string El codigo de control de la empresa para este producto, no se puede repetir
  	 * @param compra_en_mostrador bool Verdadero si este producto se puede comprar en mostrador, para aquello de compra-venta
  	 * @param costo_estandar float Valor del costo estndar del producto.
- 	 * @param metodo_costeo string Puede ser "precio" o "costo" e indican si el precio final se tomara del precio de este producto o de su costo
+ 	 * @param metodo_costeo string `precio estandar` el precio de coste es fijo y se recalcula periodicamente (normalmente al finalizar el año).
+
+`precio medio` el precio de coste se recalcula en cada recepcion de productos.
+
  	 * @param nombre_producto string Nombre del producto
  	 * @param clasificaciones json Uno o varios id_clasificacion de este producto, esta clasificacion esta dada por el usuarioArray
  	 * @param codigo_de_barras string El Codigo de barras para este producto
@@ -193,8 +196,8 @@ NOTA: Se crea un producto tipo = 1 que es para productos
  	 * @param id_unidad int La unidad preferida para este producto
  	 * @param impuestos json array de ids de impuestos que tiene este producto
  	 * @param peso_producto float el peso de este producto en KG
- 	 * @param precio int El precio de este producto
- 	 * @return id_producto int Id generado por la inserción del nuevo producto
+ 	 * @param precio_de  int El precio de este producto
+ 	 * @return id_producto int Id generado por la insercin del nuevo producto
  	 **/
   static function Nuevo
 	(
@@ -215,7 +218,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos
 		$id_unidad = null, 
 		$impuestos = null, 
 		$peso_producto = null, 
-		$precio = null
+		$precio_de  = null
 	);  
   
   
@@ -301,23 +304,6 @@ Ejemplo: 1 kg = 2.204 lb
 	(
 		$id_unidad, 
 		$id_unidades
-	);  
-  
-  
-	
-  
-	/**
- 	 *
- 	 *Lista las unidades. Se puede filtrar por activas o inactivas y ordenar por sus atributos
- 	 *
- 	 * @param activo bool Si este valor no es obtenido, se listaran tanto activas como inactivas, si es true, se listaran solo las activas, si es false se listaran solo las inactivas
- 	 * @param ordenar string Nombre de la columna por la cual se ordenara la lista
- 	 * @return unidades_convertibles json Lista de unidades convertibles
- 	 **/
-  static function ListaUnidad
-	(
-		$activo = null, 
-		$ordenar = null
 	);  
   
   

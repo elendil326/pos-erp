@@ -8,45 +8,8 @@ require_once("interfaces/Productos.interface.php");
 	
   class ProductosController implements IProductos{
   
-        //Metodo para pruebas que simula la obtencion del id de la sucursal actual
-        private static function getSucursal()
-        {
-            return 1;
-        }
-        
-        //metodo para pruebas que simula la obtencion del id de la caja actual
-        private static function getCaja()
-        {
-            return 1;
-        }
-      
-        
-        /*
-         *Se valida que un string tenga longitud en un rango de un maximo inclusivo y un minimo exclusvio.
-         *Regresa true cuando es valido, y un string cuando no lo es.
-         */
-          private static function validarString($string, $max_length, $nombre_variable,$min_length=0)
-	{
-		if(strlen($string)<=$min_length||strlen($string)>$max_length)
-		{
-		    return "La longitud de la variable ".$nombre_variable." proporcionada (".$string.") no esta en el rango de ".$min_length." - ".$max_length;
-		}
-		return true;
-        }
 
 
-        /*
-         * Se valida que un numero este en un rango de un maximo y un minimo inclusivos
-         * Regresa true cuando es valido, y un string cuando no lo es
-         */
-	private static function validarNumero($num, $max_length, $nombre_variable, $min_length=0)
-	{
-	    if($num<$min_length||$num>$max_length)
-	    {
-	        return "La variable ".$nombre_variable." proporcionada (".$num.") no esta en el rango de ".$min_length." - ".$max_length;
-	    }
-	    return true;
-	}
         
         /*
          * Valida los parametros de la tabla unidad. Regresa un string con el error en caso de
@@ -121,6 +84,9 @@ require_once("interfaces/Productos.interface.php");
             return true;
         }
         
+
+
+
         /*
          * Valida los parametros de la tabla producto. Regresa un string con el error
          * cuando se ha encontrado alguno, regresa true en caso contrario
@@ -320,7 +286,11 @@ require_once("interfaces/Productos.interface.php");
             //No se encontro error, regresa verdadero
             return true;
         }
-        
+  
+
+
+
+      
         /*
          * Valida los parametros de la tabla producto_empresa. Regres aun string con el error si encuentra
          * alguno, regresa verdadero en caso contrario.
@@ -345,7 +315,11 @@ require_once("interfaces/Productos.interface.php");
             //No se encontro error, regresa true
             return true;
         }
-        
+ 
+
+
+
+       
         /*
          * Valida los parametros de la tabla clasificacion_produco. Regres aun string con el error
          * en caso de encontrar alguno. Regresa verdadero en caso contrario.

@@ -12,13 +12,13 @@
  	 *
  	 *Mostrar? todas la empresas en el sistema, as? como sus sucursalse y sus gerentes[a] correspondientes. Por default no se mostraran las empresas ni sucursales inactivas. 
  	 *
- 	 * @param activa bool Si no se obtiene este valor, se listaran tanto empresas activas como inactivas, si su valor es true, se mostraran solo las empresas activas, si es false, se mostraran solo las inactivas
+ 	 * @param activa bool Verdadero para mostrar solo las empresas activas. En caso de false, se mostraran ambas.
  	 * @param limit string Indica hasta que registro se desea obtener a partir del conjunto de resultados productos de la bsqueda.
  	 * @param query string Valor que se buscara en la consulta
  	 * @param sort string Propiedad por la cual se ordenaran el conjunto de registros
  	 * @param start string Indica desde que registro se desea obtener a partir del conjunto de resultados productos de la bsqueda.
- 	 * @return resultados json Arreglo de objetos que contendr las empresas de la instancia
  	 * @return numero_de_resultados int 
+ 	 * @return resultados json Arreglo de objetos que contendr las empresas de la instancia
  	 **/
   static function Buscar
 	(
@@ -83,6 +83,8 @@
 	/**
  	 *
  	 *Crear una nueva empresa. Por default una nueva empresa no tiene sucursales.
+
+Varios RFC`s pueden repetirse siempre y cuando solo exista una empresa activa.
  	 *
  	 * @param direccion string [{    "tipo": "fiscal",    "calle": "Francisco I Madero",    "numero_exterior": "1009A",    "numero_interior": 12,    "colonia": "centro",    "codigo_postal": "38000",    "telefono1": "4611223312",    "telefono2": "",       "id_ciudad": 3,    "referencia": "El local naranja"}]
  	 * @param id_moneda int Id de la moneda base que manejaran las sucursales

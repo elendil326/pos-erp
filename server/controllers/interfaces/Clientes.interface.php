@@ -196,7 +196,7 @@ No se puede asignar como cliente padre un cliente que esta inactivo
  	 * @param curp string CURP del cliente.
  	 * @param denominacion_comercial string Se refiere al nombre con que se conoce comercialmente a la empresa. 
  	 * @param descuento_general float porcentaje de descuento que se le dara al cliente, va desde 0 - 100 %
- 	 * @param direcciones json [{    "tipo": 1,    "calle": "Francisco I Madero",    "numero_exterior": "1009A",    "numero_interior": 12,    "colonia": "centro",    "codigo_postal": "38000",    "telefono1": "4611223312",    "telefono2": "",       "id_ciudad": 3,    "referencia": "El local naranja"}]
+ 	 * @param direcciones json [{    "tipo": "fiscal",    "calle": "Francisco I Madero",    "numero_exterior": "1009A",    "numero_interior": 12,    "colonia": "centro",    "codigo_postal": "38000",    "telefono1": "4611223312",    "telefono2": "",       "id_ciudad": 3,    "referencia": "El local naranja"}]
  	 * @param email string E-mail del cliente
  	 * @param id_cliente_padre int Id del cliente padre al cual pertenece, en caso de querer construir una jerarquia de empresas
  	 * @param id_moneda int `id_moneda` del tipo de moneda que se usara para mostrarle al cliente.El `id_moneda` de la moneda default es 0, que corresponde al peso mexicano.
