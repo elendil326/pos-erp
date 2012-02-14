@@ -10,14 +10,19 @@
   
 	/**
  	 *
- 	 *Buscar productos
+ 	 *Buscar productos por codigo_producto, nombre_producto, descripcion_producto.
+
  	 *
- 	 * @param query string 
+ 	 * @param query string Buscar productos por codigo_producto, nombre_producto, descripcion_producto.
+ 	 * @param id_producto int Si estoy buscando un producto del cual ya tengo conocido su id. Si se envia `id_producto` todos los demas campos seran ignorados.
  	 * @param id_sucursal int Buscar las existencias de este producto en una sucursal especifica.
+ 	 * @return resultados json 
+ 	 * @return numero_de_resultados int 
  	 **/
   static function Buscar
 	(
 		$query, 
+		$id_producto = null, 
 		$id_sucursal = null
 	);  
   
@@ -149,29 +154,6 @@
   
 	/**
  	 *
- 	 *Se puede ordenar por los atributos de producto. 
- 	 *
- 	 * @param activo bool Si es true, mostrar solo los productos que estn activos, si es false mostrar solo los productos que no lo sean.
- 	 * @param compra_en_mostrador bool True si se listaran los productos que se pueden comprar en mostrador, false si se listaran los que no se pueden comprar en mostrador
- 	 * @param id_almacen int Id del almacen del cual se vern sus productos.
- 	 * @param id_empresa int Id de la empresa de la cual se vern los productos.
- 	 * @param metodo_costeo string Se listaran los productos que coincidan con este metodo de costeo
- 	 * @return productos json Objeto que contendr el arreglo de productos en inventario.
- 	 **/
-  static function Lista
-	(
-		$activo = null, 
-		$compra_en_mostrador = null, 
-		$id_almacen = null, 
-		$id_empresa = null, 
-		$metodo_costeo = null
-	);  
-  
-  
-	
-  
-	/**
- 	 *
  	 *Crear un nuevo producto, 
 
 NOTA: Se crea un producto tipo = 1 que es para productos
@@ -179,24 +161,19 @@ NOTA: Se crea un producto tipo = 1 que es para productos
  	 * @param activo bool Si queremos que este activo o no este producto despues de crearlo.
  	 * @param codigo_producto string El codigo de control de la empresa para este producto, no se puede repetir
  	 * @param compra_en_mostrador bool Verdadero si este producto se puede comprar en mostrador, para aquello de compra-venta
- 	 * @param costo_estandar float Valor del costo estndar del producto.
- 	 * @param metodo_costeo string `precio estandar` el precio de coste es fijo y se recalcula periodicamente (normalmente al finalizar el año).
-
-`precio medio` el precio de coste se recalcula en cada recepcion de productos.
-
+ 	 * @param costo_estandar string Este valor sera tomado solo en caso de seleccionar `costo estandar` como método de costeo
+ 	 * @param id_unidad_compra string Unidad de medida por defecto utilizada para los pedidos de compra. Debe estar en la misma categora que la unidad de medida por defecto.
+ 	 * @param metodo_costeo string `costo estandar` el precio de coste es fijo y se recalcula periodicamente (normalmente al finalizar el ao).`precio medio` el precio de coste se recalcula en cada recepcion de productos.
  	 * @param nombre_producto string Nombre del producto
- 	 * @param clasificaciones json Uno o varios id_clasificacion de este producto, esta clasificacion esta dada por el usuarioArray
  	 * @param codigo_de_barras string El Codigo de barras para este producto
  	 * @param control_de_existencia int 00000001 = Unidades. 00000010 = Caractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = Lote
- 	 * @param costo_extra_almacen float Si este producto produce un costo extra por tenerlo en almacen
  	 * @param descripcion_producto string Descripcion larga del producto
  	 * @param foto_del_producto string url a una foto de este producto
- 	 * @param garantia int Si este producto cuenta con un nmero de meses de garanta  que no aplica a los productos de su categora
- 	 * @param id_empresas json Arreglo que contendra los ids de las empresas a las que pertenece este producto
- 	 * @param id_unidad int La unidad preferida para este producto
+ 	 * @param id_categoria int id de la categora a la cual pertenece el producto
+ 	 * @param id_empresas json Arreglo que contendra los ids de las empresas a las que pertenece este producto, en caso de no indicarlo este producto pertenecera a todas las empresas que esten relacionadas con la sucursal
+ 	 * @param id_unidad int Unidad de medida por defecto empelada para todas las operaciones en el stok
  	 * @param impuestos json array de ids de impuestos que tiene este producto
- 	 * @param peso_producto float el peso de este producto en KG
- 	 * @param precio_de  int El precio de este producto
+ 	 * @param precio_de_venta int Precio base para calcular el precio del cliente
  	 * @return id_producto int Id generado por la insercin del nuevo producto
  	 **/
   static function Nuevo
@@ -205,20 +182,18 @@ NOTA: Se crea un producto tipo = 1 que es para productos
 		$codigo_producto, 
 		$compra_en_mostrador, 
 		$costo_estandar, 
+		$id_unidad_compra, 
 		$metodo_costeo, 
 		$nombre_producto, 
-		$clasificaciones = null, 
 		$codigo_de_barras = null, 
 		$control_de_existencia = null, 
-		$costo_extra_almacen = null, 
 		$descripcion_producto = null, 
 		$foto_del_producto = null, 
-		$garantia = null, 
+		$id_categoria = null, 
 		$id_empresas = null, 
 		$id_unidad = null, 
 		$impuestos = null, 
-		$peso_producto = null, 
-		$precio_de  = null
+		$precio_de_venta = null
 	);  
   
   
