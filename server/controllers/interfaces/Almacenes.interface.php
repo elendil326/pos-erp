@@ -10,6 +10,42 @@
   
 	/**
  	 *
+ 	 *listar almacenes de la isntancia. Se pueden filtrar por empresa, por sucursal, por tipo de almacen, por activos e inactivos y ordenar por sus atributos.
+ 	 *
+ 	 * @param activo bool Si este valor no es obtenido, se mostraran almacenes tanto activos como inactivos. Si es verdadero, solo se lsitaran los activos, si es falso solo se lsitaran los inactivos.
+ 	 * @param id_empresa int Id de la empresa de la cual se listaran sus almacenes
+ 	 * @param id_sucursal int el id de la sucursal de la cual se listaran sus almacenes
+ 	 * @param id_tipo_almacen int Se listaran los almacenes de este tipo
+ 	 * @return numero_de_resultados int 
+ 	 * @return resultados json Almacenes encontrados
+ 	 **/
+  static function Buscar
+	(
+		$activo = null, 
+		$id_empresa = null, 
+		$id_sucursal = null, 
+		$id_tipo_almacen = null
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Descativa un almacen. Para poder desactivar un almacen, este tiene que estar vac?o
+ 	 *
+ 	 * @param id_almacen int Id del almacen a desactivar
+ 	 **/
+  static function Desactivar
+	(
+		$id_almacen
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
  	 *Edita la informacion de un almacen
  	 *
  	 * @param id_almacen int Id del almacen a editar
@@ -23,20 +59,6 @@
 		$descripcion = null, 
 		$id_tipo_almacen = null, 
 		$nombre = null
-	);  
-  
-  
-	
-  
-	/**
- 	 *
- 	 *Descativa un almacen. Para poder desactivar un almacen, este tiene que estar vac?o
- 	 *
- 	 * @param id_almacen int Id del almacen a desactivar
- 	 **/
-  static function Eliminar
-	(
-		$id_almacen
 	);  
   
   
@@ -59,27 +81,6 @@ Creo que este metodo tiene que estar bajo sucursal.
 		$id_almacen, 
 		$productos, 
 		$motivo = null
-	);  
-  
-  
-	
-  
-	/**
- 	 *
- 	 *listar almacenes de la isntancia. Se pueden filtrar por empresa, por sucursal, por tipo de almacen, por activos e inactivos y ordenar por sus atributos.
- 	 *
- 	 * @param activo bool Si este valor no es obtenido, se mostraran almacenes tanto activos como inactivos. Si es verdadero, solo se lsitaran los activos, si es falso solo se lsitaran los inactivos.
- 	 * @param id_empresa int Id de la empresa de la cual se listaran sus almacenes
- 	 * @param id_sucursal int el id de la sucursal de la cual se listaran sus almacenes
- 	 * @param id_tipo_almacen int Se listaran los almacenes de este tipo
- 	 * @return almacenes json Almacenes de esta sucursal
- 	 **/
-  static function Lista
-	(
-		$activo = null, 
-		$id_empresa = null, 
-		$id_sucursal = null, 
-		$id_tipo_almacen = null
 	);  
   
   
@@ -122,6 +123,91 @@ Creo que este metodo tiene que estar bajo sucursal.
 		$id_almacen, 
 		$productos, 
 		$motivo = null
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Imprime la lista de tipos de almacen
+ 	 *
+ 	 * @param query string Buscar por descripcion
+ 	 * @return lista_tipos_almacen json Arreglo con la lista de almacenes
+ 	 **/
+  static function BuscarTipo
+	(
+		$query = null
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Elimina un tipo de almacen
+ 	 *
+ 	 * @param id_tipo_almacen int Id del tipo de almacen a editar
+ 	 **/
+  static function DesactivarTipo
+	(
+		$id_tipo_almacen
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Edita un tipo de almacen
+ 	 *
+ 	 * @param id_tipo_almacen int Id del tipo de almacen a editar
+ 	 * @param descripcion string Descripcion del tipo de almacen
+ 	 **/
+  static function EditarTipo
+	(
+		$id_tipo_almacen, 
+		$descripcion = null
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Crea un nuevo tipo de almacen
+ 	 *
+ 	 * @param descripcion string Descripcion de este tipo de almacen
+ 	 * @return id_tipo_almacen int Id del tipo de almacen
+ 	 **/
+  static function NuevoTipo
+	(
+		$descripcion
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Lista los traspasos de almacenes. Puede filtrarse por empresa, por sucursal, por almacen, por producto, cancelados, completos, estado
+ 	 *
+ 	 * @param cancelado bool Si este valor no es obtenido, se listaran los traspasos tanto cancelados como no cancelados. Si su valor es verdadero se listaran solo los traspasos cancelados, si su valor es falso, se listaran los traspasos no cancelados
+ 	 * @param completo bool Si este valor no es obtenido, se listaran los traspasos tanto completos como no completos. Si su valor es verdadero, se listaran los traspasos completos, si es falso, se listaran los traspasos no completos
+ 	 * @param estado string Se listaran los traspasos cuyo estado sea este, si no es obtenido este valor, se listaran los traspasos de cualqueir estado
+ 	 * @param id_almacen_envia int Se listaran los traspasos enviados por este almacen
+ 	 * @param id_almacen_recibe int Se listaran los traspasos recibidos por este almacen
+ 	 * @param ordenar string Nombre de la columna por la cual se ordenara
+ 	 * @return traspasos json Lista de traspasos
+ 	 **/
+  static function BuscarTraspaso
+	(
+		$cancelado = null, 
+		$completo = null, 
+		$estado = null, 
+		$id_almacen_envia = null, 
+		$id_almacen_recibe = null, 
+		$ordenar = null
 	);  
   
   
@@ -175,31 +261,6 @@ Creo que este metodo tiene que estar bajo sucursal.
   
 	/**
  	 *
- 	 *Lista los traspasos de almacenes. Puede filtrarse por empresa, por sucursal, por almacen, por producto, cancelados, completos, estado
- 	 *
- 	 * @param cancelado bool Si este valor no es obtenido, se listaran los traspasos tanto cancelados como no cancelados. Si su valor es verdadero se listaran solo los traspasos cancelados, si su valor es falso, se listaran los traspasos no cancelados
- 	 * @param completo bool Si este valor no es obtenido, se listaran los traspasos tanto completos como no completos. Si su valor es verdadero, se listaran los traspasos completos, si es falso, se listaran los traspasos no completos
- 	 * @param estado string Se listaran los traspasos cuyo estado sea este, si no es obtenido este valor, se listaran los traspasos de cualqueir estado
- 	 * @param id_almacen_envia int Se listaran los traspasos enviados por este almacen
- 	 * @param id_almacen_recibe int Se listaran los traspasos recibidos por este almacen
- 	 * @param ordenar string Nombre de la columna por la cual se ordenara
- 	 * @return traspasos json Lista de traspasos
- 	 **/
-  static function ListaTraspaso
-	(
-		$cancelado = null, 
-		$completo = null, 
-		$estado = null, 
-		$id_almacen_envia = null, 
-		$id_almacen_recibe = null, 
-		$ordenar = null
-	);  
-  
-  
-	
-  
-	/**
- 	 *
  	 *Crea un registro de traspaso de producto de un almacen a otro. El usuario que envia sera tomada de la sesion.
  	 *
  	 * @param fecha_envio_programada string Fecha de envio programada para este traspaso
@@ -230,66 +291,6 @@ Creo que este metodo tiene que estar bajo sucursal.
 	(
 		$id_traspaso, 
 		$productos
-	);  
-  
-  
-	
-  
-	/**
- 	 *
- 	 *Edita un tipo de almacen
- 	 *
- 	 * @param id_tipo_almacen int Id del tipo de almacen a editar
- 	 * @param descripcion string Descripcion del tipo de almacen
- 	 **/
-  static function EditarAlmacenTipo
-	(
-		$id_tipo_almacen, 
-		$descripcion = null
-	);  
-  
-  
-	
-  
-	/**
- 	 *
- 	 *Elimina un tipo de almacen
- 	 *
- 	 * @param id_tipo_almacen int Id del tipo de almacen a editar
- 	 **/
-  static function EliminarAlmacenTipo
-	(
-		$id_tipo_almacen
-	);  
-  
-  
-	
-  
-	/**
- 	 *
- 	 *Imprime la lista de tipos de almacen
- 	 *
- 	 * @param orden string Nombre de la columan por el cual se ordenara la lista
- 	 * @return lista_tipos_almacen json Arreglo con la lista de almacenes
- 	 **/
-  static function ListaAlmacenTipo
-	(
-		$orden = null
-	);  
-  
-  
-	
-  
-	/**
- 	 *
- 	 *Crea un nuevo tipo de almacen
- 	 *
- 	 * @param descripcion string Descripcion de este tipo de almacen
- 	 * @return id_tipo_almacen int Id del tipo de almacen
- 	 **/
-  static function NuevoAlmacenTipo
-	(
-		$descripcion
 	);  
   
   

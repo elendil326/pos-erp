@@ -25,9 +25,12 @@ class VentasControllerTest extends PHPUnit_Framework_TestCase {
 	private function nuevoCliente(){
 		return ClientesController::Nuevo( "02558a70324e7c4f269c69825450cec8" );
 	}
+	
 
-
-	public function testNueva(){
+	/**
+     * @expectedException ParametrosInvalidosException
+     */
+	public function testNuevaVentaSinDetalles(){
 
 		$detalle_venta = new stdClass;
 
