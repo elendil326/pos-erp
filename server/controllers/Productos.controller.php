@@ -6,7 +6,7 @@ require_once("interfaces/Productos.interface.php");
   *
   **/
 	
-  class ProductosController implements IProductos{
+  class ProductosController  extends ValidacionesController implements IProductos{
   
 
 
@@ -136,8 +136,12 @@ require_once("interfaces/Productos.interface.php");
             //valida que el metodo de costeo sea valido
             if(!is_null($metodo_costeo))
             {
-                if($metodo_costeo!="precio"&&$metodo_costeo!="costo")
-                    return "E metodo de costeo (".$metodo_costeo.") es invalido";
+
+                if($metodo_costeo!="precio_estandar" && $metodo_costeo!="costo"){
+                    Logger::error("Metodo de costeo `$metodo_costeo` invalido");
+                    return "El metodo de costeo (".$metodo_costeo.") es invalido";
+                }
+                    
             }
             
             //valida el boleano activo
@@ -151,9 +155,12 @@ require_once("interfaces/Productos.interface.php");
             //valida que el codigo de producto este en rango y que no se repita
             if(!is_null($codigo_producto))
             {
-                $e = self::validarString($codigo_producto, 30, "codigo de producto");
-                if(is_string($e))
-                    return $e;
+                 
+                if(FALSE === self::validarLongitudDeCadena($codigo_producto, 2, 30 )){
+                    return "El codigo de producto es muy corto";
+                }
+
+
                 if(!is_null($id_producto))
                 {
                     $productos = array_diff(ProductoDAO::search( new Producto( array( "codigo_producto" => trim($codigo_producto) ) ) ), array($producto));
@@ -165,16 +172,17 @@ require_once("interfaces/Productos.interface.php");
                 foreach($productos as $p)
                 {
                     if($p->getActivo())
-                        return "El codigo de producto (".$codigo_producto.") ya esta en uso por el producto ".$producto->getIdProducto();
+                        return "El codigo de producto (".$codigo_producto.") ya esta en uso por el producto ".$p->getIdProducto();
                 }
             }
             
             //valida que el nombre del producto este en rango y que no se repita
             if(!is_null($nombre_producto))
             {
-                $e = self::validarString($nombre_producto, 150, "nombre de producto");
-                if(is_string($e))
-                    return $e;
+                if(FALSE === self::validarLongitudDeCadena($nombre_producto, 2, 150 )){
+                    return "El nombre de producto de producto es muy corto";
+                }
+
                 if(!is_null($id_producto))
                 {
                     $productos = array_diff(ProductoDAO::search( new Producto( array( "nombre_producto" => trim($nombre_producto) ) ) ), array($producto));
@@ -400,6 +408,21 @@ require_once("interfaces/Productos.interface.php");
         
         
         
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         
 	/**
  	 *
@@ -527,6 +550,7 @@ require_once("interfaces/Productos.interface.php");
  	 * @param equivalencia float La nueva equivalencia que se pondra entre los dos valores, en el ejemplo es 2.204
  	 * @param id_unidad int Id de la unidad, en el ejemplo son kilogramos
  	 **/
+     /*
 	public static function Editar_equivalenciaUnidad
 	(
 		$equivalencia, 
@@ -566,7 +590,9 @@ require_once("interfaces/Productos.interface.php");
             
             Logger::log("Equivalencia editada exitosamente");
 	}
-  
+    */
+
+
 	/**
  	 *
  	 *Se puede ordenar por los atributos de producto. 
@@ -714,13 +740,29 @@ NOTA: Se crea un producto tipo = 1 que es para productos
 		$precio = null
 	)
 	{  
-            Logger::log("Creando nuevo producto");
+            Logger::log("Creando nuevo producto...");
             
             //valida los parametros recibidos
-            $validar = self::validarParametrosProducto(null,$compra_en_mostrador,$metodo_costeo,
-                    $activo,$codigo_producto,$nombre_producto,$garantia,$costo_estandar,$control_de_existencia,
-                    $descripcion_producto,$foto_del_producto,$costo_extra_almacen,
-                    $codigo_de_barras,$peso_producto,$id_unidad,$precio);
+            $validar = self::validarParametrosProducto(
+                            null,
+                            $compra_en_mostrador,
+                            $metodo_costeo,
+                            $activo,
+                            $codigo_producto,
+                            $nombre_producto,
+                            $garantia,
+                            $costo_estandar,
+                            $control_de_existencia,
+                            $descripcion_producto,
+                            $foto_del_producto,
+                            $costo_extra_almacen,
+                            $codigo_de_barras,
+                            $peso_producto,
+                            $id_unidad,
+                            $precio);
+
+
+
             if(is_string($validar))
             {
                 Logger::error($validar);
@@ -851,7 +893,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos
  	 * @param productos json Arreglo de objetos que contendr�n la informaci�n del nuevo producto
  	 * @return id_productos json Arreglo de enteros que contendr� los ids de los productos insertados.
  	 **/
-	public static function En_volumenNuevo
+	public static function VolumenEnNuevo
 	(
 		$productos
 	)
@@ -1014,24 +1056,24 @@ NOTA: Se crea un producto tipo = 1 que es para productos
  	 **/
 	public static function Editar
 	(
-		$id_producto, 
-		$clasificaciones = null, 
-		$codigo_de_barras = null, 
-		$codigo_producto = null, 
-		$compra_en_mostrador = null, 
-		$control_de_existencia = null, 
-		$costo_estandar = null, 
-		$costo_extra_almacen = null, 
-		$descripcion_producto = null, 
-		$empresas = null, 
-		$foto_del_producto = null, 
-		$garantia = null, 
-		$id_unidad = null, 
-		$impuestos = null, 
-		$metodo_costeo = null, 
-		$nombre_producto = null, 
-		$peso_producto = null, 
-		$precio = null
+        $id_producto, 
+        $clasificaciones = null, 
+        $codigo_de_barras = null, 
+        $codigo_producto = null, 
+        $compra_en_mostrador = null, 
+        $control_de_existencia = null, 
+        $costo_estandar = null, 
+        $costo_extra_almacen = null, 
+        $descripcion_producto = null, 
+        $empresas = null, 
+        $foto_del_producto = null, 
+        $garantia = null, 
+        $id_unidad = null, 
+        $impuestos = null, 
+        $metodo_costeo = null, 
+        $nombre_producto = null, 
+        $peso_producto = null, 
+        $precio = null
 	)
 	{  
             Logger::log("== Editando producto ".$id_producto . " ==");
@@ -1383,12 +1425,12 @@ NOTA: Se crea un producto tipo = 1 que es para productos
  	 **/
 	public static function EditarCategoria
 	(
-		$id_categoria, 
-		$nombre, 
-		$descripcion = null,
-		$garantia = null, 
-		$impuestos = null, 
-		$retenciones = null
+        $id_categoria, 
+        $nombre, 
+        $descripcion = null, 
+        $garantia = null, 
+        $impuestos = null, 
+        $retenciones = null
 	)
 	{  
             Logger::log("Editando la clasificacion de producto ".$id_categoria);
@@ -1601,10 +1643,11 @@ Ejemplo: 1 kg = 2.204 lb
  	 * @param id_unidades int En el ejemplo son las libras
  	 * @param id_unidad int En el ejemplo es el kilogramo
  	 **/
-	public static function Eliminar_equivalenciaUnidad
+	public static function EquivalenciaEditarUnidad
 	(
-		$id_unidad, 
-		$id_unidades
+        $equivalencia, 
+        $id_unidad, 
+        $id_unidades
 	)
 	{  
             Logger::log("Eliminando equivalencia entre la unidad ".$id_unidad." y las unidades ".$id_unidades);
@@ -1821,8 +1864,8 @@ Ejemplo: 1 kg = 2.204 lb
 	
 	public static function Buscar
         (
-                $query, 
-		$id_sucursal = null
+            $query, 
+            $id_sucursal = null
         )
         {
 		
@@ -1858,4 +1901,9 @@ Ejemplo: 1 kg = 2.204 lb
 				"numero_de_resultados" 	=> sizeof($resultado)
 			);
 	}
+
+
+    public static  function EquivalenciaEliminarUnidad($id_unidad, $id_unidades){}
+    public static  function EquivalenciaListaUnidad($orden = null){}
+    public static  function EquivalenciaNuevaUnidad($equivalencia, $id_unidad, $id_unidades){}
   }
