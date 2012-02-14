@@ -9,48 +9,8 @@ require_once("interfaces/Ventas.interface.php");
   class VentasController implements IVentas{
   
       
-      //Metodo para pruebas que simula la obtencion del id de la sucursal actual
-        private static function getSucursal()
-        {
-			Logger::error("getSucursal() en VentasController");
-            return 1;
-        }
-        
-        //metodo para pruebas que simula la obtencion del id de la caja actual
-        private static function getCaja()
-        {
-			Logger::error("getCaja() en VentasController");
-            return 1;
-        }
-        
-        
-        /*
-         *Se valida que un string tenga longitud en un rango de un maximo inclusivo y un minimo exclusvio.
-         *Regresa true cuando es valido, y un string cuando no lo es.
-         */
-		private static function validarString($string, $max_length, $nombre_variable,$min_length=0)
-		{
-		if(strlen($string)<=$min_length||strlen($string)>$max_length)
-		{
-		    return "La longitud de la variable ".$nombre_variable." proporcionada (".$string.") no esta en el rango de ".$min_length." - ".$max_length;
-		}
-		return true;
-        }
 
 
-        /*
-         * Se valida que un numero este en un rango de un maximo y un minimo inclusivos
-         * Regresa true cuando es valido, y un string cuando no lo es
-         */
-	private static function validarNumero($num, $max_length, $nombre_variable, $min_length=0)
-	{
-	    if($num<$min_length||$num>$max_length)
-	    {
-	        return "La variable ".$nombre_variable." proporcionada (".$num.") no esta en el rango de ".$min_length." - ".$max_length;
-	    }
-	    return true;
-	}
-        
         
         /*
          * Valida los parametros de la tabla venta_arpilla. Regresa un string con el error en caso de 
@@ -181,7 +141,7 @@ require_once("interfaces/Ventas.interface.php");
  	 * @param total_origen float Valor del embarque segun el origen
  	 * @return id_venta_arpilla int Id autogenerado por la insercion
  	 **/
-	public static function Nueva_venta_arpillas
+	public static function ArpillasVentaNueva
 	(
 		$arpillas, 
 		$fecha_origen, 
@@ -491,7 +451,7 @@ require_once("interfaces/Ventas.interface.php");
  	 * @param id_venta int Id de la venta de la cual se listaran las ventas por arpilla
  	 * @return detalle_venta_arpilla json Objeto que contendra los detalles de las ventas por arpilla
  	 **/
-	public static function Detalle_venta_arpilla
+	public static function ArpillaVentaDetalle
 	(
 		$id_venta
 	)
@@ -520,20 +480,19 @@ require_once("interfaces/Ventas.interface.php");
  	 **/
 	public static function Nueva
 	(
-		$descuento, 
-		$id_comprador_venta, 
-		$id_sucursal, 
-		$impuesto, 
-		$retencion, 
-		$subtotal, 
-		$tipo_venta, 
-		$total, 
-		$datos_cheque = null, 
-		$detalle_orden = null, 
-		$detalle_paquete = null, 
-		$detalle_venta = null, 
-		$saldo = 0, 
-		$tipo_de_pago = null
+        $descuento, 
+        $id_comprador_venta, 
+        $impuesto, 
+        $subtotal, 
+        $tipo_venta, 
+        $total, 
+        $datos_cheque = null, 
+        $detalle_orden = null, 
+        $detalle_paquete = null, 
+        $detalle_venta = null, 
+        $id_sucursal = null, 
+        $saldo = "0", 
+        $tipo_de_pago = null
 	)
 	{  
             Logger::log("Creando nueva venta fuera de caja");
@@ -541,10 +500,31 @@ require_once("interfaces/Ventas.interface.php");
             //Se utiliza el metodo de Sucursal controller, dejando que tome la caja y la sucursal como nulos
             try{
             	$venta = SucursalesController::VenderCaja(
+
+                        /*  $descuento, 
+                            $id_comprador, 
+                            $impuesto, 
+                            $retencion, 
+                            $subtotal, 
+                            $tipo_venta, 
+                            $total, 
+                            $billetes_cambio = null, 
+                            $billetes_pago = null, 
+                            $cheques = null, 
+                            $detalle_orden = null, 
+                            $detalle_paquete = null, 
+                            $detalle_producto = null, 
+                            $id_caja = null, 
+                            $id_sucursal = null, 
+                            $id_venta_caja = null, 
+                            $saldo = 0, 
+                            $tipo_pago = null
+                        */
+
 							$descuento,
 							$id_comprador_venta,
 							$impuesto,
-							$retencion,
+							null,
                     		$subtotal,
 							$tipo_venta,
 							$total,

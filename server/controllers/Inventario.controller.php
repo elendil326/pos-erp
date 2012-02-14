@@ -7,7 +7,16 @@ require_once("interfaces/Inventario.interface.php");
   **/
 	
   class InventarioController implements IInventario{
-  
+
+    public static function ProductoProcesar  ($cantidad_nueva, 
+        $cantidad_vieja, 
+        $id_almacen_nuevo, 
+        $id_almacen_viejo, 
+        $id_producto_nuevo, 
+        $id_producto_viejo, 
+        $id_unidad_nueva, 
+        $id_unidad_vieja){}
+    public static function CompraDeCargamentoTerminar(){}
   
 	/**
  	 *

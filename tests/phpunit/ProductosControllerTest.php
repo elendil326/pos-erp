@@ -41,25 +41,25 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 
 
 	public function testNuevo(){
-		//insertar un nuevo producto
-		/*$activo, 
-		$codigo_producto, 
-		$compra_en_mostrador, 
-		$costo_estandar, 
-		$metodo_costeo, 
-		$nombre_producto, 
-		$clasificaciones = null, 
-		$codigo_de_barras = null, 
-		$control_de_existencia = null, 
-		$costo_extra_almacen = null, 
-		$descripcion_producto = null, 
-		$foto_del_producto = null, 
-		$garantia = null, 
-		$id_empresas = null, 
-		$id_unidad = null, 
-		$impuestos = null, 
-		$peso_producto = null, 
-		$precio = null*/
+			//insertar un nuevo producto
+			/*$activo, 
+			$codigo_producto, 
+			$compra_en_mostrador, 
+			$costo_estandar, 
+			$metodo_costeo, 
+			$nombre_producto, 
+			$clasificaciones = null, 
+			$codigo_de_barras = null, 
+			$control_de_existencia = null, 
+			$costo_extra_almacen = null, 
+			$descripcion_producto = null, 
+			$foto_del_producto = null, 
+			$garantia = null, 
+			$id_empresas = null, 
+			$id_unidad = null, 
+			$impuestos = null, 
+			$peso_producto = null, 
+			$precio = null*/
 		$p = ProductosController::Nuevo( 
 			true, 
 			"b3af409bb8423187c75e6c7f5b683908", 
