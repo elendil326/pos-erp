@@ -116,7 +116,7 @@ Si hay dos productos en una misma sucursal pero disntintos almacenes entonces se
 		$detalle_orden = null, 
 		$detalle_paquete = null, 
 		$detalle_venta = null, 
-		$id_sucursal = "", 
+		$id_sucursal = null, 
 		$saldo = "0", 
 		$tipo_de_pago = null
 	);  
