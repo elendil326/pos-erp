@@ -161,9 +161,9 @@ NOTA: Se crea un producto tipo = 1 que es para productos
  	 * @param activo bool Si queremos que este activo o no este producto despues de crearlo.
  	 * @param codigo_producto string El codigo de control de la empresa para este producto, no se puede repetir
  	 * @param compra_en_mostrador bool Verdadero si este producto se puede comprar en mostrador, para aquello de compra-venta
- 	 * @param costo_estandar string Este valor sera tomado solo en caso de seleccionar `costo estandar` como método de costeo
+ 	 * @param costo_estandar string Este valor sera tomado solo en caso de seleccionar `costo estandar` como mtodo de costeo
  	 * @param id_unidad_compra string Unidad de medida por defecto utilizada para los pedidos de compra. Debe estar en la misma categora que la unidad de medida por defecto.
- 	 * @param metodo_costeo string `costo estandar` el precio de coste es fijo y se recalcula periodicamente (normalmente al finalizar el ao).`precio medio` el precio de coste se recalcula en cada recepcion de productos.
+ 	 * @param metodo_costeo string `costo estandar` el precio de coste es fijo y se recalcula periodicamente (normalmente al finalizar el anio).`precio` 
  	 * @param nombre_producto string Nombre del producto
  	 * @param codigo_de_barras string El Codigo de barras para este producto
  	 * @param control_de_existencia int 00000001 = Unidades. 00000010 = Caractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = Lote

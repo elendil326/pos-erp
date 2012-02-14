@@ -91,9 +91,7 @@ Si hay dos productos en una misma sucursal pero disntintos almacenes entonces se
  	 *
  	 * @param descuento float Monto descontado por descuentos
  	 * @param id_comprador_venta int Id del usuario al que se le vende, si es a una sucursal, el id se pasa negativo
- 	 * @param id_sucursal int Id de la sucursal de la cual se tomaran los productos.
  	 * @param impuesto float Monto aportado por impuestos
- 	 * @param retencion float Monto aportado por retenciones
  	 * @param subtotal float Subtotal de la venta antes de ser afectada por impuestos, descuentos y retenciones
  	 * @param tipo_venta string Si esta es una venta a  credito o de contado
  	 * @param total float Total de la venta
@@ -101,6 +99,7 @@ Si hay dos productos en una misma sucursal pero disntintos almacenes entonces se
  	 * @param detalle_orden json Objetos que contendran los ids y las cantidades de las ordenes que se venden
  	 * @param detalle_paquete json Arreglo de ids de los paquetes con sus cantidades que se venden
  	 * @param detalle_venta json {            id_producto: 5,            cantidad: 1,            precio: 5,            descuento: 0,            impuesto: 0,            retencion: 0,            id_unidad: 1}Un arreglo en forma de json co los parametros de cada producto.
+ 	 * @param id_sucursal int Id de la sucursal de la cual se tomaran los productos.
  	 * @param saldo float Saldo que ha sido aportado a la venta
  	 * @param tipo_de_pago string Si la venta es pagada con tarjeta, con efectivo o con cheque
  	 * @return id_venta int Id autogenerado de la nueva venta
@@ -109,9 +108,7 @@ Si hay dos productos en una misma sucursal pero disntintos almacenes entonces se
 	(
 		$descuento, 
 		$id_comprador_venta, 
-		$id_sucursal, 
 		$impuesto, 
-		$retencion, 
 		$subtotal, 
 		$tipo_venta, 
 		$total, 
@@ -119,6 +116,7 @@ Si hay dos productos en una misma sucursal pero disntintos almacenes entonces se
 		$detalle_orden = null, 
 		$detalle_paquete = null, 
 		$detalle_venta = null, 
+		$id_sucursal = "", 
 		$saldo = "0", 
 		$tipo_de_pago = null
 	);  
