@@ -17,48 +17,88 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
 
 	protected function setUp(){
 		Logger::log("-----------------------------");
-		$r = SesionController::Iniciar(123, 1, true);
+		//$r = SesionController::Iniciar(123, 1, true);
 
 	}
 
 
+
 	
+	//Imprime la lista de tipos de almacen
+	public function testTipoBuscarYDesactivar(){
+
+		$r = AlmacenesController::BuscarTipo();
+
+		$this->assertInternalType("int", $r["numero_de_resultados"]);
+
+		$this->assertEquals( $r["numero_de_resultados"], count($r["resultados"]) );
+
+		if($r["numero_de_resultados"] == 0){
+			return;
+		}
+
+
+		foreach ($r["resultados"] as $tipo) {
+			$tipo = $tipo->asArray();
+			if($tipo["descripcion"] == "1dee80c7d5ab2c1c90aa8d2f7dd47256"){
+				//ya existe este tipo para testing, hay que desactivarlo
+				Logger::debug($tipo["descripcion"]);
+				Logger::log("Ya encontre el repetido, procedo a desactivar");
+				$d = AlmacenesController::DesactivarTipo( $tipo["id_tipo_almacen"] );
+			}
+		}
+
+		//volvamos a buscar y esperemos que ya no exista
+		$r = AlmacenesController::BuscarTipo();
+
+		$found = false;
+
+		foreach ($r["resultados"] as $tipo) {
+			$tipo = $tipo->asArray();
+			if($tipo["descripcion"] == "1dee80c7d5ab2c1c90aa8d2f7dd47256"){
+				//ya existe este tipo para testing, hay que desactivarlo
+				$found = true;
+			}
+		}
+
+		$this->assertFalse($found);
+	}
+
 	//Edita un tipo de almacen
 	public function testTipoNuevo(){
 
-		$a = AlmacenController::Nuevo(
+		$a = AlmacenesController::NuevoTipo("1dee80c7d5ab2c1c90aa8d2f7dd47256");	
+		$this->assertInternalType("int", $a["id_tipo_almacen"]);
+
+	}
+
+	/**
+     * @expectedException ParametrosInvalidosException
+     */
+	public function testTipoNuevoRepetido(){
+		$a = AlmacenesController::NuevoTipo("1dee80c7d5ab2c1c90aa8d2f7dd47256");	
+		
+
+	}
+
+
+	//Elimina un tipo de almacen
+	 public function testTipoBuscarYEditar(){
+		
+	}
+
+
+
+
+
+
+
+	public function testNuevo(){
 				/* id_empresa, 		*/
 				/* id_sucursal, 	*/
 				/* id_tipo_almacen, */
 				/* nombre, 			*/
 				/* descripcion=null */
-			);	
-	}
-
-
-	//Envia productos fuera del almacen
-	public function testTipoBuscar(){
-		
-	}
-
-	//Imprime la lista de tipos de almacen
-	public function testTipoDesactivar(){
-		
-	}
-
-	//Elimina un tipo de almacen
-	 public function testTipoEditar(){
-		
-	}
-
-
-
-
-
-
-
-	public function testNuevoAlmacen(){
-		
 	}
 
 
@@ -81,10 +121,7 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
 		
 	}
 
-	//Surtir una sucursal
-	public function testNuevo(){
-		
-	}
+	
 
 	//Crear un nuevo almacen en una sucursal
 	public function testSalida(){

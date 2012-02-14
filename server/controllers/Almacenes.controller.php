@@ -587,7 +587,12 @@ Creo que este metodo tiene que estar bajo sucursal.
 	(
 		$query = null
 	){
-		 return TipoAlmacenDAO::getAll(null,null,$orden);
+		 $r = TipoAlmacenDAO::getAll();
+
+		 return array(
+			 "resultados" => $r,
+			 "numero_de_resultados" => sizeof($r)
+			);
 	}
   
   
@@ -728,11 +733,11 @@ Creo que este metodo tiene que estar bajo sucursal.
 	){
             Logger::log("Creando nuevo tipo de almacen");
             
-            $validar = self::validarString($descripcion, 64, "descripcion");
-            if(is_string($validar))
+            
+            if(!self::validarLongitudDeCadena($descripcion, 0, 64))
             {
-                Logger::error($validar);
-                throw new Exception($validar,901);
+                Logger::error("descfripcion ");
+                throw new Exception($descripcion);
             }
             
             //No se puede repetir la descripcion del tipo de almacen
@@ -759,7 +764,7 @@ Creo que este metodo tiene que estar bajo sucursal.
             DAO::transEnd();
             Logger::log("Tipo de almacen creado exitosamente");
             
-            return array( "id_tipo_almacen" =>  $tipo_almacen->getIdTipoAlmacen());
+            return array( "id_tipo_almacen" =>  (int)$tipo_almacen->getIdTipoAlmacen());
             
         }
   

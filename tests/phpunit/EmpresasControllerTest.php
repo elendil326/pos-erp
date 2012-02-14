@@ -58,33 +58,27 @@ class EmpresasControllerTest extends PHPUnit_Framework_TestCase {
 		$razon_social = "Caffeina Software";
 		$rfc  = "GOHA8801317";
 		
-		try{
-			$this->_empresa = EmpresasController::Nuevo(
-					$direccion, 
-					$id_moneda, 
-					$impuestos_compra, 
-					$impuestos_venta, 
-					$razon_social, 
-					$rfc
-				);
-				
-			$this->assertInternalType('int', $this->_empresa["id_empresa"] );
-			return;
+	
+		$this->_empresa = EmpresasController::Nuevo(
+				$direccion, 
+				$id_moneda, 
+				$impuestos_compra, 
+				$impuestos_venta, 
+				$razon_social, 
+				$rfc
+			);
 			
-		}catch(Exception $e){
+		$this->assertInternalType('int', $this->_empresa["id_empresa"] );
+		
 
-			
-
-		}
-			
 		
 		$empresas_con_rfc = EmpresaDAO::getByRFC($rfc);
 		//var_dump($e);
 		try{
 			foreach ($empresas_con_rfc as $empObj) {
-				Logger::log("*");
+				
 				EmpresasController::Eliminar( $empObj->getIdEmpresa() );
-				Logger::log("*");				
+							
 			}
 
 			
