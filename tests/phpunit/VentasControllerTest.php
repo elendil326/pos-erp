@@ -12,32 +12,39 @@ require_once("../../server/bootstrap.php");
 
 class VentasControllerTest extends PHPUnit_Framework_TestCase {
 
+	private $current_client;
+
 	protected function setUp(){
 		Logger::log("-----------------------------");
 		$r = SesionController::Iniciar(123, 1, true);
+		$this->current_client = $this->nuevoCliente();
+		$this->current_client = $this->current_client["id_cliente"];
+
 	}
 
+	private function nuevoCliente(){
+		return ClientesController::Nuevo( "02558a70324e7c4f269c69825450cec8" );
+	}
+
+
 	public function testNueva(){
+
+		$detalle_venta = new stdClass;
+
 		VentasController::Nueva(
-			        /*$descuento, 
-			        $id_comprador_venta, 
-			        $impuesto, 
-			        $subtotal, 
-			        $tipo_venta, 
-			        $total, 
-			        $datos_cheque = null, 
-			        $detalle_orden = null, 
-			        $detalle_paquete = null, 
-			        $detalle_venta = null, 
-			        $id_sucursal = null, 
-			        $saldo = "0", 
-			        $tipo_de_pago = null*/
-			0, 
-	        1, 
-	        null, 
-	        1, 
-	        "contado", 
-	       	1
+	        /*$descuento*/  			0,
+	        /*$id_comprador_venta*/ 	$this->current_client, 
+	        /*$impuesto*/ 				0,
+	        /*$subtotal*/ 				1,
+	        /*$tipo_venta*/ 			"contado",
+	        /*$total*/ 					1,
+	        /*$datos_cheque = null*/	null,
+	        /*$detalle_orden = null*/ 	null,
+	        /*$detalle_paquete = null*/	null,
+	        /*$detalle_venta = null*/	$detalle_venta
+	        /*$id_sucursal = null*/
+	        /*$saldo = "0"*/
+	        /*$tipo_de_pago = null*/
 	    );
 	}
 

@@ -524,7 +524,7 @@ require_once("interfaces/Ventas.interface.php");
 							$descuento,
 							$id_comprador_venta,
 							$impuesto,
-							null,
+							0,
                     		$subtotal,
 							$tipo_venta,
 							$total,

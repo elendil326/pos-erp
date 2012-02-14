@@ -6,7 +6,12 @@
     convertNoticesToExceptions="true"
     convertWarningsToExceptions="true"
     stopOnFailure="true"
-    syntaxCheck="false"
->  
-
+    syntaxCheck="true"
+    > 
+    <testsuites >
+		<testsuite name="POS">
+	      <file>InstanciasConrtollerTest.php</file>
+	      <file>ClientesControllerTests.php</file>
+	    </testsuite>
+	</testsuites>
 </phpunit>

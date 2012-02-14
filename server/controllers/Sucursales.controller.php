@@ -8,7 +8,7 @@ require_once("interfaces/Sucursales.interface.php");
 
 
 	
-  class SucursalesController implements ISucursales{
+  class SucursalesController extends ValidacionesController implements ISucursales{
 
 
         
@@ -399,7 +399,7 @@ require_once("interfaces/Sucursales.interface.php");
             //valida que el subtotal este en el rango
             if(!is_null($subtotal))
             {
-                $e=self::validarNumero($subtotal, 1.8e200, "subtotal");
+                $e = self::validarNumero($subtotal, 1.8e200, "subtotal");
                 if(is_string($e))
                     return $e;
             }
@@ -1142,9 +1142,8 @@ require_once("interfaces/Sucursales.interface.php");
             if(!is_null($id_sucursal))
             {
                 $sucursal = SucursalDAO::getByPK($id_sucursal); 
-                if(is_null( $sucursal
-                        ))
-                {
+                
+                if(is_null( $sucursal)){
                     Logger::error("La sucursal ".$id_sucursal." no existe");
                     throw new Exception("La sucursal no existe",901);
                 }
@@ -1177,13 +1176,13 @@ require_once("interfaces/Sucursales.interface.php");
             //Si no se recibe una sucursal, se toma la de la sesion
             if(is_null($id_sucursal))
             {
-                $id_sucursal = self::getSucursal();
+                //$id_sucursal = self::getSucursal();
             }
             
             //Si no se recibe otra caja, se toma la de la sesion
             if(is_null($id_caja))
             {
-                $id_caja = self::getCaja();
+                //$id_caja = self::getCaja();
             }
             
             //Se inicializa la venta con los parametros obtenidos
