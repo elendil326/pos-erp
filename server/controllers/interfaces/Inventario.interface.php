@@ -15,10 +15,10 @@
  	 * @param id_sucursal int Id de la sucursal de la cual se listaran sus compras
  	 * @return compras json Arreglo de objetos que tendrá las compras de la sucursal
  	 **/
-  static function SucursalCompras
+ /* static function SucursalCompras
 	(
 		$id_sucursal
-	);  
+	);  */
   
   
 	
@@ -57,7 +57,7 @@
  	 * @param id_unidad_nueva int Id de la unidad nueva a la que se transformara
  	 * @param id_unidad_vieja int Id de la unidad en la que se encunetra el producto nuevo
  	 **/
-  static function ProductoProcesar
+  /*static function ProductoProcesar
 	(
 		$cantidad_nueva, 
 		$cantidad_vieja, 
@@ -67,7 +67,7 @@
 		$id_producto_viejo, 
 		$id_unidad_nueva, 
 		$id_unidad_vieja
-	);  
+	);  */
   
   
 	
@@ -77,9 +77,9 @@
  	 *ver transporte y fletes...
  	 *
  	 **/
-  static function CompraDeCargamentoTerminar
+/*  static function CompraDeCargamentoTerminar
 	(
-	);  
+	);  */
   
   
 	
@@ -91,10 +91,10 @@
  	 * @param id_sucursal int Id de la sucursal de la cual listaran sus ventas
  	 * @return ventas json Objeto que conendra la informacion de las ventas de esa sucursal
  	 **/
-  static function SucursalVentas
+ /* static function SucursalVentas
 	(
 		$id_sucursal
-	);  
+	);  -*/
   
   
 	

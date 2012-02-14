@@ -31,9 +31,9 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 		
 		if ( $p["numero_de_resultados"] == 1 ) {
 			//ya existe el producto hay que eliminarlo
-			var_dump($p["resultados"][0]);
+			//var_dump($p["resultados"][0]);
 
-			//ProductosController::Desactivar();
+			ProductosController::Desactivar($p["resultados"][0]["id_producto"]);
 		}
 
 	}
@@ -42,13 +42,43 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 
 	public function testNuevo(){
 		//insertar un nuevo producto
+		/*$activo, 
+		$codigo_producto, 
+		$compra_en_mostrador, 
+		$costo_estandar, 
+		$metodo_costeo, 
+		$nombre_producto, 
+		$clasificaciones = null, 
+		$codigo_de_barras = null, 
+		$control_de_existencia = null, 
+		$costo_extra_almacen = null, 
+		$descripcion_producto = null, 
+		$foto_del_producto = null, 
+		$garantia = null, 
+		$id_empresas = null, 
+		$id_unidad = null, 
+		$impuestos = null, 
+		$peso_producto = null, 
+		$precio = null*/
 		$p = ProductosController::Nuevo( 
 			true, 
 			"b3af409bb8423187c75e6c7f5b683908", 
 			false, 
 			"b3af409bb8423187c75e6c7f5b683908", 
-			"precio_estandar",
-			"b3af409bb8423187c75e6c7f5b683908" );
+			"precio",
+			"b3af409bb8423187c75e6c7f5b683908",
+			null, 
+			null, 
+			null, 
+			null, 
+			null, 
+			null, 
+			null, 
+			null, 
+			null, 
+			null, 
+			null, 
+			10.10 );
 	}
 	
 }

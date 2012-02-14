@@ -37,8 +37,9 @@ class ReglaDAO extends ReglaDAOBase
             }
             else
             {
-                Logger::error("El producto o servicio tiene un metodo de costeo invalido");
-                throw new Exception("El producto o servicio tiene un metodo de costeo invalido", 901);
+                Logger::error("El producto o servicio tiene un metodo de costeo invalido. USANDO `metodo_de_costeo` = PRECIO");
+                $precio_base = $obj->getPrecio();
+                //throw new Exception("El producto o servicio tiene un metodo de costeo invalido", 901);
             }
         }
         else

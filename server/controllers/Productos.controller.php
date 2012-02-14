@@ -137,7 +137,7 @@ require_once("interfaces/Productos.interface.php");
             if(!is_null($metodo_costeo))
             {
 
-                if($metodo_costeo!="precio_estandar" && $metodo_costeo!="costo"){
+                if($metodo_costeo!="precio" && $metodo_costeo!="costo"){
                     Logger::error("Metodo de costeo `$metodo_costeo` invalido");
                     return "El metodo de costeo (".$metodo_costeo.") es invalido";
                 }
