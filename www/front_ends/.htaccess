@@ -4,7 +4,7 @@ RewriteEngine on
 Options +FollowSymlinks 
 #-Indexes
 
-#RewriteRule ^([0-9]*)/ingenieria/(.*\.php)?(.*)$	__instance__/ingenieria/$2?_instance_=$1&%{QUERY_STRING} [L]
+#RewriteRule ^([0-9]*)/ingenieria/(.*\.php)?(.*)$		__instance__/ingenieria/$2?_instance_=$1&%{QUERY_STRING} [L]
 
 
 # JEDI #

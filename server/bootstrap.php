@@ -137,12 +137,15 @@
 	require_once("libs/gui/MenuComponent.php");
 	require_once("libs/gui/TitleComponent.php");
 	require_once("libs/gui/TableComponent.php");
+	require_once("libs/gui/PosComponentPage.php");		
 	require_once("libs/gui/GerenciaComponentPage.php");
 	require_once("libs/gui/JediComponentPage.php");
 	require_once("libs/gui/FreeHtmlComponent.php");
 	require_once("libs/gui/ShoppingCartComponent.php");	
 	require_once("libs/gui/SearchProductComponent.php");		
 	require_once("libs/gui/SucursalSelectorComponent.php");
+
+	
 	
 	
 	require_once("libs/gui/BannerComponent.php");		

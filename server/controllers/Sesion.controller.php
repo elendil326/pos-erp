@@ -48,7 +48,7 @@ class SesionController implements ISesion{
 	)
 	{  
 		
-  		Logger::log("Cerrando sesion para toek {$aut_token}...");
+  		Logger::log("Cerrando sesion para toek {$auth_token}...");
 		Logger::warn("Falta borrar el token de la bd");
 	  	self::$_is_logged_in = null;
 		self::$_current_user = null;

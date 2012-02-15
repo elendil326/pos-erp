@@ -22,6 +22,12 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
 	}
 
 
+	/**
+	*
+	*
+	*	Almacenes
+	*
+	**/
 
 	
 	//Imprime la lista de tipos de almacen
@@ -85,91 +91,71 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
 	}
 
 
-
-
-
-	//Elimina un tipo de almacen
-	 public function testTipoBuscarYEditar(){
-		
-	}
-
-
-
-
-
-
-
-	public function testNuevo(){
-				/* id_empresa, 		*/
-				/* id_sucursal, 	*/
-				/* id_tipo_almacen, */
-				/* nombre, 			*/
-				/* descripcion=null */
-	}
-
-
 	public function testBuscar(){
 		
 	}
 
-	//Buscar almacenes
 	public function testDesactivar(){
 		
 	}
 
-	//Elimina un almacen
 	public function testEditar(){
 		
 	}
 
-	//Edita la informacion de un almacen
-	public function testEntrada(){
+
+	/**
+	*
+	*
+	*	Lotes
+	*
+	**/
+	public function testLoteNuevo(){
+
+	}
+
+	public function testLoteEntrada(){
 		
 	}
 
-	
 
-	//Crear un nuevo almacen en una sucursal
-	public function testSalida(){
+
+	public function testLoteSalida(){
+		
+	}
+
+	public function testLoteTraspasoBuscar(){
+		
+	}
+
+	public function testLoteTraspasoCancelar(){
+		
+	}
+
+	public function testLoteTraspasoEditar(){
+		
+	}
+
+	public function testLoteTraspasoEnviar(){
+		
+	}
+
+	public function testLoteTraspasoProgramar(){
+		
+	}
+
+	public function testLoteTraspasoRecibir(){
+		
+	}
+
+	public function testNuevo(){
 		
 	}
 
 
-
-
-
-
-
-
-
-	//Crea un nuevo tipo de almacen
-	 public function testTraspasoBuscar(){
-		
-	}
-
-	//Lista los traspasos
-	 public function testTraspasoCancelar(){
-		
-	}
-
-	//Cancela un traspaso
-	 public function testTraspasoEditar(){
-		
-	}
-
-	//Edita la informacion de un traspaso
-	 public function testTraspasoEnviar(){
-		
-	}
-
-	//Envia un traspaso de productos
-	 public function testTraspasoProgramar(){
-		
-	}
-
-	//Crea un registro de traspaso
-	 public function testTraspasoRecibir(){
-		
-	}
+	/*public function testTipoBuscar(){}
+	public function testTipoDesactivar(){}
+	public function testTipoEditar(){}
+	public function testTipoNuevo(){}*/
 		
 }
