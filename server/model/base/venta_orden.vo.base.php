@@ -2,7 +2,7 @@
 /** Value Object file for table venta_orden.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author Alan Gonzalez
+  * @author Anonymous
   * @access public
   * @package docs
   * 
@@ -104,7 +104,7 @@ class VentaOrden extends VO
 	/**
 	  * impuesto
 	  * 
-	  * Cantidad añadida por los impuestos<br>
+	  * Cantidad a√±adida por los impuestos<br>
 	  * @access public
 	  * @var float
 	  */
@@ -113,7 +113,7 @@ class VentaOrden extends VO
 	/**
 	  * retencion
 	  * 
-	  * Cantidad añadida por las retenciones<br>
+	  * Cantidad a√±adida por las retenciones<br>
 	  * @access public
 	  * @var float
 	  */
@@ -222,7 +222,7 @@ class VentaOrden extends VO
 	/**
 	  * getImpuesto
 	  * 
-	  * Get the <i>impuesto</i> property for this object. Donde <i>impuesto</i> es Cantidad añadida por los impuestos
+	  * Get the <i>impuesto</i> property for this object. Donde <i>impuesto</i> es Cantidad a√±adida por los impuestos
 	  * @return float
 	  */
 	final public function getImpuesto()
@@ -233,7 +233,7 @@ class VentaOrden extends VO
 	/**
 	  * setImpuesto( $impuesto )
 	  * 
-	  * Set the <i>impuesto</i> property for this object. Donde <i>impuesto</i> es Cantidad añadida por los impuestos.
+	  * Set the <i>impuesto</i> property for this object. Donde <i>impuesto</i> es Cantidad a√±adida por los impuestos.
 	  * Una validacion basica se hara aqui para comprobar que <i>impuesto</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
@@ -246,7 +246,7 @@ class VentaOrden extends VO
 	/**
 	  * getRetencion
 	  * 
-	  * Get the <i>retencion</i> property for this object. Donde <i>retencion</i> es Cantidad añadida por las retenciones
+	  * Get the <i>retencion</i> property for this object. Donde <i>retencion</i> es Cantidad a√±adida por las retenciones
 	  * @return float
 	  */
 	final public function getRetencion()
@@ -257,7 +257,7 @@ class VentaOrden extends VO
 	/**
 	  * setRetencion( $retencion )
 	  * 
-	  * Set the <i>retencion</i> property for this object. Donde <i>retencion</i> es Cantidad añadida por las retenciones.
+	  * Set the <i>retencion</i> property for this object. Donde <i>retencion</i> es Cantidad a√±adida por las retenciones.
 	  * Una validacion basica se hara aqui para comprobar que <i>retencion</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float

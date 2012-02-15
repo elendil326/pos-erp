@@ -1,16 +1,23 @@
 -- phpMyAdmin SQL Dump
--- version 3.3.9
+-- version 3.4.5deb1
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 08-02-2012 a las 18:42:59
--- Versión del servidor: 5.1.53
--- Versión de PHP: 5.3.4
+-- Tiempo de generación: 14-02-2012 a las 23:23:37
+-- Versión del servidor: 5.1.58
+-- Versión de PHP: 5.3.6-13ubuntu3.6
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
 
 --
--- Base de datos: `pos1_5`
+-- Base de datos: `pos_final`
 --
 
 -- --------------------------------------------------------
@@ -27,9 +34,9 @@ CREATE TABLE IF NOT EXISTS `abasto_proveedor` (
   `fecha` datetime NOT NULL COMMENT 'Fecha del movimiento',
   `motivo` varchar(255) NOT NULL COMMENT 'Motivo de la entrada del producto',
   PRIMARY KEY (`id_abasto_proveedor`),
-  KEY `id_proveedor` (`id_proveedor`),
-  KEY `id_almacen` (`id_almacen`),
-  KEY `id_usuario` (`id_usuario`)
+  KEY `abasto_proveedor_ibfk_3` (`id_usuario`),
+  KEY `abasto_proveedor_ibfk_1` (`id_proveedor`),
+  KEY `abasto_proveedor_ibfk_2` (`id_almacen`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Registro de abastesimientos de un proveedor' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -52,11 +59,11 @@ CREATE TABLE IF NOT EXISTS `abono_compra` (
   `cancelado` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Si este abono es cancelado',
   `motivo_cancelacion` varchar(255) DEFAULT NULL COMMENT 'Motivo por el cual se realiza la cancelacion',
   PRIMARY KEY (`id_abono_compra`),
-  KEY `id_compra` (`id_compra`),
-  KEY `id_sucursal` (`id_sucursal`),
-  KEY `id_caja` (`id_caja`),
-  KEY `id_deudor` (`id_deudor`),
-  KEY `id_receptor` (`id_receptor`)
+  KEY `abono_compra_ibfk_5` (`id_receptor`),
+  KEY `abono_compra_ibfk_1` (`id_compra`),
+  KEY `abono_compra_ibfk_2` (`id_sucursal`),
+  KEY `abono_compra_ibfk_3` (`id_caja`),
+  KEY `abono_compra_ibfk_4` (`id_deudor`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle de la compra y los abonos de la misma' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -79,11 +86,11 @@ CREATE TABLE IF NOT EXISTS `abono_prestamo` (
   `cancelado` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Si este abono es cancelado',
   `motivo_cancelacion` varchar(255) DEFAULT NULL COMMENT 'Motivo por el cual se realiza la cancelacion',
   PRIMARY KEY (`id_abono_prestamo`),
-  KEY `id_prestamo` (`id_prestamo`),
-  KEY `id_sucursal` (`id_sucursal`),
-  KEY `id_caja` (`id_caja`),
-  KEY `id_deudor` (`id_deudor`),
-  KEY `id_receptor` (`id_receptor`)
+  KEY `abono_prestamo_ibfk_5` (`id_receptor`),
+  KEY `abono_prestamo_ibfk_1` (`id_prestamo`),
+  KEY `abono_prestamo_ibfk_2` (`id_sucursal`),
+  KEY `abono_prestamo_ibfk_3` (`id_caja`),
+  KEY `abono_prestamo_ibfk_4` (`id_deudor`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle abono prestamo' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -106,11 +113,11 @@ CREATE TABLE IF NOT EXISTS `abono_venta` (
   `cancelado` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Si este abono es cancelado',
   `motivo_cancelacion` varchar(255) DEFAULT NULL COMMENT 'Motivo por el cual se realiza la cancelacion',
   PRIMARY KEY (`id_abono_venta`),
-  KEY `id_venta` (`id_venta`),
-  KEY `id_sucursal` (`id_sucursal`),
-  KEY `id_caja` (`id_caja`),
-  KEY `id_deudor` (`id_deudor`),
-  KEY `id_receptor` (`id_receptor`)
+  KEY `abono_venta_ibfk_5` (`id_receptor`),
+  KEY `abono_venta_ibfk_1` (`id_venta`),
+  KEY `abono_venta_ibfk_2` (`id_sucursal`),
+  KEY `abono_venta_ibfk_3` (`id_caja`),
+  KEY `abono_venta_ibfk_4` (`id_deudor`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle de la venta y sus abonos' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -129,8 +136,8 @@ CREATE TABLE IF NOT EXISTS `almacen` (
   `activo` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Si el almacen esta activo o no',
   PRIMARY KEY (`id_almacen`),
   KEY `id_tipo_almacen` (`id_tipo_almacen`),
-  KEY `id_sucursal` (`id_sucursal`),
-  KEY `id_empresa` (`id_empresa`)
+  KEY `almacen_ibfk_1` (`id_sucursal`),
+  KEY `almacen_ibfk_2` (`id_empresa`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
@@ -144,10 +151,10 @@ CREATE TABLE IF NOT EXISTS `apertura_caja` (
   `id_caja` int(11) NOT NULL COMMENT 'Id de la caja que se abre',
   `fecha` datetime NOT NULL COMMENT 'Fecha en que se realizo la apertura de caja',
   `saldo` float NOT NULL COMMENT 'Saldo con que inicia operaciones la caja',
-  `id_cajero` int(11) DEFAULT NULL COMMENT 'Id del usuario que realizara las funciones de cajero',
+  `id_cajero` int(11) DEFAULT NULL COMMENT 'Id del usuario que realizará las funciones de cajero',
   PRIMARY KEY (`id_apertura_caja`),
-  KEY `id_caja` (`id_caja`),
-  KEY `id_cajero` (`id_cajero`)
+  KEY `apertura_caja_ibfk_2` (`id_cajero`),
+  KEY `apertura_caja_ibfk_1` (`id_caja`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que lleva el control de la apertura de cajas' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -175,7 +182,7 @@ CREATE TABLE IF NOT EXISTS `billete` (
   `foto_billete` varchar(100) DEFAULT NULL COMMENT 'Url de la foto del billete',
   `activo` tinyint(1) NOT NULL COMMENT 'Si este billete esta activo o ya no se usa',
   PRIMARY KEY (`id_billete`),
-  KEY `id_moneda` (`id_moneda`)
+  KEY `billete_ibfk_1` (`id_moneda`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Billetes para llevar control en la caja' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -189,7 +196,7 @@ CREATE TABLE IF NOT EXISTS `billete_apertura_caja` (
   `id_apertura_caja` int(11) NOT NULL,
   `cantidad` int(11) NOT NULL COMMENT 'Cantidad de billetes dejados en la apertura de caja',
   PRIMARY KEY (`id_billete`,`id_apertura_caja`),
-  KEY `id_apertura_caja` (`id_apertura_caja`)
+  KEY `billete_apertura_caja_ibfk_2` (`id_apertura_caja`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle apertura de caja billetes';
 
 -- --------------------------------------------------------
@@ -203,7 +210,7 @@ CREATE TABLE IF NOT EXISTS `billete_caja` (
   `id_caja` int(11) NOT NULL,
   `cantidad` int(11) NOT NULL COMMENT 'Cantidad de estos billetes en la caja',
   PRIMARY KEY (`id_billete`,`id_caja`),
-  KEY `id_caja` (`id_caja`)
+  KEY `billete_caja_ibfk_2` (`id_caja`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle billetes caja';
 
 -- --------------------------------------------------------
@@ -219,7 +226,7 @@ CREATE TABLE IF NOT EXISTS `billete_cierre_caja` (
   `cantidad_sobrante` int(11) NOT NULL COMMENT 'Cantidad de billetes saobrante en el cierre de caja',
   `cantidad_faltante` int(1) NOT NULL DEFAULT '0' COMMENT 'Cantidad de billetes faltante en el cierre de caja',
   PRIMARY KEY (`id_billete`,`id_cierre_caja`),
-  KEY `id_cierre_caja` (`id_cierre_caja`)
+  KEY `billete_cierre_caja_ibfk_2` (`id_cierre_caja`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle billetes cierre de caja';
 
 -- --------------------------------------------------------
@@ -236,7 +243,7 @@ CREATE TABLE IF NOT EXISTS `billete_corte_caja` (
   `cantidad_sobrante` int(11) NOT NULL DEFAULT '0' COMMENT 'Cantidad de billetes saobrante en el corte de caja',
   `cantidad_faltante` int(11) NOT NULL DEFAULT '0' COMMENT 'Cantidad de billetes faltante en el corte de caja',
   PRIMARY KEY (`id_billete`,`id_corte_caja`),
-  KEY `id_corte_caja` (`id_corte_caja`)
+  KEY `billete_corte_caja_ibfk_2` (`id_corte_caja`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle billetes corte de caja';
 
 -- --------------------------------------------------------
@@ -272,7 +279,7 @@ CREATE TABLE IF NOT EXISTS `cheque` (
   `expedido` tinyint(1) NOT NULL COMMENT 'Verdadero si el cheque es expedido por la empresa, falso si es recibido',
   `id_usuario` int(11) DEFAULT NULL COMMENT 'Id del usuario que registra el cheque',
   PRIMARY KEY (`id_cheque`),
-  KEY `id_usuario` (`id_usuario`)
+  KEY `cheque_ibfk_1` (`id_usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -285,7 +292,7 @@ CREATE TABLE IF NOT EXISTS `cheque_abono_compra` (
   `id_cheque` int(11) NOT NULL COMMENT 'Id del cheque con el que se abono',
   `id_abono_compra` int(11) NOT NULL COMMENT 'Id del abono que se pago con ese cheque',
   PRIMARY KEY (`id_cheque`,`id_abono_compra`),
-  KEY `id_abono_compra` (`id_abono_compra`)
+  KEY `cheque_abono_compra_ibfk_2` (`id_abono_compra`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle cheque abono compra';
 
 -- --------------------------------------------------------
@@ -298,7 +305,7 @@ CREATE TABLE IF NOT EXISTS `cheque_abono_prestamo` (
   `id_cheque` int(11) NOT NULL COMMENT 'Id del cheque con el que se abono',
   `id_abono_prestamo` int(11) NOT NULL COMMENT 'Id del abono que se pago con ese cheque',
   PRIMARY KEY (`id_cheque`,`id_abono_prestamo`),
-  KEY `id_abono_prestamo` (`id_abono_prestamo`)
+  KEY `cheque_abono_prestamo_ibfk_2` (`id_abono_prestamo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle cheque abono prestamo';
 
 -- --------------------------------------------------------
@@ -311,7 +318,7 @@ CREATE TABLE IF NOT EXISTS `cheque_abono_venta` (
   `id_cheque` int(11) NOT NULL COMMENT 'Id del cheque con el que se abono',
   `id_abono_venta` int(11) NOT NULL COMMENT 'Id del abono que se pago con ese cheque',
   PRIMARY KEY (`id_cheque`,`id_abono_venta`),
-  KEY `id_abono_venta` (`id_abono_venta`)
+  KEY `cheque_abono_venta_ibfk_2` (`id_abono_venta`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle cheque abono venta';
 
 -- --------------------------------------------------------
@@ -324,7 +331,7 @@ CREATE TABLE IF NOT EXISTS `cheque_compra` (
   `id_cheque` int(11) NOT NULL COMMENT 'Id del cheque con el que se compro',
   `id_compra` int(11) NOT NULL COMMENT 'Id de la compra que se pago con ese cheque',
   PRIMARY KEY (`id_cheque`,`id_compra`),
-  KEY `id_compra` (`id_compra`)
+  KEY `cheque_compra_ibfk_2` (`id_compra`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle cheque compra';
 
 -- --------------------------------------------------------
@@ -337,7 +344,7 @@ CREATE TABLE IF NOT EXISTS `cheque_venta` (
   `id_cheque` int(11) NOT NULL COMMENT 'Id del cheque con el que se pago la venta',
   `id_venta` int(11) NOT NULL COMMENT 'Id de la venta que se pago con el cheque',
   PRIMARY KEY (`id_cheque`,`id_venta`),
-  KEY `id_venta` (`id_venta`)
+  KEY `cheque_venta_ibfk_2` (`id_venta`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle cheque venta';
 
 -- --------------------------------------------------------
@@ -352,10 +359,10 @@ CREATE TABLE IF NOT EXISTS `cierre_caja` (
   `id_cajero` int(11) DEFAULT NULL COMMENT 'Id del usuario que realiza las funciones de cajero al momento de cerrar la caja',
   `fecha` datetime NOT NULL COMMENT 'fecha en que se realiza la operacion',
   `saldo_real` float NOT NULL COMMENT 'Saldo de la caja',
-  `saldo_esperado` float NOT NULL COMMENT 'Saldo que deberia de haber en la caja despues de todos los movimientos del dia',
+  `saldo_esperado` float NOT NULL COMMENT 'Saldo que debería de haber en la caja después de todos los movimientos del día',
   PRIMARY KEY (`id_cierre_caja`),
-  KEY `id_caja` (`id_caja`),
-  KEY `id_cajero` (`id_cajero`)
+  KEY `cierre_caja_ibfk_2` (`id_cajero`),
+  KEY `cierre_caja_ibfk_1` (`id_caja`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que lleva el control del cierre de cajas' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -385,9 +392,7 @@ CREATE TABLE IF NOT EXISTS `clasificacion_cliente` (
   `descripcion` varchar(255) DEFAULT NULL COMMENT 'Descripcion larga de la clasificacion del cliente',
   `id_tarifa_compra` int(11) NOT NULL COMMENT 'Id de la tarifa de compra por default para esta clasificacion de cliente',
   `id_tarifa_venta` int(11) NOT NULL COMMENT 'Id de la tarifa de venta por default para esta clasificacion de cliente',
-  PRIMARY KEY (`id_clasificacion_cliente`),
-  KEY `id_tarifa_compra` (`id_tarifa_compra`),
-  KEY `id_tarifa_venta` (`id_tarifa_venta`)
+  PRIMARY KEY (`id_clasificacion_cliente`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
 
 -- --------------------------------------------------------
@@ -418,9 +423,7 @@ CREATE TABLE IF NOT EXISTS `clasificacion_proveedor` (
   `activa` tinyint(1) NOT NULL COMMENT 'Si esta clasificacion esat activa o no',
   `id_tarifa_compra` int(11) NOT NULL COMMENT 'Id de la tarifa de compra por default para esta clasificacion de proveedor',
   `id_tarifa_venta` int(11) NOT NULL COMMENT 'Id de la tarifa de venta por default para esta clasificacion de proveedor',
-  PRIMARY KEY (`id_clasificacion_proveedor`),
-  KEY `id_tarifa_compra` (`id_tarifa_compra`),
-  KEY `id_tarifa_venta` (`id_tarifa_venta`)
+  PRIMARY KEY (`id_clasificacion_proveedor`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que especifica las clasificaciones de proveedores' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -462,12 +465,7 @@ CREATE TABLE IF NOT EXISTS `compra` (
   `cancelada` tinyint(1) NOT NULL COMMENT 'Si la compra ha sido cancelada o no',
   `tipo_de_pago` enum('cheque','tarjeta','efectivo') DEFAULT NULL COMMENT 'Si la compra fue pagada con tarjeta, cheque o efectivo',
   `retencion` float NOT NULL COMMENT 'Monto de retencion',
-  PRIMARY KEY (`id_compra`),
-  KEY `id_caja` (`id_caja`),
-  KEY `id_vendedor_compra` (`id_vendedor_compra`),
-  KEY `id_sucursal` (`id_sucursal`),
-  KEY `id_usuario` (`id_usuario`),
-  KEY `id_empresa` (`id_empresa`)
+  PRIMARY KEY (`id_compra`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -480,7 +478,7 @@ CREATE TABLE IF NOT EXISTS `compra_arpilla` (
   `id_compra_arpilla` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Id de la tabla compra por arpilla',
   `id_compra` int(11) NOT NULL COMMENT 'Id de la compra a la que se refiere',
   `peso_origen` float DEFAULT NULL COMMENT 'El peso del camion en el origen',
-  `fecha_origen` datetime DEFAULT NULL COMMENT 'Fecha en la que se envio el embarque',
+  `fecha_origen` datetime DEFAULT NULL COMMENT 'Fecha en la que se envío el embarque',
   `folio` varchar(11) DEFAULT NULL COMMENT 'Folio del camion',
   `numero_de_viaje` varchar(11) DEFAULT NULL COMMENT 'Número de viaje',
   `peso_recibido` float NOT NULL COMMENT 'Peso del camion al llegar',
@@ -489,8 +487,7 @@ CREATE TABLE IF NOT EXISTS `compra_arpilla` (
   `productor` varchar(64) DEFAULT NULL COMMENT 'Nombre del productor',
   `merma_por_arpilla` float NOT NULL COMMENT 'La merma de producto por arpilla',
   `total_origen` float DEFAULT NULL COMMENT 'El valor del embarque según el proveedor',
-  PRIMARY KEY (`id_compra_arpilla`),
-  KEY `id_compra` (`id_compra`)
+  PRIMARY KEY (`id_compra_arpilla`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que detalla una compra realizada a un proveedor median' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -508,9 +505,7 @@ CREATE TABLE IF NOT EXISTS `compra_producto` (
   `impuesto` float NOT NULL COMMENT 'Impuesto unitario del producto',
   `id_unidad` int(11) NOT NULL COMMENT 'Id de la unidad del producto',
   `retencion` float NOT NULL COMMENT 'Retencion unitaria del producto',
-  PRIMARY KEY (`id_compra`,`id_producto`,`id_unidad`),
-  KEY `id_producto` (`id_producto`),
-  KEY `id_unidad` (`id_unidad`)
+  PRIMARY KEY (`id_compra`,`id_producto`,`id_unidad`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle de la compra y los productos de la misma';
 
 -- --------------------------------------------------------
@@ -565,10 +560,7 @@ CREATE TABLE IF NOT EXISTS `consignacion` (
   `descuento` float DEFAULT NULL COMMENT 'Monto a descontar de esta consignacion',
   `retencion` float DEFAULT NULL COMMENT 'Monto generado por retenciones',
   `saldo` float NOT NULL DEFAULT '0' COMMENT 'Saldo que ha sido abonado a la consignacion',
-  PRIMARY KEY (`id_consignacion`),
-  KEY `id_cliente` (`id_cliente`),
-  KEY `id_usuario` (`id_usuario`),
-  KEY `id_usuario_cancelacion` (`id_usuario_cancelacion`)
+  PRIMARY KEY (`id_consignacion`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -586,9 +578,7 @@ CREATE TABLE IF NOT EXISTS `consignacion_producto` (
   `descuento` float DEFAULT NULL COMMENT 'Monto a descontar de este producto',
   `retencion` float DEFAULT NULL COMMENT 'Monto generado por retenciones',
   `precio` float NOT NULL COMMENT 'Precio del producto por ser de consignacion',
-  PRIMARY KEY (`id_consignacion`,`id_producto`,`id_unidad`),
-  KEY `id_producto` (`id_producto`),
-  KEY `id_unidad` (`id_unidad`)
+  PRIMARY KEY (`id_consignacion`,`id_producto`,`id_unidad`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle de la consignacion con su producto';
 
 -- --------------------------------------------------------
@@ -605,11 +595,8 @@ CREATE TABLE IF NOT EXISTS `corte_de_caja` (
   `fecha` datetime NOT NULL COMMENT 'fecha en la que se realiza el corte de caja',
   `saldo_real` float NOT NULL COMMENT 'Saldo actual de la caja',
   `saldo_esperado` float NOT NULL COMMENT 'Saldo que se espera de acuerdo a las ventas realizadas apartir del último corte de caja o a la apertura de la misma',
-  `saldo_final` float NOT NULL COMMENT 'Saldo que se deja en caja despues de realizar el corte',
-  PRIMARY KEY (`id_corte_de_caja`),
-  KEY `id_caja` (`id_caja`),
-  KEY `id_cajero` (`id_cajero`),
-  KEY `id_cajero_nuevo` (`id_cajero_nuevo`)
+  `saldo_final` float NOT NULL COMMENT 'Saldo que se deja en caja después de realizar el corte',
+  PRIMARY KEY (`id_corte_de_caja`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -624,9 +611,7 @@ CREATE TABLE IF NOT EXISTS `devolucion_sobre_compra` (
   `id_usuario` int(11) NOT NULL COMMENT 'Id del usuario que realiza la devolucion',
   `fecha` datetime NOT NULL COMMENT 'Fecha en que se realiza la devolucion',
   `motivo` varchar(255) NOT NULL COMMENT 'Motivo por el cual se realiza la devolucion',
-  PRIMARY KEY (`id_devolucion_sobre_compra`),
-  KEY `id_compra` (`id_compra`),
-  KEY `id_usuario` (`id_usuario`)
+  PRIMARY KEY (`id_devolucion_sobre_compra`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -641,9 +626,7 @@ CREATE TABLE IF NOT EXISTS `devolucion_sobre_venta` (
   `id_usuario` int(11) NOT NULL COMMENT 'Id del usuario que realiza la devolucion',
   `fecha` datetime NOT NULL COMMENT 'Fecha en que se realiza la devolucion',
   `motivo` varchar(255) NOT NULL COMMENT 'Motivo por el cual se realiza la devolucion',
-  PRIMARY KEY (`id_devolucion_sobre_venta`),
-  KEY `id_venta` (`id_venta`),
-  KEY `id_usuario` (`id_usuario`)
+  PRIMARY KEY (`id_devolucion_sobre_venta`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -666,9 +649,8 @@ CREATE TABLE IF NOT EXISTS `direccion` (
   `ultima_modificacion` datetime NOT NULL COMMENT 'La ultima vez que este registro se modifico',
   `id_usuario_ultima_modificacion` int(11) NOT NULL COMMENT 'quien fue el usuario que modifico este registro la ultima vez',
   PRIMARY KEY (`id_direccion`),
-  KEY `id_ciudad` (`id_ciudad`),
-  KEY `id_usuario_ultima_modificacion` (`id_usuario_ultima_modificacion`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=217 ;
+  KEY `id_ciudad` (`id_ciudad`,`id_usuario_ultima_modificacion`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=343 ;
 
 -- --------------------------------------------------------
 
@@ -690,8 +672,7 @@ CREATE TABLE IF NOT EXISTS `documento` (
 CREATE TABLE IF NOT EXISTS `documento_cliente` (
   `id_documento` int(11) NOT NULL COMMENT 'Id del documento que se aplica al cliente',
   `id_cliente` int(11) NOT NULL COMMENT 'Id cliente',
-  PRIMARY KEY (`id_documento`,`id_cliente`),
-  KEY `id_cliente` (`id_cliente`)
+  PRIMARY KEY (`id_documento`,`id_cliente`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle entre un documento y el cliente al que se le aplica';
 
 -- --------------------------------------------------------
@@ -703,8 +684,7 @@ CREATE TABLE IF NOT EXISTS `documento_cliente` (
 CREATE TABLE IF NOT EXISTS `documento_compra` (
   `id_documento` int(11) NOT NULL COMMENT 'id del documento que se aplica a la compra',
   `id_compra` int(11) NOT NULL COMMENT 'id de la compra',
-  PRIMARY KEY (`id_documento`,`id_compra`),
-  KEY `id_compra` (`id_compra`)
+  PRIMARY KEY (`id_documento`,`id_compra`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle entre un documento y la compra';
 
 -- --------------------------------------------------------
@@ -716,8 +696,7 @@ CREATE TABLE IF NOT EXISTS `documento_compra` (
 CREATE TABLE IF NOT EXISTS `documento_venta` (
   `id_documento` int(11) NOT NULL COMMENT 'Id del documento que se aplica a la venta',
   `id_venta` int(11) NOT NULL COMMENT 'id de la venta',
-  PRIMARY KEY (`id_documento`,`id_venta`),
-  KEY `id_venta` (`id_venta`)
+  PRIMARY KEY (`id_documento`,`id_venta`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle entre un documento y la venta';
 
 -- --------------------------------------------------------
@@ -736,9 +715,8 @@ CREATE TABLE IF NOT EXISTS `empresa` (
   `fecha_baja` datetime DEFAULT NULL COMMENT 'Fecha en que se desactivo esa empresa',
   `activo` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Si esta empresa esta activa o no',
   `direccion_web` varchar(20) DEFAULT NULL COMMENT 'Direccion web de la empresa',
-  PRIMARY KEY (`id_empresa`),
-  KEY `id_direccion` (`id_direccion`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='tabla de empresas' AUTO_INCREMENT=2 ;
+  PRIMARY KEY (`id_empresa`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='tabla de empresas' AUTO_INCREMENT=87 ;
 
 -- --------------------------------------------------------
 
@@ -752,9 +730,7 @@ CREATE TABLE IF NOT EXISTS `entrada_almacen` (
   `id_usuario` int(11) NOT NULL COMMENT 'Id del usuario que registra',
   `fecha_registro` datetime NOT NULL COMMENT 'Fecha en que se registra el movimiento',
   `motivo` varchar(255) DEFAULT NULL COMMENT 'motivo por le cual entra producto al almacen',
-  PRIMARY KEY (`id_entrada_almacen`),
-  KEY `id_almacen` (`id_almacen`),
-  KEY `id_usuario` (`id_usuario`)
+  PRIMARY KEY (`id_entrada_almacen`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Registro de entradas de un almacen' AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
@@ -791,13 +767,7 @@ CREATE TABLE IF NOT EXISTS `gasto` (
   `monto` float NOT NULL COMMENT 'Monto del gasto si no esta definido por el concepto de gasto',
   `cancelado` tinyint(1) NOT NULL COMMENT 'Si este gasto ha sido cancelado o no',
   `motivo_cancelacion` varchar(255) DEFAULT NULL COMMENT 'Motivo por el cual se realiza la cancelacion',
-  PRIMARY KEY (`id_gasto`),
-  KEY `id_empresa` (`id_empresa`),
-  KEY `id_usuario` (`id_usuario`),
-  KEY `id_concepto_gasto` (`id_concepto_gasto`),
-  KEY `id_orden_de_servicio` (`id_orden_de_servicio`),
-  KEY `id_caja` (`id_caja`),
-  KEY `id_sucursal` (`id_sucursal`)
+  PRIMARY KEY (`id_gasto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -821,8 +791,7 @@ CREATE TABLE IF NOT EXISTS `impresora` (
 CREATE TABLE IF NOT EXISTS `impresora_caja` (
   `id_impresora` int(11) NOT NULL COMMENT 'Id de la impresora',
   `id_caja` int(11) NOT NULL COMMENT 'Id de la caja que utiliza la impresora',
-  PRIMARY KEY (`id_impresora`,`id_caja`),
-  KEY `id_caja` (`id_caja`)
+  PRIMARY KEY (`id_impresora`,`id_caja`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle entre una caja y las impresoras que utiliza';
 
 -- --------------------------------------------------------
@@ -849,8 +818,7 @@ CREATE TABLE IF NOT EXISTS `impuesto` (
 CREATE TABLE IF NOT EXISTS `impuesto_clasificacion_cliente` (
   `id_impuesto` int(11) NOT NULL COMMENT 'Id del impuesto a aplicar al tipo de cliente',
   `id_clasificacion_cliente` int(11) NOT NULL COMMENT 'Id de la clasificacion del cliente',
-  PRIMARY KEY (`id_impuesto`,`id_clasificacion_cliente`),
-  KEY `id_clasificacion_cliente` (`id_clasificacion_cliente`)
+  PRIMARY KEY (`id_impuesto`,`id_clasificacion_cliente`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle impuesto clasificacion cliente';
 
 -- --------------------------------------------------------
@@ -862,8 +830,7 @@ CREATE TABLE IF NOT EXISTS `impuesto_clasificacion_cliente` (
 CREATE TABLE IF NOT EXISTS `impuesto_clasificacion_producto` (
   `id_impuesto` int(11) NOT NULL COMMENT 'Id del impuesto a aplicarl al tipo de producto',
   `id_clasificacion_producto` int(11) NOT NULL COMMENT 'Id de la clasificacion del producto',
-  PRIMARY KEY (`id_impuesto`,`id_clasificacion_producto`),
-  KEY `id_clasificacion_producto` (`id_clasificacion_producto`)
+  PRIMARY KEY (`id_impuesto`,`id_clasificacion_producto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle impuesto clasificacion producto';
 
 -- --------------------------------------------------------
@@ -875,8 +842,7 @@ CREATE TABLE IF NOT EXISTS `impuesto_clasificacion_producto` (
 CREATE TABLE IF NOT EXISTS `impuesto_clasificacion_proveedor` (
   `id_impuesto` int(11) NOT NULL COMMENT 'Id del impuesto a aplicar al tipo de proveedor',
   `id_clasificacion_proveedor` int(11) NOT NULL COMMENT 'Id de la clasificacion del proveedor',
-  PRIMARY KEY (`id_impuesto`,`id_clasificacion_proveedor`),
-  KEY `id_clasificacion_proveedor` (`id_clasificacion_proveedor`)
+  PRIMARY KEY (`id_impuesto`,`id_clasificacion_proveedor`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle impuesto clasificacion proveedor';
 
 -- --------------------------------------------------------
@@ -888,8 +854,7 @@ CREATE TABLE IF NOT EXISTS `impuesto_clasificacion_proveedor` (
 CREATE TABLE IF NOT EXISTS `impuesto_clasificacion_servicio` (
   `id_impuesto` int(11) NOT NULL COMMENT 'Id del impuesto a aplicar al tipo de servicio',
   `id_clasificacion_servicio` int(11) NOT NULL COMMENT 'Id de la clasificacion del servicio',
-  PRIMARY KEY (`id_impuesto`,`id_clasificacion_servicio`),
-  KEY `id_clasificacion_servicio` (`id_clasificacion_servicio`)
+  PRIMARY KEY (`id_impuesto`,`id_clasificacion_servicio`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle entre impuesto clasificacion servicio';
 
 -- --------------------------------------------------------
@@ -901,8 +866,7 @@ CREATE TABLE IF NOT EXISTS `impuesto_clasificacion_servicio` (
 CREATE TABLE IF NOT EXISTS `impuesto_empresa` (
   `id_impuesto` int(11) NOT NULL COMMENT 'Id del impuesto que se aplicara a la empresa',
   `id_empresa` int(11) NOT NULL COMMENT 'id de la empresa',
-  PRIMARY KEY (`id_impuesto`,`id_empresa`),
-  KEY `id_empresa` (`id_empresa`)
+  PRIMARY KEY (`id_impuesto`,`id_empresa`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle entre los impuestos con las empresas';
 
 -- --------------------------------------------------------
@@ -914,8 +878,7 @@ CREATE TABLE IF NOT EXISTS `impuesto_empresa` (
 CREATE TABLE IF NOT EXISTS `impuesto_producto` (
   `id_impuesto` int(11) NOT NULL COMMENT 'Id del impuesto a aplicar al producto',
   `id_producto` int(11) NOT NULL COMMENT 'Id del producto al que se le aplica el impuesto',
-  PRIMARY KEY (`id_impuesto`,`id_producto`),
-  KEY `id_producto` (`id_producto`)
+  PRIMARY KEY (`id_impuesto`,`id_producto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle impuesto producto';
 
 -- --------------------------------------------------------
@@ -927,8 +890,7 @@ CREATE TABLE IF NOT EXISTS `impuesto_producto` (
 CREATE TABLE IF NOT EXISTS `impuesto_servicio` (
   `id_impuesto` int(11) NOT NULL COMMENT 'Id del impuesto a aplicar al servicio',
   `id_servicio` int(11) NOT NULL COMMENT 'Id del servicio al que se le aplicara el impuesto',
-  PRIMARY KEY (`id_impuesto`,`id_servicio`),
-  KEY `id_servicio` (`id_servicio`)
+  PRIMARY KEY (`id_impuesto`,`id_servicio`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle impuesto servicio';
 
 -- --------------------------------------------------------
@@ -940,8 +902,7 @@ CREATE TABLE IF NOT EXISTS `impuesto_servicio` (
 CREATE TABLE IF NOT EXISTS `impuesto_sucursal` (
   `id_impuesto` int(11) NOT NULL COMMENT 'Id del impuesto que se aplicara a la sucursal',
   `id_sucursal` int(11) NOT NULL COMMENT 'Id de la sucursal que tiene diversos impuestos',
-  PRIMARY KEY (`id_impuesto`,`id_sucursal`),
-  KEY `id_sucursal` (`id_sucursal`)
+  PRIMARY KEY (`id_impuesto`,`id_sucursal`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle entre los impuestos con las sucursales';
 
 -- --------------------------------------------------------
@@ -953,8 +914,7 @@ CREATE TABLE IF NOT EXISTS `impuesto_sucursal` (
 CREATE TABLE IF NOT EXISTS `impuesto_usuario` (
   `id_impuesto` int(11) NOT NULL COMMENT 'Id del impuesto que se aplica al usuario',
   `id_usuario` int(11) NOT NULL COMMENT 'Id del usuario al que se le cargan impuestos',
-  PRIMARY KEY (`id_impuesto`,`id_usuario`),
-  KEY `id_usuario` (`id_usuario`)
+  PRIMARY KEY (`id_impuesto`,`id_usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle entre los impuestos y los usuarios';
 
 -- --------------------------------------------------------
@@ -978,12 +938,7 @@ CREATE TABLE IF NOT EXISTS `ingreso` (
   `monto` float NOT NULL COMMENT 'Monto del ingreso si no esta definido por el concepto de gasto',
   `cancelado` tinyint(1) NOT NULL COMMENT 'Si este ingreso ha sido cancelado o no',
   `motivo_cancelacion` varchar(255) DEFAULT NULL COMMENT 'Motivo por el cual se realiza la cancelacion',
-  PRIMARY KEY (`id_ingreso`),
-  KEY `id_empresa` (`id_empresa`),
-  KEY `id_usuario` (`id_usuario`),
-  KEY `id_concepto_ingreso` (`id_concepto_ingreso`),
-  KEY `id_sucursal` (`id_sucursal`),
-  KEY `id_caja` (`id_caja`)
+  PRIMARY KEY (`id_ingreso`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -1001,10 +956,7 @@ CREATE TABLE IF NOT EXISTS `inspeccion_consignacion` (
   `monto_abonado` float NOT NULL COMMENT 'Monto abonado a la inspeccion',
   `cancelada` tinyint(1) NOT NULL COMMENT 'Si esta inspeccion sigue programada o se ha cancelado',
   `motivo_cancelacion` varchar(255) DEFAULT NULL COMMENT 'motivo por el cual se ha cancelado la inspeccion',
-  PRIMARY KEY (`id_inspeccion_consignacion`),
-  KEY `id_consignacion` (`id_consignacion`),
-  KEY `id_usuario` (`id_usuario`),
-  KEY `id_caja` (`id_caja`)
+  PRIMARY KEY (`id_inspeccion_consignacion`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -1020,10 +972,60 @@ CREATE TABLE IF NOT EXISTS `inspeccion_consignacion_producto` (
   `cantidad_actual` float NOT NULL COMMENT 'cantidad del producto actualmente',
   `cantidad_solicitada` float NOT NULL COMMENT 'cantidad del producto solicitado',
   `cantidad_devuelta` float NOT NULL COMMENT 'cantidad del producto devuelto',
-  PRIMARY KEY (`id_inspeccion_consignacion`,`id_producto`,`id_unidad`),
-  KEY `id_producto` (`id_producto`),
-  KEY `id_unidad` (`id_unidad`)
+  PRIMARY KEY (`id_inspeccion_consignacion`,`id_producto`,`id_unidad`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla detalle entre una inspeccion de consignacion y los pro';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `lote`
+--
+
+CREATE TABLE IF NOT EXISTS `lote` (
+  `id_lote` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Id del lote',
+  `id_compra` int(11) NOT NULL COMMENT 'Id de la compra',
+  `id_usuario` int(11) NOT NULL COMMENT 'Id del usuario que lo recibio',
+  `fecha_ingreso` datetime NOT NULL COMMENT 'Fecha en la que el lote ingresa al almacen',
+  `observaciones` int(11) NOT NULL,
+  PRIMARY KEY (`id_lote`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Manejo de lotes' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `lote_almacen`
+--
+
+CREATE TABLE IF NOT EXISTS `lote_almacen` (
+  `id_lote` int(11) NOT NULL COMMENT 'id del lote',
+  `id_almacen` int(11) NOT NULL COMMENT 'id del amacen',
+  PRIMARY KEY (`id_lote`,`id_almacen`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Relaciona un lote con un almacen';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `lote_producto`
+--
+
+CREATE TABLE IF NOT EXISTS `lote_producto` (
+  `id_lote` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id del lote',
+  `id_producto` int(11) NOT NULL COMMENT 'id del producto',
+  `cantidad` float NOT NULL COMMENT 'cantidad de producto',
+  PRIMARY KEY (`id_lote`,`id_producto`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='relaciona un producto con un lote' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `lote_ubicacion`
+--
+
+CREATE TABLE IF NOT EXISTS `lote_ubicacion` (
+  `id_lote` int(11) NOT NULL COMMENT 'id del lote',
+  `id_ubicacion` int(11) NOT NULL COMMENT 'id de la ubicacion',
+  PRIMARY KEY (`id_lote`,`id_ubicacion`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Relaciona un lote con una ubicacion';
 
 -- --------------------------------------------------------
 
@@ -1037,7 +1039,7 @@ CREATE TABLE IF NOT EXISTS `moneda` (
   `simbolo` varchar(10) NOT NULL COMMENT 'Simbolo de la moneda (US$,NP$)',
   `activa` tinyint(1) NOT NULL COMMENT 'Si esta moneda esta activa o ya no se usa',
   PRIMARY KEY (`id_moneda`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que contendra las distintas monedas que usa el uusario' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Tabla que contendrá las distintas monedas que usa el uusario' AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -1058,10 +1060,7 @@ CREATE TABLE IF NOT EXISTS `orden_de_servicio` (
   `motivo_cancelacion` varchar(255) DEFAULT NULL COMMENT 'Motivo por la cual fue cancelada la orden',
   `adelanto` float NOT NULL COMMENT 'Cantidad de dinero pagada por adelantado',
   `precio` float NOT NULL COMMENT 'El precio de esta orden de servicio',
-  PRIMARY KEY (`id_orden_de_servicio`),
-  KEY `id_servicio` (`id_servicio`),
-  KEY `id_usuario_venta` (`id_usuario_venta`),
-  KEY `id_usuario` (`id_usuario`)
+  PRIMARY KEY (`id_orden_de_servicio`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -1074,8 +1073,7 @@ CREATE TABLE IF NOT EXISTS `orden_de_servicio_paquete` (
   `id_servicio` int(11) NOT NULL COMMENT 'Id del servicio',
   `id_paquete` int(11) NOT NULL COMMENT 'Id del paquete',
   `cantidad` float NOT NULL COMMENT 'Cantidad de ordenes de servicio incluidos en el paquete',
-  PRIMARY KEY (`id_servicio`,`id_paquete`),
-  KEY `id_paquete` (`id_paquete`)
+  PRIMARY KEY (`id_servicio`,`id_paquete`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle orden de servicio paquete';
 
 -- --------------------------------------------------------
@@ -1104,8 +1102,7 @@ CREATE TABLE IF NOT EXISTS `paquete` (
 CREATE TABLE IF NOT EXISTS `paquete_empresa` (
   `id_paquete` int(11) NOT NULL,
   `id_empresa` int(11) NOT NULL,
-  PRIMARY KEY (`id_paquete`,`id_empresa`),
-  KEY `id_empresa` (`id_empresa`)
+  PRIMARY KEY (`id_paquete`,`id_empresa`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='detalle paquete empresa';
 
 -- --------------------------------------------------------
@@ -1117,8 +1114,7 @@ CREATE TABLE IF NOT EXISTS `paquete_empresa` (
 CREATE TABLE IF NOT EXISTS `paquete_sucursal` (
   `id_paquete` int(11) NOT NULL,
   `id_sucursal` int(11) NOT NULL,
-  PRIMARY KEY (`id_paquete`,`id_sucursal`),
-  KEY `id_sucursal` (`id_sucursal`)
+  PRIMARY KEY (`id_paquete`,`id_sucursal`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle paquete sucursal';
 
 -- --------------------------------------------------------
@@ -1142,8 +1138,7 @@ CREATE TABLE IF NOT EXISTS `permiso` (
 CREATE TABLE IF NOT EXISTS `permiso_rol` (
   `id_permiso` int(11) NOT NULL COMMENT 'Id del permiso del rol en esa empresa',
   `id_rol` int(11) NOT NULL COMMENT 'Id del rol que tiene el permiso en esa empresa',
-  PRIMARY KEY (`id_permiso`,`id_rol`),
-  KEY `id_rol` (`id_rol`)
+  PRIMARY KEY (`id_permiso`,`id_rol`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla detalle entre los permisos de los roles en las empreas';
 
 -- --------------------------------------------------------
@@ -1155,8 +1150,7 @@ CREATE TABLE IF NOT EXISTS `permiso_rol` (
 CREATE TABLE IF NOT EXISTS `permiso_usuario` (
   `id_permiso` int(11) NOT NULL COMMENT 'Id del permiso del usuario en la empresa',
   `id_usuario` int(11) NOT NULL COMMENT 'Id del usuario con el permiso en la empresa',
-  PRIMARY KEY (`id_permiso`,`id_usuario`),
-  KEY `id_usuario` (`id_usuario`)
+  PRIMARY KEY (`id_permiso`,`id_usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle entre los permisos con los usuarios en las empresas';
 
 -- --------------------------------------------------------
@@ -1175,11 +1169,7 @@ CREATE TABLE IF NOT EXISTS `prestamo` (
   `saldo` float NOT NULL COMMENT 'Saldo que lleva abonado el prestamo',
   `interes_mensual` float NOT NULL COMMENT 'Porcentaje de interes mensual del prestamo',
   `fecha` datetime NOT NULL COMMENT 'Fecha en que se realiza el prestamo',
-  PRIMARY KEY (`id_prestamo`),
-  KEY `id_solicitante` (`id_solicitante`),
-  KEY `id_empresa_presta` (`id_empresa_presta`),
-  KEY `id_sucursal_presta` (`id_sucursal_presta`),
-  KEY `id_usuario` (`id_usuario`)
+  PRIMARY KEY (`id_prestamo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Prestamo de una sucursal a un solicitante' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -1193,8 +1183,8 @@ CREATE TABLE IF NOT EXISTS `producto` (
   `compra_en_mostrador` tinyint(1) NOT NULL COMMENT 'Verdadero si el producto se puede comprar en mostrador',
   `metodo_costeo` enum('precio','costo') NOT NULL COMMENT 'Si el precio se toma del precio base o del costo del producto',
   `activo` tinyint(1) NOT NULL COMMENT 'Si el producto esta activo o no',
-  `codigo_producto` varchar(30) NOT NULL COMMENT 'Codigo interno del producto',
-  `nombre_producto` varchar(30) NOT NULL COMMENT 'Nombre del producto',
+  `codigo_producto` varchar(32) NOT NULL COMMENT 'Codigo interno del producto',
+  `nombre_producto` varchar(32) NOT NULL COMMENT 'Nombre del producto',
   `garantia` int(11) DEFAULT NULL COMMENT 'Si este producto cuenta con un numero de meses de garantia',
   `costo_estandar` float NOT NULL COMMENT 'Costo estandar del producto',
   `control_de_existencia` int(11) DEFAULT NULL COMMENT '00000001 = Unidades. 00000010 = Caractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = Lote',
@@ -1205,9 +1195,8 @@ CREATE TABLE IF NOT EXISTS `producto` (
   `peso_producto` float DEFAULT NULL COMMENT 'El peso de este producto en Kg',
   `id_unidad` int(11) DEFAULT NULL COMMENT 'Id de la unidad en la que usualmente se maneja este producto',
   `precio` float DEFAULT NULL COMMENT 'El precio fijo del producto',
-  PRIMARY KEY (`id_producto`),
-  KEY `id_unidad` (`id_unidad`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+  PRIMARY KEY (`id_producto`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
 
 -- --------------------------------------------------------
 
@@ -1220,9 +1209,7 @@ CREATE TABLE IF NOT EXISTS `producto_abasto_proveedor` (
   `id_producto` int(11) NOT NULL,
   `id_unidad` int(11) NOT NULL COMMENT 'Id de la unidad',
   `cantidad` float NOT NULL COMMENT 'Cantidad de producto abastesido',
-  PRIMARY KEY (`id_abasto_proveedor`,`id_producto`,`id_unidad`),
-  KEY `id_producto` (`id_producto`),
-  KEY `id_unidad` (`id_unidad`)
+  PRIMARY KEY (`id_abasto_proveedor`,`id_producto`,`id_unidad`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle producto Abasto proveedor';
 
 -- --------------------------------------------------------
@@ -1236,9 +1223,7 @@ CREATE TABLE IF NOT EXISTS `producto_almacen` (
   `id_almacen` int(11) NOT NULL,
   `id_unidad` int(11) NOT NULL COMMENT 'Id de la unidad almacenada del producto',
   `cantidad` float NOT NULL,
-  PRIMARY KEY (`id_producto`,`id_almacen`,`id_unidad`),
-  KEY `id_almacen` (`id_almacen`),
-  KEY `id_unidad` (`id_unidad`)
+  PRIMARY KEY (`id_producto`,`id_almacen`,`id_unidad`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -1250,8 +1235,7 @@ CREATE TABLE IF NOT EXISTS `producto_almacen` (
 CREATE TABLE IF NOT EXISTS `producto_clasificacion` (
   `id_producto` int(11) NOT NULL COMMENT 'Id del producto con esa clasificacion',
   `id_clasificacion_producto` int(11) NOT NULL COMMENT 'Id de la clasificacion del producto',
-  PRIMARY KEY (`id_producto`,`id_clasificacion_producto`),
-  KEY `id_clasificacion_producto` (`id_clasificacion_producto`)
+  PRIMARY KEY (`id_producto`,`id_clasificacion_producto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle prodcuto clasificacion';
 
 -- --------------------------------------------------------
@@ -1263,8 +1247,7 @@ CREATE TABLE IF NOT EXISTS `producto_clasificacion` (
 CREATE TABLE IF NOT EXISTS `producto_empresa` (
   `id_producto` int(11) NOT NULL COMMENT 'Id del producto que se vende en la empresa',
   `id_empresa` int(11) NOT NULL COMMENT 'Id de la empresa que ofrece ese producto',
-  PRIMARY KEY (`id_producto`,`id_empresa`),
-  KEY `id_empresa` (`id_empresa`)
+  PRIMARY KEY (`id_producto`,`id_empresa`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle producto empresa';
 
 -- --------------------------------------------------------
@@ -1278,9 +1261,7 @@ CREATE TABLE IF NOT EXISTS `producto_entrada_almacen` (
   `id_producto` int(11) NOT NULL,
   `id_unidad` int(11) NOT NULL,
   `cantidad` float NOT NULL COMMENT 'Cantidad de producto que sale del almacen en cierta unidad',
-  PRIMARY KEY (`id_entrada_almacen`,`id_producto`,`id_unidad`),
-  KEY `id_producto` (`id_producto`),
-  KEY `id_unidad` (`id_unidad`)
+  PRIMARY KEY (`id_entrada_almacen`,`id_producto`,`id_unidad`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle producto entrada almacen';
 
 -- --------------------------------------------------------
@@ -1298,9 +1279,7 @@ CREATE TABLE IF NOT EXISTS `producto_orden_de_servicio` (
   `impuesto` float NOT NULL COMMENT 'impuesto que se aplicara al producto',
   `retencion` float NOT NULL COMMENT 'Retencion unitaria en el producto',
   `id_unidad` int(11) NOT NULL COMMENT 'Id de la unidad del producto',
-  PRIMARY KEY (`id_orden_de_servicio`,`id_producto`,`id_unidad`),
-  KEY `id_producto` (`id_producto`),
-  KEY `id_unidad` (`id_unidad`)
+  PRIMARY KEY (`id_orden_de_servicio`,`id_producto`,`id_unidad`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla detalle entre una orden de servicio y los productos qu';
 
 -- --------------------------------------------------------
@@ -1314,9 +1293,7 @@ CREATE TABLE IF NOT EXISTS `producto_paquete` (
   `id_paquete` int(11) NOT NULL COMMENT 'Id del paquete',
   `cantidad` float NOT NULL COMMENT 'Cantidad del producto ofrecido en el paquete',
   `id_unidad` int(11) NOT NULL COMMENT 'Id de la unidad del producto en ese paquete',
-  PRIMARY KEY (`id_producto`,`id_paquete`,`id_unidad`),
-  KEY `id_paquete` (`id_paquete`),
-  KEY `id_unidad` (`id_unidad`)
+  PRIMARY KEY (`id_producto`,`id_paquete`,`id_unidad`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle paquete producto';
 
 -- --------------------------------------------------------
@@ -1330,9 +1307,7 @@ CREATE TABLE IF NOT EXISTS `producto_salida_almacen` (
   `id_producto` int(11) NOT NULL,
   `id_unidad` int(11) NOT NULL,
   `cantidad` float NOT NULL COMMENT 'Cantidad de producto que sale del almacen en cierta unidad',
-  PRIMARY KEY (`id_salida_almacen`,`id_producto`,`id_unidad`),
-  KEY `id_producto` (`id_producto`),
-  KEY `id_unidad` (`id_unidad`)
+  PRIMARY KEY (`id_salida_almacen`,`id_producto`,`id_unidad`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle producto salida almacen';
 
 -- --------------------------------------------------------
@@ -1359,15 +1334,7 @@ CREATE TABLE IF NOT EXISTS `regla` (
   `margen_min` float NOT NULL DEFAULT '0' COMMENT 'Falta definir por Manuel',
   `margen_max` float NOT NULL DEFAULT '0' COMMENT 'Falta definir por Manuel',
   `secuencia` int(11) NOT NULL COMMENT 'Secuencia de la regla',
-  PRIMARY KEY (`id_regla`),
-  KEY `id_version` (`id_version`),
-  KEY `id_producto` (`id_producto`),
-  KEY `id_clasificacion_producto` (`id_clasificacion_producto`),
-  KEY `id_unidad` (`id_unidad`),
-  KEY `id_servicio` (`id_servicio`),
-  KEY `id_clasificacion_servicio` (`id_clasificacion_servicio`),
-  KEY `id_paquete` (`id_paquete`),
-  KEY `id_tarifa` (`id_tarifa`)
+  PRIMARY KEY (`id_regla`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
@@ -1379,7 +1346,7 @@ CREATE TABLE IF NOT EXISTS `regla` (
 CREATE TABLE IF NOT EXISTS `reporte` (
   `id_reporte` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Id del reporte',
   PRIMARY KEY (`id_reporte`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que contendra los reportes generados' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que contendrá los reportes generados' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1405,8 +1372,7 @@ CREATE TABLE IF NOT EXISTS `retencion` (
 CREATE TABLE IF NOT EXISTS `retencion_clasificacion_cliente` (
   `id_retencion` int(11) NOT NULL COMMENT 'Id del retencion a aplicar al tipo de cliente',
   `id_clasificacion_cliente` int(11) NOT NULL COMMENT 'Id de la clasificacion del cliente',
-  PRIMARY KEY (`id_retencion`,`id_clasificacion_cliente`),
-  KEY `id_clasificacion_cliente` (`id_clasificacion_cliente`)
+  PRIMARY KEY (`id_retencion`,`id_clasificacion_cliente`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle entre retencion clasificacion cliente';
 
 -- --------------------------------------------------------
@@ -1418,8 +1384,7 @@ CREATE TABLE IF NOT EXISTS `retencion_clasificacion_cliente` (
 CREATE TABLE IF NOT EXISTS `retencion_clasificacion_producto` (
   `id_retencion` int(11) NOT NULL COMMENT 'Id del retencion a aplicar al tipo de producto',
   `id_clasificacion_producto` int(11) NOT NULL COMMENT 'Id de la clasificacion del producto',
-  PRIMARY KEY (`id_retencion`,`id_clasificacion_producto`),
-  KEY `id_clasificacion_producto` (`id_clasificacion_producto`)
+  PRIMARY KEY (`id_retencion`,`id_clasificacion_producto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle entre retencion clasificacion producto';
 
 -- --------------------------------------------------------
@@ -1431,8 +1396,7 @@ CREATE TABLE IF NOT EXISTS `retencion_clasificacion_producto` (
 CREATE TABLE IF NOT EXISTS `retencion_clasificacion_proveedor` (
   `id_retencion` int(11) NOT NULL COMMENT 'Id del retencion a aplicar al tipo de proveedor',
   `id_clasificacion_proveedor` int(11) NOT NULL COMMENT 'Id de la clasificacion del proveedor',
-  PRIMARY KEY (`id_retencion`,`id_clasificacion_proveedor`),
-  KEY `id_clasificacion_proveedor` (`id_clasificacion_proveedor`)
+  PRIMARY KEY (`id_retencion`,`id_clasificacion_proveedor`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle entre retencion clasificacion proveedor';
 
 -- --------------------------------------------------------
@@ -1444,8 +1408,7 @@ CREATE TABLE IF NOT EXISTS `retencion_clasificacion_proveedor` (
 CREATE TABLE IF NOT EXISTS `retencion_clasificacion_servicio` (
   `id_retencion` int(11) NOT NULL COMMENT 'Id del retencion a aplicar al tipo de servicio',
   `id_clasificacion_servicio` int(11) NOT NULL COMMENT 'Id de la clasificacion del servicio',
-  PRIMARY KEY (`id_retencion`,`id_clasificacion_servicio`),
-  KEY `id_clasificacion_servicio` (`id_clasificacion_servicio`)
+  PRIMARY KEY (`id_retencion`,`id_clasificacion_servicio`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle entre retencion clasificacion servicio';
 
 -- --------------------------------------------------------
@@ -1457,8 +1420,7 @@ CREATE TABLE IF NOT EXISTS `retencion_clasificacion_servicio` (
 CREATE TABLE IF NOT EXISTS `retencion_empresa` (
   `id_retencion` int(11) NOT NULL COMMENT 'Id de la retencion que se aplica a la empreas',
   `id_empresa` int(11) NOT NULL COMMENT 'Id de la empresa a la que se le aplica la retencion',
-  PRIMARY KEY (`id_retencion`,`id_empresa`),
-  KEY `id_empresa` (`id_empresa`)
+  PRIMARY KEY (`id_retencion`,`id_empresa`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle entre las retenciones y las empresas';
 
 -- --------------------------------------------------------
@@ -1470,8 +1432,7 @@ CREATE TABLE IF NOT EXISTS `retencion_empresa` (
 CREATE TABLE IF NOT EXISTS `retencion_producto` (
   `id_retencion` int(11) NOT NULL COMMENT 'Id de la retencion que se aplica al producto',
   `id_producto` int(11) NOT NULL COMMENT 'Id del producto al que se le aplica la retencion',
-  PRIMARY KEY (`id_retencion`,`id_producto`),
-  KEY `id_producto` (`id_producto`)
+  PRIMARY KEY (`id_retencion`,`id_producto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle retencion producto';
 
 -- --------------------------------------------------------
@@ -1483,8 +1444,7 @@ CREATE TABLE IF NOT EXISTS `retencion_producto` (
 CREATE TABLE IF NOT EXISTS `retencion_servicio` (
   `id_retencion` int(11) NOT NULL COMMENT 'Id de la retencion que se aplica al servicio',
   `id_servicio` int(11) NOT NULL COMMENT 'Id del servicio al que se le aplica la retencion',
-  PRIMARY KEY (`id_retencion`,`id_servicio`),
-  KEY `id_servicio` (`id_servicio`)
+  PRIMARY KEY (`id_retencion`,`id_servicio`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle retencion servicio';
 
 -- --------------------------------------------------------
@@ -1496,8 +1456,7 @@ CREATE TABLE IF NOT EXISTS `retencion_servicio` (
 CREATE TABLE IF NOT EXISTS `retencion_sucursal` (
   `id_retencion` int(11) NOT NULL COMMENT 'Id de la retencion que se aplica a la sucursal',
   `id_sucursal` int(11) NOT NULL COMMENT 'Id de la sucursal que tiene la retencion',
-  PRIMARY KEY (`id_retencion`,`id_sucursal`),
-  KEY `id_sucursal` (`id_sucursal`)
+  PRIMARY KEY (`id_retencion`,`id_sucursal`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle entre las retenciones y las sucursales';
 
 -- --------------------------------------------------------
@@ -1509,8 +1468,7 @@ CREATE TABLE IF NOT EXISTS `retencion_sucursal` (
 CREATE TABLE IF NOT EXISTS `retencion_usuario` (
   `id_retencion` int(11) NOT NULL COMMENT 'Id de la retencion que se aplica al usuario',
   `id_usuario` int(11) NOT NULL COMMENT 'Id del usuario que tiene la retencion',
-  PRIMARY KEY (`id_retencion`,`id_usuario`),
-  KEY `id_usuario` (`id_usuario`)
+  PRIMARY KEY (`id_retencion`,`id_usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle entre las retenciones y los usuarios';
 
 -- --------------------------------------------------------
@@ -1526,9 +1484,7 @@ CREATE TABLE IF NOT EXISTS `rol` (
   `salario` float DEFAULT NULL COMMENT 'Si los usuarios con dicho rol contaran con un salario',
   `id_tarifa_compra` int(11) NOT NULL COMMENT 'Id de la tarifa de compra por default para los usuarios de este rol',
   `id_tarifa_venta` int(11) NOT NULL COMMENT 'Id de la tarifa de venta por default para los usuarios de este rol',
-  PRIMARY KEY (`id_rol`),
-  KEY `id_tarifa_compra` (`id_tarifa_compra`),
-  KEY `id_tarifa_venta` (`id_tarifa_venta`)
+  PRIMARY KEY (`id_rol`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
 
 -- --------------------------------------------------------
@@ -1543,9 +1499,7 @@ CREATE TABLE IF NOT EXISTS `salida_almacen` (
   `id_usuario` int(11) NOT NULL COMMENT 'Id del usuario que registra',
   `fecha_registro` datetime NOT NULL COMMENT 'Fecha en que se registra el movimiento',
   `motivo` varchar(255) NOT NULL COMMENT 'motivo por le cual sale producto del almacen',
-  PRIMARY KEY (`id_salida_almacen`),
-  KEY `id_almacen` (`id_almacen`),
-  KEY `id_usuario` (`id_usuario`)
+  PRIMARY KEY (`id_salida_almacen`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Registro de salidas de un alacen' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -1562,11 +1516,7 @@ CREATE TABLE IF NOT EXISTS `seguimiento_de_servicio` (
   `id_sucursal` int(11) NOT NULL COMMENT 'Id de la sucursal de donde se realiza el seguimiento',
   `estado` varchar(255) NOT NULL COMMENT 'Estado en la que se encuentra la orden',
   `fecha_seguimiento` datetime NOT NULL COMMENT 'Fecha en la que se realizo el seguimiento',
-  PRIMARY KEY (`id_seguimiento_de_servicio`),
-  KEY `id_orden_de_servicio` (`id_orden_de_servicio`),
-  KEY `id_localizacion` (`id_localizacion`),
-  KEY `id_usuario` (`id_usuario`),
-  KEY `id_sucursal` (`id_sucursal`)
+  PRIMARY KEY (`id_seguimiento_de_servicio`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -1584,7 +1534,7 @@ CREATE TABLE IF NOT EXISTS `servicio` (
   `activo` tinyint(1) NOT NULL COMMENT 'Si el servicio esta activo',
   `descripcion_servicio` varchar(255) DEFAULT NULL COMMENT 'Descripcion del servicio',
   `costo_estandar` float NOT NULL COMMENT 'Valor del costo estandar del servicio',
-  `garantia` int(11) DEFAULT NULL COMMENT 'Si este servicio tiene una garantia en meses.',
+  `garantia` int(11) DEFAULT NULL COMMENT 'Si este servicio tiene una garantía en meses.',
   `control_existencia` int(11) DEFAULT NULL COMMENT '00000001 = Unidades. 00000010 = Caractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = LoteCaractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = Lote',
   `foto_servicio` varchar(50) DEFAULT NULL COMMENT 'Url de la foto del servicio',
   `precio` float DEFAULT NULL COMMENT 'El precio fijo del servicio',
@@ -1600,8 +1550,7 @@ CREATE TABLE IF NOT EXISTS `servicio` (
 CREATE TABLE IF NOT EXISTS `servicio_clasificacion` (
   `id_servicio` int(11) NOT NULL COMMENT 'Id del servicio ',
   `id_clasificacion_servicio` int(11) NOT NULL COMMENT 'Id de la clasificacio dnel servicio',
-  PRIMARY KEY (`id_servicio`,`id_clasificacion_servicio`),
-  KEY `id_clasificacion_servicio` (`id_clasificacion_servicio`)
+  PRIMARY KEY (`id_servicio`,`id_clasificacion_servicio`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle servicio clasificacion';
 
 -- --------------------------------------------------------
@@ -1613,8 +1562,7 @@ CREATE TABLE IF NOT EXISTS `servicio_clasificacion` (
 CREATE TABLE IF NOT EXISTS `servicio_empresa` (
   `id_servicio` int(11) NOT NULL COMMENT 'Id del servicio ',
   `id_empresa` int(11) NOT NULL COMMENT 'Id de la empresa en la que se ofrece este servicio',
-  PRIMARY KEY (`id_servicio`,`id_empresa`),
-  KEY `id_empresa` (`id_empresa`)
+  PRIMARY KEY (`id_servicio`,`id_empresa`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle servicio empresa';
 
 -- --------------------------------------------------------
@@ -1626,8 +1574,7 @@ CREATE TABLE IF NOT EXISTS `servicio_empresa` (
 CREATE TABLE IF NOT EXISTS `servicio_sucursal` (
   `id_servicio` int(11) NOT NULL,
   `id_sucursal` int(11) NOT NULL,
-  PRIMARY KEY (`id_servicio`,`id_sucursal`),
-  KEY `id_sucursal` (`id_sucursal`)
+  PRIMARY KEY (`id_servicio`,`id_sucursal`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle servicio sucusal';
 
 -- --------------------------------------------------------
@@ -1646,7 +1593,7 @@ CREATE TABLE IF NOT EXISTS `sesion` (
   PRIMARY KEY (`id_sesion`),
   UNIQUE KEY `id_usuario` (`id_usuario`),
   KEY `auth_token` (`auth_token`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Mantiene un seguimiento de las sesiones activas en el sistem' AUTO_INCREMENT=52 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='Mantiene un seguimiento de las sesiones activas en el sistem' AUTO_INCREMENT=886 ;
 
 -- --------------------------------------------------------
 
@@ -1657,7 +1604,7 @@ CREATE TABLE IF NOT EXISTS `sesion` (
 CREATE TABLE IF NOT EXISTS `sucursal` (
   `id_sucursal` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Id de la tabla sucursal',
   `id_direccion` int(11) NOT NULL COMMENT 'Id de la direccion de la sucursal',
-  `rfc` varchar(30) NOT NULL COMMENT 'RFC de la sucursal',
+  `rfc` varchar(30) DEFAULT NULL COMMENT 'RFC de la sucursal',
   `razon_social` varchar(100) NOT NULL COMMENT 'Razon social de la sucursal',
   `descripcion` varchar(255) DEFAULT NULL COMMENT 'Descrpicion de la sucursal',
   `id_gerente` int(11) DEFAULT NULL COMMENT 'Id del usuario que funje como gerente general de la sucursal',
@@ -1665,10 +1612,8 @@ CREATE TABLE IF NOT EXISTS `sucursal` (
   `fecha_apertura` datetime NOT NULL COMMENT 'Fecha en que se creo la sucursal',
   `activa` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Si esta sucursal esta activa o no',
   `fecha_baja` datetime DEFAULT NULL COMMENT 'Fecha en que se dio de baja esta sucursal',
-  PRIMARY KEY (`id_sucursal`),
-  KEY `id_direccion` (`id_direccion`),
-  KEY `id_gerente` (`id_gerente`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='tabla de sucursales' AUTO_INCREMENT=3 ;
+  PRIMARY KEY (`id_sucursal`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='tabla de sucursales' AUTO_INCREMENT=41 ;
 
 -- --------------------------------------------------------
 
@@ -1679,8 +1624,7 @@ CREATE TABLE IF NOT EXISTS `sucursal` (
 CREATE TABLE IF NOT EXISTS `sucursal_empresa` (
   `id_sucursal` int(11) NOT NULL,
   `id_empresa` int(11) NOT NULL,
-  PRIMARY KEY (`id_sucursal`,`id_empresa`),
-  KEY `id_empresa` (`id_empresa`)
+  PRIMARY KEY (`id_sucursal`,`id_empresa`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='tabla detalle entre sucursal y las empresas a la que pertene';
 
 -- --------------------------------------------------------
@@ -1698,11 +1642,8 @@ CREATE TABLE IF NOT EXISTS `tarifa` (
   `default` tinyint(1) NOT NULL COMMENT 'Si esta tarifa es la default del sistema o no',
   `id_version_default` int(11) DEFAULT NULL COMMENT 'Id de la version default de esta tarifa',
   `id_version_activa` int(11) DEFAULT NULL COMMENT 'Id de la version activa de esta tarifa',
-  PRIMARY KEY (`id_tarifa`),
-  KEY `id_moneda` (`id_moneda`),
-  KEY `id_version_default` (`id_version_default`),
-  KEY `id_version_activa` (`id_version_activa`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+  PRIMARY KEY (`id_tarifa`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 
@@ -1735,12 +1676,7 @@ CREATE TABLE IF NOT EXISTS `traspaso` (
   `estado` enum('Envio programado','Enviado','Cancelado','Recibido') NOT NULL COMMENT 'Si el traspaso esta en solicitud, en envio o si ya fue recibida',
   `cancelado` tinyint(1) NOT NULL COMMENT 'Si la solicitud de traspaso fue cancelada',
   `completo` tinyint(1) NOT NULL COMMENT 'Verdadero si se enviaron todos los productos solicitados al inicio del traspaso',
-  PRIMARY KEY (`id_traspaso`),
-  KEY `id_usuario_programa` (`id_usuario_programa`),
-  KEY `id_usuario_envia` (`id_usuario_envia`),
-  KEY `id_almacen_envia` (`id_almacen_envia`),
-  KEY `id_usuario_recibe` (`id_usuario_recibe`),
-  KEY `id_almacen_recibe` (`id_almacen_recibe`)
+  PRIMARY KEY (`id_traspaso`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Traspasos entre un almacen y otro' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -1755,10 +1691,24 @@ CREATE TABLE IF NOT EXISTS `traspaso_producto` (
   `id_unidad` int(11) NOT NULL,
   `cantidad_enviada` float NOT NULL DEFAULT '0' COMMENT 'cantidad de producto a traspasar',
   `cantidad_recibida` float NOT NULL DEFAULT '0' COMMENT 'Cantidad de producto recibida',
-  PRIMARY KEY (`id_traspaso`,`id_producto`,`id_unidad`),
-  KEY `id_producto` (`id_producto`),
-  KEY `id_unidad` (`id_unidad`)
+  `id_lote_origen` int(11) NOT NULL COMMENT 'id del lote de donde provienen los productos',
+  PRIMARY KEY (`id_traspaso`,`id_producto`,`id_unidad`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='detalle traspaso producto';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `ubicacion`
+--
+
+CREATE TABLE IF NOT EXISTS `ubicacion` (
+  `id_ubicacion` int(11) NOT NULL AUTO_INCREMENT,
+  `pasillo` varchar(128) NOT NULL,
+  `estante` varchar(128) NOT NULL,
+  `fila` varchar(128) NOT NULL,
+  `caja` varchar(128) NOT NULL,
+  PRIMARY KEY (`id_ubicacion`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Maneja las ubicaciones físicas de los productos en el almacé' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1785,8 +1735,7 @@ CREATE TABLE IF NOT EXISTS `unidad_equivalencia` (
   `id_unidad` int(11) NOT NULL COMMENT 'Id de la unidad origen',
   `equivalencia` float NOT NULL COMMENT 'Numero de unidades de id_unidades que caben en la unidad id_unidad',
   `id_unidades` int(11) NOT NULL COMMENT 'Id de las unidades equivalentes',
-  PRIMARY KEY (`id_unidad`,`id_unidades`),
-  KEY `id_unidades` (`id_unidades`)
+  PRIMARY KEY (`id_unidad`,`id_unidades`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Equivalencias entre unidades, 1 id_unidad = n id_unidades, n';
 
 -- --------------------------------------------------------
@@ -1827,31 +1776,22 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `representante_legal` varchar(100) DEFAULT NULL COMMENT 'Nombre del representante legal del usuario',
   `facturar_a_terceros` tinyint(1) DEFAULT NULL COMMENT 'Si el cliente puede facturar a terceros',
   `dia_de_pago` datetime DEFAULT NULL COMMENT 'Fecha de pago del cliente',
-  `mensajeria` tinyint(1) DEFAULT NULL COMMENT 'Si el cliente cuenta con una cuenta de mensajeria y paqueteria',
+  `mensajeria` tinyint(1) DEFAULT NULL COMMENT 'Si el cliente cuenta con una cuenta de mensajería y paquetería',
   `intereses_moratorios` float DEFAULT NULL COMMENT 'Intereses moratorios del cliente',
   `denominacion_comercial` varchar(100) DEFAULT NULL COMMENT 'Denominación comercial del cliente',
-  `dias_de_credito` int(11) DEFAULT NULL COMMENT 'Dias de credito que se le daran al cliente',
+  `dias_de_credito` int(11) DEFAULT NULL COMMENT 'Días de crédito que se le darán al cliente',
   `cuenta_de_mensajeria` varchar(50) DEFAULT NULL COMMENT 'Cuenta de mensajeria del cliente',
   `dia_de_revision` datetime DEFAULT NULL COMMENT 'Fecha de revisión del cliente',
-  `codigo_usuario` varchar(50) NOT NULL COMMENT 'Codigo del usuario para uso interno de la empresa',
+  `codigo_usuario` varchar(50) DEFAULT NULL COMMENT 'Codigo del usuario para uso interno de la empresa',
   `dias_de_embarque` int(11) DEFAULT NULL COMMENT 'Dias de embarque del proveedor (Lunes, Martes, etc)',
-  `tiempo_entrega` int(11) DEFAULT NULL COMMENT 'Tiempo de entrega del proveedor en dias',
+  `tiempo_entrega` int(11) DEFAULT NULL COMMENT 'Tiempo de entrega del proveedor en días',
   `cuenta_bancaria` varchar(50) DEFAULT NULL COMMENT 'Cuenta bancaria del usuario',
   `id_tarifa_compra` int(11) NOT NULL COMMENT 'Id de la tarifa de compra por default para este usuario',
   `tarifa_compra_obtenida` enum('rol','proveedor','cliente','usuario') NOT NULL COMMENT 'Indica de donde fue obtenida la tarifa de compra',
   `id_tarifa_venta` int(11) NOT NULL COMMENT 'Id de la tarifa de venta por default para este usuario',
   `tarifa_venta_obtenida` enum('rol','proveedor','cliente','usuario') NOT NULL COMMENT 'Indica de donde fue obtenida la tarifa de venta',
-  PRIMARY KEY (`id_usuario`),
-  KEY `id_direccion` (`id_direccion`),
-  KEY `id_direccion_alterna` (`id_direccion_alterna`),
-  KEY `id_sucursal` (`id_sucursal`),
-  KEY `id_rol` (`id_rol`),
-  KEY `id_clasificacion_cliente` (`id_clasificacion_cliente`),
-  KEY `id_clasificacion_proveedor` (`id_clasificacion_proveedor`),
-  KEY `id_moneda` (`id_moneda`),
-  KEY `id_tarifa_compra` (`id_tarifa_compra`),
-  KEY `id_tarifa_venta` (`id_tarifa_venta`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='tabla de usuarios' AUTO_INCREMENT=4 ;
+  PRIMARY KEY (`id_usuario`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='tabla de usuarios' AUTO_INCREMENT=151 ;
 
 -- --------------------------------------------------------
 
@@ -1876,11 +1816,7 @@ CREATE TABLE IF NOT EXISTS `venta` (
   `cancelada` tinyint(1) NOT NULL COMMENT 'Si la venta ha sido cancelada',
   `tipo_de_pago` enum('cheque','tarjeta','efectivo') DEFAULT NULL COMMENT 'Si la venta fue pagada con tarjeta, cheque, o en efectivo',
   `retencion` float NOT NULL COMMENT 'Monto de retencion',
-  PRIMARY KEY (`id_venta`),
-  KEY `id_caja` (`id_caja`),
-  KEY `id_comprador_venta` (`id_comprador_venta`),
-  KEY `id_sucursal` (`id_sucursal`),
-  KEY `id_usuario` (`id_usuario`)
+  PRIMARY KEY (`id_venta`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
 
 -- --------------------------------------------------------
@@ -1893,7 +1829,7 @@ CREATE TABLE IF NOT EXISTS `venta_arpilla` (
   `id_venta_arpilla` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Id de la venta por arpilla',
   `id_venta` int(11) NOT NULL COMMENT 'Id de la venta en arpillas',
   `peso_destino` float NOT NULL COMMENT 'Peso del embarque en el destino',
-  `fecha_origen` datetime NOT NULL COMMENT 'Fecha en la que se envia el embarque',
+  `fecha_origen` datetime NOT NULL COMMENT 'Fecha en la que se envía el embarque',
   `folio` varchar(11) DEFAULT NULL COMMENT 'Folio de la entrega',
   `numero_de_viaje` varchar(11) DEFAULT NULL COMMENT 'Numero de viaje',
   `peso_origen` float NOT NULL COMMENT 'Peso del embarque en el origen',
@@ -1902,8 +1838,7 @@ CREATE TABLE IF NOT EXISTS `venta_arpilla` (
   `productor` varchar(64) DEFAULT NULL COMMENT 'Nombre del productor',
   `merma_por_arpilla` float NOT NULL COMMENT 'Merma por arpilla',
   `total_origen` float DEFAULT NULL COMMENT 'Valor del embarque',
-  PRIMARY KEY (`id_venta_arpilla`),
-  KEY `id_venta` (`id_venta`)
+  PRIMARY KEY (`id_venta_arpilla`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que detalla una venta realizada mediante un embarque d' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -1917,8 +1852,7 @@ CREATE TABLE IF NOT EXISTS `venta_empresa` (
   `id_empresa` int(11) NOT NULL,
   `total` float NOT NULL COMMENT 'El total correspondiente',
   `saldada` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Si la venta ya fue saldada o aun no lo ha sido',
-  PRIMARY KEY (`id_venta`,`id_empresa`),
-  KEY `id_empresa` (`id_empresa`)
+  PRIMARY KEY (`id_venta`,`id_empresa`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle entre venta y empresa';
 
 -- --------------------------------------------------------
@@ -1934,8 +1868,7 @@ CREATE TABLE IF NOT EXISTS `venta_orden` (
   `descuento` float NOT NULL COMMENT 'El descuento de la orden',
   `impuesto` float NOT NULL COMMENT 'Cantidad añadida por los impuestos',
   `retencion` float NOT NULL COMMENT 'Cantidad añadida por las retenciones',
-  PRIMARY KEY (`id_venta`,`id_orden_de_servicio`),
-  KEY `id_orden_de_servicio` (`id_orden_de_servicio`)
+  PRIMARY KEY (`id_venta`,`id_orden_de_servicio`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle venta ordenes de servicio';
 
 -- --------------------------------------------------------
@@ -1950,8 +1883,7 @@ CREATE TABLE IF NOT EXISTS `venta_paquete` (
   `cantidad` float NOT NULL,
   `precio` float NOT NULL,
   `descuento` float NOT NULL,
-  PRIMARY KEY (`id_venta`,`id_paquete`),
-  KEY `id_paquete` (`id_paquete`)
+  PRIMARY KEY (`id_venta`,`id_paquete`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='detalle venta paquete';
 
 -- --------------------------------------------------------
@@ -1969,9 +1901,7 @@ CREATE TABLE IF NOT EXISTS `venta_producto` (
   `impuesto` float NOT NULL COMMENT 'impuesto que se aplico al producto',
   `retencion` float NOT NULL COMMENT 'Retencion unitaria en el producto',
   `id_unidad` int(11) NOT NULL COMMENT 'Id de la unidad del producto',
-  PRIMARY KEY (`id_venta`,`id_producto`,`id_unidad`),
-  KEY `id_producto` (`id_producto`),
-  KEY `id_unidad` (`id_unidad`)
+  PRIMARY KEY (`id_venta`,`id_producto`,`id_unidad`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla detalle entre una venta y los productos que se vendier';
 
 -- --------------------------------------------------------
@@ -1988,66 +1918,65 @@ CREATE TABLE IF NOT EXISTS `version` (
   `fecha_inicio` datetime DEFAULT NULL COMMENT 'Fecha a partir de la cual se aplican las reglas de esta version',
   `fecha_fin` datetime DEFAULT NULL COMMENT 'Fecha a partir de la cual se dejaran de aplicar las reglas de esta version',
   `default` tinyint(1) NOT NULL COMMENT 'Si esta version es la version default de la tarifa',
-  PRIMARY KEY (`id_version`),
-  KEY `id_tarifa` (`id_tarifa`)
+  PRIMARY KEY (`id_version`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 --
--- Filtros para las tablas descargadas (dump)
+-- Restricciones para tablas volcadas
 --
 
 --
 -- Filtros para la tabla `abasto_proveedor`
 --
 ALTER TABLE `abasto_proveedor`
-  ADD CONSTRAINT `abasto_proveedor_ibfk_3` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`),
   ADD CONSTRAINT `abasto_proveedor_ibfk_1` FOREIGN KEY (`id_proveedor`) REFERENCES `usuario` (`id_usuario`),
-  ADD CONSTRAINT `abasto_proveedor_ibfk_2` FOREIGN KEY (`id_almacen`) REFERENCES `almacen` (`id_almacen`);
+  ADD CONSTRAINT `abasto_proveedor_ibfk_2` FOREIGN KEY (`id_almacen`) REFERENCES `almacen` (`id_almacen`),
+  ADD CONSTRAINT `abasto_proveedor_ibfk_3` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`);
 
 --
 -- Filtros para la tabla `abono_compra`
 --
 ALTER TABLE `abono_compra`
-  ADD CONSTRAINT `abono_compra_ibfk_5` FOREIGN KEY (`id_receptor`) REFERENCES `usuario` (`id_usuario`),
   ADD CONSTRAINT `abono_compra_ibfk_1` FOREIGN KEY (`id_compra`) REFERENCES `compra` (`id_compra`),
   ADD CONSTRAINT `abono_compra_ibfk_2` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`),
   ADD CONSTRAINT `abono_compra_ibfk_3` FOREIGN KEY (`id_caja`) REFERENCES `caja` (`id_caja`),
-  ADD CONSTRAINT `abono_compra_ibfk_4` FOREIGN KEY (`id_deudor`) REFERENCES `usuario` (`id_usuario`);
+  ADD CONSTRAINT `abono_compra_ibfk_4` FOREIGN KEY (`id_deudor`) REFERENCES `usuario` (`id_usuario`),
+  ADD CONSTRAINT `abono_compra_ibfk_5` FOREIGN KEY (`id_receptor`) REFERENCES `usuario` (`id_usuario`);
 
 --
 -- Filtros para la tabla `abono_prestamo`
 --
 ALTER TABLE `abono_prestamo`
-  ADD CONSTRAINT `abono_prestamo_ibfk_5` FOREIGN KEY (`id_receptor`) REFERENCES `usuario` (`id_usuario`),
   ADD CONSTRAINT `abono_prestamo_ibfk_1` FOREIGN KEY (`id_prestamo`) REFERENCES `prestamo` (`id_prestamo`),
   ADD CONSTRAINT `abono_prestamo_ibfk_2` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`),
   ADD CONSTRAINT `abono_prestamo_ibfk_3` FOREIGN KEY (`id_caja`) REFERENCES `caja` (`id_caja`),
-  ADD CONSTRAINT `abono_prestamo_ibfk_4` FOREIGN KEY (`id_deudor`) REFERENCES `usuario` (`id_usuario`);
+  ADD CONSTRAINT `abono_prestamo_ibfk_4` FOREIGN KEY (`id_deudor`) REFERENCES `usuario` (`id_usuario`),
+  ADD CONSTRAINT `abono_prestamo_ibfk_5` FOREIGN KEY (`id_receptor`) REFERENCES `usuario` (`id_usuario`);
 
 --
 -- Filtros para la tabla `abono_venta`
 --
 ALTER TABLE `abono_venta`
-  ADD CONSTRAINT `abono_venta_ibfk_5` FOREIGN KEY (`id_receptor`) REFERENCES `usuario` (`id_usuario`),
   ADD CONSTRAINT `abono_venta_ibfk_1` FOREIGN KEY (`id_venta`) REFERENCES `venta` (`id_venta`),
   ADD CONSTRAINT `abono_venta_ibfk_2` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`),
   ADD CONSTRAINT `abono_venta_ibfk_3` FOREIGN KEY (`id_caja`) REFERENCES `caja` (`id_caja`),
-  ADD CONSTRAINT `abono_venta_ibfk_4` FOREIGN KEY (`id_deudor`) REFERENCES `usuario` (`id_usuario`);
+  ADD CONSTRAINT `abono_venta_ibfk_4` FOREIGN KEY (`id_deudor`) REFERENCES `usuario` (`id_usuario`),
+  ADD CONSTRAINT `abono_venta_ibfk_5` FOREIGN KEY (`id_receptor`) REFERENCES `usuario` (`id_usuario`);
 
 --
 -- Filtros para la tabla `almacen`
 --
 ALTER TABLE `almacen`
-  ADD CONSTRAINT `almacen_ibfk_3` FOREIGN KEY (`id_tipo_almacen`) REFERENCES `tipo_almacen` (`id_tipo_almacen`),
   ADD CONSTRAINT `almacen_ibfk_1` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`),
-  ADD CONSTRAINT `almacen_ibfk_2` FOREIGN KEY (`id_empresa`) REFERENCES `empresa` (`id_empresa`);
+  ADD CONSTRAINT `almacen_ibfk_2` FOREIGN KEY (`id_empresa`) REFERENCES `empresa` (`id_empresa`),
+  ADD CONSTRAINT `almacen_ibfk_3` FOREIGN KEY (`id_tipo_almacen`) REFERENCES `tipo_almacen` (`id_tipo_almacen`);
 
 --
 -- Filtros para la tabla `apertura_caja`
 --
 ALTER TABLE `apertura_caja`
-  ADD CONSTRAINT `apertura_caja_ibfk_2` FOREIGN KEY (`id_cajero`) REFERENCES `usuario` (`id_usuario`),
-  ADD CONSTRAINT `apertura_caja_ibfk_1` FOREIGN KEY (`id_caja`) REFERENCES `caja` (`id_caja`);
+  ADD CONSTRAINT `apertura_caja_ibfk_1` FOREIGN KEY (`id_caja`) REFERENCES `caja` (`id_caja`),
+  ADD CONSTRAINT `apertura_caja_ibfk_2` FOREIGN KEY (`id_cajero`) REFERENCES `usuario` (`id_usuario`);
 
 --
 -- Filtros para la tabla `billete`
@@ -2059,29 +1988,29 @@ ALTER TABLE `billete`
 -- Filtros para la tabla `billete_apertura_caja`
 --
 ALTER TABLE `billete_apertura_caja`
-  ADD CONSTRAINT `billete_apertura_caja_ibfk_2` FOREIGN KEY (`id_apertura_caja`) REFERENCES `apertura_caja` (`id_apertura_caja`),
-  ADD CONSTRAINT `billete_apertura_caja_ibfk_1` FOREIGN KEY (`id_billete`) REFERENCES `billete` (`id_billete`);
+  ADD CONSTRAINT `billete_apertura_caja_ibfk_1` FOREIGN KEY (`id_billete`) REFERENCES `billete` (`id_billete`),
+  ADD CONSTRAINT `billete_apertura_caja_ibfk_2` FOREIGN KEY (`id_apertura_caja`) REFERENCES `apertura_caja` (`id_apertura_caja`);
 
 --
 -- Filtros para la tabla `billete_caja`
 --
 ALTER TABLE `billete_caja`
-  ADD CONSTRAINT `billete_caja_ibfk_2` FOREIGN KEY (`id_caja`) REFERENCES `caja` (`id_caja`),
-  ADD CONSTRAINT `billete_caja_ibfk_1` FOREIGN KEY (`id_billete`) REFERENCES `billete` (`id_billete`);
+  ADD CONSTRAINT `billete_caja_ibfk_1` FOREIGN KEY (`id_billete`) REFERENCES `billete` (`id_billete`),
+  ADD CONSTRAINT `billete_caja_ibfk_2` FOREIGN KEY (`id_caja`) REFERENCES `caja` (`id_caja`);
 
 --
 -- Filtros para la tabla `billete_cierre_caja`
 --
 ALTER TABLE `billete_cierre_caja`
-  ADD CONSTRAINT `billete_cierre_caja_ibfk_2` FOREIGN KEY (`id_cierre_caja`) REFERENCES `cierre_caja` (`id_cierre_caja`),
-  ADD CONSTRAINT `billete_cierre_caja_ibfk_1` FOREIGN KEY (`id_billete`) REFERENCES `billete` (`id_billete`);
+  ADD CONSTRAINT `billete_cierre_caja_ibfk_1` FOREIGN KEY (`id_billete`) REFERENCES `billete` (`id_billete`),
+  ADD CONSTRAINT `billete_cierre_caja_ibfk_2` FOREIGN KEY (`id_cierre_caja`) REFERENCES `cierre_caja` (`id_cierre_caja`);
 
 --
 -- Filtros para la tabla `billete_corte_caja`
 --
 ALTER TABLE `billete_corte_caja`
-  ADD CONSTRAINT `billete_corte_caja_ibfk_2` FOREIGN KEY (`id_corte_caja`) REFERENCES `corte_de_caja` (`id_corte_de_caja`),
-  ADD CONSTRAINT `billete_corte_caja_ibfk_1` FOREIGN KEY (`id_billete`) REFERENCES `billete` (`id_billete`);
+  ADD CONSTRAINT `billete_corte_caja_ibfk_1` FOREIGN KEY (`id_billete`) REFERENCES `billete` (`id_billete`),
+  ADD CONSTRAINT `billete_corte_caja_ibfk_2` FOREIGN KEY (`id_corte_caja`) REFERENCES `corte_de_caja` (`id_corte_de_caja`);
 
 --
 -- Filtros para la tabla `caja`
@@ -2106,618 +2035,37 @@ ALTER TABLE `cheque_abono_compra`
 -- Filtros para la tabla `cheque_abono_prestamo`
 --
 ALTER TABLE `cheque_abono_prestamo`
-  ADD CONSTRAINT `cheque_abono_prestamo_ibfk_2` FOREIGN KEY (`id_abono_prestamo`) REFERENCES `abono_prestamo` (`id_abono_prestamo`),
-  ADD CONSTRAINT `cheque_abono_prestamo_ibfk_1` FOREIGN KEY (`id_cheque`) REFERENCES `cheque` (`id_cheque`);
+  ADD CONSTRAINT `cheque_abono_prestamo_ibfk_1` FOREIGN KEY (`id_cheque`) REFERENCES `cheque` (`id_cheque`),
+  ADD CONSTRAINT `cheque_abono_prestamo_ibfk_2` FOREIGN KEY (`id_abono_prestamo`) REFERENCES `abono_prestamo` (`id_abono_prestamo`);
 
 --
 -- Filtros para la tabla `cheque_abono_venta`
 --
 ALTER TABLE `cheque_abono_venta`
-  ADD CONSTRAINT `cheque_abono_venta_ibfk_2` FOREIGN KEY (`id_abono_venta`) REFERENCES `abono_venta` (`id_abono_venta`),
-  ADD CONSTRAINT `cheque_abono_venta_ibfk_1` FOREIGN KEY (`id_cheque`) REFERENCES `cheque` (`id_cheque`);
+  ADD CONSTRAINT `cheque_abono_venta_ibfk_1` FOREIGN KEY (`id_cheque`) REFERENCES `cheque` (`id_cheque`),
+  ADD CONSTRAINT `cheque_abono_venta_ibfk_2` FOREIGN KEY (`id_abono_venta`) REFERENCES `abono_venta` (`id_abono_venta`);
 
 --
 -- Filtros para la tabla `cheque_compra`
 --
 ALTER TABLE `cheque_compra`
-  ADD CONSTRAINT `cheque_compra_ibfk_2` FOREIGN KEY (`id_compra`) REFERENCES `compra` (`id_compra`),
-  ADD CONSTRAINT `cheque_compra_ibfk_1` FOREIGN KEY (`id_cheque`) REFERENCES `cheque` (`id_cheque`);
+  ADD CONSTRAINT `cheque_compra_ibfk_1` FOREIGN KEY (`id_cheque`) REFERENCES `cheque` (`id_cheque`),
+  ADD CONSTRAINT `cheque_compra_ibfk_2` FOREIGN KEY (`id_compra`) REFERENCES `compra` (`id_compra`);
 
 --
 -- Filtros para la tabla `cheque_venta`
 --
 ALTER TABLE `cheque_venta`
-  ADD CONSTRAINT `cheque_venta_ibfk_2` FOREIGN KEY (`id_venta`) REFERENCES `venta` (`id_venta`),
-  ADD CONSTRAINT `cheque_venta_ibfk_1` FOREIGN KEY (`id_cheque`) REFERENCES `cheque` (`id_cheque`);
+  ADD CONSTRAINT `cheque_venta_ibfk_1` FOREIGN KEY (`id_cheque`) REFERENCES `cheque` (`id_cheque`),
+  ADD CONSTRAINT `cheque_venta_ibfk_2` FOREIGN KEY (`id_venta`) REFERENCES `venta` (`id_venta`);
 
 --
 -- Filtros para la tabla `cierre_caja`
 --
 ALTER TABLE `cierre_caja`
-  ADD CONSTRAINT `cierre_caja_ibfk_2` FOREIGN KEY (`id_cajero`) REFERENCES `usuario` (`id_usuario`),
-  ADD CONSTRAINT `cierre_caja_ibfk_1` FOREIGN KEY (`id_caja`) REFERENCES `caja` (`id_caja`);
-
---
--- Filtros para la tabla `ciudad`
---
-ALTER TABLE `ciudad`
-  ADD CONSTRAINT `ciudad_ibfk_1` FOREIGN KEY (`id_estado`) REFERENCES `estado` (`id_estado`);
-
---
--- Filtros para la tabla `clasificacion_cliente`
---
-ALTER TABLE `clasificacion_cliente`
-  ADD CONSTRAINT `clasificacion_cliente_ibfk_2` FOREIGN KEY (`id_tarifa_venta`) REFERENCES `tarifa` (`id_tarifa`),
-  ADD CONSTRAINT `clasificacion_cliente_ibfk_1` FOREIGN KEY (`id_tarifa_compra`) REFERENCES `tarifa` (`id_tarifa`);
-
---
--- Filtros para la tabla `clasificacion_proveedor`
---
-ALTER TABLE `clasificacion_proveedor`
-  ADD CONSTRAINT `clasificacion_proveedor_ibfk_2` FOREIGN KEY (`id_tarifa_venta`) REFERENCES `tarifa` (`id_tarifa`),
-  ADD CONSTRAINT `clasificacion_proveedor_ibfk_1` FOREIGN KEY (`id_tarifa_compra`) REFERENCES `tarifa` (`id_tarifa`);
-
---
--- Filtros para la tabla `compra`
---
-ALTER TABLE `compra`
-  ADD CONSTRAINT `compra_ibfk_5` FOREIGN KEY (`id_empresa`) REFERENCES `empresa` (`id_empresa`),
-  ADD CONSTRAINT `compra_ibfk_1` FOREIGN KEY (`id_caja`) REFERENCES `caja` (`id_caja`),
-  ADD CONSTRAINT `compra_ibfk_2` FOREIGN KEY (`id_vendedor_compra`) REFERENCES `usuario` (`id_usuario`),
-  ADD CONSTRAINT `compra_ibfk_3` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`),
-  ADD CONSTRAINT `compra_ibfk_4` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`);
-
---
--- Filtros para la tabla `compra_arpilla`
---
-ALTER TABLE `compra_arpilla`
-  ADD CONSTRAINT `compra_arpilla_ibfk_1` FOREIGN KEY (`id_compra`) REFERENCES `compra` (`id_compra`);
-
---
--- Filtros para la tabla `compra_producto`
---
-ALTER TABLE `compra_producto`
-  ADD CONSTRAINT `compra_producto_ibfk_3` FOREIGN KEY (`id_unidad`) REFERENCES `unidad` (`id_unidad`),
-  ADD CONSTRAINT `compra_producto_ibfk_1` FOREIGN KEY (`id_compra`) REFERENCES `compra` (`id_compra`),
-  ADD CONSTRAINT `compra_producto_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id_producto`);
-
---
--- Filtros para la tabla `consignacion`
---
-ALTER TABLE `consignacion`
-  ADD CONSTRAINT `consignacion_ibfk_3` FOREIGN KEY (`id_usuario_cancelacion`) REFERENCES `usuario` (`id_usuario`),
-  ADD CONSTRAINT `consignacion_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `usuario` (`id_usuario`),
-  ADD CONSTRAINT `consignacion_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`);
-
---
--- Filtros para la tabla `consignacion_producto`
---
-ALTER TABLE `consignacion_producto`
-  ADD CONSTRAINT `consignacion_producto_ibfk_3` FOREIGN KEY (`id_unidad`) REFERENCES `unidad` (`id_unidad`),
-  ADD CONSTRAINT `consignacion_producto_ibfk_1` FOREIGN KEY (`id_consignacion`) REFERENCES `consignacion` (`id_consignacion`),
-  ADD CONSTRAINT `consignacion_producto_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id_producto`);
-
---
--- Filtros para la tabla `corte_de_caja`
---
-ALTER TABLE `corte_de_caja`
-  ADD CONSTRAINT `corte_de_caja_ibfk_3` FOREIGN KEY (`id_cajero_nuevo`) REFERENCES `usuario` (`id_usuario`),
-  ADD CONSTRAINT `corte_de_caja_ibfk_1` FOREIGN KEY (`id_caja`) REFERENCES `caja` (`id_caja`),
-  ADD CONSTRAINT `corte_de_caja_ibfk_2` FOREIGN KEY (`id_cajero`) REFERENCES `usuario` (`id_usuario`);
-
---
--- Filtros para la tabla `devolucion_sobre_compra`
---
-ALTER TABLE `devolucion_sobre_compra`
-  ADD CONSTRAINT `devolucion_sobre_compra_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`),
-  ADD CONSTRAINT `devolucion_sobre_compra_ibfk_1` FOREIGN KEY (`id_compra`) REFERENCES `compra` (`id_compra`);
-
---
--- Filtros para la tabla `devolucion_sobre_venta`
---
-ALTER TABLE `devolucion_sobre_venta`
-  ADD CONSTRAINT `devolucion_sobre_venta_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`),
-  ADD CONSTRAINT `devolucion_sobre_venta_ibfk_1` FOREIGN KEY (`id_venta`) REFERENCES `venta` (`id_venta`);
-
---
--- Filtros para la tabla `direccion`
---
-ALTER TABLE `direccion`
-  ADD CONSTRAINT `direccion_ibfk_2` FOREIGN KEY (`id_usuario_ultima_modificacion`) REFERENCES `usuario` (`id_usuario`),
-  ADD CONSTRAINT `direccion_ibfk_1` FOREIGN KEY (`id_ciudad`) REFERENCES `ciudad` (`id_ciudad`);
-
---
--- Filtros para la tabla `documento_cliente`
---
-ALTER TABLE `documento_cliente`
-  ADD CONSTRAINT `documento_cliente_ibfk_2` FOREIGN KEY (`id_cliente`) REFERENCES `usuario` (`id_usuario`),
-  ADD CONSTRAINT `documento_cliente_ibfk_1` FOREIGN KEY (`id_documento`) REFERENCES `documento` (`id_documento`);
-
---
--- Filtros para la tabla `documento_compra`
---
-ALTER TABLE `documento_compra`
-  ADD CONSTRAINT `documento_compra_ibfk_2` FOREIGN KEY (`id_compra`) REFERENCES `compra` (`id_compra`),
-  ADD CONSTRAINT `documento_compra_ibfk_1` FOREIGN KEY (`id_documento`) REFERENCES `documento` (`id_documento`);
-
---
--- Filtros para la tabla `documento_venta`
---
-ALTER TABLE `documento_venta`
-  ADD CONSTRAINT `documento_venta_ibfk_2` FOREIGN KEY (`id_venta`) REFERENCES `venta` (`id_venta`),
-  ADD CONSTRAINT `documento_venta_ibfk_1` FOREIGN KEY (`id_documento`) REFERENCES `documento` (`id_documento`);
-
---
--- Filtros para la tabla `empresa`
---
-ALTER TABLE `empresa`
-  ADD CONSTRAINT `empresa_ibfk_1` FOREIGN KEY (`id_direccion`) REFERENCES `direccion` (`id_direccion`);
-
---
--- Filtros para la tabla `entrada_almacen`
---
-ALTER TABLE `entrada_almacen`
-  ADD CONSTRAINT `entrada_almacen_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`),
-  ADD CONSTRAINT `entrada_almacen_ibfk_1` FOREIGN KEY (`id_almacen`) REFERENCES `almacen` (`id_almacen`);
-
---
--- Filtros para la tabla `gasto`
---
-ALTER TABLE `gasto`
-  ADD CONSTRAINT `gasto_ibfk_6` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`),
-  ADD CONSTRAINT `gasto_ibfk_1` FOREIGN KEY (`id_empresa`) REFERENCES `empresa` (`id_empresa`),
-  ADD CONSTRAINT `gasto_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`),
-  ADD CONSTRAINT `gasto_ibfk_3` FOREIGN KEY (`id_concepto_gasto`) REFERENCES `concepto_gasto` (`id_concepto_gasto`),
-  ADD CONSTRAINT `gasto_ibfk_4` FOREIGN KEY (`id_orden_de_servicio`) REFERENCES `orden_de_servicio` (`id_orden_de_servicio`),
-  ADD CONSTRAINT `gasto_ibfk_5` FOREIGN KEY (`id_caja`) REFERENCES `caja` (`id_caja`);
-
---
--- Filtros para la tabla `impresora_caja`
---
-ALTER TABLE `impresora_caja`
-  ADD CONSTRAINT `impresora_caja_ibfk_2` FOREIGN KEY (`id_caja`) REFERENCES `caja` (`id_caja`),
-  ADD CONSTRAINT `impresora_caja_ibfk_1` FOREIGN KEY (`id_impresora`) REFERENCES `impresora` (`id_impresora`);
-
---
--- Filtros para la tabla `impuesto_clasificacion_cliente`
---
-ALTER TABLE `impuesto_clasificacion_cliente`
-  ADD CONSTRAINT `impuesto_clasificacion_cliente_ibfk_2` FOREIGN KEY (`id_clasificacion_cliente`) REFERENCES `clasificacion_cliente` (`id_clasificacion_cliente`),
-  ADD CONSTRAINT `impuesto_clasificacion_cliente_ibfk_1` FOREIGN KEY (`id_impuesto`) REFERENCES `impuesto` (`id_impuesto`);
-
---
--- Filtros para la tabla `impuesto_clasificacion_producto`
---
-ALTER TABLE `impuesto_clasificacion_producto`
-  ADD CONSTRAINT `impuesto_clasificacion_producto_ibfk_2` FOREIGN KEY (`id_clasificacion_producto`) REFERENCES `clasificacion_producto` (`id_clasificacion_producto`),
-  ADD CONSTRAINT `impuesto_clasificacion_producto_ibfk_1` FOREIGN KEY (`id_impuesto`) REFERENCES `impuesto` (`id_impuesto`);
-
---
--- Filtros para la tabla `impuesto_clasificacion_proveedor`
---
-ALTER TABLE `impuesto_clasificacion_proveedor`
-  ADD CONSTRAINT `impuesto_clasificacion_proveedor_ibfk_2` FOREIGN KEY (`id_clasificacion_proveedor`) REFERENCES `clasificacion_proveedor` (`id_clasificacion_proveedor`),
-  ADD CONSTRAINT `impuesto_clasificacion_proveedor_ibfk_1` FOREIGN KEY (`id_impuesto`) REFERENCES `impuesto` (`id_impuesto`);
-
---
--- Filtros para la tabla `impuesto_clasificacion_servicio`
---
-ALTER TABLE `impuesto_clasificacion_servicio`
-  ADD CONSTRAINT `impuesto_clasificacion_servicio_ibfk_2` FOREIGN KEY (`id_clasificacion_servicio`) REFERENCES `clasificacion_servicio` (`id_clasificacion_servicio`),
-  ADD CONSTRAINT `impuesto_clasificacion_servicio_ibfk_1` FOREIGN KEY (`id_impuesto`) REFERENCES `impuesto` (`id_impuesto`);
-
---
--- Filtros para la tabla `impuesto_empresa`
---
-ALTER TABLE `impuesto_empresa`
-  ADD CONSTRAINT `impuesto_empresa_ibfk_2` FOREIGN KEY (`id_empresa`) REFERENCES `empresa` (`id_empresa`),
-  ADD CONSTRAINT `impuesto_empresa_ibfk_1` FOREIGN KEY (`id_impuesto`) REFERENCES `impuesto` (`id_impuesto`);
-
---
--- Filtros para la tabla `impuesto_producto`
---
-ALTER TABLE `impuesto_producto`
-  ADD CONSTRAINT `impuesto_producto_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id_producto`),
-  ADD CONSTRAINT `impuesto_producto_ibfk_1` FOREIGN KEY (`id_impuesto`) REFERENCES `impuesto` (`id_impuesto`);
-
---
--- Filtros para la tabla `impuesto_servicio`
---
-ALTER TABLE `impuesto_servicio`
-  ADD CONSTRAINT `impuesto_servicio_ibfk_2` FOREIGN KEY (`id_servicio`) REFERENCES `servicio` (`id_servicio`),
-  ADD CONSTRAINT `impuesto_servicio_ibfk_1` FOREIGN KEY (`id_impuesto`) REFERENCES `impuesto` (`id_impuesto`);
-
---
--- Filtros para la tabla `impuesto_sucursal`
---
-ALTER TABLE `impuesto_sucursal`
-  ADD CONSTRAINT `impuesto_sucursal_ibfk_2` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`),
-  ADD CONSTRAINT `impuesto_sucursal_ibfk_1` FOREIGN KEY (`id_impuesto`) REFERENCES `impuesto` (`id_impuesto`);
-
---
--- Filtros para la tabla `impuesto_usuario`
---
-ALTER TABLE `impuesto_usuario`
-  ADD CONSTRAINT `impuesto_usuario_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`),
-  ADD CONSTRAINT `impuesto_usuario_ibfk_1` FOREIGN KEY (`id_impuesto`) REFERENCES `impuesto` (`id_impuesto`);
-
---
--- Filtros para la tabla `ingreso`
---
-ALTER TABLE `ingreso`
-  ADD CONSTRAINT `ingreso_ibfk_5` FOREIGN KEY (`id_caja`) REFERENCES `caja` (`id_caja`),
-  ADD CONSTRAINT `ingreso_ibfk_1` FOREIGN KEY (`id_empresa`) REFERENCES `empresa` (`id_empresa`),
-  ADD CONSTRAINT `ingreso_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`),
-  ADD CONSTRAINT `ingreso_ibfk_3` FOREIGN KEY (`id_concepto_ingreso`) REFERENCES `concepto_ingreso` (`id_concepto_ingreso`),
-  ADD CONSTRAINT `ingreso_ibfk_4` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`);
-
---
--- Filtros para la tabla `inspeccion_consignacion`
---
-ALTER TABLE `inspeccion_consignacion`
-  ADD CONSTRAINT `inspeccion_consignacion_ibfk_3` FOREIGN KEY (`id_caja`) REFERENCES `caja` (`id_caja`),
-  ADD CONSTRAINT `inspeccion_consignacion_ibfk_1` FOREIGN KEY (`id_consignacion`) REFERENCES `consignacion` (`id_consignacion`),
-  ADD CONSTRAINT `inspeccion_consignacion_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`);
-
---
--- Filtros para la tabla `inspeccion_consignacion_producto`
---
-ALTER TABLE `inspeccion_consignacion_producto`
-  ADD CONSTRAINT `inspeccion_consignacion_producto_ibfk_3` FOREIGN KEY (`id_unidad`) REFERENCES `unidad` (`id_unidad`),
-  ADD CONSTRAINT `inspeccion_consignacion_producto_ibfk_1` FOREIGN KEY (`id_inspeccion_consignacion`) REFERENCES `inspeccion_consignacion` (`id_inspeccion_consignacion`),
-  ADD CONSTRAINT `inspeccion_consignacion_producto_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id_producto`);
-
---
--- Filtros para la tabla `orden_de_servicio`
---
-ALTER TABLE `orden_de_servicio`
-  ADD CONSTRAINT `orden_de_servicio_ibfk_3` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`),
-  ADD CONSTRAINT `orden_de_servicio_ibfk_1` FOREIGN KEY (`id_servicio`) REFERENCES `servicio` (`id_servicio`),
-  ADD CONSTRAINT `orden_de_servicio_ibfk_2` FOREIGN KEY (`id_usuario_venta`) REFERENCES `usuario` (`id_usuario`);
-
---
--- Filtros para la tabla `orden_de_servicio_paquete`
---
-ALTER TABLE `orden_de_servicio_paquete`
-  ADD CONSTRAINT `orden_de_servicio_paquete_ibfk_2` FOREIGN KEY (`id_paquete`) REFERENCES `paquete` (`id_paquete`),
-  ADD CONSTRAINT `orden_de_servicio_paquete_ibfk_1` FOREIGN KEY (`id_servicio`) REFERENCES `servicio` (`id_servicio`);
-
---
--- Filtros para la tabla `paquete_empresa`
---
-ALTER TABLE `paquete_empresa`
-  ADD CONSTRAINT `paquete_empresa_ibfk_2` FOREIGN KEY (`id_empresa`) REFERENCES `empresa` (`id_empresa`),
-  ADD CONSTRAINT `paquete_empresa_ibfk_1` FOREIGN KEY (`id_paquete`) REFERENCES `paquete` (`id_paquete`);
-
---
--- Filtros para la tabla `paquete_sucursal`
---
-ALTER TABLE `paquete_sucursal`
-  ADD CONSTRAINT `paquete_sucursal_ibfk_2` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`),
-  ADD CONSTRAINT `paquete_sucursal_ibfk_1` FOREIGN KEY (`id_paquete`) REFERENCES `paquete` (`id_paquete`);
-
---
--- Filtros para la tabla `permiso_rol`
---
-ALTER TABLE `permiso_rol`
-  ADD CONSTRAINT `permiso_rol_ibfk_2` FOREIGN KEY (`id_rol`) REFERENCES `rol` (`id_rol`),
-  ADD CONSTRAINT `permiso_rol_ibfk_1` FOREIGN KEY (`id_permiso`) REFERENCES `permiso` (`id_permiso`);
-
---
--- Filtros para la tabla `permiso_usuario`
---
-ALTER TABLE `permiso_usuario`
-  ADD CONSTRAINT `permiso_usuario_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`),
-  ADD CONSTRAINT `permiso_usuario_ibfk_1` FOREIGN KEY (`id_permiso`) REFERENCES `permiso` (`id_permiso`);
-
---
--- Filtros para la tabla `prestamo`
---
-ALTER TABLE `prestamo`
-  ADD CONSTRAINT `prestamo_ibfk_4` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`),
-  ADD CONSTRAINT `prestamo_ibfk_1` FOREIGN KEY (`id_solicitante`) REFERENCES `usuario` (`id_usuario`),
-  ADD CONSTRAINT `prestamo_ibfk_2` FOREIGN KEY (`id_empresa_presta`) REFERENCES `empresa` (`id_empresa`),
-  ADD CONSTRAINT `prestamo_ibfk_3` FOREIGN KEY (`id_sucursal_presta`) REFERENCES `sucursal` (`id_sucursal`);
-
---
--- Filtros para la tabla `producto`
---
-ALTER TABLE `producto`
-  ADD CONSTRAINT `producto_ibfk_1` FOREIGN KEY (`id_unidad`) REFERENCES `unidad` (`id_unidad`);
-
---
--- Filtros para la tabla `producto_abasto_proveedor`
---
-ALTER TABLE `producto_abasto_proveedor`
-  ADD CONSTRAINT `producto_abasto_proveedor_ibfk_2` FOREIGN KEY (`id_unidad`) REFERENCES `unidad` (`id_unidad`),
-  ADD CONSTRAINT `producto_abasto_proveedor_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id_producto`);
-
---
--- Filtros para la tabla `producto_almacen`
---
-ALTER TABLE `producto_almacen`
-  ADD CONSTRAINT `producto_almacen_ibfk_3` FOREIGN KEY (`id_unidad`) REFERENCES `unidad` (`id_unidad`),
-  ADD CONSTRAINT `producto_almacen_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id_producto`),
-  ADD CONSTRAINT `producto_almacen_ibfk_2` FOREIGN KEY (`id_almacen`) REFERENCES `almacen` (`id_almacen`);
-
---
--- Filtros para la tabla `producto_clasificacion`
---
-ALTER TABLE `producto_clasificacion`
-  ADD CONSTRAINT `producto_clasificacion_ibfk_2` FOREIGN KEY (`id_clasificacion_producto`) REFERENCES `clasificacion_producto` (`id_clasificacion_producto`),
-  ADD CONSTRAINT `producto_clasificacion_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id_producto`);
-
---
--- Filtros para la tabla `producto_empresa`
---
-ALTER TABLE `producto_empresa`
-  ADD CONSTRAINT `producto_empresa_ibfk_2` FOREIGN KEY (`id_empresa`) REFERENCES `empresa` (`id_empresa`),
-  ADD CONSTRAINT `producto_empresa_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id_producto`);
-
---
--- Filtros para la tabla `producto_entrada_almacen`
---
-ALTER TABLE `producto_entrada_almacen`
-  ADD CONSTRAINT `producto_entrada_almacen_ibfk_3` FOREIGN KEY (`id_unidad`) REFERENCES `unidad` (`id_unidad`),
-  ADD CONSTRAINT `producto_entrada_almacen_ibfk_1` FOREIGN KEY (`id_entrada_almacen`) REFERENCES `entrada_almacen` (`id_entrada_almacen`),
-  ADD CONSTRAINT `producto_entrada_almacen_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id_producto`);
-
---
--- Filtros para la tabla `producto_orden_de_servicio`
---
-ALTER TABLE `producto_orden_de_servicio`
-  ADD CONSTRAINT `producto_orden_de_servicio_ibfk_3` FOREIGN KEY (`id_unidad`) REFERENCES `unidad` (`id_unidad`),
-  ADD CONSTRAINT `producto_orden_de_servicio_ibfk_1` FOREIGN KEY (`id_orden_de_servicio`) REFERENCES `orden_de_servicio` (`id_orden_de_servicio`),
-  ADD CONSTRAINT `producto_orden_de_servicio_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id_producto`);
-
---
--- Filtros para la tabla `producto_paquete`
---
-ALTER TABLE `producto_paquete`
-  ADD CONSTRAINT `producto_paquete_ibfk_3` FOREIGN KEY (`id_unidad`) REFERENCES `unidad` (`id_unidad`),
-  ADD CONSTRAINT `producto_paquete_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id_producto`),
-  ADD CONSTRAINT `producto_paquete_ibfk_2` FOREIGN KEY (`id_paquete`) REFERENCES `paquete` (`id_paquete`);
-
---
--- Filtros para la tabla `producto_salida_almacen`
---
-ALTER TABLE `producto_salida_almacen`
-  ADD CONSTRAINT `producto_salida_almacen_ibfk_3` FOREIGN KEY (`id_unidad`) REFERENCES `unidad` (`id_unidad`),
-  ADD CONSTRAINT `producto_salida_almacen_ibfk_1` FOREIGN KEY (`id_salida_almacen`) REFERENCES `salida_almacen` (`id_salida_almacen`),
-  ADD CONSTRAINT `producto_salida_almacen_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id_producto`);
-
---
--- Filtros para la tabla `regla`
---
-ALTER TABLE `regla`
-  ADD CONSTRAINT `regla_ibfk_8` FOREIGN KEY (`id_tarifa`) REFERENCES `tarifa` (`id_tarifa`),
-  ADD CONSTRAINT `regla_ibfk_1` FOREIGN KEY (`id_version`) REFERENCES `version` (`id_version`),
-  ADD CONSTRAINT `regla_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id_producto`),
-  ADD CONSTRAINT `regla_ibfk_3` FOREIGN KEY (`id_clasificacion_producto`) REFERENCES `clasificacion_producto` (`id_clasificacion_producto`),
-  ADD CONSTRAINT `regla_ibfk_4` FOREIGN KEY (`id_unidad`) REFERENCES `unidad` (`id_unidad`),
-  ADD CONSTRAINT `regla_ibfk_5` FOREIGN KEY (`id_servicio`) REFERENCES `servicio` (`id_servicio`),
-  ADD CONSTRAINT `regla_ibfk_6` FOREIGN KEY (`id_clasificacion_servicio`) REFERENCES `clasificacion_servicio` (`id_clasificacion_servicio`),
-  ADD CONSTRAINT `regla_ibfk_7` FOREIGN KEY (`id_paquete`) REFERENCES `paquete` (`id_paquete`);
-
---
--- Filtros para la tabla `retencion_clasificacion_cliente`
---
-ALTER TABLE `retencion_clasificacion_cliente`
-  ADD CONSTRAINT `retencion_clasificacion_cliente_ibfk_2` FOREIGN KEY (`id_clasificacion_cliente`) REFERENCES `clasificacion_cliente` (`id_clasificacion_cliente`),
-  ADD CONSTRAINT `retencion_clasificacion_cliente_ibfk_1` FOREIGN KEY (`id_retencion`) REFERENCES `retencion` (`id_retencion`);
-
---
--- Filtros para la tabla `retencion_clasificacion_producto`
---
-ALTER TABLE `retencion_clasificacion_producto`
-  ADD CONSTRAINT `retencion_clasificacion_producto_ibfk_2` FOREIGN KEY (`id_clasificacion_producto`) REFERENCES `clasificacion_producto` (`id_clasificacion_producto`),
-  ADD CONSTRAINT `retencion_clasificacion_producto_ibfk_1` FOREIGN KEY (`id_retencion`) REFERENCES `retencion` (`id_retencion`);
-
---
--- Filtros para la tabla `retencion_clasificacion_proveedor`
---
-ALTER TABLE `retencion_clasificacion_proveedor`
-  ADD CONSTRAINT `retencion_clasificacion_proveedor_ibfk_2` FOREIGN KEY (`id_clasificacion_proveedor`) REFERENCES `clasificacion_proveedor` (`id_clasificacion_proveedor`),
-  ADD CONSTRAINT `retencion_clasificacion_proveedor_ibfk_1` FOREIGN KEY (`id_retencion`) REFERENCES `retencion` (`id_retencion`);
-
---
--- Filtros para la tabla `retencion_clasificacion_servicio`
---
-ALTER TABLE `retencion_clasificacion_servicio`
-  ADD CONSTRAINT `retencion_clasificacion_servicio_ibfk_2` FOREIGN KEY (`id_clasificacion_servicio`) REFERENCES `clasificacion_servicio` (`id_clasificacion_servicio`),
-  ADD CONSTRAINT `retencion_clasificacion_servicio_ibfk_1` FOREIGN KEY (`id_retencion`) REFERENCES `retencion` (`id_retencion`);
-
---
--- Filtros para la tabla `retencion_empresa`
---
-ALTER TABLE `retencion_empresa`
-  ADD CONSTRAINT `retencion_empresa_ibfk_2` FOREIGN KEY (`id_empresa`) REFERENCES `empresa` (`id_empresa`),
-  ADD CONSTRAINT `retencion_empresa_ibfk_1` FOREIGN KEY (`id_retencion`) REFERENCES `retencion` (`id_retencion`);
-
---
--- Filtros para la tabla `retencion_producto`
---
-ALTER TABLE `retencion_producto`
-  ADD CONSTRAINT `retencion_producto_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id_producto`),
-  ADD CONSTRAINT `retencion_producto_ibfk_1` FOREIGN KEY (`id_retencion`) REFERENCES `retencion` (`id_retencion`);
-
---
--- Filtros para la tabla `retencion_servicio`
---
-ALTER TABLE `retencion_servicio`
-  ADD CONSTRAINT `retencion_servicio_ibfk_2` FOREIGN KEY (`id_servicio`) REFERENCES `servicio` (`id_servicio`),
-  ADD CONSTRAINT `retencion_servicio_ibfk_1` FOREIGN KEY (`id_retencion`) REFERENCES `retencion` (`id_retencion`);
-
---
--- Filtros para la tabla `retencion_sucursal`
---
-ALTER TABLE `retencion_sucursal`
-  ADD CONSTRAINT `retencion_sucursal_ibfk_2` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`),
-  ADD CONSTRAINT `retencion_sucursal_ibfk_1` FOREIGN KEY (`id_retencion`) REFERENCES `retencion` (`id_retencion`);
-
---
--- Filtros para la tabla `retencion_usuario`
---
-ALTER TABLE `retencion_usuario`
-  ADD CONSTRAINT `retencion_usuario_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`),
-  ADD CONSTRAINT `retencion_usuario_ibfk_1` FOREIGN KEY (`id_retencion`) REFERENCES `retencion` (`id_retencion`);
-
---
--- Filtros para la tabla `rol`
---
-ALTER TABLE `rol`
-  ADD CONSTRAINT `rol_ibfk_2` FOREIGN KEY (`id_tarifa_venta`) REFERENCES `tarifa` (`id_tarifa`),
-  ADD CONSTRAINT `rol_ibfk_1` FOREIGN KEY (`id_tarifa_compra`) REFERENCES `tarifa` (`id_tarifa`);
-
---
--- Filtros para la tabla `salida_almacen`
---
-ALTER TABLE `salida_almacen`
-  ADD CONSTRAINT `salida_almacen_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`),
-  ADD CONSTRAINT `salida_almacen_ibfk_1` FOREIGN KEY (`id_almacen`) REFERENCES `almacen` (`id_almacen`);
-
---
--- Filtros para la tabla `seguimiento_de_servicio`
---
-ALTER TABLE `seguimiento_de_servicio`
-  ADD CONSTRAINT `seguimiento_de_servicio_ibfk_4` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`),
-  ADD CONSTRAINT `seguimiento_de_servicio_ibfk_1` FOREIGN KEY (`id_orden_de_servicio`) REFERENCES `orden_de_servicio` (`id_orden_de_servicio`),
-  ADD CONSTRAINT `seguimiento_de_servicio_ibfk_2` FOREIGN KEY (`id_localizacion`) REFERENCES `sucursal` (`id_sucursal`),
-  ADD CONSTRAINT `seguimiento_de_servicio_ibfk_3` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`);
-
---
--- Filtros para la tabla `servicio_clasificacion`
---
-ALTER TABLE `servicio_clasificacion`
-  ADD CONSTRAINT `servicio_clasificacion_ibfk_2` FOREIGN KEY (`id_clasificacion_servicio`) REFERENCES `clasificacion_servicio` (`id_clasificacion_servicio`),
-  ADD CONSTRAINT `servicio_clasificacion_ibfk_1` FOREIGN KEY (`id_servicio`) REFERENCES `servicio` (`id_servicio`);
-
---
--- Filtros para la tabla `servicio_empresa`
---
-ALTER TABLE `servicio_empresa`
-  ADD CONSTRAINT `servicio_empresa_ibfk_2` FOREIGN KEY (`id_empresa`) REFERENCES `empresa` (`id_empresa`),
-  ADD CONSTRAINT `servicio_empresa_ibfk_1` FOREIGN KEY (`id_servicio`) REFERENCES `servicio` (`id_servicio`);
-
---
--- Filtros para la tabla `servicio_sucursal`
---
-ALTER TABLE `servicio_sucursal`
-  ADD CONSTRAINT `servicio_sucursal_ibfk_2` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`),
-  ADD CONSTRAINT `servicio_sucursal_ibfk_1` FOREIGN KEY (`id_servicio`) REFERENCES `servicio` (`id_servicio`);
-
---
--- Filtros para la tabla `sesion`
---
-ALTER TABLE `sesion`
-  ADD CONSTRAINT `sesion_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`);
-
---
--- Filtros para la tabla `sucursal`
---
-ALTER TABLE `sucursal`
-  ADD CONSTRAINT `sucursal_ibfk_2` FOREIGN KEY (`id_gerente`) REFERENCES `usuario` (`id_usuario`),
-  ADD CONSTRAINT `sucursal_ibfk_1` FOREIGN KEY (`id_direccion`) REFERENCES `direccion` (`id_direccion`);
-
---
--- Filtros para la tabla `sucursal_empresa`
---
-ALTER TABLE `sucursal_empresa`
-  ADD CONSTRAINT `sucursal_empresa_ibfk_2` FOREIGN KEY (`id_empresa`) REFERENCES `empresa` (`id_empresa`),
-  ADD CONSTRAINT `sucursal_empresa_ibfk_1` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`);
-
---
--- Filtros para la tabla `tarifa`
---
-ALTER TABLE `tarifa`
-  ADD CONSTRAINT `tarifa_ibfk_3` FOREIGN KEY (`id_version_activa`) REFERENCES `version` (`id_version`),
-  ADD CONSTRAINT `tarifa_ibfk_1` FOREIGN KEY (`id_moneda`) REFERENCES `moneda` (`id_moneda`),
-  ADD CONSTRAINT `tarifa_ibfk_2` FOREIGN KEY (`id_version_default`) REFERENCES `version` (`id_version`);
-
---
--- Filtros para la tabla `traspaso`
---
-ALTER TABLE `traspaso`
-  ADD CONSTRAINT `traspaso_ibfk_5` FOREIGN KEY (`id_almacen_recibe`) REFERENCES `almacen` (`id_almacen`),
-  ADD CONSTRAINT `traspaso_ibfk_1` FOREIGN KEY (`id_usuario_programa`) REFERENCES `usuario` (`id_usuario`),
-  ADD CONSTRAINT `traspaso_ibfk_2` FOREIGN KEY (`id_usuario_envia`) REFERENCES `usuario` (`id_usuario`),
-  ADD CONSTRAINT `traspaso_ibfk_3` FOREIGN KEY (`id_almacen_envia`) REFERENCES `almacen` (`id_almacen`),
-  ADD CONSTRAINT `traspaso_ibfk_4` FOREIGN KEY (`id_usuario_recibe`) REFERENCES `usuario` (`id_usuario`);
-
---
--- Filtros para la tabla `traspaso_producto`
---
-ALTER TABLE `traspaso_producto`
-  ADD CONSTRAINT `traspaso_producto_ibfk_2` FOREIGN KEY (`id_unidad`) REFERENCES `unidad` (`id_unidad`),
-  ADD CONSTRAINT `traspaso_producto_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id_producto`);
-
---
--- Filtros para la tabla `unidad_equivalencia`
---
-ALTER TABLE `unidad_equivalencia`
-  ADD CONSTRAINT `unidad_equivalencia_ibfk_2` FOREIGN KEY (`id_unidades`) REFERENCES `unidad` (`id_unidad`),
-  ADD CONSTRAINT `unidad_equivalencia_ibfk_1` FOREIGN KEY (`id_unidad`) REFERENCES `unidad` (`id_unidad`);
-
---
--- Filtros para la tabla `usuario`
---
-ALTER TABLE `usuario`
-  ADD CONSTRAINT `usuario_ibfk_9` FOREIGN KEY (`id_tarifa_venta`) REFERENCES `tarifa` (`id_tarifa`),
-  ADD CONSTRAINT `usuario_ibfk_1` FOREIGN KEY (`id_direccion`) REFERENCES `direccion` (`id_direccion`),
-  ADD CONSTRAINT `usuario_ibfk_2` FOREIGN KEY (`id_direccion_alterna`) REFERENCES `direccion` (`id_direccion`),
-  ADD CONSTRAINT `usuario_ibfk_3` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`),
-  ADD CONSTRAINT `usuario_ibfk_4` FOREIGN KEY (`id_rol`) REFERENCES `rol` (`id_rol`),
-  ADD CONSTRAINT `usuario_ibfk_5` FOREIGN KEY (`id_clasificacion_cliente`) REFERENCES `clasificacion_cliente` (`id_clasificacion_cliente`),
-  ADD CONSTRAINT `usuario_ibfk_6` FOREIGN KEY (`id_clasificacion_proveedor`) REFERENCES `clasificacion_proveedor` (`id_clasificacion_proveedor`),
-  ADD CONSTRAINT `usuario_ibfk_7` FOREIGN KEY (`id_moneda`) REFERENCES `moneda` (`id_moneda`),
-  ADD CONSTRAINT `usuario_ibfk_8` FOREIGN KEY (`id_tarifa_compra`) REFERENCES `tarifa` (`id_tarifa`);
-
---
--- Filtros para la tabla `venta`
---
-ALTER TABLE `venta`
-  ADD CONSTRAINT `venta_ibfk_4` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`),
-  ADD CONSTRAINT `venta_ibfk_1` FOREIGN KEY (`id_caja`) REFERENCES `caja` (`id_caja`),
-  ADD CONSTRAINT `venta_ibfk_2` FOREIGN KEY (`id_comprador_venta`) REFERENCES `usuario` (`id_usuario`),
-  ADD CONSTRAINT `venta_ibfk_3` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`);
-
---
--- Filtros para la tabla `venta_arpilla`
---
-ALTER TABLE `venta_arpilla`
-  ADD CONSTRAINT `venta_arpilla_ibfk_1` FOREIGN KEY (`id_venta`) REFERENCES `venta` (`id_venta`);
-
---
--- Filtros para la tabla `venta_empresa`
---
-ALTER TABLE `venta_empresa`
-  ADD CONSTRAINT `venta_empresa_ibfk_2` FOREIGN KEY (`id_empresa`) REFERENCES `empresa` (`id_empresa`),
-  ADD CONSTRAINT `venta_empresa_ibfk_1` FOREIGN KEY (`id_venta`) REFERENCES `venta` (`id_venta`);
-
---
--- Filtros para la tabla `venta_orden`
---
-ALTER TABLE `venta_orden`
-  ADD CONSTRAINT `venta_orden_ibfk_2` FOREIGN KEY (`id_orden_de_servicio`) REFERENCES `orden_de_servicio` (`id_orden_de_servicio`),
-  ADD CONSTRAINT `venta_orden_ibfk_1` FOREIGN KEY (`id_venta`) REFERENCES `venta` (`id_venta`);
-
---
--- Filtros para la tabla `venta_paquete`
---
-ALTER TABLE `venta_paquete`
-  ADD CONSTRAINT `venta_paquete_ibfk_2` FOREIGN KEY (`id_paquete`) REFERENCES `paquete` (`id_paquete`),
-  ADD CONSTRAINT `venta_paquete_ibfk_1` FOREIGN KEY (`id_venta`) REFERENCES `venta` (`id_venta`);
-
---
--- Filtros para la tabla `venta_producto`
---
-ALTER TABLE `venta_producto`
-  ADD CONSTRAINT `venta_producto_ibfk_3` FOREIGN KEY (`id_unidad`) REFERENCES `unidad` (`id_unidad`),
-  ADD CONSTRAINT `venta_producto_ibfk_1` FOREIGN KEY (`id_venta`) REFERENCES `venta` (`id_venta`),
-  ADD CONSTRAINT `venta_producto_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id_producto`);
-
---
--- Filtros para la tabla `version`
---
-ALTER TABLE `version`
-  ADD CONSTRAINT `version_ibfk_1` FOREIGN KEY (`id_tarifa`) REFERENCES `tarifa` (`id_tarifa`);
+  ADD CONSTRAINT `cierre_caja_ibfk_1` FOREIGN KEY (`id_caja`) REFERENCES `caja` (`id_caja`),
+  ADD CONSTRAINT `cierre_caja_ibfk_2` FOREIGN KEY (`id_cajero`) REFERENCES `usuario` (`id_usuario`);
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

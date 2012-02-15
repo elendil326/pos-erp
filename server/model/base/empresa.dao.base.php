@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link Empresa }. 
-  * @author Alan Gonzalez
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -15,19 +15,16 @@ abstract class EmpresaDAOBase extends DAO
 		private static $loadedRecords = array();
 
 		private static function recordExists(  $id_empresa ){
-			return false;
 			$pk = "";
 			$pk .= $id_empresa . "-";
 			return array_key_exists ( $pk , self::$loadedRecords );
 		}
 		private static function pushRecord( $inventario,  $id_empresa){
-			return;
 			$pk = "";
 			$pk .= $id_empresa . "-";
 			self::$loadedRecords [$pk] = $inventario;
 		}
 		private static function getRecord(  $id_empresa ){
-			return;			
 			$pk = "";
 			$pk .= $id_empresa . "-";
 			return self::$loadedRecords[$pk];
@@ -76,7 +73,7 @@ abstract class EmpresaDAOBase extends DAO
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new Empresa( $rs );
-			 //self::pushRecord( $foo,  $id_empresa );
+			self::pushRecord( $foo,  $id_empresa );
 			return $foo;
 	}
 
@@ -112,7 +109,7 @@ abstract class EmpresaDAOBase extends DAO
 			$bar = new Empresa($foo);
     		array_push( $allData, $bar);
 			//id_empresa
-    		 //self::pushRecord( $bar, $foo["id_empresa"] );
+    		self::pushRecord( $bar, $foo["id_empresa"] );
 		}
 		return $allData;
 	}
@@ -191,7 +188,7 @@ abstract class EmpresaDAOBase extends DAO
 			array_push( $val, $empresa->getDireccionWeb() );
 		}
 
-		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */) ;}
+		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -203,7 +200,7 @@ abstract class EmpresaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Empresa($foo);
     		array_push( $ar,$bar);
-    		 //self::pushRecord( $bar, $foo["id_empresa"] );
+    		self::pushRecord( $bar, $foo["id_empresa"] );
 		}
 		return $ar;
 	}
@@ -214,7 +211,7 @@ abstract class EmpresaDAOBase extends DAO
 	  *	
 	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
 	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
-	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
+	  * aqui, sin embargo. El valor de retorno indica cu√°ntas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error

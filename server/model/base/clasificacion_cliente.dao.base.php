@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link ClasificacionCliente }. 
-  * @author Alan Gonzalez
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -15,7 +15,6 @@ abstract class ClasificacionClienteDAOBase extends DAO
 		private static $loadedRecords = array();
 
 		private static function recordExists(  $id_clasificacion_cliente ){
-			return false;
 			$pk = "";
 			$pk .= $id_clasificacion_cliente . "-";
 			return array_key_exists ( $pk , self::$loadedRecords );
@@ -197,7 +196,7 @@ abstract class ClasificacionClienteDAOBase extends DAO
 	  *	
 	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
 	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
-	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
+	  * aqui, sin embargo. El valor de retorno indica cu√°ntas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error

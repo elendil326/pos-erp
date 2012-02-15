@@ -2,7 +2,7 @@
 /** Value Object file for table cierre_caja.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author Alan Gonzalez
+  * @author Anonymous
   * @access public
   * @package docs
   * 
@@ -113,7 +113,7 @@ class CierreCaja extends VO
 	/**
 	  * saldo_esperado
 	  * 
-	  * Saldo que debería de haber en la caja después de todos los movimientos del día<br>
+	  * Saldo que deber√≠a de haber en la caja despu√©s de todos los movimientos del d√≠a<br>
 	  * @access public
 	  * @var float
 	  */
@@ -246,7 +246,7 @@ class CierreCaja extends VO
 	/**
 	  * getSaldoEsperado
 	  * 
-	  * Get the <i>saldo_esperado</i> property for this object. Donde <i>saldo_esperado</i> es Saldo que debería de haber en la caja después de todos los movimientos del día
+	  * Get the <i>saldo_esperado</i> property for this object. Donde <i>saldo_esperado</i> es Saldo que deber√≠a de haber en la caja despu√©s de todos los movimientos del d√≠a
 	  * @return float
 	  */
 	final public function getSaldoEsperado()
@@ -257,7 +257,7 @@ class CierreCaja extends VO
 	/**
 	  * setSaldoEsperado( $saldo_esperado )
 	  * 
-	  * Set the <i>saldo_esperado</i> property for this object. Donde <i>saldo_esperado</i> es Saldo que debería de haber en la caja después de todos los movimientos del día.
+	  * Set the <i>saldo_esperado</i> property for this object. Donde <i>saldo_esperado</i> es Saldo que deber√≠a de haber en la caja despu√©s de todos los movimientos del d√≠a.
 	  * Una validacion basica se hara aqui para comprobar que <i>saldo_esperado</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float

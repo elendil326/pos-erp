@@ -2,7 +2,7 @@
 /** Value Object file for table traspaso_producto.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author Alan Gonzalez
+  * @author Anonymous
   * @access public
   * @package docs
   * 
@@ -37,6 +37,9 @@ class TraspasoProducto extends VO
 			if( isset($data['cantidad_recibida']) ){
 				$this->cantidad_recibida = $data['cantidad_recibida'];
 			}
+			if( isset($data['id_lote_origen']) ){
+				$this->id_lote_origen = $data['id_lote_origen'];
+			}
 		}
 	}
 
@@ -54,7 +57,8 @@ class TraspasoProducto extends VO
 			"id_producto" => $this->id_producto,
 			"id_unidad" => $this->id_unidad,
 			"cantidad_enviada" => $this->cantidad_enviada,
-			"cantidad_recibida" => $this->cantidad_recibida
+			"cantidad_recibida" => $this->cantidad_recibida,
+			"id_lote_origen" => $this->id_lote_origen
 		); 
 	return json_encode($vec); 
 	}
@@ -106,6 +110,15 @@ class TraspasoProducto extends VO
 	  * @var float
 	  */
 	public $cantidad_recibida;
+
+	/**
+	  * id_lote_origen
+	  * 
+	  * id del lote de donde provienen los productos<br>
+	  * @access public
+	  * @var int(11)
+	  */
+	public $id_lote_origen;
 
 	/**
 	  * getIdTraspaso
@@ -231,6 +244,30 @@ class TraspasoProducto extends VO
 	final public function setCantidadRecibida( $cantidad_recibida )
 	{
 		$this->cantidad_recibida = $cantidad_recibida;
+	}
+
+	/**
+	  * getIdLoteOrigen
+	  * 
+	  * Get the <i>id_lote_origen</i> property for this object. Donde <i>id_lote_origen</i> es id del lote de donde provienen los productos
+	  * @return int(11)
+	  */
+	final public function getIdLoteOrigen()
+	{
+		return $this->id_lote_origen;
+	}
+
+	/**
+	  * setIdLoteOrigen( $id_lote_origen )
+	  * 
+	  * Set the <i>id_lote_origen</i> property for this object. Donde <i>id_lote_origen</i> es id del lote de donde provienen los productos.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_lote_origen</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setIdLoteOrigen( $id_lote_origen )
+	{
+		$this->id_lote_origen = $id_lote_origen;
 	}
 
 }

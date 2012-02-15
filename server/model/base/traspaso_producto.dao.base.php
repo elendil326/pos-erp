@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link TraspasoProducto }. 
-  * @author Alan Gonzalez
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -176,6 +176,11 @@ abstract class TraspasoProductoDAOBase extends DAO
 			array_push( $val, $traspaso_producto->getCantidadRecibida() );
 		}
 
+		if( ! is_null( $traspaso_producto->getIdLoteOrigen() ) ){
+			$sql .= " id_lote_origen = ? AND";
+			array_push( $val, $traspaso_producto->getIdLoteOrigen() );
+		}
+
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
@@ -199,7 +204,7 @@ abstract class TraspasoProductoDAOBase extends DAO
 	  *	
 	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
 	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
-	  * aqui, sin embargo. El valor de retorno indica cu‡ntas filas se vieron afectadas.
+	  * aqui, sin embargo. El valor de retorno indica cuÃ¡ntas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
@@ -207,10 +212,11 @@ abstract class TraspasoProductoDAOBase extends DAO
 	  **/
 	private static final function update( $traspaso_producto )
 	{
-		$sql = "UPDATE traspaso_producto SET  cantidad_enviada = ?, cantidad_recibida = ? WHERE  id_traspaso = ? AND id_producto = ? AND id_unidad = ?;";
+		$sql = "UPDATE traspaso_producto SET  cantidad_enviada = ?, cantidad_recibida = ?, id_lote_origen = ? WHERE  id_traspaso = ? AND id_producto = ? AND id_unidad = ?;";
 		$params = array( 
 			$traspaso_producto->getCantidadEnviada(), 
 			$traspaso_producto->getCantidadRecibida(), 
+			$traspaso_producto->getIdLoteOrigen(), 
 			$traspaso_producto->getIdTraspaso(),$traspaso_producto->getIdProducto(),$traspaso_producto->getIdUnidad(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -234,13 +240,14 @@ abstract class TraspasoProductoDAOBase extends DAO
 	  **/
 	private static final function create( &$traspaso_producto )
 	{
-		$sql = "INSERT INTO traspaso_producto ( id_traspaso, id_producto, id_unidad, cantidad_enviada, cantidad_recibida ) VALUES ( ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO traspaso_producto ( id_traspaso, id_producto, id_unidad, cantidad_enviada, cantidad_recibida, id_lote_origen ) VALUES ( ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$traspaso_producto->getIdTraspaso(), 
 			$traspaso_producto->getIdProducto(), 
 			$traspaso_producto->getIdUnidad(), 
 			$traspaso_producto->getCantidadEnviada(), 
 			$traspaso_producto->getCantidadRecibida(), 
+			$traspaso_producto->getIdLoteOrigen(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -339,6 +346,17 @@ abstract class TraspasoProductoDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " cantidad_recibida = ? AND"; 
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( ( !is_null (($a = $traspaso_productoA->getIdLoteOrigen()) ) ) & ( ! is_null ( ($b = $traspaso_productoB->getIdLoteOrigen()) ) ) ){
+				$sql .= " id_lote_origen >= ? AND id_lote_origen <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " id_lote_origen = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

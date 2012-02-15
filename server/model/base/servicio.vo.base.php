@@ -2,7 +2,7 @@
 /** Value Object file for table servicio.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author Alan Gonzalez
+  * @author Anonymous
   * @access public
   * @package docs
   * 
@@ -164,7 +164,7 @@ class Servicio extends VO
 	/**
 	  * garantia
 	  * 
-	  * Si este servicio tiene una garantía en meses.<br>
+	  * Si este servicio tiene una garant√≠a en meses.<br>
 	  * @access public
 	  * @var int(11)
 	  */
@@ -396,7 +396,7 @@ class Servicio extends VO
 	/**
 	  * getGarantia
 	  * 
-	  * Get the <i>garantia</i> property for this object. Donde <i>garantia</i> es Si este servicio tiene una garantía en meses.
+	  * Get the <i>garantia</i> property for this object. Donde <i>garantia</i> es Si este servicio tiene una garant√≠a en meses.
 	  * @return int(11)
 	  */
 	final public function getGarantia()
@@ -407,7 +407,7 @@ class Servicio extends VO
 	/**
 	  * setGarantia( $garantia )
 	  * 
-	  * Set the <i>garantia</i> property for this object. Donde <i>garantia</i> es Si este servicio tiene una garantía en meses..
+	  * Set the <i>garantia</i> property for this object. Donde <i>garantia</i> es Si este servicio tiene una garant√≠a en meses..
 	  * Una validacion basica se hara aqui para comprobar que <i>garantia</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param int(11)

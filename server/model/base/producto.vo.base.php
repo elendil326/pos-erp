@@ -2,7 +2,7 @@
 /** Value Object file for table producto.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author Alan Gonzalez
+  * @author Anonymous
   * @access public
   * @package docs
   * 
@@ -146,7 +146,7 @@ class Producto extends VO
 	  * 
 	  * Codigo interno del producto<br>
 	  * @access public
-	  * @var varchar(30)
+	  * @var varchar(32)
 	  */
 	public $codigo_producto;
 
@@ -155,7 +155,7 @@ class Producto extends VO
 	  * 
 	  * Nombre del producto<br>
 	  * @access public
-	  * @var varchar(30)
+	  * @var varchar(32)
 	  */
 	public $nombre_producto;
 
@@ -353,7 +353,7 @@ class Producto extends VO
 	  * getCodigoProducto
 	  * 
 	  * Get the <i>codigo_producto</i> property for this object. Donde <i>codigo_producto</i> es Codigo interno del producto
-	  * @return varchar(30)
+	  * @return varchar(32)
 	  */
 	final public function getCodigoProducto()
 	{
@@ -364,9 +364,9 @@ class Producto extends VO
 	  * setCodigoProducto( $codigo_producto )
 	  * 
 	  * Set the <i>codigo_producto</i> property for this object. Donde <i>codigo_producto</i> es Codigo interno del producto.
-	  * Una validacion basica se hara aqui para comprobar que <i>codigo_producto</i> es de tipo <i>varchar(30)</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>codigo_producto</i> es de tipo <i>varchar(32)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param varchar(30)
+	  * @param varchar(32)
 	  */
 	final public function setCodigoProducto( $codigo_producto )
 	{
@@ -377,7 +377,7 @@ class Producto extends VO
 	  * getNombreProducto
 	  * 
 	  * Get the <i>nombre_producto</i> property for this object. Donde <i>nombre_producto</i> es Nombre del producto
-	  * @return varchar(30)
+	  * @return varchar(32)
 	  */
 	final public function getNombreProducto()
 	{
@@ -388,9 +388,9 @@ class Producto extends VO
 	  * setNombreProducto( $nombre_producto )
 	  * 
 	  * Set the <i>nombre_producto</i> property for this object. Donde <i>nombre_producto</i> es Nombre del producto.
-	  * Una validacion basica se hara aqui para comprobar que <i>nombre_producto</i> es de tipo <i>varchar(30)</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>nombre_producto</i> es de tipo <i>varchar(32)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param varchar(30)
+	  * @param varchar(32)
 	  */
 	final public function setNombreProducto( $nombre_producto )
 	{
