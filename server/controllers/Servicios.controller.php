@@ -1645,10 +1645,11 @@ require_once("interfaces/Servicios.interface.php");
             $margen = 0;
             
             //Se verifica si existe un precio especial para este usuario con este servicio, o para el tipo de usuario.
-            $precio_servicio = PrecioServicioUsuarioDAO::getByPK($id_servicio, $id_cliente);
+            $precio_servicio = null;//PrecioServicioUsuarioDAO::getByPK($id_servicio, $id_cliente);
             
             if(is_null($precio_servicio))
             {
+                /*
                 $usuario = UsuarioDAO::getByPK($id_cliente);
                 $precio_servicio = PrecioServicioTipoClienteDAO::getByPK($id_servicio, $usuario->getIdClasificacionCliente());
                 
@@ -1679,8 +1680,21 @@ require_once("interfaces/Servicios.interface.php");
                         $precio +=$precio_servicio->getPrecioUtilidad();
                     }
                 }
+                */
+                 //Si no hay precio especial, se toma el del servicio
+                    if($servicio->getMetodoCosteo()=="precio")
+                    {
+                        $p = true;
+                        $precio += $servicio->getPrecio();
+                    }
+                    else
+                    {
+                        $m = true;
+                        $margen += $servicio->getMargenDeUtilidad();
+                    }
             }
             else
+
             {
                 if($precio_servicio->getEsMargenUtilidad())
                 {
@@ -2472,4 +2486,16 @@ require_once("interfaces/Servicios.interface.php");
             Logger::log("Producto agregado exitosamente");
         }
         
+    static function ProductosQuitarOrden
+    (
+        $id_orden_de_servicio, 
+        $productos
+    ){}
+
+static function ProductosAgregarOrden
+    (
+        $id_orden_de_servicio, 
+        $productos
+    ){}
+
   }

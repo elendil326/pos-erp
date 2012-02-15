@@ -33,7 +33,7 @@ INSERT INTO `ciudad` (`id_ciudad`, `id_estado`, `nombre`) VALUES
 (30, 11, 'San Francisco del Rincon');
 
 INSERT INTO `clasificacion_cliente` (`id_clasificacion_cliente`, `clave_interna`, `nombre`, `descripcion`, `id_tarifa_compra`, `id_tarifa_venta`) VALUES
-(11, 'limpios', 'limpios', NULL, 2, 1);
+(1, 'General', 'General', NULL, 2, 1);
 
 
 INSERT INTO `rol` (`id_rol`, `nombre`, `descripcion`, `salario`, `id_tarifa_compra`, `id_tarifa_venta`) VALUES

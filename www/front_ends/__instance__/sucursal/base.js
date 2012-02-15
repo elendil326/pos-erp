@@ -26716,6 +26716,9 @@ Ext.define("Kitchensink.view.EditorPanel", {
         }]
     }
 });
+
+
+
 Ext.require("Ext.data.TreeStore", function (a) {
     Ext.define("Kitchensink.view.NestedList", {
         requires: ["Kitchensink.view.EditorPanel", "Kitchensink.model.Cars"],
@@ -26749,6 +26752,9 @@ Ext.require("Ext.data.TreeStore", function (a) {
         }
     })
 });
+
+
+
 Ext.define("Ext.field.Spinner", {
     extend: "Ext.field.Number",
     xtype: "spinnerfield",

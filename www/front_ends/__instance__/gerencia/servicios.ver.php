@@ -67,7 +67,7 @@
 		$page->addComponent( $form );
                 
                 $page->addComponent( new TitleComponent( "Precios segun tipo de cliente" ) );
-        
+        /*
                 $tabla = new TableComponent(
                         array(
                             "id_clasificacion_cliente"  => "Clasificacion de cliente",
@@ -113,7 +113,7 @@
                 $tabla->addColRender("id_usuario", "funcion_usuario");
                 
                 $page->addComponent($tabla);
-
+*//*
                 $page->addComponent( new TitleComponent( "Precios segun rol" ) );
                 
                 $tabla = new TableComponent(
@@ -135,5 +135,5 @@
                 $tabla->addColRender("id_rol", "funcion_rol");
                 
                 $page->addComponent($tabla);
-		
+		*/
 		$page->render();

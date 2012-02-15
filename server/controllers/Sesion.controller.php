@@ -357,7 +357,7 @@ class SesionController implements ISesion{
 		Logger::log("SesionController::getCurrentUser(  )");
 		
 		if(self::isLoggedIn()){
-			$sm = self::getSessionManagerInstance();
+			$sm = SessionManager::getInstance();
 			$auth_token = $sm->GetCookie( "at" );
 			
 			//there is authtoken cookie
@@ -367,13 +367,13 @@ class SesionController implements ISesion{
 			
 
 			//there is authtoken in the POST message
-			if(!is_null($_POST["auth_token"])){
-				self::$_current_user = SesionDAO::getUserByAuthToken( $_POST["auth_token"] );
+			if(isset($_POST["at"]) && !is_null($_POST["at"]) ){
+				self::$_current_user = SesionDAO::getUserByAuthToken( $_POST["at"] );
 			}
 			
 			//there is authtoken in the GET message
-			if(!is_null($_GET["auth_token"])){
-				self::$_current_user = SesionDAO::getUserByAuthToken( $_GET["auth_token"] );
+			if(isset($_GET["at"]) && !is_null($_GET["at"])){
+				self::$_current_user = SesionDAO::getUserByAuthToken( $_GET["at"] );
 				
 			}
 			
