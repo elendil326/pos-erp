@@ -2,36 +2,37 @@ Ext.application({
     name: 'Sencha',
 
     launch: function() {
-        Ext.create("Ext.TabPanel", {
+        Ext.create("Ext.Panel", {
             fullscreen: true,
-            tabBarPosition: 'bottom',
-
+            flex: false,
+            layout: {
+               type: 'hbox',
+               align: 'middle'
+            },
             items: [
                 {
-                    title: 'Home',
-                    iconCls: 'home',
-                    cls: 'home',
-
-                    html: [
-                        '<img src="http://staging.sencha.com/img/sencha.png" />',
-                        '<h1>Welcome to Sencha Touch</h1>',
-                        "<p>You're creating the Getting Started app. This demonstrates how ",
-                        "to use tabs, lists and forms to create a simple app</p>",
-                        '<h2>Sencha Touch (2.0.0pr1)</h2>'
-                    ].join("")
+                style : "color:red",
+                xtype : 'button',
+                text: 'Button'
+                  
                 },
                 {
-                    title: 'Home',
-                    iconCls: 'home',
-                    cls: 'home',
-
-                    html: [
-                        '<img src="http://staging.sencha.com/img/sencha.png" />',
-                        '<h1>Welcome to Sencha Touch</h1>',
-                        "<p>You're creating the Getting Started app. This demonstrates how ",
-                        "to use tabs, lists and forms to create a simple app</p>",
-                        '<h2>Sencha Touch (2.0.0pr1)</h2>'
-                    ].join("")
+                xtype : 'button',
+                text: 'Button'
+                
+                  
+                },
+                {
+                xtype : 'button',
+                text: 'Button'
+                
+                  
+                },
+                {
+                xtype : 'button',
+                text: 'Button'
+                
+                  
                 }
             ]
         });
