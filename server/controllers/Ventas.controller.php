@@ -515,7 +515,7 @@ require_once("interfaces/Ventas.interface.php");
                 $detalle_paquete = object_to_array($detalle_paquete);
             }
 
-            
+
 
             if( empty($detalle_orden) && empty($detalle_venta) && empty($detalle_paquete) ){
                 Logger::warn("No se enviaron detalles en la venta");
@@ -576,8 +576,8 @@ require_once("interfaces/Ventas.interface.php");
                 throw new Exception("No se pudo crear la nueva venta",901);
             }
             
-            Logger::log("==== Venta " . $venta["id_venta"] . " exitosa ====" );
+            Logger::log("======== Venta " . $venta["id_venta"] . " exitosa =========" );
 
-            return array( "id_venta" => $venta["id_venta"] );
+            return array( "id_venta" => (int)$venta["id_venta"] );
 	}
   }
