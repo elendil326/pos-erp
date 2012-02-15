@@ -64,6 +64,9 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
 		$this->assertFalse($found);
 	}
 
+
+
+
 	//Edita un tipo de almacen
 	public function testTipoNuevo(){
 
@@ -72,14 +75,17 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
 
 	}
 
+
+
 	/**
-     * @expectedException ParametrosInvalidosException
+     * @expectedException BusinessLogicException
      */
 	public function testTipoNuevoRepetido(){
 		$a = AlmacenesController::NuevoTipo("1dee80c7d5ab2c1c90aa8d2f7dd47256");	
-		
-
 	}
+
+
+
 
 
 	//Elimina un tipo de almacen

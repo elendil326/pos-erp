@@ -497,6 +497,31 @@ require_once("interfaces/Ventas.interface.php");
 	{  
             Logger::log("Creando nueva venta fuera de caja");
             
+            //validar que vengan datos en detalles
+            if( is_null($detalle_orden) && is_null($detalle_venta) && is_null($detalle_paquete) ){
+                Logger::warn("No se enviaron detalles en la venta");
+                throw new InvalidDataException();
+            }
+
+            if(!is_array($detalle_orden)){
+                $detalle_orden = object_to_array($detalle_orden);
+            }
+
+            if(!is_array($detalle_venta)){
+                $detalle_venta = object_to_array($detalle_venta);
+            }
+
+            if(!is_array($detalle_paquete)){
+                $detalle_paquete = object_to_array($detalle_paquete);
+            }
+
+            
+
+            if( empty($detalle_orden) && empty($detalle_venta) && empty($detalle_paquete) ){
+                Logger::warn("No se enviaron detalles en la venta");
+                throw new InvalidDataException();
+            }
+
             //Se utiliza el metodo de Sucursal controller, dejando que tome la caja y la sucursal como nulos
             try{
             	$venta = SucursalesController::VenderCaja(
@@ -540,6 +565,7 @@ require_once("interfaces/Ventas.interface.php");
 							$saldo,
 							$tipo_de_pago
 						);
+
             }catch(Exception $e){
 	
                 Logger::error("No se pudo crear la nueva venta: ".$e);

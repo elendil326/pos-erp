@@ -13,7 +13,7 @@ class ApiException extends PosException{
 	private $http_response;
 }
 
-class InvalidDatabaseException extends PosException{
+class InvalidDatabaseOperationException extends PosException{
 	private $sql;
 }
 
@@ -25,7 +25,7 @@ class AccessDeniedException extends PosException{
 	private $level_needed;
 }
 
-/*
-class InvalidArgumentException extends PosException{
+
+class InvalidDataException extends PosException{
 	private $field;
-}*/
+}

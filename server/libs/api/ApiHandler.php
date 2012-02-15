@@ -4,7 +4,7 @@
 require_once("ApiOutputFormatter.php");
 require_once("ApiExposedProperty.php");
 require_once("ApiHttpErrors.php");
-require_once("ApiException.php");
+/*require_once("ApiException.php");*/
 
 
 require_once("StringValidator.php");

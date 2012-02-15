@@ -28,7 +28,7 @@ class VentasControllerTest extends PHPUnit_Framework_TestCase {
 	
 
 	/**
-     * @expectedException ParametrosInvalidosException
+     * @expectedException InvalidDataException
      */
 	public function testNuevaVentaSinDetalles(){
 

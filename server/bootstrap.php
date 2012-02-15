@@ -1,5 +1,5 @@
 <?php
-require_once("Exceptions.php");
+
 	/*** UTILITY FUNCTION ***/
 	function object_to_array($mixed) {
 	    if(is_object($mixed)) $mixed = (array) $mixed;
@@ -36,7 +36,7 @@ require_once("Exceptions.php");
 	# Buscar la configuracion y cargarla
 	# *******************************
 	require_once("config.default.php");
-	
+	require_once("Exceptions.php");
 	require_once("libs/Logger.php");
 	
 	if(is_file(__DIR__ . "/config.php"))

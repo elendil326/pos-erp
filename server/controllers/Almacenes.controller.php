@@ -742,26 +742,28 @@ Creo que este metodo tiene que estar bajo sucursal.
             
             //No se puede repetir la descripcion del tipo de almacen
             $tipos_almacen = TipoAlmacenDAO::search(new TipoAlmacen( array( "descripcion" => trim($descripcion) ) ));
-            if(!empty($tipos_almacen))
-            {
+
+            if(!empty($tipos_almacen)){
                 Logger::error("La descripcion (".$descripcion.") es repetida");
-                throw new Exception("La descripcion esta repetida");
+                throw new BusinessLogicException("La descripcion esta repetida");
             }
             
             $tipo_almacen = new TipoAlmacen( array( "descripcion" => trim($descripcion) ) );
             
             DAO::transBegin();
-            try
-            {
+            try{
                 TipoAlmacenDAO::save($tipo_almacen);
-            }
-            catch(Exception $e)
-            {
+
+            }catch(Exception $e){
                 DAO::transRollback();
+                
                 Logger::error("No se pudo crear el nuevo tipo de almacen: ".$e);
-                throw new Exception("No se pudo crear el nuevo tipo de almacen, contacte a su administrador de sistema");
+
+                throw new InvalidDatabaseOperationException("No se pudo crear el nuevo tipo de almacen, contacte a su administrador de sistema");
             }
+
             DAO::transEnd();
+            
             Logger::log("Tipo de almacen creado exitosamente");
             
             return array( "id_tipo_almacen" =>  (int)$tipo_almacen->getIdTipoAlmacen());
