@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 14-02-2012 a las 23:23:37
+-- Tiempo de generación: 15-02-2012 a las 22:52:07
 -- Versión del servidor: 5.1.58
 -- Versión de PHP: 5.3.6-13ubuntu3.6
 
@@ -440,6 +440,19 @@ CREATE TABLE IF NOT EXISTS `clasificacion_servicio` (
   `activa` tinyint(1) NOT NULL COMMENT 'Si esta categoria de servicio esta fija o no',
   PRIMARY KEY (`id_clasificacion_servicio`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `cliente_aval`
+--
+
+CREATE TABLE IF NOT EXISTS `cliente_aval` (
+  `id_cliente` int(11) NOT NULL,
+  `id_aval` int(11) NOT NULL,
+  `tipo_aval` enum('hipoteca','prendario') NOT NULL,
+  PRIMARY KEY (`id_cliente`,`id_aval`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Cartera de avales de clientes';
 
 -- --------------------------------------------------------
 
@@ -1840,6 +1853,18 @@ CREATE TABLE IF NOT EXISTS `venta_arpilla` (
   `total_origen` float DEFAULT NULL COMMENT 'Valor del embarque',
   PRIMARY KEY (`id_venta_arpilla`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que detalla una venta realizada mediante un embarque d' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `venta_aval`
+--
+
+CREATE TABLE IF NOT EXISTS `venta_aval` (
+  `id_venta` int(11) NOT NULL,
+  `id_aval` int(11) NOT NULL,
+  PRIMARY KEY (`id_venta`,`id_aval`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
