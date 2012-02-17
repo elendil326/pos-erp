@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 15-02-2012 a las 22:52:07
+-- Tiempo de generación: 16-02-2012 a las 22:41:19
 -- Versión del servidor: 5.1.58
 -- Versión de PHP: 5.3.6-13ubuntu3.6
 
@@ -264,6 +264,19 @@ CREATE TABLE IF NOT EXISTS `caja` (
   PRIMARY KEY (`id_caja`),
   KEY `id_sucursal` (`id_sucursal`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `categoria_unidad_medida`
+--
+
+CREATE TABLE IF NOT EXISTS `categoria_unidad_medida` (
+  `id_categoria_unidad_medida` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria de la tabla',
+  `descripcion` varchar(50) NOT NULL COMMENT 'Descripcion de la categoria unidad de medida',
+  `activa` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id_categoria_unidad_medida`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Categorias de unidad de medida' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1754,6 +1767,24 @@ CREATE TABLE IF NOT EXISTS `unidad_equivalencia` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `unidad_medida`
+--
+
+CREATE TABLE IF NOT EXISTS `unidad_medida` (
+  `id_unidad_medida` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria de la llave',
+  `id_categoria_unidad_medida` int(11) NOT NULL COMMENT 'Id de la categoria de unidad de medidad a la que pertenece',
+  `descripcion` varchar(50) NOT NULL COMMENT 'Descripcion de la nueva unidad de medida',
+  `abreviacion` varchar(50) NOT NULL COMMENT 'Descripcion corta de la nueva unidad de medida',
+  `tipo_unidad_medida` enum('Referencia UdM para esta categoria','Mayor que la UdM de referencia','Menor que la UdM de referencia') NOT NULL COMMENT 'Indica que tipo de unidad de medida',
+  `factor_conversion` float NOT NULL COMMENT 'Numero de veces que es mas grande esta UdM que la de referencia',
+  `activa` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id_unidad_medida`),
+  KEY `id_categoria_unidad_medida` (`id_categoria_unidad_medida`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Almacena las diferentes unidades de medida para un producto' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `usuario`
 --
 
@@ -2090,6 +2121,12 @@ ALTER TABLE `cheque_venta`
 ALTER TABLE `cierre_caja`
   ADD CONSTRAINT `cierre_caja_ibfk_1` FOREIGN KEY (`id_caja`) REFERENCES `caja` (`id_caja`),
   ADD CONSTRAINT `cierre_caja_ibfk_2` FOREIGN KEY (`id_cajero`) REFERENCES `usuario` (`id_usuario`);
+
+--
+-- Filtros para la tabla `unidad_medida`
+--
+ALTER TABLE `unidad_medida`
+  ADD CONSTRAINT `unidad_medida_ibfk_1` FOREIGN KEY (`id_categoria_unidad_medida`) REFERENCES `categoria_unidad_medida` (`id_categoria_unidad_medida`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
