@@ -11,6 +11,8 @@
 		$page->addComponent( new TitleComponent( "Servicios" ) );
 		$page->addComponent( new MessageComponent( "Lista de servicios" ) );
 		
+		$r = ServiciosController::Buscar();
+		
 		$tabla = new TableComponent( 
 			array(
 				"codigo_servicio" => "Codigo de servicio",
@@ -20,7 +22,7 @@
 				"margen_de_utilidad" => "Margen de Utilidad",
 				"activo" => "Activo"
 			),
-			ServiciosController::Lista()
+			$r["resultados"]
 		);
 		
                 function funcion_activo( $activo )

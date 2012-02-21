@@ -139,12 +139,11 @@
  	 * @param orden string Nombre de la columna por la cual se ordenara la lista
  	 * @return servicios json Objeto que contendra la lista de servicios
  	 **/
-  static function Lista
+  static function Buscar
 	(
 		$activo = null, 
 		$id_empresa = null, 
-		$id_sucursal = null, 
-		$orden = null
+		$id_sucursal = null
 	);  
   
   
