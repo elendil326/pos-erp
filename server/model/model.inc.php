@@ -45,7 +45,7 @@ require_once ('documento_cliente.dao.php');
 require_once ('documento_compra.dao.php');
 require_once ('documento_venta.dao.php');
 require_once ('empresa.dao.php');
-require_once ('entrada_almacen.dao.php');
+/*require_once ('entrada_almacen.dao.php');*/
 require_once ('estado.dao.php');
 require_once ('gasto.dao.php');
 require_once ('impresora.dao.php');
@@ -93,13 +93,13 @@ require_once ('permiso_usuario.dao.php');
 require_once ('prestamo.dao.php');
 require_once ('producto.dao.php');
 require_once ('producto_abasto_proveedor.dao.php');
-require_once ('producto_almacen.dao.php');
+/*require_once ('producto_almacen.dao.php');*/
 require_once ('producto_clasificacion.dao.php');
 require_once ('producto_empresa.dao.php');
-require_once ('producto_entrada_almacen.dao.php');
+/*require_once ('producto_entrada_almacen.dao.php');*/
 require_once ('producto_orden_de_servicio.dao.php');
 require_once ('producto_paquete.dao.php');
-require_once ('producto_salida_almacen.dao.php');
+/*require_once ('producto_salida_almacen.dao.php.dao.php');*/
 require_once ('regla.dao.php');
 require_once ('reporte.dao.php');
 require_once ('retencion.dao.php');
@@ -113,7 +113,7 @@ require_once ('retencion_servicio.dao.php');
 require_once ('retencion_sucursal.dao.php');
 require_once ('retencion_usuario.dao.php');
 require_once ('rol.dao.php');
-require_once ('salida_almacen.dao.php');
+/*require_once ('salida_almacen.dao.php');*/
 require_once ('seguimiento_de_servicio.dao.php');
 require_once ('servicio.dao.php');
 require_once ('servicio_clasificacion.dao.php');
