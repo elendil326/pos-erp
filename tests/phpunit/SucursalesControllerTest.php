@@ -6,7 +6,7 @@ date_default_timezone_set ( "America/Mexico_City" );
 if(!defined("BYPASS_INSTANCE_CHECK"))
 	define("BYPASS_INSTANCE_CHECK", false);
 
-$_GET["_instance_"] = 123;
+$_GET["_instance_"] = 71;
 
 require_once("../../server/bootstrap.php");
 

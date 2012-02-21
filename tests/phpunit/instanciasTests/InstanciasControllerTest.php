@@ -10,7 +10,7 @@ require_once("../../server/bootstrap.php");
 
 class InstanciasControllerTest extends PHPUnit_Framework_TestCase {
 	
-	private static $instance_id = 66;
+	private static $instance_id = 71;
 
 
 	public function testNuevaInstancia( ){

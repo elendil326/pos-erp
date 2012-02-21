@@ -5,7 +5,7 @@ date_default_timezone_set ( "America/Mexico_City" );
 if(!defined("BYPASS_INSTANCE_CHECK"))
 	define("BYPASS_INSTANCE_CHECK", false);
 
-$_GET["_instance_"] = 123;
+$_GET["_instance_"] = 71;
 
 require_once("../../server/bootstrap.php");
 
@@ -83,13 +83,18 @@ class EmpresasControllerTest extends PHPUnit_Framework_TestCase {
 	public function testBuscar(){
 		try{
 			$busqueda = EmpresasController::Buscar();			
+			
 		}catch(Exception $e){
-			Logger::error($e);
+			Logger::testLog($e);
+			
 		}
 
 
 		
 		//debe haber por lo menos un resultado
+		if( $busqueda["numero_de_resultados"] == 0 ){
+			echo "REVISAR BUG EN DAOS. serch() debe regresar getAll() cuando no se envian parametros";
+		}
 		$this->assertGreaterThan( 0, $busqueda["numero_de_resultados"]);
 		$this->assertInternalType('int', $busqueda["numero_de_resultados"]);
 		$this->assertEquals( $busqueda["numero_de_resultados"], sizeof( $busqueda["resultados"]));

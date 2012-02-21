@@ -15,6 +15,7 @@ abstract class ClasificacionClienteDAOBase extends DAO
 		private static $loadedRecords = array();
 
 		private static function recordExists(  $id_clasificacion_cliente ){
+			return false;
 			$pk = "";
 			$pk .= $id_clasificacion_cliente . "-";
 			return array_key_exists ( $pk , self::$loadedRecords );

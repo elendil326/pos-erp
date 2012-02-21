@@ -5,7 +5,7 @@ date_default_timezone_set ( "America/Mexico_City" );
 if(!defined("BYPASS_INSTANCE_CHECK"))
 	define("BYPASS_INSTANCE_CHECK", false);
 
-$_GET["_instance_"] = 123;
+$_GET["_instance_"] = 71;
 
 require_once("../../server/bootstrap.php");
 require_once("Utils.php");
@@ -48,8 +48,8 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
 			$tipo = $tipo->asArray();
 			if($tipo["descripcion"] == "1dee80c7d5ab2c1c90aa8d2f7dd47256"){
 				//ya existe este tipo para testing, hay que desactivarlo
-				Logger::debug($tipo["descripcion"]);
-				Logger::log("Ya encontre el repetido, procedo a desactivar");
+
+				Logger::testerLog("Ya encontre el repetido, procedo a desactivar");
 				$d = AlmacenesController::DesactivarTipo( $tipo["id_tipo_almacen"] );
 			}
 		}

@@ -154,6 +154,9 @@ class Logger
     self::log(  "------->DEBUG: " . $msg );
   }
 
+  public static final function testerLog ($msg ){
+    self::log(  "phpunit | " . $msg );
+  }
 
   public static final function log( $msg, $toError = false ){
 	

@@ -15,6 +15,7 @@ abstract class EmpresaDAOBase extends DAO
 		private static $loadedRecords = array();
 
 		private static function recordExists(  $id_empresa ){
+			return false;
 			$pk = "";
 			$pk .= $id_empresa . "-";
 			return array_key_exists ( $pk , self::$loadedRecords );
@@ -141,6 +142,7 @@ abstract class EmpresaDAOBase extends DAO
 	  **/
 	public static final function search( $empresa , $orderBy = null, $orden = 'ASC')
 	{
+
 		$sql = "SELECT * from empresa WHERE ("; 
 		$val = array();
 		if( ! is_null( $empresa->getIdEmpresa() ) ){

@@ -160,9 +160,11 @@ require_once("interfaces/Empresas.interface.php");
 		if($activa){
   			$e->setActivo( true );
 		}
-Logger::debug("--");
+
+		//Logger::debug("--");
 		$r = EmpresaDAO::search( $e );
-Logger::debug("--");
+		//Logger::debug("--");
+
   		return array("resultados" => $r, "numero_de_resultados" => sizeof($r) );
   	}
   
