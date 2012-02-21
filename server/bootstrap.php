@@ -139,6 +139,7 @@
 	require_once("libs/gui/TableComponent.php");
 	require_once("libs/gui/PosComponentPage.php");		
 	require_once("libs/gui/GerenciaComponentPage.php");
+	require_once("libs/gui/GerenciaTabPage.php");
 	require_once("libs/gui/JediComponentPage.php");
 	require_once("libs/gui/FreeHtmlComponent.php");
 	require_once("libs/gui/ShoppingCartComponent.php");	
