@@ -12,26 +12,6 @@
 abstract class VentaOrdenDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_venta, $id_orden_de_servicio ){
-			$pk = "";
-			$pk .= $id_venta . "-";
-			$pk .= $id_orden_de_servicio . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_venta, $id_orden_de_servicio){
-			$pk = "";
-			$pk .= $id_venta . "-";
-			$pk .= $id_orden_de_servicio . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_venta, $id_orden_de_servicio ){
-			$pk = "";
-			$pk .= $id_venta . "-";
-			$pk .= $id_orden_de_servicio . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -67,16 +47,12 @@ abstract class VentaOrdenDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_venta, $id_orden_de_servicio )
 	{
-		if(self::recordExists(  $id_venta, $id_orden_de_servicio)){
-			return self::getRecord( $id_venta, $id_orden_de_servicio );
-		}
 		$sql = "SELECT * FROM venta_orden WHERE (id_venta = ? AND id_orden_de_servicio = ? ) LIMIT 1;";
 		$params = array(  $id_venta, $id_orden_de_servicio );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new VentaOrden( $rs );
-			self::pushRecord( $foo,  $id_venta, $id_orden_de_servicio );
 			return $foo;
 	}
 
@@ -113,7 +89,6 @@ abstract class VentaOrdenDAOBase extends DAO
     		array_push( $allData, $bar);
 			//id_venta
 			//id_orden_de_servicio
-    		self::pushRecord( $bar, $foo["id_venta"],$foo["id_orden_de_servicio"] );
 		}
 		return $allData;
 	}
@@ -177,7 +152,7 @@ abstract class VentaOrdenDAOBase extends DAO
 			array_push( $val, $venta_orden->getRetencion() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -189,7 +164,6 @@ abstract class VentaOrdenDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new VentaOrden($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_venta"],$foo["id_orden_de_servicio"] );
 		}
 		return $ar;
 	}

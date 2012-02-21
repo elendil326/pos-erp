@@ -12,26 +12,6 @@
 abstract class UnidadEquivalenciaDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_unidad, $id_unidades ){
-			$pk = "";
-			$pk .= $id_unidad . "-";
-			$pk .= $id_unidades . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_unidad, $id_unidades){
-			$pk = "";
-			$pk .= $id_unidad . "-";
-			$pk .= $id_unidades . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_unidad, $id_unidades ){
-			$pk = "";
-			$pk .= $id_unidad . "-";
-			$pk .= $id_unidades . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -67,16 +47,12 @@ abstract class UnidadEquivalenciaDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_unidad, $id_unidades )
 	{
-		if(self::recordExists(  $id_unidad, $id_unidades)){
-			return self::getRecord( $id_unidad, $id_unidades );
-		}
 		$sql = "SELECT * FROM unidad_equivalencia WHERE (id_unidad = ? AND id_unidades = ? ) LIMIT 1;";
 		$params = array(  $id_unidad, $id_unidades );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new UnidadEquivalencia( $rs );
-			self::pushRecord( $foo,  $id_unidad, $id_unidades );
 			return $foo;
 	}
 
@@ -113,7 +89,6 @@ abstract class UnidadEquivalenciaDAOBase extends DAO
     		array_push( $allData, $bar);
 			//id_unidad
 			//id_unidades
-    		self::pushRecord( $bar, $foo["id_unidad"],$foo["id_unidades"] );
 		}
 		return $allData;
 	}
@@ -162,7 +137,7 @@ abstract class UnidadEquivalenciaDAOBase extends DAO
 			array_push( $val, $unidad_equivalencia->getIdUnidades() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -174,7 +149,6 @@ abstract class UnidadEquivalenciaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new UnidadEquivalencia($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_unidad"],$foo["id_unidades"] );
 		}
 		return $ar;
 	}

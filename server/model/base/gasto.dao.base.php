@@ -12,23 +12,6 @@
 abstract class GastoDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_gasto ){
-			$pk = "";
-			$pk .= $id_gasto . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_gasto){
-			$pk = "";
-			$pk .= $id_gasto . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_gasto ){
-			$pk = "";
-			$pk .= $id_gasto . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,16 +47,12 @@ abstract class GastoDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_gasto )
 	{
-		if(self::recordExists(  $id_gasto)){
-			return self::getRecord( $id_gasto );
-		}
 		$sql = "SELECT * FROM gasto WHERE (id_gasto = ? ) LIMIT 1;";
 		$params = array(  $id_gasto );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new Gasto( $rs );
-			self::pushRecord( $foo,  $id_gasto );
 			return $foo;
 	}
 
@@ -109,7 +88,6 @@ abstract class GastoDAOBase extends DAO
 			$bar = new Gasto($foo);
     		array_push( $allData, $bar);
 			//id_gasto
-    		self::pushRecord( $bar, $foo["id_gasto"] );
 		}
 		return $allData;
 	}
@@ -218,7 +196,7 @@ abstract class GastoDAOBase extends DAO
 			array_push( $val, $gasto->getMotivoCancelacion() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -230,7 +208,6 @@ abstract class GastoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Gasto($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_gasto"] );
 		}
 		return $ar;
 	}

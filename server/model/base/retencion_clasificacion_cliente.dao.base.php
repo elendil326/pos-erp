@@ -12,26 +12,6 @@
 abstract class RetencionClasificacionClienteDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_retencion, $id_clasificacion_cliente ){
-			$pk = "";
-			$pk .= $id_retencion . "-";
-			$pk .= $id_clasificacion_cliente . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_retencion, $id_clasificacion_cliente){
-			$pk = "";
-			$pk .= $id_retencion . "-";
-			$pk .= $id_clasificacion_cliente . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_retencion, $id_clasificacion_cliente ){
-			$pk = "";
-			$pk .= $id_retencion . "-";
-			$pk .= $id_clasificacion_cliente . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -67,16 +47,12 @@ abstract class RetencionClasificacionClienteDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_retencion, $id_clasificacion_cliente )
 	{
-		if(self::recordExists(  $id_retencion, $id_clasificacion_cliente)){
-			return self::getRecord( $id_retencion, $id_clasificacion_cliente );
-		}
 		$sql = "SELECT * FROM retencion_clasificacion_cliente WHERE (id_retencion = ? AND id_clasificacion_cliente = ? ) LIMIT 1;";
 		$params = array(  $id_retencion, $id_clasificacion_cliente );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new RetencionClasificacionCliente( $rs );
-			self::pushRecord( $foo,  $id_retencion, $id_clasificacion_cliente );
 			return $foo;
 	}
 
@@ -113,7 +89,6 @@ abstract class RetencionClasificacionClienteDAOBase extends DAO
     		array_push( $allData, $bar);
 			//id_retencion
 			//id_clasificacion_cliente
-    		self::pushRecord( $bar, $foo["id_retencion"],$foo["id_clasificacion_cliente"] );
 		}
 		return $allData;
 	}
@@ -157,7 +132,7 @@ abstract class RetencionClasificacionClienteDAOBase extends DAO
 			array_push( $val, $retencion_clasificacion_cliente->getIdClasificacionCliente() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -169,7 +144,6 @@ abstract class RetencionClasificacionClienteDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new RetencionClasificacionCliente($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_retencion"],$foo["id_clasificacion_cliente"] );
 		}
 		return $ar;
 	}

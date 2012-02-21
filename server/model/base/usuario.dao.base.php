@@ -12,23 +12,6 @@
 abstract class UsuarioDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_usuario ){
-			$pk = "";
-			$pk .= $id_usuario . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_usuario){
-			$pk = "";
-			$pk .= $id_usuario . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_usuario ){
-			$pk = "";
-			$pk .= $id_usuario . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,16 +47,12 @@ abstract class UsuarioDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_usuario )
 	{
-		if(self::recordExists(  $id_usuario)){
-			return self::getRecord( $id_usuario );
-		}
 		$sql = "SELECT * FROM usuario WHERE (id_usuario = ? ) LIMIT 1;";
 		$params = array(  $id_usuario );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new Usuario( $rs );
-			self::pushRecord( $foo,  $id_usuario );
 			return $foo;
 	}
 
@@ -109,7 +88,6 @@ abstract class UsuarioDAOBase extends DAO
 			$bar = new Usuario($foo);
     		array_push( $allData, $bar);
 			//id_usuario
-    		self::pushRecord( $bar, $foo["id_usuario"] );
 		}
 		return $allData;
 	}
@@ -368,7 +346,7 @@ abstract class UsuarioDAOBase extends DAO
 			array_push( $val, $usuario->getTarifaVentaObtenida() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -380,7 +358,6 @@ abstract class UsuarioDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Usuario($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_usuario"] );
 		}
 		return $ar;
 	}

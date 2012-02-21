@@ -12,23 +12,6 @@
 abstract class VersionDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_version ){
-			$pk = "";
-			$pk .= $id_version . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_version){
-			$pk = "";
-			$pk .= $id_version . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_version ){
-			$pk = "";
-			$pk .= $id_version . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,16 +47,12 @@ abstract class VersionDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_version )
 	{
-		if(self::recordExists(  $id_version)){
-			return self::getRecord( $id_version );
-		}
 		$sql = "SELECT * FROM version WHERE (id_version = ? ) LIMIT 1;";
 		$params = array(  $id_version );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new Version( $rs );
-			self::pushRecord( $foo,  $id_version );
 			return $foo;
 	}
 
@@ -109,7 +88,6 @@ abstract class VersionDAOBase extends DAO
 			$bar = new Version($foo);
     		array_push( $allData, $bar);
 			//id_version
-    		self::pushRecord( $bar, $foo["id_version"] );
 		}
 		return $allData;
 	}
@@ -178,7 +156,7 @@ abstract class VersionDAOBase extends DAO
 			array_push( $val, $version->getDefault() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -190,7 +168,6 @@ abstract class VersionDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Version($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_version"] );
 		}
 		return $ar;
 	}

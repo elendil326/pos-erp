@@ -12,26 +12,6 @@
 abstract class RetencionClasificacionProductoDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_retencion, $id_clasificacion_producto ){
-			$pk = "";
-			$pk .= $id_retencion . "-";
-			$pk .= $id_clasificacion_producto . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_retencion, $id_clasificacion_producto){
-			$pk = "";
-			$pk .= $id_retencion . "-";
-			$pk .= $id_clasificacion_producto . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_retencion, $id_clasificacion_producto ){
-			$pk = "";
-			$pk .= $id_retencion . "-";
-			$pk .= $id_clasificacion_producto . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -67,16 +47,12 @@ abstract class RetencionClasificacionProductoDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_retencion, $id_clasificacion_producto )
 	{
-		if(self::recordExists(  $id_retencion, $id_clasificacion_producto)){
-			return self::getRecord( $id_retencion, $id_clasificacion_producto );
-		}
 		$sql = "SELECT * FROM retencion_clasificacion_producto WHERE (id_retencion = ? AND id_clasificacion_producto = ? ) LIMIT 1;";
 		$params = array(  $id_retencion, $id_clasificacion_producto );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new RetencionClasificacionProducto( $rs );
-			self::pushRecord( $foo,  $id_retencion, $id_clasificacion_producto );
 			return $foo;
 	}
 
@@ -113,7 +89,6 @@ abstract class RetencionClasificacionProductoDAOBase extends DAO
     		array_push( $allData, $bar);
 			//id_retencion
 			//id_clasificacion_producto
-    		self::pushRecord( $bar, $foo["id_retencion"],$foo["id_clasificacion_producto"] );
 		}
 		return $allData;
 	}
@@ -157,7 +132,7 @@ abstract class RetencionClasificacionProductoDAOBase extends DAO
 			array_push( $val, $retencion_clasificacion_producto->getIdClasificacionProducto() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -169,7 +144,6 @@ abstract class RetencionClasificacionProductoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new RetencionClasificacionProducto($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_retencion"],$foo["id_clasificacion_producto"] );
 		}
 		return $ar;
 	}

@@ -12,23 +12,6 @@
 abstract class AbonoCompraDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_abono_compra ){
-			$pk = "";
-			$pk .= $id_abono_compra . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_abono_compra){
-			$pk = "";
-			$pk .= $id_abono_compra . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_abono_compra ){
-			$pk = "";
-			$pk .= $id_abono_compra . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,16 +47,12 @@ abstract class AbonoCompraDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_abono_compra )
 	{
-		if(self::recordExists(  $id_abono_compra)){
-			return self::getRecord( $id_abono_compra );
-		}
 		$sql = "SELECT * FROM abono_compra WHERE (id_abono_compra = ? ) LIMIT 1;";
 		$params = array(  $id_abono_compra );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new AbonoCompra( $rs );
-			self::pushRecord( $foo,  $id_abono_compra );
 			return $foo;
 	}
 
@@ -109,7 +88,6 @@ abstract class AbonoCompraDAOBase extends DAO
 			$bar = new AbonoCompra($foo);
     		array_push( $allData, $bar);
 			//id_abono_compra
-    		self::pushRecord( $bar, $foo["id_abono_compra"] );
 		}
 		return $allData;
 	}
@@ -203,7 +181,7 @@ abstract class AbonoCompraDAOBase extends DAO
 			array_push( $val, $abono_compra->getMotivoCancelacion() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -215,7 +193,6 @@ abstract class AbonoCompraDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new AbonoCompra($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_abono_compra"] );
 		}
 		return $ar;
 	}

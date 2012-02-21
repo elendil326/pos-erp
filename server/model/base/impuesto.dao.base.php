@@ -12,23 +12,6 @@
 abstract class ImpuestoDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_impuesto ){
-			$pk = "";
-			$pk .= $id_impuesto . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_impuesto){
-			$pk = "";
-			$pk .= $id_impuesto . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_impuesto ){
-			$pk = "";
-			$pk .= $id_impuesto . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,16 +47,12 @@ abstract class ImpuestoDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_impuesto )
 	{
-		if(self::recordExists(  $id_impuesto)){
-			return self::getRecord( $id_impuesto );
-		}
 		$sql = "SELECT * FROM impuesto WHERE (id_impuesto = ? ) LIMIT 1;";
 		$params = array(  $id_impuesto );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new Impuesto( $rs );
-			self::pushRecord( $foo,  $id_impuesto );
 			return $foo;
 	}
 
@@ -109,7 +88,6 @@ abstract class ImpuestoDAOBase extends DAO
 			$bar = new Impuesto($foo);
     		array_push( $allData, $bar);
 			//id_impuesto
-    		self::pushRecord( $bar, $foo["id_impuesto"] );
 		}
 		return $allData;
 	}
@@ -168,7 +146,7 @@ abstract class ImpuestoDAOBase extends DAO
 			array_push( $val, $impuesto->getDescripcion() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -180,7 +158,6 @@ abstract class ImpuestoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Impuesto($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_impuesto"] );
 		}
 		return $ar;
 	}

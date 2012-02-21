@@ -12,23 +12,6 @@
 abstract class TraspasoDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_traspaso ){
-			$pk = "";
-			$pk .= $id_traspaso . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_traspaso){
-			$pk = "";
-			$pk .= $id_traspaso . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_traspaso ){
-			$pk = "";
-			$pk .= $id_traspaso . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,16 +47,12 @@ abstract class TraspasoDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_traspaso )
 	{
-		if(self::recordExists(  $id_traspaso)){
-			return self::getRecord( $id_traspaso );
-		}
 		$sql = "SELECT * FROM traspaso WHERE (id_traspaso = ? ) LIMIT 1;";
 		$params = array(  $id_traspaso );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new Traspaso( $rs );
-			self::pushRecord( $foo,  $id_traspaso );
 			return $foo;
 	}
 
@@ -109,7 +88,6 @@ abstract class TraspasoDAOBase extends DAO
 			$bar = new Traspaso($foo);
     		array_push( $allData, $bar);
 			//id_traspaso
-    		self::pushRecord( $bar, $foo["id_traspaso"] );
 		}
 		return $allData;
 	}
@@ -203,7 +181,7 @@ abstract class TraspasoDAOBase extends DAO
 			array_push( $val, $traspaso->getCompleto() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -215,7 +193,6 @@ abstract class TraspasoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Traspaso($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_traspaso"] );
 		}
 		return $ar;
 	}

@@ -12,29 +12,6 @@
 abstract class ProductoOrdenDeServicioDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_orden_de_servicio, $id_producto, $id_unidad ){
-			$pk = "";
-			$pk .= $id_orden_de_servicio . "-";
-			$pk .= $id_producto . "-";
-			$pk .= $id_unidad . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_orden_de_servicio, $id_producto, $id_unidad){
-			$pk = "";
-			$pk .= $id_orden_de_servicio . "-";
-			$pk .= $id_producto . "-";
-			$pk .= $id_unidad . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_orden_de_servicio, $id_producto, $id_unidad ){
-			$pk = "";
-			$pk .= $id_orden_de_servicio . "-";
-			$pk .= $id_producto . "-";
-			$pk .= $id_unidad . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -70,16 +47,12 @@ abstract class ProductoOrdenDeServicioDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_orden_de_servicio, $id_producto, $id_unidad )
 	{
-		if(self::recordExists(  $id_orden_de_servicio, $id_producto, $id_unidad)){
-			return self::getRecord( $id_orden_de_servicio, $id_producto, $id_unidad );
-		}
 		$sql = "SELECT * FROM producto_orden_de_servicio WHERE (id_orden_de_servicio = ? AND id_producto = ? AND id_unidad = ? ) LIMIT 1;";
 		$params = array(  $id_orden_de_servicio, $id_producto, $id_unidad );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new ProductoOrdenDeServicio( $rs );
-			self::pushRecord( $foo,  $id_orden_de_servicio, $id_producto, $id_unidad );
 			return $foo;
 	}
 
@@ -117,7 +90,6 @@ abstract class ProductoOrdenDeServicioDAOBase extends DAO
 			//id_orden_de_servicio
 			//id_producto
 			//id_unidad
-    		self::pushRecord( $bar, $foo["id_orden_de_servicio"],$foo["id_producto"],$foo["id_unidad"] );
 		}
 		return $allData;
 	}
@@ -191,7 +163,7 @@ abstract class ProductoOrdenDeServicioDAOBase extends DAO
 			array_push( $val, $producto_orden_de_servicio->getIdUnidad() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -203,7 +175,6 @@ abstract class ProductoOrdenDeServicioDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new ProductoOrdenDeServicio($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_orden_de_servicio"],$foo["id_producto"],$foo["id_unidad"] );
 		}
 		return $ar;
 	}

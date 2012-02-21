@@ -12,26 +12,6 @@
 abstract class ServicioSucursalDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_servicio, $id_sucursal ){
-			$pk = "";
-			$pk .= $id_servicio . "-";
-			$pk .= $id_sucursal . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_servicio, $id_sucursal){
-			$pk = "";
-			$pk .= $id_servicio . "-";
-			$pk .= $id_sucursal . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_servicio, $id_sucursal ){
-			$pk = "";
-			$pk .= $id_servicio . "-";
-			$pk .= $id_sucursal . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -67,16 +47,12 @@ abstract class ServicioSucursalDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_servicio, $id_sucursal )
 	{
-		if(self::recordExists(  $id_servicio, $id_sucursal)){
-			return self::getRecord( $id_servicio, $id_sucursal );
-		}
 		$sql = "SELECT * FROM servicio_sucursal WHERE (id_servicio = ? AND id_sucursal = ? ) LIMIT 1;";
 		$params = array(  $id_servicio, $id_sucursal );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new ServicioSucursal( $rs );
-			self::pushRecord( $foo,  $id_servicio, $id_sucursal );
 			return $foo;
 	}
 
@@ -113,7 +89,6 @@ abstract class ServicioSucursalDAOBase extends DAO
     		array_push( $allData, $bar);
 			//id_servicio
 			//id_sucursal
-    		self::pushRecord( $bar, $foo["id_servicio"],$foo["id_sucursal"] );
 		}
 		return $allData;
 	}
@@ -157,7 +132,7 @@ abstract class ServicioSucursalDAOBase extends DAO
 			array_push( $val, $servicio_sucursal->getIdSucursal() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -169,7 +144,6 @@ abstract class ServicioSucursalDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new ServicioSucursal($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_servicio"],$foo["id_sucursal"] );
 		}
 		return $ar;
 	}

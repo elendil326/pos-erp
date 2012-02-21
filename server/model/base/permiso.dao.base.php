@@ -12,23 +12,6 @@
 abstract class PermisoDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_permiso ){
-			$pk = "";
-			$pk .= $id_permiso . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_permiso){
-			$pk = "";
-			$pk .= $id_permiso . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_permiso ){
-			$pk = "";
-			$pk .= $id_permiso . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,16 +47,12 @@ abstract class PermisoDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_permiso )
 	{
-		if(self::recordExists(  $id_permiso)){
-			return self::getRecord( $id_permiso );
-		}
 		$sql = "SELECT * FROM permiso WHERE (id_permiso = ? ) LIMIT 1;";
 		$params = array(  $id_permiso );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new Permiso( $rs );
-			self::pushRecord( $foo,  $id_permiso );
 			return $foo;
 	}
 
@@ -109,7 +88,6 @@ abstract class PermisoDAOBase extends DAO
 			$bar = new Permiso($foo);
     		array_push( $allData, $bar);
 			//id_permiso
-    		self::pushRecord( $bar, $foo["id_permiso"] );
 		}
 		return $allData;
 	}
@@ -153,7 +131,7 @@ abstract class PermisoDAOBase extends DAO
 			array_push( $val, $permiso->getPermiso() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -165,7 +143,6 @@ abstract class PermisoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Permiso($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_permiso"] );
 		}
 		return $ar;
 	}

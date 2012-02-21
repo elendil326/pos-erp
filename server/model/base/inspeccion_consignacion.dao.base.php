@@ -12,23 +12,6 @@
 abstract class InspeccionConsignacionDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_inspeccion_consignacion ){
-			$pk = "";
-			$pk .= $id_inspeccion_consignacion . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_inspeccion_consignacion){
-			$pk = "";
-			$pk .= $id_inspeccion_consignacion . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_inspeccion_consignacion ){
-			$pk = "";
-			$pk .= $id_inspeccion_consignacion . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,16 +47,12 @@ abstract class InspeccionConsignacionDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_inspeccion_consignacion )
 	{
-		if(self::recordExists(  $id_inspeccion_consignacion)){
-			return self::getRecord( $id_inspeccion_consignacion );
-		}
 		$sql = "SELECT * FROM inspeccion_consignacion WHERE (id_inspeccion_consignacion = ? ) LIMIT 1;";
 		$params = array(  $id_inspeccion_consignacion );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new InspeccionConsignacion( $rs );
-			self::pushRecord( $foo,  $id_inspeccion_consignacion );
 			return $foo;
 	}
 
@@ -109,7 +88,6 @@ abstract class InspeccionConsignacionDAOBase extends DAO
 			$bar = new InspeccionConsignacion($foo);
     		array_push( $allData, $bar);
 			//id_inspeccion_consignacion
-    		self::pushRecord( $bar, $foo["id_inspeccion_consignacion"] );
 		}
 		return $allData;
 	}
@@ -183,7 +161,7 @@ abstract class InspeccionConsignacionDAOBase extends DAO
 			array_push( $val, $inspeccion_consignacion->getMotivoCancelacion() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -195,7 +173,6 @@ abstract class InspeccionConsignacionDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new InspeccionConsignacion($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_inspeccion_consignacion"] );
 		}
 		return $ar;
 	}

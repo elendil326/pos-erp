@@ -12,26 +12,6 @@
 abstract class OrdenDeServicioPaqueteDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_servicio, $id_paquete ){
-			$pk = "";
-			$pk .= $id_servicio . "-";
-			$pk .= $id_paquete . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_servicio, $id_paquete){
-			$pk = "";
-			$pk .= $id_servicio . "-";
-			$pk .= $id_paquete . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_servicio, $id_paquete ){
-			$pk = "";
-			$pk .= $id_servicio . "-";
-			$pk .= $id_paquete . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -67,16 +47,12 @@ abstract class OrdenDeServicioPaqueteDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_servicio, $id_paquete )
 	{
-		if(self::recordExists(  $id_servicio, $id_paquete)){
-			return self::getRecord( $id_servicio, $id_paquete );
-		}
 		$sql = "SELECT * FROM orden_de_servicio_paquete WHERE (id_servicio = ? AND id_paquete = ? ) LIMIT 1;";
 		$params = array(  $id_servicio, $id_paquete );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new OrdenDeServicioPaquete( $rs );
-			self::pushRecord( $foo,  $id_servicio, $id_paquete );
 			return $foo;
 	}
 
@@ -113,7 +89,6 @@ abstract class OrdenDeServicioPaqueteDAOBase extends DAO
     		array_push( $allData, $bar);
 			//id_servicio
 			//id_paquete
-    		self::pushRecord( $bar, $foo["id_servicio"],$foo["id_paquete"] );
 		}
 		return $allData;
 	}
@@ -162,7 +137,7 @@ abstract class OrdenDeServicioPaqueteDAOBase extends DAO
 			array_push( $val, $orden_de_servicio_paquete->getCantidad() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -174,7 +149,6 @@ abstract class OrdenDeServicioPaqueteDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new OrdenDeServicioPaquete($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_servicio"],$foo["id_paquete"] );
 		}
 		return $ar;
 	}

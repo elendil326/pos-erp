@@ -12,23 +12,6 @@
 abstract class CierreCajaDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_cierre_caja ){
-			$pk = "";
-			$pk .= $id_cierre_caja . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_cierre_caja){
-			$pk = "";
-			$pk .= $id_cierre_caja . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_cierre_caja ){
-			$pk = "";
-			$pk .= $id_cierre_caja . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,16 +47,12 @@ abstract class CierreCajaDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_cierre_caja )
 	{
-		if(self::recordExists(  $id_cierre_caja)){
-			return self::getRecord( $id_cierre_caja );
-		}
 		$sql = "SELECT * FROM cierre_caja WHERE (id_cierre_caja = ? ) LIMIT 1;";
 		$params = array(  $id_cierre_caja );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new CierreCaja( $rs );
-			self::pushRecord( $foo,  $id_cierre_caja );
 			return $foo;
 	}
 
@@ -109,7 +88,6 @@ abstract class CierreCajaDAOBase extends DAO
 			$bar = new CierreCaja($foo);
     		array_push( $allData, $bar);
 			//id_cierre_caja
-    		self::pushRecord( $bar, $foo["id_cierre_caja"] );
 		}
 		return $allData;
 	}
@@ -173,7 +151,7 @@ abstract class CierreCajaDAOBase extends DAO
 			array_push( $val, $cierre_caja->getSaldoEsperado() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -185,7 +163,6 @@ abstract class CierreCajaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new CierreCaja($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_cierre_caja"] );
 		}
 		return $ar;
 	}

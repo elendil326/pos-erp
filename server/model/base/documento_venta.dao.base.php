@@ -12,26 +12,6 @@
 abstract class DocumentoVentaDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_documento, $id_venta ){
-			$pk = "";
-			$pk .= $id_documento . "-";
-			$pk .= $id_venta . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_documento, $id_venta){
-			$pk = "";
-			$pk .= $id_documento . "-";
-			$pk .= $id_venta . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_documento, $id_venta ){
-			$pk = "";
-			$pk .= $id_documento . "-";
-			$pk .= $id_venta . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -67,16 +47,12 @@ abstract class DocumentoVentaDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_documento, $id_venta )
 	{
-		if(self::recordExists(  $id_documento, $id_venta)){
-			return self::getRecord( $id_documento, $id_venta );
-		}
 		$sql = "SELECT * FROM documento_venta WHERE (id_documento = ? AND id_venta = ? ) LIMIT 1;";
 		$params = array(  $id_documento, $id_venta );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new DocumentoVenta( $rs );
-			self::pushRecord( $foo,  $id_documento, $id_venta );
 			return $foo;
 	}
 
@@ -113,7 +89,6 @@ abstract class DocumentoVentaDAOBase extends DAO
     		array_push( $allData, $bar);
 			//id_documento
 			//id_venta
-    		self::pushRecord( $bar, $foo["id_documento"],$foo["id_venta"] );
 		}
 		return $allData;
 	}
@@ -157,7 +132,7 @@ abstract class DocumentoVentaDAOBase extends DAO
 			array_push( $val, $documento_venta->getIdVenta() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -169,7 +144,6 @@ abstract class DocumentoVentaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new DocumentoVenta($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_documento"],$foo["id_venta"] );
 		}
 		return $ar;
 	}

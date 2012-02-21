@@ -12,23 +12,6 @@
 abstract class PrestamoDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_prestamo ){
-			$pk = "";
-			$pk .= $id_prestamo . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_prestamo){
-			$pk = "";
-			$pk .= $id_prestamo . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_prestamo ){
-			$pk = "";
-			$pk .= $id_prestamo . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,16 +47,12 @@ abstract class PrestamoDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_prestamo )
 	{
-		if(self::recordExists(  $id_prestamo)){
-			return self::getRecord( $id_prestamo );
-		}
 		$sql = "SELECT * FROM prestamo WHERE (id_prestamo = ? ) LIMIT 1;";
 		$params = array(  $id_prestamo );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new Prestamo( $rs );
-			self::pushRecord( $foo,  $id_prestamo );
 			return $foo;
 	}
 
@@ -109,7 +88,6 @@ abstract class PrestamoDAOBase extends DAO
 			$bar = new Prestamo($foo);
     		array_push( $allData, $bar);
 			//id_prestamo
-    		self::pushRecord( $bar, $foo["id_prestamo"] );
 		}
 		return $allData;
 	}
@@ -188,7 +166,7 @@ abstract class PrestamoDAOBase extends DAO
 			array_push( $val, $prestamo->getFecha() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -200,7 +178,6 @@ abstract class PrestamoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Prestamo($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_prestamo"] );
 		}
 		return $ar;
 	}

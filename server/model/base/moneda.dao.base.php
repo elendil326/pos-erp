@@ -12,23 +12,6 @@
 abstract class MonedaDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_moneda ){
-			$pk = "";
-			$pk .= $id_moneda . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_moneda){
-			$pk = "";
-			$pk .= $id_moneda . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_moneda ){
-			$pk = "";
-			$pk .= $id_moneda . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,16 +47,12 @@ abstract class MonedaDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_moneda )
 	{
-		if(self::recordExists(  $id_moneda)){
-			return self::getRecord( $id_moneda );
-		}
 		$sql = "SELECT * FROM moneda WHERE (id_moneda = ? ) LIMIT 1;";
 		$params = array(  $id_moneda );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new Moneda( $rs );
-			self::pushRecord( $foo,  $id_moneda );
 			return $foo;
 	}
 
@@ -109,7 +88,6 @@ abstract class MonedaDAOBase extends DAO
 			$bar = new Moneda($foo);
     		array_push( $allData, $bar);
 			//id_moneda
-    		self::pushRecord( $bar, $foo["id_moneda"] );
 		}
 		return $allData;
 	}
@@ -163,7 +141,7 @@ abstract class MonedaDAOBase extends DAO
 			array_push( $val, $moneda->getActiva() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -175,7 +153,6 @@ abstract class MonedaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Moneda($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_moneda"] );
 		}
 		return $ar;
 	}

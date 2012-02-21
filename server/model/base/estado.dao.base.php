@@ -12,23 +12,6 @@
 abstract class EstadoDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_estado ){
-			$pk = "";
-			$pk .= $id_estado . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_estado){
-			$pk = "";
-			$pk .= $id_estado . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_estado ){
-			$pk = "";
-			$pk .= $id_estado . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,16 +47,12 @@ abstract class EstadoDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_estado )
 	{
-		if(self::recordExists(  $id_estado)){
-			return self::getRecord( $id_estado );
-		}
 		$sql = "SELECT * FROM estado WHERE (id_estado = ? ) LIMIT 1;";
 		$params = array(  $id_estado );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new Estado( $rs );
-			self::pushRecord( $foo,  $id_estado );
 			return $foo;
 	}
 
@@ -109,7 +88,6 @@ abstract class EstadoDAOBase extends DAO
 			$bar = new Estado($foo);
     		array_push( $allData, $bar);
 			//id_estado
-    		self::pushRecord( $bar, $foo["id_estado"] );
 		}
 		return $allData;
 	}
@@ -153,7 +131,7 @@ abstract class EstadoDAOBase extends DAO
 			array_push( $val, $estado->getNombre() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -165,7 +143,6 @@ abstract class EstadoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Estado($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_estado"] );
 		}
 		return $ar;
 	}

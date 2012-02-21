@@ -12,23 +12,6 @@
 abstract class SeguimientoDeServicioDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_seguimiento_de_servicio ){
-			$pk = "";
-			$pk .= $id_seguimiento_de_servicio . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_seguimiento_de_servicio){
-			$pk = "";
-			$pk .= $id_seguimiento_de_servicio . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_seguimiento_de_servicio ){
-			$pk = "";
-			$pk .= $id_seguimiento_de_servicio . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,16 +47,12 @@ abstract class SeguimientoDeServicioDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_seguimiento_de_servicio )
 	{
-		if(self::recordExists(  $id_seguimiento_de_servicio)){
-			return self::getRecord( $id_seguimiento_de_servicio );
-		}
 		$sql = "SELECT * FROM seguimiento_de_servicio WHERE (id_seguimiento_de_servicio = ? ) LIMIT 1;";
 		$params = array(  $id_seguimiento_de_servicio );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new SeguimientoDeServicio( $rs );
-			self::pushRecord( $foo,  $id_seguimiento_de_servicio );
 			return $foo;
 	}
 
@@ -109,7 +88,6 @@ abstract class SeguimientoDeServicioDAOBase extends DAO
 			$bar = new SeguimientoDeServicio($foo);
     		array_push( $allData, $bar);
 			//id_seguimiento_de_servicio
-    		self::pushRecord( $bar, $foo["id_seguimiento_de_servicio"] );
 		}
 		return $allData;
 	}
@@ -178,7 +156,7 @@ abstract class SeguimientoDeServicioDAOBase extends DAO
 			array_push( $val, $seguimiento_de_servicio->getFechaSeguimiento() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -190,7 +168,6 @@ abstract class SeguimientoDeServicioDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new SeguimientoDeServicio($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_seguimiento_de_servicio"] );
 		}
 		return $ar;
 	}

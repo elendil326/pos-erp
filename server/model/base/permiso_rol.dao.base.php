@@ -12,26 +12,6 @@
 abstract class PermisoRolDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_permiso, $id_rol ){
-			$pk = "";
-			$pk .= $id_permiso . "-";
-			$pk .= $id_rol . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_permiso, $id_rol){
-			$pk = "";
-			$pk .= $id_permiso . "-";
-			$pk .= $id_rol . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_permiso, $id_rol ){
-			$pk = "";
-			$pk .= $id_permiso . "-";
-			$pk .= $id_rol . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -67,16 +47,12 @@ abstract class PermisoRolDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_permiso, $id_rol )
 	{
-		if(self::recordExists(  $id_permiso, $id_rol)){
-			return self::getRecord( $id_permiso, $id_rol );
-		}
 		$sql = "SELECT * FROM permiso_rol WHERE (id_permiso = ? AND id_rol = ? ) LIMIT 1;";
 		$params = array(  $id_permiso, $id_rol );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new PermisoRol( $rs );
-			self::pushRecord( $foo,  $id_permiso, $id_rol );
 			return $foo;
 	}
 
@@ -113,7 +89,6 @@ abstract class PermisoRolDAOBase extends DAO
     		array_push( $allData, $bar);
 			//id_permiso
 			//id_rol
-    		self::pushRecord( $bar, $foo["id_permiso"],$foo["id_rol"] );
 		}
 		return $allData;
 	}
@@ -157,7 +132,7 @@ abstract class PermisoRolDAOBase extends DAO
 			array_push( $val, $permiso_rol->getIdRol() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -169,7 +144,6 @@ abstract class PermisoRolDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new PermisoRol($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_permiso"],$foo["id_rol"] );
 		}
 		return $ar;
 	}

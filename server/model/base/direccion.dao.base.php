@@ -12,23 +12,6 @@
 abstract class DireccionDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_direccion ){
-			$pk = "";
-			$pk .= $id_direccion . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_direccion){
-			$pk = "";
-			$pk .= $id_direccion . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_direccion ){
-			$pk = "";
-			$pk .= $id_direccion . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,16 +47,12 @@ abstract class DireccionDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_direccion )
 	{
-		if(self::recordExists(  $id_direccion)){
-			return self::getRecord( $id_direccion );
-		}
 		$sql = "SELECT * FROM direccion WHERE (id_direccion = ? ) LIMIT 1;";
 		$params = array(  $id_direccion );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new Direccion( $rs );
-			self::pushRecord( $foo,  $id_direccion );
 			return $foo;
 	}
 
@@ -109,7 +88,6 @@ abstract class DireccionDAOBase extends DAO
 			$bar = new Direccion($foo);
     		array_push( $allData, $bar);
 			//id_direccion
-    		self::pushRecord( $bar, $foo["id_direccion"] );
 		}
 		return $allData;
 	}
@@ -203,7 +181,7 @@ abstract class DireccionDAOBase extends DAO
 			array_push( $val, $direccion->getIdUsuarioUltimaModificacion() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -215,7 +193,6 @@ abstract class DireccionDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Direccion($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_direccion"] );
 		}
 		return $ar;
 	}

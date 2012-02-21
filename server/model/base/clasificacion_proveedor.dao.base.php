@@ -12,23 +12,6 @@
 abstract class ClasificacionProveedorDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_clasificacion_proveedor ){
-			$pk = "";
-			$pk .= $id_clasificacion_proveedor . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_clasificacion_proveedor){
-			$pk = "";
-			$pk .= $id_clasificacion_proveedor . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_clasificacion_proveedor ){
-			$pk = "";
-			$pk .= $id_clasificacion_proveedor . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,16 +47,12 @@ abstract class ClasificacionProveedorDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_clasificacion_proveedor )
 	{
-		if(self::recordExists(  $id_clasificacion_proveedor)){
-			return self::getRecord( $id_clasificacion_proveedor );
-		}
 		$sql = "SELECT * FROM clasificacion_proveedor WHERE (id_clasificacion_proveedor = ? ) LIMIT 1;";
 		$params = array(  $id_clasificacion_proveedor );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new ClasificacionProveedor( $rs );
-			self::pushRecord( $foo,  $id_clasificacion_proveedor );
 			return $foo;
 	}
 
@@ -109,7 +88,6 @@ abstract class ClasificacionProveedorDAOBase extends DAO
 			$bar = new ClasificacionProveedor($foo);
     		array_push( $allData, $bar);
 			//id_clasificacion_proveedor
-    		self::pushRecord( $bar, $foo["id_clasificacion_proveedor"] );
 		}
 		return $allData;
 	}
@@ -173,7 +151,7 @@ abstract class ClasificacionProveedorDAOBase extends DAO
 			array_push( $val, $clasificacion_proveedor->getIdTarifaVenta() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -185,7 +163,6 @@ abstract class ClasificacionProveedorDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new ClasificacionProveedor($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_clasificacion_proveedor"] );
 		}
 		return $ar;
 	}

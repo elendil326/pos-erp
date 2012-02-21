@@ -12,23 +12,6 @@
 abstract class ReporteDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_reporte ){
-			$pk = "";
-			$pk .= $id_reporte . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_reporte){
-			$pk = "";
-			$pk .= $id_reporte . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_reporte ){
-			$pk = "";
-			$pk .= $id_reporte . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,16 +47,12 @@ abstract class ReporteDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_reporte )
 	{
-		if(self::recordExists(  $id_reporte)){
-			return self::getRecord( $id_reporte );
-		}
 		$sql = "SELECT * FROM reporte WHERE (id_reporte = ? ) LIMIT 1;";
 		$params = array(  $id_reporte );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new Reporte( $rs );
-			self::pushRecord( $foo,  $id_reporte );
 			return $foo;
 	}
 
@@ -109,7 +88,6 @@ abstract class ReporteDAOBase extends DAO
 			$bar = new Reporte($foo);
     		array_push( $allData, $bar);
 			//id_reporte
-    		self::pushRecord( $bar, $foo["id_reporte"] );
 		}
 		return $allData;
 	}
@@ -148,7 +126,7 @@ abstract class ReporteDAOBase extends DAO
 			array_push( $val, $reporte->getIdReporte() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -160,7 +138,6 @@ abstract class ReporteDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Reporte($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_reporte"] );
 		}
 		return $ar;
 	}

@@ -12,29 +12,6 @@
 abstract class InspeccionConsignacionProductoDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_inspeccion_consignacion, $id_producto, $id_unidad ){
-			$pk = "";
-			$pk .= $id_inspeccion_consignacion . "-";
-			$pk .= $id_producto . "-";
-			$pk .= $id_unidad . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_inspeccion_consignacion, $id_producto, $id_unidad){
-			$pk = "";
-			$pk .= $id_inspeccion_consignacion . "-";
-			$pk .= $id_producto . "-";
-			$pk .= $id_unidad . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_inspeccion_consignacion, $id_producto, $id_unidad ){
-			$pk = "";
-			$pk .= $id_inspeccion_consignacion . "-";
-			$pk .= $id_producto . "-";
-			$pk .= $id_unidad . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -70,16 +47,12 @@ abstract class InspeccionConsignacionProductoDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_inspeccion_consignacion, $id_producto, $id_unidad )
 	{
-		if(self::recordExists(  $id_inspeccion_consignacion, $id_producto, $id_unidad)){
-			return self::getRecord( $id_inspeccion_consignacion, $id_producto, $id_unidad );
-		}
 		$sql = "SELECT * FROM inspeccion_consignacion_producto WHERE (id_inspeccion_consignacion = ? AND id_producto = ? AND id_unidad = ? ) LIMIT 1;";
 		$params = array(  $id_inspeccion_consignacion, $id_producto, $id_unidad );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new InspeccionConsignacionProducto( $rs );
-			self::pushRecord( $foo,  $id_inspeccion_consignacion, $id_producto, $id_unidad );
 			return $foo;
 	}
 
@@ -117,7 +90,6 @@ abstract class InspeccionConsignacionProductoDAOBase extends DAO
 			//id_inspeccion_consignacion
 			//id_producto
 			//id_unidad
-    		self::pushRecord( $bar, $foo["id_inspeccion_consignacion"],$foo["id_producto"],$foo["id_unidad"] );
 		}
 		return $allData;
 	}
@@ -181,7 +153,7 @@ abstract class InspeccionConsignacionProductoDAOBase extends DAO
 			array_push( $val, $inspeccion_consignacion_producto->getCantidadDevuelta() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -193,7 +165,6 @@ abstract class InspeccionConsignacionProductoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new InspeccionConsignacionProducto($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_inspeccion_consignacion"],$foo["id_producto"],$foo["id_unidad"] );
 		}
 		return $ar;
 	}

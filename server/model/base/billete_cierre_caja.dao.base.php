@@ -12,26 +12,6 @@
 abstract class BilleteCierreCajaDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_billete, $id_cierre_caja ){
-			$pk = "";
-			$pk .= $id_billete . "-";
-			$pk .= $id_cierre_caja . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_billete, $id_cierre_caja){
-			$pk = "";
-			$pk .= $id_billete . "-";
-			$pk .= $id_cierre_caja . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_billete, $id_cierre_caja ){
-			$pk = "";
-			$pk .= $id_billete . "-";
-			$pk .= $id_cierre_caja . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -67,16 +47,12 @@ abstract class BilleteCierreCajaDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_billete, $id_cierre_caja )
 	{
-		if(self::recordExists(  $id_billete, $id_cierre_caja)){
-			return self::getRecord( $id_billete, $id_cierre_caja );
-		}
 		$sql = "SELECT * FROM billete_cierre_caja WHERE (id_billete = ? AND id_cierre_caja = ? ) LIMIT 1;";
 		$params = array(  $id_billete, $id_cierre_caja );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new BilleteCierreCaja( $rs );
-			self::pushRecord( $foo,  $id_billete, $id_cierre_caja );
 			return $foo;
 	}
 
@@ -113,7 +89,6 @@ abstract class BilleteCierreCajaDAOBase extends DAO
     		array_push( $allData, $bar);
 			//id_billete
 			//id_cierre_caja
-    		self::pushRecord( $bar, $foo["id_billete"],$foo["id_cierre_caja"] );
 		}
 		return $allData;
 	}
@@ -172,7 +147,7 @@ abstract class BilleteCierreCajaDAOBase extends DAO
 			array_push( $val, $billete_cierre_caja->getCantidadFaltante() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -184,7 +159,6 @@ abstract class BilleteCierreCajaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new BilleteCierreCaja($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_billete"],$foo["id_cierre_caja"] );
 		}
 		return $ar;
 	}

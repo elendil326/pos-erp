@@ -12,23 +12,6 @@
 abstract class UnidadDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_unidad ){
-			$pk = "";
-			$pk .= $id_unidad . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_unidad){
-			$pk = "";
-			$pk .= $id_unidad . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_unidad ){
-			$pk = "";
-			$pk .= $id_unidad . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,16 +47,12 @@ abstract class UnidadDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_unidad )
 	{
-		if(self::recordExists(  $id_unidad)){
-			return self::getRecord( $id_unidad );
-		}
 		$sql = "SELECT * FROM unidad WHERE (id_unidad = ? ) LIMIT 1;";
 		$params = array(  $id_unidad );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new Unidad( $rs );
-			self::pushRecord( $foo,  $id_unidad );
 			return $foo;
 	}
 
@@ -109,7 +88,6 @@ abstract class UnidadDAOBase extends DAO
 			$bar = new Unidad($foo);
     		array_push( $allData, $bar);
 			//id_unidad
-    		self::pushRecord( $bar, $foo["id_unidad"] );
 		}
 		return $allData;
 	}
@@ -168,7 +146,7 @@ abstract class UnidadDAOBase extends DAO
 			array_push( $val, $unidad->getActiva() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -180,7 +158,6 @@ abstract class UnidadDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Unidad($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_unidad"] );
 		}
 		return $ar;
 	}

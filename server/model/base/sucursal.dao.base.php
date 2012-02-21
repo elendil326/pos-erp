@@ -12,23 +12,6 @@
 abstract class SucursalDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_sucursal ){
-			$pk = "";
-			$pk .= $id_sucursal . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_sucursal){
-			$pk = "";
-			$pk .= $id_sucursal . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_sucursal ){
-			$pk = "";
-			$pk .= $id_sucursal . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,16 +47,12 @@ abstract class SucursalDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_sucursal )
 	{
-		if(self::recordExists(  $id_sucursal)){
-			return self::getRecord( $id_sucursal );
-		}
 		$sql = "SELECT * FROM sucursal WHERE (id_sucursal = ? ) LIMIT 1;";
 		$params = array(  $id_sucursal );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new Sucursal( $rs );
-			self::pushRecord( $foo,  $id_sucursal );
 			return $foo;
 	}
 
@@ -109,7 +88,6 @@ abstract class SucursalDAOBase extends DAO
 			$bar = new Sucursal($foo);
     		array_push( $allData, $bar);
 			//id_sucursal
-    		self::pushRecord( $bar, $foo["id_sucursal"] );
 		}
 		return $allData;
 	}
@@ -193,7 +171,7 @@ abstract class SucursalDAOBase extends DAO
 			array_push( $val, $sucursal->getFechaBaja() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -205,7 +183,6 @@ abstract class SucursalDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Sucursal($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_sucursal"] );
 		}
 		return $ar;
 	}

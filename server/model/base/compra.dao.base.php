@@ -12,23 +12,6 @@
 abstract class CompraDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_compra ){
-			$pk = "";
-			$pk .= $id_compra . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_compra){
-			$pk = "";
-			$pk .= $id_compra . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_compra ){
-			$pk = "";
-			$pk .= $id_compra . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,16 +47,12 @@ abstract class CompraDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_compra )
 	{
-		if(self::recordExists(  $id_compra)){
-			return self::getRecord( $id_compra );
-		}
 		$sql = "SELECT * FROM compra WHERE (id_compra = ? ) LIMIT 1;";
 		$params = array(  $id_compra );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new Compra( $rs );
-			self::pushRecord( $foo,  $id_compra );
 			return $foo;
 	}
 
@@ -109,7 +88,6 @@ abstract class CompraDAOBase extends DAO
 			$bar = new Compra($foo);
     		array_push( $allData, $bar);
 			//id_compra
-    		self::pushRecord( $bar, $foo["id_compra"] );
 		}
 		return $allData;
 	}
@@ -228,7 +206,7 @@ abstract class CompraDAOBase extends DAO
 			array_push( $val, $compra->getRetencion() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -240,7 +218,6 @@ abstract class CompraDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Compra($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_compra"] );
 		}
 		return $ar;
 	}

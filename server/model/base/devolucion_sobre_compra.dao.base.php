@@ -12,23 +12,6 @@
 abstract class DevolucionSobreCompraDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_devolucion_sobre_compra ){
-			$pk = "";
-			$pk .= $id_devolucion_sobre_compra . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_devolucion_sobre_compra){
-			$pk = "";
-			$pk .= $id_devolucion_sobre_compra . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_devolucion_sobre_compra ){
-			$pk = "";
-			$pk .= $id_devolucion_sobre_compra . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,16 +47,12 @@ abstract class DevolucionSobreCompraDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_devolucion_sobre_compra )
 	{
-		if(self::recordExists(  $id_devolucion_sobre_compra)){
-			return self::getRecord( $id_devolucion_sobre_compra );
-		}
 		$sql = "SELECT * FROM devolucion_sobre_compra WHERE (id_devolucion_sobre_compra = ? ) LIMIT 1;";
 		$params = array(  $id_devolucion_sobre_compra );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new DevolucionSobreCompra( $rs );
-			self::pushRecord( $foo,  $id_devolucion_sobre_compra );
 			return $foo;
 	}
 
@@ -109,7 +88,6 @@ abstract class DevolucionSobreCompraDAOBase extends DAO
 			$bar = new DevolucionSobreCompra($foo);
     		array_push( $allData, $bar);
 			//id_devolucion_sobre_compra
-    		self::pushRecord( $bar, $foo["id_devolucion_sobre_compra"] );
 		}
 		return $allData;
 	}
@@ -168,7 +146,7 @@ abstract class DevolucionSobreCompraDAOBase extends DAO
 			array_push( $val, $devolucion_sobre_compra->getMotivo() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -180,7 +158,6 @@ abstract class DevolucionSobreCompraDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new DevolucionSobreCompra($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_devolucion_sobre_compra"] );
 		}
 		return $ar;
 	}

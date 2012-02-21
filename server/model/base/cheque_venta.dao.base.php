@@ -12,26 +12,6 @@
 abstract class ChequeVentaDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_cheque, $id_venta ){
-			$pk = "";
-			$pk .= $id_cheque . "-";
-			$pk .= $id_venta . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_cheque, $id_venta){
-			$pk = "";
-			$pk .= $id_cheque . "-";
-			$pk .= $id_venta . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_cheque, $id_venta ){
-			$pk = "";
-			$pk .= $id_cheque . "-";
-			$pk .= $id_venta . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -67,16 +47,12 @@ abstract class ChequeVentaDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_cheque, $id_venta )
 	{
-		if(self::recordExists(  $id_cheque, $id_venta)){
-			return self::getRecord( $id_cheque, $id_venta );
-		}
 		$sql = "SELECT * FROM cheque_venta WHERE (id_cheque = ? AND id_venta = ? ) LIMIT 1;";
 		$params = array(  $id_cheque, $id_venta );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new ChequeVenta( $rs );
-			self::pushRecord( $foo,  $id_cheque, $id_venta );
 			return $foo;
 	}
 
@@ -113,7 +89,6 @@ abstract class ChequeVentaDAOBase extends DAO
     		array_push( $allData, $bar);
 			//id_cheque
 			//id_venta
-    		self::pushRecord( $bar, $foo["id_cheque"],$foo["id_venta"] );
 		}
 		return $allData;
 	}
@@ -157,7 +132,7 @@ abstract class ChequeVentaDAOBase extends DAO
 			array_push( $val, $cheque_venta->getIdVenta() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -169,7 +144,6 @@ abstract class ChequeVentaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new ChequeVenta($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_cheque"],$foo["id_venta"] );
 		}
 		return $ar;
 	}

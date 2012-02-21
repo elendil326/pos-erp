@@ -12,23 +12,6 @@
 abstract class LoteDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_lote ){
-			$pk = "";
-			$pk .= $id_lote . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_lote){
-			$pk = "";
-			$pk .= $id_lote . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_lote ){
-			$pk = "";
-			$pk .= $id_lote . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,16 +47,12 @@ abstract class LoteDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_lote )
 	{
-		if(self::recordExists(  $id_lote)){
-			return self::getRecord( $id_lote );
-		}
 		$sql = "SELECT * FROM lote WHERE (id_lote = ? ) LIMIT 1;";
 		$params = array(  $id_lote );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new Lote( $rs );
-			self::pushRecord( $foo,  $id_lote );
 			return $foo;
 	}
 
@@ -109,7 +88,6 @@ abstract class LoteDAOBase extends DAO
 			$bar = new Lote($foo);
     		array_push( $allData, $bar);
 			//id_lote
-    		self::pushRecord( $bar, $foo["id_lote"] );
 		}
 		return $allData;
 	}
@@ -168,7 +146,7 @@ abstract class LoteDAOBase extends DAO
 			array_push( $val, $lote->getObservaciones() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -180,7 +158,6 @@ abstract class LoteDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Lote($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_lote"] );
 		}
 		return $ar;
 	}

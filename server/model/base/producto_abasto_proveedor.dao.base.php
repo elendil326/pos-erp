@@ -12,29 +12,6 @@
 abstract class ProductoAbastoProveedorDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_abasto_proveedor, $id_producto, $id_unidad ){
-			$pk = "";
-			$pk .= $id_abasto_proveedor . "-";
-			$pk .= $id_producto . "-";
-			$pk .= $id_unidad . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_abasto_proveedor, $id_producto, $id_unidad){
-			$pk = "";
-			$pk .= $id_abasto_proveedor . "-";
-			$pk .= $id_producto . "-";
-			$pk .= $id_unidad . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_abasto_proveedor, $id_producto, $id_unidad ){
-			$pk = "";
-			$pk .= $id_abasto_proveedor . "-";
-			$pk .= $id_producto . "-";
-			$pk .= $id_unidad . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -70,16 +47,12 @@ abstract class ProductoAbastoProveedorDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_abasto_proveedor, $id_producto, $id_unidad )
 	{
-		if(self::recordExists(  $id_abasto_proveedor, $id_producto, $id_unidad)){
-			return self::getRecord( $id_abasto_proveedor, $id_producto, $id_unidad );
-		}
 		$sql = "SELECT * FROM producto_abasto_proveedor WHERE (id_abasto_proveedor = ? AND id_producto = ? AND id_unidad = ? ) LIMIT 1;";
 		$params = array(  $id_abasto_proveedor, $id_producto, $id_unidad );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new ProductoAbastoProveedor( $rs );
-			self::pushRecord( $foo,  $id_abasto_proveedor, $id_producto, $id_unidad );
 			return $foo;
 	}
 
@@ -117,7 +90,6 @@ abstract class ProductoAbastoProveedorDAOBase extends DAO
 			//id_abasto_proveedor
 			//id_producto
 			//id_unidad
-    		self::pushRecord( $bar, $foo["id_abasto_proveedor"],$foo["id_producto"],$foo["id_unidad"] );
 		}
 		return $allData;
 	}
@@ -171,7 +143,7 @@ abstract class ProductoAbastoProveedorDAOBase extends DAO
 			array_push( $val, $producto_abasto_proveedor->getCantidad() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -183,7 +155,6 @@ abstract class ProductoAbastoProveedorDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new ProductoAbastoProveedor($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_abasto_proveedor"],$foo["id_producto"],$foo["id_unidad"] );
 		}
 		return $ar;
 	}

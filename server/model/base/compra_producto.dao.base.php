@@ -12,29 +12,6 @@
 abstract class CompraProductoDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_compra, $id_producto, $id_unidad ){
-			$pk = "";
-			$pk .= $id_compra . "-";
-			$pk .= $id_producto . "-";
-			$pk .= $id_unidad . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_compra, $id_producto, $id_unidad){
-			$pk = "";
-			$pk .= $id_compra . "-";
-			$pk .= $id_producto . "-";
-			$pk .= $id_unidad . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_compra, $id_producto, $id_unidad ){
-			$pk = "";
-			$pk .= $id_compra . "-";
-			$pk .= $id_producto . "-";
-			$pk .= $id_unidad . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -70,16 +47,12 @@ abstract class CompraProductoDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_compra, $id_producto, $id_unidad )
 	{
-		if(self::recordExists(  $id_compra, $id_producto, $id_unidad)){
-			return self::getRecord( $id_compra, $id_producto, $id_unidad );
-		}
 		$sql = "SELECT * FROM compra_producto WHERE (id_compra = ? AND id_producto = ? AND id_unidad = ? ) LIMIT 1;";
 		$params = array(  $id_compra, $id_producto, $id_unidad );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new CompraProducto( $rs );
-			self::pushRecord( $foo,  $id_compra, $id_producto, $id_unidad );
 			return $foo;
 	}
 
@@ -117,7 +90,6 @@ abstract class CompraProductoDAOBase extends DAO
 			//id_compra
 			//id_producto
 			//id_unidad
-    		self::pushRecord( $bar, $foo["id_compra"],$foo["id_producto"],$foo["id_unidad"] );
 		}
 		return $allData;
 	}
@@ -191,7 +163,7 @@ abstract class CompraProductoDAOBase extends DAO
 			array_push( $val, $compra_producto->getRetencion() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -203,7 +175,6 @@ abstract class CompraProductoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new CompraProducto($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_compra"],$foo["id_producto"],$foo["id_unidad"] );
 		}
 		return $ar;
 	}

@@ -12,26 +12,6 @@
 abstract class LoteProductoDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_lote, $id_producto ){
-			$pk = "";
-			$pk .= $id_lote . "-";
-			$pk .= $id_producto . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_lote, $id_producto){
-			$pk = "";
-			$pk .= $id_lote . "-";
-			$pk .= $id_producto . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_lote, $id_producto ){
-			$pk = "";
-			$pk .= $id_lote . "-";
-			$pk .= $id_producto . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -67,16 +47,12 @@ abstract class LoteProductoDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_lote, $id_producto )
 	{
-		if(self::recordExists(  $id_lote, $id_producto)){
-			return self::getRecord( $id_lote, $id_producto );
-		}
 		$sql = "SELECT * FROM lote_producto WHERE (id_lote = ? AND id_producto = ? ) LIMIT 1;";
 		$params = array(  $id_lote, $id_producto );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new LoteProducto( $rs );
-			self::pushRecord( $foo,  $id_lote, $id_producto );
 			return $foo;
 	}
 
@@ -113,7 +89,6 @@ abstract class LoteProductoDAOBase extends DAO
     		array_push( $allData, $bar);
 			//id_lote
 			//id_producto
-    		self::pushRecord( $bar, $foo["id_lote"],$foo["id_producto"] );
 		}
 		return $allData;
 	}
@@ -162,7 +137,7 @@ abstract class LoteProductoDAOBase extends DAO
 			array_push( $val, $lote_producto->getCantidad() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -174,7 +149,6 @@ abstract class LoteProductoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new LoteProducto($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_lote"],$foo["id_producto"] );
 		}
 		return $ar;
 	}

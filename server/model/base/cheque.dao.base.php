@@ -12,23 +12,6 @@
 abstract class ChequeDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_cheque ){
-			$pk = "";
-			$pk .= $id_cheque . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_cheque){
-			$pk = "";
-			$pk .= $id_cheque . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_cheque ){
-			$pk = "";
-			$pk .= $id_cheque . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,16 +47,12 @@ abstract class ChequeDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_cheque )
 	{
-		if(self::recordExists(  $id_cheque)){
-			return self::getRecord( $id_cheque );
-		}
 		$sql = "SELECT * FROM cheque WHERE (id_cheque = ? ) LIMIT 1;";
 		$params = array(  $id_cheque );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new Cheque( $rs );
-			self::pushRecord( $foo,  $id_cheque );
 			return $foo;
 	}
 
@@ -109,7 +88,6 @@ abstract class ChequeDAOBase extends DAO
 			$bar = new Cheque($foo);
     		array_push( $allData, $bar);
 			//id_cheque
-    		self::pushRecord( $bar, $foo["id_cheque"] );
 		}
 		return $allData;
 	}
@@ -173,7 +151,7 @@ abstract class ChequeDAOBase extends DAO
 			array_push( $val, $cheque->getIdUsuario() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -185,7 +163,6 @@ abstract class ChequeDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Cheque($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_cheque"] );
 		}
 		return $ar;
 	}

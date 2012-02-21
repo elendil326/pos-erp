@@ -12,23 +12,6 @@
 abstract class ConceptoIngresoDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_concepto_ingreso ){
-			$pk = "";
-			$pk .= $id_concepto_ingreso . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_concepto_ingreso){
-			$pk = "";
-			$pk .= $id_concepto_ingreso . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_concepto_ingreso ){
-			$pk = "";
-			$pk .= $id_concepto_ingreso . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,16 +47,12 @@ abstract class ConceptoIngresoDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_concepto_ingreso )
 	{
-		if(self::recordExists(  $id_concepto_ingreso)){
-			return self::getRecord( $id_concepto_ingreso );
-		}
 		$sql = "SELECT * FROM concepto_ingreso WHERE (id_concepto_ingreso = ? ) LIMIT 1;";
 		$params = array(  $id_concepto_ingreso );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new ConceptoIngreso( $rs );
-			self::pushRecord( $foo,  $id_concepto_ingreso );
 			return $foo;
 	}
 
@@ -109,7 +88,6 @@ abstract class ConceptoIngresoDAOBase extends DAO
 			$bar = new ConceptoIngreso($foo);
     		array_push( $allData, $bar);
 			//id_concepto_ingreso
-    		self::pushRecord( $bar, $foo["id_concepto_ingreso"] );
 		}
 		return $allData;
 	}
@@ -168,7 +146,7 @@ abstract class ConceptoIngresoDAOBase extends DAO
 			array_push( $val, $concepto_ingreso->getActivo() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -180,7 +158,6 @@ abstract class ConceptoIngresoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new ConceptoIngreso($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_concepto_ingreso"] );
 		}
 		return $ar;
 	}

@@ -12,23 +12,6 @@
 abstract class PaqueteDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_paquete ){
-			$pk = "";
-			$pk .= $id_paquete . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_paquete){
-			$pk = "";
-			$pk .= $id_paquete . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_paquete ){
-			$pk = "";
-			$pk .= $id_paquete . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,16 +47,12 @@ abstract class PaqueteDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_paquete )
 	{
-		if(self::recordExists(  $id_paquete)){
-			return self::getRecord( $id_paquete );
-		}
 		$sql = "SELECT * FROM paquete WHERE (id_paquete = ? ) LIMIT 1;";
 		$params = array(  $id_paquete );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new Paquete( $rs );
-			self::pushRecord( $foo,  $id_paquete );
 			return $foo;
 	}
 
@@ -109,7 +88,6 @@ abstract class PaqueteDAOBase extends DAO
 			$bar = new Paquete($foo);
     		array_push( $allData, $bar);
 			//id_paquete
-    		self::pushRecord( $bar, $foo["id_paquete"] );
 		}
 		return $allData;
 	}
@@ -178,7 +156,7 @@ abstract class PaqueteDAOBase extends DAO
 			array_push( $val, $paquete->getActivo() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -190,7 +168,6 @@ abstract class PaqueteDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Paquete($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_paquete"] );
 		}
 		return $ar;
 	}

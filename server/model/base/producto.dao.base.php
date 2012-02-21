@@ -12,23 +12,6 @@
 abstract class ProductoDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_producto ){
-			$pk = "";
-			$pk .= $id_producto . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_producto){
-			$pk = "";
-			$pk .= $id_producto . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_producto ){
-			$pk = "";
-			$pk .= $id_producto . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,16 +47,12 @@ abstract class ProductoDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_producto )
 	{
-		if(self::recordExists(  $id_producto)){
-			return self::getRecord( $id_producto );
-		}
 		$sql = "SELECT * FROM producto WHERE (id_producto = ? ) LIMIT 1;";
 		$params = array(  $id_producto );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new Producto( $rs );
-			self::pushRecord( $foo,  $id_producto );
 			return $foo;
 	}
 
@@ -109,7 +88,6 @@ abstract class ProductoDAOBase extends DAO
 			$bar = new Producto($foo);
     		array_push( $allData, $bar);
 			//id_producto
-    		self::pushRecord( $bar, $foo["id_producto"] );
 		}
 		return $allData;
 	}
@@ -223,7 +201,7 @@ abstract class ProductoDAOBase extends DAO
 			array_push( $val, $producto->getPrecio() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -235,7 +213,6 @@ abstract class ProductoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Producto($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_producto"] );
 		}
 		return $ar;
 	}

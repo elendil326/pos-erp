@@ -12,23 +12,6 @@
 abstract class IngresoDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_ingreso ){
-			$pk = "";
-			$pk .= $id_ingreso . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_ingreso){
-			$pk = "";
-			$pk .= $id_ingreso . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_ingreso ){
-			$pk = "";
-			$pk .= $id_ingreso . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,16 +47,12 @@ abstract class IngresoDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_ingreso )
 	{
-		if(self::recordExists(  $id_ingreso)){
-			return self::getRecord( $id_ingreso );
-		}
 		$sql = "SELECT * FROM ingreso WHERE (id_ingreso = ? ) LIMIT 1;";
 		$params = array(  $id_ingreso );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new Ingreso( $rs );
-			self::pushRecord( $foo,  $id_ingreso );
 			return $foo;
 	}
 
@@ -109,7 +88,6 @@ abstract class IngresoDAOBase extends DAO
 			$bar = new Ingreso($foo);
     		array_push( $allData, $bar);
 			//id_ingreso
-    		self::pushRecord( $bar, $foo["id_ingreso"] );
 		}
 		return $allData;
 	}
@@ -213,7 +191,7 @@ abstract class IngresoDAOBase extends DAO
 			array_push( $val, $ingreso->getMotivoCancelacion() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -225,7 +203,6 @@ abstract class IngresoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Ingreso($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_ingreso"] );
 		}
 		return $ar;
 	}

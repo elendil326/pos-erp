@@ -12,23 +12,6 @@
 abstract class ConsignacionDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_consignacion ){
-			$pk = "";
-			$pk .= $id_consignacion . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_consignacion){
-			$pk = "";
-			$pk .= $id_consignacion . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_consignacion ){
-			$pk = "";
-			$pk .= $id_consignacion . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,16 +47,12 @@ abstract class ConsignacionDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_consignacion )
 	{
-		if(self::recordExists(  $id_consignacion)){
-			return self::getRecord( $id_consignacion );
-		}
 		$sql = "SELECT * FROM consignacion WHERE (id_consignacion = ? ) LIMIT 1;";
 		$params = array(  $id_consignacion );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new Consignacion( $rs );
-			self::pushRecord( $foo,  $id_consignacion );
 			return $foo;
 	}
 
@@ -109,7 +88,6 @@ abstract class ConsignacionDAOBase extends DAO
 			$bar = new Consignacion($foo);
     		array_push( $allData, $bar);
 			//id_consignacion
-    		self::pushRecord( $bar, $foo["id_consignacion"] );
 		}
 		return $allData;
 	}
@@ -218,7 +196,7 @@ abstract class ConsignacionDAOBase extends DAO
 			array_push( $val, $consignacion->getSaldo() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -230,7 +208,6 @@ abstract class ConsignacionDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Consignacion($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_consignacion"] );
 		}
 		return $ar;
 	}

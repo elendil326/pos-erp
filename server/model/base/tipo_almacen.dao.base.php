@@ -12,23 +12,6 @@
 abstract class TipoAlmacenDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_tipo_almacen ){
-			$pk = "";
-			$pk .= $id_tipo_almacen . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_tipo_almacen){
-			$pk = "";
-			$pk .= $id_tipo_almacen . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_tipo_almacen ){
-			$pk = "";
-			$pk .= $id_tipo_almacen . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,16 +47,12 @@ abstract class TipoAlmacenDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_tipo_almacen )
 	{
-		if(self::recordExists(  $id_tipo_almacen)){
-			return self::getRecord( $id_tipo_almacen );
-		}
 		$sql = "SELECT * FROM tipo_almacen WHERE (id_tipo_almacen = ? ) LIMIT 1;";
 		$params = array(  $id_tipo_almacen );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new TipoAlmacen( $rs );
-			self::pushRecord( $foo,  $id_tipo_almacen );
 			return $foo;
 	}
 
@@ -109,7 +88,6 @@ abstract class TipoAlmacenDAOBase extends DAO
 			$bar = new TipoAlmacen($foo);
     		array_push( $allData, $bar);
 			//id_tipo_almacen
-    		self::pushRecord( $bar, $foo["id_tipo_almacen"] );
 		}
 		return $allData;
 	}
@@ -153,7 +131,7 @@ abstract class TipoAlmacenDAOBase extends DAO
 			array_push( $val, $tipo_almacen->getDescripcion() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -165,7 +143,6 @@ abstract class TipoAlmacenDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new TipoAlmacen($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_tipo_almacen"] );
 		}
 		return $ar;
 	}

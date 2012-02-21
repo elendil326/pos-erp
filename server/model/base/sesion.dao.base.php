@@ -12,23 +12,6 @@
 abstract class SesionDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_sesion ){
-			$pk = "";
-			$pk .= $id_sesion . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_sesion){
-			$pk = "";
-			$pk .= $id_sesion . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_sesion ){
-			$pk = "";
-			$pk .= $id_sesion . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,16 +47,12 @@ abstract class SesionDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_sesion )
 	{
-		if(self::recordExists(  $id_sesion)){
-			return self::getRecord( $id_sesion );
-		}
 		$sql = "SELECT * FROM sesion WHERE (id_sesion = ? ) LIMIT 1;";
 		$params = array(  $id_sesion );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new Sesion( $rs );
-			self::pushRecord( $foo,  $id_sesion );
 			return $foo;
 	}
 
@@ -109,7 +88,6 @@ abstract class SesionDAOBase extends DAO
 			$bar = new Sesion($foo);
     		array_push( $allData, $bar);
 			//id_sesion
-    		self::pushRecord( $bar, $foo["id_sesion"] );
 		}
 		return $allData;
 	}
@@ -173,7 +151,7 @@ abstract class SesionDAOBase extends DAO
 			array_push( $val, $sesion->getIp() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -185,7 +163,6 @@ abstract class SesionDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Sesion($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_sesion"] );
 		}
 		return $ar;
 	}

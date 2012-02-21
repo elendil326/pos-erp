@@ -12,23 +12,6 @@
 abstract class CompraArpillaDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_compra_arpilla ){
-			$pk = "";
-			$pk .= $id_compra_arpilla . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_compra_arpilla){
-			$pk = "";
-			$pk .= $id_compra_arpilla . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_compra_arpilla ){
-			$pk = "";
-			$pk .= $id_compra_arpilla . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,16 +47,12 @@ abstract class CompraArpillaDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_compra_arpilla )
 	{
-		if(self::recordExists(  $id_compra_arpilla)){
-			return self::getRecord( $id_compra_arpilla );
-		}
 		$sql = "SELECT * FROM compra_arpilla WHERE (id_compra_arpilla = ? ) LIMIT 1;";
 		$params = array(  $id_compra_arpilla );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new CompraArpilla( $rs );
-			self::pushRecord( $foo,  $id_compra_arpilla );
 			return $foo;
 	}
 
@@ -109,7 +88,6 @@ abstract class CompraArpillaDAOBase extends DAO
 			$bar = new CompraArpilla($foo);
     		array_push( $allData, $bar);
 			//id_compra_arpilla
-    		self::pushRecord( $bar, $foo["id_compra_arpilla"] );
 		}
 		return $allData;
 	}
@@ -203,7 +181,7 @@ abstract class CompraArpillaDAOBase extends DAO
 			array_push( $val, $compra_arpilla->getTotalOrigen() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -215,7 +193,6 @@ abstract class CompraArpillaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new CompraArpilla($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_compra_arpilla"] );
 		}
 		return $ar;
 	}

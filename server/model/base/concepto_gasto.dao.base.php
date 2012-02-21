@@ -12,23 +12,6 @@
 abstract class ConceptoGastoDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_concepto_gasto ){
-			$pk = "";
-			$pk .= $id_concepto_gasto . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_concepto_gasto){
-			$pk = "";
-			$pk .= $id_concepto_gasto . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_concepto_gasto ){
-			$pk = "";
-			$pk .= $id_concepto_gasto . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,16 +47,12 @@ abstract class ConceptoGastoDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_concepto_gasto )
 	{
-		if(self::recordExists(  $id_concepto_gasto)){
-			return self::getRecord( $id_concepto_gasto );
-		}
 		$sql = "SELECT * FROM concepto_gasto WHERE (id_concepto_gasto = ? ) LIMIT 1;";
 		$params = array(  $id_concepto_gasto );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new ConceptoGasto( $rs );
-			self::pushRecord( $foo,  $id_concepto_gasto );
 			return $foo;
 	}
 
@@ -109,7 +88,6 @@ abstract class ConceptoGastoDAOBase extends DAO
 			$bar = new ConceptoGasto($foo);
     		array_push( $allData, $bar);
 			//id_concepto_gasto
-    		self::pushRecord( $bar, $foo["id_concepto_gasto"] );
 		}
 		return $allData;
 	}
@@ -168,7 +146,7 @@ abstract class ConceptoGastoDAOBase extends DAO
 			array_push( $val, $concepto_gasto->getActivo() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -180,7 +158,6 @@ abstract class ConceptoGastoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new ConceptoGasto($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_concepto_gasto"] );
 		}
 		return $ar;
 	}

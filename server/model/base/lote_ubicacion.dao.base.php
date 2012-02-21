@@ -12,26 +12,6 @@
 abstract class LoteUbicacionDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_lote, $id_ubicacion ){
-			$pk = "";
-			$pk .= $id_lote . "-";
-			$pk .= $id_ubicacion . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_lote, $id_ubicacion){
-			$pk = "";
-			$pk .= $id_lote . "-";
-			$pk .= $id_ubicacion . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_lote, $id_ubicacion ){
-			$pk = "";
-			$pk .= $id_lote . "-";
-			$pk .= $id_ubicacion . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -67,16 +47,12 @@ abstract class LoteUbicacionDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_lote, $id_ubicacion )
 	{
-		if(self::recordExists(  $id_lote, $id_ubicacion)){
-			return self::getRecord( $id_lote, $id_ubicacion );
-		}
 		$sql = "SELECT * FROM lote_ubicacion WHERE (id_lote = ? AND id_ubicacion = ? ) LIMIT 1;";
 		$params = array(  $id_lote, $id_ubicacion );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new LoteUbicacion( $rs );
-			self::pushRecord( $foo,  $id_lote, $id_ubicacion );
 			return $foo;
 	}
 
@@ -113,7 +89,6 @@ abstract class LoteUbicacionDAOBase extends DAO
     		array_push( $allData, $bar);
 			//id_lote
 			//id_ubicacion
-    		self::pushRecord( $bar, $foo["id_lote"],$foo["id_ubicacion"] );
 		}
 		return $allData;
 	}
@@ -157,7 +132,7 @@ abstract class LoteUbicacionDAOBase extends DAO
 			array_push( $val, $lote_ubicacion->getIdUbicacion() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -169,7 +144,6 @@ abstract class LoteUbicacionDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new LoteUbicacion($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_lote"],$foo["id_ubicacion"] );
 		}
 		return $ar;
 	}

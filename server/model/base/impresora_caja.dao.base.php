@@ -12,26 +12,6 @@
 abstract class ImpresoraCajaDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_impresora, $id_caja ){
-			$pk = "";
-			$pk .= $id_impresora . "-";
-			$pk .= $id_caja . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_impresora, $id_caja){
-			$pk = "";
-			$pk .= $id_impresora . "-";
-			$pk .= $id_caja . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_impresora, $id_caja ){
-			$pk = "";
-			$pk .= $id_impresora . "-";
-			$pk .= $id_caja . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -67,16 +47,12 @@ abstract class ImpresoraCajaDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_impresora, $id_caja )
 	{
-		if(self::recordExists(  $id_impresora, $id_caja)){
-			return self::getRecord( $id_impresora, $id_caja );
-		}
 		$sql = "SELECT * FROM impresora_caja WHERE (id_impresora = ? AND id_caja = ? ) LIMIT 1;";
 		$params = array(  $id_impresora, $id_caja );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new ImpresoraCaja( $rs );
-			self::pushRecord( $foo,  $id_impresora, $id_caja );
 			return $foo;
 	}
 
@@ -113,7 +89,6 @@ abstract class ImpresoraCajaDAOBase extends DAO
     		array_push( $allData, $bar);
 			//id_impresora
 			//id_caja
-    		self::pushRecord( $bar, $foo["id_impresora"],$foo["id_caja"] );
 		}
 		return $allData;
 	}
@@ -157,7 +132,7 @@ abstract class ImpresoraCajaDAOBase extends DAO
 			array_push( $val, $impresora_caja->getIdCaja() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -169,7 +144,6 @@ abstract class ImpresoraCajaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new ImpresoraCaja($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_impresora"],$foo["id_caja"] );
 		}
 		return $ar;
 	}

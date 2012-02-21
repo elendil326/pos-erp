@@ -12,23 +12,6 @@
 abstract class TarifaDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_tarifa ){
-			$pk = "";
-			$pk .= $id_tarifa . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_tarifa){
-			$pk = "";
-			$pk .= $id_tarifa . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_tarifa ){
-			$pk = "";
-			$pk .= $id_tarifa . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,16 +47,12 @@ abstract class TarifaDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_tarifa )
 	{
-		if(self::recordExists(  $id_tarifa)){
-			return self::getRecord( $id_tarifa );
-		}
 		$sql = "SELECT * FROM tarifa WHERE (id_tarifa = ? ) LIMIT 1;";
 		$params = array(  $id_tarifa );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new Tarifa( $rs );
-			self::pushRecord( $foo,  $id_tarifa );
 			return $foo;
 	}
 
@@ -109,7 +88,6 @@ abstract class TarifaDAOBase extends DAO
 			$bar = new Tarifa($foo);
     		array_push( $allData, $bar);
 			//id_tarifa
-    		self::pushRecord( $bar, $foo["id_tarifa"] );
 		}
 		return $allData;
 	}
@@ -183,7 +161,7 @@ abstract class TarifaDAOBase extends DAO
 			array_push( $val, $tarifa->getIdVersionActiva() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -195,7 +173,6 @@ abstract class TarifaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Tarifa($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_tarifa"] );
 		}
 		return $ar;
 	}

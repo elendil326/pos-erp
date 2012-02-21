@@ -12,23 +12,6 @@
 abstract class RetencionDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_retencion ){
-			$pk = "";
-			$pk .= $id_retencion . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_retencion){
-			$pk = "";
-			$pk .= $id_retencion . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_retencion ){
-			$pk = "";
-			$pk .= $id_retencion . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,16 +47,12 @@ abstract class RetencionDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_retencion )
 	{
-		if(self::recordExists(  $id_retencion)){
-			return self::getRecord( $id_retencion );
-		}
 		$sql = "SELECT * FROM retencion WHERE (id_retencion = ? ) LIMIT 1;";
 		$params = array(  $id_retencion );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new Retencion( $rs );
-			self::pushRecord( $foo,  $id_retencion );
 			return $foo;
 	}
 
@@ -109,7 +88,6 @@ abstract class RetencionDAOBase extends DAO
 			$bar = new Retencion($foo);
     		array_push( $allData, $bar);
 			//id_retencion
-    		self::pushRecord( $bar, $foo["id_retencion"] );
 		}
 		return $allData;
 	}
@@ -168,7 +146,7 @@ abstract class RetencionDAOBase extends DAO
 			array_push( $val, $retencion->getDescripcion() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -180,7 +158,6 @@ abstract class RetencionDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Retencion($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_retencion"] );
 		}
 		return $ar;
 	}

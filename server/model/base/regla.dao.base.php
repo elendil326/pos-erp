@@ -12,23 +12,6 @@
 abstract class ReglaDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_regla ){
-			$pk = "";
-			$pk .= $id_regla . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_regla){
-			$pk = "";
-			$pk .= $id_regla . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_regla ){
-			$pk = "";
-			$pk .= $id_regla . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,16 +47,12 @@ abstract class ReglaDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_regla )
 	{
-		if(self::recordExists(  $id_regla)){
-			return self::getRecord( $id_regla );
-		}
 		$sql = "SELECT * FROM regla WHERE (id_regla = ? ) LIMIT 1;";
 		$params = array(  $id_regla );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new Regla( $rs );
-			self::pushRecord( $foo,  $id_regla );
 			return $foo;
 	}
 
@@ -109,7 +88,6 @@ abstract class ReglaDAOBase extends DAO
 			$bar = new Regla($foo);
     		array_push( $allData, $bar);
 			//id_regla
-    		self::pushRecord( $bar, $foo["id_regla"] );
 		}
 		return $allData;
 	}
@@ -228,7 +206,7 @@ abstract class ReglaDAOBase extends DAO
 			array_push( $val, $regla->getSecuencia() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -240,7 +218,6 @@ abstract class ReglaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Regla($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_regla"] );
 		}
 		return $ar;
 	}

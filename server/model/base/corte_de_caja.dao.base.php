@@ -12,23 +12,6 @@
 abstract class CorteDeCajaDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_corte_de_caja ){
-			$pk = "";
-			$pk .= $id_corte_de_caja . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_corte_de_caja){
-			$pk = "";
-			$pk .= $id_corte_de_caja . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_corte_de_caja ){
-			$pk = "";
-			$pk .= $id_corte_de_caja . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,16 +47,12 @@ abstract class CorteDeCajaDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_corte_de_caja )
 	{
-		if(self::recordExists(  $id_corte_de_caja)){
-			return self::getRecord( $id_corte_de_caja );
-		}
 		$sql = "SELECT * FROM corte_de_caja WHERE (id_corte_de_caja = ? ) LIMIT 1;";
 		$params = array(  $id_corte_de_caja );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new CorteDeCaja( $rs );
-			self::pushRecord( $foo,  $id_corte_de_caja );
 			return $foo;
 	}
 
@@ -109,7 +88,6 @@ abstract class CorteDeCajaDAOBase extends DAO
 			$bar = new CorteDeCaja($foo);
     		array_push( $allData, $bar);
 			//id_corte_de_caja
-    		self::pushRecord( $bar, $foo["id_corte_de_caja"] );
 		}
 		return $allData;
 	}
@@ -183,7 +161,7 @@ abstract class CorteDeCajaDAOBase extends DAO
 			array_push( $val, $corte_de_caja->getSaldoFinal() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -195,7 +173,6 @@ abstract class CorteDeCajaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new CorteDeCaja($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_corte_de_caja"] );
 		}
 		return $ar;
 	}

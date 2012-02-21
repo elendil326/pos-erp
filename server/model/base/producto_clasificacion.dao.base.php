@@ -12,26 +12,6 @@
 abstract class ProductoClasificacionDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_producto, $id_clasificacion_producto ){
-			$pk = "";
-			$pk .= $id_producto . "-";
-			$pk .= $id_clasificacion_producto . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_producto, $id_clasificacion_producto){
-			$pk = "";
-			$pk .= $id_producto . "-";
-			$pk .= $id_clasificacion_producto . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_producto, $id_clasificacion_producto ){
-			$pk = "";
-			$pk .= $id_producto . "-";
-			$pk .= $id_clasificacion_producto . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -67,16 +47,12 @@ abstract class ProductoClasificacionDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_producto, $id_clasificacion_producto )
 	{
-		if(self::recordExists(  $id_producto, $id_clasificacion_producto)){
-			return self::getRecord( $id_producto, $id_clasificacion_producto );
-		}
 		$sql = "SELECT * FROM producto_clasificacion WHERE (id_producto = ? AND id_clasificacion_producto = ? ) LIMIT 1;";
 		$params = array(  $id_producto, $id_clasificacion_producto );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new ProductoClasificacion( $rs );
-			self::pushRecord( $foo,  $id_producto, $id_clasificacion_producto );
 			return $foo;
 	}
 
@@ -113,7 +89,6 @@ abstract class ProductoClasificacionDAOBase extends DAO
     		array_push( $allData, $bar);
 			//id_producto
 			//id_clasificacion_producto
-    		self::pushRecord( $bar, $foo["id_producto"],$foo["id_clasificacion_producto"] );
 		}
 		return $allData;
 	}
@@ -157,7 +132,7 @@ abstract class ProductoClasificacionDAOBase extends DAO
 			array_push( $val, $producto_clasificacion->getIdClasificacionProducto() );
 		}
 
-		if(sizeof($val) == 0){return array();}
+		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -169,7 +144,6 @@ abstract class ProductoClasificacionDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new ProductoClasificacion($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_producto"],$foo["id_clasificacion_producto"] );
 		}
 		return $ar;
 	}
