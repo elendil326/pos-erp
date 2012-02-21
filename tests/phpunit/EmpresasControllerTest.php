@@ -51,8 +51,6 @@ class EmpresasControllerTest extends PHPUnit_Framework_TestCase {
 		);
 		
 		$id_moneda = 1;
-		$impuestos_compra = Array();
-		$impuestos_venta = Array();
 		$razon_social = "Caffeina Software";
 		$rfc  = "GOHA8801317";
 		
@@ -68,8 +66,6 @@ class EmpresasControllerTest extends PHPUnit_Framework_TestCase {
 		$this->_empresa = EmpresasController::Nuevo(
 				$direccion, 
 				$id_moneda, 
-				$impuestos_compra, 
-				$impuestos_venta, 
 				$razon_social, 
 				$rfc
 			);
