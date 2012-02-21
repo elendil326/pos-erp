@@ -28,7 +28,7 @@
 			"metodo_costeo",
 			"nombre_servicio",
 			"codigo_servicio",
-			"empresas",
+/*			"empresas",*/
 			"precio",
 			"compra_en_mostrador"
 		));

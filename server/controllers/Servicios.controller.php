@@ -6,7 +6,7 @@ require_once("interfaces/Servicios.interface.php");
   *
   **/
 	
-  class ServiciosController implements IServicios{
+  class ServiciosController extends ValidacionesController implements IServicios{
   
         
         /*
@@ -124,7 +124,7 @@ require_once("interfaces/Servicios.interface.php");
             //valida que el nombre este en rango y que no se repita
             if(!is_null($nombre))
             {
-                $e = self::validarString($nombre, 50, "nombre");
+                $e = self::validarLongitudDeCadena($nombre, 50, 100);
                 if(is_string($e))
                     return $e;
                 
@@ -156,7 +156,7 @@ require_once("interfaces/Servicios.interface.php");
             //valida que la descripcion este en rango
             if(!is_null($descripcion))
             {
-                $e = self::validarString($descripcion, 255, "descripcion");
+                $e = self::validarLongitudDeCadena($descripcion, 255, "descripcion");
                 if(is_string($e))
                     return $e;
             }
@@ -226,7 +226,7 @@ require_once("interfaces/Servicios.interface.php");
             //valida que la descripcion este en rango
             if(!is_null($descripcion))
             {
-                $e = self::validarString($descripcion, 255, "descripcion");
+                $e = self::validarLongitudDeCadena($descripcion, 255, "descripcion");
                 if(is_string($e))
                     return $e;
             }
@@ -234,7 +234,7 @@ require_once("interfaces/Servicios.interface.php");
             //valida que el motivo de cancelacion este en rango
             if(!is_null($motivo_cancelacion))
             {
-                $e = self::validarString($motivo_cancelacion, 255, "motivo de cancelacion");
+                $e = self::validarLongitudDeCadena($motivo_cancelacion, 255, "motivo de cancelacion");
                 if(is_string($e))
                     return $e;
             }
@@ -285,9 +285,8 @@ require_once("interfaces/Servicios.interface.php");
             //valida el rango del nombre de servicio y que no se repita
             if(!is_null($nombre_servicio))
             {
-                $e = self::validarString($nombre_servicio, 150, "nombre de servicio");
-                if(is_string($e))
-                    return $e;
+                $e = self::validarLongitudDeCadena($nombre_servicio, 150, 1024 );
+
                 
                 if(!is_null($id_servicio))
                 {
@@ -315,7 +314,7 @@ require_once("interfaces/Servicios.interface.php");
             //valida que el codigo de servicio este en rango y que no se repita
             if(!is_null($codigo_servicio))
             {
-                $e = self::validarString($codigo_servicio, 20, "codigo de servicio");
+                $e = self::validarLongitudDeCadena($codigo_servicio, 20, "codigo de servicio");
                 if(is_string($e))
                     return $e;
                 
@@ -353,7 +352,7 @@ require_once("interfaces/Servicios.interface.php");
             //valida la descripcion del servicio
             if(!is_null($descripcion_servicio))
             {
-                $e = self::validarString($descripcion_servicio, 255, "descripcion de servicio");
+                $e = self::validarLongitudDeCadena($descripcion_servicio, 255, "descripcion de servicio");
                 if(is_string($e))
                     return $e;
             }
@@ -385,7 +384,7 @@ require_once("interfaces/Servicios.interface.php");
             //valida la foto del servicio
             if(!is_null($foto_servicio))
             {
-                $e = self::validarString($foto_servicio, 50, "foto del servicio");
+                $e = self::validarLongitudDeCadena($foto_servicio, 50, "foto del servicio");
                 if(is_string($e))
                     return $e;
             }
@@ -493,7 +492,7 @@ require_once("interfaces/Servicios.interface.php");
             //valida que el estado este en rango
             if(!is_null($estado))
             {
-                $e = self::validarString($estado, 255, "estado");
+                $e = self::validarLongitudDeCadena($estado, 255, "estado");
                 if(is_string($e))
                     return $e;
             }
@@ -992,9 +991,19 @@ require_once("interfaces/Servicios.interface.php");
             Logger::log("Creando nuevo servicio");
             
             //se validan los parametros recibidos
-            $validar = self::validarParametrosServicio(null,$nombre_servicio,$metodo_costeo,
-                    $codigo_servicio,$compra_en_mostrador,$activo,$descripcion_servicio,
-                    $costo_estandar,$garantia,$control_de_existencia,$foto_servicio,$precio);
+            $validar = self::validarParametrosServicio(
+								null,
+								$nombre_servicio,
+								$metodo_costeo,
+                    			$codigo_servicio,
+								$compra_en_mostrador,
+								$activo,
+								$descripcion_servicio,
+                    			$costo_estandar,
+								$garantia,
+								$control_de_existencia,
+								$foto_servicio,
+								$precio);
 
             if(is_string($validar))
             {
