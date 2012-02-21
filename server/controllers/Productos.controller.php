@@ -983,7 +983,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos
             }
             
             //Si el producto aun esta en existencia en algun almacen, no puede ser eliminado
-            $productos_almacen = ProductoAlmacenDAO::search( new ProductoAlmacen( array("id_producto" => $id_producto) ) );
+            $productos_almacen = LoteProductoDAO::search( new LoteProducto( array("id_producto" => $id_producto) ) );
             foreach($productos_almacen as $producto_almacen)
             {
                 if($producto_almacen->getCantidad()!=0)

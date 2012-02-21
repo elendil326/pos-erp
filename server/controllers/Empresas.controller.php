@@ -366,6 +366,7 @@ require_once("interfaces/Empresas.interface.php");
                  //se inicializa con el id de esta empresa.
                  //Por cada uno de las retenciones como id retencion, se verifica que la 
                  //retencion exista, se asigna al registro y se guarda.
+                 /*
                  if(!is_null($impuestos_compra))
                  {
                      
@@ -384,6 +385,7 @@ require_once("interfaces/Empresas.interface.php");
                          RetencionEmpresaDAO::save($retencion_empresa);
                      }
                  }
+				*/
              }catch(Exception $e){
                  DAO::transRollback();
                  Logger::error("No se pudo crear la empresa: ".$e);
