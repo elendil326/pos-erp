@@ -84,11 +84,11 @@ Consideraciones:
  	 *Muestra la informacion detallada de una autorizacion.
  	 *
  	 * @param id_autorizacion	 int Id de la autorizacion a inspeccionar.
- 	 * @return fecha_peticion string La fecha en tiempo Unix de cuando se creo esta peticion.
- 	 * @return fecha_respuesta string La fecha en tiempo Unix de cuando se respondio esta peticion.
  	 * @return solicitante json El id del usuario que pidio la autorizacion. {            "id usuario": 24,            "nombre usuario": "Juana Escobar Martinez"        }
  	 * @return sucursal_origen json El id de la sucursal donde se inicio la peticion en caso de existir. En caso de que no aplique, vendra el valor null. {            "id sucursal": 24,            "nombre sucursal": "Sucursal del norte"        }
  	 * @return id_autorizacion int El `id_autorizacion`de esta autorizacion.
+ 	 * @return fecha_respuesta string La fecha en tiempo Unix de cuando se respondio esta peticion.
+ 	 * @return fecha_peticion string La fecha en tiempo Unix de cuando se creo esta peticion.
  	 **/
   static function Detalle
 	(

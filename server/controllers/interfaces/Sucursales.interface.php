@@ -16,7 +16,6 @@
  	 * @param id_empresa int Id de la empresa de la cual se listaran sus sucursales.
  	 * @param limit int Indica hasta que registro se desea obtener a partir del conjunto de resultados productos de la bsqueda.
  	 * @param query string Valor que se buscara en la consulta
- 	 * @param sort string Propiedad por la cual se ordenaran el conjunto de registros: `asc` o `desc`
  	 * @param start int Indica desde que registro se desea obtener a partir del conjunto de resultados productos de la bsqueda.
  	 * @return resultados json Objeto que contendra la lista de sucursales.
  	 * @return numero_de_resultados int 
@@ -27,7 +26,6 @@
 		$id_empresa = null, 
 		$limit = null, 
 		$query = null, 
-		$sort = null, 
 		$start = null
 	);  
   
@@ -290,10 +288,7 @@
  	 * @param empresas json (DE ESTO ES LO QUE VEREMOS EL MARTES CON IRATZIO) Objeto que contendra los ids de las empresas a las que esta sucursal pertenece, por lo menos tiene que haber una empresa. En este JSON, opcionalmente junto con el id de la empresa, aapreceran dos campos que seran margen_utilidad y descuento, que indicaran que todos los productos de esa empresa ofrecidos en esta sucursal tendran un margen de utilidad y/o un descuento con los valores en esos campos
  	 * @param id_gerente int Id del gerente de la sucursal
  	 * @param id_moneda int Id de la moneda base que manejaran las sucursales
- 	 * @param impuestos_compra json Impuestos de compra por default que se heredan a las sucursales y estas a su vez a los productos-
- 	 * @param impuestos_venta json Objeto que contendra los ids de los impuestos que afectana esta sucursal
  	 * @param razon_social string Razon social de la sucursal
- 	 * @param rfc string Rfc de la sucursal
  	 * @param saldo_a_favor float Saldo a favor de la sucursal
  	 **/
   static function Editar
@@ -305,10 +300,7 @@
 		$empresas = null, 
 		$id_gerente = null, 
 		$id_moneda = null, 
-		$impuestos_compra = "[]", 
-		$impuestos_venta = "[]", 
 		$razon_social = null, 
-		$rfc = null, 
 		$saldo_a_favor = null
 	);  
   
@@ -356,9 +348,6 @@
  	 * @param empresas json Arreglo de `id_empresa` de las empresas a las que pertenece esta sucursal.
  	 * @param id_gerente int ID del usuario que sera gerente de esta sucursal. Para que sea valido este usuario debe tener el nivel de acceso apropiado.
  	 * @param id_moneda int Id de la moneda base que manejaran las sucursales
- 	 * @param impuestos_compra json Impuestos de compra por default que se heredan a las sucursales y estas a su vez a los productos
- 	 * @param impuestos_venta json Impuestos de venta por default que se heredan a las sucursales y estas a su vez a los productos
- 	 * @param rfc string RFC de la sucursal
  	 * @param saldo_a_favor float Saldo a favor de la sucursal.
  	 * @return id_sucursal int Id autogenerado de la sucursal que se creo.
  	 **/
@@ -371,9 +360,6 @@
 		$empresas = null, 
 		$id_gerente = null, 
 		$id_moneda =  1 , 
-		$impuestos_compra = null, 
-		$impuestos_venta = null, 
-		$rfc = null, 
 		$saldo_a_favor = "0"
 	);  
   

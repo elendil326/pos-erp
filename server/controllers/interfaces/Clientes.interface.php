@@ -18,8 +18,8 @@
  	 * @param page int Indica en que pagina se encuentra dentro del conjunto de resultados que coincidieron en la bsqueda
  	 * @param query string El texto a buscar
  	 * @param start int Indica el registro inicial del conjunto de datos que se desea mostrar
- 	 * @return numero_de_resultados int Numero de registros que regreso esta busqueda
  	 * @return resultados json Lista de clientes que clientes que satisfacen la busqueda
+ 	 * @return numero_de_resultados int Numero de registros que regreso esta busqueda
  	 **/
   static function Buscar
 	(

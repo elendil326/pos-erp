@@ -891,4 +891,190 @@ Creo que este metodo tiene que estar bajo sucursal.
 	}  
 
 
+
+
+
+
+
+
+	/**
+ 	 *
+ 	 *Metodo que surte una sucursal por parte de un proveedor. La sucursal sera tomada de la sesion actual.
+
+ 	 *
+ 	 * @param id_lote int Id del lote que se generó previamente y es el que recibe los productos
+ 	 * @param productos json Objeto que contendra los ids de los productos, sus unidades y sus cantidades
+ 	 * @param motivo string Motivo del movimiento
+ 	 * @return id_entrada_lote string Id generado por el registro de surtir
+ 	 **/
+  static function EntradaLote
+	(
+		$id_lote, 
+		$productos, 
+		$motivo = null
+	){}
+
+
+
+
+	/**
+ 	 *
+ 	 *Crear un nuevo lote
+ 	 *
+ 	 * @param folio string Una cadena unica para cada lote que identifica a este lote.
+ 	 * @return id_lote int El identificador del lote recien generado.
+ 	 **/
+  static function NuevoLote
+	(
+		$folio
+	){} 
+
+
+
+
+	/**
+ 	 *
+ 	 *Envia productos fuera del almacen. Ya sea que sea un traspaso de un alamcen a otro o por motivos de inventarios fisicos.
+ 	 *
+ 	 * @param id_lote int Id del lote de donde se descontaran los productos.
+ 	 * @param productos json Objeto que contendra los ids de los productos que seran sacados del alamcen con sus cantidades y sus unidades
+ 	 * @param motivo string Motivo de la salida del producto
+ 	 * @return id_salida_lote int ID de la salida del producto
+ 	 **/
+  static function SalidaLote
+	(
+		$id_lote, 
+		$productos, 
+		$motivo = null
+	){}  
+
+
+
+
+	/**
+ 	 *
+ 	 *Lista los traspasos de almacenes. Puede filtrarse por empresa, por sucursal, por almacen, por producto, cancelados, completos, estado
+ 	 *
+ 	 * @param cancelado bool Si este valor no es obtenido, se listaran los traspasos tanto cancelados como no cancelados. Si su valor es verdadero se listaran solo los traspasos cancelados, si su valor es falso, se listaran los traspasos no cancelados
+ 	 * @param completo bool Si este valor no es obtenido, se listaran los traspasos tanto completos como no completos. Si su valor es verdadero, se listaran los traspasos completos, si es falso, se listaran los traspasos no completos
+ 	 * @param estado string Se listaran los traspasos cuyo estado sea este, si no es obtenido este valor, se listaran los traspasos de cualqueir estado
+ 	 * @param id_almacen_envia int Se listaran los traspasos enviados por este almacen
+ 	 * @param id_almacen_recibe int Se listaran los traspasos recibidos por este almacen
+ 	 * @return resultados json Lista de traspasos
+ 	 * @return numero_de_resultados int 
+ 	 **/
+  static function BuscarTraspasoLote
+	(
+		$cancelado = null, 
+		$completo = null, 
+		$estado = null, 
+		$id_almacen_envia = null, 
+		$id_almacen_recibe = null
+	){}  
+
+
+
+
+	/**
+ 	 *
+ 	 *Para poder cancelar un traspaso, este no tuvo que haber sido enviado aun.
+ 	 *
+ 	 * @param id_traspaso int Id del traspaso a cancelar
+ 	 **/
+  static function CancelarTraspasoLote
+	(
+		$id_traspaso
+	){}  
+
+
+
+
+	/**
+ 	 *
+ 	 *Para poder editar un traspaso,este no tuvo que haber sido enviado aun
+ 	 *
+ 	 * @param id_sucursal string Id de la sucursal que recibir el traspaso
+ 	 * @param id_traspaso int Id del traspaso a editar
+ 	 * @param productos json Productos a enviar con sus cantidades y respectivos lotes del cual saldran
+ 	 * @param fecha_envio_programada string Fecha de envio programada
+ 	 **/
+  static function EditarTraspasoLote
+	(
+		$id_sucursal, 
+		$id_traspaso, 
+		$productos, 
+		$fecha_envio_programada = null
+	){} 
+
+
+
+
+	/**
+ 	 *
+ 	 *Cambia el estado del traspaso a enviado y captura la fecha de envio del servidor. El usuario que envia sera tomado del servidor.
+ 	 *
+ 	 * @param id_traspaso int Id del traspaso a enviar
+ 	 **/
+  static function EnviarTraspasoLote
+	(
+		$id_traspaso
+	){}  
+
+
+
+
+	/**
+ 	 *
+ 	 *Crea un registro de traspaso de productos de un almacen a otro. El usuario que envia sera tomada de la sesion.
+ 	 *
+ 	 * @param fecha_envio_programada string Fecha de envi programada
+ 	 * @param id_sucursal string Id de la sucursal que va a recibir el producto
+ 	 * @param productos json Conjunto de productos que se van a traspasar.
+ 	 * @return id_traspaso int Id del traspaso que se genero
+ 	 **/
+  static function NuevoTraspasoLote
+	(
+		$fecha_envio_programada, 
+		$id_sucursal, 
+		$productos
+	){} 
+
+
+
+
+	/**
+ 	 *
+ 	 *ESTO NO SE DEBE DE TOMAR EN CUENTA, PARA ESO ESTA NUEVO Crea un registro de traspaso de producto de un almacen a otro. El usuario que envia sera tomada de la sesion.
+ 	 *
+ 	 * @param fecha_envio_programada string Fecha de envio programada para este traspaso
+ 	 * @param id_almacen_envia int Id del almacen que envia el producto
+ 	 * @param id_almacen_recibe int Id del almacen al que se envia el producto
+ 	 * @param productos json Productos a ser enviados con sus cantidades
+ 	 * @return id_traspaso int Id del traspaso autogenerado
+ 	 **/
+  static function ProgramarTraspasoLote
+	(
+		$fecha_envio_programada, 
+		$id_almacen_envia, 
+		$id_almacen_recibe, 
+		$productos
+	){}  
+
+
+
+
+	/**
+ 	 *
+ 	 *Cambia el estado de un traspaso a recibido. La  bandera de completo se prende si los productos enviados son los mismos que los recibidos. La fecha de recibo es tomada del servidor. El usuario que recibe sera tomada de la sesion actual.
+ 	 *
+ 	 * @param id_traspaso int Id del traspaso que se recibe
+ 	 * @param productos json Productos que se reciben con sus cantidades y a su respectivo lote al cual se iran
+ 	 **/
+  static function RecibirTraspasoLote
+	(
+		$id_traspaso, 
+		$productos
+	){} 
+
+
 }

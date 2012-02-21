@@ -15,17 +15,15 @@
  	 * @param activa bool Verdadero para mostrar solo las empresas activas. En caso de false, se mostraran ambas.
  	 * @param limit string Indica hasta que registro se desea obtener a partir del conjunto de resultados productos de la bsqueda.
  	 * @param query string Valor que se buscara en la consulta
- 	 * @param sort string Propiedad por la cual se ordenaran el conjunto de registros
  	 * @param start string Indica desde que registro se desea obtener a partir del conjunto de resultados productos de la bsqueda.
- 	 * @return numero_de_resultados int 
  	 * @return resultados json Arreglo de objetos que contendr las empresas de la instancia
+ 	 * @return numero_de_resultados int 
  	 **/
   static function Buscar
 	(
 		$activa =  false , 
 		$limit = null, 
 		$query = null, 
-		$sort = null, 
 		$start = null
 	);  
   
@@ -88,12 +86,12 @@ Varios RFC`s pueden repetirse siempre y cuando solo exista una empresa activa.
  	 *
  	 * @param direccion string [{    "tipo": "fiscal",    "calle": "Francisco I Madero",    "numero_exterior": "1009A",    "numero_interior": 12,    "colonia": "centro",    "codigo_postal": "38000",    "telefono1": "4611223312",    "telefono2": "",       "id_ciudad": 3,    "referencia": "El local naranja"}]
  	 * @param id_moneda int Id de la moneda base que manejaran las sucursales
- 	 * @param impuestos_compra json Impuestos de compra por default que se heredan a las sucursales y estas a su vez a los productos
- 	 * @param impuestos_venta json Impuestos de venta por default que se heredan a las sucursales y estas a su vez a los productos
  	 * @param razon_social string El nombre de la nueva empresa.
  	 * @param rfc string RFC de la nueva empresa.
  	 * @param cedula string url de la imagen de la cedula
  	 * @param email string Correo electronico de la empresa
+ 	 * @param impuestos_compra json Impuestos de compra por default que se heredan  a los productos
+ 	 * @param impuestos_venta json Impuestos de venta por default que se heredan  a los productos
  	 * @param logo string url del logo de la empresa
  	 * @param representante_legal string El nombre del representante legal de la nueva empresa.
  	 * @param sucursales json Arreglo de objetos con un `id_sucursal` cada uno que indicara que sucursales pertenecen a esta empresa.
@@ -104,12 +102,12 @@ Varios RFC`s pueden repetirse siempre y cuando solo exista una empresa activa.
 	(
 		$direccion, 
 		$id_moneda, 
-		$impuestos_compra, 
-		$impuestos_venta, 
 		$razon_social, 
 		$rfc, 
 		$cedula = null, 
 		$email = null, 
+		$impuestos_compra = "", 
+		$impuestos_venta = null, 
 		$logo = null, 
 		$representante_legal = null, 
 		$sucursales = null, 

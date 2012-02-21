@@ -8,46 +8,6 @@ require_once("interfaces/Servicios.interface.php");
 	
   class ServiciosController implements IServicios{
   
-      
-        //Metodo para pruebas que simula la obtencion del id de la sucursal actual
-        private static function getSucursal()
-        {
-            return 1;
-        }
-        
-        //metodo para pruebas que simula la obtencion del id de la caja actual
-        private static function getCaja()
-        {
-            return 1;
-        }
-      
-        
-        /*
-         *Se valida que un string tenga longitud en un rango de un maximo inclusivo y un minimo exclusvio.
-         *Regresa true cuando es valido, y un string cuando no lo es.
-         */
-          private static function validarString($string, $max_length, $nombre_variable,$min_length=0)
-	{
-		if(strlen($string)<=$min_length||strlen($string)>$max_length)
-		{
-		    return "La longitud de la variable ".$nombre_variable." proporcionada (".$string.") no esta en el rango de ".$min_length." - ".$max_length;
-		}
-		return true;
-        }
-
-
-        /*
-         * Se valida que un numero este en un rango de un maximo y un minimo inclusivos
-         * Regresa true cuando es valido, y un string cuando no lo es
-         */
-	private static function validarNumero($num, $max_length, $nombre_variable, $min_length=0)
-	{
-	    if($num<$min_length||$num>$max_length)
-	    {
-	        return "La variable ".$nombre_variable." proporcionada (".$num.") no esta en el rango de ".$min_length." - ".$max_length;
-	    }
-	    return true;
-	}
         
         /*
          * Valida los parametros de la tabla productos_orden_de_servicio.
@@ -1603,11 +1563,11 @@ require_once("interfaces/Servicios.interface.php");
  	 **/
 	public static function NuevaOrden
 	(
-		$descripcion, 
-		$fecha_entrega, 
 		$id_cliente, 
 		$id_servicio, 
-		$adelanto = null
+		$adelanto = null, 
+		$descripcion = "", 
+		$fecha_entrega = ""
 	)
 	{  
             Logger::log("Creando nueva orden de servicio");
@@ -1764,8 +1724,9 @@ require_once("interfaces/Servicios.interface.php");
 	public static function SeguimientoOrden
 	(
 		$id_orden_de_servicio, 
-		$nota, 
-		$id_localizacion = null
+		$abono = null, 
+		$id_localizacion = null, 
+		$nota = null
 	)
 	{  
             Logger::log("Creando nuevo seguimiento de orden");

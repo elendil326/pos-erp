@@ -94,8 +94,8 @@
  	 *
  	 * @param compras json Objeto que contendr la informacin de las compras as como su detalle.
  	 * @param ventas json Objeto que contendr la informacin de las ventas as como su detalle.
- 	 * @return id_compras json Arreglo de ids generados por las inserciones de compras si las hay
  	 * @return id_ventas json Arreglo de ids generados por las inserciones de ventas si las hay
+ 	 * @return id_compras json Arreglo de ids generados por las inserciones de compras si las hay
  	 **/
   static function EnviarOffline
 	(

@@ -271,20 +271,20 @@
  	 *
  	 *Una nueva orden de servicio a prestar. Este debe ser un servicio activo. Y prestable desde la sucursal desde donde se inicio la llamada. Los conceptos a llenar estan definidos por el concepto. Se guardara el id del agente que inicio la orden y el id del cliente. La fecha se tomara del servidor.
  	 *
- 	 * @param descripcion string Descripcion de la orden o el porque del servicio
- 	 * @param fecha_entrega string Fecha en que se entregara el servicio.
  	 * @param id_cliente int Id del cliente que contrata el servicio
  	 * @param id_servicio int Id del servicio que se contrata
  	 * @param adelanto float Adelanto de la orden
+ 	 * @param descripcion string Descripcion de la orden o el porque del servicio
+ 	 * @param fecha_entrega int Fecha en que se entregara el servicio. En caso de aplicar. Unix Time Stamp
  	 * @return id_orden int Id de la orden que se creo.
  	 **/
   static function NuevaOrden
 	(
-		$descripcion, 
-		$fecha_entrega, 
 		$id_cliente, 
 		$id_servicio, 
-		$adelanto = null
+		$adelanto = null, 
+		$descripcion = "", 
+		$fecha_entrega = ""
 	);  
   
   
@@ -308,17 +308,19 @@
   
 	/**
  	 *
- 	 *Realizar un seguimiento a una orden de servicio existente. Puede usarse para agregar detalles a una orden pero no para editar detalles previos. Puede ser que se haya hecho un abono
+ 	 *Realizar un seguimiento a una orden de servicio existente. Puede usarse para agregar detalles a una orden pero no para editar detalles previos. Puede ser que se haya hecho un abono.
  	 *
  	 * @param id_orden_de_servicio int Id de la orden a darle seguimiento
- 	 * @param nota string Nota por la cual se inicio el seguimiento, es una cadena describiendo la causa del seguimiento.
+ 	 * @param abono json {cantidad : "int",metodo : "efectivo"}
  	 * @param id_localizacion int Id de la sucursal en la que se encuentra actualmente la orden. Si se omite entonces el seguimiento se tomara que esta en la misma sucursal del ultimo servicio o bien de donde se inicio el servicio.
+ 	 * @param nota string Nota por la cual se inicio el seguimiento, es una cadena describiendo la causa del seguimiento.
  	 **/
   static function SeguimientoOrden
 	(
 		$id_orden_de_servicio, 
-		$nota, 
-		$id_localizacion = null
+		$abono = null, 
+		$id_localizacion = null, 
+		$nota = null
 	);  
   
   

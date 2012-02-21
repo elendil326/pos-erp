@@ -16,8 +16,8 @@
  	 * @param query string Buscar productos por codigo_producto, nombre_producto, descripcion_producto.
  	 * @param id_producto int Si estoy buscando un producto del cual ya tengo conocido su id. Si se envia `id_producto` todos los demas campos seran ignorados.
  	 * @param id_sucursal int Buscar las existencias de este producto en una sucursal especifica.
- 	 * @return resultados json 
  	 * @return numero_de_resultados int 
+ 	 * @return resultados json 
  	 **/
   static function Buscar
 	(
@@ -48,20 +48,16 @@
  	 *Este metodo cambia la informacion de una categoria de producto
  	 *
  	 * @param id_categoria int Id de la categoria del producto
- 	 * @param nombre string Nombre de la categoria del producto
  	 * @param descripcion string Descripcion larga de la categoria
- 	 * @param garantia int Numero de meses de garantia con los que cuentan los productos de esta clasificacion
- 	 * @param impuestos json Ids de impuestos que afectan a esta clasificacion de producto
- 	 * @param retenciones json Ids de retenciones que afectan a esta clasificacion de producto
+ 	 * @param id_categoria_padre string Id de la categora padre en caso de tenerla
+ 	 * @param nombre string Nombre de la categoria del producto
  	 **/
   static function EditarCategoria
 	(
 		$id_categoria, 
-		$nombre, 
 		$descripcion = null, 
-		$garantia = null, 
-		$impuestos = null, 
-		$retenciones = null
+		$id_categoria_padre = null, 
+		$nombre = ""
 	);  
   
   
@@ -73,18 +69,14 @@
  	 *
  	 * @param nombre string Nombre de la categoria
  	 * @param descripcion string Descripcion larga de la categoria
- 	 * @param garantia int Numero de meses de garantia con los que cuenta esta categoria de producto
- 	 * @param impuestos json Ids de impuestos que afectan a esta categoria de producto
- 	 * @param retenciones json Ids de retenciones que afectan esta clasificacion de productos
+ 	 * @param id_categoria_padre string Id de la categoría padre, en caso de que tuviera un padre
  	 * @return id_categoria int Id atogenerado por la insercion de la categoria
  	 **/
   static function NuevaCategoria
 	(
 		$nombre, 
 		$descripcion = null, 
-		$garantia = null, 
-		$impuestos = null, 
-		$retenciones = null
+		$id_categoria_padre = null
 	);  
   
   
@@ -120,6 +112,7 @@
  	 * @param empresas json arreglo de ids de empresas a las que pertenece este producto
  	 * @param foto_del_producto string url a una foto de este producto
  	 * @param garantia int Numero de meses de garantia de este producto
+ 	 * @param garantia int Numero de meses de garantia con los que cuenta esta categoria de producto
  	 * @param id_unidad int La unidad preferente de este producto
  	 * @param impuestos json array de ids de impuestos que tiene este producto
  	 * @param metodo_costeo string Puede ser "precio" o "costo" e indican si el precio final sera tomado a partir del costo del producto o del precio del mismo
@@ -140,6 +133,7 @@
 		$descripcion_producto = null, 
 		$empresas = null, 
 		$foto_del_producto = null, 
+		$garantia = null, 
 		$garantia = null, 
 		$id_unidad = null, 
 		$impuestos = null, 
@@ -169,6 +163,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos
  	 * @param control_de_existencia int 00000001 = Unidades. 00000010 = Caractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = Lote
  	 * @param descripcion_producto string Descripcion larga del producto
  	 * @param foto_del_producto string url a una foto de este producto
+ 	 * @param garantia int Numero de meses de garantia con los que cuenta esta categoria de producto
  	 * @param id_categoria int id de la categora a la cual pertenece el producto
  	 * @param id_empresas json Arreglo que contendra los ids de las empresas a las que pertenece este producto, en caso de no indicarlo este producto pertenecera a todas las empresas que esten relacionadas con la sucursal
  	 * @param id_unidad int Unidad de medida por defecto empelada para todas las operaciones en el stok
@@ -189,6 +184,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos
 		$control_de_existencia = null, 
 		$descripcion_producto = null, 
 		$foto_del_producto = null, 
+		$garantia = null, 
 		$id_categoria = null, 
 		$id_empresas = null, 
 		$id_unidad = null, 
@@ -216,19 +212,21 @@ NOTA: Se crea un producto tipo = 1 que es para productos
   
 	/**
  	 *
- 	 *Este metodo modifica la informacion de una unidad
+ 	 *Lista las categor?as de unidades
  	 *
- 	 * @param id_unidad string Id de la unidad a editar
- 	 * @param descripcion string Descripcion de la unidad convertible
- 	 * @param es_entero bool Si la unidad se manejara solo como enteros o con decimales
- 	 * @param nombre string Nombre de la unidad convertible
+ 	 * @param limit int Indica el registro final del conjunto de datos que se desea mostrar
+ 	 * @param page int Indica en que pagina se encuentra dentro del conjunto de resultados que coincidieron en la bsqueda
+ 	 * @param query string El texto a buscar
+ 	 * @param start int Indica el registro inicial del conjunto de datos que se desea mostrar
+ 	 * @return numero_de_resultados int 
+ 	 * @return resultados json Objeto que contendr la lista de categoras de unidades
  	 **/
-  static function EditarUnidad
+  static function BuscarCategoriaUdm
 	(
-		$id_unidad, 
-		$descripcion = null, 
-		$es_entero = null, 
-		$nombre = null
+		$limit =  50 , 
+		$page = null, 
+		$query = null, 
+		$start =  0 
 	);  
   
   
@@ -236,18 +234,17 @@ NOTA: Se crea un producto tipo = 1 que es para productos
   
 	/**
  	 *
- 	 *Edita la equivalencia entre dos unidades.
-1 kg = 2.204 lb
+ 	 *Edita una categor?a de unidades
  	 *
- 	 * @param equivalencia float La nueva equivalencia que se pondra entre los dos valores, en el ejemplo es 2.204
- 	 * @param id_unidad int Id de la unidad, en el ejemplo son kilogramos
- 	 * @param id_unidades int Id de la segunda unidad, en el ejemplo son libras
+ 	 * @param activo int Indica si la categoría esta activa
+ 	 * @param descripcion string Descripcin de la categora
+ 	 * @param id_categoria int Id de la categora que se desea editar
  	 **/
-  static function EquivalenciaEditarUnidad
+  static function EditarCategoriaUdm
 	(
-		$equivalencia, 
-		$id_unidad, 
-		$id_unidades
+		$activo, 
+		$descripcion, 
+		$id_categoria
 	);  
   
   
@@ -255,30 +252,16 @@ NOTA: Se crea un producto tipo = 1 que es para productos
   
 	/**
  	 *
- 	 *Descativa una unidad para que no sea usada por otro metodo
+ 	 *Crea una nueva categor?a para unidades
  	 *
- 	 * @param id_unidad int Id de la unidad convertible a eliminar
+ 	 * @param descripcion string Descripcin de la categora
+ 	 * @param activo int Indica si la categoría esta activa, en caso de no indicarlo se tomara como activo
+ 	 * @return id_categoria int Id de la categoria
  	 **/
-  static function EliminarUnidad
+  static function NuevaCategoriaUdm
 	(
-		$id_unidad
-	);  
-  
-  
-	
-  
-	/**
- 	 *
- 	 *Elimina una equivalencia entre dos unidades.
-Ejemplo: 1 kg = 2.204 lb
- 	 *
- 	 * @param id_unidad int En el ejemplo es el kilogramo
- 	 * @param id_unidades int En el ejemplo son las libras
- 	 **/
-  static function EquivalenciaEliminarUnidad
-	(
-		$id_unidad, 
-		$id_unidades
+		$descripcion, 
+		$activo = ""
 	);  
   
   
@@ -288,12 +271,19 @@ Ejemplo: 1 kg = 2.204 lb
  	 *
  	 *Lista las equivalencias existentes. Se puede ordenar por sus atributos
  	 *
- 	 * @param orden string Nombre de la columna de la tabla por la cual se ordenara la lista
- 	 * @return unidades_equivalencia json Lista de unidades
+ 	 * @param limit int Indica el registro final del conjunto de datos que se desea mostrar
+ 	 * @param page int Indica en que pagina se encuentra dentro del conjunto de resultados que coincidieron en la bsqueda
+ 	 * @param query string El texto a buscar
+ 	 * @param start int Indica el registro inicial del conjunto de datos que se desea mostrar
+ 	 * @return numero_de_resultados int Lista de unidades
+ 	 * @return resultados json Objeto que contendra la lista de udm
  	 **/
-  static function EquivalenciaListaUnidad
+  static function BuscarUnidadUdm
 	(
-		$orden = null
+		$limit =  50 , 
+		$page = null, 
+		$query = null, 
+		$start =  0 
 	);  
   
   
@@ -301,18 +291,25 @@ Ejemplo: 1 kg = 2.204 lb
   
 	/**
  	 *
- 	 *Este metodo crea unidades, como son Kilogramos, Libras, Toneladas, Litros, costales, cajas, arpillas, etc.
+ 	 *Este metodo modifica la informacion de una unidad
  	 *
- 	 * @param es_entero bool Boleano que indica si la unidad se manejara solo en enteros o con decimales
- 	 * @param nombre string Nombre de la unidad convertible
- 	 * @param descripcion string Descripcion de la unidad convertible
- 	 * @return id_unidad_convertible string Id de la unidad convertible
+ 	 * @param activa int Indica si la unidad esta activa
+ 	 * @param descripcion string Descripción de la unidad de medida
+ 	 * @param factor_conversion float 	 Equivalencia de esta unidad con respecto a la unidad de medida base obtenida de la categoría a la cual pertenece esta unidad. En caso de que se seleccione el valor de tipo_unidad_medida = "Referencia UdM para esta categoria" este valor sera igual a uno automáticamente sin posibilidad de ingresar otro valor diferente
+ 	 * @param tipo_unidad_medida string 	 Tipo enum cuyo valores son los siguientes : "Referencia UdM para esta categoria" (define a esta unidad como la unidad base de referencia de esta categoría, en caso de seleccionar esta opción automáticamente el factor de conversión sera igual a uno sin posibilidad de ingresar otro valor diferente), "Mayor que la UdM de referencia" (indica que esta unidad de medida sera mayor que la unidad de medida base d la categoría que se indique) y "Menor que la UdM de referencia" (indica que esta unidad de medida sera menor que la unidad de medida base de la categoría que se indique)
+ 	 * @param abreviatura string Descripción corta de la unidad, normalmente sera empelada en ticket de venta
+ 	 * @param id_categoria_unidad_medida int Id de la categoría a la cual pertenece la unidad
+ 	 * @param id_unidad_medida int Id de la unidad de medida que se desea editar
  	 **/
-  static function NuevaUnidad
+  static function EditarUnidadUdm
 	(
-		$es_entero, 
-		$nombre, 
-		$descripcion = null
+		$activa, 
+		$descripcion, 
+		$factor_conversion, 
+		$tipo_unidad_medida, 
+		$abreviatura = "", 
+		$id_categoria_unidad_medida = "", 
+		$id_unidad_medida = ""
 	);  
   
   
@@ -320,17 +317,24 @@ Ejemplo: 1 kg = 2.204 lb
   
 	/**
  	 *
- 	 *Crea un registro de la equivalencia entre una unidad y otra. Ejemplo: 1 kg = 2.204 lb
+ 	 *Crea una nueva unidad de medida
  	 *
- 	 * @param equivalencia float Valor del coeficiente de la segunda unidad, es decir, las veces que cabe la segunda unidad en la primera
- 	 * @param id_unidad int Id de la unidad. Esta unidad es tomada con coeficiente 1 en la ecuacion de, en el ejemplo es el kilogramo equivalencia
- 	 * @param id_unidades int Id de la unidad equivalente, en el ejemplo es la libra
+ 	 * @param abreviatura string Descripcin corta de la unidad, normalmente sera empelada en ticket de venta
+ 	 * @param descripcion string Descripcin de la unidad de medida
+ 	 * @param factor_conversion float Equivalencia de esta unidad con respecto a la unidad de medida base obtenida de la categora a la cual pertenece esta unidad. En caso de que se seleccione el valor de tipo_unidad_medida = "Referencia UdM para esta categoria"  este valor sera igual a uno automticamente sin posibilidad de ingresar otro valor diferente
+ 	 * @param id_categoria_unidad_medida int Id de la categora a la cual pertenece la unidad
+ 	 * @param tipo_unidad_medida string Tipo enum cuyo valores son los siguientes : "Referencia UdM para esta categoria" (define a esta unidad como la unidad base de referencia de esta categora, en caso de seleccionar esta opcin automticamente el factor de conversin sera igual a uno sin posibilidad de ingresar otro valor diferente), "Mayor que la UdM de referencia" (indica que esta unidad de medida sera mayor que la unidad de medida base d la categora que se indique) y "Menor que la UdM de referencia" (indica que esta unidad de medida sera menor que la unidad de medida base de la categora que se indique)
+ 	 * @param activa string Indica si la unidad esta activa, en caso de no indicarse este valor se considera como que si esta activa la unidad
+ 	 * @return id_unidad_medida int 
  	 **/
-  static function EquivalenciaNuevaUnidad
+  static function NuevaUnidadUdm
 	(
-		$equivalencia, 
-		$id_unidad, 
-		$id_unidades
+		$abreviatura, 
+		$descripcion, 
+		$factor_conversion, 
+		$id_categoria_unidad_medida, 
+		$tipo_unidad_medida, 
+		$activa = ""
 	);  
   
   
