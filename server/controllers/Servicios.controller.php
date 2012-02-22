@@ -1461,19 +1461,7 @@ require_once("interfaces/Servicios.interface.php");
 	{  
             Logger::log("listando las ordenes");
             
-            //se valida si se recibieron paametros o no para saber que metodo usar
-            $parametros = false;
-            if
-            (
-                    !is_null($fecha_hasta)      ||
-                    !is_null($fecha_desde)      ||
-                    !is_null($id_servicio)      ||
-                    !is_null($id_usuario_venta) ||
-                    !is_null($activa)           ||
-                    !is_null($cancelada)        
-            )
-                $parametros = true;
-            $ordenes = array();
+            /*
             if($parametros)
             {
                 //Si se reciben parametros, se usan dos objetos para comparar las fechas, el primero alamcena los demas parametros
@@ -1506,6 +1494,9 @@ require_once("interfaces/Servicios.interface.php");
             {
                 $ordenes = OrdenDeServicioDAO::getAll();
             }
+			*/
+			 $ordenes = OrdenDeServicioDAO::getAll();
+			
             Logger::log("Lista de ordenes traida exitosamente con ".count($ordenes)." elementos");
 
             return array("numero_de_resultados" => count($ordenes), "resultados" => $ordenes);
@@ -1569,12 +1560,13 @@ require_once("interfaces/Servicios.interface.php");
 		$fecha_entrega = ""
 	)
 	{  
-            Logger::log("Creando nueva orden de servicio");
-            
-			
+            Logger::log("Creando nueva orden de servicio...");
+            Logger::log(" id_servicio=" . $id_servicio);
+            Logger::log(" id_cliente =" . $id_cliente);			
 
             //Se obtiene al usuario de la sesion actual
             $id_usuario = SesionController::getCurrentUser();
+
             if(is_null($id_usuario))
             {
                 Logger::error("No se ha podido obtener al usuario de la sesion. Ya inicio sesion?");
@@ -1698,19 +1690,69 @@ require_once("interfaces/Servicios.interface.php");
                                                     );
             
             DAO::transBegin();
-            try
-            {
-                OrdenDeServicioDAO::save($orden_de_servicio);
-            }
-            catch(Exception $e)
-            {
+            try{
+                $orden = OrdenDeServicioDAO::save($orden_de_servicio);
+    
+        	}catch(Exception $e){
                 DAO::transRollback();
                 Logger::error("No se pudo crear la nueva orden de servicio ".$e);
-                throw new Exception("No se pudo crear la nueva orden de servicio");
+                throw new InvalidDatabaseOperationException("No se pudo crear la nueva orden de servicio");
+
             }
+
+			$s = SesionController::Actual();
+
+			//proceder a insertar venta a credito para este servicio
+			$venta = new Venta();
+			$venta->setIdCompradorVenta	($id_cliente);
+			$venta->setTipoDeVenta		("credito");
+			$venta->setFecha			(date("Y-m-d H:i:s"));
+			$venta->setSubtotal			(1000);
+			$venta->setImpuesto			(0);
+			$venta->setTotal			(1000);
+			$venta->setIdSucursal		($s["id_sucursal"]);
+			$venta->setIdUsuario		($s["id_usuario"]);
+			$venta->setSaldo			(0);
+			$venta->setCancelada		(false);
+			$venta->setRetencion		(0);
+			
+			try{
+                VentaDAO::save( $venta );
+    
+        	}catch(Exception $e){
+                DAO::transRollback();
+                Logger::error("No se pudo crear la nueva orden de servicio ".$e);
+                throw new InvalidDatabaseOperationException("No se pudo crear la nueva orden de servicio");
+
+            }
+
+
+			$venta_orden = new VentaOrden();
+
+			$venta_orden->setIdVenta			( $venta->getIdVenta() );
+			$venta_orden->setIdOrdenDeServicio	( $orden_de_servicio->getIdOrdenDeServicio() );
+			$venta_orden->setPrecio				( 1000);
+			$venta_orden->setDescuento			( 0);
+			$venta_orden->setImpuesto			( 0);
+			$venta_orden->setRetencion			( 0);
+			
+			
+			try{
+                VentaOrdenDAO::save( $venta_orden );
+    
+        	}catch(Exception $e){
+                DAO::transRollback();
+                Logger::error("No se pudo crear la nueva orden de servicio ".$e);
+                throw new InvalidDatabaseOperationException("No se pudo crear la nueva orden de servicio");
+
+            }
+
+
             DAO::transEnd();
             Logger::log("Orden de servicio creada exitosamente");
-            return array( "id_orden" => (int)$orden_de_servicio->getIdOrdenDeServicio() );
+            return array( 
+					"id_orden" => (int)$orden_de_servicio->getIdOrdenDeServicio(),
+					"id_venta" => (int)$venta->getIdVenta() );
             
 	}
   

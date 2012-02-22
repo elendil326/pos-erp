@@ -508,13 +508,15 @@ require_once("interfaces/CargosYAbonos.interface.php");
         //Metodo para pruebas que simula la obtencion del id de la sucursal actual
         private static function getSucursal()
         {
-            return 1;
+            $s = SesionController::Actual();
+			return $s["id_sucursal"];
         }
         
         //metodo para pruebas que simula la obtencion del id de la caja actual
         private static function getCaja()
         {
-            return 1;
+            $s = SesionController::Actual();
+			return $s["id_caja"];
         }
 	/**
  	 *
@@ -2538,7 +2540,9 @@ require_once("interfaces/CargosYAbonos.interface.php");
             Logger::log("Creando abono");
             
             //Se obtiene la sesion del usuario
-            $id_usuario=SesionController::getCurrentUser();
+            $id_usuario = SesionController::getCurrentUser();
+			$id_usuario = $id_usuario->getIdUsuario();
+			
             if(is_null($id_usuario))
             {
                 Logger::error("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
@@ -2561,14 +2565,14 @@ require_once("interfaces/CargosYAbonos.interface.php");
             }
             
             //Se inicializan las variables de los parametros de las tablas de abonos
-            $usuario=UsuarioDAO::getByPK($id_deudor);
+            $usuario	=UsuarioDAO::getByPK($id_deudor);
             $id_sucursal=self::getSucursal();
-            $id_caja=self::getCaja();
-            $fecha=date("Y-m-d H:i:s",time());
-            $cancelado=0;
-            $abono=null;        //Nuevo regitro del abono
-            $from=0;            //Bandera que indica a que operacion pertenece el abono
-            $operacion=null;    //Objeto de la operacion, puede ser un objeto de venta, de ocmpra o de prestamo
+            $id_caja	=self::getCaja();
+            $fecha		=date("Y-m-d H:i:s",time());
+            $cancelado	=0;
+            $abono		=null;        //Nuevo regitro del abono
+            $from		=0;            //Bandera que indica a que operacion pertenece el abono
+            $operacion	=null;    //Objeto de la operacion, puede ser un objeto de venta, de ocmpra o de prestamo
             
             /*
              * Se valida de que operacion pertenece el abono y de acuerdo a lo obtenido, se realizan 
@@ -2660,16 +2664,20 @@ require_once("interfaces/CargosYAbonos.interface.php");
                     Logger::error("La venta ya ha sido cancelada, no se puede abonar a esta venta");
                     throw new Exception("La venta ya ha sido cancelada, no se puede abonar a esta venta");
                 }
-                if($operacion->getTotal()<=$operacion->getSaldo())
+                if($operacion->getTotal() <= $operacion->getSaldo())
                 {
                     Logger::error("La venta ya ha sido saldada, no se puede abonar a esta venta");
+					Logger::log("La venta $id_venta tiene un total de " . $operacion->getTotal() . " y un saldo pendiente de " . $operacion->getSaldo() . " por lo tanto ya ha sido saldada.");
                     throw new Exception("La venta ya ha sido saldada, no se puede abonar a esta venta");
+					
                 }
                 if($operacion->getTotal()<($operacion->getSaldo()+$monto))
                 {
                     Logger::error("No se puede abonar esta cantidad a esta venta, pues sobrepasa el total de la misma");
                     throw new Exception("No se puede abonar esta cantidad a esta venta, pues sobrepasa el total de la misma");
                 }
+
+
                 $abono=new AbonoVenta();
                 $abono->setIdVenta($id_venta);
                 $abono->setIdReceptor($id_usuario);

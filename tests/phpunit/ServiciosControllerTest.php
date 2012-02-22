@@ -151,14 +151,45 @@ class ServiciosControllerTest extends PHPUnit_Framework_TestCase {
 
 		
 		Logger::testerLog("Nueva orde de servicio (" . $c["id_cliente"] .", ". $s["id_servicio"] ." )");
+		
 		$o = ServiciosController::NuevaOrden(
 				$c["id_cliente"], 
 				$s["id_servicio"]  );
 			
 	    $this->assertInternalType("int", $o["id_orden"]);
+		$this->assertInternalType("int", $o["id_venta"]);
 
 		define("_pos_phpunit_servicios_id_cliente", $c["id_cliente"]);	
 		define("_pos_phpunit_servicios_id_servicio", $s["id_servicio"]);
+		
+		
+		//ok ya que se hizo el servicio, ver que se halla creado
+		//una venta a credito a este cliente
+		
+		$lista_de_ventas = VentasController::Lista();
+		
+		//buscar la venta para el cliente `$c["id_cliente"]`
+		
+		$found = false;
+		
+		for ($i=0; $i < $lista_de_ventas["numero_de_resultados"]; $i++) { 
+			if($lista_de_ventas["resultados"][$i]["cliente"]["id_cliente"] == $c["id_cliente"]){
+				$found = true;
+			}
+		}
+		
+		$this->assertTrue($found);
+		
+		//hacerle un abono
+		CargosYAbonosController::NuevoAbono( 
+			$c["id_cliente"], 
+			500, 
+			"efectivo",
+			null, 
+			null, 
+			null, 
+			null, 
+			$o["id_venta"] );
 	}
 	
 	
@@ -194,6 +225,7 @@ class ServiciosControllerTest extends PHPUnit_Framework_TestCase {
 				$orden_de_servicio_id = $o["id_orden_de_servicio"];
 			}
 		}
+		define("_pos_phpunit_servicios_orden_de_servicio" , $o["id_orden_de_servicio"]);
 		
 		$this->assertFalse( is_null($orden_de_servicio_id) );
 		
@@ -203,6 +235,25 @@ class ServiciosControllerTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	
+	
+	public function testBuscarSeguimientosDeOrden(){
+		$lista = ServiciosController::ListaOrden(  );
+		
+		$this->assertInternalType('int', $lista["numero_de_resultados"]);
+		
+		//debe haber por lo menos un resultado
+		$this->assertGreaterThan( 0, $lista["numero_de_resultados"] );
+
+		$old = $lista["numero_de_resultados"];
+
+		//insertar un seguimiento...
+		ServiciosController::SeguimientoOrden(_pos_phpunit_servicios_orden_de_servicio, null, null, "nota para la orden 2");
+		
+		
+		//$lista = ServiciosController::ListaOrden(  );
+		
+		//$this->assertEquals( $lista["numero_de_resultados"], $old + 1);
+	}
 	
 	
 	

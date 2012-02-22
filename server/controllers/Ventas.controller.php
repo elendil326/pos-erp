@@ -275,31 +275,7 @@ require_once("interfaces/Ventas.interface.php");
 	{  
             Logger::log("Obteniendo la lista de ventas");
             
-            //valida el parametro ordenar
-            if
-            (
-                    !is_null($ordenar)              &&
-                    $ordenar != "id_venta"          &&
-                    $ordenar != "id_caja"           &&
-                    $ordenar != "id_venta_caja"     &&
-                    $ordenar != "id_comprador_venta"&&
-                    $ordenar != "tipo_venta"        &&
-                    $ordenar != "fecha"             &&
-                    $ordenar != "subtotal"          &&
-                    $ordenar != "impuesto"          &&
-                    $ordenar != "descuento"         &&
-                    $ordenar != "total"             &&
-                    $ordenar != "id_sucursal"       &&
-                    $ordenar != "id_usuario"        &&
-                    $ordenar != "saldo"             &&
-                    $ordenar != "cancelada"         &&
-                    $ordenar != "tipo_de_pago"      &&
-                    $ordenar != "retencion"
-            )
-            {
-                Logger::error("El parametro ordenar (".$ordenar.") no es valido");
-                throw new Exception("El parametro ordenar (".$ordenar.") no es valido");
-            }
+            
             
             //Se verifica si se recibieron parametros para saber que metodo utilizar
             $parametros = false;
@@ -313,6 +289,7 @@ require_once("interfaces/Ventas.interface.php");
             )
                 $parametros = true;
             $ventas = array();
+
             if($parametros)
             {
                 //Se inicializan dos objetos que contendran los parametros recibidos, de tal forma que se obtenga el rango entre ambos
@@ -365,8 +342,34 @@ require_once("interfaces/Ventas.interface.php");
                 }
                 $ventas = $temp;
             }
+
             Logger::log("Lista obtenida exitosamente con ".count($ventas)." ventas");
-            return $ventas;
+
+			//ventas es un arreglo de objetos Venta, hay que darle el formato que dicta el api
+			$output = array( "resultados" => array(), "numero_de_resultados" => 0 );
+			
+			for ($v=0; $v < sizeof($ventas); $v++) { 
+				
+				$pre_out = $ventas[$v]->asArray();
+				
+
+				
+				$pre_out["sucursal"] = array(
+										"id_sucursal" => $pre_out["id_caja"]
+									   );
+
+				$pre_out["cliente"] = array(
+										"id_cliente" => $pre_out["id_comprador_venta"],
+										"nombre"	=> "justo dominguez"
+									   );
+
+				unset($pre_out["id_comprador_venta"]);
+			
+				array_push( $output["resultados"], $pre_out );
+				$output["numero_de_resultados"]++;
+			}
+			
+            return $output;
 	}
   
 	/**
