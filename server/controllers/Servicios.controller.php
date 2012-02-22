@@ -290,6 +290,7 @@ require_once("interfaces/Servicios.interface.php");
             {
                 $e = self::validarLongitudDeCadena($nombre_servicio, 150, 1024 );
 
+				
                 
                 if(!is_null($id_servicio))
                 {
@@ -302,8 +303,10 @@ require_once("interfaces/Servicios.interface.php");
                 }
                 foreach($servicios as $servicio)
                 {
-                    if($servicio->getActivo())
-                        return "El nombre de servicio (".$nombre_servicio.") ya esta en uso por el servicio ".$servicio->getIdServicio();
+                    if($servicio->getActivo()){
+						throw new BusinessLogicException("El nombre de servicio (".$nombre_servicio.") ya esta en uso por el servicio ".$servicio->getIdServicio());
+					}
+
                 }
             }
             
@@ -972,7 +975,9 @@ require_once("interfaces/Servicios.interface.php");
 		$sucursales = null
 	)
 	{  
-            Logger::log("Creando nuevo servicio");
+            Logger::log("Creando nuevo servicio...");
+
+			
             
             //se validan los parametros recibidos
             $validar = self::validarParametrosServicio(
@@ -1502,7 +1507,8 @@ require_once("interfaces/Servicios.interface.php");
                 $ordenes = OrdenDeServicioDAO::getAll();
             }
             Logger::log("Lista de ordenes traida exitosamente con ".count($ordenes)." elementos");
-            return $ordenes;
+
+            return array("numero_de_resultados" => count($ordenes), "resultados" => $ordenes);
 	}
   
 	/**
@@ -1565,6 +1571,8 @@ require_once("interfaces/Servicios.interface.php");
 	{  
             Logger::log("Creando nueva orden de servicio");
             
+			
+
             //Se obtiene al usuario de la sesion actual
             $id_usuario = SesionController::getCurrentUser();
             if(is_null($id_usuario))
@@ -1702,7 +1710,7 @@ require_once("interfaces/Servicios.interface.php");
             }
             DAO::transEnd();
             Logger::log("Orden de servicio creada exitosamente");
-            return array( "id_orden" => $orden_de_servicio->getIdOrdenDeServicio() );
+            return array( "id_orden" => (int)$orden_de_servicio->getIdOrdenDeServicio() );
             
 	}
   
@@ -1710,7 +1718,7 @@ require_once("interfaces/Servicios.interface.php");
 
 
 
-
+	
 	/**
  	 *
  	 *Realizar un seguimiento a una orden de servicio existente. Puede usarse para agregar detalles a una orden pero no para editar detalles previos. Puede ser que se haya hecho un abono
@@ -1727,23 +1735,17 @@ require_once("interfaces/Servicios.interface.php");
 		$nota = null
 	)
 	{  
-            Logger::log("Creando nuevo seguimiento de orden");
+            Logger::log("Creando nuevo seguimiento de orden...");
             
+			if(is_null($id_orden_de_servicio)){
+				throw new InvalidDataException("id_orden_de_servicio is a required field");
+			}
+
             //Se obtiene al usuario de la sesion
-            $id_usuario = SesionController::getCurrentUser();
-            if(is_null($id_usuario))
-            {
-                Logger::error("El usuario no pudo ser obtenido de la sesion. Ya inicio sesion?");
-                throw new Exception("El usuario no pudo ser obtenido de la sesion. Ya inicio sesion?");
-            }
-            
-            //Se obtiene la sucursal de la sesion
-            $id_sucural = self::getSucursal();
-            if(is_null($id_sucural))
-            {
-                Logger::error("La sucursal no pudo ser obtenida de la sesion");
-                throw new Exception("La sucursal no pudo ser obtenida de la seion");
-            }
+			$sesion = SesionController::Actual();
+			
+            $id_usuario = $sesion["id_usuario"];
+			$id_sucursal = $sesion["id_sucursal"];
             
             //Se validan los parametros recibidos
             $validar = self::validarParametrosSeguimiento(null, $id_orden_de_servicio, $id_localizacion, $nota);
@@ -1759,7 +1761,7 @@ require_once("interfaces/Servicios.interface.php");
                                                                         "id_orden_de_servicio"  => $id_orden_de_servicio,
                                                                         "estado"                => $nota,
                                                                         "id_usuario"            => $id_usuario,
-                                                                        "id_sucursal"           => $id_sucural,
+                                                                        "id_sucursal"           => $id_sucursal,
                                                                         "fecha_seguimiento"     => date("Y-m-d H:i:s")
                                                                         )
                                                                 );
@@ -2163,15 +2165,16 @@ require_once("interfaces/Servicios.interface.php");
 		$id_servicio
 	)
 	{  
-            Logger::log("Desactivando servicio ".$id_servicio);
+            Logger::log("Desactivando servicio ". $id_servicio . " ...");
             
             //valida que el servicio exista y que no haya sido desactivado antes
             $validar = self::validarParametrosServicio($id_servicio);
             if(is_string($validar))
             {
                 Logger::error($validar);
-                throw new Exception($validar);
+                throw new InvalidDataException($validar);
             }
+
             //Si el servicio forma parte de algun paquete activo no puede ser eliminado
             $servicios_paquete = OrdenDeServicioPaqueteDAO::search( new OrdenDeServicioPaquete( array( "id_servicio" => $id_servicio ) ) );
             foreach($servicios_paquete as $servicio_paquete)
@@ -2187,6 +2190,15 @@ require_once("interfaces/Servicios.interface.php");
             $servicio = ServicioDAO::getByPK($id_servicio);
             $servicio->setActivo(0);
             
+			//revisar que no tenga ordenes de servicio activas 
+			$res = OrdenDeServicioDAO::search( new OrdenDeServicio( array( "id_servicio" => $id_servicio,
+			 														"activa"	=> 1) ) );
+			
+			if(sizeof($res) > 0){
+				Logger::log("Intento borrar un servicio que tiene ordenes de servicio activas... ");
+				throw new BusinessLogicException("Imposible eliminar un servicio que tiene ordenes abiertas");
+			}
+
             //Se obtienen los registros de las tablas servicio_empresa, servicio_clasificacion e impuesto_servicio
             //pues seran eliminados
             $servicios_empresa = ServicioEmpresaDAO::search( new ServicioEmpresa( array( "id_servicio" => $id_servicio ) ) );

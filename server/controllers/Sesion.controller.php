@@ -102,7 +102,7 @@ class SesionController implements ISesion{
 		$sesiones_actuales  = SesionDAO::search( new Sesion( array( "id_usuario" => $user->getIdUsuario() ) ) );
 		
 		if(sizeof($sesiones_actuales) > 0){
-			Logger::warn("Este usuario ya tiene sesiones actuales");
+			//Logger::warn("Este usuario ya tiene sesiones actuales");
 			
 			foreach($sesiones_actuales	as $s ){
 				
@@ -143,20 +143,21 @@ class SesionController implements ISesion{
 		
 		try{
 			SesionDAO::save( $nueva_sesion );
-			Logger::log("Setting _is_logged_in");
+			//Logger::log("Setting _is_logged_in");
 			self::$_is_logged_in = true;
 			
 		}catch(Exception $e){
 			Logger::error( "Imposible escribir la sesion en la bd " );
 			Logger::error( $e );
-			throw new Exception("Imposible iniciar la sesion");
+			
+			throw new InvalidDatabaseOperationException($e);
 			
 		}
 		
-		Logger::log("Actual login...");
+		//Logger::log("Actual login...");
 		self::login( $nueva_sesion->getAuthToken(), $nueva_sesion->getIdUsuario(), $user->getIdRol()  );
 		
-		Logger::log("Setting _current_user");
+		//Logger::log("Setting _current_user");
 		self::$_current_user = SesionDAO::getUserByAuthToken( $nueva_sesion->getAuthToken() );
 		
 		return array( "auth_token" => $nueva_sesion->getAuthToken(), "login_succesful" => true );
@@ -318,7 +319,7 @@ class SesionController implements ISesion{
 	private static function login($auth_token, $user_id, $rol_id ){
 		
 		if(headers_sent()){
-			Logger::warn("Headers already sent while doing login.");
+			//Logger::warn("Headers already sent while doing login.");
 			return;
 		}
 		

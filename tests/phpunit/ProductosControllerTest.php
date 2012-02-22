@@ -15,6 +15,8 @@ require_once("../../server/bootstrap.php");
 
 class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 
+
+
 	protected function setUp(){
 		Logger::log("-----------------------------");
 		$r = SesionController::Iniciar(123, 1, true);
@@ -35,7 +37,6 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 
 			ProductosController::Desactivar($p["resultados"][0]["id_producto"]);
 		}
-
 	}
 
 

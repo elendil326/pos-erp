@@ -1516,10 +1516,10 @@ CREATE TABLE IF NOT EXISTS `rol` (
 CREATE TABLE IF NOT EXISTS `seguimiento_de_servicio` (
   `id_seguimiento_de_servicio` int(11) NOT NULL AUTO_INCREMENT,
   `id_orden_de_servicio` int(11) NOT NULL COMMENT 'Id orden de servicio a la que se le realiza el seguimiento',
-  `id_localizacion` int(11) NOT NULL COMMENT 'Id de la sucursal en la que se encuentra el servicio actualmente',
+  `id_localizacion` int(11) NULL COMMENT 'Id de la sucursal en la que se encuentra el servicio actualmente',
   `id_usuario` int(11) NOT NULL COMMENT 'Id del usuario que realiza el seguimiento',
-  `id_sucursal` int(11) NOT NULL COMMENT 'Id de la sucursal de donde se realiza el seguimiento',
-  `estado` varchar(255) NOT NULL COMMENT 'Estado en la que se encuentra la orden',
+  `id_sucursal` int(11) NULL COMMENT 'Id de la sucursal de donde se realiza el seguimiento',
+  `estado` varchar(255) NULL COMMENT 'Estado en la que se encuentra la orden',
   `fecha_seguimiento` datetime NOT NULL COMMENT 'Fecha en la que se realizo el seguimiento',
   PRIMARY KEY (`id_seguimiento_de_servicio`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
