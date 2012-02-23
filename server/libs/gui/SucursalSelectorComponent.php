@@ -18,7 +18,7 @@ class SucursalSelectorComponent implements GuiComponent{
 	        extend: 'Ext.data.Model',
 	        proxy: {
 	            type: 'ajax',
-				url : '../api/sucursal/lista/',
+				url : '../api/sucursal/buscar/',
 				extraParams : {
 					auth_token : Ext.util.Cookies.get("a_t")
 				},

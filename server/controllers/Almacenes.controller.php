@@ -42,12 +42,12 @@ class AlmacenesController extends ValidacionesController implements IAlmacenes{
                 Logger::log("Se recibieron parametros, se listan las almacenes en rango");
                 
                 //Se valida el parametro activo
-                $validar = self::validarParametrosAlmacen(null, null, null, null, null, null, $activo);
+                /*$validar = self::validarParametrosAlmacen(null, null, null, null, null, null, $activo);
                 if(is_string($validar))
                 {
                     Logger::error($validar);
                     throw new Exception($validar);
-                }
+                }*/
                 
                 $almacen_criterio_1=new Almacen();
                 $almacen_criterio_1->setActivo($activo);
@@ -55,14 +55,14 @@ class AlmacenesController extends ValidacionesController implements IAlmacenes{
                 $almacen_criterio_1->setIdSucursal($id_sucursal);
                 $almacen_criterio_1->setIdTipoAlmacen($id_tipo_almacen);
                 $almacenes=AlmacenDAO::search($almacen_criterio_1);
-            }
-            else
-            {
+            }else{
+	
                 Logger::log("No se recibieron parametros, se listan todos los almacenes");
                 $almacenes=AlmacenDAO::getAll();
             }
+
             Logger::log("Almacenes obtenidos exitosamente");
-            return $almacenes;
+            return array("resultados" => $almacenes, "numero_de_resultados" => sizeof($almacenes));
 	}
   
   

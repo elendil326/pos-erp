@@ -109,21 +109,24 @@
                 $tabla->addColRender("abierta", "funcion_abierta");
                 $tabla->addColRender("activa", "funcion_activa");
                 
-		$tabla->addOnClick( "id_caja", "(function(a){window.location = 'sucursales.caja.ver.php?cid='+a;})" );
+				$tabla->addOnClick( "id_caja", "(function(a){window.location = 'sucursales.caja.ver.php?cid='+a;})" );
                 
                 $page->addComponent($tabla);
                 
                 $page->addComponent( new TitleComponent( "Almacenes" , 3) );
                 
+
+				$sucs = AlmacenesController::Buscar();
+				
                 $tabla = new TableComponent( 
-			array(
-                                "nombre" => "Nombre",
-				"id_empresa"=> "Empresa",
-				"id_tipo_almacen"=> "Tipo de almacen",
-				"activo"=> "Activo"
-			),
-                         SucursalesController::ListaAlmacen(null, null, $_GET["sid"])
-		);
+					array(
+		                "nombre" => "Nombre",
+						"id_empresa"=> "Empresa",
+						"id_tipo_almacen"=> "Tipo de almacen",
+						"activo"=> "Activo"
+					),
+                 	$sucs["resultados"]        
+				);
                 
                 function funcion_empresa( $id_empresa )
                 {
