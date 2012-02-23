@@ -32,21 +32,8 @@ class JediComponentPage extends PosComponentPage{
 		                    "url": "instancias.nueva.php"
 		                }
 		            ]
-		        },
-		        {
-		            "title": "Cargos y abonos",
-		            "url": "cargos_y_abonos.php",
-		            "children": [
-		                {
-		                    "title": "Lista abono",
-		                    "url": "cargos_y_abonos.lista.abono.php"
-		                },
-		                {
-		                    "title": "Lista concepto de gasto",
-		                    "url": "cargos_y_abonos.lista.concepto.gasto.php"
-		                }
-		            ]
 		        }
+		        
 		    ]
 		}';
 		
