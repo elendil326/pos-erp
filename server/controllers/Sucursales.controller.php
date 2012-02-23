@@ -2112,6 +2112,10 @@ require_once("interfaces/Sucursales.interface.php");
 	{
             Logger::log("Creando nueva sucursal...");
             
+            //buscamos si una sucursal ya existe
+            if( count( SucursalDAO::search( new Sucursal( array( "razon_social" => $razon_social ) ) ) ) > 0 ){
+                throw new BusinessLogicException("Ya existe una sucursal con el mismo nombre");
+            }            
             
             //Se inicializa el objeto sucursal con los parametros obtenidos
             $sucursal=new Sucursal();
