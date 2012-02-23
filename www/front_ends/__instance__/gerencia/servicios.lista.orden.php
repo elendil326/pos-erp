@@ -8,9 +8,11 @@
 
 		$page = new GerenciaComponentPage();
 
-                $page->addComponent( new TitleComponent( "Ordenes de servicio" ) );
+        $page->addComponent( new TitleComponent( "Ordenes de servicio" ) );
 		$page->addComponent( new MessageComponent( "Lista de ordenes de servicio" ) );
-		
+
+		$ordenes = ServiciosController::ListaOrden();
+
 		$tabla = new TableComponent( 
 			array(
                                 "id_servicio" => "Servicio",
@@ -22,7 +24,7 @@
                                 "cancelada" => "Cancelada",
                                 "descripcion" => "Descripcion"
 			),
-			ServiciosController::ListaOrden()
+			$ordenes["resultados"]
 		);
 		
                 function funcion_servicio( $servicio )
