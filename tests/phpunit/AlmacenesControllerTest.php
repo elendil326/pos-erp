@@ -111,7 +111,7 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
 	*
 	**/
 	public function testLoteNuevo(){
-
+		AlamacenController::NuevoLote(  );
 	}
 
 	public function testLoteEntrada(){

@@ -55,10 +55,11 @@ class AlmacenesController extends ValidacionesController implements IAlmacenes{
                 $almacen_criterio_1->setIdSucursal($id_sucursal);
                 $almacen_criterio_1->setIdTipoAlmacen($id_tipo_almacen);
                 $almacenes=AlmacenDAO::search($almacen_criterio_1);
+
             }else{
-	
-                Logger::log("No se recibieron parametros, se listan todos los almacenes");
+	            Logger::log("No se recibieron parametros, se listan todos los almacenes");
                 $almacenes=AlmacenDAO::getAll();
+
             }
 
             Logger::log("Almacenes obtenidos exitosamente");
@@ -926,8 +927,25 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 **/
   static function NuevoLote
 	(
-		$folio
-	){} 
+		$id_almacen,
+		$folio = null
+	){
+		
+		Logger::log( "Insertando nuevo lote... " );
+		Logger::log( " --id_almacen: " . $id_almacen);
+		Logger::log( " --folio: " . $folio);		
+		
+		
+		//buscar que ese almacen exista
+		AlmacenDAO::getByPK( $id_almacen );
+		
+		//buscar que no exista un lote en ese almacen con ese folio
+		
+		//insertar lote
+		
+		//
+		
+	} 
 
 
 

@@ -10,7 +10,7 @@ class FormComponent implements GuiComponent{
 	private		$send_to_api_callback;
 	private 	$send_to_api_redirect;
 	private 	$is_editable;
-
+	private 	$hide_not_obligatory;
 
 	
 	function __construct(  ){
@@ -23,9 +23,13 @@ class FormComponent implements GuiComponent{
 		//defaults
 		$this->is_editable 		= true;
 		$this->form_fields      = array(  );
-
+		$this->hide_not_obligatory = false;
 	}
 
+
+	public function hideNotObligatory(){
+		$this->hide_not_obligatory = true;
+	}
 
 	/**
 	 * 
@@ -180,13 +184,40 @@ class FormComponent implements GuiComponent{
 			
 	
 			if($f->type !== "hidden"){
-				$html .= "<td>";
-				if($f->obligatory === true) $html .= "<b>";
-				$html .= $f->caption;
-				if($f->obligatory === true) $html .= "</b>";
-				$html .= "</td><td>";				
-			}
 
+				
+				if($f->obligatory === false) {
+					$html .= "<td style='display:none' class='hideable'>";
+				}else{
+					$html .= "<td>";
+				}
+				
+				if($f->obligatory === true) {
+					$html .= "<b >";
+					
+				}else{
+					//$html .= "<div style='display:block' class='hideable'>";
+								
+				}
+				
+				$html .= $f->caption;
+				
+				if($f->obligatory === true) {
+					$html .= "</b>";
+				}else{
+					//$html .= "</div>";
+				}
+				
+
+				if($f->obligatory === false) {
+					$html .= "</td><td style='display:none' class='hideable'>";
+				}else{
+					$html .= "</td><td>";
+				}			
+			}
+			
+			
+			
 			switch( $f->type ){
 				//
 				// Combo boxes
@@ -220,7 +251,7 @@ class FormComponent implements GuiComponent{
                         foreach($f->value as $o){
 							$html .= "<option value='".$o["id"]."'>".$o["caption"]."</option>";	
 						}
-
+						
                         
                         $html .= "</select>";
                 break;
@@ -237,6 +268,8 @@ class FormComponent implements GuiComponent{
 					}
 			}
 
+			
+			
 			
 			if($f->type !== "hidden"){
 				$html .= "</td>";
@@ -255,25 +288,28 @@ class FormComponent implements GuiComponent{
 			
 
 		if( !is_null ( $this->submit_form 	) ){
-			$html .= "<td align=right>";
+			$html .= "<td align=right style='background-color: #EDEFF4;-webkit-border-radius: 5px;'>";
 			$html .= "<input value='" . $this->submit_form["caption"] .  "' type='submit'  >";
 			$html .= "</td></tr>";
 		}
 
 		if( !is_null ( $this->on_click 		) ){
-			$html .= "<td>";
-			$html .= "</td><td align=right>";
+			$html .= "<td align=right colspan=2 style='background-color: #EDEFF4;-webkit-border-radius: 5px;'>";
 			$html .= "<div class='POS Boton' onClick='". $this->on_click["function"] ."' >".$this->on_click["caption"]."</div>";
+			$html .= "<div class='POS Boton' onClick='Ext.get(Ext.query(\".hideable\")).show()' >Mas opciones</div>";			
 			$html .= "</td></tr>";
 		}
 
 		if( !is_null ( $this->send_to_api	) ){
-			$html .= "<td>";
-			$html .= "</td><td align=right>";
+			$html .= "<td align=right colspan=2 style='background-color: #EDEFF4;-webkit-border-radius: 5px;'>";
 			$html .= "<div class='POS Boton' onClick=''  >Cancelar</div>";						
+			$html .= "<div class='POS Boton' onClick='Ext.get(Ext.query(\".hideable\")).show()' >Mas opciones</div>";					
 			$html .= "<div class='POS Boton OK' onClick='this.onClick=null;getParams()'  >Aceptar</div>";			
 			$html .= "</td></tr>";			
 		}
+		
+		
+		//Ext.query(".hideable")
 		
 //		if( $this->is_editable === false ){
 //			$html .= "<script>var is_editable_now = false; function make_editable(  ){ ";
