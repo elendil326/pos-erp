@@ -1704,6 +1704,7 @@ require_once("interfaces/Servicios.interface.php");
 
 			//proceder a insertar venta a credito para este servicio
 			$venta = new Venta();
+			Logger::error( "There is plenty of hard-coded stuff here !");
 			$venta->setIdCompradorVenta	($id_cliente);
 			$venta->setTipoDeVenta		("credito");
 			$venta->setFecha			(date("Y-m-d H:i:s"));

@@ -21,9 +21,10 @@ class PosComponentPage extends StdComponentPage{
 
 			<link rel="stylesheet" type="text/css" href="http://api.caffeina.mx/ext-4.0.0/resources/css/ext-all.css" /> 
 		    <script type="text/javascript" src="http://api.caffeina.mx/ext-4.0.0/ext-all-debug.js"></script>
-			<link type="text/css" rel="stylesheet" href="../../../css/basic.css"/>
+			<link type="text/css" rel="stylesheet" href="../../css/basic.css"/>
+			<link type="text/css" rel="stylesheet" href="css/basic.css"/>
 			<script type="text/javascript" charset="utf-8" src="http://api.caffeina.mx/ext-4.0.0/examples/ux/grid/TransformGrid.js"></script>
-			<script type="text/javascript" src="./gerencia.js"></script>
+			
 			<script type="text/javascript" charset="utf-8">
 				if(HtmlEncode===undefined){var HtmlEncode=function(a){var b=a.length,c=[];while(b--){var d=a[b].charCodeAt();if(d>127||d>90&&d<97){c[b]="&#"+d+";"}else{c[b]=a[b]}}return c.join("")}} 
 			</script>
