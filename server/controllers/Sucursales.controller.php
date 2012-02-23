@@ -2346,7 +2346,7 @@ require_once("interfaces/Sucursales.interface.php");
                 $cambio_direccion=true;
                 $direccion->setCodigoPostal($coidgo_postal);
             }
-            var_dump($sucursal);
+            
             //Si cambio algun parametro de direccion, se actualiza el usuario que modifica y la fecha
             if($cambio_direccion)
             {
