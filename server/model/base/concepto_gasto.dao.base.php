@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link ConceptoGasto }. 
-  * @author Anonymous
+  * @author Manuel
   * @access private
   * @abstract
   * @package docs

@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link Lote }. 
-  * @author Anonymous
+  * @author Manuel
   * @access private
   * @abstract
   * @package docs
@@ -126,19 +126,14 @@ abstract class LoteDAOBase extends DAO
 			array_push( $val, $lote->getIdLote() );
 		}
 
-		if( ! is_null( $lote->getIdCompra() ) ){
-			$sql .= " id_compra = ? AND";
-			array_push( $val, $lote->getIdCompra() );
+		if( ! is_null( $lote->getIdAlmacen() ) ){
+			$sql .= " id_almacen = ? AND";
+			array_push( $val, $lote->getIdAlmacen() );
 		}
 
 		if( ! is_null( $lote->getIdUsuario() ) ){
 			$sql .= " id_usuario = ? AND";
 			array_push( $val, $lote->getIdUsuario() );
-		}
-
-		if( ! is_null( $lote->getFechaIngreso() ) ){
-			$sql .= " fecha_ingreso = ? AND";
-			array_push( $val, $lote->getFechaIngreso() );
 		}
 
 		if( ! is_null( $lote->getObservaciones() ) ){
@@ -176,11 +171,10 @@ abstract class LoteDAOBase extends DAO
 	  **/
 	private static final function update( $lote )
 	{
-		$sql = "UPDATE lote SET  id_compra = ?, id_usuario = ?, fecha_ingreso = ?, observaciones = ? WHERE  id_lote = ?;";
+		$sql = "UPDATE lote SET  id_almacen = ?, id_usuario = ?, observaciones = ? WHERE  id_lote = ?;";
 		$params = array( 
-			$lote->getIdCompra(), 
+			$lote->getIdAlmacen(), 
 			$lote->getIdUsuario(), 
-			$lote->getFechaIngreso(), 
 			$lote->getObservaciones(), 
 			$lote->getIdLote(), );
 		global $conn;
@@ -205,12 +199,11 @@ abstract class LoteDAOBase extends DAO
 	  **/
 	private static final function create( &$lote )
 	{
-		$sql = "INSERT INTO lote ( id_lote, id_compra, id_usuario, fecha_ingreso, observaciones ) VALUES ( ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO lote ( id_lote, id_almacen, id_usuario, observaciones ) VALUES ( ?, ?, ?, ?);";
 		$params = array( 
 			$lote->getIdLote(), 
-			$lote->getIdCompra(), 
+			$lote->getIdAlmacen(), 
 			$lote->getIdUsuario(), 
-			$lote->getFechaIngreso(), 
 			$lote->getObservaciones(), 
 		 );
 		global $conn;
@@ -271,12 +264,12 @@ abstract class LoteDAOBase extends DAO
 			
 		}
 
-		if( ( !is_null (($a = $loteA->getIdCompra()) ) ) & ( ! is_null ( ($b = $loteB->getIdCompra()) ) ) ){
-				$sql .= " id_compra >= ? AND id_compra <= ? AND";
+		if( ( !is_null (($a = $loteA->getIdAlmacen()) ) ) & ( ! is_null ( ($b = $loteB->getIdAlmacen()) ) ) ){
+				$sql .= " id_almacen >= ? AND id_almacen <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_compra = ? AND"; 
+			$sql .= " id_almacen = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
@@ -288,17 +281,6 @@ abstract class LoteDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " id_usuario = ? AND"; 
-			$a = is_null ( $a ) ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
-		if( ( !is_null (($a = $loteA->getFechaIngreso()) ) ) & ( ! is_null ( ($b = $loteB->getFechaIngreso()) ) ) ){
-				$sql .= " fecha_ingreso >= ? AND fecha_ingreso <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " fecha_ingreso = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

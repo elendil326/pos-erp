@@ -2,7 +2,7 @@
 /** Value Object file for table cliente_aval.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author Anonymous
+  * @author Manuel
   * @access public
   * @package docs
   * 

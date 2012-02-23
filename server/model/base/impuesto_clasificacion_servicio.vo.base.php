@@ -2,7 +2,7 @@
 /** Value Object file for table impuesto_clasificacion_servicio.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author Anonymous
+  * @author Manuel
   * @access public
   * @package docs
   * 

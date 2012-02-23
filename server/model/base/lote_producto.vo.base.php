@@ -2,7 +2,7 @@
 /** Value Object file for table lote_producto.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author Anonymous
+  * @author Manuel
   * @access public
   * @package docs
   * 
@@ -31,6 +31,9 @@ class LoteProducto extends VO
 			if( isset($data['cantidad']) ){
 				$this->cantidad = $data['cantidad'];
 			}
+			if( isset($data['id_unidad']) ){
+				$this->id_unidad = $data['id_unidad'];
+			}
 		}
 	}
 
@@ -46,7 +49,8 @@ class LoteProducto extends VO
 		$vec = array( 
 			"id_lote" => $this->id_lote,
 			"id_producto" => $this->id_producto,
-			"cantidad" => $this->cantidad
+			"cantidad" => $this->cantidad,
+			"id_unidad" => $this->id_unidad
 		); 
 	return json_encode($vec); 
 	}
@@ -80,6 +84,15 @@ class LoteProducto extends VO
 	  * @var float
 	  */
 	public $cantidad;
+
+	/**
+	  * id_unidad
+	  * 
+	  *  [Campo no documentado]<br>
+	  * @access public
+	  * @var int(11)
+	  */
+	public $id_unidad;
 
 	/**
 	  * getIdLote
@@ -157,6 +170,30 @@ class LoteProducto extends VO
 	final public function setCantidad( $cantidad )
 	{
 		$this->cantidad = $cantidad;
+	}
+
+	/**
+	  * getIdUnidad
+	  * 
+	  * Get the <i>id_unidad</i> property for this object. Donde <i>id_unidad</i> es  [Campo no documentado]
+	  * @return int(11)
+	  */
+	final public function getIdUnidad()
+	{
+		return $this->id_unidad;
+	}
+
+	/**
+	  * setIdUnidad( $id_unidad )
+	  * 
+	  * Set the <i>id_unidad</i> property for this object. Donde <i>id_unidad</i> es  [Campo no documentado].
+	  * Una validacion basica se hara aqui para comprobar que <i>id_unidad</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setIdUnidad( $id_unidad )
+	{
+		$this->id_unidad = $id_unidad;
 	}
 
 }

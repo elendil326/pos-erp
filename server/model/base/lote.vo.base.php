@@ -2,7 +2,7 @@
 /** Value Object file for table lote.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author Anonymous
+  * @author Manuel
   * @access public
   * @package docs
   * 
@@ -25,14 +25,11 @@ class Lote extends VO
 			if( isset($data['id_lote']) ){
 				$this->id_lote = $data['id_lote'];
 			}
-			if( isset($data['id_compra']) ){
-				$this->id_compra = $data['id_compra'];
+			if( isset($data['id_almacen']) ){
+				$this->id_almacen = $data['id_almacen'];
 			}
 			if( isset($data['id_usuario']) ){
 				$this->id_usuario = $data['id_usuario'];
-			}
-			if( isset($data['fecha_ingreso']) ){
-				$this->fecha_ingreso = $data['fecha_ingreso'];
 			}
 			if( isset($data['observaciones']) ){
 				$this->observaciones = $data['observaciones'];
@@ -51,9 +48,8 @@ class Lote extends VO
 	{ 
 		$vec = array( 
 			"id_lote" => $this->id_lote,
-			"id_compra" => $this->id_compra,
+			"id_almacen" => $this->id_almacen,
 			"id_usuario" => $this->id_usuario,
-			"fecha_ingreso" => $this->fecha_ingreso,
 			"observaciones" => $this->observaciones
 		); 
 	return json_encode($vec); 
@@ -71,31 +67,22 @@ class Lote extends VO
 	public $id_lote;
 
 	/**
-	  * id_compra
+	  * id_almacen
 	  * 
-	  * Id de la compra<br>
+	  *  [Campo no documentado]<br>
 	  * @access public
 	  * @var int(11)
 	  */
-	public $id_compra;
+	public $id_almacen;
 
 	/**
 	  * id_usuario
 	  * 
-	  * Id del usuario que lo recibio<br>
+	  * Id del usuario que creo el lote<br>
 	  * @access public
 	  * @var int(11)
 	  */
 	public $id_usuario;
-
-	/**
-	  * fecha_ingreso
-	  * 
-	  * Fecha en la que el lote ingresa al almacen<br>
-	  * @access public
-	  * @var datetime
-	  */
-	public $fecha_ingreso;
 
 	/**
 	  * observaciones
@@ -135,33 +122,33 @@ class Lote extends VO
 	}
 
 	/**
-	  * getIdCompra
+	  * getIdAlmacen
 	  * 
-	  * Get the <i>id_compra</i> property for this object. Donde <i>id_compra</i> es Id de la compra
+	  * Get the <i>id_almacen</i> property for this object. Donde <i>id_almacen</i> es  [Campo no documentado]
 	  * @return int(11)
 	  */
-	final public function getIdCompra()
+	final public function getIdAlmacen()
 	{
-		return $this->id_compra;
+		return $this->id_almacen;
 	}
 
 	/**
-	  * setIdCompra( $id_compra )
+	  * setIdAlmacen( $id_almacen )
 	  * 
-	  * Set the <i>id_compra</i> property for this object. Donde <i>id_compra</i> es Id de la compra.
-	  * Una validacion basica se hara aqui para comprobar que <i>id_compra</i> es de tipo <i>int(11)</i>. 
+	  * Set the <i>id_almacen</i> property for this object. Donde <i>id_almacen</i> es  [Campo no documentado].
+	  * Una validacion basica se hara aqui para comprobar que <i>id_almacen</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param int(11)
 	  */
-	final public function setIdCompra( $id_compra )
+	final public function setIdAlmacen( $id_almacen )
 	{
-		$this->id_compra = $id_compra;
+		$this->id_almacen = $id_almacen;
 	}
 
 	/**
 	  * getIdUsuario
 	  * 
-	  * Get the <i>id_usuario</i> property for this object. Donde <i>id_usuario</i> es Id del usuario que lo recibio
+	  * Get the <i>id_usuario</i> property for this object. Donde <i>id_usuario</i> es Id del usuario que creo el lote
 	  * @return int(11)
 	  */
 	final public function getIdUsuario()
@@ -172,7 +159,7 @@ class Lote extends VO
 	/**
 	  * setIdUsuario( $id_usuario )
 	  * 
-	  * Set the <i>id_usuario</i> property for this object. Donde <i>id_usuario</i> es Id del usuario que lo recibio.
+	  * Set the <i>id_usuario</i> property for this object. Donde <i>id_usuario</i> es Id del usuario que creo el lote.
 	  * Una validacion basica se hara aqui para comprobar que <i>id_usuario</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param int(11)
@@ -180,30 +167,6 @@ class Lote extends VO
 	final public function setIdUsuario( $id_usuario )
 	{
 		$this->id_usuario = $id_usuario;
-	}
-
-	/**
-	  * getFechaIngreso
-	  * 
-	  * Get the <i>fecha_ingreso</i> property for this object. Donde <i>fecha_ingreso</i> es Fecha en la que el lote ingresa al almacen
-	  * @return datetime
-	  */
-	final public function getFechaIngreso()
-	{
-		return $this->fecha_ingreso;
-	}
-
-	/**
-	  * setFechaIngreso( $fecha_ingreso )
-	  * 
-	  * Set the <i>fecha_ingreso</i> property for this object. Donde <i>fecha_ingreso</i> es Fecha en la que el lote ingresa al almacen.
-	  * Una validacion basica se hara aqui para comprobar que <i>fecha_ingreso</i> es de tipo <i>datetime</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param datetime
-	  */
-	final public function setFechaIngreso( $fecha_ingreso )
-	{
-		$this->fecha_ingreso = $fecha_ingreso;
 	}
 
 	/**
