@@ -97,33 +97,27 @@ class SucursalesControllerTest extends PHPUnit_Framework_TestCase {
         $this->assertGreaterThanOrEqual(0, $busqueda['numero_de_resultados']);
 
         //probamos la busqueda por activo, al menos debe de haber una, ya que cuando se cree esta sucursal estara activa  
-        $busqueda = SucursalesController::Buscar($activo = 1);
+        $busqueda = SucursalesController::Buscar($activo = 1, $id_empresa = null, $limit = null, $query = null, $sort = null, $start = null);
         $this->assertGreaterThanOrEqual(1, $busqueda["numero_de_resultados"]);
 
         //probamos busqueda por start
-        $busqueda = SucursalesController::Buscar($start = 1);       
+        $busqueda = SucursalesController::Buscar($activo = null, $id_empresa = null, $limit = null, $query = null, $sort = null, $start = 1);       
         $this->assertGreaterThanOrEqual(1, $busqueda["numero_de_resultados"]);
 
         //probamos busqueda por limit
-        $busqueda = SucursalesController::Buscar($limit = 1);
+        $busqueda = SucursalesController::Buscar($activo = null, $id_empresa = null, $limit = 1, $query = null, $sort = null, $start = null);
         $this->assertGreaterThanOrEqual(1, $busqueda["numero_de_resultados"]);
 
         //probamos busqueda por query
-        $busqueda = SucursalesController::Buscar($query = "query");
+        $busqueda = SucursalesController::Buscar($activo = null, $id_empresa = null, $limit = null, $query = 1, $sort = null, $start = null);
         $this->assertGreaterThanOrEqual(0, $busqueda["numero_de_resultados"]);
 
         //probamos busqueda por id_empresa
-        $busqueda = SucursalesController::Buscar($id_empresa = 1);
+        $busqueda = SucursalesController::Buscar($activo = null, $id_empresa = 1, $limit = null, $query = null, $sort = null, $start = null);
         $this->assertGreaterThanOrEqual(0, $busqueda["numero_de_resultados"]);
 
         //valores combinados
-        $busqueda = SucursalesController::Buscar(
-            $activo = 1,
-            $start = 1,
-            $limit = 1,
-            $query = "query",
-            $id_empresa = 1
-        );
+        $busqueda = SucursalesController::Buscar($activo = 1, $id_empresa = 1, $limit = 1, $query = 1, $sort = 1, $start = 1);
 
         $this->assertGreaterThanOrEqual(0, $busqueda["numero_de_resultados"]);
 
@@ -171,14 +165,31 @@ class SucursalesControllerTest extends PHPUnit_Framework_TestCase {
             "telefono2"             => "45*451*454"
         ), "Editar_Sucursal_" . time());
 
-        echo "Editando Sucursal";
-        $res = SucursalesController::Editar( $id_sucursal = $sucursal["id_sucursal"], $razon_social = "razon_social" );
-
-        $sucursal = SucursalDAO::getByPK($sucursal["id_sucursal"]);
-
-        $this->assertEquals("Test", $sucursal->getRazonSocial());
+        SucursalesController::Editar(
+		    $id_sucursal = $sucursal["id_sucursal"],
+		    $activo = 0,
+		    $descripcion = "Descripcion de la sucursal",
+		    $direccion = "[
+                {
+                    \"tipo\": \"postal\",
+                    \"calle\": \"Francisco I Madero\",
+                    \"numero_exterior\": \"1009A\",
+                    \"numero_interior\": \"12\",
+                    \"colonia\": \"centro\",
+                    \"codigo_postal\": \"38000\",
+                    \"telefono1\": \"4611223312\",
+                    \"telefono2\": \"\",
+                    \"id_ciudad\": 3,
+                    \"referencia\": \"El local naranja\"
+                }
+            ]",
+		    $empresas = "[1]",
+		    $id_gerente = 1,
+		    $id_moneda = 1,
+		    $razon_social = "Empresa x",
+		    $saldo_a_favor = "100000"
+	    );
 
     }
-
 
 }				

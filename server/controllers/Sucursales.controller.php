@@ -2244,22 +2244,14 @@ require_once("interfaces/Sucursales.interface.php");
 	public static function Editar
 	(
 		$id_sucursal, 
-		$calle = null, 
-		$coidgo_postal = null, 
-		$colonia = null, 
-		$descripcion = null,
+		$activo = null, 
+		$descripcion = null, 
+		$direccion = null, 
 		$empresas = null, 
 		$id_gerente = null, 
-		$impuestos = null, 
-		$municipio = null, 
-		$numero_exterior = null, 
-		$numero_interior = null, 
+		$id_moneda = null, 
 		$razon_social = null, 
-		$retenciones = null, 
-		$rfc = null, 
-		$saldo_a_favor = null, 
-		$telefono1 = null, 
-		$telefono2 = null
+		$saldo_a_favor = null
 	)
 	{
             Logger::log("Editando sucursal ".$id_sucursal);
@@ -2346,7 +2338,7 @@ require_once("interfaces/Sucursales.interface.php");
                 $cambio_direccion=true;
                 $direccion->setCodigoPostal($coidgo_postal);
             }
-            
+
             //Si cambio algun parametro de direccion, se actualiza el usuario que modifica y la fecha
             if($cambio_direccion)
             {
