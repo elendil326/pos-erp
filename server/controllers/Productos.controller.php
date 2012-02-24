@@ -101,6 +101,7 @@ require_once("interfaces/Productos.interface.php");
                 $nombre_producto = null,
                 $garantia = null,
                 $costo_estandar = null,
+				$id_unidad_compra = null,
                 $control_de_existencia = null,
                 $descripcion = null,
                 $foto_del_producto = null,
@@ -210,6 +211,14 @@ require_once("interfaces/Productos.interface.php");
             if(!is_null($costo_estandar))
             {
                 $e = self::validarNumero($costo_estandar, 1.8e200, "costo estandar");
+                if(is_string($e))
+                    return $e;
+            }
+
+			//valida que la unidad_compra exista y que este activa
+            if(!is_null($id_unidad_compra))
+            {
+                $e = self::validarParametrosUnidad($id_unidad_compra);
                 if(is_string($e))
                     return $e;
             }
@@ -724,20 +733,19 @@ NOTA: Se crea un producto tipo = 1 que es para productos
 		$codigo_producto, 
 		$compra_en_mostrador, 
 		$costo_estandar, 
+		$id_unidad_compra, 
 		$metodo_costeo, 
 		$nombre_producto, 
-		$clasificaciones = null, 
 		$codigo_de_barras = null, 
 		$control_de_existencia = null, 
-		$costo_extra_almacen = null, 
 		$descripcion_producto = null, 
 		$foto_del_producto = null, 
 		$garantia = null, 
+		$id_categoria = null, 
 		$id_empresas = null, 
 		$id_unidad = null, 
 		$impuestos = null, 
-		$peso_producto = null, 
-		$precio = null
+		$precio_de_venta = null
 	)
 	{  
             Logger::log("Creando nuevo producto...");
@@ -752,14 +760,15 @@ NOTA: Se crea un producto tipo = 1 que es para productos
                             $nombre_producto,
                             $garantia,
                             $costo_estandar,
+							$id_unidad_compra,
                             $control_de_existencia,
                             $descripcion_producto,
                             $foto_del_producto,
-                            $costo_extra_almacen,
+                            $costo_extra_almacen=null,
                             $codigo_de_barras,
-                            $peso_producto,
+                            $peso_producto=null,
                             $id_unidad,
-                            $precio);
+                            $precio_de_venta);
 
 
 
@@ -799,7 +808,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos
                                     "codigo_de_barras"      => trim($codigo_de_barras),
                                     "peso_producto"         => $peso_producto,
                                     "id_unidad"             => $id_unidad,
-                                    "precio"                => $precio
+                                    "precio"                => $precio_de_venta
                                             )
                                         );
             
@@ -879,7 +888,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos
                 Logger::error("No se pudo guardar el nuevo producto: ".$e);
                 if($e->getCode()==901)
                     throw new Exception ("No se pudo guardar el nuevo producto: ".$e->getMessage (), 901);
-                throw new Exception("No se pudo guardar el nuevo producto",901);
+                throw new Exception("No se pudo guardar el nuevo producto ".$e->getMessage (),901);
             }
             DAO::transEnd();
             Logger::log("Producto creado exitosamente");

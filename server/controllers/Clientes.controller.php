@@ -750,7 +750,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
             }
             DAO::transEnd();
             Logger::log("Clasificacion de cliente creada exitosamente");
-            return array( "id_categoria_cliente" => $clasificacion_cliente->getIdClasificacionCliente() );
+            return array( "id_categoria_cliente" => (int)$clasificacion_cliente->getIdClasificacionCliente() );
 	}
   
 	/**
