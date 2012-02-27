@@ -14,11 +14,10 @@ Ext.require([
 var main = function ()
 {
 	console.log("JS FRWK READY");
-	
 
 	//window.onbeforeunload = function(){}
 	var els = Ext.select("input").elements;
-	console.log("ataching on before unload events...");
+	console.log("Ataching on before unload events...");
 	
 	for (var i = els.length - 1; i >= 0; i--){
 		Ext.get(els[i]).on(
@@ -37,42 +36,7 @@ var main = function ()
 Ext.onReady(main);
 
 
-var POS = 
-{
-	
-	Empresas : 
-	{
-		
-		validarNuevaEmpresa : function (   )
-		{
-				
-		},
-
-		agregar : function (   ) 
-		{
-			
-			POS.API.GET("api/sucursal/almacen/entrada/", 
-			{ 
-				productos : Ext.JSON.encode([{ id_producto : 5, cantidad : 5 }]), 
-				id_almacen : 3
-			},{
-				callback : function( a ){ console.log(a ); }
-			});
-
-		}
-	}
-}
-
-
-
-
-
-
-
-
-
-
-
+var POS = {};
 
 
 Ext.Ajax.on('beforerequest', 	function (){ Ext.get("ajax_loader").show(); }, this);

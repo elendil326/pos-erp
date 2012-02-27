@@ -284,15 +284,11 @@ class GerenciaComponentPage extends PosComponentPage{
             "url": "empresas.lista.php",
             "children" : [
                 {
-            		"title" : "Agregar sucursales",
-            		"url" 	: "empresas.agregar.sucursales.php"
-            	},
-                {
-            		"title" : "Lista",
+            		"title" : "Lista de empresas",
             		"url" 	: "empresas.lista.php"
             	},
             	{
-            		"title" : "Nueva",
+            		"title" : "Nueva empresa",
             		"url" 	: "empresas.nuevo.php"
             	}
             ]

@@ -97,18 +97,18 @@
 	
 	/*var_dump($suce);*/
 	
-	$page->addComponent( new TitleComponent("Agregar una sucursal"), 2 );
+	$page->addComponent( "<p>Agregar una sucursal </p>" );
 	
 	$ssel = new SucursalSelectorComponent();
 	$ssel->addJsCallback("(function(){})");
 	$page->addComponent( $ssel );
 
-	$page->addComponent( new TitleComponent( "Ventas" ), 3 );
+/*	$page->addComponent( new TitleComponent( "Ventas" ), 3 );
 
 	$page->addComponent( new TitleComponent( "Productos" ), 3 );
 
 	$page->addComponent( new TitleComponent( "Servicios" ), 3 );
 
 	$page->addComponent( new TitleComponent( "Paquetes" ), 3 );
-      
+*/      
 	$page->render();

@@ -2245,8 +2245,8 @@ require_once("interfaces/Sucursales.interface.php");
 		$saldo_a_favor = null
 	)
 	{
-            Logger::log("Editando sucursal ".$id_sucursal);
-            
+            Logger::log("Editando sucursal ".$id_sucursal . " ...");
+
             DAO::transBegin();
 
             //Se obtiene la sucursal a editar y se valida que exista
@@ -2415,13 +2415,14 @@ require_once("interfaces/Sucursales.interface.php");
                     try
                     {
                         DireccionDAO::save($_direccion);
-                    }
-                    catch(Exception $e)
-                    {
+
+                    }catch(Exception $e){
                         DAO::transRollback();
                         Logger::error("No se pudo guardar la direccion ".$e);
-                        if($e->getCode()==901)
-                            throw new Exception("Error al guardar direccion de la sucursal {$sucursal->getRazonSocial()}: ".$e->getMessage(),901);
+                        if($e->getCode()==901){
+							throw new Exception("Error al guardar direccion de la sucursal {$sucursal->getRazonSocial()}: ".$e->getMessage(),901);
+						}
+                            
                         throw new Exception("Error al guardar direccion de la sucursal {$sucursal->getRazonSocial()}",901);
                     }
 
@@ -2470,25 +2471,21 @@ require_once("interfaces/Sucursales.interface.php");
             //verificamos si se cambiaron las empresas
             if( !is_null($empresas) )
             {
-                if( $json_empresas = json_decode($empresas) )
+				
+				foreach($empresas as $id_empresa)
                 {
-
-                    if( !is_array( $json_empresas ) ){
-                        Logger::error("Verifique el formato de los datos de las empresas, se esperabaun array y se encontro \"{$empresas}\"");
-                        throw new Exception("Verifique el formato de los datos de las empresas, se esperaba un array y se encontro \"{$empresas}\"");
+                    if(!EmpresaDAO::getByPK($id_empresa)){
+                        Logger::error("No se tiene registro de la empresa con id : {$id_empresa}");
+                        throw new InvalidDataException("No se tiene registro de la empresa con id : {$id_empresa}");
                     }
 
-                    foreach($json_empresas as $id_empresa)
-                    {
-                        if(!EmpresaDAO::getByPK($id_empresa)){
-                            Logger::error("No se tiene registro de la empresa con id : {$id_empresa}");
-                            throw new Exception("No se tiene registro de la empresa con id : {$id_empresa}");
-                        }
-                    }
-                }else
-                {
-                    Logger::error("Error al decodificar las empresas, verifique el formato de los datos de las empresas, se encontro \"{$empresas}\"");
-                    throw new Exception("Error al decodificar las empresas, verifique el formato de los datos de las empresas, se encontro \"{$empresas}\"");
+					try{
+						Logger::log("Vinculando con con empresa " . $id_empresa);
+						SucursalEmpresaDAO::save( new SucursalEmpresa ( array( "id_sucursal" => $id_sucursal, "id_empresa" => $id_empresa ) )  );
+
+					}catch(Exception $idbo){
+						throw new InvalidDatabaseOperationException($idbo);
+					}
                 }
             }
 
