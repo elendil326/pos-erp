@@ -192,8 +192,9 @@ class FormComponent implements GuiComponent{
 					$html .= "<td>";
 				}
 				
-				if(($f->obligatory === false) && ($this->hide_not_obligatory)) {
-					$html .= "<b >";
+				//if(($f->obligatory === false) && ($this->hide_not_obligatory)) {
+				if($f->obligatory){
+					$html .= "<b>";
 					
 				}else{
 					//$html .= "<div style='display:block' class='hideable'>";
