@@ -257,7 +257,8 @@ class ServiciosControllerTest extends PHPUnit_Framework_TestCase {
 	
 	
 	public function testEditarServicio(){
-		
+
+		//Crear un nuevo servicio
 		$s = ServiciosController::Nuevo(
 			$codigo_servicio	= "SERV" . time(), 
 			$compra_en_mostrador= false, 
@@ -277,7 +278,7 @@ class ServiciosControllerTest extends PHPUnit_Framework_TestCase {
 			$sucursales = null);
 		
 		
-		//Crear un nuevo servicio
+		//Editar el servicio, (descripcion)
 		ServiciosController::Editar(
 			$id_servicio = $s["id_servicio"], 
 			$clasificaciones = null, 
@@ -295,8 +296,8 @@ class ServiciosControllerTest extends PHPUnit_Framework_TestCase {
 			$precio = null, 
 			$retenciones = null, 
 			$sucursales = null
-			);
-		//editar 
+		);
+
 		
 	}
 	
