@@ -186,13 +186,13 @@ class FormComponent implements GuiComponent{
 			if($f->type !== "hidden"){
 
 				
-				if($f->obligatory === false) {
+				if(($f->obligatory === false) && ($this->hide_not_obligatory)) {
 					$html .= "<td style='display:none' class='hideable'>";
 				}else{
 					$html .= "<td>";
 				}
 				
-				if($f->obligatory === true) {
+				if(($f->obligatory === false) && ($this->hide_not_obligatory)) {
 					$html .= "<b >";
 					
 				}else{
@@ -209,7 +209,7 @@ class FormComponent implements GuiComponent{
 				}
 				
 
-				if($f->obligatory === false) {
+				if(($f->obligatory === false) && ($this->hide_not_obligatory)) {
 					$html .= "</td><td style='display:none' class='hideable'>";
 				}else{
 					$html .= "</td><td>";
@@ -295,15 +295,20 @@ class FormComponent implements GuiComponent{
 
 		if( !is_null ( $this->on_click 		) ){
 			$html .= "<td align=right colspan=2 style='background-color: #EDEFF4;-webkit-border-radius: 5px;'>";
-			$html .= "<div class='POS Boton' onClick='". $this->on_click["function"] ."' >".$this->on_click["caption"]."</div>";
-			$html .= "<div class='POS Boton' onClick='Ext.get(Ext.query(\".hideable\")).show()' >Mas opciones</div>";			
+			$html .= "<div class='POS Boton' onClick='". $this->on_click["function"] ."' >".$this->on_click["caption"]."</div>";			
+			if( ($this->hide_not_obligatory)){
+				$html .= "<div class='POS Boton' onClick='Ext.get(Ext.query(\".hideable\")).show()' >Mas opciones</div>";
+			}			
 			$html .= "</td></tr>";
 		}
 
 		if( !is_null ( $this->send_to_api	) ){
 			$html .= "<td align=right colspan=2 style='background-color: #EDEFF4;-webkit-border-radius: 5px;'>";
-			$html .= "<div class='POS Boton' onClick=''  >Cancelar</div>";						
-			$html .= "<div class='POS Boton' onClick='Ext.get(Ext.query(\".hideable\")).show()' >Mas opciones</div>";					
+			$html .= "<div class='POS Boton' onClick=''  >Cancelar</div>";		
+			if( ($this->hide_not_obligatory)){
+				$html .= "<div class='POS Boton' onClick='Ext.get(Ext.query(\".hideable\")).show()' >Mas opciones</div>";									
+			} 				
+
 			$html .= "<div class='POS Boton OK' onClick='this.onClick=null;getParams()'  >Aceptar</div>";			
 			$html .= "</td></tr>";			
 		}

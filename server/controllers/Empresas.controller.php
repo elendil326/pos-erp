@@ -615,42 +615,74 @@ require_once("interfaces/Empresas.interface.php");
 	public static function Editar
 	(
 		$id_empresa, 
-		$calle	 = null, 
-		$ciudad = null, 
-		$codigo_postal = null, 
-		$colonia	 = null, 
-		$curp = null, 
-		$direccion_web = null, 
+		$cedula = null, 
+		$direccion = null, 
 		$email = null, 
-		$impuestos = null, 
-		$numero_exterior	 = null, 
-		$numero_interno = null, 
+		$id_moneda = "0", 
+		$impuestos_venta = null, 
+		$impuesto_compra = null, 
+		$logo = null, 
 		$razon_social = null, 
 		$representante_legal = null, 
-		$retenciones = null, 
-		$rfc = null, 
-		$telefono1 = null, 
-		$telefono2 = null, 
 		$texto_extra = null
 	)
 	{
             Logger::log("Editando la empresa");
-            
+            /*
             //Se validan los parametros de empresa recibidos
-            $validar = self::validarParametrosEmpresa($id_empresa,null,$curp,$rfc,$razon_social,$representante_legal,null,$direccion_web);
+            $validar = self::validarParametrosEmpresa(
+								$id_empresa,
+								null,
+								$curp,
+								$rfc,
+								$razon_social,
+								$representante_legal,
+								null,
+								$direccion_web);
+			
             if(is_string($validar))
             {
                 Logger::error($validar);
                 throw new Exception($validar,901);
             }
-            
+            */
+
             //Se validan los parametros de direccion recibidos
-            $validar = DireccionController::validarParametrosDireccion(null,$calle,$numero_exterior,$numero_interno,$texto_extra,$colonia,$ciudad,$codigo_postal,$telefono1,$telefono2);
-            if(is_string($validar))
-            {
-                Logger::error($validar);
-                throw new Exception($validar,901);
-            }
+			/*
+			$params = array(
+				"calle" 			=> $calle,
+				"numero_exterior" => $numero_exterior,
+				"numoro_interno" => $numero_interno,
+				"texto_extra"	=> $texto_extra,
+				"colonia"		=> $colonia,
+				"ciudad"		=> $ciudad,
+				"codigo_postal"	=> $codigo_postal,
+				"telefono1"		=> $telefono1,
+				"telefono2"		=> $telefono2
+				
+			);
+
+			$addr = new Direccion($params);
+			
+			
+			if(!DireccionController::validarDireccion( $addr)){
+				throw new InvalidDataException("datos de direccion invalidos");
+			}
+			*/
+			
+			/*
+            $validar = DireccionController::validarParametrosDireccion(null,
+																		$calle,
+																		$numero_exterior,
+																		$numero_interno,
+																		$texto_extra,
+																		$colonia,
+																		$ciudad,
+																		$codigo_postal,
+																		$telefono1,
+																		$telefono2);
+            
+			*/
             
             //se guarda el registro de la empresa y se verifica que este activa
             $empresa=EmpresaDAO::getByPK($id_empresa);
@@ -854,7 +886,7 @@ require_once("interfaces/Empresas.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudo modificar la empresa: ".$e);
-                throw "No se pudo modificar la empresa";
+                throw new Exception("No se pudo modificar la empresa");
             }
             DAO::transEnd();
             Logger::log("Empresa editada con exito");
