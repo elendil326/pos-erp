@@ -393,14 +393,27 @@ Creo que este metodo tiene que estar bajo sucursal.
 	){
             Logger::log("Creando nuevo almacen");
             
-            //Se validan los parametros obtenidos del almacen
-            $validar = self::validarParametrosAlmacen(null, $id_sucursal, $id_empresa, $id_tipo_almacen, $nombre, $descripcion, null);
-            if(is_string($validar))
-            {
-                Logger::log($validar);
-                throw new Exception($validar);
+            //verificamos que exista la empresa
+            if( !is_null($id_empresa) && !$empresa = EmpresaDAO::getByPK( $id_empresa ) ){
+                throw new Exception("No se tiene registro de la empresa {$id_empresa}");
+            }
+    
+            //verificamos que exista la sucursal
+            if( !is_null($id_sucursal) && !$sucursal = SucursalDAO::getByPK( $id_sucursal ) ){
+                throw new Exception("No se tiene registro de la sucursal {$id_sucursal}");
+            }
+
+            //verificamos que exista el tipo de almacen
+            if( !is_null($id_tipo_almacen) && !$almacen = TipoAlmacenDAO::getByPK( $id_tipo_almacen ) ){
+                throw new Exception("No se tiene registro del tipo de almacen {$id_tipo_almacen}");
+            }
+
+            //verificamos que se haya especificado el nombre
+            if( !ValidacionesController::validarLongitudDeCadena(trim($nombre), 2, 100) ){
+                throw new Exception("El nombre debe ser una cadena entre 2 y 100 caracteres, se encontro \"" . trim($nombre) . "\" ");
             }
             
+           
             //Se valida si hay un almacen con ese mimso nombre en esta sucursal
             $almacenes = AlmacenDAO::search(new Almacen( array( "id_sucursal" => $id_sucursal ) ) );
             foreach($almacenes as $almacen)
@@ -684,8 +697,8 @@ Creo que este metodo tiene que estar bajo sucursal.
             //Se valida el parametro descripcion
             if(!is_null($descripcion))
             {
-                $validar = self::validarString($descripcion, 64, "descripcion");
-                if(is_string($validar))
+
+                if(!ValidacionesController::validarLongitudDeCadena($descripcion, 2, 64))
                 {
                     Logger::error($validar);
                     throw new Exception($validar,901);

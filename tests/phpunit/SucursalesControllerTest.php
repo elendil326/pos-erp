@@ -165,12 +165,25 @@ class SucursalesControllerTest extends PHPUnit_Framework_TestCase {
             "telefono2"             => "45*451*454"
         ), "Editar_Sucursal_" . time());
 
+        //para cambiar la moneda
+        try{
+            $moneda = new Moneda(array( 
+                "nombre" => "Moneda_" . time(),
+                "simbolo" => "Simbolo_" . time(),
+                "activa" => 1
+            ));
+            MonedaDAO::save($moneda);
+        }catch(Exception $e){
+            
+        }
+
         SucursalesController::Editar(
 		    $id_sucursal = $sucursal["id_sucursal"],
 		    $activo = 0,
 		    $descripcion = "Descripcion de la sucursal",
 		    $direccion = "[
                 {
+                    \"id_direccion\":605,
                     \"tipo\": \"postal\",
                     \"calle\": \"Francisco I Madero\",
                     \"numero_exterior\": \"1009A\",
@@ -185,7 +198,7 @@ class SucursalesControllerTest extends PHPUnit_Framework_TestCase {
             ]",
 		    $empresas = "[1]",
 		    $id_gerente = 1,
-		    $id_moneda = 1,
+		    $id_moneda = $moneda->getIdMoneda(),
 		    $razon_social = "Empresa x",
 		    $saldo_a_favor = "100000"
 	    );

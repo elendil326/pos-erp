@@ -49,7 +49,7 @@ require_once("interfaces/Sucursales.interface.php");
             }
             
             //Se valida que el rfc solo tenga letras de la A-Z y 0-9. No se debe repetir el rfc
-            if(!is_null($rfc))
+           /* if(!is_null($rfc))
             {
                 $e=self::validarString($rfc, 30, "rfc");
                 if(is_string($e))
@@ -63,12 +63,12 @@ require_once("interfaces/Sucursales.interface.php");
                     if($sucursal->getActiva())
                         return "El rfc (".$rfc.") ya esta en uso por la sucursal ".$sucursal->getIdSucursal();
                 }
-            }
+            }*/
             
             //Se valida que la razon social tenga una longitud maxima de 100, no se puede repetir
             if(!is_null($razon_social))
             {
-                $e=self::validarString($razon_social, 100, "razon social");
+                $e = ValidacionesController::validarLongitudDeCadena(trim($razon_social), 2, 100);
                 if(is_string($e))
                     return $e;
                 
@@ -83,7 +83,7 @@ require_once("interfaces/Sucursales.interface.php");
             //Se valida que la descripcion tenga una longitud maxima de 255
             if(!is_null($descripcion))
             {
-                $e=self::validarString($descripcion, 255, "descripcion");
+                $e = ValidacionesController::validarLongitudDeCadena(trim($descripcion), 0, 255);
                 if(is_string($e))
                     return $e;
             }
@@ -2223,23 +2223,14 @@ require_once("interfaces/Sucursales.interface.php");
  	 *Edita los datos de una sucursal
  	 *
  	 * @param id_sucursal int Id de la sucursal a modificar
- 	 * @param descuento float Descuento que tendran los productos ofrecidos por esta sucursal
- 	 * @param margen_utilidad float Porcentaje del margen de utilidad que se obtendra de los productos vendidos en esta sucursal
+ 	 * @param activo bool Indica si esta sucursal estar activa
  	 * @param descripcion string Descripcion de la sucursal
- 	 * @param empresas json Objeto que contendra los ids de las empresas a las que esta sucursal pertenece, por lo menos tiene que haber una empresa. En este JSON, opcionalmente junto con el id de la empresa, aapreceran dos campos que seran margen_utilidad y descuento, que indicaran que todos los productos de esa empresa ofrecidos en esta sucursal tendran un margen de utilidad y/o un descuento con los valores en esos campos
- 	 * @param telefono1 string telefono 1 de la sucursal
- 	 * @param telefono2 string telefono 2 de la sucursal
- 	 * @param numero_exterior string Numero exterior de la sucursal
- 	 * @param razon_social string Razon social de la sucursal
+ 	 * @param direccion json Arreglo de direcciones de la sucursal, pueden ser direcciones de tipo fiscal, postal, de envo, etc. En caso de no mandar el id_direccion dentro del objeto direccion, se debe de generar una nueva direccion
+ 	 * @param empresas json (DE ESTO ES LO QUE VEREMOS EL MARTES CON IRATZIO) Objeto que contendra los ids de las empresas a las que esta sucursal pertenece, por lo menos tiene que haber una empresa. En este JSON, opcionalmente junto con el id de la empresa, aapreceran dos campos que seran margen_utilidad y descuento, que indicaran que todos los productos de esa empresa ofrecidos en esta sucursal tendran un margen de utilidad y/o un descuento con los valores en esos campos
  	 * @param id_gerente int Id del gerente de la sucursal
- 	 * @param municipio int Municipio de la sucursal
- 	 * @param impuestos json Objeto que contendra los ids de los impuestos que afectana esta sucursal
- 	 * @param rfc string Rfc de la sucursal
+ 	 * @param id_moneda int Id de la moneda base que manejaran las sucursales
+ 	 * @param razon_social string Razon social de la sucursal
  	 * @param saldo_a_favor float Saldo a favor de la sucursal
- 	 * @param numero_interior string Numero interior de la sucursal
- 	 * @param colonia string Colonia de la sucursal
- 	 * @param calle string Calle de la sucursal
- 	 * @param coidgo_postal string Codigo Postal de la sucursal
  	 **/
 	public static function Editar
 	(
@@ -2256,191 +2247,261 @@ require_once("interfaces/Sucursales.interface.php");
 	{
             Logger::log("Editando sucursal ".$id_sucursal);
             
+            DAO::transBegin();
+
             //Se obtiene la sucursal a editar y se valida que exista
-            $sucursal=SucursalDAO::getByPK($id_sucursal);
-            if(is_null($sucursal))
+            if( !$sucursal = SucursalDAO::getByPK($id_sucursal) )
             {
-                Logger::error("La sucursal con id: ".$id_sucursal." no existe");
-                throw new Exception("La sucursal con id: ".$id_sucursal." no existe");
+                Logger::error("La sucursal con id : {$id_sucursal} no existe");
+                throw new Exception("La sucursal con id : {$id_sucursal} no existe");
             }
+
+            //verificamos si esta activa para editarla
             if(!$sucursal->getActiva())
             {
                 Logger::error("La sucursal no esta activa, no se puede editar una sucursal inactiva");
                 throw new Exception("La sucursal no esta activa, no se puede editar una sucursal inactiva");
             }
-            //bandera que indica si cambia algun parametro de la direccion
-            $cambio_direccion=false;
-            
-            //Se validan los demas parametros
-            $validar = self::validarParametrosSucursal(null,$sucursal->getIdDireccion(),$rfc,$razon_social,
-                    $descripcion,$id_gerente,$saldo_a_favor);
-            
-            $direccion=DireccionDAO::getByPK($sucursal->getIdDireccion());
-            
-            //Se valida cada parametro, si se recibe, se toma como actualizacion
-            if(!is_null($descripcion))
-            {
-                $sucursal->setDescripcion($descripcion);
-            }
-            if(!is_null($telefono1))
-            {
-                $cambio_direccion=true;
-                $direccion->setTelefono($telefono1);
-            }
-            if(!is_null($telefono2))
-            {
-                $cambio_direccion=true;
-                $direccion->setTelefono2($telefono2);
-            }
-            if(!is_null($numero_exterior))
-            {
-                $cambio_direccion=true;
-                $direccion->setNumeroExterior($numero_exterior);
-            }
+
+            //verificamos la razon social
             if(!is_null($razon_social))
             {
                 $sucursal->setRazonSocial(trim($razon_social));
             }
-            if(!is_null($id_gerente))
+
+            //verificamos si se cambiaron las direcciones
+            if( !is_null($direccion) )
             {
-                $sucursal->setIdGerente($id_gerente);
-            }
-            if(!is_null($municipio))
-            {
-                $cambio_direccion=true;
-                $direccion->setIdCiudad($municipio);
-            }
-            if(!is_null($rfc))
-            {
-                $sucursal->setRfc($rfc);
-            }
+            
+                if( !$json_direcciones = json_decode($direccion) )
+                {
+                    Logger::error("Error al decodificar las direcciones, verifique el formato de los datos de las direcciones, se encontro \"{$direccion}\"");
+                    throw new Exception("Error al decodificar las direcciones, verifique el formato de los datos de las direcciones, se encontro \"{$direccion}\"");
+                }
+
+                if( !is_array( $json_direcciones ) ){
+                    Logger::error("Verifique el formato de los datos de las direcciones, se esperaba un array y se encontro \"{$direcciones}\"");
+                    throw new Exception("Verifique el formato de los datos de las empresas, se esperaba un array y se encontro \"{$direcciones}\"");
+                }
+
+                foreach($json_direcciones as $direccion)
+                {
+
+                    $_direccion = null;
+                        
+                    if( !is_object( $direccion ) ){
+                        DAO::transRollback();
+                        Logger::error("Verifique el formato de los datos de las direcciones, se esperaba un array de objetos con formato de direccion y se encontro \"{$direcciones}\"");
+                        throw new Exception("Verifique el formato de los datos de las direcciones, se esperaba un array de objetos con formato de direccion y se encontro \"{$direcciones}\"");
+                    }
+
+                    //verificamos si se va a editar una direccion o se va a crear una nueva
+                    if( isset($direccion->id_direccion) ){
+
+                        //se edita la direccion
+                        if( !$_direccion = DireccionDAO::getByPK( $direccion->id_direccion ) ){
+                            DAO::transRollback();
+                            Logger::error("No se tiene registro de la dirección con id : {$direccion->id_direccion}");
+                            throw new Exception("No se tiene registro de la dirección con id : {$direccion->id_direccion}");
+                        }
+                            
+                        //bandera que indica si cambia algun parametro de la direccion
+                        $cambio_direccion = false;
+                            
+                        //calle
+                        if( isset( $direccion->calle ) ){
+                            $cambio_direccion = true;
+                            $_direccion->setCalle( $direccion->calle );
+                        }
+                            
+                        //numero_exterior
+                        if( isset( $direccion->numero_exterior ) ){
+                            $cambio_direccion = true;
+                            $_direccion->setNumeroExterior( $direccion->numero_exterior );
+                        }
+                            
+                        //numero_interior
+                        if( isset( $direccion->numero_interior ) ){
+                            $cambio_direccion = true;
+                            $_direccion->setNumeroInterior( $direccion->numero_interior );
+                        }
+                            
+                        //referencia
+                        if( isset( $direccion->referencia ) ){
+                            $cambio_direccion = true;
+                            $_direccion->setReferencia( $direccion->referencia );
+                        }
+                            
+                        //colonia
+                        if( isset( $direccion->colonia ) ){
+                            $cambio_direccion = true;
+                            $_direccion->setColonia( $direccion->colonia );
+                        }
+                            
+                        //id_ciudad
+                        if( isset( $direccion->id_ciudad ) ){
+                            $cambio_direccion = true;
+                            $_direccion->setIdCiudad( $direccion->id_ciudad );
+                        }
+                            
+                        //codigo_postal
+                        if( isset( $direccion->codigo_postal ) ){
+                            $cambio_direccion = true;
+                            $_direccion->setCodigoPostal( $direccion->codigo_postal );
+                        }
+                            
+                        //telefono
+                        if( isset( $direccion->telefono ) ){
+                            $cambio_direccion = true;
+                            $_direccion->setTelefono( $direccion->telefono );
+                        }
+                            
+                        //telefono2
+                        if( isset( $direccion->telefono2 ) ){
+                            $cambio_direccion = true;
+                            $_direccion->setTelefono2( $direccion->telefono2 );
+                        }
+
+                        //Si cambio algun parametro de direccion, se actualiza el usuario que modifica y la fecha
+                        if($cambio_direccion)
+                        {
+                             
+                            $_direccion->setUltimaModificacion(date("Y-m-d H:i:s",time()));
+
+                            $id_usuario=SesionController::getCurrentUser();
+                                
+                            if(is_null($id_usuario))
+                            {
+                                DAO::transRollback();
+                                Logger::error("No se pudo obtener al usuario de la sesion, ya inicio sesion?");
+                                throw new Exception("No se pudo obtener al usuario de la sesion, ya inicio sesion?");
+                            }
+
+                            $_direccion->setIdUsuarioUltimaModificacion($id_usuario);                                
+
+                        }                    
+
+                    }else{
+                            
+                        //se crea una nueva direccion
+                        
+                        $id_usuario=SesionController::getCurrentUser();
+                                
+                        if(is_null($id_usuario))
+                        {
+                            DAO::transRollback();
+                            Logger::error("No se pudo obtener al usuario de la sesion, ya inicio sesion?");
+                            throw new Exception("No se pudo obtener al usuario de la sesion, ya inicio sesion?");
+                        }
+
+                        $_direccion = new Direccion(array(
+                            "calle" => isset($direccion->calle)?$direccion->calle : "",
+                            "numero_exterior" => isset($direccion->numero_exterior)?$direccion->numero_exterior : "",
+                            "numero_interior" => isset($direccion->numero_interior)?$direccion->numero_interior : "",
+                            "referencia" => isset($direccion->referencia)?$direccion->referencia : "",
+                            "colonia" => isset($direccion->colonia)?$direccion->colonia : "",
+                            "id_ciudad" => isset($direccion->id_ciudad)?$direccion->id_ciudad : "",
+                            "codigo_postal" => isset($direccion->codigo_postal)?$direccion->codigo_postal : "",
+                            "telefono" => isset($direccion->telefono)?$direccion->telefono2 : "",
+                            "telefono2" => isset($direccion->telefono2)?$direccion->telefono2 : "",
+                            "ultima_modificacion" => date("Y-m-d H:i:s",time()),
+                            "id_usuario_ultima_modificacion" => $id_usuario
+                        ));                        
+                        
+                    }
+                        
+                    //guardamos la direccion
+
+                    try
+                    {
+                        DireccionDAO::save($_direccion);
+                    }
+                    catch(Exception $e)
+                    {
+                        DAO::transRollback();
+                        Logger::error("No se pudo guardar la direccion ".$e);
+                        if($e->getCode()==901)
+                            throw new Exception("Error al guardar direccion de la sucursal {$sucursal->getRazonSocial()}: ".$e->getMessage(),901);
+                        throw new Exception("Error al guardar direccion de la sucursal {$sucursal->getRazonSocial()}",901);
+                    }
+
+                }
+               
+
+            }// !is_null
+            
+
+            //verificamos si cambio el saldo a favor
             if(!is_null($saldo_a_favor))
             {
                 $sucursal->setSaldoAFavor($saldo_a_favor);
-            }
-            if(!is_null($numero_interior))
+            }            
+
+            //verificamos si cambio la moneda        
+            if(!is_null($id_moneda))
             {
-                $cambio_direccion=true;
-                $direccion->setNumeroInterior($numero_interior);
-            }
-            if(!is_null($colonia))
-            {
-                $cambio_direccion=true;
-                $direccion->setColonia($colonia);
-            }
-            if(!is_null($calle))
-            {
-                $cambio_direccion=true;
-                $direccion->setCalle($calle);
-            }
-            if(!is_null($coidgo_postal))
-            {
-                $cambio_direccion=true;
-                $direccion->setCodigoPostal($coidgo_postal);
+
+                if(!$moneda = MonedaDAO::getByPK($id_moneda))
+                {
+                    Logger::error("No se tiene registro del id_moneda {$id_moneda}");
+                    throw new Exception("No se tiene registro del id_moneda {$id_moneda}");
+                }else
+                {
+                    //$sucursal->setIdMoneda($moneda->getIdMoneda());
+                }
+                
             }
 
-            //Si cambio algun parametro de direccion, se actualiza el usuario que modifica y la fecha
-            if($cambio_direccion)
+            //verificamos si cambio el gerente
+            if(!is_null($id_gerente))
             {
-                $direccion->setUltimaModificacion(date("Y-m-d H:i:s",time()));
-                $id_usuario=SesionController::getCurrentUser();
-                if(is_null($id_usuario))
+
+                if(!$usuario_gerente = UsuarioDAO::getByPK($id_gerente))
                 {
-                    Logger::error("No se pudo obtener al usuario de la sesion, ya inicio sesion?");
-                    throw new Exception("No se pudo obtener al usuario de la sesion, ya inicio sesion?");
+                    Logger::error("No se tiene registro del gerente con id : {$id_gerente}");
+                    throw new Exception("No se tiene registro del gerente con id : {$id_gerente}");
+                }else
+                {
+                    $sucursal->setIdGerente($usuario_gerente->getIdUsuario());
                 }
-                $direccion->setIdUsuarioUltimaModificacion($id_usuario);
+                
             }
-            DAO::transBegin();
+
+            //verificamos si se cambiaron las empresas
+            if( !is_null($empresas) )
+            {
+                if( $json_empresas = json_decode($empresas) )
+                {
+
+                    if( !is_array( $json_empresas ) ){
+                        Logger::error("Verifique el formato de los datos de las empresas, se esperabaun array y se encontro \"{$empresas}\"");
+                        throw new Exception("Verifique el formato de los datos de las empresas, se esperaba un array y se encontro \"{$empresas}\"");
+                    }
+
+                    foreach($json_empresas as $id_empresa)
+                    {
+                        if(!EmpresaDAO::getByPK($id_empresa)){
+                            Logger::error("No se tiene registro de la empresa con id : {$id_empresa}");
+                            throw new Exception("No se tiene registro de la empresa con id : {$id_empresa}");
+                        }
+                    }
+                }else
+                {
+                    Logger::error("Error al decodificar las empresas, verifique el formato de los datos de las empresas, se encontro \"{$empresas}\"");
+                    throw new Exception("Error al decodificar las empresas, verifique el formato de los datos de las empresas, se encontro \"{$empresas}\"");
+                }
+            }
+
+            //verificamos si cambio la descripcion
+            if(!is_null($descripcion))
+            {
+                $sucursal->setDescripcion($descripcion);
+            }            
+           
             try
             {
-                //Se guardan los cambios hechos
-                DireccionDAO::save($direccion);
                 SucursalDAO::save($sucursal);
-                
-                
-                //Si se recibieron impuestos, se insertan y actualizan los que se encuentran
-                //en la lista obtenida. Al final, se recorren las relaciones ya existentes y
-                //las que no esten incluidas en la lista obtenida son eliminadas.
-                if(!is_null($impuestos))
-                {
-                    
-                    $impuestos = object_to_array($impuestos);
-                    
-                    if(!is_array($impuestos))
-                    {
-                        throw new Exception("Los impuestos son invalidos",901);
-                    }
-                    
-                    //Se inertan y actualizan las que se encuentran en la lista
-                    foreach($impuestos as $impuesto)
-                    {
-                        if(is_null(ImpuestoDAO::getByPK($impuesto)))
-                        {
-                            throw new Exception("El impuesto con id: ".$impuesto." no existe",901);
-                        }
-                        ImpuestoSucursalDAO::save(new ImpuestoSucursal(array( "id_sucursal" => $id_sucursal, "id_impuesto" => $impuesto)));
-                    }
-                    $impuestos_sucursal_actual = ImpuestoSucursalDAO::search(new ImpuestoSucursal(array( "id_sucursal" => $id_sucursal)));
-                    
-                    //Se recorren las relaciones actuales y se eliminan aquellas que no esten en la lista obtenida
-                    foreach($impuestos_sucursal_actual as $i)
-                    {
-                        $encontrado=false;
-                        foreach($impuestos as $impuesto)
-                        {
-                            if($impuesto==$i->getIdImpuesto())
-                            {
-                                $encontrado=true;
-                            }
-                        }
-                        if(!$encontrado)
-                        {
-                            ImpuestoSucursalDAO::delete($i);
-                        }
-                    }
-                }
-                
-                //Si se recibieron retenciones, se insertan y actualizan las que se encuentran
-                //en la lista obtenida. Al final, se recorren las relaciones ya existentes y
-                //las que no esten incluidas en la lista obtenida son eliminadas.
-                if(!is_null($retenciones))
-                {
-                    
-                    $retenciones = object_to_array($retenciones);
-                    
-                    if(!is_array($retenciones))
-                    {
-                        throw new Exception("Las retenciones son invalidas",901);
-                    }
-                    
-                    //Se insertan o actualizan las retenciones obtenidas en la lista
-                    foreach($retenciones as $retencion)
-                    {
-                        if(is_null(RetencionDAO::getByPK($retencion)))
-                        {
-                            throw new Exception("La retencion con id: ".$retencion." no existe",901);
-                        }
-                        RetencionSucursalDAO::save(new RetencionSucursal(array( "id_sucursal" => $id_sucursal, "id_retencion" => $retencion)));
-                    }
-                    $retenciones_sucursal_actual = RetencionSucursalDAO::search(new RetencionSucursal(array( "id_sucursal" => $id_sucursal)));
-                    
-                    //Se eliminan las retenciones que no esten en la lista
-                    foreach($retenciones_sucursal_actual as $r)
-                    {
-                        $encontrado=false;
-                        foreach($retenciones as $retencion)
-                        {
-                            if($retencion==$r->getIdRetencion())
-                            {
-                                $encontrado=true;
-                            }
-                        }
-                        if(!$encontrado)
-                            RetencionSucursalDAO::delete($r);
-                    }
-                } /* Fin  if retenciones */
-            } /* Fin try */
+            }
             catch(Exception $e)
             {
                 DAO::transRollback();

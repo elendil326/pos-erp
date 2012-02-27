@@ -21,6 +21,123 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
 
 	}
 
+    /**
+     * Nuevo Tipo de Almacen
+     */
+	public function testTipoNuevo(){
+
+		$a = AlmacenesController::NuevoTipo("Nuevo_Tipo_Almacen_" . time());	
+		$this->assertInternalType("int", $a["id_tipo_almacen"]);
+
+	}
+
+    /**
+     * Editar Tipo de Almacen
+     */
+	public function testTipoEditar(){
+
+        $target = "descripcion_editada_" . time();
+
+		$a = AlmacenesController::NuevoTipo("Editar_Tipo_Almacen" . time());	
+		$this->assertInternalType("int", $a["id_tipo_almacen"]);
+
+        AlmacenesController::EditarTipo(
+            $id_tipo_almacen = $a["id_tipo_almacen"], 
+		    $descripcion = $target
+        );
+
+        $tipo_almacen = TipoAlmacenDAO::getByPK( $a["id_tipo_almacen"] );       
+
+        $this->assertEquals($target, $tipo_almacen->getDescripcion(), "Error al editar la descripcion del tipo de almacen");
+
+	}
+
+    /**
+     * Desactivar Tipo de Almacen
+     */
+	public function testTipoDesactivar(){        
+
+		$a = AlmacenesController::NuevoTipo("Desactivar_Tipo_Almacen" . time());
+
+        AlmacenesController::DesactivarTipo(
+            $id_tipo_almacen = $a["id_tipo_almacen"]
+        );
+
+        $tipo_almacen = TipoAlmacenDAO::getByPK( $a["id_tipo_almacen"] );         
+        
+        $this->assertEquals(0, $tipo_almacen->getActivo(), "Error al desactivar el tipo de almacen");
+
+	}
+
+    /**
+     * Buscar Tipo de Almacen
+     */
+	public function testTipoBuscar(){
+
+        //creamos una sucursal para fines del experimento
+
+        $a = AlmacenesController::NuevoTipo("Buscar_Tipo_Almacen" . time());
+
+        
+        //realizamos una busqueda general y verificamso que contenga los parametros de respuesta
+        $busqueda = AlmacenesController::Buscar();
+
+        $this->assertArrayHasKey('resultados', $busqueda);
+        $this->assertArrayHasKey('numero_de_resultados', $busqueda);
+
+        $this->assertInternalType('int', $busqueda['numero_de_resultados']);
+        $this->assertInternalType('array', $busqueda['resultados']);
+
+        $this->assertGreaterThanOrEqual(0, $busqueda['numero_de_resultados']);
+
+        //probamos la busqueda por activo, al menos debe de haber una, ya que cuando se cree esta sucursal estara activa  
+        $busqueda = AlmacenesController::Buscar();
+        $this->assertGreaterThanOrEqual(1, $busqueda["numero_de_resultados"]);
+
+        //probamos busqueda por query
+        $busqueda = AlmacenesController::Buscar($query = "Buscar");
+        $this->assertGreaterThanOrEqual(0, $busqueda["numero_de_resultados"]);
+
+	}
+
+    /**
+     * Nuevo Almacen
+     */
+    public function testNuevoAlmacen(){
+        
+        $tipo_almacen = AlmacenesController::NuevoTipo("Nuevo_Tipo_Almacen__" . time());	
+
+        $almacen = AlmacenesController::Nuevo(
+		    $id_empresa = 1, 
+		    $id_sucursal = 1, 
+		    $id_tipo_almacen = $tipo_almacen["id_tipo_almacen"], 
+		    $nombre = "Almacen_" . time(), 
+		    $descripcion = "Almacen de prueba " . time()
+	    );
+    
+    }
+
+    /**
+     * Editar Almacen
+     */
+    public function testEditarAlmacen(){
+        
+        $tipo_almacen = AlmacenesController::NuevoTipo("Nuevo_Tipo_Almacen___" . time());	
+
+        $almacen = AlmacenesController::Nuevo(
+		    $id_empresa = 1, 
+		    $id_sucursal = 1, 
+		    $id_tipo_almacen = $tipo_almacen["id_tipo_almacen"], 
+		    $nombre = "Almacen_" . time(), 
+		    $descripcion = "Almacen de prueba_ " . time()
+	    );
+    
+    }
+
+
+
+//--------------------------------------------------
+
 
 	/**
 	*
@@ -31,7 +148,7 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
 
 	
 	//Imprime la lista de tipos de almacen
-	public function testTipoBuscarYDesactivar(){
+	/*public function testTipoBuscarYDesactivar(){
 
 		$r = AlmacenesController::BuscarTipo();
 
@@ -68,25 +185,19 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
 		}
 
 		$this->assertFalse($found);
-	}
+	}*/
 
 
 
 
-	//Edita un tipo de almacen
-	public function testTipoNuevo(){
-
-		$a = AlmacenesController::NuevoTipo("1dee80c7d5ab2c1c90aa8d2f7dd47256");	
-		$this->assertInternalType("int", $a["id_tipo_almacen"]);
-
-	}
+	
 
 
 
 	/**
      * @expectedException BusinessLogicException
      */
-	public function testTipoNuevoRepetido(){
+	/*public function testTipoNuevoRepetido(){
 		$a = AlmacenesController::NuevoTipo("1dee80c7d5ab2c1c90aa8d2f7dd47256");	
 	}
 
@@ -101,7 +212,7 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
 
 	public function testEditar(){
 		
-	}
+	}*/
 
 
 	/**
@@ -110,8 +221,8 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
 	*	Lotes
 	*
 	**/
-	public function testLoteNuevo(){
-		AlamacenController::NuevoLote(  );
+	/*public function testLoteNuevo(){
+		//AlamacenController::NuevoLote(  );
 	}
 
 	public function testLoteEntrada(){
@@ -150,7 +261,7 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
 
 	public function testNuevo(){
 		
-	}
+	}*/
 
 
 	/*public function testTipoBuscar(){}

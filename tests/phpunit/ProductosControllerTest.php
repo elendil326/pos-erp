@@ -159,7 +159,7 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 										$precio = null
 										);			
 		}
-		*/
+		
 		/*EN EL DAO EL METODO DE BUSQUEDA NO ACEPTA CRITERIOS COMO ID_SUC O ID_PROD*/
 	
 		public function testBuscarProductosPorID_Sucursal(){
