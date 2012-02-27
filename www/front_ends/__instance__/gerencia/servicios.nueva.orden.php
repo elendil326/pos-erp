@@ -37,9 +37,7 @@
 	
 	$form->makeObligatory(array( 
 			"id_cliente",
-            "id_servicio",
-            "descripcion",
-            "fecha_entrega"
+            "id_servicio"
 		));
 	
 	

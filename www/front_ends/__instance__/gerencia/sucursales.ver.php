@@ -66,17 +66,43 @@
 	$page->addComponent( $form );
 	
 
-	$a = "POS.API.GET('api/sucursal/editar', { id_sucursal : ".$_GET["sid"].", empresas : Ext.JSON.encode([1,2,3]) }, function(){})";
+	$js = "Ext.MessageBox.show({
+				title: 'Error',
+				msg: '&iquest; Seguro que desea vincular esta sucursal a la empresa '+_emp.get('razon_social')+' ?',
+				buttons: Ext.MessageBox.YESNO,
+				icon: 'error',
+				callback : function(a,b){
+					if(a=='yes'){
+						POS.API.GET('api/sucursal/editar', 
+						{ id_sucursal : ".$_GET["sid"].", empresas : Ext.JSON.encode([ _emp.get('id_empresa') ]) }, 
+						{callback: function(a){
+								window.location = 'sucursales.ver.php?sid=".$_GET["sid"]."';
+						}}
+						)
+					}
+				}
+	       });";
+		
 
 	$page->addComponent( new TitleComponent("Empresas", 3));
 	$suce = SucursalEmpresaDAO::search( new SucursalEmpresa( array( "id_sucursal" => $_GET["sid"] ) ) );
+	$empresas_vinculadas = new TableComponent( array( "id_empresa" => "empresas vinculadas" ), $suce );
 	
-	$page->addComponent( new TableComponent( array( "id_empresa" => "empresa" ), $suce ) );	
+	function getEmpresaNombre($eid){
+		$e = EmpresaDAO::getByPK($eid);
+		return $e->getRazonSocial();
+	}
+	$empresas_vinculadas->addColRender( "id_empresa", "getEmpresaNombre" );
+	
+	$page->addComponent( $empresas_vinculadas );
+	
+	
 	
 	$page->addComponent( "<p>Agregar una sucursal </p>" );
 
+
 	$ssel = new EmpresaSelectorComponent();
-	$ssel->addJsCallback("(function(){})");
+	$ssel->addJsCallback("(function(_emp){". $js . "})");
 	$page->addComponent( $ssel );
 
 

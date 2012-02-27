@@ -743,7 +743,17 @@ class FormComponentField
 	public $hidden;
 	
 	
-	public function __construct($id, $caption, $type, $value = "", $name = null, $obligatory = false, $hidden = false, $send_as_hidden = false)
+	public function __construct
+	(
+		$id, 
+		$caption, 
+		$type, 
+		$value 			= "", 
+		$name			= null, 
+		$obligatory 	= false, 
+		$hidden 		= false, 
+		$send_as_hidden = false
+	)
 	{
 		$this->id             = $id;
 		$this->caption        = $caption;

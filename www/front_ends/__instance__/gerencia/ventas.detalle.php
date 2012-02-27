@@ -133,6 +133,7 @@
 
 	$page->addComponent($tabla);
 
+/*
 	$page->addComponent(new TitleComponent("Informacion de Arpilla", 3));
 
 	$tabla = new TableComponent(array(
@@ -151,5 +152,6 @@
 	))));
 
 	$page->addComponent($tabla);
+*/
 
 	$page->render();
