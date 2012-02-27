@@ -25,40 +25,40 @@
 		//
 		// Menu de opciones
 		// 
-                if($este_servicio->getActivo())
-                {
-                    $menu = new MenuComponent();
-                    $menu->addItem("Editar este servicio", "servicios.editar.php?sid=".$_GET["sid"]);
 
-                    $btn_eliminar = new MenuItem("Desactivar este servicio", null);
-                    $btn_eliminar->addApiCall("api/servicios/eliminar", "GET");
-                    $btn_eliminar->onApiCallSuccessRedirect("servicios.lista.php");
-                    $btn_eliminar->addName("eliminar");
+		$menu = new MenuComponent();
+		$menu->addItem("Editar este servicio", "servicios.editar.php?sid=".$_GET["sid"]);
 
-                    $funcion_eliminar = " function eliminar_servicio(btn){".
-                                "if(btn == 'yes')".
-                                "{".
-                                    "var p = {};".
-                                    "p.id_servicio = ".$_GET["sid"].";".
-                                    "sendToApi_eliminar(p);".
-                                "}".
-                            "}".
-                            "      ".
-                            "function confirmar(){".
-                            " Ext.MessageBox.confirm('Desactivar', 'Desea eliminar este servicio?', eliminar_servicio );".
-                            "}";
+		$btn_eliminar = new MenuItem("Desactivar este servicio", null);
+		$btn_eliminar->addApiCall("api/servicios/eliminar", "GET");
+		$btn_eliminar->onApiCallSuccessRedirect("servicios.lista.php");
+		$btn_eliminar->addName("eliminar");
 
-                    $btn_eliminar->addOnClick("confirmar", $funcion_eliminar);
+		$funcion_eliminar = " function eliminar_servicio(btn){".
+		"if(btn == 'yes')".
+		"{".
+		"var p = {};".
+		"p.id_servicio = ".$_GET["sid"].";".
+		"sendToApi_eliminar(p);".
+		"}".
+		"}".
+		"      ".
+		"function confirmar(){".
+		" Ext.MessageBox.confirm('Desactivar', 'Desea eliminar este servicio?', eliminar_servicio );".
+		"}";
 
-                    $menu->addMenuItem($btn_eliminar);
+		$btn_eliminar->addOnClick("confirmar", $funcion_eliminar);
 
-                    $page->addComponent( $menu);
-                }
+		$menu->addMenuItem($btn_eliminar);
+
+		$page->addComponent( $menu);
+                
 		
 		//
 		// Forma de producto
 		// 
 		$form = new DAOFormComponent( $este_servicio );
+		
 		$form->setEditable(false);
 		
 		$form->hideField( array( 
@@ -66,7 +66,7 @@
 			 ));
 		$page->addComponent( $form );
                 
-                $page->addComponent( new TitleComponent( "Precios segun tipo de cliente" ) );
+
         /*
                 $tabla = new TableComponent(
                         array(

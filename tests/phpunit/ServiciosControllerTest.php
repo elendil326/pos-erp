@@ -256,6 +256,48 @@ class ServiciosControllerTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	
-
+	public function testEditarServicio(){
+		
+		$s = ServiciosController::Nuevo(
+			$codigo_servicio	= "SERV" . time(), 
+			$compra_en_mostrador= false, 
+			$costo_estandar		= 0,	 
+			$metodo_costeo		= "precio", 
+			$nombre_servicio	= "SERV" . time(),
+			$activo = true, 
+			$clasificaciones = null, 
+			$control_de_existencia = null, 
+			$descripcion_servicio = null, 
+			$empresas = null, 
+			$foto_servicio = null, 
+			$garantia = null, 
+			$impuestos = null, 
+			$precio = 0, 
+			$retenciones = null, 
+			$sucursales = null);
+		
+		
+		//Crear un nuevo servicio
+		ServiciosController::Editar(
+			$id_servicio = $s["id_servicio"], 
+			$clasificaciones = null, 
+			$codigo_servicio = null, 
+			$compra_en_mostrador = null, 
+			$control_de_existencia = null, 
+			$costo_estandar = null, 
+			$descripcion_servicio = "nueva desc", 
+			$empresas = null, 
+			$foto_servicio = null, 
+			$garantia = null, 
+			$impuestos = null, 
+			$metodo_costeo = null, 
+			$nombre_servicio = null, 
+			$precio = null, 
+			$retenciones = null, 
+			$sucursales = null
+			);
+		//editar 
+		
+	}
 	
 }
