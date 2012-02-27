@@ -31,6 +31,8 @@
                 
 		$tabla->addOnClick( "id_empresa", "(function(a){window.location = 'empresas.ver.php?eid='+a;})" );
 		
+		$tabla->addNoData("No hay ninguna empresa registada. <a href='empresas.nuevo.php'>&iquest; Tal vez desee crear una ahora ?</a>");
+		
 		$page->addComponent( $tabla );
 		
 		$page->render();

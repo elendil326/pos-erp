@@ -19,7 +19,7 @@
 	$p->requireParam( "id", "GET", "Esta instancia no existe.", "InstanciasController::BuscarPorId" );
 	
 	
-	
+	$instancia = InstanciasController::BuscarPorId( $_GET["id"] );
 
 	/**
 	  *
@@ -28,6 +28,6 @@
 	  **/
 	$p->addComponent( new TitleComponent( "Detalles de la instancia" ) );
 	
-
-
+	$p->addComponent( "<a href='../". $instancia["instance_token"] ."/' target='_new'>Visitar</a>");
+	
 	$p->render( );

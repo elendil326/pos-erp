@@ -168,6 +168,7 @@
 				return null;
 		    }					
 
+			Logger::log("Instancia $I_ID creada correctamente... ");
 			return (int)$I_ID;
 		}
 		
