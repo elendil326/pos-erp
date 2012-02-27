@@ -653,7 +653,7 @@ class GerenciaComponentPage extends PosComponentPage{
         },
         {
             "title": "Ventas",
-            "url": "ventas.php",
+            "url": "ventas.lista.php",
             "children": [
                 {
                         "title" : "Lista",

@@ -547,13 +547,13 @@ require_once("interfaces/Servicios.interface.php");
             
             //Los parametros que no sean nulos seran tomados como actualizacion
             $clasificacion_servicio = ClasificacionServicioDAO::getByPK($id_clasificacion_servicio);
-            if(!is_null($descripcion))
-            {
-                $clasificacion_servicio->setMargenUtilidad($margen_utilidad);
-            }
             if(!is_null($garantia))
             {
-                $clasificacion_servicio->setDescripcion($garantia);
+                $clasificacion_servicio->setGarantia($garantia);
+            }
+            if(!is_null($descripcion))
+            {
+                $clasificacion_servicio->setDescripcion($descripcion);
             }
             if(!is_null($nombre))
             {
