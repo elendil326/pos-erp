@@ -14,11 +14,11 @@ class EmpresaSelectorComponent implements GuiComponent{
 		<script>
 
 		
-		Ext.define("Sucursal", {
+		Ext.define("EmpresaModel", {
 	        extend: 'Ext.data.Model',
 	        proxy: {
 	            type: 'ajax',
-				url : '../api/sucursal/buscar/',
+				url : '../api/empresa/buscar/',
 				extraParams : {
 					auth_token : Ext.util.Cookies.get("a_t")
 				},
@@ -31,24 +31,24 @@ class EmpresaSelectorComponent implements GuiComponent{
 
 	        fields: [
 				{name: 'activa',		 		mapping: 'activa'},
-				{name: 'descripcion',		 	mapping: 'descripcion'},
+				{name: 'razon_social',		 	mapping: 'razon_social'},
 				{name: 'fecha_apertura',		mapping: 'fecha_apertura'},
+				{name: 'id_empresa',			mapping: 'id_empresa'},				
 				{name: 'fecha_baja',		 	mapping: 'fecha_baja'},
 				{name: 'id_direccion',		 	mapping: 'id_direccion'},
 				{name: 'id_gerente',		 	mapping: 'id_gerente'},
-				{name: 'id_sucursal',		 	mapping: 'id_sucursal'},
 				{name: 'razon_social',		 	mapping: 'razon_social'},
 				{name: 'rfc',		 			mapping: 'rfc'},
 				{name: 'saldo_a_favor',		 	mapping: 'saldo_a_favor'},
 	        ]
 	    });
 
-		var Sucursal = {
+		var EmpresaSelector = {
 			
 			
 			
-			sucursales_store : Ext.create('Ext.data.Store', {
-			    model: 'Sucursal'
+			empresa_store : Ext.create('Ext.data.Store', {
+			    model: 'EmpresaModel'
 			}),
 			
 			selected 	  : null, 
@@ -56,7 +56,7 @@ class EmpresaSelectorComponent implements GuiComponent{
 			show_selector : function( ){
 
 				Ext.widget('window', {
-	                title: 			'Buscar sucursal',
+	                title: 			'Buscar empresa',
 	                closeAction: 	'hide',
 	                width: 			400,
 	                height: 		150,
@@ -83,19 +83,19 @@ class EmpresaSelectorComponent implements GuiComponent{
 			                },
 
 			                items: [{
-								fieldLabel: 'Seleccione una sucursal',
+								fieldLabel: 'Seleccione una empresa',
 								xtype: 'combobox',
-							    displayField: 'descripcion',
-							    valueField: 'id_sucursal',
+							    displayField: 'razon_social',
+							    valueField: 'id_empresa',
 							    width: 500,
 							    labelWidth: 130,
-							    store: Sucursal.sucursales_store,
+							    store: EmpresaSelector.empresa_store,
 							    editable: false,
 								listeners: {
 									change : function(a){
 
-										var index = Sucursal.sucursales_store.findExact( "id_sucursal", a.getValue() );
-										Sucursal.selected = Sucursal.sucursales_store.getAt( index );
+										var index = EmpresaSelector.empresa_store.findExact( "id_empresa", a.getValue() );
+										EmpresaSelector.selected = EmpresaSelector.empresa_store.getAt( index );
 									
 									}
 								}
@@ -107,18 +107,18 @@ class EmpresaSelectorComponent implements GuiComponent{
 			                        this.up('window').hide();
 			                    }
 			                }, {
-			                    text: 'Seleccionar esta sucursal',
+			                    text: 'Seleccionar esta empresa',
 			                    handler: function() {
 									this.up('window').hide();
-									Ext.get("SucursalSelectorComponent_Buscar").update("Seleccionar otra sucursal");
-									Ext.get("SucursalSelectorComponent_Result").show();
+									Ext.get("EmpresaSelectorComponent_Buscar").update("Seleccionar otra empresa");
+									Ext.get("EmpresaSelectorComponent_Result").show();
 									
 									var info = "";
-									info += "<p>" + Sucursal.selected.get("descripcion") + "</p>";
+									info += "<p>" + EmpresaSelector.selected.get("razon_social") + "</p>";
 									
-									Ext.get("SucursalSelectorComponent_ResultData").update(info);
+									Ext.get("EmpresaSelectorComponent_ResultData").update(info);
 									
-									<?php echo $this->_js_callback . ".call(null, Sucursal.selected);"; ?>
+									<?php echo $this->_js_callback . ".call(null, EmpresaSelector.selected);"; ?>
 			                    }
 			                }]
 			            })
@@ -129,11 +129,11 @@ class EmpresaSelectorComponent implements GuiComponent{
 		};
 		</script>
 
-		<div id="SucursalSelectorComponent_Result" >
-			<div id="SucursalSelectorComponent_ResultData"></div>
-			<!--<div class="POS Boton" id="SucursalSelectorComponent_Buscar" onClick="Sucursal.show_selector()">Seleccionar otra sucursal</div>-->
+		<div id="EmpresaSelectorComponent_Result" >
+			<div id="EmpresaSelectorComponent_ResultData"></div>
+			<!--<div class="POS Boton" id="EmpresaSelectorComponent_Buscar" onClick="Sucursal.show_selector()">Seleccionar otra sucursal</div>-->
 		</div>
-		<div class="POS Boton" id="SucursalSelectorComponent_Buscar" onClick="Sucursal.show_selector()">Seleccionar sucursal</div>		
+		<div class="POS Boton" id="EmpresaSelectorComponent_Buscar" onClick="EmpresaSelector.show_selector()">Seleccionar empresa</div>		
 		<?php
 	}
 	

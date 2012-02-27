@@ -75,7 +75,7 @@
 	
 	$page->addComponent( "<p>Agregar una sucursal </p>" );
 
-	$ssel = new SucursalSelectorComponent();
+	$ssel = new EmpresaSelectorComponent();
 	$ssel->addJsCallback("(function(){})");
 	$page->addComponent( $ssel );
 
