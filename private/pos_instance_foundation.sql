@@ -19,7 +19,7 @@ INSERT INTO `ciudad` (`id_ciudad`, `id_estado`, `nombre`) VALUES
 (15, 11, 'Irapuato'),
 (16, 11, 'Jaral del Progreso'),
 (17, 11, 'Jerecuaro'),
-(18, 11, 'LeÃƒÂ³n'),
+(18, 11, 'Leon'),
 (19, 11, 'Manuel Doblado'),
 (20, 11, 'Moroleon'),
 (21, 11, 'Ocampo'),
@@ -37,8 +37,11 @@ INSERT INTO `clasificacion_cliente` (`id_clasificacion_cliente`, `clave_interna`
 
 
 INSERT INTO `rol` (`id_rol`, `nombre`, `descripcion`, `salario`, `id_tarifa_compra`, `id_tarifa_venta`) VALUES
+(0, 'Administrador', 'Adminsitrador', 0, 0, 0),
+(2, 'Gerente', 'Gerente', 0, 0, 0),
 (5, 'Clientes', 'Clientes', NULL, 0, 0),
-(6, 'ROL1', 'DESC1', NULL, 2, 1);
+INSERT INTO `rol` (`id_rol`, `nombre`, `descripcion`, `salario`, `id_tarifa_compra`, `id_tarifa_venta`) VALUES
+
 
 INSERT INTO `tipo_almacen` (`id_tipo_almacen`, `descripcion`) VALUES
 (2, 'Consignacion');
