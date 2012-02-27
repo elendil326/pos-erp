@@ -6,7 +6,7 @@ require_once("interfaces/Tarifas.interface.php");
   *
   **/
 	
-  class TarifasController implements ITarifas{
+class TarifasController extends ValidacionesController implements ITarifas{
 
       
 	/**
@@ -169,9 +169,11 @@ require_once("interfaces/Tarifas.interface.php");
             //valida que el nombre sea valido y que no se repita
             if(!is_null($nombre))
             {
-                $e = self::validarString($nombre, 94, "nombre");
-                if(is_string($e))
-                    return $e;
+
+				if(!self::validarLongitudDeCadena($nombre, 0, 95)){
+					throw InvalidDataException("nombre muy largo");
+				}
+
                 
                 if(!is_null($id_tarifa))
                 {
@@ -244,9 +246,11 @@ require_once("interfaces/Tarifas.interface.php");
             //valida que el nombre este en rango
             if(!is_null($nombre))
             {
-                $e = self::validarString($nombre, 97, "nombre");
-                if(is_string($e))
-                    return $e;
+
+				if(!self::validarLongitudDeCadena($nombre, 0, 95)){
+					throw new InvalidDataException("nombre muy largo");
+				}
+
             }
             
             //No se encontro error, regresa verdadero
@@ -288,9 +292,10 @@ require_once("interfaces/Tarifas.interface.php");
             //valida que el nombre este en rango
             if(!is_null($nombre))
             {
-                $e = self::validarString($nombre, 100, "nombre");
-                if(is_string($e))
-                    return $e;
+				if(!self::validarLongitudDeCadena($nombre, 0, 100)){
+					throw new InvalidDataException("nombre muy largo");
+				}
+
             }
             
             //valida que el producto exista y este activo
@@ -1733,8 +1738,10 @@ La asignacion de una formula a algun producto, servicio, etc. requiere una secue
                 throw new Exception("No se pudo crear la tarifa, intentelo de nuevo mas tarde o contacte al administrador del sistema",901);
             }
             DAO::transEnd();
-            Logger::log("Tarifa creada exitosamente");
-            return $id_tarifa;
+
+			Logger::log("Tarifa ".$id_tarifa." creada exitosamente" );
+			
+            return array("id_tarifa" => (int)$id_tarifa);
 	}
   
 	/**
