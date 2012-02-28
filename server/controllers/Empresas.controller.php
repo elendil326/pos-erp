@@ -305,7 +305,7 @@ require_once("interfaces/Empresas.interface.php");
             $empresas = EmpresaDAO::search( new Empresa( array( "razon_social" => trim($razon_social), "activo" => 1 ) ) );
 
 			if(sizeof($empresas) > 0){
-                Logger::error("La razon social: ".$razon_social." ya esta en uso por la empresa: ". $empresa[0]->getIdEmpresa());
+                Logger::error("La razon social: ".$razon_social." ya esta en uso por la empresa: ". $empresas[0]->getIdEmpresa());
                 throw new Exception("La razon social: ".$razon_social." ya esta en uso",901);				
 			}
 

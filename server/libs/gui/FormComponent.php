@@ -337,11 +337,11 @@ class FormComponent implements GuiComponent
 		if (!is_null($this->on_click))
 		{
 			$html .= "<td align=right colspan=2 style='background-color: #EDEFF4;-webkit-border-radius: 5px;'>";
-			$html .= "<div class='POS Boton' onClick='" . $this->on_click["function"] . "' >" . $this->on_click["caption"] . "</div>";
 			if (($this->hide_not_obligatory))
 			{
 				$html .= "<div class='POS Boton' onClick='Ext.get(Ext.query(\".hideable\")).show()' >Mas opciones</div>";
 			}
+			$html .= "<div class='POS Boton OK' onClick='" . $this->on_click["function"] . "' >" . $this->on_click["caption"] . "</div>";			
 			$html .= "</td></tr>";
 		}
 		

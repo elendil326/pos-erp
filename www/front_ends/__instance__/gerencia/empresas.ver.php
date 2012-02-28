@@ -72,7 +72,7 @@
                 
 	if(!is_null($esta_empresa->getIdDireccion())){
 		
-		$page->addComponent( new TitleComponent("Direccion") );
+		$page->addComponent( new TitleComponent("Direccion",3) );
 
 		$form = new DAOFormComponent($esta_direccion);
 
@@ -91,7 +91,7 @@
 
 	}
                 
-	$page->addComponent( new TitleComponent("Sucursales"), 3 );
+	$page->addComponent( new TitleComponent("Sucursales",3));
 	
 	$suce = SucursalEmpresaDAO::search( new SucursalEmpresa( array( "id_empresa" => $_GET["eid"] ) ) );
 	
