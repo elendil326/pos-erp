@@ -2097,42 +2097,43 @@ require_once("interfaces/Sucursales.interface.php");
  	 **/
 	public static function Nueva
 	(
-		$direccion,
+		$direccion, 
 		$razon_social, 
 		$activo =  1 , 
 		$descripcion = null, 
 		$empresas = null, 
 		$id_gerente = null, 
 		$id_moneda =  1 , 
-		$impuestos_compra = null, 
-		$impuestos_venta = null, 
-		$rfc = null, 
-		$saldo_a_favor = "0"
+		$saldo_a_favor = 0
 	)
 	{
             Logger::log("Creando nueva sucursal `$razon_social` ...");
-            
+
+
             //buscamos si una sucursal ya existe
             if( count( SucursalDAO::search( new Sucursal( array( "razon_social" => $razon_social ) ) ) ) > 0 ){
 				Logger::log( "Ya existe una sucursal con el mismo nombre" );
                 throw new BusinessLogicException("Ya existe una sucursal con el mismo nombre");
             }            
             
+
+
             //Se inicializa el objeto sucursal con los parametros obtenidos
             $sucursal=new Sucursal();
-            $sucursal->setRfc($rfc);
-            $sucursal->setActiva($activo);
-            $sucursal->setRazonSocial(trim($razon_social));
-            $sucursal->setSaldoAFavor($saldo_a_favor);
-            $sucursal->setIdGerente($id_gerente);
-            $sucursal->setDescripcion($descripcion);
-            $sucursal->setFechaApertura( date("Y-m-d H:i:s",time()) );
+            $sucursal->setActiva		($activo);
+            $sucursal->setRazonSocial	(trim($razon_social));
+            $sucursal->setSaldoAFavor	($saldo_a_favor);
+            $sucursal->setIdGerente		($id_gerente);
+            $sucursal->setDescripcion	($descripcion);
+
+            $sucursal->setFechaApertura	( date("Y-m-d H:i:s",time()) );
 
             DAO::transBegin();
 
             try{
                 //Se crea la nueva direccion y se le asigna a la nueva sucursal
 				if(!is_null($direccion)){
+					
 					$direccion = object_to_array($direccion);
 					
 	                $id_direccion = DireccionController::NuevaDireccion(
@@ -2144,7 +2145,7 @@ require_once("interfaces/Sucursales.interface.php");
 							$direccion["numero_interior"],
 							$direccion["referencia"],
 							$direccion["telefono1"],
-							$direccion["telefono2"]);
+							$direccion["telefono2"] );
 							
 					$sucursal->setIdDireccion( $id_direccion );
 					
@@ -2156,7 +2157,7 @@ require_once("interfaces/Sucursales.interface.php");
 	
                 DAO::transRollback();
 
-                Logger::error( $e );
+                //Logger::error( $e );
                 
                 throw new Exception("No se pudo crear la nueva sucursal",901);
             }

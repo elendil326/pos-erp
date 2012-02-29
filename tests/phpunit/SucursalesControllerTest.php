@@ -137,7 +137,7 @@ class SucursalesControllerTest extends PHPUnit_Framework_TestCase {
             "referencia"            => "Calle cerrada",
        	    "telefono1"             => "4616149974",
             "telefono2"             => "45*451*454"
-        ), "Eliminar_Sucursal_" . time());
+        ), "Eliminar_Sucursal_" . time(), 1);
 
         //eliminamos la sucursal (desactivamos)
         
@@ -199,7 +199,7 @@ class SucursalesControllerTest extends PHPUnit_Framework_TestCase {
 	    SucursalesController::Editar(
 		    $id_sucursal = $sucursal["id_sucursal"],
 		    $activo = 0,
-		    $descripcion = "Descripcion de la sucursal",
+		    $descripcion = "_EDITADO_" . time(),
 			$direccion = Array(Array(
 								"calle"  			=> "Monte Balcanes",
 						        "numero_exterior"   => "107",
@@ -218,6 +218,19 @@ class SucursalesControllerTest extends PHPUnit_Framework_TestCase {
 		    $saldo_a_favor = "100000"
 	    );
 
+
+		//vamos a ver si si se edito esa madre
+		$_s = SucursalDAO::getByPK( $sucursal["id_sucursal"] );
+		$this->assertEquals( $descripcion, $_s->getDescripcion() );
+		
+		$_d = DireccionDAO::getByPK($_s->getIdDireccion());
+
+		$this->assertEquals($_d->getCalle(), 			"Monte Balcanes");
+		$this->assertEquals($_d->getNumeroExterior(), 	"107");
+		$this->assertEquals($_d->getColonia(), 			"Arboledas");
+		$this->assertEquals($_d->getIdCiudad(), 		334);
+		$this->assertEquals($_d->getCodigoPostal(), 	"38060");
+		//$this->assertEquals($_d->getTextoExtra(), 		"Calle cerrada");		
     }
 
 }				

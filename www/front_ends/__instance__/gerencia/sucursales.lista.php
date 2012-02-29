@@ -14,7 +14,6 @@
 
 		$tabla = new TableComponent( 
 			array(
-				"rfc" 			=> "RFC",
 				"razon_social"	=> "Razon Social",
 				"descripcion"	=> "Descripcion",
 				"id_gerente" 	=> "Gerente",
