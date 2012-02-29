@@ -22,7 +22,7 @@
 			
 			isset($_POST['password'] ) ? $_POST['password'] : null,
 			isset($_POST['usuario'] ) ? $_POST['usuario'] : null,
-			isset($_POST['request_token'] ) ? $_POST['request_token'] : null
+			isset($_POST['request_token'] ) ? $_POST['request_token'] :  true 
 			
 			);
 		}catch(Exception $e){
@@ -50,7 +50,7 @@
  		$this->response = SesionController::Cerrar( 
  			
 			
-			isset($_POST['auth_token'] ) ? $_POST['auth_token'] : null
+			isset($_POST['auth_token'] ) ? $_POST['auth_token'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -78,7 +78,7 @@
  		$this->response = SesionController::Lista( 
  			
 			
-			isset($_GET['id_grupo'] ) ? $_GET['id_grupo'] : null
+			isset($_GET['id_grupo'] ) ? $_GET['id_grupo'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -135,10 +135,10 @@
  		$this->response = EmpresasController::Buscar( 
  			
 			
-			isset($_GET['activa'] ) ? $_GET['activa'] : null,
-			isset($_GET['limit'] ) ? $_GET['limit'] : null,
-			isset($_GET['query'] ) ? $_GET['query'] : null,
-			isset($_GET['start'] ) ? $_GET['start'] : null
+			isset($_GET['activa'] ) ? $_GET['activa'] :  false ,
+			isset($_GET['limit'] ) ? $_GET['limit'] :  null,
+			isset($_GET['query'] ) ? $_GET['query'] :  null,
+			isset($_GET['start'] ) ? $_GET['start'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -181,14 +181,14 @@
 			isset($_POST['id_moneda'] ) ? $_POST['id_moneda'] : null,
 			isset($_POST['razon_social'] ) ? $_POST['razon_social'] : null,
 			isset($_POST['rfc'] ) ? $_POST['rfc'] : null,
-			isset($_POST['cedula'] ) ? $_POST['cedula'] : null,
-			isset($_POST['email'] ) ? $_POST['email'] : null,
+			isset($_POST['cedula'] ) ? $_POST['cedula'] :  null,
+			isset($_POST['email'] ) ? $_POST['email'] :  null,
 			isset($_POST['impuestos_compra'] ) ? json_decode($_POST['impuestos_compra']) : null,
 			isset($_POST['impuestos_venta'] ) ? json_decode($_POST['impuestos_venta']) : null,
-			isset($_POST['logo'] ) ? $_POST['logo'] : null,
-			isset($_POST['representante_legal'] ) ? $_POST['representante_legal'] : null,
+			isset($_POST['logo'] ) ? $_POST['logo'] :  null,
+			isset($_POST['representante_legal'] ) ? $_POST['representante_legal'] :  null,
 			isset($_POST['sucursales'] ) ? json_decode($_POST['sucursales']) : null,
-			isset($_POST['texto_extra'] ) ? $_POST['texto_extra'] : null
+			isset($_POST['texto_extra'] ) ? $_POST['texto_extra'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -255,16 +255,16 @@
  			
 			
 			isset($_POST['id_empresa'] ) ? $_POST['id_empresa'] : null,
-			isset($_POST['cedula'] ) ? $_POST['cedula'] : null,
+			isset($_POST['cedula'] ) ? $_POST['cedula'] :  null,
 			isset($_POST['direccion'] ) ? json_decode($_POST['direccion']) : null,
-			isset($_POST['email'] ) ? $_POST['email'] : null,
-			isset($_POST['id_moneda'] ) ? $_POST['id_moneda'] : null,
+			isset($_POST['email'] ) ? $_POST['email'] :  null,
+			isset($_POST['id_moneda'] ) ? $_POST['id_moneda'] :  "0",
 			isset($_POST['impuestos_venta'] ) ? json_decode($_POST['impuestos_venta']) : null,
 			isset($_POST['impuesto_compra'] ) ? json_decode($_POST['impuesto_compra']) : null,
-			isset($_POST['logo'] ) ? $_POST['logo'] : null,
-			isset($_POST['razon_social'] ) ? $_POST['razon_social'] : null,
-			isset($_POST['representante_legal'] ) ? $_POST['representante_legal'] : null,
-			isset($_POST['texto_extra'] ) ? $_POST['texto_extra'] : null
+			isset($_POST['logo'] ) ? $_POST['logo'] :  null,
+			isset($_POST['razon_social'] ) ? $_POST['razon_social'] :  null,
+			isset($_POST['representante_legal'] ) ? $_POST['representante_legal'] :  null,
+			isset($_POST['texto_extra'] ) ? $_POST['texto_extra'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -312,25 +312,25 @@
  			
 			
 			isset($_POST['razon_social'] ) ? $_POST['razon_social'] : null,
-			isset($_POST['clasificacion_cliente'] ) ? $_POST['clasificacion_cliente'] : null,
-			isset($_POST['codigo_cliente'] ) ? $_POST['codigo_cliente'] : null,
-			isset($_POST['cuenta_de_mensajeria'] ) ? $_POST['cuenta_de_mensajeria'] : null,
-			isset($_POST['curp'] ) ? $_POST['curp'] : null,
-			isset($_POST['denominacion_comercial'] ) ? $_POST['denominacion_comercial'] : null,
-			isset($_POST['descuento_general'] ) ? $_POST['descuento_general'] : null,
+			isset($_POST['clasificacion_cliente'] ) ? $_POST['clasificacion_cliente'] :  null,
+			isset($_POST['codigo_cliente'] ) ? $_POST['codigo_cliente'] :  null,
+			isset($_POST['cuenta_de_mensajeria'] ) ? $_POST['cuenta_de_mensajeria'] :  null,
+			isset($_POST['curp'] ) ? $_POST['curp'] :  null,
+			isset($_POST['denominacion_comercial'] ) ? $_POST['denominacion_comercial'] :  null,
+			isset($_POST['descuento_general'] ) ? $_POST['descuento_general'] :  "0",
 			isset($_POST['direcciones'] ) ? json_decode($_POST['direcciones']) : null,
-			isset($_POST['email'] ) ? $_POST['email'] : null,
-			isset($_POST['id_cliente_padre'] ) ? $_POST['id_cliente_padre'] : null,
-			isset($_POST['id_moneda'] ) ? $_POST['id_moneda'] : null,
-			isset($_POST['id_tarifa_compra'] ) ? $_POST['id_tarifa_compra'] : null,
-			isset($_POST['id_tarifa_venta'] ) ? $_POST['id_tarifa_venta'] : null,
-			isset($_POST['limite_credito'] ) ? $_POST['limite_credito'] : null,
-			isset($_POST['password'] ) ? $_POST['password'] : null,
-			isset($_POST['representante_legal'] ) ? $_POST['representante_legal'] : null,
-			isset($_POST['rfc'] ) ? $_POST['rfc'] : null,
-			isset($_POST['sitio_web'] ) ? $_POST['sitio_web'] : null,
-			isset($_POST['telefono_personal1'] ) ? $_POST['telefono_personal1'] : null,
-			isset($_POST['telefono_personal2'] ) ? $_POST['telefono_personal2'] : null
+			isset($_POST['email'] ) ? $_POST['email'] :  null,
+			isset($_POST['id_cliente_padre'] ) ? $_POST['id_cliente_padre'] :  null,
+			isset($_POST['id_moneda'] ) ? $_POST['id_moneda'] :  1 ,
+			isset($_POST['id_tarifa_compra'] ) ? $_POST['id_tarifa_compra'] :  null,
+			isset($_POST['id_tarifa_venta'] ) ? $_POST['id_tarifa_venta'] :  null,
+			isset($_POST['limite_credito'] ) ? $_POST['limite_credito'] :  "0",
+			isset($_POST['password'] ) ? $_POST['password'] :  null,
+			isset($_POST['representante_legal'] ) ? $_POST['representante_legal'] :  null,
+			isset($_POST['rfc'] ) ? $_POST['rfc'] :  null,
+			isset($_POST['sitio_web'] ) ? $_POST['sitio_web'] :  null,
+			isset($_POST['telefono_personal1'] ) ? $_POST['telefono_personal1'] :  null,
+			isset($_POST['telefono_personal2'] ) ? $_POST['telefono_personal2'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -380,27 +380,27 @@
  			
 			
 			isset($_POST['id_cliente'] ) ? $_POST['id_cliente'] : null,
-			isset($_POST['clasificacion_cliente'] ) ? $_POST['clasificacion_cliente'] : null,
-			isset($_POST['codigo_cliente'] ) ? $_POST['codigo_cliente'] : null,
-			isset($_POST['cuenta_de_mensajeria'] ) ? $_POST['cuenta_de_mensajeria'] : null,
-			isset($_POST['curp'] ) ? $_POST['curp'] : null,
-			isset($_POST['denominacion_comercial'] ) ? $_POST['denominacion_comercial'] : null,
-			isset($_POST['descuento_general'] ) ? $_POST['descuento_general'] : null,
+			isset($_POST['clasificacion_cliente'] ) ? $_POST['clasificacion_cliente'] :  null,
+			isset($_POST['codigo_cliente'] ) ? $_POST['codigo_cliente'] :  null,
+			isset($_POST['cuenta_de_mensajeria'] ) ? $_POST['cuenta_de_mensajeria'] :  null,
+			isset($_POST['curp'] ) ? $_POST['curp'] :  null,
+			isset($_POST['denominacion_comercial'] ) ? $_POST['denominacion_comercial'] :  null,
+			isset($_POST['descuento_general'] ) ? $_POST['descuento_general'] :  null,
 			isset($_POST['direcciones'] ) ? json_decode($_POST['direcciones']) : null,
-			isset($_POST['email'] ) ? $_POST['email'] : null,
-			isset($_POST['id_cliente_padre'] ) ? $_POST['id_cliente_padre'] : null,
-			isset($_POST['id_moneda'] ) ? $_POST['id_moneda'] : null,
-			isset($_POST['id_tarifa_compra'] ) ? $_POST['id_tarifa_compra'] : null,
-			isset($_POST['id_tarifa_venta'] ) ? $_POST['id_tarifa_venta'] : null,
-			isset($_POST['limite_credito'] ) ? $_POST['limite_credito'] : null,
-			isset($_POST['password'] ) ? $_POST['password'] : null,
-			isset($_POST['password_anterior'] ) ? $_POST['password_anterior'] : null,
-			isset($_POST['razon_social'] ) ? $_POST['razon_social'] : null,
-			isset($_POST['representante_legal'] ) ? $_POST['representante_legal'] : null,
-			isset($_POST['rfc'] ) ? $_POST['rfc'] : null,
-			isset($_POST['sitio_web'] ) ? $_POST['sitio_web'] : null,
-			isset($_POST['telefono_personal1'] ) ? $_POST['telefono_personal1'] : null,
-			isset($_POST['telefono_personal2'] ) ? $_POST['telefono_personal2'] : null
+			isset($_POST['email'] ) ? $_POST['email'] :  null,
+			isset($_POST['id_cliente_padre'] ) ? $_POST['id_cliente_padre'] :  null,
+			isset($_POST['id_moneda'] ) ? $_POST['id_moneda'] :  0 ,
+			isset($_POST['id_tarifa_compra'] ) ? $_POST['id_tarifa_compra'] :  null,
+			isset($_POST['id_tarifa_venta'] ) ? $_POST['id_tarifa_venta'] :  null,
+			isset($_POST['limite_credito'] ) ? $_POST['limite_credito'] :  null,
+			isset($_POST['password'] ) ? $_POST['password'] :  null,
+			isset($_POST['password_anterior'] ) ? $_POST['password_anterior'] :  null,
+			isset($_POST['razon_social'] ) ? $_POST['razon_social'] :  null,
+			isset($_POST['representante_legal'] ) ? $_POST['representante_legal'] :  null,
+			isset($_POST['rfc'] ) ? $_POST['rfc'] :  null,
+			isset($_POST['sitio_web'] ) ? $_POST['sitio_web'] :  null,
+			isset($_POST['telefono_personal1'] ) ? $_POST['telefono_personal1'] :  null,
+			isset($_POST['telefono_personal2'] ) ? $_POST['telefono_personal2'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -460,7 +460,7 @@
 			
 			isset($_POST['clave_interna'] ) ? $_POST['clave_interna'] : null,
 			isset($_POST['nombre'] ) ? $_POST['nombre'] : null,
-			isset($_POST['descripcion'] ) ? $_POST['descripcion'] : null
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -491,10 +491,10 @@
  		$this->response = ClientesController::BuscarClasificacion( 
  			
 			
-			isset($_GET['limit'] ) ? $_GET['limit'] : null,
-			isset($_GET['page'] ) ? $_GET['page'] : null,
-			isset($_GET['query'] ) ? $_GET['query'] : null,
-			isset($_GET['start'] ) ? $_GET['start'] : null
+			isset($_GET['limit'] ) ? $_GET['limit'] :  50 ,
+			isset($_GET['page'] ) ? $_GET['page'] :  null,
+			isset($_GET['query'] ) ? $_GET['query'] :  null,
+			isset($_GET['start'] ) ? $_GET['start'] :  0 
 			
 			);
 		}catch(Exception $e){
@@ -526,9 +526,9 @@
  			
 			
 			isset($_POST['id_clasificacion_cliente'] ) ? $_POST['id_clasificacion_cliente'] : null,
-			isset($_POST['clave_interna'] ) ? $_POST['clave_interna'] : null,
-			isset($_POST['descripcion'] ) ? $_POST['descripcion'] : null,
-			isset($_POST['nombre'] ) ? $_POST['nombre'] : null
+			isset($_POST['clave_interna'] ) ? $_POST['clave_interna'] :  null,
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null,
+			isset($_POST['nombre'] ) ? $_POST['nombre'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -561,12 +561,12 @@
  		$this->response = ClientesController::Buscar( 
  			
 			
-			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null,
-			isset($_GET['id_usuario'] ) ? $_GET['id_usuario'] : null,
-			isset($_GET['limit'] ) ? $_GET['limit'] : null,
-			isset($_GET['page'] ) ? $_GET['page'] : null,
-			isset($_GET['query'] ) ? $_GET['query'] : null,
-			isset($_GET['start'] ) ? $_GET['start'] : null
+			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] :  null,
+			isset($_GET['id_usuario'] ) ? $_GET['id_usuario'] :  null,
+			isset($_GET['limit'] ) ? $_GET['limit'] :  50 ,
+			isset($_GET['page'] ) ? $_GET['page'] :  null,
+			isset($_GET['query'] ) ? $_GET['query'] :  null,
+			isset($_GET['start'] ) ? $_GET['start'] :  0 
 			
 			);
 		}catch(Exception $e){
@@ -654,7 +654,7 @@
  			
 			
 			isset($_POST['id_compra'] ) ? $_POST['id_compra'] : null,
-			isset($_POST['descripcion'] ) ? $_POST['descripcion'] : null
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  ""
 			
 			);
 		}catch(Exception $e){
@@ -723,8 +723,8 @@
 			isset($_GET['id_cliente'] ) ? $_GET['id_cliente'] : null,
 			isset($_GET['id_productos'] ) ? json_decode($_GET['id_productos']) : null,
 			isset($_GET['siguiente_compra'] ) ? $_GET['siguiente_compra'] : null,
-			isset($_GET['id_precio'] ) ? $_GET['id_precio'] : null,
-			isset($_GET['precio'] ) ? $_GET['precio'] : null
+			isset($_GET['id_precio'] ) ? $_GET['id_precio'] :  null,
+			isset($_GET['precio'] ) ? $_GET['precio'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -753,8 +753,8 @@
  		$this->response = AutorizacionesController::Lista( 
  			
 			
-			isset($_GET['filtro'] ) ? $_GET['filtro'] : null,
-			isset($_GET['ordenar'] ) ? $_GET['ordenar'] : null
+			isset($_GET['filtro'] ) ? $_GET['filtro'] :  null,
+			isset($_GET['ordenar'] ) ? $_GET['ordenar'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -905,10 +905,10 @@
  		$this->response = InventarioController::Existencias( 
  			
 			
-			isset($_GET['id_almacen	'] ) ? $_GET['id_almacen	'] : null,
-			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] : null,
-			isset($_GET['id_producto'] ) ? $_GET['id_producto'] : null,
-			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null
+			isset($_GET['id_almacen	'] ) ? $_GET['id_almacen	'] :  null,
+			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] :  null,
+			isset($_GET['id_producto'] ) ? $_GET['id_producto'] :  null,
+			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -1045,40 +1045,40 @@
 			isset($_POST['id_rol'] ) ? $_POST['id_rol'] : null,
 			isset($_POST['nombre'] ) ? $_POST['nombre'] : null,
 			isset($_POST['password'] ) ? $_POST['password'] : null,
-			isset($_POST['comision_ventas'] ) ? $_POST['comision_ventas'] : null,
-			isset($_POST['correo_electronico'] ) ? $_POST['correo_electronico'] : null,
-			isset($_POST['cuenta_bancaria'] ) ? $_POST['cuenta_bancaria'] : null,
-			isset($_POST['cuenta_mensajeria'] ) ? $_POST['cuenta_mensajeria'] : null,
-			isset($_POST['curp'] ) ? $_POST['curp'] : null,
-			isset($_POST['denominacion_comercial'] ) ? $_POST['denominacion_comercial'] : null,
-			isset($_POST['descuento'] ) ? $_POST['descuento'] : null,
-			isset($_POST['dias_de_credito'] ) ? $_POST['dias_de_credito'] : null,
-			isset($_POST['dias_de_embarque'] ) ? $_POST['dias_de_embarque'] : null,
-			isset($_POST['dia_de_pago'] ) ? $_POST['dia_de_pago'] : null,
-			isset($_POST['dia_de_revision'] ) ? $_POST['dia_de_revision'] : null,
+			isset($_POST['comision_ventas'] ) ? $_POST['comision_ventas'] :  "0",
+			isset($_POST['correo_electronico'] ) ? $_POST['correo_electronico'] :  null,
+			isset($_POST['cuenta_bancaria'] ) ? $_POST['cuenta_bancaria'] :  null,
+			isset($_POST['cuenta_mensajeria'] ) ? $_POST['cuenta_mensajeria'] :  null,
+			isset($_POST['curp'] ) ? $_POST['curp'] :  null,
+			isset($_POST['denominacion_comercial'] ) ? $_POST['denominacion_comercial'] :  null,
+			isset($_POST['descuento'] ) ? $_POST['descuento'] :  null,
+			isset($_POST['dias_de_credito'] ) ? $_POST['dias_de_credito'] :  null,
+			isset($_POST['dias_de_embarque'] ) ? $_POST['dias_de_embarque'] :  null,
+			isset($_POST['dia_de_pago'] ) ? $_POST['dia_de_pago'] :  null,
+			isset($_POST['dia_de_revision'] ) ? $_POST['dia_de_revision'] :  null,
 			isset($_POST['direcciones'] ) ? json_decode($_POST['direcciones']) : null,
-			isset($_POST['facturar_a_terceros'] ) ? $_POST['facturar_a_terceros'] : null,
-			isset($_POST['id_clasificacion_cliente'] ) ? $_POST['id_clasificacion_cliente'] : null,
-			isset($_POST['id_clasificacion_proveedor'] ) ? $_POST['id_clasificacion_proveedor'] : null,
-			isset($_POST['id_moneda'] ) ? $_POST['id_moneda'] : null,
-			isset($_POST['id_sucursal'] ) ? $_POST['id_sucursal'] : null,
-			isset($_POST['id_tarifa_compra'] ) ? $_POST['id_tarifa_compra'] : null,
-			isset($_POST['id_tarifa_venta'] ) ? $_POST['id_tarifa_venta'] : null,
-			isset($_POST['id_usuario_padre'] ) ? $_POST['id_usuario_padre'] : null,
+			isset($_POST['facturar_a_terceros'] ) ? $_POST['facturar_a_terceros'] :  null,
+			isset($_POST['id_clasificacion_cliente'] ) ? $_POST['id_clasificacion_cliente'] :  null,
+			isset($_POST['id_clasificacion_proveedor'] ) ? $_POST['id_clasificacion_proveedor'] :  null,
+			isset($_POST['id_moneda'] ) ? $_POST['id_moneda'] :  null,
+			isset($_POST['id_sucursal'] ) ? $_POST['id_sucursal'] :  null,
+			isset($_POST['id_tarifa_compra'] ) ? $_POST['id_tarifa_compra'] :  null,
+			isset($_POST['id_tarifa_venta'] ) ? $_POST['id_tarifa_venta'] :  null,
+			isset($_POST['id_usuario_padre'] ) ? $_POST['id_usuario_padre'] :  null,
 			isset($_POST['impuestos'] ) ? json_decode($_POST['impuestos']) : null,
-			isset($_POST['intereses_moratorios'] ) ? $_POST['intereses_moratorios'] : null,
-			isset($_POST['limite_credito'] ) ? $_POST['limite_credito'] : null,
-			isset($_POST['mensajeria'] ) ? $_POST['mensajeria'] : null,
-			isset($_POST['pagina_web'] ) ? $_POST['pagina_web'] : null,
-			isset($_POST['representante_legal'] ) ? $_POST['representante_legal'] : null,
+			isset($_POST['intereses_moratorios'] ) ? $_POST['intereses_moratorios'] :  null,
+			isset($_POST['limite_credito'] ) ? $_POST['limite_credito'] :  "0",
+			isset($_POST['mensajeria'] ) ? $_POST['mensajeria'] :  null,
+			isset($_POST['pagina_web'] ) ? $_POST['pagina_web'] :  null,
+			isset($_POST['representante_legal'] ) ? $_POST['representante_legal'] :  null,
 			isset($_POST['retenciones'] ) ? json_decode($_POST['retenciones']) : null,
-			isset($_POST['rfc'] ) ? $_POST['rfc'] : null,
-			isset($_POST['salario'] ) ? $_POST['salario'] : null,
-			isset($_POST['saldo_del_ejercicio'] ) ? $_POST['saldo_del_ejercicio'] : null,
-			isset($_POST['telefono_personal1'] ) ? $_POST['telefono_personal1'] : null,
-			isset($_POST['telefono_personal2'] ) ? $_POST['telefono_personal2'] : null,
-			isset($_POST['tiempo_entrega'] ) ? $_POST['tiempo_entrega'] : null,
-			isset($_POST['ventas_a_credito'] ) ? $_POST['ventas_a_credito'] : null
+			isset($_POST['rfc'] ) ? $_POST['rfc'] :  null,
+			isset($_POST['salario'] ) ? $_POST['salario'] :  null,
+			isset($_POST['saldo_del_ejercicio'] ) ? $_POST['saldo_del_ejercicio'] :  null,
+			isset($_POST['telefono_personal1'] ) ? $_POST['telefono_personal1'] :  null,
+			isset($_POST['telefono_personal2'] ) ? $_POST['telefono_personal2'] :  null,
+			isset($_POST['tiempo_entrega'] ) ? $_POST['tiempo_entrega'] :  null,
+			isset($_POST['ventas_a_credito'] ) ? $_POST['ventas_a_credito'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -1107,8 +1107,8 @@
  		$this->response = PersonalYAgentesController::ListaUsuario( 
  			
 			
-			isset($_GET['activo'] ) ? $_GET['activo'] : null,
-			isset($_GET['ordenar'] ) ? $_GET['ordenar'] : null
+			isset($_GET['activo'] ) ? $_GET['activo'] :  null,
+			isset($_GET['ordenar'] ) ? $_GET['ordenar'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -1176,45 +1176,45 @@
  			
 			
 			isset($_POST['id_usuario'] ) ? $_POST['id_usuario'] : null,
-			isset($_POST['codigo_usuario'] ) ? $_POST['codigo_usuario'] : null,
-			isset($_POST['comision_ventas'] ) ? $_POST['comision_ventas'] : null,
-			isset($_POST['correo_electronico'] ) ? $_POST['correo_electronico'] : null,
-			isset($_POST['cuenta_bancaria'] ) ? $_POST['cuenta_bancaria'] : null,
-			isset($_POST['cuenta_mensajeria'] ) ? $_POST['cuenta_mensajeria'] : null,
-			isset($_POST['curp'] ) ? $_POST['curp'] : null,
-			isset($_POST['denominacion_comercial'] ) ? $_POST['denominacion_comercial'] : null,
-			isset($_POST['descuento'] ) ? $_POST['descuento'] : null,
-			isset($_POST['descuento_es_porcentaje'] ) ? $_POST['descuento_es_porcentaje'] : null,
-			isset($_POST['dias_de_credito'] ) ? $_POST['dias_de_credito'] : null,
-			isset($_POST['dias_de_embarque'] ) ? $_POST['dias_de_embarque'] : null,
-			isset($_POST['dia_de_pago'] ) ? $_POST['dia_de_pago'] : null,
-			isset($_POST['dia_de_revision'] ) ? $_POST['dia_de_revision'] : null,
+			isset($_POST['codigo_usuario'] ) ? $_POST['codigo_usuario'] :  null,
+			isset($_POST['comision_ventas'] ) ? $_POST['comision_ventas'] :  null,
+			isset($_POST['correo_electronico'] ) ? $_POST['correo_electronico'] :  null,
+			isset($_POST['cuenta_bancaria'] ) ? $_POST['cuenta_bancaria'] :  null,
+			isset($_POST['cuenta_mensajeria'] ) ? $_POST['cuenta_mensajeria'] :  null,
+			isset($_POST['curp'] ) ? $_POST['curp'] :  null,
+			isset($_POST['denominacion_comercial'] ) ? $_POST['denominacion_comercial'] :  null,
+			isset($_POST['descuento'] ) ? $_POST['descuento'] :  null,
+			isset($_POST['descuento_es_porcentaje'] ) ? $_POST['descuento_es_porcentaje'] :  null,
+			isset($_POST['dias_de_credito'] ) ? $_POST['dias_de_credito'] :  null,
+			isset($_POST['dias_de_embarque'] ) ? $_POST['dias_de_embarque'] :  null,
+			isset($_POST['dia_de_pago'] ) ? $_POST['dia_de_pago'] :  null,
+			isset($_POST['dia_de_revision'] ) ? $_POST['dia_de_revision'] :  null,
 			isset($_POST['direcciones'] ) ? json_decode($_POST['direcciones']) : null,
-			isset($_POST['facturar_a_terceros'] ) ? $_POST['facturar_a_terceros'] : null,
-			isset($_POST['id_clasificacion_cliente'] ) ? $_POST['id_clasificacion_cliente'] : null,
-			isset($_POST['id_clasificacion_proveedor'] ) ? $_POST['id_clasificacion_proveedor'] : null,
-			isset($_POST['id_moneda'] ) ? $_POST['id_moneda'] : null,
-			isset($_POST['id_rol'] ) ? $_POST['id_rol'] : null,
-			isset($_POST['id_sucursal'] ) ? $_POST['id_sucursal'] : null,
-			isset($_POST['id_tarifa_compra'] ) ? $_POST['id_tarifa_compra'] : null,
-			isset($_POST['id_tarifa_venta'] ) ? $_POST['id_tarifa_venta'] : null,
-			isset($_POST['id_usuario_padre'] ) ? $_POST['id_usuario_padre'] : null,
+			isset($_POST['facturar_a_terceros'] ) ? $_POST['facturar_a_terceros'] :  null,
+			isset($_POST['id_clasificacion_cliente'] ) ? $_POST['id_clasificacion_cliente'] :  null,
+			isset($_POST['id_clasificacion_proveedor'] ) ? $_POST['id_clasificacion_proveedor'] :  null,
+			isset($_POST['id_moneda'] ) ? $_POST['id_moneda'] :  null,
+			isset($_POST['id_rol'] ) ? $_POST['id_rol'] :  null,
+			isset($_POST['id_sucursal'] ) ? $_POST['id_sucursal'] :  null,
+			isset($_POST['id_tarifa_compra'] ) ? $_POST['id_tarifa_compra'] :  null,
+			isset($_POST['id_tarifa_venta'] ) ? $_POST['id_tarifa_venta'] :  null,
+			isset($_POST['id_usuario_padre'] ) ? $_POST['id_usuario_padre'] :  null,
 			isset($_POST['impuestos'] ) ? json_decode($_POST['impuestos']) : null,
-			isset($_POST['intereses_moratorios'] ) ? $_POST['intereses_moratorios'] : null,
-			isset($_POST['limite_de_credito'] ) ? $_POST['limite_de_credito'] : null,
-			isset($_POST['mensajeria'] ) ? $_POST['mensajeria'] : null,
-			isset($_POST['nombre'] ) ? $_POST['nombre'] : null,
-			isset($_POST['pagina_web'] ) ? $_POST['pagina_web'] : null,
-			isset($_POST['password'] ) ? $_POST['password'] : null,
-			isset($_POST['representante_legal'] ) ? $_POST['representante_legal'] : null,
+			isset($_POST['intereses_moratorios'] ) ? $_POST['intereses_moratorios'] :  null,
+			isset($_POST['limite_de_credito'] ) ? $_POST['limite_de_credito'] :  null,
+			isset($_POST['mensajeria'] ) ? $_POST['mensajeria'] :  null,
+			isset($_POST['nombre'] ) ? $_POST['nombre'] :  null,
+			isset($_POST['pagina_web'] ) ? $_POST['pagina_web'] :  null,
+			isset($_POST['password'] ) ? $_POST['password'] :  null,
+			isset($_POST['representante_legal'] ) ? $_POST['representante_legal'] :  null,
 			isset($_POST['retenciones'] ) ? json_decode($_POST['retenciones']) : null,
-			isset($_POST['rfc'] ) ? $_POST['rfc'] : null,
-			isset($_POST['salario'] ) ? $_POST['salario'] : null,
-			isset($_POST['saldo_del_ejercicio'] ) ? $_POST['saldo_del_ejercicio'] : null,
-			isset($_POST['telefono_personal_1'] ) ? $_POST['telefono_personal_1'] : null,
-			isset($_POST['telefono_personal_2'] ) ? $_POST['telefono_personal_2'] : null,
-			isset($_POST['tiempo_entrega'] ) ? $_POST['tiempo_entrega'] : null,
-			isset($_POST['ventas_a_credito'] ) ? $_POST['ventas_a_credito'] : null
+			isset($_POST['rfc'] ) ? $_POST['rfc'] :  null,
+			isset($_POST['salario'] ) ? $_POST['salario'] :  null,
+			isset($_POST['saldo_del_ejercicio'] ) ? $_POST['saldo_del_ejercicio'] :  null,
+			isset($_POST['telefono_personal_1'] ) ? $_POST['telefono_personal_1'] :  null,
+			isset($_POST['telefono_personal_2'] ) ? $_POST['telefono_personal_2'] :  null,
+			isset($_POST['tiempo_entrega'] ) ? $_POST['tiempo_entrega'] :  null,
+			isset($_POST['ventas_a_credito'] ) ? $_POST['ventas_a_credito'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -1247,10 +1247,10 @@
  			
 			
 			isset($_POST['nombre'] ) ? $_POST['nombre'] : null,
-			isset($_POST['descripcion'] ) ? $_POST['descripcion'] : null,
-			isset($_POST['id_tarifa_compra'] ) ? $_POST['id_tarifa_compra'] : null,
-			isset($_POST['id_tarifa_venta'] ) ? $_POST['id_tarifa_venta'] : null,
-			isset($_POST['salario'] ) ? $_POST['salario'] : null
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null,
+			isset($_POST['id_tarifa_compra'] ) ? $_POST['id_tarifa_compra'] :  null,
+			isset($_POST['id_tarifa_venta'] ) ? $_POST['id_tarifa_venta'] :  null,
+			isset($_POST['salario'] ) ? $_POST['salario'] :  "0"
 			
 			);
 		}catch(Exception $e){
@@ -1284,11 +1284,11 @@
  			
 			
 			isset($_POST['id_rol'] ) ? $_POST['id_rol'] : null,
-			isset($_POST['descripcion'] ) ? $_POST['descripcion'] : null,
-			isset($_POST['id_tarifa_compra'] ) ? $_POST['id_tarifa_compra'] : null,
-			isset($_POST['id_tarifa_venta'] ) ? $_POST['id_tarifa_venta'] : null,
-			isset($_POST['nombre'] ) ? $_POST['nombre'] : null,
-			isset($_POST['salario'] ) ? $_POST['salario'] : null
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null,
+			isset($_POST['id_tarifa_compra'] ) ? $_POST['id_tarifa_compra'] :  null,
+			isset($_POST['id_tarifa_venta'] ) ? $_POST['id_tarifa_venta'] :  null,
+			isset($_POST['nombre'] ) ? $_POST['nombre'] :  null,
+			isset($_POST['salario'] ) ? $_POST['salario'] :  "0"
 			
 			);
 		}catch(Exception $e){
@@ -1372,7 +1372,7 @@
  		$this->response = PersonalYAgentesController::ListaRol( 
  			
 			
-			isset($_GET['orden'] ) ? $_GET['orden'] : null
+			isset($_GET['orden'] ) ? $_GET['orden'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -1521,8 +1521,8 @@
  		$this->response = PersonalYAgentesController::ListaPermisoRol( 
  			
 			
-			isset($_GET['id_permiso'] ) ? $_GET['id_permiso'] : null,
-			isset($_GET['id_rol'] ) ? $_GET['id_rol'] : null
+			isset($_GET['id_permiso'] ) ? $_GET['id_permiso'] :  null,
+			isset($_GET['id_rol'] ) ? $_GET['id_rol'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -1551,8 +1551,8 @@
  		$this->response = PersonalYAgentesController::ListaPermisoUsuario( 
  			
 			
-			isset($_GET['id_permiso'] ) ? $_GET['id_permiso'] : null,
-			isset($_GET['id_usuario'] ) ? $_GET['id_usuario'] : null
+			isset($_GET['id_permiso'] ) ? $_GET['id_permiso'] :  null,
+			isset($_GET['id_usuario'] ) ? $_GET['id_usuario'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -1583,8 +1583,8 @@
  			
 			
 			isset($_GET['nombre'] ) ? $_GET['nombre'] : null,
-			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
-			isset($_GET['monto'] ) ? $_GET['monto'] : null
+			isset($_GET['descripcion'] ) ? $_GET['descripcion'] :  null,
+			isset($_GET['monto'] ) ? $_GET['monto'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -1616,9 +1616,9 @@
  			
 			
 			isset($_GET['id_concepto_gasto'] ) ? $_GET['id_concepto_gasto'] : null,
-			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
-			isset($_GET['monto'] ) ? $_GET['monto'] : null,
-			isset($_GET['nombre'] ) ? $_GET['nombre'] : null
+			isset($_GET['descripcion'] ) ? $_GET['descripcion'] :  null,
+			isset($_GET['monto'] ) ? $_GET['monto'] :  null,
+			isset($_GET['nombre'] ) ? $_GET['nombre'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -1677,8 +1677,8 @@
  			
 			
 			isset($_GET['nombre'] ) ? $_GET['nombre'] : null,
-			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
-			isset($_GET['monto'] ) ? $_GET['monto'] : null
+			isset($_GET['descripcion'] ) ? $_GET['descripcion'] :  null,
+			isset($_GET['monto'] ) ? $_GET['monto'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -1710,9 +1710,9 @@
  			
 			
 			isset($_POST['id_concepto_ingreso'] ) ? $_POST['id_concepto_ingreso'] : null,
-			isset($_POST['descripcion'] ) ? $_POST['descripcion'] : null,
-			isset($_POST['monto'] ) ? $_POST['monto'] : null,
-			isset($_POST['nombre'] ) ? $_POST['nombre'] : null
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null,
+			isset($_POST['monto'] ) ? $_POST['monto'] :  null,
+			isset($_POST['nombre'] ) ? $_POST['nombre'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -1769,8 +1769,8 @@
  		$this->response = CargosYAbonosController::ListaConceptoGasto( 
  			
 			
-			isset($_GET['activo'] ) ? $_GET['activo'] : null,
-			isset($_GET['orden'] ) ? $_GET['orden'] : null
+			isset($_GET['activo'] ) ? $_GET['activo'] :  null,
+			isset($_GET['orden'] ) ? $_GET['orden'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -1799,8 +1799,8 @@
  		$this->response = CargosYAbonosController::ListaConceptoIngreso( 
  			
 			
-			isset($_GET['activo'] ) ? $_GET['activo'] : null,
-			isset($_GET['orden'] ) ? $_GET['orden'] : null
+			isset($_GET['activo'] ) ? $_GET['activo'] :  null,
+			isset($_GET['orden'] ) ? $_GET['orden'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -1841,14 +1841,14 @@
 			isset($_GET['fecha_gasto'] ) ? $_GET['fecha_gasto'] : null,
 			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] : null,
 			isset($_GET['billetes'] ) ? json_decode($_GET['billetes']) : null,
-			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
-			isset($_GET['folio'] ) ? $_GET['folio'] : null,
-			isset($_GET['id_caja'] ) ? $_GET['id_caja'] : null,
-			isset($_GET['id_concepto_gasto'] ) ? $_GET['id_concepto_gasto'] : null,
-			isset($_GET['id_orden_de_servicio'] ) ? $_GET['id_orden_de_servicio'] : null,
-			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null,
-			isset($_GET['monto'] ) ? $_GET['monto'] : null,
-			isset($_GET['nota'] ) ? $_GET['nota'] : null
+			isset($_GET['descripcion'] ) ? $_GET['descripcion'] :  null,
+			isset($_GET['folio'] ) ? $_GET['folio'] :  null,
+			isset($_GET['id_caja'] ) ? $_GET['id_caja'] :  null,
+			isset($_GET['id_concepto_gasto'] ) ? $_GET['id_concepto_gasto'] :  null,
+			isset($_GET['id_orden_de_servicio'] ) ? $_GET['id_orden_de_servicio'] :  null,
+			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] :  null,
+			isset($_GET['monto'] ) ? $_GET['monto'] :  null,
+			isset($_GET['nota'] ) ? $_GET['nota'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -1882,11 +1882,11 @@
  			
 			
 			isset($_GET['id_gasto'] ) ? $_GET['id_gasto'] : null,
-			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
-			isset($_GET['fecha_gasto'] ) ? $_GET['fecha_gasto'] : null,
-			isset($_GET['folio'] ) ? $_GET['folio'] : null,
-			isset($_GET['id_concepto_gasto'] ) ? $_GET['id_concepto_gasto'] : null,
-			isset($_GET['nota'] ) ? $_GET['nota'] : null
+			isset($_GET['descripcion'] ) ? $_GET['descripcion'] :  null,
+			isset($_GET['fecha_gasto'] ) ? $_GET['fecha_gasto'] :  null,
+			isset($_GET['folio'] ) ? $_GET['folio'] :  null,
+			isset($_GET['id_concepto_gasto'] ) ? $_GET['id_concepto_gasto'] :  null,
+			isset($_GET['nota'] ) ? $_GET['nota'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -1920,11 +1920,11 @@
  			
 			
 			isset($_GET['id_ingreso'] ) ? $_GET['id_ingreso'] : null,
-			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
-			isset($_GET['fecha_ingreso'] ) ? $_GET['fecha_ingreso'] : null,
-			isset($_GET['folio'] ) ? $_GET['folio'] : null,
-			isset($_GET['id_concepto_ingreso'] ) ? $_GET['id_concepto_ingreso'] : null,
-			isset($_GET['nota'] ) ? $_GET['nota'] : null
+			isset($_GET['descripcion'] ) ? $_GET['descripcion'] :  null,
+			isset($_GET['fecha_ingreso'] ) ? $_GET['fecha_ingreso'] :  null,
+			isset($_GET['folio'] ) ? $_GET['folio'] :  null,
+			isset($_GET['id_concepto_ingreso'] ) ? $_GET['id_concepto_ingreso'] :  null,
+			isset($_GET['nota'] ) ? $_GET['nota'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -1965,10 +1965,10 @@
 			isset($_GET['tipo_pago'] ) ? json_decode($_GET['tipo_pago']) : null,
 			isset($_GET['billetes'] ) ? json_decode($_GET['billetes']) : null,
 			isset($_GET['cheques'] ) ? json_decode($_GET['cheques']) : null,
-			isset($_GET['id_compra'] ) ? $_GET['id_compra'] : null,
-			isset($_GET['id_prestamo'] ) ? $_GET['id_prestamo'] : null,
-			isset($_GET['id_venta'] ) ? $_GET['id_venta'] : null,
-			isset($_GET['nota'] ) ? $_GET['nota'] : null
+			isset($_GET['id_compra'] ) ? $_GET['id_compra'] :  null,
+			isset($_GET['id_prestamo'] ) ? $_GET['id_prestamo'] :  null,
+			isset($_GET['id_venta'] ) ? $_GET['id_venta'] :  null,
+			isset($_GET['nota'] ) ? $_GET['nota'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -2008,13 +2008,13 @@
 			isset($_GET['fecha_ingreso'] ) ? $_GET['fecha_ingreso'] : null,
 			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] : null,
 			isset($_GET['billetes'] ) ? json_decode($_GET['billetes']) : null,
-			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
-			isset($_GET['folio'] ) ? $_GET['folio'] : null,
-			isset($_GET['id_caja'] ) ? $_GET['id_caja'] : null,
-			isset($_GET['id_concepto_ingreso'] ) ? $_GET['id_concepto_ingreso'] : null,
-			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null,
-			isset($_GET['monto'] ) ? $_GET['monto'] : null,
-			isset($_GET['nota'] ) ? $_GET['nota'] : null
+			isset($_GET['descripcion'] ) ? $_GET['descripcion'] :  null,
+			isset($_GET['folio'] ) ? $_GET['folio'] :  null,
+			isset($_GET['id_caja'] ) ? $_GET['id_caja'] :  null,
+			isset($_GET['id_concepto_ingreso'] ) ? $_GET['id_concepto_ingreso'] :  null,
+			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] :  null,
+			isset($_GET['monto'] ) ? $_GET['monto'] :  null,
+			isset($_GET['nota'] ) ? $_GET['nota'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -2048,11 +2048,11 @@
  			
 			
 			isset($_GET['id_abono'] ) ? $_GET['id_abono'] : null,
-			isset($_GET['compra'] ) ? $_GET['compra'] : null,
-			isset($_GET['motivo_cancelacion'] ) ? $_GET['motivo_cancelacion'] : null,
-			isset($_GET['nota'] ) ? $_GET['nota'] : null,
-			isset($_GET['prestamo'] ) ? $_GET['prestamo'] : null,
-			isset($_GET['venta'] ) ? $_GET['venta'] : null
+			isset($_GET['compra'] ) ? $_GET['compra'] :  null,
+			isset($_GET['motivo_cancelacion'] ) ? $_GET['motivo_cancelacion'] :  null,
+			isset($_GET['nota'] ) ? $_GET['nota'] :  null,
+			isset($_GET['prestamo'] ) ? $_GET['prestamo'] :  null,
+			isset($_GET['venta'] ) ? $_GET['venta'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -2088,11 +2088,11 @@
 			
 			isset($_GET['id_abono'] ) ? $_GET['id_abono'] : null,
 			isset($_GET['billetes'] ) ? json_decode($_GET['billetes']) : null,
-			isset($_GET['compra'] ) ? $_GET['compra'] : null,
-			isset($_GET['id_caja'] ) ? $_GET['id_caja'] : null,
-			isset($_GET['motivo_cancelacion'] ) ? $_GET['motivo_cancelacion'] : null,
-			isset($_GET['prestamo'] ) ? $_GET['prestamo'] : null,
-			isset($_GET['venta'] ) ? $_GET['venta'] : null
+			isset($_GET['compra'] ) ? $_GET['compra'] :  null,
+			isset($_GET['id_caja'] ) ? $_GET['id_caja'] :  null,
+			isset($_GET['motivo_cancelacion'] ) ? $_GET['motivo_cancelacion'] :  null,
+			isset($_GET['prestamo'] ) ? $_GET['prestamo'] :  null,
+			isset($_GET['venta'] ) ? $_GET['venta'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -2140,21 +2140,21 @@
 			isset($_GET['compra'] ) ? $_GET['compra'] : null,
 			isset($_GET['prestamo'] ) ? $_GET['prestamo'] : null,
 			isset($_GET['venta'] ) ? $_GET['venta'] : null,
-			isset($_GET['cancelado'] ) ? $_GET['cancelado'] : null,
-			isset($_GET['fecha_actual'] ) ? $_GET['fecha_actual'] : null,
-			isset($_GET['fecha_maxima'] ) ? $_GET['fecha_maxima'] : null,
-			isset($_GET['fecha_minima'] ) ? $_GET['fecha_minima'] : null,
-			isset($_GET['id_caja'] ) ? $_GET['id_caja'] : null,
-			isset($_GET['id_compra'] ) ? $_GET['id_compra'] : null,
-			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] : null,
-			isset($_GET['id_prestamo'] ) ? $_GET['id_prestamo'] : null,
-			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null,
-			isset($_GET['id_usuario'] ) ? $_GET['id_usuario'] : null,
-			isset($_GET['id_venta'] ) ? $_GET['id_venta'] : null,
-			isset($_GET['monto_igual_a'] ) ? $_GET['monto_igual_a'] : null,
-			isset($_GET['monto_mayor_a'] ) ? $_GET['monto_mayor_a'] : null,
-			isset($_GET['monto_menor_a'] ) ? $_GET['monto_menor_a'] : null,
-			isset($_GET['orden'] ) ? $_GET['orden'] : null
+			isset($_GET['cancelado'] ) ? $_GET['cancelado'] :  null,
+			isset($_GET['fecha_actual'] ) ? $_GET['fecha_actual'] :  null,
+			isset($_GET['fecha_maxima'] ) ? $_GET['fecha_maxima'] :  null,
+			isset($_GET['fecha_minima'] ) ? $_GET['fecha_minima'] :  null,
+			isset($_GET['id_caja'] ) ? $_GET['id_caja'] :  null,
+			isset($_GET['id_compra'] ) ? $_GET['id_compra'] :  null,
+			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] :  null,
+			isset($_GET['id_prestamo'] ) ? $_GET['id_prestamo'] :  null,
+			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] :  null,
+			isset($_GET['id_usuario'] ) ? $_GET['id_usuario'] :  null,
+			isset($_GET['id_venta'] ) ? $_GET['id_venta'] :  null,
+			isset($_GET['monto_igual_a'] ) ? $_GET['monto_igual_a'] :  null,
+			isset($_GET['monto_mayor_a'] ) ? $_GET['monto_mayor_a'] :  null,
+			isset($_GET['monto_menor_a'] ) ? $_GET['monto_menor_a'] :  null,
+			isset($_GET['orden'] ) ? $_GET['orden'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -2187,8 +2187,8 @@
 			
 			isset($_GET['id_gasto'] ) ? $_GET['id_gasto'] : null,
 			isset($_GET['billetes'] ) ? json_decode($_GET['billetes']) : null,
-			isset($_GET['id_caja'] ) ? $_GET['id_caja'] : null,
-			isset($_GET['motivo_cancelacion'] ) ? $_GET['motivo_cancelacion'] : null
+			isset($_GET['id_caja'] ) ? $_GET['id_caja'] :  null,
+			isset($_GET['motivo_cancelacion'] ) ? $_GET['motivo_cancelacion'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -2228,19 +2228,19 @@
  		$this->response = CargosYAbonosController::ListaGasto( 
  			
 			
-			isset($_GET['cancelado'] ) ? $_GET['cancelado'] : null,
-			isset($_GET['fecha_actual'] ) ? $_GET['fecha_actual'] : null,
-			isset($_GET['fecha_final'] ) ? $_GET['fecha_final'] : null,
-			isset($_GET['fecha_inicial'] ) ? $_GET['fecha_inicial'] : null,
-			isset($_GET['id_caja'] ) ? $_GET['id_caja'] : null,
-			isset($_GET['id_concepto_gasto'] ) ? $_GET['id_concepto_gasto'] : null,
-			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] : null,
-			isset($_GET['id_orden_servicio'] ) ? $_GET['id_orden_servicio'] : null,
-			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null,
-			isset($_GET['id_usuario'] ) ? $_GET['id_usuario'] : null,
-			isset($_GET['monto_maximo'] ) ? $_GET['monto_maximo'] : null,
-			isset($_GET['monto_minimo'] ) ? $_GET['monto_minimo'] : null,
-			isset($_GET['orden'] ) ? $_GET['orden'] : null
+			isset($_GET['cancelado'] ) ? $_GET['cancelado'] :  null,
+			isset($_GET['fecha_actual'] ) ? $_GET['fecha_actual'] :  null,
+			isset($_GET['fecha_final'] ) ? $_GET['fecha_final'] :  null,
+			isset($_GET['fecha_inicial'] ) ? $_GET['fecha_inicial'] :  null,
+			isset($_GET['id_caja'] ) ? $_GET['id_caja'] :  null,
+			isset($_GET['id_concepto_gasto'] ) ? $_GET['id_concepto_gasto'] :  null,
+			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] :  null,
+			isset($_GET['id_orden_servicio'] ) ? $_GET['id_orden_servicio'] :  null,
+			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] :  null,
+			isset($_GET['id_usuario'] ) ? $_GET['id_usuario'] :  null,
+			isset($_GET['monto_maximo'] ) ? $_GET['monto_maximo'] :  null,
+			isset($_GET['monto_minimo'] ) ? $_GET['monto_minimo'] :  null,
+			isset($_GET['orden'] ) ? $_GET['orden'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -2273,8 +2273,8 @@
 			
 			isset($_GET['id_ingreso'] ) ? $_GET['id_ingreso'] : null,
 			isset($_GET['billetes'] ) ? json_decode($_GET['billetes']) : null,
-			isset($_GET['id_caja'] ) ? $_GET['id_caja'] : null,
-			isset($_GET['motivo_cancelacion'] ) ? $_GET['motivo_cancelacion'] : null
+			isset($_GET['id_caja'] ) ? $_GET['id_caja'] :  null,
+			isset($_GET['motivo_cancelacion'] ) ? $_GET['motivo_cancelacion'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -2313,18 +2313,18 @@
  		$this->response = CargosYAbonosController::ListaIngreso( 
  			
 			
-			isset($_GET['cancelado'] ) ? $_GET['cancelado'] : null,
-			isset($_GET['fecha_actual'] ) ? $_GET['fecha_actual'] : null,
-			isset($_GET['fecha_final'] ) ? $_GET['fecha_final'] : null,
-			isset($_GET['fecha_inicial'] ) ? $_GET['fecha_inicial'] : null,
-			isset($_GET['id_caja'] ) ? $_GET['id_caja'] : null,
-			isset($_GET['id_concepto_ingreso'] ) ? $_GET['id_concepto_ingreso'] : null,
-			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] : null,
-			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null,
-			isset($_GET['id_usuario'] ) ? $_GET['id_usuario'] : null,
-			isset($_GET['monto_maximo'] ) ? $_GET['monto_maximo'] : null,
-			isset($_GET['monto_minimo'] ) ? $_GET['monto_minimo'] : null,
-			isset($_GET['orden'] ) ? $_GET['orden'] : null
+			isset($_GET['cancelado'] ) ? $_GET['cancelado'] :  null,
+			isset($_GET['fecha_actual'] ) ? $_GET['fecha_actual'] :  null,
+			isset($_GET['fecha_final'] ) ? $_GET['fecha_final'] :  null,
+			isset($_GET['fecha_inicial'] ) ? $_GET['fecha_inicial'] :  null,
+			isset($_GET['id_caja'] ) ? $_GET['id_caja'] :  null,
+			isset($_GET['id_concepto_ingreso'] ) ? $_GET['id_concepto_ingreso'] :  null,
+			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] :  null,
+			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] :  null,
+			isset($_GET['id_usuario'] ) ? $_GET['id_usuario'] :  null,
+			isset($_GET['monto_maximo'] ) ? $_GET['monto_maximo'] :  null,
+			isset($_GET['monto_minimo'] ) ? $_GET['monto_minimo'] :  null,
+			isset($_GET['orden'] ) ? $_GET['orden'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -2382,11 +2382,11 @@
 			isset($_POST['detalle_orden'] ) ? json_decode($_POST['detalle_orden']) : null,
 			isset($_POST['detalle_paquete'] ) ? json_decode($_POST['detalle_paquete']) : null,
 			isset($_POST['detalle_producto'] ) ? json_decode($_POST['detalle_producto']) : null,
-			isset($_POST['id_caja'] ) ? $_POST['id_caja'] : null,
-			isset($_POST['id_sucursal'] ) ? $_POST['id_sucursal'] : null,
-			isset($_POST['id_venta_caja'] ) ? $_POST['id_venta_caja'] : null,
-			isset($_POST['saldo'] ) ? $_POST['saldo'] : null,
-			isset($_POST['tipo_pago'] ) ? $_POST['tipo_pago'] : null
+			isset($_POST['id_caja'] ) ? $_POST['id_caja'] :  null,
+			isset($_POST['id_sucursal'] ) ? $_POST['id_sucursal'] :  null,
+			isset($_POST['id_venta_caja'] ) ? $_POST['id_venta_caja'] :  null,
+			isset($_POST['saldo'] ) ? $_POST['saldo'] :  "0",
+			isset($_POST['tipo_pago'] ) ? $_POST['tipo_pago'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -2442,11 +2442,11 @@
 			isset($_GET['billetes_cambio'] ) ? json_decode($_GET['billetes_cambio']) : null,
 			isset($_GET['billetes_pago'] ) ? json_decode($_GET['billetes_pago']) : null,
 			isset($_GET['cheques'] ) ? json_decode($_GET['cheques']) : null,
-			isset($_GET['id_caja'] ) ? $_GET['id_caja'] : null,
-			isset($_GET['id_compra_caja'] ) ? $_GET['id_compra_caja'] : null,
-			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null,
-			isset($_GET['saldo'] ) ? $_GET['saldo'] : null,
-			isset($_GET['tipo_pago'] ) ? $_GET['tipo_pago'] : null
+			isset($_GET['id_caja'] ) ? $_GET['id_caja'] :  null,
+			isset($_GET['id_compra_caja'] ) ? $_GET['id_compra_caja'] :  null,
+			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] :  null,
+			isset($_GET['saldo'] ) ? $_GET['saldo'] :  "0",
+			isset($_GET['tipo_pago'] ) ? $_GET['tipo_pago'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -2478,11 +2478,11 @@
  		$this->response = SucursalesController::Buscar( 
  			
 			
-			isset($_GET['activo'] ) ? $_GET['activo'] : null,
-			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] : null,
-			isset($_GET['limit'] ) ? $_GET['limit'] : null,
-			isset($_GET['query'] ) ? $_GET['query'] : null,
-			isset($_GET['start'] ) ? $_GET['start'] : null
+			isset($_GET['activo'] ) ? $_GET['activo'] :  null,
+			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] :  null,
+			isset($_GET['limit'] ) ? $_GET['limit'] :  null,
+			isset($_GET['query'] ) ? $_GET['query'] :  null,
+			isset($_GET['start'] ) ? $_GET['start'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -2520,7 +2520,7 @@
 			isset($_GET['id_caja'] ) ? $_GET['id_caja'] : null,
 			isset($_GET['saldo'] ) ? $_GET['saldo'] : null,
 			isset($_GET['billetes'] ) ? json_decode($_GET['billetes']) : null,
-			isset($_GET['id_cajero'] ) ? $_GET['id_cajero'] : null
+			isset($_GET['id_cajero'] ) ? $_GET['id_cajero'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -2557,12 +2557,12 @@
 			
 			isset($_POST['direccion'] ) ? json_decode($_POST['direccion']) : null,
 			isset($_POST['razon_social'] ) ? $_POST['razon_social'] : null,
-			isset($_POST['activo'] ) ? $_POST['activo'] : null,
-			isset($_POST['descripcion'] ) ? $_POST['descripcion'] : null,
+			isset($_POST['activo'] ) ? $_POST['activo'] :  1 ,
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null,
 			isset($_POST['empresas'] ) ? json_decode($_POST['empresas']) : null,
-			isset($_POST['id_gerente'] ) ? $_POST['id_gerente'] : null,
-			isset($_POST['id_moneda'] ) ? $_POST['id_moneda'] : null,
-			isset($_POST['saldo_a_favor'] ) ? $_POST['saldo_a_favor'] : null
+			isset($_POST['id_gerente'] ) ? $_POST['id_gerente'] :  null,
+			isset($_POST['id_moneda'] ) ? $_POST['id_moneda'] :  1 ,
+			isset($_POST['saldo_a_favor'] ) ? $_POST['saldo_a_favor'] :  "0"
 			
 			);
 		}catch(Exception $e){
@@ -2599,14 +2599,14 @@
  			
 			
 			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null,
-			isset($_GET['activo'] ) ? $_GET['activo'] : null,
-			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
+			isset($_GET['activo'] ) ? $_GET['activo'] :  null,
+			isset($_GET['descripcion'] ) ? $_GET['descripcion'] :  null,
 			isset($_GET['direccion'] ) ? json_decode($_GET['direccion']) : null,
 			isset($_GET['empresas'] ) ? json_decode($_GET['empresas']) : null,
-			isset($_GET['id_gerente'] ) ? $_GET['id_gerente'] : null,
-			isset($_GET['id_moneda'] ) ? $_GET['id_moneda'] : null,
-			isset($_GET['razon_social'] ) ? $_GET['razon_social'] : null,
-			isset($_GET['saldo_a_favor'] ) ? $_GET['saldo_a_favor'] : null
+			isset($_GET['id_gerente'] ) ? $_GET['id_gerente'] :  null,
+			isset($_GET['id_moneda'] ) ? $_GET['id_moneda'] :  null,
+			isset($_GET['razon_social'] ) ? $_GET['razon_social'] :  null,
+			isset($_GET['saldo_a_favor'] ) ? $_GET['saldo_a_favor'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -2670,7 +2670,7 @@
 			isset($_GET['id_caja'] ) ? $_GET['id_caja'] : null,
 			isset($_GET['saldo_real'] ) ? $_GET['saldo_real'] : null,
 			isset($_GET['billetes'] ) ? json_decode($_GET['billetes']) : null,
-			isset($_GET['id_cajero'] ) ? $_GET['id_cajero'] : null
+			isset($_GET['id_cajero'] ) ? $_GET['id_cajero'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -2705,9 +2705,9 @@
 			
 			isset($_POST['token'] ) ? $_POST['token'] : null,
 			isset($_POST['basculas'] ) ? json_decode($_POST['basculas']) : null,
-			isset($_POST['control_billetes'] ) ? $_POST['control_billetes'] : null,
-			isset($_POST['descripcion'] ) ? $_POST['descripcion'] : null,
-			isset($_POST['id_sucursal'] ) ? $_POST['id_sucursal'] : null,
+			isset($_POST['control_billetes'] ) ? $_POST['control_billetes'] :  0 ,
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null,
+			isset($_POST['id_sucursal'] ) ? $_POST['id_sucursal'] :  null,
 			isset($_POST['impresoras'] ) ? json_decode($_POST['impresoras']) : null
 			
 			);
@@ -2747,8 +2747,8 @@
 			isset($_GET['saldo_real'] ) ? $_GET['saldo_real'] : null,
 			isset($_GET['billetes_dejados'] ) ? json_decode($_GET['billetes_dejados']) : null,
 			isset($_GET['billetes_encontrados'] ) ? json_decode($_GET['billetes_encontrados']) : null,
-			isset($_GET['id_cajero'] ) ? $_GET['id_cajero'] : null,
-			isset($_GET['id_cajero_nuevo'] ) ? $_GET['id_cajero_nuevo'] : null
+			isset($_GET['id_cajero'] ) ? $_GET['id_cajero'] :  null,
+			isset($_GET['id_cajero_nuevo'] ) ? $_GET['id_cajero_nuevo'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -2780,9 +2780,9 @@
  			
 			
 			isset($_GET['id_caja'] ) ? $_GET['id_caja'] : null,
-			isset($_GET['control_billetes'] ) ? $_GET['control_billetes'] : null,
-			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
-			isset($_GET['token'] ) ? $_GET['token'] : null
+			isset($_GET['control_billetes'] ) ? $_GET['control_billetes'] :  null,
+			isset($_GET['descripcion'] ) ? $_GET['descripcion'] :  null,
+			isset($_GET['token'] ) ? $_GET['token'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -2867,8 +2867,8 @@
  		$this->response = SucursalesController::ListaCaja( 
  			
 			
-			isset($_GET['activa'] ) ? $_GET['activa'] : null,
-			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null
+			isset($_GET['activa'] ) ? $_GET['activa'] :  null,
+			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -2916,12 +2916,10 @@
 	{
 		$this->request = array(	
 			"canceladas" => new ApiExposedProperty("canceladas", false, GET, array( "bool" )),
+			"id_cliente" => new ApiExposedProperty("id_cliente", false, GET, array( "int" )),
 			"id_sucursal" => new ApiExposedProperty("id_sucursal", false, GET, array( "int" )),
 			"liquidados" => new ApiExposedProperty("liquidados", false, GET, array( "bool" )),
 			"ordenar" => new ApiExposedProperty("ordenar", false, GET, array( "string" )),
-			"total_igual_a" => new ApiExposedProperty("total_igual_a", false, GET, array( "float" )),
-			"total_inferior_a" => new ApiExposedProperty("total_inferior_a", false, GET, array( "float" )),
-			"total_superior_a" => new ApiExposedProperty("total_superior_a", false, GET, array( "float" )),
 		);
 	}
 
@@ -2930,13 +2928,11 @@
  		$this->response = VentasController::Lista( 
  			
 			
-			isset($_GET['canceladas'] ) ? $_GET['canceladas'] : null,
-			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null,
-			isset($_GET['liquidados'] ) ? $_GET['liquidados'] : null,
-			isset($_GET['ordenar'] ) ? $_GET['ordenar'] : null,
-			isset($_GET['total_igual_a'] ) ? $_GET['total_igual_a'] : null,
-			isset($_GET['total_inferior_a'] ) ? $_GET['total_inferior_a'] : null,
-			isset($_GET['total_superior_a'] ) ? $_GET['total_superior_a'] : null
+			isset($_GET['canceladas'] ) ? $_GET['canceladas'] :  null,
+			isset($_GET['id_cliente'] ) ? $_GET['id_cliente'] :  null,
+			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] :  null,
+			isset($_GET['liquidados'] ) ? $_GET['liquidados'] :  null,
+			isset($_GET['ordenar'] ) ? $_GET['ordenar'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -2968,7 +2964,7 @@
 			
 			isset($_GET['id_venta'] ) ? $_GET['id_venta'] : null,
 			isset($_GET['billetes'] ) ? json_decode($_GET['billetes']) : null,
-			isset($_GET['id_caja'] ) ? $_GET['id_caja'] : null
+			isset($_GET['id_caja'] ) ? $_GET['id_caja'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -3018,9 +3014,9 @@
 			isset($_POST['detalle_orden'] ) ? json_decode($_POST['detalle_orden']) : null,
 			isset($_POST['detalle_paquete'] ) ? json_decode($_POST['detalle_paquete']) : null,
 			isset($_POST['detalle_venta'] ) ? json_decode($_POST['detalle_venta']) : null,
-			isset($_POST['id_sucursal'] ) ? $_POST['id_sucursal'] : null,
-			isset($_POST['saldo'] ) ? $_POST['saldo'] : null,
-			isset($_POST['tipo_de_pago'] ) ? $_POST['tipo_de_pago'] : null
+			isset($_POST['id_sucursal'] ) ? $_POST['id_sucursal'] :  null,
+			isset($_POST['saldo'] ) ? $_POST['saldo'] :  "0",
+			isset($_POST['tipo_de_pago'] ) ? $_POST['tipo_de_pago'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -3065,10 +3061,10 @@
 			isset($_GET['peso_destino'] ) ? $_GET['peso_destino'] : null,
 			isset($_GET['peso_origen'] ) ? $_GET['peso_origen'] : null,
 			isset($_GET['peso_por_arpilla'] ) ? $_GET['peso_por_arpilla'] : null,
-			isset($_GET['folio'] ) ? $_GET['folio'] : null,
-			isset($_GET['numero_de_viaje'] ) ? $_GET['numero_de_viaje'] : null,
-			isset($_GET['productor'] ) ? $_GET['productor'] : null,
-			isset($_GET['total_origen'] ) ? $_GET['total_origen'] : null
+			isset($_GET['folio'] ) ? $_GET['folio'] :  null,
+			isset($_GET['numero_de_viaje'] ) ? $_GET['numero_de_viaje'] :  null,
+			isset($_GET['productor'] ) ? $_GET['productor'] :  null,
+			isset($_GET['total_origen'] ) ? $_GET['total_origen'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -3125,8 +3121,8 @@
  		$this->response = ProveedoresController::Lista( 
  			
 			
-			isset($_GET['activo'] ) ? $_GET['activo'] : null,
-			isset($_GET['orden'] ) ? $_GET['orden'] : null
+			isset($_GET['activo'] ) ? $_GET['activo'] :  null,
+			isset($_GET['orden'] ) ? $_GET['orden'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -3179,24 +3175,24 @@
 			isset($_GET['id_tipo_proveedor'] ) ? $_GET['id_tipo_proveedor'] : null,
 			isset($_GET['nombre'] ) ? $_GET['nombre'] : null,
 			isset($_GET['password'] ) ? $_GET['password'] : null,
-			isset($_GET['activo'] ) ? $_GET['activo'] : null,
-			isset($_GET['cuenta_bancaria'] ) ? $_GET['cuenta_bancaria'] : null,
-			isset($_GET['dias_de_credito'] ) ? $_GET['dias_de_credito'] : null,
-			isset($_GET['dias_embarque'] ) ? $_GET['dias_embarque'] : null,
+			isset($_GET['activo'] ) ? $_GET['activo'] :  null,
+			isset($_GET['cuenta_bancaria'] ) ? $_GET['cuenta_bancaria'] :  null,
+			isset($_GET['dias_de_credito'] ) ? $_GET['dias_de_credito'] :  null,
+			isset($_GET['dias_embarque'] ) ? $_GET['dias_embarque'] :  true ,
 			isset($_GET['direcciones'] ) ? json_decode($_GET['direcciones']) : null,
-			isset($_GET['direccion_web'] ) ? $_GET['direccion_web'] : null,
-			isset($_GET['email'] ) ? $_GET['email'] : null,
-			isset($_GET['id_moneda'] ) ? $_GET['id_moneda'] : null,
-			isset($_GET['id_tarifa_compra'] ) ? $_GET['id_tarifa_compra'] : null,
-			isset($_GET['id_tarifa_venta'] ) ? $_GET['id_tarifa_venta'] : null,
+			isset($_GET['direccion_web'] ) ? $_GET['direccion_web'] :  null,
+			isset($_GET['email'] ) ? $_GET['email'] :  null,
+			isset($_GET['id_moneda'] ) ? $_GET['id_moneda'] :  null,
+			isset($_GET['id_tarifa_compra'] ) ? $_GET['id_tarifa_compra'] :  null,
+			isset($_GET['id_tarifa_venta'] ) ? $_GET['id_tarifa_venta'] :  null,
 			isset($_GET['impuestos'] ) ? json_decode($_GET['impuestos']) : null,
-			isset($_GET['limite_credito'] ) ? $_GET['limite_credito'] : null,
-			isset($_GET['representante_legal'] ) ? $_GET['representante_legal'] : null,
+			isset($_GET['limite_credito'] ) ? $_GET['limite_credito'] :  null,
+			isset($_GET['representante_legal'] ) ? $_GET['representante_legal'] :  null,
 			isset($_GET['retenciones'] ) ? json_decode($_GET['retenciones']) : null,
-			isset($_GET['rfc'] ) ? $_GET['rfc'] : null,
-			isset($_GET['telefono_personal1'] ) ? $_GET['telefono_personal1'] : null,
-			isset($_GET['telefono_personal2'] ) ? $_GET['telefono_personal2'] : null,
-			isset($_GET['tiempo_entrega'] ) ? $_GET['tiempo_entrega'] : null
+			isset($_GET['rfc'] ) ? $_GET['rfc'] :  null,
+			isset($_GET['telefono_personal1'] ) ? $_GET['telefono_personal1'] :  null,
+			isset($_GET['telefono_personal2'] ) ? $_GET['telefono_personal2'] :  null,
+			isset($_GET['tiempo_entrega'] ) ? $_GET['tiempo_entrega'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -3246,27 +3242,27 @@
  			
 			
 			isset($_GET['id_proveedor'] ) ? $_GET['id_proveedor'] : null,
-			isset($_GET['activo'] ) ? $_GET['activo'] : null,
-			isset($_GET['codigo_proveedor'] ) ? $_GET['codigo_proveedor'] : null,
-			isset($_GET['cuenta_bancaria'] ) ? $_GET['cuenta_bancaria'] : null,
-			isset($_GET['dias_de_credito'] ) ? $_GET['dias_de_credito'] : null,
-			isset($_GET['dias_embarque'] ) ? $_GET['dias_embarque'] : null,
+			isset($_GET['activo'] ) ? $_GET['activo'] :  1 ,
+			isset($_GET['codigo_proveedor'] ) ? $_GET['codigo_proveedor'] :  null,
+			isset($_GET['cuenta_bancaria'] ) ? $_GET['cuenta_bancaria'] :  null,
+			isset($_GET['dias_de_credito'] ) ? $_GET['dias_de_credito'] :  null,
+			isset($_GET['dias_embarque'] ) ? $_GET['dias_embarque'] :  null,
 			isset($_GET['direcciones'] ) ? json_decode($_GET['direcciones']) : null,
-			isset($_GET['direccion_web'] ) ? $_GET['direccion_web'] : null,
-			isset($_GET['email'] ) ? $_GET['email'] : null,
-			isset($_GET['id_moneda'] ) ? $_GET['id_moneda'] : null,
-			isset($_GET['id_tarifa_compra'] ) ? $_GET['id_tarifa_compra'] : null,
-			isset($_GET['id_tarifa_venta'] ) ? $_GET['id_tarifa_venta'] : null,
-			isset($_GET['id_tipo_proveedor'] ) ? $_GET['id_tipo_proveedor'] : null,
+			isset($_GET['direccion_web'] ) ? $_GET['direccion_web'] :  null,
+			isset($_GET['email'] ) ? $_GET['email'] :  null,
+			isset($_GET['id_moneda'] ) ? $_GET['id_moneda'] :  null,
+			isset($_GET['id_tarifa_compra'] ) ? $_GET['id_tarifa_compra'] :  null,
+			isset($_GET['id_tarifa_venta'] ) ? $_GET['id_tarifa_venta'] :  null,
+			isset($_GET['id_tipo_proveedor'] ) ? $_GET['id_tipo_proveedor'] :  null,
 			isset($_GET['impuestos'] ) ? json_decode($_GET['impuestos']) : null,
-			isset($_GET['limite_credito'] ) ? $_GET['limite_credito'] : null,
-			isset($_GET['nombre'] ) ? $_GET['nombre'] : null,
-			isset($_GET['password'] ) ? $_GET['password'] : null,
-			isset($_GET['representante_legal'] ) ? $_GET['representante_legal'] : null,
+			isset($_GET['limite_credito'] ) ? $_GET['limite_credito'] :  null,
+			isset($_GET['nombre'] ) ? $_GET['nombre'] :  null,
+			isset($_GET['password'] ) ? $_GET['password'] :  null,
+			isset($_GET['representante_legal'] ) ? $_GET['representante_legal'] :  null,
 			isset($_GET['retenciones'] ) ? json_decode($_GET['retenciones']) : null,
-			isset($_GET['rfc'] ) ? $_GET['rfc'] : null,
-			isset($_GET['telefono_personal'] ) ? $_GET['telefono_personal'] : null,
-			isset($_GET['tiempo_entrega'] ) ? $_GET['tiempo_entrega'] : null
+			isset($_GET['rfc'] ) ? $_GET['rfc'] :  null,
+			isset($_GET['telefono_personal'] ) ? $_GET['telefono_personal'] :  null,
+			isset($_GET['tiempo_entrega'] ) ? $_GET['tiempo_entrega'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -3328,9 +3324,9 @@
  			
 			
 			isset($_GET['nombre'] ) ? $_GET['nombre'] : null,
-			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
-			isset($_GET['id_tarifa_compra'] ) ? $_GET['id_tarifa_compra'] : null,
-			isset($_GET['id_tarifa_venta'] ) ? $_GET['id_tarifa_venta'] : null,
+			isset($_GET['descripcion'] ) ? $_GET['descripcion'] :  null,
+			isset($_GET['id_tarifa_compra'] ) ? $_GET['id_tarifa_compra'] :  null,
+			isset($_GET['id_tarifa_venta'] ) ? $_GET['id_tarifa_venta'] :  null,
 			isset($_GET['impuestos'] ) ? json_decode($_GET['impuestos']) : null,
 			isset($_GET['retenciones'] ) ? json_decode($_GET['retenciones']) : null
 			
@@ -3367,11 +3363,11 @@
  			
 			
 			isset($_GET['id_clasificacion_proveedor'] ) ? $_GET['id_clasificacion_proveedor'] : null,
-			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
-			isset($_GET['id_tarifa_compra'] ) ? $_GET['id_tarifa_compra'] : null,
-			isset($_GET['id_tarifa_venta'] ) ? $_GET['id_tarifa_venta'] : null,
+			isset($_GET['descripcion'] ) ? $_GET['descripcion'] :  null,
+			isset($_GET['id_tarifa_compra'] ) ? $_GET['id_tarifa_compra'] :  null,
+			isset($_GET['id_tarifa_venta'] ) ? $_GET['id_tarifa_venta'] :  null,
 			isset($_GET['impuestos'] ) ? json_decode($_GET['impuestos']) : null,
-			isset($_GET['nombre'] ) ? $_GET['nombre'] : null,
+			isset($_GET['nombre'] ) ? $_GET['nombre'] :  null,
 			isset($_GET['retenciones'] ) ? json_decode($_GET['retenciones']) : null
 			
 			);
@@ -3429,8 +3425,8 @@
  		$this->response = ProveedoresController::ListaClasificacion( 
  			
 			
-			isset($_GET['activo'] ) ? $_GET['activo'] : null,
-			isset($_GET['orden'] ) ? $_GET['orden'] : null
+			isset($_GET['activo'] ) ? $_GET['activo'] :  null,
+			isset($_GET['orden'] ) ? $_GET['orden'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -3474,11 +3470,11 @@
 			isset($_GET['peso_por_arpilla'] ) ? $_GET['peso_por_arpilla'] : null,
 			isset($_GET['peso_recibido'] ) ? $_GET['peso_recibido'] : null,
 			isset($_GET['total_origen'] ) ? $_GET['total_origen'] : null,
-			isset($_GET['fecha_origen'] ) ? $_GET['fecha_origen'] : null,
-			isset($_GET['folio'] ) ? $_GET['folio'] : null,
-			isset($_GET['numero_de_viaje'] ) ? $_GET['numero_de_viaje'] : null,
-			isset($_GET['peso_origen'] ) ? $_GET['peso_origen'] : null,
-			isset($_GET['productor'] ) ? $_GET['productor'] : null
+			isset($_GET['fecha_origen'] ) ? $_GET['fecha_origen'] :  null,
+			isset($_GET['folio'] ) ? $_GET['folio'] :  null,
+			isset($_GET['numero_de_viaje'] ) ? $_GET['numero_de_viaje'] :  null,
+			isset($_GET['peso_origen'] ) ? $_GET['peso_origen'] :  null,
+			isset($_GET['productor'] ) ? $_GET['productor'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -3556,9 +3552,9 @@
 			isset($_POST['tipo_compra'] ) ? $_POST['tipo_compra'] : null,
 			isset($_POST['total'] ) ? $_POST['total'] : null,
 			isset($_POST['cheques'] ) ? json_decode($_POST['cheques']) : null,
-			isset($_POST['id_sucursal'] ) ? $_POST['id_sucursal'] : null,
-			isset($_POST['saldo'] ) ? $_POST['saldo'] : null,
-			isset($_POST['tipo_de_pago'] ) ? $_POST['tipo_de_pago'] : null
+			isset($_POST['id_sucursal'] ) ? $_POST['id_sucursal'] :  null,
+			isset($_POST['saldo'] ) ? $_POST['saldo'] :  "0",
+			isset($_POST['tipo_de_pago'] ) ? $_POST['tipo_de_pago'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -3590,7 +3586,7 @@
 			
 			isset($_GET['id_compra'] ) ? $_GET['id_compra'] : null,
 			isset($_GET['billetes'] ) ? json_decode($_GET['billetes']) : null,
-			isset($_GET['id_caja'] ) ? $_GET['id_caja'] : null
+			isset($_GET['id_caja'] ) ? $_GET['id_caja'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -3659,20 +3655,20 @@
  		$this->response = ComprasController::Lista( 
  			
 			
-			isset($_GET['cancelada'] ) ? $_GET['cancelada'] : null,
-			isset($_GET['fecha_final'] ) ? $_GET['fecha_final'] : null,
-			isset($_GET['fecha_inicial'] ) ? $_GET['fecha_inicial'] : null,
-			isset($_GET['id_caja'] ) ? $_GET['id_caja'] : null,
-			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] : null,
-			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null,
-			isset($_GET['id_usuario'] ) ? $_GET['id_usuario'] : null,
-			isset($_GET['id_vendedor_compra'] ) ? $_GET['id_vendedor_compra'] : null,
-			isset($_GET['orden'] ) ? $_GET['orden'] : null,
-			isset($_GET['saldada'] ) ? $_GET['saldada'] : null,
-			isset($_GET['tipo_compra'] ) ? $_GET['tipo_compra'] : null,
-			isset($_GET['tipo_pago'] ) ? $_GET['tipo_pago'] : null,
-			isset($_GET['total_maximo'] ) ? $_GET['total_maximo'] : null,
-			isset($_GET['total_minimo'] ) ? $_GET['total_minimo'] : null
+			isset($_GET['cancelada'] ) ? $_GET['cancelada'] :  null,
+			isset($_GET['fecha_final'] ) ? $_GET['fecha_final'] :  null,
+			isset($_GET['fecha_inicial'] ) ? $_GET['fecha_inicial'] :  null,
+			isset($_GET['id_caja'] ) ? $_GET['id_caja'] :  null,
+			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] :  null,
+			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] :  null,
+			isset($_GET['id_usuario'] ) ? $_GET['id_usuario'] :  null,
+			isset($_GET['id_vendedor_compra'] ) ? $_GET['id_vendedor_compra'] :  null,
+			isset($_GET['orden'] ) ? $_GET['orden'] :  null,
+			isset($_GET['saldada'] ) ? $_GET['saldada'] :  null,
+			isset($_GET['tipo_compra'] ) ? $_GET['tipo_compra'] :  null,
+			isset($_GET['tipo_pago'] ) ? $_GET['tipo_pago'] :  null,
+			isset($_GET['total_maximo'] ) ? $_GET['total_maximo'] :  null,
+			isset($_GET['total_minimo'] ) ? $_GET['total_minimo'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -3730,9 +3726,9 @@
  		$this->response = TransportacionYFletesController::Lista( 
  			
 			
-			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] : null,
-			isset($_GET['id_estado'] ) ? $_GET['id_estado'] : null,
-			isset($_GET['orden'] ) ? $_GET['orden'] : null
+			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] :  null,
+			isset($_GET['id_estado'] ) ? $_GET['id_estado'] :  null,
+			isset($_GET['orden'] ) ? $_GET['orden'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -3778,13 +3774,13 @@
 			isset($_GET['id_modelo_vehiculo'] ) ? $_GET['id_modelo_vehiculo'] : null,
 			isset($_GET['id_tipo_carro'] ) ? $_GET['id_tipo_carro'] : null,
 			isset($_GET['imagen'] ) ? $_GET['imagen'] : null,
-			isset($_GET['codigo'] ) ? $_GET['codigo'] : null,
-			isset($_GET['combustible'] ) ? $_GET['combustible'] : null,
+			isset($_GET['codigo'] ) ? $_GET['codigo'] :  null,
+			isset($_GET['combustible'] ) ? $_GET['combustible'] :  null,
 			isset($_GET['ids_empresas'] ) ? json_decode($_GET['ids_empresas']) : null,
-			isset($_GET['kilometros'] ) ? $_GET['kilometros'] : null,
-			isset($_GET['km_por_litro'] ) ? $_GET['km_por_litro'] : null,
-			isset($_GET['matricula'] ) ? $_GET['matricula'] : null,
-			isset($_GET['num_neumaticos'] ) ? $_GET['num_neumaticos'] : null
+			isset($_GET['kilometros'] ) ? $_GET['kilometros'] :  null,
+			isset($_GET['km_por_litro'] ) ? $_GET['km_por_litro'] :  null,
+			isset($_GET['matricula'] ) ? $_GET['matricula'] :  null,
+			isset($_GET['num_neumaticos'] ) ? $_GET['num_neumaticos'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -3940,7 +3936,7 @@
  			
 			
 			isset($_GET['id_carro'] ) ? $_GET['id_carro'] : null,
-			isset($_GET['fecha_llegada'] ) ? $_GET['fecha_llegada'] : null
+			isset($_GET['fecha_llegada'] ) ? $_GET['fecha_llegada'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -3982,19 +3978,19 @@
  			
 			
 			isset($_GET['id_carro'] ) ? $_GET['id_carro'] : null,
-			isset($_GET['codigo'] ) ? $_GET['codigo'] : null,
-			isset($_GET['combustible'] ) ? $_GET['combustible'] : null,
+			isset($_GET['codigo'] ) ? $_GET['codigo'] :  null,
+			isset($_GET['combustible'] ) ? $_GET['combustible'] :  null,
 			isset($_GET['ids_empresas'] ) ? json_decode($_GET['ids_empresas']) : null,
-			isset($_GET['id_estado'] ) ? $_GET['id_estado'] : null,
-			isset($_GET['id_localizacion'] ) ? $_GET['id_localizacion'] : null,
-			isset($_GET['id_marca_carro'] ) ? $_GET['id_marca_carro'] : null,
-			isset($_GET['id_modelo_vehiculo'] ) ? $_GET['id_modelo_vehiculo'] : null,
-			isset($_GET['id_tipo_carro'] ) ? $_GET['id_tipo_carro'] : null,
-			isset($_GET['imagen'] ) ? $_GET['imagen'] : null,
-			isset($_GET['kilometros'] ) ? $_GET['kilometros'] : null,
-			isset($_GET['km_por_litro'] ) ? $_GET['km_por_litro'] : null,
-			isset($_GET['matricula'] ) ? $_GET['matricula'] : null,
-			isset($_GET['num_neumaticos'] ) ? $_GET['num_neumaticos'] : null
+			isset($_GET['id_estado'] ) ? $_GET['id_estado'] :  null,
+			isset($_GET['id_localizacion'] ) ? $_GET['id_localizacion'] :  null,
+			isset($_GET['id_marca_carro'] ) ? $_GET['id_marca_carro'] :  null,
+			isset($_GET['id_modelo_vehiculo'] ) ? $_GET['id_modelo_vehiculo'] :  null,
+			isset($_GET['id_tipo_carro'] ) ? $_GET['id_tipo_carro'] :  null,
+			isset($_GET['imagen'] ) ? $_GET['imagen'] :  null,
+			isset($_GET['kilometros'] ) ? $_GET['kilometros'] :  null,
+			isset($_GET['km_por_litro'] ) ? $_GET['km_por_litro'] :  null,
+			isset($_GET['matricula'] ) ? $_GET['matricula'] :  null,
+			isset($_GET['num_neumaticos'] ) ? $_GET['num_neumaticos'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -4024,7 +4020,7 @@
  			
 			
 			isset($_GET['nombre_tipo'] ) ? $_GET['nombre_tipo'] : null,
-			isset($_GET['activo'] ) ? $_GET['activo'] : null
+			isset($_GET['activo'] ) ? $_GET['activo'] :  true 
 			
 			);
 		}catch(Exception $e){
@@ -4055,8 +4051,8 @@
  			
 			
 			isset($_GET['id_tipo_carro'] ) ? $_GET['id_tipo_carro'] : null,
-			isset($_GET['activo'] ) ? $_GET['activo'] : null,
-			isset($_GET['nombre_tipo_carro'] ) ? $_GET['nombre_tipo_carro'] : null
+			isset($_GET['activo'] ) ? $_GET['activo'] :  true ,
+			isset($_GET['nombre_tipo_carro'] ) ? $_GET['nombre_tipo_carro'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -4086,7 +4082,7 @@
  			
 			
 			isset($_GET['nombre_modelo'] ) ? $_GET['nombre_modelo'] : null,
-			isset($_GET['activo'] ) ? $_GET['activo'] : null
+			isset($_GET['activo'] ) ? $_GET['activo'] :  true 
 			
 			);
 		}catch(Exception $e){
@@ -4118,7 +4114,7 @@
 			
 			isset($_GET['id_modelo_carro'] ) ? $_GET['id_modelo_carro'] : null,
 			isset($_GET['nombre_modelo_carro'] ) ? $_GET['nombre_modelo_carro'] : null,
-			isset($_GET['activo'] ) ? $_GET['activo'] : null
+			isset($_GET['activo'] ) ? $_GET['activo'] :  true 
 			
 			);
 		}catch(Exception $e){
@@ -4148,7 +4144,7 @@
  			
 			
 			isset($_GET['nombre_marca'] ) ? $_GET['nombre_marca'] : null,
-			isset($_GET['activo'] ) ? $_GET['activo'] : null
+			isset($_GET['activo'] ) ? $_GET['activo'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -4179,8 +4175,8 @@
  			
 			
 			isset($_GET['id_marca_carro'] ) ? $_GET['id_marca_carro'] : null,
-			isset($_GET['activo'] ) ? $_GET['activo'] : null,
-			isset($_GET['nombre_marca'] ) ? $_GET['nombre_marca'] : null
+			isset($_GET['activo'] ) ? $_GET['activo'] :  true ,
+			isset($_GET['nombre_marca'] ) ? $_GET['nombre_marca'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -4218,7 +4214,7 @@
 			isset($_GET['id_consignatario'] ) ? $_GET['id_consignatario'] : null,
 			isset($_GET['productos'] ) ? json_decode($_GET['productos']) : null,
 			isset($_GET['tipo_consignacion'] ) ? $_GET['tipo_consignacion'] : null,
-			isset($_GET['fecha_envio_programada'] ) ? $_GET['fecha_envio_programada'] : null
+			isset($_GET['fecha_envio_programada'] ) ? $_GET['fecha_envio_programada'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -4278,11 +4274,11 @@
  		$this->response = ConsignacionesController::Lista( 
  			
 			
-			isset($_GET['id_cliente'] ) ? $_GET['id_cliente'] : null,
-			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] : null,
-			isset($_GET['id_producto'] ) ? $_GET['id_producto'] : null,
-			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null,
-			isset($_GET['orden'] ) ? $_GET['orden'] : null
+			isset($_GET['id_cliente'] ) ? $_GET['id_cliente'] :  null,
+			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] :  null,
+			isset($_GET['id_producto'] ) ? $_GET['id_producto'] :  null,
+			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] :  null,
+			isset($_GET['orden'] ) ? $_GET['orden'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -4317,8 +4313,8 @@
 			
 			isset($_GET['id_inspeccion'] ) ? $_GET['id_inspeccion'] : null,
 			isset($_GET['productos_actuales'] ) ? json_decode($_GET['productos_actuales']) : null,
-			isset($_GET['id_inspector'] ) ? $_GET['id_inspector'] : null,
-			isset($_GET['monto_abonado'] ) ? $_GET['monto_abonado'] : null,
+			isset($_GET['id_inspector'] ) ? $_GET['id_inspector'] :  "",
+			isset($_GET['monto_abonado'] ) ? $_GET['monto_abonado'] :  null,
 			isset($_GET['producto_devuelto'] ) ? json_decode($_GET['producto_devuelto']) : null,
 			isset($_GET['producto_solicitado'] ) ? json_decode($_GET['producto_solicitado']) : null
 			
@@ -4353,8 +4349,8 @@
 			
 			isset($_GET['id_consignacion'] ) ? $_GET['id_consignacion'] : null,
 			isset($_GET['productos_actuales'] ) ? json_decode($_GET['productos_actuales']) : null,
-			isset($_GET['motivo'] ) ? $_GET['motivo'] : null,
-			isset($_GET['tipo_pago'] ) ? $_GET['tipo_pago'] : null
+			isset($_GET['motivo'] ) ? $_GET['motivo'] :  null,
+			isset($_GET['tipo_pago'] ) ? $_GET['tipo_pago'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -4446,7 +4442,7 @@
 			
 			isset($_GET['fecha_revision'] ) ? $_GET['fecha_revision'] : null,
 			isset($_GET['id_consignacion'] ) ? $_GET['id_consignacion'] : null,
-			isset($_GET['id_inspector'] ) ? $_GET['id_inspector'] : null
+			isset($_GET['id_inspector'] ) ? $_GET['id_inspector'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -4576,7 +4572,7 @@
   
   
 
-  class ApiServiciosLista extends ApiHandler {
+  class ApiServiciosBuscar extends ApiHandler {
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
@@ -4586,19 +4582,17 @@
 			"activo" => new ApiExposedProperty("activo", false, GET, array( "bool" )),
 			"id_empresa" => new ApiExposedProperty("id_empresa", false, GET, array( "int" )),
 			"id_sucursal" => new ApiExposedProperty("id_sucursal", false, GET, array( "int" )),
-			"orden" => new ApiExposedProperty("orden", false, GET, array( "string" )),
 		);
 	}
 
 	protected function GenerateResponse() {		
 		try{
- 		$this->response = ServiciosController::Lista( 
+ 		$this->response = ServiciosController::Buscar( 
  			
 			
-			isset($_GET['activo'] ) ? $_GET['activo'] : null,
-			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] : null,
-			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null,
-			isset($_GET['orden'] ) ? $_GET['orden'] : null
+			isset($_GET['activo'] ) ? $_GET['activo'] :  null,
+			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] :  null,
+			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -4646,15 +4640,15 @@
 			isset($_GET['costo_estandar'] ) ? $_GET['costo_estandar'] : null,
 			isset($_GET['metodo_costeo'] ) ? $_GET['metodo_costeo'] : null,
 			isset($_GET['nombre_servicio'] ) ? $_GET['nombre_servicio'] : null,
-			isset($_GET['activo'] ) ? $_GET['activo'] : null,
+			isset($_GET['activo'] ) ? $_GET['activo'] :  true ,
 			isset($_GET['clasificaciones'] ) ? json_decode($_GET['clasificaciones']) : null,
-			isset($_GET['control_de_existencia'] ) ? $_GET['control_de_existencia'] : null,
-			isset($_GET['descripcion_servicio'] ) ? $_GET['descripcion_servicio'] : null,
+			isset($_GET['control_de_existencia'] ) ? $_GET['control_de_existencia'] :  null,
+			isset($_GET['descripcion_servicio'] ) ? $_GET['descripcion_servicio'] :  null,
 			isset($_GET['empresas'] ) ? json_decode($_GET['empresas']) : null,
-			isset($_GET['foto_servicio'] ) ? $_GET['foto_servicio'] : null,
-			isset($_GET['garantia'] ) ? $_GET['garantia'] : null,
+			isset($_GET['foto_servicio'] ) ? $_GET['foto_servicio'] :  null,
+			isset($_GET['garantia'] ) ? $_GET['garantia'] :  null,
 			isset($_GET['impuestos'] ) ? json_decode($_GET['impuestos']) : null,
-			isset($_GET['precio'] ) ? $_GET['precio'] : null,
+			isset($_GET['precio'] ) ? $_GET['precio'] :  null,
 			isset($_GET['retenciones'] ) ? json_decode($_GET['retenciones']) : null,
 			isset($_GET['sucursales'] ) ? json_decode($_GET['sucursales']) : null
 			
@@ -4701,18 +4695,18 @@
 			
 			isset($_GET['id_servicio'] ) ? $_GET['id_servicio'] : null,
 			isset($_GET['clasificaciones'] ) ? json_decode($_GET['clasificaciones']) : null,
-			isset($_GET['codigo_servicio'] ) ? $_GET['codigo_servicio'] : null,
-			isset($_GET['compra_en_mostrador'] ) ? $_GET['compra_en_mostrador'] : null,
-			isset($_GET['control_de_existencia'] ) ? $_GET['control_de_existencia'] : null,
-			isset($_GET['costo_estandar'] ) ? $_GET['costo_estandar'] : null,
-			isset($_GET['descripcion_servicio'] ) ? $_GET['descripcion_servicio'] : null,
-			isset($_GET['empresas'] ) ? $_GET['empresas'] : null,
-			isset($_GET['foto_servicio'] ) ? $_GET['foto_servicio'] : null,
-			isset($_GET['garantia'] ) ? $_GET['garantia'] : null,
+			isset($_GET['codigo_servicio'] ) ? $_GET['codigo_servicio'] :  null,
+			isset($_GET['compra_en_mostrador'] ) ? $_GET['compra_en_mostrador'] :  null,
+			isset($_GET['control_de_existencia'] ) ? $_GET['control_de_existencia'] :  null,
+			isset($_GET['costo_estandar'] ) ? $_GET['costo_estandar'] :  null,
+			isset($_GET['descripcion_servicio'] ) ? $_GET['descripcion_servicio'] :  null,
+			isset($_GET['empresas'] ) ? $_GET['empresas'] :  null,
+			isset($_GET['foto_servicio'] ) ? $_GET['foto_servicio'] :  null,
+			isset($_GET['garantia'] ) ? $_GET['garantia'] :  null,
 			isset($_GET['impuestos'] ) ? json_decode($_GET['impuestos']) : null,
-			isset($_GET['metodo_costeo'] ) ? $_GET['metodo_costeo'] : null,
-			isset($_GET['nombre_servicio'] ) ? $_GET['nombre_servicio'] : null,
-			isset($_GET['precio'] ) ? $_GET['precio'] : null,
+			isset($_GET['metodo_costeo'] ) ? $_GET['metodo_costeo'] :  null,
+			isset($_GET['nombre_servicio'] ) ? $_GET['nombre_servicio'] :  null,
+			isset($_GET['precio'] ) ? $_GET['precio'] :  null,
 			isset($_GET['retenciones'] ) ? json_decode($_GET['retenciones']) : null,
 			isset($_GET['sucursales'] ) ? json_decode($_GET['sucursales']) : null
 			
@@ -4735,8 +4729,8 @@
 		$this->request = array(	
 			"activa" => new ApiExposedProperty("activa", false, GET, array( "bool" )),
 			"cancelada" => new ApiExposedProperty("cancelada", false, GET, array( "bool" )),
-			"fecha_desde" => new ApiExposedProperty("fecha_desde", false, GET, array( "string" )),
-			"fecha_hasta" => new ApiExposedProperty("fecha_hasta", false, GET, array( "string" )),
+			"fecha_desde" => new ApiExposedProperty("fecha_desde", false, GET, array( "int" )),
+			"fecha_hasta" => new ApiExposedProperty("fecha_hasta", false, GET, array( "int" )),
 			"id_servicio" => new ApiExposedProperty("id_servicio", false, GET, array( "int" )),
 			"id_usuario_venta" => new ApiExposedProperty("id_usuario_venta", false, GET, array( "int" )),
 		);
@@ -4747,12 +4741,12 @@
  		$this->response = ServiciosController::ListaOrden( 
  			
 			
-			isset($_GET['activa'] ) ? $_GET['activa'] : null,
-			isset($_GET['cancelada'] ) ? $_GET['cancelada'] : null,
-			isset($_GET['fecha_desde'] ) ? $_GET['fecha_desde'] : null,
-			isset($_GET['fecha_hasta'] ) ? $_GET['fecha_hasta'] : null,
-			isset($_GET['id_servicio'] ) ? $_GET['id_servicio'] : null,
-			isset($_GET['id_usuario_venta'] ) ? $_GET['id_usuario_venta'] : null
+			isset($_GET['activa'] ) ? $_GET['activa'] :  null,
+			isset($_GET['cancelada'] ) ? $_GET['cancelada'] :  null,
+			isset($_GET['fecha_desde'] ) ? $_GET['fecha_desde'] :  null,
+			isset($_GET['fecha_hasta'] ) ? $_GET['fecha_hasta'] :  null,
+			isset($_GET['id_servicio'] ) ? $_GET['id_servicio'] :  null,
+			isset($_GET['id_usuario_venta'] ) ? $_GET['id_usuario_venta'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -4814,9 +4808,9 @@
 			
 			isset($_POST['id_cliente'] ) ? $_POST['id_cliente'] : null,
 			isset($_POST['id_servicio'] ) ? $_POST['id_servicio'] : null,
-			isset($_POST['adelanto'] ) ? $_POST['adelanto'] : null,
-			isset($_POST['descripcion'] ) ? $_POST['descripcion'] : null,
-			isset($_POST['fecha_entrega'] ) ? $_POST['fecha_entrega'] : null
+			isset($_POST['adelanto'] ) ? $_POST['adelanto'] :  null,
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  "",
+			isset($_POST['fecha_entrega'] ) ? $_POST['fecha_entrega'] :  ""
 			
 			);
 		}catch(Exception $e){
@@ -4849,8 +4843,8 @@
 			
 			isset($_POST['id_orden_de_servicio'] ) ? $_POST['id_orden_de_servicio'] : null,
 			isset($_POST['abono'] ) ? json_decode($_POST['abono']) : null,
-			isset($_POST['id_localizacion'] ) ? $_POST['id_localizacion'] : null,
-			isset($_POST['nota'] ) ? $_POST['nota'] : null
+			isset($_POST['id_localizacion'] ) ? $_POST['id_localizacion'] :  null,
+			isset($_POST['nota'] ) ? $_POST['nota'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -4891,10 +4885,10 @@
 			isset($_POST['billetes_cambio'] ) ? json_decode($_POST['billetes_cambio']) : null,
 			isset($_POST['billetes_pago'] ) ? json_decode($_POST['billetes_pago']) : null,
 			isset($_POST['cheques'] ) ? json_decode($_POST['cheques']) : null,
-			isset($_POST['descuento'] ) ? $_POST['descuento'] : null,
-			isset($_POST['id_venta_caja'] ) ? $_POST['id_venta_caja'] : null,
-			isset($_POST['saldo'] ) ? $_POST['saldo'] : null,
-			isset($_POST['tipo_de_pago'] ) ? $_POST['tipo_de_pago'] : null
+			isset($_POST['descuento'] ) ? $_POST['descuento'] :  null,
+			isset($_POST['id_venta_caja'] ) ? $_POST['id_venta_caja'] :  null,
+			isset($_POST['saldo'] ) ? $_POST['saldo'] :  null,
+			isset($_POST['tipo_de_pago'] ) ? $_POST['tipo_de_pago'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -4956,9 +4950,9 @@
  			
 			
 			isset($_GET['nombre'] ) ? $_GET['nombre'] : null,
-			isset($_GET['activa'] ) ? $_GET['activa'] : null,
-			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
-			isset($_GET['garantia'] ) ? $_GET['garantia'] : null,
+			isset($_GET['activa'] ) ? $_GET['activa'] :  1 ,
+			isset($_GET['descripcion'] ) ? $_GET['descripcion'] :  null,
+			isset($_GET['garantia'] ) ? $_GET['garantia'] :  null,
 			isset($_GET['impuestos'] ) ? json_decode($_GET['impuestos']) : null,
 			isset($_GET['retenciones'] ) ? json_decode($_GET['retenciones']) : null
 			
@@ -4994,10 +4988,10 @@
  			
 			
 			isset($_GET['id_clasificacion_servicio'] ) ? $_GET['id_clasificacion_servicio'] : null,
-			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
-			isset($_GET['garantia'] ) ? $_GET['garantia'] : null,
+			isset($_GET['descripcion'] ) ? $_GET['descripcion'] :  null,
+			isset($_GET['garantia'] ) ? $_GET['garantia'] :  null,
 			isset($_GET['impuestos'] ) ? json_decode($_GET['impuestos']) : null,
-			isset($_GET['nombre'] ) ? $_GET['nombre'] : null,
+			isset($_GET['nombre'] ) ? $_GET['nombre'] :  null,
 			isset($_GET['retenciones'] ) ? json_decode($_GET['retenciones']) : null
 			
 			);
@@ -5056,7 +5050,7 @@
  			
 			
 			isset($_GET['id_orden_de_servicio'] ) ? $_GET['id_orden_de_servicio'] : null,
-			isset($_GET['motivo_cancelacion'] ) ? $_GET['motivo_cancelacion'] : null
+			isset($_GET['motivo_cancelacion'] ) ? $_GET['motivo_cancelacion'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -5337,7 +5331,7 @@
 			isset($_POST['cuerpo'] ) ? $_POST['cuerpo'] : null,
 			isset($_POST['destinatario'] ) ? $_POST['destinatario'] : null,
 			isset($_POST['titulo'] ) ? $_POST['titulo'] : null,
-			isset($_POST['emisor'] ) ? $_POST['emisor'] : null
+			isset($_POST['emisor'] ) ? $_POST['emisor'] :  "no-reply@caffeina.mx"
 			
 			);
 		}catch(Exception $e){
@@ -5367,7 +5361,7 @@
  			
 			
 			isset($_GET['activos'] ) ? $_GET['activos'] : null,
-			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] : null
+			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -5622,10 +5616,10 @@
  		$this->response = ContabilidadController::ListaFacturas( 
  			
 			
-			isset($_GET['activos'] ) ? $_GET['activos'] : null,
-			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] : null,
-			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null,
-			isset($_GET['orden'] ) ? $_GET['orden'] : null
+			isset($_GET['activos'] ) ? $_GET['activos'] :  null,
+			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] :  null,
+			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] :  null,
+			isset($_GET['orden'] ) ? $_GET['orden'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -5737,9 +5731,9 @@
  		$this->response = ReportesController::Lista( 
  			
 			
-			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] : null,
-			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null,
-			isset($_GET['orden'] ) ? $_GET['orden'] : null
+			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] :  null,
+			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] :  null,
+			isset($_GET['orden'] ) ? $_GET['orden'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -5770,9 +5764,9 @@
  		$this->response = ReportesController::ProductosCliente( 
  			
 			
-			isset($_GET['id_cliente'] ) ? $_GET['id_cliente'] : null,
-			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] : null,
-			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null,
+			isset($_GET['id_cliente'] ) ? $_GET['id_cliente'] :  null,
+			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] :  null,
+			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] :  null,
 			isset($_GET['orden'] ) ? json_decode($_GET['orden']) : null
 			
 			);
@@ -5804,9 +5798,9 @@
  		$this->response = ReportesController::ClienteServicio( 
  			
 			
-			isset($_GET['id_cliente'] ) ? $_GET['id_cliente'] : null,
-			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] : null,
-			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null,
+			isset($_GET['id_cliente'] ) ? $_GET['id_cliente'] :  null,
+			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] :  null,
+			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] :  null,
 			isset($_GET['orden'] ) ? json_decode($_GET['orden']) : null
 			
 			);
@@ -5853,7 +5847,7 @@
 			isset($_POST['nombre'] ) ? $_POST['nombre'] : null,
 			isset($_POST['secuencia'] ) ? $_POST['secuencia'] : null,
 			isset($_POST['tipo'] ) ? $_POST['tipo'] : null,
-			isset($_POST['descripcion'] ) ? $_POST['descripcion'] : null
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -5901,7 +5895,7 @@
 			isset($_GET['incluido_en_importe_base'] ) ? $_GET['incluido_en_importe_base'] : null,
 			isset($_GET['secuencia'] ) ? $_GET['secuencia'] : null,
 			isset($_GET['tipo'] ) ? $_GET['tipo'] : null,
-			isset($_GET['nombre'] ) ? $_GET['nombre'] : null
+			isset($_GET['nombre'] ) ? $_GET['nombre'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -5932,10 +5926,10 @@
  		$this->response = ImpuestosController::Lista( 
  			
 			
-			isset($_GET['limit'] ) ? $_GET['limit'] : null,
-			isset($_GET['query'] ) ? $_GET['query'] : null,
-			isset($_GET['sort'] ) ? $_GET['sort'] : null,
-			isset($_GET['start'] ) ? $_GET['start'] : null
+			isset($_GET['limit'] ) ? $_GET['limit'] :  null,
+			isset($_GET['query'] ) ? $_GET['query'] :  null,
+			isset($_GET['sort'] ) ? $_GET['sort'] :  null,
+			isset($_GET['start'] ) ? $_GET['start'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -5986,16 +5980,16 @@
 			isset($_POST['id_unidad_compra'] ) ? $_POST['id_unidad_compra'] : null,
 			isset($_POST['metodo_costeo'] ) ? $_POST['metodo_costeo'] : null,
 			isset($_POST['nombre_producto'] ) ? $_POST['nombre_producto'] : null,
-			isset($_POST['codigo_de_barras'] ) ? $_POST['codigo_de_barras'] : null,
-			isset($_POST['control_de_existencia'] ) ? $_POST['control_de_existencia'] : null,
-			isset($_POST['descripcion_producto'] ) ? $_POST['descripcion_producto'] : null,
-			isset($_POST['foto_del_producto'] ) ? $_POST['foto_del_producto'] : null,
-			isset($_POST['garantia'] ) ? $_POST['garantia'] : null,
-			isset($_POST['id_categoria'] ) ? $_POST['id_categoria'] : null,
+			isset($_POST['codigo_de_barras'] ) ? $_POST['codigo_de_barras'] :  null,
+			isset($_POST['control_de_existencia'] ) ? $_POST['control_de_existencia'] :  null,
+			isset($_POST['descripcion_producto'] ) ? $_POST['descripcion_producto'] :  null,
+			isset($_POST['foto_del_producto'] ) ? $_POST['foto_del_producto'] :  null,
+			isset($_POST['garantia'] ) ? $_POST['garantia'] :  null,
+			isset($_POST['id_categoria'] ) ? $_POST['id_categoria'] :  null,
 			isset($_POST['id_empresas'] ) ? json_decode($_POST['id_empresas']) : null,
-			isset($_POST['id_unidad'] ) ? $_POST['id_unidad'] : null,
+			isset($_POST['id_unidad'] ) ? $_POST['id_unidad'] :  null,
 			isset($_POST['impuestos'] ) ? json_decode($_POST['impuestos']) : null,
-			isset($_POST['precio_de_venta'] ) ? $_POST['precio_de_venta'] : null
+			isset($_POST['precio_de_venta'] ) ? $_POST['precio_de_venta'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -6099,23 +6093,23 @@
 			
 			isset($_GET['id_producto'] ) ? $_GET['id_producto'] : null,
 			isset($_GET['clasificaciones'] ) ? json_decode($_GET['clasificaciones']) : null,
-			isset($_GET['codigo_de_barras'] ) ? $_GET['codigo_de_barras'] : null,
-			isset($_GET['codigo_producto'] ) ? $_GET['codigo_producto'] : null,
-			isset($_GET['compra_en_mostrador'] ) ? $_GET['compra_en_mostrador'] : null,
-			isset($_GET['control_de_existencia'] ) ? $_GET['control_de_existencia'] : null,
-			isset($_GET['costo_estandar'] ) ? $_GET['costo_estandar'] : null,
-			isset($_GET['costo_extra_almacen'] ) ? $_GET['costo_extra_almacen'] : null,
-			isset($_GET['descripcion_producto'] ) ? $_GET['descripcion_producto'] : null,
+			isset($_GET['codigo_de_barras'] ) ? $_GET['codigo_de_barras'] :  null,
+			isset($_GET['codigo_producto'] ) ? $_GET['codigo_producto'] :  null,
+			isset($_GET['compra_en_mostrador'] ) ? $_GET['compra_en_mostrador'] :  null,
+			isset($_GET['control_de_existencia'] ) ? $_GET['control_de_existencia'] :  null,
+			isset($_GET['costo_estandar'] ) ? $_GET['costo_estandar'] :  null,
+			isset($_GET['costo_extra_almacen'] ) ? $_GET['costo_extra_almacen'] :  null,
+			isset($_GET['descripcion_producto'] ) ? $_GET['descripcion_producto'] :  null,
 			isset($_GET['empresas'] ) ? json_decode($_GET['empresas']) : null,
-			isset($_GET['foto_del_producto'] ) ? $_GET['foto_del_producto'] : null,
-			isset($_GET['garantia'] ) ? $_GET['garantia'] : null,
-			isset($_GET['garantia'] ) ? $_GET['garantia'] : null,
-			isset($_GET['id_unidad'] ) ? $_GET['id_unidad'] : null,
+			isset($_GET['foto_del_producto'] ) ? $_GET['foto_del_producto'] :  null,
+			isset($_GET['garantia'] ) ? $_GET['garantia'] :  null,
+			isset($_GET['garantia'] ) ? $_GET['garantia'] :  null,
+			isset($_GET['id_unidad'] ) ? $_GET['id_unidad'] :  null,
 			isset($_GET['impuestos'] ) ? json_decode($_GET['impuestos']) : null,
-			isset($_GET['metodo_costeo'] ) ? $_GET['metodo_costeo'] : null,
-			isset($_GET['nombre_producto'] ) ? $_GET['nombre_producto'] : null,
-			isset($_GET['peso_producto'] ) ? $_GET['peso_producto'] : null,
-			isset($_GET['precio'] ) ? $_GET['precio'] : null
+			isset($_GET['metodo_costeo'] ) ? $_GET['metodo_costeo'] :  null,
+			isset($_GET['nombre_producto'] ) ? $_GET['nombre_producto'] :  null,
+			isset($_GET['peso_producto'] ) ? $_GET['peso_producto'] :  null,
+			isset($_GET['precio'] ) ? $_GET['precio'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -6146,8 +6140,8 @@
  			
 			
 			isset($_GET['nombre'] ) ? $_GET['nombre'] : null,
-			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
-			isset($_GET['id_categoria_padre'] ) ? $_GET['id_categoria_padre'] : null
+			isset($_GET['descripcion'] ) ? $_GET['descripcion'] :  null,
+			isset($_GET['id_categoria_padre'] ) ? $_GET['id_categoria_padre'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -6179,9 +6173,9 @@
  			
 			
 			isset($_GET['id_categoria'] ) ? $_GET['id_categoria'] : null,
-			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
-			isset($_GET['id_categoria_padre'] ) ? $_GET['id_categoria_padre'] : null,
-			isset($_GET['nombre'] ) ? $_GET['nombre'] : null
+			isset($_GET['descripcion'] ) ? $_GET['descripcion'] :  null,
+			isset($_GET['id_categoria_padre'] ) ? $_GET['id_categoria_padre'] :  null,
+			isset($_GET['nombre'] ) ? $_GET['nombre'] :  ""
 			
 			);
 		}catch(Exception $e){
@@ -6247,9 +6241,9 @@
 			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
 			isset($_GET['factor_conversion'] ) ? $_GET['factor_conversion'] : null,
 			isset($_GET['tipo_unidad_medida'] ) ? $_GET['tipo_unidad_medida'] : null,
-			isset($_GET['abreviatura'] ) ? $_GET['abreviatura'] : null,
-			isset($_GET['id_categoria_unidad_medida'] ) ? $_GET['id_categoria_unidad_medida'] : null,
-			isset($_GET['id_unidad_medida'] ) ? $_GET['id_unidad_medida'] : null
+			isset($_GET['abreviatura'] ) ? $_GET['abreviatura'] :  "",
+			isset($_GET['id_categoria_unidad_medida'] ) ? $_GET['id_categoria_unidad_medida'] :  "",
+			isset($_GET['id_unidad_medida'] ) ? $_GET['id_unidad_medida'] :  ""
 			
 			);
 		}catch(Exception $e){
@@ -6280,10 +6274,10 @@
  		$this->response = ProductosController::BuscarUnidadUdm( 
  			
 			
-			isset($_GET['limit'] ) ? $_GET['limit'] : null,
-			isset($_GET['page'] ) ? $_GET['page'] : null,
-			isset($_GET['query'] ) ? $_GET['query'] : null,
-			isset($_GET['start'] ) ? $_GET['start'] : null
+			isset($_GET['limit'] ) ? $_GET['limit'] :  50 ,
+			isset($_GET['page'] ) ? $_GET['page'] :  null,
+			isset($_GET['query'] ) ? $_GET['query'] :  null,
+			isset($_GET['start'] ) ? $_GET['start'] :  0 
 			
 			);
 		}catch(Exception $e){
@@ -6314,8 +6308,8 @@
  			
 			
 			isset($_GET['query'] ) ? $_GET['query'] : null,
-			isset($_GET['id_producto'] ) ? $_GET['id_producto'] : null,
-			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null
+			isset($_GET['id_producto'] ) ? $_GET['id_producto'] :  null,
+			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -6353,7 +6347,7 @@
 			isset($_GET['factor_conversion'] ) ? $_GET['factor_conversion'] : null,
 			isset($_GET['id_categoria_unidad_medida'] ) ? $_GET['id_categoria_unidad_medida'] : null,
 			isset($_GET['tipo_unidad_medida'] ) ? $_GET['tipo_unidad_medida'] : null,
-			isset($_GET['activa'] ) ? $_GET['activa'] : null
+			isset($_GET['activa'] ) ? $_GET['activa'] :  ""
 			
 			);
 		}catch(Exception $e){
@@ -6383,7 +6377,7 @@
  			
 			
 			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
-			isset($_GET['activo'] ) ? $_GET['activo'] : null
+			isset($_GET['activo'] ) ? $_GET['activo'] :  ""
 			
 			);
 		}catch(Exception $e){
@@ -6446,10 +6440,42 @@
  		$this->response = ProductosController::BuscarCategoriaUdm( 
  			
 			
-			isset($_GET['limit'] ) ? $_GET['limit'] : null,
-			isset($_GET['page'] ) ? $_GET['page'] : null,
-			isset($_GET['query'] ) ? $_GET['query'] : null,
-			isset($_GET['start'] ) ? $_GET['start'] : null
+			isset($_GET['limit'] ) ? $_GET['limit'] :  50 ,
+			isset($_GET['page'] ) ? $_GET['page'] :  null,
+			isset($_GET['query'] ) ? $_GET['query'] :  null,
+			isset($_GET['start'] ) ? $_GET['start'] :  0 
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiProductoCategoriaBuscar extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"id_categoria" => new ApiExposedProperty("id_categoria", false, GET, array( "int" )),
+			"id_categoria_padre" => new ApiExposedProperty("id_categoria_padre", false, GET, array( "int" )),
+			"query" => new ApiExposedProperty("query", false, GET, array( "string" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = ProductosController::BuscarCategoria( 
+ 			
+			
+			isset($_GET['id_categoria'] ) ? $_GET['id_categoria'] :  null,
+			isset($_GET['id_categoria_padre'] ) ? $_GET['id_categoria_padre'] :  null,
+			isset($_GET['query'] ) ? $_GET['query'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -6484,12 +6510,12 @@
  			
 			
 			isset($_GET['tipo_tarifa'] ) ? $_GET['tipo_tarifa'] : null,
-			isset($_GET['cantidad'] ) ? $_GET['cantidad'] : null,
-			isset($_GET['id_paquete'] ) ? $_GET['id_paquete'] : null,
-			isset($_GET['id_producto'] ) ? $_GET['id_producto'] : null,
-			isset($_GET['id_servicio'] ) ? $_GET['id_servicio'] : null,
-			isset($_GET['id_tarifa'] ) ? $_GET['id_tarifa'] : null,
-			isset($_GET['id_unidad'] ) ? $_GET['id_unidad'] : null
+			isset($_GET['cantidad'] ) ? $_GET['cantidad'] :  null,
+			isset($_GET['id_paquete'] ) ? $_GET['id_paquete'] :  null,
+			isset($_GET['id_producto'] ) ? $_GET['id_producto'] :  null,
+			isset($_GET['id_servicio'] ) ? $_GET['id_servicio'] :  null,
+			isset($_GET['id_tarifa'] ) ? $_GET['id_tarifa'] :  null,
+			isset($_GET['id_unidad'] ) ? $_GET['id_unidad'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -6526,9 +6552,9 @@
 			isset($_POST['id_moneda'] ) ? $_POST['id_moneda'] : null,
 			isset($_POST['nombre'] ) ? $_POST['nombre'] : null,
 			isset($_POST['tipo_tarifa'] ) ? $_POST['tipo_tarifa'] : null,
-			isset($_POST['default'] ) ? $_POST['default'] : null,
-			isset($_POST['fecha_fin'] ) ? $_POST['fecha_fin'] : null,
-			isset($_POST['fecha_inicio'] ) ? $_POST['fecha_inicio'] : null,
+			isset($_POST['default'] ) ? $_POST['default'] :  null,
+			isset($_POST['fecha_fin'] ) ? $_POST['fecha_fin'] :  null,
+			isset($_POST['fecha_inicio'] ) ? $_POST['fecha_inicio'] :  null,
 			isset($_POST['formulas'] ) ? json_decode($_POST['formulas']) : null
 			
 			);
@@ -6565,13 +6591,13 @@
  			
 			
 			isset($_POST['id_tarifa'] ) ? $_POST['id_tarifa'] : null,
-			isset($_POST['default'] ) ? $_POST['default'] : null,
-			isset($_POST['fecha_fin'] ) ? $_POST['fecha_fin'] : null,
-			isset($_POST['fecha_inicio'] ) ? $_POST['fecha_inicio'] : null,
+			isset($_POST['default'] ) ? $_POST['default'] :  null,
+			isset($_POST['fecha_fin'] ) ? $_POST['fecha_fin'] :  null,
+			isset($_POST['fecha_inicio'] ) ? $_POST['fecha_inicio'] :  null,
 			isset($_POST['formulas'] ) ? json_decode($_POST['formulas']) : null,
-			isset($_POST['id_moneda'] ) ? $_POST['id_moneda'] : null,
-			isset($_POST['nombre'] ) ? $_POST['nombre'] : null,
-			isset($_POST['tipo_tarifa'] ) ? $_POST['tipo_tarifa'] : null
+			isset($_POST['id_moneda'] ) ? $_POST['id_moneda'] :  null,
+			isset($_POST['nombre'] ) ? $_POST['nombre'] :  null,
+			isset($_POST['tipo_tarifa'] ) ? $_POST['tipo_tarifa'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -6666,10 +6692,10 @@
 			isset($_GET['empresas'] ) ? json_decode($_GET['empresas']) : null,
 			isset($_GET['nombre'] ) ? $_GET['nombre'] : null,
 			isset($_GET['sucursales'] ) ? json_decode($_GET['sucursales']) : null,
-			isset($_GET['costo_estandar'] ) ? $_GET['costo_estandar'] : null,
-			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
-			isset($_GET['foto_paquete'] ) ? $_GET['foto_paquete'] : null,
-			isset($_GET['precio'] ) ? $_GET['precio'] : null,
+			isset($_GET['costo_estandar'] ) ? $_GET['costo_estandar'] :  null,
+			isset($_GET['descripcion'] ) ? $_GET['descripcion'] :  null,
+			isset($_GET['foto_paquete'] ) ? $_GET['foto_paquete'] :  null,
+			isset($_GET['precio'] ) ? $_GET['precio'] :  null,
 			isset($_GET['productos'] ) ? json_decode($_GET['productos']) : null,
 			isset($_GET['servicios'] ) ? json_decode($_GET['servicios']) : null
 			
@@ -6709,12 +6735,12 @@
  			
 			
 			isset($_GET['id_paquete'] ) ? $_GET['id_paquete'] : null,
-			isset($_GET['costo_estandar'] ) ? $_GET['costo_estandar'] : null,
-			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
+			isset($_GET['costo_estandar'] ) ? $_GET['costo_estandar'] :  null,
+			isset($_GET['descripcion'] ) ? $_GET['descripcion'] :  null,
 			isset($_GET['empresas'] ) ? json_decode($_GET['empresas']) : null,
-			isset($_GET['foto_paquete'] ) ? $_GET['foto_paquete'] : null,
-			isset($_GET['nombre'] ) ? $_GET['nombre'] : null,
-			isset($_GET['precio'] ) ? $_GET['precio'] : null,
+			isset($_GET['foto_paquete'] ) ? $_GET['foto_paquete'] :  null,
+			isset($_GET['nombre'] ) ? $_GET['nombre'] :  null,
+			isset($_GET['precio'] ) ? $_GET['precio'] :  null,
 			isset($_GET['productos'] ) ? json_decode($_GET['productos']) : null,
 			isset($_GET['servicios'] ) ? json_decode($_GET['servicios']) : null,
 			isset($_GET['sucursales'] ) ? json_decode($_GET['sucursales']) : null
@@ -6803,9 +6829,9 @@
  		$this->response = PaquetesController::Lista( 
  			
 			
-			isset($_GET['activo'] ) ? $_GET['activo'] : null,
-			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] : null,
-			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null
+			isset($_GET['activo'] ) ? $_GET['activo'] :  null,
+			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] :  null,
+			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -6867,7 +6893,7 @@
 			isset($_GET['id_moneda'] ) ? $_GET['id_moneda'] : null,
 			isset($_GET['nombre'] ) ? $_GET['nombre'] : null,
 			isset($_GET['valor'] ) ? $_GET['valor'] : null,
-			isset($_GET['foto_billete'] ) ? $_GET['foto_billete'] : null
+			isset($_GET['foto_billete'] ) ? $_GET['foto_billete'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -6900,10 +6926,10 @@
  			
 			
 			isset($_GET['id_billete'] ) ? $_GET['id_billete'] : null,
-			isset($_GET['foto_billete'] ) ? $_GET['foto_billete'] : null,
-			isset($_GET['id_moneda'] ) ? $_GET['id_moneda'] : null,
-			isset($_GET['nombre'] ) ? $_GET['nombre'] : null,
-			isset($_GET['valor'] ) ? $_GET['valor'] : null
+			isset($_GET['foto_billete'] ) ? $_GET['foto_billete'] :  null,
+			isset($_GET['id_moneda'] ) ? $_GET['id_moneda'] :  null,
+			isset($_GET['nombre'] ) ? $_GET['nombre'] :  null,
+			isset($_GET['valor'] ) ? $_GET['valor'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -6960,8 +6986,8 @@
  		$this->response = EfectivoController::ListaBillete( 
  			
 			
-			isset($_GET['activo'] ) ? $_GET['activo'] : null,
-			isset($_GET['ordenar'] ) ? $_GET['ordenar'] : null
+			isset($_GET['activo'] ) ? $_GET['activo'] :  null,
+			isset($_GET['ordenar'] ) ? $_GET['ordenar'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -7022,8 +7048,8 @@
  			
 			
 			isset($_GET['id_moneda'] ) ? $_GET['id_moneda'] : null,
-			isset($_GET['nombre'] ) ? $_GET['nombre'] : null,
-			isset($_GET['simbolo'] ) ? $_GET['simbolo'] : null
+			isset($_GET['nombre'] ) ? $_GET['nombre'] :  null,
+			isset($_GET['simbolo'] ) ? $_GET['simbolo'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -7080,8 +7106,8 @@
  		$this->response = EfectivoController::ListaMoneda( 
  			
 			
-			isset($_GET['activo'] ) ? $_GET['activo'] : null,
-			isset($_GET['orden'] ) ? $_GET['orden'] : null
+			isset($_GET['activo'] ) ? $_GET['activo'] :  null,
+			isset($_GET['orden'] ) ? $_GET['orden'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -7143,7 +7169,7 @@
 			
 			isset($_POST['id_lote'] ) ? $_POST['id_lote'] : null,
 			isset($_POST['productos'] ) ? json_decode($_POST['productos']) : null,
-			isset($_POST['motivo'] ) ? $_POST['motivo'] : null
+			isset($_POST['motivo'] ) ? $_POST['motivo'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -7179,7 +7205,7 @@
 			isset($_POST['id_sucursal'] ) ? $_POST['id_sucursal'] : null,
 			isset($_POST['id_tipo_almacen'] ) ? $_POST['id_tipo_almacen'] : null,
 			isset($_POST['nombre'] ) ? $_POST['nombre'] : null,
-			isset($_POST['descripcion'] ) ? $_POST['descripcion'] : null
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -7207,7 +7233,7 @@
  		$this->response = AlmacenesController::Buscar( 
  			
 			
-			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] : null
+			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -7239,7 +7265,7 @@
 			
 			isset($_POST['id_lote'] ) ? $_POST['id_lote'] : null,
 			isset($_POST['productos'] ) ? json_decode($_POST['productos']) : null,
-			isset($_POST['motivo'] ) ? $_POST['motivo'] : null
+			isset($_POST['motivo'] ) ? $_POST['motivo'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -7299,9 +7325,9 @@
  			
 			
 			isset($_POST['id_almacen'] ) ? $_POST['id_almacen'] : null,
-			isset($_POST['descripcion'] ) ? $_POST['descripcion'] : null,
-			isset($_POST['id_tipo_almacen'] ) ? $_POST['id_tipo_almacen'] : null,
-			isset($_POST['nombre'] ) ? $_POST['nombre'] : null
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null,
+			isset($_POST['id_tipo_almacen'] ) ? $_POST['id_tipo_almacen'] :  null,
+			isset($_POST['nombre'] ) ? $_POST['nombre'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -7453,11 +7479,11 @@
  		$this->response = AlmacenesController::BuscarTraspasoLote( 
  			
 			
-			isset($_GET['cancelado'] ) ? $_GET['cancelado'] : null,
-			isset($_GET['completo'] ) ? $_GET['completo'] : null,
-			isset($_GET['estado'] ) ? $_GET['estado'] : null,
-			isset($_GET['id_almacen_envia'] ) ? $_GET['id_almacen_envia'] : null,
-			isset($_GET['id_almacen_recibe'] ) ? $_GET['id_almacen_recibe'] : null
+			isset($_GET['cancelado'] ) ? $_GET['cancelado'] :  null,
+			isset($_GET['completo'] ) ? $_GET['completo'] :  null,
+			isset($_GET['estado'] ) ? $_GET['estado'] :  null,
+			isset($_GET['id_almacen_envia'] ) ? $_GET['id_almacen_envia'] :  null,
+			isset($_GET['id_almacen_recibe'] ) ? $_GET['id_almacen_recibe'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -7491,7 +7517,7 @@
 			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null,
 			isset($_GET['id_traspaso'] ) ? $_GET['id_traspaso'] : null,
 			isset($_GET['productos'] ) ? json_decode($_GET['productos']) : null,
-			isset($_GET['fecha_envio_programada'] ) ? $_GET['fecha_envio_programada'] : null
+			isset($_GET['fecha_envio_programada'] ) ? $_GET['fecha_envio_programada'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -7511,6 +7537,7 @@
 	{
 		$this->request = array(	
 			"descripcion" => new ApiExposedProperty("descripcion", true, POST, array( "string" )),
+			"activo" => new ApiExposedProperty("activo", false, POST, array( "bool" )),
 		);
 	}
 
@@ -7519,7 +7546,8 @@
  		$this->response = AlmacenesController::NuevoTipo( 
  			
 			
-			isset($_POST['descripcion'] ) ? $_POST['descripcion'] : null
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] : null,
+			isset($_POST['activo'] ) ? $_POST['activo'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -7539,6 +7567,7 @@
 	{
 		$this->request = array(	
 			"id_tipo_almacen" => new ApiExposedProperty("id_tipo_almacen", true, POST, array( "int" )),
+			"activo" => new ApiExposedProperty("activo", false, POST, array( "bool" )),
 			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "string" )),
 		);
 	}
@@ -7549,7 +7578,8 @@
  			
 			
 			isset($_POST['id_tipo_almacen'] ) ? $_POST['id_tipo_almacen'] : null,
-			isset($_POST['descripcion'] ) ? $_POST['descripcion'] : null
+			isset($_POST['activo'] ) ? $_POST['activo'] :  null,
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -7568,7 +7598,10 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
+			"activo" => new ApiExposedProperty("activo", false, GET, array( "bool" )),
+			"limit" => new ApiExposedProperty("limit", false, GET, array( "string" )),
 			"query" => new ApiExposedProperty("query", false, GET, array( "string" )),
+			"start" => new ApiExposedProperty("start", false, GET, array( "string" )),
 		);
 	}
 
@@ -7577,7 +7610,10 @@
  		$this->response = AlmacenesController::BuscarTipo( 
  			
 			
-			isset($_GET['query'] ) ? $_GET['query'] : null
+			isset($_GET['activo'] ) ? $_GET['activo'] :  null,
+			isset($_GET['limit'] ) ? $_GET['limit'] :  null,
+			isset($_GET['query'] ) ? $_GET['query'] :  null,
+			isset($_GET['start'] ) ? $_GET['start'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -7624,7 +7660,8 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"folio" => new ApiExposedProperty("folio", true, POST, array( "string" )),
+			"id_almacen" => new ApiExposedProperty("id_almacen", true, POST, array( "int" )),
+			"folio" => new ApiExposedProperty("folio", false, POST, array( "string" )),
 		);
 	}
 
@@ -7633,7 +7670,8 @@
  		$this->response = AlmacenesController::NuevoLote( 
  			
 			
-			isset($_POST['folio'] ) ? $_POST['folio'] : null
+			isset($_POST['id_almacen'] ) ? $_POST['id_almacen'] : null,
+			isset($_POST['folio'] ) ? $_POST['folio'] :  null
 			
 			);
 		}catch(Exception $e){

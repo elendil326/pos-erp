@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link Version }. 
-  * @author Manuel
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -152,7 +152,7 @@ abstract class VersionDAOBase extends DAO
 		}
 
 		if( ! is_null( $version->getDefault() ) ){
-			$sql .= " `default` = ? AND";
+			$sql .= " default = ? AND";
 			array_push( $val, $version->getDefault() );
 		}
 
@@ -186,7 +186,7 @@ abstract class VersionDAOBase extends DAO
 	  **/
 	private static final function update( $version )
 	{
-		$sql = "UPDATE version SET  id_tarifa = ?, nombre = ?, activa = ?, fecha_inicio = ?, fecha_fin = ?, `default` = ? WHERE  id_version = ?;";
+		$sql = "UPDATE version SET  id_tarifa = ?, nombre = ?, activa = ?, fecha_inicio = ?, fecha_fin = ?, default = ? WHERE  id_version = ?;";
 		$params = array( 
 			$version->getIdTarifa(), 
 			$version->getNombre(), 
@@ -217,7 +217,7 @@ abstract class VersionDAOBase extends DAO
 	  **/
 	private static final function create( &$version )
 	{
-		$sql = "INSERT INTO version ( id_version, id_tarifa, nombre, activa, fecha_inicio, fecha_fin, `default` ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO version ( id_version, id_tarifa, nombre, activa, fecha_inicio, fecha_fin, default ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$version->getIdVersion(), 
 			$version->getIdTarifa(), 
@@ -341,11 +341,11 @@ abstract class VersionDAOBase extends DAO
 		}
 
 		if( ( !is_null (($a = $versionA->getDefault()) ) ) & ( ! is_null ( ($b = $versionB->getDefault()) ) ) ){
-				$sql .= " `default` >= ? AND `default` <= ? AND";
+				$sql .= " default >= ? AND default <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " `default` = ? AND"; 
+			$sql .= " default = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

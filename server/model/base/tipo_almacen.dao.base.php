@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link TipoAlmacen }. 
-  * @author Manuel
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -131,6 +131,11 @@ abstract class TipoAlmacenDAOBase extends DAO
 			array_push( $val, $tipo_almacen->getDescripcion() );
 		}
 
+		if( ! is_null( $tipo_almacen->getActivo() ) ){
+			$sql .= " activo = ? AND";
+			array_push( $val, $tipo_almacen->getActivo() );
+		}
+
 		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
@@ -161,9 +166,10 @@ abstract class TipoAlmacenDAOBase extends DAO
 	  **/
 	private static final function update( $tipo_almacen )
 	{
-		$sql = "UPDATE tipo_almacen SET  descripcion = ? WHERE  id_tipo_almacen = ?;";
+		$sql = "UPDATE tipo_almacen SET  descripcion = ?, activo = ? WHERE  id_tipo_almacen = ?;";
 		$params = array( 
 			$tipo_almacen->getDescripcion(), 
+			$tipo_almacen->getActivo(), 
 			$tipo_almacen->getIdTipoAlmacen(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -187,10 +193,11 @@ abstract class TipoAlmacenDAOBase extends DAO
 	  **/
 	private static final function create( &$tipo_almacen )
 	{
-		$sql = "INSERT INTO tipo_almacen ( id_tipo_almacen, descripcion ) VALUES ( ?, ?);";
+		$sql = "INSERT INTO tipo_almacen ( id_tipo_almacen, descripcion, activo ) VALUES ( ?, ?, ?);";
 		$params = array( 
 			$tipo_almacen->getIdTipoAlmacen(), 
 			$tipo_almacen->getDescripcion(), 
+			$tipo_almacen->getActivo(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -256,6 +263,17 @@ abstract class TipoAlmacenDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " descripcion = ? AND"; 
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( ( !is_null (($a = $tipo_almacenA->getActivo()) ) ) & ( ! is_null ( ($b = $tipo_almacenB->getActivo()) ) ) ){
+				$sql .= " activo >= ? AND activo <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " activo = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

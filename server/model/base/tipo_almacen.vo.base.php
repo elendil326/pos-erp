@@ -2,7 +2,7 @@
 /** Value Object file for table tipo_almacen.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author Manuel
+  * @author Anonymous
   * @access public
   * @package docs
   * 
@@ -28,6 +28,9 @@ class TipoAlmacen extends VO
 			if( isset($data['descripcion']) ){
 				$this->descripcion = $data['descripcion'];
 			}
+			if( isset($data['activo']) ){
+				$this->activo = $data['activo'];
+			}
 		}
 	}
 
@@ -42,7 +45,8 @@ class TipoAlmacen extends VO
 	{ 
 		$vec = array( 
 			"id_tipo_almacen" => $this->id_tipo_almacen,
-			"descripcion" => $this->descripcion
+			"descripcion" => $this->descripcion,
+			"activo" => $this->activo
 		); 
 	return json_encode($vec); 
 	}
@@ -66,6 +70,15 @@ class TipoAlmacen extends VO
 	  * @var varchar(64)
 	  */
 	public $descripcion;
+
+	/**
+	  * activo
+	  * 
+	  * Si esta activo = 1, 0 = Inactivo<br>
+	  * @access public
+	  * @var tinyint(1)
+	  */
+	public $activo;
 
 	/**
 	  * getIdTipoAlmacen
@@ -117,6 +130,30 @@ class TipoAlmacen extends VO
 	final public function setDescripcion( $descripcion )
 	{
 		$this->descripcion = $descripcion;
+	}
+
+	/**
+	  * getActivo
+	  * 
+	  * Get the <i>activo</i> property for this object. Donde <i>activo</i> es Si esta activo = 1, 0 = Inactivo
+	  * @return tinyint(1)
+	  */
+	final public function getActivo()
+	{
+		return $this->activo;
+	}
+
+	/**
+	  * setActivo( $activo )
+	  * 
+	  * Set the <i>activo</i> property for this object. Donde <i>activo</i> es Si esta activo = 1, 0 = Inactivo.
+	  * Una validacion basica se hara aqui para comprobar que <i>activo</i> es de tipo <i>tinyint(1)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param tinyint(1)
+	  */
+	final public function setActivo( $activo )
+	{
+		$this->activo = $activo;
 	}
 
 }

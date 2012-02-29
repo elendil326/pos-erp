@@ -2,7 +2,7 @@
 /** Value Object file for table retencion_producto.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author Manuel
+  * @author Anonymous
   * @access public
   * @package docs
   * 

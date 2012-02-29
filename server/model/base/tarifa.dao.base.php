@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link Tarifa }. 
-  * @author Manuel
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -147,7 +147,7 @@ abstract class TarifaDAOBase extends DAO
 		}
 
 		if( ! is_null( $tarifa->getDefault() ) ){
-			$sql .= " `default` = ? AND";
+			$sql .= " default = ? AND";
 			array_push( $val, $tarifa->getDefault() );
 		}
 
@@ -191,7 +191,7 @@ abstract class TarifaDAOBase extends DAO
 	  **/
 	private static final function update( $tarifa )
 	{
-		$sql = "UPDATE tarifa SET  nombre = ?, tipo_tarifa = ?, activa = ?, id_moneda = ?, `default` = ?, id_version_default = ?, id_version_activa = ? WHERE  id_tarifa = ?;";
+		$sql = "UPDATE tarifa SET  nombre = ?, tipo_tarifa = ?, activa = ?, id_moneda = ?, default = ?, id_version_default = ?, id_version_activa = ? WHERE  id_tarifa = ?;";
 		$params = array( 
 			$tarifa->getNombre(), 
 			$tarifa->getTipoTarifa(), 
@@ -223,7 +223,7 @@ abstract class TarifaDAOBase extends DAO
 	  **/
 	private static final function create( &$tarifa )
 	{
-		$sql = "INSERT INTO tarifa ( id_tarifa, nombre, tipo_tarifa, activa, id_moneda, `default`, id_version_default, id_version_activa ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO tarifa ( id_tarifa, nombre, tipo_tarifa, activa, id_moneda, default, id_version_default, id_version_activa ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$tarifa->getIdTarifa(), 
 			$tarifa->getNombre(), 
@@ -337,11 +337,11 @@ abstract class TarifaDAOBase extends DAO
 		}
 
 		if( ( !is_null (($a = $tarifaA->getDefault()) ) ) & ( ! is_null ( ($b = $tarifaB->getDefault()) ) ) ){
-				$sql .= " `default` >= ? AND `default` <= ? AND";
+				$sql .= " default >= ? AND default <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " `default` = ? AND"; 
+			$sql .= " default = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
