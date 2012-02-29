@@ -594,12 +594,19 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *
  	 *Imprime la lista de tipos de almacen
  	 *
- 	 * @param query string Buscar por descripcion
- 	 * @return lista_tipos_almacen json Arreglo con la lista de almacenes
+ 	 * @param activo bool Si este valor no es pasado, se listaran los tipos de almacen tanto activos como inactivos, si su valor es true, solo se mostraran los tipos de amacen activos, si es false, solo se mostraran los tipos de almacén inactivos.
+ 	 * @param limit string Indica hasta que registro se desea obtener a partir del conjunto de resultados productos de la busqueda.
+ 	 * @param query string Valor que se buscara en la consulta
+ 	 * @param start string Indica desde que registro se desea obtener a partir del conjunto de resultados productos de la busqueda.
+ 	 * @return numero_de_resultados int Arreglo con la lista de almacenes
+ 	 * @return resultados json 
  	 **/
   static function BuscarTipo
 	(
-		$query = null
+		$activo = null, 
+		$limit = null, 
+		$query = null, 
+		$start = null
 	){
 		 $r = TipoAlmacenDAO::getAll();
 
@@ -677,11 +684,13 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *Edita un tipo de almacen
  	 *
  	 * @param id_tipo_almacen int Id del tipo de almacen a editar
+ 	 * @param activo bool Indica si el tipo almacén se activa o desactiva
  	 * @param descripcion string Descripcion del tipo de almacen
  	 **/
   static function EditarTipo
 	(
 		$id_tipo_almacen, 
+		$activo = null, 
 		$descripcion = null
 	){
             Logger::log("Editando tipo de almacen ".$id_tipo_almacen);
@@ -736,14 +745,16 @@ Creo que este metodo tiene que estar bajo sucursal.
   
 	/**
  	 *
- 	 *Crea un nuevo tipo de almacen
+ 	 *Edita un tipo de almacen
  	 *
- 	 * @param descripcion string Descripcion de este tipo de almacen
- 	 * @return id_tipo_almacen int Id del tipo de almacen
+ 	 * @param id_tipo_almacen int Id del tipo de almacen a editar
+ 	 * @param activo bool Indica si el tipo almacén se activa o desactiva
+ 	 * @param descripcion string Descripcion del tipo de almacen
  	 **/
   static function NuevoTipo
 	(
-		$descripcion
+		$descripcion, 
+		$activo = null
 	){
             Logger::log("Creando nuevo tipo de almacen");
             
