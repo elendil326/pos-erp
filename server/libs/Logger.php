@@ -197,9 +197,9 @@ class Logger
 
 		}
 
-		if(isset($_GET["_instance_"]))
+		if(defined("IID"))
 		{
-			$out .= " | IID = " . $_GET["_instance_"];
+			$out .= " | IID = " . IID;
 		}
 
 		

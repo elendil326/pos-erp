@@ -265,7 +265,7 @@
 	# *******************************
 	
 	$POS_CONFIG["INSTANCE_CONN"] = null;
-
+	define("IID", $rs["instance_id"]);
 	try{
 
 	    $POS_CONFIG["INSTANCE_CONN"] = ADONewConnection($rs["db_driver"]);
