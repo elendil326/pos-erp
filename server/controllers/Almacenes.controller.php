@@ -661,8 +661,8 @@ Creo que este metodo tiene que estar bajo sucursal.
         
         DAO::transBegin();
         try
-        {
-            TipoAlmacenDAO::delete($tipo_almacen);
+        {            $tipo_almacen->setActivo(0);
+            TipoAlmacenDAO::save($tipo_almacen);
         }
         catch(Exception $e)
         {
@@ -759,9 +759,9 @@ Creo que este metodo tiene que estar bajo sucursal.
             Logger::log("Creando nuevo tipo de almacen");
             
             
-            if(!self::validarLongitudDeCadena($descripcion, 0, 64))
+            if(!ValidacionesController::validarLongitudDeCadena($descripcion, 0, 64))
             {
-                Logger::error("descfripcion ");
+                Logger::error("descripcion : {$descripcion}");
                 throw new Exception($descripcion);
             }
             
@@ -773,7 +773,7 @@ Creo que este metodo tiene que estar bajo sucursal.
                 throw new BusinessLogicException("La descripcion esta repetida");
             }
             
-            $tipo_almacen = new TipoAlmacen( array( "descripcion" => trim($descripcion) ) );
+            $tipo_almacen = new TipoAlmacen( array( "descripcion" => trim($descripcion), "activo" => 1 ) );
             
             DAO::transBegin();
             try{

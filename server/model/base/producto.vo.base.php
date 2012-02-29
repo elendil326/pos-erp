@@ -70,6 +70,9 @@ class Producto extends VO
 			if( isset($data['precio']) ){
 				$this->precio = $data['precio'];
 			}
+			if( isset($data['id_unidad_compra']) ){
+				$this->id_unidad_compra = $data['id_unidad_compra'];
+			}
 		}
 	}
 
@@ -98,7 +101,8 @@ class Producto extends VO
 			"codigo_de_barras" => $this->codigo_de_barras,
 			"peso_producto" => $this->peso_producto,
 			"id_unidad" => $this->id_unidad,
-			"precio" => $this->precio
+			"precio" => $this->precio,
+			"id_unidad_compra" => $this->id_unidad_compra
 		); 
 	return json_encode($vec); 
 	}
@@ -248,6 +252,15 @@ class Producto extends VO
 	  * @var float
 	  */
 	public $precio;
+
+	/**
+	  * id_unidad_compra
+	  * 
+	  * Id de la unidad de compra del producto<br>
+	  * @access public
+	  * @var int(11)
+	  */
+	public $id_unidad_compra;
 
 	/**
 	  * getIdProducto
@@ -635,6 +648,30 @@ class Producto extends VO
 	final public function setPrecio( $precio )
 	{
 		$this->precio = $precio;
+	}
+
+	/**
+	  * getIdUnidadCompra
+	  * 
+	  * Get the <i>id_unidad_compra</i> property for this object. Donde <i>id_unidad_compra</i> es Id de la unidad de compra del producto
+	  * @return int(11)
+	  */
+	final public function getIdUnidadCompra()
+	{
+		return $this->id_unidad_compra;
+	}
+
+	/**
+	  * setIdUnidadCompra( $id_unidad_compra )
+	  * 
+	  * Set the <i>id_unidad_compra</i> property for this object. Donde <i>id_unidad_compra</i> es Id de la unidad de compra del producto.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_unidad_compra</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setIdUnidadCompra( $id_unidad_compra )
+	{
+		$this->id_unidad_compra = $id_unidad_compra;
 	}
 
 }

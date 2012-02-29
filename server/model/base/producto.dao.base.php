@@ -201,6 +201,11 @@ abstract class ProductoDAOBase extends DAO
 			array_push( $val, $producto->getPrecio() );
 		}
 
+		if( ! is_null( $producto->getIdUnidadCompra() ) ){
+			$sql .= " id_unidad_compra = ? AND";
+			array_push( $val, $producto->getIdUnidadCompra() );
+		}
+
 		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
@@ -231,7 +236,7 @@ abstract class ProductoDAOBase extends DAO
 	  **/
 	private static final function update( $producto )
 	{
-		$sql = "UPDATE producto SET  compra_en_mostrador = ?, metodo_costeo = ?, activo = ?, codigo_producto = ?, nombre_producto = ?, garantia = ?, costo_estandar = ?, control_de_existencia = ?, descripcion = ?, foto_del_producto = ?, costo_extra_almacen = ?, codigo_de_barras = ?, peso_producto = ?, id_unidad = ?, precio = ? WHERE  id_producto = ?;";
+		$sql = "UPDATE producto SET  compra_en_mostrador = ?, metodo_costeo = ?, activo = ?, codigo_producto = ?, nombre_producto = ?, garantia = ?, costo_estandar = ?, control_de_existencia = ?, descripcion = ?, foto_del_producto = ?, costo_extra_almacen = ?, codigo_de_barras = ?, peso_producto = ?, id_unidad = ?, precio = ?, id_unidad_compra = ? WHERE  id_producto = ?;";
 		$params = array( 
 			$producto->getCompraEnMostrador(), 
 			$producto->getMetodoCosteo(), 
@@ -248,6 +253,7 @@ abstract class ProductoDAOBase extends DAO
 			$producto->getPesoProducto(), 
 			$producto->getIdUnidad(), 
 			$producto->getPrecio(), 
+			$producto->getIdUnidadCompra(), 
 			$producto->getIdProducto(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -271,7 +277,7 @@ abstract class ProductoDAOBase extends DAO
 	  **/
 	private static final function create( &$producto )
 	{
-		$sql = "INSERT INTO producto ( id_producto, compra_en_mostrador, metodo_costeo, activo, codigo_producto, nombre_producto, garantia, costo_estandar, control_de_existencia, descripcion, foto_del_producto, costo_extra_almacen, codigo_de_barras, peso_producto, id_unidad, precio ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO producto ( id_producto, compra_en_mostrador, metodo_costeo, activo, codigo_producto, nombre_producto, garantia, costo_estandar, control_de_existencia, descripcion, foto_del_producto, costo_extra_almacen, codigo_de_barras, peso_producto, id_unidad, precio, id_unidad_compra ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$producto->getIdProducto(), 
 			$producto->getCompraEnMostrador(), 
@@ -289,6 +295,7 @@ abstract class ProductoDAOBase extends DAO
 			$producto->getPesoProducto(), 
 			$producto->getIdUnidad(), 
 			$producto->getPrecio(), 
+			$producto->getIdUnidadCompra(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -508,6 +515,17 @@ abstract class ProductoDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " precio = ? AND"; 
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( ( !is_null (($a = $productoA->getIdUnidadCompra()) ) ) & ( ! is_null ( ($b = $productoB->getIdUnidadCompra()) ) ) ){
+				$sql .= " id_unidad_compra >= ? AND id_unidad_compra <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " id_unidad_compra = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

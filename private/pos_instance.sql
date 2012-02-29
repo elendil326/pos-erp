@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 28-02-2012 a las 21:56:46
+-- Tiempo de generación: 28-02-2012 a las 23:49:00
 -- Versión del servidor: 5.1.58
 -- Versión de PHP: 5.3.6-13ubuntu3.6
 
@@ -1252,6 +1252,7 @@ CREATE TABLE IF NOT EXISTS `producto` (
   `peso_producto` float DEFAULT NULL COMMENT 'El peso de este producto en Kg',
   `id_unidad` int(11) DEFAULT NULL COMMENT 'Id de la unidad en la que usualmente se maneja este producto',
   `precio` float DEFAULT NULL COMMENT 'El precio fijo del producto',
+  `id_unidad_compra` int(11) DEFAULT NULL COMMENT 'Id de la unidad de compra del producto',
   PRIMARY KEY (`id_producto`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=33 ;
 
