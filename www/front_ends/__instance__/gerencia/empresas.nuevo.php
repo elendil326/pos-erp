@@ -39,7 +39,7 @@
 					rfc 			: Ext.get(\"rfc\").getValue(),
 					razon_social 	: Ext.get(\"razon_social\").getValue(),
 					id_moneda 		: 1,
-					direccion : Ext.JSON.encode({
+					direccion : Ext.JSON.encode([{
 						 	calle			: Ext.get(\"calle\").getValue(),
 							numero_exterior	: Ext.get(\"numero_exterior\").getValue(),
 						    numero_interior	: Ext.get(\"numero_interior\").getValue(),
@@ -49,7 +49,7 @@
 						    telefono2		: Ext.get(\"telefono2\").getValue(),
 						    id_ciudad		: Ext.get(\"ciudad\").getValue(),
 						    referencia		: Ext.get(\"referencia\").getValue()
-					})
+					}])
 				},{ callback : function(a,b){
 					window.onbeforeunload = function(){ return;	};
 					window.location = \"empresas.ver.php?eid=\"+ a.id_empresa;

@@ -266,8 +266,9 @@ require_once("interfaces/Empresas.interface.php");
 		$texto_extra = null
 	)
 	{  
+			/*Logger::log( $direccion );*/
 			
-            Logger::log("Creando nueva empresa...");
+            Logger::log("Creando nueva empresa `$razon_social`...");
 
             //Se validan los parametros
             /*$validar=self::validarParametrosEmpresa(null, null, $curp, $rfc, $razon_social, $representante_legal, null, $direccion_web);
@@ -295,7 +296,7 @@ require_once("interfaces/Empresas.interface.php");
 
 			if(sizeof($empresas) > 0){
                 Logger::error("Este rfc ya esta en uso por la empresa activa");
-                throw new Exception("El rfc: ".$rfc." ya esta en uso", 901);
+                throw new InvalidDataException("El rfc: ".$rfc." ya esta en uso", 901);
 			}
 
             
@@ -306,29 +307,36 @@ require_once("interfaces/Empresas.interface.php");
 
 			if(sizeof($empresas) > 0){
                 Logger::error("La razon social: ".$razon_social." ya esta en uso por la empresa: ". $empresas[0]->getIdEmpresa());
-                throw new Exception("La razon social: ".$razon_social." ya esta en uso",901);				
+                throw new InvalidDataException("La razon social: ".$razon_social." ya esta en uso",901);				
 			}
 
              DAO::transBegin();
 
 			//guardar direccion
 			
-			if(is_null($direccion)){
-				throw new Exception ("Missing direccion");
+			if(is_null($direccion) || (!is_array($direccion))){
+				throw new InvalidDataException ("Missing direccion or must be array");
 			}
 			
-			$d = object_to_array($direccion);
+			//this shit is ugly
+			$direccion = $direccion[0];
 			
+			if(!is_array($direccion)){
+				$d = object_to_array( $direccion );	
+			}else{
+				$d = $direccion;
+			}
+
 			$id_direccion = DireccionController::NuevaDireccion( 
-                isset($d["calle"]) ? $d["calle"] : null,
-                isset($d["numero_exterior"]) ? $d["numero_exterior"] : null,
-                isset($d["colonia"]) ? $d["colonia"] : null,
-                isset($d["id_ciudad"]) ? $d["id_ciudad"] : null,
-                isset($d["codigo_postal"]) ? $d["codigo_postal"] : null,
-                isset($d["numero_interior"]) ? $d["numero_interior"] : null,
-                isset($d["texto_extra"]) ? $d["texto_extra"] : null,
-                isset($d["telefono1"]) ? $d["telefono1"] : null,
-                isset($d["telefono2"]) ? $d["telefono2"] : null
+                isset($d["calle"]) 				? $d["calle"] : null,
+                isset($d["numero_exterior"]) 	? $d["numero_exterior"] : null,
+                isset($d["colonia"]) 			? $d["colonia"] : null,
+                isset($d["id_ciudad"]) 			? $d["id_ciudad"] : null,
+                isset($d["codigo_postal"]) 		? $d["codigo_postal"] : null,
+                isset($d["numero_interior"]) 	? $d["numero_interior"] : null,
+                isset($d["texto_extra"]) 		? $d["texto_extra"] : null,
+                isset($d["telefono1"]) 			? $d["telefono1"] : null,
+                isset($d["telefono2"]) 			? $d["telefono2"] : null
               );
 			
 			$e->setIdDireccion($id_direccion);

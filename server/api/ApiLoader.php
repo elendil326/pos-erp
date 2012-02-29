@@ -157,7 +157,7 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"direccion" => new ApiExposedProperty("direccion", true, POST, array( "string" )),
+			"direccion" => new ApiExposedProperty("direccion", true, POST, array( "json" )),
 			"id_moneda" => new ApiExposedProperty("id_moneda", true, POST, array( "int" )),
 			"razon_social" => new ApiExposedProperty("razon_social", true, POST, array( "string" )),
 			"rfc" => new ApiExposedProperty("rfc", true, POST, array( "string" )),
@@ -177,7 +177,7 @@
  		$this->response = EmpresasController::Nuevo( 
  			
 			
-			isset($_POST['direccion'] ) ? $_POST['direccion'] : null,
+			isset($_POST['direccion'] ) ? json_decode($_POST['direccion']) : null,
 			isset($_POST['id_moneda'] ) ? $_POST['id_moneda'] : null,
 			isset($_POST['razon_social'] ) ? $_POST['razon_social'] : null,
 			isset($_POST['rfc'] ) ? $_POST['rfc'] : null,

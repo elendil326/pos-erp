@@ -241,7 +241,7 @@ class SesionController implements ISesion{
 		//Logger::log("isLoggedIn() started...");
 		
 		if(isset(self::$_is_logged_in) && !is_null(self::$_is_logged_in) && self::$_is_logged_in){
-			Logger::log("isLoggedIn() already set ...");
+			//Logger::log("isLoggedIn() already set ...");
 			return true;
 		}
 		
@@ -250,7 +250,7 @@ class SesionController implements ISesion{
 		$auth_token = $sm->GetCookie("at");
 		
 		if( !is_null($auth_token) ) {
-			Logger::log("There is a session token in the cookie, lets test it.");
+			//Logger::log("There is a session token in the cookie, lets test it.");
 			
 			$user = SesionDAO::getUserByAuthToken($auth_token);
 			
@@ -258,7 +258,7 @@ class SesionController implements ISesion{
 				Logger::warn("auth_token was not found in the db, why is this?");
 				return false;
 			}else{
-				Logger::log("auth_token validated, it belongs to user_id=" . $user->getIdUsuario());
+				//Logger::log("auth_token validated, it belongs to user_id=" . $user->getIdUsuario());
 				self::$_is_logged_in = true;
 				return true;			
 			}
@@ -355,7 +355,7 @@ class SesionController implements ISesion{
 			return self::$_current_user;
 		}		
 
-		Logger::log("SesionController::getCurrentUser(  )");
+		//Logger::log("SesionController::getCurrentUser(  )");
 		
 		if(self::isLoggedIn()){
 			$sm = SessionManager::getInstance();
