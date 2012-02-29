@@ -254,9 +254,9 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 											$precio_de_venta = 12
 											);
 			$this->assertInternalType("int" , $p["id_producto"],"---- 'testNuevoProducto' 'id_producto' NO ES UN ENTERO");
-			//echo("- ID_PROD: "); var_dump($res['id_producto']);			
+			echo("- ID_PROD: "); var_dump($res['id_producto']);			
 			$res = ProductosController::Buscar($query =null, $id_producto = $p['id_producto'], $id_sucursal = null );
-			//echo("- RESULTADOS: "); var_dump($res['resultados']);			
+			echo("- RESULTADOS: "); var_dump($res['resultados']);			
 			$this->assertInternalType("int" , $res["numero_de_resultados"],"---- 'testBuscarProductosPorID_Producto' 'numero_de_resultados' NO ES UN ENTERO");
 			$this->assertEquals($res['numero_de_resultados'],1,"---- 'testBuscarProductosPorID_Producto' SE DEBIÓ DE ENCONTRAR SÓLO 1 RESULTADO CON id_producto = ".$p['id_producto']);
 			foreach($res["resultados"] as $row){
