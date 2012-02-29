@@ -613,17 +613,47 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 		$ventas_a_credito = null
 	)
 	{  
-            Logger::log("Creando nuevo usuario");
-
-            $validar = self::validarParametrosUsuario( null, null, $id_sucursal, $id_rol,
-                    $id_clasificacion_cliente, $id_clasificacion_proveedor, $id_moneda,
-                    null, $nombre, $rfc, $curp, $comision_ventas, $telefono_personal1,
-                    $telefono_personal2, $limite_credito, $descuento, $password, $salario,
-                    $correo_electronico,$pagina_web,$saldo_del_ejercicio,$ventas_a_credito,
-                    $representante_legal,$facturar_a_terceros,$dia_de_pago,$mensajeria,
-                    $intereses_moratorios,$denominacion_comercial,$dias_de_credito,
-                    $cuenta_mensajeria,$dia_de_revision,$codigo_usuario,$dias_de_embarque,$tiempo_entrega,$cuenta_bancaria,
-                    $id_tarifa_compra,$id_tarifa_venta,$id_usuario_padre);
+            Logger::log("Creando nuevo usuario `$nombre` ...");
+			/*
+            $validar = self::validarParametrosUsuario( 
+					null, 
+					null, 
+					$id_sucursal, 
+					$id_rol,
+                    $id_clasificacion_cliente, 
+					$id_clasificacion_proveedor, 
+					$id_moneda,
+                    null, 
+					$nombre, 
+					$rfc, 
+					$curp, 
+					$comision_ventas, 
+					$telefono_personal1,
+                    $telefono_personal2, 
+					$limite_credito, 
+					$descuento, 
+					$password, 
+					$salario,
+                    $correo_electronico,
+					$pagina_web,
+					$saldo_del_ejercicio,
+					$ventas_a_credito,
+                    $representante_legal,
+					$facturar_a_terceros,
+					$dia_de_pago,
+					$mensajeria,
+                    $intereses_moratorios,
+					$denominacion_comercial,
+					$dias_de_credito,
+                    $cuenta_mensajeria,
+					$dia_de_revision,
+					$codigo_usuario,
+					$dias_de_embarque,
+					$tiempo_entrega,
+					$cuenta_bancaria,
+                    $id_tarifa_compra,
+					$id_tarifa_venta,
+					$id_usuario_padre);
 
             //se verifica que la validacion haya sido correcta
             if(is_string($validar))
@@ -631,7 +661,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 Logger::error("Imposible crear a nuevo usuario: " . $validar);
                 throw new Exception($validar, 901);
             }
-            
+            */
             //Se verifica que las direcciones recibidas sean un arreglo
             if(!is_null($direcciones))
             {
@@ -665,7 +695,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                     if($usuario->getActivo())
                     {
                         Logger::error("El rfc ".$rfc." ya existe");
-                        throw new Exception("El rfc ".$rfc." ya existe",901);
+                        throw new InvalidDataException("El rfc ".$rfc." ya existe",901);
                     }
                 }
             }
@@ -728,14 +758,15 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             
             $origen_compra = "usuario";
             $origen_venta = "usuario";
-            
+            /*
             if(is_null($id_tarifa_compra))
             {
                 $origen_compra = "rol";
                 if(!is_null($id_clasificacion_cliente))
                 {
                     $origen_compra = "cliente";
-                    $id_tarifa_compra = ClasificacionClienteDAO::getByPK($id_clasificacion_cliente)->getIdTarifaCompra();
+					$cc = ClasificacionClienteDAO::getByPK($id_clasificacion_cliente);
+                    $id_tarifa_compra = $cc->getIdTarifaCompra();
                 }
                 else if(!is_null($id_clasificacion_proveedor))
                 {
@@ -773,7 +804,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 
                 $rol = RolDAO::getByPK($id_rol);
                 $id_tarifa_venta = $rol->getIdTarifaVenta();
-            }
+            }*/
             
             //Si la tarifa de venta sigue siendo nula, se toma la default
             if(is_null($id_tarifa_venta))

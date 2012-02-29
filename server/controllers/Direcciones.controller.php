@@ -53,7 +53,7 @@ class DireccionController extends ValidacionesController{
                 $telefono2=null
         )
         {
-            Logger::log("Insertando nueva direccion...");
+            Logger::log("Insertando nueva direccion ...");
 
 
 
@@ -66,7 +66,10 @@ class DireccionController extends ValidacionesController{
                 throw new Exception("No se pudo obtener la sesion del usuario, ya inicio sesion?",901);
             }
 
-            
+            if(!self::validarDireccion($direccion)){
+				throw new InvalidDataException();
+			}
+
            	$direccion->setCalle($calle);
             $direccion->setNumeroExterior($numero_exterior);
             $direccion->setColonia($colonia);
@@ -80,7 +83,7 @@ class DireccionController extends ValidacionesController{
             $direccion->setIdUsuarioUltimaModificacion($id_usuario);
 
 
-			self::validarDireccion($direccion);
+			
 
             DAO::transBegin();
             try{
@@ -94,7 +97,7 @@ class DireccionController extends ValidacionesController{
 
             DAO::transEnd();
 
-            Logger::log("Direccion creada exitosamente");
+            Logger::log("Direccion creada exitosamente, id=" . $direccion->getIdDireccion() );
             
             return $direccion->getIdDireccion();
         }

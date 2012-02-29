@@ -177,26 +177,41 @@ class SucursalesControllerTest extends PHPUnit_Framework_TestCase {
             
         }
 
-        SucursalesController::Editar(
+
+	
+	
+		//editar basico
+		SucursalesController::Editar(
 		    $id_sucursal = $sucursal["id_sucursal"],
 		    $activo = 0,
 		    $descripcion = "Descripcion de la sucursal",
-		    $direccion = "[
-                {
-                    \"id_direccion\":605,
-                    \"tipo\": \"postal\",
-                    \"calle\": \"Francisco I Madero\",
-                    \"numero_exterior\": \"1009A\",
-                    \"numero_interior\": \"12\",
-                    \"colonia\": \"centro\",
-                    \"codigo_postal\": \"38000\",
-                    \"telefono1\": \"4611223312\",
-                    \"telefono2\": \"\",
-                    \"id_ciudad\": 3,
-                    \"referencia\": \"El local naranja\"
-                }
-            ]",
-		    $empresas = "[1]",
+			$direccion = null,
+		    $empresas = null,
+		    $id_gerente = 1,
+		    $id_moneda = $moneda->getIdMoneda(),
+		    $razon_social = "Empresa x",
+		    $saldo_a_favor = "100000"
+	    );
+	
+	
+	
+		//editar la direccion
+	    SucursalesController::Editar(
+		    $id_sucursal = $sucursal["id_sucursal"],
+		    $activo = 0,
+		    $descripcion = "Descripcion de la sucursal",
+			$direccion = Array(Array(
+								"calle"  			=> "Monte Balcanes",
+						        "numero_exterior"   => "107",
+						        "colonia"  			=> "Arboledas",
+						        "id_ciudad"  		=> 334,
+						        "codigo_postal"  	=> "38060",
+						        "numero_interior"  	=> null,
+						        "texto_extra"  		=> "Calle cerrada",
+						        "telefono1"  		=> "4616149974",
+						        "telefono2"			=> "45*451*454"
+							)),
+		    $empresas = null,
 		    $id_gerente = 1,
 		    $id_moneda = $moneda->getIdMoneda(),
 		    $razon_social = "Empresa x",
