@@ -3,7 +3,9 @@
 
 
 class ValidacionesController {
-	
+	public static function validarString($s,$len,$err){
+		if(strlen($s) > $len)return $err;
+	}
 
 	/*
 	 * Validar que $a sea una fecha valida en unix

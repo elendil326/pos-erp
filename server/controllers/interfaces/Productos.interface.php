@@ -154,7 +154,6 @@
 		$empresas = null, 
 		$foto_del_producto = null, 
 		$garantia = null, 
-		$garantia = null, 
 		$id_unidad = null, 
 		$impuestos = null, 
 		$metodo_costeo = null, 
