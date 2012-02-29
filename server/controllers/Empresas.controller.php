@@ -318,28 +318,34 @@ require_once("interfaces/Empresas.interface.php");
 				throw new InvalidDataException ("Missing direccion or must be array");
 			}
 			
-			//this shit is ugly
-			$direccion = $direccion[0];
 			
-			if(!is_array($direccion)){
-				$d = object_to_array( $direccion );	
-			}else{
-				$d = $direccion;
+			
+			
+			//this shit is ugly
+			if(sizeof($direccion) ==1){
+				$direccion = $direccion[0];
+
+				if(!is_array($direccion)){
+					$d = object_to_array( $direccion );	
+				}else{
+					$d = $direccion;
+				}
+
+				$id_direccion = DireccionController::NuevaDireccion( 
+	                isset($d["calle"]) 				? $d["calle"] : null,
+	                isset($d["numero_exterior"]) 	? $d["numero_exterior"] : null,
+	                isset($d["colonia"]) 			? $d["colonia"] : null,
+	                isset($d["id_ciudad"]) 			? $d["id_ciudad"] : null,
+	                isset($d["codigo_postal"]) 		? $d["codigo_postal"] : null,
+	                isset($d["numero_interior"]) 	? $d["numero_interior"] : null,
+	                isset($d["texto_extra"]) 		? $d["texto_extra"] : null,
+	                isset($d["telefono1"]) 			? $d["telefono1"] : null,
+	                isset($d["telefono2"]) 			? $d["telefono2"] : null
+	              );
+
+				$e->setIdDireccion($id_direccion);				
 			}
 
-			$id_direccion = DireccionController::NuevaDireccion( 
-                isset($d["calle"]) 				? $d["calle"] : null,
-                isset($d["numero_exterior"]) 	? $d["numero_exterior"] : null,
-                isset($d["colonia"]) 			? $d["colonia"] : null,
-                isset($d["id_ciudad"]) 			? $d["id_ciudad"] : null,
-                isset($d["codigo_postal"]) 		? $d["codigo_postal"] : null,
-                isset($d["numero_interior"]) 	? $d["numero_interior"] : null,
-                isset($d["texto_extra"]) 		? $d["texto_extra"] : null,
-                isset($d["telefono1"]) 			? $d["telefono1"] : null,
-                isset($d["telefono2"]) 			? $d["telefono2"] : null
-              );
-			
-			$e->setIdDireccion($id_direccion);
 
             try{
                

@@ -10,17 +10,17 @@
 
 		$page->addComponent( new TitleComponent( "Clientes" ) );
 		$page->addComponent( new MessageComponent( "Lista de clientes " ) );
-		
+
+		$lista = ClientesController::Buscar();
 		$tabla = new TableComponent( 
 			array(
-				"codigo_usuario"                => "Codigo de usuario",
 				"nombre"                        => "Nombre",
 				"id_clasificacion_cliente" 		=> "Clasificacion de cliente",
 				"activo"                        => "Activo",
 				"consignatario"                 => "Consignatario",
 				"saldo_del_ejercicio"           => "Saldo"
 			),
-			ClientesController::Lista()
+			$lista["resultados"]
 		);
 
  

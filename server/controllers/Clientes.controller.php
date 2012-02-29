@@ -194,7 +194,7 @@ Update :  �Es correcto que contenga el argumento id_sucursal? Ya que as?omo es
  	 * @param mostrar_inactivos bool Si el valor es obtenido, cuando sea true, mostrar solo los clientes que estn activos, false si solo mostrar clientes inactivos.
  	 * @return clientes json Arreglo de objetos que contendr� la informaci�n de los clientes.
  	 **/
-	public static function Lista
+	private static function Lista
 	(
 		$activo = null, 
 		$id_clasificacion_cliente = null, 
@@ -339,7 +339,7 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
 		$telefono_personal2 = null
 	)
 	{
-            Logger::log("Creando nuevo cliente...");
+            Logger::log("Creando nuevo cliente `$razon_social`...");
             
             //Se toma la sucursal actual para asignarsela al cliente
             $actual = SesionController::Actual();
@@ -400,7 +400,7 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
                 throw new Exception("No se pudo crear al cliente, consulte a su administrador de sistema");
             }
             
-            Logger::log("Cliente creado correctamente...");
+            Logger::log("Cliente creado correctamente... id=" . $cliente["id_usuario"]);
 
             return array( "id_cliente" => (int)$cliente["id_usuario"]);
             
@@ -990,12 +990,12 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
  	 **/
 	public static function Buscar
         (
-                $id_sucursal = null, 
-		$id_usuario = null, 
-		$limit = 50, 
-		$page = null, 
-		$query = null, 
-		$start = 0
+			$id_sucursal = null, 
+			$id_usuario = null, 
+			$limit = 50, 
+			$page = null, 
+			$query = null, 
+			$start = 0
         )
         {
 		$resultados = UsuarioDAO::buscarClientes( $query );

@@ -1,4 +1,3 @@
-
 <?php
 require_once("interfaces/Productos.interface.php");
 /**
@@ -942,7 +941,8 @@ class ProductosController extends ValidacionesController implements IProductos
 		$metodo_costeo = null, 
 		$nombre_producto = null, 
 		$peso_producto = null, 
-		$precio = null)
+		$precio = null
+	)
     {
         Logger::log("== Editando producto " . $id_producto . " ==");
         
@@ -1164,68 +1164,31 @@ class ProductosController extends ValidacionesController implements IProductos
      **/
     public static function NuevaCategoria($nombre, $descripcion = null, $id_categoria_padre = null)
     {
-        Logger::log("Creando nueva categoria");
+        Logger::log("Creando nueva categoria `$nombre`");
+
+		if( sizeof( ClasificacionProductoDAO::search(new ClasificacionProducto(array( "nombre" => $nombre ))) > 0)){
+			throw new BusinessLogicException("El nombre $nombre esta repetido");
+		}
         
         //se validan los parametros obtenidos
-        $validar = self::validarParametrosClasificacionProducto(null, $nombre, $descripcion, $garantia);
-        if (is_string($validar)) {
+        //$validar = self::validarParametrosClasificacionProducto(null, $nombre, $descripcion, $garantia);
+        /*if (is_string($validar)) {
             Logger::error($validar);
             throw new Exception($validar);
         } //is_string($validar)
-        
+        */
         //Se inicializa el registro
         $clasificacion_producto = new ClasificacionProducto(array(
             "nombre" => trim($nombre),
             "descripcion" => $descripcion,
-            "garantia" => $garantia,
+            "garantia" => null,
             "activa" => 1
         ));
         //Se guarda la nueva clasificacion. Si se reciben impuesto y/o retenciones, se crean los registros correspondientes
         DAO::transBegin();
         try {
             ClasificacionProductoDAO::save($clasificacion_producto);
-            if (!is_null($impuestos)) {
-                $impuestos = object_to_array($impuestos);
-                
-                if (!is_array($impuestos)) {
-                    throw new Exception("Los impuestos son invalidos", 901);
-                } //!is_array($impuestos)
-                
-                $impuesto_clasificacion_producto = new ImpuestoClasificacionProducto(array(
-                    "id_clasificacion_producto" => $clasificacion_producto->getIdClasificacionProducto()
-                ));
-                
-                foreach ($impuestos as $impuesto) {
-                    if (is_null(ImpuestoDAO::getByPK($impuesto)))
-                        throw new Exception("El impuesto con id " . $impuesto . " no existe", 901);
-                    
-                    $impuesto_clasificacion_producto->setIdImpuesto($impuesto);
-                    ImpuestoClasificacionProductoDAO::save($impuesto_clasificacion_producto);
-                } //$impuestos as $impuesto
-            } //!is_null($impuestos)
-            
-            /* Fin if de impuestos */
-            if (!is_null($retenciones)) {
-                $retenciones = object_to_array($retenciones);
-                
-                if (!is_array($retenciones)) {
-                    throw new Exception("Las retenciones son invalidas", 901);
-                } //!is_array($retenciones)
-                
-                $retencion_clasificacion_producto = new RetencionClasificacionProducto(array(
-                    "id_clasificacion_producto" => $clasificacion_producto->getIdClasificacionProducto()
-                ));
-                
-                foreach ($retenciones as $retencion) {
-                    if (is_null(RetencionDAO::getByPK($retencion)))
-                        throw new Exception("La retencion con id " . $retencion . " no existe", 901);
-                    
-                    $retencion_clasificacion_producto->setIdRetencion($retencion);
-                    RetencionClasificacionProductoDAO::save($retencion_clasificacion_producto);
-                } //$retenciones as $retencion
-            } //!is_null($retenciones)
-            
-            /*Fin if de retenciones*/
+
         }
         /* Fin try */
         catch (Exception $e) {
@@ -1238,7 +1201,7 @@ class ProductosController extends ValidacionesController implements IProductos
         DAO::transEnd();
         Logger::log("Clasificacion guardada exitosamente");
         return array(
-            "id_categoria" => $clasificacion_producto->getIdClasificacionProducto()
+            "id_categoria" => (int)$clasificacion_producto->getIdClasificacionProducto()
         );
     }
     
