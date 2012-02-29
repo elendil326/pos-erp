@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 	define("BYPASS_INSTANCE_CHECK", false);
 
@@ -9,38 +9,63 @@
 	//
 	// Titulo
 	// 
-	$page->addComponent( new TitleComponent( "Nuevo Producto" , 2 ));
+	$page->addComponent(new TitleComponent("Nuevo Producto", 2));
 
 
 	//
 	// Forma de nuevo producto
 	// 
-	$form = new DAOFormComponent( new  Producto() );
+	$form = new DAOFormComponent(new Producto());
 	$form->addApiCall("api/producto/nuevo/");
-	$form->onApiCallSuccessRedirect( "productos.lista.php" );
-	
-	$form->hideField( array( 
-			"id_producto",
-		 ));
+	$form->onApiCallSuccessRedirect("productos.lista.php");
+	$form->renameField(array( "precio" => "precio_venta" ));
+	$form->hideField(array(
+	    "id_producto"
+	));
 
-	$form->makeObligatory(array( 
-			"compra_en_mostrador",
-			"costo_estandar",
-			"nombre_producto",
-			"id_empresas",
-			"codigo_producto",
-			"metodo_costeo",
-			"activo"
-		));
+	$form->makeObligatory(array(
+	    "compra_en_mostrador",
+	    "costo_estandar",
+	    "nombre_producto",
+	    "id_empresas",
+	    "codigo_producto",
+	    "metodo_costeo",
+	    "activo"
+	));
+
+	$form->createComboBoxJoin("id_unidad", "nombre", UnidadDAO::search(new Unidad(array(
+	    "activa" => 1
+	))));
 	
-        $form->createComboBoxJoin("id_unidad", "nombre", UnidadDAO::search( new Unidad( array( "activa" => 1 ) ) ));
-        $form->createComboBoxJoin( "metodo_costeo", "metodo_costeo", array( "precio" , "margen" ) );
-	$form->createComboBoxJoin( "compra_en_mostrador", "compra_en_mostrador", array( array( "id" => 1 , "caption" => "si" ), 
-                                    array( "id" => 0 , "caption" => "no" ) ), 1 );
-        $form->createComboBoxJoin( "activo", "activo", array( array( "id" => 1 , "caption" => "si" ), 
-                                    array( "id" => 0 , "caption" => "no" ) ), 1 );
-	$page->addComponent( $form );
-        
+	$form->createComboBoxJoin("metodo_costeo", "metodo_costeo", array(
+	    "precio",
+	    "costo"
+	));
+	
+	$form->createComboBoxJoin("compra_en_mostrador", "compra_en_mostrador", array(
+	    array(
+	        "id" => 1,
+	        "caption" => "si"
+	    ),
+	    array(
+	        "id" => 0,
+	        "caption" => "no"
+	    )
+	), 1);
+	
+	$form->createComboBoxJoin("activo", "activo", array(
+	    array(
+	        "id" => 1,
+	        "caption" => "si"
+	    ),
+	    array(
+	        "id" => 0,
+	        "caption" => "no"
+	    )
+	), 1);
+	
+	$page->addComponent($form);
+
 	//
 	// Render the page
 	// 

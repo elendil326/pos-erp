@@ -1247,7 +1247,7 @@ require_once("interfaces/Sucursales.interface.php");
                         VentaProductoDAO::save($d_producto);
                         
                         //Se descuentan los productos especificados de los almacenes.
-                        self::DescontarDeAlmacenes($d_producto, self::getSucursal());
+                        self::DescontarDeAlmacenes($d_producto, $id_sucursal );
                     }
                 }/* Fin de if para detalle_producto */
                 

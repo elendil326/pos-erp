@@ -665,10 +665,10 @@ class ProductosController extends ValidacionesController implements IProductos
         //Se verifica que si se recibio precio como metodo de costeo, se reciba un precio,
         //o si se recibe margen, que se reciba un margen de utilidad.
         
-        if ($metodo_costeo == "precio" && is_null($precio)) {
+        if ($metodo_costeo == "precio" && is_null($precio_de_venta)) {
             Logger::error("Se intenta registrar un producto con metodo de costeo precio sin especificar un precio");
-            throw new Exception("Se intenta registrar un producto con metodo de costeo precio sin especificar un precio", 901);
-        } //$metodo_costeo == "precio" && is_null($precio)
+            throw new InvalidDataException("Se intenta registrar un producto con metodo de costeo precio sin especificar un precio", 901);
+        } //$metodo_costeo == "precio" && is_null($precio_de_venta)
         
         else if ($metodo_costeo == "costo" && is_null($costo_estandar)) {
             Logger::error("Se intenta registrar un producto con metodo de costeo costo sin especificar un costo");
