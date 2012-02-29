@@ -80,15 +80,17 @@
 			);
 			$this->assertInternalType("int" , $c["id_cliente"],"---- 'testNuevoCliente' 'id_cliente' NO ES UN ENTERO");
 		}
-
+		
+		/**
+     	* @expectedException BusinessLogicException
+    	*/
 		public function testNuevoClienteConMismoNombre(){
 			//se crea un nuevo cliente 
 			$nombre = self::RandomString(15,FALSE,FALSE,FALSE)." - ". time();
         	$nuevo_cliente = ClientesController::nuevo($nombre);			
 			$this->assertInternalType("int" , $nuevo_cliente["id_cliente"],"---- 'testNuevoClienteConMismoNombre' 'id_cliente' NO ES UN ENTERO");
 			//se trata de insertar otro cliente con el mismo nombre
-			$nuevo_cliente2 = ClientesController::nuevo($nombre);
-			$this->assertLessThanOrEqual(0, $nuevo_cliente2['id_cliente'],"---- 'testNuevoClienteConMismoNombre' NO SE DEBERIA DE PERMITIR DUPLICAR NOMBRES, NOMBRE DUPLICADO: ".$nombre);
+			$nuevo_cliente2 = ClientesController::nuevo($nombre);			
 		}
 
 		public function testDetalleCliente(){
@@ -99,7 +101,7 @@
 			
 			$array_datos_cliente = ClientesController::Detalle($nuevo_cliente['id_cliente']);
 			$this->assertEquals($nombre,$array_datos_cliente[0]->getNombre(),"---- 'testDetalleCliente' LOS DATOS EXTRAÍDOS NO COINCIDEN CON EL DEL ID SOLICITADO");
-			//$this->assertInternalType("string",$array_datos_cliente,"---- 'testDetalleCliente' EL VALOR DEVUELTO NO ES UNA CADENA QUE PUEDA SER UN JSON");			
+						
 		}
 
 		public function testEditarCliente(){
@@ -172,11 +174,15 @@
 		}
 
 		public function testBuscarClientesPorID_Usuario(){
-			$res = ClientesController::Buscar($id_suc= null,$id_usuario=21);//el id_usr = 21 si tiene el rol = 5
+			//se crea un nuevo cliente que es el que debe de ser encontrado en el query
+			$nombre = self::RandomString(15,FALSE,FALSE,FALSE)." - ". time();
+        	$nuevo_cliente = ClientesController::nuevo($nombre);
+
+			$res = ClientesController::Buscar($id_suc= null,$id_usuario=$nuevo_cliente['id_cliente']);
 			$this->assertInternalType("int" , $res["numero_de_resultados"],"---- 'testBuscarClientesPorID_Usuario' 'numero_de_resultados' NO ES UN ENTERO");			
-			
-			if($res["numero_de_resultados"]>0 && $res["resultados"][0]->getIdUsuario() != '21' ){
-				$this->assertEquals($res["resultados"][0]->getIdUsuario(),21,"---- 'testBuscarClientesPorID_Usuario' LOS IDS NO COINCIDEN SE ENVIÓ EL id_usuario =21 Y LA CONSULTA DEVOLVIÓ id_usuario = ".$res["resultados"][0]->getIdUsuario());
+			$this->assertEquals(1, $res['numero_de_resultados'],"---- 'testBuscarClientesPorID_Usuario' SE DEBIÓ DE ENCONTRAR SÓLO 1 RESULTADO");
+			if($res["numero_de_resultados"]>0 && $res["resultados"][0]->getIdUsuario() != $nuevo_cliente['id_cliente'] ){
+				$this->assertEquals($res["resultados"][0]->getIdUsuario(),$nuevo_cliente['id_cliente'],"---- 'testBuscarClientesPorID_Usuario' LOS IDS NO COINCIDEN SE ENVIÓ EL id_usuario =".$nuevo_cliente['id_cliente']."Y LA CONSULTA DEVOLVIÓ id_usuario = ".$res["resultados"][0]->getIdUsuario());
 			}
 		}
 		
@@ -235,6 +241,9 @@
 			$this->assertInternalType('int',$c['id_categoria_cliente'],"---- 'testNuevaClasificacion' 'id_categoria_cliente' NO ES UN ENTERO");
 		}
 
+		/**
+     	* @expectedException BusinessLogicException
+     	*/
 		public function testNuevaClasificacionConMismoNombre(){
 			//se inserta una clasificacion
 			$nombre_clasificacion = self::RandomString(5,FALSE,FALSE,FALSE)." - ";			
@@ -245,9 +254,7 @@
 			$this->assertInternalType('int',$nueva['id_categoria_cliente'],"---- 'testNuevaClasificacionConMismoNombre' 'id_categoria_cliente' NO ES UN ENTERO");
 
 			//se trata de insertar otra clasificacion con el mismo nombre y los demás datos
-			$nueva2 = ClientesController::NuevaClasificacion($clave_clasificacion,$nombre_clasificacion,$desc);
-			$this->assertLessThanOrEqual(0, $nueva2['id_categoria_cliente'],"---- 'testNuevaClasificacionConMismoNombre' NO SE DEBERIA DE PERMITIR DUPLICAR NOMBRES O CLAVES, NOMBRE DUPLICADO: ".$nombre_clasificacion," CLAVE DUPLICADA: ".$clave_clasificacion);
-
+			$nueva2 = ClientesController::NuevaClasificacion($clave_clasificacion,$nombre_clasificacion,$desc);			
 		}
 
 		public function testEditarClasificacion(){
@@ -260,9 +267,7 @@
 			$this->assertInternalType('int',$nueva['id_categoria_cliente'],"---- 'testEditarClasificacion' 'id_categoria_cliente' NO ES UN ENTERO");
 
 			//se edita la clasificacion recien ingresada
-			ClientesController::EditarClasificacion($nueva['id_categoria_cliente'], $clave_clasificacion."1",$desc,$nombre_clasificacion."1");
-			//ClientesController::EditarClasificacion(15, "RB - 2",null,"uxcbs-2");
-			//no está el metodo detalleClasificacion para verificar q si hayan sido modificado los datos en la BD
+			ClientesController::EditarClasificacion($nueva['id_categoria_cliente'], $clave_clasificacion."1",$desc,$nombre_clasificacion."1");		
 
 		}		
 	
