@@ -2048,5 +2048,22 @@ Ejemplo: 1 kg = 2.204 lb
 			$tipo_unidad_medida, 
 			$activa = ""
 		){}  
-	
+
+
+			/**
+		 	 *
+		 	 *Busca las categorias de los productos
+		 	 *
+		 	 * @param id_categoria int Se busca una categoria dado su id_categoria
+		 	 * @param id_categoria_padre int Se buscan las categorias pertenecientes a una categoria padre dado su id_categoria_padre. 
+		 	 * @param query string Buscar categoria por nombre_producto, codigo_producto, codigo_de_barras
+		 	 * @return numero_de_resultados int El numero de resultados obtenido de la busqueda
+		 	 * @return resultados json json con los resultados de la busqueda
+		 	 **/
+		  static function BuscarCategoria
+			(
+				$id_categoria = null, 
+				$id_categoria_padre = null, 
+				$query = null
+			){}	
   }
