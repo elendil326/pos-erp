@@ -341,8 +341,8 @@
  	 *
  	 *M?todo que crea una nueva sucursal
  	 *
- 	 * @param direccion json Arreglo de direcciones de la sucursal, pueden ser direcciones de tipo fiscal, postal, de envo, etc.
- 	 * @param razon_social string Razon social de la sucursal
+ 	 * @param direccion json Arreglo de direcciones de la sucursal, pueden ser direcciones de tipo fiscal, postal, de envo, etc. En caso de no mandar el id_direccion dentro del objeto direccion, se debe de generar una nueva direccion
+ 	 * @param razon_social string Razon social de la sucursal, este valor no se debe de poder repetir.
  	 * @param activo bool Si esta sucursal estara activa inmediatamente despues de ser creada
  	 * @param descripcion string Descripcion de la sucursal
  	 * @param empresas json Arreglo de `id_empresa` de las empresas a las que pertenece esta sucursal.

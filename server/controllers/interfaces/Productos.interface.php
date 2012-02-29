@@ -31,6 +31,26 @@
   
 	/**
  	 *
+ 	 *Busca las categorias de los productos
+ 	 *
+ 	 * @param id_categoria int Se busca una categoria dado su id_categoria
+ 	 * @param id_categoria_padre int Se buscan las categorias pertenecientes a una categoria padre dado su id_categoria_padre. 
+ 	 * @param query string Buscar categoria por nombre_producto, codigo_producto, codigo_de_barras
+ 	 * @return numero_de_resultados int El numero de resultados obtenido de la busqueda
+ 	 * @return resultados json json con los resultados de la busqueda
+ 	 **/
+  static function BuscarCategoria
+	(
+		$id_categoria = null, 
+		$id_categoria_padre = null, 
+		$query = null
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
  	 *Este metodo desactiva una categoria de tal forma que ya no se vuelva a usar como categoria sobre un producto.
  	 *
  	 * @param id_categoria int Id de la categoria a desactivar
@@ -150,7 +170,7 @@
  	 *
  	 *Crear un nuevo producto, 
 
-NOTA: Se crea un producto tipo = 1 que es para productos
+NOTA: Se crea un producto tipo = 1 que es para productos.
  	 *
  	 * @param activo bool Si queremos que este activo o no este producto despues de crearlo.
  	 * @param codigo_producto string El codigo de control de la empresa para este producto, no se puede repetir

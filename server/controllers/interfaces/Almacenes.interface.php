@@ -10,10 +10,10 @@
   
 	/**
  	 *
- 	 *listar almacenes de la isntancia. Se pueden filtrar por empresa, por sucursal, por tipo de almacen, por activos e inactivos y ordenar por sus atributos.
+ 	 *listar almacenes de la isntancia. Se pueden filtrar por empresa, por sucursal, por tipo de almacen, por activos e inactivos y ordenar por sus atributos...........s
  	 *
  	 * @param id_empresa int Id de la empresa de la cual se listaran sus almacenes
- 	 * @return resultados json Almacenes encontrados
+ 	 * @return resultados json Almacenes encontrados.
  	 * @return numero_de_resultados int 
  	 **/
   static function Buscar
@@ -82,12 +82,14 @@
  	 *
  	 *Crear un nuevo lote
  	 *
- 	 * @param folio string Una cadena unica para cada lote que identifica a este lote.
+ 	 * @param id_almacen int A que almacen pertenecera este lote.
+ 	 * @param folio string Una cadena unica para cada lote que identifica a este lote. Si no se envia se escogera uno por el sistema.
  	 * @return id_lote int El identificador del lote recien generado.
  	 **/
   static function NuevoLote
 	(
-		$folio
+		$id_almacen, 
+		$folio = null
 	);  
   
   

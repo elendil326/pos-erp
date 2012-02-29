@@ -10,6 +10,25 @@
   
 	/**
  	 *
+ 	 *Lista todos los servicios de la instancia. Puede filtrarse por empresa, por sucursal o por activo y puede ordenarse por sus atributos.
+ 	 *
+ 	 * @param activo bool Si este valor no es obtenido, se mostraran los servicios tanto activos como inactivos. Si es true, se mostraran solo los activos, si es false se mostraran solo los inactivos.
+ 	 * @param id_empresa int Id de la empresa de la cual se listaran sus servicios
+ 	 * @param id_sucursal int Id de la sucursal de la cual se listaran sus servicios
+ 	 * @return servicios json Objeto que contendra la lista de servicios
+ 	 **/
+  static function Buscar
+	(
+		$activo = null, 
+		$id_empresa = null, 
+		$id_sucursal = null
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
  	 *Edita la informaci?n de una clasificaci?n de servicio
  	 *
  	 * @param id_clasificacion_servicio int Id de la clasificacion del servicio que se edita
@@ -131,26 +150,6 @@
   
 	/**
  	 *
- 	 *Lista todos los servicios de la instancia. Puede filtrarse por empresa, por sucursal o por activo y puede ordenarse por sus atributos.
- 	 *
- 	 * @param activo bool Si este valor no es obtenido, se mostraran los servicios tanto activos como inactivos. Si es true, se mostraran solo los activos, si es false se mostraran solo los inactivos.
- 	 * @param id_empresa int Id de la empresa de la cual se listaran sus servicios
- 	 * @param id_sucursal int Id de la sucursal de la cual se listaran sus servicios
- 	 * @param orden string Nombre de la columna por la cual se ordenara la lista
- 	 * @return servicios json Objeto que contendra la lista de servicios
- 	 **/
-  static function Buscar
-	(
-		$activo = null, 
-		$id_empresa = null, 
-		$id_sucursal = null
-	);  
-  
-  
-	
-  
-	/**
- 	 *
  	 *Crear un nuevo concepto de servicio.
  	 *
  	 * @param codigo_servicio string Codigo de control del servicio manejado por la empresa, no se puede repetir
@@ -231,7 +230,7 @@
  	 *Ver los detalles de una orden de servicio. Puede ordenarse por sus atributos. Los detalles de la orden de servicio son los seguimientos que tiene esa orden as? como el estado y sus fechas de orden y de entrega.
  	 *
  	 * @param id_orden int Id de la orden a revisar
- 	 * @return detalle_orden json Objeto que contendra el detalle de la orden
+ 	 * @return seguimientos json Arreglo con objetos Seguimiento
  	 **/
   static function DetalleOrden
 	(
@@ -247,11 +246,12 @@
  	 *
  	 * @param activa bool Se listaran las ordenes con el valor de activo obtenido
  	 * @param cancelada bool Se listaran las ordenes con valir de cancelada obtenido
- 	 * @param fecha_desde string Fecha en que se realizo la orden
- 	 * @param fecha_hasta string fecha en que se entregara una orden
+ 	 * @param fecha_desde int Fecha en que se realizo la orden
+ 	 * @param fecha_hasta int fecha en que se entregara una orden
  	 * @param id_servicio int Se listaran las ordenes que contengan este servicio
  	 * @param id_usuario_venta int Se listaran las ordenes de este usuario
- 	 * @return ordenes json Objeto que contendrá las ordenes.
+ 	 * @return numero_de_resultados int Objeto que contendr las ordenes.
+ 	 * @return resultados json 
  	 **/
   static function ListaOrden
 	(
@@ -276,6 +276,7 @@
  	 * @param descripcion string Descripcion de la orden o el porque del servicio
  	 * @param fecha_entrega int Fecha en que se entregara el servicio. En caso de aplicar. Unix Time Stamp
  	 * @return id_orden int Id de la orden que se creo.
+ 	 * @return id_venta string `id_venta` de la venta que genero este servicio
  	 **/
   static function NuevaOrden
 	(
