@@ -699,21 +699,26 @@ class ProductosController extends ValidacionesController implements IProductos
             ProductoDAO::save($producto);
 		
             if (!is_null($id_empresas)) {
-                $id_empresas = object_to_array($id_empresas);
+
+                if (!is_array($id_empresas)) {
+					$id_empresas = object_to_array($id_empresas);
+                } //!is_array($id_empresas)
                 
                 if (!is_array($id_empresas)) {
                     throw new Exception("Las empresas fueron enviadas incorrectamente", 901);
                 } //!is_array($id_empresas)
-                
+
                 $producto_empresa = new ProductoEmpresa(array(
                     "id_producto" => $producto->getIdProducto()
                 ));
+
                 foreach ($id_empresas as $id_empresa) {
                     $validar = self::validarParametrosProductoEmpresa($id_empresa);
                     if (is_string($validar))
                         throw new Exception($validar, 901);
                     
                     $producto_empresa->setIdEmpresa($id_empresa);
+					Logger::log("vinculando producto con empresa ".$id_empresa);
                     ProductoEmpresaDAO::save($producto_empresa);
                 } //$id_empresas as $id_empresa
             } //!is_null($id_empresas)
@@ -772,7 +777,7 @@ class ProductosController extends ValidacionesController implements IProductos
             throw new Exception("No se pudo guardar el nuevo producto " . $e->getMessage(), 901);
         }
         DAO::transEnd();
-        Logger::log("Producto creado exitosamente");
+        Logger::log("Producto creado exitosamente, id=".$producto->getIdProducto());
         return array(
             "id_producto" => (int)$producto->getIdProducto()
         );
@@ -1609,9 +1614,11 @@ class ProductosController extends ValidacionesController implements IProductos
     {
 	
 	
-	    Logger::log("Buscando producto.... " . $query);
+
 	
         if (!is_null($id_producto)) {
+		    Logger::log("Buscando producto por id_producto = $id_producto.... " );
+		
 			$p = ProductoDAO::getByPK($id_producto);
 			
 			if(is_null($p)){
@@ -1628,19 +1635,22 @@ class ProductosController extends ValidacionesController implements IProductos
         } //!is_null($id_producto)
         
 		if (!is_null($id_sucursal)) {
-			$empresas = SucursalEmpresaDAO::search( new SucursalEmpresa(array( "id_empresa" => $id_sucursal )));
-			
+			Logger::log("Buscando producto por id_sucursal = $id_sucursal.... " );
+
+			$empresas = SucursalEmpresaDAO::search( new SucursalEmpresa(array( "id_sucursal" => $id_sucursal )));
+
 			if(empty($empresas)){
+				Logger::log("no results");
 				return array( "resultados" => array(),"numero_de_resultados" => 0);
 			}
-			
+
 			$results = array();
-			
+
 			foreach ($empresas as $e) {
-				$productos = ProductoEmpresaDAO::search( new ProductoEmpresa( array("id_empresa" => $e) ) );
-				
-				foreach ($productos as $p) {
-					array_push($results, $p->asArray());
+				$productos_e = ProductoEmpresaDAO::search( new ProductoEmpresa( array("id_empresa" => $e->getIdEmpresa()) ) );
+				Logger::log("suc pertenece a empresa " . $e->getIdEmpresa() );
+				foreach ($productos_e as $p_e) {
+					array_push($results, ProductoDAO::getByPK( $p_e->getIdProducto() )->asArray());
 				}
 			}
 			
