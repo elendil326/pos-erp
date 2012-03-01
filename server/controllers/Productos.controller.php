@@ -1629,7 +1629,7 @@ class ProductosController extends ValidacionesController implements IProductos
 			}
 			
 			return array(
-	            "resultados" => $p->asArray(),
+	            "resultados" => array($p->asArray()),
 	            "numero_de_resultados" => 1
 	        );
         } //!is_null($id_producto)
