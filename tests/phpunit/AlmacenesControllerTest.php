@@ -47,9 +47,7 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
 		    $descripcion = $target
         );
 
-        $tipo_almacen = TipoAlmacenDAO::getByPK( $a["id_tipo_almacen"] );       
-
-        $this->assertEquals($target, $tipo_almacen->getDescripcion(), "Error al editar la descripcion del tipo de almacen");
+        $this->assertEquals($target, TipoAlmacenDAO::getByPK($a["id_tipo_almacen"])->getDescripcion(), "Error al editar la descripcion del tipo de almacen");
 
 	}
 
@@ -63,10 +61,8 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
         AlmacenesController::DesactivarTipo(
             $id_tipo_almacen = $a["id_tipo_almacen"]
         );
-
-        $tipo_almacen = TipoAlmacenDAO::getByPK( $a["id_tipo_almacen"] );         
         
-        $this->assertEquals(0, $tipo_almacen->getActivo(), "Error al desactivar el tipo de almacen");
+        $this->assertEquals(0, TipoAlmacenDAO::getByPK( $a["id_tipo_almacen"] )->getActivo(), "Error al desactivar el tipo de almacen");
 
 	}
 
@@ -78,10 +74,14 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
         //creamos una sucursal para fines del experimento
 
         $a = AlmacenesController::NuevoTipo("Buscar_Tipo_Almacen" . time());
-
         
         //realizamos una busqueda general y verificamso que contenga los parametros de respuesta
-        $busqueda = AlmacenesController::Buscar();
+        $busqueda = AlmacenesController::BuscarTipo(
+            $activo = 0, 
+    		$limit = 30, 
+    		$query = "Tipo_Almacen", 
+    		$start = 0
+        );
 
         $this->assertArrayHasKey('resultados', $busqueda);
         $this->assertArrayHasKey('numero_de_resultados', $busqueda);
@@ -92,11 +92,21 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
         $this->assertGreaterThanOrEqual(0, $busqueda['numero_de_resultados']);
 
         //probamos la busqueda por activo, al menos debe de haber una, ya que cuando se cree esta sucursal estara activa  
-        $busqueda = AlmacenesController::Buscar();
+        $busqueda = AlmacenesController::BuscarTipo(
+            $activo = 1, 
+    		$limit = null, 
+    		$query = null, 
+    		$start = null
+        );
         $this->assertGreaterThanOrEqual(1, $busqueda["numero_de_resultados"]);
 
         //probamos busqueda por query
-        $busqueda = AlmacenesController::Buscar($query = "Buscar");
+        $busqueda = AlmacenesController::BuscarTipo(
+            $activo = null, 
+    		$limit = null,
+    		$query = "Tipo_Almacen", 
+    		$start = null
+        );
         $this->assertGreaterThanOrEqual(0, $busqueda["numero_de_resultados"]);
 
 	}
@@ -105,7 +115,7 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
      * Nuevo Almacen
      */
     public function testNuevoAlmacen(){
-        
+
         $tipo_almacen = AlmacenesController::NuevoTipo("Nuevo_Tipo_Almacen_" . time());	
 
         $almacen = AlmacenesController::Nuevo(
@@ -115,7 +125,9 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
 		    $nombre = "Almacen_" . time(), 
 		    $descripcion = "Almacen de prueba " . time()
 	    );
-    
+
+        $this->assertInternalType("int", $almacen["id_almacen"]);
+
     }
 
     /**
@@ -123,16 +135,29 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
      */
     public function testEditarAlmacen(){
         
-        /*$tipo_almacen = AlmacenesController::NuevoTipo("Nuevo_Tipo_Almacen__" . time());	
+        $tipo_almacen = AlmacenesController::NuevoTipo("Nuevo_Tipo_Almacen__" . time());	        
 
         $almacen = AlmacenesController::Nuevo(
 		    $id_empresa = 1, 
 		    $id_sucursal = 1, 
 		    $id_tipo_almacen = $tipo_almacen["id_tipo_almacen"], 
-		    $nombre = "Almacen_" . time(), 
+		    $nombre = "Almacen_Editar" . time(), 
 		    $descripcion = "Almacen de prueba_ " . time()
-	    );*/
-    
+	    );
+
+        $tipo_almacen_mod = AlmacenesController::NuevoTipo("Nuevo_Tipo_Almacen__mod_" . time());	        
+
+        $almacen_editado = AlmacenesController::Editar(
+            $id_almacen = $almacen["id_almacen"], 
+		    $descripcion = null, 
+		    $id_tipo_almacen = $tipo_almacen_mod["id_tipo_almacen"], 
+		    $nombre = null
+        );
+
+        $almacen = AlmacenDAO::getByPK($almacen["id_almacen"]);
+
+        $this->assertEquals($tipo_almacen_mod["id_tipo_almacen"], $almacen->getIdTipoAlmacen);
+
     }
 
 

@@ -21,4 +21,38 @@ require_once("base/tipo_almacen.vo.base.php");
 class TipoAlmacenDAO extends TipoAlmacenDAOBase
 {
 
+        /**
+         * regresa un arreglo que contiene los datos de todas las planeaciones sin importar si estan activas o no, sin importar el id_empleado ni id_cliente
+         */
+        public static function buscarTipoAlmacen( $data, $start = null, $limit = null, $sort = "id_tipo_almacen", $dir = "DESC", $search = null ){
+
+                global $conn;
+                $query = "";
+
+                $query .= "SELECT * ";
+                $query .= "FROM tipo_almacen ";
+                $query .= "WHERE activo = ? ";
+                $query .= $search != null?" and descripcion LIKE '%{$search}%' ":" ";                
+				$query .= "ORDER BY {$sort} {$dir} ";
+                $query .= $limit != null?" LIMIT {$start}, {$limit} ":"";               			
+
+                $rs = $conn->Execute($query, $data);            
+
+                $res = array();
+                
+                foreach ($rs as $foo  ) {
+                        array_push( $res, $foo );
+                }               
+
+                return $res;
+        }
+
 }
+
+
+
+
+
+
+
+

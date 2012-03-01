@@ -464,7 +464,7 @@ Creo que este metodo tiene que estar bajo sucursal.
             }
             DAO::transEnd();
             Logger::log("Almacen creado exitosamente");
-            return array( "id_almacen" => $almacen->getIdAlmacen());
+            return array( "id_almacen" => (int) $almacen->getIdAlmacen());
 	}
   
   
@@ -608,12 +608,18 @@ Creo que este metodo tiene que estar bajo sucursal.
 		$query = null, 
 		$start = null
 	){
-		 $r = TipoAlmacenDAO::getAll();
 
-		 return array(
-			 "resultados" => $r,
-			 "numero_de_resultados" => sizeof($r)
-			);
+        $array = Array();
+
+        array_push( $array, isset($activo)? $activo : 1 );
+
+        $search = TipoAlmacenDAO::buscarTipoAlmacen( $array, isset($start)?$start:null, isset($limit)?$limit:null, "id_tipo_almacen", "DESC", $query );
+
+        return array(
+            "resultados" => $search,
+            "numero_de_resultados" => sizeof($search)
+		);
+
 	}
   
   
@@ -773,7 +779,9 @@ Creo que este metodo tiene que estar bajo sucursal.
                 throw new BusinessLogicException("La descripcion esta repetida");
             }
             
-            $tipo_almacen = new TipoAlmacen( array( "descripcion" => trim($descripcion), "activo" => 1 ) );
+            $activo = $activo == null ? 1 : $activo;
+
+            $tipo_almacen = new TipoAlmacen( array( "descripcion" => trim($descripcion), "activo" => $activo ) );
             
             DAO::transBegin();
             try{
