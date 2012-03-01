@@ -1247,6 +1247,7 @@ require_once("interfaces/Sucursales.interface.php");
                         VentaProductoDAO::save($d_producto);
                         
                         //Se descuentan los productos especificados de los almacenes.
+						
                         self::DescontarDeAlmacenes($d_producto, $id_sucursal );
                     }
                 }/* Fin de if para detalle_producto */
@@ -1454,14 +1455,18 @@ require_once("interfaces/Sucursales.interface.php");
                 $id_sucursal
         )
         {
+			Logger::log("DescontarDeAlmacenes( Sucursal=$id_sucursal )");
+			
             //se buscan los almacenes de la sucursal
-            $almacenes=AlmacenDAO::search(new Almacen(array("id_sucursal" => $id_sucursal)));
+            $almacenes = AlmacenDAO::search(new Almacen(array("id_sucursal" => $id_sucursal)));
             
+			Logger::log( "	Existen " .count($almacenes) . " almacenes en esta sucursa."  );
+
             //Arreglo que contendra los almacenes con el producto que buscamos.
-            $productos_almacen=array();
+            $productos_almacen = array();
             
             //El total de productos en existencia en todos los almacenes
-            $total=0;
+            $total = 0;
             
             //por cada almacen en la sucursal que no sea de consignacion se busca el producto en dicho almacen,
             //si el producto fue encontrado se ingresa en el arreglo de productos_almacen y si su existencia es mayor a 0
@@ -1470,26 +1475,29 @@ require_once("interfaces/Sucursales.interface.php");
             {
                 if($almacen->getIdTipoAlmacen()==2)
                     continue;
-                $producto_almacen=ProductoAlmacenDAO::getByPK($detalle_producto->getIdProducto(), $almacen->getIdAlmacen(), $detalle_producto->getIdUnidad());
+
+                $producto_almacen = ProductoAlmacenDAO::getByPK( $detalle_producto->getIdProducto(), $almacen->getIdAlmacen(), $detalle_producto->getIdUnidad());
+
                 if(!is_null($producto_almacen))
                 {
                     if($producto_almacen->getCantidad()>0)
                         $total+=$producto_almacen->getCantidad();
+
                     array_push($productos_almacen,$producto_almacen);
                 }
             }
             
             //Si productos_almacen queda vacío, quiere decir que no se encontro el producto en ningún almacen de esta sucursal
-            if(empty ($productos_almacen))
-            {
+            if(empty ($productos_almacen)){
+				Logger::log("No se encontro el producto en los almacenes de esta sucursal");
                 throw new Exception("No se encontro el producto en los almacenes de esta sucursal");
             }
             
             //La cantidad de producto que estamos buscando vender
-            $n=$detalle_producto->getCantidad();
+            $n = $detalle_producto->getCantidad();
             
             //El numero de almacenes que cuentan con el producto
-            $n_almacenes=count($productos_almacen);
+            $n_almacenes = count($productos_almacen);
             
             //La unidad en la que se encuentra el producto, si no existe ocurre un error fatal.
             $unidad=UnidadDAO::getByPK($detalle_producto->getIdUnidad());
