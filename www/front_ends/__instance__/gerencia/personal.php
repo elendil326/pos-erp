@@ -30,7 +30,7 @@
 		
 		$tabla = new TableComponent( 
 			array(
-                                "codigo_usuario"                => "Codigo de usuario",
+
 				"nombre"                        => "Nombre",
 				"id_rol"                        => "Rol",
 				"id_clasificacion_cliente" 	=> "Clasificacion de cliente",

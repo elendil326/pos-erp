@@ -171,11 +171,12 @@
 	# *******************************
 	# Cargar los Controllers
 	# *******************************
+    require_once("controllers/Validaciones.controllers.php");
     require_once("controllers/Instancias.controller.php");
 	require_once("controllers/Clientes.controller.php");
 	require_once("controllers/Sesion.controller.php");
 	require_once("controllers/PersonalYAgentes.controller.php");
-    require_once("controllers/Validaciones.controllers.php");
+
 	require_once("controllers/Empresas.controller.php");
 	require_once("controllers/Direcciones.controller.php");	
 	require_once("controllers/Sucursales.controller.php");		

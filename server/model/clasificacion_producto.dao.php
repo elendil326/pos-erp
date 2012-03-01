@@ -20,5 +20,18 @@ require_once("base/clasificacion_producto.vo.base.php");
   */
 class ClasificacionProductoDAO extends ClasificacionProductoDAOBase
 {
+	public static function buscarQuery($query, $how_many = 100){
+		$sql = "select * from clasificacion_producto where ( nombre like ? or descripcion like ? )  limit ?; ";
 
+		$val = array( "%" . $query . "%" , "%" . $query . "%" , $how_many );
+		
+		global $conn;
+		$rs = $conn->Execute($sql, $val);
+		$ar = array( );
+		foreach ($rs as $foo) {
+			$bar =  new ClasificacionProducto($foo);
+    		array_push( $ar,$bar);
+		}
+		return $ar;
+	}
 }

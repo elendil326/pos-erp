@@ -6,7 +6,7 @@ require_once("interfaces/Clientes.interface.php");
   *
   **/
 	
-  class ClientesController implements IClientes{
+  class ClientesController extends ValidacionesController implements IClientes{
         
 
         
@@ -85,7 +85,7 @@ require_once("interfaces/Clientes.interface.php");
             //valida que la clave interna sea valida y que no se repita
             if(!is_null($clave_interna))
             {
-                $e = ValidacionesController::validarLongitudDeCadena($clave_interna, 0, 20);
+                $e = self::validarLongitudDeCadena($clave_interna, 0, 20);
                 if(!$e)
                     return "La clave interna no tiene 0 a 20 caracteres";
                 
@@ -99,8 +99,11 @@ require_once("interfaces/Clientes.interface.php");
                     $clasificaciones_cliente = ClasificacionClienteDAO::search( 
                         new ClasificacionCliente( array( "clave_interna" => trim($clave_interna) ) ) );
                 }
-                if(!empty($clasificaciones_cliente))
-                    return "La clave interna (".$clave_interna.") ya esta en uso";
+                if(!empty($clasificaciones_cliente)){
+					Logger::log( "La clave interna (".$clave_interna.") ya esta en uso");
+					throw new BusinessLogicException("La clave interna (".$clave_interna.") ya esta en uso");
+				}
+
             }
             
             //valida que el nombre sea valido y que no se repita
@@ -108,7 +111,7 @@ require_once("interfaces/Clientes.interface.php");
             {
                 $e = ValidacionesController::validarLongitudDeCadena($nombre, 1, 16);
                 if(!$e)
-                    return "El nombre no tiene de 1 a 16 caracteres";
+                    return "El nombre $nombre no tiene de 1 a 16 caracteres";
                 
                 if(!is_null($id_clasificacion_cliente))
                 {
@@ -121,8 +124,11 @@ require_once("interfaces/Clientes.interface.php");
                         new ClasificacionCliente( array( "nombre" => trim($nombre) ) ) );
                 }
                 
-                if(!empty($clasificaciones_cliente))
-                    return "El nombre (".$nombre.") ya esta en uso";
+                if(!empty($clasificaciones_cliente)){
+					Logger::log( "El nombre (".$nombre.") ya esta en uso");
+					throw new BusinessLogicException("El nombre (".$nombre.") ya esta en uso");
+				}
+
             }
             
             //valida que la descripcion este en rango
@@ -663,7 +669,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 		$descripcion = null
 	)
 	{  
-            Logger::log("Creando nueva clasificacion de clientes");
+            Logger::log("Creando nueva clasificacion de clientes, $nombre");
             
             //Se validan los parametros recibidos
             $validar = self::validarParametrosClasificacionCliente(null,$clave_interna,$nombre,$descripcion);
@@ -998,6 +1004,17 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 			$start = 0
         )
         {
+	
+		if(!is_null($id_usuario)){
+			Logger::log("Buscando cliente por id, id = $id_usuario");
+			
+			return array(
+				"resultados" => array( UsuarioDAO::getByPK(  $id_usuario )->asArray() ),
+				"numero_de_resultados" => 1
+				
+			);
+		}
+		
 		$resultados = UsuarioDAO::buscarClientes( $query );
 		return array( 
 			"resultados" => $resultados ,
@@ -1024,9 +1041,15 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 		$query = null, 
 		$start = 0
 	)
-        {
-            
-        }
+	{
+    
+		$r = ClasificacionClienteDAO::getAll();
+		
+        return array(
+        	"resultados" => $r,
+			"numero_de_resultados" => sizeof($r)
+        );
+	}
 	
 	
 }

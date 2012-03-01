@@ -36,7 +36,7 @@ class ValidacionesController {
      *
      */
     public static function validarLongitudDeCadena($a, $i, $j = 1024){
-    	return (is_string($a) && (strlen($a) >= $i && strlen($a) <= $j ) );
+    	return (/*is_string($a) &&*/ (strlen($a) >= $i && strlen($a) <= $j ) );
     }
 
 

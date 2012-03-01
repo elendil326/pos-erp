@@ -61,11 +61,11 @@
 			"1",//HARDCODEADO A 1
 			"C47465-2012",//->HARDCODEADO A NULL SIEMPRE
 			"* Otra cuenta_mensajeria",//INSERTA LONG > A LOS Q INDICA LA DEF DE LA TABLA DE AL BD
-			"CURP8",//NO ESTA BIEN VALIDADADO, NO EXP REG
+			"CURP8".time(),//NO ESTA BIEN VALIDADADO, NO EXP REG
 			"denominacion comercial",//INSERTA LONG > A LOS Q INDICA LA DEF DE LA TABLA DE AL BD
 			"50", //PUEDE RECIBIR STRINGS E INSERTARLOS COMO #'S
 			null,
-			"aclvC@hotmail.com",
+			time() . "@hotmail.com",
 			null,
 			1,
 			null, //
@@ -73,7 +73,7 @@
 			"999999",//ACEPTA CADENAS Y NO TIENEN UN LIM MAX, ACEPTA HASTA 9999999999999999999999999999999999999999999999999999999999999999......
 			"1234",//ACEPTA # AUNQUE LOS EVALUA Y NO PERMITE INSERT
 			null, 
-			"RFC8",//NO EXPR REG PARA RFC 
+			"RFC8".time(),//NO EXPR REG PARA RFC 
 			12345, //INSERTA NUMEROS, CUANDO SON # ELEVADOS LOS INSERTA 123e+38
 			null, 
 			null
@@ -81,17 +81,8 @@
 			$this->assertInternalType("int" , $c["id_cliente"],"---- 'testNuevoCliente' 'id_cliente' NO ES UN ENTERO");
 		}
 		
-		/**
-     	* @expectedException BusinessLogicException
-    	*/
-		public function testNuevoClienteConMismoNombre(){
-			//se crea un nuevo cliente 
-			$nombre = self::RandomString(15,FALSE,FALSE,FALSE)." - ". time();
-        	$nuevo_cliente = ClientesController::nuevo($nombre);			
-			$this->assertInternalType("int" , $nuevo_cliente["id_cliente"],"---- 'testNuevoClienteConMismoNombre' 'id_cliente' NO ES UN ENTERO");
-			//se trata de insertar otro cliente con el mismo nombre
-			$nuevo_cliente2 = ClientesController::nuevo($nombre);			
-		}
+		
+
 
 		public function testDetalleCliente(){
 			//se crea un nuevo cliente 
@@ -164,14 +155,7 @@
 			$this->assertNotEquals($sitio,$array_datos_cliente[0]->getPaginaWeb(),"---- 'testEditarCliente' SITIO WEB NO SE ACTUALIZÓ");
 		}
 
-		public function testBuscarClientesPorID_Sucursal(){
-			$res = ClientesController::Buscar($id_sucursal = 1 );
-			$this->assertInternalType("int" , $res["numero_de_resultados"],"---- 'testBuscarClientesPorID_Sucursal' 'numero_de_resultados' NO ES UN ENTERO");
-			foreach($res["resultados"] as $row){
-				if($row->getIdSucursal() != '1'|| is_null($row->getIdSucursal()))
-					$this->assertEquals($row->getIdSucursal(),1,"---- 'testBuscarClientesPorID_Sucursal' LOS IDS NO COINCIDEN SE ENVIÓ EL id_sucursal =1 Y LA CONSULTA DEVOLVIÓ id_sucursal = ".$row->getIdSucursal()." PARA id_usuario ".$row->getIdUsuario());
-			}		
-		}
+
 
 		public function testBuscarClientesPorID_Usuario(){
 			//se crea un nuevo cliente que es el que debe de ser encontrado en el query
@@ -179,9 +163,12 @@
         	$nuevo_cliente = ClientesController::nuevo($nombre);
 
 			$res = ClientesController::Buscar($id_suc= null,$id_usuario=$nuevo_cliente['id_cliente']);
-			$this->assertInternalType("int" , $res["numero_de_resultados"],"---- 'testBuscarClientesPorID_Usuario' 'numero_de_resultados' NO ES UN ENTERO");			
+			
+			$this->assertInternalType("int" , $res["numero_de_resultados"],"---- 'testBuscarClientesPorID_Usuario' 'numero_de_resultados' NO ES UN ENTERO");
+			
 			$this->assertEquals(1, $res['numero_de_resultados'],"---- 'testBuscarClientesPorID_Usuario' SE DEBIÓ DE ENCONTRAR SÓLO 1 RESULTADO");
-			if($res["numero_de_resultados"]>0 && $res["resultados"][0]->getIdUsuario() != $nuevo_cliente['id_cliente'] ){
+			
+			if($res["numero_de_resultados"]>0 && $res["resultados"][0]["id_usuario"] != $nuevo_cliente['id_cliente'] ){
 				$this->assertEquals($res["resultados"][0]->getIdUsuario(),$nuevo_cliente['id_cliente'],"---- 'testBuscarClientesPorID_Usuario' LOS IDS NO COINCIDEN SE ENVIÓ EL id_usuario =".$nuevo_cliente['id_cliente']."Y LA CONSULTA DEVOLVIÓ id_usuario = ".$res["resultados"][0]->getIdUsuario());
 			}
 		}
@@ -233,12 +220,13 @@
     	}
 
 		public function testNuevaClasificacion(){
-			$nombre_clasificacion = self::RandomString(5,FALSE,FALSE,FALSE)." - ". time();			
-			$clave_clasificacion = self::RandomString(2,TRUE,FALSE,FALSE)." - ". time();
+			$nombre_clasificacion = time();			
+			$clave_clasificacion = "c". time();
 			$desc = self::RandomString(25,FALSE,FALSE,FALSE)." - ";
 
 			$nueva = ClientesController::NuevaClasificacion($clave_clasificacion,$nombre_clasificacion,$desc);
-			$this->assertInternalType('int',$c['id_categoria_cliente'],"---- 'testNuevaClasificacion' 'id_categoria_cliente' NO ES UN ENTERO");
+			
+			$this->assertInternalType('int',$nueva['id_categoria_cliente'],"---- 'testNuevaClasificacion' 'id_categoria_cliente' NO ES UN ENTERO");
 		}
 
 		/**
@@ -286,5 +274,33 @@
 			$this->assertGreaterThanOrEqual(1, $res['numero_de_resultados'],"---- 'testBuscarClasificacionClientesPorQuery' SE DEBIÓ DE ENCONTRAR ALMENOS 1 RESULTADO");			
 		}		
 		
+
+
+
+		/*
+		public function testBuscarClientesPorID_Sucursal(){
+			$res = ClientesController::Buscar($id_sucursal = 1 );
+			$this->assertInternalType("int" , $res["numero_de_resultados"],"---- 'testBuscarClientesPorID_Sucursal' 'numero_de_resultados' NO ES UN ENTERO");
+			
+			foreach($res["resultados"] as $row){
+				if($row->getIdSucursal() != '1'|| is_null($row->getIdSucursal()))
+					$this->assertEquals($row->getIdSucursal(),1,"---- 'testBuscarClientesPorID_Sucursal' LOS IDS NO COINCIDEN SE ENVIÓ EL id_sucursal =1 Y LA CONSULTA DEVOLVIÓ id_sucursal = ".$row->getIdSucursal()." PARA id_usuario ".$row->getIdUsuario());
+			}		
+		}*/
+		
+		
+		/**
+     	* @expectedException BusinessLogicException
+    	*/
+/*
+		public function testNuevoClienteConMismoNombre(){
+			//se crea un nuevo cliente 
+			$nombre = self::RandomString(15,FALSE,FALSE,FALSE)." - ". time();
+        	$nuevo_cliente = ClientesController::nuevo($nombre);			
+			$this->assertInternalType("int" , $nuevo_cliente["id_cliente"],"---- 'testNuevoClienteConMismoNombre' 'id_cliente' NO ES UN ENTERO");
+			//se trata de insertar otro cliente con el mismo nombre
+			$nuevo_cliente2 = ClientesController::nuevo($nombre);
+		}
+*/
 	}
 

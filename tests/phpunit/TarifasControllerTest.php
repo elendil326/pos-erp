@@ -69,7 +69,7 @@ class TarifasControllerTest extends PHPUnit_Framework_TestCase {
 		//crear nueva tarifa de venta
 		$tv = TarifasController::Nueva(
 						$monedas[0]->getIdMoneda(),
-						"tarifac" . time(),
+						"tarifa_e_" . time(),
 						"compra"
 					);
 		
@@ -77,7 +77,7 @@ class TarifasControllerTest extends PHPUnit_Framework_TestCase {
 		//crear nueva tarifa de compra
 		$tc = TarifasController::Nueva(
 						$monedas[0]->getIdMoneda(),
-						"tarifac" . time(),
+						"tarifa_d_" . time(),
 						"compra"
 					);
 		
@@ -89,7 +89,7 @@ class TarifasControllerTest extends PHPUnit_Framework_TestCase {
 					$fecha_inicio = null, 
 					$formulas = null, 
 					$id_moneda = null, 
-					$nombre = "_" . $tc["nombre"], 
+					$nombre = "_" . "tarifa_d_" . time(), 
 					$tipo_tarifa = "venta"
 				);
 				
@@ -101,7 +101,7 @@ class TarifasControllerTest extends PHPUnit_Framework_TestCase {
 					$fecha_inicio = null, 
 					$formulas = null, 
 					$id_moneda = null, 
-					$nombre = "_" . $tc["nombre"], 
+					$nombre = "_" . "tarifa_ef_" . time(), 
 					$tipo_tarifa = "compra"
 				);		
 	}

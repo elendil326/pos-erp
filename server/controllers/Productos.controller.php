@@ -794,10 +794,14 @@ class ProductosController extends ValidacionesController implements IProductos
     {
         Logger::log("Insertando productos en volumen");
         
-        $productos = object_to_array($productos);
-        
+		if(!is_array($productos)){
+        	$productos = object_to_array($productos);			
+		}
+
+        //var_dump($productos);
+
         if (!is_array($productos)) {
-            Logger::error("Los productos recibidos son invalidos");
+            Logger::error("Los productos recibidos son invalidossss");
             throw new Exception("Los productos recibidos son invalidos", 901);
         } //!is_array($productos)
         
@@ -807,12 +811,30 @@ class ProductosController extends ValidacionesController implements IProductos
         $id_productos = array();
         DAO::transBegin();
         try {
+			
             foreach ($productos as $producto) {
-                if (!array_key_exists("codigo_producto", $producto) || !array_key_exists("id_empresas", $producto) || !array_key_exists("nombre_producto", $producto) || !array_key_exists("precio", $producto) || !array_key_exists("costo_estandar", $producto) || !array_key_exists("compra_en_mostrador", $producto)) {
-                    throw new Exception("Los productos recibidos son invalidos", 901);
+                if (! 	array_key_exists("codigo_producto", $producto) 
+					|| !array_key_exists("nombre_producto", $producto) 
+					//|| !array_key_exists("precio", $producto) 
+					|| !array_key_exists("costo_estandar", $producto) 
+					|| !array_key_exists("compra_en_mostrador", $producto)
+				) 
+				{
+					Logger::log( json_encode($producto) );
+					
+                    throw new InvalidDataException("Los productos recibidos son invalidos", 901);
                 } //!array_key_exists("codigo_producto", $producto) || !array_key_exists("id_empresas", $producto) || !array_key_exists("nombre_producto", $producto) || !array_key_exists("precio", $producto) || !array_key_exists("costo_estandar", $producto) || !array_key_exists("compra_en_mostrador", $producto)
                 
-                array_push($id_productos, self::Nuevo(1, $producto["codigo_producto"], $producto["id_empresas"], $producto["nombre_producto"], $producto["precio"], $producto["costo_estandar"], $producto["compra_en_mostrador"]));
+                array_push($id_productos, self::Nuevo( 
+						1, 
+						$producto["codigo_producto"],
+						$producto["compra_en_mostrador"], 
+						$producto["costo_estandar"],
+						null,
+						"costo",
+						$producto["nombre_producto"]
+						));
+
             } //$productos as $producto
         }
         catch (Exception $e) {
@@ -1171,7 +1193,8 @@ class ProductosController extends ValidacionesController implements IProductos
     {
         Logger::log("Creando nueva categoria `$nombre`");
 
-		if( sizeof( ClasificacionProductoDAO::search(new ClasificacionProducto(array( "nombre" => $nombre ))) > 0)){
+		if( sizeof( $r = ClasificacionProductoDAO::search(new ClasificacionProducto(array( "nombre" => $nombre )))) > 0){
+
 			throw new BusinessLogicException("El nombre $nombre esta repetido");
 		}
         
@@ -1204,7 +1227,7 @@ class ProductosController extends ValidacionesController implements IProductos
             throw new Exception("No se ha podido guardar la nueva clasificacion", 901);
         }
         DAO::transEnd();
-        Logger::log("Clasificacion guardada exitosamente");
+        Logger::log("Clasificacion guardada exitosamente, id_categoria=");
         return array(
             "id_categoria" => (int)$clasificacion_producto->getIdClasificacionProducto()
         );
@@ -1228,7 +1251,7 @@ class ProductosController extends ValidacionesController implements IProductos
         Logger::log("Editando la clasificacion de producto " . $id_categoria);
         
         //Se validan los parametros recibidos
-        $validar = self::validarParametrosClasificacionProducto($id_categoria, $nombre, $descripcion, $garantia);
+        $validar = self::validarParametrosClasificacionProducto($id_categoria, $nombre, $descripcion);
         if (is_string($validar)) {
             Logger::error($validar);
             throw new Exception($validar);
@@ -1241,9 +1264,7 @@ class ProductosController extends ValidacionesController implements IProductos
             $clasificacion_producto->setNombre(trim($nombre));
         } //!is_null($nombre)
         
-        if (!is_null($garantia)) {
-            $clasificacion_producto->setGarantia($garantia);
-        } //!is_null($garantia)
+
         
         if (is_null($descripcion)) {
             $clasificacion_producto->setDescripcion($descripcion);
@@ -1256,83 +1277,7 @@ class ProductosController extends ValidacionesController implements IProductos
         DAO::transBegin();
         try {
             ClasificacionProductoDAO::save($clasificacion_producto);
-            if (!is_null($impuestos)) {
-                $impuestos = object_to_array($impuestos);
-                
-                if (!is_array($impuestos)) {
-                    throw new Exception("Los impuestos son invalidos", 901);
-                } //!is_array($impuestos)
-                
-                $impuesto_clasificacion_producto = new ImpuestoClasificacionProducto(array(
-                    "id_clasificacion_producto" => $clasificacion_producto->getIdClasificacionProducto()
-                ));
-                
-                foreach ($impuestos as $impuesto) {
-                    if (is_null(ImpuestoDAO::getByPK($impuesto)))
-                        throw new Exception("El impuesto con id " . $impuesto . " no existe", 901);
-                    
-                    $impuesto_clasificacion_producto->setIdImpuesto($impuesto);
-                    ImpuestoClasificacionProductoDAO::save($impuesto_clasificacion_producto);
-                } //$impuestos as $impuesto
-                
-                $impuestos_clasificacion_producto = ImpuestoClasificacionProductoDAO::search(new ImpuestoClasificacionProducto(array(
-                    "id_clasificacion_producto" => $id_categoria
-                )));
-                
-                foreach ($impuestos_clasificacion_producto as $i_c_p) {
-                    var_dump($i_c_p);
-                    $encontrado = false;
-                    foreach ($impuestos as $impuesto); {
-                        var_dump($impuesto);
-                        if ($impuesto == $i_c_p->getIdImpuesto()) {
-                            $encontrado = true;
-                        } //$impuesto == $i_c_p->getIdImpuesto()
-                    }
-                    if (!$encontrado) {
-                        ImpuestoClasificacionProductoDAO::delete($i_c_p);
-                    } //!$encontrado
-                } //$impuestos_clasificacion_producto as $i_c_p
-                
-            } //!is_null($impuestos)
             
-            /* Fin if de impuestos */
-            if (!is_null($retenciones)) {
-                $retenciones = object_to_array($retenciones);
-                
-                if (!is_array($retenciones)) {
-                    throw new Exception("Las retenciones son invalidas", 901);
-                } //!is_array($retenciones)
-                
-                $retencion_clasificacion_producto = new RetencionClasificacionProducto(array(
-                    "id_clasificacion_producto" => $clasificacion_producto->getIdClasificacionProducto()
-                ));
-                
-                foreach ($retenciones as $retencion) {
-                    if (is_null(RetencionDAO::getByPK($retencion)))
-                        throw new Exception("La retencion con id " . $retencion . " no existe");
-                    
-                    $retencion_clasificacion_producto->setIdRetencion($retencion);
-                    RetencionClasificacionProductoDAO::save($retencion_clasificacion_producto);
-                } //$retenciones as $retencion
-                
-                $retenciones_clasificacion_producto = RetencionClasificacionProductoDAO::search(new RetencionClasificacionProducto(array(
-                    "id_clasificacion_producto" => $id_categoria
-                )));
-                
-                foreach ($retenciones_clasificacion_producto as $r_c_p) {
-                    $encontrado = false;
-                    foreach ($retenciones as $retencion) {
-                        if ($retencion == $r_c_p->getIdRetencion()) {
-                            $encontrado = true;
-                        } //$retencion == $r_c_p->getIdRetencion()
-                    } //$retenciones as $retencion
-                    if (!$encontrado) {
-                        RetencionClasificacionProductoDAO::delete($r_c_p);
-                    } //!$encontrado
-                } //$retenciones_clasificacion_producto as $r_c_p
-            } //!is_null($retenciones)
-            
-            /*Fin if de retenciones*/
         }
         catch (Exception $e) {
             DAO::transRollback();
@@ -1806,5 +1751,34 @@ class ProductosController extends ValidacionesController implements IProductos
      **/
     static function BuscarCategoria($id_categoria = null, $id_categoria_padre = null, $query = null)
     {
+		
+		
+		if(!is_null($id_categoria)){
+			$r = ClasificacionProductoDAO::search(new ClasificacionProducto(array("id_clasificacion_producto" => $id_categoria )));
+			
+		}else if(!is_null($id_categoria_padre)){
+			$r = ClasificacionProductoDAO::search(new ClasificacionProducto(array("id_clasificacion_producto" => $id_categoria )));
+			
+		}else if(!is_null($query)){
+			$r = ClasificacionProductoDAO::buscarQuery( $query );
+			
+		}else{
+			$r = ClasificacionProductoDAO::getAll();
+			
+		}
+		
+		$f_res = array();
+		
+		foreach ($r as $_r) {
+			$foo = $_r->asArray();
+			$foo["id_categoria"] = $foo["id_clasificacion_producto"];
+			unset($foo["id_clasificacion_producto"]);
+			array_push( $f_res,  $foo);
+		}
+		
+		return array(
+			"resultados" => $f_res,
+			"numero_de_resultados" => sizeof($r)
+		);
     }
 }

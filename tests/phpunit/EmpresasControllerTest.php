@@ -51,8 +51,8 @@ class EmpresasControllerTest extends PHPUnit_Framework_TestCase {
 		);
 		
 		$id_moneda = 1;
-		$razon_social = "Caffeina Software";
-		$rfc  = "GOHA8801317";
+		$razon_social = "Caffeina Software".time();
+		$rfc  = "GOHA".time();
 		
 
 		
@@ -64,7 +64,7 @@ class EmpresasControllerTest extends PHPUnit_Framework_TestCase {
 
 
 		$this->_empresa = EmpresasController::Nuevo(
-				$direccion, 
+				array($direccion), 
 				$id_moneda, 
 				$razon_social, 
 				$rfc
