@@ -1627,8 +1627,31 @@ class ProductosController extends ValidacionesController implements IProductos
 	        );
         } //!is_null($id_producto)
         
+		if (!is_null($id_sucursal)) {
+			$empresas = SucursalEmpresaDAO::search( new SucursalEmpresa(array( "id_empresa" => $id_sucursal )));
+			
+			if(empty($empresas)){
+				return array( "resultados" => array(),"numero_de_resultados" => 0);
+			}
+			
+			$results = array();
+			
+			foreach ($empresas as $e) {
+				$productos = ProductoEmpresaDAO::search( new ProductoEmpresa( array("id_empresa" => $e) ) );
+				
+				foreach ($productos as $p) {
+					array_push($results, $p->asArray());
+				}
+			}
+			
+			return array(
+				"numero_de_resultados" => sizeof( $results ),
+				"resultados" => $results
+			);
 
-        
+		}
+		
+		
         $productos = ProductoDAO::buscarProductos($query);
         
         $resultado = array();

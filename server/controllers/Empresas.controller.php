@@ -408,9 +408,37 @@ require_once("interfaces/Empresas.interface.php");
                  throw new Exception("No se pudo crear la empresa, consulte a su administrador de sistema",901);
              }
 
+
+
+
+			if(!is_null($sucursales)){
+				if(!is_array($sucursales)){
+					DAO::transRollback();
+					throw new InvalidDataException("`sucursales` debe ser un arreglo NO asociativo");
+				}
+				
+				foreach ($sucursales as $suc_id) {
+					Logger::log("Vinculando empresa " . $e->getIdEmpresa() . " con sucursal " . $suc_id );
+					$suc_emp = new SucursalEmpresa();
+					$suc_emp->setIdSucursal($suc_id);
+					$suc_emp->setIdEmpresa($e->getIdEmpresa());
+					
+					try {
+						SucursalEmpresaDAO::save( $suc_emp );
+						
+					} catch (Exception $exception) {
+						throw new InvalidDatabaseOperationException($exception);
+						
+					}
+				}
+				
+
+			}
+
+
              DAO::transEnd();
 
-             Logger::log("Empresa creada exitosamente");
+             Logger::log("Empresa creada exitosamente, id=" . $e->getIdEmpresa());
 
             return array ( "id_empresa" => ((int)$e->getIdEmpresa()) );
 	}
