@@ -84,7 +84,7 @@
 
 Varios RFC`s pueden repetirse siempre y cuando solo exista una empresa activa.
  	 *
- 	 * @param direccion string [{    "tipo": "fiscal",    "calle": "Francisco I Madero",    "numero_exterior": "1009A",    "numero_interior": 12,    "colonia": "centro",    "codigo_postal": "38000",    "telefono1": "4611223312",    "telefono2": "",       "id_ciudad": 3,    "referencia": "El local naranja"}]
+ 	 * @param direccion json [{    "tipo": "fiscal",    "calle": "Francisco I Madero",    "numero_exterior": "1009A",    "numero_interior": 12,    "colonia": "centro",    "codigo_postal": "38000",    "telefono1": "4611223312",    "telefono2": "",       "id_ciudad": 3,    "referencia": "El local naranja"}]
  	 * @param id_moneda int Id de la moneda base que manejaran las sucursales
  	 * @param razon_social string El nombre de la nueva empresa.
  	 * @param rfc string RFC de la nueva empresa.

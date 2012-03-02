@@ -131,7 +131,6 @@
  	 * @param descripcion_producto string Descripcion larga del producto
  	 * @param empresas json arreglo de ids de empresas a las que pertenece este producto
  	 * @param foto_del_producto string url a una foto de este producto
- 	 * @param garantia int Numero de meses de garantia de este producto
  	 * @param garantia int Numero de meses de garantia con los que cuenta esta categoria de producto
  	 * @param id_unidad int La unidad preferente de este producto
  	 * @param impuestos json array de ids de impuestos que tiene este producto
@@ -176,7 +175,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos.
  	 * @param compra_en_mostrador bool Verdadero si este producto se puede comprar en mostrador, para aquello de compra-venta
  	 * @param costo_estandar string Este valor sera tomado solo en caso de seleccionar `costo estandar` como mtodo de costeo
  	 * @param id_unidad_compra string Unidad de medida por defecto utilizada para los pedidos de compra. Debe estar en la misma categora que la unidad de medida por defecto.
- 	 * @param metodo_costeo string `costo estandar` el precio de coste es fijo y se recalcula periodicamente (normalmente al finalizar el anio).`precio` 
+ 	 * @param metodo_costeo string `costo` el precio de coste es fijo y se recalcula periodicamente (normalmente al finalizar el anio).`precio` 
  	 * @param nombre_producto string Nombre del producto
  	 * @param codigo_de_barras string El Codigo de barras para este producto
  	 * @param control_de_existencia int 00000001 = Unidades. 00000010 = Caractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = Lote

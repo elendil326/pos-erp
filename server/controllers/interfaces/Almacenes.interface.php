@@ -83,13 +83,13 @@
  	 *Crear un nuevo lote
  	 *
  	 * @param id_almacen int A que almacen pertenecera este lote.
- 	 * @param folio string Una cadena unica para cada lote que identifica a este lote. Si no se envia se escogera uno por el sistema.
+ 	 * @param observaciones string Alguna observacin o detalle relevante que se deba documentar
  	 * @return id_lote int El identificador del lote recien generado.
  	 **/
   static function NuevoLote
 	(
 		$id_almacen, 
-		$folio = null
+		$observaciones = null
 	);  
   
   

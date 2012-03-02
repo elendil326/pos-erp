@@ -389,7 +389,7 @@
 			isset($_POST['direcciones'] ) ? json_decode($_POST['direcciones']) : null,
 			isset($_POST['email'] ) ? $_POST['email'] :  null,
 			isset($_POST['id_cliente_padre'] ) ? $_POST['id_cliente_padre'] :  null,
-			isset($_POST['id_moneda'] ) ? $_POST['id_moneda'] :  0 ,
+			isset($_POST['id_moneda'] ) ? $_POST['id_moneda'] :  null,
 			isset($_POST['id_tarifa_compra'] ) ? $_POST['id_tarifa_compra'] :  null,
 			isset($_POST['id_tarifa_venta'] ) ? $_POST['id_tarifa_venta'] :  null,
 			isset($_POST['limite_credito'] ) ? $_POST['limite_credito'] :  null,
@@ -6076,7 +6076,6 @@
 			"empresas" => new ApiExposedProperty("empresas", false, GET, array( "json" )),
 			"foto_del_producto" => new ApiExposedProperty("foto_del_producto", false, GET, array( "string" )),
 			"garantia" => new ApiExposedProperty("garantia", false, GET, array( "int" )),
-			"garantia" => new ApiExposedProperty("garantia", false, GET, array( "int" )),
 			"id_unidad" => new ApiExposedProperty("id_unidad", false, GET, array( "int" )),
 			"impuestos" => new ApiExposedProperty("impuestos", false, GET, array( "json" )),
 			"metodo_costeo" => new ApiExposedProperty("metodo_costeo", false, GET, array( "string" )),
@@ -6102,7 +6101,6 @@
 			isset($_GET['descripcion_producto'] ) ? $_GET['descripcion_producto'] :  null,
 			isset($_GET['empresas'] ) ? json_decode($_GET['empresas']) : null,
 			isset($_GET['foto_del_producto'] ) ? $_GET['foto_del_producto'] :  null,
-			isset($_GET['garantia'] ) ? $_GET['garantia'] :  null,
 			isset($_GET['garantia'] ) ? $_GET['garantia'] :  null,
 			isset($_GET['id_unidad'] ) ? $_GET['id_unidad'] :  null,
 			isset($_GET['impuestos'] ) ? json_decode($_GET['impuestos']) : null,
@@ -7661,7 +7659,7 @@
 	{
 		$this->request = array(	
 			"id_almacen" => new ApiExposedProperty("id_almacen", true, POST, array( "int" )),
-			"folio" => new ApiExposedProperty("folio", false, POST, array( "string" )),
+			"observaciones" => new ApiExposedProperty("observaciones", false, POST, array( "string" )),
 		);
 	}
 
@@ -7671,7 +7669,7 @@
  			
 			
 			isset($_POST['id_almacen'] ) ? $_POST['id_almacen'] : null,
-			isset($_POST['folio'] ) ? $_POST['folio'] :  null
+			isset($_POST['observaciones'] ) ? $_POST['observaciones'] :  null
 			
 			);
 		}catch(Exception $e){

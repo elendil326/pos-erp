@@ -960,28 +960,37 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *
  	 *Crear un nuevo lote
  	 *
- 	 * @param folio string Una cadena unica para cada lote que identifica a este lote.
+ 	 * @param id_almacen int A que almacen pertenecera este lote.
+ 	 * @param observaciones string Alguna observacin o detalle relevante que se deba documentar
  	 * @return id_lote int El identificador del lote recien generado.
  	 **/
   static function NuevoLote
 	(
-		$id_almacen,
-		$folio = null
+		$id_almacen, 
+		$observaciones = null
 	){
-		
-		Logger::log( "Insertando nuevo lote... " );
-		Logger::log( " --id_almacen: " . $id_almacen);
-		Logger::log( " --folio: " . $folio);		
-		
-		
-		//buscar que ese almacen exista
-		AlmacenDAO::getByPK( $id_almacen );
-		
-		//buscar que no exista un lote en ese almacen con ese folio
-		
-		//insertar lote
-		
-		//
+			
+        if( ! $almacen = AlmacenDAO::getByPK( $id_almacen ) ){
+            Logger::error("No se tiene registro del almacen {$id_almacen}");
+            throw new BusinessLogicException("No se tiene registro del almacen {$id_almacen}");
+        }
+    
+        $sesion = SesionController::Actual();
+
+        try{
+
+            LoteDAO::save( new Lote( array(
+                "id_almacen" => $almacen->getIdAlmacen(),
+                "id_usuario" => $sesion['id_usuario'],
+                "observaciones" => is_null($observaciones)? "" : $observaciones
+            ) ) );       
+
+        }catch(Exception $e){                
+
+            Logger::error("Error al crear nuevo lote {$e->getMessage()}");
+            throw new InvalidDatabaseOperationException("Error al crear el nuevo lote");
+
+        }            
 		
 	} 
 

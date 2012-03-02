@@ -272,13 +272,18 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
 
     }
 
+    public function testNuevoLote(){
+        
+    }
+    
+
 
     /**
      * Desactivar Almacen con Productos
      */
-    public function testDesactivarAlmacenProductos(){        
-/*
-        DireccionDAO::save( $direccion = new Direccion(array(
+    public function testDesactivarAlmacenProductos(){ 
+
+/*        DireccionDAO::save( $direccion = new Direccion(array(
             "calle" => "Una Calle",
             "numero_exterior" => "322",
             "id_ciudad" => "12",
@@ -314,14 +319,7 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
 		    $descripcion = "Almacen de prueba_ " . time()
 	    );
 
-        // SON PUTAS MAMADAS, NO VOY A CREAR UNA COMPRA Y UN USUARIO, YA QUE ESTO DESENCADENARIA UN BUEN DE COSAS Y SERIA INMENSA ESTA FUNCION
-        /*$usuario = UsuarioDAO::getAll();    
-        $id_usuario = $usuario[0]->getIdUsuario();
-
-        $compras = ComprasDAO::getAll();
-        $id_compra = $compras[0]->getIdCompra();*/
-
-/*        MonedaDAO::save( $moneda = new Moneda( array(
+        MonedaDAO::save( $moneda = new Moneda( array(
             "nombre" => "Moneda",
             "simbolo" => "MN",
             "activa" => 1
