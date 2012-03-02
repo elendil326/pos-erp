@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 28-02-2012 a las 23:49:00
+-- Tiempo de generación: 01-03-2012 a las 23:52:50
 -- Versión del servidor: 5.1.58
 -- Versión de PHP: 5.3.6-13ubuntu3.6
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Base de datos: `final_2`
+-- Base de datos: `pos_instance_6`
 --
 
 -- --------------------------------------------------------
@@ -138,7 +138,7 @@ CREATE TABLE IF NOT EXISTS `almacen` (
   KEY `id_tipo_almacen` (`id_tipo_almacen`),
   KEY `almacen_ibfk_1` (`id_sucursal`),
   KEY `almacen_ibfk_2` (`id_empresa`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
 
 -- --------------------------------------------------------
 
@@ -676,7 +676,7 @@ CREATE TABLE IF NOT EXISTS `direccion` (
   `id_usuario_ultima_modificacion` int(11) NOT NULL COMMENT 'quien fue el usuario que modifico este registro la ultima vez',
   PRIMARY KEY (`id_direccion`),
   KEY `id_ciudad` (`id_ciudad`,`id_usuario_ultima_modificacion`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=405 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=415 ;
 
 -- --------------------------------------------------------
 
@@ -742,7 +742,7 @@ CREATE TABLE IF NOT EXISTS `empresa` (
   `activo` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Si esta empresa esta activa o no',
   `direccion_web` varchar(20) DEFAULT NULL COMMENT 'Direccion web de la empresa',
   PRIMARY KEY (`id_empresa`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='tabla de empresas' AUTO_INCREMENT=121 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='tabla de empresas' AUTO_INCREMENT=131 ;
 
 -- --------------------------------------------------------
 
@@ -996,7 +996,7 @@ CREATE TABLE IF NOT EXISTS `lote` (
   `id_lote` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Id del lote',
   `id_almacen` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL COMMENT 'Id del usuario que creo el lote',
-  `observaciones` int(11) NOT NULL,
+  `folio` varchar(32) DEFAULT NULL,
   PRIMARY KEY (`id_lote`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Manejo de lotes' AUTO_INCREMENT=1 ;
 
@@ -1594,7 +1594,7 @@ CREATE TABLE IF NOT EXISTS `sesion` (
   PRIMARY KEY (`id_sesion`),
   UNIQUE KEY `id_usuario` (`id_usuario`),
   KEY `auth_token` (`auth_token`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='Mantiene un seguimiento de las sesiones activas en el sistem' AUTO_INCREMENT=1974 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='Mantiene un seguimiento de las sesiones activas en el sistem' AUTO_INCREMENT=1975 ;
 
 -- --------------------------------------------------------
 
@@ -1614,7 +1614,7 @@ CREATE TABLE IF NOT EXISTS `sucursal` (
   `activa` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Si esta sucursal esta activa o no',
   `fecha_baja` datetime DEFAULT NULL COMMENT 'Fecha en que se dio de baja esta sucursal',
   PRIMARY KEY (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='tabla de sucursales' AUTO_INCREMENT=69 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='tabla de sucursales' AUTO_INCREMENT=79 ;
 
 -- --------------------------------------------------------
 
@@ -1657,7 +1657,7 @@ CREATE TABLE IF NOT EXISTS `tipo_almacen` (
   `descripcion` varchar(64) NOT NULL,
   `activo` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Si esta activo = 1, 0 = Inactivo',
   PRIMARY KEY (`id_tipo_almacen`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=36 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=68 ;
 
 -- --------------------------------------------------------
 

@@ -967,7 +967,7 @@ Creo que este metodo tiene que estar bajo sucursal.
   static function NuevoLote
 	(
 		$id_almacen, 
-		$observaciones = null
+		$folio = null
 	){
 			
         if( ! $almacen = AlmacenDAO::getByPK( $id_almacen ) ){
@@ -982,7 +982,7 @@ Creo que este metodo tiene que estar bajo sucursal.
             LoteDAO::save( new Lote( array(
                 "id_almacen" => $almacen->getIdAlmacen(),
                 "id_usuario" => $sesion['id_usuario'],
-                "observaciones" => is_null($observaciones)? "" : $observaciones
+                "folio" => is_null($folio)? "" : $folio
             ) ) );       
 
         }catch(Exception $e){                
