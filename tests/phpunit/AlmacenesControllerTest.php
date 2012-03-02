@@ -118,9 +118,35 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
 
         $tipo_almacen = AlmacenesController::NuevoTipo("Nuevo_Tipo_Almacen_" . time());	
 
+        DireccionDAO::save( $direccion = new Direccion(array(
+            "calle" => "Una Calle",
+            "numero_exterior" => "322",
+            "id_ciudad" => "12",
+            "codigo_postal" => "38000",
+            "ultima_modificacion" => "2012-02-21 22:10:45",
+            "id_usuario_ultima_modificacion" => "2"
+        )));
+
+        EmpresaDAO::save( $empresa = new Empresa ( array(
+            "id_direccion" => $direccion->getIdDireccion(),
+            "rfc" => "RFC_" . time(),
+            "razon_social" => "Empresa_Razon_Social____" . time(),
+            "fecha_alta" => "2012-02-21 22:10:45",
+            "activo" => 1,
+            "direccion_web" => "Dir_" . time()
+        )));
+
+        SucursalDAO::save($sucursal = new Sucursal(array(
+            "id_direccion" => $direccion->getIdDireccion(),
+            "razon_social" => "Sucursal_Razon_Social____" . time(),
+            "saldo_a_favor" => 2000,
+            "fecha_apertura" => "2012-02-21 22:10:45",
+            "activa" => 1
+        )));
+
         $almacen = AlmacenesController::Nuevo(
-		    $id_empresa = 1, 
-		    $id_sucursal = 1, 
+		    $id_empresa = $empresa->getIdEmpresa(), 
+		    $id_sucursal = $sucursal->getIdSucursal(), 
 		    $id_tipo_almacen = $tipo_almacen["id_tipo_almacen"], 
 		    $nombre = "Almacen_" . time(), 
 		    $descripcion = "Almacen de prueba " . time()

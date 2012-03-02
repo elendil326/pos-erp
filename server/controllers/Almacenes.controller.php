@@ -101,7 +101,7 @@ class AlmacenesController extends ValidacionesController implements IAlmacenes{
            
             //verificamos que se hayan terminado todos los productos de los lotes de esta sucursal
 
-            $lotes_almacen = LoteAlmacenDAO::search( new LoteAlmacen( array(
+            $lotes_almacen = LoteDAO::search( new Lote( array(
                 "id_almacen" => $id_almacen
             )));
 
