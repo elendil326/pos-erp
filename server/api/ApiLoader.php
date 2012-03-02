@@ -7659,7 +7659,7 @@
 	{
 		$this->request = array(	
 			"id_almacen" => new ApiExposedProperty("id_almacen", true, POST, array( "int" )),
-			"observaciones" => new ApiExposedProperty("observaciones", false, POST, array( "string" )),
+			"folio" => new ApiExposedProperty("folio", false, POST, array( "string" )),
 		);
 	}
 
@@ -7669,7 +7669,7 @@
  			
 			
 			isset($_POST['id_almacen'] ) ? $_POST['id_almacen'] : null,
-			isset($_POST['observaciones'] ) ? $_POST['observaciones'] :  null
+			isset($_POST['folio'] ) ? $_POST['folio'] :  null
 			
 			);
 		}catch(Exception $e){
