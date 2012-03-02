@@ -516,4 +516,100 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 			$this->assertInternalType("int" , $udm["id_unidad_medida"],"---- 'testNuevaUnidadUdm' 'id_unidad_medida' NO ES UN ENTERO");
 		}
 
+		/**
+     	* @expectedException BusinessLogicException
+     	*/
+		public function testNuevaUnidadUdmNombreRepetido(){
+			$abreviatura_Udm = self::RandomString(5,true,FALSE,FALSE); 
+			$descripcion_Udm = self::RandomString(15,true,FALSE,FALSE); 
+			$descripcion_catUdm = self::RandomString(15,true,FALSE,FALSE); 
+			
+			$cat = ProductosController::NuevaCategoriaUdm($descripcion = $descripcion_catUdm, $activo = null);
+
+			$udm = ProductosController::NuevaUnidadUdm(
+														$abreviatura = $abreviatura_Udm, 
+														$descripcion = $descripcion_Udm, 
+														$factor_conversion = 1, 
+														$id_categoria_unidad_medida = $cat['id_categoria'], 
+														$tipo_unidad_medida = "Referencia UdM para esta categoria", 
+														$activa = null
+													);
+			$this->assertInternalType("int" , $udm["id_unidad_medida"],"---- 'testNuevaUnidadUdmNombreRepetido' 'id_unidad_medida' NO ES UN ENTERO");
+			//se intenta repetir la UDM
+			$udm2 = ProductosController::NuevaUnidadUdm(
+														$abreviatura = $abreviatura_Udm, 
+														$descripcion = $descripcion_Udm, 
+														$factor_conversion = 1, 
+														$id_categoria_unidad_medida = $cat['id_categoria'], 
+														$tipo_unidad_medida = "Referencia UdM para esta categoria", 
+														$activa = null
+													);			
+		}
+
+		public function testEditarUnidadUdm(){
+			//se crea un nueva udm y categoria
+			$abreviatura_Udm = self::RandomString(5,true,FALSE,FALSE);
+			$abreviatura_Udm_editada = self::RandomString(5,true,FALSE,FALSE); 
+			$descripcion_Udm = self::RandomString(15,true,FALSE,FALSE); 
+			$descripcion_catUdm = self::RandomString(15,true,FALSE,FALSE); 
+			
+			$cat = ProductosController::NuevaCategoriaUdm($descripcion = $descripcion_catUdm, $activo = null);
+
+			$udm = ProductosController::NuevaUnidadUdm(
+														$abreviatura = $abreviatura_Udm, 
+														$descripcion = $descripcion_Udm, 
+														$factor_conversion = 1, 
+														$id_categoria_unidad_medida = $cat['id_categoria'], 
+														$tipo_unidad_medida = "Referencia UdM para esta categoria", 
+														$activa = null
+													);
+			$this->assertInternalType("int" , $udm["id_unidad_medida"],"---- 'testEditarUnidadUdm' 'id_unidad_medida' NO ES UN ENTERO");
+
+			$udmObj = UnidadMedidaDAO::getByPK($udm['id_unidad_medida']);
+			//se edita la Udm recien ingresada
+			ProductosController::EditarUnidadUdm($activa = $udmObj->getActiva(), 
+												$descripcion = $udmObj->getDescripcion(), 
+												$factor_conversion = $udmObj->getFactorConversion(), 
+												$tipo_unidad_medida = $udmObj->getTipoUnidadMedida(), 
+												$abreviatura = $abreviatura_Udm_editada, //cambia
+												$id_categoria_unidad_medida = $udmObj->getIdCategoriaUnidadMedida(), 
+												$id_unidad_medida = $udmObj->getIdUnidadMedida());			
+			//se redefine el obj para comparar valores
+			$udmObj2 = UnidadMedidaDAO::getByPK($c['id_unidad_medida']);
+			
+			if($udmObj2->getAbreviacion() != $abreviatura_Udm_editada)//el valor es diferente, no se actualizó entonces es error
+				$this->assertFalse( True ,"---- 'testEditarUnidadUdm' NO SE EDITÓ LA CategoriaUdm SE DEBIÓ CAMBIAR: ".$descripcion_catUdm." POR: ".$descripcion_editada);//forzar assertFalse para imprimir error
+		}
+
+		public function testBuscarUnidadUdmPorQuery(){
+			//se genera una categoria y udm para despues buscarla por su nombre
+			$abreviatura_Udm = self::RandomString(5,true,FALSE,FALSE);
+			$descripcion_Udm = self::RandomString(15,true,FALSE,FALSE); 
+			$descripcion_catUdm = self::RandomString(15,true,FALSE,FALSE); 
+			
+			$cat = ProductosController::NuevaCategoriaUdm($descripcion = $descripcion_catUdm, $activo = null);
+			
+			$udm = ProductosController::NuevaUnidadUdm(
+														$abreviatura = $abreviatura_Udm, 
+														$descripcion = $descripcion_Udm, 
+														$factor_conversion = 1, 
+														$id_categoria_unidad_medida = $cat['id_categoria'], 
+														$tipo_unidad_medida = "Referencia UdM para esta categoria", 
+														$activa = null
+													);
+
+			$res = ProductosController::BuscarUnidadUdm(
+														$limit =  50 , 
+														$page = null, 
+														$query = $abreviatura_Udm, 
+														$start =  0 
+													);
+
+			$this->assertInternalType("int" , $res["numero_de_resultados"],"---- 'testBuscarUnidadUdmPorQuery' 'numero_de_resultados' NO ES UN ENTERO");
+			$this->assertGreaterThanOrEqual(1, $res['numero_de_resultados'],"---- 'testBuscarUnidadUdmPorQuery' SE DEBIÓ DE ENCONTRAR ALMENOS 1 RESULTADO CON abreviacion = ".$abreviatura_Udm);				
+		}
+
 }
+
+
+
