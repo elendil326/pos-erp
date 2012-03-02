@@ -86,57 +86,56 @@ class AlmacenesController extends ValidacionesController implements IAlmacenes{
             if(is_null($almacen))
             {
                 Logger::error("El almacen con id: ".$id_almacen." no existe");
-                throw new Exception("El almacen con id: ".$id_almacen." no existe");
+                throw new InvalidDataException("El almacen con id: ".$id_almacen." no existe");
             }
             if(!$almacen->getActivo())
             {
                 Logger::warn("El almacen ya esta inactivo");
-                throw new Exception("El almacen ya esta inactivo");
+                throw new BusinessLogicException("El almacen ya esta inactivo");
             }
             if($almacen->getIdTipoAlmacen()==2)
             {
                 Logger::error("No se puede eliminar con este metodo un almacen de tipo consignacion");
-                throw new Exception("No se puede eliminar con este metodo un almacen de tipo consignacion");
+                throw new BusinessLogicException("No se puede eliminar con este metodo un almacen de tipo consignacion");
             }
            
-            $almacen->setActivo(0);
-            
-            //Busca los productos del almacen, si alguno tiene una cantidad distinta a cero,
-            //el almacen no puede ser eliminado
-            $productos_almacen=ProductoAlmacenDAO::search(new ProductoAlmacen(array( "id_almacen" => $id_almacen )));
-            foreach($productos_almacen as $producto_almacen)
-            {
-                if($producto_almacen->getCantidad()!=0)
-                {
-                    Logger::error("El almacen no puede ser borrado pues aun contiene productos");
-                    throw new Exception("El almacen no puede ser borrado pues aun contiene productos");
+            //verificamos que se hayan terminado todos los productos de los lotes de esta sucursal
+
+            $lotes_almacen = LoteAlmacenDAO::search( new LoteAlmacen( array(
+                "id_almacen" => $id_almacen
+            )));
+
+            foreach( $lotes_almacen as $lote_almacen ){
+
+                $lote_producto = LoteProductoDAO::search( new LoteProducto( array(
+                    "id_lote" => $lote_almacen->getIdLote()
+                ) ) );
+
+                foreach( $lote_producto as $lote ){
+
+                    if( $lote->getCantidad > 0 ){
+                        Logger::error("No se puede el almacen ya que el lote {$lote->getIdLote()} no esta terminado");
+                        throw new BusinessLogicException("No se puede el almacen ya que el lote {$lote->getIdLote()} no esta terminado");
+                    }                    
+
                 }
+
             }
             
-            //Se cancelaran todos los traspasos que este almacen tenga programados ya sea para enviar o para recibir
-            $traspasos_enviados = TraspasoDAO::search( new Traspaso( array( "id_almacen_envia" => $id_almacen ) ) );
-            $traspasos_recibidos = TraspasoDAO::search( new Traspaso( array( "id_almacen_recibe" => $id_almacen ) ) );
+            //TODO : Revisar como se manejaran los traspasos ya que por ahora se estan omitiendo
+
+            $almacen->setActivo(0);
             
             DAO::transBegin();
             try
             {
                 AlmacenDAO::save($almacen);
-                foreach($traspasos_enviados as $t_e)
-                {
-                    if($t_e->getEstado()=="Envio programado")
-                        self::CancelarTraspasoAlmacen ($t_e->getIdTraspaso());
-                }
-                foreach($traspasos_recibidos as $t_r)
-                {
-                    if(!$t_r->getCancelado()&&!$t_r->getCompleto())
-                        self::CancelarTraspasoAlmacen ($t_r->getIdTraspaso());
-                }
             }
             catch(Exception $e)
             {
                 DAO::transRollback();
                 Logger::error("No se pudo eliminar el almacen: ".$e);
-                throw new Exception("No se pudo eliminar el almacen");
+                throw new InvalidDatabaseOperationException("No se pudo eliminar el almacen");
             }
             DAO::transEnd();
             Logger::log("Almacen eliminado exitosamente");
@@ -162,19 +161,18 @@ class AlmacenesController extends ValidacionesController implements IAlmacenes{
 		$nombre = null
 	){
             Logger::log("Editando almacen");
-            
-            //valida los parametros de editar almacen
-            $validar = self::validarParametrosAlmacen($id_almacen,null,null,$id_tipo_almacen,$nombre,$descripcion);
-            if(is_string($validar))
-            {
-                Logger::error($validar);
-                throw new Exception($validar);
-            }
-            $almacen=AlmacenDAO::getByPK($id_almacen);
+
+            //varificamos si el almacen exisate y esta activo
+            if( ! $almacen = AlmacenDAO::getByPK($id_almacen) ){
+                Logger::log("No se tiene registro del almacen {$id_almacen}");
+                throw new BusinessLogicException("No se tiene registro del almacen {$id_almacen}");
+            }    
+                
+
             if(!$almacen->getActivo())
             {
                 Logger::error("El almacen no esta activo, no puede ser editado");
-                throw new Exception("El almacen no esta activo, no puede ser editado");
+                throw new BusinessLogicException("El almacen no esta activo, no puede ser editado");
             }
             
             //Si un parametro no es nulo, se toma como actualizacion
@@ -182,25 +180,33 @@ class AlmacenesController extends ValidacionesController implements IAlmacenes{
             {
                 $almacen->setDescripcion($descripcion);
             }
+
             if(!is_null($nombre))
             {
                 //Se verifica que el nombre del almacen no se repita
-                $almacenes = AlmacenDAO::search(new Almacen( array( "id_sucursal" => $almacen->getIdSucursal() ) ) );
+                $almacenes = AlmacenDAO::search( new Almacen( array( "id_sucursal" => $almacen->getIdSucursal() ) ) );
                 foreach($almacenes as $a)
                 {
                     if($a->getNombre()==trim($nombre) && $a->getIdAlmacen()!=$id_almacen)
                     {
                         Logger::log("El nombre (".$nombre.") ya esta siendo usado por el almacen: ".$a->getIdAlmacen());
-                        throw new Exception("El nombre ya esta en uso");
+                        throw new BusinessLogicException("El nombre ya esta en uso");
                     }
                 }
                 $almacen->setNombre(trim($nombre));
-            }
-            
+            }                    
+
             //El tipo de almacen no puede ser cambiado a un almacen de consignacion, 
             //ni un almacen de consignacion puede ser cambiado a otro tipo de almacen.
             if(!is_null($id_tipo_almacen))
             {
+
+                //verificamos que el tipo de almacen exista
+                if( ! $tipo_almacen = TipoAlmacenDAO::getByPK( $id_tipo_almacen ) ){
+                    Logger::log("No se tiene registro del tipo de almacen {$id_tipo_almacen}");
+                    throw new BusinessLogicException("No se tiene registro del tipo de almacen {$id_tipo_almacen}");
+                }
+
                 if($id_tipo_almacen==2)
                 {
                     Logger::warn("Se busca cambiar el tipo de almacen para volverse un almacen de consignacion, no se hara nada pues esto no esta permitido");

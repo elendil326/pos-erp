@@ -134,18 +134,46 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
      * Editar Almacen
      */
     public function testEditarAlmacen(){
+
+        DireccionDAO::save( $direccion = new Direccion(array(
+            "calle" => "Una Calle",
+            "numero_exterior" => "322",
+            "id_ciudad" => "12",
+            "codigo_postal" => "38000",
+            "ultima_modificacion" => "2012-02-21 22:10:45",
+            "id_usuario_ultima_modificacion" => "2"
+        )));
+
+        EmpresaDAO::save( $empresa = new Empresa ( array(
+            "id_direccion" => $direccion->getIdDireccion(),
+            "rfc" => "RFC_" . time(),
+            "razon_social" => "Empresa_Razon_Social_" . time(),
+            "fecha_alta" => "2012-02-21 22:10:45",
+            "activo" => 1,
+            "direccion_web" => "Dir_" . time()
+        )));
+
+        SucursalDAO::save($sucursal = new Sucursal(array(
+            "id_direccion" => $direccion->getIdDireccion(),
+            "razon_social" => "Sucursal_Razon_Social_" . time(),
+            "saldo_a_favor" => 2000,
+            "fecha_apertura" => "2012-02-21 22:10:45",
+            "activa" => 1
+        )));
         
         $tipo_almacen = AlmacenesController::NuevoTipo("Nuevo_Tipo_Almacen__" . time());	        
 
         $almacen = AlmacenesController::Nuevo(
-		    $id_empresa = 1, 
-		    $id_sucursal = 1, 
+		    $id_empresa = $empresa->getIdEmpresa(), 
+		    $id_sucursal = $sucursal->getIdSucursal(), 
 		    $id_tipo_almacen = $tipo_almacen["id_tipo_almacen"], 
 		    $nombre = "Almacen_Editar" . time(), 
 		    $descripcion = "Almacen de prueba_ " . time()
 	    );
 
         $tipo_almacen_mod = AlmacenesController::NuevoTipo("Nuevo_Tipo_Almacen__mod_" . time());	        
+
+        // Probamos editar el tipo de almacen
 
         $almacen_editado = AlmacenesController::Editar(
             $id_almacen = $almacen["id_almacen"], 
@@ -154,12 +182,214 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
 		    $nombre = null
         );
 
-        $almacen = AlmacenDAO::getByPK($almacen["id_almacen"]);
+        $_almacen = AlmacenDAO::getByPK($almacen["id_almacen"]);
 
-        $this->assertEquals($tipo_almacen_mod["id_tipo_almacen"], $almacen->getIdTipoAlmacen);
+        $this->assertEquals($tipo_almacen_mod["id_tipo_almacen"], $_almacen->getIdTipoAlmacen());
+
+        // Probamos editar la descripcion del almacen
+
+        $almacen_editado = AlmacenesController::Editar(
+            $id_almacen = $almacen["id_almacen"], 
+		    $descripcion = "Descripcion Editada", 
+		    $id_tipo_almacen = null, 
+		    $nombre = null
+        );
+
+        $_almacen = AlmacenDAO::getByPK($almacen["id_almacen"]);
+
+        $this->assertEquals("Descripcion Editada", $_almacen->getDescripcion());
+
+        // Probamos editar el nombre del Alamcen
+
+        $almacen_editado = AlmacenesController::Editar(
+            $id_almacen = $almacen["id_almacen"], 
+		    $descripcion = null, 
+		    $id_tipo_almacen = null, 
+		    $nombre = "Nombre del Almacen"
+        );
+
+        $_almacen = AlmacenDAO::getByPK($almacen["id_almacen"]);
+
+        $this->assertEquals("Nombre del Almacen", $_almacen->getNombre());
 
     }
 
+
+    /**
+     * Desactivar Almacen
+     */
+    public function testDesactivarAlmacen(){
+
+        $usuario = UsuarioDAO::getAll();
+    
+        $id_usuario = $usuario[0]->getIdUsuario();
+
+        DireccionDAO::save( $direccion = new Direccion(array(
+            "calle" => "Una Calle",
+            "numero_exterior" => "322",
+            "id_ciudad" => "12",
+            "codigo_postal" => "38000",
+            "ultima_modificacion" => "2012-02-21 22:10:45",
+            "id_usuario_ultima_modificacion" => "2"
+        )));
+
+        EmpresaDAO::save( $empresa = new Empresa ( array(
+            "id_direccion" => $direccion->getIdDireccion(),
+            "rfc" => "RFC_" . time(),
+            "razon_social" => "Empresa_Razon_Social__" . time(),
+            "fecha_alta" => "2012-02-21 22:10:45",
+            "activo" => 1,
+            "direccion_web" => "Dir_" . time()
+        )));
+
+        SucursalDAO::save($sucursal = new Sucursal(array(
+            "id_direccion" => $direccion->getIdDireccion(),
+            "razon_social" => "Sucursal_Razon_Social__" . time(),
+            "saldo_a_favor" => 2000,
+            "fecha_apertura" => "2012-02-21 22:10:45",
+            "activa" => 1
+        )));
+        
+        $tipo_almacen = AlmacenesController::NuevoTipo("Nuevo_Tipo_Almacen___" . time());	        
+
+        $almacen = AlmacenesController::Nuevo(
+		    $id_empresa = $empresa->getIdEmpresa(), 
+		    $id_sucursal = $sucursal->getIdSucursal(), 
+		    $id_tipo_almacen = $tipo_almacen["id_tipo_almacen"], 
+		    $nombre = "Almacen_Editar" . time(), 
+		    $descripcion = "Almacen de prueba_ " . time()
+	    );
+
+        // Desactivamos el Almacen
+
+        $almacen_desactivado = AlmacenesController::Desactivar(
+            $id_almacen = $almacen["id_almacen"]
+        );
+
+        $_almacen = AlmacenDAO::getByPK($almacen["id_almacen"]);
+
+        $this->assertEquals(0, $_almacen->getActivo());
+
+    }
+
+
+    /**
+     * Desactivar Almacen con Productos
+     */
+    public function testDesactivarAlmacenProductos(){        
+/*
+        DireccionDAO::save( $direccion = new Direccion(array(
+            "calle" => "Una Calle",
+            "numero_exterior" => "322",
+            "id_ciudad" => "12",
+            "codigo_postal" => "38000",
+            "ultima_modificacion" => "2012-02-21 22:10:45",
+            "id_usuario_ultima_modificacion" => "2"
+        )));
+
+        EmpresaDAO::save( $empresa = new Empresa ( array(
+            "id_direccion" => $direccion->getIdDireccion(),
+            "rfc" => "RFC_" . time(),
+            "razon_social" => "Empresa_Razon_Social___" . time(),
+            "fecha_alta" => "2012-02-21 22:10:45",
+            "activo" => 1,
+            "direccion_web" => "Dir_" . time()
+        )));
+
+        SucursalDAO::save($sucursal = new Sucursal(array(
+            "id_direccion" => $direccion->getIdDireccion(),
+            "razon_social" => "Sucursal_Razon_Social___" . time(),
+            "saldo_a_favor" => 2000,
+            "fecha_apertura" => "2012-02-21 22:10:45",
+            "activa" => 1
+        )));
+        
+        $tipo_almacen = AlmacenesController::NuevoTipo("Nuevo_Tipo_Almacen____" . time());	        
+
+        $almacen = AlmacenesController::Nuevo(
+		    $id_empresa = $empresa->getIdEmpresa(), 
+		    $id_sucursal = $sucursal->getIdSucursal(), 
+		    $id_tipo_almacen = $tipo_almacen["id_tipo_almacen"], 
+		    $nombre = "Almacen_Editar" . time(), 
+		    $descripcion = "Almacen de prueba_ " . time()
+	    );
+
+        // SON PUTAS MAMADAS, NO VOY A CREAR UNA COMPRA Y UN USUARIO, YA QUE ESTO DESENCADENARIA UN BUEN DE COSAS Y SERIA INMENSA ESTA FUNCION
+        /*$usuario = UsuarioDAO::getAll();    
+        $id_usuario = $usuario[0]->getIdUsuario();
+
+        $compras = ComprasDAO::getAll();
+        $id_compra = $compras[0]->getIdCompra();*/
+
+/*        MonedaDAO::save( $moneda = new Moneda( array(
+            "nombre" => "Moneda",
+            "simbolo" => "MN",
+            "activa" => 1
+        ); ) );
+
+        TarifaDAO::save( $tarifa = new Tarifa( array(
+            "nombre" => "",
+            "tipo_tarifa" => "",
+            "activa" => "",
+            "" => "",
+            "" => "",
+            "" => "",
+            "" => "",
+            "" => "",
+            "" => "",
+        ) ) );
+        
+        UsuarioDAO::save( $usuario = new Usuario( array(
+            "id_rol" => 
+            "fecha_asignacion_rol" => 
+            "nombre" => 
+            "fecha_alta" => 
+            "limite_credito" => 
+            "activo" => 
+            "limite_credito" => 
+            "password" => 
+            "consignatario" => 
+            "saldo_del_ejercicio" => 
+            "id_tarifa_compra" => 
+            "tarifa_compra_obtenida" => 
+            "id_tarifa_venta" => 
+            "tarifa_venta_obtenida" => 
+        ) ) );
+
+        LoteDAO::save( $lote = new Lote( array(
+            "id_compra" => 1,
+            "id_usuario" => 1,
+            "fecha_ingreso" => "2012-02-21 22:10:45",
+            "observaciones" => ""
+        ) ) );
+
+        LoteAlmacenDAO::save( $lote_almacen = new LoteAlmacen( array(
+            "id_lote" => $lote->getIdLote(),
+            "id_almacen" => $almacen["id_almacen"]
+        ) ) );
+
+        ProductoDAO::save( $producto = new Producto( array(
+            
+        ) ) );
+
+        LoteProducto::save( $lote_producto = new LoteProducto( array(
+            "id_lote" => $lote->getIdLote(),
+            "id_producto" => $producto->getIdProducto(),
+            "cantidad" => 100
+        ) ) );
+
+        // Desactivamos el Almacen
+
+        $almacen_desactivado = AlmacenesController::Desactivar(
+            $id_almacen = $almacen["id_almacen"]
+        );
+
+        $_almacen = AlmacenDAO::getByPK($almacen["id_almacen"]);
+
+        $this->assertEquals(0, $_almacen->getActivo());
+*/
+
+    }
 
 
 //--------------------------------------------------
