@@ -12,6 +12,7 @@
 		$page->addComponent( new MessageComponent( "Lista de clientes " ) );
 
 		$lista = ClientesController::Buscar();
+		
 		$tabla = new TableComponent( 
 			array(
 				"nombre"                        => "Nombre",

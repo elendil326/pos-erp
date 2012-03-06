@@ -1008,7 +1008,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
         (
 			$id_sucursal = null, 
 			$id_usuario = null, 
-			$limit = 50, 
+			$limit = 5000, 
 			$page = null, 
 			$query = null, 
 			$start = 0

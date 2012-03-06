@@ -47,7 +47,7 @@ class UsuarioDAO extends UsuarioDAOBase
 
 
 
-	public static function buscarClientes( $query, $how_many = 10 ){
+	public static function buscarClientes( $query, $how_many = 5000 ){
 		$sql = "select * from usuario where ( nombre like ? or rfc like ? ) and id_rol = 5 limit ?; ";
 		Logger::error("buscarclientes en el dao de usuario esta hardcodeado el id_rol = 5 para clientes");
 		$val = array( "%" . $query . "%" , "%" . $query . "%" , $how_many );
