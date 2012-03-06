@@ -273,26 +273,10 @@
 			$this->assertInternalType("int" , $res["numero_de_resultados"],"---- 'testBuscarClasificacionClientesPorQuery' 'numero_de_resultados' NO ES UN ENTERO");	
 			$this->assertGreaterThanOrEqual(1, $res['numero_de_resultados'],"---- 'testBuscarClasificacionClientesPorQuery' SE DEBIÓ DE ENCONTRAR ALMENOS 1 RESULTADO");			
 		}		
-		
 
-
-
-		/*
-		public function testBuscarClientesPorID_Sucursal(){
-			$res = ClientesController::Buscar($id_sucursal = 1 );
-			$this->assertInternalType("int" , $res["numero_de_resultados"],"---- 'testBuscarClientesPorID_Sucursal' 'numero_de_resultados' NO ES UN ENTERO");
-			
-			foreach($res["resultados"] as $row){
-				if($row->getIdSucursal() != '1'|| is_null($row->getIdSucursal()))
-					$this->assertEquals($row->getIdSucursal(),1,"---- 'testBuscarClientesPorID_Sucursal' LOS IDS NO COINCIDEN SE ENVIÓ EL id_sucursal =1 Y LA CONSULTA DEVOLVIÓ id_sucursal = ".$row->getIdSucursal()." PARA id_usuario ".$row->getIdUsuario());
-			}		
-		}*/
-		
-		
 		/**
      	* @expectedException BusinessLogicException
     	*/
-/*
 		public function testNuevoClienteConMismoNombre(){
 			//se crea un nuevo cliente 
 			$nombre = self::RandomString(15,FALSE,FALSE,FALSE)." - ". time();
@@ -301,6 +285,6 @@
 			//se trata de insertar otro cliente con el mismo nombre
 			$nuevo_cliente2 = ClientesController::nuevo($nombre);
 		}
-*/
+
 	}
 

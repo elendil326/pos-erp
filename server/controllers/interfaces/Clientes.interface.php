@@ -10,6 +10,38 @@
   
 	/**
  	 *
+ 	 *Elimina una la relacion entre un cliente y uno o varios avales para que no tengan v?nculo alguno en la libreta de avales. NO SE PODR? ELIMINAR UN AVAL DE UN CLIENTE CUANDO EXISTA UNA VENTA SIN LIQUIDAR.
+ 	 *
+ 	 * @param avales json JSON con los id_aval a eliminar al cliente
+ 	 * @param id_cliente int ID del cliente avalado
+ 	 **/
+  static function EliminarAval
+	(
+		$avales, 
+		$id_cliente
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Asigna avales a un cliente (tanto aval como cliente son usuarios), para poder generar su libreta de avales para poder usarla despues en una venta.
+ 	 *
+ 	 * @param avales json JSON que contendra los diferentes IDs de usuarios que fungiran como avales del cliente
+ 	 * @param id_cliente int Representa el ID del cliente que va a ser avalado
+ 	 **/
+  static function NuevoAval
+	(
+		$avales, 
+		$id_cliente
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
  	 *Busca un cliente por su razon social, denominacion comercial, rfc o representante legal y regresa un objeto que contiene un conjunto de objetos que contiene la informacion de los clientes que coincidieron con la busqueda
  	 *
  	 * @param id_sucursal int Filtrar busqueda por sucursal donde se dieron de alta este cliente. 
