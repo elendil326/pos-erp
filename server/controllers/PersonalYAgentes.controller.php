@@ -825,8 +825,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             try
             {
 
-                //Se guarda el usuario creado.
-                UsuarioDAO::save($usuario);
+
                 
                 //Se crean las direcciones recibidas
                 if(!is_null($direcciones))
@@ -839,7 +838,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                        
 						Logger::log( "Insertando nueva direccion" );
 
-                        $address = DireccionController::NuevaDireccion(
+                        $address_id = DireccionController::NuevaDireccion(
 				                $calle 				= isset($d["calle"]) ? $d["calle"] : null,
 				                $numero_exterior	= isset($d["numero_exterior"]) ? $d["numero_exterior"] : null,
 				                $colonia			= isset($d["colonia"]) ? $d["colonia"] : null,
@@ -850,8 +849,13 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 				                $telefono			= isset($d["telefono1"]) ? $d["telefono1"] : null,
 				                $telefono2			= isset($d["telefono2"]) ? $d["telefono2"] : null );
 
+						$usuario->setIdDireccion( $address_id );
                     }
                 }
+
+                //Se guarda el usuario creado.
+                UsuarioDAO::save($usuario);
+
 
                 //si se pasaron impuestos, se validan y se agregan a la tabla impuesto_usuario
                 if(!is_null($impuestos))

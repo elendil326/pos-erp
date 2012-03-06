@@ -356,7 +356,16 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
             
             //se crea la cliente utilizando el metodo Nuevo usuario, este se encarga de la validacion
             //y se toma como rol de cliente el 5
-            
+
+            if(strlen($rfc) == 0){
+				$rfc = null;
+			}
+
+            if(strlen($curp) == 0){
+				$curp = null;
+			}
+			
+			
             try 
             {
                 $cliente = PersonalYAgentesController::NuevoUsuario(
@@ -1076,8 +1085,10 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 		$line_size = sizeof( $lines );
 		
 		while( $nline < $line_size ){
-			//buscar primer cliente
-			while( $lines[++$nline] != "MGW10002");
+			//buscar siguiente cliente
+			while( ($lines[++$nline] != "MGW10002")){
+				if($nline+1 >= $line_size) return;
+			};
 
 			//nuevo cliente
 			$_cliente = array();
