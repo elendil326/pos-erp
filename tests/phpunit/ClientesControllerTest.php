@@ -57,28 +57,43 @@
 
 		
 		public function testNuevoCliente(){
-			$c = ClientesController::nuevo("Felix Hdez Reyes",//PERMITE NOMBRES REPETIDOS
-			"1",//HARDCODEADO A 1
-			"C47465-2012",//->HARDCODEADO A NULL SIEMPRE
-			"* Otra cuenta_mensajeria",//INSERTA LONG > A LOS Q INDICA LA DEF DE LA TABLA DE AL BD
-			"CURP8".time(),//NO ESTA BIEN VALIDADADO, NO EXP REG
-			"denominacion comercial",//INSERTA LONG > A LOS Q INDICA LA DEF DE LA TABLA DE AL BD
-			"50", //PUEDE RECIBIR STRINGS E INSERTARLOS COMO #'S
-			null,
-			time() . "@hotmail.com",
-			null,
-			1,
-			null, //
-			"1", //
-			"999999",//ACEPTA CADENAS Y NO TIENEN UN LIM MAX, ACEPTA HASTA 9999999999999999999999999999999999999999999999999999999999999999......
-			"1234",//ACEPTA # AUNQUE LOS EVALUA Y NO PERMITE INSERT
-			null, 
-			"RFC8".time(),//NO EXPR REG PARA RFC 
-			12345, //INSERTA NUMEROS, CUANDO SON # ELEVADOS LOS INSERTA 123e+38
-			null, 
-			null
-			);
+			$nombre = self::RandomString(15,FALSE,FALSE,FALSE)." - ". time();		
+			
+        	$c = ClientesController::nuevo($nombre, 
+														$clasificacion_cliente = null, 
+														$codigo_cliente = null, 
+														$cuenta_de_mensajeria = null, 
+														$curp = null, 
+														$denominacion_comercial = null, 
+														$descuento_general = null, 
+														$direcciones = Array(Array(
+															"calle"  			=> "Monte Balcanes",
+															"numero_exterior"   => "107",
+															"colonia"  			=> "Arboledas",
+															"id_ciudad"  		=> 334,
+															"codigo_postal"  	=> "38060",
+															"numero_interior"  	=> null,
+															"texto_extra"  		=> "Calle cerrada",
+															"telefono1"  		=> "4616149974",
+															"telefono2"			=> "45*451*454"
+														)), 
+														$email = null, 
+														$id_cliente_padre = null, 
+														$id_moneda =  1 , 
+														$id_tarifa_compra = null, 
+														$id_tarifa_venta = null, 
+														$limite_credito = null, 
+														$password = null, 
+														$representante_legal = null, 
+														$rfc = null, 
+														$sitio_web = null, 
+														$telefono_personal1 = null, 
+														$telefono_personal2 = null);
+			
 			$this->assertInternalType("int" , $c["id_cliente"],"---- 'testNuevoCliente' 'id_cliente' NO ES UN ENTERO");
+			$array_datos_cliente = ClientesController::Detalle($c['id_cliente']);
+			$this->assertNotEquals(null , $array_datos_cliente[0]->getIdDireccion(),"---- 'testNuevoCliente' 'id_direccion' NO TIENE VALOR, NO SE INSERTÓ LA DIRECCION");			
+			
 		}
 		
 		
@@ -274,22 +289,6 @@
 			$this->assertGreaterThanOrEqual(1, $res['numero_de_resultados'],"---- 'testBuscarClasificacionClientesPorQuery' SE DEBIÓ DE ENCONTRAR ALMENOS 1 RESULTADO");			
 		}		
 		
-
-
-
-		/*
-		public function testBuscarClientesPorID_Sucursal(){
-			$res = ClientesController::Buscar($id_sucursal = 1 );
-			$this->assertInternalType("int" , $res["numero_de_resultados"],"---- 'testBuscarClientesPorID_Sucursal' 'numero_de_resultados' NO ES UN ENTERO");
-			
-			foreach($res["resultados"] as $row){
-				if($row->getIdSucursal() != '1'|| is_null($row->getIdSucursal()))
-					$this->assertEquals($row->getIdSucursal(),1,"---- 'testBuscarClientesPorID_Sucursal' LOS IDS NO COINCIDEN SE ENVIÓ EL id_sucursal =1 Y LA CONSULTA DEVOLVIÓ id_sucursal = ".$row->getIdSucursal()." PARA id_usuario ".$row->getIdUsuario());
-			}		
-		}*/
-		
-		
-
 		public function testNuevoClienteDesdeAdminPAQ(){
 			
 			POSController::DropBd();
