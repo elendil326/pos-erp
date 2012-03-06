@@ -567,6 +567,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
             if(!is_null($password))
             {
                 $validar = self::validarParametrosCliente($id_cliente);
+
                 if(is_string($validar))
                 {
                     Logger::error($validar);
@@ -1051,5 +1052,174 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
         );
 	}
 	
-	
+
+
+
+	public static function ImportarClientes($raw_contents, $from = "ADMINPAQ"){
+		
+		$lines = explode( "\n", $raw_contents );
+		
+		
+		$nline = -1; 
+
+
+		//buscar las llaves de cliente
+		while( $lines[++$nline] != "MGW10002");
+		
+		
+		//llaves
+		$llaves = array();
+		for ($z=0; ( $lines[++$nline] != "/MGW10002"); $z++) { 
+			$llave [ $z ] = $lines[$nline];
+			// n - |CRFC|
+		}
+		
+		$campos = $z;
+		
+		//buscar primer cliente
+		while( $lines[++$nline] != "MGW10002");
+		
+		//nuevo cliente
+		$_cliente = array();
+		$nline++;
+		for ($z = 0; $z < $campos; $z++, $nline++) { 
+			
+			//$lines[$nline] =  substr ( $lines[$nline] , 1 , -1 );
+			
+			switch( $llave [ $z ]  ){
+				case "CCODIGOCLIENTE" 			: $_cliente["CCODIGOCLIENTE"] = $lines[$nline];  break; 
+				case "CRAZONSOCIAL" 				: $_cliente["CRAZONSOCIAL"] = $lines[$nline];  break; 
+				case "CFECHAALTA" 				: $_cliente["CFECHAALTA"] = $lines[$nline];  break; 
+				case "CRFC" 						: $_cliente["CRFC"] = $lines[$nline];  break; 
+				case "CCURP" 						: $_cliente["CCURP"] = $lines[$nline];  break; 
+				case "CDENCOMERCIAL" 				: $_cliente["CDENCOMERCIAL"] = $lines[$nline];  break; 
+				case "CREPLEGAL" 					: $_cliente["CREPLEGAL"] = $lines[$nline];  break; 
+				case "CIDMONEDA" 					: $_cliente["CIDMONEDA"] = $lines[$nline];  break; 
+				case "CIDMONEDA2" 				: $_cliente["CIDMONEDA2"] = $lines[$nline];  break; 
+				case "CLISTAPRECIOCLIENTE" 		: $_cliente["CLISTAPRECIOCLIENTE"] = $lines[$nline];  break; 
+				case "CDESCUENTODOCTO" 			: $_cliente["CDESCUENTODOCTO"] = $lines[$nline];  break; 
+				case "CDESCUENTOMOVTO" 			: $_cliente["CDESCUENTOMOVTO"] = $lines[$nline];  break; 
+				case "CBANVENTACREDITO" 			: $_cliente["CBANVENTACREDITO"] = $lines[$nline];  break; 
+				case "cCodigoValorClasifCliente1"	: $_cliente["cCodigoValorClasifCliente1"] = $lines[$nline];  break; 
+				case "cCodigoValorClasifCliente2" : $_cliente["cCodigoValorClasifCliente2"] = $lines[$nline];  break; 
+				case "cCodigoValorClasifCliente3" : $_cliente["cCodigoValorClasifCliente3"] = $lines[$nline];  break; 
+				case "cCodigoValorClasifCliente4" : $_cliente["cCodigoValorClasifCliente4"] = $lines[$nline];  break; 
+				case "cCodigoValorClasifCliente5" : $_cliente["cCodigoValorClasifCliente5"] = $lines[$nline];  break; 
+				case "cCodigoValorClasifCliente6" : $_cliente["cCodigoValorClasifCliente6"] = $lines[$nline];  break; 
+				case "CTIPOCLIENTE" 				: $_cliente["CTIPOCLIENTE"] = $lines[$nline];  break; 
+				case "CESTATUS" 					: $_cliente["CESTATUS"] = $lines[$nline];  break; 
+				case "CFECHABAJA" 				: $_cliente["CFECHABAJA"] = $lines[$nline];  break; 
+				case "CFECHAULTIMAREVISION" 		: $_cliente["CFECHAULTIMAREVISION"] = $lines[$nline];  break; 
+				case "CLIMITECREDITOCLIENTE" 		: $_cliente["CLIMITECREDITOCLIENTE"] = $lines[$nline];  break; 
+				case "CDIASCREDITOCLIENTE" 		: $_cliente["CDIASCREDITOCLIENTE"] = $lines[$nline];  break; 
+				case "CLIMDOCTOS" 				: $_cliente["CLIMDOCTOS"] = $lines[$nline];  break; 
+				case "CBANEXCEDERCREDITO" 		: $_cliente["CBANEXCEDERCREDITO"] = $lines[$nline];  break; 
+				case "CDESCUENTOPRONTOPAGO" 		: $_cliente["CDESCUENTOPRONTOPAGO"] = $lines[$nline];  break; 
+				case "CDIASPRONTOPAGO" 			: $_cliente["CDIASPRONTOPAGO"] = $lines[$nline];  break; 
+				case "CINTERESMORATORIO" 			: $_cliente["CINTERESMORATORIO"] = $lines[$nline];  break; 
+				case "CDIAPAGO" 					: $_cliente["CDIAPAGO"] = $lines[$nline];  break; 
+				case "CDIASREVISION" 				: $_cliente["CDIASREVISION"] = $lines[$nline];  break; 
+				case "CMENSAJERIA" 				: $_cliente["CMENSAJERIA"] = $lines[$nline];  break; 
+				case "CCUENTAMENSAJERIA" 			: $_cliente["CCUENTAMENSAJERIA"] = $lines[$nline];  break; 
+				case "CDIASEMBARQUECLIENTE" 		: $_cliente["CDIASEMBARQUECLIENTE"] = $lines[$nline];  break; 
+				case "cCodigoAlmacen" 			: $_cliente["cCodigoAlmacen"] = $lines[$nline];  break; 
+				case "cCodigoAgenteVenta" 		: $_cliente["cCodigoAgenteVenta"] = $lines[$nline];  break; 
+				case "cCodigoAgenteCobro" 		: $_cliente["cCodigoAgenteCobro"] = $lines[$nline];  break; 
+				case "CRESTRICCIONAGENTE" 		: $_cliente["CRESTRICCIONAGENTE"] = $lines[$nline];  break; 
+				case "CIMPUESTO1" 				: $_cliente["CIMPUESTO1"] = $lines[$nline];  break; 
+				case "CIMPUESTO2" 				: $_cliente["CIMPUESTO2"] = $lines[$nline];  break; 
+				case "CIMPUESTO3" 				: $_cliente["CIMPUESTO3"] = $lines[$nline];  break; 
+				case "CRETENCIONCLIENTE1" 		: $_cliente["CRETENCIONCLIENTE1"] = $lines[$nline];  break; 
+				case "CRETENCIONCLIENTE2" 			: $_cliente["CRETENCIONCLIENTE2"] = $lines[$nline];  break; 
+				case "cCodigoValorClasifProveedor1" 	: $_cliente["cCodigoValorClasifProveedor1"] = $lines[$nline];  break; 
+				case "cCodigoValorClasifProveedor2" 	: $_cliente["cCodigoValorClasifProveedor2"] = $lines[$nline];  break; 
+				case "cCodigoValorClasifProveedor3" 	: $_cliente["cCodigoValorClasifProveedor3"] = $lines[$nline];  break; 
+				case "cCodigoValorClasifProveedor4" 	: $_cliente["cCodigoValorClasifProveedor4"] = $lines[$nline];  break; 
+				case "cCodigoValorClasifProveedor5" 	: $_cliente["cCodigoValorClasifProveedor5"] = $lines[$nline];  break; 
+				case "cCodigoValorClasifProveedor6" 	: $_cliente["cCodigoValorClasifProveedor6"] = $lines[$nline];  break; 
+				case "CLIMITECREDITOPROVEEDOR" 		: $_cliente["CLIMITECREDITOPROVEEDOR"] = $lines[$nline];  break; 
+				case "CDIASCREDITOPROVEEDOR" 			: $_cliente["CDIASCREDITOPROVEEDOR"] = $lines[$nline];  break; 
+				case "CTIEMPOENTREGA" 				: $_cliente["CTIEMPOENTREGA"] = $lines[$nline];  break; 
+				case "CDIASEMBARQUEPROVEEDOR" 		: $_cliente["CDIASEMBARQUEPROVEEDOR"] = $lines[$nline];  break; 
+				case "CIMPUESTOPROVEEDOR1" 			: $_cliente["CIMPUESTOPROVEEDOR1"] = $lines[$nline];  break; 
+				case "CIMPUESTOPROVEEDOR2" 			: $_cliente["CIMPUESTOPROVEEDOR2"] = $lines[$nline];  break; 
+				case "CIMPUESTOPROVEEDOR3" 			: $_cliente["CIMPUESTOPROVEEDOR3"] = $lines[$nline];  break; 
+				case "CRETENCIONPROVEEDOR1" 			: $_cliente["CRETENCIONPROVEEDOR1"] = $lines[$nline];  break; 
+				case "CRETENCIONPROVEEDOR2" 			: $_cliente["CRETENCIONPROVEEDOR2"] = $lines[$nline];  break; 
+				case "CBANINTERESMORATORIO" 			: $_cliente["CBANINTERESMORATORIO"] = $lines[$nline];  break; 
+				case "CCOMVENTAEXCEPCLIENTE" 			: $_cliente["CCOMVENTAEXCEPCLIENTE"] = $lines[$nline];  break; 
+				case "CCOMCOBROEXCEPCLIENTE" 			: $_cliente["CCOMCOBROEXCEPCLIENTE"] = $lines[$nline];  break; 
+				case "CBANPRODUCTOCONSIGNACION" 		: $_cliente["CBANPRODUCTOCONSIGNACION"] = $lines[$nline];  break; 
+				case "CSEGCONTCLIENTE1" 			: $_cliente["CSEGCONTCLIENTE1"] = $lines[$nline];  break; 
+				case "CSEGCONTCLIENTE2" 			: $_cliente["CSEGCONTCLIENTE2"] = $lines[$nline];  break; 
+				case "CSEGCONTCLIENTE3" 			: $_cliente["CSEGCONTCLIENTE3"] = $lines[$nline];  break; 
+				case "CSEGCONTCLIENTE4" 			: $_cliente["CSEGCONTCLIENTE4"] = $lines[$nline];  break; 
+				case "CSEGCONTCLIENTE5" 			: $_cliente["CSEGCONTCLIENTE5"] = $lines[$nline];  break; 
+				case "CSEGCONTCLIENTE6" 			: $_cliente["CSEGCONTCLIENTE6"] = $lines[$nline];  break; 
+				case "CSEGCONTCLIENTE7" 			: $_cliente["CSEGCONTCLIENTE7"] = $lines[$nline];  break; 
+				case "CSEGCONTPROVEEDOR1" 		: $_cliente["CSEGCONTPROVEEDOR1"] = $lines[$nline];  break; 
+				case "CSEGCONTPROVEEDOR2" 		: $_cliente["CSEGCONTPROVEEDOR2"] = $lines[$nline];  break; 
+				case "CSEGCONTPROVEEDOR3" 		: $_cliente["CSEGCONTPROVEEDOR3"] = $lines[$nline];  break; 
+				case "CSEGCONTPROVEEDOR4" 		: $_cliente["CSEGCONTPROVEEDOR4"] = $lines[$nline];  break; 
+				case "CSEGCONTPROVEEDOR5" 		: $_cliente["CSEGCONTPROVEEDOR5"] = $lines[$nline];  break; 
+				case "CSEGCONTPROVEEDOR6" 		: $_cliente["CSEGCONTPROVEEDOR6"] = $lines[$nline];  break; 
+				case "CSEGCONTPROVEEDOR7" 		: $_cliente["CSEGCONTPROVEEDOR7"] = $lines[$nline];  break; 
+				case "CTEXTOEXTRA1" 				: $_cliente["CTEXTOEXTRA1"] = $lines[$nline];  break; 
+				case "CTEXTOEXTRA2" 				: $_cliente["CTEXTOEXTRA2"] = $lines[$nline];  break; 
+				case "CTEXTOEXTRA3" 				: $_cliente["CTEXTOEXTRA3"] = $lines[$nline];  break; 
+				case "CFECHAEXTRA" 				: $_cliente["CFECHAEXTRA"] = $lines[$nline];  break; 
+				case "CIMPORTEEXTRA1" 			: $_cliente["CIMPORTEEXTRA1"] = $lines[$nline];  break; 
+				case "CIMPORTEEXTRA2" 			: $_cliente["CIMPORTEEXTRA2"] = $lines[$nline];  break; 
+				case "CIMPORTEEXTRA3" 			: $_cliente["CIMPORTEEXTRA3"] = $lines[$nline];  break; 
+				case "CIMPORTEEXTRA4" 			: $_cliente["CIMPORTEEXTRA4"] = $lines[$nline];  break; 
+				case "CBANDOMICILIO" 				: $_cliente["CBANDOMICILIO"] = $lines[$nline];  break; 
+				case "CBANCREDITOYCOBRANZA" 		: $_cliente["CBANCREDITOYCOBRANZA"] = $lines[$nline];  break; 
+				case "CBANENVIO" 					: $_cliente["CBANENVIO"] = $lines[$nline];  break; 
+				case "CBANAGENTE" 				: $_cliente["CBANAGENTE"] = $lines[$nline];  break; 
+				case "CBANIMPUESTO" 				: $_cliente["CBANIMPUESTO"] = $lines[$nline];  break; 
+				case "CBANPRECIO" 				: $_cliente["CBANPRECIO"] = $lines[$nline];  break; 
+				case "CCOMVENTA" 					: $_cliente["CCOMVENTA"] = $lines[$nline];  break; 
+				case "CCOMCOBRO" 					: $_cliente["CCOMCOBRO"] = $lines[$nline];  break; 
+				case "CFACTERC01" 				: $_cliente["CFACTERC01"] = $lines[$nline];  break; 
+				case "CCODPROVCO" 				: $_cliente["CCODPROVCO"] = $lines[$nline];  break;
+				
+			}
+		}
+		
+		$c = ClientesController::Nuevo(
+				$razon_social			= $_cliente["CRAZONSOCIAL"], 
+				$clasificacion_cliente 	= $_cliente["cCodigoValorClasifCliente1"], 
+				$codigo_cliente 		= $_cliente["CCODIGOCLIENTE"], 
+				$cuenta_de_mensajeria 	= $_cliente["CMENSAJERIA"], 
+				$curp 					= $_cliente["CCURP"], 
+				$denominacion_comercial = $_cliente["CDENCOMERCIAL"], 
+				$descuento_general 		= 0, 
+				$direcciones 			= array(Array(
+					"tipo"				=> "fiscal",
+					"calle"  			=> "Monte Balcanes",
+			        "numero_exterior"   => "107",
+			        "colonia"  			=> "Arboledas",
+			        "id_ciudad"  		=> 334,
+			        "codigo_postal"  	=> "38060",
+			        "numero_interior"  	=> null,
+			        "texto_extra"  		=> "Calle cerrada",
+			        "telefono1"  		=> "4616149974",
+			        "telefono2"			=> "45*451*454"
+				)), 
+				$email 					= null, 
+				$id_cliente_padre 		= null, 
+				$id_moneda 				=  1 , 
+				$id_tarifa_compra 		= null, 
+				$id_tarifa_venta 		= null, 
+				$limite_credito 		= $_cliente["CLIMITECREDITOCLIENTE"], 
+				$password 				= null, 
+				$representante_legal 	= $_cliente["CREPLEGAL"], 
+				$rfc 					= $_cliente["CRFC"], 
+				$sitio_web 				= null, 
+				$telefono_personal1 	= null, 
+				$telefono_personal2 	= null
+			);
+		
+		//var_dump($_cliente);
+	}
 }

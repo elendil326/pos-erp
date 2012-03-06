@@ -95,7 +95,7 @@ Se puede ordenar por los atributos de producto.
             else if(!is_null($id_almacen))
             {
                 //Se buscan los registros de productos que cumplan con el almacen y con el producto recibidos
-                $productos_almacenes = ProductoAlmacenDAO::search( new ProductoAlmacen( 
+                $productos_almacenes = LoteProductoDAO::search( new LoteProducto( 
                         array( "id_almacen" => $id_almacen, "id_producto" => $id_producto ) ) );
             }
             else if(!is_null($id_empresa))
@@ -109,7 +109,7 @@ Se puede ordenar por los atributos de producto.
                 foreach($almacenes_empresa as $almacen_empresa)
                 {
                     //Se obtiene el arreglo de productos
-                    $productos_almacen_empresa = ProductoAlmacenDAO::search( new ProductoAlmacen(
+                    $productos_almacen_empresa = LoteProductoDAO::search( new LoteProducto(
                             array( "id_almacen" => $almacen_empresa->getIdAlmacen(), "id_producto" => $id_producto ) ) );
                     
                     //Se vacía el arreglo en uno general
@@ -131,7 +131,7 @@ Se puede ordenar por los atributos de producto.
                 foreach($almacenes_sucursal as $almacen_sucursal)
                 {
                     //Se obtiene el arreglo de productos
-                    $productos_almacen_sucursal = ProductoAlmacenDAO::search( new ProductoAlmacen( 
+                    $productos_almacen_sucursal = LoteProductoDAO::search( new LoteProducto( 
                             array( "id_almacen" => $almacen_sucursal->getIdAlmacen(), "id_producto" => $id_producto ) ) );
                     
                     //Se vacía el arreglo en uno general
@@ -153,8 +153,8 @@ Se puede ordenar por los atributos de producto.
                 foreach($almacenes as $almacen)
                 {
                     //Se obtiene el arreglo de productos
-                    $productos_a = ProductoAlmacenDAO::search( 
-							new ProductoAlmacen( 
+                    $productos_a = LoteProductoDAO::search( 
+							new LoteProducto( 
 									array( 
 										"id_almacen" => $almacen->getIdAlmacen(), 
 										"id_producto" => $id_producto 

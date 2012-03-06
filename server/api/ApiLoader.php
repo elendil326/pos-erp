@@ -1172,9 +1172,10 @@
 
 	protected function GenerateResponse() {		
 		try{
+
  		$this->response = PersonalYAgentesController::EditarUsuario( 
  			
-			
+
 			isset($_POST['id_usuario'] ) ? $_POST['id_usuario'] : null,
 			isset($_POST['codigo_usuario'] ) ? $_POST['codigo_usuario'] :  null,
 			isset($_POST['comision_ventas'] ) ? $_POST['comision_ventas'] :  null,

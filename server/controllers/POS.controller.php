@@ -46,7 +46,7 @@ require_once("interfaces/POS.interface.php");
  	 *Cuando un cliente pierde comunicacion se lanzan peticiones a intervalos pequenos de tiempo para revisar conectividad. Esos requests deberan hacerse a este metodo para que el servidor se de cuenta de que el cliente perdio conectvidad y tome medidas aparte como llenar estadistica de conectividad, ademas esto asegurara que el cliente puede enviar cambios ( compras, ventas, nuevos clientes ) de regreso al servidor. 
  	 *
  	 **/
-	public static function Probar_conexion
+	public static function ConexionProbar
 	(
 	)
 	{  
@@ -72,7 +72,7 @@ require_once("interfaces/POS.interface.php");
  	 *Revisar la version que esta actualmente en el servidor. 
  	 *
  	 **/
-	public static function Check_current_client_versionClient
+	public static function VersionClientCurrentCheckClient
 	(
 	)
 	{  
@@ -109,11 +109,16 @@ require_once("interfaces/POS.interface.php");
 
 		global $conn;
 
+
+  		$conn->Execute( "TRUNCATE TABLE `abono_venta`;"  );
+
   		$conn->Execute( "TRUNCATE TABLE `rol`;"  );
 		
 		$conn->Execute( "INSERT INTO `rol` (`id_rol`, `nombre`, `descripcion`, `salario`, `id_tarifa_compra`, `id_tarifa_venta`) VALUES ('5', 'Clientes', 'Clientes', NULL, 0, 0);");
 		
   		$conn->Execute( "TRUNCATE TABLE `usuario`; "  );
+
+  		$conn->Execute( "TRUNCATE TABLE `almacen`; "  );
 
   		$conn->Execute( "TRUNCATE TABLE `empresa`; "  );
 
@@ -123,28 +128,28 @@ require_once("interfaces/POS.interface.php");
 
   		$conn->Execute( "TRUNCATE TABLE `tipo_almacen`; "  );
 
-  		$conn->Execute( "TRUNCATE TABLE `almacen`; "  );
+
 
   		$conn->Execute( "TRUNCATE TABLE `producto`; "  );
                 
-                $conn->Execute( "TRUNCATE TABLE `servicio`; "  );
+		$conn->Execute( "TRUNCATE TABLE `servicio`; "  );
 
   		$conn->Execute( "TRUNCATE TABLE `sesion`; "  );
 
-  		$conn->Execute( "TRUNCATE TABLE `entrada_almacen`; "  );
+  		//$conn->Execute( "TRUNCATE TABLE `entrada_almacen`; "  );
 
   		$conn->Execute( "TRUNCATE TABLE `unidad`; "  );
                 
-                $conn->Execute( "TRUNCATE TABLE `clasificacion_producto`; " );
+		$conn->Execute( "TRUNCATE TABLE `clasificacion_producto`; " );
                 
-                $conn->Execute( "TRUNCATE TABLE `clasificacion_servicio`; " );
+		$conn->Execute( "TRUNCATE TABLE `clasificacion_servicio`; " );
 
   		$conn->Execute( "TRUNCATE TABLE `ciudad`; "  );
 
   		$conn->Execute( "TRUNCATE TABLE `direccion`; "  );
 
 
-  		$conn->Execute( "TRUNCATE TABLE `producto_almacen`; "  );
+  		//$conn->Execute( "TRUNCATE TABLE `producto_almacen`; "  );
 
   		$conn->Execute( "INSERT INTO `usuario` (`id_usuario`, `id_direccion`, `id_direccion_alterna`, `id_sucursal`, `id_rol`, `id_clasificacion_cliente`, `id_clasificacion_proveedor`, `id_moneda`, `fecha_asignacion_rol`, `nombre`, `rfc`, `curp`, `comision_ventas`, `telefono_personal1`, `telefono_personal2`, `fecha_alta`, `fecha_baja`, `activo`, `limite_credito`, `descuento`, `password`, `last_login`, `consignatario`, `salario`, `correo_electronico`, `pagina_web`, `saldo_del_ejercicio`, `ventas_a_credito`, `representante_legal`, `facturar_a_terceros`, `dia_de_pago`, `mensajeria`, `intereses_moratorios`, `denominacion_comercial`, `dias_de_credito`, `cuenta_de_mensajeria`, `dia_de_revision`, `codigo_usuario`, `dias_de_embarque`, `tiempo_entrega`, `cuenta_bancaria`) VALUES (1, NULL, NULL, NULL, 0, NULL, NULL, NULL, '2011-10-24 18:28:24', 'Alan Gonzalez', NULL, NULL, NULL, NULL, NULL, '2011-10-24 18:28:34', NULL, 1, 0, NULL, '202cb962ac59075b964b07152d234b70', NULL, 0, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, NULL, NULL);") ;
 		

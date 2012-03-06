@@ -187,6 +187,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
           //valida que la moneda exista en la base de datos
           if(!is_null($id_moneda))
           {
+				Logger::log("Editando a moneda:".$id_moneda);
               if(is_null(MonedaDAO::getByPK($id_moneda)))
                   return "La moneda con id: ".$id_moneda." no existe";
           }
@@ -758,53 +759,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             
             $origen_compra = "usuario";
             $origen_venta = "usuario";
-            /*
-            if(is_null($id_tarifa_compra))
-            {
-                $origen_compra = "rol";
-                if(!is_null($id_clasificacion_cliente))
-                {
-                    $origen_compra = "cliente";
-					$cc = ClasificacionClienteDAO::getByPK($id_clasificacion_cliente);
-                    $id_tarifa_compra = $cc->getIdTarifaCompra();
-                }
-                else if(!is_null($id_clasificacion_proveedor))
-                {
-                    $origen_compra = "proveedor";
-                    $id_tarifa_compra = ClasificacionProveedorDAO::getByPK($id_clasificacion_proveedor)->getIdTarifaCompra();
-                }
-                else
-                {
-                    $rol = RolDAO::getByPK($id_rol);
-                    $id_tarifa_compra = $rol->getIdTarifaCompra();
-                    $origen_compra = "rol";
-                }
-            }
             
-            if(is_null($id_tarifa_venta))
-            {
-                
-                $origen_venta = "rol";
-                if(!is_null($id_clasificacion_cliente))
-                {
-                    $origen_venta = "cliente";
-                    $id_tarifa_compra = ClasificacionClienteDAO::getByPK($id_clasificacion_cliente)->getIdTarifaCompra();
-                }
-                else if(!is_null($id_clasificacion_proveedor))
-                {
-                    $origen_venta = "proveedor";
-                    $id_tarifa_compra = ClasificacionProveedorDAO::getByPK($id_clasificacion_proveedor)->getIdTarifaCompra();
-                }
-                else
-                {
-                    $rol = RolDAO::getByPK($id_rol);
-                    $id_tarifa_compra = $rol->getIdTarifaCompra();
-                    $origen_venta = "rol";
-                }
-                
-                $rol = RolDAO::getByPK($id_rol);
-                $id_tarifa_venta = $rol->getIdTarifaVenta();
-            }*/
             
             //Si la tarifa de venta sigue siendo nula, se toma la default
             if(is_null($id_tarifa_venta))
@@ -878,6 +833,9 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 {
                     foreach($direcciones as $d)
                     {
+						if(!is_array($d)){
+							throw new InvalidDataException("Las direcciones deben ser un arreglo de arreglos.");
+						}
                         //Se valida que la direccion tenga los parametros necesarios
                         if
                         (
@@ -894,9 +852,20 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                         {
                             throw new Exception("La direccion recibida no cuenta con algun parametro necesario",901);
                         }
-                        DireccionController::NuevaDireccion($d["calle"], $d["numero_exterior"],
-                                $d["colonia"], $d["id_ciudad"], $d["codigo_postal"], $d["numero_interior"],
-                                $d["referencia"], $d["telefono1"], $d["telefono2"],$usuario->getIdUsuario());
+
+
+
+                        $address = DireccionController::NuevaDireccion(
+								$d["calle"], 
+								$d["numero_exterior"],
+                                $d["colonia"], 
+								$d["id_ciudad"], 
+								$d["codigo_postal"], 
+								$d["numero_interior"],
+                                $d["referencia"], 
+								$d["telefono1"], 
+								$d["telefono2"],
+								$usuario->getIdUsuario());
                     }
                 }
 
@@ -960,6 +929,15 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             return array( "id_usuario" => $usuario->getIdUsuario() );
 	}
   
+
+
+
+
+
+
+
+
+
 	/**
  	 *
  	 *Listar a todos los usuarios del sistema. Se puede ordenar por los atributos del usuario y filtrar en activos e inactivos
@@ -1163,7 +1141,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	)
 	{  
             Logger::log("Editando usuario: ".$id_usuario);
-
+Logger::debug($id_moneda);
             //valida los parametros de la tabla usuario
             $validar=self::validarParametrosUsuario($id_usuario, null, $id_sucursal, $id_rol,
                     $id_clasificacion_cliente, $id_clasificacion_proveedor, $id_moneda,
@@ -1179,6 +1157,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 Logger::error($validar);
                 throw new Exception($validar,901);
             }
+
 
 
 

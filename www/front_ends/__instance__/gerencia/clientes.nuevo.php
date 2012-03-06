@@ -61,7 +61,7 @@
 	));
 
 	$form->addApiCall("api/cliente/nuevo/");
-	//$form->onApiCallSuccessRedirect("clientes.lista.php");
+	$form->onApiCallSuccessRedirect("clientes.lista.php");
 
 	$form->makeObligatory(array(
 	    "razon_social"
