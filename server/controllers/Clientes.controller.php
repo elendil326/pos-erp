@@ -365,6 +365,10 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
 				$curp = null;
 			}
 			
+			if(strlen($email) == 0){
+				$email = null;
+			}
+			
 			
             try 
             {
@@ -1197,7 +1201,36 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 				}
 			}
 
-			$c = ClientesController::Nuevo(
+			$adress = array();
+			
+
+			
+			if($lines[$nline] == "MGW10011"){
+
+				$foo = array( 
+					"CTIPOCATALOGO" 	=> $lines[$nline+1],
+					"CTIPODIRECCION"	=> $lines[$nline+2],
+					"CNOMBRECALLE"		=> $lines[$nline+3],
+					"CNUMEROEXTERIOR"	=> $lines[$nline+4],
+					"CNUMEROINTERIOR"	=> $lines[$nline+5],
+					"CCOLONIA"			=> $lines[$nline+6],
+					"CCODIGOPOSTAL"		=> $lines[$nline+7],
+					"CTELEFONO1"		=> $lines[$nline+8],
+					"CTELEFONO2"		=> $lines[$nline+9],
+					"CTELEFONO3"		=> $lines[$nline+10],
+					"CTELEFONO4"		=> $lines[$nline+11],
+					"CEMAIL"			=> $lines[$nline+12],
+					"CDIRECCIONWEB"		=> $lines[$nline+13],
+					"CPAIS"				=> $lines[$nline+14],
+					"CESTADO"			=> $lines[$nline+15],
+					"CCIUDAD"			=> $lines[$nline+16],
+					"CTEXTOEXTRA"		=> $lines[$nline+17],
+					"CMUNICIPIO"		=> $lines[$nline+18]
+				);
+
+			}
+			
+			$c = self::Nuevo(
 					$razon_social			= $_cliente["CRAZONSOCIAL"], 
 					$clasificacion_cliente 	= $_cliente["cCodigoValorClasifCliente1"], 
 					$codigo_cliente 		= $_cliente["CCODIGOCLIENTE"], 
@@ -1207,17 +1240,17 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 					$descuento_general 		= 0, 
 					$direcciones 			= array(Array(
 						"tipo"				=> "fiscal",
-						"calle"  			=> "Monte Balcanes",
-				        "numero_exterior"   => "107",
-				        "colonia"  			=> "Arboledas",
+						"calle"  			=> $foo["CNOMBRECALLE"],
+				        "numero_exterior"   => $foo["CNUMEROEXTERIOR"],
+				        "colonia"  			=> $foo["CCOLONIA"],
 				        "id_ciudad"  		=> 334,
-				        "codigo_postal"  	=> "38060",
-				        "numero_interior"  	=> null,
-				        "texto_extra"  		=> "Calle cerrada",
-				        "telefono1"  		=> "4616149974",
-				        "telefono2"			=> "45*451*454"
+				        "codigo_postal"  	=> $foo["CCODIGOPOSTAL"],
+				        "numero_interior"  	=> $foo["CNUMEROINTERIOR"],
+				        "texto_extra"  		=> $foo["CTEXTOEXTRA"],
+				        "telefono1"  		=> $foo["CTELEFONO1"],
+				        "telefono2"			=> $foo["CTELEFONO2"]
 					)), 
-					$email 					= null, 
+					$email 					= $foo["CEMAIL"], 
 					$id_cliente_padre 		= null, 
 					$id_moneda 				=  1 , 
 					$id_tarifa_compra 		= null, 
@@ -1230,12 +1263,74 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 					$telefono_personal1 	= null, 
 					$telefono_personal2 	= null
 				);
+				
+				
+			
 		}
 
 	}
 	
-	public static function EliminarAval($avales, 
-	$id_cliente){}
-	public static function NuevoAval(	$avales, 
-		$id_cliente){}		
+	public static function EliminarAval($avales, $id_cliente){
+		
+	}
+	
+	
+	
+	
+	public static function NuevoAval($avales, $id_cliente){
+		//avales debe ser un arreglo
+		if(!is_array($avales)){
+			throw new InvalidDataException("Avales debe ser un array");
+		}
+		
+		
+		foreach ($avales as $a) {
+			
+			
+			if(!is_array($a)){
+				throw new InvalidDataException("avales debe ser un arreglo de arreglos");
+			}
+			
+			if(!isset( $a["id_aval"] )){
+				throw new InvalidDataException("avales debe ser un arreglo de arreglos, falta id_aval");
+			}
+			
+			if(!isset($a["tipo_aval"])){
+				throw new InvalidDataException("avales debe ser un arreglo de arreglos falta tipo_aval");
+			}
+			
+			//tipos 
+			//if($a["tipo_aval"])
+			if(is_null($a["id_aval"])){
+				throw new InvalidDataException("el aval ".$a["id_aval"]. "no existe");
+			}
+		}
+		
+		//validar que existan clientes y avales
+		if(is_null($id_cliente)){
+			throw new InvalidDataException("el cliente a avalar no existe");
+		}
+		
+		
+
+		foreach ($avales as $a) {
+			$clienteAval = new ClienteAval();
+			$clienteAval->setIdAval( $a["id_aval"] );
+			$clienteAval->setIdCliente( $id_cliente );
+			$clienteAval->setTipoAval( $a["tipo_aval"] );
+			
+			try {
+				Logger::log("Salvando nuevo aval a DB");
+				ClienteAvalDAO::save( $clienteAval );
+				
+			} catch (Exception $e) {
+				throw new InvalidDatabaseOperationException($e);
+				
+			}
+		}
+		
+	}		
+	
+	
+	
 }

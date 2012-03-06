@@ -289,13 +289,32 @@
 			$this->assertGreaterThanOrEqual(1, $res['numero_de_resultados'],"---- 'testBuscarClasificacionClientesPorQuery' SE DEBIÓ DE ENCONTRAR ALMENOS 1 RESULTADO");			
 		}		
 		
+		
+		
+		public function testNuevoAval(){
+			//Crear un cliente
+			$a = ClientesController::nuevo(time()."cliente");
+			
+			//crear su aval
+			$b = ClientesController::nuevo(time()."aval");			
+			
+			//asignar el aval al cliente
+			ClientesController::NuevoAval(  array( array( "id_aval" => $b["id_cliente"] , "tipo_aval" => "prendario") ), 
+					$a["id_cliente"] );
+			
+			$r = ClienteAvalDAO::getByPK($a["id_cliente"], $b["id_cliente"]);
+			
+			$this->assertNotNull($r);
+		}
+		
+		
 		public function testNuevoClienteDesdeAdminPAQ(){
 			
 			POSController::DropBd();
 			
-			$raw_exportation = file_get_contents( "adminpaq.catalogo.clientes.csv" );
+			//$raw_exportation = file_get_contents( "adminpaq.catalogo.clientes.csv" );
 
-			ClientesController::ImportarClientes( $raw_exportation );
+			//ClientesController::ImportarClientes( $raw_exportation );
 			
 		}
 	}

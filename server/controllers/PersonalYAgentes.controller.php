@@ -836,7 +836,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 							throw new InvalidDataException("Las direcciones deben ser un arreglo de arreglos.");
 						}
                        
-						Logger::log( "Insertando nueva direccion" );
+						Logger::log( "Isertando direccion..." );
 
                         $address_id = DireccionController::NuevaDireccion(
 				                $calle 				= isset($d["calle"]) ? $d["calle"] : null,
