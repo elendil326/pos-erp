@@ -312,9 +312,9 @@
 			
 			POSController::DropBd();
 			
-			//$raw_exportation = file_get_contents( "adminpaq.catalogo.clientes.csv" );
+			$raw_exportation = file_get_contents( "adminpaq.catalogo.clientes.csv" );
 
-			//ClientesController::ImportarClientes( $raw_exportation );
+			ClientesController::ImportarClientes( $raw_exportation );
 			
 		}
 	}

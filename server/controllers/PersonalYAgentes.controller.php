@@ -691,12 +691,13 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             if(!is_null($rfc))
             {
                 $usuarios=UsuarioDAO::search(new Usuario(array( "rfc" => $rfc )));
+
                 foreach($usuarios as $usuario)
                 {
                     if($usuario->getActivo())
                     {
                         Logger::error("El rfc ".$rfc." ya existe");
-                        throw new InvalidDataException("El rfc ".$rfc." ya existe",901);
+                       // throw new InvalidDataException("El rfc ".$rfc." ya existe",901);
                     }
                 }
             }
@@ -731,7 +732,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                     if($usuario->getActivo())
                     {
                         Logger::error("El correo electronico ".$correo_electronico." ya esta en uso");
-                        throw new Exception("El correo electronico ".$correo_electronico." ya esta en uso",901);
+                        //throw new Exception("El correo electronico ".$correo_electronico." ya esta en uso",901);
                     }
                 }
             }
