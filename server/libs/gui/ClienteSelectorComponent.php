@@ -32,10 +32,7 @@ class ClienteSelectorComponent implements GuiComponent{
 		    console.log("Cliente seleccionado", cliente_seleccionado);
 		
 		    Ext.get("buscar_cliente_01").enableDisplayMode('block').hide();
-		    var pphtml = "<h3 style='margin:0px'>Usuario : <a target=\"_blank\" href='clientes.ver.php?cid="+cliente_seleccionado.get("id_usuario")+"'>" + cliente_seleccionado.get("nombre") + "</a></h3>";
-
-		    if( cliente_seleccionado.get("rfc") !== null )
-			    pphtml += "<p>" + cliente_seleccionado.get("rfc") + "</p>";
+		    var pphtml = "<h3 style='margin:0px'><a target=\"_blank\" href='clientes.ver.php?cid="+cliente_seleccionado.get("id_usuario")+"'>" + cliente_seleccionado.get("nombre") + " " + ( cliente_seleccionado.get("rfc") !== null ? " - " + cliente_seleccionado.get("rfc") : "") + "</a></h3>";
 
 		    //pphtml += "<br><div class='POS Boton' onClick='alert(\"dd\")'>Seleccionar Usuario</div>";
 		
