@@ -15,7 +15,7 @@
 		){
 			
 			if( is_null($instance_token) ){
-				return self::Nueva( md5(rand()), $descripcion );
+				return self::Nueva( md5( time() ) , $descripcion );
 			}
 			
 			//primero busquemos ese token
@@ -29,7 +29,7 @@
 			
 			
 			//insertar registro en `instances` para que me asigne un id
-			$sql = "INSERT INTO  `instances` ( `instance_id` ,`instance_token` ,`descripcion`  )VALUES ( NULL ,  ?,  ? );";
+			$sql = "INSERT INTO  `instances` ( `instance_id` ,`fecha_creacion`,`instance_token` ,`descripcion`  )VALUES ( NULL , ".time().",  ?,  ? );";
 			
 			try{
 				$POS_CONFIG["CORE_CONN"]->Execute( $sql, array( $instance_token, $descripcion )  );
@@ -217,8 +217,10 @@
 			
 			global $POS_CONFIG;
 			
-			$sql = "select * from instances";
-											//($sql,$inputarr=false,$force_array=false,$first2cols=false)
+			$sql = "select * from instances order by fecha_creacion desc";
+			
+			//($sql,$inputarr=false,$force_array=false,$first2cols=false)
+			
 			$res = $POS_CONFIG["CORE_CONN"]->GetAssoc( $sql, false, false, false );
 			
 			if(empty($res)) return NULL;
@@ -230,8 +232,7 @@
 			}
 			
 			return $a;
-			
-			
+
 		}
 		
 		public static function Eliminar($instance_token){

@@ -2,21 +2,21 @@
 -- version 3.2.4
 -- http://www.phpmyadmin.net
 --
--- Servidor: localhost
--- Tiempo de generación: 04-10-2011 a las 16:52:01
--- Versión del servidor: 5.1.44
--- Versión de PHP: 5.3.1
+-- Host: localhost
+-- Generation Time: Mar 07, 2012 at 08:30 PM
+-- Server version: 5.1.44
+-- PHP Version: 5.3.1
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
 --
--- Base de datos: `pos`
+-- Database: `pos`
 --
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `instances`
+-- Table structure for table `instances`
 --
 
 CREATE TABLE IF NOT EXISTS `instances` (
@@ -29,14 +29,15 @@ CREATE TABLE IF NOT EXISTS `instances` (
   `db_driver` varchar(32) NOT NULL,
   `db_host` varchar(32) NOT NULL,
   `db_debug` tinyint(1) NOT NULL,
+  `fecha_creacion` int(11) NOT NULL COMMENT 'fecha de creacion de esta instancia',
   PRIMARY KEY (`instance_id`),
   KEY `instance_token` (`instance_token`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=80 ;
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `users`
+-- Table structure for table `users`
 --
 
 CREATE TABLE IF NOT EXISTS `users` (
