@@ -11,6 +11,7 @@ class GerenciaComponentPage extends PosComponentPage{
 
 		//check for user login status
 		if(SesionController::isLoggedIn() === FALSE){
+			
 			$a = explode("/", $_SERVER["SCRIPT_NAME"]);
 			
 			die(header("Location: ../?next_url=" . $a[sizeof($a)-1]));

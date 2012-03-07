@@ -25,7 +25,7 @@ class SesionController implements ISesion{
 				if(self::$_current_user){
 	            	return array( "id_caja" => null, "id_sucursal" => null, "id_usuario" => self::$_current_user->getIdUsuario() );					
 				}
-	            return array( "id_caja" => null, "id_sucursal" => null, "id_usuario" => null);
+	            return array( "id_caja" => null, "id_sucursal" => null, "id_usuario" => self::getCurrentUser()->getIdUsuario());
 	
 			}else{
             	return array( "id_caja" => null, "id_sucursal" => null, "id_usuario" => null);				
@@ -238,80 +238,41 @@ class SesionController implements ISesion{
 
 	static function isLoggedIn(){
 		
-		//Logger::log("isLoggedIn() started...");
+		Logger::log("isLoggedIn() started...");
 		
 		if(isset(self::$_is_logged_in) && !is_null(self::$_is_logged_in) && self::$_is_logged_in){
 			//Logger::log("isLoggedIn() already set ...");
 			return true;
 		}
 		
+		Logger::log("getting session mananger");
 		$sm = SessionManager::getInstance();
 		
 		$auth_token = $sm->GetCookie("at");
 		
-		if( !is_null($auth_token) ) {
-			//Logger::log("There is a session token in the cookie, lets test it.");
-			
-			$user = SesionDAO::getUserByAuthToken($auth_token);
-			
-			if(is_null($user)){
-				Logger::warn("auth_token was not found in the db, why is this?");
-				return false;
-			}else{
-				//Logger::log("auth_token validated, it belongs to user_id=" . $user->getIdUsuario());
-				self::$_is_logged_in = true;
-				return true;			
-			}
+		if( is_null($auth_token) ) {
+			Logger::log("there is no auth token in the cookie");
+			self::$_is_logged_in = false;
+			return false;
 		}
-
-		return false;
-
-
+		
+		//Logger::log("There is a session token in the cookie, lets test it.");
+	
+		$user = SesionDAO::getUserByAuthToken($auth_token);
+	
+		if(is_null($user)){
+			Logger::warn("auth_token was not found in the db, why is this?");
+			self::$_is_logged_in = false;
+			return false;
+		}else{
+			Logger::log("auth_token validated, it belongs to user_id=" . $user->getIdUsuario());
+			self::$_is_logged_in = true;
+			return true;			
+		}
 		
 
-		/*
-		//regresar falso si alguno de estos no esta 
-		if(
-				!isset($_SESSION['USER_ID']			)
-			|| 	!isset($_SESSION['PASSWORD']		)
-			|| 	!isset($_SESSION['HTTP_USER_AGENT']	)
-			|| 	!isset($_SESSION['USER_ROL']		)
-		) return false;
 
 
-		if( $_SESSION['HTTP_USER_AGENT'] !== $_SERVER['HTTP_USER_AGENT']  )
-		{
-			Logger::error("El user agent en sesion es diferente al que envio la peticion");
-			return false;
-		}
-
-
-
-		//ok, los valores estan ahi, vamos a buscar a ese usuario
-		$user = UsuarioDAO::getByPK( $_SESSION['USER_ID'] );
-
-		if($user === null)
-		{
-			Logger::error("El usuario que esta en sesion ya no existe en la BD.");
-			return false;
-		}
-
-
-		if($user->getActivo() === false)
-		{
-			Logger::error("El usuario que esta en sesion esta desactivado en la BD.");
-			return false;
-		}	
-		
-
-		if( $_SESSION['PASSWORD'] !== $user->getPassword())
-		{
-			Logger::error("La constrasena en sesion es diferente en la BD!");
-			return false;
-		}
-
-		return true;
-		* */
 	}
 	
 
@@ -355,56 +316,40 @@ class SesionController implements ISesion{
 			return self::$_current_user;
 		}		
 
-		//Logger::log("SesionController::getCurrentUser(  )");
-		
-		if(self::isLoggedIn()){
-			$sm = SessionManager::getInstance();
-			$auth_token = $sm->GetCookie( "at" );
-			
-			//there is authtoken cookie
-			if(!is_null($auth_token)){
-				self::$_current_user = SesionDAO::getUserByAuthToken( $auth_token );				
-			}
-			
 
-			//there is authtoken in the POST message
-			if(isset($_POST["at"]) && !is_null($_POST["at"]) ){
-				self::$_current_user = SesionDAO::getUserByAuthToken( $_POST["at"] );
-			}
-			
-			//there is authtoken in the GET message
-			if(isset($_GET["at"]) && !is_null($_GET["at"])){
-				self::$_current_user = SesionDAO::getUserByAuthToken( $_GET["at"] );
-				
-			}
-			
-			return self::$_current_user;
-			
-		}else{
-			return NULL;
-			
-		}
-			
+		$sm = SessionManager::getInstance();
+		$auth_token = $sm->GetCookie( "at" );
 		
-		/*
-		if(isset($_GET["auth_token"])) {
-
-			$u = SesionDAO::getCurrentUser($_GET["auth_token"]);
-			return $u->getIdUsuario();
-		}
+		self::$_current_user = null;
 		
-		if(isset($_POST["auth_token"])) {
-
-			$u = SesionDAO::getCurrentUser($_POST["auth_token"]);
-			return $u->getIdUsuario();
-		}
-		
-		if(self::isLoggedIn())
-			return $_SESSION['USER_ID'];
-		else
+		//there is no authtoken cookie
+		if(is_null($auth_token)){
 			return null;
+		}else{
+			self::$_current_user = SesionDAO::getUserByAuthToken( $auth_token );
+		}
+		
+		
 
-		**/			
+		//there is authtoken in the POST message
+		if( isset($_POST["at"]) && !is_null($_POST["at"]) ){
+			self::$_current_user = SesionDAO::getUserByAuthToken( $_POST["at"] );
+		}
+		
+		//there is authtoken in the GET message
+		if(isset($_GET["at"]) && !is_null($_GET["at"])){
+			self::$_current_user = SesionDAO::getUserByAuthToken( $_GET["at"] );
+		}
+		
+		
+		if(is_null(self::$_current_user)){
+			
+		}
+		
+		return self::$_current_user;
+
+			
+			
 	}
 
 

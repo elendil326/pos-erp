@@ -1789,7 +1789,7 @@ require_once("interfaces/Servicios.interface.php");
 			
             $id_usuario = $sesion["id_usuario"];
 			$id_sucursal = $sesion["id_sucursal"];
-            var_dump($sesion);
+
             //Se validan los parametros recibidos
             /*$validar = self::validarParametrosSeguimiento(null, $id_orden_de_servicio, $id_localizacion, $nota);
 
