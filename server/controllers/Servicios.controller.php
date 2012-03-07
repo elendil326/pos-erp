@@ -1789,36 +1789,37 @@ require_once("interfaces/Servicios.interface.php");
 			
             $id_usuario = $sesion["id_usuario"];
 			$id_sucursal = $sesion["id_sucursal"];
-            
+            var_dump($sesion);
             //Se validan los parametros recibidos
-            $validar = self::validarParametrosSeguimiento(null, $id_orden_de_servicio, $id_localizacion, $nota);
+            /*$validar = self::validarParametrosSeguimiento(null, $id_orden_de_servicio, $id_localizacion, $nota);
+
             if(is_string($validar))
             {
                 Logger::error($validar);
                 throw new Exception($validar);
-            }
+            }*/
             
             $seguimiento_de_servicio = new SeguimientoDeServicio( array(  
-            
-                                                                        "id_localizacion"       => $id_localizacion,
-                                                                        "id_orden_de_servicio"  => $id_orden_de_servicio,
-                                                                        "estado"                => $nota,
-                                                                        "id_usuario"            => $id_usuario,
-                                                                        "id_sucursal"           => $id_sucursal,
-                                                                        "fecha_seguimiento"     => date("Y-m-d H:i:s")
-                                                                        )
-                                                                );
+
+													"id_localizacion"       => $id_localizacion,
+													"id_orden_de_servicio"  => $id_orden_de_servicio,
+													"estado"                => $nota,
+													"id_usuario"            => $id_usuario,
+													"id_sucursal"           => $id_sucursal,
+													"fecha_seguimiento"     => date("Y-m-d H:i:s")
+                                                   ));
             
             DAO::transBegin();
-            try
-            {
+            try{
                 SeguimientoDeServicioDAO::save($seguimiento_de_servicio);
-            }
-            catch(Exception $e)
-            {
+
+            }catch(Exception $e){
+	
                 DAO::transRollback();
-                Logger::error("No se pudo crear el seguimiento de servicio ". $e);
-                throw new Exception("No se pudo crear el seguimiento de servicio");
+
+                Logger::error($e->getMessage());
+
+                throw new InvalidDatabaseOperationException("No se pudo crear el seguimiento de servicio");
             }
             DAO::transEnd();
             Logger::log("Seguimiento creado exitosamente");

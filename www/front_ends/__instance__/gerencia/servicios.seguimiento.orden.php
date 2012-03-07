@@ -39,19 +39,17 @@
                 "fecha_seguimiento"               
 		));
         
-		$form->makeObligatory( array("estado", "id_localizacion") );
+		$form->makeObligatory( array("estado") );
 
 		$form->sendHidden( "id_orden_de_servicio" );
         
 		$form->addApiCall( "api/servicios/orden/seguimiento/" );
-                $form->onApiCallSuccessRedirect("servicios.detalle.orden.php?oid=".$_GET["oid"]);
+		
+		$form->onApiCallSuccessRedirect("servicios.detalle.orden.php?oid=".$_GET["oid"]);
                 
-                $form->renameField( array( "estado" => "nota" ) );
-
-                
+		$form->renameField( array( "estado" => "nota" ) );
         
-                
-                $form->createComboBoxJoinDistintName( "id_localizacion", "id_sucursal" , "razon_social", SucursalDAO::search(new Sucursal( array( "activa" => 1 ) )) );
+		//$form->createComboBoxJoinDistintName( "id_localizacion", "id_sucursal" , "razon_social", SucursalDAO::search(new Sucursal( array( "activa" => 1 ) )) );
 
 		$page->addComponent( $form );
                 

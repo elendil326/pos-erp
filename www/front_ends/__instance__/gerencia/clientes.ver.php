@@ -47,7 +47,7 @@
 
 		$form = new DAOFormComponent( $este_usuario );
 		
-		//$form->setEditable(false);
+		$form->setEditable(false);
                 
 		$form->hideField( array( 
 				"id_usuario",
