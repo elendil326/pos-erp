@@ -1,7 +1,5 @@
 <?php 
 
-
-
 		define("BYPASS_INSTANCE_CHECK", false);
 
 		require_once("../../../../server/bootstrap.php");
@@ -13,8 +11,15 @@
 		// Parametros necesarios
 		// 
 		$page->requireParam(  "cid", "GET", "Este cliente no existe." );
-		
+
+				
 		$este_usuario = UsuarioDAO::getByPK( $_GET["cid"] );
+		
+		if(is_null($este_usuario)){
+		
+			die;
+		}
+		
 		
 		
 		//
@@ -30,8 +35,6 @@
 	
             $menu = new MenuComponent();
 
-            //$menu->addItem("Editar el perfil de este cliente", "clientes.editar.perfil.php?cid=".$_GET["cid"]);
-
             $menu->addItem("Editar este cliente", "clientes.editar.php?cid=".$_GET["cid"]);
 
             $page->addComponent( $menu);
@@ -41,8 +44,10 @@
 		//
 		// Forma de producto
 		// 
+
 		$form = new DAOFormComponent( $este_usuario );
-		$form->setEditable(false);
+		
+		//$form->setEditable(false);
                 
 		$form->hideField( array( 
 				"id_usuario",
@@ -64,18 +69,23 @@
         $form->createComboBoxJoin( "id_rol", "nombre", RolDAO::getAll() , $este_usuario->getIdRol());
         $form->createComboBoxJoin( "id_moneda", "nombre", MonedaDAO::getAll() , $este_usuario->getIdMoneda());
         $form->createComboBoxJoin( "id_clasificacion_cliente", "nombre", ClasificacionClienteDAO::getAll() , $este_usuario->getIdClasificacionCliente());
-        $form->createComboBoxJoin( "id_clasificacion_proveedor", "nombre", ClasificacionProveedorDAO::getAll(), $este_usuario->getIdClasificacionProveedor() );        
+        $form->createComboBoxJoin( "id_clasificacion_proveedor", "nombre", ClasificacionProveedorDAO::getAll(), $este_usuario->getIdClasificacionProveedor() );
 		$page->addComponent( $form );
 
 
 
 		$direccion = $este_usuario->getIdDireccion();
 		$direccionObj = DireccionDAO::getByPK( $direccion );
-		$dform = new DAOFormComponent( $direccionObj );
-		$dform->setEditable(false);		
-		$form->hideField( array( 
-				"id_direccion"
-			 ));
-		$page->addComponent( $dform );		
+		
+		if(!is_null($direccionObj)){
+			$dform = new DAOFormComponent( $direccionObj );
+			$dform->setEditable(false);		
+			$form->hideField( array( 
+					"id_direccion"
+				 ));
+			$page->addComponent( $dform );
+		}
+		
+	
 		
 		$page->render();

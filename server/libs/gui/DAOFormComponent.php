@@ -6,8 +6,12 @@ class DAOFormComponent extends FormComponent
 	private $api_method_to_call;
 
 	function __construct( $vo )
-	{
-
+	{ 
+		if(is_null($vo)){
+			
+			throw new InvalidDataException();
+		}
+		
 		parent::__construct();
 		
 		$this->api_method_to_call = NULL;
@@ -28,8 +32,10 @@ class DAOFormComponent extends FormComponent
 			}
 				
 		}else{
-			$fields = json_decode( $vo->__toString() );
 
+
+			$fields = json_decode( $vo->__toString() );
+			
 			foreach($fields as $k => $v)
 			{
 
