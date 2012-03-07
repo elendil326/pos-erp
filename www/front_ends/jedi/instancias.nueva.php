@@ -19,6 +19,7 @@
 		switch($_GET["do"]){
 			case "nueva":
 				Logger::log("---------------------------");
+				
 				Logger::log("Jedi requested new instance");
 
 				$N_I_ID = InstanciasController::Nueva(null, $_GET["d"]);
@@ -28,7 +29,8 @@
 					break;
 				}
 				
-				define("NEXT_MSG", "Instancia creada correctamente");
+				//todo salio bien...
+				header("Location: instancias.ver.php?id=" . $N_I_ID);
 			break;
 			default:
 			

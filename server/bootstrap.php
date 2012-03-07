@@ -221,6 +221,13 @@
 	# *******************************
 	
 
+
+
+	if(class_exists("PHPUnit_Runner_Version")){
+		$_GET["_instance_"] = $POS_CONFIG["PHPUNIT_INSTANCE_TO_TEST"];		
+		define("BYPASS_INSTANCE_CHECK", false);
+	}
+
 	# *******************************
 	# Buscar esta instancia si es que la necesito
 	# *******************************
@@ -231,6 +238,7 @@
 		//saltar el checkeo siguiente
 		return;
 	}
+
 
 
 	

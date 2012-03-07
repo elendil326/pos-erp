@@ -31,8 +31,9 @@ class SesionDAO extends SesionDAOBase
 			$rs = $conn->GetRow($sql, $params);	
 			
 		}catch(Exception $e){
-			Logger::error($e);
-			
+			Logger::error($e->getMessage());
+			throw new InvalidDatabaseOperationException($e);
+			return null;
 		}
 		
 

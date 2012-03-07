@@ -27,7 +27,12 @@
 	  *
 	  **/
 	$p->addComponent( new TitleComponent( "Detalles de la instancia" ) );
+	$p->addComponent( new TitleComponent( $instancia["instance_token"], 3 ) );	
 	
-	$p->addComponent( "<a href='../". $instancia["instance_token"] ."/' target='_new'>Visitar</a>");
+	$p->addComponent( "<div class='POS Boton'><a href='../". $instancia["instance_token"] ."/' target='_new'>Visitar la instancia</a></div>");
+	
+	var_dump($instancia);	
 	
 	$p->render( );
+	
+

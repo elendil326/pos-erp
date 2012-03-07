@@ -59,3 +59,10 @@ $POS_CONFIG["MAIL_PASSWORD"]	= "";
 $POS_CONFIG["MAIL_PORT"]		= "26";
 $POS_CONFIG["MAIL_METHOD"]		= "SMTP";
 
+
+
+
+# *******************************
+# phpunit
+# *******************************
+$POS_CONFIG["PHPUNIT_INSTANCE_TO_TEST"]		= "71";
