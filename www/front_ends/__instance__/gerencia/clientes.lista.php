@@ -11,6 +11,11 @@
 		$page->addComponent( new TitleComponent( "Clientes" ) );
 		$page->addComponent( new MessageComponent( "Lista de clientes " ) );
 
+		
+		$cselector = new ClienteSelectorComponent( );
+		$cselector->addJsCallback( "(function(a){ window.location = 'clientes.ver.php?cid='+a.get('id_usuario'); })" );
+		$page->addComponent( $cselector);
+
 		$lista = ClientesController::Buscar();
 		
 		$tabla = new TableComponent( 

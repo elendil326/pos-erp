@@ -38,7 +38,10 @@ class ClienteSelectorComponent implements GuiComponent{
 		
 		    Ext.get("buscar_cliente_02").update(pphtml).show();
 
-			<?php echo $this->_js_callback . ".call( null, cliente_seleccionado);"; ?>
+			<?php 
+				if(!is_null($this->_js_callback))
+				echo $this->_js_callback . ".call( null, cliente_seleccionado);"; 
+			?>
 	    };
 
       	Ext.onReady(function(){				
