@@ -27,7 +27,7 @@ class SesionController implements ISesion{
 	            	return array( "id_caja" => null, "id_sucursal" => null, "id_usuario" => self::$_current_user->getIdUsuario() );					
 				}
 				
-	            return array( "id_caja" => null, "id_sucursal" => null, "id_usuario" => self::getCurrentUser()->getIdUsuario());
+	            	return array( "id_caja" => null, "id_sucursal" => null, "id_usuario" => self::$_current_user->getIdUsuario());
 	
 			}else{
             	return array( "id_caja" => null, "id_sucursal" => null, "id_usuario" => null);				
