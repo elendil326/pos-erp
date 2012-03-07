@@ -24,7 +24,7 @@
 			"activa",
 			"cancelada",
 			"motivo_cancelacion",
-                        "precio"
+			"precio"
     	));
 
 
@@ -33,7 +33,7 @@
 		));
 	
 	$form->addApiCall( "api/servicios/orden/nueva/" );
-        $form->onApiCallSuccessRedirect("servicios.lista.orden.php");
+    $form->onApiCallSuccessRedirect("servicios.lista.orden.php");
 	
 	$form->makeObligatory(array( 
 			"id_cliente",
@@ -44,10 +44,8 @@
     $form->createComboBoxJoin("id_servicio", "nombre_servicio", ServicioDAO::search( new Servicio( array("activo" => 1) ) ) );
 	
 	
-	$form->createComboBoxJoinDistintName("id_cliente", "id_usuario", "nombre", 
-                array_diff(UsuarioDAO::byRange( new Usuario( array("id_clasificacion_cliente" => 1) ) , new Usuario( array("id_clasificacion_cliente" => 100000) ) ) ,
-                        UsuarioDAO::search( new Usuario( array( "activo" => 0 ) ) ) ) );
-                
+	$form->createComboBoxJoinDistintName("id_cliente", "id_usuario", "nombre", UsuarioDAO::search( new Usuario( array( "activo" => 1 ) ) ) );
+              
 	$page->addComponent( $form );
 
 
