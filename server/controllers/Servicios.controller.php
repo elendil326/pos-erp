@@ -1608,7 +1608,7 @@ require_once("interfaces/Servicios.interface.php");
                                                             "cancelada"         => 0,
                                                             "descripcion"       => $descripcion,
                                                             "adelanto"          => $adelanto,
-                                                            "precio"            => $prec
+                                                            "precio"            => $subtotal
                                                             
                                                             )
                                                     );
@@ -1620,7 +1620,7 @@ require_once("interfaces/Servicios.interface.php");
     
         	}catch(Exception $e){
                 DAO::transRollback();
-                Logger::error("No se pudo crear la nueva orden de servicio ".$e);
+                Logger::error($e->getMessage());
                 throw new InvalidDatabaseOperationException("No se pudo crear la nueva orden de servicio");
 
             }
