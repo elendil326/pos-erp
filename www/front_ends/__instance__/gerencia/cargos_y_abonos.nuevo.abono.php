@@ -49,7 +49,7 @@
                     $form = new DAOFormComponent( new AbonoPrestamo() );
                 }
                 
-                $form->addApiCall("api/efectivo/abono/nuevo/", "GET");
+                $form->addApiCall("api/cargosyabonos/abono/nuevo/", "POST");
                 $form->onApiCallSuccessRedirect( "cargos_y_abonos.lista.abono.php" );
                 
                 $id_deudor = $_GET["did"];

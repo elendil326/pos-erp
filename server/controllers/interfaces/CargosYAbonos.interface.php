@@ -80,7 +80,8 @@
  	 * @param monto_mayor_a float Se listaran los abonos cuyo monto sea mayor a este
  	 * @param monto_menor_a float Se listaran los abonos cuyo monto sea menor a este
  	 * @param orden string Nombre de la columna por la cual se ordenara la lista
- 	 * @return abonos json Objeto que contendra la lista de abonos
+ 	 * @return resultados json Objeto que contendra la lista de abonos
+ 	 * @return numero_de_resultados int 
  	 **/
   static function ListaAbono
 	(
@@ -155,6 +156,71 @@ Update : Se deber?a de tomar de la sesi?n el id del usuario que hiso la ultima m
 		$descripcion = null, 
 		$monto = null, 
 		$nombre = null
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Lista los ingresos, se puede filtrar de acuerdo a la empresa, la sucursal, el usuario que registra el ingreso, el concepto de ingreso, la caja que recibi? el ingreso, de una fecha inicial a una final, por monto, por cancelacion, y se puede ordenar de acuerdo a sus atributos.
+ 	 *
+ 	 * @param cancelado bool Si este valor no es obtenido, se listaran tanto ingresos cancelados como no cancelados, si es true, solo se listaran los ingresos cancelados, si es false, se listaran solo los ingresos no cancelados
+ 	 * @param fecha_actual bool verdaderi si solo se listaran los ingresos del dia de hoy
+ 	 * @param fecha_final string Se listaran los ingresos cuya fecha de ingreso sea menor a este valor
+ 	 * @param fecha_inicial string Se listaran los ingresos cuya fecha de ingreso sea mayor a este valor
+ 	 * @param id_caja int Id de la caja de la cual se listaran los ingresos que ha recibido
+ 	 * @param id_concepto_ingreso int Se listaran los ingresos que tengan este concepto de ingreso
+ 	 * @param id_empresa int Id de la empresa de la cual se listaran sus ingresos
+ 	 * @param id_sucursal int Id de la sucursal de la cual se listaran sus ingresos
+ 	 * @param id_usuario int Id del usuario del cual se listaran los ingresos que ha registrado
+ 	 * @param orden string Nombre de la columna mediante la cual se ordenara la lista
+ 	 **/
+  static function ListaIngreso
+	(
+		$cancelado = null, 
+		$fecha_actual = null, 
+		$fecha_final = null, 
+		$fecha_inicial = null, 
+		$id_caja = null, 
+		$id_concepto_ingreso = null, 
+		$id_empresa = null, 
+		$id_sucursal = null, 
+		$id_usuario = null, 
+		$orden = null
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Registra un nuevo ingreso
+ 	 *
+ 	 * @param fecha_ingreso string Fecha del ingreso
+ 	 * @param id_empresa int Id de la empresa a la que pertenece este ingreso
+ 	 * @param billetes json Ids de los billetes con sus cantidades en las que ingresaran a la caja en caso de que la caja lleve control de billetes
+ 	 * @param descripcion string Descripcion del ingreso en caso de no este contemplado en la lista de conceptos de ingreso
+ 	 * @param folio string Folio de la factura del ingreso
+ 	 * @param id_caja int Id de la caja en la que se registra el ingreso
+ 	 * @param id_concepto_ingreso int Id del concepto al que hace referencia el ingreso
+ 	 * @param id_sucursal int Id de la caja a la que pertenece este ingreso
+ 	 * @param monto float Monto del ingreso en caso de que no este contemplado por el concepto de ingreso o que sea diferente
+ 	 * @param nota string Nota del ingreso
+ 	 * @return id_ingreso int Id autogenerado por la insercion del ingreso
+ 	 **/
+  static function NuevoIngreso
+	(
+		$fecha_ingreso, 
+		$id_empresa, 
+		$billetes = null, 
+		$descripcion = null, 
+		$folio = null, 
+		$id_caja = null, 
+		$id_concepto_ingreso = null, 
+		$id_sucursal = null, 
+		$monto = null, 
+		$nota = null
 	);  
   
   
@@ -451,75 +517,6 @@ Update :El usuario y la fecha de la ultima modificaci?n se deber?an de obtener d
 		$billetes = null, 
 		$id_caja = null, 
 		$motivo_cancelacion = null
-	);  
-  
-  
-	
-  
-	/**
- 	 *
- 	 *Lista los ingresos, se puede filtrar de acuerdo a la empresa, la sucursal, el usuario que registra el ingreso, el concepto de ingreso, la caja que recibi? el ingreso, de una fecha inicial a una final, por monto, por cancelacion, y se puede ordenar de acuerdo a sus atributos.
- 	 *
- 	 * @param cancelado bool Si este valor no es obtenido, se listaran tanto ingresos cancelados como no cancelados, si es true, solo se listaran los ingresos cancelados, si es false, se listaran solo los ingresos no cancelados
- 	 * @param fecha_actual bool verdaderi si solo se listaran los ingresos del dia de hoy
- 	 * @param fecha_final string Se listaran los ingresos cuya fecha de ingreso sea menor a este valor
- 	 * @param fecha_inicial string Se listaran los ingresos cuya fecha de ingreso sea mayor a este valor
- 	 * @param id_caja int Id de la caja de la cual se listaran los ingresos que ha recibido
- 	 * @param id_concepto_ingreso int Se listaran los ingresos que tengan este concepto de ingreso
- 	 * @param id_empresa int Id de la empresa de la cual se listaran sus ingresos
- 	 * @param id_sucursal int Id de la sucursal de la cual se listaran sus ingresos
- 	 * @param id_usuario int Id del usuario del cual se listaran los ingresos que ha registrado
- 	 * @param monto_maximo float Se listaran los ingresos cuyo monto sea menor a este valor
- 	 * @param monto_minimo float Se listaran los ingresos cuyo monto sea mayor a este valor
- 	 * @param orden string Nombre de la columna mediante la cual se ordenara la lista
- 	 **/
-  static function ListaIngreso
-	(
-		$cancelado = null, 
-		$fecha_actual = null, 
-		$fecha_final = null, 
-		$fecha_inicial = null, 
-		$id_caja = null, 
-		$id_concepto_ingreso = null, 
-		$id_empresa = null, 
-		$id_sucursal = null, 
-		$id_usuario = null, 
-		$monto_maximo = null, 
-		$monto_minimo = null, 
-		$orden = null
-	);  
-  
-  
-	
-  
-	/**
- 	 *
- 	 *Registra un nuevo ingreso
- 	 *
- 	 * @param fecha_ingreso string Fecha del ingreso
- 	 * @param id_empresa int Id de la empresa a la que pertenece este ingreso
- 	 * @param billetes json Ids de los billetes con sus cantidades en las que ingresaran a la caja en caso de que la caja lleve control de billetes
- 	 * @param descripcion string Descripcion del ingreso en caso de no este contemplado en la lista de conceptos de ingreso
- 	 * @param folio string Folio de la factura del ingreso
- 	 * @param id_caja int Id de la caja en la que se registra el ingreso
- 	 * @param id_concepto_ingreso int Id del concepto al que hace referencia el ingreso
- 	 * @param id_sucursal int Id de la caja a la que pertenece este ingreso
- 	 * @param monto float Monto del ingreso en caso de que no este contemplado por el concepto de ingreso o que sea diferente
- 	 * @param nota string Nota del ingreso
- 	 * @return id_ingreso int Id autogenerado por la insercion del ingreso
- 	 **/
-  static function NuevoIngreso
-	(
-		$fecha_ingreso, 
-		$id_empresa, 
-		$billetes = null, 
-		$descripcion = null, 
-		$folio = null, 
-		$id_caja = null, 
-		$id_concepto_ingreso = null, 
-		$id_sucursal = null, 
-		$monto = null, 
-		$nota = null
 	);  
   
   

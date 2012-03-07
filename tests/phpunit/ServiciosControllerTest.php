@@ -98,34 +98,17 @@ class ServiciosControllerTest extends PHPUnit_Framework_TestCase {
 	
 
 	public function testNuevaOrden(){
-		$servs = ServiciosController::Buscar();
-		
-		$this->assertEquals( $servs["numero_de_resultados"], sizeof($servs["resultados"]) );
-		/*
-		for ($i=0; $i < $servs["numero_de_resultados"]; $i++) { 
-			$s = $servs["resultados"][$i]->asArray();
-			if($s["nombre_servicio"] == "F9c4cf2db944589ec4c13ed61fbaeb33"){
-				Logger::testerLog("el servicio F9c4cf2db944589ec4c13ed61fbaeb33 ya existe, desactivando...");
-				try{
-					ServiciosController::Eliminar( $s["id_servicio"] );
-					// si lo pude eliminar, voy a crearlo de nuevo
-					
-					
-				}catch(Exception $e){
-					
-				}
-			}
-		}*/
-		
+		//$servs = ServiciosController::Buscar();
+		//$this->assertEquals( $servs["numero_de_resultados"], sizeof($servs["resultados"]) );
 
-		Logger::testerLog("Creando servicio: F9c4cf2db94458" . time());
+
 		
 		$s = ServiciosController::Nuevo(
-			"F9c4cf2db94458" . time(), 
+			"testNuevaOrden-2db94458" . time(), 
 			false, 
 			0, 
 			"precio", 
-			"F9c4cf2db94458" . time(),
+			"testNuevaOrden-2db94458" . time(),
 			true, 
 			null, 
 			null, 
@@ -134,21 +117,22 @@ class ServiciosControllerTest extends PHPUnit_Framework_TestCase {
 			null, 
 			null, 
 			null, 
-			0
+			1542.15 //este servicio cuesta 1542.15
 		);
 	
 		
-		Logger::testerLog("Creando cliente:  c9c4cf2db94458" . time());
-		$c = ClientesController::nuevo(		"c9c4cf2db94458" . time());
 
+		$c = ClientesController::nuevo( "testNuevaOrden-2db94458" . time() );
 
+		
 		
 		Logger::testerLog("Nueva orde de servicio (" . $c["id_cliente"] .", ". $s["id_servicio"] ." )");
 		
 		$o = ServiciosController::NuevaOrden(
 				$c["id_cliente"], 
-				$s["id_servicio"]  );
-			
+				$s["id_servicio"]  
+		);
+		
 	    $this->assertInternalType("int", $o["id_orden"]);
 		$this->assertInternalType("int", $o["id_venta"]);
 
@@ -176,7 +160,7 @@ class ServiciosControllerTest extends PHPUnit_Framework_TestCase {
 		//hacerle un abono
 		CargosYAbonosController::NuevoAbono( 
 			$c["id_cliente"], 
-			500, 
+			1, 
 			"efectivo",
 			null, 
 			null, 
@@ -293,5 +277,7 @@ class ServiciosControllerTest extends PHPUnit_Framework_TestCase {
 
 		
 	}
+	
+
 	
 }

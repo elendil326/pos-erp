@@ -975,7 +975,7 @@ require_once("interfaces/Servicios.interface.php");
 		$sucursales = null
 	)
 	{  
-            Logger::log("Creando nuevo servicio...");
+            Logger::log("Creando nuevo servicio `$nombre_servicio`...");
 
 			
             

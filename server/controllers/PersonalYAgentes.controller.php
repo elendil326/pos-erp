@@ -942,6 +942,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	)
 	{  
             Logger::log("Listando a los usuarios");
+
             //valida el parametro activo.
             $validar=self::validarParametrosUsuario(null, null, null, null, null, null, null, $activo);
             if(is_string($validar))
@@ -954,65 +955,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 
             //valida el parametro ordenar.
             //Ordenar tiene que ser un string que corresponda al nombre de un campo de la tabla usuario
-            if(!is_null($ordenar))
-            {
-                $e=self::validarString($ordenar, 30, "ordenar");
-                if(is_string($e))
-                {
-                    Logger::error($e);
-                    throw new Exception($e,901);
-                }
-                if
-                (
-                        $ordenar != "id_usuario" &&
-                        $ordenar != "id_direccion" &&
-                        $ordenar != "id_direccion_alterna" &&
-                        $ordenar != "id_sucursal" &&
-                        $ordenar != "id_rol" &&
-                        $ordenar != "id_clasificacion_cliente" &&
-                        $ordenar != "id_clasificacion_proveedor" &&
-                        $ordenar != "id_moneda" &&
-                        $ordenar != "fecha_asignacion_rol" &&
-                        $ordenar != "nombre" &&
-                        $ordenar != "rfc" &&
-                        $ordenar != "curp" &&
-                        $ordenar != "comision_ventas" &&
-                        $ordenar != "telefono_personal1" &&
-                        $ordenar != "telefono_personal2" &&
-                        $ordenar != "fecha_alta" &&
-                        $ordenar != "fecha_baja" &&
-                        $ordenar != "activo" &&
-                        $ordenar != "limite_credito" &&
-                        $ordenar != "descuento" &&
-                        $ordenar != "password" &&
-                        $ordenar != "last_login" &&
-                        $ordenar != "consignatario" &&
-                        $ordenar != "salario" &&
-                        $ordenar != "correo_electronico" &&
-                        $ordenar != "pagina_web" &&
-                        $ordenar != "saldo_del_ejercicio" &&
-                        $ordenar != "ventas_a_credito" &&
-                        $ordenar != "representante_legal" &&
-                        $ordenar != "facturar_a_terceros" &&
-                        $ordenar != "dia_de_pago" &&
-                        $ordenar != "mensajeria" &&
-                        $ordenar != "intereses_moratorios" &&
-                        $ordenar != "denominacion_comercial" &&
-                        $ordenar != "dias_de_credito" &&
-                        $ordenar != "cuenta_de_mensajeria" &&
-                        $ordenar != "dia_de_revision" &&
-                        $ordenar != "codigo_usuario" &&
-                        $ordenar != "dias_de_embarque" &&
-                        $ordenar != "tiempo_entrega" &&
-                        $ordenar != "cuenta_bancaria" &&
-                        $ordenar != "id_tarifa_compra"  &&
-                        $ordenar != "id_tarifa_venta"
-                )
-                {
-                    Logger::error("El parametro ordenar: ".$ordenar." no es una columna de la tabla usuario");
-                    throw new Exception("El parametro ordenar es invalido",901);
-                }
-            }
+            
             //Si se paso el parametro activo, se llama al metodo search
             if(!is_null($activo))
             {
@@ -1022,7 +965,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             //Si no, se llama al metodo getAll.
             else
             {
-                $usuarios=UsuarioDAO::getAll(null,null,$ordenar);
+                $usuarios = UsuarioDAO::byRange( new Usuario( array( "id_rol" => 0 )), new Usuario( array( "id_rol" => 4 )) );
             }
             Logger::log("Se obtuvo la lista de usuarios exitosamente con ".count($usuarios)." elementos");
             return $usuarios;

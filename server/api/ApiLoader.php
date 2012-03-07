@@ -578,6 +578,66 @@
   
   
 
+  class ApiClienteAvalNuevo extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"avales" => new ApiExposedProperty("avales", true, POST, array( "json" )),
+			"id_cliente" => new ApiExposedProperty("id_cliente", true, POST, array( "int" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = ClientesController::NuevoAval( 
+ 			
+			
+			isset($_POST['avales'] ) ? json_decode($_POST['avales']) : null,
+			isset($_POST['id_cliente'] ) ? $_POST['id_cliente'] : null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiClienteAvalEliminar extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"avales" => new ApiExposedProperty("avales", true, POST, array( "json" )),
+			"id_cliente" => new ApiExposedProperty("id_cliente", true, POST, array( "int" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = ClientesController::EliminarAval( 
+ 			
+			
+			isset($_POST['avales'] ) ? json_decode($_POST['avales']) : null,
+			isset($_POST['id_cliente'] ) ? $_POST['id_cliente'] : null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
   class ApiAutorizacionesGasto extends ApiHandler {
   
 
@@ -1172,10 +1232,9 @@
 
 	protected function GenerateResponse() {		
 		try{
-
  		$this->response = PersonalYAgentesController::EditarUsuario( 
  			
-
+			
 			isset($_POST['id_usuario'] ) ? $_POST['id_usuario'] : null,
 			isset($_POST['codigo_usuario'] ) ? $_POST['codigo_usuario'] :  null,
 			isset($_POST['comision_ventas'] ) ? $_POST['comision_ventas'] :  null,
@@ -1597,7 +1656,7 @@
   
   
 
-  class ApiEfectivoGastoConceptoEditar extends ApiHandler {
+  class ApiCargosyabonosGastoConceptoEditar extends ApiHandler {
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
@@ -1937,22 +1996,22 @@
   
   
 
-  class ApiEfectivoAbonoNuevo extends ApiHandler {
+  class ApiCargosyabonosAbonoNuevo extends ApiHandler {
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"id_deudor" => new ApiExposedProperty("id_deudor", true, GET, array( "int" )),
-			"monto" => new ApiExposedProperty("monto", true, GET, array( "float" )),
-			"tipo_pago" => new ApiExposedProperty("tipo_pago", true, GET, array( "json" )),
-			"billetes" => new ApiExposedProperty("billetes", false, GET, array( "json" )),
-			"cheques" => new ApiExposedProperty("cheques", false, GET, array( "json" )),
-			"id_compra" => new ApiExposedProperty("id_compra", false, GET, array( "int" )),
-			"id_prestamo" => new ApiExposedProperty("id_prestamo", false, GET, array( "int" )),
-			"id_venta" => new ApiExposedProperty("id_venta", false, GET, array( "int" )),
-			"nota" => new ApiExposedProperty("nota", false, GET, array( "string" )),
+			"id_deudor" => new ApiExposedProperty("id_deudor", true, POST, array( "int" )),
+			"monto" => new ApiExposedProperty("monto", true, POST, array( "float" )),
+			"tipo_pago" => new ApiExposedProperty("tipo_pago", true, POST, array( "json" )),
+			"billetes" => new ApiExposedProperty("billetes", false, POST, array( "json" )),
+			"cheques" => new ApiExposedProperty("cheques", false, POST, array( "json" )),
+			"id_compra" => new ApiExposedProperty("id_compra", false, POST, array( "int" )),
+			"id_prestamo" => new ApiExposedProperty("id_prestamo", false, POST, array( "int" )),
+			"id_venta" => new ApiExposedProperty("id_venta", false, POST, array( "int" )),
+			"nota" => new ApiExposedProperty("nota", false, POST, array( "string" )),
 		);
 	}
 
@@ -1961,15 +2020,15 @@
  		$this->response = CargosYAbonosController::NuevoAbono( 
  			
 			
-			isset($_GET['id_deudor'] ) ? $_GET['id_deudor'] : null,
-			isset($_GET['monto'] ) ? $_GET['monto'] : null,
-			isset($_GET['tipo_pago'] ) ? json_decode($_GET['tipo_pago']) : null,
-			isset($_GET['billetes'] ) ? json_decode($_GET['billetes']) : null,
-			isset($_GET['cheques'] ) ? json_decode($_GET['cheques']) : null,
-			isset($_GET['id_compra'] ) ? $_GET['id_compra'] :  null,
-			isset($_GET['id_prestamo'] ) ? $_GET['id_prestamo'] :  null,
-			isset($_GET['id_venta'] ) ? $_GET['id_venta'] :  null,
-			isset($_GET['nota'] ) ? $_GET['nota'] :  null
+			isset($_POST['id_deudor'] ) ? $_POST['id_deudor'] : null,
+			isset($_POST['monto'] ) ? $_POST['monto'] : null,
+			isset($_POST['tipo_pago'] ) ? json_decode($_POST['tipo_pago']) : null,
+			isset($_POST['billetes'] ) ? json_decode($_POST['billetes']) : null,
+			isset($_POST['cheques'] ) ? json_decode($_POST['cheques']) : null,
+			isset($_POST['id_compra'] ) ? $_POST['id_compra'] :  null,
+			isset($_POST['id_prestamo'] ) ? $_POST['id_prestamo'] :  null,
+			isset($_POST['id_venta'] ) ? $_POST['id_venta'] :  null,
+			isset($_POST['nota'] ) ? $_POST['nota'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -1981,23 +2040,23 @@
   
   
 
-  class ApiEfectivoIngresoNuevo extends ApiHandler {
+  class ApiCargosyabonosIngresoNuevo extends ApiHandler {
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"fecha_ingreso" => new ApiExposedProperty("fecha_ingreso", true, GET, array( "string" )),
-			"id_empresa" => new ApiExposedProperty("id_empresa", true, GET, array( "int" )),
-			"billetes" => new ApiExposedProperty("billetes", false, GET, array( "json" )),
-			"descripcion" => new ApiExposedProperty("descripcion", false, GET, array( "string" )),
-			"folio" => new ApiExposedProperty("folio", false, GET, array( "string" )),
-			"id_caja" => new ApiExposedProperty("id_caja", false, GET, array( "int" )),
-			"id_concepto_ingreso" => new ApiExposedProperty("id_concepto_ingreso", false, GET, array( "int" )),
-			"id_sucursal" => new ApiExposedProperty("id_sucursal", false, GET, array( "int" )),
-			"monto" => new ApiExposedProperty("monto", false, GET, array( "float" )),
-			"nota" => new ApiExposedProperty("nota", false, GET, array( "string" )),
+			"fecha_ingreso" => new ApiExposedProperty("fecha_ingreso", true, POST, array( "string" )),
+			"id_empresa" => new ApiExposedProperty("id_empresa", true, POST, array( "int" )),
+			"billetes" => new ApiExposedProperty("billetes", false, POST, array( "json" )),
+			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "string" )),
+			"folio" => new ApiExposedProperty("folio", false, POST, array( "string" )),
+			"id_caja" => new ApiExposedProperty("id_caja", false, POST, array( "int" )),
+			"id_concepto_ingreso" => new ApiExposedProperty("id_concepto_ingreso", false, POST, array( "int" )),
+			"id_sucursal" => new ApiExposedProperty("id_sucursal", false, POST, array( "int" )),
+			"monto" => new ApiExposedProperty("monto", false, POST, array( "float" )),
+			"nota" => new ApiExposedProperty("nota", false, POST, array( "string" )),
 		);
 	}
 
@@ -2006,16 +2065,16 @@
  		$this->response = CargosYAbonosController::NuevoIngreso( 
  			
 			
-			isset($_GET['fecha_ingreso'] ) ? $_GET['fecha_ingreso'] : null,
-			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] : null,
-			isset($_GET['billetes'] ) ? json_decode($_GET['billetes']) : null,
-			isset($_GET['descripcion'] ) ? $_GET['descripcion'] :  null,
-			isset($_GET['folio'] ) ? $_GET['folio'] :  null,
-			isset($_GET['id_caja'] ) ? $_GET['id_caja'] :  null,
-			isset($_GET['id_concepto_ingreso'] ) ? $_GET['id_concepto_ingreso'] :  null,
-			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] :  null,
-			isset($_GET['monto'] ) ? $_GET['monto'] :  null,
-			isset($_GET['nota'] ) ? $_GET['nota'] :  null
+			isset($_POST['fecha_ingreso'] ) ? $_POST['fecha_ingreso'] : null,
+			isset($_POST['id_empresa'] ) ? $_POST['id_empresa'] : null,
+			isset($_POST['billetes'] ) ? json_decode($_POST['billetes']) : null,
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null,
+			isset($_POST['folio'] ) ? $_POST['folio'] :  null,
+			isset($_POST['id_caja'] ) ? $_POST['id_caja'] :  null,
+			isset($_POST['id_concepto_ingreso'] ) ? $_POST['id_concepto_ingreso'] :  null,
+			isset($_POST['id_sucursal'] ) ? $_POST['id_sucursal'] :  null,
+			isset($_POST['monto'] ) ? $_POST['monto'] :  null,
+			isset($_POST['nota'] ) ? $_POST['nota'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -2027,19 +2086,19 @@
   
   
 
-  class ApiEfectivoAbonoEditar extends ApiHandler {
+  class ApiCargosyabonosAbonoEditar extends ApiHandler {
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"id_abono" => new ApiExposedProperty("id_abono", true, GET, array( "int" )),
-			"compra" => new ApiExposedProperty("compra", false, GET, array( "bool" )),
-			"motivo_cancelacion" => new ApiExposedProperty("motivo_cancelacion", false, GET, array( "string" )),
-			"nota" => new ApiExposedProperty("nota", false, GET, array( "string" )),
-			"prestamo" => new ApiExposedProperty("prestamo", false, GET, array( "bool" )),
-			"venta" => new ApiExposedProperty("venta", false, GET, array( "bool" )),
+			"id_abono" => new ApiExposedProperty("id_abono", true, POST, array( "int" )),
+			"compra" => new ApiExposedProperty("compra", false, POST, array( "bool" )),
+			"motivo_cancelacion" => new ApiExposedProperty("motivo_cancelacion", false, POST, array( "string" )),
+			"nota" => new ApiExposedProperty("nota", false, POST, array( "string" )),
+			"prestamo" => new ApiExposedProperty("prestamo", false, POST, array( "bool" )),
+			"venta" => new ApiExposedProperty("venta", false, POST, array( "bool" )),
 		);
 	}
 
@@ -2048,12 +2107,12 @@
  		$this->response = CargosYAbonosController::EditarAbono( 
  			
 			
-			isset($_GET['id_abono'] ) ? $_GET['id_abono'] : null,
-			isset($_GET['compra'] ) ? $_GET['compra'] :  null,
-			isset($_GET['motivo_cancelacion'] ) ? $_GET['motivo_cancelacion'] :  null,
-			isset($_GET['nota'] ) ? $_GET['nota'] :  null,
-			isset($_GET['prestamo'] ) ? $_GET['prestamo'] :  null,
-			isset($_GET['venta'] ) ? $_GET['venta'] :  null
+			isset($_POST['id_abono'] ) ? $_POST['id_abono'] : null,
+			isset($_POST['compra'] ) ? $_POST['compra'] :  null,
+			isset($_POST['motivo_cancelacion'] ) ? $_POST['motivo_cancelacion'] :  null,
+			isset($_POST['nota'] ) ? $_POST['nota'] :  null,
+			isset($_POST['prestamo'] ) ? $_POST['prestamo'] :  null,
+			isset($_POST['venta'] ) ? $_POST['venta'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -2065,20 +2124,20 @@
   
   
 
-  class ApiEfectivoAbonoEliminar extends ApiHandler {
+  class ApiCargosyabonosAbonoEliminar extends ApiHandler {
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"id_abono" => new ApiExposedProperty("id_abono", true, GET, array( "int" )),
-			"billetes" => new ApiExposedProperty("billetes", false, GET, array( "json" )),
-			"compra" => new ApiExposedProperty("compra", false, GET, array( "bool" )),
-			"id_caja" => new ApiExposedProperty("id_caja", false, GET, array( "int" )),
-			"motivo_cancelacion" => new ApiExposedProperty("motivo_cancelacion", false, GET, array( "string" )),
-			"prestamo" => new ApiExposedProperty("prestamo", false, GET, array( "bool" )),
-			"venta" => new ApiExposedProperty("venta", false, GET, array( "bool" )),
+			"id_abono" => new ApiExposedProperty("id_abono", true, POST, array( "int" )),
+			"billetes" => new ApiExposedProperty("billetes", false, POST, array( "json" )),
+			"compra" => new ApiExposedProperty("compra", false, POST, array( "bool" )),
+			"id_caja" => new ApiExposedProperty("id_caja", false, POST, array( "int" )),
+			"motivo_cancelacion" => new ApiExposedProperty("motivo_cancelacion", false, POST, array( "string" )),
+			"prestamo" => new ApiExposedProperty("prestamo", false, POST, array( "bool" )),
+			"venta" => new ApiExposedProperty("venta", false, POST, array( "bool" )),
 		);
 	}
 
@@ -2087,13 +2146,13 @@
  		$this->response = CargosYAbonosController::EliminarAbono( 
  			
 			
-			isset($_GET['id_abono'] ) ? $_GET['id_abono'] : null,
-			isset($_GET['billetes'] ) ? json_decode($_GET['billetes']) : null,
-			isset($_GET['compra'] ) ? $_GET['compra'] :  null,
-			isset($_GET['id_caja'] ) ? $_GET['id_caja'] :  null,
-			isset($_GET['motivo_cancelacion'] ) ? $_GET['motivo_cancelacion'] :  null,
-			isset($_GET['prestamo'] ) ? $_GET['prestamo'] :  null,
-			isset($_GET['venta'] ) ? $_GET['venta'] :  null
+			isset($_POST['id_abono'] ) ? $_POST['id_abono'] : null,
+			isset($_POST['billetes'] ) ? json_decode($_POST['billetes']) : null,
+			isset($_POST['compra'] ) ? $_POST['compra'] :  null,
+			isset($_POST['id_caja'] ) ? $_POST['id_caja'] :  null,
+			isset($_POST['motivo_cancelacion'] ) ? $_POST['motivo_cancelacion'] :  null,
+			isset($_POST['prestamo'] ) ? $_POST['prestamo'] :  null,
+			isset($_POST['venta'] ) ? $_POST['venta'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -2105,7 +2164,7 @@
   
   
 
-  class ApiEfectivoAbonoLista extends ApiHandler {
+  class ApiCargosyabonosAbonoLista extends ApiHandler {
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
@@ -2287,7 +2346,7 @@
   
   
 
-  class ApiEfectivoIngresoLista extends ApiHandler {
+  class ApiCargosyabonosIngresoLista extends ApiHandler {
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
@@ -2303,8 +2362,6 @@
 			"id_empresa" => new ApiExposedProperty("id_empresa", false, GET, array( "int" )),
 			"id_sucursal" => new ApiExposedProperty("id_sucursal", false, GET, array( "int" )),
 			"id_usuario" => new ApiExposedProperty("id_usuario", false, GET, array( "int" )),
-			"monto_maximo" => new ApiExposedProperty("monto_maximo", false, GET, array( "float" )),
-			"monto_minimo" => new ApiExposedProperty("monto_minimo", false, GET, array( "float" )),
 			"orden" => new ApiExposedProperty("orden", false, GET, array( "string" )),
 		);
 	}
@@ -2323,8 +2380,6 @@
 			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] :  null,
 			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] :  null,
 			isset($_GET['id_usuario'] ) ? $_GET['id_usuario'] :  null,
-			isset($_GET['monto_maximo'] ) ? $_GET['monto_maximo'] :  null,
-			isset($_GET['monto_minimo'] ) ? $_GET['monto_minimo'] :  null,
 			isset($_GET['orden'] ) ? $_GET['orden'] :  null
 			
 			);
