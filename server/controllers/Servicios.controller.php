@@ -1561,117 +1561,41 @@ require_once("interfaces/Servicios.interface.php");
 	)
 	{  
             Logger::log("Creando nueva orden de servicio...");
-            Logger::log(" id_servicio=" . $id_servicio);
-            Logger::log(" id_cliente =" . $id_cliente);			
+            Logger::log("   id_servicio=" . $id_servicio);
+            Logger::log("   id_cliente =" . $id_cliente);			
 
             //Se obtiene al usuario de la sesion actual
             $id_usuario = SesionController::getCurrentUser();
 
-            if(is_null($id_usuario))
-            {
+            if(is_null($id_usuario)){
                 Logger::error("No se ha podido obtener al usuario de la sesion. Ya inicio sesion?");
-                throw new Exception("No se ha podido obtener al usuario de la sesion. Ya inicio sesion?");
+                throw new AccessDeniedException("No se ha podido obtener al usuario de la sesion.");
             }
             
             //Valida que los datos sean correctos
             $validar = self::validarParametrosOrdenDeServicio(null, $id_servicio, $id_cliente, $descripcion, null, $adelanto);
-            if(is_string($validar))
-            {
-                Logger::error($validar);
-                throw new Exception($validar);
-            }
-            
-            //Si no se recibe adelanto se toma como cero
-            if(is_null($adelanto))
-                $adelanto=0;
-            
-            //Se calcula el precio de la orden de servicio
-            
-            $prec = 0;
-            
-            $servicio = ServicioDAO::getByPK($id_servicio);
-            
-            $p = false; //bandera para precio
-            $m = false; //bandera para margen
-            
-            $precio = 0;
-            $margen = 0;
-            
-            //Se verifica si existe un precio especial para este usuario con este servicio, o para el tipo de usuario.
-            $precio_servicio = null;//PrecioServicioUsuarioDAO::getByPK($id_servicio, $id_cliente);
-            
-            if(is_null($precio_servicio))
-            {
-                /*
-                $usuario = UsuarioDAO::getByPK($id_cliente);
-                $precio_servicio = PrecioServicioTipoClienteDAO::getByPK($id_servicio, $usuario->getIdClasificacionCliente());
-                
-                if(is_null($precio_servicio))
-                {
-                    //Si no hay precio especial, se toma el del servicio
-                    if($servicio->getMetodoCosteo()=="precio")
-                    {
-                        $p = true;
-                        $precio += $servicio->getPrecio();
-                    }
-                    else
-                    {
-                        $m = true;
-                        $margen += $servicio->getMargenDeUtilidad();
-                    }
-                }
-                else
-                {
-                    if($precio_servicio->getEsMargenUtilidad())
-                    {
-                        $m = true;
-                        $margen +=$precio_servicio->getPrecioUtilidad();
-                    }
-                    else
-                    {
-                        $p = true;
-                        $precio +=$precio_servicio->getPrecioUtilidad();
-                    }
-                }
-                */
-                 //Si no hay precio especial, se toma el del servicio
-                    if($servicio->getMetodoCosteo()=="precio")
-                    {
-                        $p = true;
-                        $precio += $servicio->getPrecio();
-                    }
-                    else
-                    {
-                        $m = true;
-                        $margen += $servicio->getMargenDeUtilidad();
-                    }
-            }
-            else
 
-            {
-                if($precio_servicio->getEsMargenUtilidad())
-                {
-                    $m = true;
-                    $margen +=$precio_servicio->getPrecioUtilidad();
-                }
-                else
-                {
-                    $p = true;
-                    $precio +=$precio_servicio->getPrecioUtilidad();
-                }
-            }
-            
-            //Si el servicio esta en terminos de precio, se toma el precio,
-            //si es un margen, se multiplica el margen por su costo y se suma su costo.
-            if($p)
-            {
-                $prec+=$precio;
-            }
-            else
-            {
-                $prec+=($margen/100)*($servicio->getCostoEstandar())+$servicio->getCostoEstandar();
-            }
-            
+
+			//validar que exista el servicio
+			//valir que el cliente exista
+			//validar la descripcion
+
+
+            //Si no se recibe adelanto se toma como cero
+            if(is_null($adelanto)){
+	    		$adelanto = 0;
+			}
+
+
+			$servicio = ServicioDAO::getByPK($id_servicio);
+			
+			$subtotal = 0;
+
+			$subtotal = $servicio->getPrecio();
+
+			
+
+
             //Se inicializa el registro de orden de servicio
             $orden_de_servicio = new OrdenDeServicio( array( 
                                                             
@@ -1691,6 +1615,7 @@ require_once("interfaces/Servicios.interface.php");
             
             DAO::transBegin();
             try{
+				Logger::log("Insertando la orden de servicio....");
                 $orden = OrdenDeServicioDAO::save($orden_de_servicio);
     
         	}catch(Exception $e){
@@ -1708,21 +1633,22 @@ require_once("interfaces/Servicios.interface.php");
 			$venta->setIdCompradorVenta	($id_cliente);
 			$venta->setTipoDeVenta		("credito");
 			$venta->setFecha			(date("Y-m-d H:i:s"));
-			$venta->setSubtotal			(1000);
+			$venta->setSubtotal			($subtotal);
 			$venta->setImpuesto			(0);
-			$venta->setTotal			(1000);
+			$venta->setTotal			($subtotal);
 			$venta->setIdSucursal		($s["id_sucursal"]);
 			$venta->setIdUsuario		($s["id_usuario"]);
-			$venta->setSaldo			(0);
+			$venta->setSaldo			($subtotal);
 			$venta->setCancelada		(false);
 			$venta->setRetencion		(0);
 			
 			try{
+				Logger::log("Insertando la venta....");
                 VentaDAO::save( $venta );
     
         	}catch(Exception $e){
                 DAO::transRollback();
-                Logger::error("No se pudo crear la nueva orden de servicio ".$e);
+                Logger::error($e->getMessage());
                 throw new InvalidDatabaseOperationException("No se pudo crear la nueva orden de servicio");
 
             }
@@ -1732,25 +1658,28 @@ require_once("interfaces/Servicios.interface.php");
 
 			$venta_orden->setIdVenta			( $venta->getIdVenta() );
 			$venta_orden->setIdOrdenDeServicio	( $orden_de_servicio->getIdOrdenDeServicio() );
-			$venta_orden->setPrecio				( 1000);
+			$venta_orden->setPrecio				( $subtotal);
 			$venta_orden->setDescuento			( 0);
 			$venta_orden->setImpuesto			( 0);
 			$venta_orden->setRetencion			( 0);
 			
 			
 			try{
+				Logger::log("Insertando la orden de venta....");
                 VentaOrdenDAO::save( $venta_orden );
     
         	}catch(Exception $e){
                 DAO::transRollback();
-                Logger::error("No se pudo crear la nueva orden de servicio ".$e);
+                Logger::error($e->getMessage());
                 throw new InvalidDatabaseOperationException("No se pudo crear la nueva orden de servicio");
 
             }
 
 
             DAO::transEnd();
-            Logger::log("Orden de servicio creada exitosamente");
+            Logger::log("Orden de servicio creada exitosamente:");
+			Logger::log("	orden de servicio=" . $orden_de_servicio->getIdOrdenDeServicio());
+			Logger::log("	id de venta		 =" . $venta->getIdVenta() );
             return array( 
 					"id_orden" => (int)$orden_de_servicio->getIdOrdenDeServicio(),
 					"id_venta" => (int)$venta->getIdVenta() );
