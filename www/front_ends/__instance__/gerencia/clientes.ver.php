@@ -86,6 +86,40 @@
 			$page->addComponent( $dform );
 		}
 		
-	
+	//AVALES
+
+    $page->addComponent( new TitleComponent( "Nuevo Aval", 2 ) );
+
+        //$clientes_component = new ClienteSelectorComponent();                
+        //$clientes_component->addJsCallback("seleccionar_sucursal");
+        //$clientes_component->renderCmp();
+
+        $page->addComponent( new ClienteSelectorComponent() );                
+
+        $page->addComponent( new TitleComponent( "Lista de Avales", 2 ) );
+
+        $avales = ClienteAvalDAO::search( new ClienteAval( array( "id_cliente" => $este_usuario->getIdUsuario() ) ) );
+
+        $array_avales = array();
+
+        foreach( $avales as $aval ){
+            array_push( $array_avales, $aval->asArray() );
+        }
+		
+		$tabla_avales = new TableComponent( 
+			array(
+				"id_aval"           => "Nombre",
+				"tipo_aval" 		=> "Tipo de Aval"
+			),
+            $array_avales
+		);
+
+        function funcion_nombre_aval($id_usuario){
+            return (UsuarioDAO::getByPK($id_usuario)->getNombre());
+        }                
+
+        $tabla_avales->addColRender("id_aval", "funcion_nombre_aval");
+					
+		$page->addComponent( $tabla_avales );        
 		
 		$page->render();
