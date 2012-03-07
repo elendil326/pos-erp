@@ -13,6 +13,13 @@
 	$page->addComponent( new TitleComponent( "Nueva orden de servicio" ) );
 
 
+	$csel = new ClienteSelectorComponent();
+	$csel->addJsCallback("alert");
+	
+	$page->addComponent( $csel);
+
+
+
 	//forma de nueva orden de servicio
 	$form = new DAOFormComponent( array( new OrdenDeServicio() ) );
 	
@@ -52,7 +59,7 @@
 			$clientes["resultados"]
 			
 		);
-              
+
 	$page->addComponent( $form );
 
 

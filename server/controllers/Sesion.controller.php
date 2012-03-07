@@ -23,11 +23,13 @@ class SesionController implements ISesion{
         public static function Actual(){
 			if(self::$_is_logged_in){
 				
-				if(self::$_current_user){
-	            	return array( "id_caja" => null, "id_sucursal" => null, "id_usuario" => self::$_current_user->getIdUsuario() );					
+				if(!is_null(self::$_current_user)){
+	            	return array( "id_caja" => null, "id_sucursal" => null, "id_usuario" => self::$_current_user->getIdUsuario() );
 				}
-				
-	            return array( "id_caja" => null, "id_sucursal" => null, "id_usuario" => self::getCurrentUser()->getIdUsuario());
+				$foo = self::getCurrentUser() ;
+
+	            return array( "id_caja" => null, "id_sucursal" => null, "id_usuario" => $foo->getIdUsuario());
+	
 	
 			}else{
             	return array( "id_caja" => null, "id_sucursal" => null, "id_usuario" => null);				
@@ -50,8 +52,8 @@ class SesionController implements ISesion{
 	)
 	{  
 		
-  		Logger::log("Cerrando sesion para toek {$auth_token}...");
-		Logger::warn("Falta borrar el token de la bd");
+  		//Logger::log("Cerrando sesion para toek {$auth_token}...");
+		//Logger::warn("Falta borrar el token de la bd");
 	  	self::$_is_logged_in = null;
 		self::$_current_user = null;
 		$sm = SessionManager::getInstance();
@@ -73,9 +75,9 @@ class SesionController implements ISesion{
  	 * Si el usuario que esta intentando iniciar sesion, esta descativado...
  	 * 403 Authorization Required supongo
  	 *
- 	 * @param password string La contrase�a del usuario.
- 	 * @param usuario string El id de usuario a intentar iniciar sesi�n.
- 	 * @param request_token bool Si se env�a, y es verdadero, el seguimiento de esta sesi�n se har� mediante un token, de lo contrario se har� mediante cookies.
+ 	 * @param password string La contrasena del usuario.
+ 	 * @param usuario string El id de usuario a intentar iniciar sesion.
+ 	 * @param request_token bool Si se envia, y es verdadero, el seguimiento de esta sesi�n se har� mediante un token, de lo contrario se har� mediante cookies.
  	 * @return usuario_grupo int El grupo al que este usuario pertenece.
  	 * @return siguiente_url string La url a donde se debe de redirigir.
  	 * @return login_succesful	 bool Si la validaci�n del usuario es correcta.
@@ -95,7 +97,7 @@ class SesionController implements ISesion{
 
 
 		if( $user === NULL ) {
-			Logger::warn("Credenciales invalidas para usuario {$user}");
+			//Logger::warn("Credenciales invalidas para usuario {$usuario}");
 			return array( "login_succesful" => false );
 			
 		}
@@ -104,7 +106,7 @@ class SesionController implements ISesion{
 		$sesiones_actuales  = SesionDAO::search( new Sesion( array( "id_usuario" => $user->getIdUsuario() ) ) );
 		
 		if(sizeof($sesiones_actuales) > 0){
-			//Logger::warn("Este usuario ya tiene sesiones actuales");
+			////Logger::warn("Este usuario ya tiene sesiones actuales");
 			
 			foreach($sesiones_actuales	as $s ){
 				
@@ -112,8 +114,8 @@ class SesionController implements ISesion{
 					SesionDAO::delete( $s );
 					
 				}catch(Exception $e){
-					Logger::error($e);
-					throw $e;
+					//Logger::error($e->getMessage());
+					throw new InvalidDatabaseOperationException($e);
 				}
 			}
 		}
@@ -145,22 +147,23 @@ class SesionController implements ISesion{
 		
 		try{
 			SesionDAO::save( $nueva_sesion );
-			//Logger::log("Setting _is_logged_in");
-			self::$_is_logged_in = true;
+			////Logger::log("Setting _is_logged_in");
+			
 			
 		}catch(Exception $e){
-			Logger::error( "Imposible escribir la sesion en la bd " );
-			Logger::error( $e );
+			//Logger::error( "Imposible escribir la sesion en la bd " );
+			//Logger::error( $e->getMessage() );
 			
 			throw new InvalidDatabaseOperationException($e);
 			
 		}
 		
-		//Logger::log("Actual login...");
+		////Logger::log("Actual login...");
 		self::login( $nueva_sesion->getAuthToken(), $nueva_sesion->getIdUsuario(), $user->getIdRol()  );
 		
-		//Logger::log("Setting _current_user");
-		self::$_current_user = SesionDAO::getUserByAuthToken( $nueva_sesion->getAuthToken() );
+		////Logger::log("Setting _current_user");
+		self::$_current_user = $user;
+		self::$_is_logged_in = true;
 		
 		return array( "auth_token" => $nueva_sesion->getAuthToken(), "login_succesful" => true );
 	}
@@ -202,19 +205,19 @@ class SesionController implements ISesion{
 	  *
 	  **/
 	public static function testLogin($user, $pass){
-		Logger::log("testLogin( {$user} )");
+		//Logger::log("testLogin( {$user} )");
 
-		if( self::isLoggedIn() ) {
-			Logger::log( "Ya hay una sesion activa" );
-			return UsuarioDAO::getByPK( $_SESSION['USER_ID'] );	
-		}
+		//if( self::isLoggedIn() ) {
+		//	//Logger::log( "Ya hay una sesion activa" );
+		//	return UsuarioDAO::getByPK( $_SESSION['USER_ID'] );	
+		//}
 
 		//user is not logged in, look for him
 		$user = UsuarioDAO::findUser( $user, $pass );
 
 
 		if( $user === NULL ) {
-			Logger::warn("No se encontro el usuario " . $user);
+			//Logger::warn("No se encontro el usuario " . $user);
 			return NULL;	
 		}
 
@@ -240,34 +243,34 @@ class SesionController implements ISesion{
 
 	static function isLoggedIn(){
 		
-		Logger::log("isLoggedIn() started...");
+		//Logger::log("isLoggedIn() started...");
 		
 		if(isset(self::$_is_logged_in) && !is_null(self::$_is_logged_in) && self::$_is_logged_in){
-			//Logger::log("isLoggedIn() already set ...");
+			////Logger::log("isLoggedIn() already set ...");
 			return true;
 		}
 		
-		Logger::log("getting session mananger");
+		//Logger::log("getting session mananger");
 		$sm = SessionManager::getInstance();
 		
 		$auth_token = $sm->GetCookie("at");
 		
 		if( is_null($auth_token) ) {
-			Logger::log("there is no auth token in the cookie");
+			//Logger::log("there is no auth token in the cookie");
 			self::$_is_logged_in = false;
 			return false;
 		}
 		
-		//Logger::log("There is a session token in the cookie, lets test it.");
+		////Logger::log("There is a session token in the cookie, lets test it.");
 	
 		$user = SesionDAO::getUserByAuthToken($auth_token);
 	
 		if(is_null($user)){
-			Logger::warn("auth_token was not found in the db, why is this?");
+			//Logger::warn("auth_token was not found in the db, why is this?");
 			self::$_is_logged_in = false;
 			return false;
 		}else{
-			Logger::log("auth_token validated, it belongs to user_id=" . $user->getIdUsuario());
+			//Logger::log("auth_token validated, it belongs to user_id=" . $user->getIdUsuario());
 			self::$_is_logged_in = true;
 			return true;			
 		}
@@ -280,31 +283,21 @@ class SesionController implements ISesion{
 
 
 	private static function login($auth_token, $user_id, $rol_id ){
+		//Logger::log("setting cookies");
 		
 		if(headers_sent()){
-			//Logger::warn("Headers already sent while doing login.");
+			//Logger::warn("Headers already sent while doing login (cookies).");
 			return;
 		}
 		
-		$sm = SessionManager::getInstance();
+		$sm = SessionManager::getInstance( );
+		
+
 		
 		$sm->SetCookie( 'at',  $auth_token, 	time()+60*60*24, '/' );
 		$sm->SetCookie( 'rid', $rol_id, 		time()+60*60*24, '/' );
 		$sm->SetCookie( 'uid', $user_id, 		time()+60*60*24, '/' );
-		
-		/*
-		Logger::warn("Iniciando sesion");
 
-		$_SESSION['USER_ID'			] 	= $user_id; 
-		$_SESSION['PASSWORD'		]	= md5($password);
-		
-		if(isset( $_SERVER["HTTP_USER_AGENT"] ))
-			$_SESSION['HTTP_USER_AGENT'	]	= $_SERVER["HTTP_USER_AGENT"];
-		else
-			$_SESSION['HTTP_USER_AGENT'	]	= "NOT_SET";
-			
-		$_SESSION['USER_ROL'		]	= $rol_id;
-		*/
 	}
 	
 
@@ -324,23 +317,28 @@ class SesionController implements ISesion{
 		
 		self::$_current_user = null;
 		
+		//Logger::log("getCurrentUser()");
+		
 		//there is no authtoken cookie
 		if(!is_null($auth_token)){
-			return self::$_current_user = SesionDAO::getUserByAuthToken( $auth_token );	
+			//Logger::log("cookie");			
+			self::$_current_user = SesionDAO::getUserByAuthToken( $auth_token );	
 		}
 		
 
 		//there is authtoken in the POST message
 		if( isset($_POST["at"]) && !is_null($_POST["at"]) ){
-			return self::$_current_user = SesionDAO::getUserByAuthToken( $_POST["at"] );
+			//Logger::log("post");
+			self::$_current_user = SesionDAO::getUserByAuthToken( $_POST["at"] );
 		}
 		
 		//there is authtoken in the GET message
 		if(isset($_GET["at"]) && !is_null($_GET["at"])){
-			return self::$_current_user = SesionDAO::getUserByAuthToken( $_GET["at"] );
+			//Logger::log("get");
+			self::$_current_user = SesionDAO::getUserByAuthToken( $_GET["at"] );
 		}
 		
-		return null;
+		return self::$_current_user;
 
 			
 			

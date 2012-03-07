@@ -31,7 +31,7 @@
 	
 	$p->addComponent( "<div class='POS Boton'><a href='../". $instancia["instance_token"] ."/' target='_new'>Visitar la instancia</a></div>");
 	
-	var_dump($instancia);	
+
 	
 	$p->render( );
 	

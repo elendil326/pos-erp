@@ -1589,6 +1589,10 @@ require_once("interfaces/Servicios.interface.php");
 
 			$servicio = ServicioDAO::getByPK($id_servicio);
 			
+			if(is_null($servicio)){
+				throw new InvalidDataException("Este servicio no existe");
+			}
+			
 			$subtotal = 0;
 
 			$subtotal = $servicio->getPrecio();
@@ -1641,6 +1645,8 @@ require_once("interfaces/Servicios.interface.php");
 			$venta->setSaldo			($subtotal);
 			$venta->setCancelada		(false);
 			$venta->setRetencion		(0);
+			
+			Logger::log("--------- BAJARLE EL CREDITO A ESTE WEY , y ver si tiene credito suficiente para este pedo");
 			
 			try{
 				Logger::log("Insertando la venta....");

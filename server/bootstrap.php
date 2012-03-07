@@ -308,4 +308,3 @@
 	
 	$conn = $POS_CONFIG["INSTANCE_CONN"];
 	
-	Logger::log("---------");

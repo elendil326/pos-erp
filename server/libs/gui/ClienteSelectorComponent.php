@@ -38,6 +38,7 @@ class ClienteSelectorComponent implements GuiComponent{
 		
 		    Ext.get("buscar_cliente_02").update(pphtml).show();
 
+			<?php echo $this->_js_callback . ".call( null, cliente_seleccionado);"; ?>
 	    };
 
       	Ext.onReady(function(){				
@@ -150,7 +151,7 @@ class ClienteSelectorComponent implements GuiComponent{
                     }, {
 			            text: 'Seleccionar este usuario',
 			            handler: function() {
-						    <?php echo $this->_js_callback; ?>
+
                         }
                 }]
 	        });

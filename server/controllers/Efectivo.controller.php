@@ -8,21 +8,6 @@ require_once("interfaces/Efectivo.interface.php");
 	
   class EfectivoController implements IEfectivo{
   
-      
-        //Metodo para pruebas que simula la obtencion del id de la sucursal actual
-        private static function getSucursal()
-        {
-			Logger::error("Getsucursal en efectivo controller, no deberia de ser asi");
-            return 1;
-        }
-        
-        //metodo para pruebas que simula la obtencion del id de la caja actual
-        private static function getCaja()
-        {
-			Logger::error("Getsucursal en efectivo controller, no deberia de ser asi");
-            return 1;
-        }
-        
         
         /*
          *Se valida que un string tenga longitud en un rango de un maximo inclusivo y un minimo exclusvio.
