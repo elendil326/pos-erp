@@ -43,8 +43,15 @@
 	
     $form->createComboBoxJoin("id_servicio", "nombre_servicio", ServicioDAO::search( new Servicio( array("activo" => 1) ) ) );
 	
+	$clientes = $lista = ClientesController::Buscar();
 	
-	$form->createComboBoxJoinDistintName("id_cliente", "id_usuario", "nombre", UsuarioDAO::search( new Usuario( array( "activo" => 1 ) ) ) );
+	$form->createComboBoxJoinDistintName(
+			"id_cliente", 
+			"id_usuario", 
+			"nombre", 
+			$clientes["resultados"]
+			
+		);
               
 	$page->addComponent( $form );
 
