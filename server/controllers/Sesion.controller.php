@@ -22,9 +22,11 @@ class SesionController implements ISesion{
  	 **/
         public static function Actual(){
 			if(self::$_is_logged_in){
+				
 				if(self::$_current_user){
 	            	return array( "id_caja" => null, "id_sucursal" => null, "id_usuario" => self::$_current_user->getIdUsuario() );					
 				}
+				
 	            return array( "id_caja" => null, "id_sucursal" => null, "id_usuario" => self::getCurrentUser()->getIdUsuario());
 	
 			}else{
@@ -323,30 +325,22 @@ class SesionController implements ISesion{
 		self::$_current_user = null;
 		
 		//there is no authtoken cookie
-		if(is_null($auth_token)){
-			return null;
-		}else{
-			self::$_current_user = SesionDAO::getUserByAuthToken( $auth_token );
+		if(!is_null($auth_token)){
+			return self::$_current_user = SesionDAO::getUserByAuthToken( $auth_token );	
 		}
-		
 		
 
 		//there is authtoken in the POST message
 		if( isset($_POST["at"]) && !is_null($_POST["at"]) ){
-			self::$_current_user = SesionDAO::getUserByAuthToken( $_POST["at"] );
+			return self::$_current_user = SesionDAO::getUserByAuthToken( $_POST["at"] );
 		}
 		
 		//there is authtoken in the GET message
 		if(isset($_GET["at"]) && !is_null($_GET["at"])){
-			self::$_current_user = SesionDAO::getUserByAuthToken( $_GET["at"] );
+			return self::$_current_user = SesionDAO::getUserByAuthToken( $_GET["at"] );
 		}
 		
-		
-		if(is_null(self::$_current_user)){
-			
-		}
-		
-		return self::$_current_user;
+		return null;
 
 			
 			
