@@ -2001,7 +2001,7 @@ class CargosYAbonosController extends ValidacionesController implements ICargosY
     public static function NuevoAbono( $id_deudor, $monto, $tipo_pago, $billetes = null, $cheques = null, $id_compra = null, $id_prestamo = null, $id_venta = null, $nota = null)
     {
         Logger::log("Insertando nuevo abono ... ");
-Logger::debug($tipo_pago . "<-----");
+
         //Se obtiene la sesion del usuario
         $id_usuario = SesionController::getCurrentUser();
         $id_usuario = $id_usuario->getIdUsuario();
@@ -2154,7 +2154,6 @@ Logger::debug($tipo_pago . "<-----");
         $abono->setIdSucursal($id_sucursal);
         $abono->setMonto($monto);
         $abono->setNota($nota);
-Logger::debug($tipo_pago);
         $abono->setTipoDePago($tipo_pago);
         $id_cheques = array();
         $id_abono   = null;

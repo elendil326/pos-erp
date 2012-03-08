@@ -24,7 +24,6 @@
 		"metodo_costeo",
 		"nombre_servicio",
 		"codigo_servicio",
-		/*"empresas",*/
 		"precio",
 		"compra_en_mostrador"
 	));
@@ -40,7 +39,14 @@
 	              array( "id" => 0 , "caption" => "no" ) ), 1 );
 
 	$page->addComponent( $form );
-
+	
+	$page->partialRender();
+	
+	?>
+	
+	hola mundo
+	
+	<?php
 
 	//render the page
 	$page->render();
