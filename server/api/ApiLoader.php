@@ -2005,7 +2005,7 @@
 		$this->request = array(	
 			"id_deudor" => new ApiExposedProperty("id_deudor", true, POST, array( "int" )),
 			"monto" => new ApiExposedProperty("monto", true, POST, array( "float" )),
-			"tipo_pago" => new ApiExposedProperty("tipo_pago", true, POST, array( "json" )),
+			"tipo_pago" => new ApiExposedProperty("tipo_pago", true, POST, array( "string" )),
 			"billetes" => new ApiExposedProperty("billetes", false, POST, array( "json" )),
 			"cheques" => new ApiExposedProperty("cheques", false, POST, array( "json" )),
 			"id_compra" => new ApiExposedProperty("id_compra", false, POST, array( "int" )),
@@ -2022,7 +2022,7 @@
 			
 			isset($_POST['id_deudor'] ) ? $_POST['id_deudor'] : null,
 			isset($_POST['monto'] ) ? $_POST['monto'] : null,
-			isset($_POST['tipo_pago'] ) ? json_decode($_POST['tipo_pago']) : null,
+			isset($_POST['tipo_pago'] ) ? $_POST['tipo_pago'] : null,
 			isset($_POST['billetes'] ) ? json_decode($_POST['billetes']) : null,
 			isset($_POST['cheques'] ) ? json_decode($_POST['cheques']) : null,
 			isset($_POST['id_compra'] ) ? $_POST['id_compra'] :  null,
