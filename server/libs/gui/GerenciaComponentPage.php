@@ -349,14 +349,6 @@ class GerenciaComponentPage extends PosComponentPage{
 			                "url": "servicios.lista.orden.php"
 			            },
 		                {
-		                    "title": "Clasificaciones de s.",
-		                    "url": "servicios.lista.clasificacion.php"
-		                },
-		                {
-		                    "title": "Nueva clasificacion",
-		                    "url": "servicios.nueva.clasificacion.php"
-		                },
-		                {
 		                    "title": "Lista de servicios",
 		                    "url": "servicios.lista.php"
 		                },
