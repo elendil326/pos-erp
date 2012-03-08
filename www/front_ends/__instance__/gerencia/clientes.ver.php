@@ -90,12 +90,12 @@
 
     $page->addComponent( new TitleComponent( "Nuevo Aval", 2 ) );
 
-        //$clientes_component = new ClienteSelectorComponent();                
-        //$clientes_component->addJsCallback("seleccionar_sucursal");
-        //$clientes_component->renderCmp();
+        $clientes_component = new ClienteSelectorComponent();                
+        $clientes_component->addJsCallback("( function(record){ Ext.get('add_aval').setStyle({'display':'block'}); id_usuario = record.get('id_usuario'); nombre = record.get('nombre'); id_este_usuario = " . $este_usuario->getIdUsuario() . " } )");    
+        $page->addComponent( $clientes_component );                        
 
-        $page->addComponent( new ClienteSelectorComponent() );                
-
+        $page->addComponent( new FreeHtmlComponent ( "<br><div id = \"add_aval\" style = \"display:none;\" ><form name=tipo_aval> <input type='Radio' name='taval' value='hipoteca' checked> hipoteca <input type='Radio' name='taval' value='prendario'> prendario</form> <br> <div class='POS Boton' onClick = \" ( function(){  Ext.Msg.confirm('Agregar Nuevo Aval','En realidad desea agregar a ' + nombre + ' como nuevo aval?', function(btn) {if(btn == 'yes'){ POS.API.POST('api/..', {params : 1}, {callback : function(a){ window.location = 'clientes.ver.php?cid='+id_usuario; }}); }}, this);  } )() \" >Agregar como aval</div></div>" ) );
+    
         $page->addComponent( new TitleComponent( "Lista de Avales", 2 ) );
 
         $avales = ClienteAvalDAO::search( new ClienteAval( array( "id_cliente" => $este_usuario->getIdUsuario() ) ) );
