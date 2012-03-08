@@ -85,7 +85,7 @@ class SucursalSelectorComponent implements GuiComponent{
 			                items: [{
 								fieldLabel: 'Seleccione una sucursal',
 								xtype: 'combobox',
-							    displayField: 'descripcion',
+							    displayField: 'razon_social',
 							    valueField: 'id_sucursal',
 							    width: 500,
 							    labelWidth: 130,

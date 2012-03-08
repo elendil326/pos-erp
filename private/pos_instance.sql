@@ -1238,7 +1238,7 @@ CREATE TABLE IF NOT EXISTS `prestamo` (
 CREATE TABLE IF NOT EXISTS `producto` (
   `id_producto` int(11) NOT NULL AUTO_INCREMENT,
   `compra_en_mostrador` tinyint(1) NOT NULL COMMENT 'Verdadero si el producto se puede comprar en mostrador',
-  `metodo_costeo` enum('precio','costo') NOT NULL COMMENT 'Si el precio se toma del precio base o del costo del producto',
+  `metodo_costeo` enum('precio','costo','variable') NOT NULL COMMENT 'Si el precio se toma del precio base o del costo del producto',
   `activo` tinyint(1) NOT NULL COMMENT 'Si el producto esta activo o no',
   `codigo_producto` varchar(32) NOT NULL COMMENT 'Codigo interno del producto',
   `nombre_producto` varchar(32) NOT NULL COMMENT 'Nombre del producto',

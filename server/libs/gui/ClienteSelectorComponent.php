@@ -164,7 +164,7 @@ class ClienteSelectorComponent implements GuiComponent{
 			</tr>
         </table>
 
-		<div id="ClienteSelectorComponent_001"><!-- buscar productos --></div>		        
+		<div id="ClienteSelectorComponent_001"><!-- buscar clientes --></div>		        
 
 		<?php
 

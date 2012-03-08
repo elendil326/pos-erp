@@ -273,8 +273,12 @@
  	 * @param id_cliente int Id del cliente que contrata el servicio
  	 * @param id_servicio int Id del servicio que se contrata
  	 * @param adelanto float Adelanto de la orden
+ 	 * @param cliente_reporta string lo que el cliente reporta hacerca de ...
+ 	 * @param condiciones_de_recepcion string condiciones fisica en las que se recibe el equipo
  	 * @param descripcion string Descripcion de la orden o el porque del servicio
  	 * @param fecha_entrega int Fecha en que se entregara el servicio. En caso de aplicar. Unix Time Stamp
+ 	 * @param fotografia string 
+ 	 * @param precio float en caso de que el metodo de costeo sea variable, hay que mandar un precio final
  	 * @return id_orden int Id de la orden que se creo.
  	 * @return id_venta string `id_venta` de la venta que genero este servicio
  	 **/
@@ -283,8 +287,12 @@
 		$id_cliente, 
 		$id_servicio, 
 		$adelanto = null, 
+		$cliente_reporta = null, 
+		$condiciones_de_recepcion = null, 
 		$descripcion = "", 
-		$fecha_entrega = ""
+		$fecha_entrega = "", 
+		$fotografia = null, 
+		$precio = null
 	);  
   
   

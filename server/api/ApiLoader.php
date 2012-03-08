@@ -4852,8 +4852,12 @@
 			"id_cliente" => new ApiExposedProperty("id_cliente", true, POST, array( "int" )),
 			"id_servicio" => new ApiExposedProperty("id_servicio", true, POST, array( "int" )),
 			"adelanto" => new ApiExposedProperty("adelanto", false, POST, array( "float" )),
+			"cliente_reporta" => new ApiExposedProperty("cliente_reporta", false, POST, array( "string" )),
+			"condiciones_de_recepcion" => new ApiExposedProperty("condiciones_de_recepcion", false, POST, array( "string" )),
 			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "string" )),
 			"fecha_entrega" => new ApiExposedProperty("fecha_entrega", false, POST, array( "int" )),
+			"fotografia" => new ApiExposedProperty("fotografia", false, POST, array( "string" )),
+			"precio" => new ApiExposedProperty("precio", false, POST, array( "float" )),
 		);
 	}
 
@@ -4865,8 +4869,12 @@
 			isset($_POST['id_cliente'] ) ? $_POST['id_cliente'] : null,
 			isset($_POST['id_servicio'] ) ? $_POST['id_servicio'] : null,
 			isset($_POST['adelanto'] ) ? $_POST['adelanto'] :  null,
+			isset($_POST['cliente_reporta'] ) ? $_POST['cliente_reporta'] :  null,
+			isset($_POST['condiciones_de_recepcion'] ) ? $_POST['condiciones_de_recepcion'] :  null,
 			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  "",
-			isset($_POST['fecha_entrega'] ) ? $_POST['fecha_entrega'] :  ""
+			isset($_POST['fecha_entrega'] ) ? $_POST['fecha_entrega'] :  "",
+			isset($_POST['fotografia'] ) ? $_POST['fotografia'] :  null,
+			isset($_POST['precio'] ) ? $_POST['precio'] :  null
 			
 			);
 		}catch(Exception $e){

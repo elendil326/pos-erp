@@ -14,10 +14,9 @@
 
 
 	$csel = new ClienteSelectorComponent();
-	$csel->addJsCallback("alert");
+	//$csel->addJsCallback("alert");
 	
 	$page->addComponent( $csel);
-
 
 
 	//forma de nueva orden de servicio
@@ -30,8 +29,7 @@
 			"fecha_orden",
 			"activa",
 			"cancelada",
-			"motivo_cancelacion",
-			"precio"
+			"motivo_cancelacion"
     	));
 
 

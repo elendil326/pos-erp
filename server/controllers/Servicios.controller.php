@@ -313,7 +313,7 @@ require_once("interfaces/Servicios.interface.php");
             //valida el metodo de costeo
             if(!is_null($metodo_costeo))
             {
-                if($metodo_costeo!="precio" && $metodo_costeo!="costo")
+                if( $metodo_costeo !="precio" && $metodo_costeo !="costo" && $metodo_costeo !="variable" )
                     return "El metodo de costeo (".$metodo_costeo.") es invalido";
             }
             
@@ -1556,8 +1556,12 @@ require_once("interfaces/Servicios.interface.php");
 		$id_cliente, 
 		$id_servicio, 
 		$adelanto = null, 
+		$cliente_reporta = null, 
+		$condiciones_de_recepcion = null, 
 		$descripcion = "", 
-		$fecha_entrega = ""
+		$fecha_entrega = "", 
+		$fotografia = null, 
+		$precio = null
 	)
 	{  
             Logger::log("Creando nueva orden de servicio...");
@@ -1594,8 +1598,15 @@ require_once("interfaces/Servicios.interface.php");
 			}
 			
 			$subtotal = 0;
+			if($servicio->getMetodoCosteo() == "variable"){
+				if(is_null($precio)){
+					throw new InvalidDataException("Este servicio de de precio variable y no se envio el precio");
+				}
+				$subtotal = $precio;
+			}else{
+				$subtotal = $servicio->getPrecio();				
+			}
 
-			$subtotal = $servicio->getPrecio();
 
 			
 
