@@ -1125,7 +1125,12 @@ require_once("interfaces/Sucursales.interface.php");
                         //Se modifica la caja en la cual se realiza la transaccion, si la caja lleva un control de billetes
                         //se le pasan los billetes que se recibieron como pago. Si se entrega cambio y se lleva control de
                         //billetes solo se pasan lso billetes que salieron por concepto del cambio.
-                        CajasController::modificarCaja($venta->getIdCaja(), 1, $billetes_pago, $total);
+                        CajasController::modificarCaja(
+											$venta->getIdCaja(), 
+											1, 
+											$billetes_pago, 
+											$total);
+
                         if(!is_null($billetes_cambio))
                         {
                             CajasController::modificarCaja($venta->getIdCaja(), 0, $billetes_cambio, 0);
@@ -1236,6 +1241,7 @@ require_once("interfaces/Sucursales.interface.php");
                         $validar = self::validarParametrosVentaProducto(null,$d_p["id_producto"],$d_p["precio"],$d_p["cantidad"],$d_p["descuento"],$d_p["impuesto"],$d_p["retencion"],$d_p["id_unidad"]);
                         if(is_string($validar))
                             throw new Exception($validar,901);
+
                         $producto=ProductoDAO::getByPK($d_p["id_producto"]);
                         $d_producto->setCantidad($d_p["cantidad"]);
                         $d_producto->setDescuento($d_p["descuento"]);

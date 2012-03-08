@@ -1073,9 +1073,10 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	)
 	{  
             Logger::log("Editando usuario: ".$id_usuario);
-Logger::debug($id_moneda);
+			
             //valida los parametros de la tabla usuario
-            $validar=self::validarParametrosUsuario($id_usuario, null, $id_sucursal, $id_rol,
+            
+			/*$validar=self::validarParametrosUsuario($id_usuario, null, $id_sucursal, $id_rol,
                     $id_clasificacion_cliente, $id_clasificacion_proveedor, $id_moneda,
                     null, $nombre, $rfc, $curp, $comision_ventas, $telefono_personal_1,
                     $telefono_personal_2, $limite_de_credito, $descuento, $password, $salario,
@@ -1089,7 +1090,7 @@ Logger::debug($id_moneda);
                 Logger::error($validar);
                 throw new Exception($validar,901);
             }
-
+			*/
 
 
 

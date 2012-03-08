@@ -96,12 +96,10 @@ class ServiciosControllerTest extends PHPUnit_Framework_TestCase {
 	
 
 	
-
-	public function testNuevaOrden(){
-		//$servs = ServiciosController::Buscar();
-		//$this->assertEquals( $servs["numero_de_resultados"], sizeof($servs["resultados"]) );
-
-
+	/**
+     * @expectedException BusinessLogicException
+     */
+	public function testNuevaOrdenSinCreditoSuficiente(){
 		
 		$s = ServiciosController::Nuevo(
 			"testNuevaOrden-2db94458" . time(), 
@@ -124,6 +122,60 @@ class ServiciosControllerTest extends PHPUnit_Framework_TestCase {
 
 		$c = ClientesController::nuevo( "testNuevaOrden-2db94458" . time() );
 
+		$o = ServiciosController::NuevaOrden(
+				$c["id_cliente"], 
+				$s["id_servicio"]  
+		);
+		
+
+	}
+	
+	
+	
+	
+
+	public function testNuevaOrden(){
+		
+		$s = ServiciosController::Nuevo(
+			"testNuevaOrden-2db9445f" . time(), 
+			false, 
+			0, 
+			"precio", 
+			"testNuevaOrden-2db9445f" . time(),
+			true, 
+			null, 
+			null, 
+			null, 
+			null, 
+			null, 
+			null, 
+			null, 
+			1542.15 //este servicio cuesta 1542.15
+		);
+	
+		
+
+		$c = ClientesController::nuevo(
+				$razon_social =  "testNuevaOrden-2db9445f" . time() , 
+				$clasificacion_cliente = null, 
+				$codigo_cliente = "t" . time(), 
+				$cuenta_de_mensajeria = null, 
+				$curp = null, 
+				$denominacion_comercial = null, 
+				$descuento_general = 0, 
+				$direcciones = null, 
+				$email = null, 
+				$id_cliente_padre = null, 
+				$id_moneda =  1 , 
+				$id_tarifa_compra = null, 
+				$id_tarifa_venta = null, 
+				$limite_credito = 1542.15, 
+				$password = null, 
+				$representante_legal = null, 
+				$rfc = null, 
+				$sitio_web = null, 
+				$telefono_personal1 = null, 
+				$telefono_personal2 = null);
 		
 		
 		Logger::testerLog("Nueva orde de servicio (" . $c["id_cliente"] .", ". $s["id_servicio"] ." )");
@@ -142,10 +194,7 @@ class ServiciosControllerTest extends PHPUnit_Framework_TestCase {
 		
 		//ok ya que se hizo el servicio, ver que se halla creado
 		//una venta a credito a este cliente
-		
 		$lista_de_ventas = VentasController::Lista();
-		
-		//buscar la venta para el cliente `$c["id_cliente"]`
 		
 		$found = false;
 		
@@ -156,6 +205,12 @@ class ServiciosControllerTest extends PHPUnit_Framework_TestCase {
 		}
 		
 		$this->assertTrue($found);
+
+
+		//vamos a buscar que ese cliente ya no tenga limite de credito
+		$u = UsuarioDAO::getByPK($c["id_cliente"]);
+		
+		$this->assertEquals( 0, $u->getLimiteCredito() );
 		
 		//hacerle un abono
 		CargosYAbonosController::NuevoAbono( 
@@ -167,6 +222,8 @@ class ServiciosControllerTest extends PHPUnit_Framework_TestCase {
 			null, 
 			null, 
 			$o["id_venta"] );
+			
+
 	}
 	
 	

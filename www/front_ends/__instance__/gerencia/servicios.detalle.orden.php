@@ -32,17 +32,16 @@ $page->addComponent(new TitleComponent("Orden de servicio " . $_GET["oid"] . " p
 //
 // Menu de opciones
 // 
-if ($esta_orden->getActiva())
-{
+if ($esta_orden->getActiva()){
 	$menu = new MenuComponent();
-	$menu->addItem("Nuevo seguimiento a esta orden de servicio", "servicios.seguimiento.orden.php?oid=" . $_GET["oid"]);
 	
-	$menu->addItem("Agregar productos a esta orden de servicio", "servicios.agregar_productos.orden.php?oid=" . $_GET["oid"]);
+	$menu->addItem("Nuevo seguimiento", "servicios.seguimiento.orden.php?oid=" . $_GET["oid"]);
 	
-	$menu->addItem("Quitar productos a esta orden de servicio", "servicios.quitar_productos.orden.php?oid=" . $_GET["oid"]);
+	//$menu->addItem("Agregar productos a esta orden de servicio", "servicios.agregar_productos.orden.php?oid=" . $_GET["oid"]);
+	//$menu->addItem("Quitar productos a esta orden de servicio", "servicios.quitar_productos.orden.php?oid=" . $_GET["oid"]);
 	
 	
-	$btn_eliminar = new MenuItem("Cancelar esta orden de servicio", null);
+	$btn_eliminar = new MenuItem("Cancelar orden", null);
 	$btn_eliminar->addApiCall("api/servicios/orden/cancelar", "GET");
 	$btn_eliminar->onApiCallSuccessRedirect("servicios.lista.orden.php");
 	$btn_eliminar->addName("cancelar");
@@ -53,7 +52,7 @@ if ($esta_orden->getActiva())
 	
 	$menu->addMenuItem($btn_eliminar);
 	
-	$btn_terminar = new MenuItem("Terminar esta orden de servicio", null);
+	$btn_terminar = new MenuItem("Terminar orden", null);
 	$btn_terminar->addApiCall("api/servicios/orden/terminar", "POST");
 	$btn_terminar->onApiCallSuccessRedirect("servicios.lista.orden.php");
 	$btn_terminar->addName("terminar");
@@ -67,6 +66,10 @@ if ($esta_orden->getActiva())
 	
 	$page->addComponent($menu);
 }
+
+
+
+
 //
 // Forma de producto
 // 
@@ -74,13 +77,14 @@ $form = new DAOFormComponent($esta_orden);
 $form->setEditable(false);
 
 $form->hideField(array(
-	"id_orden_de_servicio"
+	"id_orden_de_servicio",
+	"id_usuario_venta"
 ));
 
 
-$form->createComboBoxJoin("id_servicio", "nombre_servicio", ServicioDAO::getAll(), $esta_orden->getIdServicio());
-$form->createComboBoxJoin("id_usuario", "nombre", UsuarioDAO::getAll(), $esta_orden->getIdUsuario());
-$form->createComboBoxJoinDistintName("id_usuario_venta", "id_usuario", "nombre", UsuarioDAO::getAll(), $esta_orden->getIdUsuarioVenta());
+//$form->createComboBoxJoin("id_servicio", "nombre_servicio", ServicioDAO::getAll(), $esta_orden->getIdServicio());
+//$form->createComboBoxJoin("id_usuario", "nombre", UsuarioDAO::getAll(), $esta_orden->getIdUsuario());
+//$form->createComboBoxJoinDistintName("id_usuario_venta", "id_usuario", "nombre", UsuarioDAO::getAll(), $esta_orden->getIdUsuarioVenta());
 $page->addComponent($form);
 
 
@@ -102,14 +106,20 @@ function funcion_sucursal($id_sucursal)
 	return (SucursalDAO::getByPK($id_sucursal) ? SucursalDAO::getByPK($id_sucursal)->getRazonSocial() : "---------");
 }
 
-function funcion_usuario($id_usuario)
-{
-	return (UsuarioDAO::getByPK($id_usuario) ? UsuarioDAO::getByPK($id_usuario)->getNombre() : "----------");
+function funcion_usuario($id_usuario){
+	
+	
+	if( is_null( $u = UsuarioDAO::getByPK($id_usuario) ) ){
+		return "ERROR";
+	}
+	
+	return $u->getNombre();
+
 }
 
 $table->addColRender("id_localizacion", "funcion_sucursal");
-
 $table->addColRender("id_usuario", "funcion_usuario");
+$table->addColRender("id_usuario_venta", "funcion_usuario");
 
 
 $page->addComponent($table);

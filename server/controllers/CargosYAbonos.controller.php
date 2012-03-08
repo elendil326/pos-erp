@@ -1998,9 +1998,9 @@ class CargosYAbonosController extends ValidacionesController implements ICargosY
      * @param id_compra int Id de la compra a la que se abona
      * @return id_abono int El id autogenerado del abono de la sucursal
      **/
-    public static function NuevoAbono($id_deudor, $monto, $tipo_pago, $billetes = null, $cheques = null, $id_compra = null, $id_prestamo = null, $id_venta = null, $nota = null)
+    public static function NuevoAbono( $id_deudor, $monto, $tipo_pago, $billetes = null, $cheques = null, $id_compra = null, $id_prestamo = null, $id_venta = null, $nota = null)
     {
-        Logger::log("Nuevo abono ...");
+        Logger::log("Insertando nuevo abono ...");
         
         //Se obtiene la sesion del usuario
         $id_usuario = SesionController::getCurrentUser();
@@ -2013,14 +2013,15 @@ class CargosYAbonosController extends ValidacionesController implements ICargosY
         
         //Se validan los parametros obtenidos
         $validar = self::validarParametrosAbono($monto, $id_deudor, $nota, $tipo_pago);
+
         if (is_string($validar)) {
             Logger::error($validar);
             throw new Exception($validar);
         }
         
         //Si el tipo de pago es con cheque y no se reciben cheques, lanzas una excepcion
-        if ($tipo_pago === "cheque" && is_null($cheques)) {
-            Logger::error("No se recibio informacion del cheque");
+        if (($tipo_pago === "cheque") && is_null($cheques)) {
+            Logger::error("Se intenta pagar con cheque mas no se envio info de cheques");
             throw new Exception("No se recibio informacion del cheque");
         }
         
@@ -2045,6 +2046,10 @@ class CargosYAbonosController extends ValidacionesController implements ICargosY
          * y se activa la bandera from
          */
         if (!is_null($id_compra)) {
+			/*************************************************************
+			 * 	abono a compra
+			 ************************************************************* */	
+			Logger::log("Abono pertenece a compra, compraid=" . $id_compra);
             $operacion = CompraDAO::getByPK($id_compra);
             
             if (is_null($operacion)) {
@@ -2068,13 +2073,18 @@ class CargosYAbonosController extends ValidacionesController implements ICargosY
                 throw new Exception("No se puede abonar esta cantidad a esta compra, pues sobrepasa el total de la misma");
             }
             
+			Logger::log("Insertando abono compra...");
             $abono = new AbonoCompra();
             $abono->setIdCompra($id_compra);
             $abono->setIdReceptor($id_deudor);
             $abono->setIdDeudor($id_usuario);
             $usuario->setSaldoDelEjercicio($usuario->getSaldoDelEjercicio() - $monto);
             $from = 1;
+
         } else if (!is_null($id_prestamo)) {
+			/*************************************************************
+			 * abono a prestamo
+			 ************************************************************* */
             $operacion = PrestamoDAO::getByPK($id_prestamo);
             if (is_null($operacion)) {
                 Logger::error("El prestamo con id: " . $id_prestamo . " no existe");
@@ -2095,7 +2105,11 @@ class CargosYAbonosController extends ValidacionesController implements ICargosY
             $usuario->setSaldoDelEjercicio($usuario->getSaldoDelEjercicio() + $monto);
             $from = 2;
         } else if (!is_null($id_venta)) {
+			/*************************************************************
+			 * abono a venta
+			 ************************************************************* */	
             $operacion = VentaDAO::getByPK($id_venta);
+
             if (is_null($operacion)) {
                 Logger::error("La venta con id: " . $id_venta . " no existe");
                 throw new Exception("La venta con id: " . $id_venta . " no existe");
@@ -2119,7 +2133,7 @@ class CargosYAbonosController extends ValidacionesController implements ICargosY
                 throw new Exception("No se puede abonar esta cantidad a esta venta, pues sobrepasa el total de la misma");
             }
             
-            
+            Logger::log("Insertando AbonoVenta...");
             $abono = new AbonoVenta();
             $abono->setIdVenta($id_venta);
             $abono->setIdReceptor($id_usuario);
@@ -2133,7 +2147,7 @@ class CargosYAbonosController extends ValidacionesController implements ICargosY
         
         //Una vez hecho los cambios particulaes, se realizan los cambios generales
         
-        $operacion->setSaldo($operacion->getSaldo() + $monto);
+        $operacion->setSaldo($operacion->getSaldo() - $monto);
         $abono->setCancelado($cancelado);
         $abono->setIdCaja($id_caja);
         $abono->setFecha($fecha);

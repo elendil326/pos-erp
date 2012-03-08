@@ -1633,7 +1633,9 @@ require_once("interfaces/Servicios.interface.php");
 
 			//proceder a insertar venta a credito para este servicio
 			$venta = new Venta();
+			
 			Logger::error( "There is plenty of hard-coded stuff here !");
+			
 			$venta->setIdCompradorVenta	($id_cliente);
 			$venta->setTipoDeVenta		("credito");
 			$venta->setFecha			(date("Y-m-d H:i:s"));
@@ -1646,10 +1648,33 @@ require_once("interfaces/Servicios.interface.php");
 			$venta->setCancelada		(false);
 			$venta->setRetencion		(0);
 			
-			Logger::log("--------- BAJARLE EL CREDITO A ESTE WEY , y ver si tiene credito suficiente para este pedo");
+
+			
+			//vamos a ver si este dude tiene suficient credito para esto
+			
+			$cliente = UsuarioDAO::getByPK( $id_cliente );
+			
+			if(is_null($cliente)){
+				throw new InvalidDataException("El cliente al que se le quiere vender no existe");
+			}
+			
+			//validar que sea un cliente
+			if($cliente->getIdRol() != 5){
+				throw new InvalidDataException("El cliente al que se le quiere hacer esta venta no es un cliente");
+			}
+			
+			
+			if($cliente->getLimiteCredito() < $venta->getTotal()){
+				throw new BusinessLogicException("intentas comprar algo a credito que es mas de lo que tienes");
+			}
+			
+			
+			$cliente->setLimiteCredito( $cliente->getLimiteCredito(  ) - $venta->getTotal() );
+			
 			
 			try{
-				Logger::log("Insertando la venta....");
+				Logger::log("Insertando la venta ....");
+				UsuarioDAO::save( $cliente );
                 VentaDAO::save( $venta );
     
         	}catch(Exception $e){
@@ -1783,7 +1808,7 @@ require_once("interfaces/Servicios.interface.php");
 		$tipo_de_pago = null
 	)
 	{  
-            Logger::log("Terminando orden de servicio ".$id_orden);
+            Logger::log("Terminando orden de servicio ".$id_orden. " ...");
             
             //valida que la orden exista y que etse activa
             $validar = self::validarParametrosOrdenDeServicio($id_orden);
@@ -1852,7 +1877,7 @@ require_once("interfaces/Servicios.interface.php");
             
             $servicio = ServicioDAO::getByPK($orden_de_servicio->getIdServicio());
             
-            $usuario = UsuarioDAO::getByPK($orden_de_servicio->getIdUsuario());
+            $usuario = UsuarioDAO::getByPK($orden_de_servicio->getIdUsuarioVenta());
             
             $productos_orden = ProductoOrdenDeServicioDAO::search( new ProductoOrdenDeServicio( array( "id_orden_de_servicio" => $id_orden ) ) );
             
