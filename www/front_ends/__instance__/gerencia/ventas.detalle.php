@@ -113,6 +113,16 @@
 
 	$page->addComponent(new TitleComponent("Paquetes de esta venta", 3));
 
+
+	$page->partialRender();
+	
+?>
+
+
+	aqui puedo poner html 
+
+<?php
+
 	$tabla = new TableComponent(array(
 		"id_paquete" => "Paquete",
 		"cantidad" => "Cantidad",

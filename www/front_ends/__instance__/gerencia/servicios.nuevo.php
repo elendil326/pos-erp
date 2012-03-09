@@ -24,7 +24,6 @@
 		"metodo_costeo",
 		"nombre_servicio",
 		"codigo_servicio",
-		"precio",
 		"compra_en_mostrador"
 	));
 
@@ -42,11 +41,11 @@
 	
 	$page->partialRender();
 	
-	?>
+	/* ?>
 	
 	hola mundo
 	
-	<?php
+	<?php */
 
 	//render the page
 	$page->render();
