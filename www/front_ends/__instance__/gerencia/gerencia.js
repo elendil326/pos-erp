@@ -124,3 +124,39 @@ POS.API =
 	}
 
 }
+
+
+var nuevoClienteAval =  function( nombre, id_usuario, id_este_usuario ){  
+    Ext.Msg.confirm("Agregar Nuevo Aval","En realidad desea agregar a " + nombre + " como nuevo aval?", function(btn) {
+
+        if(btn == "yes"){ 
+
+            var tipo_aval = Ext.get("radio_hipoteca").dom.checked ? "hipoteca" : "prendario";
+
+            POS.API.POST(
+                "api/cliente/aval/nuevo", 
+                {"id_cliente" : id_este_usuario, "avales" : Ext.JSON.encode([{ "id_aval": id_usuario , "tipo_aval" : tipo_aval }])}, 
+                {callback : function(a){ window.location = "clientes.ver.php?cid="+id_este_usuario; }}
+            ); 
+
+        }
+    }, this);  
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

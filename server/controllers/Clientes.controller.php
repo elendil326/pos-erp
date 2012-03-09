@@ -1288,7 +1288,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 			
 			
 			if(!is_array($a)){
-				throw new InvalidDataException("avales debe ser un arreglo de arreglos");
+                $a = object_to_array($a);
 			}
 			
 			if(!isset( $a["id_aval"] )){
@@ -1314,6 +1314,11 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 		
 
 		foreach ($avales as $a) {
+
+            if(!is_array($a)){
+                $a = object_to_array($a);
+			}
+
 			$clienteAval = new ClienteAval();
 			$clienteAval->setIdAval( $a["id_aval"] );
 			$clienteAval->setIdCliente( $id_cliente );
