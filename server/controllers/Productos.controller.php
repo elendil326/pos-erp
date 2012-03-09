@@ -1781,4 +1781,148 @@ class ProductosController extends ValidacionesController implements IProductos
 			"numero_de_resultados" => sizeof($r)
 		);
     }
+
+
+    static function importarDesdeAdminPaq($raw_contents){
+
+        Logger::log("Importantdo productos desde adminpaq");        
+        $productos_importados = 0;
+        $productos_no_importados = 0;
+        $errores = array();
+
+        $lines = explode( "\n", $raw_contents );
+
+        $nline = -1; 
+
+        //buscar las llaves de cliente
+        $size = sizeof($lines);
+
+        while( ( $nline < ($size-1) )&&( trim($lines[++$nline]) != "MGW10005")) ;
+
+        if($nline == ($size-1)){
+            Logger::log("No encontre la seccion de productos...");
+            return;
+        }
+        
+        //ya encontre los productos, vamos a guardar las llaves
+
+        $keys = array();
+
+        $c = -1;
+        
+
+        while( trim($lines[$nline]) != "/MGW10005"){
+            
+            $keys[$c++] = trim($lines[$nline]);
+
+            $nline++;
+        }
+
+        
+        
+        //ok ya tengo las llaves, iniciemos el proceso de busqueda
+        while ( ++$nline < ($size-1) )  {
+
+
+
+            if(trim($lines[$nline]) == "MGW10005"){
+
+                $aProducto = Array(); 
+
+                Logger::log("Encontre producto en " . ($nline +1));
+
+
+
+                //encontre el producto
+                for ($pindex=0, ++$nline; $pindex < (sizeof( $keys )-1); $pindex++, $nline++) { 
+                    
+                    $cline  = trim($lines[$nline]);
+
+                    if($cline == "{"){
+                        $mtext = "";
+                        $nline++;
+                        Logger::log("Encontre multitexto en " . ($nline+1));
+                        while( trim($lines[$nline]) != "}" ) {
+                            $mtext .= trim($lines[$nline]);
+                            $nline++;
+                        }
+                        
+                        Logger::log("Multitexto termino en " . ($nline+1));
+
+                        $aProducto[ $keys[ $pindex ] ] = $mtext;  
+
+                    }else{
+                        $aProducto[ $keys[ $pindex ] ] = trim($lines[$nline]);    
+                    }
+
+                    
+                    
+
+                    
+
+                    
+                }
+
+                
+
+                Logger::log("Insertando `". $aProducto["cNombreProducto"] ."` ...");
+
+
+                if(strlen(trim($aProducto["cNombreUnidadCompra"])) == 0){
+                    $aProducto["cNombreUnidadCompra"] = 1;
+                }
+
+                if(strlen(trim($aProducto["cCodigoValorClasif1"])) == 0){
+                    $aProducto["cCodigoValorClasif1"] = null;
+                }
+
+                try{
+                    self::nuevo(
+                        $activo                 = $aProducto["cStatusProducto"], 
+                        $codigo_producto        = $aProducto["cCodigoProducto"],  
+                        $compra_en_mostrador    = false, 
+                        $costo_estandar         = $aProducto["cCostoEstandar"], 
+                        $id_unidad_compra       = $aProducto["cNombreUnidadCompra"], 
+                        $metodo_costeo          = "precio",//$aProducto["cMetodoCosteo"], 
+                        $nombre_producto        = $aProducto["cNombreProducto"], 
+                        $codigo_de_barras       = null, 
+                        $control_de_existencia  = $aProducto["cControlExistencia"], 
+                        $descripcion_producto   = $aProducto["cDescripcionProducto"], 
+                        $foto_del_producto      = null, 
+                        $garantia               = null, 
+                        $id_categoria           = $aProducto["cCodigoValorClasif1"], 
+                        $id_empresas            = null, 
+                        $id_unidad              = 1,//$aProducto["cNombreUnidadBase"], 
+                        $impuestos              = null, 
+                        $precio_de_venta        = $aProducto["cPrecio1"]
+                    );
+                    
+                    $productos_importados++;
+                    
+                }catch(InvalidDataException $ide){
+                    Logger::error( $ide->getMessage() );
+                    $productos_no_importados++;
+                    array_push($errores, $ide->getMessage() );
+
+                }catch(InvalidDatabaseOperationException $idoe){
+                    Logger::error( $idoe->getMessage() );
+                    $productos_no_importados++;
+                    array_push($errores, $idoe->getMessage() );
+
+                }catch(Exception $e){
+                    Logger::error( $e->getMessage() );
+                    $productos_no_importados++;
+                    array_push($errores, $e->getMessage() );
+                }
+            }
+        }//while
+
+
+        return array(
+                "productos_importados" => $productos_importados,
+                "productos_no_importados" => $productos_no_importados,
+                "errores" => $errores
+            );
+
+    }//importar productos
 }

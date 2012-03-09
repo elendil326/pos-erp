@@ -36,6 +36,21 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 	    }
 	    return $rstr;
 	}
+
+
+
+	public function testImportarProductos(){
+		
+
+
+		$p = ProductosController::importarDesdeAdminPaq( file_get_contents("adminpaq.catalogo.productos.csv") );
+
+		var_dump($p);
+		$this->assertEquals(1,2);
+
+	}
+
+
 /*	EN EL PROCESAMIENTO DEL Productos.controller.php SE REQUIRE QUE SE MANDE UN JSON DE CLASIFICACIONES, MISMO QUE NO ESTÁ EN LOS PARAMS DE LA INTERFAZ NI EN EL API*/
 
 	public function testNuevoProducto(){
@@ -603,6 +618,8 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 			$this->assertInternalType("int" , $res["numero_de_resultados"],"---- 'testBuscarUnidadUdmPorQuery' 'numero_de_resultados' NO ES UN ENTERO");
 			$this->assertGreaterThanOrEqual(1, $res['numero_de_resultados'],"---- 'testBuscarUnidadUdmPorQuery' SE DEBIÓ DE ENCONTRAR ALMENOS 1 RESULTADO CON abreviacion = ".$abreviatura_Udm);				
 		}
+
+
 
 }
 
