@@ -7,6 +7,7 @@
 
  	private $tabs;
  	private $tab_index;
+ 	private $before_tabbing_cmps;
  	
 
  	public function __construct( $title = "Gerencia" ){
@@ -14,7 +15,7 @@
  		$this->page_title = $title;
  		$this->tabs = array();
  		$this->tab_index = -1;
-
+ 		$this->before_tabbing_cmps = array();
 
  	}
 
@@ -27,7 +28,8 @@
  	public function addComponent( $cmp ){
 
  		if($this->tab_index == -1){
- 			throw new Exception ("Primero debes hacer un `nextTab`");
+ 			array_push( $this->before_tabbing_cmps , $cmp );
+ 			return;
  		}
 
  		if(!isset($this->tabs[$this->tab_index])){
@@ -38,44 +40,43 @@
  	}
 
  	public function render(){
+
+
+ 		for ($bfi=0; $bfi < sizeof($this->before_tabbing_cmps); $bfi++) { 
+			parent::addComponent( $this->before_tabbing_cmps[$bfi] );
+ 		}
  		/**
  		 *
  		 * Create tab header
  		 *
  		 **/
  		$h = "<script>
- 			var currentTab = null;
+ 			var currentTab = 'Datos';
  			if ( 'onhashchange' in window ) {
  				console.log('`onhashchange` available....');
 			    window.onhashchange = function() {
-			        var token = window.location.hash.substr(1);
-			        currentTab = token;
-			        Ext.get(\"tab_\"+token).show();
+			    	
+					Ext.get('tab_'+currentTab).setStyle('display', 'none');
+					Ext.get('atab_'+currentTab).toggleCls('selected');
+					currentTab = window.location.hash.substr(1);
+					
+					Ext.get('tab_'+currentTab).setStyle('display', 'block');
+					Ext.get('atab_'+currentTab).toggleCls('selected');
 			    }
 			}</script>
-			<table class=\"tabs\" style=\"width:100%\"><tr>";
+			<table class=\"tabs\" ><tr>";
  		
  		for ($ti=0; $ti < sizeof($this->tabs); $ti++) { 
-			$h .= "<td><a href='#". $this->tabs[$ti]["title"] ."'>" . $this->tabs[$ti]["title"] . "</a></td>";
+ 			if($ti == 0){
+ 				
+ 				$h .= "<td class='selected' style='max-width:84px' id='atab_" . $this->tabs[$ti]["title"] . "' ><a href='#". $this->tabs[$ti]["title"] ."'>" . $this->tabs[$ti]["title"] . "</a></td>";
+ 				continue;
+ 			}
+			$h .= "<td style='max-width:84px' id='atab_" . $this->tabs[$ti]["title"] . "' ><a href='#". $this->tabs[$ti]["title"] ."'>" . $this->tabs[$ti]["title"] . "</a></td>";
  		}
 
  		$h .= "<td class=\"dummy\"></td></tr></table>";
 
- 		/*
-	 	<table class="tabs">
-			<tr>
-				<td>asdf</td>
-				<td>asdf</td>
-				<td>asdf</td>
-				<td class="selected">asdf</td>
-				<td>asdf</td>
-				<td>asdf</td>
-				<td>asdf</td>
-				<td class="dummy"></td>
-			</tr>
-		</table>
- 		 */
- 		
  		
  		//parent::addComponent("<h1>".$this->page_title . "</h1>");
  		parent::addComponent($h);

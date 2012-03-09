@@ -6,28 +6,28 @@
 
 		$page = new GerenciaTabPage(  );
 
-
-		//
-		// Parametros necesarios
-		// 
-		$page->requireParam(  "cid", "GET", "Este cliente no existe." );
-
-		
-		$page->nextTab("Datos");
-
 		$este_usuario = UsuarioDAO::getByPK( $_GET["cid"] );
 		
 		if(is_null($este_usuario)){
 		
 			die;
 		}
-		
-		
-		
+		//
+		// Parametros necesarios
+		// 
+		$page->requireParam(  "cid", "GET", "Este cliente no existe." );
+
+
 		//
 		// Titulo de la pagina
 		// 
-		$page->addComponent( new TitleComponent( "Detalles de " . $este_usuario->getNombre() , 2 ));
+		$page->addComponent( new TitleComponent(  utf8_decode($este_usuario->getNombre()) , 2 ));
+
+		
+		$page->nextTab("Datos");
+
+
+
 
 		
 		//
@@ -97,7 +97,7 @@
     $page->addComponent( new TitleComponent( "Nuevo Aval", 2 ) );
 
     $clientes_component = new ClienteSelectorComponent(); 
-                   
+
     $clientes_component->addJsCallback("( function(record){ Ext.get('add_aval').setStyle({'display':'block'}); id_usuario = record.get('id_usuario'); nombre = record.get('nombre'); id_este_usuario = " . $este_usuario->getIdUsuario() . " } )");    
     
     $page->addComponent( $clientes_component );                        
