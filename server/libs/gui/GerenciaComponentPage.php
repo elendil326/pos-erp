@@ -1094,10 +1094,11 @@ class GerenciaComponentPage extends PosComponentPage{
 				$foo = array_pop( $foo );
 
 				$foo = explode( "." , $foo );
+				
 				$foo = $foo[0];
 
 
-				if(strtolower( $foo ) == strtolower( $item->title )){
+				if(strtolower( $foo ) == strtolower( str_replace(" ", "_", $item->title) )){
 					if(isset( $item->children ) ){
 
 						foreach( $item->children as $subitem )

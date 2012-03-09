@@ -20,8 +20,32 @@ $este_producto = ProductoDAO::getByPK($_GET["pid"]);
 //
 // Titulo de la pagina
 // 
-$page->addComponent(new TitleComponent( $este_producto->getNombreProducto(), 1));
+//$page->addComponent(new TitleComponent( $este_producto->getNombreProducto(), 1));
 
+$page->partialRender();
+
+
+?>
+<table>
+	<tr>
+		<td rowspan=2><div id="gimg"></div></td>
+		<td><h2><?php echo $este_producto->getNombreProducto(); ?></h2></td>
+	</tr>
+	<tr>
+		<td><?php echo $este_producto->getPrecio(); ?></td>
+	</tr>
+</table>
+
+<script type="text/javascript">
+	function gimgcb(a,b,c){
+		if(a.responseData.results.length > 0)
+			document.getElementById("gimg").innerHTML = "<img src='" + a.responseData.results[0].tbUrl + "'>";
+	}
+</script>
+<script type="text/javascript" 
+		src="https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=<?php echo $este_producto->getCodigoProducto(); ?>&callback=gimgcb">
+</script>
+<?php
 
 //
 // Menu de opciones
@@ -69,20 +93,6 @@ $form->createComboBoxJoin("id_unidad", "nombre", UnidadDAO::getAll(), $este_prod
 
 $page->addComponent($form);
 
-$page->partialRender();
 
-
-?>
-<div id="gimg"></div>
-<script type="text/javascript">
-	function gimgcb(a,b,c){
-		if(a.responseData.results.length > 0)
-			document.getElementById("gimg").innerHTML = "<img src='" + a.responseData.results[0].tbUrl + "'>";
-	}
-</script>
-<script type="text/javascript" 
-		src="https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=<?php echo $este_producto->getCodigoProducto(); ?>&callback=gimgcb">
-</script>
-<?php
 
 $page->render();
