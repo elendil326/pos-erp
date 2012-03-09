@@ -21,6 +21,7 @@
                 {
                     $venta = true;
                     $page->addComponent( new TitleComponent( "Nuevo abono a la venta ".$_GET["vid"] , 2 ));
+                    $page->addComponent( new TitleComponent( "Saldo $".VentaDAO::getByPK($_GET["vid"])->getSaldo() , 3 ));
                 }
                 else if( isset( $_GET["pid"] ) )
                 {

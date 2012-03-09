@@ -164,4 +164,52 @@
 	$page->addComponent($tabla);
 */
 
+   	$page->addComponent(new TitleComponent("Abonos a esta venta", 3));
+
+	$tabla_abonos = new TableComponent(array(
+        "monto" => "Monto",
+        "id_receptor" => "Recibio",
+        "nota" => "Nota",
+        "fecha" => "Fecha",
+        "tipo_de_pago" => "Tipo de Pago"
+	), AbonoVentaDAO::search(new AbonoVenta(array(
+		"id_venta" => $_GET["vid"]
+	))));
+
+	function nombre_receptor($id_receptor, $obj)
+	{
+        if($obj["cancelado"] == 1){
+            return "<font title = \"Abono cancelado debido a {$obj['motivo_cancelacion']}\" style = \"color:red; cursor: help;\" >" . UsuarioDAO::getByPK($id_receptor)->getNombre() . "</font>";    
+        }        
+
+		return UsuarioDAO::getByPK($id_receptor)->getNombre();
+	}
+    
+
+    function isCancelado($foo, $obj){
+
+        if($obj["cancelado"] == 1){
+            return "<font title = \"Abono cancelado debido a {$obj['motivo_cancelacion']}\" style = \"color:red; cursor: help;\" >{$foo}</font>";    
+        }
+
+        return $foo;    
+        
+    }
+
+	$tabla_abonos->addColRender("monto", "isCancelado");
+	$tabla_abonos->addColRender("id_receptor", "nombre_receptor");
+	$tabla_abonos->addColRender("nota", "isCancelado");
+	$tabla_abonos->addColRender("fecha", "isCancelado");
+	$tabla_abonos->addColRender("tipo_de_pago", "isCancelado");
+
+	$page->addComponent($tabla_abonos);
+
 	$page->render();
+
+
+
+
+
+
+
+
