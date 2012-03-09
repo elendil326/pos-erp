@@ -36,10 +36,13 @@ INSERT INTO `clasificacion_cliente` (`id_clasificacion_cliente`, `clave_interna`
 (1, 'General', 'General', NULL, 2, 1);
 
 
+
 INSERT INTO `rol` (`id_rol`, `nombre`, `descripcion`, `salario`, `id_tarifa_compra`, `id_tarifa_venta`) VALUES
-(0, 'Administrador', 'Adminsitrador', 0, 0, 0),
-(2, 'Gerente', 'Gerente', 0, 0, 0),
-(5, 'Clientes', 'Clientes', NULL, 0, 0);
+(0, 'Administrador', 'Administrador del sistema', NULL, 0, 0),
+(1, 'Socio', 'Socio mayoritario', NULL, 0, 0),
+(2, 'Gerente', 'Gerentes de sucursales', NULL, 0, 0),
+(3, 'Asistente', 'Asistentes de', NULL, 0, 0),
+(5, 'Cliente', 'Clientes', NULL, 0, 0);
 
 
 
