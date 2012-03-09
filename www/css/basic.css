@@ -504,6 +504,46 @@ font-weight: normal;
 
 
 
+	table.tabs td{
+		width:84px;
+		height: 48px;
+		background-image: url(../media/tab_a.png);
+		border:0px !important;
+		margin:0px;
+		padding:0px;
+	}
+
+	table.tabs td:hover{
+		color:white;
+		height: 48px;
+		background-image: url(../media/tab_b.png);
+		width:84px;
+	}
+
+	table.tabs td:{
+		color:white;
+		height: 48px;
+		background-image: url(../media/tab_b.png);
+		width:84px;
+	}
+
+	table.tabs td.selected{
+		color:white;
+		height: 48px;
+		background-image: url(../media/tab_c.png);
+		width:84px;
+	}
+
+	table.tabs td.dummy{
+		color:white;
+		height: 48px;
+		background-image: url(../media/tab_a.png);
+		width:200px;
+	}
+
+	table.tabs td.dummy:hover{
+	
+	}
 
 
 

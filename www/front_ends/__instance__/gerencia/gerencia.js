@@ -146,3 +146,11 @@ var nuevoClienteAval =  function( nombre, id_usuario, id_este_usuario ){
 
 
 
+if ( 'onhashchange' in window ) {
+	console.log("`onhashchange` available....");
+    window.onhashchange = function() {
+        var token = window.location.hash.substr(1);
+        // Handle tab creation and activation as above.
+        
+    }
+}

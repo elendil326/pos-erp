@@ -4,7 +4,7 @@
 
 		require_once("../../../../server/bootstrap.php");
 
-		$page = new GerenciaComponentPage(  );
+		$page = new GerenciaTabPage(  );
 
 
 		//
@@ -12,7 +12,9 @@
 		// 
 		$page->requireParam(  "cid", "GET", "Este cliente no existe." );
 
-				
+		
+		$page->nextTab("Datos");
+
 		$este_usuario = UsuarioDAO::getByPK( $_GET["cid"] );
 		
 		if(is_null($este_usuario)){
@@ -72,7 +74,7 @@
         $form->createComboBoxJoin( "id_clasificacion_proveedor", "nombre", ClasificacionProveedorDAO::getAll(), $este_usuario->getIdClasificacionProveedor() );
 		$page->addComponent( $form );
 
-
+		$page->nextTab("Direccion");
 
 		$direccion = $este_usuario->getIdDireccion();
 		$direccionObj = DireccionDAO::getByPK( $direccion );
@@ -86,40 +88,46 @@
 			$page->addComponent( $dform );
 		}
 		
-	//AVALES
+	/**********
+	 *
+	 * AVALES
+	 ********** */
+	$page->nextTab("Avales");
 
     $page->addComponent( new TitleComponent( "Nuevo Aval", 2 ) );
 
-        $clientes_component = new ClienteSelectorComponent();                
-        $clientes_component->addJsCallback("( function(record){ Ext.get('add_aval').setStyle({'display':'block'}); id_usuario = record.get('id_usuario'); nombre = record.get('nombre'); id_este_usuario = " . $este_usuario->getIdUsuario() . " } )");    
-        $page->addComponent( $clientes_component );                        
-
-        $page->addComponent( new FreeHtmlComponent ( "<br><div id = \"add_aval\" style = \"display:none;\" ><form name = \"tipo_aval\" id = \"tipo_aval\"> <input id = \"radio_hipoteca\" type='Radio' name='taval' value='hipoteca' checked> hipoteca <input id = \"radio_prendario\"type='Radio' name='taval' value='prendario'> prendario</form> <br> <div class='POS Boton' onClick = \"nuevoClienteAval(nombre, id_usuario, id_este_usuario)\" >Agregar como aval</div></div>" ) );
+    $clientes_component = new ClienteSelectorComponent(); 
+                   
+    $clientes_component->addJsCallback("( function(record){ Ext.get('add_aval').setStyle({'display':'block'}); id_usuario = record.get('id_usuario'); nombre = record.get('nombre'); id_este_usuario = " . $este_usuario->getIdUsuario() . " } )");    
     
-        $page->addComponent( new TitleComponent( "Lista de Avales", 2 ) );
+    $page->addComponent( $clientes_component );                        
 
-        $avales = ClienteAvalDAO::search( new ClienteAval( array( "id_cliente" => $este_usuario->getIdUsuario() ) ) );
+    $page->addComponent( new FreeHtmlComponent ( "<br><div id = \"add_aval\" style = \"display:none;\" ><form name = \"tipo_aval\" id = \"tipo_aval\"> <input id = \"radio_hipoteca\" type='Radio' name='taval' value='hipoteca' checked> hipoteca <input id = \"radio_prendario\"type='Radio' name='taval' value='prendario'> prendario</form> <br> <div class='POS Boton' onClick = \"nuevoClienteAval(nombre, id_usuario, id_este_usuario)\" >Agregar como aval</div></div>" ) );
 
-        $array_avales = array();
+    $page->addComponent( new TitleComponent( "Lista de Avales", 2 ) );
 
-        foreach( $avales as $aval ){
-            array_push( $array_avales, $aval->asArray() );
-        }
-		
-		$tabla_avales = new TableComponent( 
-			array(
-				"id_aval"           => "Nombre",
-				"tipo_aval" 		=> "Tipo de Aval"
-			),
-            $array_avales
-		);
+    $avales = ClienteAvalDAO::search( new ClienteAval( array( "id_cliente" => $este_usuario->getIdUsuario() ) ) );
 
-        function funcion_nombre_aval($id_usuario){
-            return (UsuarioDAO::getByPK($id_usuario)->getNombre());
-        }                
+    $array_avales = array();
 
-        $tabla_avales->addColRender("id_aval", "funcion_nombre_aval");
-					
-		$page->addComponent( $tabla_avales );        
-		
-		$page->render();
+    foreach( $avales as $aval ){
+        array_push( $array_avales, $aval->asArray() );
+    }
+	
+	$tabla_avales = new TableComponent( 
+		array(
+			"id_aval"           => "Nombre",
+			"tipo_aval" 		=> "Tipo de Aval"
+		),
+        $array_avales
+	);
+
+    function funcion_nombre_aval($id_usuario){
+        return (UsuarioDAO::getByPK($id_usuario)->getNombre());
+    }                
+
+    $tabla_avales->addColRender("id_aval", "funcion_nombre_aval");
+				
+	$page->addComponent( $tabla_avales );        
+	
+	$page->render();

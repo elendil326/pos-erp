@@ -1121,6 +1121,7 @@ class GerenciaComponentPage extends PosComponentPage{
 			################ Main Menu ################
 	}
 
+	/*
 	private function dieWithLogin($message = null){
 		$login_cmp = new LoginComponent();
 
@@ -1133,7 +1134,7 @@ class GerenciaComponentPage extends PosComponentPage{
 		parent::render();
 		exit();
 	}
-
+	*/
 }
 
 

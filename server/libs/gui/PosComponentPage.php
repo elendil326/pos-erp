@@ -160,7 +160,7 @@ class PosComponentPage extends StdComponentPage{
 					<div class="links">
 						<a href="">Admin</a>
 						<a href="">API Publica</a>
-						<a href="">Ayuda</a>
+						<a href="front_ends/j/">Desarrolladores</a>
 					</div>
 				</div>
 			</div>

@@ -14,13 +14,9 @@ $page = new GerenciaComponentPage();
 // 
 $page->requireParam("pid", "GET", "Este producto no existe.");
 
+
 $este_producto = ProductoDAO::getByPK($_GET["pid"]);
 
-
-//
-// Titulo de la pagina
-// 
-//$page->addComponent(new TitleComponent( $este_producto->getNombreProducto(), 1));
 
 $page->partialRender();
 
