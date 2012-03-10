@@ -4,11 +4,10 @@ import mx.caffeina.pos.Printer.*;
 import mx.caffeina.pos.Impresiones.*;
 import mx.caffeina.pos.Bascula.*;
 import mx.caffeina.pos.Networking.*;
+import mx.caffeina.pos.AdminPAQProxy.*;
 
 import java.util.List;
 import org.json.simple.parser.JSONParser;
-
-
 
 
 public class Dispatcher{
@@ -27,7 +26,6 @@ public class Dispatcher{
 
 		if(request.equals("avicon.ico"))
 		{
-			//Logger.log("Omitinedo request de favicon.");
 			return returnError();
 		}
 
@@ -70,6 +68,38 @@ public class Dispatcher{
 			return callback + ServidorImpresion.Print( data );	
 		}
 
+
+		/**
+		* 
+		* 	Despachar a AdminPAQProxy
+		* 
+		* 
+		* */
+		if(action.equals("AdminPAQProxy")){
+
+			String path_to_files = null;
+
+			//buscar argumentos
+			for ( int i = 0; i < args.length ; i++) 
+			{
+				
+				if( args[i].startsWith("path_to_files=") ){
+					path_to_files 	= args[i].substring( args[i].indexOf("=") +1);
+					System.out.println("found `path_to_files` = " + path_to_files);
+				}
+			}
+
+			if(path_to_files == null){
+				return callback + "({\"success\": false,  \"response\" : \"Falto el path a los archivos del admin\"});";
+			}
+
+
+			AdminPAQProxy aproxy = new AdminPAQProxy(  path_to_files );
+
+
+			return callback + (aproxy.test());	
+
+		}
 
 
 		/**

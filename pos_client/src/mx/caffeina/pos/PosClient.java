@@ -16,11 +16,8 @@ public class PosClient{
 	public static void main( String ... args )
 	{
 	
-		AdminPAQProxy.test();
-		System.exit(1);	
 
 
-		
 		Logger.log("----------------------------------");
 		Logger.log("     Iniciando cliente");
 		Logger.log("----------------------------------");
@@ -35,7 +32,7 @@ public class PosClient{
 			//no-upgrade
 			if( args[0].indexOf("n") != -1 ) 
 			{
-						
+					
 			}
 
 		}
