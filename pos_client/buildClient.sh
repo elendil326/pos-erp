@@ -10,7 +10,7 @@
 	mkdir bin
 
 	##compile those
-	javac -d bin -cp src:lib/javadbf-0.4.0.jar:lib/json-simple-1.1.jar:lib/GiovynetDriver.jar:lib/commons-logging-1.1.1.jar:lib/xBaseJ.jar:lib/xercesImpl.jar @file.list || exit;
+	javac -d bin -cp src:lib/com.linuxense.javadbf.jar:lib/json-simple-1.1.jar:lib/GiovynetDriver.jar:lib/xercesImpl.jar @file.list || exit;
 
 	rm file.list
 
@@ -18,7 +18,7 @@
 
 	##create manifest file
 echo "Main-Class: mx.caffeina.pos.PosClient
-Class-Path: lib/json-simple-1.1.jar lib/GiovynetDriver.jar lib/commons-logging-1.1.1.jar lib/xBaseJ.jar lib/xercesImpl.jar lib/javadbf-0.4.0.jar" > ../manifest
+Class-Path: lib/json-simple-1.1.jar lib/GiovynetDriver.jar lib/xercesImpl.jar lib/com.linuxense.javadbf.jar" > ../manifest
 
 	jar cfm ../posClient.jar ../manifest mx 
 

@@ -8,4 +8,6 @@
 
 		$page = new GerenciaComponentPage();
 
+		
+
 		$page->render();

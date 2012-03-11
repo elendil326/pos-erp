@@ -55,7 +55,12 @@ public class Dispatcher{
 		* 
 		* */
 		if(action.equals("handshake")){
-			return callback + "({\"success\": true, \"payload\": \"Hi !\" });";	
+			if(callback == null){
+				return "{\"success\": true, \"payload\": \"Hi !\" }";	
+			}else{
+				return callback + "({\"success\": true, \"payload\": \"Hi !\" });";		
+			}
+			
 		}
 		
 		/**
@@ -77,7 +82,10 @@ public class Dispatcher{
 		* */
 		if(action.equals("AdminPAQProxy")){
 
-			String path_to_files = null;
+			String  path_to_files = null,
+					data_or_structure = null,
+					table	= null;
+
 
 			//buscar argumentos
 			for ( int i = 0; i < args.length ; i++) 
@@ -87,18 +95,43 @@ public class Dispatcher{
 					path_to_files 	= args[i].substring( args[i].indexOf("=") +1);
 					System.out.println("found `path_to_files` = " + path_to_files);
 				}
+
+				if( args[i].startsWith("data_or_structure=") ){
+					data_or_structure 	= args[i].substring( args[i].indexOf("=") +1);
+					System.out.println("found `data_or_structure` = " + data_or_structure);
+				}
+
+				if( args[i].startsWith("data_or_structure=") ){
+					data_or_structure 	= args[i].substring( args[i].indexOf("=") +1);
+					System.out.println("found `data_or_structure` = " + data_or_structure);
+				}
+
+				if( args[i].startsWith("table=") ){
+					table 	= args[i].substring( args[i].indexOf("=") +1);
+					System.out.println("found `table` = " + table);
+				}
 			}
 
 			if(path_to_files == null){
 				return callback + "({\"success\": false,  \"response\" : \"Falto el path a los archivos del admin\"});";
 			}
 
+			if(table == null){
+				return callback + "({\"success\": false,  \"response\" : \"Falto que tabla quieres hacer queryen\"});";
+			}
+
+			if(data_or_structure == null){
+				data_or_structure = "data";
+			}
+
 
 			AdminPAQProxy aproxy = new AdminPAQProxy(  path_to_files );
 
-
-			return callback + (aproxy.test());	
-
+			if(callback == null){
+				return ( aproxy.query(table, data_or_structure) );	
+			}else{
+				return callback + "("+ ( aproxy.query(table, data_or_structure) ) +");";		
+			}
 		}
 
 
