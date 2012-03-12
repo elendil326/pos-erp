@@ -115,7 +115,7 @@ public class AdminPAQProxy{
 
 
 	private String getData(){
-
+		/*
 		int numberOfFields = -1;
 
 		try{
@@ -143,7 +143,7 @@ public class AdminPAQProxy{
 
 			
 		}
-
+		*/
 
 		// Now, lets us start reading the rows
 		//
@@ -160,6 +160,7 @@ public class AdminPAQProxy{
 				//System.out.println("Leyendo record "  + cRecord);
 				rowObjects = reader.nextRecord(  );
 
+
 			}catch( DBFException dbfe ){
 				System.out.println( "E5:" + dbfe.getMessage() );
 
@@ -171,14 +172,19 @@ public class AdminPAQProxy{
 
 			if(cRecord > 1) output += ", ";
 
-			output += "{ "; 
+			output += "["; 
 
 			for( int i=0; i<rowObjects.length; i++) {
-				if(i>0) output+=",";
-				output += "\"" +  fieldNames[i] + "\" : \"" + rowObjects[i] + "\"";
+
+				if(i>0)
+					output+=",";
+
+				output += "\"" + rowObjects[i] + "\"";	
+				
+				
 			}
 
-			output += " }"; 
+			output += "]"; 
 
 			/* *********** **/
 			
