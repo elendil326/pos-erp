@@ -9,7 +9,7 @@
         $page = new GerenciaComponentPage();
 
 		$page->addComponent( new TitleComponent( "Clientes" ) );
-		$page->addComponent( new MessageComponent( "Lista de clientes " ) );
+		$page->addComponent( new MessageComponent( "Lista de clientes" ) );
 
 		
 		$cselector = new ClienteSelectorComponent( );

@@ -79,13 +79,14 @@
         }
 
         function formatForm(){
-            
+
             Ext.get('precio').dom.disabled = true;
             Ext.get('precio').dom.value = "";
 
             var option = Ext.get('id_servicio').dom.options[Ext.get('id_servicio').dom.options.selectedIndex].value.split("-");
 
             if( option[1] == "variable" ){
+                Ext.get('precio').dom.value = "";
                 Ext.get('precio').dom.disabled = false;
             }
 
