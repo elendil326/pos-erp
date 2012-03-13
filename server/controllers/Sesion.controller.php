@@ -21,8 +21,10 @@ class SesionController implements ISesion{
  	 * @return id_usuario int 
  	 **/
         public static function Actual(){
-			if(self::$_is_logged_in){
-				
+			Logger::log("actual()");
+
+			if( !is_null(self::$_is_logged_in) && self::$_is_logged_in ){
+							
 				if(!is_null(self::$_current_user)){
 	            	return array( "id_caja" => null, "id_sucursal" => null, "id_usuario" => self::$_current_user->getIdUsuario() );
 				}
