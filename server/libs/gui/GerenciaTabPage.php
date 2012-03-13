@@ -51,13 +51,18 @@
  		 *
  		 **/
  		$h = "<script>
- 			var currentTab = 'Datos';
+ 			var currentTab = '';
+			currentTab = window.location.hash.substr(1);
  			if ( 'onhashchange' in window ) {
  				console.log('`onhashchange` available....');
 			    window.onhashchange = function() {
 			    	
-					Ext.get('tab_'+currentTab).setStyle('display', 'none');
-					Ext.get('atab_'+currentTab).toggleCls('selected');
+			
+					if((currentTab.length > 0) && (Ext.get('tab_'+currentTab) != null)){
+						Ext.get('tab_'+currentTab).setStyle('display', 'none');
+						Ext.get('atab_'+currentTab).toggleCls('selected');						
+					}
+
 					currentTab = window.location.hash.substr(1);
 					
 					Ext.get('tab_'+currentTab).setStyle('display', 'block');

@@ -26,7 +26,18 @@
 		$page->addComponent( $importarProductos );
 
 
-		$page->nextTab("Exportar");
+		$page->nextTab("Sesiones");
+		$sesiones = SesionDAO::GetAll();
+		$header = array(
+			"id_sesion" => "id_sesion",
+			"id_usuario"=> "id_usuario",
+			"fecha_de_vencimiento"=> "fecha_de_vencimiento",
+			"client_user_agent"=> "client_user_agent",
+			"ip"=> "ip"
+		);
+		$tabla = new TableComponent($header, $sesiones);
+		$page->addComponent( $tabla );
 		
+		$page->nextTab("Respaldar");
 		
 		$page->render();

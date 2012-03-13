@@ -194,8 +194,18 @@ class SesionController implements ISesion{
 		$id_grupo = null
 	)
 	{  
-  
-  
+  		$out = array();
+		$sesiones = SesionDAO::getAll(  );
+		
+		for ($i=0; $i < sizeof($sesiones); $i++) { 
+			array_push( $out, $sesiones[$i]->asArray() );
+		}
+		
+		return array(
+			"numero_de_resultados" => sizeof($out),
+			"resultados"			=> $out
+		);
+  		
 	}
 
 
