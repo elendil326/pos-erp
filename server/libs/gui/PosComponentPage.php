@@ -35,9 +35,12 @@ class PosComponentPage extends StdComponentPage{
 
 				<link rel="stylesheet" type="text/css" href="http://api.caffeina.mx/ext-4.0.0/resources/css/ext-all.css" /> 
 			    <script type="text/javascript" src="http://api.caffeina.mx/ext-4.0.0/ext-all-debug.js"></script>
-				<link type="text/css" rel="stylesheet" href="../../css/basic.css"/>
-				<link type="text/css" rel="stylesheet" href="../../../css/basic.css"/>			
-				<link type="text/css" rel="stylesheet" href="css/basic.css"/>
+			
+				<?php if (is_file("../../css/basic.css") ) { ?><link type="text/css" rel="stylesheet" href="../../css/basic.css"/><?php } ?>
+				<?php if (is_file("../../../css/basic.css") ) { ?><link type="text/css" rel="stylesheet" href="../../../css/basic.css"/><?php } ?>
+				<?php if (is_file("css/basic.css") ) { ?><link type="text/css" rel="stylesheet" href="css/basic.css"/><?php } ?>								
+				
+
 
 				<script type="text/javascript" charset="utf-8" src="http://api.caffeina.mx/ext-4.0.0/examples/ux/grid/TransformGrid.js"></script>
 				<script type="text/javascript" charset="utf-8" src="./gerencia.js"></script>			

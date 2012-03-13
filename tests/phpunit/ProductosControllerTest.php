@@ -43,10 +43,10 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 		
 
 
-		$p = ProductosController::importarDesdeAdminPaq( file_get_contents("adminpaq.catalogo.productos.csv") );
+		$p = ProductosController::Importar( file_get_contents("adminpaq.catalogo.productos.csv") );
 
-		var_dump($p);
-		$this->assertEquals(1,2);
+		
+		//$this->assertEquals(1,2);
 
 	}
 

@@ -11,6 +11,7 @@ class FormComponent implements GuiComponent
 	private $send_to_api_redirect;
 	private $is_editable;
 	private $hide_not_obligatory;
+	private $guiComponentId;
 	
 	/**
 	 *
@@ -28,7 +29,12 @@ class FormComponent implements GuiComponent
 		$this->is_editable         = true;
 		$this->form_fields         = array();
 		$this->hide_not_obligatory = false;
+		
+		//para eviar id's repetidos
+
+		$this->guiComponentId = "_"  . (rand() + rand());
 	}
+	
 	
 	
 	/**
@@ -106,18 +112,18 @@ class FormComponent implements GuiComponent
 			$html .= 'if(HtmlEncode===undefined){var HtmlEncode=function(a){var b=a.length,c=[];while(b--){var d=a[b].charCodeAt();if(d>127||d>90&&d<97){c[b]="&#"+d+";"}else{c[b]=a[b]}}return c.join("")}} ';
 			
 			
-			$html .= "var obligatory = [];";
+			$html .= "\n\nvar ".$this->guiComponentId."obligatory = [];\n";
 			foreach ($this->form_fields as $f)
 			{
 				if ($f->obligatory){
-					$html .= "obligatory.push( '" . $f->id . "' );";
+					$html .= $this->guiComponentId . "obligatory.push( '" . $f->id . "' );\n";
 				}
 					
 			}
 			
-			$html .= "function getParams(){";
-			$html .= "var p = {};";
-			$html .= "var found=false;";
+			$html .= "\nfunction ". $this->guiComponentId ."getParams(){\n";
+			$html .= "\tvar ". $this->guiComponentId ."p = {};\n";
+			$html .= "\tvar ". $this->guiComponentId ."found = false;\n";
 
 			foreach ($this->form_fields as $f)
 			{
@@ -126,34 +132,35 @@ class FormComponent implements GuiComponent
 
 					if ($f->send_as_hidden === true)
 					{
-						$html .= "p." . $f->id . " = " . $f->value . ";";
+						$html .= "\tp". $this->guiComponentId ."." . $this->guiComponentId . $f->id . " = " . $f->value . ";\n";
 					}
 					continue;
 				}
 				
+				///*(Ext.get('" . $f->id . "').getValue().length > 0 ) ||*/
 				
-				$html .= "\nif( /*(Ext.get('" . $f->id . "').getValue().length > 0 ) ||*/ (Ext.get('" . $f->id . "').getValue() != '". $f->value ."') ){\n\t p." . $f->id . " = HtmlEncode( Ext.get('" . $f->id . "').getValue() ); \n} else{\n ";
+				$html .= "\n\tif(  (Ext.get('" . $this->guiComponentId . $f->id . "').getValue() != '". $f->value ."') ){\n\t ". $this->guiComponentId ."p." . $f->id . " = HtmlEncode( Ext.get('". $this->guiComponentId . $f->id . "').getValue() ); \n\t} else{\n ";
 				//else si no esta lleno de datos, vamos a buscarlo en los obligatorios, 
 				//si esta en los obligatorios entonces mandamos el error
-				$html .= "\n\tfor (var i = obligatory.length - 1; i >= 0; i--){\n";
-				$html .= "	\tif(obligatory[i] == '" . $f->id . "') {\n";
-				$html .= "	\t	found = true;";
-				$html .= "Ext.get('" . $f->id . "').highlight('#DD4B39');";
+				$html .= "\n\t\tfor (var i = ".$this->guiComponentId."obligatory.length - 1; i >= 0; i--){\n";
+				$html .= "	\t\tif(obligatory[i] == '" . $f->id . "') {\n";
+				$html .= "	\t\tfound = true;\n";
+				$html .= "\tExt.get('" . $this->guiComponentId . $f->id . "').highlight('#DD4B39');\n";
 				$html .= "\n\t\t}\n";
 				$html .= "\t}\n";
 				$html .= "}\n";
 			}
 			
-			$html .= "	if(!found) sendToApi(p);";
-			$html .= "}";
+			$html .= "	if(!".$this->guiComponentId."found) ". $this->guiComponentId ."sendToApi( ".$this->guiComponentId."p);\n";
+			$html .= "}\n\n";
 			
-			$html .= "function sendToApi( params ){";
-			$html .= "	POS.API." . $this->send_to_api_http_method . "(\"" . $this->send_to_api . "\", params, ";
-			$html .= "	{";
-			$html .= "		callback : function( a ){ ";
+			$html .= "function ". $this->guiComponentId ."sendToApi( params ){\n";
+			$html .= "	POS.API." . $this->send_to_api_http_method . "(\"" . $this->send_to_api . "\", params, \n";
+			$html .= "	{\n";
+			$html .= "		callback : function( a ){ \n";
 			$html .= "			";
-			$html .= "			/* remove unload event */";
-			$html .= "			window.onbeforeunload = function(){ return;	};";
+			$html .= "			/* remove unload event */\n";
+			$html .= "			window.onbeforeunload = function(){ return;	};\n";
 			
 			
 			
@@ -163,19 +170,19 @@ class FormComponent implements GuiComponent
 			
 			
 			if (!is_null($this->send_to_api_redirect))
-				$html .= "			window.location = '" . $this->send_to_api_redirect . "&previous_action=ok';";
+				$html .= "			window.location = '" . $this->send_to_api_redirect . "&previous_action=ok';\n";
 			else
-				$html .= "			Ext.MessageBox.show({
-				           				title: 'OK',
-				           				msg: 'OK.',
-				           				buttons: Ext.MessageBox.OK
-				       				});	/* console.log('OKAY'); */ ";
+				$html .= "			Ext.MessageBox.show({\n
+				           				title: 'OK',\n
+				           				msg: 'OK.',\n
+				           				buttons: Ext.MessageBox.OK\n
+				       				});	/* console.log('OKAY'); */ \n";
 			
-			$html .= "			";
-			$html .= "			";
-			$html .= "	 	}";
-			$html .= "	});";
-			$html .= "}";
+			$html .= "			\n";
+			$html .= "			\n";
+			$html .= "	 	}\n";
+			$html .= "	});\n";
+			$html .= "}\n";
 			$html .= "</script>";
 			
 		}
@@ -256,7 +263,7 @@ class FormComponent implements GuiComponent
 				// Combo boxes
 				// 
 				case "combo":
-					$html .= "<select id='" . $f->id . "'";
+					$html .= "<select id='" . $this->guiComponentId  . $f->id . "'";
 					if ($this->is_editable === false)
 						$html .= " disabled='disabled' ";
 					$html .= ">";
@@ -280,7 +287,7 @@ class FormComponent implements GuiComponent
 				// List boxes
 				//             
 				case "listbox":
-					$html .= "<select multiple='true' id='" . $f->id . "' name='" . $f->name . "'>";
+					$html .= "<select multiple='true' id='" . $this->guiComponentId . $f->id . "' name='" . $f->name . "'>";
 					
 					foreach ($f->value as $o)
 					{
@@ -298,7 +305,7 @@ class FormComponent implements GuiComponent
 					}
 					else
 					{
-						$html .= "<textarea id='" . $f->id . "' name='" . $f->name . "' >".$f->value."</textarea>";
+						$html .= "<textarea id='" . $this->guiComponentId  . $f->id . "' name='" . $f->name . "' rows=5 cols=auto>".$f->value."</textarea>";
 					}
 					break;
 					
@@ -314,7 +321,7 @@ class FormComponent implements GuiComponent
 					}
 					else
 					{
-						$html .= "<input id='" . $f->id . "' name='" . $f->name . "' value='" . $f->value . "' type='" . $f->type . "' >";
+						$html .= "<input id='" . $this->guiComponentId . $f->id . "' name='" . $f->name . "' value='" . $f->value . "' type='" . $f->type . "' >";
 					}
 			}
 			
@@ -366,7 +373,7 @@ class FormComponent implements GuiComponent
 				$html .= "<div class='POS Boton' onClick='Ext.get(Ext.query(\".hideable\")).show()' >Mas opciones</div>";
 			}
 			
-			$html .= "<div class='POS Boton OK' onClick='this.onClick=null;getParams()'  >Aceptar</div>";
+			$html .= "<div class='POS Boton OK' onClick='this.onClick=null; " . $this->guiComponentId . "getParams()'  >Aceptar</div>";
 			$html .= "</td></tr>";
 		}
 		
