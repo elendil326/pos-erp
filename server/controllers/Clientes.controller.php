@@ -1068,7 +1068,11 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 
 
 
-	public static function ImportarClientes($raw_contents, $from = "ADMINPAQ"){
+	public static function Importar($raw_contents ){
+		
+		Logger::log("Importando clientes...");
+		
+		Logger::log("El tamaño del archivo es de " . strlen( $raw_contents ) . " bytes.");
 		
 		$lines = explode( "\n", $raw_contents );
 

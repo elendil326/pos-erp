@@ -166,6 +166,21 @@
   
 	/**
  	 *
+ 	 *importar una lista de productos
+ 	 *
+ 	 * @param raw_content string el texto a parsear
+ 	 * @return errores json 
+ 	 **/
+  static function Importar
+	(
+		$raw_content
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
  	 *Crear un nuevo producto, 
 
 NOTA: Se crea un producto tipo = 1 que es para productos.

@@ -258,4 +258,18 @@ No se puede asignar como cliente padre un cliente que esta inactivo
   
   
 	
+  
+	/**
+ 	 *
+ 	 *importar clientes via un archivo de texto
+ 	 *
+ 	 * @param raw_content string La cadena a parsear
+ 	 **/
+  static function Importar
+	(
+		$raw_content
+	);  
+  
+  
+	
   }

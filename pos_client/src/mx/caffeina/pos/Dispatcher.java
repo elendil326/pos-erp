@@ -84,7 +84,11 @@ public class Dispatcher{
 
 			String  path_to_files = null,
 					data_or_structure = null,
-					table	= null;
+					table	= null,
+					key 	= null,
+					value 	= null,
+					save	= null;
+
 
 
 			//buscar argumentos
@@ -110,6 +114,22 @@ public class Dispatcher{
 					table 	= args[i].substring( args[i].indexOf("=") +1);
 					System.out.println("found `table` = " + table);
 				}
+
+				if( args[i].startsWith("value=") ){
+					value 	= args[i].substring( args[i].indexOf("=") +1);
+					System.out.println("found `value` = " + value);
+				}
+
+
+				if( args[i].startsWith("key=") ){
+					key 	= args[i].substring( args[i].indexOf("=") +1);
+					System.out.println("found `key` = " + key);
+				}
+
+				if( args[i].startsWith("save=") ){
+					save 	= args[i].substring( args[i].indexOf("=") +1);
+					System.out.println("found `save` = " + save);
+				}
 			}
 
 			if(path_to_files == null){
@@ -120,12 +140,31 @@ public class Dispatcher{
 				return callback + "({\"success\": false,  \"response\" : \"Falto que tabla quieres hacer queryen\"});";
 			}
 
+
+
+
 			if(data_or_structure == null){
 				data_or_structure = "data";
 			}
 
 
 			AdminPAQProxy aproxy = new AdminPAQProxy(  path_to_files );
+
+			if(key != null){
+				if(callback == null){
+					return ( aproxy.queryRow(table, key, value) );	
+				}else{
+					return callback + "("+ ( aproxy.queryRow(table, key, value ) ) +");";		
+				}
+			}
+
+			if(save != null){
+				if(callback == null){
+					return ( aproxy.set( ) );	
+				}else{
+					return callback + "("+ aproxy.set(  ) +");";		
+				}
+			}
 
 			if(callback == null){
 				return ( aproxy.query(table, data_or_structure) );	
@@ -155,6 +194,12 @@ public class Dispatcher{
 			String response = Networking.getMacAddd( );			
 			return callback + "({\"success\": true,  \"response\" : \""+response+"\"});";			
 		}
+
+
+
+
+
+
 
 
 		/**

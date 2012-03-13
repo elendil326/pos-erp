@@ -147,7 +147,7 @@ public class HttpServer
 				//send the headers
 				out.println("HTTP/1.1 200 OK");
 				out.println("Date: Mon, 23 May 2005 22:38:34 GMT");
-				out.println("Server: POSWebServer/0.0.2");
+				out.println("Server: POSWebServer/0.0.3");
 				out.println("Accept-Ranges: bytes");
 				out.println("Content-Length: " + response.length());
 				out.println("Connection: close");

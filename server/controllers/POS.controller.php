@@ -203,8 +203,8 @@ require_once("interfaces/POS.interface.php");
 		$titulo, 
 		$emisor = "no-reply@caffeina.mx"
 	)
-        {
-      
-        }
+    {
+  
+    }
 	
   }

@@ -638,6 +638,34 @@
   
   
 
+  class ApiClientesImportar extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"raw_content" => new ApiExposedProperty("raw_content", true, POST, array( "string" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = ClientesController::Importar( 
+ 			
+			
+			isset($_POST['raw_content'] ) ? $_POST['raw_content'] : null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
   class ApiAutorizacionesGasto extends ApiHandler {
   
 
@@ -6538,6 +6566,34 @@
 			isset($_GET['id_categoria'] ) ? $_GET['id_categoria'] :  null,
 			isset($_GET['id_categoria_padre'] ) ? $_GET['id_categoria_padre'] :  null,
 			isset($_GET['query'] ) ? $_GET['query'] :  null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiProductoImportar extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"raw_content" => new ApiExposedProperty("raw_content", true, POST, array( "string" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = ProductosController::Importar( 
+ 			
+			
+			isset($_POST['raw_content'] ) ? $_POST['raw_content'] : null
 			
 			);
 		}catch(Exception $e){

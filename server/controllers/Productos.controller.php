@@ -831,7 +831,7 @@ class ProductosController extends ValidacionesController implements IProductos
 						$producto["compra_en_mostrador"], 
 						$producto["costo_estandar"],
 						null,
-						"costo",
+						"costog",
 						$producto["nombre_producto"]
 						));
 
@@ -1783,7 +1783,7 @@ class ProductosController extends ValidacionesController implements IProductos
     }
 
 
-    static function importarDesdeAdminPaq($raw_contents){
+    public static function Importar($raw_contents){
 
         Logger::log("Importantdo productos desde adminpaq");        
         $productos_importados = 0;

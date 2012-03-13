@@ -114,7 +114,7 @@
  	 *
  	 * @param id_deudor int Id del usuario o la sucursal que realiza el abono, las sucursales seran negativas.En el caso de las compras, este campo sera el receptor, y el deudor sera tomado del sistema. 
  	 * @param monto float monto abonado de la sucursal
- 	 * @param tipo_pago json JSON con la informacion que describe el tipo de pago, si es con cheque, en efectivo o con tarjeta
+ 	 * @param tipo_pago string `efectivo`, `cheque`, `tarjeta`
  	 * @param billetes json Ids de los billetes y sus cantidades que se reciben en caso de que la caja lleve un control de billetes
  	 * @param cheques json Se toma el nombre del banco, el monto y los ultimos cuatro numeros del o los cheques usados para este abono
  	 * @param id_compra int Id de la compra a la que se abona
