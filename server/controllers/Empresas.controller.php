@@ -671,7 +671,9 @@ require_once("interfaces/Empresas.interface.php");
 		$texto_extra = null
 	)
 	{
+
             Logger::log("Editando la empresa $id_empresa ....");
+
             /*
             //Se validan los parametros de empresa recibidos
             $validar = self::validarParametrosEmpresa(
@@ -727,9 +729,12 @@ require_once("interfaces/Empresas.interface.php");
 																		$telefono2);
             
 			*/
-            
+			//var_dump($direccion);
+			$direccion = object_to_array($direccion);
+			//var_dump($direccion);
+			            
             //se guarda el registro de la empresa y se verifica que este activa
-            $empresa = EmpresaDAO::getByPK($id_empresa);
+            $empresa = EmpresaDAO::getByPK( $id_empresa );
 
 			Logger::log("validando empresa activa");
 			
@@ -740,15 +745,16 @@ require_once("interfaces/Empresas.interface.php");
             
 
             //se guarda el registro de la direccion perteneciente a esta empresa
-			Logger::log("obteniendo direccion");
-            $direccion_obj = DireccionDAO::getByPK($empresa->getIdDireccion());
+			Logger::log("obteniendo direccion " . $empresa->getIdDireccion() . "...");
+            $direccion_obj = DireccionDAO::getByPK( $empresa->getIdDireccion() );
+
             if(is_null($direccion_obj)){
                 Logger::error("FATAL!!! La empresa no cuenta con una direccion");
-                throw new Exception("FATAL!!! La empresa no cuenta con una direccion",901);
+                throw new Exception("FATAL!!! La empresa no cuenta con una direccion", 901);
             }
             
             //bandera para saber si se modifico algun campo de la direccion
-            $modificar_direccion=false;
+            $modificar_direccion = false;
             
             //se evaluan los parametros. Los que no sean nulos seran tomados com oactualizacion
             if(isset($direccion_web) && !is_null($direccion_web)){
@@ -756,6 +762,7 @@ require_once("interfaces/Empresas.interface.php");
             }
 
             if(!is_null($razon_social)){
+				Logger::log("razon_social changed ...");
                 $empresa->setRazonSocial($razon_social);
             }
 
@@ -764,60 +771,70 @@ require_once("interfaces/Empresas.interface.php");
             }*/
 
             if(!is_null($rfc)){
+				Logger::log("rfc changed ...");	
                 $empresa->setRfc($rfc);
             }
 
             if(!is_null($direccion["codigo_postal"])){
-                $direccion->setCodigoPostal($codigo_postal);
-                $modificar_direccion=true;
+				Logger::log("codigo_postal changed ...");	
+                $direccion_obj->setCodigoPostal($codigo_postal);
+                $modificar_direccion = true;
             }
 
             if(!is_null($direccion["calle"])){
-                $direccion->setCalle($calle);
+				Logger::log("calle changed ...");	
+                $direccion_obj->setCalle($calle);
                 $modificar_direccion=true;
             }
 
             if(!is_null($direccion["numero_interno"])){
-                $direccion->setNumeroInterior($numero_interno);
+				Logger::log("numero_interno changed ...");	
+                $direccion_obj->setNumeroInterior($numero_interno);
                 $modificar_direccion=true;
             }
 
             if(!is_null($representante_legal)){
+				Logger::log("changed ...");	
                 $empresa->setRepresentanteLegal($representante_legal);
             }
 
             if(!is_null($direccion["telefono1"])){
-                $direccion->setTelefono($telefono1);
+				Logger::log("changed ...");	
+                $direccion_obj->setTelefono($telefono1);
                 $modificar_direccion=true;
             }
 
             if(!is_null($direccion["numero_exterior"])){
-                $direccion->setNumeroExterior($numero_exterior);
+				Logger::log("changed ...");	
+                $direccion_obj->setNumeroExterior($numero_exterior);
                 $modificar_direccion=true;
             }
 
             if(!is_null($direccion["colonia"])){
-                $direccion->setColonia($colonia);
+				Logger::log("changed ...");	
+                $direccion_obj->setColonia($colonia);
                 $modificar_direccion=true;
             }
 
             if(!is_null($direccion["telefono2"])){
-                $direccion->setTelefono2($telefono2);
+				Logger::log("changed ...");	
+                $direccion_obj->setTelefono2($telefono2);
                 $modificar_direccion=true;
             }
-
+/*
             if(!is_null($texto_extra)){
-                $direccion->setReferencia($texto_extra);
+				Logger::log("changed ...");	
+                $direccion_obj->setReferencia($texto_extra);
                 $modificar_direccion=true;
             }
-            
+  */          
             //Si se cambio algun campo de la direccion se actualiza el campo ultima modificacion
             //y se toma al usuario de la sesion.
             if($modificar_direccion)
             {
-                $direccion->setUltimaModificacion(date("Y-m-d H:i:s",time()));
+                $direccion_obj->setUltimaModificacion(date("Y-m-d H:i:s",time()));
 
-                $id_usuario = SesionController::getCurrentUser();
+                //$id_usuario = SesionController::getCurrentUser( );
 
                 if(is_null($id_usuario)){
                     Logger::error("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
@@ -830,6 +847,7 @@ require_once("interfaces/Empresas.interface.php");
             {
                 //Se guardan los cambios hechos en la empresa y en su direccion
                 EmpresaDAO::save($empresa);
+			
                 DireccionDAO::save($direccion_obj);
                 
                 //Si se obtiene el parametro impuestos se buscan los impuestos actuales de la empresa.
