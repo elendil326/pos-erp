@@ -122,62 +122,62 @@ abstract class AbonoVentaDAOBase extends DAO
 		$sql = "SELECT * from abono_venta WHERE ("; 
 		$val = array();
 		if( ! is_null( $abono_venta->getIdAbonoVenta() ) ){
-			$sql .= " id_abono_venta = ? AND";
+			$sql .= " `id_abono_venta` = ? AND";
 			array_push( $val, $abono_venta->getIdAbonoVenta() );
 		}
 
 		if( ! is_null( $abono_venta->getIdVenta() ) ){
-			$sql .= " id_venta = ? AND";
+			$sql .= " `id_venta` = ? AND";
 			array_push( $val, $abono_venta->getIdVenta() );
 		}
 
 		if( ! is_null( $abono_venta->getIdSucursal() ) ){
-			$sql .= " id_sucursal = ? AND";
+			$sql .= " `id_sucursal` = ? AND";
 			array_push( $val, $abono_venta->getIdSucursal() );
 		}
 
 		if( ! is_null( $abono_venta->getMonto() ) ){
-			$sql .= " monto = ? AND";
+			$sql .= " `monto` = ? AND";
 			array_push( $val, $abono_venta->getMonto() );
 		}
 
 		if( ! is_null( $abono_venta->getIdCaja() ) ){
-			$sql .= " id_caja = ? AND";
+			$sql .= " `id_caja` = ? AND";
 			array_push( $val, $abono_venta->getIdCaja() );
 		}
 
 		if( ! is_null( $abono_venta->getIdDeudor() ) ){
-			$sql .= " id_deudor = ? AND";
+			$sql .= " `id_deudor` = ? AND";
 			array_push( $val, $abono_venta->getIdDeudor() );
 		}
 
 		if( ! is_null( $abono_venta->getIdReceptor() ) ){
-			$sql .= " id_receptor = ? AND";
+			$sql .= " `id_receptor` = ? AND";
 			array_push( $val, $abono_venta->getIdReceptor() );
 		}
 
 		if( ! is_null( $abono_venta->getNota() ) ){
-			$sql .= " nota = ? AND";
+			$sql .= " `nota` = ? AND";
 			array_push( $val, $abono_venta->getNota() );
 		}
 
 		if( ! is_null( $abono_venta->getFecha() ) ){
-			$sql .= " fecha = ? AND";
+			$sql .= " `fecha` = ? AND";
 			array_push( $val, $abono_venta->getFecha() );
 		}
 
 		if( ! is_null( $abono_venta->getTipoDePago() ) ){
-			$sql .= " tipo_de_pago = ? AND";
+			$sql .= " `tipo_de_pago` = ? AND";
 			array_push( $val, $abono_venta->getTipoDePago() );
 		}
 
 		if( ! is_null( $abono_venta->getCancelado() ) ){
-			$sql .= " cancelado = ? AND";
+			$sql .= " `cancelado` = ? AND";
 			array_push( $val, $abono_venta->getCancelado() );
 		}
 
 		if( ! is_null( $abono_venta->getMotivoCancelacion() ) ){
-			$sql .= " motivo_cancelacion = ? AND";
+			$sql .= " `motivo_cancelacion` = ? AND";
 			array_push( $val, $abono_venta->getMotivoCancelacion() );
 		}
 
@@ -211,7 +211,7 @@ abstract class AbonoVentaDAOBase extends DAO
 	  **/
 	private static final function update( $abono_venta )
 	{
-		$sql = "UPDATE abono_venta SET  id_venta = ?, id_sucursal = ?, monto = ?, id_caja = ?, id_deudor = ?, id_receptor = ?, nota = ?, fecha = ?, tipo_de_pago = ?, cancelado = ?, motivo_cancelacion = ? WHERE  id_abono_venta = ?;";
+		$sql = "UPDATE abono_venta SET  `id_venta` = ?, `id_sucursal` = ?, `monto` = ?, `id_caja` = ?, `id_deudor` = ?, `id_receptor` = ?, `nota` = ?, `fecha` = ?, `tipo_de_pago` = ?, `cancelado` = ?, `motivo_cancelacion` = ? WHERE  `id_abono_venta` = ?;";
 		$params = array( 
 			$abono_venta->getIdVenta(), 
 			$abono_venta->getIdSucursal(), 
@@ -247,7 +247,7 @@ abstract class AbonoVentaDAOBase extends DAO
 	  **/
 	private static final function create( &$abono_venta )
 	{
-		$sql = "INSERT INTO abono_venta ( id_abono_venta, id_venta, id_sucursal, monto, id_caja, id_deudor, id_receptor, nota, fecha, tipo_de_pago, cancelado, motivo_cancelacion ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO abono_venta ( `id_abono_venta`, `id_venta`, `id_sucursal`, `monto`, `id_caja`, `id_deudor`, `id_receptor`, `nota`, `fecha`, `tipo_de_pago`, `cancelado`, `motivo_cancelacion` ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$abono_venta->getIdAbonoVenta(), 
 			$abono_venta->getIdVenta(), 
@@ -310,132 +310,132 @@ abstract class AbonoVentaDAOBase extends DAO
 		$sql = "SELECT * from abono_venta WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $abono_ventaA->getIdAbonoVenta()) ) ) & ( ! is_null ( ($b = $abono_ventaB->getIdAbonoVenta()) ) ) ){
-				$sql .= " id_abono_venta >= ? AND id_abono_venta <= ? AND";
+				$sql .= " `id_abono_venta` >= ? AND `id_abono_venta` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_abono_venta = ? AND"; 
+			$sql .= " `id_abono_venta` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $abono_ventaA->getIdVenta()) ) ) & ( ! is_null ( ($b = $abono_ventaB->getIdVenta()) ) ) ){
-				$sql .= " id_venta >= ? AND id_venta <= ? AND";
+				$sql .= " `id_venta` >= ? AND `id_venta` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_venta = ? AND"; 
+			$sql .= " `id_venta` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $abono_ventaA->getIdSucursal()) ) ) & ( ! is_null ( ($b = $abono_ventaB->getIdSucursal()) ) ) ){
-				$sql .= " id_sucursal >= ? AND id_sucursal <= ? AND";
+				$sql .= " `id_sucursal` >= ? AND `id_sucursal` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_sucursal = ? AND"; 
+			$sql .= " `id_sucursal` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $abono_ventaA->getMonto()) ) ) & ( ! is_null ( ($b = $abono_ventaB->getMonto()) ) ) ){
-				$sql .= " monto >= ? AND monto <= ? AND";
+				$sql .= " `monto` >= ? AND `monto` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " monto = ? AND"; 
+			$sql .= " `monto` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $abono_ventaA->getIdCaja()) ) ) & ( ! is_null ( ($b = $abono_ventaB->getIdCaja()) ) ) ){
-				$sql .= " id_caja >= ? AND id_caja <= ? AND";
+				$sql .= " `id_caja` >= ? AND `id_caja` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_caja = ? AND"; 
+			$sql .= " `id_caja` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $abono_ventaA->getIdDeudor()) ) ) & ( ! is_null ( ($b = $abono_ventaB->getIdDeudor()) ) ) ){
-				$sql .= " id_deudor >= ? AND id_deudor <= ? AND";
+				$sql .= " `id_deudor` >= ? AND `id_deudor` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_deudor = ? AND"; 
+			$sql .= " `id_deudor` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $abono_ventaA->getIdReceptor()) ) ) & ( ! is_null ( ($b = $abono_ventaB->getIdReceptor()) ) ) ){
-				$sql .= " id_receptor >= ? AND id_receptor <= ? AND";
+				$sql .= " `id_receptor` >= ? AND `id_receptor` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_receptor = ? AND"; 
+			$sql .= " `id_receptor` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $abono_ventaA->getNota()) ) ) & ( ! is_null ( ($b = $abono_ventaB->getNota()) ) ) ){
-				$sql .= " nota >= ? AND nota <= ? AND";
+				$sql .= " `nota` >= ? AND `nota` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " nota = ? AND"; 
+			$sql .= " `nota` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $abono_ventaA->getFecha()) ) ) & ( ! is_null ( ($b = $abono_ventaB->getFecha()) ) ) ){
-				$sql .= " fecha >= ? AND fecha <= ? AND";
+				$sql .= " `fecha` >= ? AND `fecha` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " fecha = ? AND"; 
+			$sql .= " `fecha` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $abono_ventaA->getTipoDePago()) ) ) & ( ! is_null ( ($b = $abono_ventaB->getTipoDePago()) ) ) ){
-				$sql .= " tipo_de_pago >= ? AND tipo_de_pago <= ? AND";
+				$sql .= " `tipo_de_pago` >= ? AND `tipo_de_pago` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " tipo_de_pago = ? AND"; 
+			$sql .= " `tipo_de_pago` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $abono_ventaA->getCancelado()) ) ) & ( ! is_null ( ($b = $abono_ventaB->getCancelado()) ) ) ){
-				$sql .= " cancelado >= ? AND cancelado <= ? AND";
+				$sql .= " `cancelado` >= ? AND `cancelado` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " cancelado = ? AND"; 
+			$sql .= " `cancelado` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $abono_ventaA->getMotivoCancelacion()) ) ) & ( ! is_null ( ($b = $abono_ventaB->getMotivoCancelacion()) ) ) ){
-				$sql .= " motivo_cancelacion >= ? AND motivo_cancelacion <= ? AND";
+				$sql .= " `motivo_cancelacion` >= ? AND `motivo_cancelacion` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " motivo_cancelacion = ? AND"; 
+			$sql .= " `motivo_cancelacion` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

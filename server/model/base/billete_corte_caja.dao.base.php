@@ -123,32 +123,32 @@ abstract class BilleteCorteCajaDAOBase extends DAO
 		$sql = "SELECT * from billete_corte_caja WHERE ("; 
 		$val = array();
 		if( ! is_null( $billete_corte_caja->getIdBillete() ) ){
-			$sql .= " id_billete = ? AND";
+			$sql .= " `id_billete` = ? AND";
 			array_push( $val, $billete_corte_caja->getIdBillete() );
 		}
 
 		if( ! is_null( $billete_corte_caja->getIdCorteCaja() ) ){
-			$sql .= " id_corte_caja = ? AND";
+			$sql .= " `id_corte_caja` = ? AND";
 			array_push( $val, $billete_corte_caja->getIdCorteCaja() );
 		}
 
 		if( ! is_null( $billete_corte_caja->getCantidadEncontrada() ) ){
-			$sql .= " cantidad_encontrada = ? AND";
+			$sql .= " `cantidad_encontrada` = ? AND";
 			array_push( $val, $billete_corte_caja->getCantidadEncontrada() );
 		}
 
 		if( ! is_null( $billete_corte_caja->getCantidadDejada() ) ){
-			$sql .= " cantidad_dejada = ? AND";
+			$sql .= " `cantidad_dejada` = ? AND";
 			array_push( $val, $billete_corte_caja->getCantidadDejada() );
 		}
 
 		if( ! is_null( $billete_corte_caja->getCantidadSobrante() ) ){
-			$sql .= " cantidad_sobrante = ? AND";
+			$sql .= " `cantidad_sobrante` = ? AND";
 			array_push( $val, $billete_corte_caja->getCantidadSobrante() );
 		}
 
 		if( ! is_null( $billete_corte_caja->getCantidadFaltante() ) ){
-			$sql .= " cantidad_faltante = ? AND";
+			$sql .= " `cantidad_faltante` = ? AND";
 			array_push( $val, $billete_corte_caja->getCantidadFaltante() );
 		}
 
@@ -182,7 +182,7 @@ abstract class BilleteCorteCajaDAOBase extends DAO
 	  **/
 	private static final function update( $billete_corte_caja )
 	{
-		$sql = "UPDATE billete_corte_caja SET  cantidad_encontrada = ?, cantidad_dejada = ?, cantidad_sobrante = ?, cantidad_faltante = ? WHERE  id_billete = ? AND id_corte_caja = ?;";
+		$sql = "UPDATE billete_corte_caja SET  `cantidad_encontrada` = ?, `cantidad_dejada` = ?, `cantidad_sobrante` = ?, `cantidad_faltante` = ? WHERE  `id_billete` = ? AND `id_corte_caja` = ?;";
 		$params = array( 
 			$billete_corte_caja->getCantidadEncontrada(), 
 			$billete_corte_caja->getCantidadDejada(), 
@@ -211,7 +211,7 @@ abstract class BilleteCorteCajaDAOBase extends DAO
 	  **/
 	private static final function create( &$billete_corte_caja )
 	{
-		$sql = "INSERT INTO billete_corte_caja ( id_billete, id_corte_caja, cantidad_encontrada, cantidad_dejada, cantidad_sobrante, cantidad_faltante ) VALUES ( ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO billete_corte_caja ( `id_billete`, `id_corte_caja`, `cantidad_encontrada`, `cantidad_dejada`, `cantidad_sobrante`, `cantidad_faltante` ) VALUES ( ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$billete_corte_caja->getIdBillete(), 
 			$billete_corte_caja->getIdCorteCaja(), 
@@ -268,66 +268,66 @@ abstract class BilleteCorteCajaDAOBase extends DAO
 		$sql = "SELECT * from billete_corte_caja WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $billete_corte_cajaA->getIdBillete()) ) ) & ( ! is_null ( ($b = $billete_corte_cajaB->getIdBillete()) ) ) ){
-				$sql .= " id_billete >= ? AND id_billete <= ? AND";
+				$sql .= " `id_billete` >= ? AND `id_billete` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_billete = ? AND"; 
+			$sql .= " `id_billete` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $billete_corte_cajaA->getIdCorteCaja()) ) ) & ( ! is_null ( ($b = $billete_corte_cajaB->getIdCorteCaja()) ) ) ){
-				$sql .= " id_corte_caja >= ? AND id_corte_caja <= ? AND";
+				$sql .= " `id_corte_caja` >= ? AND `id_corte_caja` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_corte_caja = ? AND"; 
+			$sql .= " `id_corte_caja` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $billete_corte_cajaA->getCantidadEncontrada()) ) ) & ( ! is_null ( ($b = $billete_corte_cajaB->getCantidadEncontrada()) ) ) ){
-				$sql .= " cantidad_encontrada >= ? AND cantidad_encontrada <= ? AND";
+				$sql .= " `cantidad_encontrada` >= ? AND `cantidad_encontrada` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " cantidad_encontrada = ? AND"; 
+			$sql .= " `cantidad_encontrada` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $billete_corte_cajaA->getCantidadDejada()) ) ) & ( ! is_null ( ($b = $billete_corte_cajaB->getCantidadDejada()) ) ) ){
-				$sql .= " cantidad_dejada >= ? AND cantidad_dejada <= ? AND";
+				$sql .= " `cantidad_dejada` >= ? AND `cantidad_dejada` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " cantidad_dejada = ? AND"; 
+			$sql .= " `cantidad_dejada` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $billete_corte_cajaA->getCantidadSobrante()) ) ) & ( ! is_null ( ($b = $billete_corte_cajaB->getCantidadSobrante()) ) ) ){
-				$sql .= " cantidad_sobrante >= ? AND cantidad_sobrante <= ? AND";
+				$sql .= " `cantidad_sobrante` >= ? AND `cantidad_sobrante` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " cantidad_sobrante = ? AND"; 
+			$sql .= " `cantidad_sobrante` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $billete_corte_cajaA->getCantidadFaltante()) ) ) & ( ! is_null ( ($b = $billete_corte_cajaB->getCantidadFaltante()) ) ) ){
-				$sql .= " cantidad_faltante >= ? AND cantidad_faltante <= ? AND";
+				$sql .= " `cantidad_faltante` >= ? AND `cantidad_faltante` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " cantidad_faltante = ? AND"; 
+			$sql .= " `cantidad_faltante` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

@@ -122,42 +122,42 @@ abstract class CajaDAOBase extends DAO
 		$sql = "SELECT * from caja WHERE ("; 
 		$val = array();
 		if( ! is_null( $caja->getIdCaja() ) ){
-			$sql .= " id_caja = ? AND";
+			$sql .= " `id_caja` = ? AND";
 			array_push( $val, $caja->getIdCaja() );
 		}
 
 		if( ! is_null( $caja->getIdSucursal() ) ){
-			$sql .= " id_sucursal = ? AND";
+			$sql .= " `id_sucursal` = ? AND";
 			array_push( $val, $caja->getIdSucursal() );
 		}
 
 		if( ! is_null( $caja->getToken() ) ){
-			$sql .= " token = ? AND";
+			$sql .= " `token` = ? AND";
 			array_push( $val, $caja->getToken() );
 		}
 
 		if( ! is_null( $caja->getDescripcion() ) ){
-			$sql .= " descripcion = ? AND";
+			$sql .= " `descripcion` = ? AND";
 			array_push( $val, $caja->getDescripcion() );
 		}
 
 		if( ! is_null( $caja->getAbierta() ) ){
-			$sql .= " abierta = ? AND";
+			$sql .= " `abierta` = ? AND";
 			array_push( $val, $caja->getAbierta() );
 		}
 
 		if( ! is_null( $caja->getSaldo() ) ){
-			$sql .= " saldo = ? AND";
+			$sql .= " `saldo` = ? AND";
 			array_push( $val, $caja->getSaldo() );
 		}
 
 		if( ! is_null( $caja->getControlBilletes() ) ){
-			$sql .= " control_billetes = ? AND";
+			$sql .= " `control_billetes` = ? AND";
 			array_push( $val, $caja->getControlBilletes() );
 		}
 
 		if( ! is_null( $caja->getActiva() ) ){
-			$sql .= " activa = ? AND";
+			$sql .= " `activa` = ? AND";
 			array_push( $val, $caja->getActiva() );
 		}
 
@@ -191,7 +191,7 @@ abstract class CajaDAOBase extends DAO
 	  **/
 	private static final function update( $caja )
 	{
-		$sql = "UPDATE caja SET  id_sucursal = ?, token = ?, descripcion = ?, abierta = ?, saldo = ?, control_billetes = ?, activa = ? WHERE  id_caja = ?;";
+		$sql = "UPDATE caja SET  `id_sucursal` = ?, `token` = ?, `descripcion` = ?, `abierta` = ?, `saldo` = ?, `control_billetes` = ?, `activa` = ? WHERE  `id_caja` = ?;";
 		$params = array( 
 			$caja->getIdSucursal(), 
 			$caja->getToken(), 
@@ -223,7 +223,7 @@ abstract class CajaDAOBase extends DAO
 	  **/
 	private static final function create( &$caja )
 	{
-		$sql = "INSERT INTO caja ( id_caja, id_sucursal, token, descripcion, abierta, saldo, control_billetes, activa ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO caja ( `id_caja`, `id_sucursal`, `token`, `descripcion`, `abierta`, `saldo`, `control_billetes`, `activa` ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$caja->getIdCaja(), 
 			$caja->getIdSucursal(), 
@@ -282,88 +282,88 @@ abstract class CajaDAOBase extends DAO
 		$sql = "SELECT * from caja WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $cajaA->getIdCaja()) ) ) & ( ! is_null ( ($b = $cajaB->getIdCaja()) ) ) ){
-				$sql .= " id_caja >= ? AND id_caja <= ? AND";
+				$sql .= " `id_caja` >= ? AND `id_caja` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_caja = ? AND"; 
+			$sql .= " `id_caja` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $cajaA->getIdSucursal()) ) ) & ( ! is_null ( ($b = $cajaB->getIdSucursal()) ) ) ){
-				$sql .= " id_sucursal >= ? AND id_sucursal <= ? AND";
+				$sql .= " `id_sucursal` >= ? AND `id_sucursal` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_sucursal = ? AND"; 
+			$sql .= " `id_sucursal` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $cajaA->getToken()) ) ) & ( ! is_null ( ($b = $cajaB->getToken()) ) ) ){
-				$sql .= " token >= ? AND token <= ? AND";
+				$sql .= " `token` >= ? AND `token` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " token = ? AND"; 
+			$sql .= " `token` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $cajaA->getDescripcion()) ) ) & ( ! is_null ( ($b = $cajaB->getDescripcion()) ) ) ){
-				$sql .= " descripcion >= ? AND descripcion <= ? AND";
+				$sql .= " `descripcion` >= ? AND `descripcion` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " descripcion = ? AND"; 
+			$sql .= " `descripcion` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $cajaA->getAbierta()) ) ) & ( ! is_null ( ($b = $cajaB->getAbierta()) ) ) ){
-				$sql .= " abierta >= ? AND abierta <= ? AND";
+				$sql .= " `abierta` >= ? AND `abierta` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " abierta = ? AND"; 
+			$sql .= " `abierta` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $cajaA->getSaldo()) ) ) & ( ! is_null ( ($b = $cajaB->getSaldo()) ) ) ){
-				$sql .= " saldo >= ? AND saldo <= ? AND";
+				$sql .= " `saldo` >= ? AND `saldo` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " saldo = ? AND"; 
+			$sql .= " `saldo` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $cajaA->getControlBilletes()) ) ) & ( ! is_null ( ($b = $cajaB->getControlBilletes()) ) ) ){
-				$sql .= " control_billetes >= ? AND control_billetes <= ? AND";
+				$sql .= " `control_billetes` >= ? AND `control_billetes` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " control_billetes = ? AND"; 
+			$sql .= " `control_billetes` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $cajaA->getActiva()) ) ) & ( ! is_null ( ($b = $cajaB->getActiva()) ) ) ){
-				$sql .= " activa >= ? AND activa <= ? AND";
+				$sql .= " `activa` >= ? AND `activa` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " activa = ? AND"; 
+			$sql .= " `activa` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

@@ -124,32 +124,32 @@ abstract class TraspasoProductoDAOBase extends DAO
 		$sql = "SELECT * from traspaso_producto WHERE ("; 
 		$val = array();
 		if( ! is_null( $traspaso_producto->getIdTraspaso() ) ){
-			$sql .= " id_traspaso = ? AND";
+			$sql .= " `id_traspaso` = ? AND";
 			array_push( $val, $traspaso_producto->getIdTraspaso() );
 		}
 
 		if( ! is_null( $traspaso_producto->getIdProducto() ) ){
-			$sql .= " id_producto = ? AND";
+			$sql .= " `id_producto` = ? AND";
 			array_push( $val, $traspaso_producto->getIdProducto() );
 		}
 
 		if( ! is_null( $traspaso_producto->getIdUnidad() ) ){
-			$sql .= " id_unidad = ? AND";
+			$sql .= " `id_unidad` = ? AND";
 			array_push( $val, $traspaso_producto->getIdUnidad() );
 		}
 
 		if( ! is_null( $traspaso_producto->getCantidadEnviada() ) ){
-			$sql .= " cantidad_enviada = ? AND";
+			$sql .= " `cantidad_enviada` = ? AND";
 			array_push( $val, $traspaso_producto->getCantidadEnviada() );
 		}
 
 		if( ! is_null( $traspaso_producto->getCantidadRecibida() ) ){
-			$sql .= " cantidad_recibida = ? AND";
+			$sql .= " `cantidad_recibida` = ? AND";
 			array_push( $val, $traspaso_producto->getCantidadRecibida() );
 		}
 
 		if( ! is_null( $traspaso_producto->getIdLoteOrigen() ) ){
-			$sql .= " id_lote_origen = ? AND";
+			$sql .= " `id_lote_origen` = ? AND";
 			array_push( $val, $traspaso_producto->getIdLoteOrigen() );
 		}
 
@@ -183,7 +183,7 @@ abstract class TraspasoProductoDAOBase extends DAO
 	  **/
 	private static final function update( $traspaso_producto )
 	{
-		$sql = "UPDATE traspaso_producto SET  cantidad_enviada = ?, cantidad_recibida = ?, id_lote_origen = ? WHERE  id_traspaso = ? AND id_producto = ? AND id_unidad = ?;";
+		$sql = "UPDATE traspaso_producto SET  `cantidad_enviada` = ?, `cantidad_recibida` = ?, `id_lote_origen` = ? WHERE  `id_traspaso` = ? AND `id_producto` = ? AND `id_unidad` = ?;";
 		$params = array( 
 			$traspaso_producto->getCantidadEnviada(), 
 			$traspaso_producto->getCantidadRecibida(), 
@@ -211,7 +211,7 @@ abstract class TraspasoProductoDAOBase extends DAO
 	  **/
 	private static final function create( &$traspaso_producto )
 	{
-		$sql = "INSERT INTO traspaso_producto ( id_traspaso, id_producto, id_unidad, cantidad_enviada, cantidad_recibida, id_lote_origen ) VALUES ( ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO traspaso_producto ( `id_traspaso`, `id_producto`, `id_unidad`, `cantidad_enviada`, `cantidad_recibida`, `id_lote_origen` ) VALUES ( ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$traspaso_producto->getIdTraspaso(), 
 			$traspaso_producto->getIdProducto(), 
@@ -268,66 +268,66 @@ abstract class TraspasoProductoDAOBase extends DAO
 		$sql = "SELECT * from traspaso_producto WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $traspaso_productoA->getIdTraspaso()) ) ) & ( ! is_null ( ($b = $traspaso_productoB->getIdTraspaso()) ) ) ){
-				$sql .= " id_traspaso >= ? AND id_traspaso <= ? AND";
+				$sql .= " `id_traspaso` >= ? AND `id_traspaso` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_traspaso = ? AND"; 
+			$sql .= " `id_traspaso` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $traspaso_productoA->getIdProducto()) ) ) & ( ! is_null ( ($b = $traspaso_productoB->getIdProducto()) ) ) ){
-				$sql .= " id_producto >= ? AND id_producto <= ? AND";
+				$sql .= " `id_producto` >= ? AND `id_producto` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_producto = ? AND"; 
+			$sql .= " `id_producto` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $traspaso_productoA->getIdUnidad()) ) ) & ( ! is_null ( ($b = $traspaso_productoB->getIdUnidad()) ) ) ){
-				$sql .= " id_unidad >= ? AND id_unidad <= ? AND";
+				$sql .= " `id_unidad` >= ? AND `id_unidad` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_unidad = ? AND"; 
+			$sql .= " `id_unidad` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $traspaso_productoA->getCantidadEnviada()) ) ) & ( ! is_null ( ($b = $traspaso_productoB->getCantidadEnviada()) ) ) ){
-				$sql .= " cantidad_enviada >= ? AND cantidad_enviada <= ? AND";
+				$sql .= " `cantidad_enviada` >= ? AND `cantidad_enviada` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " cantidad_enviada = ? AND"; 
+			$sql .= " `cantidad_enviada` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $traspaso_productoA->getCantidadRecibida()) ) ) & ( ! is_null ( ($b = $traspaso_productoB->getCantidadRecibida()) ) ) ){
-				$sql .= " cantidad_recibida >= ? AND cantidad_recibida <= ? AND";
+				$sql .= " `cantidad_recibida` >= ? AND `cantidad_recibida` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " cantidad_recibida = ? AND"; 
+			$sql .= " `cantidad_recibida` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $traspaso_productoA->getIdLoteOrigen()) ) ) & ( ! is_null ( ($b = $traspaso_productoB->getIdLoteOrigen()) ) ) ){
-				$sql .= " id_lote_origen >= ? AND id_lote_origen <= ? AND";
+				$sql .= " `id_lote_origen` >= ? AND `id_lote_origen` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_lote_origen = ? AND"; 
+			$sql .= " `id_lote_origen` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

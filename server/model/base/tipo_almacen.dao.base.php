@@ -122,17 +122,17 @@ abstract class TipoAlmacenDAOBase extends DAO
 		$sql = "SELECT * from tipo_almacen WHERE ("; 
 		$val = array();
 		if( ! is_null( $tipo_almacen->getIdTipoAlmacen() ) ){
-			$sql .= " id_tipo_almacen = ? AND";
+			$sql .= " `id_tipo_almacen` = ? AND";
 			array_push( $val, $tipo_almacen->getIdTipoAlmacen() );
 		}
 
 		if( ! is_null( $tipo_almacen->getDescripcion() ) ){
-			$sql .= " descripcion = ? AND";
+			$sql .= " `descripcion` = ? AND";
 			array_push( $val, $tipo_almacen->getDescripcion() );
 		}
 
 		if( ! is_null( $tipo_almacen->getActivo() ) ){
-			$sql .= " activo = ? AND";
+			$sql .= " `activo` = ? AND";
 			array_push( $val, $tipo_almacen->getActivo() );
 		}
 
@@ -166,7 +166,7 @@ abstract class TipoAlmacenDAOBase extends DAO
 	  **/
 	private static final function update( $tipo_almacen )
 	{
-		$sql = "UPDATE tipo_almacen SET  descripcion = ?, activo = ? WHERE  id_tipo_almacen = ?;";
+		$sql = "UPDATE tipo_almacen SET  `descripcion` = ?, `activo` = ? WHERE  `id_tipo_almacen` = ?;";
 		$params = array( 
 			$tipo_almacen->getDescripcion(), 
 			$tipo_almacen->getActivo(), 
@@ -193,7 +193,7 @@ abstract class TipoAlmacenDAOBase extends DAO
 	  **/
 	private static final function create( &$tipo_almacen )
 	{
-		$sql = "INSERT INTO tipo_almacen ( id_tipo_almacen, descripcion, activo ) VALUES ( ?, ?, ?);";
+		$sql = "INSERT INTO tipo_almacen ( `id_tipo_almacen`, `descripcion`, `activo` ) VALUES ( ?, ?, ?);";
 		$params = array( 
 			$tipo_almacen->getIdTipoAlmacen(), 
 			$tipo_almacen->getDescripcion(), 
@@ -247,33 +247,33 @@ abstract class TipoAlmacenDAOBase extends DAO
 		$sql = "SELECT * from tipo_almacen WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $tipo_almacenA->getIdTipoAlmacen()) ) ) & ( ! is_null ( ($b = $tipo_almacenB->getIdTipoAlmacen()) ) ) ){
-				$sql .= " id_tipo_almacen >= ? AND id_tipo_almacen <= ? AND";
+				$sql .= " `id_tipo_almacen` >= ? AND `id_tipo_almacen` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_tipo_almacen = ? AND"; 
+			$sql .= " `id_tipo_almacen` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $tipo_almacenA->getDescripcion()) ) ) & ( ! is_null ( ($b = $tipo_almacenB->getDescripcion()) ) ) ){
-				$sql .= " descripcion >= ? AND descripcion <= ? AND";
+				$sql .= " `descripcion` >= ? AND `descripcion` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " descripcion = ? AND"; 
+			$sql .= " `descripcion` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $tipo_almacenA->getActivo()) ) ) & ( ! is_null ( ($b = $tipo_almacenB->getActivo()) ) ) ){
-				$sql .= " activo >= ? AND activo <= ? AND";
+				$sql .= " `activo` >= ? AND `activo` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " activo = ? AND"; 
+			$sql .= " `activo` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

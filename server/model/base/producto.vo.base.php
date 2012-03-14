@@ -132,7 +132,7 @@ class Producto extends VO
 	  * 
 	  * Si el precio se toma del precio base o del costo del producto<br>
 	  * @access public
-	  * @var enum('precio','costo')
+	  * @var enum('precio','costo','variable')
 	  */
 	public $metodo_costeo;
 
@@ -150,7 +150,7 @@ class Producto extends VO
 	  * 
 	  * Codigo interno del producto<br>
 	  * @access public
-	  * @var varchar(32)
+	  * @var varchar(64)
 	  */
 	public $codigo_producto;
 
@@ -159,7 +159,7 @@ class Producto extends VO
 	  * 
 	  * Nombre del producto<br>
 	  * @access public
-	  * @var varchar(32)
+	  * @var varchar(64)
 	  */
 	public $nombre_producto;
 
@@ -318,7 +318,7 @@ class Producto extends VO
 	  * getMetodoCosteo
 	  * 
 	  * Get the <i>metodo_costeo</i> property for this object. Donde <i>metodo_costeo</i> es Si el precio se toma del precio base o del costo del producto
-	  * @return enum('precio','costo')
+	  * @return enum('precio','costo','variable')
 	  */
 	final public function getMetodoCosteo()
 	{
@@ -329,9 +329,9 @@ class Producto extends VO
 	  * setMetodoCosteo( $metodo_costeo )
 	  * 
 	  * Set the <i>metodo_costeo</i> property for this object. Donde <i>metodo_costeo</i> es Si el precio se toma del precio base o del costo del producto.
-	  * Una validacion basica se hara aqui para comprobar que <i>metodo_costeo</i> es de tipo <i>enum('precio','costo')</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>metodo_costeo</i> es de tipo <i>enum('precio','costo','variable')</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param enum('precio','costo')
+	  * @param enum('precio','costo','variable')
 	  */
 	final public function setMetodoCosteo( $metodo_costeo )
 	{
@@ -366,7 +366,7 @@ class Producto extends VO
 	  * getCodigoProducto
 	  * 
 	  * Get the <i>codigo_producto</i> property for this object. Donde <i>codigo_producto</i> es Codigo interno del producto
-	  * @return varchar(32)
+	  * @return varchar(64)
 	  */
 	final public function getCodigoProducto()
 	{
@@ -377,9 +377,9 @@ class Producto extends VO
 	  * setCodigoProducto( $codigo_producto )
 	  * 
 	  * Set the <i>codigo_producto</i> property for this object. Donde <i>codigo_producto</i> es Codigo interno del producto.
-	  * Una validacion basica se hara aqui para comprobar que <i>codigo_producto</i> es de tipo <i>varchar(32)</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>codigo_producto</i> es de tipo <i>varchar(64)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param varchar(32)
+	  * @param varchar(64)
 	  */
 	final public function setCodigoProducto( $codigo_producto )
 	{
@@ -390,7 +390,7 @@ class Producto extends VO
 	  * getNombreProducto
 	  * 
 	  * Get the <i>nombre_producto</i> property for this object. Donde <i>nombre_producto</i> es Nombre del producto
-	  * @return varchar(32)
+	  * @return varchar(64)
 	  */
 	final public function getNombreProducto()
 	{
@@ -401,9 +401,9 @@ class Producto extends VO
 	  * setNombreProducto( $nombre_producto )
 	  * 
 	  * Set the <i>nombre_producto</i> property for this object. Donde <i>nombre_producto</i> es Nombre del producto.
-	  * Una validacion basica se hara aqui para comprobar que <i>nombre_producto</i> es de tipo <i>varchar(32)</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>nombre_producto</i> es de tipo <i>varchar(64)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param varchar(32)
+	  * @param varchar(64)
 	  */
 	final public function setNombreProducto( $nombre_producto )
 	{

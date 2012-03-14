@@ -122,12 +122,12 @@ abstract class EstadoDAOBase extends DAO
 		$sql = "SELECT * from estado WHERE ("; 
 		$val = array();
 		if( ! is_null( $estado->getIdEstado() ) ){
-			$sql .= " id_estado = ? AND";
+			$sql .= " `id_estado` = ? AND";
 			array_push( $val, $estado->getIdEstado() );
 		}
 
 		if( ! is_null( $estado->getNombre() ) ){
-			$sql .= " nombre = ? AND";
+			$sql .= " `nombre` = ? AND";
 			array_push( $val, $estado->getNombre() );
 		}
 
@@ -161,7 +161,7 @@ abstract class EstadoDAOBase extends DAO
 	  **/
 	private static final function update( $estado )
 	{
-		$sql = "UPDATE estado SET  nombre = ? WHERE  id_estado = ?;";
+		$sql = "UPDATE estado SET  `nombre` = ? WHERE  `id_estado` = ?;";
 		$params = array( 
 			$estado->getNombre(), 
 			$estado->getIdEstado(), );
@@ -187,7 +187,7 @@ abstract class EstadoDAOBase extends DAO
 	  **/
 	private static final function create( &$estado )
 	{
-		$sql = "INSERT INTO estado ( id_estado, nombre ) VALUES ( ?, ?);";
+		$sql = "INSERT INTO estado ( `id_estado`, `nombre` ) VALUES ( ?, ?);";
 		$params = array( 
 			$estado->getIdEstado(), 
 			$estado->getNombre(), 
@@ -240,22 +240,22 @@ abstract class EstadoDAOBase extends DAO
 		$sql = "SELECT * from estado WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $estadoA->getIdEstado()) ) ) & ( ! is_null ( ($b = $estadoB->getIdEstado()) ) ) ){
-				$sql .= " id_estado >= ? AND id_estado <= ? AND";
+				$sql .= " `id_estado` >= ? AND `id_estado` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_estado = ? AND"; 
+			$sql .= " `id_estado` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $estadoA->getNombre()) ) ) & ( ! is_null ( ($b = $estadoB->getNombre()) ) ) ){
-				$sql .= " nombre >= ? AND nombre <= ? AND";
+				$sql .= " `nombre` >= ? AND `nombre` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " nombre = ? AND"; 
+			$sql .= " `nombre` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

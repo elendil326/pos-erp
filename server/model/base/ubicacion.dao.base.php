@@ -122,27 +122,27 @@ abstract class UbicacionDAOBase extends DAO
 		$sql = "SELECT * from ubicacion WHERE ("; 
 		$val = array();
 		if( ! is_null( $ubicacion->getIdUbicacion() ) ){
-			$sql .= " id_ubicacion = ? AND";
+			$sql .= " `id_ubicacion` = ? AND";
 			array_push( $val, $ubicacion->getIdUbicacion() );
 		}
 
 		if( ! is_null( $ubicacion->getPasillo() ) ){
-			$sql .= " pasillo = ? AND";
+			$sql .= " `pasillo` = ? AND";
 			array_push( $val, $ubicacion->getPasillo() );
 		}
 
 		if( ! is_null( $ubicacion->getEstante() ) ){
-			$sql .= " estante = ? AND";
+			$sql .= " `estante` = ? AND";
 			array_push( $val, $ubicacion->getEstante() );
 		}
 
 		if( ! is_null( $ubicacion->getFila() ) ){
-			$sql .= " fila = ? AND";
+			$sql .= " `fila` = ? AND";
 			array_push( $val, $ubicacion->getFila() );
 		}
 
 		if( ! is_null( $ubicacion->getCaja() ) ){
-			$sql .= " caja = ? AND";
+			$sql .= " `caja` = ? AND";
 			array_push( $val, $ubicacion->getCaja() );
 		}
 
@@ -176,7 +176,7 @@ abstract class UbicacionDAOBase extends DAO
 	  **/
 	private static final function update( $ubicacion )
 	{
-		$sql = "UPDATE ubicacion SET  pasillo = ?, estante = ?, fila = ?, caja = ? WHERE  id_ubicacion = ?;";
+		$sql = "UPDATE ubicacion SET  `pasillo` = ?, `estante` = ?, `fila` = ?, `caja` = ? WHERE  `id_ubicacion` = ?;";
 		$params = array( 
 			$ubicacion->getPasillo(), 
 			$ubicacion->getEstante(), 
@@ -205,7 +205,7 @@ abstract class UbicacionDAOBase extends DAO
 	  **/
 	private static final function create( &$ubicacion )
 	{
-		$sql = "INSERT INTO ubicacion ( id_ubicacion, pasillo, estante, fila, caja ) VALUES ( ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO ubicacion ( `id_ubicacion`, `pasillo`, `estante`, `fila`, `caja` ) VALUES ( ?, ?, ?, ?, ?);";
 		$params = array( 
 			$ubicacion->getIdUbicacion(), 
 			$ubicacion->getPasillo(), 
@@ -261,55 +261,55 @@ abstract class UbicacionDAOBase extends DAO
 		$sql = "SELECT * from ubicacion WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $ubicacionA->getIdUbicacion()) ) ) & ( ! is_null ( ($b = $ubicacionB->getIdUbicacion()) ) ) ){
-				$sql .= " id_ubicacion >= ? AND id_ubicacion <= ? AND";
+				$sql .= " `id_ubicacion` >= ? AND `id_ubicacion` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_ubicacion = ? AND"; 
+			$sql .= " `id_ubicacion` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $ubicacionA->getPasillo()) ) ) & ( ! is_null ( ($b = $ubicacionB->getPasillo()) ) ) ){
-				$sql .= " pasillo >= ? AND pasillo <= ? AND";
+				$sql .= " `pasillo` >= ? AND `pasillo` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " pasillo = ? AND"; 
+			$sql .= " `pasillo` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $ubicacionA->getEstante()) ) ) & ( ! is_null ( ($b = $ubicacionB->getEstante()) ) ) ){
-				$sql .= " estante >= ? AND estante <= ? AND";
+				$sql .= " `estante` >= ? AND `estante` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " estante = ? AND"; 
+			$sql .= " `estante` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $ubicacionA->getFila()) ) ) & ( ! is_null ( ($b = $ubicacionB->getFila()) ) ) ){
-				$sql .= " fila >= ? AND fila <= ? AND";
+				$sql .= " `fila` >= ? AND `fila` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " fila = ? AND"; 
+			$sql .= " `fila` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $ubicacionA->getCaja()) ) ) & ( ! is_null ( ($b = $ubicacionB->getCaja()) ) ) ){
-				$sql .= " caja >= ? AND caja <= ? AND";
+				$sql .= " `caja` >= ? AND `caja` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " caja = ? AND"; 
+			$sql .= " `caja` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

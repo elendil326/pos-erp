@@ -122,27 +122,27 @@ abstract class AperturaCajaDAOBase extends DAO
 		$sql = "SELECT * from apertura_caja WHERE ("; 
 		$val = array();
 		if( ! is_null( $apertura_caja->getIdAperturaCaja() ) ){
-			$sql .= " id_apertura_caja = ? AND";
+			$sql .= " `id_apertura_caja` = ? AND";
 			array_push( $val, $apertura_caja->getIdAperturaCaja() );
 		}
 
 		if( ! is_null( $apertura_caja->getIdCaja() ) ){
-			$sql .= " id_caja = ? AND";
+			$sql .= " `id_caja` = ? AND";
 			array_push( $val, $apertura_caja->getIdCaja() );
 		}
 
 		if( ! is_null( $apertura_caja->getFecha() ) ){
-			$sql .= " fecha = ? AND";
+			$sql .= " `fecha` = ? AND";
 			array_push( $val, $apertura_caja->getFecha() );
 		}
 
 		if( ! is_null( $apertura_caja->getSaldo() ) ){
-			$sql .= " saldo = ? AND";
+			$sql .= " `saldo` = ? AND";
 			array_push( $val, $apertura_caja->getSaldo() );
 		}
 
 		if( ! is_null( $apertura_caja->getIdCajero() ) ){
-			$sql .= " id_cajero = ? AND";
+			$sql .= " `id_cajero` = ? AND";
 			array_push( $val, $apertura_caja->getIdCajero() );
 		}
 
@@ -176,7 +176,7 @@ abstract class AperturaCajaDAOBase extends DAO
 	  **/
 	private static final function update( $apertura_caja )
 	{
-		$sql = "UPDATE apertura_caja SET  id_caja = ?, fecha = ?, saldo = ?, id_cajero = ? WHERE  id_apertura_caja = ?;";
+		$sql = "UPDATE apertura_caja SET  `id_caja` = ?, `fecha` = ?, `saldo` = ?, `id_cajero` = ? WHERE  `id_apertura_caja` = ?;";
 		$params = array( 
 			$apertura_caja->getIdCaja(), 
 			$apertura_caja->getFecha(), 
@@ -205,7 +205,7 @@ abstract class AperturaCajaDAOBase extends DAO
 	  **/
 	private static final function create( &$apertura_caja )
 	{
-		$sql = "INSERT INTO apertura_caja ( id_apertura_caja, id_caja, fecha, saldo, id_cajero ) VALUES ( ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO apertura_caja ( `id_apertura_caja`, `id_caja`, `fecha`, `saldo`, `id_cajero` ) VALUES ( ?, ?, ?, ?, ?);";
 		$params = array( 
 			$apertura_caja->getIdAperturaCaja(), 
 			$apertura_caja->getIdCaja(), 
@@ -261,55 +261,55 @@ abstract class AperturaCajaDAOBase extends DAO
 		$sql = "SELECT * from apertura_caja WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $apertura_cajaA->getIdAperturaCaja()) ) ) & ( ! is_null ( ($b = $apertura_cajaB->getIdAperturaCaja()) ) ) ){
-				$sql .= " id_apertura_caja >= ? AND id_apertura_caja <= ? AND";
+				$sql .= " `id_apertura_caja` >= ? AND `id_apertura_caja` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_apertura_caja = ? AND"; 
+			$sql .= " `id_apertura_caja` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $apertura_cajaA->getIdCaja()) ) ) & ( ! is_null ( ($b = $apertura_cajaB->getIdCaja()) ) ) ){
-				$sql .= " id_caja >= ? AND id_caja <= ? AND";
+				$sql .= " `id_caja` >= ? AND `id_caja` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_caja = ? AND"; 
+			$sql .= " `id_caja` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $apertura_cajaA->getFecha()) ) ) & ( ! is_null ( ($b = $apertura_cajaB->getFecha()) ) ) ){
-				$sql .= " fecha >= ? AND fecha <= ? AND";
+				$sql .= " `fecha` >= ? AND `fecha` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " fecha = ? AND"; 
+			$sql .= " `fecha` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $apertura_cajaA->getSaldo()) ) ) & ( ! is_null ( ($b = $apertura_cajaB->getSaldo()) ) ) ){
-				$sql .= " saldo >= ? AND saldo <= ? AND";
+				$sql .= " `saldo` >= ? AND `saldo` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " saldo = ? AND"; 
+			$sql .= " `saldo` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $apertura_cajaA->getIdCajero()) ) ) & ( ! is_null ( ($b = $apertura_cajaB->getIdCajero()) ) ) ){
-				$sql .= " id_cajero >= ? AND id_cajero <= ? AND";
+				$sql .= " `id_cajero` >= ? AND `id_cajero` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_cajero = ? AND"; 
+			$sql .= " `id_cajero` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

@@ -123,12 +123,12 @@ abstract class ImpresoraCajaDAOBase extends DAO
 		$sql = "SELECT * from impresora_caja WHERE ("; 
 		$val = array();
 		if( ! is_null( $impresora_caja->getIdImpresora() ) ){
-			$sql .= " id_impresora = ? AND";
+			$sql .= " `id_impresora` = ? AND";
 			array_push( $val, $impresora_caja->getIdImpresora() );
 		}
 
 		if( ! is_null( $impresora_caja->getIdCaja() ) ){
-			$sql .= " id_caja = ? AND";
+			$sql .= " `id_caja` = ? AND";
 			array_push( $val, $impresora_caja->getIdCaja() );
 		}
 
@@ -180,7 +180,7 @@ abstract class ImpresoraCajaDAOBase extends DAO
 	  **/
 	private static final function create( &$impresora_caja )
 	{
-		$sql = "INSERT INTO impresora_caja ( id_impresora, id_caja ) VALUES ( ?, ?);";
+		$sql = "INSERT INTO impresora_caja ( `id_impresora`, `id_caja` ) VALUES ( ?, ?);";
 		$params = array( 
 			$impresora_caja->getIdImpresora(), 
 			$impresora_caja->getIdCaja(), 
@@ -233,22 +233,22 @@ abstract class ImpresoraCajaDAOBase extends DAO
 		$sql = "SELECT * from impresora_caja WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $impresora_cajaA->getIdImpresora()) ) ) & ( ! is_null ( ($b = $impresora_cajaB->getIdImpresora()) ) ) ){
-				$sql .= " id_impresora >= ? AND id_impresora <= ? AND";
+				$sql .= " `id_impresora` >= ? AND `id_impresora` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_impresora = ? AND"; 
+			$sql .= " `id_impresora` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $impresora_cajaA->getIdCaja()) ) ) & ( ! is_null ( ($b = $impresora_cajaB->getIdCaja()) ) ) ){
-				$sql .= " id_caja >= ? AND id_caja <= ? AND";
+				$sql .= " `id_caja` >= ? AND `id_caja` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_caja = ? AND"; 
+			$sql .= " `id_caja` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

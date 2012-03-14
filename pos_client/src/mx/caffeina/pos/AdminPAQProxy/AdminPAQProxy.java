@@ -49,6 +49,8 @@ public class AdminPAQProxy{
 		int i = -1;
 		while( !sql_tokens[++i].equals("from") );
 		
+		i++;
+		
 		startCon( sql_tokens[i] );
 
 		//first level
@@ -67,6 +69,9 @@ public class AdminPAQProxy{
 	}
 	
 	private String select(String [] sql){
+		
+		StringBuilder output = new StringBuilder("{ \"estructura\" : [ ");
+		
 		int numberOfFields = -1;
 
 		try{
@@ -82,10 +87,13 @@ public class AdminPAQProxy{
 		for( int i=0; i<numberOfFields; i++) {
 
 			DBFField field = null;
-
 			try{
-				fieldNames[i] = reader.getField( i).getName( );
-
+				if(i>0) {
+					output.append(",");
+				}
+				
+				output.append( "\"" + reader.getField( i).getName( ) + "\"" );
+				
 			}catch( DBFException dbfe ){
 				System.out.println( "E4:" + dbfe );
 				break;
@@ -96,17 +104,17 @@ public class AdminPAQProxy{
 		// Now, lets us start reading the rows
 		Object []rowObjects = null;
 
-		String output = "{ \"datos\" :  ";;
+		output.append("] , ");
 
+		output.append("\"datos\" : [ ");
+		
 		int cRecord = 0;
 		while( true ) {
 
 			cRecord ++;
 			
 			try{
-				//System.out.println("Leyendo record "  + cRecord);
 				rowObjects = reader.nextRecord(  );
-
 
 			}catch( DBFException dbfe ){
 				System.out.println( "E5:" + dbfe.getMessage() );
@@ -117,26 +125,24 @@ public class AdminPAQProxy{
 				break;
 			}
 
+			if(cRecord > 1) output.append(", ");
 			
+			output.append("[");
+
 			for( int i=0; i<rowObjects.length; i++) {
-				//if( fieldNames[i].equals(key) && rowObjects[i].equals(val) ){
-					output += "[";
-					for( int j=0; j<rowObjects.length; j++) {
-						if(j>0){
-							output+=",";
-						}
-						output += "\"" + rowObjects[j] + "\"";	
-					}
-					output += "]"; 
-				//}
+				if(i>0)
+					output.append(", ");
+
+				output.append("\"" + rowObjects[i] + "\" ");	
+
 			}
 
+			output.append( "]"); 			
 		}	
 
-		output += " }"; 		
+		output.append("]}");
 
 		// By now, we have itereated through all of the rows
-
 		try{
 			inputStream.close();	
 
@@ -144,22 +150,10 @@ public class AdminPAQProxy{
 			System.out.println( "E6:" + e );
 		}
 		
-		return output;
+		return output.toString();
 	}
 	
 
-	
-	
-/*
-	private String selectWhere(String sql){
-		
-		startCon(table);
-		
-
-		
-
-	}
-*/
 	private String getStructure(  ){
 		int numberOfFields = -1;
 
@@ -219,74 +213,8 @@ public class AdminPAQProxy{
 	}
 
 
-	private String getData(){
-		
 
-		// Now, lets us start reading the rows
-		//
-		Object []rowObjects = null;
-
-		StringBuilder output = new StringBuilder("{ \"datos\" : [ ");
-
-
-		int cRecord = 0;
-		while( true ) {
-
-			cRecord ++;
-			
-			try{
-				//System.out.println("Leyendo record "  + cRecord);
-				rowObjects = reader.nextRecord(  );
-
-
-			}catch( DBFException dbfe ){
-				System.out.println( "E5:" + dbfe.getMessage() );
-
-			}
-
-			if(rowObjects == null){
-				break;
-			}
-
-			if(cRecord > 1) output.append(", ");
-
-			
-			output.append("[");
-
-			for( int i=0; i<rowObjects.length; i++) {
-
-				if(i>0)
-					output.append(",");
-
-				output.append("\"" + rowObjects[i] + "\"");	
-				
-				
-			}
-
-			output.append( "]"); 
-
-			/* *********** **/
-			
-		}	
-
-		output.append("]}");
-
-		// By now, we have itereated through all of the rows
-
-		try{
-			inputStream.close();	
-
-		}catch(Exception e){
-			System.out.println( "E6:" + e );
-		}
-		
-		return output.toString();
-	}
-
-
-	public String set( 
-		//String file, String tabla, String [] values 
-	){
+	public String set( ){
 		
 		System.out.println("set() call");
 

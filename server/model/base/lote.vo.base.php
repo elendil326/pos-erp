@@ -31,8 +31,8 @@ class Lote extends VO
 			if( isset($data['id_usuario']) ){
 				$this->id_usuario = $data['id_usuario'];
 			}
-			if( isset($data['observaciones']) ){
-				$this->observaciones = $data['observaciones'];
+			if( isset($data['folio']) ){
+				$this->folio = $data['folio'];
 			}
 		}
 	}
@@ -50,7 +50,7 @@ class Lote extends VO
 			"id_lote" => $this->id_lote,
 			"id_almacen" => $this->id_almacen,
 			"id_usuario" => $this->id_usuario,
-			"observaciones" => $this->observaciones
+			"folio" => $this->folio
 		); 
 	return json_encode($vec); 
 	}
@@ -85,13 +85,13 @@ class Lote extends VO
 	public $id_usuario;
 
 	/**
-	  * observaciones
+	  * folio
 	  * 
 	  *  [Campo no documentado]<br>
 	  * @access public
-	  * @var int(11)
+	  * @var varchar(32)
 	  */
-	public $observaciones;
+	public $folio;
 
 	/**
 	  * getIdLote
@@ -170,27 +170,27 @@ class Lote extends VO
 	}
 
 	/**
-	  * getObservaciones
+	  * getFolio
 	  * 
-	  * Get the <i>observaciones</i> property for this object. Donde <i>observaciones</i> es  [Campo no documentado]
-	  * @return int(11)
+	  * Get the <i>folio</i> property for this object. Donde <i>folio</i> es  [Campo no documentado]
+	  * @return varchar(32)
 	  */
-	final public function getObservaciones()
+	final public function getFolio()
 	{
-		return $this->observaciones;
+		return $this->folio;
 	}
 
 	/**
-	  * setObservaciones( $observaciones )
+	  * setFolio( $folio )
 	  * 
-	  * Set the <i>observaciones</i> property for this object. Donde <i>observaciones</i> es  [Campo no documentado].
-	  * Una validacion basica se hara aqui para comprobar que <i>observaciones</i> es de tipo <i>int(11)</i>. 
+	  * Set the <i>folio</i> property for this object. Donde <i>folio</i> es  [Campo no documentado].
+	  * Una validacion basica se hara aqui para comprobar que <i>folio</i> es de tipo <i>varchar(32)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param int(11)
+	  * @param varchar(32)
 	  */
-	final public function setObservaciones( $observaciones )
+	final public function setFolio( $folio )
 	{
-		$this->observaciones = $observaciones;
+		$this->folio = $folio;
 	}
 
 }

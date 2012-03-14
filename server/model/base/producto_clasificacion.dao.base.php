@@ -123,12 +123,12 @@ abstract class ProductoClasificacionDAOBase extends DAO
 		$sql = "SELECT * from producto_clasificacion WHERE ("; 
 		$val = array();
 		if( ! is_null( $producto_clasificacion->getIdProducto() ) ){
-			$sql .= " id_producto = ? AND";
+			$sql .= " `id_producto` = ? AND";
 			array_push( $val, $producto_clasificacion->getIdProducto() );
 		}
 
 		if( ! is_null( $producto_clasificacion->getIdClasificacionProducto() ) ){
-			$sql .= " id_clasificacion_producto = ? AND";
+			$sql .= " `id_clasificacion_producto` = ? AND";
 			array_push( $val, $producto_clasificacion->getIdClasificacionProducto() );
 		}
 
@@ -180,7 +180,7 @@ abstract class ProductoClasificacionDAOBase extends DAO
 	  **/
 	private static final function create( &$producto_clasificacion )
 	{
-		$sql = "INSERT INTO producto_clasificacion ( id_producto, id_clasificacion_producto ) VALUES ( ?, ?);";
+		$sql = "INSERT INTO producto_clasificacion ( `id_producto`, `id_clasificacion_producto` ) VALUES ( ?, ?);";
 		$params = array( 
 			$producto_clasificacion->getIdProducto(), 
 			$producto_clasificacion->getIdClasificacionProducto(), 
@@ -233,22 +233,22 @@ abstract class ProductoClasificacionDAOBase extends DAO
 		$sql = "SELECT * from producto_clasificacion WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $producto_clasificacionA->getIdProducto()) ) ) & ( ! is_null ( ($b = $producto_clasificacionB->getIdProducto()) ) ) ){
-				$sql .= " id_producto >= ? AND id_producto <= ? AND";
+				$sql .= " `id_producto` >= ? AND `id_producto` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_producto = ? AND"; 
+			$sql .= " `id_producto` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $producto_clasificacionA->getIdClasificacionProducto()) ) ) & ( ! is_null ( ($b = $producto_clasificacionB->getIdClasificacionProducto()) ) ) ){
-				$sql .= " id_clasificacion_producto >= ? AND id_clasificacion_producto <= ? AND";
+				$sql .= " `id_clasificacion_producto` >= ? AND `id_clasificacion_producto` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_clasificacion_producto = ? AND"; 
+			$sql .= " `id_clasificacion_producto` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

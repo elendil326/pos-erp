@@ -123,12 +123,12 @@ abstract class DocumentoCompraDAOBase extends DAO
 		$sql = "SELECT * from documento_compra WHERE ("; 
 		$val = array();
 		if( ! is_null( $documento_compra->getIdDocumento() ) ){
-			$sql .= " id_documento = ? AND";
+			$sql .= " `id_documento` = ? AND";
 			array_push( $val, $documento_compra->getIdDocumento() );
 		}
 
 		if( ! is_null( $documento_compra->getIdCompra() ) ){
-			$sql .= " id_compra = ? AND";
+			$sql .= " `id_compra` = ? AND";
 			array_push( $val, $documento_compra->getIdCompra() );
 		}
 
@@ -180,7 +180,7 @@ abstract class DocumentoCompraDAOBase extends DAO
 	  **/
 	private static final function create( &$documento_compra )
 	{
-		$sql = "INSERT INTO documento_compra ( id_documento, id_compra ) VALUES ( ?, ?);";
+		$sql = "INSERT INTO documento_compra ( `id_documento`, `id_compra` ) VALUES ( ?, ?);";
 		$params = array( 
 			$documento_compra->getIdDocumento(), 
 			$documento_compra->getIdCompra(), 
@@ -233,22 +233,22 @@ abstract class DocumentoCompraDAOBase extends DAO
 		$sql = "SELECT * from documento_compra WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $documento_compraA->getIdDocumento()) ) ) & ( ! is_null ( ($b = $documento_compraB->getIdDocumento()) ) ) ){
-				$sql .= " id_documento >= ? AND id_documento <= ? AND";
+				$sql .= " `id_documento` >= ? AND `id_documento` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_documento = ? AND"; 
+			$sql .= " `id_documento` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $documento_compraA->getIdCompra()) ) ) & ( ! is_null ( ($b = $documento_compraB->getIdCompra()) ) ) ){
-				$sql .= " id_compra >= ? AND id_compra <= ? AND";
+				$sql .= " `id_compra` >= ? AND `id_compra` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_compra = ? AND"; 
+			$sql .= " `id_compra` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

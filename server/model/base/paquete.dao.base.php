@@ -122,37 +122,37 @@ abstract class PaqueteDAOBase extends DAO
 		$sql = "SELECT * from paquete WHERE ("; 
 		$val = array();
 		if( ! is_null( $paquete->getIdPaquete() ) ){
-			$sql .= " id_paquete = ? AND";
+			$sql .= " `id_paquete` = ? AND";
 			array_push( $val, $paquete->getIdPaquete() );
 		}
 
 		if( ! is_null( $paquete->getNombre() ) ){
-			$sql .= " nombre = ? AND";
+			$sql .= " `nombre` = ? AND";
 			array_push( $val, $paquete->getNombre() );
 		}
 
 		if( ! is_null( $paquete->getDescripcion() ) ){
-			$sql .= " descripcion = ? AND";
+			$sql .= " `descripcion` = ? AND";
 			array_push( $val, $paquete->getDescripcion() );
 		}
 
 		if( ! is_null( $paquete->getFotoPaquete() ) ){
-			$sql .= " foto_paquete = ? AND";
+			$sql .= " `foto_paquete` = ? AND";
 			array_push( $val, $paquete->getFotoPaquete() );
 		}
 
 		if( ! is_null( $paquete->getCostoEstandar() ) ){
-			$sql .= " costo_estandar = ? AND";
+			$sql .= " `costo_estandar` = ? AND";
 			array_push( $val, $paquete->getCostoEstandar() );
 		}
 
 		if( ! is_null( $paquete->getPrecio() ) ){
-			$sql .= " precio = ? AND";
+			$sql .= " `precio` = ? AND";
 			array_push( $val, $paquete->getPrecio() );
 		}
 
 		if( ! is_null( $paquete->getActivo() ) ){
-			$sql .= " activo = ? AND";
+			$sql .= " `activo` = ? AND";
 			array_push( $val, $paquete->getActivo() );
 		}
 
@@ -186,7 +186,7 @@ abstract class PaqueteDAOBase extends DAO
 	  **/
 	private static final function update( $paquete )
 	{
-		$sql = "UPDATE paquete SET  nombre = ?, descripcion = ?, foto_paquete = ?, costo_estandar = ?, precio = ?, activo = ? WHERE  id_paquete = ?;";
+		$sql = "UPDATE paquete SET  `nombre` = ?, `descripcion` = ?, `foto_paquete` = ?, `costo_estandar` = ?, `precio` = ?, `activo` = ? WHERE  `id_paquete` = ?;";
 		$params = array( 
 			$paquete->getNombre(), 
 			$paquete->getDescripcion(), 
@@ -217,7 +217,7 @@ abstract class PaqueteDAOBase extends DAO
 	  **/
 	private static final function create( &$paquete )
 	{
-		$sql = "INSERT INTO paquete ( id_paquete, nombre, descripcion, foto_paquete, costo_estandar, precio, activo ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO paquete ( `id_paquete`, `nombre`, `descripcion`, `foto_paquete`, `costo_estandar`, `precio`, `activo` ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$paquete->getIdPaquete(), 
 			$paquete->getNombre(), 
@@ -275,77 +275,77 @@ abstract class PaqueteDAOBase extends DAO
 		$sql = "SELECT * from paquete WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $paqueteA->getIdPaquete()) ) ) & ( ! is_null ( ($b = $paqueteB->getIdPaquete()) ) ) ){
-				$sql .= " id_paquete >= ? AND id_paquete <= ? AND";
+				$sql .= " `id_paquete` >= ? AND `id_paquete` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_paquete = ? AND"; 
+			$sql .= " `id_paquete` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $paqueteA->getNombre()) ) ) & ( ! is_null ( ($b = $paqueteB->getNombre()) ) ) ){
-				$sql .= " nombre >= ? AND nombre <= ? AND";
+				$sql .= " `nombre` >= ? AND `nombre` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " nombre = ? AND"; 
+			$sql .= " `nombre` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $paqueteA->getDescripcion()) ) ) & ( ! is_null ( ($b = $paqueteB->getDescripcion()) ) ) ){
-				$sql .= " descripcion >= ? AND descripcion <= ? AND";
+				$sql .= " `descripcion` >= ? AND `descripcion` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " descripcion = ? AND"; 
+			$sql .= " `descripcion` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $paqueteA->getFotoPaquete()) ) ) & ( ! is_null ( ($b = $paqueteB->getFotoPaquete()) ) ) ){
-				$sql .= " foto_paquete >= ? AND foto_paquete <= ? AND";
+				$sql .= " `foto_paquete` >= ? AND `foto_paquete` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " foto_paquete = ? AND"; 
+			$sql .= " `foto_paquete` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $paqueteA->getCostoEstandar()) ) ) & ( ! is_null ( ($b = $paqueteB->getCostoEstandar()) ) ) ){
-				$sql .= " costo_estandar >= ? AND costo_estandar <= ? AND";
+				$sql .= " `costo_estandar` >= ? AND `costo_estandar` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " costo_estandar = ? AND"; 
+			$sql .= " `costo_estandar` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $paqueteA->getPrecio()) ) ) & ( ! is_null ( ($b = $paqueteB->getPrecio()) ) ) ){
-				$sql .= " precio >= ? AND precio <= ? AND";
+				$sql .= " `precio` >= ? AND `precio` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " precio = ? AND"; 
+			$sql .= " `precio` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $paqueteA->getActivo()) ) ) & ( ! is_null ( ($b = $paqueteB->getActivo()) ) ) ){
-				$sql .= " activo >= ? AND activo <= ? AND";
+				$sql .= " `activo` >= ? AND `activo` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " activo = ? AND"; 
+			$sql .= " `activo` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

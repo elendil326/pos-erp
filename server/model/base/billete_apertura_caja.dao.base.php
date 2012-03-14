@@ -123,17 +123,17 @@ abstract class BilleteAperturaCajaDAOBase extends DAO
 		$sql = "SELECT * from billete_apertura_caja WHERE ("; 
 		$val = array();
 		if( ! is_null( $billete_apertura_caja->getIdBillete() ) ){
-			$sql .= " id_billete = ? AND";
+			$sql .= " `id_billete` = ? AND";
 			array_push( $val, $billete_apertura_caja->getIdBillete() );
 		}
 
 		if( ! is_null( $billete_apertura_caja->getIdAperturaCaja() ) ){
-			$sql .= " id_apertura_caja = ? AND";
+			$sql .= " `id_apertura_caja` = ? AND";
 			array_push( $val, $billete_apertura_caja->getIdAperturaCaja() );
 		}
 
 		if( ! is_null( $billete_apertura_caja->getCantidad() ) ){
-			$sql .= " cantidad = ? AND";
+			$sql .= " `cantidad` = ? AND";
 			array_push( $val, $billete_apertura_caja->getCantidad() );
 		}
 
@@ -167,7 +167,7 @@ abstract class BilleteAperturaCajaDAOBase extends DAO
 	  **/
 	private static final function update( $billete_apertura_caja )
 	{
-		$sql = "UPDATE billete_apertura_caja SET  cantidad = ? WHERE  id_billete = ? AND id_apertura_caja = ?;";
+		$sql = "UPDATE billete_apertura_caja SET  `cantidad` = ? WHERE  `id_billete` = ? AND `id_apertura_caja` = ?;";
 		$params = array( 
 			$billete_apertura_caja->getCantidad(), 
 			$billete_apertura_caja->getIdBillete(),$billete_apertura_caja->getIdAperturaCaja(), );
@@ -193,7 +193,7 @@ abstract class BilleteAperturaCajaDAOBase extends DAO
 	  **/
 	private static final function create( &$billete_apertura_caja )
 	{
-		$sql = "INSERT INTO billete_apertura_caja ( id_billete, id_apertura_caja, cantidad ) VALUES ( ?, ?, ?);";
+		$sql = "INSERT INTO billete_apertura_caja ( `id_billete`, `id_apertura_caja`, `cantidad` ) VALUES ( ?, ?, ?);";
 		$params = array( 
 			$billete_apertura_caja->getIdBillete(), 
 			$billete_apertura_caja->getIdAperturaCaja(), 
@@ -247,33 +247,33 @@ abstract class BilleteAperturaCajaDAOBase extends DAO
 		$sql = "SELECT * from billete_apertura_caja WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $billete_apertura_cajaA->getIdBillete()) ) ) & ( ! is_null ( ($b = $billete_apertura_cajaB->getIdBillete()) ) ) ){
-				$sql .= " id_billete >= ? AND id_billete <= ? AND";
+				$sql .= " `id_billete` >= ? AND `id_billete` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_billete = ? AND"; 
+			$sql .= " `id_billete` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $billete_apertura_cajaA->getIdAperturaCaja()) ) ) & ( ! is_null ( ($b = $billete_apertura_cajaB->getIdAperturaCaja()) ) ) ){
-				$sql .= " id_apertura_caja >= ? AND id_apertura_caja <= ? AND";
+				$sql .= " `id_apertura_caja` >= ? AND `id_apertura_caja` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_apertura_caja = ? AND"; 
+			$sql .= " `id_apertura_caja` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $billete_apertura_cajaA->getCantidad()) ) ) & ( ! is_null ( ($b = $billete_apertura_cajaB->getCantidad()) ) ) ){
-				$sql .= " cantidad >= ? AND cantidad <= ? AND";
+				$sql .= " `cantidad` >= ? AND `cantidad` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " cantidad = ? AND"; 
+			$sql .= " `cantidad` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

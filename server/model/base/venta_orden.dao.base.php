@@ -123,32 +123,32 @@ abstract class VentaOrdenDAOBase extends DAO
 		$sql = "SELECT * from venta_orden WHERE ("; 
 		$val = array();
 		if( ! is_null( $venta_orden->getIdVenta() ) ){
-			$sql .= " id_venta = ? AND";
+			$sql .= " `id_venta` = ? AND";
 			array_push( $val, $venta_orden->getIdVenta() );
 		}
 
 		if( ! is_null( $venta_orden->getIdOrdenDeServicio() ) ){
-			$sql .= " id_orden_de_servicio = ? AND";
+			$sql .= " `id_orden_de_servicio` = ? AND";
 			array_push( $val, $venta_orden->getIdOrdenDeServicio() );
 		}
 
 		if( ! is_null( $venta_orden->getPrecio() ) ){
-			$sql .= " precio = ? AND";
+			$sql .= " `precio` = ? AND";
 			array_push( $val, $venta_orden->getPrecio() );
 		}
 
 		if( ! is_null( $venta_orden->getDescuento() ) ){
-			$sql .= " descuento = ? AND";
+			$sql .= " `descuento` = ? AND";
 			array_push( $val, $venta_orden->getDescuento() );
 		}
 
 		if( ! is_null( $venta_orden->getImpuesto() ) ){
-			$sql .= " impuesto = ? AND";
+			$sql .= " `impuesto` = ? AND";
 			array_push( $val, $venta_orden->getImpuesto() );
 		}
 
 		if( ! is_null( $venta_orden->getRetencion() ) ){
-			$sql .= " retencion = ? AND";
+			$sql .= " `retencion` = ? AND";
 			array_push( $val, $venta_orden->getRetencion() );
 		}
 
@@ -182,7 +182,7 @@ abstract class VentaOrdenDAOBase extends DAO
 	  **/
 	private static final function update( $venta_orden )
 	{
-		$sql = "UPDATE venta_orden SET  precio = ?, descuento = ?, impuesto = ?, retencion = ? WHERE  id_venta = ? AND id_orden_de_servicio = ?;";
+		$sql = "UPDATE venta_orden SET  `precio` = ?, `descuento` = ?, `impuesto` = ?, `retencion` = ? WHERE  `id_venta` = ? AND `id_orden_de_servicio` = ?;";
 		$params = array( 
 			$venta_orden->getPrecio(), 
 			$venta_orden->getDescuento(), 
@@ -211,7 +211,7 @@ abstract class VentaOrdenDAOBase extends DAO
 	  **/
 	private static final function create( &$venta_orden )
 	{
-		$sql = "INSERT INTO venta_orden ( id_venta, id_orden_de_servicio, precio, descuento, impuesto, retencion ) VALUES ( ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO venta_orden ( `id_venta`, `id_orden_de_servicio`, `precio`, `descuento`, `impuesto`, `retencion` ) VALUES ( ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$venta_orden->getIdVenta(), 
 			$venta_orden->getIdOrdenDeServicio(), 
@@ -268,66 +268,66 @@ abstract class VentaOrdenDAOBase extends DAO
 		$sql = "SELECT * from venta_orden WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $venta_ordenA->getIdVenta()) ) ) & ( ! is_null ( ($b = $venta_ordenB->getIdVenta()) ) ) ){
-				$sql .= " id_venta >= ? AND id_venta <= ? AND";
+				$sql .= " `id_venta` >= ? AND `id_venta` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_venta = ? AND"; 
+			$sql .= " `id_venta` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $venta_ordenA->getIdOrdenDeServicio()) ) ) & ( ! is_null ( ($b = $venta_ordenB->getIdOrdenDeServicio()) ) ) ){
-				$sql .= " id_orden_de_servicio >= ? AND id_orden_de_servicio <= ? AND";
+				$sql .= " `id_orden_de_servicio` >= ? AND `id_orden_de_servicio` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_orden_de_servicio = ? AND"; 
+			$sql .= " `id_orden_de_servicio` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $venta_ordenA->getPrecio()) ) ) & ( ! is_null ( ($b = $venta_ordenB->getPrecio()) ) ) ){
-				$sql .= " precio >= ? AND precio <= ? AND";
+				$sql .= " `precio` >= ? AND `precio` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " precio = ? AND"; 
+			$sql .= " `precio` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $venta_ordenA->getDescuento()) ) ) & ( ! is_null ( ($b = $venta_ordenB->getDescuento()) ) ) ){
-				$sql .= " descuento >= ? AND descuento <= ? AND";
+				$sql .= " `descuento` >= ? AND `descuento` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " descuento = ? AND"; 
+			$sql .= " `descuento` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $venta_ordenA->getImpuesto()) ) ) & ( ! is_null ( ($b = $venta_ordenB->getImpuesto()) ) ) ){
-				$sql .= " impuesto >= ? AND impuesto <= ? AND";
+				$sql .= " `impuesto` >= ? AND `impuesto` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " impuesto = ? AND"; 
+			$sql .= " `impuesto` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $venta_ordenA->getRetencion()) ) ) & ( ! is_null ( ($b = $venta_ordenB->getRetencion()) ) ) ){
-				$sql .= " retencion >= ? AND retencion <= ? AND";
+				$sql .= " `retencion` >= ? AND `retencion` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " retencion = ? AND"; 
+			$sql .= " `retencion` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

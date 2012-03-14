@@ -122,27 +122,27 @@ abstract class LoteEntradaDAOBase extends DAO
 		$sql = "SELECT * from lote_entrada WHERE ("; 
 		$val = array();
 		if( ! is_null( $lote_entrada->getIdLoteEntrada() ) ){
-			$sql .= " id_lote_entrada = ? AND";
+			$sql .= " `id_lote_entrada` = ? AND";
 			array_push( $val, $lote_entrada->getIdLoteEntrada() );
 		}
 
 		if( ! is_null( $lote_entrada->getIdLote() ) ){
-			$sql .= " id_lote = ? AND";
+			$sql .= " `id_lote` = ? AND";
 			array_push( $val, $lote_entrada->getIdLote() );
 		}
 
 		if( ! is_null( $lote_entrada->getIdUsuario() ) ){
-			$sql .= " id_usuario = ? AND";
+			$sql .= " `id_usuario` = ? AND";
 			array_push( $val, $lote_entrada->getIdUsuario() );
 		}
 
 		if( ! is_null( $lote_entrada->getFechaRegistro() ) ){
-			$sql .= " fecha_registro = ? AND";
+			$sql .= " `fecha_registro` = ? AND";
 			array_push( $val, $lote_entrada->getFechaRegistro() );
 		}
 
 		if( ! is_null( $lote_entrada->getMotivo() ) ){
-			$sql .= " motivo = ? AND";
+			$sql .= " `motivo` = ? AND";
 			array_push( $val, $lote_entrada->getMotivo() );
 		}
 
@@ -176,7 +176,7 @@ abstract class LoteEntradaDAOBase extends DAO
 	  **/
 	private static final function update( $lote_entrada )
 	{
-		$sql = "UPDATE lote_entrada SET  id_lote = ?, id_usuario = ?, fecha_registro = ?, motivo = ? WHERE  id_lote_entrada = ?;";
+		$sql = "UPDATE lote_entrada SET  `id_lote` = ?, `id_usuario` = ?, `fecha_registro` = ?, `motivo` = ? WHERE  `id_lote_entrada` = ?;";
 		$params = array( 
 			$lote_entrada->getIdLote(), 
 			$lote_entrada->getIdUsuario(), 
@@ -205,7 +205,7 @@ abstract class LoteEntradaDAOBase extends DAO
 	  **/
 	private static final function create( &$lote_entrada )
 	{
-		$sql = "INSERT INTO lote_entrada ( id_lote_entrada, id_lote, id_usuario, fecha_registro, motivo ) VALUES ( ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO lote_entrada ( `id_lote_entrada`, `id_lote`, `id_usuario`, `fecha_registro`, `motivo` ) VALUES ( ?, ?, ?, ?, ?);";
 		$params = array( 
 			$lote_entrada->getIdLoteEntrada(), 
 			$lote_entrada->getIdLote(), 
@@ -261,55 +261,55 @@ abstract class LoteEntradaDAOBase extends DAO
 		$sql = "SELECT * from lote_entrada WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $lote_entradaA->getIdLoteEntrada()) ) ) & ( ! is_null ( ($b = $lote_entradaB->getIdLoteEntrada()) ) ) ){
-				$sql .= " id_lote_entrada >= ? AND id_lote_entrada <= ? AND";
+				$sql .= " `id_lote_entrada` >= ? AND `id_lote_entrada` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_lote_entrada = ? AND"; 
+			$sql .= " `id_lote_entrada` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $lote_entradaA->getIdLote()) ) ) & ( ! is_null ( ($b = $lote_entradaB->getIdLote()) ) ) ){
-				$sql .= " id_lote >= ? AND id_lote <= ? AND";
+				$sql .= " `id_lote` >= ? AND `id_lote` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_lote = ? AND"; 
+			$sql .= " `id_lote` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $lote_entradaA->getIdUsuario()) ) ) & ( ! is_null ( ($b = $lote_entradaB->getIdUsuario()) ) ) ){
-				$sql .= " id_usuario >= ? AND id_usuario <= ? AND";
+				$sql .= " `id_usuario` >= ? AND `id_usuario` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_usuario = ? AND"; 
+			$sql .= " `id_usuario` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $lote_entradaA->getFechaRegistro()) ) ) & ( ! is_null ( ($b = $lote_entradaB->getFechaRegistro()) ) ) ){
-				$sql .= " fecha_registro >= ? AND fecha_registro <= ? AND";
+				$sql .= " `fecha_registro` >= ? AND `fecha_registro` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " fecha_registro = ? AND"; 
+			$sql .= " `fecha_registro` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $lote_entradaA->getMotivo()) ) ) & ( ! is_null ( ($b = $lote_entradaB->getMotivo()) ) ) ){
-				$sql .= " motivo >= ? AND motivo <= ? AND";
+				$sql .= " `motivo` >= ? AND `motivo` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " motivo = ? AND"; 
+			$sql .= " `motivo` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

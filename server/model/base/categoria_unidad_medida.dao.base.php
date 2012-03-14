@@ -122,17 +122,17 @@ abstract class CategoriaUnidadMedidaDAOBase extends DAO
 		$sql = "SELECT * from categoria_unidad_medida WHERE ("; 
 		$val = array();
 		if( ! is_null( $categoria_unidad_medida->getIdCategoriaUnidadMedida() ) ){
-			$sql .= " id_categoria_unidad_medida = ? AND";
+			$sql .= " `id_categoria_unidad_medida` = ? AND";
 			array_push( $val, $categoria_unidad_medida->getIdCategoriaUnidadMedida() );
 		}
 
 		if( ! is_null( $categoria_unidad_medida->getDescripcion() ) ){
-			$sql .= " descripcion = ? AND";
+			$sql .= " `descripcion` = ? AND";
 			array_push( $val, $categoria_unidad_medida->getDescripcion() );
 		}
 
 		if( ! is_null( $categoria_unidad_medida->getActiva() ) ){
-			$sql .= " activa = ? AND";
+			$sql .= " `activa` = ? AND";
 			array_push( $val, $categoria_unidad_medida->getActiva() );
 		}
 
@@ -166,7 +166,7 @@ abstract class CategoriaUnidadMedidaDAOBase extends DAO
 	  **/
 	private static final function update( $categoria_unidad_medida )
 	{
-		$sql = "UPDATE categoria_unidad_medida SET  descripcion = ?, activa = ? WHERE  id_categoria_unidad_medida = ?;";
+		$sql = "UPDATE categoria_unidad_medida SET  `descripcion` = ?, `activa` = ? WHERE  `id_categoria_unidad_medida` = ?;";
 		$params = array( 
 			$categoria_unidad_medida->getDescripcion(), 
 			$categoria_unidad_medida->getActiva(), 
@@ -193,7 +193,7 @@ abstract class CategoriaUnidadMedidaDAOBase extends DAO
 	  **/
 	private static final function create( &$categoria_unidad_medida )
 	{
-		$sql = "INSERT INTO categoria_unidad_medida ( id_categoria_unidad_medida, descripcion, activa ) VALUES ( ?, ?, ?);";
+		$sql = "INSERT INTO categoria_unidad_medida ( `id_categoria_unidad_medida`, `descripcion`, `activa` ) VALUES ( ?, ?, ?);";
 		$params = array( 
 			$categoria_unidad_medida->getIdCategoriaUnidadMedida(), 
 			$categoria_unidad_medida->getDescripcion(), 
@@ -247,33 +247,33 @@ abstract class CategoriaUnidadMedidaDAOBase extends DAO
 		$sql = "SELECT * from categoria_unidad_medida WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $categoria_unidad_medidaA->getIdCategoriaUnidadMedida()) ) ) & ( ! is_null ( ($b = $categoria_unidad_medidaB->getIdCategoriaUnidadMedida()) ) ) ){
-				$sql .= " id_categoria_unidad_medida >= ? AND id_categoria_unidad_medida <= ? AND";
+				$sql .= " `id_categoria_unidad_medida` >= ? AND `id_categoria_unidad_medida` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_categoria_unidad_medida = ? AND"; 
+			$sql .= " `id_categoria_unidad_medida` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $categoria_unidad_medidaA->getDescripcion()) ) ) & ( ! is_null ( ($b = $categoria_unidad_medidaB->getDescripcion()) ) ) ){
-				$sql .= " descripcion >= ? AND descripcion <= ? AND";
+				$sql .= " `descripcion` >= ? AND `descripcion` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " descripcion = ? AND"; 
+			$sql .= " `descripcion` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $categoria_unidad_medidaA->getActiva()) ) ) & ( ! is_null ( ($b = $categoria_unidad_medidaB->getActiva()) ) ) ){
-				$sql .= " activa >= ? AND activa <= ? AND";
+				$sql .= " `activa` >= ? AND `activa` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " activa = ? AND"; 
+			$sql .= " `activa` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

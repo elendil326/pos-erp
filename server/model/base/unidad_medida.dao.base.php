@@ -122,37 +122,37 @@ abstract class UnidadMedidaDAOBase extends DAO
 		$sql = "SELECT * from unidad_medida WHERE ("; 
 		$val = array();
 		if( ! is_null( $unidad_medida->getIdUnidadMedida() ) ){
-			$sql .= " id_unidad_medida = ? AND";
+			$sql .= " `id_unidad_medida` = ? AND";
 			array_push( $val, $unidad_medida->getIdUnidadMedida() );
 		}
 
 		if( ! is_null( $unidad_medida->getIdCategoriaUnidadMedida() ) ){
-			$sql .= " id_categoria_unidad_medida = ? AND";
+			$sql .= " `id_categoria_unidad_medida` = ? AND";
 			array_push( $val, $unidad_medida->getIdCategoriaUnidadMedida() );
 		}
 
 		if( ! is_null( $unidad_medida->getDescripcion() ) ){
-			$sql .= " descripcion = ? AND";
+			$sql .= " `descripcion` = ? AND";
 			array_push( $val, $unidad_medida->getDescripcion() );
 		}
 
 		if( ! is_null( $unidad_medida->getAbreviacion() ) ){
-			$sql .= " abreviacion = ? AND";
+			$sql .= " `abreviacion` = ? AND";
 			array_push( $val, $unidad_medida->getAbreviacion() );
 		}
 
 		if( ! is_null( $unidad_medida->getTipoUnidadMedida() ) ){
-			$sql .= " tipo_unidad_medida = ? AND";
+			$sql .= " `tipo_unidad_medida` = ? AND";
 			array_push( $val, $unidad_medida->getTipoUnidadMedida() );
 		}
 
 		if( ! is_null( $unidad_medida->getFactorConversion() ) ){
-			$sql .= " factor_conversion = ? AND";
+			$sql .= " `factor_conversion` = ? AND";
 			array_push( $val, $unidad_medida->getFactorConversion() );
 		}
 
 		if( ! is_null( $unidad_medida->getActiva() ) ){
-			$sql .= " activa = ? AND";
+			$sql .= " `activa` = ? AND";
 			array_push( $val, $unidad_medida->getActiva() );
 		}
 
@@ -186,7 +186,7 @@ abstract class UnidadMedidaDAOBase extends DAO
 	  **/
 	private static final function update( $unidad_medida )
 	{
-		$sql = "UPDATE unidad_medida SET  id_categoria_unidad_medida = ?, descripcion = ?, abreviacion = ?, tipo_unidad_medida = ?, factor_conversion = ?, activa = ? WHERE  id_unidad_medida = ?;";
+		$sql = "UPDATE unidad_medida SET  `id_categoria_unidad_medida` = ?, `descripcion` = ?, `abreviacion` = ?, `tipo_unidad_medida` = ?, `factor_conversion` = ?, `activa` = ? WHERE  `id_unidad_medida` = ?;";
 		$params = array( 
 			$unidad_medida->getIdCategoriaUnidadMedida(), 
 			$unidad_medida->getDescripcion(), 
@@ -217,7 +217,7 @@ abstract class UnidadMedidaDAOBase extends DAO
 	  **/
 	private static final function create( &$unidad_medida )
 	{
-		$sql = "INSERT INTO unidad_medida ( id_unidad_medida, id_categoria_unidad_medida, descripcion, abreviacion, tipo_unidad_medida, factor_conversion, activa ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO unidad_medida ( `id_unidad_medida`, `id_categoria_unidad_medida`, `descripcion`, `abreviacion`, `tipo_unidad_medida`, `factor_conversion`, `activa` ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$unidad_medida->getIdUnidadMedida(), 
 			$unidad_medida->getIdCategoriaUnidadMedida(), 
@@ -275,77 +275,77 @@ abstract class UnidadMedidaDAOBase extends DAO
 		$sql = "SELECT * from unidad_medida WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $unidad_medidaA->getIdUnidadMedida()) ) ) & ( ! is_null ( ($b = $unidad_medidaB->getIdUnidadMedida()) ) ) ){
-				$sql .= " id_unidad_medida >= ? AND id_unidad_medida <= ? AND";
+				$sql .= " `id_unidad_medida` >= ? AND `id_unidad_medida` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_unidad_medida = ? AND"; 
+			$sql .= " `id_unidad_medida` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $unidad_medidaA->getIdCategoriaUnidadMedida()) ) ) & ( ! is_null ( ($b = $unidad_medidaB->getIdCategoriaUnidadMedida()) ) ) ){
-				$sql .= " id_categoria_unidad_medida >= ? AND id_categoria_unidad_medida <= ? AND";
+				$sql .= " `id_categoria_unidad_medida` >= ? AND `id_categoria_unidad_medida` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_categoria_unidad_medida = ? AND"; 
+			$sql .= " `id_categoria_unidad_medida` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $unidad_medidaA->getDescripcion()) ) ) & ( ! is_null ( ($b = $unidad_medidaB->getDescripcion()) ) ) ){
-				$sql .= " descripcion >= ? AND descripcion <= ? AND";
+				$sql .= " `descripcion` >= ? AND `descripcion` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " descripcion = ? AND"; 
+			$sql .= " `descripcion` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $unidad_medidaA->getAbreviacion()) ) ) & ( ! is_null ( ($b = $unidad_medidaB->getAbreviacion()) ) ) ){
-				$sql .= " abreviacion >= ? AND abreviacion <= ? AND";
+				$sql .= " `abreviacion` >= ? AND `abreviacion` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " abreviacion = ? AND"; 
+			$sql .= " `abreviacion` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $unidad_medidaA->getTipoUnidadMedida()) ) ) & ( ! is_null ( ($b = $unidad_medidaB->getTipoUnidadMedida()) ) ) ){
-				$sql .= " tipo_unidad_medida >= ? AND tipo_unidad_medida <= ? AND";
+				$sql .= " `tipo_unidad_medida` >= ? AND `tipo_unidad_medida` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " tipo_unidad_medida = ? AND"; 
+			$sql .= " `tipo_unidad_medida` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $unidad_medidaA->getFactorConversion()) ) ) & ( ! is_null ( ($b = $unidad_medidaB->getFactorConversion()) ) ) ){
-				$sql .= " factor_conversion >= ? AND factor_conversion <= ? AND";
+				$sql .= " `factor_conversion` >= ? AND `factor_conversion` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " factor_conversion = ? AND"; 
+			$sql .= " `factor_conversion` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $unidad_medidaA->getActiva()) ) ) & ( ! is_null ( ($b = $unidad_medidaB->getActiva()) ) ) ){
-				$sql .= " activa >= ? AND activa <= ? AND";
+				$sql .= " `activa` >= ? AND `activa` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " activa = ? AND"; 
+			$sql .= " `activa` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

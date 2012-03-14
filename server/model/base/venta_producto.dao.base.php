@@ -124,42 +124,42 @@ abstract class VentaProductoDAOBase extends DAO
 		$sql = "SELECT * from venta_producto WHERE ("; 
 		$val = array();
 		if( ! is_null( $venta_producto->getIdVenta() ) ){
-			$sql .= " id_venta = ? AND";
+			$sql .= " `id_venta` = ? AND";
 			array_push( $val, $venta_producto->getIdVenta() );
 		}
 
 		if( ! is_null( $venta_producto->getIdProducto() ) ){
-			$sql .= " id_producto = ? AND";
+			$sql .= " `id_producto` = ? AND";
 			array_push( $val, $venta_producto->getIdProducto() );
 		}
 
 		if( ! is_null( $venta_producto->getPrecio() ) ){
-			$sql .= " precio = ? AND";
+			$sql .= " `precio` = ? AND";
 			array_push( $val, $venta_producto->getPrecio() );
 		}
 
 		if( ! is_null( $venta_producto->getCantidad() ) ){
-			$sql .= " cantidad = ? AND";
+			$sql .= " `cantidad` = ? AND";
 			array_push( $val, $venta_producto->getCantidad() );
 		}
 
 		if( ! is_null( $venta_producto->getDescuento() ) ){
-			$sql .= " descuento = ? AND";
+			$sql .= " `descuento` = ? AND";
 			array_push( $val, $venta_producto->getDescuento() );
 		}
 
 		if( ! is_null( $venta_producto->getImpuesto() ) ){
-			$sql .= " impuesto = ? AND";
+			$sql .= " `impuesto` = ? AND";
 			array_push( $val, $venta_producto->getImpuesto() );
 		}
 
 		if( ! is_null( $venta_producto->getRetencion() ) ){
-			$sql .= " retencion = ? AND";
+			$sql .= " `retencion` = ? AND";
 			array_push( $val, $venta_producto->getRetencion() );
 		}
 
 		if( ! is_null( $venta_producto->getIdUnidad() ) ){
-			$sql .= " id_unidad = ? AND";
+			$sql .= " `id_unidad` = ? AND";
 			array_push( $val, $venta_producto->getIdUnidad() );
 		}
 
@@ -193,7 +193,7 @@ abstract class VentaProductoDAOBase extends DAO
 	  **/
 	private static final function update( $venta_producto )
 	{
-		$sql = "UPDATE venta_producto SET  precio = ?, cantidad = ?, descuento = ?, impuesto = ?, retencion = ? WHERE  id_venta = ? AND id_producto = ? AND id_unidad = ?;";
+		$sql = "UPDATE venta_producto SET  `precio` = ?, `cantidad` = ?, `descuento` = ?, `impuesto` = ?, `retencion` = ? WHERE  `id_venta` = ? AND `id_producto` = ? AND `id_unidad` = ?;";
 		$params = array( 
 			$venta_producto->getPrecio(), 
 			$venta_producto->getCantidad(), 
@@ -223,7 +223,7 @@ abstract class VentaProductoDAOBase extends DAO
 	  **/
 	private static final function create( &$venta_producto )
 	{
-		$sql = "INSERT INTO venta_producto ( id_venta, id_producto, precio, cantidad, descuento, impuesto, retencion, id_unidad ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO venta_producto ( `id_venta`, `id_producto`, `precio`, `cantidad`, `descuento`, `impuesto`, `retencion`, `id_unidad` ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$venta_producto->getIdVenta(), 
 			$venta_producto->getIdProducto(), 
@@ -282,88 +282,88 @@ abstract class VentaProductoDAOBase extends DAO
 		$sql = "SELECT * from venta_producto WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $venta_productoA->getIdVenta()) ) ) & ( ! is_null ( ($b = $venta_productoB->getIdVenta()) ) ) ){
-				$sql .= " id_venta >= ? AND id_venta <= ? AND";
+				$sql .= " `id_venta` >= ? AND `id_venta` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_venta = ? AND"; 
+			$sql .= " `id_venta` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $venta_productoA->getIdProducto()) ) ) & ( ! is_null ( ($b = $venta_productoB->getIdProducto()) ) ) ){
-				$sql .= " id_producto >= ? AND id_producto <= ? AND";
+				$sql .= " `id_producto` >= ? AND `id_producto` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_producto = ? AND"; 
+			$sql .= " `id_producto` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $venta_productoA->getPrecio()) ) ) & ( ! is_null ( ($b = $venta_productoB->getPrecio()) ) ) ){
-				$sql .= " precio >= ? AND precio <= ? AND";
+				$sql .= " `precio` >= ? AND `precio` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " precio = ? AND"; 
+			$sql .= " `precio` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $venta_productoA->getCantidad()) ) ) & ( ! is_null ( ($b = $venta_productoB->getCantidad()) ) ) ){
-				$sql .= " cantidad >= ? AND cantidad <= ? AND";
+				$sql .= " `cantidad` >= ? AND `cantidad` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " cantidad = ? AND"; 
+			$sql .= " `cantidad` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $venta_productoA->getDescuento()) ) ) & ( ! is_null ( ($b = $venta_productoB->getDescuento()) ) ) ){
-				$sql .= " descuento >= ? AND descuento <= ? AND";
+				$sql .= " `descuento` >= ? AND `descuento` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " descuento = ? AND"; 
+			$sql .= " `descuento` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $venta_productoA->getImpuesto()) ) ) & ( ! is_null ( ($b = $venta_productoB->getImpuesto()) ) ) ){
-				$sql .= " impuesto >= ? AND impuesto <= ? AND";
+				$sql .= " `impuesto` >= ? AND `impuesto` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " impuesto = ? AND"; 
+			$sql .= " `impuesto` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $venta_productoA->getRetencion()) ) ) & ( ! is_null ( ($b = $venta_productoB->getRetencion()) ) ) ){
-				$sql .= " retencion >= ? AND retencion <= ? AND";
+				$sql .= " `retencion` >= ? AND `retencion` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " retencion = ? AND"; 
+			$sql .= " `retencion` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $venta_productoA->getIdUnidad()) ) ) & ( ! is_null ( ($b = $venta_productoB->getIdUnidad()) ) ) ){
-				$sql .= " id_unidad >= ? AND id_unidad <= ? AND";
+				$sql .= " `id_unidad` >= ? AND `id_unidad` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_unidad = ? AND"; 
+			$sql .= " `id_unidad` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

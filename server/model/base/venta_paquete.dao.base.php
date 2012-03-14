@@ -123,27 +123,27 @@ abstract class VentaPaqueteDAOBase extends DAO
 		$sql = "SELECT * from venta_paquete WHERE ("; 
 		$val = array();
 		if( ! is_null( $venta_paquete->getIdVenta() ) ){
-			$sql .= " id_venta = ? AND";
+			$sql .= " `id_venta` = ? AND";
 			array_push( $val, $venta_paquete->getIdVenta() );
 		}
 
 		if( ! is_null( $venta_paquete->getIdPaquete() ) ){
-			$sql .= " id_paquete = ? AND";
+			$sql .= " `id_paquete` = ? AND";
 			array_push( $val, $venta_paquete->getIdPaquete() );
 		}
 
 		if( ! is_null( $venta_paquete->getCantidad() ) ){
-			$sql .= " cantidad = ? AND";
+			$sql .= " `cantidad` = ? AND";
 			array_push( $val, $venta_paquete->getCantidad() );
 		}
 
 		if( ! is_null( $venta_paquete->getPrecio() ) ){
-			$sql .= " precio = ? AND";
+			$sql .= " `precio` = ? AND";
 			array_push( $val, $venta_paquete->getPrecio() );
 		}
 
 		if( ! is_null( $venta_paquete->getDescuento() ) ){
-			$sql .= " descuento = ? AND";
+			$sql .= " `descuento` = ? AND";
 			array_push( $val, $venta_paquete->getDescuento() );
 		}
 
@@ -177,7 +177,7 @@ abstract class VentaPaqueteDAOBase extends DAO
 	  **/
 	private static final function update( $venta_paquete )
 	{
-		$sql = "UPDATE venta_paquete SET  cantidad = ?, precio = ?, descuento = ? WHERE  id_venta = ? AND id_paquete = ?;";
+		$sql = "UPDATE venta_paquete SET  `cantidad` = ?, `precio` = ?, `descuento` = ? WHERE  `id_venta` = ? AND `id_paquete` = ?;";
 		$params = array( 
 			$venta_paquete->getCantidad(), 
 			$venta_paquete->getPrecio(), 
@@ -205,7 +205,7 @@ abstract class VentaPaqueteDAOBase extends DAO
 	  **/
 	private static final function create( &$venta_paquete )
 	{
-		$sql = "INSERT INTO venta_paquete ( id_venta, id_paquete, cantidad, precio, descuento ) VALUES ( ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO venta_paquete ( `id_venta`, `id_paquete`, `cantidad`, `precio`, `descuento` ) VALUES ( ?, ?, ?, ?, ?);";
 		$params = array( 
 			$venta_paquete->getIdVenta(), 
 			$venta_paquete->getIdPaquete(), 
@@ -261,55 +261,55 @@ abstract class VentaPaqueteDAOBase extends DAO
 		$sql = "SELECT * from venta_paquete WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $venta_paqueteA->getIdVenta()) ) ) & ( ! is_null ( ($b = $venta_paqueteB->getIdVenta()) ) ) ){
-				$sql .= " id_venta >= ? AND id_venta <= ? AND";
+				$sql .= " `id_venta` >= ? AND `id_venta` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_venta = ? AND"; 
+			$sql .= " `id_venta` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $venta_paqueteA->getIdPaquete()) ) ) & ( ! is_null ( ($b = $venta_paqueteB->getIdPaquete()) ) ) ){
-				$sql .= " id_paquete >= ? AND id_paquete <= ? AND";
+				$sql .= " `id_paquete` >= ? AND `id_paquete` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_paquete = ? AND"; 
+			$sql .= " `id_paquete` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $venta_paqueteA->getCantidad()) ) ) & ( ! is_null ( ($b = $venta_paqueteB->getCantidad()) ) ) ){
-				$sql .= " cantidad >= ? AND cantidad <= ? AND";
+				$sql .= " `cantidad` >= ? AND `cantidad` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " cantidad = ? AND"; 
+			$sql .= " `cantidad` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $venta_paqueteA->getPrecio()) ) ) & ( ! is_null ( ($b = $venta_paqueteB->getPrecio()) ) ) ){
-				$sql .= " precio >= ? AND precio <= ? AND";
+				$sql .= " `precio` >= ? AND `precio` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " precio = ? AND"; 
+			$sql .= " `precio` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $venta_paqueteA->getDescuento()) ) ) & ( ! is_null ( ($b = $venta_paqueteB->getDescuento()) ) ) ){
-				$sql .= " descuento >= ? AND descuento <= ? AND";
+				$sql .= " `descuento` >= ? AND `descuento` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " descuento = ? AND"; 
+			$sql .= " `descuento` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

@@ -122,32 +122,32 @@ abstract class SesionDAOBase extends DAO
 		$sql = "SELECT * from sesion WHERE ("; 
 		$val = array();
 		if( ! is_null( $sesion->getIdSesion() ) ){
-			$sql .= " id_sesion = ? AND";
+			$sql .= " `id_sesion` = ? AND";
 			array_push( $val, $sesion->getIdSesion() );
 		}
 
 		if( ! is_null( $sesion->getIdUsuario() ) ){
-			$sql .= " id_usuario = ? AND";
+			$sql .= " `id_usuario` = ? AND";
 			array_push( $val, $sesion->getIdUsuario() );
 		}
 
 		if( ! is_null( $sesion->getAuthToken() ) ){
-			$sql .= " auth_token = ? AND";
+			$sql .= " `auth_token` = ? AND";
 			array_push( $val, $sesion->getAuthToken() );
 		}
 
 		if( ! is_null( $sesion->getFechaDeVencimiento() ) ){
-			$sql .= " fecha_de_vencimiento = ? AND";
+			$sql .= " `fecha_de_vencimiento` = ? AND";
 			array_push( $val, $sesion->getFechaDeVencimiento() );
 		}
 
 		if( ! is_null( $sesion->getClientUserAgent() ) ){
-			$sql .= " client_user_agent = ? AND";
+			$sql .= " `client_user_agent` = ? AND";
 			array_push( $val, $sesion->getClientUserAgent() );
 		}
 
 		if( ! is_null( $sesion->getIp() ) ){
-			$sql .= " ip = ? AND";
+			$sql .= " `ip` = ? AND";
 			array_push( $val, $sesion->getIp() );
 		}
 
@@ -181,7 +181,7 @@ abstract class SesionDAOBase extends DAO
 	  **/
 	private static final function update( $sesion )
 	{
-		$sql = "UPDATE sesion SET  id_usuario = ?, auth_token = ?, fecha_de_vencimiento = ?, client_user_agent = ?, ip = ? WHERE  id_sesion = ?;";
+		$sql = "UPDATE sesion SET  `id_usuario` = ?, `auth_token` = ?, `fecha_de_vencimiento` = ?, `client_user_agent` = ?, `ip` = ? WHERE  `id_sesion` = ?;";
 		$params = array( 
 			$sesion->getIdUsuario(), 
 			$sesion->getAuthToken(), 
@@ -211,7 +211,7 @@ abstract class SesionDAOBase extends DAO
 	  **/
 	private static final function create( &$sesion )
 	{
-		$sql = "INSERT INTO sesion ( id_sesion, id_usuario, auth_token, fecha_de_vencimiento, client_user_agent, ip ) VALUES ( ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO sesion ( `id_sesion`, `id_usuario`, `auth_token`, `fecha_de_vencimiento`, `client_user_agent`, `ip` ) VALUES ( ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$sesion->getIdSesion(), 
 			$sesion->getIdUsuario(), 
@@ -268,66 +268,66 @@ abstract class SesionDAOBase extends DAO
 		$sql = "SELECT * from sesion WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $sesionA->getIdSesion()) ) ) & ( ! is_null ( ($b = $sesionB->getIdSesion()) ) ) ){
-				$sql .= " id_sesion >= ? AND id_sesion <= ? AND";
+				$sql .= " `id_sesion` >= ? AND `id_sesion` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_sesion = ? AND"; 
+			$sql .= " `id_sesion` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $sesionA->getIdUsuario()) ) ) & ( ! is_null ( ($b = $sesionB->getIdUsuario()) ) ) ){
-				$sql .= " id_usuario >= ? AND id_usuario <= ? AND";
+				$sql .= " `id_usuario` >= ? AND `id_usuario` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_usuario = ? AND"; 
+			$sql .= " `id_usuario` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $sesionA->getAuthToken()) ) ) & ( ! is_null ( ($b = $sesionB->getAuthToken()) ) ) ){
-				$sql .= " auth_token >= ? AND auth_token <= ? AND";
+				$sql .= " `auth_token` >= ? AND `auth_token` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " auth_token = ? AND"; 
+			$sql .= " `auth_token` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $sesionA->getFechaDeVencimiento()) ) ) & ( ! is_null ( ($b = $sesionB->getFechaDeVencimiento()) ) ) ){
-				$sql .= " fecha_de_vencimiento >= ? AND fecha_de_vencimiento <= ? AND";
+				$sql .= " `fecha_de_vencimiento` >= ? AND `fecha_de_vencimiento` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " fecha_de_vencimiento = ? AND"; 
+			$sql .= " `fecha_de_vencimiento` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $sesionA->getClientUserAgent()) ) ) & ( ! is_null ( ($b = $sesionB->getClientUserAgent()) ) ) ){
-				$sql .= " client_user_agent >= ? AND client_user_agent <= ? AND";
+				$sql .= " `client_user_agent` >= ? AND `client_user_agent` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " client_user_agent = ? AND"; 
+			$sql .= " `client_user_agent` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $sesionA->getIp()) ) ) & ( ! is_null ( ($b = $sesionB->getIp()) ) ) ){
-				$sql .= " ip >= ? AND ip <= ? AND";
+				$sql .= " `ip` >= ? AND `ip` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " ip = ? AND"; 
+			$sql .= " `ip` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

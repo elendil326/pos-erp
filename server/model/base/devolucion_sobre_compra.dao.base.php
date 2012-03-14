@@ -122,27 +122,27 @@ abstract class DevolucionSobreCompraDAOBase extends DAO
 		$sql = "SELECT * from devolucion_sobre_compra WHERE ("; 
 		$val = array();
 		if( ! is_null( $devolucion_sobre_compra->getIdDevolucionSobreCompra() ) ){
-			$sql .= " id_devolucion_sobre_compra = ? AND";
+			$sql .= " `id_devolucion_sobre_compra` = ? AND";
 			array_push( $val, $devolucion_sobre_compra->getIdDevolucionSobreCompra() );
 		}
 
 		if( ! is_null( $devolucion_sobre_compra->getIdCompra() ) ){
-			$sql .= " id_compra = ? AND";
+			$sql .= " `id_compra` = ? AND";
 			array_push( $val, $devolucion_sobre_compra->getIdCompra() );
 		}
 
 		if( ! is_null( $devolucion_sobre_compra->getIdUsuario() ) ){
-			$sql .= " id_usuario = ? AND";
+			$sql .= " `id_usuario` = ? AND";
 			array_push( $val, $devolucion_sobre_compra->getIdUsuario() );
 		}
 
 		if( ! is_null( $devolucion_sobre_compra->getFecha() ) ){
-			$sql .= " fecha = ? AND";
+			$sql .= " `fecha` = ? AND";
 			array_push( $val, $devolucion_sobre_compra->getFecha() );
 		}
 
 		if( ! is_null( $devolucion_sobre_compra->getMotivo() ) ){
-			$sql .= " motivo = ? AND";
+			$sql .= " `motivo` = ? AND";
 			array_push( $val, $devolucion_sobre_compra->getMotivo() );
 		}
 
@@ -176,7 +176,7 @@ abstract class DevolucionSobreCompraDAOBase extends DAO
 	  **/
 	private static final function update( $devolucion_sobre_compra )
 	{
-		$sql = "UPDATE devolucion_sobre_compra SET  id_compra = ?, id_usuario = ?, fecha = ?, motivo = ? WHERE  id_devolucion_sobre_compra = ?;";
+		$sql = "UPDATE devolucion_sobre_compra SET  `id_compra` = ?, `id_usuario` = ?, `fecha` = ?, `motivo` = ? WHERE  `id_devolucion_sobre_compra` = ?;";
 		$params = array( 
 			$devolucion_sobre_compra->getIdCompra(), 
 			$devolucion_sobre_compra->getIdUsuario(), 
@@ -205,7 +205,7 @@ abstract class DevolucionSobreCompraDAOBase extends DAO
 	  **/
 	private static final function create( &$devolucion_sobre_compra )
 	{
-		$sql = "INSERT INTO devolucion_sobre_compra ( id_devolucion_sobre_compra, id_compra, id_usuario, fecha, motivo ) VALUES ( ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO devolucion_sobre_compra ( `id_devolucion_sobre_compra`, `id_compra`, `id_usuario`, `fecha`, `motivo` ) VALUES ( ?, ?, ?, ?, ?);";
 		$params = array( 
 			$devolucion_sobre_compra->getIdDevolucionSobreCompra(), 
 			$devolucion_sobre_compra->getIdCompra(), 
@@ -261,55 +261,55 @@ abstract class DevolucionSobreCompraDAOBase extends DAO
 		$sql = "SELECT * from devolucion_sobre_compra WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $devolucion_sobre_compraA->getIdDevolucionSobreCompra()) ) ) & ( ! is_null ( ($b = $devolucion_sobre_compraB->getIdDevolucionSobreCompra()) ) ) ){
-				$sql .= " id_devolucion_sobre_compra >= ? AND id_devolucion_sobre_compra <= ? AND";
+				$sql .= " `id_devolucion_sobre_compra` >= ? AND `id_devolucion_sobre_compra` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_devolucion_sobre_compra = ? AND"; 
+			$sql .= " `id_devolucion_sobre_compra` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $devolucion_sobre_compraA->getIdCompra()) ) ) & ( ! is_null ( ($b = $devolucion_sobre_compraB->getIdCompra()) ) ) ){
-				$sql .= " id_compra >= ? AND id_compra <= ? AND";
+				$sql .= " `id_compra` >= ? AND `id_compra` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_compra = ? AND"; 
+			$sql .= " `id_compra` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $devolucion_sobre_compraA->getIdUsuario()) ) ) & ( ! is_null ( ($b = $devolucion_sobre_compraB->getIdUsuario()) ) ) ){
-				$sql .= " id_usuario >= ? AND id_usuario <= ? AND";
+				$sql .= " `id_usuario` >= ? AND `id_usuario` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_usuario = ? AND"; 
+			$sql .= " `id_usuario` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $devolucion_sobre_compraA->getFecha()) ) ) & ( ! is_null ( ($b = $devolucion_sobre_compraB->getFecha()) ) ) ){
-				$sql .= " fecha >= ? AND fecha <= ? AND";
+				$sql .= " `fecha` >= ? AND `fecha` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " fecha = ? AND"; 
+			$sql .= " `fecha` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $devolucion_sobre_compraA->getMotivo()) ) ) & ( ! is_null ( ($b = $devolucion_sobre_compraB->getMotivo()) ) ) ){
-				$sql .= " motivo >= ? AND motivo <= ? AND";
+				$sql .= " `motivo` >= ? AND `motivo` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " motivo = ? AND"; 
+			$sql .= " `motivo` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

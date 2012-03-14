@@ -123,17 +123,17 @@ abstract class ClienteAvalDAOBase extends DAO
 		$sql = "SELECT * from cliente_aval WHERE ("; 
 		$val = array();
 		if( ! is_null( $cliente_aval->getIdCliente() ) ){
-			$sql .= " id_cliente = ? AND";
+			$sql .= " `id_cliente` = ? AND";
 			array_push( $val, $cliente_aval->getIdCliente() );
 		}
 
 		if( ! is_null( $cliente_aval->getIdAval() ) ){
-			$sql .= " id_aval = ? AND";
+			$sql .= " `id_aval` = ? AND";
 			array_push( $val, $cliente_aval->getIdAval() );
 		}
 
 		if( ! is_null( $cliente_aval->getTipoAval() ) ){
-			$sql .= " tipo_aval = ? AND";
+			$sql .= " `tipo_aval` = ? AND";
 			array_push( $val, $cliente_aval->getTipoAval() );
 		}
 
@@ -167,7 +167,7 @@ abstract class ClienteAvalDAOBase extends DAO
 	  **/
 	private static final function update( $cliente_aval )
 	{
-		$sql = "UPDATE cliente_aval SET  tipo_aval = ? WHERE  id_cliente = ? AND id_aval = ?;";
+		$sql = "UPDATE cliente_aval SET  `tipo_aval` = ? WHERE  `id_cliente` = ? AND `id_aval` = ?;";
 		$params = array( 
 			$cliente_aval->getTipoAval(), 
 			$cliente_aval->getIdCliente(),$cliente_aval->getIdAval(), );
@@ -193,7 +193,7 @@ abstract class ClienteAvalDAOBase extends DAO
 	  **/
 	private static final function create( &$cliente_aval )
 	{
-		$sql = "INSERT INTO cliente_aval ( id_cliente, id_aval, tipo_aval ) VALUES ( ?, ?, ?);";
+		$sql = "INSERT INTO cliente_aval ( `id_cliente`, `id_aval`, `tipo_aval` ) VALUES ( ?, ?, ?);";
 		$params = array( 
 			$cliente_aval->getIdCliente(), 
 			$cliente_aval->getIdAval(), 
@@ -247,33 +247,33 @@ abstract class ClienteAvalDAOBase extends DAO
 		$sql = "SELECT * from cliente_aval WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $cliente_avalA->getIdCliente()) ) ) & ( ! is_null ( ($b = $cliente_avalB->getIdCliente()) ) ) ){
-				$sql .= " id_cliente >= ? AND id_cliente <= ? AND";
+				$sql .= " `id_cliente` >= ? AND `id_cliente` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_cliente = ? AND"; 
+			$sql .= " `id_cliente` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $cliente_avalA->getIdAval()) ) ) & ( ! is_null ( ($b = $cliente_avalB->getIdAval()) ) ) ){
-				$sql .= " id_aval >= ? AND id_aval <= ? AND";
+				$sql .= " `id_aval` >= ? AND `id_aval` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_aval = ? AND"; 
+			$sql .= " `id_aval` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $cliente_avalA->getTipoAval()) ) ) & ( ! is_null ( ($b = $cliente_avalB->getTipoAval()) ) ) ){
-				$sql .= " tipo_aval >= ? AND tipo_aval <= ? AND";
+				$sql .= " `tipo_aval` >= ? AND `tipo_aval` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " tipo_aval = ? AND"; 
+			$sql .= " `tipo_aval` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

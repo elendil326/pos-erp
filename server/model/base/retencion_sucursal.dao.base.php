@@ -123,12 +123,12 @@ abstract class RetencionSucursalDAOBase extends DAO
 		$sql = "SELECT * from retencion_sucursal WHERE ("; 
 		$val = array();
 		if( ! is_null( $retencion_sucursal->getIdRetencion() ) ){
-			$sql .= " id_retencion = ? AND";
+			$sql .= " `id_retencion` = ? AND";
 			array_push( $val, $retencion_sucursal->getIdRetencion() );
 		}
 
 		if( ! is_null( $retencion_sucursal->getIdSucursal() ) ){
-			$sql .= " id_sucursal = ? AND";
+			$sql .= " `id_sucursal` = ? AND";
 			array_push( $val, $retencion_sucursal->getIdSucursal() );
 		}
 
@@ -180,7 +180,7 @@ abstract class RetencionSucursalDAOBase extends DAO
 	  **/
 	private static final function create( &$retencion_sucursal )
 	{
-		$sql = "INSERT INTO retencion_sucursal ( id_retencion, id_sucursal ) VALUES ( ?, ?);";
+		$sql = "INSERT INTO retencion_sucursal ( `id_retencion`, `id_sucursal` ) VALUES ( ?, ?);";
 		$params = array( 
 			$retencion_sucursal->getIdRetencion(), 
 			$retencion_sucursal->getIdSucursal(), 
@@ -233,22 +233,22 @@ abstract class RetencionSucursalDAOBase extends DAO
 		$sql = "SELECT * from retencion_sucursal WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $retencion_sucursalA->getIdRetencion()) ) ) & ( ! is_null ( ($b = $retencion_sucursalB->getIdRetencion()) ) ) ){
-				$sql .= " id_retencion >= ? AND id_retencion <= ? AND";
+				$sql .= " `id_retencion` >= ? AND `id_retencion` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_retencion = ? AND"; 
+			$sql .= " `id_retencion` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $retencion_sucursalA->getIdSucursal()) ) ) & ( ! is_null ( ($b = $retencion_sucursalB->getIdSucursal()) ) ) ){
-				$sql .= " id_sucursal >= ? AND id_sucursal <= ? AND";
+				$sql .= " `id_sucursal` >= ? AND `id_sucursal` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_sucursal = ? AND"; 
+			$sql .= " `id_sucursal` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

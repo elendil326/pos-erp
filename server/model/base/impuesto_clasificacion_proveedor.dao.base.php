@@ -123,12 +123,12 @@ abstract class ImpuestoClasificacionProveedorDAOBase extends DAO
 		$sql = "SELECT * from impuesto_clasificacion_proveedor WHERE ("; 
 		$val = array();
 		if( ! is_null( $impuesto_clasificacion_proveedor->getIdImpuesto() ) ){
-			$sql .= " id_impuesto = ? AND";
+			$sql .= " `id_impuesto` = ? AND";
 			array_push( $val, $impuesto_clasificacion_proveedor->getIdImpuesto() );
 		}
 
 		if( ! is_null( $impuesto_clasificacion_proveedor->getIdClasificacionProveedor() ) ){
-			$sql .= " id_clasificacion_proveedor = ? AND";
+			$sql .= " `id_clasificacion_proveedor` = ? AND";
 			array_push( $val, $impuesto_clasificacion_proveedor->getIdClasificacionProveedor() );
 		}
 
@@ -180,7 +180,7 @@ abstract class ImpuestoClasificacionProveedorDAOBase extends DAO
 	  **/
 	private static final function create( &$impuesto_clasificacion_proveedor )
 	{
-		$sql = "INSERT INTO impuesto_clasificacion_proveedor ( id_impuesto, id_clasificacion_proveedor ) VALUES ( ?, ?);";
+		$sql = "INSERT INTO impuesto_clasificacion_proveedor ( `id_impuesto`, `id_clasificacion_proveedor` ) VALUES ( ?, ?);";
 		$params = array( 
 			$impuesto_clasificacion_proveedor->getIdImpuesto(), 
 			$impuesto_clasificacion_proveedor->getIdClasificacionProveedor(), 
@@ -233,22 +233,22 @@ abstract class ImpuestoClasificacionProveedorDAOBase extends DAO
 		$sql = "SELECT * from impuesto_clasificacion_proveedor WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $impuesto_clasificacion_proveedorA->getIdImpuesto()) ) ) & ( ! is_null ( ($b = $impuesto_clasificacion_proveedorB->getIdImpuesto()) ) ) ){
-				$sql .= " id_impuesto >= ? AND id_impuesto <= ? AND";
+				$sql .= " `id_impuesto` >= ? AND `id_impuesto` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_impuesto = ? AND"; 
+			$sql .= " `id_impuesto` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $impuesto_clasificacion_proveedorA->getIdClasificacionProveedor()) ) ) & ( ! is_null ( ($b = $impuesto_clasificacion_proveedorB->getIdClasificacionProveedor()) ) ) ){
-				$sql .= " id_clasificacion_proveedor >= ? AND id_clasificacion_proveedor <= ? AND";
+				$sql .= " `id_clasificacion_proveedor` >= ? AND `id_clasificacion_proveedor` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_clasificacion_proveedor = ? AND"; 
+			$sql .= " `id_clasificacion_proveedor` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

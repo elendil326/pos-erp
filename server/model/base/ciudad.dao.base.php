@@ -122,17 +122,17 @@ abstract class CiudadDAOBase extends DAO
 		$sql = "SELECT * from ciudad WHERE ("; 
 		$val = array();
 		if( ! is_null( $ciudad->getIdCiudad() ) ){
-			$sql .= " id_ciudad = ? AND";
+			$sql .= " `id_ciudad` = ? AND";
 			array_push( $val, $ciudad->getIdCiudad() );
 		}
 
 		if( ! is_null( $ciudad->getIdEstado() ) ){
-			$sql .= " id_estado = ? AND";
+			$sql .= " `id_estado` = ? AND";
 			array_push( $val, $ciudad->getIdEstado() );
 		}
 
 		if( ! is_null( $ciudad->getNombre() ) ){
-			$sql .= " nombre = ? AND";
+			$sql .= " `nombre` = ? AND";
 			array_push( $val, $ciudad->getNombre() );
 		}
 
@@ -166,7 +166,7 @@ abstract class CiudadDAOBase extends DAO
 	  **/
 	private static final function update( $ciudad )
 	{
-		$sql = "UPDATE ciudad SET  id_estado = ?, nombre = ? WHERE  id_ciudad = ?;";
+		$sql = "UPDATE ciudad SET  `id_estado` = ?, `nombre` = ? WHERE  `id_ciudad` = ?;";
 		$params = array( 
 			$ciudad->getIdEstado(), 
 			$ciudad->getNombre(), 
@@ -193,7 +193,7 @@ abstract class CiudadDAOBase extends DAO
 	  **/
 	private static final function create( &$ciudad )
 	{
-		$sql = "INSERT INTO ciudad ( id_ciudad, id_estado, nombre ) VALUES ( ?, ?, ?);";
+		$sql = "INSERT INTO ciudad ( `id_ciudad`, `id_estado`, `nombre` ) VALUES ( ?, ?, ?);";
 		$params = array( 
 			$ciudad->getIdCiudad(), 
 			$ciudad->getIdEstado(), 
@@ -247,33 +247,33 @@ abstract class CiudadDAOBase extends DAO
 		$sql = "SELECT * from ciudad WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $ciudadA->getIdCiudad()) ) ) & ( ! is_null ( ($b = $ciudadB->getIdCiudad()) ) ) ){
-				$sql .= " id_ciudad >= ? AND id_ciudad <= ? AND";
+				$sql .= " `id_ciudad` >= ? AND `id_ciudad` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_ciudad = ? AND"; 
+			$sql .= " `id_ciudad` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $ciudadA->getIdEstado()) ) ) & ( ! is_null ( ($b = $ciudadB->getIdEstado()) ) ) ){
-				$sql .= " id_estado >= ? AND id_estado <= ? AND";
+				$sql .= " `id_estado` >= ? AND `id_estado` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_estado = ? AND"; 
+			$sql .= " `id_estado` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $ciudadA->getNombre()) ) ) & ( ! is_null ( ($b = $ciudadB->getNombre()) ) ) ){
-				$sql .= " nombre >= ? AND nombre <= ? AND";
+				$sql .= " `nombre` >= ? AND `nombre` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " nombre = ? AND"; 
+			$sql .= " `nombre` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

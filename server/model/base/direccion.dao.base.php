@@ -122,62 +122,62 @@ abstract class DireccionDAOBase extends DAO
 		$sql = "SELECT * from direccion WHERE ("; 
 		$val = array();
 		if( ! is_null( $direccion->getIdDireccion() ) ){
-			$sql .= " id_direccion = ? AND";
+			$sql .= " `id_direccion` = ? AND";
 			array_push( $val, $direccion->getIdDireccion() );
 		}
 
 		if( ! is_null( $direccion->getCalle() ) ){
-			$sql .= " calle = ? AND";
+			$sql .= " `calle` = ? AND";
 			array_push( $val, $direccion->getCalle() );
 		}
 
 		if( ! is_null( $direccion->getNumeroExterior() ) ){
-			$sql .= " numero_exterior = ? AND";
+			$sql .= " `numero_exterior` = ? AND";
 			array_push( $val, $direccion->getNumeroExterior() );
 		}
 
 		if( ! is_null( $direccion->getNumeroInterior() ) ){
-			$sql .= " numero_interior = ? AND";
+			$sql .= " `numero_interior` = ? AND";
 			array_push( $val, $direccion->getNumeroInterior() );
 		}
 
 		if( ! is_null( $direccion->getReferencia() ) ){
-			$sql .= " referencia = ? AND";
+			$sql .= " `referencia` = ? AND";
 			array_push( $val, $direccion->getReferencia() );
 		}
 
 		if( ! is_null( $direccion->getColonia() ) ){
-			$sql .= " colonia = ? AND";
+			$sql .= " `colonia` = ? AND";
 			array_push( $val, $direccion->getColonia() );
 		}
 
 		if( ! is_null( $direccion->getIdCiudad() ) ){
-			$sql .= " id_ciudad = ? AND";
+			$sql .= " `id_ciudad` = ? AND";
 			array_push( $val, $direccion->getIdCiudad() );
 		}
 
 		if( ! is_null( $direccion->getCodigoPostal() ) ){
-			$sql .= " codigo_postal = ? AND";
+			$sql .= " `codigo_postal` = ? AND";
 			array_push( $val, $direccion->getCodigoPostal() );
 		}
 
 		if( ! is_null( $direccion->getTelefono() ) ){
-			$sql .= " telefono = ? AND";
+			$sql .= " `telefono` = ? AND";
 			array_push( $val, $direccion->getTelefono() );
 		}
 
 		if( ! is_null( $direccion->getTelefono2() ) ){
-			$sql .= " telefono2 = ? AND";
+			$sql .= " `telefono2` = ? AND";
 			array_push( $val, $direccion->getTelefono2() );
 		}
 
 		if( ! is_null( $direccion->getUltimaModificacion() ) ){
-			$sql .= " ultima_modificacion = ? AND";
+			$sql .= " `ultima_modificacion` = ? AND";
 			array_push( $val, $direccion->getUltimaModificacion() );
 		}
 
 		if( ! is_null( $direccion->getIdUsuarioUltimaModificacion() ) ){
-			$sql .= " id_usuario_ultima_modificacion = ? AND";
+			$sql .= " `id_usuario_ultima_modificacion` = ? AND";
 			array_push( $val, $direccion->getIdUsuarioUltimaModificacion() );
 		}
 
@@ -211,7 +211,7 @@ abstract class DireccionDAOBase extends DAO
 	  **/
 	private static final function update( $direccion )
 	{
-		$sql = "UPDATE direccion SET  calle = ?, numero_exterior = ?, numero_interior = ?, referencia = ?, colonia = ?, id_ciudad = ?, codigo_postal = ?, telefono = ?, telefono2 = ?, ultima_modificacion = ?, id_usuario_ultima_modificacion = ? WHERE  id_direccion = ?;";
+		$sql = "UPDATE direccion SET  `calle` = ?, `numero_exterior` = ?, `numero_interior` = ?, `referencia` = ?, `colonia` = ?, `id_ciudad` = ?, `codigo_postal` = ?, `telefono` = ?, `telefono2` = ?, `ultima_modificacion` = ?, `id_usuario_ultima_modificacion` = ? WHERE  `id_direccion` = ?;";
 		$params = array( 
 			$direccion->getCalle(), 
 			$direccion->getNumeroExterior(), 
@@ -247,7 +247,7 @@ abstract class DireccionDAOBase extends DAO
 	  **/
 	private static final function create( &$direccion )
 	{
-		$sql = "INSERT INTO direccion ( id_direccion, calle, numero_exterior, numero_interior, referencia, colonia, id_ciudad, codigo_postal, telefono, telefono2, ultima_modificacion, id_usuario_ultima_modificacion ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO direccion ( `id_direccion`, `calle`, `numero_exterior`, `numero_interior`, `referencia`, `colonia`, `id_ciudad`, `codigo_postal`, `telefono`, `telefono2`, `ultima_modificacion`, `id_usuario_ultima_modificacion` ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$direccion->getIdDireccion(), 
 			$direccion->getCalle(), 
@@ -310,132 +310,132 @@ abstract class DireccionDAOBase extends DAO
 		$sql = "SELECT * from direccion WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $direccionA->getIdDireccion()) ) ) & ( ! is_null ( ($b = $direccionB->getIdDireccion()) ) ) ){
-				$sql .= " id_direccion >= ? AND id_direccion <= ? AND";
+				$sql .= " `id_direccion` >= ? AND `id_direccion` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_direccion = ? AND"; 
+			$sql .= " `id_direccion` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $direccionA->getCalle()) ) ) & ( ! is_null ( ($b = $direccionB->getCalle()) ) ) ){
-				$sql .= " calle >= ? AND calle <= ? AND";
+				$sql .= " `calle` >= ? AND `calle` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " calle = ? AND"; 
+			$sql .= " `calle` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $direccionA->getNumeroExterior()) ) ) & ( ! is_null ( ($b = $direccionB->getNumeroExterior()) ) ) ){
-				$sql .= " numero_exterior >= ? AND numero_exterior <= ? AND";
+				$sql .= " `numero_exterior` >= ? AND `numero_exterior` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " numero_exterior = ? AND"; 
+			$sql .= " `numero_exterior` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $direccionA->getNumeroInterior()) ) ) & ( ! is_null ( ($b = $direccionB->getNumeroInterior()) ) ) ){
-				$sql .= " numero_interior >= ? AND numero_interior <= ? AND";
+				$sql .= " `numero_interior` >= ? AND `numero_interior` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " numero_interior = ? AND"; 
+			$sql .= " `numero_interior` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $direccionA->getReferencia()) ) ) & ( ! is_null ( ($b = $direccionB->getReferencia()) ) ) ){
-				$sql .= " referencia >= ? AND referencia <= ? AND";
+				$sql .= " `referencia` >= ? AND `referencia` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " referencia = ? AND"; 
+			$sql .= " `referencia` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $direccionA->getColonia()) ) ) & ( ! is_null ( ($b = $direccionB->getColonia()) ) ) ){
-				$sql .= " colonia >= ? AND colonia <= ? AND";
+				$sql .= " `colonia` >= ? AND `colonia` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " colonia = ? AND"; 
+			$sql .= " `colonia` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $direccionA->getIdCiudad()) ) ) & ( ! is_null ( ($b = $direccionB->getIdCiudad()) ) ) ){
-				$sql .= " id_ciudad >= ? AND id_ciudad <= ? AND";
+				$sql .= " `id_ciudad` >= ? AND `id_ciudad` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_ciudad = ? AND"; 
+			$sql .= " `id_ciudad` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $direccionA->getCodigoPostal()) ) ) & ( ! is_null ( ($b = $direccionB->getCodigoPostal()) ) ) ){
-				$sql .= " codigo_postal >= ? AND codigo_postal <= ? AND";
+				$sql .= " `codigo_postal` >= ? AND `codigo_postal` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " codigo_postal = ? AND"; 
+			$sql .= " `codigo_postal` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $direccionA->getTelefono()) ) ) & ( ! is_null ( ($b = $direccionB->getTelefono()) ) ) ){
-				$sql .= " telefono >= ? AND telefono <= ? AND";
+				$sql .= " `telefono` >= ? AND `telefono` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " telefono = ? AND"; 
+			$sql .= " `telefono` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $direccionA->getTelefono2()) ) ) & ( ! is_null ( ($b = $direccionB->getTelefono2()) ) ) ){
-				$sql .= " telefono2 >= ? AND telefono2 <= ? AND";
+				$sql .= " `telefono2` >= ? AND `telefono2` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " telefono2 = ? AND"; 
+			$sql .= " `telefono2` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $direccionA->getUltimaModificacion()) ) ) & ( ! is_null ( ($b = $direccionB->getUltimaModificacion()) ) ) ){
-				$sql .= " ultima_modificacion >= ? AND ultima_modificacion <= ? AND";
+				$sql .= " `ultima_modificacion` >= ? AND `ultima_modificacion` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " ultima_modificacion = ? AND"; 
+			$sql .= " `ultima_modificacion` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $direccionA->getIdUsuarioUltimaModificacion()) ) ) & ( ! is_null ( ($b = $direccionB->getIdUsuarioUltimaModificacion()) ) ) ){
-				$sql .= " id_usuario_ultima_modificacion >= ? AND id_usuario_ultima_modificacion <= ? AND";
+				$sql .= " `id_usuario_ultima_modificacion` >= ? AND `id_usuario_ultima_modificacion` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_usuario_ultima_modificacion = ? AND"; 
+			$sql .= " `id_usuario_ultima_modificacion` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

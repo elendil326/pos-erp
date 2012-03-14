@@ -124,42 +124,42 @@ abstract class ProductoOrdenDeServicioDAOBase extends DAO
 		$sql = "SELECT * from producto_orden_de_servicio WHERE ("; 
 		$val = array();
 		if( ! is_null( $producto_orden_de_servicio->getIdOrdenDeServicio() ) ){
-			$sql .= " id_orden_de_servicio = ? AND";
+			$sql .= " `id_orden_de_servicio` = ? AND";
 			array_push( $val, $producto_orden_de_servicio->getIdOrdenDeServicio() );
 		}
 
 		if( ! is_null( $producto_orden_de_servicio->getIdProducto() ) ){
-			$sql .= " id_producto = ? AND";
+			$sql .= " `id_producto` = ? AND";
 			array_push( $val, $producto_orden_de_servicio->getIdProducto() );
 		}
 
 		if( ! is_null( $producto_orden_de_servicio->getPrecio() ) ){
-			$sql .= " precio = ? AND";
+			$sql .= " `precio` = ? AND";
 			array_push( $val, $producto_orden_de_servicio->getPrecio() );
 		}
 
 		if( ! is_null( $producto_orden_de_servicio->getCantidad() ) ){
-			$sql .= " cantidad = ? AND";
+			$sql .= " `cantidad` = ? AND";
 			array_push( $val, $producto_orden_de_servicio->getCantidad() );
 		}
 
 		if( ! is_null( $producto_orden_de_servicio->getDescuento() ) ){
-			$sql .= " descuento = ? AND";
+			$sql .= " `descuento` = ? AND";
 			array_push( $val, $producto_orden_de_servicio->getDescuento() );
 		}
 
 		if( ! is_null( $producto_orden_de_servicio->getImpuesto() ) ){
-			$sql .= " impuesto = ? AND";
+			$sql .= " `impuesto` = ? AND";
 			array_push( $val, $producto_orden_de_servicio->getImpuesto() );
 		}
 
 		if( ! is_null( $producto_orden_de_servicio->getRetencion() ) ){
-			$sql .= " retencion = ? AND";
+			$sql .= " `retencion` = ? AND";
 			array_push( $val, $producto_orden_de_servicio->getRetencion() );
 		}
 
 		if( ! is_null( $producto_orden_de_servicio->getIdUnidad() ) ){
-			$sql .= " id_unidad = ? AND";
+			$sql .= " `id_unidad` = ? AND";
 			array_push( $val, $producto_orden_de_servicio->getIdUnidad() );
 		}
 
@@ -193,7 +193,7 @@ abstract class ProductoOrdenDeServicioDAOBase extends DAO
 	  **/
 	private static final function update( $producto_orden_de_servicio )
 	{
-		$sql = "UPDATE producto_orden_de_servicio SET  precio = ?, cantidad = ?, descuento = ?, impuesto = ?, retencion = ? WHERE  id_orden_de_servicio = ? AND id_producto = ? AND id_unidad = ?;";
+		$sql = "UPDATE producto_orden_de_servicio SET  `precio` = ?, `cantidad` = ?, `descuento` = ?, `impuesto` = ?, `retencion` = ? WHERE  `id_orden_de_servicio` = ? AND `id_producto` = ? AND `id_unidad` = ?;";
 		$params = array( 
 			$producto_orden_de_servicio->getPrecio(), 
 			$producto_orden_de_servicio->getCantidad(), 
@@ -223,7 +223,7 @@ abstract class ProductoOrdenDeServicioDAOBase extends DAO
 	  **/
 	private static final function create( &$producto_orden_de_servicio )
 	{
-		$sql = "INSERT INTO producto_orden_de_servicio ( id_orden_de_servicio, id_producto, precio, cantidad, descuento, impuesto, retencion, id_unidad ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO producto_orden_de_servicio ( `id_orden_de_servicio`, `id_producto`, `precio`, `cantidad`, `descuento`, `impuesto`, `retencion`, `id_unidad` ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$producto_orden_de_servicio->getIdOrdenDeServicio(), 
 			$producto_orden_de_servicio->getIdProducto(), 
@@ -282,88 +282,88 @@ abstract class ProductoOrdenDeServicioDAOBase extends DAO
 		$sql = "SELECT * from producto_orden_de_servicio WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $producto_orden_de_servicioA->getIdOrdenDeServicio()) ) ) & ( ! is_null ( ($b = $producto_orden_de_servicioB->getIdOrdenDeServicio()) ) ) ){
-				$sql .= " id_orden_de_servicio >= ? AND id_orden_de_servicio <= ? AND";
+				$sql .= " `id_orden_de_servicio` >= ? AND `id_orden_de_servicio` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_orden_de_servicio = ? AND"; 
+			$sql .= " `id_orden_de_servicio` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $producto_orden_de_servicioA->getIdProducto()) ) ) & ( ! is_null ( ($b = $producto_orden_de_servicioB->getIdProducto()) ) ) ){
-				$sql .= " id_producto >= ? AND id_producto <= ? AND";
+				$sql .= " `id_producto` >= ? AND `id_producto` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_producto = ? AND"; 
+			$sql .= " `id_producto` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $producto_orden_de_servicioA->getPrecio()) ) ) & ( ! is_null ( ($b = $producto_orden_de_servicioB->getPrecio()) ) ) ){
-				$sql .= " precio >= ? AND precio <= ? AND";
+				$sql .= " `precio` >= ? AND `precio` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " precio = ? AND"; 
+			$sql .= " `precio` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $producto_orden_de_servicioA->getCantidad()) ) ) & ( ! is_null ( ($b = $producto_orden_de_servicioB->getCantidad()) ) ) ){
-				$sql .= " cantidad >= ? AND cantidad <= ? AND";
+				$sql .= " `cantidad` >= ? AND `cantidad` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " cantidad = ? AND"; 
+			$sql .= " `cantidad` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $producto_orden_de_servicioA->getDescuento()) ) ) & ( ! is_null ( ($b = $producto_orden_de_servicioB->getDescuento()) ) ) ){
-				$sql .= " descuento >= ? AND descuento <= ? AND";
+				$sql .= " `descuento` >= ? AND `descuento` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " descuento = ? AND"; 
+			$sql .= " `descuento` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $producto_orden_de_servicioA->getImpuesto()) ) ) & ( ! is_null ( ($b = $producto_orden_de_servicioB->getImpuesto()) ) ) ){
-				$sql .= " impuesto >= ? AND impuesto <= ? AND";
+				$sql .= " `impuesto` >= ? AND `impuesto` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " impuesto = ? AND"; 
+			$sql .= " `impuesto` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $producto_orden_de_servicioA->getRetencion()) ) ) & ( ! is_null ( ($b = $producto_orden_de_servicioB->getRetencion()) ) ) ){
-				$sql .= " retencion >= ? AND retencion <= ? AND";
+				$sql .= " `retencion` >= ? AND `retencion` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " retencion = ? AND"; 
+			$sql .= " `retencion` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $producto_orden_de_servicioA->getIdUnidad()) ) ) & ( ! is_null ( ($b = $producto_orden_de_servicioB->getIdUnidad()) ) ) ){
-				$sql .= " id_unidad >= ? AND id_unidad <= ? AND";
+				$sql .= " `id_unidad` >= ? AND `id_unidad` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_unidad = ? AND"; 
+			$sql .= " `id_unidad` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

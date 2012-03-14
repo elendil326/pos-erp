@@ -122,227 +122,227 @@ abstract class UsuarioDAOBase extends DAO
 		$sql = "SELECT * from usuario WHERE ("; 
 		$val = array();
 		if( ! is_null( $usuario->getIdUsuario() ) ){
-			$sql .= " id_usuario = ? AND";
+			$sql .= " `id_usuario` = ? AND";
 			array_push( $val, $usuario->getIdUsuario() );
 		}
 
 		if( ! is_null( $usuario->getIdDireccion() ) ){
-			$sql .= " id_direccion = ? AND";
+			$sql .= " `id_direccion` = ? AND";
 			array_push( $val, $usuario->getIdDireccion() );
 		}
 
 		if( ! is_null( $usuario->getIdDireccionAlterna() ) ){
-			$sql .= " id_direccion_alterna = ? AND";
+			$sql .= " `id_direccion_alterna` = ? AND";
 			array_push( $val, $usuario->getIdDireccionAlterna() );
 		}
 
 		if( ! is_null( $usuario->getIdSucursal() ) ){
-			$sql .= " id_sucursal = ? AND";
+			$sql .= " `id_sucursal` = ? AND";
 			array_push( $val, $usuario->getIdSucursal() );
 		}
 
 		if( ! is_null( $usuario->getIdRol() ) ){
-			$sql .= " id_rol = ? AND";
+			$sql .= " `id_rol` = ? AND";
 			array_push( $val, $usuario->getIdRol() );
 		}
 
 		if( ! is_null( $usuario->getIdClasificacionCliente() ) ){
-			$sql .= " id_clasificacion_cliente = ? AND";
+			$sql .= " `id_clasificacion_cliente` = ? AND";
 			array_push( $val, $usuario->getIdClasificacionCliente() );
 		}
 
 		if( ! is_null( $usuario->getIdClasificacionProveedor() ) ){
-			$sql .= " id_clasificacion_proveedor = ? AND";
+			$sql .= " `id_clasificacion_proveedor` = ? AND";
 			array_push( $val, $usuario->getIdClasificacionProveedor() );
 		}
 
 		if( ! is_null( $usuario->getIdMoneda() ) ){
-			$sql .= " id_moneda = ? AND";
+			$sql .= " `id_moneda` = ? AND";
 			array_push( $val, $usuario->getIdMoneda() );
 		}
 
 		if( ! is_null( $usuario->getFechaAsignacionRol() ) ){
-			$sql .= " fecha_asignacion_rol = ? AND";
+			$sql .= " `fecha_asignacion_rol` = ? AND";
 			array_push( $val, $usuario->getFechaAsignacionRol() );
 		}
 
 		if( ! is_null( $usuario->getNombre() ) ){
-			$sql .= " nombre = ? AND";
+			$sql .= " `nombre` = ? AND";
 			array_push( $val, $usuario->getNombre() );
 		}
 
 		if( ! is_null( $usuario->getRfc() ) ){
-			$sql .= " rfc = ? AND";
+			$sql .= " `rfc` = ? AND";
 			array_push( $val, $usuario->getRfc() );
 		}
 
 		if( ! is_null( $usuario->getCurp() ) ){
-			$sql .= " curp = ? AND";
+			$sql .= " `curp` = ? AND";
 			array_push( $val, $usuario->getCurp() );
 		}
 
 		if( ! is_null( $usuario->getComisionVentas() ) ){
-			$sql .= " comision_ventas = ? AND";
+			$sql .= " `comision_ventas` = ? AND";
 			array_push( $val, $usuario->getComisionVentas() );
 		}
 
 		if( ! is_null( $usuario->getTelefonoPersonal1() ) ){
-			$sql .= " telefono_personal1 = ? AND";
+			$sql .= " `telefono_personal1` = ? AND";
 			array_push( $val, $usuario->getTelefonoPersonal1() );
 		}
 
 		if( ! is_null( $usuario->getTelefonoPersonal2() ) ){
-			$sql .= " telefono_personal2 = ? AND";
+			$sql .= " `telefono_personal2` = ? AND";
 			array_push( $val, $usuario->getTelefonoPersonal2() );
 		}
 
 		if( ! is_null( $usuario->getFechaAlta() ) ){
-			$sql .= " fecha_alta = ? AND";
+			$sql .= " `fecha_alta` = ? AND";
 			array_push( $val, $usuario->getFechaAlta() );
 		}
 
 		if( ! is_null( $usuario->getFechaBaja() ) ){
-			$sql .= " fecha_baja = ? AND";
+			$sql .= " `fecha_baja` = ? AND";
 			array_push( $val, $usuario->getFechaBaja() );
 		}
 
 		if( ! is_null( $usuario->getActivo() ) ){
-			$sql .= " activo = ? AND";
+			$sql .= " `activo` = ? AND";
 			array_push( $val, $usuario->getActivo() );
 		}
 
 		if( ! is_null( $usuario->getLimiteCredito() ) ){
-			$sql .= " limite_credito = ? AND";
+			$sql .= " `limite_credito` = ? AND";
 			array_push( $val, $usuario->getLimiteCredito() );
 		}
 
 		if( ! is_null( $usuario->getDescuento() ) ){
-			$sql .= " descuento = ? AND";
+			$sql .= " `descuento` = ? AND";
 			array_push( $val, $usuario->getDescuento() );
 		}
 
 		if( ! is_null( $usuario->getPassword() ) ){
-			$sql .= " password = ? AND";
+			$sql .= " `password` = ? AND";
 			array_push( $val, $usuario->getPassword() );
 		}
 
 		if( ! is_null( $usuario->getLastLogin() ) ){
-			$sql .= " last_login = ? AND";
+			$sql .= " `last_login` = ? AND";
 			array_push( $val, $usuario->getLastLogin() );
 		}
 
 		if( ! is_null( $usuario->getConsignatario() ) ){
-			$sql .= " consignatario = ? AND";
+			$sql .= " `consignatario` = ? AND";
 			array_push( $val, $usuario->getConsignatario() );
 		}
 
 		if( ! is_null( $usuario->getSalario() ) ){
-			$sql .= " salario = ? AND";
+			$sql .= " `salario` = ? AND";
 			array_push( $val, $usuario->getSalario() );
 		}
 
 		if( ! is_null( $usuario->getCorreoElectronico() ) ){
-			$sql .= " correo_electronico = ? AND";
+			$sql .= " `correo_electronico` = ? AND";
 			array_push( $val, $usuario->getCorreoElectronico() );
 		}
 
 		if( ! is_null( $usuario->getPaginaWeb() ) ){
-			$sql .= " pagina_web = ? AND";
+			$sql .= " `pagina_web` = ? AND";
 			array_push( $val, $usuario->getPaginaWeb() );
 		}
 
 		if( ! is_null( $usuario->getSaldoDelEjercicio() ) ){
-			$sql .= " saldo_del_ejercicio = ? AND";
+			$sql .= " `saldo_del_ejercicio` = ? AND";
 			array_push( $val, $usuario->getSaldoDelEjercicio() );
 		}
 
 		if( ! is_null( $usuario->getVentasACredito() ) ){
-			$sql .= " ventas_a_credito = ? AND";
+			$sql .= " `ventas_a_credito` = ? AND";
 			array_push( $val, $usuario->getVentasACredito() );
 		}
 
 		if( ! is_null( $usuario->getRepresentanteLegal() ) ){
-			$sql .= " representante_legal = ? AND";
+			$sql .= " `representante_legal` = ? AND";
 			array_push( $val, $usuario->getRepresentanteLegal() );
 		}
 
 		if( ! is_null( $usuario->getFacturarATerceros() ) ){
-			$sql .= " facturar_a_terceros = ? AND";
+			$sql .= " `facturar_a_terceros` = ? AND";
 			array_push( $val, $usuario->getFacturarATerceros() );
 		}
 
 		if( ! is_null( $usuario->getDiaDePago() ) ){
-			$sql .= " dia_de_pago = ? AND";
+			$sql .= " `dia_de_pago` = ? AND";
 			array_push( $val, $usuario->getDiaDePago() );
 		}
 
 		if( ! is_null( $usuario->getMensajeria() ) ){
-			$sql .= " mensajeria = ? AND";
+			$sql .= " `mensajeria` = ? AND";
 			array_push( $val, $usuario->getMensajeria() );
 		}
 
 		if( ! is_null( $usuario->getInteresesMoratorios() ) ){
-			$sql .= " intereses_moratorios = ? AND";
+			$sql .= " `intereses_moratorios` = ? AND";
 			array_push( $val, $usuario->getInteresesMoratorios() );
 		}
 
 		if( ! is_null( $usuario->getDenominacionComercial() ) ){
-			$sql .= " denominacion_comercial = ? AND";
+			$sql .= " `denominacion_comercial` = ? AND";
 			array_push( $val, $usuario->getDenominacionComercial() );
 		}
 
 		if( ! is_null( $usuario->getDiasDeCredito() ) ){
-			$sql .= " dias_de_credito = ? AND";
+			$sql .= " `dias_de_credito` = ? AND";
 			array_push( $val, $usuario->getDiasDeCredito() );
 		}
 
 		if( ! is_null( $usuario->getCuentaDeMensajeria() ) ){
-			$sql .= " cuenta_de_mensajeria = ? AND";
+			$sql .= " `cuenta_de_mensajeria` = ? AND";
 			array_push( $val, $usuario->getCuentaDeMensajeria() );
 		}
 
 		if( ! is_null( $usuario->getDiaDeRevision() ) ){
-			$sql .= " dia_de_revision = ? AND";
+			$sql .= " `dia_de_revision` = ? AND";
 			array_push( $val, $usuario->getDiaDeRevision() );
 		}
 
 		if( ! is_null( $usuario->getCodigoUsuario() ) ){
-			$sql .= " codigo_usuario = ? AND";
+			$sql .= " `codigo_usuario` = ? AND";
 			array_push( $val, $usuario->getCodigoUsuario() );
 		}
 
 		if( ! is_null( $usuario->getDiasDeEmbarque() ) ){
-			$sql .= " dias_de_embarque = ? AND";
+			$sql .= " `dias_de_embarque` = ? AND";
 			array_push( $val, $usuario->getDiasDeEmbarque() );
 		}
 
 		if( ! is_null( $usuario->getTiempoEntrega() ) ){
-			$sql .= " tiempo_entrega = ? AND";
+			$sql .= " `tiempo_entrega` = ? AND";
 			array_push( $val, $usuario->getTiempoEntrega() );
 		}
 
 		if( ! is_null( $usuario->getCuentaBancaria() ) ){
-			$sql .= " cuenta_bancaria = ? AND";
+			$sql .= " `cuenta_bancaria` = ? AND";
 			array_push( $val, $usuario->getCuentaBancaria() );
 		}
 
 		if( ! is_null( $usuario->getIdTarifaCompra() ) ){
-			$sql .= " id_tarifa_compra = ? AND";
+			$sql .= " `id_tarifa_compra` = ? AND";
 			array_push( $val, $usuario->getIdTarifaCompra() );
 		}
 
 		if( ! is_null( $usuario->getTarifaCompraObtenida() ) ){
-			$sql .= " tarifa_compra_obtenida = ? AND";
+			$sql .= " `tarifa_compra_obtenida` = ? AND";
 			array_push( $val, $usuario->getTarifaCompraObtenida() );
 		}
 
 		if( ! is_null( $usuario->getIdTarifaVenta() ) ){
-			$sql .= " id_tarifa_venta = ? AND";
+			$sql .= " `id_tarifa_venta` = ? AND";
 			array_push( $val, $usuario->getIdTarifaVenta() );
 		}
 
 		if( ! is_null( $usuario->getTarifaVentaObtenida() ) ){
-			$sql .= " tarifa_venta_obtenida = ? AND";
+			$sql .= " `tarifa_venta_obtenida` = ? AND";
 			array_push( $val, $usuario->getTarifaVentaObtenida() );
 		}
 
@@ -376,7 +376,7 @@ abstract class UsuarioDAOBase extends DAO
 	  **/
 	private static final function update( $usuario )
 	{
-		$sql = "UPDATE usuario SET  id_direccion = ?, id_direccion_alterna = ?, id_sucursal = ?, id_rol = ?, id_clasificacion_cliente = ?, id_clasificacion_proveedor = ?, id_moneda = ?, fecha_asignacion_rol = ?, nombre = ?, rfc = ?, curp = ?, comision_ventas = ?, telefono_personal1 = ?, telefono_personal2 = ?, fecha_alta = ?, fecha_baja = ?, activo = ?, limite_credito = ?, descuento = ?, password = ?, last_login = ?, consignatario = ?, salario = ?, correo_electronico = ?, pagina_web = ?, saldo_del_ejercicio = ?, ventas_a_credito = ?, representante_legal = ?, facturar_a_terceros = ?, dia_de_pago = ?, mensajeria = ?, intereses_moratorios = ?, denominacion_comercial = ?, dias_de_credito = ?, cuenta_de_mensajeria = ?, dia_de_revision = ?, codigo_usuario = ?, dias_de_embarque = ?, tiempo_entrega = ?, cuenta_bancaria = ?, id_tarifa_compra = ?, tarifa_compra_obtenida = ?, id_tarifa_venta = ?, tarifa_venta_obtenida = ? WHERE  id_usuario = ?;";
+		$sql = "UPDATE usuario SET  `id_direccion` = ?, `id_direccion_alterna` = ?, `id_sucursal` = ?, `id_rol` = ?, `id_clasificacion_cliente` = ?, `id_clasificacion_proveedor` = ?, `id_moneda` = ?, `fecha_asignacion_rol` = ?, `nombre` = ?, `rfc` = ?, `curp` = ?, `comision_ventas` = ?, `telefono_personal1` = ?, `telefono_personal2` = ?, `fecha_alta` = ?, `fecha_baja` = ?, `activo` = ?, `limite_credito` = ?, `descuento` = ?, `password` = ?, `last_login` = ?, `consignatario` = ?, `salario` = ?, `correo_electronico` = ?, `pagina_web` = ?, `saldo_del_ejercicio` = ?, `ventas_a_credito` = ?, `representante_legal` = ?, `facturar_a_terceros` = ?, `dia_de_pago` = ?, `mensajeria` = ?, `intereses_moratorios` = ?, `denominacion_comercial` = ?, `dias_de_credito` = ?, `cuenta_de_mensajeria` = ?, `dia_de_revision` = ?, `codigo_usuario` = ?, `dias_de_embarque` = ?, `tiempo_entrega` = ?, `cuenta_bancaria` = ?, `id_tarifa_compra` = ?, `tarifa_compra_obtenida` = ?, `id_tarifa_venta` = ?, `tarifa_venta_obtenida` = ? WHERE  `id_usuario` = ?;";
 		$params = array( 
 			$usuario->getIdDireccion(), 
 			$usuario->getIdDireccionAlterna(), 
@@ -445,7 +445,7 @@ abstract class UsuarioDAOBase extends DAO
 	  **/
 	private static final function create( &$usuario )
 	{
-		$sql = "INSERT INTO usuario ( id_usuario, id_direccion, id_direccion_alterna, id_sucursal, id_rol, id_clasificacion_cliente, id_clasificacion_proveedor, id_moneda, fecha_asignacion_rol, nombre, rfc, curp, comision_ventas, telefono_personal1, telefono_personal2, fecha_alta, fecha_baja, activo, limite_credito, descuento, password, last_login, consignatario, salario, correo_electronico, pagina_web, saldo_del_ejercicio, ventas_a_credito, representante_legal, facturar_a_terceros, dia_de_pago, mensajeria, intereses_moratorios, denominacion_comercial, dias_de_credito, cuenta_de_mensajeria, dia_de_revision, codigo_usuario, dias_de_embarque, tiempo_entrega, cuenta_bancaria, id_tarifa_compra, tarifa_compra_obtenida, id_tarifa_venta, tarifa_venta_obtenida ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO usuario ( `id_usuario`, `id_direccion`, `id_direccion_alterna`, `id_sucursal`, `id_rol`, `id_clasificacion_cliente`, `id_clasificacion_proveedor`, `id_moneda`, `fecha_asignacion_rol`, `nombre`, `rfc`, `curp`, `comision_ventas`, `telefono_personal1`, `telefono_personal2`, `fecha_alta`, `fecha_baja`, `activo`, `limite_credito`, `descuento`, `password`, `last_login`, `consignatario`, `salario`, `correo_electronico`, `pagina_web`, `saldo_del_ejercicio`, `ventas_a_credito`, `representante_legal`, `facturar_a_terceros`, `dia_de_pago`, `mensajeria`, `intereses_moratorios`, `denominacion_comercial`, `dias_de_credito`, `cuenta_de_mensajeria`, `dia_de_revision`, `codigo_usuario`, `dias_de_embarque`, `tiempo_entrega`, `cuenta_bancaria`, `id_tarifa_compra`, `tarifa_compra_obtenida`, `id_tarifa_venta`, `tarifa_venta_obtenida` ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$usuario->getIdUsuario(), 
 			$usuario->getIdDireccion(), 
@@ -541,495 +541,495 @@ abstract class UsuarioDAOBase extends DAO
 		$sql = "SELECT * from usuario WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $usuarioA->getIdUsuario()) ) ) & ( ! is_null ( ($b = $usuarioB->getIdUsuario()) ) ) ){
-				$sql .= " id_usuario >= ? AND id_usuario <= ? AND";
+				$sql .= " `id_usuario` >= ? AND `id_usuario` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_usuario = ? AND"; 
+			$sql .= " `id_usuario` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getIdDireccion()) ) ) & ( ! is_null ( ($b = $usuarioB->getIdDireccion()) ) ) ){
-				$sql .= " id_direccion >= ? AND id_direccion <= ? AND";
+				$sql .= " `id_direccion` >= ? AND `id_direccion` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_direccion = ? AND"; 
+			$sql .= " `id_direccion` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getIdDireccionAlterna()) ) ) & ( ! is_null ( ($b = $usuarioB->getIdDireccionAlterna()) ) ) ){
-				$sql .= " id_direccion_alterna >= ? AND id_direccion_alterna <= ? AND";
+				$sql .= " `id_direccion_alterna` >= ? AND `id_direccion_alterna` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_direccion_alterna = ? AND"; 
+			$sql .= " `id_direccion_alterna` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getIdSucursal()) ) ) & ( ! is_null ( ($b = $usuarioB->getIdSucursal()) ) ) ){
-				$sql .= " id_sucursal >= ? AND id_sucursal <= ? AND";
+				$sql .= " `id_sucursal` >= ? AND `id_sucursal` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_sucursal = ? AND"; 
+			$sql .= " `id_sucursal` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getIdRol()) ) ) & ( ! is_null ( ($b = $usuarioB->getIdRol()) ) ) ){
-				$sql .= " id_rol >= ? AND id_rol <= ? AND";
+				$sql .= " `id_rol` >= ? AND `id_rol` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_rol = ? AND"; 
+			$sql .= " `id_rol` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getIdClasificacionCliente()) ) ) & ( ! is_null ( ($b = $usuarioB->getIdClasificacionCliente()) ) ) ){
-				$sql .= " id_clasificacion_cliente >= ? AND id_clasificacion_cliente <= ? AND";
+				$sql .= " `id_clasificacion_cliente` >= ? AND `id_clasificacion_cliente` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_clasificacion_cliente = ? AND"; 
+			$sql .= " `id_clasificacion_cliente` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getIdClasificacionProveedor()) ) ) & ( ! is_null ( ($b = $usuarioB->getIdClasificacionProveedor()) ) ) ){
-				$sql .= " id_clasificacion_proveedor >= ? AND id_clasificacion_proveedor <= ? AND";
+				$sql .= " `id_clasificacion_proveedor` >= ? AND `id_clasificacion_proveedor` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_clasificacion_proveedor = ? AND"; 
+			$sql .= " `id_clasificacion_proveedor` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getIdMoneda()) ) ) & ( ! is_null ( ($b = $usuarioB->getIdMoneda()) ) ) ){
-				$sql .= " id_moneda >= ? AND id_moneda <= ? AND";
+				$sql .= " `id_moneda` >= ? AND `id_moneda` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_moneda = ? AND"; 
+			$sql .= " `id_moneda` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getFechaAsignacionRol()) ) ) & ( ! is_null ( ($b = $usuarioB->getFechaAsignacionRol()) ) ) ){
-				$sql .= " fecha_asignacion_rol >= ? AND fecha_asignacion_rol <= ? AND";
+				$sql .= " `fecha_asignacion_rol` >= ? AND `fecha_asignacion_rol` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " fecha_asignacion_rol = ? AND"; 
+			$sql .= " `fecha_asignacion_rol` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getNombre()) ) ) & ( ! is_null ( ($b = $usuarioB->getNombre()) ) ) ){
-				$sql .= " nombre >= ? AND nombre <= ? AND";
+				$sql .= " `nombre` >= ? AND `nombre` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " nombre = ? AND"; 
+			$sql .= " `nombre` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getRfc()) ) ) & ( ! is_null ( ($b = $usuarioB->getRfc()) ) ) ){
-				$sql .= " rfc >= ? AND rfc <= ? AND";
+				$sql .= " `rfc` >= ? AND `rfc` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " rfc = ? AND"; 
+			$sql .= " `rfc` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getCurp()) ) ) & ( ! is_null ( ($b = $usuarioB->getCurp()) ) ) ){
-				$sql .= " curp >= ? AND curp <= ? AND";
+				$sql .= " `curp` >= ? AND `curp` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " curp = ? AND"; 
+			$sql .= " `curp` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getComisionVentas()) ) ) & ( ! is_null ( ($b = $usuarioB->getComisionVentas()) ) ) ){
-				$sql .= " comision_ventas >= ? AND comision_ventas <= ? AND";
+				$sql .= " `comision_ventas` >= ? AND `comision_ventas` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " comision_ventas = ? AND"; 
+			$sql .= " `comision_ventas` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getTelefonoPersonal1()) ) ) & ( ! is_null ( ($b = $usuarioB->getTelefonoPersonal1()) ) ) ){
-				$sql .= " telefono_personal1 >= ? AND telefono_personal1 <= ? AND";
+				$sql .= " `telefono_personal1` >= ? AND `telefono_personal1` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " telefono_personal1 = ? AND"; 
+			$sql .= " `telefono_personal1` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getTelefonoPersonal2()) ) ) & ( ! is_null ( ($b = $usuarioB->getTelefonoPersonal2()) ) ) ){
-				$sql .= " telefono_personal2 >= ? AND telefono_personal2 <= ? AND";
+				$sql .= " `telefono_personal2` >= ? AND `telefono_personal2` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " telefono_personal2 = ? AND"; 
+			$sql .= " `telefono_personal2` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getFechaAlta()) ) ) & ( ! is_null ( ($b = $usuarioB->getFechaAlta()) ) ) ){
-				$sql .= " fecha_alta >= ? AND fecha_alta <= ? AND";
+				$sql .= " `fecha_alta` >= ? AND `fecha_alta` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " fecha_alta = ? AND"; 
+			$sql .= " `fecha_alta` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getFechaBaja()) ) ) & ( ! is_null ( ($b = $usuarioB->getFechaBaja()) ) ) ){
-				$sql .= " fecha_baja >= ? AND fecha_baja <= ? AND";
+				$sql .= " `fecha_baja` >= ? AND `fecha_baja` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " fecha_baja = ? AND"; 
+			$sql .= " `fecha_baja` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getActivo()) ) ) & ( ! is_null ( ($b = $usuarioB->getActivo()) ) ) ){
-				$sql .= " activo >= ? AND activo <= ? AND";
+				$sql .= " `activo` >= ? AND `activo` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " activo = ? AND"; 
+			$sql .= " `activo` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getLimiteCredito()) ) ) & ( ! is_null ( ($b = $usuarioB->getLimiteCredito()) ) ) ){
-				$sql .= " limite_credito >= ? AND limite_credito <= ? AND";
+				$sql .= " `limite_credito` >= ? AND `limite_credito` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " limite_credito = ? AND"; 
+			$sql .= " `limite_credito` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getDescuento()) ) ) & ( ! is_null ( ($b = $usuarioB->getDescuento()) ) ) ){
-				$sql .= " descuento >= ? AND descuento <= ? AND";
+				$sql .= " `descuento` >= ? AND `descuento` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " descuento = ? AND"; 
+			$sql .= " `descuento` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getPassword()) ) ) & ( ! is_null ( ($b = $usuarioB->getPassword()) ) ) ){
-				$sql .= " password >= ? AND password <= ? AND";
+				$sql .= " `password` >= ? AND `password` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " password = ? AND"; 
+			$sql .= " `password` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getLastLogin()) ) ) & ( ! is_null ( ($b = $usuarioB->getLastLogin()) ) ) ){
-				$sql .= " last_login >= ? AND last_login <= ? AND";
+				$sql .= " `last_login` >= ? AND `last_login` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " last_login = ? AND"; 
+			$sql .= " `last_login` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getConsignatario()) ) ) & ( ! is_null ( ($b = $usuarioB->getConsignatario()) ) ) ){
-				$sql .= " consignatario >= ? AND consignatario <= ? AND";
+				$sql .= " `consignatario` >= ? AND `consignatario` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " consignatario = ? AND"; 
+			$sql .= " `consignatario` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getSalario()) ) ) & ( ! is_null ( ($b = $usuarioB->getSalario()) ) ) ){
-				$sql .= " salario >= ? AND salario <= ? AND";
+				$sql .= " `salario` >= ? AND `salario` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " salario = ? AND"; 
+			$sql .= " `salario` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getCorreoElectronico()) ) ) & ( ! is_null ( ($b = $usuarioB->getCorreoElectronico()) ) ) ){
-				$sql .= " correo_electronico >= ? AND correo_electronico <= ? AND";
+				$sql .= " `correo_electronico` >= ? AND `correo_electronico` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " correo_electronico = ? AND"; 
+			$sql .= " `correo_electronico` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getPaginaWeb()) ) ) & ( ! is_null ( ($b = $usuarioB->getPaginaWeb()) ) ) ){
-				$sql .= " pagina_web >= ? AND pagina_web <= ? AND";
+				$sql .= " `pagina_web` >= ? AND `pagina_web` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " pagina_web = ? AND"; 
+			$sql .= " `pagina_web` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getSaldoDelEjercicio()) ) ) & ( ! is_null ( ($b = $usuarioB->getSaldoDelEjercicio()) ) ) ){
-				$sql .= " saldo_del_ejercicio >= ? AND saldo_del_ejercicio <= ? AND";
+				$sql .= " `saldo_del_ejercicio` >= ? AND `saldo_del_ejercicio` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " saldo_del_ejercicio = ? AND"; 
+			$sql .= " `saldo_del_ejercicio` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getVentasACredito()) ) ) & ( ! is_null ( ($b = $usuarioB->getVentasACredito()) ) ) ){
-				$sql .= " ventas_a_credito >= ? AND ventas_a_credito <= ? AND";
+				$sql .= " `ventas_a_credito` >= ? AND `ventas_a_credito` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " ventas_a_credito = ? AND"; 
+			$sql .= " `ventas_a_credito` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getRepresentanteLegal()) ) ) & ( ! is_null ( ($b = $usuarioB->getRepresentanteLegal()) ) ) ){
-				$sql .= " representante_legal >= ? AND representante_legal <= ? AND";
+				$sql .= " `representante_legal` >= ? AND `representante_legal` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " representante_legal = ? AND"; 
+			$sql .= " `representante_legal` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getFacturarATerceros()) ) ) & ( ! is_null ( ($b = $usuarioB->getFacturarATerceros()) ) ) ){
-				$sql .= " facturar_a_terceros >= ? AND facturar_a_terceros <= ? AND";
+				$sql .= " `facturar_a_terceros` >= ? AND `facturar_a_terceros` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " facturar_a_terceros = ? AND"; 
+			$sql .= " `facturar_a_terceros` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getDiaDePago()) ) ) & ( ! is_null ( ($b = $usuarioB->getDiaDePago()) ) ) ){
-				$sql .= " dia_de_pago >= ? AND dia_de_pago <= ? AND";
+				$sql .= " `dia_de_pago` >= ? AND `dia_de_pago` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " dia_de_pago = ? AND"; 
+			$sql .= " `dia_de_pago` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getMensajeria()) ) ) & ( ! is_null ( ($b = $usuarioB->getMensajeria()) ) ) ){
-				$sql .= " mensajeria >= ? AND mensajeria <= ? AND";
+				$sql .= " `mensajeria` >= ? AND `mensajeria` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " mensajeria = ? AND"; 
+			$sql .= " `mensajeria` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getInteresesMoratorios()) ) ) & ( ! is_null ( ($b = $usuarioB->getInteresesMoratorios()) ) ) ){
-				$sql .= " intereses_moratorios >= ? AND intereses_moratorios <= ? AND";
+				$sql .= " `intereses_moratorios` >= ? AND `intereses_moratorios` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " intereses_moratorios = ? AND"; 
+			$sql .= " `intereses_moratorios` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getDenominacionComercial()) ) ) & ( ! is_null ( ($b = $usuarioB->getDenominacionComercial()) ) ) ){
-				$sql .= " denominacion_comercial >= ? AND denominacion_comercial <= ? AND";
+				$sql .= " `denominacion_comercial` >= ? AND `denominacion_comercial` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " denominacion_comercial = ? AND"; 
+			$sql .= " `denominacion_comercial` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getDiasDeCredito()) ) ) & ( ! is_null ( ($b = $usuarioB->getDiasDeCredito()) ) ) ){
-				$sql .= " dias_de_credito >= ? AND dias_de_credito <= ? AND";
+				$sql .= " `dias_de_credito` >= ? AND `dias_de_credito` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " dias_de_credito = ? AND"; 
+			$sql .= " `dias_de_credito` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getCuentaDeMensajeria()) ) ) & ( ! is_null ( ($b = $usuarioB->getCuentaDeMensajeria()) ) ) ){
-				$sql .= " cuenta_de_mensajeria >= ? AND cuenta_de_mensajeria <= ? AND";
+				$sql .= " `cuenta_de_mensajeria` >= ? AND `cuenta_de_mensajeria` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " cuenta_de_mensajeria = ? AND"; 
+			$sql .= " `cuenta_de_mensajeria` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getDiaDeRevision()) ) ) & ( ! is_null ( ($b = $usuarioB->getDiaDeRevision()) ) ) ){
-				$sql .= " dia_de_revision >= ? AND dia_de_revision <= ? AND";
+				$sql .= " `dia_de_revision` >= ? AND `dia_de_revision` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " dia_de_revision = ? AND"; 
+			$sql .= " `dia_de_revision` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getCodigoUsuario()) ) ) & ( ! is_null ( ($b = $usuarioB->getCodigoUsuario()) ) ) ){
-				$sql .= " codigo_usuario >= ? AND codigo_usuario <= ? AND";
+				$sql .= " `codigo_usuario` >= ? AND `codigo_usuario` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " codigo_usuario = ? AND"; 
+			$sql .= " `codigo_usuario` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getDiasDeEmbarque()) ) ) & ( ! is_null ( ($b = $usuarioB->getDiasDeEmbarque()) ) ) ){
-				$sql .= " dias_de_embarque >= ? AND dias_de_embarque <= ? AND";
+				$sql .= " `dias_de_embarque` >= ? AND `dias_de_embarque` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " dias_de_embarque = ? AND"; 
+			$sql .= " `dias_de_embarque` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getTiempoEntrega()) ) ) & ( ! is_null ( ($b = $usuarioB->getTiempoEntrega()) ) ) ){
-				$sql .= " tiempo_entrega >= ? AND tiempo_entrega <= ? AND";
+				$sql .= " `tiempo_entrega` >= ? AND `tiempo_entrega` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " tiempo_entrega = ? AND"; 
+			$sql .= " `tiempo_entrega` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getCuentaBancaria()) ) ) & ( ! is_null ( ($b = $usuarioB->getCuentaBancaria()) ) ) ){
-				$sql .= " cuenta_bancaria >= ? AND cuenta_bancaria <= ? AND";
+				$sql .= " `cuenta_bancaria` >= ? AND `cuenta_bancaria` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " cuenta_bancaria = ? AND"; 
+			$sql .= " `cuenta_bancaria` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getIdTarifaCompra()) ) ) & ( ! is_null ( ($b = $usuarioB->getIdTarifaCompra()) ) ) ){
-				$sql .= " id_tarifa_compra >= ? AND id_tarifa_compra <= ? AND";
+				$sql .= " `id_tarifa_compra` >= ? AND `id_tarifa_compra` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_tarifa_compra = ? AND"; 
+			$sql .= " `id_tarifa_compra` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getTarifaCompraObtenida()) ) ) & ( ! is_null ( ($b = $usuarioB->getTarifaCompraObtenida()) ) ) ){
-				$sql .= " tarifa_compra_obtenida >= ? AND tarifa_compra_obtenida <= ? AND";
+				$sql .= " `tarifa_compra_obtenida` >= ? AND `tarifa_compra_obtenida` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " tarifa_compra_obtenida = ? AND"; 
+			$sql .= " `tarifa_compra_obtenida` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getIdTarifaVenta()) ) ) & ( ! is_null ( ($b = $usuarioB->getIdTarifaVenta()) ) ) ){
-				$sql .= " id_tarifa_venta >= ? AND id_tarifa_venta <= ? AND";
+				$sql .= " `id_tarifa_venta` >= ? AND `id_tarifa_venta` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_tarifa_venta = ? AND"; 
+			$sql .= " `id_tarifa_venta` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $usuarioA->getTarifaVentaObtenida()) ) ) & ( ! is_null ( ($b = $usuarioB->getTarifaVentaObtenida()) ) ) ){
-				$sql .= " tarifa_venta_obtenida >= ? AND tarifa_venta_obtenida <= ? AND";
+				$sql .= " `tarifa_venta_obtenida` >= ? AND `tarifa_venta_obtenida` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " tarifa_venta_obtenida = ? AND"; 
+			$sql .= " `tarifa_venta_obtenida` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

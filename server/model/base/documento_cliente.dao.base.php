@@ -123,12 +123,12 @@ abstract class DocumentoClienteDAOBase extends DAO
 		$sql = "SELECT * from documento_cliente WHERE ("; 
 		$val = array();
 		if( ! is_null( $documento_cliente->getIdDocumento() ) ){
-			$sql .= " id_documento = ? AND";
+			$sql .= " `id_documento` = ? AND";
 			array_push( $val, $documento_cliente->getIdDocumento() );
 		}
 
 		if( ! is_null( $documento_cliente->getIdCliente() ) ){
-			$sql .= " id_cliente = ? AND";
+			$sql .= " `id_cliente` = ? AND";
 			array_push( $val, $documento_cliente->getIdCliente() );
 		}
 
@@ -180,7 +180,7 @@ abstract class DocumentoClienteDAOBase extends DAO
 	  **/
 	private static final function create( &$documento_cliente )
 	{
-		$sql = "INSERT INTO documento_cliente ( id_documento, id_cliente ) VALUES ( ?, ?);";
+		$sql = "INSERT INTO documento_cliente ( `id_documento`, `id_cliente` ) VALUES ( ?, ?);";
 		$params = array( 
 			$documento_cliente->getIdDocumento(), 
 			$documento_cliente->getIdCliente(), 
@@ -233,22 +233,22 @@ abstract class DocumentoClienteDAOBase extends DAO
 		$sql = "SELECT * from documento_cliente WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $documento_clienteA->getIdDocumento()) ) ) & ( ! is_null ( ($b = $documento_clienteB->getIdDocumento()) ) ) ){
-				$sql .= " id_documento >= ? AND id_documento <= ? AND";
+				$sql .= " `id_documento` >= ? AND `id_documento` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_documento = ? AND"; 
+			$sql .= " `id_documento` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $documento_clienteA->getIdCliente()) ) ) & ( ! is_null ( ($b = $documento_clienteB->getIdCliente()) ) ) ){
-				$sql .= " id_cliente >= ? AND id_cliente <= ? AND";
+				$sql .= " `id_cliente` >= ? AND `id_cliente` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_cliente = ? AND"; 
+			$sql .= " `id_cliente` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

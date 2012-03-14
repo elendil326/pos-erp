@@ -122,27 +122,27 @@ abstract class ConceptoGastoDAOBase extends DAO
 		$sql = "SELECT * from concepto_gasto WHERE ("; 
 		$val = array();
 		if( ! is_null( $concepto_gasto->getIdConceptoGasto() ) ){
-			$sql .= " id_concepto_gasto = ? AND";
+			$sql .= " `id_concepto_gasto` = ? AND";
 			array_push( $val, $concepto_gasto->getIdConceptoGasto() );
 		}
 
 		if( ! is_null( $concepto_gasto->getNombre() ) ){
-			$sql .= " nombre = ? AND";
+			$sql .= " `nombre` = ? AND";
 			array_push( $val, $concepto_gasto->getNombre() );
 		}
 
 		if( ! is_null( $concepto_gasto->getDescripcion() ) ){
-			$sql .= " descripcion = ? AND";
+			$sql .= " `descripcion` = ? AND";
 			array_push( $val, $concepto_gasto->getDescripcion() );
 		}
 
 		if( ! is_null( $concepto_gasto->getMonto() ) ){
-			$sql .= " monto = ? AND";
+			$sql .= " `monto` = ? AND";
 			array_push( $val, $concepto_gasto->getMonto() );
 		}
 
 		if( ! is_null( $concepto_gasto->getActivo() ) ){
-			$sql .= " activo = ? AND";
+			$sql .= " `activo` = ? AND";
 			array_push( $val, $concepto_gasto->getActivo() );
 		}
 
@@ -176,7 +176,7 @@ abstract class ConceptoGastoDAOBase extends DAO
 	  **/
 	private static final function update( $concepto_gasto )
 	{
-		$sql = "UPDATE concepto_gasto SET  nombre = ?, descripcion = ?, monto = ?, activo = ? WHERE  id_concepto_gasto = ?;";
+		$sql = "UPDATE concepto_gasto SET  `nombre` = ?, `descripcion` = ?, `monto` = ?, `activo` = ? WHERE  `id_concepto_gasto` = ?;";
 		$params = array( 
 			$concepto_gasto->getNombre(), 
 			$concepto_gasto->getDescripcion(), 
@@ -205,7 +205,7 @@ abstract class ConceptoGastoDAOBase extends DAO
 	  **/
 	private static final function create( &$concepto_gasto )
 	{
-		$sql = "INSERT INTO concepto_gasto ( id_concepto_gasto, nombre, descripcion, monto, activo ) VALUES ( ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO concepto_gasto ( `id_concepto_gasto`, `nombre`, `descripcion`, `monto`, `activo` ) VALUES ( ?, ?, ?, ?, ?);";
 		$params = array( 
 			$concepto_gasto->getIdConceptoGasto(), 
 			$concepto_gasto->getNombre(), 
@@ -261,55 +261,55 @@ abstract class ConceptoGastoDAOBase extends DAO
 		$sql = "SELECT * from concepto_gasto WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $concepto_gastoA->getIdConceptoGasto()) ) ) & ( ! is_null ( ($b = $concepto_gastoB->getIdConceptoGasto()) ) ) ){
-				$sql .= " id_concepto_gasto >= ? AND id_concepto_gasto <= ? AND";
+				$sql .= " `id_concepto_gasto` >= ? AND `id_concepto_gasto` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_concepto_gasto = ? AND"; 
+			$sql .= " `id_concepto_gasto` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $concepto_gastoA->getNombre()) ) ) & ( ! is_null ( ($b = $concepto_gastoB->getNombre()) ) ) ){
-				$sql .= " nombre >= ? AND nombre <= ? AND";
+				$sql .= " `nombre` >= ? AND `nombre` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " nombre = ? AND"; 
+			$sql .= " `nombre` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $concepto_gastoA->getDescripcion()) ) ) & ( ! is_null ( ($b = $concepto_gastoB->getDescripcion()) ) ) ){
-				$sql .= " descripcion >= ? AND descripcion <= ? AND";
+				$sql .= " `descripcion` >= ? AND `descripcion` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " descripcion = ? AND"; 
+			$sql .= " `descripcion` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $concepto_gastoA->getMonto()) ) ) & ( ! is_null ( ($b = $concepto_gastoB->getMonto()) ) ) ){
-				$sql .= " monto >= ? AND monto <= ? AND";
+				$sql .= " `monto` >= ? AND `monto` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " monto = ? AND"; 
+			$sql .= " `monto` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $concepto_gastoA->getActivo()) ) ) & ( ! is_null ( ($b = $concepto_gastoB->getActivo()) ) ) ){
-				$sql .= " activo >= ? AND activo <= ? AND";
+				$sql .= " `activo` >= ? AND `activo` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " activo = ? AND"; 
+			$sql .= " `activo` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

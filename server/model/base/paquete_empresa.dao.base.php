@@ -123,12 +123,12 @@ abstract class PaqueteEmpresaDAOBase extends DAO
 		$sql = "SELECT * from paquete_empresa WHERE ("; 
 		$val = array();
 		if( ! is_null( $paquete_empresa->getIdPaquete() ) ){
-			$sql .= " id_paquete = ? AND";
+			$sql .= " `id_paquete` = ? AND";
 			array_push( $val, $paquete_empresa->getIdPaquete() );
 		}
 
 		if( ! is_null( $paquete_empresa->getIdEmpresa() ) ){
-			$sql .= " id_empresa = ? AND";
+			$sql .= " `id_empresa` = ? AND";
 			array_push( $val, $paquete_empresa->getIdEmpresa() );
 		}
 
@@ -180,7 +180,7 @@ abstract class PaqueteEmpresaDAOBase extends DAO
 	  **/
 	private static final function create( &$paquete_empresa )
 	{
-		$sql = "INSERT INTO paquete_empresa ( id_paquete, id_empresa ) VALUES ( ?, ?);";
+		$sql = "INSERT INTO paquete_empresa ( `id_paquete`, `id_empresa` ) VALUES ( ?, ?);";
 		$params = array( 
 			$paquete_empresa->getIdPaquete(), 
 			$paquete_empresa->getIdEmpresa(), 
@@ -233,22 +233,22 @@ abstract class PaqueteEmpresaDAOBase extends DAO
 		$sql = "SELECT * from paquete_empresa WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $paquete_empresaA->getIdPaquete()) ) ) & ( ! is_null ( ($b = $paquete_empresaB->getIdPaquete()) ) ) ){
-				$sql .= " id_paquete >= ? AND id_paquete <= ? AND";
+				$sql .= " `id_paquete` >= ? AND `id_paquete` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_paquete = ? AND"; 
+			$sql .= " `id_paquete` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $paquete_empresaA->getIdEmpresa()) ) ) & ( ! is_null ( ($b = $paquete_empresaB->getIdEmpresa()) ) ) ){
-				$sql .= " id_empresa >= ? AND id_empresa <= ? AND";
+				$sql .= " `id_empresa` >= ? AND `id_empresa` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_empresa = ? AND"; 
+			$sql .= " `id_empresa` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

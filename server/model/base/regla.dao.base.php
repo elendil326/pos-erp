@@ -122,87 +122,87 @@ abstract class ReglaDAOBase extends DAO
 		$sql = "SELECT * from regla WHERE ("; 
 		$val = array();
 		if( ! is_null( $regla->getIdRegla() ) ){
-			$sql .= " id_regla = ? AND";
+			$sql .= " `id_regla` = ? AND";
 			array_push( $val, $regla->getIdRegla() );
 		}
 
 		if( ! is_null( $regla->getIdVersion() ) ){
-			$sql .= " id_version = ? AND";
+			$sql .= " `id_version` = ? AND";
 			array_push( $val, $regla->getIdVersion() );
 		}
 
 		if( ! is_null( $regla->getNombre() ) ){
-			$sql .= " nombre = ? AND";
+			$sql .= " `nombre` = ? AND";
 			array_push( $val, $regla->getNombre() );
 		}
 
 		if( ! is_null( $regla->getIdProducto() ) ){
-			$sql .= " id_producto = ? AND";
+			$sql .= " `id_producto` = ? AND";
 			array_push( $val, $regla->getIdProducto() );
 		}
 
 		if( ! is_null( $regla->getIdClasificacionProducto() ) ){
-			$sql .= " id_clasificacion_producto = ? AND";
+			$sql .= " `id_clasificacion_producto` = ? AND";
 			array_push( $val, $regla->getIdClasificacionProducto() );
 		}
 
 		if( ! is_null( $regla->getIdUnidad() ) ){
-			$sql .= " id_unidad = ? AND";
+			$sql .= " `id_unidad` = ? AND";
 			array_push( $val, $regla->getIdUnidad() );
 		}
 
 		if( ! is_null( $regla->getIdServicio() ) ){
-			$sql .= " id_servicio = ? AND";
+			$sql .= " `id_servicio` = ? AND";
 			array_push( $val, $regla->getIdServicio() );
 		}
 
 		if( ! is_null( $regla->getIdClasificacionServicio() ) ){
-			$sql .= " id_clasificacion_servicio = ? AND";
+			$sql .= " `id_clasificacion_servicio` = ? AND";
 			array_push( $val, $regla->getIdClasificacionServicio() );
 		}
 
 		if( ! is_null( $regla->getIdPaquete() ) ){
-			$sql .= " id_paquete = ? AND";
+			$sql .= " `id_paquete` = ? AND";
 			array_push( $val, $regla->getIdPaquete() );
 		}
 
 		if( ! is_null( $regla->getCantidadMinima() ) ){
-			$sql .= " cantidad_minima = ? AND";
+			$sql .= " `cantidad_minima` = ? AND";
 			array_push( $val, $regla->getCantidadMinima() );
 		}
 
 		if( ! is_null( $regla->getIdTarifa() ) ){
-			$sql .= " id_tarifa = ? AND";
+			$sql .= " `id_tarifa` = ? AND";
 			array_push( $val, $regla->getIdTarifa() );
 		}
 
 		if( ! is_null( $regla->getPorcentajeUtilidad() ) ){
-			$sql .= " porcentaje_utilidad = ? AND";
+			$sql .= " `porcentaje_utilidad` = ? AND";
 			array_push( $val, $regla->getPorcentajeUtilidad() );
 		}
 
 		if( ! is_null( $regla->getUtilidadNeta() ) ){
-			$sql .= " utilidad_neta = ? AND";
+			$sql .= " `utilidad_neta` = ? AND";
 			array_push( $val, $regla->getUtilidadNeta() );
 		}
 
 		if( ! is_null( $regla->getMetodoRedondeo() ) ){
-			$sql .= " metodo_redondeo = ? AND";
+			$sql .= " `metodo_redondeo` = ? AND";
 			array_push( $val, $regla->getMetodoRedondeo() );
 		}
 
 		if( ! is_null( $regla->getMargenMin() ) ){
-			$sql .= " margen_min = ? AND";
+			$sql .= " `margen_min` = ? AND";
 			array_push( $val, $regla->getMargenMin() );
 		}
 
 		if( ! is_null( $regla->getMargenMax() ) ){
-			$sql .= " margen_max = ? AND";
+			$sql .= " `margen_max` = ? AND";
 			array_push( $val, $regla->getMargenMax() );
 		}
 
 		if( ! is_null( $regla->getSecuencia() ) ){
-			$sql .= " secuencia = ? AND";
+			$sql .= " `secuencia` = ? AND";
 			array_push( $val, $regla->getSecuencia() );
 		}
 
@@ -236,7 +236,7 @@ abstract class ReglaDAOBase extends DAO
 	  **/
 	private static final function update( $regla )
 	{
-		$sql = "UPDATE regla SET  id_version = ?, nombre = ?, id_producto = ?, id_clasificacion_producto = ?, id_unidad = ?, id_servicio = ?, id_clasificacion_servicio = ?, id_paquete = ?, cantidad_minima = ?, id_tarifa = ?, porcentaje_utilidad = ?, utilidad_neta = ?, metodo_redondeo = ?, margen_min = ?, margen_max = ?, secuencia = ? WHERE  id_regla = ?;";
+		$sql = "UPDATE regla SET  `id_version` = ?, `nombre` = ?, `id_producto` = ?, `id_clasificacion_producto` = ?, `id_unidad` = ?, `id_servicio` = ?, `id_clasificacion_servicio` = ?, `id_paquete` = ?, `cantidad_minima` = ?, `id_tarifa` = ?, `porcentaje_utilidad` = ?, `utilidad_neta` = ?, `metodo_redondeo` = ?, `margen_min` = ?, `margen_max` = ?, `secuencia` = ? WHERE  `id_regla` = ?;";
 		$params = array( 
 			$regla->getIdVersion(), 
 			$regla->getNombre(), 
@@ -277,7 +277,7 @@ abstract class ReglaDAOBase extends DAO
 	  **/
 	private static final function create( &$regla )
 	{
-		$sql = "INSERT INTO regla ( id_regla, id_version, nombre, id_producto, id_clasificacion_producto, id_unidad, id_servicio, id_clasificacion_servicio, id_paquete, cantidad_minima, id_tarifa, porcentaje_utilidad, utilidad_neta, metodo_redondeo, margen_min, margen_max, secuencia ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO regla ( `id_regla`, `id_version`, `nombre`, `id_producto`, `id_clasificacion_producto`, `id_unidad`, `id_servicio`, `id_clasificacion_servicio`, `id_paquete`, `cantidad_minima`, `id_tarifa`, `porcentaje_utilidad`, `utilidad_neta`, `metodo_redondeo`, `margen_min`, `margen_max`, `secuencia` ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$regla->getIdRegla(), 
 			$regla->getIdVersion(), 
@@ -345,187 +345,187 @@ abstract class ReglaDAOBase extends DAO
 		$sql = "SELECT * from regla WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $reglaA->getIdRegla()) ) ) & ( ! is_null ( ($b = $reglaB->getIdRegla()) ) ) ){
-				$sql .= " id_regla >= ? AND id_regla <= ? AND";
+				$sql .= " `id_regla` >= ? AND `id_regla` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_regla = ? AND"; 
+			$sql .= " `id_regla` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $reglaA->getIdVersion()) ) ) & ( ! is_null ( ($b = $reglaB->getIdVersion()) ) ) ){
-				$sql .= " id_version >= ? AND id_version <= ? AND";
+				$sql .= " `id_version` >= ? AND `id_version` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_version = ? AND"; 
+			$sql .= " `id_version` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $reglaA->getNombre()) ) ) & ( ! is_null ( ($b = $reglaB->getNombre()) ) ) ){
-				$sql .= " nombre >= ? AND nombre <= ? AND";
+				$sql .= " `nombre` >= ? AND `nombre` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " nombre = ? AND"; 
+			$sql .= " `nombre` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $reglaA->getIdProducto()) ) ) & ( ! is_null ( ($b = $reglaB->getIdProducto()) ) ) ){
-				$sql .= " id_producto >= ? AND id_producto <= ? AND";
+				$sql .= " `id_producto` >= ? AND `id_producto` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_producto = ? AND"; 
+			$sql .= " `id_producto` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $reglaA->getIdClasificacionProducto()) ) ) & ( ! is_null ( ($b = $reglaB->getIdClasificacionProducto()) ) ) ){
-				$sql .= " id_clasificacion_producto >= ? AND id_clasificacion_producto <= ? AND";
+				$sql .= " `id_clasificacion_producto` >= ? AND `id_clasificacion_producto` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_clasificacion_producto = ? AND"; 
+			$sql .= " `id_clasificacion_producto` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $reglaA->getIdUnidad()) ) ) & ( ! is_null ( ($b = $reglaB->getIdUnidad()) ) ) ){
-				$sql .= " id_unidad >= ? AND id_unidad <= ? AND";
+				$sql .= " `id_unidad` >= ? AND `id_unidad` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_unidad = ? AND"; 
+			$sql .= " `id_unidad` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $reglaA->getIdServicio()) ) ) & ( ! is_null ( ($b = $reglaB->getIdServicio()) ) ) ){
-				$sql .= " id_servicio >= ? AND id_servicio <= ? AND";
+				$sql .= " `id_servicio` >= ? AND `id_servicio` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_servicio = ? AND"; 
+			$sql .= " `id_servicio` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $reglaA->getIdClasificacionServicio()) ) ) & ( ! is_null ( ($b = $reglaB->getIdClasificacionServicio()) ) ) ){
-				$sql .= " id_clasificacion_servicio >= ? AND id_clasificacion_servicio <= ? AND";
+				$sql .= " `id_clasificacion_servicio` >= ? AND `id_clasificacion_servicio` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_clasificacion_servicio = ? AND"; 
+			$sql .= " `id_clasificacion_servicio` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $reglaA->getIdPaquete()) ) ) & ( ! is_null ( ($b = $reglaB->getIdPaquete()) ) ) ){
-				$sql .= " id_paquete >= ? AND id_paquete <= ? AND";
+				$sql .= " `id_paquete` >= ? AND `id_paquete` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_paquete = ? AND"; 
+			$sql .= " `id_paquete` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $reglaA->getCantidadMinima()) ) ) & ( ! is_null ( ($b = $reglaB->getCantidadMinima()) ) ) ){
-				$sql .= " cantidad_minima >= ? AND cantidad_minima <= ? AND";
+				$sql .= " `cantidad_minima` >= ? AND `cantidad_minima` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " cantidad_minima = ? AND"; 
+			$sql .= " `cantidad_minima` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $reglaA->getIdTarifa()) ) ) & ( ! is_null ( ($b = $reglaB->getIdTarifa()) ) ) ){
-				$sql .= " id_tarifa >= ? AND id_tarifa <= ? AND";
+				$sql .= " `id_tarifa` >= ? AND `id_tarifa` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_tarifa = ? AND"; 
+			$sql .= " `id_tarifa` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $reglaA->getPorcentajeUtilidad()) ) ) & ( ! is_null ( ($b = $reglaB->getPorcentajeUtilidad()) ) ) ){
-				$sql .= " porcentaje_utilidad >= ? AND porcentaje_utilidad <= ? AND";
+				$sql .= " `porcentaje_utilidad` >= ? AND `porcentaje_utilidad` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " porcentaje_utilidad = ? AND"; 
+			$sql .= " `porcentaje_utilidad` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $reglaA->getUtilidadNeta()) ) ) & ( ! is_null ( ($b = $reglaB->getUtilidadNeta()) ) ) ){
-				$sql .= " utilidad_neta >= ? AND utilidad_neta <= ? AND";
+				$sql .= " `utilidad_neta` >= ? AND `utilidad_neta` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " utilidad_neta = ? AND"; 
+			$sql .= " `utilidad_neta` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $reglaA->getMetodoRedondeo()) ) ) & ( ! is_null ( ($b = $reglaB->getMetodoRedondeo()) ) ) ){
-				$sql .= " metodo_redondeo >= ? AND metodo_redondeo <= ? AND";
+				$sql .= " `metodo_redondeo` >= ? AND `metodo_redondeo` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " metodo_redondeo = ? AND"; 
+			$sql .= " `metodo_redondeo` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $reglaA->getMargenMin()) ) ) & ( ! is_null ( ($b = $reglaB->getMargenMin()) ) ) ){
-				$sql .= " margen_min >= ? AND margen_min <= ? AND";
+				$sql .= " `margen_min` >= ? AND `margen_min` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " margen_min = ? AND"; 
+			$sql .= " `margen_min` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $reglaA->getMargenMax()) ) ) & ( ! is_null ( ($b = $reglaB->getMargenMax()) ) ) ){
-				$sql .= " margen_max >= ? AND margen_max <= ? AND";
+				$sql .= " `margen_max` >= ? AND `margen_max` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " margen_max = ? AND"; 
+			$sql .= " `margen_max` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $reglaA->getSecuencia()) ) ) & ( ! is_null ( ($b = $reglaB->getSecuencia()) ) ) ){
-				$sql .= " secuencia >= ? AND secuencia <= ? AND";
+				$sql .= " `secuencia` >= ? AND `secuencia` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " secuencia = ? AND"; 
+			$sql .= " `secuencia` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

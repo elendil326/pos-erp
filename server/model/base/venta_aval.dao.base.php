@@ -123,12 +123,12 @@ abstract class VentaAvalDAOBase extends DAO
 		$sql = "SELECT * from venta_aval WHERE ("; 
 		$val = array();
 		if( ! is_null( $venta_aval->getIdVenta() ) ){
-			$sql .= " id_venta = ? AND";
+			$sql .= " `id_venta` = ? AND";
 			array_push( $val, $venta_aval->getIdVenta() );
 		}
 
 		if( ! is_null( $venta_aval->getIdAval() ) ){
-			$sql .= " id_aval = ? AND";
+			$sql .= " `id_aval` = ? AND";
 			array_push( $val, $venta_aval->getIdAval() );
 		}
 
@@ -180,7 +180,7 @@ abstract class VentaAvalDAOBase extends DAO
 	  **/
 	private static final function create( &$venta_aval )
 	{
-		$sql = "INSERT INTO venta_aval ( id_venta, id_aval ) VALUES ( ?, ?);";
+		$sql = "INSERT INTO venta_aval ( `id_venta`, `id_aval` ) VALUES ( ?, ?);";
 		$params = array( 
 			$venta_aval->getIdVenta(), 
 			$venta_aval->getIdAval(), 
@@ -233,22 +233,22 @@ abstract class VentaAvalDAOBase extends DAO
 		$sql = "SELECT * from venta_aval WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $venta_avalA->getIdVenta()) ) ) & ( ! is_null ( ($b = $venta_avalB->getIdVenta()) ) ) ){
-				$sql .= " id_venta >= ? AND id_venta <= ? AND";
+				$sql .= " `id_venta` >= ? AND `id_venta` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_venta = ? AND"; 
+			$sql .= " `id_venta` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $venta_avalA->getIdAval()) ) ) & ( ! is_null ( ($b = $venta_avalB->getIdAval()) ) ) ){
-				$sql .= " id_aval >= ? AND id_aval <= ? AND";
+				$sql .= " `id_aval` >= ? AND `id_aval` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_aval = ? AND"; 
+			$sql .= " `id_aval` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

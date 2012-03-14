@@ -123,12 +123,12 @@ abstract class RetencionClasificacionServicioDAOBase extends DAO
 		$sql = "SELECT * from retencion_clasificacion_servicio WHERE ("; 
 		$val = array();
 		if( ! is_null( $retencion_clasificacion_servicio->getIdRetencion() ) ){
-			$sql .= " id_retencion = ? AND";
+			$sql .= " `id_retencion` = ? AND";
 			array_push( $val, $retencion_clasificacion_servicio->getIdRetencion() );
 		}
 
 		if( ! is_null( $retencion_clasificacion_servicio->getIdClasificacionServicio() ) ){
-			$sql .= " id_clasificacion_servicio = ? AND";
+			$sql .= " `id_clasificacion_servicio` = ? AND";
 			array_push( $val, $retencion_clasificacion_servicio->getIdClasificacionServicio() );
 		}
 
@@ -180,7 +180,7 @@ abstract class RetencionClasificacionServicioDAOBase extends DAO
 	  **/
 	private static final function create( &$retencion_clasificacion_servicio )
 	{
-		$sql = "INSERT INTO retencion_clasificacion_servicio ( id_retencion, id_clasificacion_servicio ) VALUES ( ?, ?);";
+		$sql = "INSERT INTO retencion_clasificacion_servicio ( `id_retencion`, `id_clasificacion_servicio` ) VALUES ( ?, ?);";
 		$params = array( 
 			$retencion_clasificacion_servicio->getIdRetencion(), 
 			$retencion_clasificacion_servicio->getIdClasificacionServicio(), 
@@ -233,22 +233,22 @@ abstract class RetencionClasificacionServicioDAOBase extends DAO
 		$sql = "SELECT * from retencion_clasificacion_servicio WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $retencion_clasificacion_servicioA->getIdRetencion()) ) ) & ( ! is_null ( ($b = $retencion_clasificacion_servicioB->getIdRetencion()) ) ) ){
-				$sql .= " id_retencion >= ? AND id_retencion <= ? AND";
+				$sql .= " `id_retencion` >= ? AND `id_retencion` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_retencion = ? AND"; 
+			$sql .= " `id_retencion` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $retencion_clasificacion_servicioA->getIdClasificacionServicio()) ) ) & ( ! is_null ( ($b = $retencion_clasificacion_servicioB->getIdClasificacionServicio()) ) ) ){
-				$sql .= " id_clasificacion_servicio >= ? AND id_clasificacion_servicio <= ? AND";
+				$sql .= " `id_clasificacion_servicio` >= ? AND `id_clasificacion_servicio` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_clasificacion_servicio = ? AND"; 
+			$sql .= " `id_clasificacion_servicio` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

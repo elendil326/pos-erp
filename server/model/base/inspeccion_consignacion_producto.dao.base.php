@@ -124,32 +124,32 @@ abstract class InspeccionConsignacionProductoDAOBase extends DAO
 		$sql = "SELECT * from inspeccion_consignacion_producto WHERE ("; 
 		$val = array();
 		if( ! is_null( $inspeccion_consignacion_producto->getIdInspeccionConsignacion() ) ){
-			$sql .= " id_inspeccion_consignacion = ? AND";
+			$sql .= " `id_inspeccion_consignacion` = ? AND";
 			array_push( $val, $inspeccion_consignacion_producto->getIdInspeccionConsignacion() );
 		}
 
 		if( ! is_null( $inspeccion_consignacion_producto->getIdProducto() ) ){
-			$sql .= " id_producto = ? AND";
+			$sql .= " `id_producto` = ? AND";
 			array_push( $val, $inspeccion_consignacion_producto->getIdProducto() );
 		}
 
 		if( ! is_null( $inspeccion_consignacion_producto->getIdUnidad() ) ){
-			$sql .= " id_unidad = ? AND";
+			$sql .= " `id_unidad` = ? AND";
 			array_push( $val, $inspeccion_consignacion_producto->getIdUnidad() );
 		}
 
 		if( ! is_null( $inspeccion_consignacion_producto->getCantidadActual() ) ){
-			$sql .= " cantidad_actual = ? AND";
+			$sql .= " `cantidad_actual` = ? AND";
 			array_push( $val, $inspeccion_consignacion_producto->getCantidadActual() );
 		}
 
 		if( ! is_null( $inspeccion_consignacion_producto->getCantidadSolicitada() ) ){
-			$sql .= " cantidad_solicitada = ? AND";
+			$sql .= " `cantidad_solicitada` = ? AND";
 			array_push( $val, $inspeccion_consignacion_producto->getCantidadSolicitada() );
 		}
 
 		if( ! is_null( $inspeccion_consignacion_producto->getCantidadDevuelta() ) ){
-			$sql .= " cantidad_devuelta = ? AND";
+			$sql .= " `cantidad_devuelta` = ? AND";
 			array_push( $val, $inspeccion_consignacion_producto->getCantidadDevuelta() );
 		}
 
@@ -183,7 +183,7 @@ abstract class InspeccionConsignacionProductoDAOBase extends DAO
 	  **/
 	private static final function update( $inspeccion_consignacion_producto )
 	{
-		$sql = "UPDATE inspeccion_consignacion_producto SET  cantidad_actual = ?, cantidad_solicitada = ?, cantidad_devuelta = ? WHERE  id_inspeccion_consignacion = ? AND id_producto = ? AND id_unidad = ?;";
+		$sql = "UPDATE inspeccion_consignacion_producto SET  `cantidad_actual` = ?, `cantidad_solicitada` = ?, `cantidad_devuelta` = ? WHERE  `id_inspeccion_consignacion` = ? AND `id_producto` = ? AND `id_unidad` = ?;";
 		$params = array( 
 			$inspeccion_consignacion_producto->getCantidadActual(), 
 			$inspeccion_consignacion_producto->getCantidadSolicitada(), 
@@ -211,7 +211,7 @@ abstract class InspeccionConsignacionProductoDAOBase extends DAO
 	  **/
 	private static final function create( &$inspeccion_consignacion_producto )
 	{
-		$sql = "INSERT INTO inspeccion_consignacion_producto ( id_inspeccion_consignacion, id_producto, id_unidad, cantidad_actual, cantidad_solicitada, cantidad_devuelta ) VALUES ( ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO inspeccion_consignacion_producto ( `id_inspeccion_consignacion`, `id_producto`, `id_unidad`, `cantidad_actual`, `cantidad_solicitada`, `cantidad_devuelta` ) VALUES ( ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$inspeccion_consignacion_producto->getIdInspeccionConsignacion(), 
 			$inspeccion_consignacion_producto->getIdProducto(), 
@@ -268,66 +268,66 @@ abstract class InspeccionConsignacionProductoDAOBase extends DAO
 		$sql = "SELECT * from inspeccion_consignacion_producto WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $inspeccion_consignacion_productoA->getIdInspeccionConsignacion()) ) ) & ( ! is_null ( ($b = $inspeccion_consignacion_productoB->getIdInspeccionConsignacion()) ) ) ){
-				$sql .= " id_inspeccion_consignacion >= ? AND id_inspeccion_consignacion <= ? AND";
+				$sql .= " `id_inspeccion_consignacion` >= ? AND `id_inspeccion_consignacion` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_inspeccion_consignacion = ? AND"; 
+			$sql .= " `id_inspeccion_consignacion` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $inspeccion_consignacion_productoA->getIdProducto()) ) ) & ( ! is_null ( ($b = $inspeccion_consignacion_productoB->getIdProducto()) ) ) ){
-				$sql .= " id_producto >= ? AND id_producto <= ? AND";
+				$sql .= " `id_producto` >= ? AND `id_producto` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_producto = ? AND"; 
+			$sql .= " `id_producto` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $inspeccion_consignacion_productoA->getIdUnidad()) ) ) & ( ! is_null ( ($b = $inspeccion_consignacion_productoB->getIdUnidad()) ) ) ){
-				$sql .= " id_unidad >= ? AND id_unidad <= ? AND";
+				$sql .= " `id_unidad` >= ? AND `id_unidad` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_unidad = ? AND"; 
+			$sql .= " `id_unidad` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $inspeccion_consignacion_productoA->getCantidadActual()) ) ) & ( ! is_null ( ($b = $inspeccion_consignacion_productoB->getCantidadActual()) ) ) ){
-				$sql .= " cantidad_actual >= ? AND cantidad_actual <= ? AND";
+				$sql .= " `cantidad_actual` >= ? AND `cantidad_actual` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " cantidad_actual = ? AND"; 
+			$sql .= " `cantidad_actual` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $inspeccion_consignacion_productoA->getCantidadSolicitada()) ) ) & ( ! is_null ( ($b = $inspeccion_consignacion_productoB->getCantidadSolicitada()) ) ) ){
-				$sql .= " cantidad_solicitada >= ? AND cantidad_solicitada <= ? AND";
+				$sql .= " `cantidad_solicitada` >= ? AND `cantidad_solicitada` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " cantidad_solicitada = ? AND"; 
+			$sql .= " `cantidad_solicitada` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $inspeccion_consignacion_productoA->getCantidadDevuelta()) ) ) & ( ! is_null ( ($b = $inspeccion_consignacion_productoB->getCantidadDevuelta()) ) ) ){
-				$sql .= " cantidad_devuelta >= ? AND cantidad_devuelta <= ? AND";
+				$sql .= " `cantidad_devuelta` >= ? AND `cantidad_devuelta` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " cantidad_devuelta = ? AND"; 
+			$sql .= " `cantidad_devuelta` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

@@ -123,12 +123,12 @@ abstract class PermisoRolDAOBase extends DAO
 		$sql = "SELECT * from permiso_rol WHERE ("; 
 		$val = array();
 		if( ! is_null( $permiso_rol->getIdPermiso() ) ){
-			$sql .= " id_permiso = ? AND";
+			$sql .= " `id_permiso` = ? AND";
 			array_push( $val, $permiso_rol->getIdPermiso() );
 		}
 
 		if( ! is_null( $permiso_rol->getIdRol() ) ){
-			$sql .= " id_rol = ? AND";
+			$sql .= " `id_rol` = ? AND";
 			array_push( $val, $permiso_rol->getIdRol() );
 		}
 
@@ -180,7 +180,7 @@ abstract class PermisoRolDAOBase extends DAO
 	  **/
 	private static final function create( &$permiso_rol )
 	{
-		$sql = "INSERT INTO permiso_rol ( id_permiso, id_rol ) VALUES ( ?, ?);";
+		$sql = "INSERT INTO permiso_rol ( `id_permiso`, `id_rol` ) VALUES ( ?, ?);";
 		$params = array( 
 			$permiso_rol->getIdPermiso(), 
 			$permiso_rol->getIdRol(), 
@@ -233,22 +233,22 @@ abstract class PermisoRolDAOBase extends DAO
 		$sql = "SELECT * from permiso_rol WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $permiso_rolA->getIdPermiso()) ) ) & ( ! is_null ( ($b = $permiso_rolB->getIdPermiso()) ) ) ){
-				$sql .= " id_permiso >= ? AND id_permiso <= ? AND";
+				$sql .= " `id_permiso` >= ? AND `id_permiso` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_permiso = ? AND"; 
+			$sql .= " `id_permiso` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $permiso_rolA->getIdRol()) ) ) & ( ! is_null ( ($b = $permiso_rolB->getIdRol()) ) ) ){
-				$sql .= " id_rol >= ? AND id_rol <= ? AND";
+				$sql .= " `id_rol` >= ? AND `id_rol` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_rol = ? AND"; 
+			$sql .= " `id_rol` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

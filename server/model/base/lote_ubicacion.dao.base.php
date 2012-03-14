@@ -123,12 +123,12 @@ abstract class LoteUbicacionDAOBase extends DAO
 		$sql = "SELECT * from lote_ubicacion WHERE ("; 
 		$val = array();
 		if( ! is_null( $lote_ubicacion->getIdLote() ) ){
-			$sql .= " id_lote = ? AND";
+			$sql .= " `id_lote` = ? AND";
 			array_push( $val, $lote_ubicacion->getIdLote() );
 		}
 
 		if( ! is_null( $lote_ubicacion->getIdUbicacion() ) ){
-			$sql .= " id_ubicacion = ? AND";
+			$sql .= " `id_ubicacion` = ? AND";
 			array_push( $val, $lote_ubicacion->getIdUbicacion() );
 		}
 
@@ -180,7 +180,7 @@ abstract class LoteUbicacionDAOBase extends DAO
 	  **/
 	private static final function create( &$lote_ubicacion )
 	{
-		$sql = "INSERT INTO lote_ubicacion ( id_lote, id_ubicacion ) VALUES ( ?, ?);";
+		$sql = "INSERT INTO lote_ubicacion ( `id_lote`, `id_ubicacion` ) VALUES ( ?, ?);";
 		$params = array( 
 			$lote_ubicacion->getIdLote(), 
 			$lote_ubicacion->getIdUbicacion(), 
@@ -233,22 +233,22 @@ abstract class LoteUbicacionDAOBase extends DAO
 		$sql = "SELECT * from lote_ubicacion WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $lote_ubicacionA->getIdLote()) ) ) & ( ! is_null ( ($b = $lote_ubicacionB->getIdLote()) ) ) ){
-				$sql .= " id_lote >= ? AND id_lote <= ? AND";
+				$sql .= " `id_lote` >= ? AND `id_lote` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_lote = ? AND"; 
+			$sql .= " `id_lote` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $lote_ubicacionA->getIdUbicacion()) ) ) & ( ! is_null ( ($b = $lote_ubicacionB->getIdUbicacion()) ) ) ){
-				$sql .= " id_ubicacion >= ? AND id_ubicacion <= ? AND";
+				$sql .= " `id_ubicacion` >= ? AND `id_ubicacion` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_ubicacion = ? AND"; 
+			$sql .= " `id_ubicacion` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

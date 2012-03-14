@@ -122,32 +122,32 @@ abstract class BilleteDAOBase extends DAO
 		$sql = "SELECT * from billete WHERE ("; 
 		$val = array();
 		if( ! is_null( $billete->getIdBillete() ) ){
-			$sql .= " id_billete = ? AND";
+			$sql .= " `id_billete` = ? AND";
 			array_push( $val, $billete->getIdBillete() );
 		}
 
 		if( ! is_null( $billete->getIdMoneda() ) ){
-			$sql .= " id_moneda = ? AND";
+			$sql .= " `id_moneda` = ? AND";
 			array_push( $val, $billete->getIdMoneda() );
 		}
 
 		if( ! is_null( $billete->getNombre() ) ){
-			$sql .= " nombre = ? AND";
+			$sql .= " `nombre` = ? AND";
 			array_push( $val, $billete->getNombre() );
 		}
 
 		if( ! is_null( $billete->getValor() ) ){
-			$sql .= " valor = ? AND";
+			$sql .= " `valor` = ? AND";
 			array_push( $val, $billete->getValor() );
 		}
 
 		if( ! is_null( $billete->getFotoBillete() ) ){
-			$sql .= " foto_billete = ? AND";
+			$sql .= " `foto_billete` = ? AND";
 			array_push( $val, $billete->getFotoBillete() );
 		}
 
 		if( ! is_null( $billete->getActivo() ) ){
-			$sql .= " activo = ? AND";
+			$sql .= " `activo` = ? AND";
 			array_push( $val, $billete->getActivo() );
 		}
 
@@ -181,7 +181,7 @@ abstract class BilleteDAOBase extends DAO
 	  **/
 	private static final function update( $billete )
 	{
-		$sql = "UPDATE billete SET  id_moneda = ?, nombre = ?, valor = ?, foto_billete = ?, activo = ? WHERE  id_billete = ?;";
+		$sql = "UPDATE billete SET  `id_moneda` = ?, `nombre` = ?, `valor` = ?, `foto_billete` = ?, `activo` = ? WHERE  `id_billete` = ?;";
 		$params = array( 
 			$billete->getIdMoneda(), 
 			$billete->getNombre(), 
@@ -211,7 +211,7 @@ abstract class BilleteDAOBase extends DAO
 	  **/
 	private static final function create( &$billete )
 	{
-		$sql = "INSERT INTO billete ( id_billete, id_moneda, nombre, valor, foto_billete, activo ) VALUES ( ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO billete ( `id_billete`, `id_moneda`, `nombre`, `valor`, `foto_billete`, `activo` ) VALUES ( ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$billete->getIdBillete(), 
 			$billete->getIdMoneda(), 
@@ -268,66 +268,66 @@ abstract class BilleteDAOBase extends DAO
 		$sql = "SELECT * from billete WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $billeteA->getIdBillete()) ) ) & ( ! is_null ( ($b = $billeteB->getIdBillete()) ) ) ){
-				$sql .= " id_billete >= ? AND id_billete <= ? AND";
+				$sql .= " `id_billete` >= ? AND `id_billete` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_billete = ? AND"; 
+			$sql .= " `id_billete` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $billeteA->getIdMoneda()) ) ) & ( ! is_null ( ($b = $billeteB->getIdMoneda()) ) ) ){
-				$sql .= " id_moneda >= ? AND id_moneda <= ? AND";
+				$sql .= " `id_moneda` >= ? AND `id_moneda` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_moneda = ? AND"; 
+			$sql .= " `id_moneda` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $billeteA->getNombre()) ) ) & ( ! is_null ( ($b = $billeteB->getNombre()) ) ) ){
-				$sql .= " nombre >= ? AND nombre <= ? AND";
+				$sql .= " `nombre` >= ? AND `nombre` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " nombre = ? AND"; 
+			$sql .= " `nombre` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $billeteA->getValor()) ) ) & ( ! is_null ( ($b = $billeteB->getValor()) ) ) ){
-				$sql .= " valor >= ? AND valor <= ? AND";
+				$sql .= " `valor` >= ? AND `valor` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " valor = ? AND"; 
+			$sql .= " `valor` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $billeteA->getFotoBillete()) ) ) & ( ! is_null ( ($b = $billeteB->getFotoBillete()) ) ) ){
-				$sql .= " foto_billete >= ? AND foto_billete <= ? AND";
+				$sql .= " `foto_billete` >= ? AND `foto_billete` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " foto_billete = ? AND"; 
+			$sql .= " `foto_billete` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $billeteA->getActivo()) ) ) & ( ! is_null ( ($b = $billeteB->getActivo()) ) ) ){
-				$sql .= " activo >= ? AND activo <= ? AND";
+				$sql .= " `activo` >= ? AND `activo` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " activo = ? AND"; 
+			$sql .= " `activo` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

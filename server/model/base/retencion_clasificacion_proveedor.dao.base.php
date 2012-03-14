@@ -123,12 +123,12 @@ abstract class RetencionClasificacionProveedorDAOBase extends DAO
 		$sql = "SELECT * from retencion_clasificacion_proveedor WHERE ("; 
 		$val = array();
 		if( ! is_null( $retencion_clasificacion_proveedor->getIdRetencion() ) ){
-			$sql .= " id_retencion = ? AND";
+			$sql .= " `id_retencion` = ? AND";
 			array_push( $val, $retencion_clasificacion_proveedor->getIdRetencion() );
 		}
 
 		if( ! is_null( $retencion_clasificacion_proveedor->getIdClasificacionProveedor() ) ){
-			$sql .= " id_clasificacion_proveedor = ? AND";
+			$sql .= " `id_clasificacion_proveedor` = ? AND";
 			array_push( $val, $retencion_clasificacion_proveedor->getIdClasificacionProveedor() );
 		}
 
@@ -180,7 +180,7 @@ abstract class RetencionClasificacionProveedorDAOBase extends DAO
 	  **/
 	private static final function create( &$retencion_clasificacion_proveedor )
 	{
-		$sql = "INSERT INTO retencion_clasificacion_proveedor ( id_retencion, id_clasificacion_proveedor ) VALUES ( ?, ?);";
+		$sql = "INSERT INTO retencion_clasificacion_proveedor ( `id_retencion`, `id_clasificacion_proveedor` ) VALUES ( ?, ?);";
 		$params = array( 
 			$retencion_clasificacion_proveedor->getIdRetencion(), 
 			$retencion_clasificacion_proveedor->getIdClasificacionProveedor(), 
@@ -233,22 +233,22 @@ abstract class RetencionClasificacionProveedorDAOBase extends DAO
 		$sql = "SELECT * from retencion_clasificacion_proveedor WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $retencion_clasificacion_proveedorA->getIdRetencion()) ) ) & ( ! is_null ( ($b = $retencion_clasificacion_proveedorB->getIdRetencion()) ) ) ){
-				$sql .= " id_retencion >= ? AND id_retencion <= ? AND";
+				$sql .= " `id_retencion` >= ? AND `id_retencion` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_retencion = ? AND"; 
+			$sql .= " `id_retencion` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $retencion_clasificacion_proveedorA->getIdClasificacionProveedor()) ) ) & ( ! is_null ( ($b = $retencion_clasificacion_proveedorB->getIdClasificacionProveedor()) ) ) ){
-				$sql .= " id_clasificacion_proveedor >= ? AND id_clasificacion_proveedor <= ? AND";
+				$sql .= " `id_clasificacion_proveedor` >= ? AND `id_clasificacion_proveedor` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_clasificacion_proveedor = ? AND"; 
+			$sql .= " `id_clasificacion_proveedor` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

@@ -122,32 +122,32 @@ abstract class CierreCajaDAOBase extends DAO
 		$sql = "SELECT * from cierre_caja WHERE ("; 
 		$val = array();
 		if( ! is_null( $cierre_caja->getIdCierreCaja() ) ){
-			$sql .= " id_cierre_caja = ? AND";
+			$sql .= " `id_cierre_caja` = ? AND";
 			array_push( $val, $cierre_caja->getIdCierreCaja() );
 		}
 
 		if( ! is_null( $cierre_caja->getIdCaja() ) ){
-			$sql .= " id_caja = ? AND";
+			$sql .= " `id_caja` = ? AND";
 			array_push( $val, $cierre_caja->getIdCaja() );
 		}
 
 		if( ! is_null( $cierre_caja->getIdCajero() ) ){
-			$sql .= " id_cajero = ? AND";
+			$sql .= " `id_cajero` = ? AND";
 			array_push( $val, $cierre_caja->getIdCajero() );
 		}
 
 		if( ! is_null( $cierre_caja->getFecha() ) ){
-			$sql .= " fecha = ? AND";
+			$sql .= " `fecha` = ? AND";
 			array_push( $val, $cierre_caja->getFecha() );
 		}
 
 		if( ! is_null( $cierre_caja->getSaldoReal() ) ){
-			$sql .= " saldo_real = ? AND";
+			$sql .= " `saldo_real` = ? AND";
 			array_push( $val, $cierre_caja->getSaldoReal() );
 		}
 
 		if( ! is_null( $cierre_caja->getSaldoEsperado() ) ){
-			$sql .= " saldo_esperado = ? AND";
+			$sql .= " `saldo_esperado` = ? AND";
 			array_push( $val, $cierre_caja->getSaldoEsperado() );
 		}
 
@@ -181,7 +181,7 @@ abstract class CierreCajaDAOBase extends DAO
 	  **/
 	private static final function update( $cierre_caja )
 	{
-		$sql = "UPDATE cierre_caja SET  id_caja = ?, id_cajero = ?, fecha = ?, saldo_real = ?, saldo_esperado = ? WHERE  id_cierre_caja = ?;";
+		$sql = "UPDATE cierre_caja SET  `id_caja` = ?, `id_cajero` = ?, `fecha` = ?, `saldo_real` = ?, `saldo_esperado` = ? WHERE  `id_cierre_caja` = ?;";
 		$params = array( 
 			$cierre_caja->getIdCaja(), 
 			$cierre_caja->getIdCajero(), 
@@ -211,7 +211,7 @@ abstract class CierreCajaDAOBase extends DAO
 	  **/
 	private static final function create( &$cierre_caja )
 	{
-		$sql = "INSERT INTO cierre_caja ( id_cierre_caja, id_caja, id_cajero, fecha, saldo_real, saldo_esperado ) VALUES ( ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO cierre_caja ( `id_cierre_caja`, `id_caja`, `id_cajero`, `fecha`, `saldo_real`, `saldo_esperado` ) VALUES ( ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$cierre_caja->getIdCierreCaja(), 
 			$cierre_caja->getIdCaja(), 
@@ -268,66 +268,66 @@ abstract class CierreCajaDAOBase extends DAO
 		$sql = "SELECT * from cierre_caja WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $cierre_cajaA->getIdCierreCaja()) ) ) & ( ! is_null ( ($b = $cierre_cajaB->getIdCierreCaja()) ) ) ){
-				$sql .= " id_cierre_caja >= ? AND id_cierre_caja <= ? AND";
+				$sql .= " `id_cierre_caja` >= ? AND `id_cierre_caja` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_cierre_caja = ? AND"; 
+			$sql .= " `id_cierre_caja` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $cierre_cajaA->getIdCaja()) ) ) & ( ! is_null ( ($b = $cierre_cajaB->getIdCaja()) ) ) ){
-				$sql .= " id_caja >= ? AND id_caja <= ? AND";
+				$sql .= " `id_caja` >= ? AND `id_caja` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_caja = ? AND"; 
+			$sql .= " `id_caja` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $cierre_cajaA->getIdCajero()) ) ) & ( ! is_null ( ($b = $cierre_cajaB->getIdCajero()) ) ) ){
-				$sql .= " id_cajero >= ? AND id_cajero <= ? AND";
+				$sql .= " `id_cajero` >= ? AND `id_cajero` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_cajero = ? AND"; 
+			$sql .= " `id_cajero` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $cierre_cajaA->getFecha()) ) ) & ( ! is_null ( ($b = $cierre_cajaB->getFecha()) ) ) ){
-				$sql .= " fecha >= ? AND fecha <= ? AND";
+				$sql .= " `fecha` >= ? AND `fecha` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " fecha = ? AND"; 
+			$sql .= " `fecha` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $cierre_cajaA->getSaldoReal()) ) ) & ( ! is_null ( ($b = $cierre_cajaB->getSaldoReal()) ) ) ){
-				$sql .= " saldo_real >= ? AND saldo_real <= ? AND";
+				$sql .= " `saldo_real` >= ? AND `saldo_real` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " saldo_real = ? AND"; 
+			$sql .= " `saldo_real` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $cierre_cajaA->getSaldoEsperado()) ) ) & ( ! is_null ( ($b = $cierre_cajaB->getSaldoEsperado()) ) ) ){
-				$sql .= " saldo_esperado >= ? AND saldo_esperado <= ? AND";
+				$sql .= " `saldo_esperado` >= ? AND `saldo_esperado` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " saldo_esperado = ? AND"; 
+			$sql .= " `saldo_esperado` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

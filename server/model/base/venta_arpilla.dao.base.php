@@ -122,62 +122,62 @@ abstract class VentaArpillaDAOBase extends DAO
 		$sql = "SELECT * from venta_arpilla WHERE ("; 
 		$val = array();
 		if( ! is_null( $venta_arpilla->getIdVentaArpilla() ) ){
-			$sql .= " id_venta_arpilla = ? AND";
+			$sql .= " `id_venta_arpilla` = ? AND";
 			array_push( $val, $venta_arpilla->getIdVentaArpilla() );
 		}
 
 		if( ! is_null( $venta_arpilla->getIdVenta() ) ){
-			$sql .= " id_venta = ? AND";
+			$sql .= " `id_venta` = ? AND";
 			array_push( $val, $venta_arpilla->getIdVenta() );
 		}
 
 		if( ! is_null( $venta_arpilla->getPesoDestino() ) ){
-			$sql .= " peso_destino = ? AND";
+			$sql .= " `peso_destino` = ? AND";
 			array_push( $val, $venta_arpilla->getPesoDestino() );
 		}
 
 		if( ! is_null( $venta_arpilla->getFechaOrigen() ) ){
-			$sql .= " fecha_origen = ? AND";
+			$sql .= " `fecha_origen` = ? AND";
 			array_push( $val, $venta_arpilla->getFechaOrigen() );
 		}
 
 		if( ! is_null( $venta_arpilla->getFolio() ) ){
-			$sql .= " folio = ? AND";
+			$sql .= " `folio` = ? AND";
 			array_push( $val, $venta_arpilla->getFolio() );
 		}
 
 		if( ! is_null( $venta_arpilla->getNumeroDeViaje() ) ){
-			$sql .= " numero_de_viaje = ? AND";
+			$sql .= " `numero_de_viaje` = ? AND";
 			array_push( $val, $venta_arpilla->getNumeroDeViaje() );
 		}
 
 		if( ! is_null( $venta_arpilla->getPesoOrigen() ) ){
-			$sql .= " peso_origen = ? AND";
+			$sql .= " `peso_origen` = ? AND";
 			array_push( $val, $venta_arpilla->getPesoOrigen() );
 		}
 
 		if( ! is_null( $venta_arpilla->getArpillas() ) ){
-			$sql .= " arpillas = ? AND";
+			$sql .= " `arpillas` = ? AND";
 			array_push( $val, $venta_arpilla->getArpillas() );
 		}
 
 		if( ! is_null( $venta_arpilla->getPesoPorArpilla() ) ){
-			$sql .= " peso_por_arpilla = ? AND";
+			$sql .= " `peso_por_arpilla` = ? AND";
 			array_push( $val, $venta_arpilla->getPesoPorArpilla() );
 		}
 
 		if( ! is_null( $venta_arpilla->getProductor() ) ){
-			$sql .= " productor = ? AND";
+			$sql .= " `productor` = ? AND";
 			array_push( $val, $venta_arpilla->getProductor() );
 		}
 
 		if( ! is_null( $venta_arpilla->getMermaPorArpilla() ) ){
-			$sql .= " merma_por_arpilla = ? AND";
+			$sql .= " `merma_por_arpilla` = ? AND";
 			array_push( $val, $venta_arpilla->getMermaPorArpilla() );
 		}
 
 		if( ! is_null( $venta_arpilla->getTotalOrigen() ) ){
-			$sql .= " total_origen = ? AND";
+			$sql .= " `total_origen` = ? AND";
 			array_push( $val, $venta_arpilla->getTotalOrigen() );
 		}
 
@@ -211,7 +211,7 @@ abstract class VentaArpillaDAOBase extends DAO
 	  **/
 	private static final function update( $venta_arpilla )
 	{
-		$sql = "UPDATE venta_arpilla SET  id_venta = ?, peso_destino = ?, fecha_origen = ?, folio = ?, numero_de_viaje = ?, peso_origen = ?, arpillas = ?, peso_por_arpilla = ?, productor = ?, merma_por_arpilla = ?, total_origen = ? WHERE  id_venta_arpilla = ?;";
+		$sql = "UPDATE venta_arpilla SET  `id_venta` = ?, `peso_destino` = ?, `fecha_origen` = ?, `folio` = ?, `numero_de_viaje` = ?, `peso_origen` = ?, `arpillas` = ?, `peso_por_arpilla` = ?, `productor` = ?, `merma_por_arpilla` = ?, `total_origen` = ? WHERE  `id_venta_arpilla` = ?;";
 		$params = array( 
 			$venta_arpilla->getIdVenta(), 
 			$venta_arpilla->getPesoDestino(), 
@@ -247,7 +247,7 @@ abstract class VentaArpillaDAOBase extends DAO
 	  **/
 	private static final function create( &$venta_arpilla )
 	{
-		$sql = "INSERT INTO venta_arpilla ( id_venta_arpilla, id_venta, peso_destino, fecha_origen, folio, numero_de_viaje, peso_origen, arpillas, peso_por_arpilla, productor, merma_por_arpilla, total_origen ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO venta_arpilla ( `id_venta_arpilla`, `id_venta`, `peso_destino`, `fecha_origen`, `folio`, `numero_de_viaje`, `peso_origen`, `arpillas`, `peso_por_arpilla`, `productor`, `merma_por_arpilla`, `total_origen` ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$venta_arpilla->getIdVentaArpilla(), 
 			$venta_arpilla->getIdVenta(), 
@@ -310,132 +310,132 @@ abstract class VentaArpillaDAOBase extends DAO
 		$sql = "SELECT * from venta_arpilla WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $venta_arpillaA->getIdVentaArpilla()) ) ) & ( ! is_null ( ($b = $venta_arpillaB->getIdVentaArpilla()) ) ) ){
-				$sql .= " id_venta_arpilla >= ? AND id_venta_arpilla <= ? AND";
+				$sql .= " `id_venta_arpilla` >= ? AND `id_venta_arpilla` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_venta_arpilla = ? AND"; 
+			$sql .= " `id_venta_arpilla` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $venta_arpillaA->getIdVenta()) ) ) & ( ! is_null ( ($b = $venta_arpillaB->getIdVenta()) ) ) ){
-				$sql .= " id_venta >= ? AND id_venta <= ? AND";
+				$sql .= " `id_venta` >= ? AND `id_venta` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_venta = ? AND"; 
+			$sql .= " `id_venta` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $venta_arpillaA->getPesoDestino()) ) ) & ( ! is_null ( ($b = $venta_arpillaB->getPesoDestino()) ) ) ){
-				$sql .= " peso_destino >= ? AND peso_destino <= ? AND";
+				$sql .= " `peso_destino` >= ? AND `peso_destino` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " peso_destino = ? AND"; 
+			$sql .= " `peso_destino` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $venta_arpillaA->getFechaOrigen()) ) ) & ( ! is_null ( ($b = $venta_arpillaB->getFechaOrigen()) ) ) ){
-				$sql .= " fecha_origen >= ? AND fecha_origen <= ? AND";
+				$sql .= " `fecha_origen` >= ? AND `fecha_origen` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " fecha_origen = ? AND"; 
+			$sql .= " `fecha_origen` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $venta_arpillaA->getFolio()) ) ) & ( ! is_null ( ($b = $venta_arpillaB->getFolio()) ) ) ){
-				$sql .= " folio >= ? AND folio <= ? AND";
+				$sql .= " `folio` >= ? AND `folio` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " folio = ? AND"; 
+			$sql .= " `folio` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $venta_arpillaA->getNumeroDeViaje()) ) ) & ( ! is_null ( ($b = $venta_arpillaB->getNumeroDeViaje()) ) ) ){
-				$sql .= " numero_de_viaje >= ? AND numero_de_viaje <= ? AND";
+				$sql .= " `numero_de_viaje` >= ? AND `numero_de_viaje` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " numero_de_viaje = ? AND"; 
+			$sql .= " `numero_de_viaje` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $venta_arpillaA->getPesoOrigen()) ) ) & ( ! is_null ( ($b = $venta_arpillaB->getPesoOrigen()) ) ) ){
-				$sql .= " peso_origen >= ? AND peso_origen <= ? AND";
+				$sql .= " `peso_origen` >= ? AND `peso_origen` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " peso_origen = ? AND"; 
+			$sql .= " `peso_origen` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $venta_arpillaA->getArpillas()) ) ) & ( ! is_null ( ($b = $venta_arpillaB->getArpillas()) ) ) ){
-				$sql .= " arpillas >= ? AND arpillas <= ? AND";
+				$sql .= " `arpillas` >= ? AND `arpillas` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " arpillas = ? AND"; 
+			$sql .= " `arpillas` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $venta_arpillaA->getPesoPorArpilla()) ) ) & ( ! is_null ( ($b = $venta_arpillaB->getPesoPorArpilla()) ) ) ){
-				$sql .= " peso_por_arpilla >= ? AND peso_por_arpilla <= ? AND";
+				$sql .= " `peso_por_arpilla` >= ? AND `peso_por_arpilla` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " peso_por_arpilla = ? AND"; 
+			$sql .= " `peso_por_arpilla` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $venta_arpillaA->getProductor()) ) ) & ( ! is_null ( ($b = $venta_arpillaB->getProductor()) ) ) ){
-				$sql .= " productor >= ? AND productor <= ? AND";
+				$sql .= " `productor` >= ? AND `productor` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " productor = ? AND"; 
+			$sql .= " `productor` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $venta_arpillaA->getMermaPorArpilla()) ) ) & ( ! is_null ( ($b = $venta_arpillaB->getMermaPorArpilla()) ) ) ){
-				$sql .= " merma_por_arpilla >= ? AND merma_por_arpilla <= ? AND";
+				$sql .= " `merma_por_arpilla` >= ? AND `merma_por_arpilla` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " merma_por_arpilla = ? AND"; 
+			$sql .= " `merma_por_arpilla` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $venta_arpillaA->getTotalOrigen()) ) ) & ( ! is_null ( ($b = $venta_arpillaB->getTotalOrigen()) ) ) ){
-				$sql .= " total_origen >= ? AND total_origen <= ? AND";
+				$sql .= " `total_origen` >= ? AND `total_origen` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " total_origen = ? AND"; 
+			$sql .= " `total_origen` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

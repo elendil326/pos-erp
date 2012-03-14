@@ -122,23 +122,23 @@ abstract class LoteDAOBase extends DAO
 		$sql = "SELECT * from lote WHERE ("; 
 		$val = array();
 		if( ! is_null( $lote->getIdLote() ) ){
-			$sql .= " id_lote = ? AND";
+			$sql .= " `id_lote` = ? AND";
 			array_push( $val, $lote->getIdLote() );
 		}
 
 		if( ! is_null( $lote->getIdAlmacen() ) ){
-			$sql .= " id_almacen = ? AND";
+			$sql .= " `id_almacen` = ? AND";
 			array_push( $val, $lote->getIdAlmacen() );
 		}
 
 		if( ! is_null( $lote->getIdUsuario() ) ){
-			$sql .= " id_usuario = ? AND";
+			$sql .= " `id_usuario` = ? AND";
 			array_push( $val, $lote->getIdUsuario() );
 		}
 
-		if( ! is_null( $lote->getObservaciones() ) ){
-			$sql .= " observaciones = ? AND";
-			array_push( $val, $lote->getObservaciones() );
+		if( ! is_null( $lote->getFolio() ) ){
+			$sql .= " `folio` = ? AND";
+			array_push( $val, $lote->getFolio() );
 		}
 
 		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
@@ -171,11 +171,11 @@ abstract class LoteDAOBase extends DAO
 	  **/
 	private static final function update( $lote )
 	{
-		$sql = "UPDATE lote SET  id_almacen = ?, id_usuario = ?, observaciones = ? WHERE  id_lote = ?;";
+		$sql = "UPDATE lote SET  `id_almacen` = ?, `id_usuario` = ?, `folio` = ? WHERE  `id_lote` = ?;";
 		$params = array( 
 			$lote->getIdAlmacen(), 
 			$lote->getIdUsuario(), 
-			$lote->getObservaciones(), 
+			$lote->getFolio(), 
 			$lote->getIdLote(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -199,12 +199,12 @@ abstract class LoteDAOBase extends DAO
 	  **/
 	private static final function create( &$lote )
 	{
-		$sql = "INSERT INTO lote ( id_lote, id_almacen, id_usuario, observaciones ) VALUES ( ?, ?, ?, ?);";
+		$sql = "INSERT INTO lote ( `id_lote`, `id_almacen`, `id_usuario`, `folio` ) VALUES ( ?, ?, ?, ?);";
 		$params = array( 
 			$lote->getIdLote(), 
 			$lote->getIdAlmacen(), 
 			$lote->getIdUsuario(), 
-			$lote->getObservaciones(), 
+			$lote->getFolio(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -254,44 +254,44 @@ abstract class LoteDAOBase extends DAO
 		$sql = "SELECT * from lote WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $loteA->getIdLote()) ) ) & ( ! is_null ( ($b = $loteB->getIdLote()) ) ) ){
-				$sql .= " id_lote >= ? AND id_lote <= ? AND";
+				$sql .= " `id_lote` >= ? AND `id_lote` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_lote = ? AND"; 
+			$sql .= " `id_lote` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $loteA->getIdAlmacen()) ) ) & ( ! is_null ( ($b = $loteB->getIdAlmacen()) ) ) ){
-				$sql .= " id_almacen >= ? AND id_almacen <= ? AND";
+				$sql .= " `id_almacen` >= ? AND `id_almacen` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_almacen = ? AND"; 
+			$sql .= " `id_almacen` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $loteA->getIdUsuario()) ) ) & ( ! is_null ( ($b = $loteB->getIdUsuario()) ) ) ){
-				$sql .= " id_usuario >= ? AND id_usuario <= ? AND";
+				$sql .= " `id_usuario` >= ? AND `id_usuario` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_usuario = ? AND"; 
+			$sql .= " `id_usuario` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( ( !is_null (($a = $loteA->getObservaciones()) ) ) & ( ! is_null ( ($b = $loteB->getObservaciones()) ) ) ){
-				$sql .= " observaciones >= ? AND observaciones <= ? AND";
+		if( ( !is_null (($a = $loteA->getFolio()) ) ) & ( ! is_null ( ($b = $loteB->getFolio()) ) ) ){
+				$sql .= " `folio` >= ? AND `folio` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " observaciones = ? AND"; 
+			$sql .= " `folio` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

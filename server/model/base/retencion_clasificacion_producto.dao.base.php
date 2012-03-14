@@ -123,12 +123,12 @@ abstract class RetencionClasificacionProductoDAOBase extends DAO
 		$sql = "SELECT * from retencion_clasificacion_producto WHERE ("; 
 		$val = array();
 		if( ! is_null( $retencion_clasificacion_producto->getIdRetencion() ) ){
-			$sql .= " id_retencion = ? AND";
+			$sql .= " `id_retencion` = ? AND";
 			array_push( $val, $retencion_clasificacion_producto->getIdRetencion() );
 		}
 
 		if( ! is_null( $retencion_clasificacion_producto->getIdClasificacionProducto() ) ){
-			$sql .= " id_clasificacion_producto = ? AND";
+			$sql .= " `id_clasificacion_producto` = ? AND";
 			array_push( $val, $retencion_clasificacion_producto->getIdClasificacionProducto() );
 		}
 
@@ -180,7 +180,7 @@ abstract class RetencionClasificacionProductoDAOBase extends DAO
 	  **/
 	private static final function create( &$retencion_clasificacion_producto )
 	{
-		$sql = "INSERT INTO retencion_clasificacion_producto ( id_retencion, id_clasificacion_producto ) VALUES ( ?, ?);";
+		$sql = "INSERT INTO retencion_clasificacion_producto ( `id_retencion`, `id_clasificacion_producto` ) VALUES ( ?, ?);";
 		$params = array( 
 			$retencion_clasificacion_producto->getIdRetencion(), 
 			$retencion_clasificacion_producto->getIdClasificacionProducto(), 
@@ -233,22 +233,22 @@ abstract class RetencionClasificacionProductoDAOBase extends DAO
 		$sql = "SELECT * from retencion_clasificacion_producto WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $retencion_clasificacion_productoA->getIdRetencion()) ) ) & ( ! is_null ( ($b = $retencion_clasificacion_productoB->getIdRetencion()) ) ) ){
-				$sql .= " id_retencion >= ? AND id_retencion <= ? AND";
+				$sql .= " `id_retencion` >= ? AND `id_retencion` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_retencion = ? AND"; 
+			$sql .= " `id_retencion` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $retencion_clasificacion_productoA->getIdClasificacionProducto()) ) ) & ( ! is_null ( ($b = $retencion_clasificacion_productoB->getIdClasificacionProducto()) ) ) ){
-				$sql .= " id_clasificacion_producto >= ? AND id_clasificacion_producto <= ? AND";
+				$sql .= " `id_clasificacion_producto` >= ? AND `id_clasificacion_producto` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_clasificacion_producto = ? AND"; 
+			$sql .= " `id_clasificacion_producto` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

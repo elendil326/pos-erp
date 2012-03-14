@@ -123,17 +123,17 @@ abstract class OrdenDeServicioPaqueteDAOBase extends DAO
 		$sql = "SELECT * from orden_de_servicio_paquete WHERE ("; 
 		$val = array();
 		if( ! is_null( $orden_de_servicio_paquete->getIdServicio() ) ){
-			$sql .= " id_servicio = ? AND";
+			$sql .= " `id_servicio` = ? AND";
 			array_push( $val, $orden_de_servicio_paquete->getIdServicio() );
 		}
 
 		if( ! is_null( $orden_de_servicio_paquete->getIdPaquete() ) ){
-			$sql .= " id_paquete = ? AND";
+			$sql .= " `id_paquete` = ? AND";
 			array_push( $val, $orden_de_servicio_paquete->getIdPaquete() );
 		}
 
 		if( ! is_null( $orden_de_servicio_paquete->getCantidad() ) ){
-			$sql .= " cantidad = ? AND";
+			$sql .= " `cantidad` = ? AND";
 			array_push( $val, $orden_de_servicio_paquete->getCantidad() );
 		}
 
@@ -167,7 +167,7 @@ abstract class OrdenDeServicioPaqueteDAOBase extends DAO
 	  **/
 	private static final function update( $orden_de_servicio_paquete )
 	{
-		$sql = "UPDATE orden_de_servicio_paquete SET  cantidad = ? WHERE  id_servicio = ? AND id_paquete = ?;";
+		$sql = "UPDATE orden_de_servicio_paquete SET  `cantidad` = ? WHERE  `id_servicio` = ? AND `id_paquete` = ?;";
 		$params = array( 
 			$orden_de_servicio_paquete->getCantidad(), 
 			$orden_de_servicio_paquete->getIdServicio(),$orden_de_servicio_paquete->getIdPaquete(), );
@@ -193,7 +193,7 @@ abstract class OrdenDeServicioPaqueteDAOBase extends DAO
 	  **/
 	private static final function create( &$orden_de_servicio_paquete )
 	{
-		$sql = "INSERT INTO orden_de_servicio_paquete ( id_servicio, id_paquete, cantidad ) VALUES ( ?, ?, ?);";
+		$sql = "INSERT INTO orden_de_servicio_paquete ( `id_servicio`, `id_paquete`, `cantidad` ) VALUES ( ?, ?, ?);";
 		$params = array( 
 			$orden_de_servicio_paquete->getIdServicio(), 
 			$orden_de_servicio_paquete->getIdPaquete(), 
@@ -247,33 +247,33 @@ abstract class OrdenDeServicioPaqueteDAOBase extends DAO
 		$sql = "SELECT * from orden_de_servicio_paquete WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $orden_de_servicio_paqueteA->getIdServicio()) ) ) & ( ! is_null ( ($b = $orden_de_servicio_paqueteB->getIdServicio()) ) ) ){
-				$sql .= " id_servicio >= ? AND id_servicio <= ? AND";
+				$sql .= " `id_servicio` >= ? AND `id_servicio` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_servicio = ? AND"; 
+			$sql .= " `id_servicio` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $orden_de_servicio_paqueteA->getIdPaquete()) ) ) & ( ! is_null ( ($b = $orden_de_servicio_paqueteB->getIdPaquete()) ) ) ){
-				$sql .= " id_paquete >= ? AND id_paquete <= ? AND";
+				$sql .= " `id_paquete` >= ? AND `id_paquete` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_paquete = ? AND"; 
+			$sql .= " `id_paquete` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $orden_de_servicio_paqueteA->getCantidad()) ) ) & ( ! is_null ( ($b = $orden_de_servicio_paqueteB->getCantidad()) ) ) ){
-				$sql .= " cantidad >= ? AND cantidad <= ? AND";
+				$sql .= " `cantidad` >= ? AND `cantidad` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " cantidad = ? AND"; 
+			$sql .= " `cantidad` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

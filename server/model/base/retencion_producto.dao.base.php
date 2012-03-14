@@ -123,12 +123,12 @@ abstract class RetencionProductoDAOBase extends DAO
 		$sql = "SELECT * from retencion_producto WHERE ("; 
 		$val = array();
 		if( ! is_null( $retencion_producto->getIdRetencion() ) ){
-			$sql .= " id_retencion = ? AND";
+			$sql .= " `id_retencion` = ? AND";
 			array_push( $val, $retencion_producto->getIdRetencion() );
 		}
 
 		if( ! is_null( $retencion_producto->getIdProducto() ) ){
-			$sql .= " id_producto = ? AND";
+			$sql .= " `id_producto` = ? AND";
 			array_push( $val, $retencion_producto->getIdProducto() );
 		}
 
@@ -180,7 +180,7 @@ abstract class RetencionProductoDAOBase extends DAO
 	  **/
 	private static final function create( &$retencion_producto )
 	{
-		$sql = "INSERT INTO retencion_producto ( id_retencion, id_producto ) VALUES ( ?, ?);";
+		$sql = "INSERT INTO retencion_producto ( `id_retencion`, `id_producto` ) VALUES ( ?, ?);";
 		$params = array( 
 			$retencion_producto->getIdRetencion(), 
 			$retencion_producto->getIdProducto(), 
@@ -233,22 +233,22 @@ abstract class RetencionProductoDAOBase extends DAO
 		$sql = "SELECT * from retencion_producto WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $retencion_productoA->getIdRetencion()) ) ) & ( ! is_null ( ($b = $retencion_productoB->getIdRetencion()) ) ) ){
-				$sql .= " id_retencion >= ? AND id_retencion <= ? AND";
+				$sql .= " `id_retencion` >= ? AND `id_retencion` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_retencion = ? AND"; 
+			$sql .= " `id_retencion` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $retencion_productoA->getIdProducto()) ) ) & ( ! is_null ( ($b = $retencion_productoB->getIdProducto()) ) ) ){
-				$sql .= " id_producto >= ? AND id_producto <= ? AND";
+				$sql .= " `id_producto` >= ? AND `id_producto` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_producto = ? AND"; 
+			$sql .= " `id_producto` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

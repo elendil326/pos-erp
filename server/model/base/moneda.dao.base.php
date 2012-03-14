@@ -122,22 +122,22 @@ abstract class MonedaDAOBase extends DAO
 		$sql = "SELECT * from moneda WHERE ("; 
 		$val = array();
 		if( ! is_null( $moneda->getIdMoneda() ) ){
-			$sql .= " id_moneda = ? AND";
+			$sql .= " `id_moneda` = ? AND";
 			array_push( $val, $moneda->getIdMoneda() );
 		}
 
 		if( ! is_null( $moneda->getNombre() ) ){
-			$sql .= " nombre = ? AND";
+			$sql .= " `nombre` = ? AND";
 			array_push( $val, $moneda->getNombre() );
 		}
 
 		if( ! is_null( $moneda->getSimbolo() ) ){
-			$sql .= " simbolo = ? AND";
+			$sql .= " `simbolo` = ? AND";
 			array_push( $val, $moneda->getSimbolo() );
 		}
 
 		if( ! is_null( $moneda->getActiva() ) ){
-			$sql .= " activa = ? AND";
+			$sql .= " `activa` = ? AND";
 			array_push( $val, $moneda->getActiva() );
 		}
 
@@ -171,7 +171,7 @@ abstract class MonedaDAOBase extends DAO
 	  **/
 	private static final function update( $moneda )
 	{
-		$sql = "UPDATE moneda SET  nombre = ?, simbolo = ?, activa = ? WHERE  id_moneda = ?;";
+		$sql = "UPDATE moneda SET  `nombre` = ?, `simbolo` = ?, `activa` = ? WHERE  `id_moneda` = ?;";
 		$params = array( 
 			$moneda->getNombre(), 
 			$moneda->getSimbolo(), 
@@ -199,7 +199,7 @@ abstract class MonedaDAOBase extends DAO
 	  **/
 	private static final function create( &$moneda )
 	{
-		$sql = "INSERT INTO moneda ( id_moneda, nombre, simbolo, activa ) VALUES ( ?, ?, ?, ?);";
+		$sql = "INSERT INTO moneda ( `id_moneda`, `nombre`, `simbolo`, `activa` ) VALUES ( ?, ?, ?, ?);";
 		$params = array( 
 			$moneda->getIdMoneda(), 
 			$moneda->getNombre(), 
@@ -254,44 +254,44 @@ abstract class MonedaDAOBase extends DAO
 		$sql = "SELECT * from moneda WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $monedaA->getIdMoneda()) ) ) & ( ! is_null ( ($b = $monedaB->getIdMoneda()) ) ) ){
-				$sql .= " id_moneda >= ? AND id_moneda <= ? AND";
+				$sql .= " `id_moneda` >= ? AND `id_moneda` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_moneda = ? AND"; 
+			$sql .= " `id_moneda` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $monedaA->getNombre()) ) ) & ( ! is_null ( ($b = $monedaB->getNombre()) ) ) ){
-				$sql .= " nombre >= ? AND nombre <= ? AND";
+				$sql .= " `nombre` >= ? AND `nombre` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " nombre = ? AND"; 
+			$sql .= " `nombre` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $monedaA->getSimbolo()) ) ) & ( ! is_null ( ($b = $monedaB->getSimbolo()) ) ) ){
-				$sql .= " simbolo >= ? AND simbolo <= ? AND";
+				$sql .= " `simbolo` >= ? AND `simbolo` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " simbolo = ? AND"; 
+			$sql .= " `simbolo` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $monedaA->getActiva()) ) ) & ( ! is_null ( ($b = $monedaB->getActiva()) ) ) ){
-				$sql .= " activa >= ? AND activa <= ? AND";
+				$sql .= " `activa` >= ? AND `activa` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " activa = ? AND"; 
+			$sql .= " `activa` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

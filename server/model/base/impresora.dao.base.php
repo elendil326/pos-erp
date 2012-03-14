@@ -122,12 +122,12 @@ abstract class ImpresoraDAOBase extends DAO
 		$sql = "SELECT * from impresora WHERE ("; 
 		$val = array();
 		if( ! is_null( $impresora->getIdImpresora() ) ){
-			$sql .= " id_impresora = ? AND";
+			$sql .= " `id_impresora` = ? AND";
 			array_push( $val, $impresora->getIdImpresora() );
 		}
 
 		if( ! is_null( $impresora->getPuerto() ) ){
-			$sql .= " puerto = ? AND";
+			$sql .= " `puerto` = ? AND";
 			array_push( $val, $impresora->getPuerto() );
 		}
 
@@ -161,7 +161,7 @@ abstract class ImpresoraDAOBase extends DAO
 	  **/
 	private static final function update( $impresora )
 	{
-		$sql = "UPDATE impresora SET  puerto = ? WHERE  id_impresora = ?;";
+		$sql = "UPDATE impresora SET  `puerto` = ? WHERE  `id_impresora` = ?;";
 		$params = array( 
 			$impresora->getPuerto(), 
 			$impresora->getIdImpresora(), );
@@ -187,7 +187,7 @@ abstract class ImpresoraDAOBase extends DAO
 	  **/
 	private static final function create( &$impresora )
 	{
-		$sql = "INSERT INTO impresora ( id_impresora, puerto ) VALUES ( ?, ?);";
+		$sql = "INSERT INTO impresora ( `id_impresora`, `puerto` ) VALUES ( ?, ?);";
 		$params = array( 
 			$impresora->getIdImpresora(), 
 			$impresora->getPuerto(), 
@@ -240,22 +240,22 @@ abstract class ImpresoraDAOBase extends DAO
 		$sql = "SELECT * from impresora WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $impresoraA->getIdImpresora()) ) ) & ( ! is_null ( ($b = $impresoraB->getIdImpresora()) ) ) ){
-				$sql .= " id_impresora >= ? AND id_impresora <= ? AND";
+				$sql .= " `id_impresora` >= ? AND `id_impresora` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_impresora = ? AND"; 
+			$sql .= " `id_impresora` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $impresoraA->getPuerto()) ) ) & ( ! is_null ( ($b = $impresoraB->getPuerto()) ) ) ){
-				$sql .= " puerto >= ? AND puerto <= ? AND";
+				$sql .= " `puerto` >= ? AND `puerto` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " puerto = ? AND"; 
+			$sql .= " `puerto` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

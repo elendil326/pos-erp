@@ -122,27 +122,27 @@ abstract class ClasificacionServicioDAOBase extends DAO
 		$sql = "SELECT * from clasificacion_servicio WHERE ("; 
 		$val = array();
 		if( ! is_null( $clasificacion_servicio->getIdClasificacionServicio() ) ){
-			$sql .= " id_clasificacion_servicio = ? AND";
+			$sql .= " `id_clasificacion_servicio` = ? AND";
 			array_push( $val, $clasificacion_servicio->getIdClasificacionServicio() );
 		}
 
 		if( ! is_null( $clasificacion_servicio->getNombre() ) ){
-			$sql .= " nombre = ? AND";
+			$sql .= " `nombre` = ? AND";
 			array_push( $val, $clasificacion_servicio->getNombre() );
 		}
 
 		if( ! is_null( $clasificacion_servicio->getGarantia() ) ){
-			$sql .= " garantia = ? AND";
+			$sql .= " `garantia` = ? AND";
 			array_push( $val, $clasificacion_servicio->getGarantia() );
 		}
 
 		if( ! is_null( $clasificacion_servicio->getDescripcion() ) ){
-			$sql .= " descripcion = ? AND";
+			$sql .= " `descripcion` = ? AND";
 			array_push( $val, $clasificacion_servicio->getDescripcion() );
 		}
 
 		if( ! is_null( $clasificacion_servicio->getActiva() ) ){
-			$sql .= " activa = ? AND";
+			$sql .= " `activa` = ? AND";
 			array_push( $val, $clasificacion_servicio->getActiva() );
 		}
 
@@ -176,7 +176,7 @@ abstract class ClasificacionServicioDAOBase extends DAO
 	  **/
 	private static final function update( $clasificacion_servicio )
 	{
-		$sql = "UPDATE clasificacion_servicio SET  nombre = ?, garantia = ?, descripcion = ?, activa = ? WHERE  id_clasificacion_servicio = ?;";
+		$sql = "UPDATE clasificacion_servicio SET  `nombre` = ?, `garantia` = ?, `descripcion` = ?, `activa` = ? WHERE  `id_clasificacion_servicio` = ?;";
 		$params = array( 
 			$clasificacion_servicio->getNombre(), 
 			$clasificacion_servicio->getGarantia(), 
@@ -205,7 +205,7 @@ abstract class ClasificacionServicioDAOBase extends DAO
 	  **/
 	private static final function create( &$clasificacion_servicio )
 	{
-		$sql = "INSERT INTO clasificacion_servicio ( id_clasificacion_servicio, nombre, garantia, descripcion, activa ) VALUES ( ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO clasificacion_servicio ( `id_clasificacion_servicio`, `nombre`, `garantia`, `descripcion`, `activa` ) VALUES ( ?, ?, ?, ?, ?);";
 		$params = array( 
 			$clasificacion_servicio->getIdClasificacionServicio(), 
 			$clasificacion_servicio->getNombre(), 
@@ -261,55 +261,55 @@ abstract class ClasificacionServicioDAOBase extends DAO
 		$sql = "SELECT * from clasificacion_servicio WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $clasificacion_servicioA->getIdClasificacionServicio()) ) ) & ( ! is_null ( ($b = $clasificacion_servicioB->getIdClasificacionServicio()) ) ) ){
-				$sql .= " id_clasificacion_servicio >= ? AND id_clasificacion_servicio <= ? AND";
+				$sql .= " `id_clasificacion_servicio` >= ? AND `id_clasificacion_servicio` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_clasificacion_servicio = ? AND"; 
+			$sql .= " `id_clasificacion_servicio` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $clasificacion_servicioA->getNombre()) ) ) & ( ! is_null ( ($b = $clasificacion_servicioB->getNombre()) ) ) ){
-				$sql .= " nombre >= ? AND nombre <= ? AND";
+				$sql .= " `nombre` >= ? AND `nombre` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " nombre = ? AND"; 
+			$sql .= " `nombre` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $clasificacion_servicioA->getGarantia()) ) ) & ( ! is_null ( ($b = $clasificacion_servicioB->getGarantia()) ) ) ){
-				$sql .= " garantia >= ? AND garantia <= ? AND";
+				$sql .= " `garantia` >= ? AND `garantia` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " garantia = ? AND"; 
+			$sql .= " `garantia` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $clasificacion_servicioA->getDescripcion()) ) ) & ( ! is_null ( ($b = $clasificacion_servicioB->getDescripcion()) ) ) ){
-				$sql .= " descripcion >= ? AND descripcion <= ? AND";
+				$sql .= " `descripcion` >= ? AND `descripcion` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " descripcion = ? AND"; 
+			$sql .= " `descripcion` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $clasificacion_servicioA->getActiva()) ) ) & ( ! is_null ( ($b = $clasificacion_servicioB->getActiva()) ) ) ){
-				$sql .= " activa >= ? AND activa <= ? AND";
+				$sql .= " `activa` >= ? AND `activa` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " activa = ? AND"; 
+			$sql .= " `activa` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

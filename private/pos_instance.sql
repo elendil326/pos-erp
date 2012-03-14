@@ -1235,6 +1235,20 @@ CREATE TABLE IF NOT EXISTS `prestamo` (
 -- Estructura de tabla para la tabla `producto`
 --
 
+
+CREATE TABLE IF NOT EXISTS `cliente_seguimiento` (
+`id_cliente_seguimiento` INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`id_usuario` INT( 11 ) NOT NULL ,
+`id_cliente` INT( 11 ) NOT NULL ,
+`fecha` INT( 11 ) NOT NULL ,
+`texto` TEXT NOT NULL ,
+PRIMARY KEY (`id_cliente_seguimiento`),
+INDEX (  `id_usuario` ,  `id_cliente` )
+) ENGINE = MYISAM ;
+
+
+
+
 CREATE TABLE IF NOT EXISTS `producto` (
   `id_producto` int(11) NOT NULL AUTO_INCREMENT,
   `compra_en_mostrador` tinyint(1) NOT NULL COMMENT 'Verdadero si el producto se puede comprar en mostrador',

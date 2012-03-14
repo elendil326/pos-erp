@@ -122,27 +122,27 @@ abstract class TarifaDAOBase extends DAO
 		$sql = "SELECT * from tarifa WHERE ("; 
 		$val = array();
 		if( ! is_null( $tarifa->getIdTarifa() ) ){
-			$sql .= " id_tarifa = ? AND";
+			$sql .= " `id_tarifa` = ? AND";
 			array_push( $val, $tarifa->getIdTarifa() );
 		}
 
 		if( ! is_null( $tarifa->getNombre() ) ){
-			$sql .= " nombre = ? AND";
+			$sql .= " `nombre` = ? AND";
 			array_push( $val, $tarifa->getNombre() );
 		}
 
 		if( ! is_null( $tarifa->getTipoTarifa() ) ){
-			$sql .= " tipo_tarifa = ? AND";
+			$sql .= " `tipo_tarifa` = ? AND";
 			array_push( $val, $tarifa->getTipoTarifa() );
 		}
 
 		if( ! is_null( $tarifa->getActiva() ) ){
-			$sql .= " activa = ? AND";
+			$sql .= " `activa` = ? AND";
 			array_push( $val, $tarifa->getActiva() );
 		}
 
 		if( ! is_null( $tarifa->getIdMoneda() ) ){
-			$sql .= " id_moneda = ? AND";
+			$sql .= " `id_moneda` = ? AND";
 			array_push( $val, $tarifa->getIdMoneda() );
 		}
 
@@ -152,12 +152,12 @@ abstract class TarifaDAOBase extends DAO
 		}
 
 		if( ! is_null( $tarifa->getIdVersionDefault() ) ){
-			$sql .= " id_version_default = ? AND";
+			$sql .= " `id_version_default` = ? AND";
 			array_push( $val, $tarifa->getIdVersionDefault() );
 		}
 
 		if( ! is_null( $tarifa->getIdVersionActiva() ) ){
-			$sql .= " id_version_activa = ? AND";
+			$sql .= " `id_version_activa` = ? AND";
 			array_push( $val, $tarifa->getIdVersionActiva() );
 		}
 
@@ -191,7 +191,7 @@ abstract class TarifaDAOBase extends DAO
 	  **/
 	private static final function update( $tarifa )
 	{
-		$sql = "UPDATE tarifa SET  nombre = ?, tipo_tarifa = ?, activa = ?, id_moneda = ?, `default` = ?, id_version_default = ?, id_version_activa = ? WHERE  id_tarifa = ?;";
+		$sql = "UPDATE tarifa SET  `nombre` = ?, `tipo_tarifa` = ?, `activa` = ?, `id_moneda` = ?, `default` = ?, `id_version_default` = ?, `id_version_activa` = ? WHERE  `id_tarifa` = ?;";
 		$params = array( 
 			$tarifa->getNombre(), 
 			$tarifa->getTipoTarifa(), 
@@ -223,7 +223,7 @@ abstract class TarifaDAOBase extends DAO
 	  **/
 	private static final function create( &$tarifa )
 	{
-		$sql = "INSERT INTO tarifa ( id_tarifa, nombre, tipo_tarifa, activa, id_moneda, `default`, id_version_default, id_version_activa ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO tarifa ( `id_tarifa`, `nombre`, `tipo_tarifa`, `activa`, `id_moneda`, `default`, `id_version_default`, `id_version_activa` ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$tarifa->getIdTarifa(), 
 			$tarifa->getNombre(), 
@@ -282,55 +282,55 @@ abstract class TarifaDAOBase extends DAO
 		$sql = "SELECT * from tarifa WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $tarifaA->getIdTarifa()) ) ) & ( ! is_null ( ($b = $tarifaB->getIdTarifa()) ) ) ){
-				$sql .= " id_tarifa >= ? AND id_tarifa <= ? AND";
+				$sql .= " `id_tarifa` >= ? AND `id_tarifa` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_tarifa = ? AND"; 
+			$sql .= " `id_tarifa` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $tarifaA->getNombre()) ) ) & ( ! is_null ( ($b = $tarifaB->getNombre()) ) ) ){
-				$sql .= " nombre >= ? AND nombre <= ? AND";
+				$sql .= " `nombre` >= ? AND `nombre` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " nombre = ? AND"; 
+			$sql .= " `nombre` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $tarifaA->getTipoTarifa()) ) ) & ( ! is_null ( ($b = $tarifaB->getTipoTarifa()) ) ) ){
-				$sql .= " tipo_tarifa >= ? AND tipo_tarifa <= ? AND";
+				$sql .= " `tipo_tarifa` >= ? AND `tipo_tarifa` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " tipo_tarifa = ? AND"; 
+			$sql .= " `tipo_tarifa` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $tarifaA->getActiva()) ) ) & ( ! is_null ( ($b = $tarifaB->getActiva()) ) ) ){
-				$sql .= " activa >= ? AND activa <= ? AND";
+				$sql .= " `activa` >= ? AND `activa` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " activa = ? AND"; 
+			$sql .= " `activa` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $tarifaA->getIdMoneda()) ) ) & ( ! is_null ( ($b = $tarifaB->getIdMoneda()) ) ) ){
-				$sql .= " id_moneda >= ? AND id_moneda <= ? AND";
+				$sql .= " `id_moneda` >= ? AND `id_moneda` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_moneda = ? AND"; 
+			$sql .= " `id_moneda` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
@@ -348,22 +348,22 @@ abstract class TarifaDAOBase extends DAO
 		}
 
 		if( ( !is_null (($a = $tarifaA->getIdVersionDefault()) ) ) & ( ! is_null ( ($b = $tarifaB->getIdVersionDefault()) ) ) ){
-				$sql .= " id_version_default >= ? AND id_version_default <= ? AND";
+				$sql .= " `id_version_default` >= ? AND `id_version_default` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_version_default = ? AND"; 
+			$sql .= " `id_version_default` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $tarifaA->getIdVersionActiva()) ) ) & ( ! is_null ( ($b = $tarifaB->getIdVersionActiva()) ) ) ){
-				$sql .= " id_version_activa >= ? AND id_version_activa <= ? AND";
+				$sql .= " `id_version_activa` >= ? AND `id_version_activa` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_version_activa = ? AND"; 
+			$sql .= " `id_version_activa` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

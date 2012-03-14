@@ -2235,18 +2235,17 @@ require_once("interfaces/Sucursales.interface.php");
 
  
                 if( !is_array( $direccion ) ){
-                    Logger::error("Verifique el formato de los datos de las direcciones, se esperaba un array ");
-                    throw new Exception("Verifique el formato de los datos de las empresas, se esperaba un array ");
+                    //Logger::error("Verifique el formato de los datos de las direcciones, se esperaba un array ");
+                    //throw new Exception("Verifique el formato de los datos de las empresas, se esperaba un array ");
+					$direccion = object_to_array($direccion);
                 }
 
-                foreach($direccion as $d)
-                {
 
-                    $_direccion = null;
-                        
-                    if( is_object( $d ) ){
-                        $d = object_to_array($d);
-                    }
+
+                    $_direccion = new Direccion($direccion);
+
+                    $d = DireccionDAO::getByPK( $sucursal->getIdDireccion() ); 
+
 
                     //verificamos si se va a editar una direccion o se va a crear una nueva
                     if( isset($d->id_direccion) ){
@@ -2332,7 +2331,7 @@ require_once("interfaces/Sucursales.interface.php");
 
                             $_direccion->setIdUsuarioUltimaModificacion($id_usuario);                                
 
-                        }                    
+                                           
 
                     }else{
                             

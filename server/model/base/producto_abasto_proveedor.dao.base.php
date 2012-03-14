@@ -124,22 +124,22 @@ abstract class ProductoAbastoProveedorDAOBase extends DAO
 		$sql = "SELECT * from producto_abasto_proveedor WHERE ("; 
 		$val = array();
 		if( ! is_null( $producto_abasto_proveedor->getIdAbastoProveedor() ) ){
-			$sql .= " id_abasto_proveedor = ? AND";
+			$sql .= " `id_abasto_proveedor` = ? AND";
 			array_push( $val, $producto_abasto_proveedor->getIdAbastoProveedor() );
 		}
 
 		if( ! is_null( $producto_abasto_proveedor->getIdProducto() ) ){
-			$sql .= " id_producto = ? AND";
+			$sql .= " `id_producto` = ? AND";
 			array_push( $val, $producto_abasto_proveedor->getIdProducto() );
 		}
 
 		if( ! is_null( $producto_abasto_proveedor->getIdUnidad() ) ){
-			$sql .= " id_unidad = ? AND";
+			$sql .= " `id_unidad` = ? AND";
 			array_push( $val, $producto_abasto_proveedor->getIdUnidad() );
 		}
 
 		if( ! is_null( $producto_abasto_proveedor->getCantidad() ) ){
-			$sql .= " cantidad = ? AND";
+			$sql .= " `cantidad` = ? AND";
 			array_push( $val, $producto_abasto_proveedor->getCantidad() );
 		}
 
@@ -173,7 +173,7 @@ abstract class ProductoAbastoProveedorDAOBase extends DAO
 	  **/
 	private static final function update( $producto_abasto_proveedor )
 	{
-		$sql = "UPDATE producto_abasto_proveedor SET  cantidad = ? WHERE  id_abasto_proveedor = ? AND id_producto = ? AND id_unidad = ?;";
+		$sql = "UPDATE producto_abasto_proveedor SET  `cantidad` = ? WHERE  `id_abasto_proveedor` = ? AND `id_producto` = ? AND `id_unidad` = ?;";
 		$params = array( 
 			$producto_abasto_proveedor->getCantidad(), 
 			$producto_abasto_proveedor->getIdAbastoProveedor(),$producto_abasto_proveedor->getIdProducto(),$producto_abasto_proveedor->getIdUnidad(), );
@@ -199,7 +199,7 @@ abstract class ProductoAbastoProveedorDAOBase extends DAO
 	  **/
 	private static final function create( &$producto_abasto_proveedor )
 	{
-		$sql = "INSERT INTO producto_abasto_proveedor ( id_abasto_proveedor, id_producto, id_unidad, cantidad ) VALUES ( ?, ?, ?, ?);";
+		$sql = "INSERT INTO producto_abasto_proveedor ( `id_abasto_proveedor`, `id_producto`, `id_unidad`, `cantidad` ) VALUES ( ?, ?, ?, ?);";
 		$params = array( 
 			$producto_abasto_proveedor->getIdAbastoProveedor(), 
 			$producto_abasto_proveedor->getIdProducto(), 
@@ -254,44 +254,44 @@ abstract class ProductoAbastoProveedorDAOBase extends DAO
 		$sql = "SELECT * from producto_abasto_proveedor WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $producto_abasto_proveedorA->getIdAbastoProveedor()) ) ) & ( ! is_null ( ($b = $producto_abasto_proveedorB->getIdAbastoProveedor()) ) ) ){
-				$sql .= " id_abasto_proveedor >= ? AND id_abasto_proveedor <= ? AND";
+				$sql .= " `id_abasto_proveedor` >= ? AND `id_abasto_proveedor` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_abasto_proveedor = ? AND"; 
+			$sql .= " `id_abasto_proveedor` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $producto_abasto_proveedorA->getIdProducto()) ) ) & ( ! is_null ( ($b = $producto_abasto_proveedorB->getIdProducto()) ) ) ){
-				$sql .= " id_producto >= ? AND id_producto <= ? AND";
+				$sql .= " `id_producto` >= ? AND `id_producto` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_producto = ? AND"; 
+			$sql .= " `id_producto` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $producto_abasto_proveedorA->getIdUnidad()) ) ) & ( ! is_null ( ($b = $producto_abasto_proveedorB->getIdUnidad()) ) ) ){
-				$sql .= " id_unidad >= ? AND id_unidad <= ? AND";
+				$sql .= " `id_unidad` >= ? AND `id_unidad` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_unidad = ? AND"; 
+			$sql .= " `id_unidad` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $producto_abasto_proveedorA->getCantidad()) ) ) & ( ! is_null ( ($b = $producto_abasto_proveedorB->getCantidad()) ) ) ){
-				$sql .= " cantidad >= ? AND cantidad <= ? AND";
+				$sql .= " `cantidad` >= ? AND `cantidad` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " cantidad = ? AND"; 
+			$sql .= " `cantidad` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

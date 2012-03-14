@@ -124,22 +124,22 @@ abstract class LoteEntradaProductoDAOBase extends DAO
 		$sql = "SELECT * from lote_entrada_producto WHERE ("; 
 		$val = array();
 		if( ! is_null( $lote_entrada_producto->getIdLoteEntrada() ) ){
-			$sql .= " id_lote_entrada = ? AND";
+			$sql .= " `id_lote_entrada` = ? AND";
 			array_push( $val, $lote_entrada_producto->getIdLoteEntrada() );
 		}
 
 		if( ! is_null( $lote_entrada_producto->getIdProducto() ) ){
-			$sql .= " id_producto = ? AND";
+			$sql .= " `id_producto` = ? AND";
 			array_push( $val, $lote_entrada_producto->getIdProducto() );
 		}
 
 		if( ! is_null( $lote_entrada_producto->getIdUnidad() ) ){
-			$sql .= " id_unidad = ? AND";
+			$sql .= " `id_unidad` = ? AND";
 			array_push( $val, $lote_entrada_producto->getIdUnidad() );
 		}
 
 		if( ! is_null( $lote_entrada_producto->getCantidad() ) ){
-			$sql .= " cantidad = ? AND";
+			$sql .= " `cantidad` = ? AND";
 			array_push( $val, $lote_entrada_producto->getCantidad() );
 		}
 
@@ -173,7 +173,7 @@ abstract class LoteEntradaProductoDAOBase extends DAO
 	  **/
 	private static final function update( $lote_entrada_producto )
 	{
-		$sql = "UPDATE lote_entrada_producto SET  cantidad = ? WHERE  id_lote_entrada = ? AND id_producto = ? AND id_unidad = ?;";
+		$sql = "UPDATE lote_entrada_producto SET  `cantidad` = ? WHERE  `id_lote_entrada` = ? AND `id_producto` = ? AND `id_unidad` = ?;";
 		$params = array( 
 			$lote_entrada_producto->getCantidad(), 
 			$lote_entrada_producto->getIdLoteEntrada(),$lote_entrada_producto->getIdProducto(),$lote_entrada_producto->getIdUnidad(), );
@@ -199,7 +199,7 @@ abstract class LoteEntradaProductoDAOBase extends DAO
 	  **/
 	private static final function create( &$lote_entrada_producto )
 	{
-		$sql = "INSERT INTO lote_entrada_producto ( id_lote_entrada, id_producto, id_unidad, cantidad ) VALUES ( ?, ?, ?, ?);";
+		$sql = "INSERT INTO lote_entrada_producto ( `id_lote_entrada`, `id_producto`, `id_unidad`, `cantidad` ) VALUES ( ?, ?, ?, ?);";
 		$params = array( 
 			$lote_entrada_producto->getIdLoteEntrada(), 
 			$lote_entrada_producto->getIdProducto(), 
@@ -254,44 +254,44 @@ abstract class LoteEntradaProductoDAOBase extends DAO
 		$sql = "SELECT * from lote_entrada_producto WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $lote_entrada_productoA->getIdLoteEntrada()) ) ) & ( ! is_null ( ($b = $lote_entrada_productoB->getIdLoteEntrada()) ) ) ){
-				$sql .= " id_lote_entrada >= ? AND id_lote_entrada <= ? AND";
+				$sql .= " `id_lote_entrada` >= ? AND `id_lote_entrada` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_lote_entrada = ? AND"; 
+			$sql .= " `id_lote_entrada` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $lote_entrada_productoA->getIdProducto()) ) ) & ( ! is_null ( ($b = $lote_entrada_productoB->getIdProducto()) ) ) ){
-				$sql .= " id_producto >= ? AND id_producto <= ? AND";
+				$sql .= " `id_producto` >= ? AND `id_producto` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_producto = ? AND"; 
+			$sql .= " `id_producto` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $lote_entrada_productoA->getIdUnidad()) ) ) & ( ! is_null ( ($b = $lote_entrada_productoB->getIdUnidad()) ) ) ){
-				$sql .= " id_unidad >= ? AND id_unidad <= ? AND";
+				$sql .= " `id_unidad` >= ? AND `id_unidad` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_unidad = ? AND"; 
+			$sql .= " `id_unidad` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $lote_entrada_productoA->getCantidad()) ) ) & ( ! is_null ( ($b = $lote_entrada_productoB->getCantidad()) ) ) ){
-				$sql .= " cantidad >= ? AND cantidad <= ? AND";
+				$sql .= " `cantidad` >= ? AND `cantidad` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " cantidad = ? AND"; 
+			$sql .= " `cantidad` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

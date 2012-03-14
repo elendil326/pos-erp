@@ -122,32 +122,32 @@ abstract class RolDAOBase extends DAO
 		$sql = "SELECT * from rol WHERE ("; 
 		$val = array();
 		if( ! is_null( $rol->getIdRol() ) ){
-			$sql .= " id_rol = ? AND";
+			$sql .= " `id_rol` = ? AND";
 			array_push( $val, $rol->getIdRol() );
 		}
 
 		if( ! is_null( $rol->getNombre() ) ){
-			$sql .= " nombre = ? AND";
+			$sql .= " `nombre` = ? AND";
 			array_push( $val, $rol->getNombre() );
 		}
 
 		if( ! is_null( $rol->getDescripcion() ) ){
-			$sql .= " descripcion = ? AND";
+			$sql .= " `descripcion` = ? AND";
 			array_push( $val, $rol->getDescripcion() );
 		}
 
 		if( ! is_null( $rol->getSalario() ) ){
-			$sql .= " salario = ? AND";
+			$sql .= " `salario` = ? AND";
 			array_push( $val, $rol->getSalario() );
 		}
 
 		if( ! is_null( $rol->getIdTarifaCompra() ) ){
-			$sql .= " id_tarifa_compra = ? AND";
+			$sql .= " `id_tarifa_compra` = ? AND";
 			array_push( $val, $rol->getIdTarifaCompra() );
 		}
 
 		if( ! is_null( $rol->getIdTarifaVenta() ) ){
-			$sql .= " id_tarifa_venta = ? AND";
+			$sql .= " `id_tarifa_venta` = ? AND";
 			array_push( $val, $rol->getIdTarifaVenta() );
 		}
 
@@ -181,7 +181,7 @@ abstract class RolDAOBase extends DAO
 	  **/
 	private static final function update( $rol )
 	{
-		$sql = "UPDATE rol SET  nombre = ?, descripcion = ?, salario = ?, id_tarifa_compra = ?, id_tarifa_venta = ? WHERE  id_rol = ?;";
+		$sql = "UPDATE rol SET  `nombre` = ?, `descripcion` = ?, `salario` = ?, `id_tarifa_compra` = ?, `id_tarifa_venta` = ? WHERE  `id_rol` = ?;";
 		$params = array( 
 			$rol->getNombre(), 
 			$rol->getDescripcion(), 
@@ -211,7 +211,7 @@ abstract class RolDAOBase extends DAO
 	  **/
 	private static final function create( &$rol )
 	{
-		$sql = "INSERT INTO rol ( id_rol, nombre, descripcion, salario, id_tarifa_compra, id_tarifa_venta ) VALUES ( ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO rol ( `id_rol`, `nombre`, `descripcion`, `salario`, `id_tarifa_compra`, `id_tarifa_venta` ) VALUES ( ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$rol->getIdRol(), 
 			$rol->getNombre(), 
@@ -268,66 +268,66 @@ abstract class RolDAOBase extends DAO
 		$sql = "SELECT * from rol WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $rolA->getIdRol()) ) ) & ( ! is_null ( ($b = $rolB->getIdRol()) ) ) ){
-				$sql .= " id_rol >= ? AND id_rol <= ? AND";
+				$sql .= " `id_rol` >= ? AND `id_rol` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_rol = ? AND"; 
+			$sql .= " `id_rol` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $rolA->getNombre()) ) ) & ( ! is_null ( ($b = $rolB->getNombre()) ) ) ){
-				$sql .= " nombre >= ? AND nombre <= ? AND";
+				$sql .= " `nombre` >= ? AND `nombre` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " nombre = ? AND"; 
+			$sql .= " `nombre` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $rolA->getDescripcion()) ) ) & ( ! is_null ( ($b = $rolB->getDescripcion()) ) ) ){
-				$sql .= " descripcion >= ? AND descripcion <= ? AND";
+				$sql .= " `descripcion` >= ? AND `descripcion` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " descripcion = ? AND"; 
+			$sql .= " `descripcion` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $rolA->getSalario()) ) ) & ( ! is_null ( ($b = $rolB->getSalario()) ) ) ){
-				$sql .= " salario >= ? AND salario <= ? AND";
+				$sql .= " `salario` >= ? AND `salario` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " salario = ? AND"; 
+			$sql .= " `salario` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $rolA->getIdTarifaCompra()) ) ) & ( ! is_null ( ($b = $rolB->getIdTarifaCompra()) ) ) ){
-				$sql .= " id_tarifa_compra >= ? AND id_tarifa_compra <= ? AND";
+				$sql .= " `id_tarifa_compra` >= ? AND `id_tarifa_compra` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_tarifa_compra = ? AND"; 
+			$sql .= " `id_tarifa_compra` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $rolA->getIdTarifaVenta()) ) ) & ( ! is_null ( ($b = $rolB->getIdTarifaVenta()) ) ) ){
-				$sql .= " id_tarifa_venta >= ? AND id_tarifa_venta <= ? AND";
+				$sql .= " `id_tarifa_venta` >= ? AND `id_tarifa_venta` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_tarifa_venta = ? AND"; 
+			$sql .= " `id_tarifa_venta` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

@@ -122,12 +122,12 @@ abstract class PermisoDAOBase extends DAO
 		$sql = "SELECT * from permiso WHERE ("; 
 		$val = array();
 		if( ! is_null( $permiso->getIdPermiso() ) ){
-			$sql .= " id_permiso = ? AND";
+			$sql .= " `id_permiso` = ? AND";
 			array_push( $val, $permiso->getIdPermiso() );
 		}
 
 		if( ! is_null( $permiso->getPermiso() ) ){
-			$sql .= " permiso = ? AND";
+			$sql .= " `permiso` = ? AND";
 			array_push( $val, $permiso->getPermiso() );
 		}
 
@@ -161,7 +161,7 @@ abstract class PermisoDAOBase extends DAO
 	  **/
 	private static final function update( $permiso )
 	{
-		$sql = "UPDATE permiso SET  permiso = ? WHERE  id_permiso = ?;";
+		$sql = "UPDATE permiso SET  `permiso` = ? WHERE  `id_permiso` = ?;";
 		$params = array( 
 			$permiso->getPermiso(), 
 			$permiso->getIdPermiso(), );
@@ -187,7 +187,7 @@ abstract class PermisoDAOBase extends DAO
 	  **/
 	private static final function create( &$permiso )
 	{
-		$sql = "INSERT INTO permiso ( id_permiso, permiso ) VALUES ( ?, ?);";
+		$sql = "INSERT INTO permiso ( `id_permiso`, `permiso` ) VALUES ( ?, ?);";
 		$params = array( 
 			$permiso->getIdPermiso(), 
 			$permiso->getPermiso(), 
@@ -240,22 +240,22 @@ abstract class PermisoDAOBase extends DAO
 		$sql = "SELECT * from permiso WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $permisoA->getIdPermiso()) ) ) & ( ! is_null ( ($b = $permisoB->getIdPermiso()) ) ) ){
-				$sql .= " id_permiso >= ? AND id_permiso <= ? AND";
+				$sql .= " `id_permiso` >= ? AND `id_permiso` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_permiso = ? AND"; 
+			$sql .= " `id_permiso` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $permisoA->getPermiso()) ) ) & ( ! is_null ( ($b = $permisoB->getPermiso()) ) ) ){
-				$sql .= " permiso >= ? AND permiso <= ? AND";
+				$sql .= " `permiso` >= ? AND `permiso` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " permiso = ? AND"; 
+			$sql .= " `permiso` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

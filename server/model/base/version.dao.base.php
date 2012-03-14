@@ -122,32 +122,32 @@ abstract class VersionDAOBase extends DAO
 		$sql = "SELECT * from version WHERE ("; 
 		$val = array();
 		if( ! is_null( $version->getIdVersion() ) ){
-			$sql .= " id_version = ? AND";
+			$sql .= " `id_version` = ? AND";
 			array_push( $val, $version->getIdVersion() );
 		}
 
 		if( ! is_null( $version->getIdTarifa() ) ){
-			$sql .= " id_tarifa = ? AND";
+			$sql .= " `id_tarifa` = ? AND";
 			array_push( $val, $version->getIdTarifa() );
 		}
 
 		if( ! is_null( $version->getNombre() ) ){
-			$sql .= " nombre = ? AND";
+			$sql .= " `nombre` = ? AND";
 			array_push( $val, $version->getNombre() );
 		}
 
 		if( ! is_null( $version->getActiva() ) ){
-			$sql .= " activa = ? AND";
+			$sql .= " `activa` = ? AND";
 			array_push( $val, $version->getActiva() );
 		}
 
 		if( ! is_null( $version->getFechaInicio() ) ){
-			$sql .= " fecha_inicio = ? AND";
+			$sql .= " `fecha_inicio` = ? AND";
 			array_push( $val, $version->getFechaInicio() );
 		}
 
 		if( ! is_null( $version->getFechaFin() ) ){
-			$sql .= " fecha_fin = ? AND";
+			$sql .= " `fecha_fin` = ? AND";
 			array_push( $val, $version->getFechaFin() );
 		}
 
@@ -186,7 +186,7 @@ abstract class VersionDAOBase extends DAO
 	  **/
 	private static final function update( $version )
 	{
-		$sql = "UPDATE version SET  id_tarifa = ?, nombre = ?, activa = ?, fecha_inicio = ?, fecha_fin = ?, `default` = ? WHERE  id_version = ?;";
+		$sql = "UPDATE version SET  `id_tarifa` = ?, `nombre` = ?, `activa` = ?, `fecha_inicio` = ?, `fecha_fin` = ?, `default` = ? WHERE  `id_version` = ?;";
 		$params = array( 
 			$version->getIdTarifa(), 
 			$version->getNombre(), 
@@ -217,7 +217,7 @@ abstract class VersionDAOBase extends DAO
 	  **/
 	private static final function create( &$version )
 	{
-		$sql = "INSERT INTO version ( id_version, id_tarifa, nombre, activa, fecha_inicio, fecha_fin, `default` ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO version ( `id_version`, `id_tarifa`, `nombre`, `activa`, `fecha_inicio`, `fecha_fin`, `default` ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$version->getIdVersion(), 
 			$version->getIdTarifa(), 
@@ -275,66 +275,66 @@ abstract class VersionDAOBase extends DAO
 		$sql = "SELECT * from version WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $versionA->getIdVersion()) ) ) & ( ! is_null ( ($b = $versionB->getIdVersion()) ) ) ){
-				$sql .= " id_version >= ? AND id_version <= ? AND";
+				$sql .= " `id_version` >= ? AND `id_version` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_version = ? AND"; 
+			$sql .= " `id_version` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $versionA->getIdTarifa()) ) ) & ( ! is_null ( ($b = $versionB->getIdTarifa()) ) ) ){
-				$sql .= " id_tarifa >= ? AND id_tarifa <= ? AND";
+				$sql .= " `id_tarifa` >= ? AND `id_tarifa` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_tarifa = ? AND"; 
+			$sql .= " `id_tarifa` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $versionA->getNombre()) ) ) & ( ! is_null ( ($b = $versionB->getNombre()) ) ) ){
-				$sql .= " nombre >= ? AND nombre <= ? AND";
+				$sql .= " `nombre` >= ? AND `nombre` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " nombre = ? AND"; 
+			$sql .= " `nombre` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $versionA->getActiva()) ) ) & ( ! is_null ( ($b = $versionB->getActiva()) ) ) ){
-				$sql .= " activa >= ? AND activa <= ? AND";
+				$sql .= " `activa` >= ? AND `activa` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " activa = ? AND"; 
+			$sql .= " `activa` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $versionA->getFechaInicio()) ) ) & ( ! is_null ( ($b = $versionB->getFechaInicio()) ) ) ){
-				$sql .= " fecha_inicio >= ? AND fecha_inicio <= ? AND";
+				$sql .= " `fecha_inicio` >= ? AND `fecha_inicio` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " fecha_inicio = ? AND"; 
+			$sql .= " `fecha_inicio` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $versionA->getFechaFin()) ) ) & ( ! is_null ( ($b = $versionB->getFechaFin()) ) ) ){
-				$sql .= " fecha_fin >= ? AND fecha_fin <= ? AND";
+				$sql .= " `fecha_fin` >= ? AND `fecha_fin` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " fecha_fin = ? AND"; 
+			$sql .= " `fecha_fin` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

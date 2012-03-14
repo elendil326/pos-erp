@@ -123,12 +123,12 @@ abstract class ProductoEmpresaDAOBase extends DAO
 		$sql = "SELECT * from producto_empresa WHERE ("; 
 		$val = array();
 		if( ! is_null( $producto_empresa->getIdProducto() ) ){
-			$sql .= " id_producto = ? AND";
+			$sql .= " `id_producto` = ? AND";
 			array_push( $val, $producto_empresa->getIdProducto() );
 		}
 
 		if( ! is_null( $producto_empresa->getIdEmpresa() ) ){
-			$sql .= " id_empresa = ? AND";
+			$sql .= " `id_empresa` = ? AND";
 			array_push( $val, $producto_empresa->getIdEmpresa() );
 		}
 
@@ -180,7 +180,7 @@ abstract class ProductoEmpresaDAOBase extends DAO
 	  **/
 	private static final function create( &$producto_empresa )
 	{
-		$sql = "INSERT INTO producto_empresa ( id_producto, id_empresa ) VALUES ( ?, ?);";
+		$sql = "INSERT INTO producto_empresa ( `id_producto`, `id_empresa` ) VALUES ( ?, ?);";
 		$params = array( 
 			$producto_empresa->getIdProducto(), 
 			$producto_empresa->getIdEmpresa(), 
@@ -233,22 +233,22 @@ abstract class ProductoEmpresaDAOBase extends DAO
 		$sql = "SELECT * from producto_empresa WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $producto_empresaA->getIdProducto()) ) ) & ( ! is_null ( ($b = $producto_empresaB->getIdProducto()) ) ) ){
-				$sql .= " id_producto >= ? AND id_producto <= ? AND";
+				$sql .= " `id_producto` >= ? AND `id_producto` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_producto = ? AND"; 
+			$sql .= " `id_producto` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $producto_empresaA->getIdEmpresa()) ) ) & ( ! is_null ( ($b = $producto_empresaB->getIdEmpresa()) ) ) ){
-				$sql .= " id_empresa >= ? AND id_empresa <= ? AND";
+				$sql .= " `id_empresa` >= ? AND `id_empresa` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_empresa = ? AND"; 
+			$sql .= " `id_empresa` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

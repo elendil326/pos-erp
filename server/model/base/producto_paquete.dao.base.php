@@ -124,22 +124,22 @@ abstract class ProductoPaqueteDAOBase extends DAO
 		$sql = "SELECT * from producto_paquete WHERE ("; 
 		$val = array();
 		if( ! is_null( $producto_paquete->getIdProducto() ) ){
-			$sql .= " id_producto = ? AND";
+			$sql .= " `id_producto` = ? AND";
 			array_push( $val, $producto_paquete->getIdProducto() );
 		}
 
 		if( ! is_null( $producto_paquete->getIdPaquete() ) ){
-			$sql .= " id_paquete = ? AND";
+			$sql .= " `id_paquete` = ? AND";
 			array_push( $val, $producto_paquete->getIdPaquete() );
 		}
 
 		if( ! is_null( $producto_paquete->getCantidad() ) ){
-			$sql .= " cantidad = ? AND";
+			$sql .= " `cantidad` = ? AND";
 			array_push( $val, $producto_paquete->getCantidad() );
 		}
 
 		if( ! is_null( $producto_paquete->getIdUnidad() ) ){
-			$sql .= " id_unidad = ? AND";
+			$sql .= " `id_unidad` = ? AND";
 			array_push( $val, $producto_paquete->getIdUnidad() );
 		}
 
@@ -173,7 +173,7 @@ abstract class ProductoPaqueteDAOBase extends DAO
 	  **/
 	private static final function update( $producto_paquete )
 	{
-		$sql = "UPDATE producto_paquete SET  cantidad = ? WHERE  id_producto = ? AND id_paquete = ? AND id_unidad = ?;";
+		$sql = "UPDATE producto_paquete SET  `cantidad` = ? WHERE  `id_producto` = ? AND `id_paquete` = ? AND `id_unidad` = ?;";
 		$params = array( 
 			$producto_paquete->getCantidad(), 
 			$producto_paquete->getIdProducto(),$producto_paquete->getIdPaquete(),$producto_paquete->getIdUnidad(), );
@@ -199,7 +199,7 @@ abstract class ProductoPaqueteDAOBase extends DAO
 	  **/
 	private static final function create( &$producto_paquete )
 	{
-		$sql = "INSERT INTO producto_paquete ( id_producto, id_paquete, cantidad, id_unidad ) VALUES ( ?, ?, ?, ?);";
+		$sql = "INSERT INTO producto_paquete ( `id_producto`, `id_paquete`, `cantidad`, `id_unidad` ) VALUES ( ?, ?, ?, ?);";
 		$params = array( 
 			$producto_paquete->getIdProducto(), 
 			$producto_paquete->getIdPaquete(), 
@@ -254,44 +254,44 @@ abstract class ProductoPaqueteDAOBase extends DAO
 		$sql = "SELECT * from producto_paquete WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $producto_paqueteA->getIdProducto()) ) ) & ( ! is_null ( ($b = $producto_paqueteB->getIdProducto()) ) ) ){
-				$sql .= " id_producto >= ? AND id_producto <= ? AND";
+				$sql .= " `id_producto` >= ? AND `id_producto` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_producto = ? AND"; 
+			$sql .= " `id_producto` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $producto_paqueteA->getIdPaquete()) ) ) & ( ! is_null ( ($b = $producto_paqueteB->getIdPaquete()) ) ) ){
-				$sql .= " id_paquete >= ? AND id_paquete <= ? AND";
+				$sql .= " `id_paquete` >= ? AND `id_paquete` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_paquete = ? AND"; 
+			$sql .= " `id_paquete` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $producto_paqueteA->getCantidad()) ) ) & ( ! is_null ( ($b = $producto_paqueteB->getCantidad()) ) ) ){
-				$sql .= " cantidad >= ? AND cantidad <= ? AND";
+				$sql .= " `cantidad` >= ? AND `cantidad` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " cantidad = ? AND"; 
+			$sql .= " `cantidad` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $producto_paqueteA->getIdUnidad()) ) ) & ( ! is_null ( ($b = $producto_paqueteB->getIdUnidad()) ) ) ){
-				$sql .= " id_unidad >= ? AND id_unidad <= ? AND";
+				$sql .= " `id_unidad` >= ? AND `id_unidad` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_unidad = ? AND"; 
+			$sql .= " `id_unidad` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

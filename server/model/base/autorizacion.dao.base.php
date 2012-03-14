@@ -122,7 +122,7 @@ abstract class AutorizacionDAOBase extends DAO
 		$sql = "SELECT * from autorizacion WHERE ("; 
 		$val = array();
 		if( ! is_null( $autorizacion->getIdAutorizacion() ) ){
-			$sql .= " id_autorizacion = ? AND";
+			$sql .= " `id_autorizacion` = ? AND";
 			array_push( $val, $autorizacion->getIdAutorizacion() );
 		}
 
@@ -174,7 +174,7 @@ abstract class AutorizacionDAOBase extends DAO
 	  **/
 	private static final function create( &$autorizacion )
 	{
-		$sql = "INSERT INTO autorizacion ( id_autorizacion ) VALUES ( ?);";
+		$sql = "INSERT INTO autorizacion ( `id_autorizacion` ) VALUES ( ?);";
 		$params = array( 
 			$autorizacion->getIdAutorizacion(), 
 		 );
@@ -226,11 +226,11 @@ abstract class AutorizacionDAOBase extends DAO
 		$sql = "SELECT * from autorizacion WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $autorizacionA->getIdAutorizacion()) ) ) & ( ! is_null ( ($b = $autorizacionB->getIdAutorizacion()) ) ) ){
-				$sql .= " id_autorizacion >= ? AND id_autorizacion <= ? AND";
+				$sql .= " `id_autorizacion` >= ? AND `id_autorizacion` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_autorizacion = ? AND"; 
+			$sql .= " `id_autorizacion` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

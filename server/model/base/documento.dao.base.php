@@ -122,7 +122,7 @@ abstract class DocumentoDAOBase extends DAO
 		$sql = "SELECT * from documento WHERE ("; 
 		$val = array();
 		if( ! is_null( $documento->getIdDocumento() ) ){
-			$sql .= " id_documento = ? AND";
+			$sql .= " `id_documento` = ? AND";
 			array_push( $val, $documento->getIdDocumento() );
 		}
 
@@ -174,7 +174,7 @@ abstract class DocumentoDAOBase extends DAO
 	  **/
 	private static final function create( &$documento )
 	{
-		$sql = "INSERT INTO documento ( id_documento ) VALUES ( ?);";
+		$sql = "INSERT INTO documento ( `id_documento` ) VALUES ( ?);";
 		$params = array( 
 			$documento->getIdDocumento(), 
 		 );
@@ -226,11 +226,11 @@ abstract class DocumentoDAOBase extends DAO
 		$sql = "SELECT * from documento WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $documentoA->getIdDocumento()) ) ) & ( ! is_null ( ($b = $documentoB->getIdDocumento()) ) ) ){
-				$sql .= " id_documento >= ? AND id_documento <= ? AND";
+				$sql .= " `id_documento` >= ? AND `id_documento` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_documento = ? AND"; 
+			$sql .= " `id_documento` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

@@ -80,7 +80,7 @@
 	
 	$page->addComponent(new TitleComponent("Direccion Fiscal", 3));
 
-	$add_form->addOnClick( "Crear empresa", $js );
+	$add_form->addOnClick( "Editar empresa", $js );
 	$add_form->hideField( array( 
 				"id_direccion",
 				"ultima_modificacion",
@@ -151,7 +151,7 @@ die;
 	$form->sendHidden( array( "id_empresa" ) );
                
 	$form->addApiCall( "api/empresa/editar/" , "POST");
-	//$form->onApiCallSuccessRedirect("empresas.lista.php");
+	$form->onApiCallSuccessRedirect("empresas.lista.php");
 	$form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll( ), $esta_direccion->getIdCiudad( ) );
 
 	$page->addComponent( $form );

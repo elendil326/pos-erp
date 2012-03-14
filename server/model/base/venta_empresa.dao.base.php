@@ -123,22 +123,22 @@ abstract class VentaEmpresaDAOBase extends DAO
 		$sql = "SELECT * from venta_empresa WHERE ("; 
 		$val = array();
 		if( ! is_null( $venta_empresa->getIdVenta() ) ){
-			$sql .= " id_venta = ? AND";
+			$sql .= " `id_venta` = ? AND";
 			array_push( $val, $venta_empresa->getIdVenta() );
 		}
 
 		if( ! is_null( $venta_empresa->getIdEmpresa() ) ){
-			$sql .= " id_empresa = ? AND";
+			$sql .= " `id_empresa` = ? AND";
 			array_push( $val, $venta_empresa->getIdEmpresa() );
 		}
 
 		if( ! is_null( $venta_empresa->getTotal() ) ){
-			$sql .= " total = ? AND";
+			$sql .= " `total` = ? AND";
 			array_push( $val, $venta_empresa->getTotal() );
 		}
 
 		if( ! is_null( $venta_empresa->getSaldada() ) ){
-			$sql .= " saldada = ? AND";
+			$sql .= " `saldada` = ? AND";
 			array_push( $val, $venta_empresa->getSaldada() );
 		}
 
@@ -172,7 +172,7 @@ abstract class VentaEmpresaDAOBase extends DAO
 	  **/
 	private static final function update( $venta_empresa )
 	{
-		$sql = "UPDATE venta_empresa SET  total = ?, saldada = ? WHERE  id_venta = ? AND id_empresa = ?;";
+		$sql = "UPDATE venta_empresa SET  `total` = ?, `saldada` = ? WHERE  `id_venta` = ? AND `id_empresa` = ?;";
 		$params = array( 
 			$venta_empresa->getTotal(), 
 			$venta_empresa->getSaldada(), 
@@ -199,7 +199,7 @@ abstract class VentaEmpresaDAOBase extends DAO
 	  **/
 	private static final function create( &$venta_empresa )
 	{
-		$sql = "INSERT INTO venta_empresa ( id_venta, id_empresa, total, saldada ) VALUES ( ?, ?, ?, ?);";
+		$sql = "INSERT INTO venta_empresa ( `id_venta`, `id_empresa`, `total`, `saldada` ) VALUES ( ?, ?, ?, ?);";
 		$params = array( 
 			$venta_empresa->getIdVenta(), 
 			$venta_empresa->getIdEmpresa(), 
@@ -254,44 +254,44 @@ abstract class VentaEmpresaDAOBase extends DAO
 		$sql = "SELECT * from venta_empresa WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $venta_empresaA->getIdVenta()) ) ) & ( ! is_null ( ($b = $venta_empresaB->getIdVenta()) ) ) ){
-				$sql .= " id_venta >= ? AND id_venta <= ? AND";
+				$sql .= " `id_venta` >= ? AND `id_venta` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_venta = ? AND"; 
+			$sql .= " `id_venta` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $venta_empresaA->getIdEmpresa()) ) ) & ( ! is_null ( ($b = $venta_empresaB->getIdEmpresa()) ) ) ){
-				$sql .= " id_empresa >= ? AND id_empresa <= ? AND";
+				$sql .= " `id_empresa` >= ? AND `id_empresa` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_empresa = ? AND"; 
+			$sql .= " `id_empresa` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $venta_empresaA->getTotal()) ) ) & ( ! is_null ( ($b = $venta_empresaB->getTotal()) ) ) ){
-				$sql .= " total >= ? AND total <= ? AND";
+				$sql .= " `total` >= ? AND `total` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " total = ? AND"; 
+			$sql .= " `total` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $venta_empresaA->getSaldada()) ) ) & ( ! is_null ( ($b = $venta_empresaB->getSaldada()) ) ) ){
-				$sql .= " saldada >= ? AND saldada <= ? AND";
+				$sql .= " `saldada` >= ? AND `saldada` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " saldada = ? AND"; 
+			$sql .= " `saldada` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

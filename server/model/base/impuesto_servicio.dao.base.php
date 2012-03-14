@@ -123,12 +123,12 @@ abstract class ImpuestoServicioDAOBase extends DAO
 		$sql = "SELECT * from impuesto_servicio WHERE ("; 
 		$val = array();
 		if( ! is_null( $impuesto_servicio->getIdImpuesto() ) ){
-			$sql .= " id_impuesto = ? AND";
+			$sql .= " `id_impuesto` = ? AND";
 			array_push( $val, $impuesto_servicio->getIdImpuesto() );
 		}
 
 		if( ! is_null( $impuesto_servicio->getIdServicio() ) ){
-			$sql .= " id_servicio = ? AND";
+			$sql .= " `id_servicio` = ? AND";
 			array_push( $val, $impuesto_servicio->getIdServicio() );
 		}
 
@@ -180,7 +180,7 @@ abstract class ImpuestoServicioDAOBase extends DAO
 	  **/
 	private static final function create( &$impuesto_servicio )
 	{
-		$sql = "INSERT INTO impuesto_servicio ( id_impuesto, id_servicio ) VALUES ( ?, ?);";
+		$sql = "INSERT INTO impuesto_servicio ( `id_impuesto`, `id_servicio` ) VALUES ( ?, ?);";
 		$params = array( 
 			$impuesto_servicio->getIdImpuesto(), 
 			$impuesto_servicio->getIdServicio(), 
@@ -233,22 +233,22 @@ abstract class ImpuestoServicioDAOBase extends DAO
 		$sql = "SELECT * from impuesto_servicio WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $impuesto_servicioA->getIdImpuesto()) ) ) & ( ! is_null ( ($b = $impuesto_servicioB->getIdImpuesto()) ) ) ){
-				$sql .= " id_impuesto >= ? AND id_impuesto <= ? AND";
+				$sql .= " `id_impuesto` >= ? AND `id_impuesto` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_impuesto = ? AND"; 
+			$sql .= " `id_impuesto` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $impuesto_servicioA->getIdServicio()) ) ) & ( ! is_null ( ($b = $impuesto_servicioB->getIdServicio()) ) ) ){
-				$sql .= " id_servicio >= ? AND id_servicio <= ? AND";
+				$sql .= " `id_servicio` >= ? AND `id_servicio` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_servicio = ? AND"; 
+			$sql .= " `id_servicio` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

@@ -122,27 +122,27 @@ abstract class ImpuestoDAOBase extends DAO
 		$sql = "SELECT * from impuesto WHERE ("; 
 		$val = array();
 		if( ! is_null( $impuesto->getIdImpuesto() ) ){
-			$sql .= " id_impuesto = ? AND";
+			$sql .= " `id_impuesto` = ? AND";
 			array_push( $val, $impuesto->getIdImpuesto() );
 		}
 
 		if( ! is_null( $impuesto->getMontoPorcentaje() ) ){
-			$sql .= " monto_porcentaje = ? AND";
+			$sql .= " `monto_porcentaje` = ? AND";
 			array_push( $val, $impuesto->getMontoPorcentaje() );
 		}
 
 		if( ! is_null( $impuesto->getEsMonto() ) ){
-			$sql .= " es_monto = ? AND";
+			$sql .= " `es_monto` = ? AND";
 			array_push( $val, $impuesto->getEsMonto() );
 		}
 
 		if( ! is_null( $impuesto->getNombre() ) ){
-			$sql .= " nombre = ? AND";
+			$sql .= " `nombre` = ? AND";
 			array_push( $val, $impuesto->getNombre() );
 		}
 
 		if( ! is_null( $impuesto->getDescripcion() ) ){
-			$sql .= " descripcion = ? AND";
+			$sql .= " `descripcion` = ? AND";
 			array_push( $val, $impuesto->getDescripcion() );
 		}
 
@@ -176,7 +176,7 @@ abstract class ImpuestoDAOBase extends DAO
 	  **/
 	private static final function update( $impuesto )
 	{
-		$sql = "UPDATE impuesto SET  monto_porcentaje = ?, es_monto = ?, nombre = ?, descripcion = ? WHERE  id_impuesto = ?;";
+		$sql = "UPDATE impuesto SET  `monto_porcentaje` = ?, `es_monto` = ?, `nombre` = ?, `descripcion` = ? WHERE  `id_impuesto` = ?;";
 		$params = array( 
 			$impuesto->getMontoPorcentaje(), 
 			$impuesto->getEsMonto(), 
@@ -205,7 +205,7 @@ abstract class ImpuestoDAOBase extends DAO
 	  **/
 	private static final function create( &$impuesto )
 	{
-		$sql = "INSERT INTO impuesto ( id_impuesto, monto_porcentaje, es_monto, nombre, descripcion ) VALUES ( ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO impuesto ( `id_impuesto`, `monto_porcentaje`, `es_monto`, `nombre`, `descripcion` ) VALUES ( ?, ?, ?, ?, ?);";
 		$params = array( 
 			$impuesto->getIdImpuesto(), 
 			$impuesto->getMontoPorcentaje(), 
@@ -261,55 +261,55 @@ abstract class ImpuestoDAOBase extends DAO
 		$sql = "SELECT * from impuesto WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $impuestoA->getIdImpuesto()) ) ) & ( ! is_null ( ($b = $impuestoB->getIdImpuesto()) ) ) ){
-				$sql .= " id_impuesto >= ? AND id_impuesto <= ? AND";
+				$sql .= " `id_impuesto` >= ? AND `id_impuesto` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_impuesto = ? AND"; 
+			$sql .= " `id_impuesto` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $impuestoA->getMontoPorcentaje()) ) ) & ( ! is_null ( ($b = $impuestoB->getMontoPorcentaje()) ) ) ){
-				$sql .= " monto_porcentaje >= ? AND monto_porcentaje <= ? AND";
+				$sql .= " `monto_porcentaje` >= ? AND `monto_porcentaje` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " monto_porcentaje = ? AND"; 
+			$sql .= " `monto_porcentaje` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $impuestoA->getEsMonto()) ) ) & ( ! is_null ( ($b = $impuestoB->getEsMonto()) ) ) ){
-				$sql .= " es_monto >= ? AND es_monto <= ? AND";
+				$sql .= " `es_monto` >= ? AND `es_monto` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " es_monto = ? AND"; 
+			$sql .= " `es_monto` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $impuestoA->getNombre()) ) ) & ( ! is_null ( ($b = $impuestoB->getNombre()) ) ) ){
-				$sql .= " nombre >= ? AND nombre <= ? AND";
+				$sql .= " `nombre` >= ? AND `nombre` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " nombre = ? AND"; 
+			$sql .= " `nombre` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $impuestoA->getDescripcion()) ) ) & ( ! is_null ( ($b = $impuestoB->getDescripcion()) ) ) ){
-				$sql .= " descripcion >= ? AND descripcion <= ? AND";
+				$sql .= " `descripcion` >= ? AND `descripcion` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " descripcion = ? AND"; 
+			$sql .= " `descripcion` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

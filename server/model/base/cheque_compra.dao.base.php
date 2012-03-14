@@ -123,12 +123,12 @@ abstract class ChequeCompraDAOBase extends DAO
 		$sql = "SELECT * from cheque_compra WHERE ("; 
 		$val = array();
 		if( ! is_null( $cheque_compra->getIdCheque() ) ){
-			$sql .= " id_cheque = ? AND";
+			$sql .= " `id_cheque` = ? AND";
 			array_push( $val, $cheque_compra->getIdCheque() );
 		}
 
 		if( ! is_null( $cheque_compra->getIdCompra() ) ){
-			$sql .= " id_compra = ? AND";
+			$sql .= " `id_compra` = ? AND";
 			array_push( $val, $cheque_compra->getIdCompra() );
 		}
 
@@ -180,7 +180,7 @@ abstract class ChequeCompraDAOBase extends DAO
 	  **/
 	private static final function create( &$cheque_compra )
 	{
-		$sql = "INSERT INTO cheque_compra ( id_cheque, id_compra ) VALUES ( ?, ?);";
+		$sql = "INSERT INTO cheque_compra ( `id_cheque`, `id_compra` ) VALUES ( ?, ?);";
 		$params = array( 
 			$cheque_compra->getIdCheque(), 
 			$cheque_compra->getIdCompra(), 
@@ -233,22 +233,22 @@ abstract class ChequeCompraDAOBase extends DAO
 		$sql = "SELECT * from cheque_compra WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $cheque_compraA->getIdCheque()) ) ) & ( ! is_null ( ($b = $cheque_compraB->getIdCheque()) ) ) ){
-				$sql .= " id_cheque >= ? AND id_cheque <= ? AND";
+				$sql .= " `id_cheque` >= ? AND `id_cheque` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_cheque = ? AND"; 
+			$sql .= " `id_cheque` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $cheque_compraA->getIdCompra()) ) ) & ( ! is_null ( ($b = $cheque_compraB->getIdCompra()) ) ) ){
-				$sql .= " id_compra >= ? AND id_compra <= ? AND";
+				$sql .= " `id_compra` >= ? AND `id_compra` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_compra = ? AND"; 
+			$sql .= " `id_compra` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

@@ -123,12 +123,12 @@ abstract class ChequeAbonoVentaDAOBase extends DAO
 		$sql = "SELECT * from cheque_abono_venta WHERE ("; 
 		$val = array();
 		if( ! is_null( $cheque_abono_venta->getIdCheque() ) ){
-			$sql .= " id_cheque = ? AND";
+			$sql .= " `id_cheque` = ? AND";
 			array_push( $val, $cheque_abono_venta->getIdCheque() );
 		}
 
 		if( ! is_null( $cheque_abono_venta->getIdAbonoVenta() ) ){
-			$sql .= " id_abono_venta = ? AND";
+			$sql .= " `id_abono_venta` = ? AND";
 			array_push( $val, $cheque_abono_venta->getIdAbonoVenta() );
 		}
 
@@ -180,7 +180,7 @@ abstract class ChequeAbonoVentaDAOBase extends DAO
 	  **/
 	private static final function create( &$cheque_abono_venta )
 	{
-		$sql = "INSERT INTO cheque_abono_venta ( id_cheque, id_abono_venta ) VALUES ( ?, ?);";
+		$sql = "INSERT INTO cheque_abono_venta ( `id_cheque`, `id_abono_venta` ) VALUES ( ?, ?);";
 		$params = array( 
 			$cheque_abono_venta->getIdCheque(), 
 			$cheque_abono_venta->getIdAbonoVenta(), 
@@ -233,22 +233,22 @@ abstract class ChequeAbonoVentaDAOBase extends DAO
 		$sql = "SELECT * from cheque_abono_venta WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $cheque_abono_ventaA->getIdCheque()) ) ) & ( ! is_null ( ($b = $cheque_abono_ventaB->getIdCheque()) ) ) ){
-				$sql .= " id_cheque >= ? AND id_cheque <= ? AND";
+				$sql .= " `id_cheque` >= ? AND `id_cheque` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_cheque = ? AND"; 
+			$sql .= " `id_cheque` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $cheque_abono_ventaA->getIdAbonoVenta()) ) ) & ( ! is_null ( ($b = $cheque_abono_ventaB->getIdAbonoVenta()) ) ) ){
-				$sql .= " id_abono_venta >= ? AND id_abono_venta <= ? AND";
+				$sql .= " `id_abono_venta` >= ? AND `id_abono_venta` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_abono_venta = ? AND"; 
+			$sql .= " `id_abono_venta` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

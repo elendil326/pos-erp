@@ -122,27 +122,27 @@ abstract class RetencionDAOBase extends DAO
 		$sql = "SELECT * from retencion WHERE ("; 
 		$val = array();
 		if( ! is_null( $retencion->getIdRetencion() ) ){
-			$sql .= " id_retencion = ? AND";
+			$sql .= " `id_retencion` = ? AND";
 			array_push( $val, $retencion->getIdRetencion() );
 		}
 
 		if( ! is_null( $retencion->getMontoPorcentaje() ) ){
-			$sql .= " monto_porcentaje = ? AND";
+			$sql .= " `monto_porcentaje` = ? AND";
 			array_push( $val, $retencion->getMontoPorcentaje() );
 		}
 
 		if( ! is_null( $retencion->getEsMonto() ) ){
-			$sql .= " es_monto = ? AND";
+			$sql .= " `es_monto` = ? AND";
 			array_push( $val, $retencion->getEsMonto() );
 		}
 
 		if( ! is_null( $retencion->getNombre() ) ){
-			$sql .= " nombre = ? AND";
+			$sql .= " `nombre` = ? AND";
 			array_push( $val, $retencion->getNombre() );
 		}
 
 		if( ! is_null( $retencion->getDescripcion() ) ){
-			$sql .= " descripcion = ? AND";
+			$sql .= " `descripcion` = ? AND";
 			array_push( $val, $retencion->getDescripcion() );
 		}
 
@@ -176,7 +176,7 @@ abstract class RetencionDAOBase extends DAO
 	  **/
 	private static final function update( $retencion )
 	{
-		$sql = "UPDATE retencion SET  monto_porcentaje = ?, es_monto = ?, nombre = ?, descripcion = ? WHERE  id_retencion = ?;";
+		$sql = "UPDATE retencion SET  `monto_porcentaje` = ?, `es_monto` = ?, `nombre` = ?, `descripcion` = ? WHERE  `id_retencion` = ?;";
 		$params = array( 
 			$retencion->getMontoPorcentaje(), 
 			$retencion->getEsMonto(), 
@@ -205,7 +205,7 @@ abstract class RetencionDAOBase extends DAO
 	  **/
 	private static final function create( &$retencion )
 	{
-		$sql = "INSERT INTO retencion ( id_retencion, monto_porcentaje, es_monto, nombre, descripcion ) VALUES ( ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO retencion ( `id_retencion`, `monto_porcentaje`, `es_monto`, `nombre`, `descripcion` ) VALUES ( ?, ?, ?, ?, ?);";
 		$params = array( 
 			$retencion->getIdRetencion(), 
 			$retencion->getMontoPorcentaje(), 
@@ -261,55 +261,55 @@ abstract class RetencionDAOBase extends DAO
 		$sql = "SELECT * from retencion WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $retencionA->getIdRetencion()) ) ) & ( ! is_null ( ($b = $retencionB->getIdRetencion()) ) ) ){
-				$sql .= " id_retencion >= ? AND id_retencion <= ? AND";
+				$sql .= " `id_retencion` >= ? AND `id_retencion` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_retencion = ? AND"; 
+			$sql .= " `id_retencion` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $retencionA->getMontoPorcentaje()) ) ) & ( ! is_null ( ($b = $retencionB->getMontoPorcentaje()) ) ) ){
-				$sql .= " monto_porcentaje >= ? AND monto_porcentaje <= ? AND";
+				$sql .= " `monto_porcentaje` >= ? AND `monto_porcentaje` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " monto_porcentaje = ? AND"; 
+			$sql .= " `monto_porcentaje` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $retencionA->getEsMonto()) ) ) & ( ! is_null ( ($b = $retencionB->getEsMonto()) ) ) ){
-				$sql .= " es_monto >= ? AND es_monto <= ? AND";
+				$sql .= " `es_monto` >= ? AND `es_monto` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " es_monto = ? AND"; 
+			$sql .= " `es_monto` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $retencionA->getNombre()) ) ) & ( ! is_null ( ($b = $retencionB->getNombre()) ) ) ){
-				$sql .= " nombre >= ? AND nombre <= ? AND";
+				$sql .= " `nombre` >= ? AND `nombre` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " nombre = ? AND"; 
+			$sql .= " `nombre` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $retencionA->getDescripcion()) ) ) & ( ! is_null ( ($b = $retencionB->getDescripcion()) ) ) ){
-				$sql .= " descripcion >= ? AND descripcion <= ? AND";
+				$sql .= " `descripcion` >= ? AND `descripcion` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " descripcion = ? AND"; 
+			$sql .= " `descripcion` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

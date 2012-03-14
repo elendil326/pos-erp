@@ -122,32 +122,32 @@ abstract class AbastoProveedorDAOBase extends DAO
 		$sql = "SELECT * from abasto_proveedor WHERE ("; 
 		$val = array();
 		if( ! is_null( $abasto_proveedor->getIdAbastoProveedor() ) ){
-			$sql .= " id_abasto_proveedor = ? AND";
+			$sql .= " `id_abasto_proveedor` = ? AND";
 			array_push( $val, $abasto_proveedor->getIdAbastoProveedor() );
 		}
 
 		if( ! is_null( $abasto_proveedor->getIdProveedor() ) ){
-			$sql .= " id_proveedor = ? AND";
+			$sql .= " `id_proveedor` = ? AND";
 			array_push( $val, $abasto_proveedor->getIdProveedor() );
 		}
 
 		if( ! is_null( $abasto_proveedor->getIdAlmacen() ) ){
-			$sql .= " id_almacen = ? AND";
+			$sql .= " `id_almacen` = ? AND";
 			array_push( $val, $abasto_proveedor->getIdAlmacen() );
 		}
 
 		if( ! is_null( $abasto_proveedor->getIdUsuario() ) ){
-			$sql .= " id_usuario = ? AND";
+			$sql .= " `id_usuario` = ? AND";
 			array_push( $val, $abasto_proveedor->getIdUsuario() );
 		}
 
 		if( ! is_null( $abasto_proveedor->getFecha() ) ){
-			$sql .= " fecha = ? AND";
+			$sql .= " `fecha` = ? AND";
 			array_push( $val, $abasto_proveedor->getFecha() );
 		}
 
 		if( ! is_null( $abasto_proveedor->getMotivo() ) ){
-			$sql .= " motivo = ? AND";
+			$sql .= " `motivo` = ? AND";
 			array_push( $val, $abasto_proveedor->getMotivo() );
 		}
 
@@ -181,7 +181,7 @@ abstract class AbastoProveedorDAOBase extends DAO
 	  **/
 	private static final function update( $abasto_proveedor )
 	{
-		$sql = "UPDATE abasto_proveedor SET  id_proveedor = ?, id_almacen = ?, id_usuario = ?, fecha = ?, motivo = ? WHERE  id_abasto_proveedor = ?;";
+		$sql = "UPDATE abasto_proveedor SET  `id_proveedor` = ?, `id_almacen` = ?, `id_usuario` = ?, `fecha` = ?, `motivo` = ? WHERE  `id_abasto_proveedor` = ?;";
 		$params = array( 
 			$abasto_proveedor->getIdProveedor(), 
 			$abasto_proveedor->getIdAlmacen(), 
@@ -211,7 +211,7 @@ abstract class AbastoProveedorDAOBase extends DAO
 	  **/
 	private static final function create( &$abasto_proveedor )
 	{
-		$sql = "INSERT INTO abasto_proveedor ( id_abasto_proveedor, id_proveedor, id_almacen, id_usuario, fecha, motivo ) VALUES ( ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO abasto_proveedor ( `id_abasto_proveedor`, `id_proveedor`, `id_almacen`, `id_usuario`, `fecha`, `motivo` ) VALUES ( ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$abasto_proveedor->getIdAbastoProveedor(), 
 			$abasto_proveedor->getIdProveedor(), 
@@ -268,66 +268,66 @@ abstract class AbastoProveedorDAOBase extends DAO
 		$sql = "SELECT * from abasto_proveedor WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $abasto_proveedorA->getIdAbastoProveedor()) ) ) & ( ! is_null ( ($b = $abasto_proveedorB->getIdAbastoProveedor()) ) ) ){
-				$sql .= " id_abasto_proveedor >= ? AND id_abasto_proveedor <= ? AND";
+				$sql .= " `id_abasto_proveedor` >= ? AND `id_abasto_proveedor` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_abasto_proveedor = ? AND"; 
+			$sql .= " `id_abasto_proveedor` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $abasto_proveedorA->getIdProveedor()) ) ) & ( ! is_null ( ($b = $abasto_proveedorB->getIdProveedor()) ) ) ){
-				$sql .= " id_proveedor >= ? AND id_proveedor <= ? AND";
+				$sql .= " `id_proveedor` >= ? AND `id_proveedor` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_proveedor = ? AND"; 
+			$sql .= " `id_proveedor` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $abasto_proveedorA->getIdAlmacen()) ) ) & ( ! is_null ( ($b = $abasto_proveedorB->getIdAlmacen()) ) ) ){
-				$sql .= " id_almacen >= ? AND id_almacen <= ? AND";
+				$sql .= " `id_almacen` >= ? AND `id_almacen` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_almacen = ? AND"; 
+			$sql .= " `id_almacen` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $abasto_proveedorA->getIdUsuario()) ) ) & ( ! is_null ( ($b = $abasto_proveedorB->getIdUsuario()) ) ) ){
-				$sql .= " id_usuario >= ? AND id_usuario <= ? AND";
+				$sql .= " `id_usuario` >= ? AND `id_usuario` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_usuario = ? AND"; 
+			$sql .= " `id_usuario` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $abasto_proveedorA->getFecha()) ) ) & ( ! is_null ( ($b = $abasto_proveedorB->getFecha()) ) ) ){
-				$sql .= " fecha >= ? AND fecha <= ? AND";
+				$sql .= " `fecha` >= ? AND `fecha` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " fecha = ? AND"; 
+			$sql .= " `fecha` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $abasto_proveedorA->getMotivo()) ) ) & ( ! is_null ( ($b = $abasto_proveedorB->getMotivo()) ) ) ){
-				$sql .= " motivo >= ? AND motivo <= ? AND";
+				$sql .= " `motivo` >= ? AND `motivo` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " motivo = ? AND"; 
+			$sql .= " `motivo` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

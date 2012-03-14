@@ -123,12 +123,12 @@ abstract class ChequeAbonoPrestamoDAOBase extends DAO
 		$sql = "SELECT * from cheque_abono_prestamo WHERE ("; 
 		$val = array();
 		if( ! is_null( $cheque_abono_prestamo->getIdCheque() ) ){
-			$sql .= " id_cheque = ? AND";
+			$sql .= " `id_cheque` = ? AND";
 			array_push( $val, $cheque_abono_prestamo->getIdCheque() );
 		}
 
 		if( ! is_null( $cheque_abono_prestamo->getIdAbonoPrestamo() ) ){
-			$sql .= " id_abono_prestamo = ? AND";
+			$sql .= " `id_abono_prestamo` = ? AND";
 			array_push( $val, $cheque_abono_prestamo->getIdAbonoPrestamo() );
 		}
 
@@ -180,7 +180,7 @@ abstract class ChequeAbonoPrestamoDAOBase extends DAO
 	  **/
 	private static final function create( &$cheque_abono_prestamo )
 	{
-		$sql = "INSERT INTO cheque_abono_prestamo ( id_cheque, id_abono_prestamo ) VALUES ( ?, ?);";
+		$sql = "INSERT INTO cheque_abono_prestamo ( `id_cheque`, `id_abono_prestamo` ) VALUES ( ?, ?);";
 		$params = array( 
 			$cheque_abono_prestamo->getIdCheque(), 
 			$cheque_abono_prestamo->getIdAbonoPrestamo(), 
@@ -233,22 +233,22 @@ abstract class ChequeAbonoPrestamoDAOBase extends DAO
 		$sql = "SELECT * from cheque_abono_prestamo WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $cheque_abono_prestamoA->getIdCheque()) ) ) & ( ! is_null ( ($b = $cheque_abono_prestamoB->getIdCheque()) ) ) ){
-				$sql .= " id_cheque >= ? AND id_cheque <= ? AND";
+				$sql .= " `id_cheque` >= ? AND `id_cheque` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_cheque = ? AND"; 
+			$sql .= " `id_cheque` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $cheque_abono_prestamoA->getIdAbonoPrestamo()) ) ) & ( ! is_null ( ($b = $cheque_abono_prestamoB->getIdAbonoPrestamo()) ) ) ){
-				$sql .= " id_abono_prestamo >= ? AND id_abono_prestamo <= ? AND";
+				$sql .= " `id_abono_prestamo` >= ? AND `id_abono_prestamo` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_abono_prestamo = ? AND"; 
+			$sql .= " `id_abono_prestamo` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

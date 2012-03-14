@@ -122,37 +122,37 @@ abstract class AlmacenDAOBase extends DAO
 		$sql = "SELECT * from almacen WHERE ("; 
 		$val = array();
 		if( ! is_null( $almacen->getIdAlmacen() ) ){
-			$sql .= " id_almacen = ? AND";
+			$sql .= " `id_almacen` = ? AND";
 			array_push( $val, $almacen->getIdAlmacen() );
 		}
 
 		if( ! is_null( $almacen->getIdSucursal() ) ){
-			$sql .= " id_sucursal = ? AND";
+			$sql .= " `id_sucursal` = ? AND";
 			array_push( $val, $almacen->getIdSucursal() );
 		}
 
 		if( ! is_null( $almacen->getIdEmpresa() ) ){
-			$sql .= " id_empresa = ? AND";
+			$sql .= " `id_empresa` = ? AND";
 			array_push( $val, $almacen->getIdEmpresa() );
 		}
 
 		if( ! is_null( $almacen->getIdTipoAlmacen() ) ){
-			$sql .= " id_tipo_almacen = ? AND";
+			$sql .= " `id_tipo_almacen` = ? AND";
 			array_push( $val, $almacen->getIdTipoAlmacen() );
 		}
 
 		if( ! is_null( $almacen->getNombre() ) ){
-			$sql .= " nombre = ? AND";
+			$sql .= " `nombre` = ? AND";
 			array_push( $val, $almacen->getNombre() );
 		}
 
 		if( ! is_null( $almacen->getDescripcion() ) ){
-			$sql .= " descripcion = ? AND";
+			$sql .= " `descripcion` = ? AND";
 			array_push( $val, $almacen->getDescripcion() );
 		}
 
 		if( ! is_null( $almacen->getActivo() ) ){
-			$sql .= " activo = ? AND";
+			$sql .= " `activo` = ? AND";
 			array_push( $val, $almacen->getActivo() );
 		}
 
@@ -186,7 +186,7 @@ abstract class AlmacenDAOBase extends DAO
 	  **/
 	private static final function update( $almacen )
 	{
-		$sql = "UPDATE almacen SET  id_sucursal = ?, id_empresa = ?, id_tipo_almacen = ?, nombre = ?, descripcion = ?, activo = ? WHERE  id_almacen = ?;";
+		$sql = "UPDATE almacen SET  `id_sucursal` = ?, `id_empresa` = ?, `id_tipo_almacen` = ?, `nombre` = ?, `descripcion` = ?, `activo` = ? WHERE  `id_almacen` = ?;";
 		$params = array( 
 			$almacen->getIdSucursal(), 
 			$almacen->getIdEmpresa(), 
@@ -217,7 +217,7 @@ abstract class AlmacenDAOBase extends DAO
 	  **/
 	private static final function create( &$almacen )
 	{
-		$sql = "INSERT INTO almacen ( id_almacen, id_sucursal, id_empresa, id_tipo_almacen, nombre, descripcion, activo ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO almacen ( `id_almacen`, `id_sucursal`, `id_empresa`, `id_tipo_almacen`, `nombre`, `descripcion`, `activo` ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$almacen->getIdAlmacen(), 
 			$almacen->getIdSucursal(), 
@@ -275,77 +275,77 @@ abstract class AlmacenDAOBase extends DAO
 		$sql = "SELECT * from almacen WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $almacenA->getIdAlmacen()) ) ) & ( ! is_null ( ($b = $almacenB->getIdAlmacen()) ) ) ){
-				$sql .= " id_almacen >= ? AND id_almacen <= ? AND";
+				$sql .= " `id_almacen` >= ? AND `id_almacen` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_almacen = ? AND"; 
+			$sql .= " `id_almacen` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $almacenA->getIdSucursal()) ) ) & ( ! is_null ( ($b = $almacenB->getIdSucursal()) ) ) ){
-				$sql .= " id_sucursal >= ? AND id_sucursal <= ? AND";
+				$sql .= " `id_sucursal` >= ? AND `id_sucursal` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_sucursal = ? AND"; 
+			$sql .= " `id_sucursal` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $almacenA->getIdEmpresa()) ) ) & ( ! is_null ( ($b = $almacenB->getIdEmpresa()) ) ) ){
-				$sql .= " id_empresa >= ? AND id_empresa <= ? AND";
+				$sql .= " `id_empresa` >= ? AND `id_empresa` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_empresa = ? AND"; 
+			$sql .= " `id_empresa` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $almacenA->getIdTipoAlmacen()) ) ) & ( ! is_null ( ($b = $almacenB->getIdTipoAlmacen()) ) ) ){
-				$sql .= " id_tipo_almacen >= ? AND id_tipo_almacen <= ? AND";
+				$sql .= " `id_tipo_almacen` >= ? AND `id_tipo_almacen` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_tipo_almacen = ? AND"; 
+			$sql .= " `id_tipo_almacen` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $almacenA->getNombre()) ) ) & ( ! is_null ( ($b = $almacenB->getNombre()) ) ) ){
-				$sql .= " nombre >= ? AND nombre <= ? AND";
+				$sql .= " `nombre` >= ? AND `nombre` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " nombre = ? AND"; 
+			$sql .= " `nombre` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $almacenA->getDescripcion()) ) ) & ( ! is_null ( ($b = $almacenB->getDescripcion()) ) ) ){
-				$sql .= " descripcion >= ? AND descripcion <= ? AND";
+				$sql .= " `descripcion` >= ? AND `descripcion` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " descripcion = ? AND"; 
+			$sql .= " `descripcion` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $almacenA->getActivo()) ) ) & ( ! is_null ( ($b = $almacenB->getActivo()) ) ) ){
-				$sql .= " activo >= ? AND activo <= ? AND";
+				$sql .= " `activo` >= ? AND `activo` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " activo = ? AND"; 
+			$sql .= " `activo` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

@@ -122,62 +122,62 @@ abstract class OrdenDeServicioDAOBase extends DAO
 		$sql = "SELECT * from orden_de_servicio WHERE ("; 
 		$val = array();
 		if( ! is_null( $orden_de_servicio->getIdOrdenDeServicio() ) ){
-			$sql .= " id_orden_de_servicio = ? AND";
+			$sql .= " `id_orden_de_servicio` = ? AND";
 			array_push( $val, $orden_de_servicio->getIdOrdenDeServicio() );
 		}
 
 		if( ! is_null( $orden_de_servicio->getIdServicio() ) ){
-			$sql .= " id_servicio = ? AND";
+			$sql .= " `id_servicio` = ? AND";
 			array_push( $val, $orden_de_servicio->getIdServicio() );
 		}
 
 		if( ! is_null( $orden_de_servicio->getIdUsuarioVenta() ) ){
-			$sql .= " id_usuario_venta = ? AND";
+			$sql .= " `id_usuario_venta` = ? AND";
 			array_push( $val, $orden_de_servicio->getIdUsuarioVenta() );
 		}
 
 		if( ! is_null( $orden_de_servicio->getIdUsuario() ) ){
-			$sql .= " id_usuario = ? AND";
+			$sql .= " `id_usuario` = ? AND";
 			array_push( $val, $orden_de_servicio->getIdUsuario() );
 		}
 
 		if( ! is_null( $orden_de_servicio->getFechaOrden() ) ){
-			$sql .= " fecha_orden = ? AND";
+			$sql .= " `fecha_orden` = ? AND";
 			array_push( $val, $orden_de_servicio->getFechaOrden() );
 		}
 
 		if( ! is_null( $orden_de_servicio->getFechaEntrega() ) ){
-			$sql .= " fecha_entrega = ? AND";
+			$sql .= " `fecha_entrega` = ? AND";
 			array_push( $val, $orden_de_servicio->getFechaEntrega() );
 		}
 
 		if( ! is_null( $orden_de_servicio->getActiva() ) ){
-			$sql .= " activa = ? AND";
+			$sql .= " `activa` = ? AND";
 			array_push( $val, $orden_de_servicio->getActiva() );
 		}
 
 		if( ! is_null( $orden_de_servicio->getCancelada() ) ){
-			$sql .= " cancelada = ? AND";
+			$sql .= " `cancelada` = ? AND";
 			array_push( $val, $orden_de_servicio->getCancelada() );
 		}
 
 		if( ! is_null( $orden_de_servicio->getDescripcion() ) ){
-			$sql .= " descripcion = ? AND";
+			$sql .= " `descripcion` = ? AND";
 			array_push( $val, $orden_de_servicio->getDescripcion() );
 		}
 
 		if( ! is_null( $orden_de_servicio->getMotivoCancelacion() ) ){
-			$sql .= " motivo_cancelacion = ? AND";
+			$sql .= " `motivo_cancelacion` = ? AND";
 			array_push( $val, $orden_de_servicio->getMotivoCancelacion() );
 		}
 
 		if( ! is_null( $orden_de_servicio->getAdelanto() ) ){
-			$sql .= " adelanto = ? AND";
+			$sql .= " `adelanto` = ? AND";
 			array_push( $val, $orden_de_servicio->getAdelanto() );
 		}
 
 		if( ! is_null( $orden_de_servicio->getPrecio() ) ){
-			$sql .= " precio = ? AND";
+			$sql .= " `precio` = ? AND";
 			array_push( $val, $orden_de_servicio->getPrecio() );
 		}
 
@@ -211,7 +211,7 @@ abstract class OrdenDeServicioDAOBase extends DAO
 	  **/
 	private static final function update( $orden_de_servicio )
 	{
-		$sql = "UPDATE orden_de_servicio SET  id_servicio = ?, id_usuario_venta = ?, id_usuario = ?, fecha_orden = ?, fecha_entrega = ?, activa = ?, cancelada = ?, descripcion = ?, motivo_cancelacion = ?, adelanto = ?, precio = ? WHERE  id_orden_de_servicio = ?;";
+		$sql = "UPDATE orden_de_servicio SET  `id_servicio` = ?, `id_usuario_venta` = ?, `id_usuario` = ?, `fecha_orden` = ?, `fecha_entrega` = ?, `activa` = ?, `cancelada` = ?, `descripcion` = ?, `motivo_cancelacion` = ?, `adelanto` = ?, `precio` = ? WHERE  `id_orden_de_servicio` = ?;";
 		$params = array( 
 			$orden_de_servicio->getIdServicio(), 
 			$orden_de_servicio->getIdUsuarioVenta(), 
@@ -247,7 +247,7 @@ abstract class OrdenDeServicioDAOBase extends DAO
 	  **/
 	private static final function create( &$orden_de_servicio )
 	{
-		$sql = "INSERT INTO orden_de_servicio ( id_orden_de_servicio, id_servicio, id_usuario_venta, id_usuario, fecha_orden, fecha_entrega, activa, cancelada, descripcion, motivo_cancelacion, adelanto, precio ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO orden_de_servicio ( `id_orden_de_servicio`, `id_servicio`, `id_usuario_venta`, `id_usuario`, `fecha_orden`, `fecha_entrega`, `activa`, `cancelada`, `descripcion`, `motivo_cancelacion`, `adelanto`, `precio` ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$orden_de_servicio->getIdOrdenDeServicio(), 
 			$orden_de_servicio->getIdServicio(), 
@@ -310,132 +310,132 @@ abstract class OrdenDeServicioDAOBase extends DAO
 		$sql = "SELECT * from orden_de_servicio WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $orden_de_servicioA->getIdOrdenDeServicio()) ) ) & ( ! is_null ( ($b = $orden_de_servicioB->getIdOrdenDeServicio()) ) ) ){
-				$sql .= " id_orden_de_servicio >= ? AND id_orden_de_servicio <= ? AND";
+				$sql .= " `id_orden_de_servicio` >= ? AND `id_orden_de_servicio` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_orden_de_servicio = ? AND"; 
+			$sql .= " `id_orden_de_servicio` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $orden_de_servicioA->getIdServicio()) ) ) & ( ! is_null ( ($b = $orden_de_servicioB->getIdServicio()) ) ) ){
-				$sql .= " id_servicio >= ? AND id_servicio <= ? AND";
+				$sql .= " `id_servicio` >= ? AND `id_servicio` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_servicio = ? AND"; 
+			$sql .= " `id_servicio` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $orden_de_servicioA->getIdUsuarioVenta()) ) ) & ( ! is_null ( ($b = $orden_de_servicioB->getIdUsuarioVenta()) ) ) ){
-				$sql .= " id_usuario_venta >= ? AND id_usuario_venta <= ? AND";
+				$sql .= " `id_usuario_venta` >= ? AND `id_usuario_venta` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_usuario_venta = ? AND"; 
+			$sql .= " `id_usuario_venta` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $orden_de_servicioA->getIdUsuario()) ) ) & ( ! is_null ( ($b = $orden_de_servicioB->getIdUsuario()) ) ) ){
-				$sql .= " id_usuario >= ? AND id_usuario <= ? AND";
+				$sql .= " `id_usuario` >= ? AND `id_usuario` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_usuario = ? AND"; 
+			$sql .= " `id_usuario` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $orden_de_servicioA->getFechaOrden()) ) ) & ( ! is_null ( ($b = $orden_de_servicioB->getFechaOrden()) ) ) ){
-				$sql .= " fecha_orden >= ? AND fecha_orden <= ? AND";
+				$sql .= " `fecha_orden` >= ? AND `fecha_orden` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " fecha_orden = ? AND"; 
+			$sql .= " `fecha_orden` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $orden_de_servicioA->getFechaEntrega()) ) ) & ( ! is_null ( ($b = $orden_de_servicioB->getFechaEntrega()) ) ) ){
-				$sql .= " fecha_entrega >= ? AND fecha_entrega <= ? AND";
+				$sql .= " `fecha_entrega` >= ? AND `fecha_entrega` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " fecha_entrega = ? AND"; 
+			$sql .= " `fecha_entrega` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $orden_de_servicioA->getActiva()) ) ) & ( ! is_null ( ($b = $orden_de_servicioB->getActiva()) ) ) ){
-				$sql .= " activa >= ? AND activa <= ? AND";
+				$sql .= " `activa` >= ? AND `activa` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " activa = ? AND"; 
+			$sql .= " `activa` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $orden_de_servicioA->getCancelada()) ) ) & ( ! is_null ( ($b = $orden_de_servicioB->getCancelada()) ) ) ){
-				$sql .= " cancelada >= ? AND cancelada <= ? AND";
+				$sql .= " `cancelada` >= ? AND `cancelada` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " cancelada = ? AND"; 
+			$sql .= " `cancelada` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $orden_de_servicioA->getDescripcion()) ) ) & ( ! is_null ( ($b = $orden_de_servicioB->getDescripcion()) ) ) ){
-				$sql .= " descripcion >= ? AND descripcion <= ? AND";
+				$sql .= " `descripcion` >= ? AND `descripcion` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " descripcion = ? AND"; 
+			$sql .= " `descripcion` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $orden_de_servicioA->getMotivoCancelacion()) ) ) & ( ! is_null ( ($b = $orden_de_servicioB->getMotivoCancelacion()) ) ) ){
-				$sql .= " motivo_cancelacion >= ? AND motivo_cancelacion <= ? AND";
+				$sql .= " `motivo_cancelacion` >= ? AND `motivo_cancelacion` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " motivo_cancelacion = ? AND"; 
+			$sql .= " `motivo_cancelacion` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $orden_de_servicioA->getAdelanto()) ) ) & ( ! is_null ( ($b = $orden_de_servicioB->getAdelanto()) ) ) ){
-				$sql .= " adelanto >= ? AND adelanto <= ? AND";
+				$sql .= " `adelanto` >= ? AND `adelanto` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " adelanto = ? AND"; 
+			$sql .= " `adelanto` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $orden_de_servicioA->getPrecio()) ) ) & ( ! is_null ( ($b = $orden_de_servicioB->getPrecio()) ) ) ){
-				$sql .= " precio >= ? AND precio <= ? AND";
+				$sql .= " `precio` >= ? AND `precio` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " precio = ? AND"; 
+			$sql .= " `precio` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

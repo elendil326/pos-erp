@@ -123,12 +123,12 @@ abstract class ServicioClasificacionDAOBase extends DAO
 		$sql = "SELECT * from servicio_clasificacion WHERE ("; 
 		$val = array();
 		if( ! is_null( $servicio_clasificacion->getIdServicio() ) ){
-			$sql .= " id_servicio = ? AND";
+			$sql .= " `id_servicio` = ? AND";
 			array_push( $val, $servicio_clasificacion->getIdServicio() );
 		}
 
 		if( ! is_null( $servicio_clasificacion->getIdClasificacionServicio() ) ){
-			$sql .= " id_clasificacion_servicio = ? AND";
+			$sql .= " `id_clasificacion_servicio` = ? AND";
 			array_push( $val, $servicio_clasificacion->getIdClasificacionServicio() );
 		}
 
@@ -180,7 +180,7 @@ abstract class ServicioClasificacionDAOBase extends DAO
 	  **/
 	private static final function create( &$servicio_clasificacion )
 	{
-		$sql = "INSERT INTO servicio_clasificacion ( id_servicio, id_clasificacion_servicio ) VALUES ( ?, ?);";
+		$sql = "INSERT INTO servicio_clasificacion ( `id_servicio`, `id_clasificacion_servicio` ) VALUES ( ?, ?);";
 		$params = array( 
 			$servicio_clasificacion->getIdServicio(), 
 			$servicio_clasificacion->getIdClasificacionServicio(), 
@@ -233,22 +233,22 @@ abstract class ServicioClasificacionDAOBase extends DAO
 		$sql = "SELECT * from servicio_clasificacion WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $servicio_clasificacionA->getIdServicio()) ) ) & ( ! is_null ( ($b = $servicio_clasificacionB->getIdServicio()) ) ) ){
-				$sql .= " id_servicio >= ? AND id_servicio <= ? AND";
+				$sql .= " `id_servicio` >= ? AND `id_servicio` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_servicio = ? AND"; 
+			$sql .= " `id_servicio` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $servicio_clasificacionA->getIdClasificacionServicio()) ) ) & ( ! is_null ( ($b = $servicio_clasificacionB->getIdClasificacionServicio()) ) ) ){
-				$sql .= " id_clasificacion_servicio >= ? AND id_clasificacion_servicio <= ? AND";
+				$sql .= " `id_clasificacion_servicio` >= ? AND `id_clasificacion_servicio` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_clasificacion_servicio = ? AND"; 
+			$sql .= " `id_clasificacion_servicio` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

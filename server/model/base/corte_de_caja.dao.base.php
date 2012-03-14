@@ -122,42 +122,42 @@ abstract class CorteDeCajaDAOBase extends DAO
 		$sql = "SELECT * from corte_de_caja WHERE ("; 
 		$val = array();
 		if( ! is_null( $corte_de_caja->getIdCorteDeCaja() ) ){
-			$sql .= " id_corte_de_caja = ? AND";
+			$sql .= " `id_corte_de_caja` = ? AND";
 			array_push( $val, $corte_de_caja->getIdCorteDeCaja() );
 		}
 
 		if( ! is_null( $corte_de_caja->getIdCaja() ) ){
-			$sql .= " id_caja = ? AND";
+			$sql .= " `id_caja` = ? AND";
 			array_push( $val, $corte_de_caja->getIdCaja() );
 		}
 
 		if( ! is_null( $corte_de_caja->getIdCajero() ) ){
-			$sql .= " id_cajero = ? AND";
+			$sql .= " `id_cajero` = ? AND";
 			array_push( $val, $corte_de_caja->getIdCajero() );
 		}
 
 		if( ! is_null( $corte_de_caja->getIdCajeroNuevo() ) ){
-			$sql .= " id_cajero_nuevo = ? AND";
+			$sql .= " `id_cajero_nuevo` = ? AND";
 			array_push( $val, $corte_de_caja->getIdCajeroNuevo() );
 		}
 
 		if( ! is_null( $corte_de_caja->getFecha() ) ){
-			$sql .= " fecha = ? AND";
+			$sql .= " `fecha` = ? AND";
 			array_push( $val, $corte_de_caja->getFecha() );
 		}
 
 		if( ! is_null( $corte_de_caja->getSaldoReal() ) ){
-			$sql .= " saldo_real = ? AND";
+			$sql .= " `saldo_real` = ? AND";
 			array_push( $val, $corte_de_caja->getSaldoReal() );
 		}
 
 		if( ! is_null( $corte_de_caja->getSaldoEsperado() ) ){
-			$sql .= " saldo_esperado = ? AND";
+			$sql .= " `saldo_esperado` = ? AND";
 			array_push( $val, $corte_de_caja->getSaldoEsperado() );
 		}
 
 		if( ! is_null( $corte_de_caja->getSaldoFinal() ) ){
-			$sql .= " saldo_final = ? AND";
+			$sql .= " `saldo_final` = ? AND";
 			array_push( $val, $corte_de_caja->getSaldoFinal() );
 		}
 
@@ -191,7 +191,7 @@ abstract class CorteDeCajaDAOBase extends DAO
 	  **/
 	private static final function update( $corte_de_caja )
 	{
-		$sql = "UPDATE corte_de_caja SET  id_caja = ?, id_cajero = ?, id_cajero_nuevo = ?, fecha = ?, saldo_real = ?, saldo_esperado = ?, saldo_final = ? WHERE  id_corte_de_caja = ?;";
+		$sql = "UPDATE corte_de_caja SET  `id_caja` = ?, `id_cajero` = ?, `id_cajero_nuevo` = ?, `fecha` = ?, `saldo_real` = ?, `saldo_esperado` = ?, `saldo_final` = ? WHERE  `id_corte_de_caja` = ?;";
 		$params = array( 
 			$corte_de_caja->getIdCaja(), 
 			$corte_de_caja->getIdCajero(), 
@@ -223,7 +223,7 @@ abstract class CorteDeCajaDAOBase extends DAO
 	  **/
 	private static final function create( &$corte_de_caja )
 	{
-		$sql = "INSERT INTO corte_de_caja ( id_corte_de_caja, id_caja, id_cajero, id_cajero_nuevo, fecha, saldo_real, saldo_esperado, saldo_final ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO corte_de_caja ( `id_corte_de_caja`, `id_caja`, `id_cajero`, `id_cajero_nuevo`, `fecha`, `saldo_real`, `saldo_esperado`, `saldo_final` ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$corte_de_caja->getIdCorteDeCaja(), 
 			$corte_de_caja->getIdCaja(), 
@@ -282,88 +282,88 @@ abstract class CorteDeCajaDAOBase extends DAO
 		$sql = "SELECT * from corte_de_caja WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $corte_de_cajaA->getIdCorteDeCaja()) ) ) & ( ! is_null ( ($b = $corte_de_cajaB->getIdCorteDeCaja()) ) ) ){
-				$sql .= " id_corte_de_caja >= ? AND id_corte_de_caja <= ? AND";
+				$sql .= " `id_corte_de_caja` >= ? AND `id_corte_de_caja` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_corte_de_caja = ? AND"; 
+			$sql .= " `id_corte_de_caja` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $corte_de_cajaA->getIdCaja()) ) ) & ( ! is_null ( ($b = $corte_de_cajaB->getIdCaja()) ) ) ){
-				$sql .= " id_caja >= ? AND id_caja <= ? AND";
+				$sql .= " `id_caja` >= ? AND `id_caja` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_caja = ? AND"; 
+			$sql .= " `id_caja` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $corte_de_cajaA->getIdCajero()) ) ) & ( ! is_null ( ($b = $corte_de_cajaB->getIdCajero()) ) ) ){
-				$sql .= " id_cajero >= ? AND id_cajero <= ? AND";
+				$sql .= " `id_cajero` >= ? AND `id_cajero` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_cajero = ? AND"; 
+			$sql .= " `id_cajero` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $corte_de_cajaA->getIdCajeroNuevo()) ) ) & ( ! is_null ( ($b = $corte_de_cajaB->getIdCajeroNuevo()) ) ) ){
-				$sql .= " id_cajero_nuevo >= ? AND id_cajero_nuevo <= ? AND";
+				$sql .= " `id_cajero_nuevo` >= ? AND `id_cajero_nuevo` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_cajero_nuevo = ? AND"; 
+			$sql .= " `id_cajero_nuevo` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $corte_de_cajaA->getFecha()) ) ) & ( ! is_null ( ($b = $corte_de_cajaB->getFecha()) ) ) ){
-				$sql .= " fecha >= ? AND fecha <= ? AND";
+				$sql .= " `fecha` >= ? AND `fecha` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " fecha = ? AND"; 
+			$sql .= " `fecha` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $corte_de_cajaA->getSaldoReal()) ) ) & ( ! is_null ( ($b = $corte_de_cajaB->getSaldoReal()) ) ) ){
-				$sql .= " saldo_real >= ? AND saldo_real <= ? AND";
+				$sql .= " `saldo_real` >= ? AND `saldo_real` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " saldo_real = ? AND"; 
+			$sql .= " `saldo_real` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $corte_de_cajaA->getSaldoEsperado()) ) ) & ( ! is_null ( ($b = $corte_de_cajaB->getSaldoEsperado()) ) ) ){
-				$sql .= " saldo_esperado >= ? AND saldo_esperado <= ? AND";
+				$sql .= " `saldo_esperado` >= ? AND `saldo_esperado` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " saldo_esperado = ? AND"; 
+			$sql .= " `saldo_esperado` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $corte_de_cajaA->getSaldoFinal()) ) ) & ( ! is_null ( ($b = $corte_de_cajaB->getSaldoFinal()) ) ) ){
-				$sql .= " saldo_final >= ? AND saldo_final <= ? AND";
+				$sql .= " `saldo_final` >= ? AND `saldo_final` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " saldo_final = ? AND"; 
+			$sql .= " `saldo_final` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

@@ -122,27 +122,27 @@ abstract class UnidadDAOBase extends DAO
 		$sql = "SELECT * from unidad WHERE ("; 
 		$val = array();
 		if( ! is_null( $unidad->getIdUnidad() ) ){
-			$sql .= " id_unidad = ? AND";
+			$sql .= " `id_unidad` = ? AND";
 			array_push( $val, $unidad->getIdUnidad() );
 		}
 
 		if( ! is_null( $unidad->getNombre() ) ){
-			$sql .= " nombre = ? AND";
+			$sql .= " `nombre` = ? AND";
 			array_push( $val, $unidad->getNombre() );
 		}
 
 		if( ! is_null( $unidad->getDescripcion() ) ){
-			$sql .= " descripcion = ? AND";
+			$sql .= " `descripcion` = ? AND";
 			array_push( $val, $unidad->getDescripcion() );
 		}
 
 		if( ! is_null( $unidad->getEsEntero() ) ){
-			$sql .= " es_entero = ? AND";
+			$sql .= " `es_entero` = ? AND";
 			array_push( $val, $unidad->getEsEntero() );
 		}
 
 		if( ! is_null( $unidad->getActiva() ) ){
-			$sql .= " activa = ? AND";
+			$sql .= " `activa` = ? AND";
 			array_push( $val, $unidad->getActiva() );
 		}
 
@@ -176,7 +176,7 @@ abstract class UnidadDAOBase extends DAO
 	  **/
 	private static final function update( $unidad )
 	{
-		$sql = "UPDATE unidad SET  nombre = ?, descripcion = ?, es_entero = ?, activa = ? WHERE  id_unidad = ?;";
+		$sql = "UPDATE unidad SET  `nombre` = ?, `descripcion` = ?, `es_entero` = ?, `activa` = ? WHERE  `id_unidad` = ?;";
 		$params = array( 
 			$unidad->getNombre(), 
 			$unidad->getDescripcion(), 
@@ -205,7 +205,7 @@ abstract class UnidadDAOBase extends DAO
 	  **/
 	private static final function create( &$unidad )
 	{
-		$sql = "INSERT INTO unidad ( id_unidad, nombre, descripcion, es_entero, activa ) VALUES ( ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO unidad ( `id_unidad`, `nombre`, `descripcion`, `es_entero`, `activa` ) VALUES ( ?, ?, ?, ?, ?);";
 		$params = array( 
 			$unidad->getIdUnidad(), 
 			$unidad->getNombre(), 
@@ -261,55 +261,55 @@ abstract class UnidadDAOBase extends DAO
 		$sql = "SELECT * from unidad WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $unidadA->getIdUnidad()) ) ) & ( ! is_null ( ($b = $unidadB->getIdUnidad()) ) ) ){
-				$sql .= " id_unidad >= ? AND id_unidad <= ? AND";
+				$sql .= " `id_unidad` >= ? AND `id_unidad` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_unidad = ? AND"; 
+			$sql .= " `id_unidad` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $unidadA->getNombre()) ) ) & ( ! is_null ( ($b = $unidadB->getNombre()) ) ) ){
-				$sql .= " nombre >= ? AND nombre <= ? AND";
+				$sql .= " `nombre` >= ? AND `nombre` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " nombre = ? AND"; 
+			$sql .= " `nombre` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $unidadA->getDescripcion()) ) ) & ( ! is_null ( ($b = $unidadB->getDescripcion()) ) ) ){
-				$sql .= " descripcion >= ? AND descripcion <= ? AND";
+				$sql .= " `descripcion` >= ? AND `descripcion` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " descripcion = ? AND"; 
+			$sql .= " `descripcion` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $unidadA->getEsEntero()) ) ) & ( ! is_null ( ($b = $unidadB->getEsEntero()) ) ) ){
-				$sql .= " es_entero >= ? AND es_entero <= ? AND";
+				$sql .= " `es_entero` >= ? AND `es_entero` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " es_entero = ? AND"; 
+			$sql .= " `es_entero` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $unidadA->getActiva()) ) ) & ( ! is_null ( ($b = $unidadB->getActiva()) ) ) ){
-				$sql .= " activa >= ? AND activa <= ? AND";
+				$sql .= " `activa` >= ? AND `activa` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " activa = ? AND"; 
+			$sql .= " `activa` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

@@ -108,13 +108,14 @@ class FormComponent implements GuiComponent
 		
 		$html = "";
 		
-		if (!is_null($this->send_to_api))
+		if (!is_null($this->send_to_api) || !is_null($this->on_click))
 		{
 			$html .= "<script>";
 			$html .= 'if(HtmlEncode===undefined){var HtmlEncode=function(a){var b=a.length,c=[];while(b--){var d=a[b].charCodeAt();if(d>127||d>90&&d<97){c[b]="&#"+d+";"}else{c[b]=a[b]}}return c.join("")}} ';
 			
 			
 			$html .= "\n\nvar ".$this->guiComponentId."obligatory = [];\n";
+
 			foreach ($this->form_fields as $f)
 			{
 				if ($f->obligatory){
@@ -140,51 +141,57 @@ class FormComponent implements GuiComponent
 				}
 				
 				///*(Ext.get('" . $f->id . "').getValue().length > 0 ) ||*/
-				
-				$html .= "\n\tif(  (Ext.get('" . $this->guiComponentId . $f->id . "').getValue() != '". $f->value ."') ){\n\t ". $this->guiComponentId ."p." . $f->id . " = HtmlEncode( Ext.get('". $this->guiComponentId . $f->id . "').getValue() ); \n\t} else{\n ";
+
+				$html .= "\n\tif(  (Ext.get('" . $this->guiComponentId . $f->id . "').getValue() != '". $f->value ."') ){\n\t\t". $this->guiComponentId ."p." . $f->id . " = HtmlEncode( Ext.get('". $this->guiComponentId . $f->id . "').getValue() ); \n\t} else{\n ";
 				//else si no esta lleno de datos, vamos a buscarlo en los obligatorios, 
 				//si esta en los obligatorios entonces mandamos el error
 				$html .= "\n\t\tfor (var i = ".$this->guiComponentId."obligatory.length - 1; i >= 0; i--){\n";
-				$html .= "	\t\tif(obligatory[i] == '" . $f->id . "') {\n";
-				$html .= "	\t\tfound = true;\n";
-				$html .= "\tExt.get('" . $this->guiComponentId . $f->id . "').highlight('#DD4B39');\n";
-				$html .= "\n\t\t}\n";
+				$html .= "	\t\tif( ".$this->guiComponentId."obligatory[i] == '" . $f->id . "') {\n";
+				$html .= "	\t\t\tfound = true;\n";
+				$html .= "\t\t\t\tExt.get('" . $this->guiComponentId . $f->id . "').highlight('#DD4B39');\n";
+				$html .= "\n\t\t\t}\n";
+				$html .= "\t\t}\n";
 				$html .= "\t}\n";
-				$html .= "}\n";
 			}
 			
 			$html .= "	if(!".$this->guiComponentId."found) ". $this->guiComponentId ."sendToApi( ".$this->guiComponentId."p);\n";
 			$html .= "}\n\n";
 			
-			$html .= "function ". $this->guiComponentId ."sendToApi( params ){\n";
-			$html .= "	POS.API." . $this->send_to_api_http_method . "(\"" . $this->send_to_api . "\", params, \n";
-			$html .= "	{\n";
-			$html .= "		callback : function( a ){ \n";
-			$html .= "			";
-			$html .= "			/* remove unload event */\n";
-			$html .= "			window.onbeforeunload = function(){ return;	};\n";
+			
+			
+			if(!is_null($this->send_to_api) ){
+				
+			
+				$html .= "function ". $this->guiComponentId ."sendToApi( params ){\n";
+				$html .= "	POS.API." . $this->send_to_api_http_method . "(\"" . $this->send_to_api . "\", params, \n";
+				$html .= "	{\n";
+				$html .= "		callback : function( a ){ \n";
+				$html .= "			";
+				$html .= "			/* remove unload event */\n";
+				$html .= "			window.onbeforeunload = function(){ return;	};\n";
 			
 			
 			
-			if (!is_null($this->send_to_api_callback))
-				$html .= "			" . $this->send_to_api_callback . "( a );";
+				if (!is_null($this->send_to_api_callback))
+					$html .= "			" . $this->send_to_api_callback . "( a );";
 			
 			
 			
-			if (!is_null($this->send_to_api_redirect))
-				$html .= "			window.location = '" . $this->send_to_api_redirect . "&previous_action=ok';\n";
-			else
-				$html .= "			Ext.MessageBox.show({\n
-				           				title: 'OK',\n
-				           				msg: 'OK.',\n
-				           				buttons: Ext.MessageBox.OK\n
-				       				});	/* console.log('OKAY'); */ \n";
+				if (!is_null($this->send_to_api_redirect))
+					$html .= "			window.location = '" . $this->send_to_api_redirect . "&previous_action=ok';\n";
+				else
+					$html .= "			Ext.MessageBox.show({\n
+					           				title: 'OK',\n
+					           				msg: 'OK.',\n
+					           				buttons: Ext.MessageBox.OK\n
+					       				});	/* console.log('OKAY'); */ \n";
 			
-			$html .= "			\n";
-			$html .= "			\n";
-			$html .= "	 	}\n";
-			$html .= "	});\n";
-			$html .= "}\n";
+				$html .= "			\n";
+				$html .= "			\n";
+				$html .= "	 	}\n";
+				$html .= "	});\n";
+				$html .= "}\n";
+			}
 			$html .= "</script>";
 			
 		}
@@ -522,6 +529,7 @@ class FormComponent implements GuiComponent
 			{
 				if ($this->form_fields[$i]->id === $field)
 				{
+					Logger::log($field . " es obligatorio");
 					$this->form_fields[$i]->obligatory = true;
 				} //if
 				

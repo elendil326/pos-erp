@@ -122,7 +122,7 @@ abstract class ReporteDAOBase extends DAO
 		$sql = "SELECT * from reporte WHERE ("; 
 		$val = array();
 		if( ! is_null( $reporte->getIdReporte() ) ){
-			$sql .= " id_reporte = ? AND";
+			$sql .= " `id_reporte` = ? AND";
 			array_push( $val, $reporte->getIdReporte() );
 		}
 
@@ -174,7 +174,7 @@ abstract class ReporteDAOBase extends DAO
 	  **/
 	private static final function create( &$reporte )
 	{
-		$sql = "INSERT INTO reporte ( id_reporte ) VALUES ( ?);";
+		$sql = "INSERT INTO reporte ( `id_reporte` ) VALUES ( ?);";
 		$params = array( 
 			$reporte->getIdReporte(), 
 		 );
@@ -226,11 +226,11 @@ abstract class ReporteDAOBase extends DAO
 		$sql = "SELECT * from reporte WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $reporteA->getIdReporte()) ) ) & ( ! is_null ( ($b = $reporteB->getIdReporte()) ) ) ){
-				$sql .= " id_reporte >= ? AND id_reporte <= ? AND";
+				$sql .= " `id_reporte` >= ? AND `id_reporte` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_reporte = ? AND"; 
+			$sql .= " `id_reporte` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

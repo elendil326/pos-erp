@@ -123,12 +123,12 @@ abstract class ImpuestoSucursalDAOBase extends DAO
 		$sql = "SELECT * from impuesto_sucursal WHERE ("; 
 		$val = array();
 		if( ! is_null( $impuesto_sucursal->getIdImpuesto() ) ){
-			$sql .= " id_impuesto = ? AND";
+			$sql .= " `id_impuesto` = ? AND";
 			array_push( $val, $impuesto_sucursal->getIdImpuesto() );
 		}
 
 		if( ! is_null( $impuesto_sucursal->getIdSucursal() ) ){
-			$sql .= " id_sucursal = ? AND";
+			$sql .= " `id_sucursal` = ? AND";
 			array_push( $val, $impuesto_sucursal->getIdSucursal() );
 		}
 
@@ -180,7 +180,7 @@ abstract class ImpuestoSucursalDAOBase extends DAO
 	  **/
 	private static final function create( &$impuesto_sucursal )
 	{
-		$sql = "INSERT INTO impuesto_sucursal ( id_impuesto, id_sucursal ) VALUES ( ?, ?);";
+		$sql = "INSERT INTO impuesto_sucursal ( `id_impuesto`, `id_sucursal` ) VALUES ( ?, ?);";
 		$params = array( 
 			$impuesto_sucursal->getIdImpuesto(), 
 			$impuesto_sucursal->getIdSucursal(), 
@@ -233,22 +233,22 @@ abstract class ImpuestoSucursalDAOBase extends DAO
 		$sql = "SELECT * from impuesto_sucursal WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $impuesto_sucursalA->getIdImpuesto()) ) ) & ( ! is_null ( ($b = $impuesto_sucursalB->getIdImpuesto()) ) ) ){
-				$sql .= " id_impuesto >= ? AND id_impuesto <= ? AND";
+				$sql .= " `id_impuesto` >= ? AND `id_impuesto` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_impuesto = ? AND"; 
+			$sql .= " `id_impuesto` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $impuesto_sucursalA->getIdSucursal()) ) ) & ( ! is_null ( ($b = $impuesto_sucursalB->getIdSucursal()) ) ) ){
-				$sql .= " id_sucursal >= ? AND id_sucursal <= ? AND";
+				$sql .= " `id_sucursal` >= ? AND `id_sucursal` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_sucursal = ? AND"; 
+			$sql .= " `id_sucursal` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

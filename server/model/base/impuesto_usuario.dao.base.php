@@ -123,12 +123,12 @@ abstract class ImpuestoUsuarioDAOBase extends DAO
 		$sql = "SELECT * from impuesto_usuario WHERE ("; 
 		$val = array();
 		if( ! is_null( $impuesto_usuario->getIdImpuesto() ) ){
-			$sql .= " id_impuesto = ? AND";
+			$sql .= " `id_impuesto` = ? AND";
 			array_push( $val, $impuesto_usuario->getIdImpuesto() );
 		}
 
 		if( ! is_null( $impuesto_usuario->getIdUsuario() ) ){
-			$sql .= " id_usuario = ? AND";
+			$sql .= " `id_usuario` = ? AND";
 			array_push( $val, $impuesto_usuario->getIdUsuario() );
 		}
 
@@ -180,7 +180,7 @@ abstract class ImpuestoUsuarioDAOBase extends DAO
 	  **/
 	private static final function create( &$impuesto_usuario )
 	{
-		$sql = "INSERT INTO impuesto_usuario ( id_impuesto, id_usuario ) VALUES ( ?, ?);";
+		$sql = "INSERT INTO impuesto_usuario ( `id_impuesto`, `id_usuario` ) VALUES ( ?, ?);";
 		$params = array( 
 			$impuesto_usuario->getIdImpuesto(), 
 			$impuesto_usuario->getIdUsuario(), 
@@ -233,22 +233,22 @@ abstract class ImpuestoUsuarioDAOBase extends DAO
 		$sql = "SELECT * from impuesto_usuario WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $impuesto_usuarioA->getIdImpuesto()) ) ) & ( ! is_null ( ($b = $impuesto_usuarioB->getIdImpuesto()) ) ) ){
-				$sql .= " id_impuesto >= ? AND id_impuesto <= ? AND";
+				$sql .= " `id_impuesto` >= ? AND `id_impuesto` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_impuesto = ? AND"; 
+			$sql .= " `id_impuesto` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $impuesto_usuarioA->getIdUsuario()) ) ) & ( ! is_null ( ($b = $impuesto_usuarioB->getIdUsuario()) ) ) ){
-				$sql .= " id_usuario >= ? AND id_usuario <= ? AND";
+				$sql .= " `id_usuario` >= ? AND `id_usuario` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_usuario = ? AND"; 
+			$sql .= " `id_usuario` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

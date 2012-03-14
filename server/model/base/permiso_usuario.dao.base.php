@@ -123,12 +123,12 @@ abstract class PermisoUsuarioDAOBase extends DAO
 		$sql = "SELECT * from permiso_usuario WHERE ("; 
 		$val = array();
 		if( ! is_null( $permiso_usuario->getIdPermiso() ) ){
-			$sql .= " id_permiso = ? AND";
+			$sql .= " `id_permiso` = ? AND";
 			array_push( $val, $permiso_usuario->getIdPermiso() );
 		}
 
 		if( ! is_null( $permiso_usuario->getIdUsuario() ) ){
-			$sql .= " id_usuario = ? AND";
+			$sql .= " `id_usuario` = ? AND";
 			array_push( $val, $permiso_usuario->getIdUsuario() );
 		}
 
@@ -180,7 +180,7 @@ abstract class PermisoUsuarioDAOBase extends DAO
 	  **/
 	private static final function create( &$permiso_usuario )
 	{
-		$sql = "INSERT INTO permiso_usuario ( id_permiso, id_usuario ) VALUES ( ?, ?);";
+		$sql = "INSERT INTO permiso_usuario ( `id_permiso`, `id_usuario` ) VALUES ( ?, ?);";
 		$params = array( 
 			$permiso_usuario->getIdPermiso(), 
 			$permiso_usuario->getIdUsuario(), 
@@ -233,22 +233,22 @@ abstract class PermisoUsuarioDAOBase extends DAO
 		$sql = "SELECT * from permiso_usuario WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $permiso_usuarioA->getIdPermiso()) ) ) & ( ! is_null ( ($b = $permiso_usuarioB->getIdPermiso()) ) ) ){
-				$sql .= " id_permiso >= ? AND id_permiso <= ? AND";
+				$sql .= " `id_permiso` >= ? AND `id_permiso` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_permiso = ? AND"; 
+			$sql .= " `id_permiso` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $permiso_usuarioA->getIdUsuario()) ) ) & ( ! is_null ( ($b = $permiso_usuarioB->getIdUsuario()) ) ) ){
-				$sql .= " id_usuario >= ? AND id_usuario <= ? AND";
+				$sql .= " `id_usuario` >= ? AND `id_usuario` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_usuario = ? AND"; 
+			$sql .= " `id_usuario` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

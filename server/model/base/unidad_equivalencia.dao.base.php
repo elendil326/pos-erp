@@ -123,17 +123,17 @@ abstract class UnidadEquivalenciaDAOBase extends DAO
 		$sql = "SELECT * from unidad_equivalencia WHERE ("; 
 		$val = array();
 		if( ! is_null( $unidad_equivalencia->getIdUnidad() ) ){
-			$sql .= " id_unidad = ? AND";
+			$sql .= " `id_unidad` = ? AND";
 			array_push( $val, $unidad_equivalencia->getIdUnidad() );
 		}
 
 		if( ! is_null( $unidad_equivalencia->getEquivalencia() ) ){
-			$sql .= " equivalencia = ? AND";
+			$sql .= " `equivalencia` = ? AND";
 			array_push( $val, $unidad_equivalencia->getEquivalencia() );
 		}
 
 		if( ! is_null( $unidad_equivalencia->getIdUnidades() ) ){
-			$sql .= " id_unidades = ? AND";
+			$sql .= " `id_unidades` = ? AND";
 			array_push( $val, $unidad_equivalencia->getIdUnidades() );
 		}
 
@@ -167,7 +167,7 @@ abstract class UnidadEquivalenciaDAOBase extends DAO
 	  **/
 	private static final function update( $unidad_equivalencia )
 	{
-		$sql = "UPDATE unidad_equivalencia SET  equivalencia = ? WHERE  id_unidad = ? AND id_unidades = ?;";
+		$sql = "UPDATE unidad_equivalencia SET  `equivalencia` = ? WHERE  `id_unidad` = ? AND `id_unidades` = ?;";
 		$params = array( 
 			$unidad_equivalencia->getEquivalencia(), 
 			$unidad_equivalencia->getIdUnidad(),$unidad_equivalencia->getIdUnidades(), );
@@ -193,7 +193,7 @@ abstract class UnidadEquivalenciaDAOBase extends DAO
 	  **/
 	private static final function create( &$unidad_equivalencia )
 	{
-		$sql = "INSERT INTO unidad_equivalencia ( id_unidad, equivalencia, id_unidades ) VALUES ( ?, ?, ?);";
+		$sql = "INSERT INTO unidad_equivalencia ( `id_unidad`, `equivalencia`, `id_unidades` ) VALUES ( ?, ?, ?);";
 		$params = array( 
 			$unidad_equivalencia->getIdUnidad(), 
 			$unidad_equivalencia->getEquivalencia(), 
@@ -247,33 +247,33 @@ abstract class UnidadEquivalenciaDAOBase extends DAO
 		$sql = "SELECT * from unidad_equivalencia WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $unidad_equivalenciaA->getIdUnidad()) ) ) & ( ! is_null ( ($b = $unidad_equivalenciaB->getIdUnidad()) ) ) ){
-				$sql .= " id_unidad >= ? AND id_unidad <= ? AND";
+				$sql .= " `id_unidad` >= ? AND `id_unidad` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_unidad = ? AND"; 
+			$sql .= " `id_unidad` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $unidad_equivalenciaA->getEquivalencia()) ) ) & ( ! is_null ( ($b = $unidad_equivalenciaB->getEquivalencia()) ) ) ){
-				$sql .= " equivalencia >= ? AND equivalencia <= ? AND";
+				$sql .= " `equivalencia` >= ? AND `equivalencia` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " equivalencia = ? AND"; 
+			$sql .= " `equivalencia` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $unidad_equivalenciaA->getIdUnidades()) ) ) & ( ! is_null ( ($b = $unidad_equivalenciaB->getIdUnidades()) ) ) ){
-				$sql .= " id_unidades >= ? AND id_unidades <= ? AND";
+				$sql .= " `id_unidades` >= ? AND `id_unidades` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_unidades = ? AND"; 
+			$sql .= " `id_unidades` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

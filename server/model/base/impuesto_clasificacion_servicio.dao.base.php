@@ -123,12 +123,12 @@ abstract class ImpuestoClasificacionServicioDAOBase extends DAO
 		$sql = "SELECT * from impuesto_clasificacion_servicio WHERE ("; 
 		$val = array();
 		if( ! is_null( $impuesto_clasificacion_servicio->getIdImpuesto() ) ){
-			$sql .= " id_impuesto = ? AND";
+			$sql .= " `id_impuesto` = ? AND";
 			array_push( $val, $impuesto_clasificacion_servicio->getIdImpuesto() );
 		}
 
 		if( ! is_null( $impuesto_clasificacion_servicio->getIdClasificacionServicio() ) ){
-			$sql .= " id_clasificacion_servicio = ? AND";
+			$sql .= " `id_clasificacion_servicio` = ? AND";
 			array_push( $val, $impuesto_clasificacion_servicio->getIdClasificacionServicio() );
 		}
 
@@ -180,7 +180,7 @@ abstract class ImpuestoClasificacionServicioDAOBase extends DAO
 	  **/
 	private static final function create( &$impuesto_clasificacion_servicio )
 	{
-		$sql = "INSERT INTO impuesto_clasificacion_servicio ( id_impuesto, id_clasificacion_servicio ) VALUES ( ?, ?);";
+		$sql = "INSERT INTO impuesto_clasificacion_servicio ( `id_impuesto`, `id_clasificacion_servicio` ) VALUES ( ?, ?);";
 		$params = array( 
 			$impuesto_clasificacion_servicio->getIdImpuesto(), 
 			$impuesto_clasificacion_servicio->getIdClasificacionServicio(), 
@@ -233,22 +233,22 @@ abstract class ImpuestoClasificacionServicioDAOBase extends DAO
 		$sql = "SELECT * from impuesto_clasificacion_servicio WHERE ("; 
 		$val = array();
 		if( ( !is_null (($a = $impuesto_clasificacion_servicioA->getIdImpuesto()) ) ) & ( ! is_null ( ($b = $impuesto_clasificacion_servicioB->getIdImpuesto()) ) ) ){
-				$sql .= " id_impuesto >= ? AND id_impuesto <= ? AND";
+				$sql .= " `id_impuesto` >= ? AND `id_impuesto` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_impuesto = ? AND"; 
+			$sql .= " `id_impuesto` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
 		if( ( !is_null (($a = $impuesto_clasificacion_servicioA->getIdClasificacionServicio()) ) ) & ( ! is_null ( ($b = $impuesto_clasificacion_servicioB->getIdClasificacionServicio()) ) ) ){
-				$sql .= " id_clasificacion_servicio >= ? AND id_clasificacion_servicio <= ? AND";
+				$sql .= " `id_clasificacion_servicio` >= ? AND `id_clasificacion_servicio` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " id_clasificacion_servicio = ? AND"; 
+			$sql .= " `id_clasificacion_servicio` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
