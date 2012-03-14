@@ -51,7 +51,7 @@
  		 *
  		 **/
  		$h = "<table class=\"tabs\" ><tr>";
- 		
+
  		for ($ti=0; $ti < sizeof($this->tabs); $ti++) { 
 			$h .= "<td style='max-width:84px' id='atab_" . $this->tabs[$ti]["title"] . "' ><a href='#". $this->tabs[$ti]["title"] ."'>" . $this->tabs[$ti]["title"] . "</a></td>";
  		}
@@ -85,15 +85,23 @@
 
 			$h = "<script>
 	 			var currentTab = '';
-				currentTab = window.location.hash.substr(1);
-
+				
+				
+				if(window.location.hash.length == 0){
+					Ext.get('tab_". $this->tabs[0]["title"] ."').setStyle('display', 'block');
+					Ext.get('atab_". $this->tabs[0]["title"] ."').toggleCls('selected');
+					currentTab = '". $this->tabs[0]["title"] ."';
+				}else{
+					currentTab = window.location.hash.substr(1);
+					Ext.get('tab_'+currentTab).setStyle('display', 'block');
+					Ext.get('atab_'+currentTab).toggleCls('selected');						
+				}
 
 	 			if ( 'onhashchange' in window ) {
 	 				console.log('`onhashchange` available....');
 					//vamos a ver que hash tiene ahorita en el inicio
-					currentTab = window.location.hash.substr(1);
-					Ext.get('tab_'+currentTab).setStyle('display', 'block');
-					Ext.get('atab_'+currentTab).toggleCls('selected');
+					
+					
 
 				    window.onhashchange = function() {
 
