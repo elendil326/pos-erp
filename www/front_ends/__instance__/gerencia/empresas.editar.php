@@ -41,6 +41,7 @@
 	        "activo",
 	        "id_direccion",
 	        "ultima_modificacion",
+			"direccion_web",
 	        "id_usuario_ultima_modificacion"
 		 ));
 		

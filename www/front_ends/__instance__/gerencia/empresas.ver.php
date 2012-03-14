@@ -79,6 +79,7 @@
 		$form->hideField(
 			array(
 			"id_direccion",
+			"direccion_web",
 			"id_usuario_ultima_modificacion"
 			)
 		);

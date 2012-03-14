@@ -338,7 +338,7 @@ require_once("interfaces/Empresas.interface.php");
 	                isset($d["id_ciudad"]) 			? $d["id_ciudad"] : null,
 	                isset($d["codigo_postal"]) 		? $d["codigo_postal"] : null,
 	                isset($d["numero_interior"]) 	? $d["numero_interior"] : null,
-	                isset($d["texto_extra"]) 		? $d["texto_extra"] : null,
+	                isset($d["referencia"]) 		? $d["referencia"] : null,
 	                isset($d["telefono1"]) 			? $d["telefono1"] : null,
 	                isset($d["telefono2"]) 			? $d["telefono2"] : null
 	              );
