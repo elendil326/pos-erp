@@ -670,6 +670,36 @@
   
   
 
+  class ApiClienteSeguimientoNuevo extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"id_cliente" => new ApiExposedProperty("id_cliente", true, POST, array( "int" )),
+			"texto" => new ApiExposedProperty("texto", true, POST, array( "string" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = ClientesController::NuevoSeguimiento( 
+ 			
+			
+			isset($_POST['id_cliente'] ) ? $_POST['id_cliente'] : null,
+			isset($_POST['texto'] ) ? $_POST['texto'] : null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
   class ApiAutorizacionesGasto extends ApiHandler {
   
 

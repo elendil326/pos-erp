@@ -76,6 +76,7 @@ require_once ('moneda.dao.php');
 require_once ('orden_de_servicio.dao.php');
 require_once ('orden_de_servicio_paquete.dao.php');
 require_once ('paquete.dao.php');
+
 require_once ('paquete_empresa.dao.php');
 require_once ('paquete_sucursal.dao.php');
 require_once ('permiso.dao.php');
@@ -139,3 +140,5 @@ require_once ('venta_orden.dao.php');
 require_once ('venta_paquete.dao.php');
 require_once ('venta_producto.dao.php');
 require_once ('version.dao.php');
+
+require_once ('cliente_seguimiento.dao.php');

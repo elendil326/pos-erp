@@ -1340,6 +1340,49 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 		
 	}		
 	
-	
+	/**
+ 	 *
+ 	 *Hacer un seguimiento al cliente
+ 	 *
+ 	 * @param texto string El texto que ingresa el que realiza el seguimiento
+ 	 **/
+  static function NuevoSeguimiento
+	(
+		$id_cliente, 
+		$texto
+	){
+		Logger::log("Nuevo seguimiento a cliente `$id_cliente` ....");
+		
+		$cliente = UsuarioDAO::getByPK( $id_cliente );
+		
+		if(is_null($cliente)){
+			throw new InvalidDataException("Este cliente no existe");
+		}
+		
+		if( strlen( $texto ) == 0){
+			throw new InvalidDataException("El texto no puede ser vacio");			
+		}
+		
+		$usuario_actual = SesionController::Actual();
+		
+		
+		$s = new ClienteSeguimiento();
+		$s->setIdCliente(	$id_cliente);
+		$s->setIdUsuario(	$usuario_actual["id_usuario"]);
+		$s->setFecha(		time());
+		$s->setTexto(		$texto);
+		
+		
+		try{
+			ClienteSeguimientoDAO::save( $s );
+		}catch(Exception $e){
+			throw new InvalidDatabaseOperationException( $e );
+		}
+		
+		
+		
+		
+		
+	}	
 	
 }

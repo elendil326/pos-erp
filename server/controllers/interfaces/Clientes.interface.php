@@ -261,6 +261,22 @@ No se puede asignar como cliente padre un cliente que esta inactivo
   
 	/**
  	 *
+ 	 *Hacer un seguimiento al cliente
+ 	 *
+ 	 * @param id_cliente int el id del cliente al que se le hara el seguimiento
+ 	 * @param texto string El texto que ingresa el que realiza el seguimiento
+ 	 **/
+  static function NuevoSeguimiento
+	(
+		$id_cliente, 
+		$texto
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
  	 *importar clientes via un archivo de texto
  	 *
  	 * @param raw_content string La cadena a parsear

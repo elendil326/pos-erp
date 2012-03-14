@@ -38,6 +38,7 @@
 	$form->renameField(array(
 	    "id_usuario" => "id_cliente"
 	));
+	
 	$form->sendHidden("id_cliente");
 
 	$form->setValueField("password", "");
