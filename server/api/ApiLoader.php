@@ -238,6 +238,7 @@
 			"id_empresa" => new ApiExposedProperty("id_empresa", true, POST, array( "int" )),
 			"cedula" => new ApiExposedProperty("cedula", false, POST, array( "string" )),
 			"direccion" => new ApiExposedProperty("direccion", false, POST, array( "json" )),
+			"direccion_web" => new ApiExposedProperty("direccion_web", false, POST, array( "string" )),
 			"email" => new ApiExposedProperty("email", false, POST, array( "string" )),
 			"id_moneda" => new ApiExposedProperty("id_moneda", false, POST, array( "string" )),
 			"impuestos_venta" => new ApiExposedProperty("impuestos_venta", false, POST, array( "json" )),
@@ -245,6 +246,7 @@
 			"logo" => new ApiExposedProperty("logo", false, POST, array( "string" )),
 			"razon_social" => new ApiExposedProperty("razon_social", false, POST, array( "string" )),
 			"representante_legal" => new ApiExposedProperty("representante_legal", false, POST, array( "string" )),
+			"rfc" => new ApiExposedProperty("rfc", false, POST, array( "string" )),
 			"texto_extra" => new ApiExposedProperty("texto_extra", false, POST, array( "string" )),
 		);
 	}
@@ -257,6 +259,7 @@
 			isset($_POST['id_empresa'] ) ? $_POST['id_empresa'] : null,
 			isset($_POST['cedula'] ) ? $_POST['cedula'] :  null,
 			isset($_POST['direccion'] ) ? json_decode($_POST['direccion']) : null,
+			isset($_POST['direccion_web'] ) ? $_POST['direccion_web'] :  null,
 			isset($_POST['email'] ) ? $_POST['email'] :  null,
 			isset($_POST['id_moneda'] ) ? $_POST['id_moneda'] :  "0",
 			isset($_POST['impuestos_venta'] ) ? json_decode($_POST['impuestos_venta']) : null,
@@ -264,6 +267,7 @@
 			isset($_POST['logo'] ) ? $_POST['logo'] :  null,
 			isset($_POST['razon_social'] ) ? $_POST['razon_social'] :  null,
 			isset($_POST['representante_legal'] ) ? $_POST['representante_legal'] :  null,
+			isset($_POST['rfc'] ) ? $_POST['rfc'] :  null,
 			isset($_POST['texto_extra'] ) ? $_POST['texto_extra'] :  null
 			
 			);
