@@ -35,7 +35,9 @@ class FormComponent implements GuiComponent
 		$this->guiComponentId = "_"  . (rand() + rand());
 	}
 	
-	
+	public function getGuiComponentId(){
+		return $this->guiComponentId;
+	}
 	
 	/**
 	 *

@@ -1,12 +1,10 @@
 <?php 
 
-class DAOFormComponent extends FormComponent
-{
+class DAOFormComponent extends FormComponent{
 
 	private $api_method_to_call;
 
-	function __construct( $vo )
-	{ 
+	function __construct( $vo ){ 
 		if(is_null($vo)){
 			
 			throw new InvalidDataException();
@@ -51,7 +49,6 @@ class DAOFormComponent extends FormComponent
 
 	}
 
-	
 	public function sendHidden( $field_name ){
 		if( is_array( $field_name ) ){
 			foreach ($field_name as $field ) {
@@ -76,9 +73,6 @@ class DAOFormComponent extends FormComponent
 		
 		throw new Exception("Field `".$field_name."` not found in the VO object.");
 	}
-	
-	
-	
 
 	public function hideField( $field_name ){
 		
@@ -106,7 +100,4 @@ class DAOFormComponent extends FormComponent
 		throw new Exception("Field `".$field_name."` not found in the VO object.");
 	}
 
-
-
 }
-
