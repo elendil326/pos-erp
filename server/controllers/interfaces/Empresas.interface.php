@@ -37,6 +37,7 @@
  	 * @param id_empresa int Id de la empresa a modificar
  	 * @param cedula string url de la cedula de la empresa
  	 * @param direccion json [{    "tipo": "fiscal",    "calle": "Francisco I Madero",    "numero_exterior": "1009A",    "numero_interior": 12,    "colonia": "centro",    "codigo_postal": "38000",    "telefono1": "4611223312",    "telefono2": "",       "id_ciudad": 3,    "referencia": "El local naranja"}]
+ 	 * @param direccion_web string Direccion del sitio de la empresa
  	 * @param email string Correo electronico de la empresa
  	 * @param id_moneda string Id de la moneda base que manejaran las sucursales
  	 * @param impuestos_venta json Impuestos de venta por default que se heredan a las sucursales y estas a su vez a los productos
@@ -44,6 +45,7 @@
  	 * @param logo string url del logo de la empresa
  	 * @param razon_social string El nombre de la nueva empresa.
  	 * @param representante_legal string El nombre del representante legal de la nueva empresa.
+ 	 * @param rfc string RFC de la empresa
  	 * @param texto_extra string Comentarios sobre la ubicacin de la empresa.
  	 **/
   static function Editar
@@ -51,6 +53,7 @@
 		$id_empresa, 
 		$cedula = null, 
 		$direccion = null, 
+		$direccion_web = null, 
 		$email = null, 
 		$id_moneda = "0", 
 		$impuestos_venta = null, 
@@ -58,6 +61,7 @@
 		$logo = null, 
 		$razon_social = null, 
 		$representante_legal = null, 
+		$rfc = null, 
 		$texto_extra = null
 	);  
   
