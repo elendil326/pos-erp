@@ -170,7 +170,7 @@ class EmpresasControllerTest extends PHPUnit_Framework_TestCase {
 
 		$editada = EmpresaDAO::getByPK( $nueva_empresa['id_empresa'] );
 		
-		$this->assertNotEquals($editada->getCedual() , $original->getCedula(),"---- 'testEditarEmpresa' LA CEDULA NO SE ACTUALIZÓ");
+		$this->assertNotEquals($editada->getCedula() , $original->getCedula(),"---- 'testEditarEmpresa' LA CEDULA NO SE ACTUALIZÓ");
 		$this->assertNotEquals($editada->getTextoExtra() , $original->getTextExtra(),"---- 'testEditarEmpresa' LA TEXTO EXTRA NO SE ACTUALIZÓ");
 	}
 

@@ -258,7 +258,7 @@ require_once("interfaces/Empresas.interface.php");
 		$rfc, 
 		$cedula = null, 
 		$email = null, 
-		$impuestos_compra = "", 
+		$impuestos_compra = null, 
 		$impuestos_venta = null, 
 		$logo = null, 
 		$representante_legal = null, 
@@ -659,6 +659,7 @@ require_once("interfaces/Empresas.interface.php");
 		$id_empresa, 
 		$cedula = null, 
 		$direccion = null, 
+		$direccion_web = null, 
 		$email = null, 
 		$id_moneda = "0", 
 		$impuestos_venta = null, 
@@ -666,10 +667,11 @@ require_once("interfaces/Empresas.interface.php");
 		$logo = null, 
 		$razon_social = null, 
 		$representante_legal = null, 
+		$rfc = null, 
 		$texto_extra = null
 	)
 	{
-            Logger::log("Editando la empresa");
+            Logger::log("Editando la empresa $id_empresa ....");
             /*
             //Se validan los parametros de empresa recibidos
             $validar = self::validarParametrosEmpresa(
@@ -727,17 +729,20 @@ require_once("interfaces/Empresas.interface.php");
 			*/
             
             //se guarda el registro de la empresa y se verifica que este activa
-            $empresa=EmpresaDAO::getByPK($id_empresa);
-            if(!$empresa->getActivo())
-            {
+            $empresa = EmpresaDAO::getByPK($id_empresa);
+
+			Logger::log("validando empresa activa");
+			
+            if(!$empresa->getActivo()){
                 Logger::error("La empresa no esta activa, no se puede editar una empresa desactivada");
                 throw new Exception("La empresa no esta activa, no se puede editar una empresa desactivada",901);
             }
             
+
             //se guarda el registro de la direccion perteneciente a esta empresa
-            $direccion=DireccionDAO::getByPK($empresa->getIdDireccion());
-            if(is_null($direccion))
-            {
+			Logger::log("obteniendo direccion");
+            $direccion_obj = DireccionDAO::getByPK($empresa->getIdDireccion());
+            if(is_null($direccion_obj)){
                 Logger::error("FATAL!!! La empresa no cuenta con una direccion");
                 throw new Exception("FATAL!!! La empresa no cuenta con una direccion",901);
             }
@@ -746,64 +751,62 @@ require_once("interfaces/Empresas.interface.php");
             $modificar_direccion=false;
             
             //se evaluan los parametros. Los que no sean nulos seran tomados com oactualizacion
-            if(isset($direccion_web) && !is_null($direccion_web))
-            {
+            if(isset($direccion_web) && !is_null($direccion_web)){
                 $empresa->setDireccionWeb($direccion_web);
             }
 
-            if(!is_null($razon_social))
-            {
+            if(!is_null($razon_social)){
                 $empresa->setRazonSocial($razon_social);
             }
-            if(!is_null($rfc))
-            {
+
+            if(!is_null($cedula)){
+                $empresa->setCedula($cedula);
+            }
+
+            if(!is_null($rfc)){
                 $empresa->setRfc($rfc);
             }
-            if(!is_null($codigo_postal))
-            {
+
+            if(!is_null($direccion["codigo_postal"])){
                 $direccion->setCodigoPostal($codigo_postal);
                 $modificar_direccion=true;
             }
-            if(!is_null($curp))
-            {
-                $empresa->setCurp($curp);
-            }
-            if(!is_null($calle))
-            {
+
+            if(!is_null($direccion["calle"])){
                 $direccion->setCalle($calle);
                 $modificar_direccion=true;
             }
-            if(!is_null($numero_interno))
-            {
+
+            if(!is_null($direccion["numero_interno"])){
                 $direccion->setNumeroInterior($numero_interno);
                 $modificar_direccion=true;
             }
-            if(!is_null($representante_legal))
-            {
+
+            if(!is_null($representante_legal)){
                 $empresa->setRepresentanteLegal($representante_legal);
             }
-            if(!is_null($telefono1))
-            {
+
+            if(!is_null($direccion["telefono1"])){
                 $direccion->setTelefono($telefono1);
                 $modificar_direccion=true;
             }
-            if(!is_null($numero_exterior))
-            {
+
+            if(!is_null($direccion["numero_exterior"])){
                 $direccion->setNumeroExterior($numero_exterior);
                 $modificar_direccion=true;
             }
-            if(!is_null($colonia))
-            {
+
+            if(!is_null($direccion["colonia"])){
                 $direccion->setColonia($colonia);
                 $modificar_direccion=true;
             }
-            if(!is_null($telefono2))
-            {
+
+            if(!is_null($direccion["telefono2"])){
                 $direccion->setTelefono2($telefono2);
                 $modificar_direccion=true;
             }
-            if(!is_null($texto_extra))
-            {
+
+            if(!is_null($texto_extra)){
                 $direccion->setReferencia($texto_extra);
                 $modificar_direccion=true;
             }
@@ -813,9 +816,10 @@ require_once("interfaces/Empresas.interface.php");
             if($modificar_direccion)
             {
                 $direccion->setUltimaModificacion(date("Y-m-d H:i:s",time()));
-                $id_usuario=SesionController::getCurrentUser();
-                if(is_null($id_usuario))
-                {
+
+                $id_usuario = SesionController::getCurrentUser();
+
+                if(is_null($id_usuario)){
                     Logger::error("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
                     throw new Exception("No se pudo obtener el usuario de la sesion, ya inicio sesion?",901);
                 }
@@ -826,7 +830,7 @@ require_once("interfaces/Empresas.interface.php");
             {
                 //Se guardan los cambios hechos en la empresa y en su direccion
                 EmpresaDAO::save($empresa);
-                DireccionDAO::save($direccion);
+                DireccionDAO::save($direccion_obj);
                 
                 //Si se obtiene el parametro impuestos se buscan los impuestos actuales de la empresa.
                 //Por cada impuesto recibido, se verifica que el impuesto exista y se almacena en la tabla
@@ -834,6 +838,7 @@ require_once("interfaces/Empresas.interface.php");
                 //
                 //Despues, se recorren los impuestos actuales y se buscan en la lista de impuestos recibidos.
                 //Se eliminaran aquellos impuestos qe no esten en la lista recibida.
+				$impuestos = $impuestos_venta;
                 if(!is_null($impuestos))
                 {
                     
@@ -880,6 +885,8 @@ require_once("interfaces/Empresas.interface.php");
                 //
                 //Despues, se recorren las retenciones actuales y se buscan en la lista de retenciones recibidas.
                 //Se eliminaran aquellas retenciones que no esten en la lista recibida.
+				/*$retenciones = $impuestos_compra;
+				
                 if(!is_null($retenciones))
                 {
                     
@@ -919,6 +926,7 @@ require_once("interfaces/Empresas.interface.php");
                         }
                     }
                 }
+*/
             }
             catch(Exception $e)
             {
@@ -926,6 +934,7 @@ require_once("interfaces/Empresas.interface.php");
                 Logger::error("No se pudo modificar la empresa: ".$e);
                 throw new Exception("No se pudo modificar la empresa");
             }
+			
             DAO::transEnd();
             Logger::log("Empresa editada con exito");
 	}
