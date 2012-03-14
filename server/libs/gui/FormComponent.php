@@ -134,7 +134,7 @@ class FormComponent implements GuiComponent
 
 					if ($f->send_as_hidden === true)
 					{
-						$html .= "\tp". $this->guiComponentId ."." . $this->guiComponentId . $f->id . " = " . $f->value . ";\n";
+						$html .= "\t". $this->guiComponentId ."p." . $f->id . " = " . $f->value . ";\n";
 					}
 					continue;
 				}
