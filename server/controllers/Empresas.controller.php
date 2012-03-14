@@ -731,7 +731,7 @@ require_once("interfaces/Empresas.interface.php");
 			*/
 			//var_dump($direccion);
 			$direccion = object_to_array($direccion);
-			//var_dump($direccion);
+			$direccion = $direccion[0];
 			            
             //se guarda el registro de la empresa y se verifica que este activa
             $empresa = EmpresaDAO::getByPK( $id_empresa );
@@ -775,21 +775,22 @@ require_once("interfaces/Empresas.interface.php");
                 $empresa->setRfc($rfc);
             }
 
-            if(!is_null($direccion["codigo_postal"])){
+
+            if(array_key_exists( "codigo_postal", $direccion  )){
 				Logger::log("codigo_postal changed ...");	
-                $direccion_obj->setCodigoPostal($codigo_postal);
+                $direccion_obj->setCodigoPostal($direccion["codigo_postal"]);
                 $modificar_direccion = true;
             }
 
-            if(!is_null($direccion["calle"])){
+            if(array_key_exists(  "calle", $direccion  )){
 				Logger::log("calle changed ...");	
-                $direccion_obj->setCalle($calle);
+                $direccion_obj->setCalle($direccion["calle"]);
                 $modificar_direccion=true;
             }
 
-            if(!is_null($direccion["numero_interno"])){
+            if(array_key_exists( "numero_interior", $direccion  )){
 				Logger::log("numero_interno changed ...");	
-                $direccion_obj->setNumeroInterior($numero_interno);
+                $direccion_obj->setNumeroInterior($direccion["numero_interior"]);
                 $modificar_direccion=true;
             }
 
@@ -798,43 +799,44 @@ require_once("interfaces/Empresas.interface.php");
                 $empresa->setRepresentanteLegal($representante_legal);
             }
 
-            if(!is_null($direccion["telefono1"])){
+            if(array_key_exists("telefono1" , $direccion)){
 				Logger::log("changed ...");	
-                $direccion_obj->setTelefono($telefono1);
+                $direccion_obj->setTelefono($direccion["telefono1"]);
                 $modificar_direccion=true;
             }
 
-            if(!is_null($direccion["numero_exterior"])){
+            if(array_key_exists(  "numero_exterior" , $direccion )){
 				Logger::log("changed ...");	
-                $direccion_obj->setNumeroExterior($numero_exterior);
+                $direccion_obj->setNumeroExterior($direccion["numero_exterior"]);
                 $modificar_direccion=true;
             }
 
-            if(!is_null($direccion["colonia"])){
-				Logger::log("changed ...");	
-                $direccion_obj->setColonia($colonia);
+            if(array_key_exists( "colonia" , $direccion )){
+				Logger::log("colonia changed ...");	
+                $direccion_obj->setColonia($direccion["colonia"]);
                 $modificar_direccion=true;
             }
 
-            if(!is_null($direccion["telefono2"])){
+            if(array_key_exists(  "telefono2" , $direccion )){
 				Logger::log("changed ...");	
-                $direccion_obj->setTelefono2($telefono2);
+                $direccion_obj->setTelefono2($direccion["telefono2"]);
                 $modificar_direccion=true;
             }
-/*
-            if(!is_null($texto_extra)){
+
+            if(array_key_exists( "referencia"  , $direccion)){
 				Logger::log("changed ...");	
-                $direccion_obj->setReferencia($texto_extra);
+                $direccion_obj->setReferencia($direccion["referencia"]);
                 $modificar_direccion=true;
             }
-  */          
+
+
             //Si se cambio algun campo de la direccion se actualiza el campo ultima modificacion
             //y se toma al usuario de la sesion.
             if($modificar_direccion)
             {
                 $direccion_obj->setUltimaModificacion(date("Y-m-d H:i:s",time()));
 
-                //$id_usuario = SesionController::getCurrentUser( );
+                $id_usuario = SesionController::getCurrentUser( );
 
                 if(is_null($id_usuario)){
                     Logger::error("No se pudo obtener el usuario de la sesion, ya inicio sesion?");

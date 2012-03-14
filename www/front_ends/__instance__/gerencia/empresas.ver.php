@@ -12,7 +12,11 @@
 	// Requerir parametros
 	// 
 	$page->requireParam(  "eid", "GET", "Esta empresa no existe." );
+	
 	$esta_empresa = EmpresaDAO::getByPK( $_GET["eid"] );
+	
+	
+	
 	$esta_direccion = DireccionDAO::getByPK($esta_empresa->getIdDireccion());
                
 

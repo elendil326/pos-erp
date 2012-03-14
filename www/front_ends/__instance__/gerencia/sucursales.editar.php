@@ -14,6 +14,8 @@
 	$page->requireParam("sid", "GET", "Esta sucursal no existe.");
 	$esta_sucursal  = SucursalDAO::getByPK($_GET["sid"]);
 	$esta_direccion = DireccionDAO::getByPK($esta_sucursal->getIdDireccion());
+	
+	
 	//
 	// Titulo de la pagina
 	// 
