@@ -746,15 +746,11 @@ require_once("interfaces/Empresas.interface.php");
             $modificar_direccion=false;
             
             //se evaluan los parametros. Los que no sean nulos seran tomados com oactualizacion
-            if(!is_null($direccion_web))
+            if(isset($direccion_web) && !is_null($direccion_web))
             {
                 $empresa->setDireccionWeb($direccion_web);
             }
-            if(!is_null($ciudad))
-            {
-                $direccion->setIdCiudad($ciudad);
-                $modificar_direccion=true;
-            }
+
             if(!is_null($razon_social))
             {
                 $empresa->setRazonSocial($razon_social);

@@ -53,17 +53,40 @@ class EmpresasControllerTest extends PHPUnit_Framework_TestCase {
 
 
 		$this->_empresa = EmpresasController::Nuevo(
-				array($direccion), 
-				$id_moneda, 
-				$razon_social, 
-				$rfc
+				$direccion 			= array( $direccion ), 
+				$id_moneda			= 1, 
+				$razon_social		= time()	."a",
+				$rfc				= time()	."b",
+				$cedula 			= time()	."c", 
+				$email				= time()	."d", 
+				$impuestos_compra 	= null, 
+				$impuestos_venta 	= null, 
+				$logo 				= time()	."e",
+				$representante_legal = time()	."f", 
+				$sucursales 		= null, 
+				$texto_extra 		= time()	."g"
+
 			);
 
 		$this->assertInternalType('int', $this->_empresa["id_empresa"] );
+		
+		$dao = EmpresaDAO::getByPK($this->_empresa["id_empresa"]);
+		
+		$this->assertEquals($razon_social, 			$dao->getRazonSocial());
+		$this->assertEquals($rfc, 					$dao->getRfc());
+		$this->assertEquals($representante_legal,	$dao->getRepresentanteLegal());
+
+		
+
+		/*$this->assertInternalType('int', $dao->getIdDireccion() );	*/
+		
+		//traer la direccion para comparar valores
+		
+		
 	}
 
 	/**
-    * @expectedException BusinessLogicException
+    * @expectedException InvalidDataException
     */
 	public function testNuevoEmpresaMismoNombre(){
 		$direccion = Array(

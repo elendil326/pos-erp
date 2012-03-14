@@ -20,7 +20,9 @@
 				"fecha_alta",
 				"fecha_baja",
 				"activo",
-				"id_direccion"	));
+				"id_direccion",
+				"direccion_web"
+		));
 
 
 	$form->makeObligatory(array(
@@ -40,6 +42,7 @@
 				POS.API.POST(\"api/empresa/nuevo/\",{
 					rfc 			: Ext.get(\"".$form->getGuiComponentId()."rfc\").getValue(),
 					razon_social 	: Ext.get(\"".$form->getGuiComponentId()."razon_social\").getValue(),
+					representante_legal : Ext.get(\"".$form->getGuiComponentId()."representante_legal\").getValue(),
 					id_moneda 		: 1,
 					direccion : Ext.JSON.encode([{
 						 	calle			: Ext.get(\"".$add_form->getGuiComponentId()."calle\").getValue(),
