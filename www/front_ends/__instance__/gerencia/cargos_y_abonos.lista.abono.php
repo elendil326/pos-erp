@@ -9,9 +9,7 @@
 		$page = new GerenciaComponentPage();
 
         $page->addComponent( new TitleComponent( "Lista de Abonos" ) );
-		$page->addComponent( new MessageComponent( "Lista los abonos realizados" ) );
-		
-   		$page->addComponent( new TitleComponent( "Abonos a venta", 2 ) );
+		$page->addComponent( new MessageComponent( "Lista los abonos realizados" ) );	
 
         list($abonos_compra, $abonos_venta, $abonos_prestamo) = CargosYAbonosController::ListaAbono(
             $compra = true, 
@@ -34,6 +32,30 @@
             $orden = null
         );
 
+
+        function nombre_deudor($id_usuario, $obj){
+            return UsuarioDAO::getByPK($id_usuario)->getNombre();
+        }
+
+        function formatMonto($monto, $obj){
+
+            $monto =  "$&nbsp;<b>" . number_format( (float)$monto, 2 ) . "</b>";		
+
+            if($obj["cancelado"] == 1){
+                return "<font style = \"color:red; display:inline;\" >" . $monto . "</font>";
+            }
+
+            return "<font style = \"display:inline;\" >" . $monto . "</font>";
+        }
+
+        function toDate($fecha){
+            return date( "y-m-d H:i:s", strtotime($fecha) );
+        }
+
+        //ABONOS A VENTA    
+
+   		$page->addComponent( new TitleComponent( "Abonos a venta", 2 ) );
+
 		$tabla_abonos_venta = new TableComponent( 
 			array(
 				"id_abono_venta" => "ID",
@@ -51,32 +73,83 @@
 			),
 			$abonos_venta
 		);
-                
-
-        function nombre_deudor($id_usuario, $obj){
-            return UsuarioDAO::getByPK($id_usuario)->getNombre();
-        }
-
-        function formatMonto($monto, $obj){
-
-            setlocale(LC_MONETARY, 'es_MX');
-
-            $monto = money_format('%(#10.2n', $monto) . "\n";
-
-            if($obj["cancelado"] == 1){
-                return "<font style = \"color:red; display:inline;\" >$" . $monto . "</font>";
-            }
-
-            return "<font style = \"display:inline;\" >$" . $monto . "</font>";
-        }
+                        
 
         $tabla_abonos_venta->addColRender("id_deudor", "nombre_deudor");
         $tabla_abonos_venta->addColRender("id_receptor", "nombre_deudor");
         $tabla_abonos_venta->addColRender("monto", "formatMonto");        
+        $tabla_abonos_venta->addColRender("fecha", "toDate");        
 		$tabla_abonos_venta->addOnClick( "id_abono_venta", "(function(a){ alert('ok'); })" );
 		
 			
 		$page->addComponent( $tabla_abonos_venta );
+
+        
+        //ABONOS A COMPRA
+
+   		$page->addComponent( new TitleComponent( "Abonos a compra", 2 ) );
+
+        $tabla_abonos_compra = new TableComponent( 
+			array(
+				"id_abono_compra" => "ID",
+                "id_compra" => "Compra",
+                "id_sucursal" => "Sucursal",
+                "monto" => "Monto",
+                "id_caja" => "Caja",
+                "id_deudor" => "Deudor",
+                "id_receptor" => "Recibio",
+                "nota" => "Nota",
+                "fecha" => "Fecha",
+                "tipo_de_pago" => "Pago"/*,
+                "cancelado" => "Cancelado",
+                "motivo_cancelacion" => "Motivo",*/
+			),
+			$abonos_compra
+		);
+                        
+
+       
+
+        $tabla_abonos_compra->addColRender("id_deudor", "nombre_deudor");
+        $tabla_abonos_compra->addColRender("id_receptor", "nombre_deudor");
+        $tabla_abonos_compra->addColRender("monto", "formatMonto");        
+        $tabla_abonos_compra->addColRender("fecha", "toDate");        
+		$tabla_abonos_compra->addOnClick( "id_abono_venta", "(function(a){ alert('ok'); })" );
+		
+			
+		$page->addComponent( $tabla_abonos_compra );
+
+
+        //ABONOS A PRESTAMO
+
+   		$page->addComponent( new TitleComponent( "Abonos a prestamo", 2 ) );
+
+        $tabla_abonos_prestamo = new TableComponent( 
+			array(
+				"id_abono_prestamo" => "ID",
+                "id_prestamo" => "Prestamo",
+                "id_sucursal" => "Sucursal",
+                "monto" => "Monto",
+                "id_caja" => "Caja",
+                "id_deudor" => "Deudor",
+                "id_receptor" => "Recibio",
+                "nota" => "Nota",
+                "fecha" => "Fecha",
+                "tipo_de_pago" => "Pago"/*,
+                "cancelado" => "Cancelado",
+                "motivo_cancelacion" => "Motivo",*/
+			),
+			$abonos_prestamo
+		);                           
+
+        $tabla_abonos_prestamo->addColRender("id_deudor", "nombre_deudor");
+        $tabla_abonos_prestamo->addColRender("id_receptor", "nombre_deudor");
+        $tabla_abonos_prestamo->addColRender("monto", "formatMonto");        
+        $tabla_abonos_prestamo->addColRender("fecha", "toDate");        
+		$tabla_abonos_prestamo->addOnClick( "id_abono_venta", "(function(a){ alert('ok'); })" );
+					
+		$page->addComponent( $tabla_abonos_prestamo );
+
 
 
 
