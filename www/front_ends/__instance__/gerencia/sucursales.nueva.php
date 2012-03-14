@@ -14,15 +14,19 @@
 	$page->addComponent( new TitleComponent( "Datos de la sucursal" , 3 ) );
 	$form = new DAOFormComponent( new Sucursal() );
 
-	$form->hideField( array( "id_sucursal"	));
+	$form->hideField( array( "id_sucursal", "rfc", "id_direccion", "activa", "fecha_baja", "id_gerente" ));
 
 
 	$form->makeObligatory(array("razon_social" ));
-		$add_form = new DAOFormComponent( new Direccion() );
+
+	$add_form = new DAOFormComponent( new Direccion() );
 
 	$js = "(function(){
 				POS.API.POST(\"api/sucursal/nueva/\",{
 					razon_social 	: Ext.get(\"".$form->getGuiComponentId()."razon_social\").getValue(),
+					saldo_a_favor 	: Ext.get(\"".$form->getGuiComponentId()."saldo_a_favor\").getValue(),
+					descripcion		: Ext.get(\"".$form->getGuiComponentId()."descripcion\").getValue(),
+					fecha_apertura	: Ext.get(\"".$form->getGuiComponentId()."fecha_apertura\").getValue(),
 					id_moneda 		: 1,
 					direccion : Ext.JSON.encode({
 						 	calle			: Ext.get(\"".$add_form->getGuiComponentId()."calle\").getValue(),

@@ -61,7 +61,10 @@
 	$form->setEditable(false);	
 	$form->hideField( array( 
 		"id_sucursal",
-		"id_direccion"
+		"id_direccion",
+		"rfc",
+		"id_gerente",
+		"activa"
 	));
 	$page->addComponent( $form );
 	
