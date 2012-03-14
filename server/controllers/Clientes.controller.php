@@ -1380,7 +1380,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 		}
 		
 		
-		
+		return array( "id_cliente_seguimiento" => $s->getIdClienteSeguimiento() );
 		
 		
 	}	

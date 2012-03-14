@@ -144,7 +144,7 @@ var nuevoClienteAval =  function( nombre, id_usuario, id_este_usuario ){
 };
 
 
-
+/*
 
 if ( 'onhashchange' in window ) {
 	console.log("`onhashchange` available....");
@@ -153,4 +153,4 @@ if ( 'onhashchange' in window ) {
         // Handle tab creation and activation as above.
         
     }
-}
+}*/

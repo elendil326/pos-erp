@@ -50,51 +50,25 @@
  		 * Create tab header
  		 *
  		 **/
- 		$h = "<script>
- 			var currentTab = '';
-			currentTab = window.location.hash.substr(1);
- 			if ( 'onhashchange' in window ) {
- 				console.log('`onhashchange` available....');
-			    window.onhashchange = function() {
-			    	
-			
-					if((currentTab.length > 0) && (Ext.get('tab_'+currentTab) != null)){
-						Ext.get('tab_'+currentTab).setStyle('display', 'none');
-						Ext.get('atab_'+currentTab).toggleCls('selected');						
-					}
-
-					currentTab = window.location.hash.substr(1);
-					
-					Ext.get('tab_'+currentTab).setStyle('display', 'block');
-					Ext.get('atab_'+currentTab).toggleCls('selected');
-			    }
-			}</script>
-			<table class=\"tabs\" ><tr>";
+ 		$h = "<table class=\"tabs\" ><tr>";
  		
  		for ($ti=0; $ti < sizeof($this->tabs); $ti++) { 
- 			if($ti == 0){
- 				
- 				$h .= "<td class='selected' style='max-width:84px' id='atab_" . $this->tabs[$ti]["title"] . "' ><a href='#". $this->tabs[$ti]["title"] ."'>" . $this->tabs[$ti]["title"] . "</a></td>";
- 				continue;
- 			}
 			$h .= "<td style='max-width:84px' id='atab_" . $this->tabs[$ti]["title"] . "' ><a href='#". $this->tabs[$ti]["title"] ."'>" . $this->tabs[$ti]["title"] . "</a></td>";
  		}
 
  		$h .= "<td class=\"dummy\"></td></tr></table>";
-
- 		
- 		//parent::addComponent("<h1>".$this->page_title . "</h1>");
+			
  		parent::addComponent($h);
 
 
  		for ($ti=0; $ti < sizeof($this->tabs); $ti++) { 
 
- 			if($ti > 0){
+ 			/*if($ti > 0){
 				parent::addComponent("<div class='gTab' style='display:none' id='tab_" . $this->tabs[$ti]["title"] . "'>"); 				
  			}else{
  				parent::addComponent("<div class='gTab' id='tab_" . $this->tabs[$ti]["title"] . "'>");	
- 			}
-
+ 			}*/
+			parent::addComponent("<div class='gTab' style='display:none' id='tab_" . $this->tabs[$ti]["title"] . "'>");	
  			
 
 			//parent::addComponent('<H3>'. $this->tabs[$ti]["title"] .'</H3>');	
@@ -109,6 +83,34 @@
  			parent::addComponent("</div>");
  		}
 
+			$h = "<script>
+	 			var currentTab = '';
+				currentTab = window.location.hash.substr(1);
+
+
+	 			if ( 'onhashchange' in window ) {
+	 				console.log('`onhashchange` available....');
+					//vamos a ver que hash tiene ahorita en el inicio
+					currentTab = window.location.hash.substr(1);
+					Ext.get('tab_'+currentTab).setStyle('display', 'block');
+					Ext.get('atab_'+currentTab).toggleCls('selected');
+
+				    window.onhashchange = function() {
+
+						if((currentTab.length > 0) && (Ext.get('tab_'+currentTab) != null)){
+							console.log('current tab:'+ currentTab);
+							Ext.get('tab_'+currentTab).setStyle('display', 'none');
+							Ext.get('atab_'+currentTab).toggleCls('selected');						
+						}
+
+						currentTab = window.location.hash.substr(1);
+						console.log('new tab:' + currentTab);
+						Ext.get('tab_'+currentTab).setStyle('display', 'block');
+						Ext.get('atab_'+currentTab).toggleCls('selected');
+				    }
+				}</script>";
+
+	 		parent::addComponent($h);
 
  		parent::render();		
  	}
