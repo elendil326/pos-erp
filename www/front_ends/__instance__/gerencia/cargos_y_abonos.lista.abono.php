@@ -34,7 +34,12 @@
 
 
         function nombre_deudor($id_usuario, $obj){
-            return UsuarioDAO::getByPK($id_usuario)->getNombre();
+
+            if( ! UsuarioDAO::getByPK($id_usuario) ){
+                return "";
+            }
+
+            return "<font style = \"cursor:pointer;\" onClick = \"(function(){ window.location = 'clientes.ver.php?cid={$id_usuario}'; })();\" >" . UsuarioDAO::getByPK($id_usuario)->getNombre() . "</font>";
         }
 
         function formatMonto($monto, $obj){
@@ -49,7 +54,29 @@
         }
 
         function toDate($fecha){
-            return date( "y-m-d H:i:s", strtotime($fecha) );
+            return date( "d/m/y h:i:s A", strtotime($fecha) );
+        }
+
+        function descripcion_caja($id_caja){
+
+            if($caja = CajaDAO::getByPK($id_caja) ){
+                return $caja->getDescripcion();
+            }
+
+            return "";
+        }
+
+        function detalle_venta($id_venta){
+            return "<font style = \"cursor:pointer;\" onClick = \"(function(){ window.location = 'ventas.detalle.php?vid={$id_venta}'; })();\" >{$id_venta}</font>";
+        }
+
+        function descripcion_sucursal($id_sucursal){
+
+            if( ! SucursalDAO::getByPK($id_sucursal)){
+                return "";
+            }
+
+            return "<font style = \"cursor:pointer;\" onClick = \"(function(){ window.location = 'sucursales.ver.php?sid={$id_sucursal}'; })();\" >" . SucursalDAO::getByPK($id_sucursal)->getRazonSocial() . "</font>";
         }
 
         //ABONOS A VENTA    
@@ -65,7 +92,7 @@
                 "id_caja" => "Caja",
                 "id_deudor" => "Deudor",
                 "id_receptor" => "Recibio",
-                "nota" => "Nota",
+                //"nota" => "Nota",
                 "fecha" => "Fecha",
                 "tipo_de_pago" => "Pago"/*,
                 "cancelado" => "Cancelado",
@@ -79,7 +106,9 @@
         $tabla_abonos_venta->addColRender("id_receptor", "nombre_deudor");
         $tabla_abonos_venta->addColRender("monto", "formatMonto");        
         $tabla_abonos_venta->addColRender("fecha", "toDate");        
-		$tabla_abonos_venta->addOnClick( "id_abono_venta", "(function(a){ alert('ok'); })" );
+        $tabla_abonos_venta->addColRender("id_caja","descripcion_caja");
+        $tabla_abonos_venta->addColRender("id_venta","detalle_venta");
+		//$tabla_abonos_venta->addOnClick( "id_venta", "(function(a){ alert('okoooo'); })" );
 		
 			
 		$page->addComponent( $tabla_abonos_venta );
@@ -98,7 +127,7 @@
                 "id_caja" => "Caja",
                 "id_deudor" => "Deudor",
                 "id_receptor" => "Recibio",
-                "nota" => "Nota",
+                //"nota" => "Nota",
                 "fecha" => "Fecha",
                 "tipo_de_pago" => "Pago"/*,
                 "cancelado" => "Cancelado",
@@ -114,7 +143,8 @@
         $tabla_abonos_compra->addColRender("id_receptor", "nombre_deudor");
         $tabla_abonos_compra->addColRender("monto", "formatMonto");        
         $tabla_abonos_compra->addColRender("fecha", "toDate");        
-		$tabla_abonos_compra->addOnClick( "id_abono_venta", "(function(a){ alert('ok'); })" );
+        $tabla_abonos_compra->addColRender("id_caja","descripcion_caja");
+		//$tabla_abonos_compra->addOnClick( "id_abono_venta", "(function(a){ alert('ok'); })" );
 		
 			
 		$page->addComponent( $tabla_abonos_compra );
@@ -133,7 +163,7 @@
                 "id_caja" => "Caja",
                 "id_deudor" => "Deudor",
                 "id_receptor" => "Recibio",
-                "nota" => "Nota",
+                //"nota" => "Nota",
                 "fecha" => "Fecha",
                 "tipo_de_pago" => "Pago"/*,
                 "cancelado" => "Cancelado",
@@ -146,7 +176,8 @@
         $tabla_abonos_prestamo->addColRender("id_receptor", "nombre_deudor");
         $tabla_abonos_prestamo->addColRender("monto", "formatMonto");        
         $tabla_abonos_prestamo->addColRender("fecha", "toDate");        
-		$tabla_abonos_prestamo->addOnClick( "id_abono_venta", "(function(a){ alert('ok'); })" );
+        $tabla_abonos_prestamo->addColRender("id_caja","descripcion_caja");
+		//$tabla_abonos_prestamo->addOnClick( "id_abono_venta", "(function(a){ alert('ok'); })" );
 					
 		$page->addComponent( $tabla_abonos_prestamo );
 
