@@ -202,7 +202,7 @@ class Logger
 			$out .= " | IID = " . IID;
 		}
 
-		
+		/*
 		if(class_exists("SesionController") ){
 			$a = SesionController::Actual();
 			if(!is_null( $a["id_usuario"] )){
@@ -210,6 +210,7 @@ class Logger
 			}
 
 		}
+		*/
 
 
     if(POS_CONFIG_LOG_TRACKBACK){

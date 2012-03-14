@@ -759,9 +759,9 @@ require_once("interfaces/Empresas.interface.php");
                 $empresa->setRazonSocial($razon_social);
             }
 
-            if(!is_null($cedula)){
+            /*if(!is_null($cedula)){
                 $empresa->setCedula($cedula);
-            }
+            }*/
 
             if(!is_null($rfc)){
                 $empresa->setRfc($rfc);

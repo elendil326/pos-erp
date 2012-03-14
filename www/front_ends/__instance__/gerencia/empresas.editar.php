@@ -46,10 +46,9 @@
 		
 	$form->sendHidden( array( "id_empresa" ) );
                
-               $form->addApiCall( "api/empresa/editar/" , "POST");
-               $form->onApiCallSuccessRedirect("empresas.lista.php");
-
-               $form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll( ), $esta_direccion->getIdCiudad( ) );
+	$form->addApiCall( "api/empresa/editar/" , "POST");
+	//$form->onApiCallSuccessRedirect("empresas.lista.php");
+	$form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll( ), $esta_direccion->getIdCiudad( ) );
 
 	$page->addComponent( $form );
                
