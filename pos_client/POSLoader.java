@@ -33,7 +33,7 @@ class POSLoader{
 		{
 						
 			
-			System.out.println("corriendo...");
+			System.out.println("Corriendo...");
 			ret = runPOS();
 			System.out.println("POS ENDED WITH " + ret);
 		}

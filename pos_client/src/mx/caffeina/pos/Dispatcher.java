@@ -5,6 +5,7 @@ import mx.caffeina.pos.Impresiones.*;
 import mx.caffeina.pos.Bascula.*;
 import mx.caffeina.pos.Networking.*;
 import mx.caffeina.pos.AdminPAQProxy.*;
+import java.net.URLDecoder;
 
 import java.util.List;
 import org.json.simple.parser.JSONParser;
@@ -82,94 +83,43 @@ public class Dispatcher{
 		* */
 		if(action.equals("AdminPAQProxy")){
 
-			String  path_to_files = null,
-					data_or_structure = null,
-					table	= null,
-					key 	= null,
-					value 	= null,
-					save	= null;
-
-
-
+			String  path = null,
+					sql = null;
+					
 			//buscar argumentos
 			for ( int i = 0; i < args.length ; i++) 
 			{
 				
-				if( args[i].startsWith("path_to_files=") ){
-					path_to_files 	= args[i].substring( args[i].indexOf("=") +1);
-					System.out.println("found `path_to_files` = " + path_to_files);
-				}
-
-				if( args[i].startsWith("data_or_structure=") ){
-					data_or_structure 	= args[i].substring( args[i].indexOf("=") +1);
-					System.out.println("found `data_or_structure` = " + data_or_structure);
-				}
-
-				if( args[i].startsWith("data_or_structure=") ){
-					data_or_structure 	= args[i].substring( args[i].indexOf("=") +1);
-					System.out.println("found `data_or_structure` = " + data_or_structure);
-				}
-
-				if( args[i].startsWith("table=") ){
-					table 	= args[i].substring( args[i].indexOf("=") +1);
-					System.out.println("found `table` = " + table);
-				}
-
-				if( args[i].startsWith("value=") ){
-					value 	= args[i].substring( args[i].indexOf("=") +1);
-					System.out.println("found `value` = " + value);
+				if( args[i].startsWith("path=") ){
+					path 	= args[i].substring( args[i].indexOf("=") +1);
+					System.out.println("found `path` = " + path);
 				}
 
 
-				if( args[i].startsWith("key=") ){
-					key 	= args[i].substring( args[i].indexOf("=") +1);
-					System.out.println("found `key` = " + key);
+				if( args[i].startsWith("sql=") ){
+					sql 	= URLDecoder.decode(args[i].substring( args[i].indexOf("=") +1));
+					
+					//remove url decoding
+					System.out.println("found `sql` = " + sql);
+					
 				}
 
-				if( args[i].startsWith("save=") ){
-					save 	= args[i].substring( args[i].indexOf("=") +1);
-					System.out.println("found `save` = " + save);
-				}
 			}
 
-			if(path_to_files == null){
-				return callback + "({\"success\": false,  \"response\" : \"Falto el path a los archivos del admin\"});";
+			if(path == null){
+				return callback + "({\"success\": false,  \"response\" : \"Falto el path a los archivos del admin.\"});";
 			}
 
-			if(table == null){
-				return callback + "({\"success\": false,  \"response\" : \"Falto que tabla quieres hacer queryen\"});";
+			if(sql == null){
+				return callback + "({\"success\": false,  \"response\" : \"No enviaste la consulta sql.\"});";
 			}
 
-
-
-
-			if(data_or_structure == null){
-				data_or_structure = "data";
-			}
-
-
-			AdminPAQProxy aproxy = new AdminPAQProxy(  path_to_files );
-
-			if(key != null){
-				if(callback == null){
-					return ( aproxy.queryRow(table, key, value) );	
-				}else{
-					return callback + "("+ ( aproxy.queryRow(table, key, value ) ) +");";		
-				}
-			}
-
-			if(save != null){
-				if(callback == null){
-					return ( aproxy.set( ) );	
-				}else{
-					return callback + "("+ aproxy.set(  ) +");";		
-				}
-			}
+			AdminPAQProxy aproxy = new AdminPAQProxy(  path );
 
 			if(callback == null){
-				return ( aproxy.query(table, data_or_structure) );	
+				return ( aproxy.query(sql) );	
 			}else{
-				return callback + "("+ ( aproxy.query(table, data_or_structure) ) +");";		
+				return callback + "("+ ( aproxy.query(sql) ) +");";		
 			}
 		}
 

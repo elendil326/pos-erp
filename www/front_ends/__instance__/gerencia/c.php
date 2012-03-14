@@ -27,7 +27,7 @@
 
 
 		$page->nextTab("Sesiones");
-		$sesiones = SesionDAO::GetAll();
+		$sesiones = SesionController::Lista();//SesionDAO::GetAll();
 		$header = array(
 			"id_sesion" => "id_sesion",
 			"id_usuario"=> "id_usuario",
@@ -35,7 +35,7 @@
 			"client_user_agent"=> "client_user_agent",
 			"ip"=> "ip"
 		);
-		$tabla = new TableComponent($header, $sesiones);
+		$tabla = new TableComponent($header, $sesiones["resultados"]);
 		$page->addComponent( $tabla );
 		
 		$page->nextTab("Respaldar");

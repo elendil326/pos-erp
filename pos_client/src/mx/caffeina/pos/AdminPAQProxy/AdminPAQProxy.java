@@ -10,11 +10,12 @@ public class AdminPAQProxy{
 	private DBFReader reader;
 	private FileInputStream inputStream;
 
+
 	public AdminPAQProxy(String ruta){
-		//crear el nuevo proxy
 		this.ruta = ruta;
 		this.reader = null;
 	}
+
 
 	private void startCon(String file){
 		System.out.println( "AdminPAQProxy: Conectando con ... " + this.ruta + "" + file + ".dbf" );
@@ -34,27 +35,38 @@ public class AdminPAQProxy{
 
 		}
 	}
-
-	public String query(String tabla , String data_structure){
-
-		startCon( tabla );
-
-		if(data_structure == "data"){
-			return getData();
-		}
-
-		if(data_structure == "structure"){
-			return getStructure(  );	
-		}
-
-		return "{ error }";
+	
+	private void closeCon(){
+		
 	}
 
-	public String queryRow(String table, String key, String val){
-		
-		startCon(table);
-		
+	
+	public String query(String sql ){
 
+		String [] sql_tokens = sql.trim().split( " " );
+
+		//buscar el from
+		int i = -1;
+		while( !sql_tokens[++i].equals("from") );
+		
+		startCon( sql_tokens[i] );
+
+		//first level
+		if(sql_tokens[0].equals("select")) return select(sql_tokens);
+		
+		if(sql_tokens[0].equals("update")) return update(sql_tokens);
+		
+		return "{error}";
+
+
+	}
+
+	private String update(String [] sql){
+		
+		return "0";
+	}
+	
+	private String select(String [] sql){
 		int numberOfFields = -1;
 
 		try{
@@ -67,7 +79,6 @@ public class AdminPAQProxy{
 
 		String fieldNames [] = new String[ numberOfFields ];
 
-
 		for( int i=0; i<numberOfFields; i++) {
 
 			DBFField field = null;
@@ -79,13 +90,10 @@ public class AdminPAQProxy{
 				System.out.println( "E4:" + dbfe );
 				break;
 			}
-
-			
 		}
 		
 
 		// Now, lets us start reading the rows
-		//
 		Object []rowObjects = null;
 
 		String output = "{ \"datos\" :  ";;
@@ -110,35 +118,19 @@ public class AdminPAQProxy{
 			}
 
 			
-
-			
-
 			for( int i=0; i<rowObjects.length; i++) {
-
-
-				
-
-				if( fieldNames[i].equals(key) && rowObjects[i].equals(val) ){
-
+				//if( fieldNames[i].equals(key) && rowObjects[i].equals(val) ){
 					output += "[";
-
 					for( int j=0; j<rowObjects.length; j++) {
-						if(j>0)
+						if(j>0){
 							output+=",";
-
+						}
 						output += "\"" + rowObjects[j] + "\"";	
 					}
-
 					output += "]"; 
-				}
-
-				
+				//}
 			}
-			
 
-			
-
-			
 		}	
 
 		output += " }"; 		
@@ -153,9 +145,21 @@ public class AdminPAQProxy{
 		}
 		
 		return output;
+	}
+	
+
+	
+	
+/*
+	private String selectWhere(String sql){
+		
+		startCon(table);
+		
+
+		
 
 	}
-
+*/
 	private String getStructure(  ){
 		int numberOfFields = -1;
 

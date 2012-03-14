@@ -21,7 +21,6 @@ class SesionController implements ISesion{
  	 * @return id_usuario int 
  	 **/
         public static function Actual(){
-			Logger::log("actual()");
 
 			if( !is_null(self::$_is_logged_in) && self::$_is_logged_in ){
 							
