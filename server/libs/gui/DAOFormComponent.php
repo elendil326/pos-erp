@@ -75,6 +75,7 @@ class DAOFormComponent extends FormComponent{
 	}
 
 	public function hideField( $field_name ){
+		$this->removeDuplicates();
 		
 		if( is_array( $field_name ) ){
 			foreach ($field_name as $field ) {

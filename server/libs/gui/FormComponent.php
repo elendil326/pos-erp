@@ -70,7 +70,7 @@ class FormComponent implements GuiComponent
 	 * 
 	 * 
 	 * */
-	private function removeDuplicates()
+	protected function removeDuplicates()
 	{
 		usort($this->form_fields, array(
 			"FormComponentField",
