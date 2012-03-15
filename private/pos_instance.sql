@@ -1242,7 +1242,6 @@ CREATE TABLE IF NOT EXISTS `cliente_seguimiento` (
 `id_cliente` INT( 11 ) NOT NULL ,
 `fecha` INT( 11 ) NOT NULL ,
 `texto` TEXT NOT NULL ,
-PRIMARY KEY (`id_cliente_seguimiento`),
 INDEX (  `id_usuario` ,  `id_cliente` )
 ) ENGINE = MYISAM ;
 

@@ -98,7 +98,7 @@
 	 * ******************************************************** */
 	$page->nextTab("Avales");
 
-    $page->addComponent( new TitleComponent( "Nuevo Aval", 2 ) );
+    $page->addComponent( new TitleComponent( "Nuevo Aval", 3 ) );
 
     $clientes_component = new ClienteSelectorComponent(); 
 
@@ -108,7 +108,7 @@
 
     $page->addComponent( new FreeHtmlComponent ( "<br><div id = \"add_aval\" style = \"display:none;\" ><form name = \"tipo_aval\" id = \"tipo_aval\"> <input id = \"radio_hipoteca\" type='Radio' name='taval' value='hipoteca' checked> hipoteca <input id = \"radio_prendario\"type='Radio' name='taval' value='prendario'> prendario</form> <br> <div class='POS Boton' onClick = \"nuevoClienteAval(nombre, id_usuario, id_este_usuario)\" >Agregar como aval</div></div>" ) );
 
-    $page->addComponent( new TitleComponent( "Lista de Avales", 2 ) );
+    $page->addComponent( new TitleComponent( "Lista de Avales", 3 ) );
 
     $avales = ClienteAvalDAO::search( new ClienteAval( array( "id_cliente" => $este_usuario->getIdUsuario() ) ) );
 
@@ -143,7 +143,7 @@
 	 *
 	 * ******************************************************** */
 	$page->nextTab("Seguimientos");	
-	
+	$page->addComponent(new TitleComponent("Nuevo seguimiento", 3));
 	$nseguimiento = new DAOFormComponent( new ClienteSeguimiento( array( "id_cliente" => $este_usuario->getIdUsuario() ) ) );
 	$nseguimiento->addApiCall("api/cliente/seguimiento/nuevo");
 	$nseguimiento->hideField( array(
