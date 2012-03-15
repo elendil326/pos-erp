@@ -22,6 +22,7 @@
 	    "id_sucursal",
 	    "id_rol",
 	    "id_clasificacion_proveedor",
+		"id_direccion_alterna",
 	    "fecha_asignacion_rol",
 	    "comision_ventas",
 	    "fecha_alta",
@@ -50,6 +51,19 @@
 	))));
 	$form->createComboBoxJoin("id_clasificacion_cliente", "nombre", ClasificacionClienteDAO::getAll());
 
+	$form->addApiCall("api/cliente/nuevo/");
+	$form->onApiCallSuccessRedirect("clientes.lista.php");
+
+	$form->makeObligatory(array(
+	    "razon_social"
+	));
+	
+	$form->createComboBoxJoin("id_ciudad", "nombre", CiudadDAO::getAll());
+	$form->createComboBoxJoinDistintName("id_tarifa_venta", "id_tarifa" ,"nombre", TarifaDAO::search(new Tarifa(array("tipo_tarifa"=>"venta"))));
+	$form->createComboBoxJoin("id_tarifa_compra", "nombre", TarifaDAO::search(new Tarifa(array("tipo_tarifa"=>"compra"))));
+	$form->createComboBoxJoin( "tarifa_compra_obtenida", "tarifa_compra_obtenida", array("rol", "proveedor", "cliente","usuario") );
+	$form->createComboBoxJoin( "tarifa_venta_obtenida", "tarifa_venta_obtenida", array("rol", "proveedor", "cliente","usuario") );
+
 	$form->renameField(array(
 	    "nombre" => "razon_social",
 	    "codigo_usuario" => "codigo_cliente",
@@ -59,15 +73,6 @@
 	    "id_moneda" => "moneda_del_cliente",
 	    "pagina_web" => "direccion_web"
 	));
-
-	$form->addApiCall("api/cliente/nuevo/");
-	$form->onApiCallSuccessRedirect("clientes.lista.php");
-
-	$form->makeObligatory(array(
-	    "razon_social"
-	));
-
-	$form->createComboBoxJoin("id_ciudad", "nombre", CiudadDAO::getAll());
 
 	$page->addComponent($form);
 

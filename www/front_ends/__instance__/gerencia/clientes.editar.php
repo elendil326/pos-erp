@@ -22,6 +22,8 @@
 	    "id_usuario",
 	    "id_rol",
 	    "id_clasificacion_proveedor",
+		"id_direccion",
+		"id_direccion_alterna",
 	    "fecha_asignacion_rol",
 	    "comision_ventas",
 	    "fecha_alta",
@@ -52,6 +54,10 @@
 	$form->createComboBoxJoin("id_sucursal", "razon_social", SucursalDAO::search(new Sucursal(array(
 	    "activa" => 1
 	))), $este_cliente->getIdSucursal());
+	$form->createComboBoxJoinDistintName("id_tarifa_venta", "id_tarifa" ,"nombre", TarifaDAO::search(new Tarifa(array("tipo_tarifa"=>"venta"))));
+	$form->createComboBoxJoin("id_tarifa_compra", "nombre", TarifaDAO::search(new Tarifa(array("tipo_tarifa"=>"compra"))));
+	$form->createComboBoxJoin( "tarifa_compra_obtenida", "tarifa_compra_obtenida", array("rol", "proveedor", "cliente","usuario") );
+	$form->createComboBoxJoin( "tarifa_venta_obtenida", "tarifa_venta_obtenida", array("rol", "proveedor", "cliente","usuario") );
 
 	$form->addApiCall("api/cliente/editar/");
 	$form->onApiCallSuccessRedirect("clientes.lista.php");

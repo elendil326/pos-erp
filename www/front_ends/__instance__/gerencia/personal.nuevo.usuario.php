@@ -57,10 +57,12 @@
 	));
 
 	$form->createComboBoxJoin("id_ciudad", "nombre", CiudadDAO::getAll());
+	$form->createComboBoxJoin( "tarifa_venta_obtenida", "tarifa_venta_obtenida", array("rol", "proveedor", "cliente","usuario") );
 
 	$form->renameField(array(
 	    "id_ciudad" => "ciudad"
 	));
+	
 
 	$form->addApiCall("api/personal/usuario/nuevo/");
 	$form->onApiCallSuccessRedirect("personal.lista.usuario.php");
@@ -69,7 +71,8 @@
 	    "nombre",
 	    "id_rol",
 	    "password",
-	    "codigo_usuario"
+	    "codigo_usuario",
+		"comision_ventas"
 	));
 
 
@@ -77,6 +80,8 @@
 
 
 	$form->createComboBoxJoin("id_rol", "nombre", RolDAO::getAll() );
+
+	
 
 	$form->createComboBoxJoin("id_moneda", "nombre", MonedaDAO::search(new Moneda(array(
 	    "activa" => 1
