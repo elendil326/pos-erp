@@ -3,8 +3,8 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 01-03-2012 a las 23:52:50
--- Versión del servidor: 5.1.58
+-- Tiempo de generación: 14-03-2012 a las 23:22:53
+-- Versión del servidor: 5.1.61
 -- Versión de PHP: 5.3.6-13ubuntu3.6
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Base de datos: `pos_instance_6`
+-- Base de datos: `Estructura_POS`
 --
 
 -- --------------------------------------------------------
@@ -466,6 +466,22 @@ CREATE TABLE IF NOT EXISTS `cliente_aval` (
   `tipo_aval` enum('hipoteca','prendario') NOT NULL,
   PRIMARY KEY (`id_cliente`,`id_aval`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Cartera de avales de clientes';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `cliente_seguimiento`
+--
+
+CREATE TABLE IF NOT EXISTS `cliente_seguimiento` (
+  `id_cliente_seguimiento` int(11) NOT NULL AUTO_INCREMENT,
+  `id_usuario` int(11) NOT NULL,
+  `id_cliente` int(11) NOT NULL,
+  `fecha` int(11) NOT NULL,
+  `texto` text NOT NULL,
+  PRIMARY KEY (`id_cliente_seguimiento`),
+  KEY `id_usuario` (`id_usuario`,`id_cliente`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1235,19 +1251,6 @@ CREATE TABLE IF NOT EXISTS `prestamo` (
 -- Estructura de tabla para la tabla `producto`
 --
 
-
-CREATE TABLE IF NOT EXISTS `cliente_seguimiento` (
-`id_cliente_seguimiento` INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-`id_usuario` INT( 11 ) NOT NULL ,
-`id_cliente` INT( 11 ) NOT NULL ,
-`fecha` INT( 11 ) NOT NULL ,
-`texto` TEXT NOT NULL ,
-INDEX (  `id_usuario` ,  `id_cliente` )
-) ENGINE = MYISAM ;
-
-
-
-
 CREATE TABLE IF NOT EXISTS `producto` (
   `id_producto` int(11) NOT NULL AUTO_INCREMENT,
   `compra_en_mostrador` tinyint(1) NOT NULL COMMENT 'Verdadero si el producto se puede comprar en mostrador',
@@ -1542,7 +1545,7 @@ CREATE TABLE IF NOT EXISTS `seguimiento_de_servicio` (
 CREATE TABLE IF NOT EXISTS `servicio` (
   `id_servicio` int(11) NOT NULL AUTO_INCREMENT,
   `nombre_servicio` varchar(50) NOT NULL COMMENT 'nombre del servicio',
-  `metodo_costeo` enum('precio','costo') NOT NULL COMMENT 'Si el precio final se tomara del precio base de este servicio o de su costo',
+  `metodo_costeo` enum('precio','costo','variable') NOT NULL COMMENT 'Si el precio final se tomara del precio base de este servicio o de su costo',
   `codigo_servicio` varchar(20) NOT NULL COMMENT 'Codigo de control del servicio manejado por la empresa, no se puede repetir',
   `compra_en_mostrador` tinyint(1) NOT NULL COMMENT 'Verdadero si este servicio se puede comprar en mostrador, para aquello de compra-venta. Para poder hacer esto, el sistema debe poder hacer compras en mostrador',
   `activo` tinyint(1) NOT NULL COMMENT 'Si el servicio esta activo',
