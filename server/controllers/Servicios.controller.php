@@ -1588,7 +1588,13 @@ require_once("interfaces/Servicios.interface.php");
             //Si no se recibe adelanto se toma como cero
             if(is_null($adelanto)){
 	    		$adelanto = 0;
-			}
+			}else{
+
+                if($adelanto < 0){
+                    throw new InvalidDataException("No es un valor de adelanto valido");
+                }
+        
+            }
 
 
 			$servicio = ServicioDAO::getByPK($id_servicio);
@@ -1600,8 +1606,13 @@ require_once("interfaces/Servicios.interface.php");
 			$subtotal = 0;
 			if($servicio->getMetodoCosteo() == "variable"){
 				if(is_null($precio)){
-					throw new InvalidDataException("Este servicio de de precio variable y no se envio el precio");
+					throw new InvalidDataException("Este servicio es de precio variable y no se envio el precio");
 				}
+
+                if($precio <= 0){
+                    throw new InvalidDataException("No es un precio valido");
+                }
+
 				$subtotal = $precio;
 			}else{
 				$subtotal = $servicio->getPrecio();				
