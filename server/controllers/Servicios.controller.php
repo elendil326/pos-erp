@@ -314,7 +314,16 @@ require_once("interfaces/Servicios.interface.php");
             if(!is_null($metodo_costeo))
             {
                 if( $metodo_costeo !="precio" && $metodo_costeo !="costo" && $metodo_costeo !="variable" )
-                    return "El metodo de costeo (".$metodo_costeo.") es invalido";
+                    return "El metodo de costeo (".$metodo_costeo.") es invalido, seleccione : precio, costo o variable";
+
+                if( $metodo_costeo =="precio" && !is_numeric($precio) && $precio < 0 ){
+                    return "Seleccione un valor de precio valido";                    
+                }
+
+                if( $metodo_costeo =="costo" && !is_numeric($costo_estandar) && $costo_estandar < 0 ){
+                    return "Seleccione un valor de costo valido";                    
+                }
+
             }
             
             //valida que el codigo de servicio este en rango y que no se repita
@@ -977,8 +986,7 @@ require_once("interfaces/Servicios.interface.php");
 	{  
             Logger::log("Creando nuevo servicio `$nombre_servicio`...");
 
-			
-            
+		
             //se validan los parametros recibidos
             $validar = self::validarParametrosServicio(
 								null,
@@ -1215,11 +1223,7 @@ require_once("interfaces/Servicios.interface.php");
             if(!is_null($garantia))
             {
                 $servicio->setGarantia($garantia);
-            }
-            if(!is_null($metodo_costeo))
-            {
-                $servicio->setMetodoCosteo($metodo_costeo);
-            }
+            }            
             if(!is_null($codigo_servicio))
             {
                 $servicio->setCodigoServicio(trim($codigo_servicio));
@@ -1242,11 +1246,34 @@ require_once("interfaces/Servicios.interface.php");
             }
             if(!is_null($costo_estandar))
             {
+    
+                if(!is_numeric($costo_estandar) || $costo_estandar < 0){
+                    throw new Exception("Indique un valor de costo valido");
+                }
+
                 $servicio->setCostoEstandar($costo_estandar);
             }
             if(!is_null($precio))
             {
+
+                if(!is_numeric($precio) ||$precio < 0){
+                    throw new Exception("Indique un valor de precio valido");
+                }
+
                 $servicio->setPrecio($precio);
+            }
+            if(!is_null($metodo_costeo))
+            {
+
+                if($metodo_costeo == "costo" && is_null($costo_estandar) ){
+                    throw new Exception("Indique un valor de costo");
+                }
+
+                if($metodo_costeo == "precio" && is_null($precio) ){
+                    throw new Exception("Indique un valor de precio");
+                }
+
+                $servicio->setMetodoCosteo($metodo_costeo);
             }
             
             //Se verifica que se cuente con el atributo que busca el metodo de costeo
