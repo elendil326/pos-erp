@@ -19,7 +19,7 @@
 		 ));
 
 	
-	$form->addApiCall( "api/sucursal/tipo_almacen/nuevo/");
+	$form->addApiCall( "api/almacen/tipo/nuevo");
         $form->onApiCallSuccessRedirect("sucursales.lista.tipo_almacen.php");
 	
 	$form->makeObligatory(array( 

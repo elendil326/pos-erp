@@ -4,7 +4,7 @@
 
 	require_once("../../../../server/bootstrap.php");
 
-	$page = new GerenciaComponentPage(  );
+	$page = new GerenciaTabPage(  );
 
 
 	//
@@ -12,15 +12,23 @@
 	// 
 	$page->requireParam(  "sid", "GET", "Esta sucursal no existe." );
 	$esta_sucursal = SucursalDAO::getByPK( $_GET["sid"] );
+	
+	
+	
+	//
+	// Titulo de la pagina
+	// 
+	$page->addComponent( new TitleComponent( "Detalles de " . $esta_sucursal->getRazonSocial() , 2 ));
+		
+	$page->nextTab("Detalles");
+	
+
 	$esta_direccion = DireccionDAO::getByPK($esta_sucursal->getIdDireccion());
 	if(is_null($esta_direccion))
 	$esta_direccion = new Direccion();
 
 
-	//
-	// Titulo de la pagina
-	// 
-	$page->addComponent( new TitleComponent( "Detalles de " . $esta_sucursal->getRazonSocial() , 2 ));
+
 
 
 	//
@@ -54,9 +62,9 @@
 		$page->addComponent( $menu);
 	}
 
-	//
-	// Forma de producto
-	// 
+
+
+
 	$form = new DAOFormComponent( $esta_sucursal );
 	$form->setEditable(false);	
 	$form->hideField( array( 
@@ -69,6 +77,18 @@
 	$page->addComponent( $form );
 	
 
+	if(!is_null($esta_sucursal->getIdDireccion())){
+		$page->addComponent(new TitleComponent("Direccion", 3));
+
+		$form = new DAOFormComponent( $esta_direccion );
+		$form->setEditable(false);
+		$form->hideField(array( "id_direccion", "id_usuario_ultima_modificacion" ));
+		$form->createComboBoxJoin("id_ciudad", "nombre", CiudadDAO::getAll(), $esta_direccion->getIdCiudad());
+
+		$page->addComponent($form);
+	}
+
+	$page->nextTab("Empresas");
 	$js = "Ext.MessageBox.show({
 				title: 'Error',
 				msg: '&iquest; Seguro que desea vincular esta sucursal a la empresa '+_emp.get('razon_social')+' ?',
@@ -110,17 +130,9 @@
 
 
 
-	if(!is_null($esta_sucursal->getIdDireccion())){
-		$page->addComponent(new TitleComponent("Direccion", 3));
 
-		$form = new DAOFormComponent( $esta_direccion );
-		$form->setEditable(false);
-		$form->hideField(array( "id_direccion", "id_usuario_ultima_modificacion" ));
-		$form->createComboBoxJoin("id_ciudad", "nombre", CiudadDAO::getAll(), $esta_direccion->getIdCiudad());
 
-		$page->addComponent($form);
-	}
-
+	$page->nextTab("Cajas");
 	$page->addComponent( new TitleComponent("Cajas", 3) );
 
 	$tabla = new TableComponent( 
@@ -149,10 +161,13 @@
 
 	$page->addComponent($tabla);
 
+
+	$page->nextTab("Almacenes");
 	$page->addComponent( new TitleComponent( "Almacenes" , 3) );
 
 
-	$sucs = AlmacenesController::Buscar();
+
+	$sucs = AlmacenesController::Buscar(  );
 
 	$tabla = new TableComponent( 
 		array(
@@ -180,8 +195,31 @@
 	$tabla->addColRender("id_tipo_almacen", "funcion_tipo_almacen");
 	$tabla->addColRender("activo", "funcion_activo");
 
-	$tabla->addOnClick( "id_almacen", "(function(a){window.location = 'sucursales.almacen.ver.php?aid='+a;})" );
+	//$tabla->addOnClick( "id_almacen", "(function(a){window.location = 'sucursales.almacen.ver.php?aid='+a;})" );
 
 	$page->addComponent( $tabla );
 
+
+
+	$page->addComponent(new TitleComponent("Nuevo almacen en esta sucuersal", 3));
+	
+	$nalmacen_obj = new Almacen();
+	$nalmacen_obj->setIdSucursal( $esta_sucursal->getIdSucursal() );
+	
+	
+	$nalmacen = new DAOFormComponent($nalmacen_obj);
+	$nalmacen->hideField(array(
+		"id_sucursal",
+		"id_almacen"
+	));
+	$nalmacen->sendHidden("id_sucursal");
+	
+	$nalmacen->createComboBoxJoin( "id_tipo_almacen", "descripcion", TipoAlmacenDAO::GetAll() );	
+	$nalmacen->createComboBoxJoin( "id_empresa", "razon_social", EmpresaDAO::GetAll() );
+	$nalmacen->createComboBoxJoin( "activo", "foo", array(  "foo" => "si" ) );
+	
+	$nalmacen->addApiCall("api/almacen/nuevo", "POST");
+	//$nalmacen->onApiCallSuccessRedirect("");
+	
+	$page->addComponent($nalmacen);
 	$page->render();

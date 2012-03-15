@@ -23,7 +23,25 @@ class AlmacenesController extends ValidacionesController implements IAlmacenes{
 		$id_sucursal = null, 
 		$id_tipo_almacen = null
 	){
-		Logger::log("Listando Almacenes");
+		Logger::log("Listando Almacenes...");
+		
+		
+		$almacenes = AlmacenDAO::search(new Almacen(array(
+				"id_sucursal" 		=> $id_sucursal,
+				"id_empresa" 		=> $id_empresa,
+				"id_tipo_almacen" 	=> $id_tipo_almacen
+				)
+			));
+		
+		
+		if(!is_null($id_sucursal)){
+			return array("resultados" => $almacenes, "numero_de_resultados" => sizeof($almacenes));
+		}
+		
+		$almacenes=AlmacenDAO::getAll();
+        return array("resultados" => $almacenes, "numero_de_resultados" => sizeof($almacenes));
+
+		/*
             $parametros=false;
             if
             (
@@ -47,23 +65,24 @@ class AlmacenesController extends ValidacionesController implements IAlmacenes{
                 {
                     Logger::error($validar);
                     throw new Exception($validar);
-                }*/
+                }* /
                 
-                $almacen_criterio_1=new Almacen();
+                $almacen_criterio_1=new TipoAlmacenDAO();
                 $almacen_criterio_1->setActivo($activo);
                 $almacen_criterio_1->setIdEmpresa($id_empresa);
                 $almacen_criterio_1->setIdSucursal($id_sucursal);
                 $almacen_criterio_1->setIdTipoAlmacen($id_tipo_almacen);
-                $almacenes=AlmacenDAO::search($almacen_criterio_1);
+                $almacenes=TipoAlmacenDAO::search($almacen_criterio_1);
 
             }else{
 	            Logger::log("No se recibieron parametros, se listan todos los almacenes");
-                $almacenes=AlmacenDAO::getAll();
+	
+                
 
             }
+			*/
+			
 
-            Logger::log("Almacenes obtenidos exitosamente");
-            return array("resultados" => $almacenes, "numero_de_resultados" => sizeof($almacenes));
 	}
   
   
