@@ -173,7 +173,15 @@ class FormComponent implements GuiComponent
 				
 				///*(Ext.get('" . $f->id . "').getValue().length > 0 ) ||*/
 
-				$html .= "\n\tif(  (Ext.get('" . $this->guiComponentId . $f->id . "').getValue() != '". $f->value ."') ){\n\t\t". $this->guiComponentId ."p." . $f->id . " = HtmlEncode( Ext.get('". $this->guiComponentId . $f->id . "').getValue() ); \n\t} else{\n ";
+				$html .= "\n\tif(  (Ext.get('" . $this->guiComponentId . $f->id . "').getValue() != '". $f->value ."') ){";
+				if($f->type == "date"){
+					$html .= "\n\t\t". $this->guiComponentId ."p." . $f->id . " = ( Ext.getCmp('". $this->guiComponentId . $f->id . "').getValue() ); \n\t} else{\n ";
+					
+				}else{
+					$html .= "\n\t\t". $this->guiComponentId ."p." . $f->id . " = HtmlEncode( Ext.get('". $this->guiComponentId . $f->id . "').getValue() ); \n\t} else{\n ";
+
+				}
+
 				//else si no esta lleno de datos, vamos a buscarlo en los obligatorios, 
 				//si esta en los obligatorios entonces mandamos el error
 				$html .= "\n\t\tfor (var i = ".$this->guiComponentId."obligatory.length - 1; i >= 0; i--){\n";
@@ -349,25 +357,24 @@ class FormComponent implements GuiComponent
 					}
 					break;
 
-                                case "date":                                                                            
-                                    
-                                        $id_datefield = "date_" . (rand() + rand());
-                                    
-                                        $html .= "<div id = \"{$id_datefield}\"></div>";            
-                                        $html .= "<script>";
-                                        
-                                        $html .= "store_component.addExtComponent(";
-                                        $html .= "  Ext.create('Ext.form.field.Date',{  \n";       
-                                        $html .= "      anchor: '100%',  \n";
-                                        $html .= "      name: '" . $id_datefield . "',  \n";
-                                        $html .= "      id: '" . $id_datefield . "',  \n";
-                                        $html .= "      value: new Date()  \n";                                        
-                                        $html .= "  }), '{$id_datefield}' \n";
-                                        $html .= ");";
-                                        
-                                        $html .= "</script>";
-                                    
-                                        break;
+                 case "date":                                                                            
+                     
+                         $id_datefield = $this->guiComponentId . $f->id ; //"date_" . (rand() + rand());
+                     
+                         $html .= "<div id = \"{$id_datefield}\"></div>";            
+                         $html .= "<script>";
+                         $html .= "store_component.addExtComponent(";
+                         $html .= "  Ext.create('Ext.form.field.Date',{  \n";       
+                         $html .= "      anchor: '100%',  \n";
+                         $html .= "      name: '" . $id_datefield . "',  \n";
+                         $html .= "      id: '" . $id_datefield . "',  \n";
+                         $html .= "      value: new Date()  \n";                                        
+                         $html .= "  }), '{$id_datefield}' \n";
+                         $html .= ");";
+                         
+                         $html .= "</script>";
+                     
+                         break;
 					
 				//
 				// Everything else

@@ -21,12 +21,13 @@
 			),
 			$lista
 		);
-		var_dump($lista);
+
 		function funcion_cancelado($cancelado){
             return ($cancelado ? "Cancelado" : "Activo" );
         }
 		
 		$tabla->addColRender("cancelado", "funcion_cancelado");
+		
 		$tabla->addOnClick( "id_ingreso", "(function(a){ window.location = 'cargos_y_abonos.lista.ingreso.php'; })" );
 
 		$page->render();

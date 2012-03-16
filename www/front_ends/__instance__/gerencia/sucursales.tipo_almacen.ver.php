@@ -75,7 +75,7 @@
 				"id_empresa"=> "Empresa",
 				"activo"=> "Activo"
 			),
-                         SucursalesController::ListaAlmacen(null, null, null, $_GET["tid"])
+			SucursalesController::ListaAlmacen(null, null, null, $_GET["tid"])
 		);
 		function funcion_sucursal( $id_sucursal )
                 {

@@ -680,6 +680,8 @@ class CargosYAbonosController extends ValidacionesController implements ICargosY
         }
     }
     
+
+
     private static function cancelarAbonoVenta(AbonoVenta $abono, $id_caja, $billetes)
     {
         $venta = VentaDAO::getByPK($abono->getIdVenta());
