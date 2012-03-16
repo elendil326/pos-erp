@@ -1378,7 +1378,8 @@ class CargosYAbonosController extends ValidacionesController implements ICargosY
             $gastos = GastoDAO::getAll(null, null, $orden);
         }
         Logger::log("Se obtuvo la lista de gastos exitosamente");
-        return $gastos;
+
+        return array("resultados" => $gastos, "numero_de_resultados" => sizeof($gastos) );
     }
     
     /**
