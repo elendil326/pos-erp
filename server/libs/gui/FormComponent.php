@@ -752,7 +752,20 @@ class FormComponent implements GuiComponent
 		{
 			throw new Exception("Nombre " . $field_name . " no encontrado en los elementos");
 		}
-	}
+	}        
+        /**
+         *
+         *  
+         */
+        public function setType($id, $type){            
+            
+            foreach($this->form_fields as $field ){
+                if($field->id == $id){                    
+                    $field->type = $type;
+                }
+            }
+            
+        }
 	
 	
 }
