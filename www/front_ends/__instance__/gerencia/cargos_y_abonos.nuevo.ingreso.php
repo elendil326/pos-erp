@@ -23,7 +23,8 @@
 			"id_ingreso",
 			"motivo_cancelacion",
 			"fecha_de_registro",
-			"id_sucursal"
+			"id_sucursal",
+			"id_caja"
 		));
 
 		$form->createComboBoxJoin("id_billete", "nombre", BilleteDAO::search(new Billete(array(
@@ -38,7 +39,7 @@
 		
 		$form->createComboBoxJoin("id_caja", "descripcion", CajaDAO::getAll());
 		
-		$form->addApiCall("api/cargosyabonos/ingreso/nuevo");
+		$form->addApiCall("api/cargosyabonos/ingreso/nuevo", "POST");
 		
 		$form->renameField( array("fecha_del_ingreso" => "fecha_ingreso") );
 

@@ -2261,7 +2261,7 @@ class CargosYAbonosController extends ValidacionesController implements ICargosY
      **/
     public static function ListaIngreso($cancelado = null, $fecha_actual = null, $fecha_final = null, $fecha_inicial = null, $id_caja = null, $id_concepto_ingreso = null, $id_empresa = null, $id_sucursal = null, $id_usuario = null, $monto_maximo = null, $monto_minimo = null, $orden = null)
     {
-        Logger::log("Listando Ingresos");
+        Logger::log("Listando ingresos....");
         
         //verifica que el orden sea valida
         if (!is_null($orden)) {
@@ -2358,7 +2358,7 @@ class CargosYAbonosController extends ValidacionesController implements ICargosY
             $ingresos = IngresoDAO::getAll(null, null, $orden);
         }
         Logger::log("Se obtuvo la lista de ingresos exitosamente");
-        return $ingresos;
+        return array("resultados" => $ingresos , "numero_de_resultados" => sizeof($ingresos) ) ;
     }
     
     /**

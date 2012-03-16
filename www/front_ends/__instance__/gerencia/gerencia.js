@@ -29,7 +29,9 @@ var main = function ()
 			});
 	};
 	
-        store_component.render();
+	if( window.store_component !== undefined ){
+		store_component.render();	
+	}
 
 }
 
