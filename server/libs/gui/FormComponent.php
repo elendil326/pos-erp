@@ -108,36 +108,36 @@ class FormComponent implements GuiComponent
 		
 		$html = "";
                 
-                $html .= "<script>\n";
-                
-                $html .= "var ExtComponent =  function(component, id){\n";
-                $html .= "    this.component = component;\n";
-                $html .= "    this.id = id;\n";
-                $html .= "};\n";
-                
-                $html .= "var storeComponent = function(){\n";    
-                
-                $html .= "  this.arrayComponent = [];\n";
-                $html .= "  this.arrayIndex = 0;\n"; 
-                
-                $html .= "  this.addExtComponent = function( component, id ){\n";
-                //$html .= "    Ext.Array( this.arrayComponent, this.arrayIndex, new ExtComponent( component, id ));    \n";                
-                
-                $html .= "      this.arrayComponent[this.arrayIndex] = new ExtComponent( component, id );\n";
-                $html .= "      this.arrayIndex++;        \n";
-                $html .= "  };\n";
+        $html .= "<script>\n";
+        
+        $html .= "var ExtComponent =  function(component, id){\n";
+        $html .= "    this.component = component;\n";
+        $html .= "    this.id = id;\n";
+        $html .= "};\n";
+        
+        $html .= "var storeComponent = function(){\n";    
+        
+        $html .= "  this.arrayComponent = [];\n";
+        $html .= "  this.arrayIndex = 0;\n"; 
+        
+        $html .= "  this.addExtComponent = function( component, id ){\n";
+        //$html .= "    Ext.Array( this.arrayComponent, this.arrayIndex, new ExtComponent( component, id ));    \n";                
+        
+        $html .= "      this.arrayComponent[this.arrayIndex] = new ExtComponent( component, id );\n";
+        $html .= "      this.arrayIndex++;        \n";
+        $html .= "  };\n";
 
-                $html .= "  this.render = function(){\n";
-                $html .= "    Ext.Array.forEach( this.arrayComponent, function(c){\n";
-                $html .= "        c.component.render(c.id);\n";                
-                $html .= "    });\n";
-                $html .= "  };\n";
+        $html .= "  this.render = function(){\n";
+        $html .= "    Ext.Array.forEach( this.arrayComponent, function(c){\n";
+        $html .= "        c.component.render(c.id);\n";                
+        $html .= "    });\n";
+        $html .= "  };\n";
 
-                $html .= "};    \n";
-                
-                $html .= "var store_component = new storeComponent();\n";
-                
-                $html .= "</script>\n";
+        $html .= "};    \n";
+        
+        $html .= "var store_component = new storeComponent();\n";
+        
+        $html .= "</script>\n";
 		
 		if (!is_null($this->send_to_api) || !is_null($this->on_click))
 		{
@@ -150,7 +150,7 @@ class FormComponent implements GuiComponent
 			foreach ($this->form_fields as $f)
 			{
 				if ($f->obligatory){
-					$html .= $this->guiComponentId . "obligatory.push( '" . $f->id . "' );\n";
+					$html .= $this->guiComponentId . "obligatory.push( '" . $this->guiComponentId . $f->id . "' );\n";
 				}
 					
 			}
@@ -185,15 +185,15 @@ class FormComponent implements GuiComponent
 				//else si no esta lleno de datos, vamos a buscarlo en los obligatorios, 
 				//si esta en los obligatorios entonces mandamos el error
 				$html .= "\n\t\tfor (var i = ".$this->guiComponentId."obligatory.length - 1; i >= 0; i--){\n";
-				$html .= "	\t\tif( ".$this->guiComponentId."obligatory[i] == '" . $f->id . "') {\n";
-				$html .= "	\t\t\tfound = true;\n";
+				$html .= "	\t\tif( ".$this->guiComponentId."obligatory[i] == '" .  $this->guiComponentId . $f->id . "') {\n";
+				$html .= "	\t\t\t". $this->guiComponentId ."found = true; console.log('found it');\n";
 				$html .= "\t\t\t\tExt.get('" . $this->guiComponentId . $f->id . "').highlight('#DD4B39');\n";
 				$html .= "\n\t\t\t}\n";
 				$html .= "\t\t}\n";
 				$html .= "\t}\n";
 			}
 			
-			$html .= "	if(!".$this->guiComponentId."found) ". $this->guiComponentId ."sendToApi( ".$this->guiComponentId."p);\n";
+			$html .= "	if(!".$this->guiComponentId."found){ ". $this->guiComponentId ."sendToApi( ".$this->guiComponentId."p); }\n";
 			$html .= "}\n\n";
 			
 			
