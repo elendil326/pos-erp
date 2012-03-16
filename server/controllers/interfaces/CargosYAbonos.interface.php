@@ -163,71 +163,6 @@ Update : Se deber?a de tomar de la sesi?n el id del usuario que hiso la ultima m
   
 	/**
  	 *
- 	 *Lista los ingresos, se puede filtrar de acuerdo a la empresa, la sucursal, el usuario que registra el ingreso, el concepto de ingreso, la caja que recibi? el ingreso, de una fecha inicial a una final, por monto, por cancelacion, y se puede ordenar de acuerdo a sus atributos.
- 	 *
- 	 * @param cancelado bool Si este valor no es obtenido, se listaran tanto ingresos cancelados como no cancelados, si es true, solo se listaran los ingresos cancelados, si es false, se listaran solo los ingresos no cancelados
- 	 * @param fecha_actual bool verdaderi si solo se listaran los ingresos del dia de hoy
- 	 * @param fecha_final string Se listaran los ingresos cuya fecha de ingreso sea menor a este valor
- 	 * @param fecha_inicial string Se listaran los ingresos cuya fecha de ingreso sea mayor a este valor
- 	 * @param id_caja int Id de la caja de la cual se listaran los ingresos que ha recibido
- 	 * @param id_concepto_ingreso int Se listaran los ingresos que tengan este concepto de ingreso
- 	 * @param id_empresa int Id de la empresa de la cual se listaran sus ingresos
- 	 * @param id_sucursal int Id de la sucursal de la cual se listaran sus ingresos
- 	 * @param id_usuario int Id del usuario del cual se listaran los ingresos que ha registrado
- 	 * @param orden string Nombre de la columna mediante la cual se ordenara la lista
- 	 **/
-  static function ListaIngreso
-	(
-		$cancelado = null, 
-		$fecha_actual = null, 
-		$fecha_final = null, 
-		$fecha_inicial = null, 
-		$id_caja = null, 
-		$id_concepto_ingreso = null, 
-		$id_empresa = null, 
-		$id_sucursal = null, 
-		$id_usuario = null, 
-		$orden = null
-	);  
-  
-  
-	
-  
-	/**
- 	 *
- 	 *Registra un nuevo ingreso
- 	 *
- 	 * @param fecha_ingreso string Fecha del ingreso
- 	 * @param id_empresa int Id de la empresa a la que pertenece este ingreso
- 	 * @param billetes json Ids de los billetes con sus cantidades en las que ingresaran a la caja en caso de que la caja lleve control de billetes
- 	 * @param descripcion string Descripcion del ingreso en caso de no este contemplado en la lista de conceptos de ingreso
- 	 * @param folio string Folio de la factura del ingreso
- 	 * @param id_caja int Id de la caja en la que se registra el ingreso
- 	 * @param id_concepto_ingreso int Id del concepto al que hace referencia el ingreso
- 	 * @param id_sucursal int Id de la caja a la que pertenece este ingreso
- 	 * @param monto float Monto del ingreso en caso de que no este contemplado por el concepto de ingreso o que sea diferente
- 	 * @param nota string Nota del ingreso
- 	 * @return id_ingreso int Id autogenerado por la insercion del ingreso
- 	 **/
-  static function NuevoIngreso
-	(
-		$fecha_ingreso, 
-		$id_empresa, 
-		$billetes = null, 
-		$descripcion = null, 
-		$folio = null, 
-		$id_caja = null, 
-		$id_concepto_ingreso = null, 
-		$id_sucursal = null, 
-		$monto = null, 
-		$nota = null
-	);  
-  
-  
-	
-  
-	/**
- 	 *
  	 *Deshabilita un concepto de gasto
 Update :Se deber?a de tomar tambi?n de la sesi?n el id del usuario y fecha de la ultima modificaci?n
  	 *
@@ -248,7 +183,7 @@ Update : Falta especificar los parametros y el ejemplo de envio.
  	 *
  	 * @param activo bool Si este valo no es obtenido, se listaran tanto activos como inactivos. Si es verdadero, se listaran solo los activos, si es falso, se listaran solo los inactivos
  	 * @param orden string Nombre de la columna mediante la cual se ordenara la lista
- 	 * @return conceptos_gasto json Arreglo que contendrá la información de conceptos de gasto.
+ 	 * @return conceptos_gasto json Arreglo que contendr la informacin de conceptos de gasto.
  	 **/
   static function ListaConceptoGasto
 	(
@@ -268,7 +203,7 @@ Update : En la respuesta basta con solo indicar success : true | false, y en cas
  	 * @param nombre string la justificacion que aparecera despues de la leyenda "gasto por concepto de"
  	 * @param descripcion string Descripcion larga del concepto de gasto
  	 * @param monto float Monto fijo del concepto de gasto
- 	 * @return id_concepto_gasto int Id autogenerado por la inserción del nuevo gasto
+ 	 * @return id_concepto_gasto int Id autogenerado por la insercin del nuevo gasto
  	 **/
   static function NuevoConceptoGasto
 	(
@@ -380,7 +315,7 @@ Update :Ademas deber?a tambi?n de tomar la fecha de ingreso del gasto del servid
  	 * @param id_sucursal int Id de la sucursal a la que pertenece este gasto
  	 * @param monto float Monto del gasto en caso de que no este contemplado por el concepto de gasto o sea diferente a este
  	 * @param nota string Nota del gasto
- 	 * @return id_gasto int Id generado por la inserción del nuevo gasto
+ 	 * @return id_gasto int Id generado por la insercin del nuevo gasto
  	 **/
   static function NuevoGasto
 	(
@@ -444,7 +379,7 @@ Update :Falta especificar la estructura del JSON que se env?a como parametro
  	 *
  	 * @param activo bool Si se listaran solo activos o inactivos, si no se recibe se listan ambos
  	 * @param orden string Nombre de la columan por el cual se ordenara la lista
- 	 * @return conceptos_ingreso json Arreglo que contendrá la información de los conceptos de ingreso
+ 	 * @return conceptos_ingreso json Arreglo que contendr la informacin de los conceptos de ingreso
  	 **/
   static function ListaConceptoIngreso
 	(
@@ -517,6 +452,71 @@ Update :El usuario y la fecha de la ultima modificaci?n se deber?an de obtener d
 		$billetes = null, 
 		$id_caja = null, 
 		$motivo_cancelacion = null
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Lista los ingresos, se puede filtrar de acuerdo a la empresa, la sucursal, el usuario que registra el ingreso, el concepto de ingreso, la caja que recibi? el ingreso, de una fecha inicial a una final, por monto, por cancelacion, y se puede ordenar de acuerdo a sus atributos.
+ 	 *
+ 	 * @param cancelado bool Si este valor no es obtenido, se listaran tanto ingresos cancelados como no cancelados, si es true, solo se listaran los ingresos cancelados, si es false, se listaran solo los ingresos no cancelados
+ 	 * @param fecha_actual bool verdaderi si solo se listaran los ingresos del dia de hoy
+ 	 * @param fecha_final string Se listaran los ingresos cuya fecha de ingreso sea menor a este valor
+ 	 * @param fecha_inicial string Se listaran los ingresos cuya fecha de ingreso sea mayor a este valor
+ 	 * @param id_caja int Id de la caja de la cual se listaran los ingresos que ha recibido
+ 	 * @param id_concepto_ingreso int Se listaran los ingresos que tengan este concepto de ingreso
+ 	 * @param id_empresa int Id de la empresa de la cual se listaran sus ingresos
+ 	 * @param id_sucursal int Id de la sucursal de la cual se listaran sus ingresos
+ 	 * @param id_usuario int Id del usuario del cual se listaran los ingresos que ha registrado
+ 	 * @param orden string Nombre de la columna mediante la cual se ordenara la lista
+ 	 **/
+  static function ListaIngreso
+	(
+		$cancelado = null, 
+		$fecha_actual = null, 
+		$fecha_final = null, 
+		$fecha_inicial = null, 
+		$id_caja = null, 
+		$id_concepto_ingreso = null, 
+		$id_empresa = null, 
+		$id_sucursal = null, 
+		$id_usuario = null, 
+		$orden = null
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Registra un nuevo ingreso
+ 	 *
+ 	 * @param fecha_ingreso string Fecha del ingreso
+ 	 * @param id_empresa int Id de la empresa a la que pertenece este ingreso
+ 	 * @param billetes json Ids de los billetes con sus cantidades en las que ingresaran a la caja en caso de que la caja lleve control de billetes
+ 	 * @param descripcion string Descripcion del ingreso en caso de no este contemplado en la lista de conceptos de ingreso
+ 	 * @param folio string Folio de la factura del ingreso
+ 	 * @param id_caja int Id de la caja en la que se registra el ingreso
+ 	 * @param id_concepto_ingreso int Id del concepto al que hace referencia el ingreso
+ 	 * @param id_sucursal int Id de la caja a la que pertenece este ingreso
+ 	 * @param monto float Monto del ingreso en caso de que no este contemplado por el concepto de ingreso o que sea diferente
+ 	 * @param nota string Nota del ingreso
+ 	 * @return id_ingreso int Id autogenerado por la insercion del ingreso
+ 	 **/
+  static function NuevoIngreso
+	(
+		$fecha_ingreso, 
+		$id_empresa, 
+		$billetes = null, 
+		$descripcion = null, 
+		$folio = null, 
+		$id_caja = null, 
+		$id_concepto_ingreso = null, 
+		$id_sucursal = null, 
+		$monto = null, 
+		$nota = null
 	);  
   
   

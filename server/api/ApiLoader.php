@@ -1686,16 +1686,16 @@
   
   
 
-  class ApiEfectivoGastoConceptoNuevo extends ApiHandler {
+  class ApiCargosyabonosGastoConceptoNuevo extends ApiHandler {
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"nombre" => new ApiExposedProperty("nombre", true, GET, array( "string" )),
-			"descripcion" => new ApiExposedProperty("descripcion", false, GET, array( "string" )),
-			"monto" => new ApiExposedProperty("monto", false, GET, array( "float" )),
+			"nombre" => new ApiExposedProperty("nombre", true, POST, array( "string" )),
+			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "string" )),
+			"monto" => new ApiExposedProperty("monto", false, POST, array( "float" )),
 		);
 	}
 
@@ -1704,9 +1704,9 @@
  		$this->response = CargosYAbonosController::NuevoConceptoGasto( 
  			
 			
-			isset($_GET['nombre'] ) ? $_GET['nombre'] : null,
-			isset($_GET['descripcion'] ) ? $_GET['descripcion'] :  null,
-			isset($_GET['monto'] ) ? $_GET['monto'] :  null
+			isset($_POST['nombre'] ) ? $_POST['nombre'] : null,
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null,
+			isset($_POST['monto'] ) ? $_POST['monto'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -1752,14 +1752,14 @@
   
   
 
-  class ApiEfectivoGastoConceptoEliminar extends ApiHandler {
+  class ApiCargosyabonosGastoConceptoEliminar extends ApiHandler {
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"id_concepto_gasto" => new ApiExposedProperty("id_concepto_gasto", true, GET, array( "int" )),
+			"id_concepto_gasto" => new ApiExposedProperty("id_concepto_gasto", true, POST, array( "int" )),
 		);
 	}
 
@@ -1768,7 +1768,7 @@
  		$this->response = CargosYAbonosController::EliminarConceptoGasto( 
  			
 			
-			isset($_GET['id_concepto_gasto'] ) ? $_GET['id_concepto_gasto'] : null
+			isset($_POST['id_concepto_gasto'] ) ? $_POST['id_concepto_gasto'] : null
 			
 			);
 		}catch(Exception $e){
@@ -1780,16 +1780,16 @@
   
   
 
-  class ApiEfectivoIngresoConceptoNuevo extends ApiHandler {
+  class ApiCargosyabonosIngresoConceptoNuevo extends ApiHandler {
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"nombre" => new ApiExposedProperty("nombre", true, GET, array( "string" )),
-			"descripcion" => new ApiExposedProperty("descripcion", false, GET, array( "string" )),
-			"monto" => new ApiExposedProperty("monto", false, GET, array( "float" )),
+			"nombre" => new ApiExposedProperty("nombre", true, POST, array( "string" )),
+			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "string" )),
+			"monto" => new ApiExposedProperty("monto", false, POST, array( "float" )),
 		);
 	}
 
@@ -1798,9 +1798,9 @@
  		$this->response = CargosYAbonosController::NuevoConceptoIngreso( 
  			
 			
-			isset($_GET['nombre'] ) ? $_GET['nombre'] : null,
-			isset($_GET['descripcion'] ) ? $_GET['descripcion'] :  null,
-			isset($_GET['monto'] ) ? $_GET['monto'] :  null
+			isset($_POST['nombre'] ) ? $_POST['nombre'] : null,
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null,
+			isset($_POST['monto'] ) ? $_POST['monto'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -1812,7 +1812,7 @@
   
   
 
-  class ApiEfectivoIngresoConceptoEditar extends ApiHandler {
+  class ApiCargosyabonosIngresoConceptoEditar extends ApiHandler {
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
@@ -1846,14 +1846,14 @@
   
   
 
-  class ApiEfectivoIngresoConceptoEliminar extends ApiHandler {
+  class ApiCargosyabonosIngresoConceptoEliminar extends ApiHandler {
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"id_concepto_ingreso" => new ApiExposedProperty("id_concepto_ingreso", true, GET, array( "int" )),
+			"id_concepto_ingreso" => new ApiExposedProperty("id_concepto_ingreso", true, POST, array( "int" )),
 		);
 	}
 
@@ -1862,7 +1862,7 @@
  		$this->response = CargosYAbonosController::EliminarConceptoIngreso( 
  			
 			
-			isset($_GET['id_concepto_ingreso'] ) ? $_GET['id_concepto_ingreso'] : null
+			isset($_POST['id_concepto_ingreso'] ) ? $_POST['id_concepto_ingreso'] : null
 			
 			);
 		}catch(Exception $e){
@@ -1874,7 +1874,7 @@
   
   
 
-  class ApiEfectivoGastoConceptoLista extends ApiHandler {
+  class ApiCargosyabonosGastoConceptoLista extends ApiHandler {
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
@@ -1904,7 +1904,7 @@
   
   
 
-  class ApiEfectivoIngresoConceptoLista extends ApiHandler {
+  class ApiCargosyabonosIngresoConceptoLista extends ApiHandler {
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
@@ -1934,7 +1934,7 @@
   
   
 
-  class ApiEfectivoGastoNuevo extends ApiHandler {
+  class ApiCargosyabonosGastoNuevo extends ApiHandler {
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
@@ -1982,19 +1982,19 @@
   
   
 
-  class ApiEfectivoGastoEditar extends ApiHandler {
+  class ApiCargosyabonosGastoEditar extends ApiHandler {
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"id_gasto" => new ApiExposedProperty("id_gasto", true, GET, array( "int" )),
-			"descripcion" => new ApiExposedProperty("descripcion", false, GET, array( "string" )),
-			"fecha_gasto" => new ApiExposedProperty("fecha_gasto", false, GET, array( "string" )),
-			"folio" => new ApiExposedProperty("folio", false, GET, array( "string" )),
-			"id_concepto_gasto" => new ApiExposedProperty("id_concepto_gasto", false, GET, array( "int" )),
-			"nota" => new ApiExposedProperty("nota", false, GET, array( "string" )),
+			"id_gasto" => new ApiExposedProperty("id_gasto", true, POST, array( "int" )),
+			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "string" )),
+			"fecha_gasto" => new ApiExposedProperty("fecha_gasto", false, POST, array( "string" )),
+			"folio" => new ApiExposedProperty("folio", false, POST, array( "string" )),
+			"id_concepto_gasto" => new ApiExposedProperty("id_concepto_gasto", false, POST, array( "int" )),
+			"nota" => new ApiExposedProperty("nota", false, POST, array( "string" )),
 		);
 	}
 
@@ -2003,12 +2003,12 @@
  		$this->response = CargosYAbonosController::EditarGasto( 
  			
 			
-			isset($_GET['id_gasto'] ) ? $_GET['id_gasto'] : null,
-			isset($_GET['descripcion'] ) ? $_GET['descripcion'] :  null,
-			isset($_GET['fecha_gasto'] ) ? $_GET['fecha_gasto'] :  null,
-			isset($_GET['folio'] ) ? $_GET['folio'] :  null,
-			isset($_GET['id_concepto_gasto'] ) ? $_GET['id_concepto_gasto'] :  null,
-			isset($_GET['nota'] ) ? $_GET['nota'] :  null
+			isset($_POST['id_gasto'] ) ? $_POST['id_gasto'] : null,
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null,
+			isset($_POST['fecha_gasto'] ) ? $_POST['fecha_gasto'] :  null,
+			isset($_POST['folio'] ) ? $_POST['folio'] :  null,
+			isset($_POST['id_concepto_gasto'] ) ? $_POST['id_concepto_gasto'] :  null,
+			isset($_POST['nota'] ) ? $_POST['nota'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -2020,19 +2020,19 @@
   
   
 
-  class ApiEfectivoIngresoEditar extends ApiHandler {
+  class ApiCargosyabonosIngresoEditar extends ApiHandler {
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"id_ingreso" => new ApiExposedProperty("id_ingreso", true, GET, array( "int" )),
-			"descripcion" => new ApiExposedProperty("descripcion", false, GET, array( "string" )),
-			"fecha_ingreso" => new ApiExposedProperty("fecha_ingreso", false, GET, array( "string" )),
-			"folio" => new ApiExposedProperty("folio", false, GET, array( "string" )),
-			"id_concepto_ingreso" => new ApiExposedProperty("id_concepto_ingreso", false, GET, array( "int" )),
-			"nota" => new ApiExposedProperty("nota", false, GET, array( "string" )),
+			"id_ingreso" => new ApiExposedProperty("id_ingreso", true, POST, array( "int" )),
+			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "string" )),
+			"fecha_ingreso" => new ApiExposedProperty("fecha_ingreso", false, POST, array( "string" )),
+			"folio" => new ApiExposedProperty("folio", false, POST, array( "string" )),
+			"id_concepto_ingreso" => new ApiExposedProperty("id_concepto_ingreso", false, POST, array( "int" )),
+			"nota" => new ApiExposedProperty("nota", false, POST, array( "string" )),
 		);
 	}
 
@@ -2041,12 +2041,12 @@
  		$this->response = CargosYAbonosController::EditarIngreso( 
  			
 			
-			isset($_GET['id_ingreso'] ) ? $_GET['id_ingreso'] : null,
-			isset($_GET['descripcion'] ) ? $_GET['descripcion'] :  null,
-			isset($_GET['fecha_ingreso'] ) ? $_GET['fecha_ingreso'] :  null,
-			isset($_GET['folio'] ) ? $_GET['folio'] :  null,
-			isset($_GET['id_concepto_ingreso'] ) ? $_GET['id_concepto_ingreso'] :  null,
-			isset($_GET['nota'] ) ? $_GET['nota'] :  null
+			isset($_POST['id_ingreso'] ) ? $_POST['id_ingreso'] : null,
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null,
+			isset($_POST['fecha_ingreso'] ) ? $_POST['fecha_ingreso'] :  null,
+			isset($_POST['folio'] ) ? $_POST['folio'] :  null,
+			isset($_POST['id_concepto_ingreso'] ) ? $_POST['id_concepto_ingreso'] :  null,
+			isset($_POST['nota'] ) ? $_POST['nota'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -2288,17 +2288,17 @@
   
   
 
-  class ApiEfectivoGastoEliminar extends ApiHandler {
+  class ApiCargosyabonosGastoEliminar extends ApiHandler {
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"id_gasto" => new ApiExposedProperty("id_gasto", true, GET, array( "int" )),
-			"billetes" => new ApiExposedProperty("billetes", false, GET, array( "json" )),
-			"id_caja" => new ApiExposedProperty("id_caja", false, GET, array( "int" )),
-			"motivo_cancelacion" => new ApiExposedProperty("motivo_cancelacion", false, GET, array( "string" )),
+			"id_gasto" => new ApiExposedProperty("id_gasto", true, POST, array( "int" )),
+			"billetes" => new ApiExposedProperty("billetes", false, POST, array( "json" )),
+			"id_caja" => new ApiExposedProperty("id_caja", false, POST, array( "int" )),
+			"motivo_cancelacion" => new ApiExposedProperty("motivo_cancelacion", false, POST, array( "string" )),
 		);
 	}
 
@@ -2307,10 +2307,10 @@
  		$this->response = CargosYAbonosController::EliminarGasto( 
  			
 			
-			isset($_GET['id_gasto'] ) ? $_GET['id_gasto'] : null,
-			isset($_GET['billetes'] ) ? json_decode($_GET['billetes']) : null,
-			isset($_GET['id_caja'] ) ? $_GET['id_caja'] :  null,
-			isset($_GET['motivo_cancelacion'] ) ? $_GET['motivo_cancelacion'] :  null
+			isset($_POST['id_gasto'] ) ? $_POST['id_gasto'] : null,
+			isset($_POST['billetes'] ) ? json_decode($_POST['billetes']) : null,
+			isset($_POST['id_caja'] ) ? $_POST['id_caja'] :  null,
+			isset($_POST['motivo_cancelacion'] ) ? $_POST['motivo_cancelacion'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -2322,7 +2322,7 @@
   
   
 
-  class ApiEfectivoGastoLista extends ApiHandler {
+  class ApiCargosyabonosGastoLista extends ApiHandler {
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
@@ -2374,17 +2374,17 @@
   
   
 
-  class ApiEfectivoIngresoEliminar extends ApiHandler {
+  class ApiCargosyabonosIngresoEliminar extends ApiHandler {
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"id_ingreso" => new ApiExposedProperty("id_ingreso", true, GET, array( "int" )),
-			"billetes" => new ApiExposedProperty("billetes", false, GET, array( "json" )),
-			"id_caja" => new ApiExposedProperty("id_caja", false, GET, array( "int" )),
-			"motivo_cancelacion" => new ApiExposedProperty("motivo_cancelacion", false, GET, array( "string" )),
+			"id_ingreso" => new ApiExposedProperty("id_ingreso", true, POST, array( "int" )),
+			"billetes" => new ApiExposedProperty("billetes", false, POST, array( "json" )),
+			"id_caja" => new ApiExposedProperty("id_caja", false, POST, array( "int" )),
+			"motivo_cancelacion" => new ApiExposedProperty("motivo_cancelacion", false, POST, array( "string" )),
 		);
 	}
 
@@ -2393,10 +2393,10 @@
  		$this->response = CargosYAbonosController::EliminarIngreso( 
  			
 			
-			isset($_GET['id_ingreso'] ) ? $_GET['id_ingreso'] : null,
-			isset($_GET['billetes'] ) ? json_decode($_GET['billetes']) : null,
-			isset($_GET['id_caja'] ) ? $_GET['id_caja'] :  null,
-			isset($_GET['motivo_cancelacion'] ) ? $_GET['motivo_cancelacion'] :  null
+			isset($_POST['id_ingreso'] ) ? $_POST['id_ingreso'] : null,
+			isset($_POST['billetes'] ) ? json_decode($_POST['billetes']) : null,
+			isset($_POST['id_caja'] ) ? $_POST['id_caja'] :  null,
+			isset($_POST['motivo_cancelacion'] ) ? $_POST['motivo_cancelacion'] :  null
 			
 			);
 		}catch(Exception $e){
