@@ -29,6 +29,7 @@ var main = function ()
 			});
 	};
 	
+        store_component.render();
 
 }
 
@@ -154,3 +155,4 @@ if ( 'onhashchange' in window ) {
         
     }
 }*/
+    
