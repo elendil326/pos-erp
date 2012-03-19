@@ -287,7 +287,6 @@
  	 * @param direccion json Arreglo de direcciones de la sucursal, pueden ser direcciones de tipo fiscal, postal, de envio, etc
  	 * @param empresas json (DE ESTO ES LO QUE VEREMOS EL MARTES CON IRATZIO) Objeto que contendra los ids de las empresas a las que esta sucursal pertenece, por lo menos tiene que haber una empresa. En este JSON, opcionalmente junto con el id de la empresa, aapreceran dos campos que seran margen_utilidad y descuento, que indicaran que todos los productos de esa empresa ofrecidos en esta sucursal tendran un margen de utilidad y/o un descuento con los valores en esos campos
  	 * @param id_gerente int Id del gerente de la sucursal
- 	 * @param id_moneda int Id de la moneda base que manejaran las sucursales
  	 * @param razon_social string Razon social de la sucursal
  	 * @param saldo_a_favor float Saldo a favor de la sucursal
  	 **/
@@ -299,7 +298,6 @@
 		$direccion = null, 
 		$empresas = null, 
 		$id_gerente = null, 
-		$id_moneda = null, 
 		$razon_social = null, 
 		$saldo_a_favor = null
 	);  
@@ -347,7 +345,6 @@
  	 * @param descripcion string Descripcion de la sucursal
  	 * @param empresas json Arreglo de `id_empresa` de las empresas a las que pertenece esta sucursal.
  	 * @param id_gerente int ID del usuario que sera gerente de esta sucursal. Para que sea valido este usuario debe tener el nivel de acceso apropiado.
- 	 * @param id_moneda int Id de la moneda base que manejaran las sucursales
  	 * @param saldo_a_favor float Saldo a favor de la sucursal.
  	 * @return id_sucursal int Id autogenerado de la sucursal que se creo.
  	 **/
@@ -359,7 +356,6 @@
 		$descripcion = null, 
 		$empresas = null, 
 		$id_gerente = null, 
-		$id_moneda =  1 , 
 		$saldo_a_favor = "0"
 	);  
   

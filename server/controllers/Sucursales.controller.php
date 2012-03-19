@@ -2117,7 +2117,6 @@ require_once("interfaces/Sucursales.interface.php");
 		$descripcion = null, 
 		$empresas = null, 
 		$id_gerente = null, 
-		$id_moneda =  1 , 
 		$saldo_a_favor = 0
 	)
 	{
@@ -2193,7 +2192,6 @@ require_once("interfaces/Sucursales.interface.php");
  	 * @param direccion json Arreglo de direcciones de la sucursal, pueden ser direcciones de tipo fiscal, postal, de envo, etc. En caso de no mandar el id_direccion dentro del objeto direccion, se debe de generar una nueva direccion
  	 * @param empresas json (DE ESTO ES LO QUE VEREMOS EL MARTES CON IRATZIO) Objeto que contendra los ids de las empresas a las que esta sucursal pertenece, por lo menos tiene que haber una empresa. En este JSON, opcionalmente junto con el id de la empresa, aapreceran dos campos que seran margen_utilidad y descuento, que indicaran que todos los productos de esa empresa ofrecidos en esta sucursal tendran un margen de utilidad y/o un descuento con los valores en esos campos
  	 * @param id_gerente int Id del gerente de la sucursal
- 	 * @param id_moneda int Id de la moneda base que manejaran las sucursales
  	 * @param razon_social string Razon social de la sucursal
  	 * @param saldo_a_favor float Saldo a favor de la sucursal
  	 **/
@@ -2205,7 +2203,6 @@ require_once("interfaces/Sucursales.interface.php");
 		$direccion = null, 
 		$empresas = null, 
 		$id_gerente = null, 
-		$id_moneda = null, 
 		$razon_social = null, 
 		$saldo_a_favor = null
 	)
@@ -2388,22 +2385,7 @@ require_once("interfaces/Sucursales.interface.php");
             if(!is_null($saldo_a_favor))
             {
                 $sucursal->setSaldoAFavor($saldo_a_favor);
-            }            
-
-            //verificamos si cambio la moneda        
-            if(!is_null($id_moneda))
-            {
-
-                if(!$moneda = MonedaDAO::getByPK($id_moneda))
-                {
-                    Logger::error("No se tiene registro del id_moneda {$id_moneda}");
-                    throw new Exception("No se tiene registro del id_moneda {$id_moneda}");
-                }else
-                {
-                    //$sucursal->setIdMoneda($moneda->getIdMoneda());
-                }
-                
-            }
+            }                        
 
             //verificamos si cambio el gerente
             if(!is_null($id_gerente))
