@@ -1,5 +1,4 @@
 /*1315830813,169775812*/
-
 html body{background:#e7e7e7}
 
 .devsitePage{
@@ -499,9 +498,10 @@ font-weight: normal;
 }
 
 
-
-
-
+table.tabs{
+	margin-left: -21px !important;
+	
+}
 
 
 	table.tabs td{
@@ -511,6 +511,7 @@ font-weight: normal;
 		border:0px !important;
 		margin:0px;
 		padding:0px;
+		
 	}
 
 	table.tabs td a{
@@ -545,10 +546,11 @@ font-weight: normal;
 
 
 	table.tabs td.dummy{
+
 		color:white;
 		height: 48px;
 		background-image: url(../media/tab_a.png);
-		width:200px;
+		width:700px;
 	}
 
 	table.tabs td.dummy:hover{
