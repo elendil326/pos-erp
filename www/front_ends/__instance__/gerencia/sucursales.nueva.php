@@ -18,7 +18,7 @@
 
 
 	$form->makeObligatory(array("razon_social" ));
-
+	$form->setType("fecha_apertura","date");
 	$add_form = new DAOFormComponent( new Direccion() );
 
 	$js = "(function(){

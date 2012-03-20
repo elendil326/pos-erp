@@ -2117,9 +2117,10 @@ require_once("interfaces/Sucursales.interface.php");
 		$descripcion = null, 
 		$empresas = null, 
 		$id_gerente = null, 
-		$saldo_a_favor = 0
+		$saldo_a_favor = null
 	)
 	{
+
             Logger::log("Creando nueva sucursal `$razon_social` ...");
 
 
@@ -2128,9 +2129,7 @@ require_once("interfaces/Sucursales.interface.php");
 				Logger::log( "Ya existe una sucursal con el mismo nombre" );
                 throw new BusinessLogicException("Ya existe una sucursal con el mismo nombre");
             }            
-            
-
-
+           
             //Se inicializa el objeto sucursal con los parametros obtenidos
             $sucursal=new Sucursal();
             $sucursal->setActiva		($activo);
@@ -2138,7 +2137,7 @@ require_once("interfaces/Sucursales.interface.php");
             $sucursal->setSaldoAFavor	($saldo_a_favor);
             $sucursal->setIdGerente		($id_gerente);
             $sucursal->setDescripcion	($descripcion);
-
+			
             $sucursal->setFechaApertura	( date("Y-m-d H:i:s",time()) );
 
             DAO::transBegin();
@@ -2165,7 +2164,7 @@ require_once("interfaces/Sucursales.interface.php");
 				}
 
                 SucursalDAO::save($sucursal);
-
+				
             }catch(Exception $e){
 	
                 DAO::transRollback();
@@ -2239,145 +2238,99 @@ require_once("interfaces/Sucursales.interface.php");
 
 
 
-                    $_direccion = new Direccion($direccion);
+           		$_direccion = new Direccion($direccion);
 
-                    $d = DireccionDAO::getByPK( $sucursal->getIdDireccion() ); 
+                $d = DireccionDAO::getByPK( $sucursal->getIdDireccion() ); 
 
 
-                    //verificamos si se va a editar una direccion o se va a crear una nueva
-                    if( isset($d->id_direccion) ){
+                //verificamos si se va a editar una direccion o se va a crear una nueva
+                if( isset($d->id_direccion) ){
 
-                        //se edita la direccion
-                        if( !$_direccion = DireccionDAO::getByPK( $d->id_direccion ) ){
-                            DAO::transRollback();
-                            Logger::error("No se tiene registro de la dirección con id : {$direccion->id_direccion}");
-                            throw new InvalidDataException("No se tiene registro de la dirección con id : {$direccion->id_direccion}");
-                        }
-                            
-                        //bandera que indica si cambia algun parametro de la direccion
-                        $cambio_direccion = false;
-                            
-                        //calle
-                        if( isset( $d->calle ) ){
-                            $cambio_direccion = true;
-                            $_direccion->setCalle( $direccion->calle );
-                        }
-                            
-                        //numero_exterior
-                        if( isset( $d->numero_exterior ) ){
-                            $cambio_direccion = true;
-                            $_direccion->setNumeroExterior( $direccion->numero_exterior );
-                        }
-                            
-                        //numero_interior
-                        if( isset( $d->numero_interior ) ){
-                            $cambio_direccion = true;
-                            $_direccion->setNumeroInterior( $direccion->numero_interior );
-                        }
-                            
-                        //referencia
-                        if( isset( $d->referencia ) ){
-                            $cambio_direccion = true;
-                            $_direccion->setReferencia( $direccion->referencia );
-                        }
-                            
-                        //colonia
-                        if( isset( $d->colonia ) ){
-                            $cambio_direccion = true;
-                            $_direccion->setColonia( $direccion->colonia );
-                        }
-                            
-                        //id_ciudad
-                        if( isset( $d->id_ciudad ) ){
-                            $cambio_direccion = true;
-                            $_direccion->setIdCiudad( $direccion->id_ciudad );
-                        }
-                            
-                        //codigo_postal
-                        if( isset( $d->codigo_postal ) ){
-                            $cambio_direccion = true;
-                            $_direccion->setCodigoPostal( $direccion->codigo_postal );
-                        }
-                            
-                        //telefono
-                        if( isset( $d->telefono ) ){
-                            $cambio_direccion = true;
-                            $_direccion->setTelefono( $direccion->telefono );
-                        }
-                            
-                        //telefono2
-                        if( isset( $d->telefono2 ) ){
-                            $cambio_direccion = true;
-                            $_direccion->setTelefono2( $direccion->telefono2 );
-                        }
+                	//se edita la direccion
+                	if( !$_direccion = DireccionDAO::getByPK( $d->id_direccion ) ){
+                    	DAO::transRollback();
+                    	Logger::error("No se tiene registro de la dirección con id : {$direccion->id_direccion}");
+                        throw new InvalidDataException("No se tiene registro de la dirección con id : {$direccion->id_direccion}");
+                 	}
+                    $_direccion->setIdDireccion($d->id_direccion);
 
-                        //Si cambio algun parametro de direccion, se actualiza el usuario que modifica y la fecha
-                        if($cambio_direccion)
-                        {
-                             
-                            $_direccion->setUltimaModificacion(date("Y-m-d H:i:s",time()));
-
-                            $id_usuario=SesionController::getCurrentUser();
-                                
-                            if(is_null($id_usuario))
-                            {
-                                DAO::transRollback();
-                                Logger::error("No se pudo obtener al usuario de la sesion, ya inicio sesion?");
-                                throw new Exception("No se pudo obtener al usuario de la sesion, ya inicio sesion?");
-                            }
-
-                            $_direccion->setIdUsuarioUltimaModificacion($id_usuario);                                
-
-                                           
-
-                    }else{
+                 	//bandera que indica si cambia algun parametro de la direccion
+                    $cambio_direccion = false;
                             
-                        //se crea una nueva direccion
-                        
-                        $id_usuario=SesionController::getCurrentUser();
-                                
-                        if(is_null($id_usuario))
-                        {
-                            DAO::transRollback();
-                            Logger::error("No se pudo obtener al usuario de la sesion, ya inicio sesion?");
-                            throw new Exception("No se pudo obtener al usuario de la sesion, ya inicio sesion?");
-                        }
+                    //calle
+                    if( isset( $d->calle ) ){
+                    	$cambio_direccion = true;
+                        $_direccion->setCalle( $direccion['calle'] );
+                 	}
+                            
+                  	//numero_exterior
+                    if( isset( $d->numero_exterior ) ){
+                    	$cambio_direccion = true;
+                        $_direccion->setNumeroExterior( $direccion['numero_exterior'] );
+                	}
+                            
+                	//numero_interior
+                	if( isset( $d->numero_interior ) ){
+                    	$cambio_direccion = true;
+                        $_direccion->setNumeroInterior( $direccion['numero_interior'] );
+                	}
+                            
+                	//referencia
+                    if( isset( $d->referencia ) ){
+                    	$cambio_direccion = true;
+                        $_direccion->setReferencia( $direccion['referencia'] );
+                 	}
+                            
+                 	//colonia
+                 	if( isset( $d->colonia ) ){
+                    	$cambio_direccion = true;
+                    	$_direccion->setColonia( $direccion['colonia'] );
+                	}
+                            
+                    //id_ciudad
+                    if( isset( $d->id_ciudad ) ){
+                    	$cambio_direccion = true;
+                        $_direccion->setIdCiudad( $direccion['id_ciudad'] );
+                  	}
+                            
+                  	//codigo_postal
+                  	if( isset( $d->codigo_postal ) ){
+                    	$cambio_direccion = true;
+                        $_direccion->setCodigoPostal( $direccion['codigo_postal'] );
+                 	}
+                            
+                 	//telefono
+                 	if( isset( $d->telefono ) ){
+                    	$cambio_direccion = true;
+                       	$_direccion->setTelefono( $direccion['telefono1'] );
+               		}
+                            
+               		//telefono2
+               		if( isset( $d->telefono2 ) ){
+                    	$cambio_direccion = true;
+                        $_direccion->setTelefono2( $direccion['telefono2'] );
+               		}
 
-                        $_direccion = new Direccion(array(
-                            "calle" 			=> isset($d->calle)				?$d->calle : "",
-                            "numero_exterior" 	=> isset($d->numero_exterior)	?$d->numero_exterior : "",
-                            "numero_interior" 	=> isset($d->numero_interior)	?$d->numero_interior : "",
-                            "referencia" 		=> isset($d->referencia)		?$d->referencia : "",
-                            "colonia" 			=> isset($d->colonia)			?$d->colonia : "",
-                            "id_ciudad" 		=> isset($d->id_ciudad)			?$d->id_ciudad : "",
-                            "codigo_postal" 	=> isset($d->codigo_postal)		?$d->codigo_postal : "",
-                            "telefono" 			=> isset($d->telefono)			?$d->telefono2 : "",
-                            "telefono2" 		=> isset($d->telefono2)			?$d->telefono2 : "",
-                            "ultima_modificacion" => date("Y-m-d H:i:s",time()),
-                            "id_usuario_ultima_modificacion" => $id_usuario
-                        ));                        
-                        
+               		//Si cambio algun parametro de direccion, se actualiza el usuario que modifica y la fecha
+                	if($cambio_direccion)
+                    {
+						DireccionController::EditarDireccion($_direccion );
+                  	}
+					else{
+                                                
+                    	DireccionController::NuevaDireccion(
+															$calle = isset($d->calle)				?$d->calle : "",
+															$numero_exterior = isset($d->numero_exterior)	?$d->numero_exterior : "",
+															$colonia = isset($d->colonia)			?$d->colonia : "",
+															$id_ciudad = isset($d->id_ciudad)			?$d->id_ciudad : "",
+															$codigo_postal = isset($d->codigo_postal)		?$d->codigo_postal : "",
+															$numero_interior = isset($d->numero_interior)	?$d->numero_interior : "",
+															$referencia = isset($d->referencia)		?$d->referencia : "",
+															$telefono = isset($d->telefono)			?$d->telefono : "",
+															$telefono2=  isset($d->telefono2)			?$d->telefono2 : ""
+															);
                     }
-                        
-                    //guardamos la direccion
-
-                    try{
-						Logger::log("Salvando direccion...");
-                        DireccionDAO::save($_direccion);
-
-                    }catch(Exception $e){
-                        DAO::transRollback();
-                        Logger::error("No se pudo guardar la direccion ".$e);
-                        if($e->getCode()==901){
-							throw new Exception("Error al guardar direccion de la sucursal {$sucursal->getRazonSocial()}: ".$e->getMessage(),901);
-						}
-                            
-                        throw new Exception("Error al guardar direccion de la sucursal {$sucursal->getRazonSocial()}",901);
-                    }
-
                 }
-               
-
             }// !is_null
             
 

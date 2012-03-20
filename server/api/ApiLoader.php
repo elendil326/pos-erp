@@ -2663,7 +2663,6 @@
 			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "string" )),
 			"empresas" => new ApiExposedProperty("empresas", false, POST, array( "json" )),
 			"id_gerente" => new ApiExposedProperty("id_gerente", false, POST, array( "int" )),
-			"id_moneda" => new ApiExposedProperty("id_moneda", false, POST, array( "int" )),
 			"saldo_a_favor" => new ApiExposedProperty("saldo_a_favor", false, POST, array( "float" )),
 		);
 	}
@@ -2679,7 +2678,6 @@
 			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null,
 			isset($_POST['empresas'] ) ? json_decode($_POST['empresas']) : null,
 			isset($_POST['id_gerente'] ) ? $_POST['id_gerente'] :  null,
-			isset($_POST['id_moneda'] ) ? $_POST['id_moneda'] :  1 ,
 			isset($_POST['saldo_a_favor'] ) ? $_POST['saldo_a_favor'] :  "0"
 			
 			);
@@ -2705,7 +2703,6 @@
 			"direccion" => new ApiExposedProperty("direccion", false, GET, array( "json" )),
 			"empresas" => new ApiExposedProperty("empresas", false, GET, array( "json" )),
 			"id_gerente" => new ApiExposedProperty("id_gerente", false, GET, array( "int" )),
-			"id_moneda" => new ApiExposedProperty("id_moneda", false, GET, array( "int" )),
 			"razon_social" => new ApiExposedProperty("razon_social", false, GET, array( "string" )),
 			"saldo_a_favor" => new ApiExposedProperty("saldo_a_favor", false, GET, array( "float" )),
 		);
@@ -2722,7 +2719,6 @@
 			isset($_GET['direccion'] ) ? json_decode($_GET['direccion']) : null,
 			isset($_GET['empresas'] ) ? json_decode($_GET['empresas']) : null,
 			isset($_GET['id_gerente'] ) ? $_GET['id_gerente'] :  null,
-			isset($_GET['id_moneda'] ) ? $_GET['id_moneda'] :  null,
 			isset($_GET['razon_social'] ) ? $_GET['razon_social'] :  null,
 			isset($_GET['saldo_a_favor'] ) ? $_GET['saldo_a_favor'] :  null
 			

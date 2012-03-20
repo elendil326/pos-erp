@@ -47,7 +47,8 @@
 		"numero_exterior",
 		"colonia",
 		"codigo_postal",
-		"calle"
+		"calle",
+		"id_ciudad"
 	));
 	
 	$add_form = new DAOFormComponent( $esta_direccion );

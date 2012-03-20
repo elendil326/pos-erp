@@ -26,12 +26,12 @@
 	$form = new DAOFormComponent($esta_sucursal);
 
 	$form->hideField( array( "id_sucursal", "rfc", "id_direccion", "activa", "fecha_baja", "id_gerente" ));
-
+	
 
 	$form->makeObligatory(array("razon_social" ));
-
+	
 	$add_form = new DAOFormComponent( $esta_direccion );
-
+	
 	$js = "(function(){
 				POS.API.GET(\"api/sucursal/editar/\",{
 					id_sucursal		: " .  $_GET['sid'] . ",
@@ -56,7 +56,7 @@
 					window.location = \"sucursales.ver.php?sid=\"+ " .  $_GET['sid'] . ";
 				}});
 			})()";
-
+	
 	$page->addComponent( $form );
 
 	$page->addComponent(new TitleComponent("Direccion", 3));
@@ -67,7 +67,8 @@
 				"ultima_modificacion",
 				"id_usuario_ultima_modificacion"	));
 			
-	$add_form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll() );
+	$add_form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll() );		
+
 	$add_form->renameField( array( 
 		"id_ciudad" => "ciudad",
 	));
