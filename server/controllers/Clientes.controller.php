@@ -1,4 +1,5 @@
 <?php
+
 require_once("interfaces/Clientes.interface.php");
 /**
   *
@@ -1017,7 +1018,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 			$query = null, 
 			$start = 0
         )
-        {
+	{
 	
 		if(!is_null($id_usuario)){
 			Logger::log("Buscando cliente por id, id = $id_usuario");
@@ -1030,6 +1031,27 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 		}
 		
 		$resultados = UsuarioDAO::buscarClientes( $query );
+		
+		for($i = 0; $i < sizeof($resultados); $i++){
+			
+			$resultados[$i] = $resultados[$i]->asArray();
+			
+			if(!is_null($resultados[$i]["id_direccion"]))
+				$resultados[$i]["direccion"] = DireccionDAO::getByPK($resultados[$i]["id_direccion"]);
+			else
+				$resultados[$i]["direccion"] = new Direccion();
+			
+
+			$resultados[$i]["direccion"] = $resultados[$i]["direccion"]->asArray();
+
+				
+			unset($resultados[$i]["password"]);
+	        unset($resultados[$i]["id_direccion"]);
+	        unset($resultados[$i]["id_direccion_alterna"]);
+	
+			
+		}
+		
 		return array( 
 			"resultados" => $resultados ,
 			"numero_de_resultados" => sizeof($resultados)
