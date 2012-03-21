@@ -20,7 +20,8 @@
 	$form = new DAOFormComponent( $esta_moneda );
 	
 	$form->hideField( array( 
-			"id_moneda"
+			"id_moneda",
+			"activa"
 		 ));
         $form->sendHidden("id_moneda");
 

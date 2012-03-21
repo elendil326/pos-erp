@@ -9,15 +9,14 @@
 	$page = new GerenciaComponentPage();
 
 	//titulos
-	$page->addComponent(new TitleComponent("Nuevo tipo de almacen"));
-	$a = AlmacenesController::Buscar();
+	$page->addComponent(new TitleComponent("Tipos de almacen"));
+	$a = AlmacenesController::BuscarTipo();
 	$tabla = new TableComponent(array(
-	    "id_tipo_almacen" => "Tipo de Almacen",
-	    "descripcion" => "descripcion"
+	    "descripcion" => "Descripcion"
 	), $a["resultados"]);
 
+	
 	$tabla->addOnClick("id_tipo_almacen", "(function(a){window.location = 'sucursales.tipo_almacen.ver.php?tid='+a;})");
-
 	$page->addComponent($tabla);
 
 

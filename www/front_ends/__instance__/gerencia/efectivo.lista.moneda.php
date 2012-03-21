@@ -14,8 +14,7 @@
 		$tabla = new TableComponent( 
 			array(
                                 "nombre"                => "Nombre",
-				"simbolo"               => "Simbolo",
-				"activa"               	=> "Activa"
+				"simbolo"               => "Simbolo"
 			),
 			EfectivoController::ListaMoneda()
 		);

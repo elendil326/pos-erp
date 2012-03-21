@@ -64,6 +64,7 @@
 		//$form->setEditable(false);		
 		$form->hideField( array( 
 				"id_billete",
+				"activo"
 			 ));
 //		$form->makeObligatory(array( 
 //				"compra_en_mostrador",

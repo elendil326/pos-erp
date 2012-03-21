@@ -62,12 +62,13 @@
 		$form = new DAOFormComponent( $este_tipo_almacen );
 		$form->setEditable(false);	
 		$form->hideField( array( 
-				"id_tipo_almacen"
+				"id_tipo_almacen",
+				"activo"
 			 ));
 		$page->addComponent( $form );
                 
                 $page->addComponent( new TitleComponent( "Almacenes con este tipo de almacen" ) );
-
+		$r = AlmacenesController::Buscar(null, null, null, $_GET["tid"]);
 		$tabla = new TableComponent( 
 			array(
                                 "nombre" => "Nombre",
@@ -75,7 +76,7 @@
 				"id_empresa"=> "Empresa",
 				"activo"=> "Activo"
 			),
-			SucursalesController::ListaAlmacen(null, null, null, $_GET["tid"])
+			$r['resultados']
 		);
 		function funcion_sucursal( $id_sucursal )
                 {

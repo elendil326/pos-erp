@@ -2224,6 +2224,7 @@ require_once("interfaces/Sucursales.interface.php");
                 $sucursal->setRazonSocial(trim($razon_social));
             }
 
+			//lógica para manejar la edicion o agregado de una direccion
             //verificamos si se cambiaron las direcciones
             if( !is_null($direccion) )
             {
@@ -2241,8 +2242,7 @@ require_once("interfaces/Sucursales.interface.php");
            		$_direccion = new Direccion($direccion);
 
                 $d = DireccionDAO::getByPK( $sucursal->getIdDireccion() ); 
-
-
+				
                 //verificamos si se va a editar una direccion o se va a crear una nueva
                 if( isset($d->id_direccion) ){
 
@@ -2332,7 +2332,7 @@ require_once("interfaces/Sucursales.interface.php");
                     }
                 }
             }// !is_null
-            
+            //fin logica editar o agregar una direccion
 
             //verificamos si cambio el saldo a favor
             if(!is_null($saldo_a_favor))

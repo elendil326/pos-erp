@@ -22,7 +22,7 @@
                          ));
                 $form->sendHidden("id_tipo_almacen");
                 
-                $form->addApiCall( "api/sucursal/tipo_almacen/editar/" , "GET");
+                $form->addApiCall( "api/almacen/tipo/editar" , "POST");
                 $form->onApiCallSuccessRedirect("sucursales.lista.tipo_almacen.php");
 
                 

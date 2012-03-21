@@ -20,13 +20,14 @@
 	$form = new DAOFormComponent( $este_billete );
 	
 	$form->hideField( array( 
-			"id_billete"
+			"id_billete",
+			"activo"
 		 ));
         $form->sendHidden("id_billete");
 	
 	$form->addApiCall( "api/efectivo/billete/editar/", "GET" );
         $form->onApiCallSuccessRedirect("efectivo.lista.billete.php");
-	
+	$form->createComboBoxJoin("id_moneda", "nombre", MonedaDAO::getAll());
 	
 	$page->addComponent( $form );
 

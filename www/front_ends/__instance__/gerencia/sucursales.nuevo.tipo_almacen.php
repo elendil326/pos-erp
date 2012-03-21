@@ -15,7 +15,8 @@
 	$form = new DAOFormComponent( array( new TipoAlmacen() ) );
 	
 	$form->hideField( array( 
-			"id_tipo_almacen"
+			"id_tipo_almacen",
+			"activo"
 		 ));
 
 	

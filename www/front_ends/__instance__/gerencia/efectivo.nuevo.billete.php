@@ -16,7 +16,7 @@
 	
 	$form->hideField( array( 
 			"id_billete",
-                        "activo"
+         	"activo"
 		 ));
 
 

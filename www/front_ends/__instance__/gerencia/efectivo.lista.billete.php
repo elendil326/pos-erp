@@ -16,8 +16,7 @@
                                 "nombre"                => "Nombre",
 				"valor"                 => "Valor",
                                 "id_moneda"             => "Moneda",
-				"foto_billete"          => "Foto",
-				"activo"               	=> "Activo"
+				"foto_billete"          => "Foto"
 			),
 			EfectivoController::ListaBillete()
 		);

@@ -673,65 +673,6 @@ require_once("interfaces/Empresas.interface.php");
 	{
 
             Logger::log("Editando la empresa $id_empresa ....");
-
-            /*
-            //Se validan los parametros de empresa recibidos
-            $validar = self::validarParametrosEmpresa(
-								$id_empresa,
-								null,
-								$curp,
-								$rfc,
-								$razon_social,
-								$representante_legal,
-								null,
-								$direccion_web);
-			
-            if(is_string($validar))
-            {
-                Logger::error($validar);
-                throw new Exception($validar,901);
-            }
-            */
-
-            //Se validan los parametros de direccion recibidos
-			/*
-			$params = array(
-				"calle" 			=> $calle,
-				"numero_exterior" => $numero_exterior,
-				"numoro_interno" => $numero_interno,
-				"texto_extra"	=> $texto_extra,
-				"colonia"		=> $colonia,
-				"ciudad"		=> $ciudad,
-				"codigo_postal"	=> $codigo_postal,
-				"telefono1"		=> $telefono1,
-				"telefono2"		=> $telefono2
-				
-			);
-
-			$addr = new Direccion($params);
-			
-			
-			if(!DireccionController::validarDireccion( $addr)){
-				throw new InvalidDataException("datos de direccion invalidos");
-			}
-			*/
-			
-			/*
-            $validar = DireccionController::validarParametrosDireccion(null,
-																		$calle,
-																		$numero_exterior,
-																		$numero_interno,
-																		$texto_extra,
-																		$colonia,
-																		$ciudad,
-																		$codigo_postal,
-																		$telefono1,
-																		$telefono2);
-            
-			*/
-			//var_dump($direccion);
-			$direccion = object_to_array($direccion);
-			$direccion = $direccion[0];
 			            
             //se guarda el registro de la empresa y se verifica que este activa
             $empresa = EmpresaDAO::getByPK( $id_empresa );
@@ -744,115 +685,122 @@ require_once("interfaces/Empresas.interface.php");
             }
             
 
-            //se guarda el registro de la direccion perteneciente a esta empresa
-			Logger::log("obteniendo direccion " . $empresa->getIdDireccion() . "...");
-            $direccion_obj = DireccionDAO::getByPK( $empresa->getIdDireccion() );
-
-            if(is_null($direccion_obj)){
-                Logger::error("FATAL!!! La empresa no cuenta con una direccion");
-                throw new Exception("FATAL!!! La empresa no cuenta con una direccion", 901);
-            }
-            
-            //bandera para saber si se modifico algun campo de la direccion
-            $modificar_direccion = false;
-            
-            //se evaluan los parametros. Los que no sean nulos seran tomados com oactualizacion
-            if(isset($direccion_web) && !is_null($direccion_web)){
-                $empresa->setDireccionWeb($direccion_web);
-            }
-
-            if(!is_null($razon_social)){
-				Logger::log("razon_social changed ...");
-                $empresa->setRazonSocial($razon_social);
-            }
-
-            /*if(!is_null($cedula)){
-                $empresa->setCedula($cedula);
-            }*/
-
-            if(!is_null($rfc)){
-				Logger::log("rfc changed ...");	
-                $empresa->setRfc($rfc);
-            }
-
-
-            if(array_key_exists( "codigo_postal", $direccion  )){
-				Logger::log("codigo_postal changed ...");	
-                $direccion_obj->setCodigoPostal($direccion["codigo_postal"]);
-                $modificar_direccion = true;
-            }
-
-            if(array_key_exists(  "calle", $direccion  )){
-				Logger::log("calle changed ...");	
-                $direccion_obj->setCalle($direccion["calle"]);
-                $modificar_direccion=true;
-            }
-
-            if(array_key_exists( "numero_interior", $direccion  )){
-				Logger::log("numero_interno changed ...");	
-                $direccion_obj->setNumeroInterior($direccion["numero_interior"]);
-                $modificar_direccion=true;
-            }
-
-            if(!is_null($representante_legal)){
-				Logger::log("changed ...");	
-                $empresa->setRepresentanteLegal($representante_legal);
-            }
-
-            if(array_key_exists("telefono1" , $direccion)){
-				Logger::log("changed ...");	
-                $direccion_obj->setTelefono($direccion["telefono1"]);
-                $modificar_direccion=true;
-            }
-
-            if(array_key_exists(  "numero_exterior" , $direccion )){
-				Logger::log("changed ...");	
-                $direccion_obj->setNumeroExterior($direccion["numero_exterior"]);
-                $modificar_direccion=true;
-            }
-
-            if(array_key_exists( "colonia" , $direccion )){
-				Logger::log("colonia changed ...");	
-                $direccion_obj->setColonia($direccion["colonia"]);
-                $modificar_direccion=true;
-            }
-
-            if(array_key_exists(  "telefono2" , $direccion )){
-				Logger::log("changed ...");	
-                $direccion_obj->setTelefono2($direccion["telefono2"]);
-                $modificar_direccion=true;
-            }
-
-            if(array_key_exists( "referencia"  , $direccion)){
-				Logger::log("changed ...");	
-                $direccion_obj->setReferencia($direccion["referencia"]);
-                $modificar_direccion=true;
-            }
-
-
-            //Si se cambio algun campo de la direccion se actualiza el campo ultima modificacion
-            //y se toma al usuario de la sesion.
-            if($modificar_direccion)
+            //lógica para manejar la edicion o agregado de una direccion
+            //verificamos si se cambiaron las direcciones
+            if( !is_null($direccion) )
             {
-                $direccion_obj->setUltimaModificacion(date("Y-m-d H:i:s",time()));
+            	Logger::log("	Editando direccion ...");
 
-                $id_usuario = SesionController::getCurrentUser( );
-
-                if(is_null($id_usuario)){
-                    Logger::error("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
-                    throw new Exception("No se pudo obtener el usuario de la sesion, ya inicio sesion?",901);
+ 
+                if( !is_array( $direccion ) ){
+                    //Logger::error("Verifique el formato de los datos de las direcciones, se esperaba un array ");
+                    //throw new Exception("Verifique el formato de los datos de las empresas, se esperaba un array ");
+					$direccion = object_to_array($direccion);
+					
                 }
-            }
+
+           		$_direccion = new Direccion($direccion);
+
+                $d = DireccionDAO::getByPK( $empresa->getIdDireccion() ); 
+				
+                //verificamos si se va a editar una direccion o se va a crear una nueva
+                if( isset($d->id_direccion) ){
+
+                	//se edita la direccion
+                	if( !$_direccion = DireccionDAO::getByPK( $d->id_direccion ) ){
+                    	DAO::transRollback();
+                    	Logger::error("No se tiene registro de la dirección con id : {$direccion->id_direccion}");
+                        throw new InvalidDataException("No se tiene registro de la dirección con id : {$direccion->id_direccion}");
+                 	}
+                    $_direccion->setIdDireccion($d->id_direccion);
+
+                 	//bandera que indica si cambia algun parametro de la direccion
+                    $cambio_direccion = false;
+                      
+                    //calle
+                    if( isset( $d->calle ) ){
+                    	$cambio_direccion = true;
+                        $_direccion->setCalle( $direccion['calle'] );
+                 	}
+                            
+                  	//numero_exterior
+                    if( isset( $d->numero_exterior ) ){
+                    	$cambio_direccion = true;
+                        $_direccion->setNumeroExterior( $direccion['numero_exterior'] );
+                	}
+                            
+                	//numero_interior
+                	if( isset( $d->numero_interior ) ){
+                    	$cambio_direccion = true;
+                        $_direccion->setNumeroInterior( $direccion['numero_interior'] );
+                	}
+                            
+                	//referencia
+                    if( isset( $d->referencia ) ){
+                    	$cambio_direccion = true;
+                        $_direccion->setReferencia( $direccion['referencia'] );
+                 	}
+                            
+                 	//colonia
+                 	if( isset( $d->colonia ) ){
+                    	$cambio_direccion = true;
+                    	$_direccion->setColonia( $direccion['colonia'] );
+                	}
+                            
+                    //id_ciudad
+                    if( isset( $d->id_ciudad ) ){
+                    	$cambio_direccion = true;
+                        $_direccion->setIdCiudad( $direccion['id_ciudad'] );
+                  	}
+                            
+                  	//codigo_postal
+                  	if( isset( $d->codigo_postal ) ){
+                    	$cambio_direccion = true;
+                        $_direccion->setCodigoPostal( $direccion['codigo_postal'] );
+                 	}
+                            
+                 	//telefono
+                 	if( isset( $d->telefono ) ){
+                    	$cambio_direccion = true;
+                       	$_direccion->setTelefono( $direccion['telefono1'] );
+               		}
+                            
+               		//telefono2
+               		if( isset( $d->telefono2 ) ){
+                    	$cambio_direccion = true;
+                        $_direccion->setTelefono2( $direccion['telefono2'] );
+               		}
+
+               		//Si cambio algun parametro de direccion, se actualiza el usuario que modifica y la fecha
+                	if($cambio_direccion)
+                    {
+						DireccionController::EditarDireccion($_direccion );
+                  	}
+					else{
+                                                
+                    	DireccionController::NuevaDireccion(
+															$calle = isset($d->calle)				?$d->calle : "",
+															$numero_exterior = isset($d->numero_exterior)	?$d->numero_exterior : "",
+															$colonia = isset($d->colonia)			?$d->colonia : "",
+															$id_ciudad = isset($d->id_ciudad)			?$d->id_ciudad : "",
+															$codigo_postal = isset($d->codigo_postal)		?$d->codigo_postal : "",
+															$numero_interior = isset($d->numero_interior)	?$d->numero_interior : "",
+															$referencia = isset($d->referencia)		?$d->referencia : "",
+															$telefono = isset($d->telefono)			?$d->telefono : "",
+															$telefono2=  isset($d->telefono2)			?$d->telefono2 : ""
+															);
+                    }
+                }
+            }// !is_null
+            //fin logica editar o agregar una direccion
             
             DAO::transBegin();
             try
             {
-                //Se guardan los cambios hechos en la empresa y en su direccion
+                //Se guardan los cambios hechos en la empresa
                 EmpresaDAO::save($empresa);
 			
-                DireccionDAO::save($direccion_obj);
-                
-                //Si se obtiene el parametro impuestos se buscan los impuestos actuales de la empresa.
+              	//Si se obtiene el parametro impuestos se buscan los impuestos actuales de la empresa.
                 //Por cada impuesto recibido, se verifica que el impuesto exista y se almacena en la tabla
                 //impuesto_empresa. Si esta relacion ya existe solo se actualizara.
                 //

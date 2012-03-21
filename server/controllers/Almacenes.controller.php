@@ -33,12 +33,12 @@ class AlmacenesController extends ValidacionesController implements IAlmacenes{
 				)
 			));
 		
-		
 		if(!is_null($id_sucursal)){
 			return array("resultados" => $almacenes, "numero_de_resultados" => sizeof($almacenes));
 		}
 		
 		$almacenes=AlmacenDAO::getAll();
+
         return array("resultados" => $almacenes, "numero_de_resultados" => sizeof($almacenes));
 
 		/*

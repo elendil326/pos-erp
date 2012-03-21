@@ -60,7 +60,7 @@
 					razon_social 	: Ext.get(\"".$form->getGuiComponentId()."razon_social\").getValue(),
 					representante_legal : Ext.get(\"".$form->getGuiComponentId()."representante_legal\").getValue(),
 					id_moneda 		: 1,
-					direccion : Ext.JSON.encode([{
+					direccion : Ext.JSON.encode({
 						 	calle			: Ext.get(\"".$add_form->getGuiComponentId()."calle\").getValue(),
 							numero_exterior	: Ext.get(\"".$add_form->getGuiComponentId()."numero_exterior\").getValue(),
 						    numero_interior	: Ext.get(\"".$add_form->getGuiComponentId()."numero_interior\").getValue(),
@@ -70,7 +70,7 @@
 						    telefono2		: Ext.get(\"".$add_form->getGuiComponentId()."telefono2\").getValue(),
 						    id_ciudad		: Ext.get(\"".$add_form->getGuiComponentId()."ciudad\").getValue(),
 						    referencia		: Ext.get(\"".$add_form->getGuiComponentId()."referencia\").getValue()
-					}])
+					})
 				},{ callback : function(a,b){
 					window.onbeforeunload = function(){ return;	};
 					window.location = \"empresas.ver.php?eid=\"+ " .  $_GET['eid'] . ";
