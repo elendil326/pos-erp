@@ -91,8 +91,8 @@ public class Dispatcher{
 			{
 				
 				if( args[i].startsWith("path=") ){
-					path 	= args[i].substring( args[i].indexOf("=") +1);
-					System.out.println("found `path` = " + path);
+					path 	= URLDecoder.decode(args[i].substring( args[i].indexOf("=") +1));
+					Logger.log("found `path` = " + path);
 				}
 
 
@@ -100,17 +100,19 @@ public class Dispatcher{
 					sql 	= URLDecoder.decode(args[i].substring( args[i].indexOf("=") +1));
 					
 					//remove url decoding
-					System.out.println("found `sql` = " + sql);
+					Logger.log("found `sql` = " + sql);
 					
 				}
 
 			}
 
 			if(path == null){
+				Logger.warn("Falto el path a los archivos del admin.");
 				return callback + "({\"success\": false,  \"response\" : \"Falto el path a los archivos del admin.\"});";
 			}
 
 			if(sql == null){
+				Logger.warn("No enviaste la consulta sql.");
 				return callback + "({\"success\": false,  \"response\" : \"No enviaste la consulta sql.\"});";
 			}
 
@@ -286,11 +288,11 @@ public class Dispatcher{
 				return callback + "({\"success\": true, \"reading\" : \""+ rawValue +"\"});";
 				
 			}catch(java.lang.UnsatisfiedLinkError usle){
-				Logger.error(usle);	
+				Logger.error("BASCULA:" +usle);	
 				return callback + "({\"success\": false, \"reason\" : \"Imposible cargar las librerias para este sistema operativo.\"});";
 				
 			}catch(Exception e){
-				Logger.error(e);					
+				Logger.error("BASCULA:" + e);					
 				return callback + "({\"success\": false, \"reason\" : \"La bascula no responde, revise que este conectada correctamente\"});";			
 				
 			}

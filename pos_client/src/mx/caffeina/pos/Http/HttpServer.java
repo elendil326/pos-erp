@@ -163,7 +163,7 @@ public class HttpServer
 				
 
             }catch(Exception e){ 
-				Logger.error(e);
+				Logger.error("HttpServer:" + e);
 				
             }finally{ 
 	
@@ -175,8 +175,8 @@ public class HttpServer
                     Logger.log("closing server socket..."); 
 					
                 }catch(IOException ioe){ 
-					Logger.error(ioe);
-					
+					Logger.error("while closing socket:"+ioe);
+					 
                 }
             } 
 

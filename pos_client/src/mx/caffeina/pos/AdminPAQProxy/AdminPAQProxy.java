@@ -3,6 +3,9 @@ package mx.caffeina.pos.AdminPAQProxy;
 import java.io.*;
 import com.linuxense.javadbf.*;
 import java.util.ArrayList;
+import mx.caffeina.pos.*;
+
+
 
 public class AdminPAQProxy{
 
@@ -42,7 +45,7 @@ public class AdminPAQProxy{
 
 	
 	public String query(String sql ){
-
+		Logger.log("doing query:" + sql);
 		String [] sql_tokens = sql.trim().split( " " );
 
 		//buscar el from
@@ -80,9 +83,11 @@ public class AdminPAQProxy{
 		}catch( DBFException dbfe ){
 			System.out.println( "E3:" + dbfe );
 
+		}catch(NullPointerException npe){
+			Logger.error("ADMINPAQPROXY:"+npe);
 		}
 
-		String fieldNames [] = new String[ numberOfFields ];
+		//String fieldNames [] = new String[ numberOfFields ];
 
 		for( int i=0; i<numberOfFields; i++) {
 
@@ -127,17 +132,25 @@ public class AdminPAQProxy{
 
 			if(cRecord > 1) output.append(", ");
 			
-			output.append("[");
+			output.append("{");
 
 			for( int i=0; i<rowObjects.length; i++) {
-				if(i>0)
+				if(i>0){
 					output.append(", ");
+				}
+					
+				try{
+					output.append( "\""+reader.getField( i).getName( ) + "\"" + ": \"" + rowObjects[i] + "\" ");	
+					
+				}catch(DBFException dbfe){
+					Logger.error("While reading record " + i + ":" + dbfe );
+					
+				}
 
-				output.append("\"" + rowObjects[i] + "\" ");	
 
 			}
 
-			output.append( "]"); 			
+			output.append( "}"); 			
 		}	
 
 		output.append("]}");
