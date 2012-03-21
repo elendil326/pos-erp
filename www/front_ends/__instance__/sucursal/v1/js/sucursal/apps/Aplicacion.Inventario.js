@@ -135,6 +135,7 @@ Aplicacion.Inventario.prototype.cargarInventario = function ()
 				inventario = Ext.util.JSON.decode( response.responseText );
 				inventario2 = Ext.util.JSON.decode( response.responseText );					
 			}catch(e){
+				console.error(e);
 				return POS.error(response, e);
 			}
 
@@ -241,7 +242,10 @@ Aplicacion.Inventario.crearHtmlDeInventario = function (){
 		+ 		"<td></td>"				
 		+ 	"</tr>";
 
-	console.log(inventario.getAt(0).data)
+	if(DEBUG){
+		console.log("Inventario:" , inventario.getAt(0).data);
+	}
+	
 	
 	for (var i=0; i < inventario.getCount(); i++) {
 		

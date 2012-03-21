@@ -249,6 +249,8 @@ switch( ((int)($args['action'] ))  )
 		
 	break;
 	case 400: 
+		var_dump( InventarioController::Existencias());
+		
 		print('{ "success": true, "hash" : "d751713988987e9331980363e24189ce" , "datos": [] }');
 	break;
 	
