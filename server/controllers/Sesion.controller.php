@@ -218,14 +218,8 @@ class SesionController implements ISesion{
 	public static function testLogin($user, $pass){
 		//Logger::log("testLogin( {$user} )");
 
-		//if( self::isLoggedIn() ) {
-		//	//Logger::log( "Ya hay una sesion activa" );
-		//	return UsuarioDAO::getByPK( $_SESSION['USER_ID'] );	
-		//}
-
 		//user is not logged in, look for him
 		$user = UsuarioDAO::findUser( $user, $pass );
-
 
 		if( $user === NULL ) {
 			//Logger::warn("No se encontro el usuario " . $user);

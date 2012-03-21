@@ -36,11 +36,6 @@ require_once( "../../../../../server/bootstrap.php" );
 define("I_AM_PROXY" ,true);
 define("WHO_AM_I" , "PROXY");
 
-if( isset($_GET['action'])  && ($_GET['action'] == 666) ){
-	var_dump($_SESSION);
-	die();
-}
-
 
 //Comprobamos que la variable que trae la funcion a ejecutar exista y despues 
 //entramos al switch.
@@ -50,6 +45,7 @@ if ( !isset($_REQUEST['action']) )
     Logger::log("Invalid method call for dispatching. No hay action en el request.");
     return;
 }
+
 
 
 //require_once('controller/login.controller.php');
@@ -108,7 +104,7 @@ if( ! (($args['action'] == 1101) || ($args['action'] == 207) )){
 
 
 //main dispatching
-//switch( ((int)($args['action'] / 100))*100 )
+Logger::log("DISPATCHING ACTION " . $args['action'] );
 switch( ((int)($args['action'] ))  )
 {
 	
@@ -327,8 +323,17 @@ switch( ((int)($args['action'] ))  )
 	case 2000:
 	
 	break;
+	
 	case 2001:
-		print(  '{"success":true, "sesion":true }' );
+		print(  '{"success":true, "sesion": false }' );
+	break;
+	
+	case 2004:
+		//revisar login
+		$token = SesionController::Iniciar( $args["p"], $args["u"], true);
+		echo json_encode(array("success"=>$token["login_succesful"], "text" => "Credenciales invalidas"));
+
+
 	break;
 	
 	case 2005:

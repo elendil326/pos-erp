@@ -1,7 +1,7 @@
 
 
 for(a = 0 ; a < POS.Apps.length; a++){
-	console.log("	sink.Structure.push( POS.Apps[ "+a+" ].getConfig() );");
+	if(DEBUG) {console.log("	sink.Structure.push( POS.Apps[ "+a+" ].getConfig() );");}
 	sink.Structure.push( POS.Apps[ a ].getConfig() );
 }
 

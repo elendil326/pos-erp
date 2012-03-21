@@ -19,7 +19,7 @@
 	<link rel="stylesheet" type="text/css" href="css/shared/Keyboard.css">
 	<link rel="stylesheet" type="text/css" href="css/shared/Tabla.css">
 	
-	<script type="text/javascript" src="js/login/start.js"></script>
+	<script type="text/javascript" src="js/login/start.js?<?php echo rand(); ?>"></script>
 	<script type="text/javascript" src="js/shared/hash.js"></script>	
 	<script type="text/javascript" src="js/shared/POS.AjaxToClient.js"></script>	
 	<script type="text/javascript" src="js/shared/POS.Keyboard.js"></script>	

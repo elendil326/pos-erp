@@ -38,7 +38,7 @@ if( document.location.search === "?debug" )
 function checkCurrentSession( clientPIN ){
 	
 	if(DEBUG){console.log("checkCurrentSession()");}
-	
+
 	Ext.getBody().mask('Validando sucursal...', 'x-mask-loading', false);
 	
 	Ext.Ajax.request({
@@ -181,6 +181,7 @@ function parseLoginResults( args )
 {
 	
 	
+	
 	if(!args.success){
 		//login invalido
 		form.getComponent(0).setInstructions(args.text);
@@ -207,11 +208,12 @@ var sendLogin = function (){
 		params : {
 			action: 2004,
 			u : Ext.getCmp("uid").getValue(),
-			p : hex_md5( Ext.getCmp("pswd").getValue() )
+			p : Ext.getCmp("pswd").getValue() 
 		},
 		success: function(response, opts) {
 
 			Ext.getBody().unmask();
+			
 			parseLoginResults( Ext.util.JSON.decode( response.responseText ) );
 			
 		}
@@ -251,7 +253,7 @@ function createLoginForm( sucursal ){
 		items: [
 			{
 				xtype: 'fieldset',
-				title: 'Bienvenido a ' + sucursal ,
+				title: 'Bienvenido' ,
 				instructions: 'Porfavor llene la informacion apropiada.',
 				defaults: {
 					required: false,
@@ -298,7 +300,7 @@ function createLoginForm( sucursal ){
 		],
 		listeners : {
 			submit : function(form, result){
-				if(DEBUG){console.log('success', Ext.toArray(result, form));}
+				if(DEBUG){ console.log('success', Ext.toArray(result, form)); }
 				return;
 			},
 			exception : function(form, result){
