@@ -306,15 +306,15 @@ class GerenciaComponentPage extends PosComponentPage{
 		        },
 		        {
 		            "title": "Tarifas",
-		            "url": "precios.lista.tarifa.php",
+		            "url": "tarifas.lista.php",
 		            "children": [
 		                {
-		                    "title": "Nueva tarifa",
-		                    "url": "precios.nueva.tarifa.php"
+		                    "title": "Listar tarifas",
+		                    "url": "tarifas.lista.php"
 		                },
-		                {
-		                    "title": "Lista de tarifas",
-		                    "url": "precios.lista.tarifa.php"
+                                {
+		                    "title": "Nueva tarifa",
+		                    "url": "tarifas.nueva.php"
 		                }
 		            ]
 		        },
