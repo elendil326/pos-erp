@@ -13,9 +13,19 @@ import org.json.simple.parser.JSONParser;
 
 public class Dispatcher{
 	
-	static String action = null, data = null, callback = null;
+	String action = null, data = null, callback = null;
 	
-	public static String dispatch( String request ){
+	
+	public String returnResponse(String r){
+		if( callback == null ){
+			return r;
+		}else{
+			return callback + "("+ r +");";
+		}
+	
+	}
+	
+	public String dispatch( String request ){
 
 		
 
@@ -47,6 +57,7 @@ public class Dispatcher{
 
 		Logger.log("Request: " + request + "");
 		Logger.log("Dispatching module " + action);
+
 		
 		
 		/**
@@ -56,11 +67,7 @@ public class Dispatcher{
 		* 
 		* */
 		if(action.equals("handshake")){
-			if(callback == null){
-				return "{\"success\": true, \"payload\": \"Hi !\" }";	
-			}else{
-				return callback + "({\"success\": true, \"payload\": \"Hi !\" });";		
-			}
+			returnResponse("{\"success\": true, \"payload\": \"Hi !\" }");
 			
 		}
 		
@@ -71,7 +78,7 @@ public class Dispatcher{
 		* 
 		* */
 		if(action.equals("Printer")){
-			return callback + ServidorImpresion.Print( data );	
+			return returnResponse(ServidorImpresion.Print( data )) ;	
 		}
 
 
@@ -106,23 +113,23 @@ public class Dispatcher{
 
 			}
 
+
+
 			if(path == null){
 				Logger.warn("Falto el path a los archivos del admin.");
-				return callback + "({\"success\": false,  \"response\" : \"Falto el path a los archivos del admin.\"});";
+				return returnResponse("{\"success\": false,  \"response\" : \"Falto el path a los archivos del admin.\"}");
 			}
 
 			if(sql == null){
 				Logger.warn("No enviaste la consulta sql.");
-				return callback + "({\"success\": false,  \"response\" : \"No enviaste la consulta sql.\"});";
+				return returnResponse("{\"success\": false,  \"response\" : \"No enviaste la consulta sql.\"}");							
 			}
 
 			AdminPAQProxy aproxy = new AdminPAQProxy(  path );
 
-			if(callback == null){
-				return ( aproxy.query(sql) );	
-			}else{
-				return callback + "("+ ( aproxy.query(sql) ) +");";		
-			}
+			
+			return returnResponse(aproxy.query(sql));
+
 		}
 
 
@@ -133,7 +140,8 @@ public class Dispatcher{
 		* 
 		* */
 		if(action.equals("Impresiones")){
-			return callback + Impresiones.Print( data );	
+			return returnResponse(Impresiones.Print( data ) );
+				
 		}		
 
 		/**
@@ -144,7 +152,7 @@ public class Dispatcher{
 		* */
 		if(action.equals("networking")){
 			String response = Networking.getMacAddd( );			
-			return callback + "({\"success\": true,  \"response\" : \""+response+"\"});";			
+			return returnResponse	("{\"success\": true,  \"response\" : \""+response+"\"}");		
 		}
 
 
@@ -224,6 +232,7 @@ public class Dispatcher{
 			*   **************************** */			
 			if(read_random.equals("true")){
 				return callback + "({\"success\": true, \"reading\" : \""+ ( (int)(Math.random() * 100) ) +"KG\"});";
+				
 			}
 			
 			
@@ -304,8 +313,10 @@ public class Dispatcher{
 	}
 	
 	
-	static String returnError(){
-		return callback + "({\"success\": false, \"reason\" : \"Internal error\"});";
+	
+	String returnError(){
+		
+		return returnResponse("{\"success\": false, \"reason\" : \"Internal error\"}");
 	}
 	
 }

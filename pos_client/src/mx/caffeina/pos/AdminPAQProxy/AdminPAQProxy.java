@@ -140,8 +140,8 @@ public class AdminPAQProxy{
 				}
 					
 				try{
-					output.append( "\""+reader.getField( i).getName( ) + "\"" + ": \"" + rowObjects[i] + "\" ");	
-					
+					output.append( "\""+reader.getField( i).getName( ) + "\"" + ": \"" + String.valueOf(rowObjects[i]).replaceAll("\\p{Cntrl}", "").replaceAll("[^\\p{ASCII}]", "") + "\" ");	
+
 				}catch(DBFException dbfe){
 					Logger.error("While reading record " + i + ":" + dbfe );
 					

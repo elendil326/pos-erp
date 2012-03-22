@@ -141,8 +141,9 @@ public class HttpServer
 
 
 				//send the response
-				String response = Dispatcher.dispatch( Get_Request ); 
-				
+				Dispatcher d = new Dispatcher();
+
+				String response = d.dispatch(Get_Request);
 			
 				//send the headers
 				out.println("HTTP/1.1 200 OK");
