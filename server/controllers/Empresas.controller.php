@@ -8,7 +8,49 @@ require_once("interfaces/Empresas.interface.php");
 	
   class EmpresasController implements IEmpresas{
 
-
+		/**
+		 * 
+		 * 
+		 * */	
+		public static function flujoEfectivo( $id_empresa, $unix_fecha_inicio = null){
+			
+			if(($empresa = EmpresaDAO::getByPK($id_empresa)) == null){
+				throw new InvalidDataException("Esta empresa no existe");
+			}
+			
+			//traerme los abonos a ventas
+			$abonos = CargosYAbonosController::ListaAbono(1,1,1);
+			
+			$flujo = 0;
+			
+			$out = array();
+			
+			for ($a=0; $a < $abonos["numero_de_resultados"]; $a++) { 
+				
+				$flujo += $abonos["resultados"]["ventas"][$a]->monto;
+				
+				array_push( $out, array(
+					"fecha" =>	$abonos["resultados"]["ventas"][$a]->fecha,
+					"value" => 	$flujo,
+					"tipo" 	=> 	"abono"
+				) );
+			}
+			
+			$gastos = CargosYAbonosController::ListaGasto();
+			
+			for ($a=0; $a < $gastos["numero_de_resultados"]; $a++) { 
+				$flujo -= $gastos["resultados"][$a]->monto;
+				
+				array_push( $out, array(
+					"fecha" =>	$gastos["resultados"][$a]->fecha_del_gasto,
+					"value" => 	$flujo,
+					"tipo" 	=> 	"gastos"
+				) );
+			}
+			
+			return $out;
+			var_dump($out);
+		}
 
         /*
          * Valida los parametros de la tabla empresa haciendo uso de las validaciones basicas

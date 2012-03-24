@@ -112,7 +112,7 @@
 			"id_caja"
 		));
 
-		$form->setType("fecha_del_ingreso", "date");
+		//$form->setType("fecha_del_ingreso", "date");
 		$form->createComboBoxJoin("id_empresa", "razon_social", EmpresaDAO::getAll());
 		$form->createComboBoxJoin("id_concepto_ingreso", "nombre", ConceptoIngresoDAO::getAll());		
 		$form->createComboBoxJoin("id_caja", "descripcion", CajaDAO::getAll());

@@ -129,7 +129,9 @@ class ReporteComponent implements GuiComponent{
 
 				g.setXFormater(
 						function(val){
-							if(val ==0)return "";					
+							if(val == 0)return "";
+							val = parseInt(val);
+							console.log(val);				
 							return meses(fechas<?php echo $this->random_id; ?>[val].fecha.split("-")[1]) + " "  + fechas<?php echo $this->random_id; ?>[val].fecha.split("-")[2]; 
 						}
 					);

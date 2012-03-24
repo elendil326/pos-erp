@@ -119,6 +119,8 @@
 
 
 	$r = new ReporteComponent();
+	
+	
 	$data = array(
 		array(
 			"fecha" => "2012-01-01",
@@ -133,7 +135,9 @@
 			"value" => "25"
 		)		
 	);
+	
+	$data = EmpresasController::flujoEfectivo( (int)$_GET["eid"] );
 	$r->agregarMuestra	( "uno", $data );
-	$r->fechaDeInicio( strtotime( "2012-01-01"));
+	$r->fechaDeInicio( strtotime( "2012-03-01"));
 	$page->addComponent($r);
 	$page->render();

@@ -136,8 +136,7 @@
     </script>
 
     <?php
-
-        list($abonos_compra, $abonos_venta, $abonos_prestamo) = CargosYAbonosController::ListaAbono(
+		$r =  CargosYAbonosController::ListaAbono(
             $compra = true, 
             $prestamo = true, 
             $venta = true, 
@@ -158,6 +157,7 @@
             $orden = null
         );
 
+ 		list($abonos_compra, $abonos_venta, $abonos_prestamo) = $r["resultados"];
 
         function nombre_deudor($id_usuario, $obj){
 

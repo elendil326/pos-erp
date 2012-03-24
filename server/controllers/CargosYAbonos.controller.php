@@ -891,6 +891,7 @@ class CargosYAbonosController extends ValidacionesController implements ICargosY
             Logger::warn("No se recibio si se listaran compras, ventas o prestamos, no se lista nada");
             throw new Exception("No se recibio si se listaran compras, ventas o prestamos, no se lista nada");
         }
+
         $abonos_compra   = null;
         $abonos_venta    = null;
         $abonos_prestamo = null;
@@ -903,6 +904,7 @@ class CargosYAbonosController extends ValidacionesController implements ICargosY
         if (!is_null($id_caja) || !is_null($id_usuario) || !is_null($id_sucursal) || !is_null($id_empresa) || !is_null($id_compra) || !is_null($id_venta) || !is_null($id_prestamo) || !is_null($cancelado) || !is_null($fecha_minima) || !is_null($fecha_maxima) || !is_null($fecha_actual) || !is_null($monto_menor_a) || !is_null($monto_mayor_a) || !is_null($monto_igual_a)) {
             $parametros = true;
         }
+
         //
         //Verficiar si se listaran abonos de compra
         //
@@ -1186,25 +1188,27 @@ class CargosYAbonosController extends ValidacionesController implements ICargosY
                 $abonos_prestamo = AbonoPrestamoDAO::getAll(null, null, $orden);
         }
         $cont   = 0;
-        $abonos = null;
+        $abonos = array( );
         //
         //Si la consulta de abonos en compras trae un resultado, agregala al arreglo de abonos
         //y asi con las ventas y los prestamos.
         //
-        if (!is_null($abonos_compra)) {
-            $abonos[$cont] = $abonos_compra;
+
+        if (sizeof($abonos_compra) > 0) {
+            $abonos["compras"] = $abonos_compra;
             $cont++;
         }
-        if (!is_null($abonos_venta)) {
-            $abonos[$cont] = $abonos_venta;
+        if (sizeof($abonos_venta) > 0) {
+            $abonos["ventas"] = $abonos_venta;
             $cont++;
         }
-        if (!is_null($abonos_prestamo)) {
-            $abonos[$cont] = $abonos_prestamo;
+        if (sizeof($abonos_prestamo) > 0) {
+            $abonos["prestamos"] = $abonos_prestamo;
             $cont++;
         }
         Logger::log("Recuperado lista de abonos exitosamente");
-        return $abonos;
+
+        return array("resultados" => $abonos , "numero_de_resultados" => sizeof($abonos));
     }
     
     /**

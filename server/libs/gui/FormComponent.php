@@ -168,36 +168,7 @@ class FormComponent implements GuiComponent
 		
 		$html = "";
                 
-        $html .= "<script>\n";
-        
-        $html .= "var ExtComponent =  function(component, id){\n";
-        $html .= "    this.component = component;\n";
-        $html .= "    this.id = id;\n";
-        $html .= "};\n";
-        
-        $html .= "var storeComponent = function(){\n";    
-        
-        $html .= "  this.arrayComponent = [];\n";
-        $html .= "  this.arrayIndex = 0;\n"; 
-        
-        $html .= "  this.addExtComponent = function( component, id ){\n";
-        //$html .= "    Ext.Array( this.arrayComponent, this.arrayIndex, new ExtComponent( component, id ));    \n";                
-        
-        $html .= "      this.arrayComponent[this.arrayIndex] = new ExtComponent( component, id );\n";
-        $html .= "      this.arrayIndex++;        \n";
-        $html .= "  };\n";
 
-        $html .= "  this.render = function(){\n";
-        $html .= "    Ext.Array.forEach( this.arrayComponent, function(c){\n";
-        $html .= "        c.component.render(c.id);\n";                
-        $html .= "    });\n";
-        $html .= "  };\n";
-
-        $html .= "};    \n";
-        
-        $html .= "var store_component = new storeComponent();\n";
-        
-        $html .= "</script>\n";
 		
 		if (!is_null($this->send_to_api) || !is_null($this->on_click))
 		{

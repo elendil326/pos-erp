@@ -146,3 +146,34 @@ var nuevoClienteAval =  function( nombre, id_usuario, id_este_usuario ){
     }, this);  
 };
 
+
+
+
+
+var ExtComponent =  function(component, id){
+    this.component = component;
+    this.id = id;
+};
+
+var storeComponent = function(){  
+
+  this.arrayComponent = [];
+  this.arrayIndex = 0;
+
+  this.addExtComponent = function( component, id ){
+//    Ext.Array( this.arrayComponent, this.arrayIndex, new ExtComponent( component, id ));               
+
+      this.arrayComponent[this.arrayIndex] = new ExtComponent( component, id );
+      this.arrayIndex++;        
+  };
+
+  this.render = function(){
+    Ext.Array.forEach( this.arrayComponent, function(c){
+        c.component.render(c.id);        
+    });
+  };
+
+};   
+
+var store_component = new storeComponent();
+
