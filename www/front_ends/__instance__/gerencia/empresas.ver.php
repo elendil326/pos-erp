@@ -116,4 +116,24 @@
 
 	$page->addComponent( new TitleComponent( "Paquetes" ), 3 );
 */      
+
+
+	$r = new ReporteComponent();
+	$data = array(
+		array(
+			"fecha" => "2012-01-01",
+			"value" => "15"
+		),
+		array(
+			"fecha" => "2012-01-02",
+			"value" => "20"
+		),		
+		array(
+			"fecha" => "2012-01-03",
+			"value" => "25"
+		)		
+	);
+	$r->agregarMuestra	( "uno", $data );
+	$r->fechaDeInicio( strtotime( "2012-01-01"));
+	$page->addComponent($r);
 	$page->render();

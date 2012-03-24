@@ -146,7 +146,7 @@
 	require_once("libs/gui/SearchProductComponent.php");		
 	require_once("libs/gui/SucursalSelectorComponent.php");
 	require_once("libs/gui/EmpresaSelectorComponent.php");
-	
+	require_once("libs/gui/ReporteComponent.php");	
 	
 	
 	require_once("libs/gui/BannerComponent.php");		

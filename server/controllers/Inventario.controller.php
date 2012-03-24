@@ -41,7 +41,25 @@ Se puede ordenar por los atributos de producto.
 		$id_sucursal = null
 	)
 	{  
-            Logger::log("Listando las existencias");
+		
+			Logger::log("Listando las existencias....");
+			
+			$daoProductos = ProductosDAO::getAll();
+		
+			$aOut = array();
+			$nOutSize = 0;
+		
+			for ($iProd=0; $iProd < sizeof($daoProductos); $iProd++, $nOutSize++) { 
+				
+			}
+			
+			
+			
+			
+            return array(
+            	"numero_de_resultados" => $nOutsize,
+				"resultados"	=> $aOut
+            );
             
             //Si se recibe un id producto, solo se listan las existencias de dicho producto, se puede combinar con 
             //los demas parametros. Si no se recibe ningun otro, se realiza un acumulado de este producto en todos los almacenes.

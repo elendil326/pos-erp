@@ -1391,7 +1391,7 @@ class ProductosController extends ValidacionesController implements IProductos
      * @param orden string Nombre de la columna de la tabla por la cual se ordenara la lista
      * @return unidades_equivalencia json Lista de unidades
      **/
-    public static function Lista_equivalenciaUnidad($orden = null)
+    private static function Lista_equivalenciaUnidad($orden = null)
     {
         Logger::log("Listando equivalencias");
         
@@ -1638,9 +1638,14 @@ class ProductosController extends ValidacionesController implements IProductos
     public static function EquivalenciaEliminarUnidad($id_unidad, $id_unidades)
     {
     }
+
+
     public static function EquivalenciaListaUnidad($orden = null)
     {
     }
+
+
+
     public static function EquivalenciaNuevaUnidad($equivalencia, $id_unidad, $id_unidades)
     {
     }

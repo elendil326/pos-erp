@@ -12,6 +12,10 @@ class FormComponent implements GuiComponent
 	private $is_editable;
 	private $hide_not_obligatory;
 	private $guiComponentId;
+	private $special_sort;
+	
+	
+	
 	
 	/**
 	 *
@@ -29,11 +33,51 @@ class FormComponent implements GuiComponent
 		$this->is_editable         = true;
 		$this->form_fields         = array();
 		$this->hide_not_obligatory = false;
-		
+		$this->special_sort		 	= null;
 		//para eviar id's repetidos
 
 		$this->guiComponentId = "_"  . (rand() + rand());
 	}
+	
+	
+	/**
+	 *
+	 *
+	 * */
+	public function sortOrder(Array $order){
+		
+		$this->removeDuplicates();
+
+		$found_needed = $fn = sizeof( $this->form_fields );
+		$error = "";
+		$out = array();
+		
+		for ($i=0; $i < $fn; $i++){ 
+			
+			if($i >= sizeof($order)){
+				throw new Exception("te faltan parametros ");
+			}
+			
+			if($this->form_fields[$i]->hidden) continue;
+			
+			if(!in_array( $this->form_fields[$i]->id , $order )){
+				
+				$error .= "`".$this->form_fields[$i]->id."`, ";
+			}else{
+				$out[array_search( $this->form_fields[$i]->id, $order )] = $this->form_fields[$i];
+			}
+		}
+		
+		if(strlen($error) > 0){
+			throw new Exception("fields: $error not found in your ordered array."); 
+		}
+		$this->special_sort = $order;
+		
+		$this->form_fields = $out;
+		
+	}
+	
+	
 	
 	public function getGuiComponentId(){
 		return $this->guiComponentId;
@@ -61,7 +105,7 @@ class FormComponent implements GuiComponent
 	 * 
 	 * 
 	 * */
-	function addField($id, $caption, $type, $value = "", $name = null)
+	public function addField($id, $caption, $type, $value = "", $name = null)
 	{
 		array_push($this->form_fields, new FormComponentField($id, $caption, $type, $value, $name));
 	}
@@ -72,10 +116,8 @@ class FormComponent implements GuiComponent
 	 * */
 	protected function removeDuplicates()
 	{
-		usort($this->form_fields, array(
-			"FormComponentField",
-			"idSort"
-		));
+		usort($this->form_fields, array( "FormComponentField","idSort" ));
+		
 		$top_i = 0;
 		
 		
@@ -91,20 +133,38 @@ class FormComponent implements GuiComponent
 		
 	}
 	
+	
+	private function sortFields(){
+		//remove fields with the same id
+		$this->removeDuplicates();
+
+		if(!is_null($this->special_sort)){
+			/* for ($i=0; $i < sizeof( ); $i++) { 
+				# code...
+			}*/
+			
+		}else{
+			//sort fields by the necesary attribute
+			usort($this->form_fields, array(
+				"FormComponentField",
+				"obligatorySort"
+			));
+			
+		}
+		
+		
+		
+	}
+	
 	/**
 	 * 
 	 * 
 	 * */
 	function renderCmp()
 	{
-		//remove fields with the same id
-		$this->removeDuplicates();
 		
-		//sort fields by the necesary attribute
-		usort($this->form_fields, array(
-			"FormComponentField",
-			"obligatorySort"
-		));
+		$this->sortFields();
+
 		
 		$html = "";
                 
@@ -159,8 +219,10 @@ class FormComponent implements GuiComponent
 			$html .= "\tvar ". $this->guiComponentId ."p = {};\n";
 			$html .= "\tvar ". $this->guiComponentId ."found = false;\n";
 
-			foreach ($this->form_fields as $f)
+			for ($i = 0; $i < sizeof($this->form_fields); $i++)
 			{
+				$f = $this->form_fields[$i];
+				
 				if ($f->hidden === true)
 				{
 
@@ -462,6 +524,8 @@ class FormComponent implements GuiComponent
 		
 	}
 	
+	
+	
 	/**
 	 *
 	 *
@@ -474,6 +538,9 @@ class FormComponent implements GuiComponent
 			"method" => $method
 		);
 	}
+	
+	
+	
 	
 	/**
 	 *
@@ -694,6 +761,8 @@ class FormComponent implements GuiComponent
 		
 	}
 	
+	
+	
 	/**
 	 *
 	 *
@@ -780,6 +849,8 @@ class FormComponent implements GuiComponent
 		} //for
 		
 	}
+
+
 	/**
 	 *
 	 *
@@ -787,6 +858,10 @@ class FormComponent implements GuiComponent
 	public function createComboBox($field_name, $values)
 	{
 	}
+
+
+
+
 	/**
 	 *
 	 *
@@ -810,19 +885,23 @@ class FormComponent implements GuiComponent
 			throw new Exception("Nombre " . $field_name . " no encontrado en los elementos");
 		}
 	}        
-        /**
-         *
-         *  
-         */
-        public function setType($id, $type){            
-            
-            foreach($this->form_fields as $field ){
-                if($field->id == $id){                    
-                    $field->type = $type;
-                }
+
+
+    /**
+     *
+     *  
+     */
+    public function setType($id, $type){            
+
+        foreach($this->form_fields as $field ){
+            if($field->id == $id){                    
+                $field->type = $type;
+				return;
             }
-            
         }
+           
+		throw new Exception("$id not found in form");
+	}
 	
 	
 }

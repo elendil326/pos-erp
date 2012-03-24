@@ -37,6 +37,21 @@
 	$form->createComboBoxJoin( "activo", "activo", array( array( "id" => 1 , "caption" => "si" ), 
 	              array( "id" => 0 , "caption" => "no" ) ), 1 );
 
+	$form->sortOrder(array( 
+			"foto_servicio", 
+			"codigo_servicio", 
+			"compra_en_mostrador",
+			"control_existencia",
+			"costo_estandar",
+			"descripcion_servicio",
+			"precio",
+			"garantia",
+			"id_servicio",
+			"metodo_costeo",
+			"nombre_servicio",
+			"activo"
+		));
+		
 	$page->addComponent( $form );
 	
 	$page->partialRender();
