@@ -18,14 +18,13 @@
 	$form = new DAOFormComponent(new Producto());
 	$form->addApiCall("api/producto/nuevo/");
 	$form->onApiCallSuccessRedirect("productos.lista.php");
-	$form->renameField(array( "precio" => "precio_venta" ));
+	$form->renameField(array( "precio" => "precio_de_venta" ));
 	$form->hideField(array(
 	    "id_producto"
 	));
 
 	$form->makeObligatory(array(
 	    "compra_en_mostrador",
-	    "costo_estandar",
 	    "nombre_producto",
 	    "id_empresas",
 	    "codigo_producto",
@@ -34,6 +33,10 @@
 	));
 
 	$form->createComboBoxJoin("id_unidad", "nombre", UnidadDAO::search(new Unidad(array(
+	    "activa" => 1
+	))));
+	
+	$form->createComboBoxJoinDistintName("id_unidad_compra", "id_unidad", "nombre", UnidadDAO::search(new Unidad(array(
 	    "activa" => 1
 	))));
 	

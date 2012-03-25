@@ -700,7 +700,7 @@ class FormComponent implements GuiComponent
 					else
 					{
 						$v = $v->asArray();
-						
+
 						if ($selected_value == $v["$field_name"])
 						{
 							array_push($end_values, array(

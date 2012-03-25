@@ -101,16 +101,6 @@ class ReporteComponent implements GuiComponent{
 			$GRAFICAS_ACUMULATIVAS = false;
 			Logger::log("rendering...");			
 
-			echo "var todos".$this->random_id . " = [";
-
-			for($i = 0; $i < sizeof($this->acumulado); $i++ ){
-				echo  "[" . $i . "," . $this->acumulado[$i] . "]";
-
-				if($i < sizeof($this->acumulado) - 1){
-						echo ",";		
-				}
-			}
-			echo "];\n\n";
 
 
 
@@ -123,8 +113,11 @@ class ReporteComponent implements GuiComponent{
 			}
 			echo "];\n";
 			
+			
 
-				
+
+			$this->acumulado = array();
+			
 			for ($s=0; $s < sizeof($this->timelines); $s++) { 
 
 				$GRAFICAS_ACUMULATIVAS = $this->timelines_draw_acumulable[$s];
@@ -144,11 +137,11 @@ class ReporteComponent implements GuiComponent{
 							$tot += $t["value"];
 						}
 					}
+
+					$acc += $tot;					
+					$this->acumulado[$i] = $acc;
 					
 					if($GRAFICAS_ACUMULATIVAS){
-						
-						$acc += $tot;
-
 						echo  "[" . $i . "," . $acc . "]";
 
 					}else{
@@ -160,21 +153,27 @@ class ReporteComponent implements GuiComponent{
 					//en este timeline
 
 					
-					/*
-					if($GRAFICAS_ACUMULATIVAS){
-						$acc += $this->timelines[$s][$i]["value"] ;
-						echo  "[" . $i . "," . $acc . "]";
-				
-					}else{
-						echo  "[" . $i . "," . $this->timelines[$s][$i]["value"] . "]";
 
-					}*/
 
 					if($i < sizeof($this->fechas) - 1){
 							echo ",";		
 					}
 				}
 				echo "];\n\n";
+				
+				
+				echo "var todos".$this->random_id . " = [";
+
+				for($i = 0; $i < sizeof($this->acumulado); $i++ ){
+					echo  "[" . $i . "," . $this->acumulado[$i] . "]";
+
+					if($i < sizeof($this->acumulado) - 1){
+							echo ",";		
+					}
+				}
+				echo "];\n\n";
+				
+				
 			}
 
 			/*
