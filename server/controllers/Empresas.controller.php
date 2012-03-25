@@ -27,11 +27,9 @@ require_once("interfaces/Empresas.interface.php");
 			
 			for ($a=0; $a < $abonos["numero_de_resultados"]; $a++) { 
 				
-				$flujo += $abonos["resultados"]["ventas"][$a]->monto;
-				
 				array_push( $out, array(
 					"fecha" =>	$abonos["resultados"]["ventas"][$a]->fecha,
-					"value" => 	$flujo,
+					"value" => 	$abonos["resultados"]["ventas"][$a]->monto,
 					"tipo" 	=> 	"abono"
 				) );
 			}
@@ -39,17 +37,19 @@ require_once("interfaces/Empresas.interface.php");
 			$gastos = CargosYAbonosController::ListaGasto();
 			
 			for ($a=0; $a < $gastos["numero_de_resultados"]; $a++) { 
-				$flujo -= $gastos["resultados"][$a]->monto;
 				
+
 				array_push( $out, array(
 					"fecha" =>	$gastos["resultados"][$a]->fecha_del_gasto,
-					"value" => 	$flujo,
+					"value" => 	$gastos["resultados"][$a]->monto * -1,
 					"tipo" 	=> 	"gastos"
 				) );
 			}
 			
+
+			
 			return $out;
-			var_dump($out);
+
 		}
 
         /*

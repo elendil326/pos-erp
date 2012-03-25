@@ -137,7 +137,8 @@
 	);
 	
 	$data = EmpresasController::flujoEfectivo( (int)$_GET["eid"] );
-	$r->agregarMuestra	( "uno", $data );
+
+	$r->agregarMuestra	( "uno", $data, true );
 	$r->fechaDeInicio( strtotime( "2012-03-01"));
 	$page->addComponent($r);
 	$page->render();
