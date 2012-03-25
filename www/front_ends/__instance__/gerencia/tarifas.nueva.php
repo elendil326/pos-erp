@@ -373,15 +373,15 @@ $page->partialRender();
 
                         window.onbeforeunload = function(){}
 
-                        window.location = "tarifas.lista.php"; 
+                        window.location = "tarifas.lista.php";
 
                     }
                 }
             );
                 
-            }        
+            }
         });
-    }    
+    }
 
 
 </script>
