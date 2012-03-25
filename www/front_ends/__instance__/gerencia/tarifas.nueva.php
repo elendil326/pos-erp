@@ -11,7 +11,7 @@ $page->addComponent(new MessageComponent("Crea una nueva tarifa en el sistema"))
 $page->partialRender();
 ?>
 
-<form>
+<form id ="form_tarifa">
 
     <table style ="width:100%;">
         <tr>
@@ -25,12 +25,12 @@ $page->partialRender();
                 Moneda :    
             </td>
             <td>
-                <select name = "moneda_tarifa" id = "moneda_tarifa" onChange = "" >
+                <select name = "id_moneda_tarifa" id = "id_moneda_tarifa" onChange = "" >
                     <?php
-                    $options = "<option value = null>-------</option>";
-
-                    foreach (ServicioDAO::getAll() as $servicio) {
-                        $options .= "<option value = \"{$servicio->getIdServicio()}-{$servicio->getMetodoCosteo()}-{$servicio->getCostoEstandar()}-{$servicio->getPrecio()}\">{$servicio->getNombreServicio()}</option>";
+                    //$options = "<option value = null>-------</option>";
+                    $options = "";
+                    foreach (MonedaDAO::getAll() as $moneda) {
+                        $options .= "<option value = \"{$moneda->getIdMoneda()}\">{$moneda->getNombre()}</option>";
                     }
 
                     echo $options;
@@ -44,23 +44,16 @@ $page->partialRender();
             </td>
             <td>
                 <select name = "tipo_tarifa" id = "tipo_tarifa" onChange = "" >
-                    <?php
-                    $options = "<option value = null>-------</option>";
-
-                    foreach (ServicioDAO::getAll() as $servicio) {
-                        $options .= "<option value = \"{$servicio->getIdServicio()}-{$servicio->getMetodoCosteo()}-{$servicio->getCostoEstandar()}-{$servicio->getPrecio()}\">{$servicio->getNombreServicio()}</option>";
-                    }
-
-                    echo $options;
-                    ?>
+                    <option value = "venta">Venta</option>                    
+                    <option value = "compra">Compra</option>                    
                 </select>
             </td>
             <td>
                 Tarifa default del sistema:    
             </td>
             <td>
-                <input type="Radio" name="default_tarifa" value="true"> S&iacute;
-                <input type="Radio" name="default_tarifa" value="false" checked> No
+                <input type="Radio" name="default_tarifa" value="true" /> S&iacute;
+                <input type="Radio" name="default_tarifa" value="false" checked /> No
             </td>
         </tr>
     </table>
@@ -93,42 +86,47 @@ $page->partialRender();
     </table>
 </form>
 
-<div id ="btn_nueva_regla"class="POS Boton" onClick = "showNuevaRegla()">Asignar Nueva Regla</div>
+<?php
+$page->addComponent(new TitleComponent("Nueva Regla", 2));
+$page->addComponent(new MessageComponent("Ingrese los valores para crer una nuava regla"));
 
-<div name ="form_nueva_regla" id ="form_nueva_regla" style ="margin-top: 10px;">
-    <form>
-        <table style ="width:100%;">
-            <tr>
-                <td>
-                    Nombre :    
-                </td>
-                <td colspan ="3">
-                    <input type = "text" name = "nombre_regla" id = "nombre_regla" value = "" style ="width:100%;"/>
-                </td>
+$page->partialRender();
+?>
 
-            </tr>
-            <tr>
-                <td>
-                    Secuencia :    
-                </td>
-                <td>
-                    <input type = "text" name = "secuencia_regla" id = "secuencia_regla" value = "" style ="width:100%;"/>
-                </td>
-                <td>
-                    Cantidad Min :    
-                </td>
-                <td>
-                    <input type = "text" name = "cantidad_minima_regla" id = "cantidad_minima_regla" value = "" style ="width:100%;"/>
-                </td>
-            </tr>  
-            <tr>
-                <td colspan = "4"  align="right" style = "border-width:0px;">
-                    <input class="POS Boton OK" style = "position:relative; float:right;" type = "button" value = "Aceptar" onClick = "nuevaOrdenServicio()" /> <input class="POS Boton" style = "position:relative; float:right;" type = "reset" value = "Cancelar" />
-                </td>
-            </tr> 
-        </table>
-    </form>
-</div>
+
+<form name ="form_nueva_regla" id ="form_nueva_regla">
+    <table style ="width:100%;">
+        <tr>
+            <td>
+                Nombre :    
+            </td>
+            <td colspan ="3">
+                <input type = "text" name = "nombre_regla" id = "nombre_regla" value = "" style ="width:100%;"/>
+            </td>
+
+        </tr>
+        <tr>
+            <td>
+                Secuencia :    
+            </td>
+            <td>
+                <input type = "text" name = "secuencia_regla" id = "secuencia_regla" value = "" style ="width:100%;"/>
+            </td>
+            <td>
+                Cantidad Min :    
+            </td>
+            <td>
+                <input type = "text" name = "cantidad_minima_regla" id = "cantidad_minima_regla" value = "" style ="width:100%;"/>
+            </td>
+        </tr>  
+        <tr>
+            <td colspan = "4"  align="right" style = "border-width:0px;">
+                <input id ="btn_nueva_regla" class="POS Boton OK" style = "position:relative; float:right;" type = "button" value = "Aceptar" /> <input  id ="btn_cancelar_regla" class="POS Boton" style = "position:relative; float:right;" type = "reset" value = "Cancelar" />
+            </td>
+        </tr> 
+    </table>
+</form>
+
 <?php
 $page->addComponent(new TitleComponent("Reglas", 2));
 $page->addComponent(new MessageComponent("Listado de reglas que componen esta versi&oacute;n"));
@@ -136,52 +134,80 @@ $page->addComponent(new MessageComponent("Listado de reglas que componen esta ve
 $page->partialRender();
 ?>
 
-<table name ="table_reglas" id ="table_reglas" style ="width:100%; margin-top: 10px;">
+<div id ="content_table_rules">
+    <table name ="table_reglas" id ="table_reglas" style ="width:100%; margin-top: 10px;">
+        <tr>
+            <th> Secuencia </th>
+            <th> Nombre </th>
+            <th> Producto </th>
+            <th> Categor&iacute;a </th>
+            <th> Servicio </th>
+            <th> Cant Min </th>
+        </tr>
+    </table>
+</div>
+
+<table style ="width:100%; margin-top: 50px;">
     <tr>
-        <th> Secuencia </th>
-        <th> Nombre </th>
-        <th> Producto </th>
-        <th> Categor&iacute;a </th>
-        <th> Servicio </th>
-        <th> Cant Min </th>
+        <td style = "border-width:0px; background:#EDEFF4;"  valign="middle">
+            <input class="POS Boton OK" style = "left : 250px; width:200px;" type = "button" value = "Crear Tarifa" onClick = "crearNuevaTarifa();" />
+        </td>
     </tr>
 </table>
 
 <script>
+          
+    var btn_nueva_regla = Ext.get('btn_nueva_regla');          
 
-    var showNuevaRegla = function(){
-        new Ext.fx.Anim({
-            target: Ext.get('btn_nueva_regla'),
-            duration: 1000,
-            from: {
-                opacity: 1
-            },
-            to: {
-                opacity: 0,
-                height: 0, // end width 300
-                cursor:'help'
-            },listeners: {
-                afteranimate: {
-                    element: 'el', //bind to the underlying el property on the panel
-                    fn: function(){ 
-                        Ext.get('form_nueva_regla').fadeOut();
-                    }
-                },
-                beforeanimate: {
-                    element: 'el', //bind to the underlying el property on the panel
-                    fn: function(){ 
-                        Ext.get('form_nueva_regla').fadeOut();
-                    }
-                }
-            }
-        });
-    }
+    btn_nueva_regla.on('click',function(){                          
+        
+        var nombre = Ext.get('nombre_regla').getValue().replace(/^\s+|\s+$/g,"");
+        var secuencia = Ext.get('secuencia_regla').getValue().replace(/^\s+|\s+$/g,""); 
+        var cantidad_minima = Ext.get('cantidad_minima_regla').getValue().replace(/^\s+|\s+$/g,"");
+        
+        var error = "";
+        
+        if(cantidad_minima == ""){
+            cantidad_minima = 1;
+        }
+        
+        if(!nombre.length){
+            error += "Verifique el nombre de la regla.<br/>";
+        }
+        
+        if(isNaN(secuencia) || !secuencia.length){
+            error += "Indique un numero de secuencia valido.<br/>";
+        }
+        
+        if(isNaN(cantidad_minima)){
+            error += "Indique un numero de cantidad minima valido.<br/>";
+        }                
+        
+        if(error.length > 0){
+            
+            Ext.MessageBox.show({
+                title: "Nueva regla",
+                msg: error,
+                buttons: Ext.MessageBox.OK,
+                icon: Ext.MessageBox.ERROR
+            });
+            
+            return;
+        }             
+        
+        r.addRegla(Ext.get('content_table_rules'), new regla({
+            nombre:nombre,
+            secuencia:secuencia,
+            cantidad_minima:cantidad_minima
+        }));                
+        
+    });
 
     var regla = function(config){
                           
         this.nombre = config.nombre; 
         this.secuencia = config.secuencia;
-        this.cantidad_minima = config.cantidad_minima? config.cantidad_minima : null;
+        this.cantidad_minima = config.cantidad_minima? config.cantidad_minima : 0;
         this.id_clasificacion_producto = config.id_clasificacion_producto? config.id_clasificacion_producto : null;
         this.id_clasificacion_servicio = config.id_clasificacion_servicio? config.id_clasificacion_servicio : null;
         this.id_paquete = config.id_paquete? config.id_paquete : null;
@@ -196,27 +222,94 @@ $page->partialRender();
         this.utilidad_neta = config.utilidad_neta? config.utilidad_neta : 0; 
         
     }
+    
+    
 
-    var reglas = function(){
+    var reglas = function(){           
     
         this.store = [];
             
         this.index = 0;    
             
-        this.addRegla = function(regla){            
+        this.addRegla = function(element, regla){  
+            
+            var error = this.review(regla);
+            
+            if(error.length){
+                Ext.MessageBox.show({
+                    title: "Nueva regla",
+                    msg: error,
+                    buttons: Ext.MessageBox.OK,
+                    icon: Ext.MessageBox.ERROR
+                });
+            
+                return;
+            }
+            
+            Ext.get('form_nueva_regla').dom.reset();
+            
             this.store[this.index] = regla;
             this.index++;
+            this.render(element);
         }
     
-        this.render = function(){
+        this.render = function(element){
+            
+            var html = "";
+        
+            html += "<table name =\"table_reglas\" style =\"width:100%; margin-top: 10px;\">";
+            html += "    <tr>";
+            html += "        <th> Secuencia </th>";
+            html += "        <th> Nombre </th>";
+            html += "        <th> Producto </th>";
+            html += "        <th> Categor&iacute;a </th>";
+            html += "        <th> Servicio </th>";
+            html += "        <th> Cant Min </th>";
+            html += "    </tr>";                        
+            
             Ext.Array.forEach( this.store, function(c){
-                //agregar un nuevo hijo a la tabla
+                html += "    <tr>";
+                html += "        <td> " + c.secuencia + " </td>";
+                html += "        <td> " + c.nombre + " </td>";
+                html += "        <td> " + (c.id_producto == null? "-":c.id_producto) + " </td>";
+                html += "        <td> " + (c.id_clasificacion_producto == null? "-":c.id_clasificacion_producto) + " </td>";
+                html += "        <td> " + (c.id_clasificacion_servicio == null? "-":c.id_clasificacion_servicio) + " </td>";
+                html += "        <td> " + c.cantidad_minima + " </td>";
+                html += "    </tr>";
             });
+            
+            html += "</table>";
+            
+            element.update(html);
+            
+        }
+        
+        this.review = function(regla){
+        
+            var error = "";
+        
+            Ext.Array.forEach( this.store, function(c){
+
+                error += c.secuencia == regla.secuencia ? "Ya se cuenta con ese numero de secuencia.<br/>":"";
+                error += c.nombre == regla.nombre ? "Ya existe una regla con ese nombre.<br/>":"";
+                
+            });
+            
+            return error;
+        
+        }                
+        
+        this.getSize = function(){
+            return this.store.length;
+        }
+    
+        this.getReglas = function(){
+            return this.store;
         }
     
     }
     
-    var fecha_inicio = Ext.create('Ext.form.field.Date', {
+    var start_date = Ext.create('Ext.form.field.Date', {
         name : 'fecha_inicio',         
         style : {
             marginTop : '-10px'
@@ -226,7 +319,7 @@ $page->partialRender();
         renderTo: "fecha_inicio_tarifa"
     });
         
-    var fecha_fin = Ext.create('Ext.form.field.Date', {
+    var end_date = Ext.create('Ext.form.field.Date', {
         name : 'fecha_fin',         
         style : {
             marginTop : '-10px'
@@ -235,6 +328,61 @@ $page->partialRender();
         value: new Date(),  // defaults to today           
         renderTo: "fecha_fin_tarifa"
     });
+    
+    var r = new reglas();
+
+    function crearNuevaTarifa(){
+        
+        Ext.Msg.confirm("Nueva Tarifa", "Ha terminado de definir la nueva tarifa?", function(e){
+            if(e == 'yes'){
+                
+                var error = "";
+                
+                var nombre = Ext.get('nombre_tarifa').getValue().replace(/^\s+|\s+$/g,"");                                
+                
+                if(!nombre.length){
+                    error += "Verifique el nombre de la tarifa.<br/>";
+                }
+                
+                if(error.length){
+                    
+                    Ext.MessageBox.show({
+                        title: "Nueva Tarifa",
+                        msg: error,
+                        buttons: Ext.MessageBox.OK,
+                        icon: Ext.MessageBox.ERROR
+                    });
+            
+                    return;
+                }
+                
+                POS.API.POST(
+                "api/tarifa/nueva", 
+                {
+                    "id_moneda":Ext.get('id_moneda_tarifa').getValue(),
+                    "nombre":nombre,
+                    "tipo_tarifa":Ext.get('tipo_tarifa').getValue(),
+                    "default":Ext.get('form_tarifa').dom.default_tarifa[0].checked,
+                    "fecha_fin":Ext.Date.format(end_date.getValue(), 'Y-m-d') + " 00:00:00",
+                    "fecha_inicio":Ext.Date.format(start_date.getValue(), 'Y-m-d') + " 00:00:00",
+                    "formulas":r.getReglas()
+                }, 
+                {
+
+                    callback : function(a){ 
+
+                        window.onbeforeunload = function(){}
+
+                        window.location = "tarifas.lista.php"; 
+
+                    }
+                }
+            );
+                
+            }        
+        });
+    }    
+
 
 </script>
 
