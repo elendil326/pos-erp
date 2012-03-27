@@ -972,7 +972,84 @@ Creo que este metodo tiene que estar bajo sucursal.
 		$id_lote, 
 		$productos, 
 		$motivo = null
-	){}
+	){
+
+        //existe el lote?
+        if(is_null(LoteDAO::getByPK( $id_lote ))){
+            throw new InvalidDataException("este lote no existe");
+        }
+
+        //validemos los productos
+        if(!is_array( $productos )){
+            throw new InvalidDataException("productos no es un array");
+        }
+
+        $sesion = SesionController::Actual();
+
+        DAO::transBegin();
+
+        $_lote = new LoteEntrada();
+        $_lote->setIdLote( $id_lote );
+        $_lote->setIdUsuario( $sesion["id_usuario"] );
+        $_lote->setFechaRegistro( time() );
+
+        try {
+            LoteEntradaDAO::save( $_lote );
+
+        } catch (Exception $e) {
+            DAO::transRollback();
+            throw new InvalidDatabaseOperationException($e);
+        }
+
+        for ($i=0; $i < sizeof($productos); $i++) { 
+            if(!is_array($productos[$i])){
+                throw new InvalidDataException("El producto en la posicion $i no es un arreglo como se esperaba");
+            }
+
+            if(!array_key_exists("id_producto", $productos[$i])){
+                throw new InvalidDataException("El producto en $i no tiene id_prodcuto");
+            }
+
+            if(!array_key_exists("cantidad", $productos[$i])){
+                throw new InvalidDataException("El producto en $i no tiene cantidad");
+            }
+
+            if(is_null(ProductoDAO::getByPK($productos[$i]["id_producto"]))){
+                throw new InvalidDataException("El producto " . $productos[$i]["id_producto"] . " no existe.");
+            }
+
+            if($productos[$i]["cantidad"] < 0){
+                throw new InvalidDataException("El producto " . $productos[$i]["id_producto"] . " no puede agregar cantidad negativas.");
+            }
+
+            try{
+                LoteProductoDAO::save(new LoteProducto( array(
+                        "id_lote" => $id_lote,
+                        "id_producto" => $productos[$i]["id_producto"],
+                        "cantidad" => $productos[$i]["cantidad"],
+                        "id_unidad" => 1
+                    )));
+
+                LoteEntradaProductoDAO::save(new LoteEntradaProducto(array(
+                        "id_lote_entrada" => $_lote->getIdLoteEntrada(),
+                        "id_producto"   => $productos[$i]["id_producto"],
+                        "id_unidad" => 1,
+                        "cantidad"  => $productos[$i]["cantidad"]
+                    )));
+
+
+            }catch(Exception $e){
+                Logger::error($e);
+                throw new InvalidDatabaseOperationException($e);
+            }
+
+        }
+
+        DAO::transEnd();
+
+        return array("id_entrada_lote" => $_lote->getIdLoteEntrada());
+
+    }
 
 
 

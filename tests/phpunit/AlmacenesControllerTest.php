@@ -472,24 +472,48 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
 	*	Lotes
 	*
 	**/
-	public function testLoteNuevo(){
+	public function testLotes(){
         //Buscar algun almacen
 
         $almacenes = AlmacenesController::Buscar( true );
 
         $almacenId = $almacenes["resultados"][0]->getIdAlmacen();
 
-        $nLote = AlmacenesController::NuevoLote( $almacenId );
 
+        //nuevo lote
+        $nLote = AlmacenesController::NuevoLote( $almacenId );
         $this->assertNotNull( $l = LoteDAO::getByPK( $nLote["id_lote"] ) );
 
-        
+
+        ProductoDAO::save( $producto = new Producto( array(
+            "compra_en_mostrador" => false,
+            "metodo_costeo" => "precio",
+            "precio" => 123.123,
+            "activo" => true,
+            "codigo_producto" => time() . "tp",
+            "nombre_producto" => time() . "np",
+            "costo_estandar" => 12.3123
+        )));
+
+        //metele productos
+        $r = AlmacenesController::EntradaLote( $nLote["id_lote"], array(
+                array( "id_producto" => $producto->getIdProducto(),
+                        "cantidad" => 123 )
+            ));
+
+        //Vamos a validar estas tablas
+        //LoteEntradaDAO::
+        $this->assertNotNull(LoteEntradaDAO::getByPK($r["id_entrada_lote"]));
+
+        //LoteProductoDAO::
+        $this->assertNotNull( LoteProductoDAO::getByPK( $nLote["id_lote"], $producto->getIdProducto() ));        
+
+        //LoteEntradaProductoDAO::
+        $this->assertNotNull( LoteEntradaProductoDAO::getByPK( $r["id_entrada_lote"], $producto->getIdProducto(), 1 ));
+
 
 	}
 
-	public function testLoteEntrada(){
-		
-	}
 
     /*
 
