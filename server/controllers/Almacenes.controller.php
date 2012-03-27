@@ -1110,7 +1110,91 @@ Creo que este metodo tiene que estar bajo sucursal.
 		$id_lote, 
 		$productos, 
 		$motivo = null
-	){}  
+	){
+
+
+        //existe el lote?
+        if(is_null(LoteDAO::getByPK( $id_lote ))){
+            throw new InvalidDataException("este lote no existe");
+        }
+
+        //validemos los productos
+        if(!is_array( $productos )){
+            throw new InvalidDataException("productos no es un array");
+        }
+
+        $sesion = SesionController::Actual();
+
+        DAO::transBegin();
+
+        $sl = new LoteSalida();
+        $sl->setIdLote( $id_lote );
+        $sl->setIdUsuario( $sesion["id_usuario"] );
+        $sl->setFechaRegistro( time() );
+        $sl->setMotivo( is_null($motivo) ? "" : $motivo );
+        
+
+        try {
+            LoteSalidaDAO::save( $sl );
+
+        } catch (Exception $e) {
+            DAO::transRollback();
+            throw new InvalidDatabaseOperationException($e);
+        }
+
+        for ($i=0; $i < sizeof($productos); $i++) { 
+            if(!is_array($productos[$i])){
+                throw new InvalidDataException("El producto en la posicion $i no es un arreglo como se esperaba");
+            }
+
+            if(!array_key_exists("id_producto", $productos[$i])){
+                throw new InvalidDataException("El producto en $i no tiene id_prodcuto");
+            }
+
+            if(!array_key_exists("cantidad", $productos[$i])){
+                throw new InvalidDataException("El producto en $i no tiene cantidad");
+            }
+
+            if(is_null(ProductoDAO::getByPK($productos[$i]["id_producto"]))){
+                throw new InvalidDataException("El producto " . $productos[$i]["id_producto"] . " no existe.");
+            }
+
+            //vamos a ver existencias
+            if(is_null( $lp = LoteProductoDAO::getByPK( $id_lote,  $productos[$i]["id_producto"]))){
+                throw new InvalidDataException("El lote $id_lote no tiene el producto " . $productos[$i]["id_producto"]);
+            }
+
+            if($productos[$i]["cantidad"] > $lp->getCantidad()){
+                throw new InvalidDataException("Estas intentando sacar mas de lo que hay en el lote.");
+            }
+
+            $lp->setCantidad( $lp->getCantidad() - $productos[$i]["cantidad"]);
+
+            
+            try{
+                LoteProductoDAO::save($lp);
+
+                LoteSalidaProductoDAO::save(new LoteSalidaProducto(array(
+                        "id_lote_salida" => $sl->getIdLoteSalida(),
+                        "id_producto"   => $productos[$i]["id_producto"],
+                        "id_unidad" => 1,
+                        "cantidad"  => $productos[$i]["cantidad"]
+                    )));
+
+
+            }catch(Exception $e){
+                Logger::error($e);
+                throw new InvalidDatabaseOperationException($e);
+            }
+            
+        }
+
+        DAO::transEnd();
+
+        return array("id_salida_lote" => $_lote->getIdLoteEntrada());
+
+
+    }  
 
 
 

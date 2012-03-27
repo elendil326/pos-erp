@@ -512,6 +512,26 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
         $this->assertNotNull( LoteEntradaProductoDAO::getByPK( $r["id_entrada_lote"], $producto->getIdProducto(), 1 ));
 
 
+        //sacar de ese lote, uno por uno hasta llegar a retirar todo
+        for ($i=0; $i < 123; $i++) { 
+            AlmacenesController::SalidaLote( $nLote["id_lote"], array(
+                array( "id_producto" => $producto->getIdProducto(),
+                        "cantidad" => 1 )
+            )) ;
+        }
+        
+        //la siguiente vez que retire algo, debe de arrojar una exception
+        try{
+            AlmacenesController::SalidaLote( $nLote["id_lote"], array(
+                array( "id_producto" => $producto->getIdProducto(),
+                        "cantidad" => 1 )
+            )) ;
+        }catch(InvalidDataException $ivde){
+
+        }
+        
+        $this->assertNotNull($ivde);
+
 	}
 
 
