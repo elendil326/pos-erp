@@ -24,20 +24,22 @@ class AlmacenesController extends ValidacionesController implements IAlmacenes{
 		$id_tipo_almacen = null
 	){
 		Logger::log("Listando Almacenes...");
-		
-		
-		$almacenes = AlmacenDAO::search(new Almacen(array(
-				"id_sucursal" 		=> $id_sucursal,
-				"id_empresa" 		=> $id_empresa,
-				"id_tipo_almacen" 	=> $id_tipo_almacen
-				)
-			));
-		
+
+
 		if(!is_null($id_sucursal)){
+
+
+            $almacenes = AlmacenDAO::search(new Almacen(array(
+                "id_sucursal"       => $id_sucursal,
+                "id_empresa"        => $id_empresa,
+                "id_tipo_almacen"   => $id_tipo_almacen
+                )
+            ));
+
 			return array("resultados" => $almacenes, "numero_de_resultados" => sizeof($almacenes));
 		}
 		
-		$almacenes=AlmacenDAO::getAll();
+		$almacenes = AlmacenDAO::getAll(  );
 
         return array("resultados" => $almacenes, "numero_de_resultados" => sizeof($almacenes));
 
@@ -988,7 +990,7 @@ Creo que este metodo tiene que estar bajo sucursal.
 		$id_almacen, 
 		$folio = null
 	){
-			
+		
         if( ! $almacen = AlmacenDAO::getByPK( $id_almacen ) ){
             Logger::error("No se tiene registro del almacen {$id_almacen}");
             throw new BusinessLogicException("No se tiene registro del almacen {$id_almacen}");
@@ -998,7 +1000,7 @@ Creo que este metodo tiene que estar bajo sucursal.
 
         try{
 
-            LoteDAO::save( new Lote( array(
+            LoteDAO::save( $l = new Lote( array(
                 "id_almacen" => $almacen->getIdAlmacen(),
                 "id_usuario" => $sesion['id_usuario'],
                 "folio" => is_null($folio)? "" : $folio
@@ -1010,7 +1012,8 @@ Creo que este metodo tiene que estar bajo sucursal.
             throw new InvalidDatabaseOperationException("Error al crear el nuevo lote");
 
         }            
-		
+	   
+        return array("id_lote" => $l->getIdLote());	
 	} 
 
 

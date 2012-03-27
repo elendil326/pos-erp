@@ -466,46 +466,32 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
 
 
 
-	
-
-
-
-	/**
-     * @expectedException BusinessLogicException
-     */
-	/*public function testTipoNuevoRepetido(){
-		$a = AlmacenesController::NuevoTipo("1dee80c7d5ab2c1c90aa8d2f7dd47256");	
-	}
-
-
-	public function testBuscar(){
-		
-	}
-
-	public function testDesactivar(){
-		
-	}
-
-	public function testEditar(){
-		
-	}*/
-
-
 	/**
 	*
 	*
 	*	Lotes
 	*
 	**/
-	/*public function testLoteNuevo(){
-		//AlamacenController::NuevoLote(  );
+	public function testLoteNuevo(){
+        //Buscar algun almacen
+
+        $almacenes = AlmacenesController::Buscar( true );
+
+        $almacenId = $almacenes["resultados"][0]->getIdAlmacen();
+
+        $nLote = AlmacenesController::NuevoLote( $almacenId );
+
+        $this->assertNotNull( $l = LoteDAO::getByPK( $nLote["id_lote"] ) );
+
+        
+
 	}
 
 	public function testLoteEntrada(){
 		
 	}
 
-
+    /*
 
 	public function testLoteSalida(){
 		
