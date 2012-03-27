@@ -3,6 +3,7 @@
 
 
 require_once("../../server/bootstrap.php");
+
 require_once("Utils.php");
 
 
@@ -12,7 +13,7 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
 
 	protected function setUp(){
 		Logger::log("-----------------------------");
-		//$r = SesionController::Iniciar(123, 1, true);
+		$r = SesionController::Iniciar(123, 1, true);
 
 	}
 
@@ -423,7 +424,7 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
 
 	
 	//Imprime la lista de tipos de almacen
-	/*public function testTipoBuscarYDesactivar(){
+	public function testTipoBuscarYDesactivar(){
 
 		$r = AlmacenesController::BuscarTipo();
 
@@ -437,7 +438,7 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
 
 
 		foreach ($r["resultados"] as $tipo) {
-			$tipo = $tipo->asArray();
+			$tipo = $tipo;
 			if($tipo["descripcion"] == "1dee80c7d5ab2c1c90aa8d2f7dd47256"){
 				//ya existe este tipo para testing, hay que desactivarlo
 
@@ -452,7 +453,7 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
 		$found = false;
 
 		foreach ($r["resultados"] as $tipo) {
-			$tipo = $tipo->asArray();
+			$tipo = $tipo;
 			if($tipo["descripcion"] == "1dee80c7d5ab2c1c90aa8d2f7dd47256"){
 				//ya existe este tipo para testing, hay que desactivarlo
 				$found = true;
@@ -460,7 +461,7 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
 		}
 
 		$this->assertFalse($found);
-	}*/
+	}
 
 
 
