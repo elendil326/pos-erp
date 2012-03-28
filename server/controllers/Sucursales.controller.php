@@ -2130,6 +2130,10 @@ require_once("interfaces/Sucursales.interface.php");
                 throw new BusinessLogicException("Ya existe una sucursal con el mismo nombre");
             }            
            
+            if(is_null($saldo_a_favor)){
+                $saldo_a_favor = 0;
+            }
+
             //Se inicializa el objeto sucursal con los parametros obtenidos
             $sucursal=new Sucursal();
             $sucursal->setActiva		($activo);
@@ -2169,9 +2173,7 @@ require_once("interfaces/Sucursales.interface.php");
 	
                 DAO::transRollback();
 
-                //Logger::error( $e );
-                
-                throw new Exception("No se pudo crear la nueva sucursal",901);
+                throw new InvalidDatabaseOperationException($e);
             }
 
             DAO::transEnd();

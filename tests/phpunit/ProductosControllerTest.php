@@ -57,24 +57,25 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 			$codigo_p = self::RandomString(5,FALSE,FALSE,FALSE);
 			$nombre_p = self::RandomString(15,FALSE,FALSE,FALSE); 
 
-			$p = ProductosController::Nuevo($activo= true, 
-											$codigo_producto = $codigo_p, 
-											$compra_en_mostrador = true, 
-											$costo_estandar=10, 
-											$id_unidad_compra = 1, 
-											$metodo_costeo="costo", 
-											$nombre_producto = $nombre_p, 
-											$codigo_de_barras = null, 
-											$control_de_existencia = null, 
-											$descripcion_producto = null, 
-											$foto_del_producto = null, 
-											$garantia = null, 
-											$id_categoria = null, 
-											$id_empresas = null, 
-											$id_unidad = null, 
-											$impuestos = null, 
-											$precio_de_venta = 12
-											);
+			$p = ProductosController::Nuevo(
+				$activo 			= true, 
+				$codigo_producto	= $codigo_p, 
+				$compra_en_mostrador = true, 
+				$id_unidad_compra	= 1, 
+				$metodo_costeo 		="costo", 
+				$nombre_producto 	= $nombre_p, 
+				$codigo_de_barras 	= null, 
+				$control_de_existencia = null, 
+				$costo_estandar = 123, 
+				$descripcion_producto = null, 
+				$foto_del_producto = null, 
+				$garantia = null, 
+				$id_categoria = null, 
+				$id_empresas = null, 
+				$id_unidad = null, 
+				$impuestos = null, 
+				$precio_de_venta = 12 );
+
 			$this->assertInternalType("int" , $p["id_producto"],"---- 'testNuevoProducto' 'id_producto' NO ES UN ENTERO");
 	}
 	
@@ -130,15 +131,15 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 			$codigo_p = self::RandomString(5,FALSE,FALSE,FALSE);
 			$nombre_p = self::RandomString(15,FALSE,FALSE,FALSE); 
 			
-        	$p = ProductosController::Nuevo($activo= true, 
+        	$p = ProductosController::Nuevo( $activo = true, 
 											$codigo_producto = $codigo_p, 
 											$compra_en_mostrador = true, 
-											$costo_estandar=10, 
-											$id_unidad_compra = 1,
-											$metodo_costeo="costo", 
+											$id_unidad_compra = 1 , 
+											$metodo_costeo = "costo", 
 											$nombre_producto = $nombre_p, 
 											$codigo_de_barras = null, 
 											$control_de_existencia = null, 
+											$costo_estandar = 10, 
 											$descripcion_producto = null, 
 											$foto_del_producto = null, 
 											$garantia = null, 

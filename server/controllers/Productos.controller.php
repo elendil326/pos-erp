@@ -731,14 +731,14 @@ class ProductosController extends ValidacionesController implements IProductos
         Logger::log("Creando nuevo producto `$codigo_producto` ....");
         
         //valida los parametros recibidos
-        $validar = self::validarParametrosProducto(null, $compra_en_mostrador, $metodo_costeo, $activo, $codigo_producto, $nombre_producto, $garantia, $costo_estandar, $id_unidad_compra, $control_de_existencia, $descripcion_producto, $foto_del_producto, $costo_extra_almacen = null, $codigo_de_barras, $peso_producto = null, $id_unidad, $precio_de_venta);
+        /*$validar = self::validarParametrosProducto(null, $compra_en_mostrador, $metodo_costeo, $activo, $codigo_producto, $nombre_producto, $garantia, $costo_estandar, $id_unidad_compra, $control_de_existencia, $descripcion_producto, $foto_del_producto, $costo_extra_almacen = null, $codigo_de_barras, $peso_producto = null, $id_unidad, $precio_de_venta);
         
         
         
         if (is_string($validar)) {
             Logger::error($validar);
             throw new Exception($validar);
-        } //is_string($validar)
+        } //is_string($validar)*/
         
         //Se verifica que si se recibio precio como metodo de costeo, se reciba un precio,
         //o si se recibe margen, que se reciba un margen de utilidad.
@@ -764,14 +764,15 @@ class ProductosController extends ValidacionesController implements IProductos
             "control_de_existencia" => $control_de_existencia,
             "descripcion" => $descripcion_producto,
             "foto_del_producto" => $foto_del_producto,
-            "costo_extra_almacen" => $costo_extra_almacen,
+            //"costo_extra_almacen" => $costo_extra_almacen,
             "codigo_de_barras" => trim($codigo_de_barras),
-            "peso_producto" => $peso_producto,
+            //"peso_producto" => $peso_producto,
             "id_unidad" => $id_unidad,
             "precio" => $precio_de_venta
         ));
         
         DAO::transBegin();
+        
         try {
             //Se guarda el producto creado y se asignan las empresas, los impuestos y las clasificaciones recibidas
             ProductoDAO::save($producto);
@@ -793,7 +794,7 @@ class ProductosController extends ValidacionesController implements IProductos
                 foreach ($id_empresas as $id_empresa) {
                     $validar = self::validarParametrosProductoEmpresa($id_empresa);
                     if (is_string($validar))
-                        throw new Exception($validar, 901);
+                        throw new BusinessLogicException($validar, 901);
                     
                     $producto_empresa->setIdEmpresa($id_empresa);
 					Logger::log("vinculando producto con empresa ".$id_empresa);
@@ -806,7 +807,7 @@ class ProductosController extends ValidacionesController implements IProductos
                 $impuestos = object_to_array($impuestos);
                 
                 if (!is_array($impuestos)) {
-                    throw new Exception("Los impuestos fueron recibidos incorrectamente", 901);
+                    throw new BusinessLogicException("Los impuestos fueron recibidos incorrectamente", 901);
                 } //!is_array($impuestos)
                 
                 $impuesto_producto = new ImpuestoProducto(array(
@@ -814,7 +815,7 @@ class ProductosController extends ValidacionesController implements IProductos
                 ));
                 foreach ($impuestos as $impuesto) {
                     if (is_null(ImpuestoDAO::getByPK($impuesto)))
-                        throw new Exception("El impuesto con id " . $impuesto . " no existe", 901);
+                        throw new BusinessLogicException("El impuesto con id " . $impuesto . " no existe", 901);
                     $impuesto_producto->setIdImpuesto($impuesto);
                     ImpuestoProductoDAO::save($impuesto_producto);
                 } //$impuestos as $impuesto
@@ -851,8 +852,8 @@ class ProductosController extends ValidacionesController implements IProductos
             DAO::transRollback();
             Logger::error("No se pudo guardar el nuevo producto: " . $e);
             if ($e->getCode() == 901)
-                throw new Exception("No se pudo guardar el nuevo producto: " . $e->getMessage(), 901);
-            throw new Exception("No se pudo guardar el nuevo producto " . $e->getMessage(), 901);
+                throw new BusinessLogicException("No se pudo guardar el nuevo producto: " . $e->getMessage(), 901);
+            throw new BusinessLogicException("No se pudo guardar el nuevo producto " . $e->getMessage(), 901);
         }
         DAO::transEnd();
         Logger::log("Producto creado exitosamente, id=".$producto->getIdProducto());

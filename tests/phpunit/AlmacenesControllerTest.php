@@ -4,8 +4,6 @@
 
 require_once("../../server/bootstrap.php");
 
-require_once("Utils.php");
-
 
 class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
 
@@ -242,8 +240,15 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
      */
     public function testDesactivarAlmacen(){
 
+        POSController::DropBd();
+
         $usuario = UsuarioDAO::getAll();
-    
+        
+        if(sizeof($usuario) == 0){
+            Logger::error("WHOOOT no hay usuarios en la BD");
+            return;
+        }
+
         $id_usuario = $usuario[0]->getIdUsuario();
 
         DireccionDAO::save( $direccion = new Direccion(array(
@@ -529,7 +534,7 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
         }catch(InvalidDataException $ivde){
 
         }
-        
+
         $this->assertNotNull($ivde);
 
 	}

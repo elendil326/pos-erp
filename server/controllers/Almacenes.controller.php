@@ -134,7 +134,7 @@ class AlmacenesController extends ValidacionesController implements IAlmacenes{
 
                 foreach( $lote_producto as $lote ){
 
-                    if( $lote->getCantidad > 0 ){
+                    if( $lote->getCantidad() > 0 ){
                         Logger::error("No se puede el almacen ya que el lote {$lote->getIdLote()} no esta terminado");
                         throw new BusinessLogicException("No se puede el almacen ya que el lote {$lote->getIdLote()} no esta terminado");
                     }                    

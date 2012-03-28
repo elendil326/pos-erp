@@ -1260,7 +1260,7 @@ CREATE TABLE IF NOT EXISTS `producto` (
   `codigo_producto` varchar(64) NOT NULL COMMENT 'Codigo interno del producto',
   `nombre_producto` varchar(64) NOT NULL COMMENT 'Nombre del producto',
   `garantia` int(11) DEFAULT NULL COMMENT 'Si este producto cuenta con un numero de meses de garantia',
-  `costo_estandar` float NOT NULL COMMENT 'Costo estandar del producto',
+  `costo_estandar` float  NULL COMMENT 'Costo estandar del producto',
   `control_de_existencia` int(11) DEFAULT NULL COMMENT '00000001 = Unidades. 00000010 = Caractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = Lote',
   `descripcion` varchar(255) DEFAULT NULL COMMENT 'Descripcion del producto',
   `foto_del_producto` varchar(100) DEFAULT NULL COMMENT 'Url a una foto de este producto',
