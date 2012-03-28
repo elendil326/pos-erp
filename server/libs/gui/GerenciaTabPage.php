@@ -41,6 +41,7 @@
 
  	public function render(){
 
+ 		
 
  		for ($bfi=0; $bfi < sizeof($this->before_tabbing_cmps); $bfi++) { 
 			parent::addComponent( $this->before_tabbing_cmps[$bfi] );
@@ -51,7 +52,10 @@
  		 * Create tab header
  		 *
  		 **/
- 		$h = "<table class=\"tabs\" ><tr>";
+
+ 		if(sizeof($this->tabs) == 0)  throw new Exception ("there are no tabs in your tabpage");
+
+ 		$h = "<table style='margin-top:10px' class=\"tabs\" ><tr>";
 
  		for ($ti=0; $ti < sizeof($this->tabs); $ti++) { 
 			$h .= "<td style='max-width:84px' id='atab_" . $this->tabs[$ti]["title"] . "' >

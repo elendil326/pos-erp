@@ -159,7 +159,8 @@
 	//require_once("controllers/instances.controller.php");
     
 	require_once("libs/SessionManager.php");
-
+	require_once("libs/FormatTime.php");
+	
 
 	# *******************************
 	# Cargar los DAO
