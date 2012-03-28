@@ -20,5 +20,26 @@ require_once("base/almacen.vo.base.php");
   */
 class AlmacenDAO extends AlmacenDAOBase
 {
+    public static function Existencias(){
 
+        $sql = "select 
+                 s.razon_social as sucursal, 
+                 s.id_sucursal, 
+                 a.id_almacen, 
+                 a.nombre as nombre_almacen, 
+                 lp.id_producto,
+                 sum(lp.cantidad) as cantidad
+              from 
+                 lote l, lote_producto lp, almacen a, sucursal s
+              where 
+                 lp.id_lote = l.id_lote 
+                 and l.id_almacen = a.id_almacen 
+                 and a.id_sucursal = s.id_sucursal
+              group by id_almacen, id_producto";
+
+     
+        global $conn;
+        return $conn->Execute( $sql )->GetArray();
+
+    }
 }

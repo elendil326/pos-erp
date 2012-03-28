@@ -21,4 +21,5 @@ require_once("base/lote.vo.base.php");
 class LoteDAO extends LoteDAOBase
 {
 
+
 }

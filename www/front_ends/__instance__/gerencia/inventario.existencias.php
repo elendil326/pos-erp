@@ -12,12 +12,12 @@
 		
 		$inventario = InventarioController::Existencias();
 		$inventario = $inventario["resultados"];
+		
 
 		$tabla = new TableComponent( 
 			array(
                 "id_producto"                   => "Producto",
-				"id_almacen"                    => "Almacen",
-				"id_unidad"                     => "Unidad",
+				"nombre_almacen"                    => "Almacen",
 				"cantidad"               		=> "Cantidad"
 			),
 			$inventario
@@ -25,7 +25,7 @@
         
 
         
-		function funcion_producto($id_producto)
+				function funcion_producto($id_producto)
                 {
                     return (ProductoDAO::getByPK($id_producto) ? ProductoDAO::getByPK($id_producto)->getNombreProducto() : "-----" );
                 }
@@ -42,7 +42,7 @@
 
                 $tabla->addColRender("id_producto", "funcion_producto");
                 $tabla->addColRender("id_almacen", "funcion_almacen");
-                $tabla->addColRender("id_unidad", "funcion_unidad");
+                //$tabla->addColRender("id_unidad", "funcion_unidad");
         
 		$tabla->addOnClick( "id_producto", "(function(a){ window.location = 'productos.ver.php?pid=' + a; })" );
 		

@@ -43,13 +43,28 @@ Se puede ordenar por los atributos de producto.
 	{  
 		
 			Logger::log("Listando las existencias....");
+            $e = AlmacenDAO::Existencias();
+            return array( "resultados" => $e , "numero_de_resultados" => sizeof($e) );
+
 			
+
 			$daoProductos = ProductoDAO::getAll();
 		
 			$aOut = array();
-			$nOutSize = 0;
+
+            $daoAlmacenes = AlmacenDAO::getAll();
 		
-			for ($iProd=0; $iProd < sizeof($daoProductos); $iProd++, $nOutSize++) { 
+			for ($iProd=0; $iProd < sizeof($daoProductos); $iProd++) { 
+
+                //por cada almacen
+                for ($iAl=0; $iAl < sizeof( $daoAlmacenes ); $iAl++) { 
+                    //buscar sus lotes
+
+
+                }
+
+                array_push($aOut, $daoProductos[$iProd]->asArray());
+
 				
 			}
 			
@@ -199,6 +214,13 @@ Se puede ordenar por los atributos de producto.
             return $existencias;
             
 	}
+
+
+
+
+
+
+
         
         //Este metodo es usado por el metodo existencias, pues cuando se listan las existencias
         //de los productos de una empresa o de una sucursal, se tienen que recorrer todos sus

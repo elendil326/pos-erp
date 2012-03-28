@@ -38,7 +38,8 @@
 
 
 	?>
-	<h3>Al parecer aun no esta aprovechando todo el potencial de Caffeina POS.</h3>
+
+	<h3 style="margin-top:170px">Al parecer aun no esta aprovechando todo el potencial de Caffeina POS.</h3>
 		<table>
 			<tr>
 				<td><img src="../../../media/iconos/1332931020_Photomanipulation.png"></td>
