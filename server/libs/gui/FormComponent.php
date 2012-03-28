@@ -251,14 +251,13 @@ class FormComponent implements GuiComponent
 			
 				if (!is_null($this->send_to_api_redirect)){
 
-					$html .= "			window.location = '" . $this->send_to_api_redirect . "?&previous_action=ok';\n";
+					$html .= "			window.location = '" . $this->send_to_api_redirect . "&previous_action=ok';\n";
 
-				}else
-					$html .= "			Ext.MessageBox.show({\n
-					           				title: 'OK',\n
-					           				msg: 'OK.',\n
-					           				buttons: Ext.MessageBox.OK\n
-					       				});	/* console.log('OKAY'); */ \n";
+				}else{
+					$html .= "Ext.example.msg('Exito', 'Your data was saved!');";
+					
+				}
+
 			
 				$html .= "			\n";
 				$html .= "			\n";

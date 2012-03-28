@@ -1795,7 +1795,9 @@ class CargosYAbonosController extends ValidacionesController implements ICargosY
         Logger::log("Creando nuevo gasto");
         
         //obtiene al usuario de la sesion actual
-        $id_usuario = SesionController::getCurrentUser();
+        $id_usuario = SesionController::Actual();
+        $id_usuario = $id_usuario["id_usuario"];
+        
         if (is_null($id_usuario)) {
             Logger::error("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
             throw new Exception("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
