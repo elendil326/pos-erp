@@ -290,6 +290,8 @@ $page->partialRender();
         
             Ext.Array.forEach( this.store, function(c){
 
+                error += regla.secuencia < 1 ? "Indique un numero valido de secuencia.<br/>":"";
+
                 error += c.secuencia == regla.secuencia ? "Ya se cuenta con ese numero de secuencia.<br/>":"";
                 error += c.nombre == regla.nombre ? "Ya existe una regla con ese nombre.<br/>":"";
                 
@@ -362,7 +364,7 @@ $page->partialRender();
                     "id_moneda":Ext.get('id_moneda_tarifa').getValue(),
                     "nombre":nombre,
                     "tipo_tarifa":Ext.get('tipo_tarifa').getValue(),
-                    "default":Ext.get('form_tarifa').dom.default_tarifa[0].checked,
+                    "default":Ext.get('form_tarifa').dom.default_tarifa[0].checked == true ? true : null,
                     "fecha_fin":Ext.Date.format(end_date.getValue(), 'Y-m-d') + " 00:00:00",
                     "fecha_inicio":Ext.Date.format(start_date.getValue(), 'Y-m-d') + " 00:00:00",
                     "formulas":r.getReglas()

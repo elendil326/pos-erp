@@ -83,17 +83,17 @@ class ReporteComponent implements GuiComponent{
 			function meses(m){m=parseFloat(m);switch(m){case 1:return"enero";case 2:return"febrero";case 3:return"marzo";case 4:return"abril";case 5:return"mayo";case 6:return"junio";case 7:return"julio";case 8:return"agosto";case 9:return"septiembre";case 10:return"octubre";case 11:return"noviembre";case 12:return"diciembre";}}
 		</script>
 		<script type="text/javascript" charset="utf-8" src="http://api.caffeina.mx/prototype/prototype.js"></script>
-		<script src="http://127.0.0.1/caffeina/pos/trunk/www/frameworks/humblefinance/flotr/flotr.js" type="text/javascript" charset="utf-8"></script>
-		<script src="http://127.0.0.1/caffeina/pos/trunk/www/frameworks/humblefinance/flotr/excanvas.js" type="text/javascript" charset="utf-8"></script>
-		<script src="http://127.0.0.1/caffeina/pos/trunk/www/frameworks/humblefinance/flotr/canvastext.js" type="text/javascript" charset="utf-8"></script>
-		<script src="http://127.0.0.1/caffeina/pos/trunk/www/frameworks/humblefinance/flotr/canvas2image.js" type="text/javascript" charset="utf-8"></script>
-		<script src="http://127.0.0.1/caffeina/pos/trunk/www/frameworks/humblefinance/flotr/base64.js" type="text/javascript" charset="utf-8"></script>
-		<script type="text/javascript" charset="utf-8" src="http://127.0.0.1/caffeina/pos/trunk/www/frameworks/humblefinance/humble/HumbleFinance.js"></script>
-		<link rel="stylesheet" href="http://127.0.0.1/caffeina/pos/trunk/www/frameworks/humblefinance/humble/finance.css" type="text/css" media="screen" title="no title" charset="utf-8">
+		<script src="http://192.168.1.103/caffeina/pos/trunk/www/frameworks/humblefinance/flotr/flotr.js" type="text/javascript" charset="utf-8"></script>
+		<script src="http://192.168.1.103/caffeina/pos/trunk/www/frameworks/humblefinance/flotr/excanvas.js" type="text/javascript" charset="utf-8"></script>
+		<script src="http://192.168.1.103/caffeina/pos/trunk/www/frameworks/humblefinance/flotr/canvastext.js" type="text/javascript" charset="utf-8"></script>
+		<script src="http://192.168.1.103/caffeina/pos/trunk/www/frameworks/humblefinance/flotr/canvas2image.js" type="text/javascript" charset="utf-8"></script>
+		<script src="http://192.168.1.103/caffeina/pos/trunk/www/frameworks/humblefinance/flotr/base64.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8" src="http://192.168.1.103/caffeina/pos/trunk/www/frameworks/humblefinance/humble/HumbleFinance.js"></script>
+		<link rel="stylesheet" href="http://192.168.1.103/caffeina/pos/trunk/www/frameworks/humblefinance/humble/finance.css" type="text/css" media="screen" title="no title" charset="utf-8">
 		
 		<h2><?php echo $title; ?></h2>
 		
-		<div id="<?php echo $id; ?>"><div id="fechas"></div></div>
+		<div style ="width: 95%" id="<?php echo $id; ?>"><div id="fechas"></div></div>
 		
 		<script type="text/javascript" charset="utf-8">
 

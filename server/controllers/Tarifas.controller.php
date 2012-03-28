@@ -550,8 +550,10 @@ Solo se puede elegir una tarifa de tipo compra.
             //Se busca la tarifa default del sistema y se desactiva su bandera
             $tarifas_default = TarifaDAO::search( new Tarifa( array( "activa" => 1, "default" => 1, "tipo_tarifa" => "compra" ) ) );
             
+            //---------------------------------
+            
             //Si se encuentra mas de una default o ninguna default, mandar un error fatal, pues no deberia darse este caso.
-            if(count($tarifas_default)!=1)
+            /*if(count($tarifas_default)!=1)
             {
                 Logger::error("FATAL!!! No se encontro o se encontro mas de una tarifa de compra por default en el sistema");
                 throw new Exception("FATAL!!! No se encontro o se encontro mas de una tarifa de compra por default en el sistema",901);
@@ -559,14 +561,34 @@ Solo se puede elegir una tarifa de tipo compra.
             
             //Se da por hecho que solo hay una tarifa de compra por default en el sistema 
             $tarifa_default = $tarifas_default[0];
-            $tarifa_default->setDefault(0);
+            $tarifa_default->setDefault(0);*/
             
+            
+            DAO::transBegin();
+            
+            foreach($tarifas_default as $t){
+                
+                $t->setDefault(0);
+                
+                try
+                {
+                    TarifaDAO::save($t);                    
+                }
+                catch(Exception $e)
+                {
+                    DAO::transRollback();
+                    Logger::error("No se pudo cambiar la tarifa de compra por default del sistema: ".$e);
+                    throw new Exception("No se pudo cambiar la tarifa de compra por default del sistema. Intentelo mas tarde o consulte a su administrador del sistema",901);
+                }
+            }
+            
+            //---------------------------------------
             
             $tarifa->setDefault(1);
-            DAO::transBegin();
+           
             try
             {
-                TarifaDAO::save($tarifa_default);
+                //TarifaDAO::save($tarifa_default);
                 TarifaDAO::save($tarifa);
             }
             catch(Exception $e)
@@ -941,15 +963,18 @@ Una version default no puede caducar.
                 throw new Exception("FATAL!!!! ".$validar,901);
             }
             $tarifa = TarifaDAO::getByPK($id_tarifa);
+
+            //---------------------------------------------------------------------
             
             $versiones_default = VersionDAO::search( new Version( array( "id_tarifa" => $id_tarifa, "default" => 1 ) ) );
+                        
             
             //Si existe mas de una version default, se manda error fatal pues ese caso no deberia de ocurrir
-            if(count($versiones_default)>1)
+            /*if(count($versiones_default)>1)
             {
                 Logger::error("FATAL!!!! Se encontro mas de una version default en la tarifa ".$id_tarifa);
                 throw new Exception("FATAL!!!! Se encontro mas de una version default en la tarifa ".$id_tarifa,901);
-            }
+            }*/
             
             $version_default = null;
             //Puede darse el caso que no exista ninguna version default aun.
@@ -960,7 +985,12 @@ Una version default no puede caducar.
                 $version_default->setDefault(0);
             }
             $version->setDefault(1);
-            $tarifa->setIdVersionDefault($version->getIdVersion());
+            $tarifa->setIdVersionDefault($version->getIdVersion());                        
+            
+            
+            //-----------------------------------------------------------------------
+            
+            
             DAO::transBegin();
             try
             {
@@ -1168,7 +1198,7 @@ Una misma regla puede aplicar a un producto, una clasificacion de producto, un s
             
             //Valida que la secuencia de la regla no exista ya en esta version
             $reglas = ReglaDAO::search(new Regla( array( "id_version" => $id_version ) ));
-            
+            //var_dump($reglas);
             foreach($reglas as $regla)
             {
                 if($regla->getSecuencia()==$secuencia)
@@ -1671,6 +1701,14 @@ La asignacion de una formula a algun producto, servicio, etc. requiere una secue
             DAO::transBegin();
             try
             {
+                
+                //parametros de Nuevatarifa Base
+                //$id_moneda, 
+		//$nombre, 
+		//$tipo_tarifa, 
+		//$activa = null, 
+		//$default = null
+                
                 //Se crea la tarifa base con los parametros obtenidos
                 $id_tarifa = self::NuevaTarifaBase($id_moneda, $nombre, $tipo_tarifa, 1, $default);
                 
@@ -1678,6 +1716,16 @@ La asignacion de una formula a algun producto, servicio, etc. requiere una secue
                 //Se crea otra version que sera la default de la tazrifa con una regla sin cambios a los precios
                 if( !is_null($fecha_inicio) || !is_null($fecha_fin) )
                 {
+                    
+                    //parametros para nueva version
+                    //$id_tarifa, 
+                    //$nombre, 
+                    //$activa = null, 
+                    //$default = null, 
+                    //$fecha_fin = null, 
+                    //$fecha_inicio = null
+                    
+                    
                     $id_version_default = self::NuevaVersion($id_tarifa, $nombre." v1", null, 1);
                     $nombre_version = $nombre." v2";
                     $id_version = self::NuevaVersion($id_tarifa, $nombre_version, 1, NULL, $fecha_fin, $fecha_inicio);
@@ -1686,6 +1734,14 @@ La asignacion de una formula a algun producto, servicio, etc. requiere una secue
                 }
                 else
                 {
+                    //nueva version
+                    //$id_tarifa, 
+                    //$nombre, 
+                    //$activa = null, 
+                    //$default = null, 
+                    //$fecha_fin = null, 
+                    //$fecha_inicio = null
+                    
                     $nombre_version = $nombre." v1";
                     $id_version = self::NuevaVersion($id_tarifa, $nombre_version, 1, 1, $fecha_fin, $fecha_inicio);
                 }
