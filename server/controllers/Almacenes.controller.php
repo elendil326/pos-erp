@@ -1191,7 +1191,7 @@ Creo que este metodo tiene que estar bajo sucursal.
 
         DAO::transEnd();
 
-        return array("id_salida_lote" => $_lote->getIdLoteEntrada());
+        return array("id_salida_lote" => $sl->getIdLoteSalida());
 
 
     }  
