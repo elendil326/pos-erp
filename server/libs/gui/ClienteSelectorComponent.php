@@ -23,24 +23,33 @@ class ClienteSelectorComponent implements GuiComponent{
 		<script>
 
         var cliente_seleccionado = null;
+       	<?php if(is_null($this->_js_callback)){ ?>
+        var seleccion_de_cliente_otro = function(){
+        	Ext.get("buscar_cliente_02").update("").hide();
+			Ext.get("ClienteSelectorComponent_001").show();	
+			cliente_seleccionado = null;
+        }
+       	<?php } ?>
 
         var seleccion_de_cliente = function(a,c){
 		
 		    cliente_seleccionado = c[0];
 		
-		    console.log("Cliente seleccionado", cliente_seleccionado);
+		    //console.log("Cliente seleccionado", cliente_seleccionado);
 		
-		    Ext.get("buscar_cliente_01").enableDisplayMode('block').hide();
-		    var pphtml = "<h3 style='margin:0px'><a target=\"_blank\" href='clientes.ver.php?cid="+cliente_seleccionado.get("id_usuario")+"'>" + cliente_seleccionado.get("nombre") + " " + ( cliente_seleccionado.get("rfc") !== null ? " - " + cliente_seleccionado.get("rfc") : "") + "</a></h3>";
+		    
 
-		    //pphtml += "<br><div class='POS Boton' onClick='alert(\"dd\")'>Seleccionar Usuario</div>";
-		
-		    Ext.get("buscar_cliente_02").update(pphtml).show();
+		    <?php if(is_null($this->_js_callback)){ ?>
+			    Ext.get("buscar_cliente_01").enableDisplayMode('block').hide();
+			    var pphtml = "<h3 style='margin:0px'><a target=\"_blank\" href='clientes.ver.php?cid="+cliente_seleccionado.get("id_usuario")+"'>" + cliente_seleccionado.get("nombre") + " " + ( cliente_seleccionado.get("rfc") !== null ? " - " + cliente_seleccionado.get("rfc") : "") + "</a></h3>";
+			    pphtml += "<a href='JAVASCRIPT:seleccion_de_cliente_otro();'>otro</a>";
+				Ext.get("buscar_cliente_02").update(pphtml).show();
+				Ext.get("ClienteSelectorComponent_001").hide();
 
-			<?php 
-				if(!is_null($this->_js_callback))
+			<?php } else { 
 				echo $this->_js_callback . ".call( null, cliente_seleccionado);"; 
-			?>
+				
+			} ?>
 	    };
 
       	Ext.onReady(function(){				
@@ -127,6 +136,7 @@ class ClienteSelectorComponent implements GuiComponent{
 				    },
 	                xtype: 'combo',
 	                store: ds,
+	                emptyText : "Busque un cliente",
 	                displayField: 'title',
 	                typeAhead: true,
 	                hideLabel: true,
@@ -152,11 +162,11 @@ class ClienteSelectorComponent implements GuiComponent{
 
         </script>
 					
-        <table border="0" style="width: 100%">
+        <table border="0" style="width: 100%" >
 			<tr id="SeleccionDeCliente">
 				<td colspan="4">
-					<div id="buscar_cliente_01">
-						<p style="margin-bottom: 0px;">Seleccione un usuario</p>
+					<div id="buscar_cliente_01" style="display:none">
+						<p style="margin-bottom: 0px;"></p>
 						<div style="margin-bottom: 15px;" id="ShoppingCartComponent_002"><!-- clientes --></div>				
 					</div>
 					<div id="buscar_cliente_02" style="display:none; margin-bottom: 0px"></div>						
@@ -165,6 +175,7 @@ class ClienteSelectorComponent implements GuiComponent{
         </table>
 
 		<div id="ClienteSelectorComponent_001"><!-- buscar clientes --></div>		        
+		&nbsp;<bR>
 
 		<?php
 

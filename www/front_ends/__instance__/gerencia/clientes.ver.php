@@ -9,7 +9,6 @@
 	$este_usuario = UsuarioDAO::getByPK( $_GET["cid"] );
 	
 	if(is_null($este_usuario)){
-	
 		die;
 	}
 	//
@@ -24,7 +23,12 @@
 	$page->addComponent( new TitleComponent(  utf8_decode($este_usuario->getNombre()) , 2 ));
 
 	
-	$page->nextTab("Datos");
+	$page->nextTab("Panorama");
+
+
+	
+
+	$page->nextTab("General");
 
 
 
@@ -150,6 +154,7 @@
 	$page->addComponent(new TitleComponent("Nuevo seguimiento", 3));
 	$nseguimiento = new DAOFormComponent( new ClienteSeguimiento( array( "id_cliente" => $este_usuario->getIdUsuario() ) ) );
 	$nseguimiento->addApiCall("api/cliente/seguimiento/nuevo");
+	$nseguimiento->settype("texto", "textarea");
 	$nseguimiento->hideField( array(
 		"id_usuario",
 		"id_cliente",
@@ -157,7 +162,7 @@
 		"fecha"
 	) );
 	$nseguimiento->sendHidden("id_cliente");
-	$page->addComponent($nseguimiento );
+	$page->addComponent( $nseguimiento );
 	
 	
 	$page->render();

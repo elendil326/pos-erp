@@ -19,7 +19,7 @@
 				"nombre_servicio" => "Nombre",
 				"metodo_costeo" => "Metodo de costeo",
 				"precio" => "Precio",
-				"margen_de_utilidad" => "Margen de Utilidad",
+				
 				"activo" => "Activo"
 			),
 			$r["resultados"]
