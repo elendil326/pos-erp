@@ -30,45 +30,7 @@ class GerenciaComponentPage extends PosComponentPage{
 
 		        {
 		            "title": "Cargos y abonos",
-		            "url": "cargos_y_abonos.php",
-		            "children": [
-		                {
-		                    "title": "Lista abono",
-		                    "url": "cargos_y_abonos.lista.abono.php"
-		                },
-		                {
-		                    "title": "Lista concepto de gasto",
-		                    "url": "cargos_y_abonos.lista.concepto.gasto.php"
-		                },
-		                {
-		                    "title": "Nuevo concepto de gasto",
-		                    "url": "cargos_y_abonos.nuevo.concepto.gasto.php"
-		                },
-		                {
-		                    "title": "Lista gasto",
-		                    "url": "cargos_y_abonos.lista.gasto.php"
-		                },
-		                {
-		                    "title": "Nuevo gasto",
-		                    "url": "cargos_y_abonos.nuevo.gasto.php"
-		                },
-		                {
-		                    "title": "Lista concepto de ingreso",
-		                    "url": "cargos_y_abonos.lista.concepto.ingreso.php"
-		                },
-		                {
-		                    "title": "Nuevo concepto de ingreso",
-		                    "url": "cargos_y_abonos.nuevo.concepto.ingreso.php"
-		                },
-		                {
-		                    "title": "Lista ingreso",
-		                    "url": "cargos_y_abonos.lista.ingreso.php"
-		                },
-		                {
-		                    "title": "Nuevo ingreso",
-		                    "url": "cargos_y_abonos.nuevo.ingreso.php"
-		                }
-		            ]
+		            "url": "cargos_y_abonos.php"
 		        },
 		        {
 		            "title": "Clientes",

@@ -91,16 +91,20 @@
 
 	$page->addComponent(new TitleComponent("Ordenes de servicio de esta venta", 3));
 
-	$tabla = new TableComponent(array(
-		"id_orden_de_servicio" => "Orden de Servicio",
-		"cantidad" => "Cantidad",
-		"precio" => "Precio Unitario",
-		"descuento" => "Descuento",
-		"impuesto" => "Impuesto",
-		"retencion" => "Retencion"
-	), VentaOrdenDAO::search(new VentaOrden(array(
+
+	if(($v = VentaOrdenDAO::search(new VentaOrden(array(
 		"id_venta" => $_GET["vid"]
-	))));
+	)))) > 0){
+
+		$tabla = new TableComponent(array(
+			"id_orden_de_servicio" => "Orden de Servicio",
+			"precio" => "Precio",
+			"descuento" => "Descuento"
+		), $v);	
+
+	}
+
+	
 
 	function funcion_orden_de_servicio($id_orden_de_servicio)
 	{
@@ -116,32 +120,33 @@
 
 	$page->partialRender();
 	
-?>
 
-
-	aqui puedo poner html 
-
-<?php
-
-	$tabla = new TableComponent(array(
-		"id_paquete" => "Paquete",
-		"cantidad" => "Cantidad",
-		"precio" => "Precio Unitario",
-		"descuento" => "Descuento",
-		"impuesto" => "Impuesto",
-		"retencion" => "Retencion"
-	), VentaPaqueteDAO::search(new VentaPaquete(array(
-		"id_venta" => $_GET["vid"]
-	))));
-
-	function funcion_paquete($id_paquete)
-	{
+	function funcion_paquete($id_paquete){
 		return PaqueteDAO::getByPK($id_paquete) ? PaqueteDAO::getByPK($id_paquete)->getNombre() : "---------";
 	}
 
-	$tabla->addColRender("id_paquete", "funcion_paquete");
+	if(($p = VentaPaqueteDAO::search(new VentaPaquete(array(
+		"id_venta" => $_GET["vid"]
+	)))) > 0){
 
-	$page->addComponent($tabla);
+		
+		$tabla = new TableComponent(array(
+			"id_paquete" => "Paquete",
+			"cantidad" => "Cantidad",
+			"precio" => "Precio Unitario",
+			"descuento" => "Descuento",
+			"impuesto" => "Impuesto",
+			"retencion" => "Retencion"
+		), $p);
+
+		$tabla->addColRender("id_paquete", "funcion_paquete");
+
+		$page->addComponent($tabla);
+	}
+
+
+
+	
 
 /*
 	$page->addComponent(new TitleComponent("Informacion de Arpilla", 3));

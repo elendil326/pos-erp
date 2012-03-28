@@ -186,13 +186,14 @@ class PosComponentPage extends StdComponentPage{
 				<div class="content">
 					
 					<div class="copyright">
-					Caffeina Software
+					<a href="http://caffeina.mx"> Caffeina Software</a>
 					</div>
 
 					<div class="links">
 						<a href="">Admin</a>
 						<a href="">API Publica</a>
 						<a href="front_ends/j/">Desarrolladores</a>
+
 					</div>
 				</div>
 			</div>
