@@ -273,12 +273,12 @@ class GerenciaComponentPage extends PosComponentPage{
 		                    "url": "productos.lista.equivalencia.unidad.php"
 		                },
 		                {
-		                    "title": "Nueva unidad",
-		                    "url": "productos.nueva.unidad.php"
+		                    "title": "Nueva Unidad Medida",
+		                    "url": "productos.nueva.unidad_medida.php"
 		                },
 		                {
-		                    "title": "Nueva equivalencia unidad",
-		                    "url": "productos.nueva.equivalencia.unidad.php"
+		                    "title": "Nueva Categoria Unidad Medida",
+		                    "url": "productos.nueva.categoria_unidad_medida.php"
 		                }
 		            ]
 		        },

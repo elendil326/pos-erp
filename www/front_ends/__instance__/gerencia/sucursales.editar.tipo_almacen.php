@@ -25,7 +25,7 @@
                 $form->addApiCall( "api/almacen/tipo/editar" , "POST");
                 $form->onApiCallSuccessRedirect("sucursales.lista.tipo_almacen.php");
 
-                
+                $form->hideField( array( "activo" ));
 
                 $page->addComponent( $form );
 

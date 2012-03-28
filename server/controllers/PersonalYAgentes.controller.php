@@ -1760,13 +1760,13 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             }
             
             //Si no se recibe una tarifa de venta, se toma la default
-            if(is_null($id_tarifa_venta))
+            if(isset($id_tarifa_venta))
             {
                 $id_tarifa_venta=1;
             }
             
             //Si no se recibe una tarifa de compra, se toma la default
-            if(is_null($id_tarifa_compra))
+            if(isset($id_tarifa_compra))
             {
                 $id_tarifa_compra=2;
             }

@@ -31,7 +31,8 @@
 	$form->makeObligatory(array("razon_social" ));
 	
 	$add_form = new DAOFormComponent( $esta_direccion );
-	
+	$form->setType("fecha_apertura","date");
+
 	$js = "(function(){
 				POS.API.GET(\"api/sucursal/editar/\",{
 					id_sucursal		: " .  $_GET['sid'] . ",
@@ -68,7 +69,7 @@
 				"id_usuario_ultima_modificacion"	));
 			
 	$add_form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll() );		
-
+	
 	$add_form->renameField( array( 
 		"id_ciudad" => "ciudad",
 	));

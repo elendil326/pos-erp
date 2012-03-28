@@ -6073,12 +6073,12 @@
 			"activo" => new ApiExposedProperty("activo", true, POST, array( "bool" )),
 			"codigo_producto" => new ApiExposedProperty("codigo_producto", true, POST, array( "string" )),
 			"compra_en_mostrador" => new ApiExposedProperty("compra_en_mostrador", true, POST, array( "bool" )),
-			"costo_estandar" => new ApiExposedProperty("costo_estandar", true, POST, array( "string" )),
 			"id_unidad_compra" => new ApiExposedProperty("id_unidad_compra", true, POST, array( "string" )),
 			"metodo_costeo" => new ApiExposedProperty("metodo_costeo", true, POST, array( "string" )),
 			"nombre_producto" => new ApiExposedProperty("nombre_producto", true, POST, array( "string" )),
 			"codigo_de_barras" => new ApiExposedProperty("codigo_de_barras", false, POST, array( "string" )),
 			"control_de_existencia" => new ApiExposedProperty("control_de_existencia", false, POST, array( "int" )),
+			"costo_estandar" => new ApiExposedProperty("costo_estandar", false, POST, array( "string" )),
 			"descripcion_producto" => new ApiExposedProperty("descripcion_producto", false, POST, array( "string" )),
 			"foto_del_producto" => new ApiExposedProperty("foto_del_producto", false, POST, array( "string" )),
 			"garantia" => new ApiExposedProperty("garantia", false, POST, array( "int" )),
@@ -6098,12 +6098,12 @@
 			isset($_POST['activo'] ) ? $_POST['activo'] : null,
 			isset($_POST['codigo_producto'] ) ? $_POST['codigo_producto'] : null,
 			isset($_POST['compra_en_mostrador'] ) ? $_POST['compra_en_mostrador'] : null,
-			isset($_POST['costo_estandar'] ) ? $_POST['costo_estandar'] : null,
 			isset($_POST['id_unidad_compra'] ) ? $_POST['id_unidad_compra'] : null,
 			isset($_POST['metodo_costeo'] ) ? $_POST['metodo_costeo'] : null,
 			isset($_POST['nombre_producto'] ) ? $_POST['nombre_producto'] : null,
 			isset($_POST['codigo_de_barras'] ) ? $_POST['codigo_de_barras'] :  null,
 			isset($_POST['control_de_existencia'] ) ? $_POST['control_de_existencia'] :  null,
+			isset($_POST['costo_estandar'] ) ? $_POST['costo_estandar'] :  null,
 			isset($_POST['descripcion_producto'] ) ? $_POST['descripcion_producto'] :  null,
 			isset($_POST['foto_del_producto'] ) ? $_POST['foto_del_producto'] :  null,
 			isset($_POST['garantia'] ) ? $_POST['garantia'] :  null,
@@ -6448,7 +6448,7 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"abreviatura" => new ApiExposedProperty("abreviatura", true, GET, array( "string" )),
+			"abreviacion" => new ApiExposedProperty("abreviacion", true, GET, array( "string" )),
 			"descripcion" => new ApiExposedProperty("descripcion", true, GET, array( "string" )),
 			"factor_conversion" => new ApiExposedProperty("factor_conversion", true, GET, array( "float" )),
 			"id_categoria_unidad_medida" => new ApiExposedProperty("id_categoria_unidad_medida", true, GET, array( "int" )),
@@ -6462,7 +6462,7 @@
  		$this->response = ProductosController::NuevaUnidadUdm( 
  			
 			
-			isset($_GET['abreviatura'] ) ? $_GET['abreviatura'] : null,
+			isset($_GET['abreviacion'] ) ? $_GET['abreviacion'] : null,
 			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
 			isset($_GET['factor_conversion'] ) ? $_GET['factor_conversion'] : null,
 			isset($_GET['id_categoria_unidad_medida'] ) ? $_GET['id_categoria_unidad_medida'] : null,

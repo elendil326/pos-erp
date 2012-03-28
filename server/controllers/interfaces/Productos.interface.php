@@ -188,12 +188,12 @@ NOTA: Se crea un producto tipo = 1 que es para productos.
  	 * @param activo bool Si queremos que este activo o no este producto despues de crearlo.
  	 * @param codigo_producto string El codigo de control de la empresa para este producto, no se puede repetir
  	 * @param compra_en_mostrador bool Verdadero si este producto se puede comprar en mostrador, para aquello de compra-venta
- 	 * @param costo_estandar string Este valor sera tomado solo en caso de seleccionar `costo estandar` como mtodo de costeo
  	 * @param id_unidad_compra string Unidad de medida por defecto utilizada para los pedidos de compra. Debe estar en la misma categora que la unidad de medida por defecto.
  	 * @param metodo_costeo string `costo` el precio de coste es fijo y se recalcula periodicamente (normalmente al finalizar el anio).`precio` 
  	 * @param nombre_producto string Nombre del producto
  	 * @param codigo_de_barras string El Codigo de barras para este producto
  	 * @param control_de_existencia int 00000001 = Unidades. 00000010 = Caractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = Lote
+ 	 * @param costo_estandar string Este valor sera tomado solo en caso de seleccionar `costo estandar` como mtodo de costeo
  	 * @param descripcion_producto string Descripcion larga del producto
  	 * @param foto_del_producto string url a una foto de este producto
  	 * @param garantia int Numero de meses de garantia con los que cuenta esta categoria de producto
@@ -209,12 +209,12 @@ NOTA: Se crea un producto tipo = 1 que es para productos.
 		$activo, 
 		$codigo_producto, 
 		$compra_en_mostrador, 
-		$costo_estandar, 
 		$id_unidad_compra, 
 		$metodo_costeo, 
 		$nombre_producto, 
 		$codigo_de_barras = null, 
 		$control_de_existencia = null, 
+		$costo_estandar = null, 
 		$descripcion_producto = null, 
 		$foto_del_producto = null, 
 		$garantia = null, 
@@ -352,7 +352,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos.
  	 *
  	 *Crea una nueva unidad de medida
  	 *
- 	 * @param abreviatura string Descripcin corta de la unidad, normalmente sera empelada en ticket de venta
+ 	 * @param abreviacion string Descripcin corta de la unidad, normalmente sera empelada en ticket de venta
  	 * @param descripcion string Descripcin de la unidad de medida
  	 * @param factor_conversion float Equivalencia de esta unidad con respecto a la unidad de medida base obtenida de la categora a la cual pertenece esta unidad. En caso de que se seleccione el valor de tipo_unidad_medida = "Referencia UdM para esta categoria"  este valor sera igual a uno automticamente sin posibilidad de ingresar otro valor diferente
  	 * @param id_categoria_unidad_medida int Id de la categora a la cual pertenece la unidad
@@ -362,7 +362,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos.
  	 **/
   static function NuevaUnidadUdm
 	(
-		$abreviatura, 
+		$abreviacion, 
 		$descripcion, 
 		$factor_conversion, 
 		$id_categoria_unidad_medida, 
