@@ -22,6 +22,7 @@
 		 *  
 		 * ************************************************** */
 		$page->addComponent( new TitleComponent( "Gastos", 3 ) );
+
 		$lista = CargosYAbonosController::ListaGasto();
 
 		$tabla = new TableComponent( 
@@ -44,7 +45,7 @@
 
 		$form = new DAOFormComponent(array(
 		    new Gasto(),
-			new ConceptoIngreso()		    
+			new ConceptoGasto()		    
 		));
  
 		$form->hideField(array(	    
@@ -55,19 +56,25 @@
 			"motivo_cancelacion",
 			"fecha_de_registro",
 			"id_sucursal",
-			"id_caja"
+			"id_caja",
+			"id_orden_de_servicio",
+			"nombre",
+			
 		));
+
+
 
 		
 		$form->createComboBoxJoin("id_empresa", "razon_social", EmpresaDAO::getAll());
-		$form->createComboBoxJoin("id_concepto_ingreso", "nombre", ConceptoIngresoDAO::getAll());		
+		$form->createComboBoxJoin("id_concepto_gasto", "nombre", ConceptoIngresoDAO::getAll());		
 		$form->createComboBoxJoin("id_caja", "descripcion", CajaDAO::getAll());
 		$form->addApiCall("api/cargosyabonos/gasto/nuevo", "GET"); /* THIS SHOULD BE POST!!! */
 		
 
 		$form->renameField( array("fecha_del_gasto" => "fecha_gasto") );
 		$form->setType("fecha_gasto", "date");
-		$form->makeObligatory("fecha_gasto");
+
+		$form->makeObligatory(array("fecha_gasto", "monto", "id_empresa"));
 		$page->addComponent($form);		
 		
 

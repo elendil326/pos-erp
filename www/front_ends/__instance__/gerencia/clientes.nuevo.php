@@ -74,6 +74,8 @@
 	    "pagina_web" => "direccion_web"
 	));
 
+	$form->makeObligatory("razon_social");
+
 	$page->addComponent($form);
 
 

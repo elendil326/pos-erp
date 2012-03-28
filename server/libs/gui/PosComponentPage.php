@@ -110,7 +110,6 @@ class PosComponentPage extends StdComponentPage{
 				</div>
 				<div class="body nav">
 					<div class="content">
-
 						<!-- ----------------------------------------------------------------------
 										MENU
 							 ---------------------------------------------------------------------- -->
@@ -126,6 +125,36 @@ class PosComponentPage extends StdComponentPage{
 						<div id="bodyText" class="bodyText">
 							<div class="header">
 								<div class="content">
+								<style>
+								.msg .x-box-mc {
+								    font-size:14px;
+								}
+								#msg-div {
+								    position:absolute;
+								    left:55%;
+								    top:10px;
+								    width:300px;
+								    z-index:20000;
+								}
+								#msg-div .msg {
+								    border-radius: 8px;
+								    -moz-border-radius: 8px;
+								    background: #F6F6F6;
+								    border: 2px solid #ccc;
+								    margin-top: 2px;
+								    padding: 10px 15px;
+								    color: #555;
+								}
+								#msg-div .msg h3 {
+								    margin: 0 0 8px;
+								    font-weight: bold;
+								    font-size: 15px;
+								}
+								#msg-div .msg p {
+								    margin: 0;
+								}</style>
+								
+								
 			<?php } ?>	
 								<?php 
 								for ($i = $this->partial_render_n; $i < sizeof($this->components); $i++) { 

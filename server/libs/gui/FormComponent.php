@@ -249,9 +249,11 @@ class FormComponent implements GuiComponent
 			
 			
 			
-				if (!is_null($this->send_to_api_redirect))
-					$html .= "			window.location = '" . $this->send_to_api_redirect . "&previous_action=ok';\n";
-				else
+				if (!is_null($this->send_to_api_redirect)){
+
+					$html .= "			window.location = '" . $this->send_to_api_redirect . "?&previous_action=ok';\n";
+
+				}else
 					$html .= "			Ext.MessageBox.show({\n
 					           				title: 'OK',\n
 					           				msg: 'OK.',\n
@@ -287,6 +289,7 @@ class FormComponent implements GuiComponent
 		{
 			if ($f->hidden)
 				continue;
+
 			//incrementar el calculo de la fila actual
 			$new_row++;
 			
@@ -345,8 +348,16 @@ class FormComponent implements GuiComponent
 				// 
 				case "combo":
 					$html .= "<select id='" . $this->guiComponentId  . $f->id . "'";
-					if ($this->is_editable === false)
+
+					if ($this->is_editable === false){
+						
 						$html .= " disabled='disabled' ";
+						//break;
+					}
+
+					
+					
+
 					$html .= ">";
 					$html .= "<option value=''>------------</option>";
 					foreach ($f->value as $o)
