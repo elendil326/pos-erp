@@ -44,7 +44,7 @@ Se puede ordenar por los atributos de producto.
 		
 			Logger::log("Listando las existencias....");
 			
-			$daoProductos = ProductosDAO::getAll();
+			$daoProductos = ProductoDAO::getAll();
 		
 			$aOut = array();
 			$nOutSize = 0;
@@ -57,7 +57,7 @@ Se puede ordenar por los atributos de producto.
 			
 			
             return array(
-            	"numero_de_resultados" => $nOutsize,
+            	"numero_de_resultados" => sizeof($aOut),
 				"resultados"	=> $aOut
             );
             
