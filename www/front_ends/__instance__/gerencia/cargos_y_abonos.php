@@ -29,8 +29,8 @@
 				"id_gasto"			=> "id_gasto",
 				"id_empresa"	 		=> "id_empresa",
 				"id_usuario"			=> "id_usuario",
-				"id_concepto_ingreso"	=> "concepto",
-				"fecha_del_ingreso"		=> "fecha",
+				"id_concepto_gasto"	=> "concepto",
+				"fecha_del_gasto"		=> "fecha",
 				"monto"					=> "monto"
 			),
 			$lista["resultados"]

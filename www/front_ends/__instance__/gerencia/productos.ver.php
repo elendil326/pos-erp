@@ -85,7 +85,7 @@ $form->makeObligatory(array(
     "activo"
 ));
 
-$form->createComboBoxJoin("id_unidad", "nombre", UnidadDAO::getAll(), $este_producto->getIdUnidad());
+//$form->createComboBoxJoin("id_unidad", "nombre", UnidadDAO::getAll(), $este_producto->getIdUnidad());
 
 $page->addComponent($form);
 

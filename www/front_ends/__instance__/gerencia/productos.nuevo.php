@@ -29,16 +29,18 @@
 	    "id_empresas",
 	    "codigo_producto",
 	    "metodo_costeo",
-	    "activo"
+	    "activo",
+	    "id_unidad_compra"
 	));
 
-	$form->createComboBoxJoin("id_unidad", "nombre", UnidadDAO::search(new Unidad(array(
+	/*$form->createComboBoxJoin("id_unidad", "nombre", UnidadDAO::search(new Unidad(array(
 	    "activa" => 1
-	))));
+	))));*/
 	
+	/*
 	$form->createComboBoxJoinDistintName("id_unidad_compra", "id_unidad", "nombre", UnidadDAO::search(new Unidad(array(
 	    "activa" => 1
-	))));
+	))));*/
 	
 	$form->createComboBoxJoin("metodo_costeo", "metodo_costeo", array(
 	    "precio",

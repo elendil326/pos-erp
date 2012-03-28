@@ -386,7 +386,7 @@ class FormComponent implements GuiComponent
 					}
 					else
 					{
-						$html .= "<textarea id='" . $this->guiComponentId  . $f->id . "' name='" . $f->name . "' rows=5 cols=auto>".$f->value."</textarea>";
+						$html .= "<textarea style='width:100%' id='" . $this->guiComponentId  . $f->id . "' name='" . $f->name . "' rows=5 cols=auto>".$f->value."</textarea>";
 					}
 					break;
 
