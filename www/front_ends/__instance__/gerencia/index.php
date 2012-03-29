@@ -1,11 +1,12 @@
 <?php
 
-
-
-	define("BYPASS_INSTANCE_CHECK", false);
-
-	require_once("../../../../server/bootstrap.php");
-
+	if(!class_exists("PHPUnit_Runner_Version")){
+		define("BYPASS_INSTANCE_CHECK", false);
+		require_once("../../../../server/bootstrap.php");
+	}
+	
+	
+	
 	$page = new GerenciaComponentPage();
 	$page->partialRender();
 
