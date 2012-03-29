@@ -217,27 +217,19 @@ class GerenciaComponentPage extends PosComponentPage{
 		                {
 		                    "title": "Nuevo producto",
 		                    "url": "productos.nuevo.php"
-		                },
+		                },		             
 		                {
-		                    "title": "Editar equivalencia de unidad",
-		                    "url": "productos.editar.equivalencia.unidad.php"
-		                },
-		                {
-		                    "title": "Eliminar equivalencia de unidad",
-		                    "url": "productos.eliminar.equivalencia.unidad.php"
-		                },
-		                {
-		                    "title": "Lista unidades",
-		                    "url": "productos.lista.unidad.php"
-		                },
-		                {
-		                    "title": "Lista equivalencia de unidad",
-		                    "url": "productos.lista.equivalencia.unidad.php"
-		                },
+		                    "title": "Lista Unidades de Medida",
+		                    "url": "productos.lista.unidad_medida.php"
+		                },		          
 		                {
 		                    "title": "Nueva Unidad Medida",
 		                    "url": "productos.nueva.unidad_medida.php"
 		                },
+						{
+		                    "title": "Lista Categorias Unidades de Medida",
+		                    "url": "productos.lista.categoria_unidad_medida.php"
+		                },	
 		                {
 		                    "title": "Nueva Categoria Unidad Medida",
 		                    "url": "productos.nueva.categoria_unidad_medida.php"

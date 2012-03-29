@@ -19,11 +19,13 @@
                         "activa"
 		 ));
         
-    $form->createComboBoxJoin("tipo_unidad_medida", "tipo_unidad_medida", array( "Referencia UdM para esta categoria", "Mayor que la UdM de referencia", "Menor que la UdM de referencia"));
+	$form->createComboBoxJoin("id_categoria_unidad_medida", "descripcion", CategoriaUnidadMedidaDAO::getAll());
+	    
+	$form->createComboBoxJoin("tipo_unidad_medida", "tipo_unidad_medida", array( "Referencia UdM para esta categoria", "Mayor que la UdM de referencia", "Menor que la UdM de referencia"));
 
 	$form->addApiCall( "api/producto/udm/unidad/nueva" , "GET");
         
-    $form->onApiCallSuccessRedirect("productos.lista.unidad.php");
+    $form->onApiCallSuccessRedirect("productos.lista.unidad_medida.php");
 	
 	$form->makeObligatory(array( 
 			"abreviacion",

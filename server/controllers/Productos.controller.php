@@ -136,9 +136,9 @@ class ProductosController extends ValidacionesController implements IProductos
         } //
         
         //valida el tipo unidad medida (enum)
-//        if ($tipo_unidad_medida != "Referencia UdM para esta categoria" || $tipo_unidad_medida !=  "Mayor que la UdM de referencia" || $tipo_unidad_medida != "Menor que la UdM de referencia") {
-  //			return "Tipo de UdM inválido, debe ser entre los siguientes valores: Referencia UdM para esta categoria, Mayor que la UdM de referencia, Menor que la UdM de referencia";
-    //    } //
+        if ($tipo_unidad_medida != "Referencia UdM para esta categoria" && $tipo_unidad_medida !=  "Mayor que la UdM de referencia" && $tipo_unidad_medida != "Menor que la UdM de referencia") {
+  			return "Tipo de UdM inválido, debe ser entre los siguientes valores: Referencia UdM para esta categoria, Mayor que la UdM de referencia, Menor que la UdM de referencia";
+        } //
 		
 
         //valida el boleano activa
@@ -1749,6 +1749,33 @@ class ProductosController extends ValidacionesController implements IProductos
      **/
     static function EditarCategoriaUdm($activo, $descripcion, $id_categoria)
     {
+		Logger::log("Editando unidad de medida " . $id_categoria);
+        
+        //validar el string de descripcion
+        $e = self::validarString($descripcion, 100, "descripcion");
+        if (is_string($e)){
+			Logger::error($e);
+		    throw new Exception($e);
+		}
+        
+        //Los parametros que no sean nulos se tomaran como actualizacion
+        $cat_unidad = CategoriaUnidadMedidaDAO::getByPK($id_categoria);
+        if (!is_null($descripcion)) {
+            $cat_unidad->setDescripcion($descripcion);
+        } //!is_null($descripcion)
+        
+        //se guardan los cambios
+        DAO::transBegin();
+        try {
+            CategoriaUnidadMedidaDAO::save($cat_unidad);
+        }
+        catch (Exception $e) {
+            DAO::transRollback();
+            Logger::error("No se pudo editar la categoria unidad de medida" . $id_categoria . ": " . $e);
+            throw new Exception("No se pudo editar la categoria unidad de medida");
+        }
+        DAO::transEnd();
+        Logger::log("Categoria Unidad de Medida editada exitosamente");
     }
     
     
@@ -1829,6 +1856,45 @@ class ProductosController extends ValidacionesController implements IProductos
      **/
     static function EditarUnidadUdm($activa, $descripcion, $factor_conversion, $tipo_unidad_medida, $abreviatura = "", $id_categoria_unidad_medida = "", $id_unidad_medida = "")
     {
+		Logger::log("Editando unidad de medida " . $id_unidad_medida);
+        
+        //Se validan los parametros
+        $validar = self::validarParametrosUdM($id_unidad_medida, $abreviatura, $descripcion, $factor_conversion, $id_categoria_unidad_medida, $tipo_unidad_medida, $activa);
+        if (is_string($validar)) {
+            Logger::error($validar);
+            throw new Exception($validar);
+        } //is_string($validar)
+        
+        //Los parametros que no sean nulos se tomaran como actualizacion
+        $unidad = UnidadMedidaDAO::getByPK($id_unidad_medida);
+        if (!is_null($descripcion)) {
+            $unidad->setDescripcion($descripcion);
+        } //!is_null($descripcion)
+        if (!is_null($abreviatura)) {
+            $unidad->setAbreviacion(trim($abreviatura));
+        } //!is_null($abreviacion)
+        if (!is_null($factor_conversion)) {
+            $unidad->setFactorConversion($factor_conversion);
+        } //!is_null($factor_conversion)
+		if (!is_null($id_categoria_unidad_medida)) {
+            $unidad->setIdCategoriaUnidadMedida($id_categoria_unidad_medida);
+        } //!is_null($factor_conversion)
+		if (!is_null($tipo_unidad_medida)) {
+            $unidad->setTipoUnidadMedida($tipo_unidad_medida);
+        } //!is_null($factor_conversion)
+        
+        //se guardan los cambios
+        DAO::transBegin();
+        try {
+            UnidadMedidaDAO::save($unidad);
+        }
+        catch (Exception $e) {
+            DAO::transRollback();
+            Logger::error("No se pudo editar la unidad de medida" . $id_unidad_medida . ": " . $e);
+            throw new Exception("No se pudo editar la unidad de medida");
+        }
+        DAO::transEnd();
+        Logger::log("Unidad de Medida editada exitosamente");
     }
     
     
@@ -1857,6 +1923,9 @@ class ProductosController extends ValidacionesController implements IProductos
             throw new Exception($validar);
         } //is_string($validar)
         
+		if($tipo_unidad_medida == "Referencia UdM para esta categoria")
+			$factor_conversion = 1;
+
         $udm = new UnidadMedida(array(
             "abreviacion" => trim($abreviatura),            
             "descripcion" => $descripcion,
