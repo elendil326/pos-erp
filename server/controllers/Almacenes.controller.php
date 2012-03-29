@@ -979,8 +979,12 @@ Creo que este metodo tiene que estar bajo sucursal.
             throw new InvalidDataException("este lote no existe");
         }
 
+        
+
         //validemos los productos
-        if(!is_array( $productos )){
+        if(!is_array( $productos ) && !is_array( $productos = object_to_array( $productos ) )){
+
+
             throw new InvalidDataException("productos no es un array");
         }
 
@@ -1002,7 +1006,7 @@ Creo que este metodo tiene que estar bajo sucursal.
         }
 
         for ($i=0; $i < sizeof($productos); $i++) { 
-            if(!is_array($productos[$i])){
+            if(!is_array($productos[$i]) && !is_array($productos[$i] = object_to_array($productos[$i]))){
                 throw new InvalidDataException("El producto en la posicion $i no es un arreglo como se esperaba");
             }
 
@@ -1023,12 +1027,25 @@ Creo que este metodo tiene que estar bajo sucursal.
             }
 
             try{
-                LoteProductoDAO::save(new LoteProducto( array(
+
+                $lp = LoteProductoDAO::getByPK( $id_lote, $productos[$i]["id_producto"] );
+
+                if(!is_null($lp)){
+                    Logger::log("Este producto ya existia en este lote");
+                    $lp->setCantidad( $lp->getCantidad() +  $productos[$i]["cantidad"]);
+
+                }else{
+                    Logger::log("primera vez que se pone este producto en este lote");
+                    $lp = new LoteProducto( array(
                         "id_lote" => $id_lote,
                         "id_producto" => $productos[$i]["id_producto"],
                         "cantidad" => $productos[$i]["cantidad"],
                         "id_unidad" => 1
-                    )));
+                    ));
+                }
+                
+
+                LoteProductoDAO::save($lp);
 
                 LoteEntradaProductoDAO::save(new LoteEntradaProducto(array(
                         "id_lote_entrada" => $_lote->getIdLoteEntrada(),

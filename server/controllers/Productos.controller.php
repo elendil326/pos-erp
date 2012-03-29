@@ -15,14 +15,14 @@ class ProductosController extends ValidacionesController implements IProductos
     private static function validarParametrosUnidad($id_unidad = null, $nombre = null, $descripcion = null, $es_entero = null, $activa = null)
     {
         //valida que la unidad exista y que este activa
-        if (!is_null($id_unidad)) {
+        /*if (!is_null($id_unidad)) {
             $unidad = UnidadDAO::getByPK($id_unidad);
             if (is_null($unidad))
                 return "La unidad con id " . $id_unidad . " no existe";
             
             if (!$unidad->getActiva())
                 return "La unidad esta desactivada";
-        } //!is_null($id_unidad)
+        } //!is_null($id_unidad)*/
         
         //valida que el nombre este en el rango y que no se repita
         if (!is_null($nombre)) {
@@ -1854,7 +1854,15 @@ class ProductosController extends ValidacionesController implements IProductos
      * @param id_categoria_unidad_medida int Id de la categoría a la cual pertenece la unidad
      * @param id_unidad_medida int Id de la unidad de medida que se desea editar
      **/
-    static function EditarUnidadUdm($activa, $descripcion, $factor_conversion, $tipo_unidad_medida, $abreviatura = "", $id_categoria_unidad_medida = "", $id_unidad_medida = "")
+    static function EditarUnidadUdm(
+		$id_unidad_medida, 
+		$abreviatura = "", 
+		$activa = null, 
+		$descripcion = "", 
+		$factor_conversion = "", 
+		$id_categoria_unidad_medida = "", 
+		$tipo_unidad_medida = ""
+	)
     {
 		Logger::log("Editando unidad de medida " . $id_unidad_medida);
         

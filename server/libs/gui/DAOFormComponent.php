@@ -49,56 +49,6 @@ class DAOFormComponent extends FormComponent{
 
 	}
 
-	public function sendHidden( $field_name ){
-		if( is_array( $field_name ) ){
-			foreach ($field_name as $field ) {
-				$this->sendHidden( $field );
-			}
-			return;
-		}
-		
-		
-		$sof = sizeof($this->form_fields);
 
-		for ($i=0; $i < $sof; $i++) { 
-
-			if( $this->form_fields[$i]->id == $field_name )
-			{
-				$this->form_fields[$i]->send_as_hidden = true;
-				$this->form_fields[$i]->hidden = true;
-				$this->form_fields[$i]->type = "hidden";
-				return true;			
-			}
-		}
-		
-		throw new Exception("Field `".$field_name."` not found in the VO object.");
-	}
-
-	public function hideField( $field_name ){
-		$this->removeDuplicates();
-		
-		if( is_array( $field_name ) ){
-			foreach ($field_name as $field ) {
-				$this->hideField( $field );
-			}
-			return;
-		}
-		
-		
-		$sof = sizeof($this->form_fields);
-
-		for ($i=0; $i < $sof; $i++) { 
-
-			if( $this->form_fields[$i]->id == $field_name )
-			{
-				$this->form_fields[$i]->type = "hidden";
-				$this->form_fields[$i]->send_as_hidden = false;				
-				$this->form_fields[$i]->hidden = true;
-				return true;			
-			}
-		}
-		
-		throw new Exception("Field `".$field_name."` not found in the VO object.");
-	}
 
 }

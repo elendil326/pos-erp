@@ -6,8 +6,7 @@ define("BYPASS_INSTANCE_CHECK", false);
 
 require_once("../../../../server/bootstrap.php");
 
-$page = new GerenciaComponentPage();
-
+$page = new GerenciaTabPage();
 
 //
 // Parametros necesarios
@@ -18,35 +17,37 @@ $page->requireParam("pid", "GET", "Este producto no existe.");
 $este_producto = ProductoDAO::getByPK($_GET["pid"]);
 
 
-$page->partialRender();
-
-
-?>
+$page->addComponent("
 <table>
-	<tr>
-		<td rowspan=2><div id="gimg"></div></td>
-		<td><h2><?php echo $este_producto->getNombreProducto(); ?></h2></td>
-	</tr>
-	<tr>
-		<td><?php echo $este_producto->getPrecio(); ?></td>
-	</tr>
+    <tr>
+        <td rowspan=2><div id=\"gimg\"></div></td>
+        <td><h2>" . $este_producto->getNombreProducto() . "</h2></td>
+    </tr>
+    <tr>
+        <td>" .  $este_producto->getPrecio() . "</td>
+    </tr>
 </table>
+<script type=\"text/javascript\">
+    function gimgcb(a,b,c){
+        if(a.responseData.results.length > 0)
+            document.getElementById(\"gimg\").innerHTML = \"<img src='\" + a.responseData.results[0].tbUrl + \"'>\";
+    }
+</script>
+<script 
+        type=\"text/javascript\" 
+        src=\"https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=".  $este_producto->getCodigoProducto() . "&callback=gimgcb\">
+</script>");
 
-<script type="text/javascript">
-	function gimgcb(a,b,c){
-		if(a.responseData.results.length > 0)
-			document.getElementById("gimg").innerHTML = "<img src='" + a.responseData.results[0].tbUrl + "'>";
-	}
-</script>
-<script type="text/javascript" 
-		src="https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=<?php echo $este_producto->getCodigoProducto(); ?>&callback=gimgcb">
-</script>
-<?php
+$page->nextTab("General");
+
+
+
+
 
 //
 // Menu de opciones
 //
-if ($este_producto->getActivo()) {
+
     $menu = new MenuComponent();
     $menu->addItem("Editar este producto", "productos.editar.php?pid=" . $_GET["pid"]);
     //$menu->addItem("Desactivar este producto", null);
@@ -63,7 +64,7 @@ if ($este_producto->getActivo()) {
     $menu->addMenuItem($btn_eliminar);
     
     $page->addComponent($menu);
-}
+
 
 //
 // Forma de producto
@@ -90,5 +91,17 @@ $form->makeObligatory(array(
 $page->addComponent($form);
 
 
+$page->nextTab("Existencias");
+
+$entrada_lote = new FormComponent(  );
+
+$entrada_lote->addField("id_lote", "lote", "combobox" );
+$entrada_lote->createComboBoxJoin("id_lote", "id_lote", LoteDAO::getAll(   ) );
+$entrada_lote->addField("cantidad", "Cantidad", "text");
+$entrada_lote->addField("productos", "", "text", "\"   [ { \\\"id_producto\\\" : ". $_GET["pid"] .", \\\"cantidad\\\"    : 40 } ]   \"");
+$entrada_lote->sendHidden("productos");
+$entrada_lote->addApiCall("api/almacen/lote/entrada", "POST");
+
+$page->addComponent( $entrada_lote );
 
 $page->render();
