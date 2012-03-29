@@ -20,15 +20,17 @@ $tabla = new TableComponent(
 );
 
 function getNombreMoneda($id_moneda) {
-    return MonedaDAO::getByPK($id_moneda)->getNombre();
+    return MonedaDAO::getByPK($id_moneda)->getSimbolo() . " ($)";
 }
 
 function getActiva($activa) {
-    return $activa == 1 ? "Si" : "No";
+    return $activa == 1 ? "<input type=\"checkbox\" checked disabled>" : "<input type=\"checkbox\" disabled>";
 }
 
 $tabla->addColRender("id_moneda", "getNombreMoneda");
 $tabla->addColRender("activa", "getActiva");
+
+$tabla->addOnClick( "id_tarifa", "(function(a){ window.location = 'tarifas.ver.php?tid=' + a; })" );
 
 
 $page->addComponent($tabla);
