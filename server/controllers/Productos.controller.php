@@ -897,6 +897,8 @@ class ProductosController extends ValidacionesController implements IProductos
 					//|| !array_key_exists("precio", $producto) 
 					|| !array_key_exists("costo_estandar", $producto) 
 					|| !array_key_exists("compra_en_mostrador", $producto)
+					|| !array_key_exists("metodo_costeo", $producto)					
+					
 				) 
 				{
 					Logger::log( json_encode($producto) );
@@ -910,7 +912,7 @@ class ProductosController extends ValidacionesController implements IProductos
 						$producto["compra_en_mostrador"], 
 						$producto["costo_estandar"],
 						null,
-						"costog",
+						"costo",
 						$producto["nombre_producto"]
 						));
 

@@ -160,6 +160,7 @@
     
 	require_once("libs/SessionManager.php");
     require_once("libs/FormatTime.php");
+    require_once("libs/CNumeroaLetra.php");
 
 
 	# *******************************
@@ -190,6 +191,8 @@
 	require_once("controllers/CargosYAbonos.controller.php");
 	require_once("controllers/Efectivo.controller.php");
 	require_once("controllers/POS.controller.php");
+	require_once("controllers/Impresiones.controller.php");	
+	
 	/*
 	require_once("controllers/Autorizaciones.controller.php");
 	require_once("controllers/Cajas.controller.php");

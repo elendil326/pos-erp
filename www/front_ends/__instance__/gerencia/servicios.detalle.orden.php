@@ -123,5 +123,5 @@ $table->addColRender("id_usuario_venta", "funcion_usuario");
 
 
 $page->addComponent($table);
-
+ImpresionesController::imprimirNotaDeVenta(2);
 $page->render();

@@ -59,8 +59,10 @@ class DireccionController extends ValidacionesController{
 
             $direccion = new Direccion();
 
-            $id_usuario =  SesionController::getCurrentUser(   );
-
+            $id_usuario =  SesionController::Actual(   );
+			$id_usuario = $id_usuario["id_usuario"];
+			
+			
             if($id_usuario == null){	
 				Logger::error("SesionController::getCurrentUser() regreso null");
                 throw new Exception("No se pudo obtener la sesion del usuario, ya inicio sesion?",901);

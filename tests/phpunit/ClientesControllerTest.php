@@ -10,6 +10,25 @@ class ClientesControllerTests extends PHPUnit_Framework_TestCase {
 	protected function setUp(){
 		Logger::log("-------------". dirname(__FILE__)  ."----------------");
 		$r = SesionController::Iniciar(123, 1, true);
+		
+		if($r["login_succesful"] == false){
+			$u = new Usuario();
+			$u->setIdUsuario(1);
+			$u->setIdRol(1);
+			$u->setFechaAsignacionRol(time());
+			$u->setNombre("admin");
+			$u->setFechaAlta(time());
+			$u->setActivo(1);
+			$u->setLimiteCredito(0);
+			$u->setConsignatario(0);
+			$u->setSaldoDelEjercicio(0);
+			$u->setIdTarifaCompra(1);
+			$u->setTarifaCompraObtenida(1);
+			$u->setIdTarifaVenta(1);
+			$u->setTarifaVentaObtenida(1);
+			$u->setPassword("202cb962ac59075b964b07152d234b70");
+			UsuarioDAO::save( $u );
+		}
 	}
 	
 	public function testNuevaClasificacionCliente(){
