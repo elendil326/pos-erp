@@ -69,7 +69,7 @@
  	 *
  	 * @param id_categoria int Id de la categoria del producto
  	 * @param descripcion string Descripcion larga de la categoria
- 	 * @param id_categoria_padre string Id de la categora padre en caso de tenerla
+ 	 * @param id_categoria_padre int Id de la categora padre en caso de tenerla
  	 * @param nombre string Nombre de la categoria del producto
  	 **/
   static function EditarCategoria
@@ -77,7 +77,7 @@
 		$id_categoria, 
 		$descripcion = null, 
 		$id_categoria_padre = null, 
-		$nombre = ""
+		$nombre = null
 	);  
   
   
@@ -269,15 +269,15 @@ NOTA: Se crea un producto tipo = 1 que es para productos.
  	 *
  	 *Edita una categor?a de unidades
  	 *
- 	 * @param activo int Indica si la categoría esta activa
+ 	 * @param id_categoria_unidad_medida int Id de la categora que se desea editar
+ 	 * @param activo int Indica si la categora esta activa
  	 * @param descripcion string Descripcin de la categora
- 	 * @param id_categoria int Id de la categora que se desea editar
  	 **/
   static function EditarCategoriaUdm
 	(
-		$activo, 
-		$descripcion, 
-		$id_categoria
+		$id_categoria_unidad_medida, 
+		$activo = null, 
+		$descripcion = null
 	);  
   
   
@@ -326,22 +326,22 @@ NOTA: Se crea un producto tipo = 1 que es para productos.
  	 *
  	 *Este metodo modifica la informacion de una unidad
  	 *
+ 	 * @param id_categoria_unidad_medida int Id de la categora a la cual pertenece la unidad
  	 * @param id_unidad_medida int Id de la unidad de medida que se desea editar
  	 * @param abreviatura string Descripcin corta de la unidad, normalmente sera empelada en ticket de venta
  	 * @param activa int Indica si la unidad esta activa
  	 * @param descripcion string Descripcin de la unidad de medida
  	 * @param factor_conversion float  Equivalencia de esta unidad con respecto a la unidad de medida base obtenida de la categora a la cual pertenece esta unidad. En caso de que se seleccione el valor de tipo_unidad_medida = "Referencia UdM para esta categoria" este valor sera igual a uno automticamente sin posibilidad de ingresar otro valor diferente
- 	 * @param id_categoria_unidad_medida int Id de la categora a la cual pertenece la unidad
  	 * @param tipo_unidad_medida string  Tipo enum cuyo valores son los siguientes : "Referencia UdM para esta categoria" (define a esta unidad como la unidad base de referencia de esta categora, en caso de seleccionar esta opcin automticamente el factor de conversin sera igual a uno sin posibilidad de ingresar otro valor diferente), "Mayor que la UdM de referencia" (indica que esta unidad de medida sera mayor que la unidad de medida base d la categora que se indique) y "Menor que la UdM de referencia" (indica que esta unidad de medida sera menor que la unidad de medida base de la categora que se indique)
  	 **/
   static function EditarUnidadUdm
 	(
+		$id_categoria_unidad_medida, 
 		$id_unidad_medida, 
-		$abreviatura = "", 
+		$abreviatura = null, 
 		$activa = null, 
-		$descripcion = "", 
-		$factor_conversion = "", 
-		$id_categoria_unidad_medida = "", 
+		$descripcion = null, 
+		$factor_conversion = null, 
 		$tipo_unidad_medida = ""
 	);  
   

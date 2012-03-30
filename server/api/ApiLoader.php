@@ -6186,24 +6186,24 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"id_producto" => new ApiExposedProperty("id_producto", true, GET, array( "int" )),
-			"clasificaciones" => new ApiExposedProperty("clasificaciones", false, GET, array( "json" )),
-			"codigo_de_barras" => new ApiExposedProperty("codigo_de_barras", false, GET, array( "string" )),
-			"codigo_producto" => new ApiExposedProperty("codigo_producto", false, GET, array( "string" )),
-			"compra_en_mostrador" => new ApiExposedProperty("compra_en_mostrador", false, GET, array( "bool" )),
-			"control_de_existencia" => new ApiExposedProperty("control_de_existencia", false, GET, array( "int" )),
-			"costo_estandar" => new ApiExposedProperty("costo_estandar", false, GET, array( "float" )),
-			"costo_extra_almacen" => new ApiExposedProperty("costo_extra_almacen", false, GET, array( "float" )),
-			"descripcion_producto" => new ApiExposedProperty("descripcion_producto", false, GET, array( "string" )),
-			"empresas" => new ApiExposedProperty("empresas", false, GET, array( "json" )),
-			"foto_del_producto" => new ApiExposedProperty("foto_del_producto", false, GET, array( "string" )),
-			"garantia" => new ApiExposedProperty("garantia", false, GET, array( "int" )),
-			"id_unidad" => new ApiExposedProperty("id_unidad", false, GET, array( "int" )),
-			"impuestos" => new ApiExposedProperty("impuestos", false, GET, array( "json" )),
-			"metodo_costeo" => new ApiExposedProperty("metodo_costeo", false, GET, array( "string" )),
-			"nombre_producto" => new ApiExposedProperty("nombre_producto", false, GET, array( "string" )),
-			"peso_producto" => new ApiExposedProperty("peso_producto", false, GET, array( "float" )),
-			"precio" => new ApiExposedProperty("precio", false, GET, array( "int" )),
+			"id_producto" => new ApiExposedProperty("id_producto", true, POST, array( "int" )),
+			"clasificaciones" => new ApiExposedProperty("clasificaciones", false, POST, array( "json" )),
+			"codigo_de_barras" => new ApiExposedProperty("codigo_de_barras", false, POST, array( "string" )),
+			"codigo_producto" => new ApiExposedProperty("codigo_producto", false, POST, array( "string" )),
+			"compra_en_mostrador" => new ApiExposedProperty("compra_en_mostrador", false, POST, array( "bool" )),
+			"control_de_existencia" => new ApiExposedProperty("control_de_existencia", false, POST, array( "int" )),
+			"costo_estandar" => new ApiExposedProperty("costo_estandar", false, POST, array( "float" )),
+			"costo_extra_almacen" => new ApiExposedProperty("costo_extra_almacen", false, POST, array( "float" )),
+			"descripcion_producto" => new ApiExposedProperty("descripcion_producto", false, POST, array( "string" )),
+			"empresas" => new ApiExposedProperty("empresas", false, POST, array( "json" )),
+			"foto_del_producto" => new ApiExposedProperty("foto_del_producto", false, POST, array( "string" )),
+			"garantia" => new ApiExposedProperty("garantia", false, POST, array( "int" )),
+			"id_unidad" => new ApiExposedProperty("id_unidad", false, POST, array( "int" )),
+			"impuestos" => new ApiExposedProperty("impuestos", false, POST, array( "json" )),
+			"metodo_costeo" => new ApiExposedProperty("metodo_costeo", false, POST, array( "string" )),
+			"nombre_producto" => new ApiExposedProperty("nombre_producto", false, POST, array( "string" )),
+			"peso_producto" => new ApiExposedProperty("peso_producto", false, POST, array( "float" )),
+			"precio" => new ApiExposedProperty("precio", false, POST, array( "int" )),
 		);
 	}
 
@@ -6212,24 +6212,24 @@
  		$this->response = ProductosController::Editar( 
  			
 			
-			isset($_GET['id_producto'] ) ? $_GET['id_producto'] : null,
-			isset($_GET['clasificaciones'] ) ? json_decode($_GET['clasificaciones']) : null,
-			isset($_GET['codigo_de_barras'] ) ? $_GET['codigo_de_barras'] :  null,
-			isset($_GET['codigo_producto'] ) ? $_GET['codigo_producto'] :  null,
-			isset($_GET['compra_en_mostrador'] ) ? $_GET['compra_en_mostrador'] :  null,
-			isset($_GET['control_de_existencia'] ) ? $_GET['control_de_existencia'] :  null,
-			isset($_GET['costo_estandar'] ) ? $_GET['costo_estandar'] :  null,
-			isset($_GET['costo_extra_almacen'] ) ? $_GET['costo_extra_almacen'] :  null,
-			isset($_GET['descripcion_producto'] ) ? $_GET['descripcion_producto'] :  null,
-			isset($_GET['empresas'] ) ? json_decode($_GET['empresas']) : null,
-			isset($_GET['foto_del_producto'] ) ? $_GET['foto_del_producto'] :  null,
-			isset($_GET['garantia'] ) ? $_GET['garantia'] :  null,
-			isset($_GET['id_unidad'] ) ? $_GET['id_unidad'] :  null,
-			isset($_GET['impuestos'] ) ? json_decode($_GET['impuestos']) : null,
-			isset($_GET['metodo_costeo'] ) ? $_GET['metodo_costeo'] :  null,
-			isset($_GET['nombre_producto'] ) ? $_GET['nombre_producto'] :  null,
-			isset($_GET['peso_producto'] ) ? $_GET['peso_producto'] :  null,
-			isset($_GET['precio'] ) ? $_GET['precio'] :  null
+			isset($_POST['id_producto'] ) ? $_POST['id_producto'] : null,
+			isset($_POST['clasificaciones'] ) ? json_decode($_POST['clasificaciones']) : null,
+			isset($_POST['codigo_de_barras'] ) ? $_POST['codigo_de_barras'] :  null,
+			isset($_POST['codigo_producto'] ) ? $_POST['codigo_producto'] :  null,
+			isset($_POST['compra_en_mostrador'] ) ? $_POST['compra_en_mostrador'] :  null,
+			isset($_POST['control_de_existencia'] ) ? $_POST['control_de_existencia'] :  null,
+			isset($_POST['costo_estandar'] ) ? $_POST['costo_estandar'] :  null,
+			isset($_POST['costo_extra_almacen'] ) ? $_POST['costo_extra_almacen'] :  null,
+			isset($_POST['descripcion_producto'] ) ? $_POST['descripcion_producto'] :  null,
+			isset($_POST['empresas'] ) ? json_decode($_POST['empresas']) : null,
+			isset($_POST['foto_del_producto'] ) ? $_POST['foto_del_producto'] :  null,
+			isset($_POST['garantia'] ) ? $_POST['garantia'] :  null,
+			isset($_POST['id_unidad'] ) ? $_POST['id_unidad'] :  null,
+			isset($_POST['impuestos'] ) ? json_decode($_POST['impuestos']) : null,
+			isset($_POST['metodo_costeo'] ) ? $_POST['metodo_costeo'] :  null,
+			isset($_POST['nombre_producto'] ) ? $_POST['nombre_producto'] :  null,
+			isset($_POST['peso_producto'] ) ? $_POST['peso_producto'] :  null,
+			isset($_POST['precio'] ) ? $_POST['precio'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -6280,10 +6280,10 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"id_categoria" => new ApiExposedProperty("id_categoria", true, GET, array( "int" )),
-			"descripcion" => new ApiExposedProperty("descripcion", false, GET, array( "string" )),
-			"id_categoria_padre" => new ApiExposedProperty("id_categoria_padre", false, GET, array( "string" )),
-			"nombre" => new ApiExposedProperty("nombre", false, GET, array( "string" )),
+			"id_categoria" => new ApiExposedProperty("id_categoria", true, POST, array( "int" )),
+			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "string" )),
+			"id_categoria_padre" => new ApiExposedProperty("id_categoria_padre", false, POST, array( "int" )),
+			"nombre" => new ApiExposedProperty("nombre", false, POST, array( "string" )),
 		);
 	}
 
@@ -6292,10 +6292,10 @@
  		$this->response = ProductosController::EditarCategoria( 
  			
 			
-			isset($_GET['id_categoria'] ) ? $_GET['id_categoria'] : null,
-			isset($_GET['descripcion'] ) ? $_GET['descripcion'] :  null,
-			isset($_GET['id_categoria_padre'] ) ? $_GET['id_categoria_padre'] :  null,
-			isset($_GET['nombre'] ) ? $_GET['nombre'] :  ""
+			isset($_POST['id_categoria'] ) ? $_POST['id_categoria'] : null,
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null,
+			isset($_POST['id_categoria_padre'] ) ? $_POST['id_categoria_padre'] :  null,
+			isset($_POST['nombre'] ) ? $_POST['nombre'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -6342,12 +6342,12 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
+			"id_categoria_unidad_medida" => new ApiExposedProperty("id_categoria_unidad_medida", true, POST, array( "int" )),
 			"id_unidad_medida" => new ApiExposedProperty("id_unidad_medida", true, POST, array( "int" )),
 			"abreviatura" => new ApiExposedProperty("abreviatura", false, POST, array( "string" )),
 			"activa" => new ApiExposedProperty("activa", false, POST, array( "int" )),
 			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "string" )),
 			"factor_conversion" => new ApiExposedProperty("factor_conversion", false, POST, array( "float" )),
-			"id_categoria_unidad_medida" => new ApiExposedProperty("id_categoria_unidad_medida", false, POST, array( "int" )),
 			"tipo_unidad_medida" => new ApiExposedProperty("tipo_unidad_medida", false, POST, array( "string" )),
 		);
 	}
@@ -6357,12 +6357,12 @@
  		$this->response = ProductosController::EditarUnidadUdm( 
  			
 			
+			isset($_POST['id_categoria_unidad_medida'] ) ? $_POST['id_categoria_unidad_medida'] : null,
 			isset($_POST['id_unidad_medida'] ) ? $_POST['id_unidad_medida'] : null,
-			isset($_POST['abreviatura'] ) ? $_POST['abreviatura'] :  "",
+			isset($_POST['abreviatura'] ) ? $_POST['abreviatura'] :  null,
 			isset($_POST['activa'] ) ? $_POST['activa'] :  null,
-			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  "",
-			isset($_POST['factor_conversion'] ) ? $_POST['factor_conversion'] :  "",
-			isset($_POST['id_categoria_unidad_medida'] ) ? $_POST['id_categoria_unidad_medida'] :  "",
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null,
+			isset($_POST['factor_conversion'] ) ? $_POST['factor_conversion'] :  null,
 			isset($_POST['tipo_unidad_medida'] ) ? $_POST['tipo_unidad_medida'] :  ""
 			
 			);
@@ -6516,9 +6516,9 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"activo" => new ApiExposedProperty("activo", true, GET, array( "int" )),
-			"descripcion" => new ApiExposedProperty("descripcion", true, GET, array( "string" )),
-			"id_categoria" => new ApiExposedProperty("id_categoria", true, GET, array( "int" )),
+			"id_categoria_unidad_medida" => new ApiExposedProperty("id_categoria_unidad_medida", true, POST, array( "int" )),
+			"activo" => new ApiExposedProperty("activo", false, POST, array( "int" )),
+			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "string" )),
 		);
 	}
 
@@ -6527,9 +6527,9 @@
  		$this->response = ProductosController::EditarCategoriaUdm( 
  			
 			
-			isset($_GET['activo'] ) ? $_GET['activo'] : null,
-			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
-			isset($_GET['id_categoria'] ) ? $_GET['id_categoria'] : null
+			isset($_POST['id_categoria_unidad_medida'] ) ? $_POST['id_categoria_unidad_medida'] : null,
+			isset($_POST['activo'] ) ? $_POST['activo'] :  null,
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null
 			
 			);
 		}catch(Exception $e){

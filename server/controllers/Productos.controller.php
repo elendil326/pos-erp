@@ -1749,9 +1749,9 @@ class ProductosController extends ValidacionesController implements IProductos
      * @param descripcion string Descripcin de la categora
      * @param id_categoria int Id de la categora que se desea editar
      **/
-    static function EditarCategoriaUdm($activo, $descripcion, $id_categoria)
+    static function EditarCategoriaUdm($id_categoria, $activo = null, $descripcion = null)
     {
-		Logger::log("Editando unidad de medida " . $id_categoria);
+		Logger::log("Editando categoria unidad de medida " . $id_categoria);
         
         //validar el string de descripcion
         $e = self::validarString($descripcion, 100, "descripcion");
@@ -1763,6 +1763,7 @@ class ProductosController extends ValidacionesController implements IProductos
         //Los parametros que no sean nulos se tomaran como actualizacion
         $cat_unidad = CategoriaUnidadMedidaDAO::getByPK($id_categoria);
         if (!is_null($descripcion)) {
+
             $cat_unidad->setDescripcion($descripcion);
         } //!is_null($descripcion)
         
@@ -1857,12 +1858,12 @@ class ProductosController extends ValidacionesController implements IProductos
      * @param id_unidad_medida int Id de la unidad de medida que se desea editar
      **/
     static function EditarUnidadUdm(
+		$id_categoria_unidad_medida, 
 		$id_unidad_medida, 
-		$abreviatura = "", 
+		$abreviatura = null, 
 		$activa = null, 
-		$descripcion = "", 
-		$factor_conversion = "", 
-		$id_categoria_unidad_medida = "", 
+		$descripcion = null, 
+		$factor_conversion = null, 
 		$tipo_unidad_medida = ""
 	)
     {
