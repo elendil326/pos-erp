@@ -1,5 +1,4 @@
 <?php
-
 define("BYPASS_INSTANCE_CHECK", false);
 
 require_once("../../../../server/bootstrap.php");
@@ -21,61 +20,70 @@ $page->requireParam("tid", "GET", "Esta tarifa no existe.");
 // Titulo de la pagina
 // 
 
-$page->addComponent(new TitleComponent( "Detalle Tarifa"));
+$page->addComponent(new TitleComponent("Detalle Tarifa"));
 
-$page->addComponent(new TitleComponent( utf8_decode($tarifa->getNombre()), 2 ) );
+$page->addComponent(new TitleComponent(utf8_decode($tarifa->getNombre()), 2));
 
+$page->partialRender();
+?>
 
+<form name = "orden_servicio" id = "orden_servicio">
+    <table width = 100% border = 0 >
+        <tr>
+            <td><label>Tipo Tarifa</label></td>
+            <td>                
+                <select disabled="disabled" >
+                    <option><?php echo $tarifa->getTipoTarifa() ?></option>
+                </select>                
+            </td>
+            <td>
+                <label>Activa</label>
+            </td>
+            <td>
+                <select disabled="disabled" >
+                    <option <?php echo $tarifa->getActiva() ? " SELECTED" : "" ?> >S&iacute;</option>
+                    <option <?php echo $tarifa->getActiva() ? "" : " SELECTED" ?> >No</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><label>Moneda</label></td>
+            <td>                
+                <input type="text" value ="<?php echo MonedaDAO::getByPK($tarifa->getIdMoneda())->getSimbolo(); ?> ($)" DISABLED />                
+            </td>
+            <td><label>Default Sistema</label></td>
+            <td>
+                <input type="Radio" DISABLED name="default_tarifa" value="true" <?php echo $tarifa->getDefault() ? " CHECKED" : "" ?> /> S&iacute;
+                <input type="Radio" DISABLED name="default_tarifa" value="false" <?php echo $tarifa->getDefault() ? "" : " CHECKED" ?> /> No                
+            </td>        
+        </tr>        
+    </table>
+</form>
 
-//
-// Menu de opciones
-// 
-if ($tarifa->getActiva()) {
+<?php
+$page->addComponent(new TitleComponent("Vers&iacute;on Tarifa", 2));
 
-    $menu = new MenuComponent();
+$tabla = new TableComponent(
+                array(
+                    "nombre" => "Nombre",
+                    "activa" => "Activa",
+                    "fecha_inicio" => "Fecha Inicial",
+                    "fecha_fin" => "Fecha Final",
+                    "default" => "Default"
+                ),
+                VersionDAO::search( new Version( array("id_tarifa" => $tarifa->getIdTarifa()) ) )
+);
 
-    $menu->addItem("Editar esta tarifa", "tarifas.editar.php?tid=" . $_GET["tid"]);
-
-    $page->addComponent($menu);
+function getCheck($activa) {
+    return $activa == 1 ? "<input type=\"checkbox\" checked disabled>" : "<input type=\"checkbox\" disabled>";
 }
 
+$tabla->addColRender("activa", "getCheck");
 
-//
-// Forma de producto
-// 
+$tabla->addColRender("default", "getCheck");
 
-$form = new DAOFormComponent($tarifa);        
+$tabla->addOnClick( "id_version", "(function(a){ window.location = 'tarifas.version.ver.php?vid=' + a; })" );
 
-$form->setEditable(false);
-
-/*$form->hideField(array(
-    "id_usuario",
-    "salario",
-    "id_rol",
-    "comision_ventas",
-    "dia_de_revision",
-    "id_clasificacion_proveedor",
-    "id_direccion",
-    "id_direccion_alterna",
-    "fecha_asignacion_rol",
-    "activo",
-    "password"
-));*/
-
-
-
-
-//$form->createComboBoxJoin("id_rol", "nombre", RolDAO::getAll(), $tarifa->getIdRol());
-//$form->createComboBoxJoin("id_moneda", "nombre", MonedaDAO::getAll(), $tarifa->getIdMoneda());
-//$form->createComboBoxJoin("id_clasificacion_cliente", "nombre", ClasificacionClienteDAO::getAll(), $tarifa->getIdClasificacionCliente());
-//$form->createComboBoxJoin("id_clasificacion_proveedor", "nombre", ClasificacionProveedorDAO::getAll(), $tarifa->getIdClasificacionProveedor());
-//$form->createComboBoxJoin("id_sucursal", "nombre", SucursalDAO::getAll(), $tarifa->getIdSucursal());
-//$form->createComboBoxJoinDistintName("id_tarifa_venta", "id_tarifa", "nombre", TarifaDAO::search(new Tarifa(array("id_tarifa" => $tarifa->getIdTarifaVenta()))));
-//$form->createComboBoxJoin("id_tarifa_compra", "nombre", TarifaDAO::search(new Tarifa(array("id_tarifa" => $tarifa->getIdTarifaCompra()))));
-
-$page->addComponent($form);
-
-
-
+$page->addComponent($tabla);
 
 $page->render();

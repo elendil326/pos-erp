@@ -5,88 +5,11 @@ require_once("../../../../server/bootstrap.php");
 
 $page = new GerenciaComponentPage();
 
-$page->addComponent(new TitleComponent("Nueva Tarifa"));
-$page->addComponent(new MessageComponent("Crea una nueva tarifa en el sistema"));
+$version = VersionDAO::getByPK($_REQUEST['vid']);
 
-$page->partialRender();
-?>
+$page->addComponent(new TitleComponent("Versi&oacute;n Tarifa"));
+$page->addComponent(new TitleComponent($version->getNombre(), 2));
 
-<form id ="form_tarifa">
-
-    <table style ="width:100%;">
-        <tr>
-            <td>
-                Nombre :    
-            </td>
-            <td>
-                <input type = "text" name = "nombre_tarifa" id = "nombre_tarifa" value = "" style ="width:100%;"/>
-            </td>
-            <td>
-                Moneda :    
-            </td>
-            <td>
-                <select name = "id_moneda_tarifa" id = "id_moneda_tarifa" onChange = "" >
-                    <?php
-                    //$options = "<option value = null>-------</option>";
-                    $options = "";
-                    foreach (MonedaDAO::getAll() as $moneda) {
-                        $options .= "<option value = \"{$moneda->getIdMoneda()}\">{$moneda->getNombre()}</option>";
-                    }
-
-                    echo $options;
-                    ?>
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Tipo :    
-            </td>
-            <td>
-                <select name = "tipo_tarifa" id = "tipo_tarifa" onChange = "" >
-                    <option value = "venta">Venta</option>                    
-                    <option value = "compra">Compra</option>                    
-                </select>
-            </td>
-            <td>
-                Tarifa default del sistema:    
-            </td>
-            <td>
-                <input type="Radio" name="default_tarifa" value="true" /> S&iacute;
-                <input type="Radio" name="default_tarifa" value="false" checked /> No
-            </td>
-        </tr>
-    </table>
-
-</form>
-
-<?php
-$page->addComponent(new TitleComponent("Versi&oacute;n", 2));
-$page->addComponent(new MessageComponent("Cuando se crea una nueva tarifa automaticamente se crea una version por default, indique apartir de que fechas entrara en vigor la version de la tarifa, si no se indica la fecha de inicio, se considera que entra en vigor inmediatamente, si no se indica  una fecha de finalizaci&oacute;n se considera que no tendra vigencia"));
-
-$page->partialRender();
-?>
-
-<form>
-    <table style ="width:100%;">
-        <tr>
-            <td>
-                Fecha Inicio :    
-            </td>
-            <td>
-                <div id ="fecha_inicio_tarifa">&nbsp;</div>
-            </td>
-            <td>
-                Fecha Vigencia :    
-            </td>
-            <td>
-                <div id ="fecha_fin_tarifa">&nbsp;</div>
-            </td>
-        </tr>
-    </table>
-</form>
-
-<?php
 $page->addComponent(new TitleComponent("Nueva Regla", 2));
 $page->addComponent(new MessageComponent("Ingrese los valores para crer una nuava regla"));
 
@@ -144,13 +67,67 @@ $page->partialRender();
             <th> Servicio </th>
             <th> Cant Min </th>
         </tr>
+        
+        <?php
+        
+            $html = "";
+        
+            $reglas = ReglaDAO::search(new Regla( array( "id_version" => $version->getIdVersion() ) ));
+            
+            foreach( $reglas as $regla ){
+            
+                $html.= "<tr>";
+                
+                $html.= "   <td>";
+                $html.= "       {$regla->getSecuencia()}";
+                $html.= "   </td>";                
+                $html.= "   <td>";
+                $html.= "       {$regla->getNombre()}";
+                $html.= "   </td>";
+                
+                $html.= "   <td>";                
+                if($producto = ProductoDAO::getByPK( $regla->getIdProducto() )){
+                    $html.= "       " . $producto->getNombreProducto();    
+                }else{
+                    $html.= "-";
+                }                                               
+                $html.= "   </td>";
+                                
+                $html.= "   <td>";                
+                if($categoria = ClasificacionProductoDAO::getByPK( $regla->getIdClasificacionProducto() )){
+                    $html.= "       " . $categoria->getNombre();    
+                }else{
+                    $html.= "-";
+                }                                               
+                $html.= "   </td>";
+                
+                $html.= "   <td>";                
+                if($servicio = ServicioDAO::getByPK( $regla->getIdServicio() )){
+                    $html.= "       " . $servicio->getNombreServicio();    
+                }else{
+                    $html.= "-";
+                }                                               
+                $html.= "   </td>";
+                
+                $html.= "   <td>";                
+                $html.= "       {$regla->getCantidadMinima()}";                             
+                $html.= "   </td>";
+                
+                $html.= "</tr>";
+                
+            }
+            
+            echo $html;
+        
+        ?>
+        
     </table>
 </div>
 
 <table style ="width:100%; margin-top: 50px;">
     <tr>
         <td style = "border-width:0px; background:#EDEFF4;"  valign="middle">
-            <input class="POS Boton OK" style = "left : 250px; width:200px;" type = "button" value = "Crear Tarifa" onClick = "crearNuevaTarifa();" />
+            <input class="POS Boton OK" style = "left : 250px; width:200px;" type = "button" value = "Guardar Cambios" onClick = "crearNuevaTarifa();" />
         </td>
     </tr>
 </table>
@@ -367,7 +344,7 @@ $page->partialRender();
                     "default":Ext.get('form_tarifa').dom.default_tarifa[0].checked == true ? true : null,
                     "fecha_fin":Ext.Date.format(end_date.getValue(), 'Y-m-d') + " 00:00:00",
                     "fecha_inicio":Ext.Date.format(start_date.getValue(), 'Y-m-d') + " 00:00:00",
-                    "formulas":Ext.JSON.encode(r.getReglas())
+                    "formulas":r.getReglas()
                 }, 
                 {
 

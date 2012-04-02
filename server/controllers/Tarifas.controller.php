@@ -1672,7 +1672,8 @@ La asignacion de una formula a algun producto, servicio, etc. requiere una secue
 		$fecha_inicio = null, 
 		$formulas = null
 	)
-	{  
+	{                         
+            
             Logger::log("Creando nueva tarifa desde metodo publico");
             
             //Si se reciben formulas, se validan
@@ -1760,7 +1761,8 @@ La asignacion de una formula a algun producto, servicio, etc. requiere una secue
                         self::NuevaRegla
                         (
                                 $id_version, 
-                                $nombre_version." r".$contador, 
+                                //$nombre_version." r".$contador, 
+                                $formula["nombre"], 
                                 $formula["secuencia"], 
                                 array_key_exists("cantidad_minima", $formula) ? $formula["cantidad_minima"] : 1, 
                                 array_key_exists("id_clasificacion_producto", $formula) ? $formula["id_clasificacion_producto"] : null, 
