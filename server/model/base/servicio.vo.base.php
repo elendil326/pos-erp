@@ -112,7 +112,7 @@ class Servicio extends VO
 	  * 
 	  * Si el precio final se tomara del precio base de este servicio o de su costo<br>
 	  * @access public
-	  * @var enum('precio','costo')
+	  * @var enum('precio','costo','variable')
 	  */
 	public $metodo_costeo;
 
@@ -253,7 +253,7 @@ class Servicio extends VO
 	  * getMetodoCosteo
 	  * 
 	  * Get the <i>metodo_costeo</i> property for this object. Donde <i>metodo_costeo</i> es Si el precio final se tomara del precio base de este servicio o de su costo
-	  * @return enum('precio','costo')
+	  * @return enum('precio','costo','variable')
 	  */
 	final public function getMetodoCosteo()
 	{
@@ -264,9 +264,9 @@ class Servicio extends VO
 	  * setMetodoCosteo( $metodo_costeo )
 	  * 
 	  * Set the <i>metodo_costeo</i> property for this object. Donde <i>metodo_costeo</i> es Si el precio final se tomara del precio base de este servicio o de su costo.
-	  * Una validacion basica se hara aqui para comprobar que <i>metodo_costeo</i> es de tipo <i>enum('precio','costo')</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>metodo_costeo</i> es de tipo <i>enum('precio','costo','variable')</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param enum('precio','costo')
+	  * @param enum('precio','costo','variable')
 	  */
 	final public function setMetodoCosteo( $metodo_costeo )
 	{

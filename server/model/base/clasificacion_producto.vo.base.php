@@ -31,8 +31,8 @@ class ClasificacionProducto extends VO
 			if( isset($data['descripcion']) ){
 				$this->descripcion = $data['descripcion'];
 			}
-			if( isset($data['garantia']) ){
-				$this->garantia = $data['garantia'];
+			if( isset($data['id_categoria_padre']) ){
+				$this->id_categoria_padre = $data['id_categoria_padre'];
 			}
 			if( isset($data['activa']) ){
 				$this->activa = $data['activa'];
@@ -53,7 +53,7 @@ class ClasificacionProducto extends VO
 			"id_clasificacion_producto" => $this->id_clasificacion_producto,
 			"nombre" => $this->nombre,
 			"descripcion" => $this->descripcion,
-			"garantia" => $this->garantia,
+			"id_categoria_padre" => $this->id_categoria_padre,
 			"activa" => $this->activa
 		); 
 	return json_encode($vec); 
@@ -89,13 +89,13 @@ class ClasificacionProducto extends VO
 	public $descripcion;
 
 	/**
-	  * garantia
+	  * id_categoria_padre
 	  * 
 	  * numero de meses que tendran los productos de esta clasificacion<br>
 	  * @access public
 	  * @var int(11)
 	  */
-	public $garantia;
+	public $id_categoria_padre;
 
 	/**
 	  * activa
@@ -183,27 +183,27 @@ class ClasificacionProducto extends VO
 	}
 
 	/**
-	  * getGarantia
+	  * getIdCategoriaPadre
 	  * 
-	  * Get the <i>garantia</i> property for this object. Donde <i>garantia</i> es numero de meses que tendran los productos de esta clasificacion
+	  * Get the <i>id_categoria_padre</i> property for this object. Donde <i>id_categoria_padre</i> es numero de meses que tendran los productos de esta clasificacion
 	  * @return int(11)
 	  */
-	final public function getGarantia()
+	final public function getIdCategoriaPadre()
 	{
-		return $this->garantia;
+		return $this->id_categoria_padre;
 	}
 
 	/**
-	  * setGarantia( $garantia )
+	  * setIdCategoriaPadre( $id_categoria_padre )
 	  * 
-	  * Set the <i>garantia</i> property for this object. Donde <i>garantia</i> es numero de meses que tendran los productos de esta clasificacion.
-	  * Una validacion basica se hara aqui para comprobar que <i>garantia</i> es de tipo <i>int(11)</i>. 
+	  * Set the <i>id_categoria_padre</i> property for this object. Donde <i>id_categoria_padre</i> es numero de meses que tendran los productos de esta clasificacion.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_categoria_padre</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param int(11)
 	  */
-	final public function setGarantia( $garantia )
+	final public function setIdCategoriaPadre( $id_categoria_padre )
 	{
-		$this->garantia = $garantia;
+		$this->id_categoria_padre = $id_categoria_padre;
 	}
 
 	/**

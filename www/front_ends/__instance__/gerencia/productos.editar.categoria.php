@@ -28,14 +28,16 @@
                                 
 			 ));
                 
-                $form->renameField(array( "id_clasificacion_producto" => "id_categoria" ));
+               $form->renameField(array( "id_clasificacion_producto" => "id_categoria" ));
                 
                 $form->sendHidden("id_categoria");
                 
-                $form->addApiCall( "api/producto/categoria/editar/", "GET" );
+                $form->addApiCall( "api/producto/categoria/editar", "POST" );
                 
                 $form->onApiCallSuccessRedirect("productos.lista.categoria.php");
-                
+         
+		$form->createComboBoxJoin("id_categoria_padre", "nombre", ClasificacionProductoDAO::getAll());
+		//id_categoria_padre si carga el combo pero no envia el valor por que en la tabla es id_clasificacion_producto...rename 2 veces?
 		$page->addComponent( $form );
                 
 		$page->render();

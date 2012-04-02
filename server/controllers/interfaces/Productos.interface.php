@@ -89,7 +89,7 @@
  	 *
  	 * @param nombre string Nombre de la categoria
  	 * @param descripcion string Descripcion larga de la categoria
- 	 * @param id_categoria_padre string Id de la categoría padre, en caso de que tuviera un padre
+ 	 * @param id_categoria_padre int Id de la categora padre, en caso de que tuviera un padre
  	 * @return id_categoria int Id atogenerado por la insercion de la categoria
  	 **/
   static function NuevaCategoria
@@ -133,6 +133,7 @@
  	 * @param foto_del_producto string url a una foto de este producto
  	 * @param garantia int Numero de meses de garantia con los que cuenta esta categoria de producto
  	 * @param id_unidad int La unidad preferente de este producto
+ 	 * @param id_unidad_compra int El id de la unidad de medida en la que se adquiere el producto al comprarlo
  	 * @param impuestos json array de ids de impuestos que tiene este producto
  	 * @param metodo_costeo string Puede ser "precio" o "costo" e indican si el precio final sera tomado a partir del costo del producto o del precio del mismo
  	 * @param nombre_producto string Nombre del producto
@@ -154,6 +155,7 @@
 		$foto_del_producto = null, 
 		$garantia = null, 
 		$id_unidad = null, 
+		$id_unidad_compra = null, 
 		$impuestos = null, 
 		$metodo_costeo = null, 
 		$nombre_producto = null, 
@@ -193,7 +195,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos.
  	 * @param nombre_producto string Nombre del producto
  	 * @param codigo_de_barras string El Codigo de barras para este producto
  	 * @param control_de_existencia int 00000001 = Unidades. 00000010 = Caractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = Lote
- 	 * @param costo_estandar string Este valor sera tomado solo en caso de seleccionar `costo estandar` como mtodo de costeo
+ 	 * @param costo_estandar float Este valor sera tomado solo en caso de seleccionar `costo` como metodo de costeo
  	 * @param descripcion_producto string Descripcion larga del producto
  	 * @param foto_del_producto string url a una foto de este producto
  	 * @param garantia int Numero de meses de garantia con los que cuenta esta categoria de producto

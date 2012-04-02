@@ -66,7 +66,7 @@ class ClienteSeguimiento extends VO
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
 	  * @access public
-	  * @var INT(
+	  * @var int(11)
 	  */
 	public $id_cliente_seguimiento;
 
@@ -75,7 +75,7 @@ class ClienteSeguimiento extends VO
 	  * 
 	  *  [Campo no documentado]<br>
 	  * @access public
-	  * @var INT(
+	  * @var int(11)
 	  */
 	public $id_usuario;
 
@@ -84,7 +84,7 @@ class ClienteSeguimiento extends VO
 	  * 
 	  *  [Campo no documentado]<br>
 	  * @access public
-	  * @var INT(
+	  * @var int(11)
 	  */
 	public $id_cliente;
 
@@ -93,7 +93,7 @@ class ClienteSeguimiento extends VO
 	  * 
 	  *  [Campo no documentado]<br>
 	  * @access public
-	  * @var INT(
+	  * @var int(11)
 	  */
 	public $fecha;
 
@@ -102,7 +102,7 @@ class ClienteSeguimiento extends VO
 	  * 
 	  *  [Campo no documentado]<br>
 	  * @access public
-	  * @var TEXT
+	  * @var text
 	  */
 	public $texto;
 
@@ -110,7 +110,7 @@ class ClienteSeguimiento extends VO
 	  * getIdClienteSeguimiento
 	  * 
 	  * Get the <i>id_cliente_seguimiento</i> property for this object. Donde <i>id_cliente_seguimiento</i> es  [Campo no documentado]
-	  * @return INT(
+	  * @return int(11)
 	  */
 	final public function getIdClienteSeguimiento()
 	{
@@ -121,13 +121,13 @@ class ClienteSeguimiento extends VO
 	  * setIdClienteSeguimiento( $id_cliente_seguimiento )
 	  * 
 	  * Set the <i>id_cliente_seguimiento</i> property for this object. Donde <i>id_cliente_seguimiento</i> es  [Campo no documentado].
-	  * Una validacion basica se hara aqui para comprobar que <i>id_cliente_seguimiento</i> es de tipo <i>INT(</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>id_cliente_seguimiento</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * <br><br>Esta propiedad se mapea con un campo que es de <b>Auto Incremento</b> !<br>
 	  * No deberias usar setIdClienteSeguimiento( ) a menos que sepas exactamente lo que estas haciendo.<br>
 	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
 	  * No deberias usar setIdClienteSeguimiento( ) a menos que sepas exactamente lo que estas haciendo.<br>
-	  * @param INT(
+	  * @param int(11)
 	  */
 	final public function setIdClienteSeguimiento( $id_cliente_seguimiento )
 	{
@@ -138,7 +138,7 @@ class ClienteSeguimiento extends VO
 	  * getIdUsuario
 	  * 
 	  * Get the <i>id_usuario</i> property for this object. Donde <i>id_usuario</i> es  [Campo no documentado]
-	  * @return INT(
+	  * @return int(11)
 	  */
 	final public function getIdUsuario()
 	{
@@ -149,9 +149,9 @@ class ClienteSeguimiento extends VO
 	  * setIdUsuario( $id_usuario )
 	  * 
 	  * Set the <i>id_usuario</i> property for this object. Donde <i>id_usuario</i> es  [Campo no documentado].
-	  * Una validacion basica se hara aqui para comprobar que <i>id_usuario</i> es de tipo <i>INT(</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>id_usuario</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param INT(
+	  * @param int(11)
 	  */
 	final public function setIdUsuario( $id_usuario )
 	{
@@ -162,7 +162,7 @@ class ClienteSeguimiento extends VO
 	  * getIdCliente
 	  * 
 	  * Get the <i>id_cliente</i> property for this object. Donde <i>id_cliente</i> es  [Campo no documentado]
-	  * @return INT(
+	  * @return int(11)
 	  */
 	final public function getIdCliente()
 	{
@@ -173,9 +173,9 @@ class ClienteSeguimiento extends VO
 	  * setIdCliente( $id_cliente )
 	  * 
 	  * Set the <i>id_cliente</i> property for this object. Donde <i>id_cliente</i> es  [Campo no documentado].
-	  * Una validacion basica se hara aqui para comprobar que <i>id_cliente</i> es de tipo <i>INT(</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>id_cliente</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param INT(
+	  * @param int(11)
 	  */
 	final public function setIdCliente( $id_cliente )
 	{
@@ -186,7 +186,7 @@ class ClienteSeguimiento extends VO
 	  * getFecha
 	  * 
 	  * Get the <i>fecha</i> property for this object. Donde <i>fecha</i> es  [Campo no documentado]
-	  * @return INT(
+	  * @return int(11)
 	  */
 	final public function getFecha()
 	{
@@ -197,9 +197,9 @@ class ClienteSeguimiento extends VO
 	  * setFecha( $fecha )
 	  * 
 	  * Set the <i>fecha</i> property for this object. Donde <i>fecha</i> es  [Campo no documentado].
-	  * Una validacion basica se hara aqui para comprobar que <i>fecha</i> es de tipo <i>INT(</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param INT(
+	  * @param int(11)
 	  */
 	final public function setFecha( $fecha )
 	{
@@ -210,7 +210,7 @@ class ClienteSeguimiento extends VO
 	  * getTexto
 	  * 
 	  * Get the <i>texto</i> property for this object. Donde <i>texto</i> es  [Campo no documentado]
-	  * @return TEXT
+	  * @return text
 	  */
 	final public function getTexto()
 	{
@@ -221,9 +221,9 @@ class ClienteSeguimiento extends VO
 	  * setTexto( $texto )
 	  * 
 	  * Set the <i>texto</i> property for this object. Donde <i>texto</i> es  [Campo no documentado].
-	  * Una validacion basica se hara aqui para comprobar que <i>texto</i> es de tipo <i>TEXT</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>texto</i> es de tipo <i>text</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param TEXT
+	  * @param text
 	  */
 	final public function setTexto( $texto )
 	{

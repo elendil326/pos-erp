@@ -753,6 +753,8 @@ class ProductosController extends ValidacionesController implements IProductos
             throw new Exception("Se intenta registrar un producto con metodo de costeo costo sin especificar un costo", 901);
         } //$metodo_costeo == "costo" && is_null($costo_estandar)
         
+		$costo_estandar = ($metodo_costeo == "costo")? $costo_estandar : null;//sólo en caso de que se haya seleccionado metodo_costeo == 'costo' tomar en cuenta este valor ver API
+
         $producto = new Producto(array(
             "compra_en_mostrador" => $compra_en_mostrador,
             "metodo_costeo" => $metodo_costeo,
@@ -1045,6 +1047,7 @@ class ProductosController extends ValidacionesController implements IProductos
 		$foto_del_producto = null, 
 		$garantia = null, 
 		$id_unidad = null, 
+		$id_unidad_compra = null, 
 		$impuestos = null, 
 		$metodo_costeo = null, 
 		$nombre_producto = null, 
@@ -1093,6 +1096,7 @@ class ProductosController extends ValidacionesController implements IProductos
         } //!is_null($garantia)
         
         if (!is_null($costo_estandar)) {
+			$costo_estandar = ($metodo_costeo == "costo")? $costo_estandar : null;//sólo en caso de que se haya seleccionado metodo_costeo == 'costo' tomar en cuenta este valor ver API
             $producto->setCostoEstandar($costo_estandar);
         } //!is_null($costo_estandar)
         
@@ -1119,6 +1123,10 @@ class ProductosController extends ValidacionesController implements IProductos
         if (!is_null($id_unidad)) {
             $producto->setIdUnidad($id_unidad);
         } //!is_null($id_unidad)
+
+		if (!is_null($id_unidad_compra)) {
+            $producto->setIdUnidadCompra($id_unidad_compra);
+        } //!is_null($id_unidad_compra)
         
         if (!is_null($precio)) {
             $producto->setPrecio($precio);
@@ -1279,6 +1287,13 @@ class ProductosController extends ValidacionesController implements IProductos
 			throw new BusinessLogicException("El nombre $nombre esta repetido");
 		}
         
+		if(!is_null($id_categoria_padre))
+		{	
+			$clasificacion_producto = ClasificacionProductoDAO::getByPK($id_categoria_padre);
+		   	if (is_null($clasificacion_producto))
+		   		return "La clasificacion de producto (categoria padre) con id " . $id_categoria_padre . " no existe";
+		}
+
         //se validan los parametros obtenidos
         //$validar = self::validarParametrosClasificacionProducto(null, $nombre, $descripcion, $garantia);
         /*if (is_string($validar)) {
@@ -1290,7 +1305,7 @@ class ProductosController extends ValidacionesController implements IProductos
         $clasificacion_producto = new ClasificacionProducto(array(
             "nombre" => trim($nombre),
             "descripcion" => $descripcion,
-            "garantia" => null,
+            "id_categoria_padre" => $id_categoria_padre,
             "activa" => 1
         ));
         //Se guarda la nueva clasificacion. Si se reciben impuesto y/o retenciones, se crean los registros correspondientes
@@ -1331,6 +1346,13 @@ class ProductosController extends ValidacionesController implements IProductos
     {
         Logger::log("Editando la clasificacion de producto " . $id_categoria);
         
+		if(!is_null($id_categoria_padre))
+		{	
+			$clasificacion_producto = ClasificacionProductoDAO::getByPK($id_categoria_padre);
+		   	if (is_null($clasificacion_producto))
+		   		return "La clasificacion de producto (categoria padre) con id " . $id_categoria_padre . " no existe";
+		}
+
         //Se validan los parametros recibidos
         $validar = self::validarParametrosClasificacionProducto($id_categoria, $nombre, $descripcion);
         if (is_string($validar)) {
@@ -1344,11 +1366,13 @@ class ProductosController extends ValidacionesController implements IProductos
         if (!is_null($nombre)) {
             $clasificacion_producto->setNombre(trim($nombre));
         } //!is_null($nombre)
-        
-
-        
+                
         if (is_null($descripcion)) {
-            $clasificacion_producto->setDescripcion($descripcion);
+            $clasificacion_producto->setDescripcion(trim($descripcion));
+        } //is_null($descripcion)
+
+		if (is_null($id_categoria_padre)) {
+            $clasificacion_producto->setIdCategoriaPadre($id_categoria_padre);
         } //is_null($descripcion)
         
         //Se actualiza la clasificacion de producto. Si se reciben impuestos y/o retenciones

@@ -49,6 +49,9 @@ class Empresa extends VO
 			if( isset($data['direccion_web']) ){
 				$this->direccion_web = $data['direccion_web'];
 			}
+			if( isset($data['cedula']) ){
+				$this->cedula = $data['cedula'];
+			}
 		}
 	}
 
@@ -70,7 +73,8 @@ class Empresa extends VO
 			"fecha_alta" => $this->fecha_alta,
 			"fecha_baja" => $this->fecha_baja,
 			"activo" => $this->activo,
-			"direccion_web" => $this->direccion_web
+			"direccion_web" => $this->direccion_web,
+			"cedula" => $this->cedula
 		); 
 	return json_encode($vec); 
 	}
@@ -157,6 +161,15 @@ class Empresa extends VO
 	  * @var varchar(20)
 	  */
 	public $direccion_web;
+
+	/**
+	  * cedula
+	  * 
+	  *  [Campo no documentado]<br>
+	  * @access public
+	  * @var varchar(100)
+	  */
+	public $cedula;
 
 	/**
 	  * getIdEmpresa
@@ -376,6 +389,30 @@ class Empresa extends VO
 	final public function setDireccionWeb( $direccion_web )
 	{
 		$this->direccion_web = $direccion_web;
+	}
+
+	/**
+	  * getCedula
+	  * 
+	  * Get the <i>cedula</i> property for this object. Donde <i>cedula</i> es  [Campo no documentado]
+	  * @return varchar(100)
+	  */
+	final public function getCedula()
+	{
+		return $this->cedula;
+	}
+
+	/**
+	  * setCedula( $cedula )
+	  * 
+	  * Set the <i>cedula</i> property for this object. Donde <i>cedula</i> es  [Campo no documentado].
+	  * Una validacion basica se hara aqui para comprobar que <i>cedula</i> es de tipo <i>varchar(100)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param varchar(100)
+	  */
+	final public function setCedula( $cedula )
+	{
+		$this->cedula = $cedula;
 	}
 
 }

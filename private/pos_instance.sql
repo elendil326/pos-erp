@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 28-03-2012 a las 01:00:33
+-- Tiempo de generación: 02-04-2012 a las 22:59:15
 -- Versión del servidor: 5.1.61
 -- Versión de PHP: 5.3.6-13ubuntu3.6
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Base de datos: `pos_instance_83`
+-- Base de datos: `pos_instance_86`
 --
 
 -- --------------------------------------------------------
@@ -138,7 +138,7 @@ CREATE TABLE IF NOT EXISTS `almacen` (
   KEY `id_tipo_almacen` (`id_tipo_almacen`),
   KEY `almacen_ibfk_1` (`id_sucursal`),
   KEY `almacen_ibfk_2` (`id_empresa`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=14 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -263,7 +263,7 @@ CREATE TABLE IF NOT EXISTS `caja` (
   `activa` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Si la caja esta activa o ha sido eliminada',
   PRIMARY KEY (`id_caja`),
   KEY `id_sucursal` (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -276,7 +276,7 @@ CREATE TABLE IF NOT EXISTS `categoria_unidad_medida` (
   `descripcion` varchar(50) NOT NULL COMMENT 'Descripcion de la categoria unidad de medida',
   `activa` tinyint(1) NOT NULL,
   PRIMARY KEY (`id_categoria_unidad_medida`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Categorias de unidad de medida' AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Categorias de unidad de medida' AUTO_INCREMENT=6 ;
 
 -- --------------------------------------------------------
 
@@ -418,10 +418,10 @@ CREATE TABLE IF NOT EXISTS `clasificacion_producto` (
   `id_clasificacion_producto` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(64) NOT NULL COMMENT 'el nombre de esta clasificacion',
   `descripcion` varchar(255) DEFAULT NULL COMMENT 'Descripcion larga de la clasificacion del producto',
-  `garantia` int(11) DEFAULT NULL COMMENT 'numero de meses que tendran los productos de esta clasificacion',
+  `id_categoria_padre` int(11) DEFAULT NULL COMMENT 'numero de meses que tendran los productos de esta clasificacion',
   `activa` tinyint(1) NOT NULL COMMENT 'Si esta claificacion esta activa',
   PRIMARY KEY (`id_clasificacion_producto`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -692,7 +692,7 @@ CREATE TABLE IF NOT EXISTS `direccion` (
   `id_usuario_ultima_modificacion` int(11) NOT NULL COMMENT 'quien fue el usuario que modifico este registro la ultima vez',
   PRIMARY KEY (`id_direccion`),
   KEY `id_ciudad` (`id_ciudad`,`id_usuario_ultima_modificacion`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=417 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -759,7 +759,7 @@ CREATE TABLE IF NOT EXISTS `empresa` (
   `direccion_web` varchar(20) DEFAULT NULL COMMENT 'Direccion web de la empresa',
   `cedula` varchar(100) CHARACTER SET armscii8 NOT NULL,
   PRIMARY KEY (`id_empresa`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='tabla de empresas' AUTO_INCREMENT=132 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='tabla de empresas' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1260,7 +1260,7 @@ CREATE TABLE IF NOT EXISTS `producto` (
   `codigo_producto` varchar(64) NOT NULL COMMENT 'Codigo interno del producto',
   `nombre_producto` varchar(64) NOT NULL COMMENT 'Nombre del producto',
   `garantia` int(11) DEFAULT NULL COMMENT 'Si este producto cuenta con un numero de meses de garantia',
-  `costo_estandar` float  NULL COMMENT 'Costo estandar del producto',
+  `costo_estandar` float DEFAULT NULL COMMENT 'Costo estandar del producto',
   `control_de_existencia` int(11) DEFAULT NULL COMMENT '00000001 = Unidades. 00000010 = Caractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = Lote',
   `descripcion` varchar(255) DEFAULT NULL COMMENT 'Descripcion del producto',
   `foto_del_producto` varchar(100) DEFAULT NULL COMMENT 'Url a una foto de este producto',
@@ -1271,7 +1271,7 @@ CREATE TABLE IF NOT EXISTS `producto` (
   `precio` float DEFAULT NULL COMMENT 'El precio fijo del producto',
   `id_unidad_compra` int(11) DEFAULT NULL COMMENT 'Id de la unidad de compra del producto',
   PRIMARY KEY (`id_producto`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 
@@ -1611,7 +1611,7 @@ CREATE TABLE IF NOT EXISTS `sesion` (
   PRIMARY KEY (`id_sesion`),
   UNIQUE KEY `id_usuario` (`id_usuario`),
   KEY `auth_token` (`auth_token`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='Mantiene un seguimiento de las sesiones activas en el sistem' AUTO_INCREMENT=1977 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='Mantiene un seguimiento de las sesiones activas en el sistem' AUTO_INCREMENT=1983 ;
 
 -- --------------------------------------------------------
 
@@ -1631,7 +1631,7 @@ CREATE TABLE IF NOT EXISTS `sucursal` (
   `activa` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Si esta sucursal esta activa o no',
   `fecha_baja` datetime DEFAULT NULL COMMENT 'Fecha en que se dio de baja esta sucursal',
   PRIMARY KEY (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='tabla de sucursales' AUTO_INCREMENT=80 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='tabla de sucursales' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1661,7 +1661,7 @@ CREATE TABLE IF NOT EXISTS `tarifa` (
   `id_version_default` int(11) DEFAULT NULL COMMENT 'Id de la version default de esta tarifa',
   `id_version_activa` int(11) DEFAULT NULL COMMENT 'Id de la version activa de esta tarifa',
   PRIMARY KEY (`id_tarifa`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -1674,7 +1674,7 @@ CREATE TABLE IF NOT EXISTS `tipo_almacen` (
   `descripcion` varchar(64) NOT NULL,
   `activo` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Si esta activo = 1, 0 = Inactivo',
   PRIMARY KEY (`id_tipo_almacen`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=69 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 
@@ -1745,7 +1745,7 @@ CREATE TABLE IF NOT EXISTS `unidad_medida` (
   `activa` tinyint(1) NOT NULL,
   PRIMARY KEY (`id_unidad_medida`),
   KEY `id_categoria_unidad_medida` (`id_categoria_unidad_medida`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Almacena las diferentes unidades de medida para un producto' AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Almacena las diferentes unidades de medida para un producto' AUTO_INCREMENT=7 ;
 
 -- --------------------------------------------------------
 

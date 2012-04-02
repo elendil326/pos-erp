@@ -6078,7 +6078,7 @@
 			"nombre_producto" => new ApiExposedProperty("nombre_producto", true, POST, array( "string" )),
 			"codigo_de_barras" => new ApiExposedProperty("codigo_de_barras", false, POST, array( "string" )),
 			"control_de_existencia" => new ApiExposedProperty("control_de_existencia", false, POST, array( "int" )),
-			"costo_estandar" => new ApiExposedProperty("costo_estandar", false, POST, array( "string" )),
+			"costo_estandar" => new ApiExposedProperty("costo_estandar", false, POST, array( "float" )),
 			"descripcion_producto" => new ApiExposedProperty("descripcion_producto", false, POST, array( "string" )),
 			"foto_del_producto" => new ApiExposedProperty("foto_del_producto", false, POST, array( "string" )),
 			"garantia" => new ApiExposedProperty("garantia", false, POST, array( "int" )),
@@ -6199,6 +6199,7 @@
 			"foto_del_producto" => new ApiExposedProperty("foto_del_producto", false, POST, array( "string" )),
 			"garantia" => new ApiExposedProperty("garantia", false, POST, array( "int" )),
 			"id_unidad" => new ApiExposedProperty("id_unidad", false, POST, array( "int" )),
+			"id_unidad_compra" => new ApiExposedProperty("id_unidad_compra", false, POST, array( "int" )),
 			"impuestos" => new ApiExposedProperty("impuestos", false, POST, array( "json" )),
 			"metodo_costeo" => new ApiExposedProperty("metodo_costeo", false, POST, array( "string" )),
 			"nombre_producto" => new ApiExposedProperty("nombre_producto", false, POST, array( "string" )),
@@ -6225,6 +6226,7 @@
 			isset($_POST['foto_del_producto'] ) ? $_POST['foto_del_producto'] :  null,
 			isset($_POST['garantia'] ) ? $_POST['garantia'] :  null,
 			isset($_POST['id_unidad'] ) ? $_POST['id_unidad'] :  null,
+			isset($_POST['id_unidad_compra'] ) ? $_POST['id_unidad_compra'] :  null,
 			isset($_POST['impuestos'] ) ? json_decode($_POST['impuestos']) : null,
 			isset($_POST['metodo_costeo'] ) ? $_POST['metodo_costeo'] :  null,
 			isset($_POST['nombre_producto'] ) ? $_POST['nombre_producto'] :  null,
@@ -6250,7 +6252,7 @@
 		$this->request = array(	
 			"nombre" => new ApiExposedProperty("nombre", true, GET, array( "string" )),
 			"descripcion" => new ApiExposedProperty("descripcion", false, GET, array( "string" )),
-			"id_categoria_padre" => new ApiExposedProperty("id_categoria_padre", false, GET, array( "string" )),
+			"id_categoria_padre" => new ApiExposedProperty("id_categoria_padre", false, GET, array( "int" )),
 		);
 	}
 

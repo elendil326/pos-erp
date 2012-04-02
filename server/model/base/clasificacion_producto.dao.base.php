@@ -136,9 +136,9 @@ abstract class ClasificacionProductoDAOBase extends DAO
 			array_push( $val, $clasificacion_producto->getDescripcion() );
 		}
 
-		if( ! is_null( $clasificacion_producto->getGarantia() ) ){
-			$sql .= " `garantia` = ? AND";
-			array_push( $val, $clasificacion_producto->getGarantia() );
+		if( ! is_null( $clasificacion_producto->getIdCategoriaPadre() ) ){
+			$sql .= " `id_categoria_padre` = ? AND";
+			array_push( $val, $clasificacion_producto->getIdCategoriaPadre() );
 		}
 
 		if( ! is_null( $clasificacion_producto->getActiva() ) ){
@@ -176,11 +176,11 @@ abstract class ClasificacionProductoDAOBase extends DAO
 	  **/
 	private static final function update( $clasificacion_producto )
 	{
-		$sql = "UPDATE clasificacion_producto SET  `nombre` = ?, `descripcion` = ?, `garantia` = ?, `activa` = ? WHERE  `id_clasificacion_producto` = ?;";
+		$sql = "UPDATE clasificacion_producto SET  `nombre` = ?, `descripcion` = ?, `id_categoria_padre` = ?, `activa` = ? WHERE  `id_clasificacion_producto` = ?;";
 		$params = array( 
 			$clasificacion_producto->getNombre(), 
 			$clasificacion_producto->getDescripcion(), 
-			$clasificacion_producto->getGarantia(), 
+			$clasificacion_producto->getIdCategoriaPadre(), 
 			$clasificacion_producto->getActiva(), 
 			$clasificacion_producto->getIdClasificacionProducto(), );
 		global $conn;
@@ -205,12 +205,12 @@ abstract class ClasificacionProductoDAOBase extends DAO
 	  **/
 	private static final function create( &$clasificacion_producto )
 	{
-		$sql = "INSERT INTO clasificacion_producto ( `id_clasificacion_producto`, `nombre`, `descripcion`, `garantia`, `activa` ) VALUES ( ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO clasificacion_producto ( `id_clasificacion_producto`, `nombre`, `descripcion`, `id_categoria_padre`, `activa` ) VALUES ( ?, ?, ?, ?, ?);";
 		$params = array( 
 			$clasificacion_producto->getIdClasificacionProducto(), 
 			$clasificacion_producto->getNombre(), 
 			$clasificacion_producto->getDescripcion(), 
-			$clasificacion_producto->getGarantia(), 
+			$clasificacion_producto->getIdCategoriaPadre(), 
 			$clasificacion_producto->getActiva(), 
 		 );
 		global $conn;
@@ -293,12 +293,12 @@ abstract class ClasificacionProductoDAOBase extends DAO
 			
 		}
 
-		if( ( !is_null (($a = $clasificacion_productoA->getGarantia()) ) ) & ( ! is_null ( ($b = $clasificacion_productoB->getGarantia()) ) ) ){
-				$sql .= " `garantia` >= ? AND `garantia` <= ? AND";
+		if( ( !is_null (($a = $clasificacion_productoA->getIdCategoriaPadre()) ) ) & ( ! is_null ( ($b = $clasificacion_productoB->getIdCategoriaPadre()) ) ) ){
+				$sql .= " `id_categoria_padre` >= ? AND `id_categoria_padre` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " `garantia` = ? AND"; 
+			$sql .= " `id_categoria_padre` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
