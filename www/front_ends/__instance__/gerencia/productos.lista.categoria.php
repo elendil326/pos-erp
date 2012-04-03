@@ -14,7 +14,7 @@
 		$tabla = new TableComponent( 
 			array(
 				"nombre" => "Nombre",
-				"garantia"	=> "Garantia",
+				"id_categoria_padre"	=> "Categoria Padre",
 				"descripcion" 		=> "Descripcion",
 				"activa" 			=> "Activa"
 			),
@@ -27,6 +27,14 @@
                 }
                 
                 $tabla->addColRender("activa", "funcion_activa");
+
+				function funcion_id_categoria_padre( $id_categoria_padre )
+                {
+					$cat = ClasificacionProductoDAO::getByPk($id_categoria_padre);
+                    return $cat->getNombre();
+                }
+                
+                $tabla->addColRender("id_categoria_padre", "funcion_id_categoria_padre");
                 
 		$tabla->addOnClick( "id_clasificacion_producto", "(function(a){ window.location = 'productos.categoria.ver.php?cid=' + a; })" );
 		

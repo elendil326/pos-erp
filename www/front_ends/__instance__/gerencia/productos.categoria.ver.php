@@ -71,7 +71,8 @@
 //				"metodo_costeo",
 //				"activo"
 //			));
-//	    $form->createComboBoxJoin("id_unidad", "nombre", UnidadDAO::getAll(), $este_producto->getIdUnidad() );
+	    $form->createComboBoxJoin("id_categoria_padre", "nombre", ClasificacionProductoDAO::getAll(), $esta_categoria->getIdClasificacionProducto() );
+
 		$page->addComponent( $form );
 		
 		$page->render();

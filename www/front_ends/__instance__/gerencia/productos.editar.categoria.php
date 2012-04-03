@@ -36,8 +36,8 @@
                 
                 $form->onApiCallSuccessRedirect("productos.lista.categoria.php");
          
-		$form->createComboBoxJoin("id_categoria_padre", "nombre", ClasificacionProductoDAO::getAll());
-		//id_categoria_padre si carga el combo pero no envia el valor por que en la tabla es id_clasificacion_producto...rename 2 veces?
+		$form->createComboBoxJoinDistintName( "id_categoria_padre","id_clasificacion_producto", "nombre", ClasificacionProductoDAO::getAll() ) ;
+		
 		$page->addComponent( $form );
                 
 		$page->render();

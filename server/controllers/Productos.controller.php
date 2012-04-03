@@ -1367,11 +1367,11 @@ class ProductosController extends ValidacionesController implements IProductos
             $clasificacion_producto->setNombre(trim($nombre));
         } //!is_null($nombre)
                 
-        if (is_null($descripcion)) {
+        if (!is_null($descripcion)) {
             $clasificacion_producto->setDescripcion(trim($descripcion));
         } //is_null($descripcion)
 
-		if (is_null($id_categoria_padre)) {
+		if (!is_null($id_categoria_padre)) {
             $clasificacion_producto->setIdCategoriaPadre($id_categoria_padre);
         } //is_null($descripcion)
         
