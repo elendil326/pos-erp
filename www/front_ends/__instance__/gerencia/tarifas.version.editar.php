@@ -124,6 +124,14 @@ $page->partialRender();
     </table>
 </div>
 
+<table style ="width:100%; margin-top: 50px;">
+    <tr>
+        <td style = "border-width:0px; background:#EDEFF4;"  valign="middle">
+            <input class="POS Boton OK" style = "left : 250px; width:200px;" type = "button" value = "Guardar Cambios" onClick = "crearNuevaTarifa();" />
+        </td>
+    </tr>
+</table>
+
 <script>
           
     var btn_nueva_regla = Ext.get('btn_nueva_regla');          

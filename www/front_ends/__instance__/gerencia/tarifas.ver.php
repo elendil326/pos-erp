@@ -27,7 +27,15 @@ $page->addComponent(new TitleComponent(utf8_decode($tarifa->getNombre()), 2));
 $page->partialRender();
 ?>
 
-<form name = "orden_servicio" id = "orden_servicio">
+<table style ="width:100%; margin-top: 50px;">
+    <tr>
+        <td style = "border-width:0px;" valign="middle">
+            <input class="POS Boton"  type = "button" value = "Editar Tarifa" onClick = " window.location = 'tarifas.editar.php?tid=<?php echo $_GET["tid"]; ?>'; " />
+        </td>
+    </tr>
+</table>
+
+<form>
     <table width = 100% border = 0 >
         <tr>
             <td><label>Tipo Tarifa</label></td>
