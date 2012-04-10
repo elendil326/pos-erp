@@ -29,54 +29,32 @@ class ImpresionesController {
 	    return trim($end);
 	}
 
-	private static function formatAddress($d) {
+	private static function formatAddress($id_direccion) {
+		if( is_null($daoDireccion = DireccionDAO::getByPK( $id_direccion ))){
+			throw new InvalidDataException("Esta direccion no existe.");
+		}
 
-	    if ($d instanceof stdClass) {
-	        $e = "";
-	        $e .= self::readableText($d->calle) . " " . $d->numeroExterior;
-	        if (isset($d->numeroInterior))
-	            $e .= "\n" . self::readableText($d->numeroInterior);
-	        $e .= "\n";
+        $out = self::readableText($daoDireccion->getCalle()) . " " . $daoDireccion->getNumeroExterior();
 
-	        $e .= " " . self::readableText($d->colonia);
-	        if (strlen($d->codigoPostal) > 0) {
-	            $e .= " C.P. " . $d->codigoPostal . "\n";
-	        }
+        if ($daoDireccion->getNumeroInterior() != null)
+            $out .= "\n" . self::readableText($daoDireccion->getNumeroInterior());
 
-	        if (strlen($d->municipio) > 0) {
-	            $e .= self::readableText($d->municipio) . ", ";
-	        }
+        $out .= " " . self::readableText($daoDireccion->getColonia());
 
-	        if (strlen($d->estado) > 0) {
-	            $e .= self::readableText($d->estado) . ", ";
-	        }
+        if (strlen($daoDireccion->getCodigoPostal()) > 0) {
+            $out .= " C.P. " . $daoDireccion->getCodigoPostal() . "\n";
+        }
 
-	        $e .= self::readableText($d->pais) . "\n";
-	    } else {
+        if (!is_null($daoDireccion->getIdCiudad())) {
+            $out .= self::readableText($daoDireccion->getIdCiudad()) . ", ";
+            $out .= self::readableText("d->getEstado()") . ", ";
+        }
 
-	        $e = "";
-	        $e .= self::readableText($d->getCalle()) . " " . $d->getNumeroExterior();
-	        if ($d->getNumeroInterior() != null)
-	            $e .= "\n" . self::readableText($d->getNumeroInterior());
 
-	        //$e .= " " . self::readableText($d->getColonia()) . " C.P. " . $d->getCodigoPostal() . "\n";
-	        $e .= " " . self::readableText($d->getColonia());
-	        if (strlen($d->getCodigoPostal()) > 0) {
-	            $e .= " C.P. " . $d->getCodigoPostal() . "\n";
-	        }
+        $out .= self::readableText("Mexico") . "\n";
+    
 
-	        if (strlen($d->getMunicipio()) > 0) {
-	            $e .= self::readableText($d->getMunicipio()) . ", ";
-	        }
-
-	        if (strlen($d->getEstado()) > 0) {
-	            $e .= self::readableText($d->getEstado()) . ", ";
-	        }
-
-	        $e .= self::readableText($d->getPais()) . "\n";
-	    }
-
-	    return $e;
+	    return $out;
 	}
 
 	private static function roundRect($pdf, $x, $y, $w, $h) {
@@ -1045,6 +1023,7 @@ class ImpresionesController {
 		$daoVentaOrden = $daoArrayVentaOrden[0];
 		$daoVenta = VentaDAO::getByPK($daoVentaOrden->getIdVenta());
 		$daoSucursal = SucursalDAO::getByPK($daoVenta->getIdSucursal());
+		$daoServicio = ServicioDAO::getByPK( $daoOrden->getIdServicio() );
 		
 		require_once("libs/ezpdf/class.pdf.php");
 		require_once("libs/ezpdf/class.ezpdf.php");
@@ -1093,14 +1072,14 @@ class ImpresionesController {
 	     * del certificado del contribuyente
 	     * **************************/
 	    $e = "<b>" . self::readableText("caffeina software") . "</b>\n";
-	    //$e .= self::formatAddress("emisor");
+	    $e .= self::formatAddress(415);
 	    $e .= "RFC: " . "RFC";
 
 	    //datos de la sucursal
 
 		if(!is_null($daoSucursal)){
 	    	$e .= "\n\n<b>Lugar de expedicion</b>\n";
-	    	$e .= self::formatAddress( "asdf" );
+	    	$e .= self::formatAddress( 415 );
 		}
 
 
@@ -1125,15 +1104,15 @@ class ImpresionesController {
 	    $opciones_tabla['rowGap'] = 3;
 	    $opciones_tabla['colGap'] = 3;
 
-	    //$pdf->ezTable($datos, "", "", $opciones_tabla);
+	    $pdf->ezTable($datos, "", "", $opciones_tabla);
 	
 
 	    //$cajero = UsuarioDAO::getByPK($venta->getIdUsuario())->getNombre();
 		
 		
 	    $datos = array(
-	        array("col" => "<b>Venta</b>"),
-	        array("col" =>  "id_venta"),
+	        array("col" => "<b>Servicio</b>"),
+	        array("col" =>  $daoServicio->getCodigoServicio()),
 	        array("col" => "<b>Fecha de venta</b>"),
 	        array("col" => "fecha"),
 	        array("col" => "<b>Tipo de venta</b>"),
