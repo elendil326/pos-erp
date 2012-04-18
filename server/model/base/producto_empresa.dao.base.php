@@ -40,7 +40,7 @@ abstract class ProductoEmpresaDAOBase extends DAO
 	  *	Obtener {@link ProductoEmpresa} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ProductoEmpresa} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ProductoEmpresa Un objeto del tipo {@link ProductoEmpresa}. NULL si no hay tal registro.

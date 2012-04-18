@@ -1134,6 +1134,7 @@ CREATE TABLE IF NOT EXISTS `orden_de_servicio` (
   `motivo_cancelacion` varchar(255) DEFAULT NULL COMMENT 'Motivo por la cual fue cancelada la orden',
   `adelanto` float NOT NULL COMMENT 'Cantidad de dinero pagada por adelantado',
   `precio` float NOT NULL COMMENT 'El precio de esta orden de servicio',
+  `extra_params` varchar(2048) DEFAULT NULL COMMENT 'Un json con valores extra que se necesitan llenar',
   PRIMARY KEY (`id_orden_de_servicio`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
@@ -1556,6 +1557,7 @@ CREATE TABLE IF NOT EXISTS `servicio` (
   `control_existencia` int(11) DEFAULT NULL COMMENT '00000001 = Unidades. 00000010 = Caractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = LoteCaractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = Lote',
   `foto_servicio` varchar(50) DEFAULT NULL COMMENT 'Url de la foto del servicio',
   `precio` float DEFAULT NULL COMMENT 'El precio fijo del servicio',
+  `extra_params` varchar(512) DEFAULT NULL COMMENT 'Un json con valores extra que se necesitan llenar',
   PRIMARY KEY (`id_servicio`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 

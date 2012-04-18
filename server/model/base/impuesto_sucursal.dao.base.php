@@ -40,7 +40,7 @@ abstract class ImpuestoSucursalDAOBase extends DAO
 	  *	Obtener {@link ImpuestoSucursal} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ImpuestoSucursal} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ImpuestoSucursal Un objeto del tipo {@link ImpuestoSucursal}. NULL si no hay tal registro.

@@ -40,7 +40,7 @@ abstract class AutorizacionDAOBase extends DAO
 	  *	Obtener {@link Autorizacion} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Autorizacion} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Autorizacion Un objeto del tipo {@link Autorizacion}. NULL si no hay tal registro.

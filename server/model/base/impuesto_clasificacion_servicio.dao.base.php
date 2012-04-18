@@ -40,7 +40,7 @@ abstract class ImpuestoClasificacionServicioDAOBase extends DAO
 	  *	Obtener {@link ImpuestoClasificacionServicio} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ImpuestoClasificacionServicio} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ImpuestoClasificacionServicio Un objeto del tipo {@link ImpuestoClasificacionServicio}. NULL si no hay tal registro.

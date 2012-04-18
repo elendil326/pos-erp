@@ -40,7 +40,7 @@ abstract class ImpuestoUsuarioDAOBase extends DAO
 	  *	Obtener {@link ImpuestoUsuario} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ImpuestoUsuario} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ImpuestoUsuario Un objeto del tipo {@link ImpuestoUsuario}. NULL si no hay tal registro.

@@ -40,7 +40,7 @@ abstract class LoteUbicacionDAOBase extends DAO
 	  *	Obtener {@link LoteUbicacion} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link LoteUbicacion} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link LoteUbicacion Un objeto del tipo {@link LoteUbicacion}. NULL si no hay tal registro.

@@ -40,7 +40,7 @@ abstract class ServicioDAOBase extends DAO
 	  *	Obtener {@link Servicio} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Servicio} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Servicio Un objeto del tipo {@link Servicio}. NULL si no hay tal registro.
@@ -181,6 +181,11 @@ abstract class ServicioDAOBase extends DAO
 			array_push( $val, $servicio->getPrecio() );
 		}
 
+		if( ! is_null( $servicio->getExtraParams() ) ){
+			$sql .= " `extra_params` = ? AND";
+			array_push( $val, $servicio->getExtraParams() );
+		}
+
 		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
@@ -211,7 +216,7 @@ abstract class ServicioDAOBase extends DAO
 	  **/
 	private static final function update( $servicio )
 	{
-		$sql = "UPDATE servicio SET  `nombre_servicio` = ?, `metodo_costeo` = ?, `codigo_servicio` = ?, `compra_en_mostrador` = ?, `activo` = ?, `descripcion_servicio` = ?, `costo_estandar` = ?, `garantia` = ?, `control_existencia` = ?, `foto_servicio` = ?, `precio` = ? WHERE  `id_servicio` = ?;";
+		$sql = "UPDATE servicio SET  `nombre_servicio` = ?, `metodo_costeo` = ?, `codigo_servicio` = ?, `compra_en_mostrador` = ?, `activo` = ?, `descripcion_servicio` = ?, `costo_estandar` = ?, `garantia` = ?, `control_existencia` = ?, `foto_servicio` = ?, `precio` = ?, `extra_params` = ? WHERE  `id_servicio` = ?;";
 		$params = array( 
 			$servicio->getNombreServicio(), 
 			$servicio->getMetodoCosteo(), 
@@ -224,6 +229,7 @@ abstract class ServicioDAOBase extends DAO
 			$servicio->getControlExistencia(), 
 			$servicio->getFotoServicio(), 
 			$servicio->getPrecio(), 
+			$servicio->getExtraParams(), 
 			$servicio->getIdServicio(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -247,7 +253,7 @@ abstract class ServicioDAOBase extends DAO
 	  **/
 	private static final function create( &$servicio )
 	{
-		$sql = "INSERT INTO servicio ( `id_servicio`, `nombre_servicio`, `metodo_costeo`, `codigo_servicio`, `compra_en_mostrador`, `activo`, `descripcion_servicio`, `costo_estandar`, `garantia`, `control_existencia`, `foto_servicio`, `precio` ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO servicio ( `id_servicio`, `nombre_servicio`, `metodo_costeo`, `codigo_servicio`, `compra_en_mostrador`, `activo`, `descripcion_servicio`, `costo_estandar`, `garantia`, `control_existencia`, `foto_servicio`, `precio`, `extra_params` ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$servicio->getIdServicio(), 
 			$servicio->getNombreServicio(), 
@@ -261,6 +267,7 @@ abstract class ServicioDAOBase extends DAO
 			$servicio->getControlExistencia(), 
 			$servicio->getFotoServicio(), 
 			$servicio->getPrecio(), 
+			$servicio->getExtraParams(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -436,6 +443,17 @@ abstract class ServicioDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " `precio` = ? AND"; 
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( ( !is_null (($a = $servicioA->getExtraParams()) ) ) & ( ! is_null ( ($b = $servicioB->getExtraParams()) ) ) ){
+				$sql .= " `extra_params` >= ? AND `extra_params` <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " `extra_params` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

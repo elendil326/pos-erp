@@ -41,6 +41,9 @@ if ($esta_orden->getActiva()){
 	//$menu->addItem("Quitar productos a esta orden de servicio", "servicios.quitar_productos.orden.php?oid=" . $_GET["oid"]);
 	
 	
+	
+	ImpresionesController::imprimirNotaDeVenta(2);
+	
 	$btn_eliminar = new MenuItem("Cancelar orden", null);
 	$btn_eliminar->addApiCall("api/servicios/orden/cancelar", "GET");
 	$btn_eliminar->onApiCallSuccessRedirect("servicios.lista.orden.php");
@@ -123,5 +126,5 @@ $table->addColRender("id_usuario_venta", "funcion_usuario");
 
 
 $page->addComponent($table);
-ImpresionesController::imprimirNotaDeVenta(2);
+
 $page->render();

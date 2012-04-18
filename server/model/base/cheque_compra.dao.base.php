@@ -40,7 +40,7 @@ abstract class ChequeCompraDAOBase extends DAO
 	  *	Obtener {@link ChequeCompra} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ChequeCompra} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ChequeCompra Un objeto del tipo {@link ChequeCompra}. NULL si no hay tal registro.

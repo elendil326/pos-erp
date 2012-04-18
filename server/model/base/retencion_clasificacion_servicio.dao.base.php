@@ -40,7 +40,7 @@ abstract class RetencionClasificacionServicioDAOBase extends DAO
 	  *	Obtener {@link RetencionClasificacionServicio} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link RetencionClasificacionServicio} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link RetencionClasificacionServicio Un objeto del tipo {@link RetencionClasificacionServicio}. NULL si no hay tal registro.

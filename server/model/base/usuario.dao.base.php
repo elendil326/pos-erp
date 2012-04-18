@@ -40,7 +40,7 @@ abstract class UsuarioDAOBase extends DAO
 	  *	Obtener {@link Usuario} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Usuario} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Usuario Un objeto del tipo {@link Usuario}. NULL si no hay tal registro.

@@ -40,7 +40,7 @@ abstract class ChequeAbonoPrestamoDAOBase extends DAO
 	  *	Obtener {@link ChequeAbonoPrestamo} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ChequeAbonoPrestamo} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ChequeAbonoPrestamo Un objeto del tipo {@link ChequeAbonoPrestamo}. NULL si no hay tal registro.

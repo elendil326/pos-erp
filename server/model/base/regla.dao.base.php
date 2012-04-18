@@ -40,7 +40,7 @@ abstract class ReglaDAOBase extends DAO
 	  *	Obtener {@link Regla} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Regla} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Regla Un objeto del tipo {@link Regla}. NULL si no hay tal registro.

@@ -40,7 +40,7 @@ abstract class GastoDAOBase extends DAO
 	  *	Obtener {@link Gasto} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Gasto} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Gasto Un objeto del tipo {@link Gasto}. NULL si no hay tal registro.

@@ -40,7 +40,7 @@ abstract class ConceptoIngresoDAOBase extends DAO
 	  *	Obtener {@link ConceptoIngreso} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ConceptoIngreso} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ConceptoIngreso Un objeto del tipo {@link ConceptoIngreso}. NULL si no hay tal registro.

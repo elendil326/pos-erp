@@ -40,7 +40,7 @@ abstract class VentaArpillaDAOBase extends DAO
 	  *	Obtener {@link VentaArpilla} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link VentaArpilla} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link VentaArpilla Un objeto del tipo {@link VentaArpilla}. NULL si no hay tal registro.

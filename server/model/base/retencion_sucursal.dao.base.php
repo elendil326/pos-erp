@@ -40,7 +40,7 @@ abstract class RetencionSucursalDAOBase extends DAO
 	  *	Obtener {@link RetencionSucursal} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link RetencionSucursal} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link RetencionSucursal Un objeto del tipo {@link RetencionSucursal}. NULL si no hay tal registro.

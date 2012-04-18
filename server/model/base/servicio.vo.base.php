@@ -58,6 +58,9 @@ class Servicio extends VO
 			if( isset($data['precio']) ){
 				$this->precio = $data['precio'];
 			}
+			if( isset($data['extra_params']) ){
+				$this->extra_params = $data['extra_params'];
+			}
 		}
 	}
 
@@ -82,7 +85,8 @@ class Servicio extends VO
 			"garantia" => $this->garantia,
 			"control_existencia" => $this->control_existencia,
 			"foto_servicio" => $this->foto_servicio,
-			"precio" => $this->precio
+			"precio" => $this->precio,
+			"extra_params" => $this->extra_params
 		); 
 	return json_encode($vec); 
 	}
@@ -196,6 +200,15 @@ class Servicio extends VO
 	  * @var float
 	  */
 	public $precio;
+
+	/**
+	  * extra_params
+	  * 
+	  * Un json con valores extra que se necesitan llenar<br>
+	  * @access public
+	  * @var varchar(512)
+	  */
+	public $extra_params;
 
 	/**
 	  * getIdServicio
@@ -487,6 +500,30 @@ class Servicio extends VO
 	final public function setPrecio( $precio )
 	{
 		$this->precio = $precio;
+	}
+
+	/**
+	  * getExtraParams
+	  * 
+	  * Get the <i>extra_params</i> property for this object. Donde <i>extra_params</i> es Un json con valores extra que se necesitan llenar
+	  * @return varchar(512)
+	  */
+	final public function getExtraParams()
+	{
+		return $this->extra_params;
+	}
+
+	/**
+	  * setExtraParams( $extra_params )
+	  * 
+	  * Set the <i>extra_params</i> property for this object. Donde <i>extra_params</i> es Un json con valores extra que se necesitan llenar.
+	  * Una validacion basica se hara aqui para comprobar que <i>extra_params</i> es de tipo <i>varchar(512)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param varchar(512)
+	  */
+	final public function setExtraParams( $extra_params )
+	{
+		$this->extra_params = $extra_params;
 	}
 
 }

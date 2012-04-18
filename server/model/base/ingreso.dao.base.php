@@ -40,7 +40,7 @@ abstract class IngresoDAOBase extends DAO
 	  *	Obtener {@link Ingreso} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Ingreso} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Ingreso Un objeto del tipo {@link Ingreso}. NULL si no hay tal registro.

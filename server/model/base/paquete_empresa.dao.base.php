@@ -40,7 +40,7 @@ abstract class PaqueteEmpresaDAOBase extends DAO
 	  *	Obtener {@link PaqueteEmpresa} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link PaqueteEmpresa} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link PaqueteEmpresa Un objeto del tipo {@link PaqueteEmpresa}. NULL si no hay tal registro.

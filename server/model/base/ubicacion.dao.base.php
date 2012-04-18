@@ -40,7 +40,7 @@ abstract class UbicacionDAOBase extends DAO
 	  *	Obtener {@link Ubicacion} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Ubicacion} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Ubicacion Un objeto del tipo {@link Ubicacion}. NULL si no hay tal registro.

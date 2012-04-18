@@ -40,7 +40,7 @@ abstract class ConceptoGastoDAOBase extends DAO
 	  *	Obtener {@link ConceptoGasto} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ConceptoGasto} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ConceptoGasto Un objeto del tipo {@link ConceptoGasto}. NULL si no hay tal registro.

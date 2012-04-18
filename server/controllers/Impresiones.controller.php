@@ -1029,7 +1029,7 @@ class ImpresionesController {
 		require_once("libs/ezpdf/class.ezpdf.php");
 
 	    $pdf = new Cezpdf( $paper = 'letter');
-		//echo "x";
+
 		if (is_file(POS_PATH_TO_SERVER_ROOT . "libs/ezpdf/fonts/Helvetica.afm")){
 			$pdf->selectFont(POS_PATH_TO_SERVER_ROOT . "libs/ezpdf/fonts/Helvetica.afm");
 			
@@ -1114,11 +1114,11 @@ class ImpresionesController {
 	        array("col" => "<b>Servicio</b>"),
 	        array("col" =>  $daoServicio->getCodigoServicio()),
 	        array("col" => "<b>Fecha de venta</b>"),
-	        array("col" => "fecha"),
+	        array("col" => $daoVenta->getFecha()),
 	        array("col" => "<b>Tipo de venta</b>"),
-	        array("col" => self::readableText(   "tipo_de_venta")),
+	        array("col" => self::readableText( $daoVenta->getTipoDeVenta())),
 	        array("col" => "<b>Cajero</b>"),
-	        array("col" => self::readableText(  "cajero"))
+	        array("col" => self::readableText(  $daoVenta->getIdUsuario()))
 	    );
 
 	    $pdf->ezSetY(self::puntos_cm(26.8));
@@ -1139,7 +1139,6 @@ class ImpresionesController {
 	     * Cliente
 	     * ************************* */
 	    $datos_receptor = $daoCliente->getNombre() . "\n";
-	    //$datos_receptor .= formatAddress($daoCliente->getIdDireccion());
 	    $datos_receptor .= "RFC: " . $daoCliente->getRfc();
 
 	    $receptor = array(

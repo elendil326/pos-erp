@@ -40,7 +40,7 @@ abstract class SesionDAOBase extends DAO
 	  *	Obtener {@link Sesion} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Sesion} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Sesion Un objeto del tipo {@link Sesion}. NULL si no hay tal registro.

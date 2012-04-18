@@ -40,7 +40,7 @@ abstract class SucursalDAOBase extends DAO
 	  *	Obtener {@link Sucursal} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Sucursal} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Sucursal Un objeto del tipo {@link Sucursal}. NULL si no hay tal registro.

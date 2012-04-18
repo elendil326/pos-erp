@@ -40,7 +40,7 @@ abstract class ProductoOrdenDeServicioDAOBase extends DAO
 	  *	Obtener {@link ProductoOrdenDeServicio} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ProductoOrdenDeServicio} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ProductoOrdenDeServicio Un objeto del tipo {@link ProductoOrdenDeServicio}. NULL si no hay tal registro.

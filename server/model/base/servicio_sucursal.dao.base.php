@@ -40,7 +40,7 @@ abstract class ServicioSucursalDAOBase extends DAO
 	  *	Obtener {@link ServicioSucursal} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ServicioSucursal} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ServicioSucursal Un objeto del tipo {@link ServicioSucursal}. NULL si no hay tal registro.

@@ -40,7 +40,7 @@ abstract class ClasificacionProveedorDAOBase extends DAO
 	  *	Obtener {@link ClasificacionProveedor} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ClasificacionProveedor} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ClasificacionProveedor Un objeto del tipo {@link ClasificacionProveedor}. NULL si no hay tal registro.

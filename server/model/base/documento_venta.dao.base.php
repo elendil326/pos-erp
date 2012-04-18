@@ -40,7 +40,7 @@ abstract class DocumentoVentaDAOBase extends DAO
 	  *	Obtener {@link DocumentoVenta} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link DocumentoVenta} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link DocumentoVenta Un objeto del tipo {@link DocumentoVenta}. NULL si no hay tal registro.

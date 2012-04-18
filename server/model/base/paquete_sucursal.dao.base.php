@@ -40,7 +40,7 @@ abstract class PaqueteSucursalDAOBase extends DAO
 	  *	Obtener {@link PaqueteSucursal} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link PaqueteSucursal} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link PaqueteSucursal Un objeto del tipo {@link PaqueteSucursal}. NULL si no hay tal registro.

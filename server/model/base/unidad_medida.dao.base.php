@@ -40,7 +40,7 @@ abstract class UnidadMedidaDAOBase extends DAO
 	  *	Obtener {@link UnidadMedida} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link UnidadMedida} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link UnidadMedida Un objeto del tipo {@link UnidadMedida}. NULL si no hay tal registro.

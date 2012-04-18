@@ -39,7 +39,7 @@
 
 
 	?>
-
+	<!--
 	<h3 style="margin-top:170px">Al parecer aun no esta aprovechando todo el potencial de Caffeina POS.</h3>
 		<table>
 			<tr>
@@ -68,7 +68,7 @@
 		</table>
 		
 
-
+	-->
 
 	<?php
 	

@@ -40,7 +40,7 @@ abstract class TraspasoProductoDAOBase extends DAO
 	  *	Obtener {@link TraspasoProducto} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link TraspasoProducto} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link TraspasoProducto Un objeto del tipo {@link TraspasoProducto}. NULL si no hay tal registro.

@@ -40,7 +40,7 @@ abstract class RetencionEmpresaDAOBase extends DAO
 	  *	Obtener {@link RetencionEmpresa} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link RetencionEmpresa} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link RetencionEmpresa Un objeto del tipo {@link RetencionEmpresa}. NULL si no hay tal registro.

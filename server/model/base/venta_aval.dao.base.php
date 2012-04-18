@@ -40,7 +40,7 @@ abstract class VentaAvalDAOBase extends DAO
 	  *	Obtener {@link VentaAval} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link VentaAval} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link VentaAval Un objeto del tipo {@link VentaAval}. NULL si no hay tal registro.

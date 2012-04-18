@@ -40,7 +40,7 @@ abstract class ClasificacionServicioDAOBase extends DAO
 	  *	Obtener {@link ClasificacionServicio} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ClasificacionServicio} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ClasificacionServicio Un objeto del tipo {@link ClasificacionServicio}. NULL si no hay tal registro.

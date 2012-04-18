@@ -40,7 +40,7 @@ abstract class PrestamoDAOBase extends DAO
 	  *	Obtener {@link Prestamo} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Prestamo} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Prestamo Un objeto del tipo {@link Prestamo}. NULL si no hay tal registro.

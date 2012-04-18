@@ -40,7 +40,7 @@ abstract class ServicioEmpresaDAOBase extends DAO
 	  *	Obtener {@link ServicioEmpresa} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ServicioEmpresa} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ServicioEmpresa Un objeto del tipo {@link ServicioEmpresa}. NULL si no hay tal registro.
