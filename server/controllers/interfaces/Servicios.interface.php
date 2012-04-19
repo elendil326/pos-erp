@@ -285,6 +285,7 @@
  	 * @param cliente_reporta string lo que el cliente reporta hacerca de ...
  	 * @param condiciones_de_recepcion string condiciones fisica en las que se recibe el equipo
  	 * @param descripcion string Descripcion de la orden o el porque del servicio
+ 	 * @param extra_params json Si esta orden requiere parametros, se enviaran en forma de json. Se evaluaran segun las reglas de extra_params, algunos pueden ser obligatorios y asi.
  	 * @param fecha_entrega int Fecha en que se entregara el servicio. En caso de aplicar. Unix Time Stamp
  	 * @param fotografia string 
  	 * @param precio float en caso de que el metodo de costeo sea variable, hay que mandar un precio final
@@ -299,6 +300,7 @@
 		$cliente_reporta = null, 
 		$condiciones_de_recepcion = null, 
 		$descripcion = "", 
+		$extra_params = null, 
 		$fecha_entrega = "", 
 		$fotografia = null, 
 		$precio = null

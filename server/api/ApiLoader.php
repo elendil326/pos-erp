@@ -1,5 +1,31 @@
 <?php 
 
+	/*require_once("ApiHandler.php");
+
+	require_once("ApiHttpErrors.php");
+
+	require_once("ApiLoader.php");
+
+	require_once("ApiOutputFormatter.php");
+
+	require_once("CustomValidator.php");
+
+	require_once("DateRangeValidator.php");
+
+	require_once("DateValidator.php");
+
+	require_once("EnumValidator.php");
+
+	require_once("HtmlValidator.php");
+
+	require_once("NumericRangeValidator.php");
+
+	require_once("NumericValidator.php");
+
+	require_once("StringValidator.php");
+
+	require_once("Validator.php");*/
+
 
   class ApiSesionIniciar extends ApiHandler {
   
@@ -4915,6 +4941,7 @@
 			"cliente_reporta" => new ApiExposedProperty("cliente_reporta", false, POST, array( "string" )),
 			"condiciones_de_recepcion" => new ApiExposedProperty("condiciones_de_recepcion", false, POST, array( "string" )),
 			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "string" )),
+			"extra_params" => new ApiExposedProperty("extra_params", false, POST, array( "json" )),
 			"fecha_entrega" => new ApiExposedProperty("fecha_entrega", false, POST, array( "int" )),
 			"fotografia" => new ApiExposedProperty("fotografia", false, POST, array( "string" )),
 			"precio" => new ApiExposedProperty("precio", false, POST, array( "float" )),
@@ -4932,6 +4959,7 @@
 			isset($_POST['cliente_reporta'] ) ? $_POST['cliente_reporta'] :  null,
 			isset($_POST['condiciones_de_recepcion'] ) ? $_POST['condiciones_de_recepcion'] :  null,
 			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  "",
+			isset($_POST['extra_params'] ) ? json_decode($_POST['extra_params']) : null,
 			isset($_POST['fecha_entrega'] ) ? $_POST['fecha_entrega'] :  "",
 			isset($_POST['fotografia'] ) ? $_POST['fotografia'] :  null,
 			isset($_POST['precio'] ) ? $_POST['precio'] :  null

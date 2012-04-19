@@ -1588,6 +1588,7 @@ require_once("interfaces/Servicios.interface.php");
 		$cliente_reporta = null, 
 		$condiciones_de_recepcion = null, 
 		$descripcion = "", 
+		$extra_params = null, 
 		$fecha_entrega = "", 
 		$fotografia = null, 
 		$precio = null
@@ -1598,12 +1599,14 @@ require_once("interfaces/Servicios.interface.php");
             Logger::log("   id_cliente =" . $id_cliente);			
 
             //Se obtiene al usuario de la sesion actual
-            $id_usuario = SesionController::getCurrentUser();
+            $s = SesionController::Actual();
 
-            if(is_null($id_usuario)){
+            if(is_null($s)){
                 Logger::error("No se ha podido obtener al usuario de la sesion. Ya inicio sesion?");
                 throw new AccessDeniedException("No se ha podido obtener al usuario de la sesion.");
             }
+
+			$id_usuario = $s["id_usuario"];
             
             //Valida que los datos sean correctos
             $validar = self::validarParametrosOrdenDeServicio(null, $id_servicio, $id_cliente, $descripcion, null, $adelanto);
@@ -1632,6 +1635,10 @@ require_once("interfaces/Servicios.interface.php");
 				throw new InvalidDataException("Este servicio no existe");
 			}
 			
+			
+
+			
+			
 			$subtotal = 0;
 			if($servicio->getMetodoCosteo() == "variable"){
 				if(is_null($precio)){
@@ -1644,11 +1651,16 @@ require_once("interfaces/Servicios.interface.php");
 
 				$subtotal = $precio;
 			}else{
-				$subtotal = $servicio->getPrecio();				
+				$subtotal = $servicio->getPrecio();	
+				
+				if(is_null($subtotal)){
+					Logger::error("el precio de este servicio esta mal!");
+					$subtotal = 0;
+				}			
 			}
 
 
-			
+		
 
 
             //Se inicializa el registro de orden de servicio
@@ -1667,7 +1679,22 @@ require_once("interfaces/Servicios.interface.php");
                                                             
                                                             )
                                                     );
-            
+			//ok, ya tengo el servicio, vamos a ver si necesito parametros extra
+			if(!is_null( $servicio->getExtraParams() )){
+				//si se necesitan, vamos a ver cuales son,
+				$extra_params_sent		= $extra_params;
+				$extra_params_required	= json_decode( $servicio->getExtraParams() );
+
+				foreach ($extra_params_required	as $epr) {
+
+					Logger::log("extraparam:" . $epr->desc);
+
+
+				}
+				
+				$orden_de_servicio->setExtraParams( json_encode($extra_params) );
+			}
+			
             DAO::transBegin();
             try{
 				Logger::log("Insertando la orden de servicio....");
