@@ -1119,11 +1119,14 @@ class ImpresionesController {
 	    $datos = array(
 	        array("col" => "<b>Servicio</b>"),
 	        array("col" =>  $daoServicio->getCodigoServicio()),
+
+	        array("col" => "<b>Numero de orden</b>"),
+	        array("col" =>  $daoOrden->getIdOrdenDeServicio() ),
+		
 	        array("col" => "<b>Fecha de venta</b>"),
 	        array("col" => $daoVenta->getFecha()),
-	        array("col" => "<b>Tipo de venta</b>"),
-	        array("col" => self::readableText( $daoVenta->getTipoDeVenta())),
-	        array("col" => "<b>Cajero</b>"),
+
+	        array("col" => "<b>Agente de venta</b>"),
 	        array("col" => self::readableText(  $cajero->getNombre() ))
 	    );
 
@@ -1164,109 +1167,38 @@ class ImpresionesController {
 	    /*     * ************************
 	     * PRODUCTOS
 	     * ************************* */
+
 	    $elementos = array(
-	        array('cantidad' => 'Cantidad',
-	            'unidad'=>'Unidad',
-	            'agrupacion' => 'Agrupacion',
-	            'descripcion' => 'Descripcion                                                                                                     ', 'precio' => 'Precio', 'importe' => 'Importe'),
-	    );
+	        array(  'cantidad' 	=> '',
+	            	'unidad'		=>''
+				)
+		);
 
-		$productos = array();
-	    foreach ($productos as $p) {
 
-	        $p_inventario = InventarioDAO::getByPK($p["id_producto"]);
-
-	        $agrupacion = $p_inventario->getAgrupacion() != null ? $p_inventario->getAgrupacion() : "unidad";
-
-	        if ($p["cantidadProc"] > 0) {
-
-	            $prod['cantidad'] = sprintf("%01.2f",$p["cantidadProc"]);            
-	            $prod['descripcion'] = $p["descripcion"] . " PROCESADA";
-	            $prod['precio'] = moneyFormat($p["precioProc"], DONT_USE_HTML);
-	            $size = $p_inventario->getAgrupacion() != null ? sprintf("%01.2f", ($p["cantidadProc"] / $p_inventario->getAgrupacionTam())) : "";    
-
-	            if ($p_inventario->getPrecioPorAgrupacion()) {
-
-	                $prod['importe'] = moneyFormat($size * $p["precioProc"], DONT_USE_HTML);
-	                $prod['unidad'] = $p_inventario->getAgrupacion();
-
-	            } else {
-	                $prod['importe'] = moneyFormat($p["precioProc"] * $p["cantidadProc"], DONT_USE_HTML);
-	                $prod['unidad'] = $p_inventario->getEscala();
-	            }
-
-	            $prod['agrupacion'] = $size . " " . $agrupacion;
-	            array_push($elementos, $prod);
-	        }
-
-	        if ($p["cantidad"] > 0) {
-
-	            $prod['cantidad'] = sprintf("%01.2f",$p["cantidad"]);
-	            $prod['descripcion'] = $p["descripcion"];
-	            $prod['precio'] = moneyFormat($p["precio"], DONT_USE_HTML);
-
-	            $size = $p_inventario->getAgrupacion() != null ? sprintf("%01.2f", ($p["cantidad"] / $p_inventario->getAgrupacionTam())) : "";    
-
-	            //ver si hay precio por agrupacion
-	            if ($p_inventario->getPrecioPorAgrupacion()) {
-
-	                $prod['importe'] = moneyFormat($size * $p["precio"], DONT_USE_HTML);
-	                $prod['unidad'] = $p_inventario->getAgrupacion();
-
-	            } else {
-	                $prod['importe'] = moneyFormat($p["precio"] * $p["cantidad"], DONT_USE_HTML);
-	                $prod['unidad'] = $p_inventario->getEscala();
-	            }
-
-	            $prod['agrupacion'] = $size . " " . $agrupacion;
-	            array_push($elementos, $prod);
-	        }
-	    }
-
-		define("DONT_USE_HTML", false);
-
-	    array_push($elementos, array("cantidad" => "",
-	        "unidad" => "",
-	        "agrupacion" => "",
-	        "descripcion" => "",
-	        "precio" => "Subtotal",
-	        "importe" => self::moneyFormat($daoVenta->getSubTotal(), DONT_USE_HTML)));
-
-	    array_push($elementos, array("cantidad" => "",
-	        "unidad" => "",
-	        "agrupacion" => "",
-	        "descripcion" => "",
-	        "precio" => "Descuento",
-	        "importe" => self::moneyFormat($daoVenta->getDescuento(), DONT_USE_HTML)));
-
-	    array_push($elementos, array("cantidad" => "",
-	        "unidad" => "",
-	        "agrupacion" => "",
-	        "descripcion" => "",
-	        "precio" => "IVA",
-	        "importe" => self::moneyFormat($daoVenta->getImpuesto(), DONT_USE_HTML)));
-
-	    array_push($elementos, array("cantidad" => "",
-	        "unidad" => "",
-	        "agrupacion" => "",
-	        "descripcion" => "",
-	        "precio" => "Total",
-	        "importe" => self::moneyFormat($daoVenta->getTotal(), DONT_USE_HTML)));
-
-	    if($daoVenta->getSaldo() < $daoVenta->getTotal()){
-	        array_push($elementos, array("cantidad" => "",
-	        "unidad" => "",
-	        "agrupacion" => "",
-	        "descripcion" => "",
-	        "precio" => "Saldo",
-	        "importe" => self::moneyFormat(($daoVenta->getTotal() - $daoVenta->getSaldo()), DONT_USE_HTML)));
-	    }
+		$eP = $daoOrden->getExtraParams();
+		
+		if(!is_null($eP)){
+			$ePObj = json_decode($eP);
+			foreach ($ePObj as $obj) {
+				$row["cantidad"] = "<b>" . $obj->desc . "</b>";
+				$row["unidad"] = $obj->value;				
+				$row["agrupacion"] = "";
+				$row["descripcion"] = "";
+				$row["precio"] = "";				
+				$row["importe"] = "";				
+				array_push($elementos, $row);	
+			}
+		}
+		
+		
 
 
 	    $pdf->ezText("", 10, array('justification' => 'center'));
 	    $pdf->ezSetY(self::puntos_cm(18.6));
+	
 	    $opciones_tabla['xPos'] = self::puntos_cm(2);
 	    $opciones_tabla['width'] = self::puntos_cm(16.2);
+	
 	    $pdf->ezTable($elementos, "", "", $opciones_tabla);
 
 	    //roundedRect($x, $y, $w, $h)
@@ -1277,6 +1209,7 @@ class ImpresionesController {
 	     * notas de abajo
 	     * ************************* */
 	    $pdf->setLineStyle(1);
+	
 	    $pdf->setStrokeColor(0.3359375, 0.578125, 0.89453125);
 
 	    $pdf->line( self::puntos_cm(1.9), self::puntos_cm(2.0), self::puntos_cm(18.1), self::puntos_cm(2.0));

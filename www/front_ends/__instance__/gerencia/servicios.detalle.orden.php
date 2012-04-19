@@ -86,7 +86,9 @@ $form->setEditable(false);
 $form->hideField(array(
 	"id_orden_de_servicio",
 	"id_usuario_venta",
-	"extra_params"
+	"extra_params",
+	"motivo_cancelacion",
+	"fecha_entrega"
 ));
 
 

@@ -28,7 +28,6 @@
 		$tabla = new TableComponent(array(
 			"id_usuario_venta" => "Cliente",
 			"fecha_orden" => "Fecha Orden",
-			"fecha_entrega" => "Transcurrido",
 			"id_servicio" => "Servicio"
 			
 		), $ordenes["resultados"]);
@@ -52,12 +51,14 @@
 		{
 			return ($cancelada) ? "Cancelada" : "No Cancelada";
 		}
+		
+		
 		function funcion_transcurrido($a, $obj){
 			return FormatTime(strtotime($obj["fecha_orden"]));
 
 		}
 
-		$tabla->addColRender("fecha_entrega", "funcion_transcurrido");
+		$tabla->addColRender("fecha_orden", "funcion_transcurrido");
 
 		$tabla->addColRender("activa", "funcion_activa");
 
