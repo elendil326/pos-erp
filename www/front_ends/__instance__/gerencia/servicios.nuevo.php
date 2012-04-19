@@ -146,7 +146,7 @@
 		                selectOnTab: true,
 		                store: [
 		                    ['textarea', 	'Texto grande'],
-		                    ['input', 		'Texto peque&ntilde;o o numero'],
+		                    ['text', 		'Texto peque&ntilde;o o numero'],
 		                    ['file', 		'Archivo' ],
 		                    ['date',		'Fecha']
 		                ],

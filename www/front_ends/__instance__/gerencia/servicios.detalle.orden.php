@@ -27,6 +27,7 @@ $link_to_customer .= $customer->getNombre();
 $link_to_customer .= "</a>";
 
 
+
 $page->addComponent(new TitleComponent("Orden de servicio " . $_GET["oid"] . " para " . $link_to_customer, 2));
 
 //
@@ -36,37 +37,40 @@ if ($esta_orden->getActiva()){
 	$menu = new MenuComponent();
 	
 	$menu->addItem("Nuevo seguimiento", "servicios.seguimiento.orden.php?oid=" . $_GET["oid"]);
-	
-	//$menu->addItem("Agregar productos a esta orden de servicio", "servicios.agregar_productos.orden.php?oid=" . $_GET["oid"]);
-	//$menu->addItem("Quitar productos a esta orden de servicio", "servicios.quitar_productos.orden.php?oid=" . $_GET["oid"]);
-	
-	
-	
-	ImpresionesController::imprimirNotaDeVenta(2);
-	
+
 	$btn_eliminar = new MenuItem("Cancelar orden", null);
 	$btn_eliminar->addApiCall("api/servicios/orden/cancelar", "GET");
 	$btn_eliminar->onApiCallSuccessRedirect("servicios.lista.orden.php");
 	$btn_eliminar->addName("cancelar");
-	
 	$funcion_cancelar = " function cancelar_orden(btn){" . "if(btn == 'yes')" . "{" . "var p = {};" . "p.id_orden_de_servicio = " . $_GET["oid"] . ";" . "sendToApi_cancelar(p);" . "}" . "}" . "      " . "function confirmar_cancelacion(){" . " Ext.MessageBox.confirm('Cancelar', 'Desea cancelar esta orden?', cancelar_orden );" . "}";
-	
 	$btn_eliminar->addOnClick("confirmar_cancelacion", $funcion_cancelar);
+		
+
+	
+
 	
 	$menu->addMenuItem($btn_eliminar);
-	
 	$btn_terminar = new MenuItem("Terminar orden", null);
 	$btn_terminar->addApiCall("api/servicios/orden/terminar", "POST");
 	$btn_terminar->onApiCallSuccessRedirect("servicios.lista.orden.php");
 	$btn_terminar->addName("terminar");
-	
 	$funcion_terminar = " function terminar_orden(btn){" . "if(btn == 'yes')" . "{" . "window.location = \"servicios.terminar.orden.php?oid=" . $_GET["oid"] . "\";" . "}" . "}" . "      " . "function confirmar_termino(){" . " Ext.MessageBox.confirm('Terminar', 'Desea terminar esta orden?', terminar_orden );" . "}";
-	
 	$btn_terminar->addOnClick("confirmar_termino", $funcion_terminar);
+		
+
+	
+
 	
 	$menu->addMenuItem($btn_terminar);
 	
 	
+	$imp = new MenuItem("Imprimir", null);
+	//$funcion_imp = " function funcion_imp(){ alert(4); }";	
+	$imp->addOnClick("asdf", "function asdf(){window.location = 'servicios.detalle.orden.impresion.php?oid=". $_GET["oid"] ."' ;}");
+	$menu->addMenuItem($imp);
+	
+	
+		
 	$page->addComponent($menu);
 }
 
@@ -81,14 +85,16 @@ $form->setEditable(false);
 
 $form->hideField(array(
 	"id_orden_de_servicio",
-	"id_usuario_venta"
+	"id_usuario_venta",
+	"extra_params"
 ));
 
 
-//$form->createComboBoxJoin("id_servicio", "nombre_servicio", ServicioDAO::getAll(), $esta_orden->getIdServicio());
-//$form->createComboBoxJoin("id_usuario", "nombre", UsuarioDAO::getAll(), $esta_orden->getIdUsuario());
+$form->createComboBoxJoin("id_servicio", "nombre_servicio", ServicioDAO::getAll(), $esta_orden->getIdServicio());
+$form->createComboBoxJoin("id_usuario", "nombre", UsuarioDAO::getAll(), $esta_orden->getIdUsuario());
 //$form->createComboBoxJoinDistintName("id_usuario_venta", "id_usuario", "nombre", UsuarioDAO::getAll(), $esta_orden->getIdUsuarioVenta());
 $page->addComponent($form);
+
 
 
 $page->addComponent(new TitleComponent("Seguimientos de esta orden", 2));

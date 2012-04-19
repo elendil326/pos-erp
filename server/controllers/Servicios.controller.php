@@ -1646,7 +1646,7 @@ require_once("interfaces/Servicios.interface.php");
 				}
 
                 if($precio <= 0){
-                    throw new InvalidDataException("No es un precio valido");
+                    throw new InvalidDataException("$precio no es un precio valido");
                 }
 
 				$subtotal = $precio;
@@ -1688,7 +1688,8 @@ require_once("interfaces/Servicios.interface.php");
 				foreach ($extra_params_required	as $epr) {
 
 					Logger::log("extraparam:" . $epr->desc);
-
+					
+					
 
 				}
 				

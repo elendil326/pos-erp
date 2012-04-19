@@ -138,14 +138,12 @@ $page->partialRender();
 
 			switch(obj[i].type){
 				case "text": 
+				case "textarea":
 					out.push({
 						desc : obj[i].desc,
 						value: Ext.get("extra_params_"+ i).getValue()
 					});
-				break;
-				
-				case "textarea":
-					
+
 				break;
 				
 			}
