@@ -13,7 +13,7 @@ class FormComponent implements GuiComponent
 	private $hide_not_obligatory;
 	private $guiComponentId;
 	private $special_sort;
-	
+	private $js_function;
 	
 	
 	
@@ -34,6 +34,7 @@ class FormComponent implements GuiComponent
 		$this->form_fields         = array();
 		$this->hide_not_obligatory = false;
 		$this->special_sort		 	= null;
+		$this->js_function 			= NULL;
 		//para eviar id's repetidos
 
 		$this->guiComponentId = "_"  . (rand() + rand());
@@ -77,6 +78,10 @@ class FormComponent implements GuiComponent
 		
 	}
 	
+	
+	public function beforeSend( $jsFunction){
+		$this->js_function = $jsFunction;
+	}
 	
 	
 	public function getGuiComponentId(){
@@ -135,6 +140,8 @@ class FormComponent implements GuiComponent
 	}
 	
 	
+	
+	
 	private function sortFields(){
 		//remove fields with the same id
 		$this->removeDuplicates();
@@ -156,6 +163,8 @@ class FormComponent implements GuiComponent
 		
 		
 	}
+	
+	
 	
 	
 	public function sendHidden( $field_name ){
@@ -182,6 +191,8 @@ class FormComponent implements GuiComponent
 		
 		throw new Exception("Field `".$field_name."` not found in the VO object.");
 	}
+
+
 
 
 
@@ -283,7 +294,12 @@ class FormComponent implements GuiComponent
 				$html .= "\t}\n";
 			}
 			
-			$html .= "	if(!".$this->guiComponentId."found){ ". $this->guiComponentId ."sendToApi( ".$this->guiComponentId."p); }\n";
+			if(is_null($this->js_function)){
+				$html .= "	if(!".$this->guiComponentId."found){ ". $this->guiComponentId ."sendToApi( ". $this->guiComponentId."p ); }else{console.log('you have missing data');}\n";				
+			}else{
+				$html .= "	if(!".$this->guiComponentId."found){ ". $this->guiComponentId ."sendToApi( ". $this->js_function . "(" . $this->guiComponentId."p ) ); }else{console.log('you have missing data');}\n";
+			}
+
 			$html .= "}\n\n";
 			
 			

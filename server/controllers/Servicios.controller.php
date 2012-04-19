@@ -971,11 +971,12 @@ require_once("interfaces/Servicios.interface.php");
 		$costo_estandar, 
 		$metodo_costeo, 
 		$nombre_servicio, 
-		$activo = true, 
+		$activo =  true , 
 		$clasificaciones = null, 
 		$control_de_existencia = null, 
 		$descripcion_servicio = null, 
 		$empresas = null, 
+		$extra_params = null, 
 		$foto_servicio = null, 
 		$garantia = null, 
 		$impuestos = null, 
@@ -1030,7 +1031,8 @@ require_once("interfaces/Servicios.interface.php");
 		                                "garantia"                  => $garantia,
 		                                "control_existencia"        => $control_de_existencia,
 		                                "foto_servicio"             => $foto_servicio,
-		                                "precio"                    => $precio
+		                                "precio"                    => $precio,
+										"extra_params"				=> json_encode($extra_params)
                                     ) 
 								);
             

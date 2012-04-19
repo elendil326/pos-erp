@@ -162,6 +162,14 @@
  	 * @param control_de_existencia int 00000001 = Unidades. 00000010 = Caractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = LoteCaractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = Lote
  	 * @param descripcion_servicio string Descripcion del servicio
  	 * @param empresas json Arreglo de ids de empresas a las que pertenecera este servicio
+ 	 * @param extra_params json Un json que contiene descripciones de parametros extra para pedir en cada servicio: 
+{[
+{
+"caption" : "texto",
+"type" : "textarea|bool|float|file",
+"obligatory" : true
+}
+]}
  	 * @param foto_servicio string La url de la foto del servicio
  	 * @param garantia int Si este servicio tiene una garanta en meses.
  	 * @param impuestos json array de ids de impuestos que tiene este servico
@@ -182,6 +190,7 @@
 		$control_de_existencia = null, 
 		$descripcion_servicio = null, 
 		$empresas = null, 
+		$extra_params = null, 
 		$foto_servicio = null, 
 		$garantia = null, 
 		$impuestos = null, 
