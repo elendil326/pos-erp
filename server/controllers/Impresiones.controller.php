@@ -1012,7 +1012,10 @@ class ImpresionesController {
 	    return $file_name . ".jpg";
 	}
 
-	public static function imprimirNotaDeVenta( $id_orden ) {
+
+
+
+	public static function OrdenDeServicio( $id_orden ) {
 
 		//obtengamos datos de esta orden de servicio
 		//el cliente
@@ -1064,24 +1067,26 @@ class ImpresionesController {
 	    /**************************
 	     * ENCABEZADO
 	     ***************************/
-
-
+	    $pdf->addText( self::puntos_cm(7.1), self::puntos_cm(26.1), 18, utf8_decode('Orden de Servicio'));
+	
+	
+	
 	    /**************************
 	     * TITULO
 	     * Datos del emisor, lugar de expedicion, folio, fecha de emision, no de serie
 	     * del certificado del contribuyente
 	     * **************************/
+	
 	    $e = "<b>" . self::readableText("caffeina software") . "</b>\n";
-	    $e .= self::formatAddress(415);
+	    /*$e .= self::formatAddress(415);
 	    $e .= "RFC: " . "RFC";
 
 	    //datos de la sucursal
-
 		if(!is_null($daoSucursal)){
 	    	$e .= "\n\n<b>Lugar de expedicion</b>\n";
 	    	$e .= self::formatAddress( 415 );
 		}
-
+		*/
 
 	    $datos = array(
 	        array(
@@ -1090,7 +1095,7 @@ class ImpresionesController {
 	        )
 	    );
 
-	    $pdf->ezSetY( self::puntos_cm(26.8));
+	    $pdf->ezSetY( self::puntos_cm(25.8));
 	    $opciones_tabla = array();
 	    $opciones_tabla['showLines'] = 0;
 	    $opciones_tabla['showHeadings'] = 0;
@@ -1107,8 +1112,9 @@ class ImpresionesController {
 	    $pdf->ezTable($datos, "", "", $opciones_tabla);
 	
 
-	    //$cajero = UsuarioDAO::getByPK($venta->getIdUsuario())->getNombre();
+	    $cajero = UsuarioDAO::getByPK( $daoVenta->getIdUsuario() );
 		
+
 		
 	    $datos = array(
 	        array("col" => "<b>Servicio</b>"),
@@ -1118,7 +1124,7 @@ class ImpresionesController {
 	        array("col" => "<b>Tipo de venta</b>"),
 	        array("col" => self::readableText( $daoVenta->getTipoDeVenta())),
 	        array("col" => "<b>Cajero</b>"),
-	        array("col" => self::readableText(  $daoVenta->getIdUsuario()))
+	        array("col" => self::readableText(  $cajero->getNombre() ))
 	    );
 
 	    $pdf->ezSetY(self::puntos_cm(26.8));
@@ -1139,7 +1145,7 @@ class ImpresionesController {
 	     * Cliente
 	     * ************************* */
 	    $datos_receptor = $daoCliente->getNombre() . "\n";
-	    $datos_receptor .= "RFC: " . $daoCliente->getRfc();
+	    $datos_receptor .= $daoCliente->getRfc();
 
 	    $receptor = array(
 	        array("receptor" => "<b>Cliente</b>"),
@@ -1264,95 +1270,8 @@ class ImpresionesController {
 	    $pdf->ezTable($elementos, "", "", $opciones_tabla);
 
 	    //roundedRect($x, $y, $w, $h)
-	    self::roundRect($pdf, self::puntos_cm(2), self::puntos_cm(18.6), self::puntos_cm(16.2), self::puntos_cm(9.7));
+	    self::roundRect($pdf, self::puntos_cm(2), self::puntos_cm(18.6), self::puntos_cm(16.2), self::puntos_cm(16.0));
 
-
-	    /*     * ************************
-	     * PAGARE
-	     * ************************* */
-	    $mes = "";
-
-	    switch( date( "m", strtotime( $daoVenta->getFecha() ) ) ){
-	        case 1 : 
-	            $mes = 'Enero';
-	            break;
-	        case 2 : 
-	            $mes = 'Febrero';
-	            break;
-	        case 3 : 
-	            $mes = 'Marzo';
-	            break;
-	        case 4 : 
-	            $mes = 'Abril';
-	            break;
-	        case 5 : 
-	            $mes = 'Mayo';
-	            break;
-	        case 6 : 
-	            $mes = 'Junio';
-	            break;
-	        case 7 : 
-	            $mes = 'Julio';
-	            break;
-	        case 8 : 
-	            $mes = 'Agosto';
-	            break;
-	        case 9 : 
-	            $mes = 'Septiembre';
-	            break;
-	        case 10 : 
-	            $mes = 'Octubre';
-	            break;
-	        case 11 : 
-	            $mes = 'Noviembre';
-	            break;
-	        case 12 : 
-	            $mes = 'Diciembre';
-	            break;
-	    }
-
-	    $en_letra = new CNumeroaletra();
-	    $en_letra->setNumero($daoVenta->getTotal());
-
-
-	    $pagare = "\n\nNo. _________                                                                                                                            En " . self::readableText("emosor") . " a " . date("d", strtotime( $daoVenta->getFecha() )) . " de " . $mes . " del " . date("Y", strtotime( $daoVenta->getFecha() )) ."\n\n";
-	    $pagare .= " Debe(mos) y pagare(mos) incondicionalmente por este Pagaré a la orden de " . self::readableText("emisor->nombre") . " en " . self::readableText("emiso") . " " . self::readableText("estaod") . " ";
-	    $pagare .= "el __________________________  la cantidad de ";
-	    $pagare .= self::moneyFormat($daoVenta->getTotal(), DONT_USE_HTML) . " " . $en_letra->letra() . ". Valor recibido a mi";
-	    $pagare .= "(nuestra) entera satisfacción. Este pagaré forma parte de una serie numerada de 1 al 1 y esta sujeto a la condición de que, ";
-	    $pagare .= "al no pagarse a su vencimiento, sera exigible ";
-	    $pagare .= "desde la fecha de vencimiento de este documento hasta el dia de su liquidacón, ";
-	    $pagare .= "causara intereses moratorios al tipo de 20% mensual, ";
-	    $pagare .= "pagadero en esta ciudad juntamente con el principal.";
-
-	    $receptor = array(
-	        array("receptor" => utf8_decode($pagare))
-	    ); 
-
-
-	    $pdf->addText(self::puntos_cm(2.1),self::puntos_cm(7.8),18,utf8_decode('<i>P a g a r é</i>'));
-	    $pdf->addText(self::puntos_cm(14),self::puntos_cm(7.8),9,utf8_decode('BUENO POR  ' . self::moneyFormat($daoVenta->getTotal(), DONT_USE_HTML)));    
-
-	    $pdf->addText(self::puntos_cm(12.9),self::puntos_cm(4),8,utf8_decode('<b>Acepto(amos)</b>'));
-	    $pdf->addText(self::puntos_cm(12.9),self::puntos_cm(2.65),8,utf8_decode('<b>Firma(s) ________________________</b>'));
-
-	    $pdf->setColor(0.419, 0.466, 0.443);
-
-	    $pdf->addText(self::puntos_cm(4),self::puntos_cm(4.15),6,utf8_decode('Nombre y datos del deudor'));
-	    $pdf->addText(self::puntos_cm(2),self::puntos_cm(3.6),6.5,utf8_decode('Nombre _____________________________________________'));
-	    $pdf->addText(self::puntos_cm(2),self::puntos_cm(3.125),6.5,utf8_decode('Dirección ____________________________________________'));
-	    $pdf->addText(self::puntos_cm(2),self::puntos_cm(2.65),6.5,utf8_decode('Población ____________________________________________'));
-
-
-	    $pdf->ezSetY(self::puntos_cm(8.2));
-	    $opciones_tabla['xPos'] = self::puntos_cm(2);
-	    $opciones_tabla['width'] = self::puntos_cm(16.2);
-	    $opciones_tabla['shaded'] = 0;
-	    $opciones_tabla['showLines'] = 0;
-	    $pdf->ezTable($receptor, "", "", $opciones_tabla);
-
-	    //roundedRect($x, $y, $w, $h)
-	    self::roundRect($pdf, self::puntos_cm(2), self::puntos_cm(8.5), self::puntos_cm(16.2), self::puntos_cm(6.06));
 
 	    /*     * ************************
 	     * notas de abajo
@@ -1360,7 +1279,7 @@ class ImpresionesController {
 	    $pdf->setLineStyle(1);
 	    $pdf->setStrokeColor(0.3359375, 0.578125, 0.89453125);
 
-	    $pdf->line( self::puntos_cm(2), self::puntos_cm(2.0), self::puntos_cm(18.1), self::puntos_cm(2.0));
+	    $pdf->line( self::puntos_cm(1.9), self::puntos_cm(2.0), self::puntos_cm(18.1), self::puntos_cm(2.0));
 
 	    $pdf->addText( self::puntos_cm(2), self::puntos_cm(1.61), 7, "Fecha de impresion: " . date('Y-m-d'));
 

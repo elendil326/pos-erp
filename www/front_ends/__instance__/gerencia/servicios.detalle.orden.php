@@ -65,8 +65,8 @@ if ($esta_orden->getActiva()){
 	
 	
 	$imp = new MenuItem("Imprimir", null);
-	//$funcion_imp = " function funcion_imp(){ alert(4); }";	
-	$imp->addOnClick("asdf", "function asdf(){window.location = 'servicios.detalle.orden.impresion.php?oid=". $_GET["oid"] ."' ;}");
+
+	$imp->addOnClick("_p", "function _p(){ window.open('servicios.detalle.orden.impresion.php?oid=". $_GET["oid"] ."'); }");
 	$menu->addMenuItem($imp);
 	
 	

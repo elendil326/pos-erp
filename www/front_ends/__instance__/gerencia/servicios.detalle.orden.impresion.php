@@ -12,4 +12,4 @@
 	$page->requireParam("oid", "GET", "Esta orden de servicio no existe.");
 
 
-	ImpresionesController::imprimirNotaDeVenta($_GET["oid"]);
+	ImpresionesController::OrdenDeServicio($_GET["oid"]);
