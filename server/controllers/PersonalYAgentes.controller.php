@@ -833,22 +833,27 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 {
                     foreach($direcciones as $d)
                     {
+	
+						if(!is_array($d)){
+							$d = object_to_array($d);
+						}
+						
 						if(!is_array($d)){
 							throw new InvalidDataException("Las direcciones deben ser un arreglo de arreglos.");
 						}
                        
-						Logger::log( "Isertando direccion..." );
+						Logger::log( "Insertando direccion..." );
 
                         $address_id = DireccionController::NuevaDireccion(
-				                $calle 				= isset($d["calle"]) ? $d["calle"] : null,
-				                $numero_exterior	= isset($d["numero_exterior"]) ? $d["numero_exterior"] : null,
-				                $colonia			= isset($d["colonia"]) ? $d["colonia"] : null,
+				                $calle 				= isset($d["calle"]) ? $d["calle"] : "",
+				                $numero_exterior	= isset($d["numero_exterior"]) ? $d["numero_exterior"] : "",
+				                $colonia			= isset($d["colonia"]) ? $d["colonia"] : "",
 				                $id_ciudad			= isset($d["id_ciudad"]) ? $d["id_ciudad"] : null,
-				                $codigo_postal		= isset($d["codigo_postal"]) ? $d["codigo_postal"] : null,
-				                $numero_interior	= isset($d["numero_interior"]) ? $d["numero_interior"] : null,
-				                $referencia			= isset($d["referencia"]) ? $d["referencia"] : null,
-				                $telefono			= isset($d["telefono1"]) ? $d["telefono1"] : null,
-				                $telefono2			= isset($d["telefono2"]) ? $d["telefono2"] : null );
+				                $codigo_postal		= isset($d["codigo_postal"]) ? $d["codigo_postal"] : "",
+				                $numero_interior	= isset($d["numero_interior"]) ? $d["numero_interior"] : "",
+				                $referencia			= isset($d["referencia"]) ? $d["referencia"] : "",
+				                $telefono			= isset($d["telefono1"]) ? $d["telefono1"] : "",
+				                $telefono2			= isset($d["telefono2"]) ? $d["telefono2"] :"");
 
 						$usuario->setIdDireccion( $address_id );
                     }

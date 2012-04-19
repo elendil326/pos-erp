@@ -370,6 +370,9 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
 				$email = null;
 			}
 			
+			if(is_null($direcciones)){
+				throw new InvalidDataException("No hay direcciones");
+			}
 			
             try 
             {

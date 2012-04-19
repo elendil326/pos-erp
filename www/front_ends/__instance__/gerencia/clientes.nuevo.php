@@ -16,6 +16,32 @@
 	    new Usuario(),
 	    new Direccion()
 	));
+	
+	$form->beforeSend("atach_address");
+	
+	$page->partialRender();
+	?>
+	
+	<script type="text/javascript" charset="utf-8">
+		function atach_address(o){
+
+			o.direcciones = Ext.JSON.encode([{
+				calle 			: o.calle,
+				numero_exterior	: o.numero_exterior,
+				numero_interior	: o.numero_interior,
+				referencia		: o.referencia,
+				colonia			: o.colonia,
+				id_ciudad		: o.id_ciudad,
+				codigo_postal	: o.codigo_postal,
+				telefono		: o.telefono,
+				telefono2		: o.telefono2
+			}]);
+			console.log(o);			
+			return o;
+		}
+	</script>
+	
+	<?php
 
 	$form->hideField(array(
 	    "id_usuario",
@@ -65,13 +91,13 @@
 	$form->createComboBoxJoin( "tarifa_venta_obtenida", "tarifa_venta_obtenida", array("rol", "proveedor", "cliente","usuario") );
 
 	$form->renameField(array(
-	    "nombre" => "razon_social",
-	    "codigo_usuario" => "codigo_cliente",
-	    "telefono" => "telefono1",
-	    "correo_electronico" => "email",
+	    "nombre" 				=> "razon_social",
+	    "codigo_usuario" 		=> "codigo_cliente",
+	    "telefono" 				=> "telefono1",
+	    "correo_electronico"    => "email",
 	    "id_clasificacion_cliente" => "clasificacion_cliente",
-	    "id_moneda" => "moneda_del_cliente",
-	    "pagina_web" => "direccion_web"
+	    "id_moneda" 			=> "moneda_del_cliente",
+	    "pagina_web" 			=> "direccion_web"
 	));
 
 	$form->makeObligatory("razon_social");
