@@ -298,22 +298,14 @@ class GerenciaComponentPage extends PosComponentPage{
 		            "title": "Servicios",
 		            "url": "servicios.php",
 		            "children": [
-			            {
-			                "title": "Lista orden",
-			                "url": "servicios.lista.orden.php"
-			            },
 		                {
-		                    "title": "Lista de servicios",
-		                    "url": "servicios.lista.php"
+		                    "title": "Nueva orden",
+		                    "url": "servicios.nueva.orden.php"
 		                },
 		                {
 		                    "title": "Nuevo servicio",
 		                    "url": "servicios.nuevo.php"
-		                },
-		                {
-		                    "title": "Nueva orden",
-		                    "url": "servicios.nueva.orden.php"
-		                }
+		                }		
 		            ]
 		        },
 		        {

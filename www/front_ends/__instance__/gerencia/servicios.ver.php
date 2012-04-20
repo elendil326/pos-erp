@@ -63,6 +63,7 @@
 		
 		$form->hideField( array( 
 				"id_servicio",
+				"extra_params"
 			 ));
 		$page->addComponent( $form );
                 

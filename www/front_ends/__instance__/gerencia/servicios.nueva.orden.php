@@ -206,7 +206,7 @@ $page->partialRender();
         {
             callback : function(a){ 
                 window.onbeforeunload = function(){}
-                //window.location = "servicios.lista.orden.php"; 
+                window.location = "servicios.lista.orden.php"; 
 
             }
         }
