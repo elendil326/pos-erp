@@ -236,7 +236,7 @@ switch (((int) ($args['action'] ))) {
         break;
     case 400:
         
-        $inventario  = InventarioController::Existencias();
+        /*$inventario  = InventarioController::Existencias();
         
         $json = Array();
         
@@ -274,7 +274,48 @@ switch (((int) ($args['action'] ))) {
                
         $json = json_encode($json);
         
+        printf('{ "success": true, "hash" : "%s" , "datos": %s }', md5($json), $json);*/
+        
+        
+        $inventario  = ProductoDAO::getAll();
+        
+        $json = Array();
+        
+        foreach($inventario as $producto){                                      
+            
+            Array_push($json, array(
+                //detalles basicos que jamas cambian
+                "productoID" => $producto->getIdProducto(),
+                "descripcion" => $producto->getNombreProducto(),
+                "tratamiento" => 0,
+                "medida" => UnidadMedidaDAO::getByPK($producto->getIdUnidad())->getAbreviacion(),
+                "agrupacion" => UnidadMedidaDAO::getByPK($producto->getIdUnidad())->getAbreviacion(),
+                "agrupacionTam" => 1,
+                "precioPorAgrupacion" => $producto->getPrecio(),
+                //precios de la tabla de detalle inventario !
+                "precioVenta" => $producto->getPrecio(),
+                "precioVentaProcesado" => $producto->getPrecio(),
+                //las existencias originales, son las existencias
+                //totales menos las existencias procesadas
+                "existencias" => 0,            
+                //mantendre existenciasOriginales para 
+                //backwards compatibility
+                "existenciasOriginales" => 0,
+                "existenciasProcesadas" => 0,
+                // estos precios si vienen de la tabla de
+                // actualizacion de precio
+                "precioIntersucursal" => $producto->getPrecio(),
+                "precioIntersucursalProcesado" => $producto->getPrecio()
+            ));
+
+        
+        }
+               
+        $json = json_encode($json);
+        
         printf('{ "success": true, "hash" : "%s" , "datos": %s }', md5($json), $json);
+        
+        
         break;
 
     case 500:
