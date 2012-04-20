@@ -357,11 +357,14 @@ class FormComponent implements GuiComponent
 		
 		$new_row = 0;
 		$html .= "<tr>";
+		$n_fields = 0;
+		
 		foreach ($this->form_fields as $f)
 		{
 			if ($f->hidden)
 				continue;
 
+			$n_fields ++;
 			//incrementar el calculo de la fila actual
 			$new_row++;
 			
@@ -407,7 +410,19 @@ class FormComponent implements GuiComponent
 				}
 				else
 				{
-					$html .= "</td><td>";
+					
+					$t = 0;
+					for ( $i=0 ; $i < sizeof($this->form_fields); $i++) { 
+						if( $this->form_fields[$i]->hidden ) continue;
+						$t++;
+					}
+					if($t == 1){
+						$html .= "</td><td colspan=4>";
+						
+					}else{
+						$html .= "</td><td >";						
+					}
+
 				}
 			}
 			
@@ -469,7 +484,12 @@ class FormComponent implements GuiComponent
 					}
 					else
 					{
-						$html .= "<textarea style='width:100%' id='" . $this->guiComponentId  . $f->id . "' name='" . $f->name . "' rows=5 cols=auto>".$f->value."</textarea>";
+						if(is_null($f->placeholder)){
+							$ph = "";
+						}else{
+							$ph = $f->placeholder;
+						}
+						$html .= "<textarea placeholder='$ph' style='width:100%' id='" . $this->guiComponentId  . $f->id . "' name='" . $f->name . "' rows=5 cols=auto>".$f->value."</textarea>";
 					}
 					break;
 
@@ -502,8 +522,13 @@ class FormComponent implements GuiComponent
 						$html .= $f->value;
 					}
 					else
-					{
-						$html .= "<input id='" . $this->guiComponentId . $f->id . "' name='" . $f->name . "' value='" . $f->value . "' type='" . $f->type . "' >";
+					{	
+						if(is_null($f->placeholder)){
+							$ph = "";
+						}else{
+							$ph = $f->placeholder;
+						}
+						$html .= "<input placeholder='$ph' id='" . $this->guiComponentId . $f->id . "' name='" . $f->name . "' value='" . $f->value . "' type='" . $f->type . "' >";
 					}
 			}
 			
@@ -517,6 +542,8 @@ class FormComponent implements GuiComponent
 			
 			if ($new_row == 2)
 			{
+				//esta por terminarse
+				
 				$html .= "</tr><tr>";
 				$new_row = 0;
 			}
@@ -524,6 +551,7 @@ class FormComponent implements GuiComponent
 		
 		$html .= "</tr><tr>";
 		
+		//action buttons
 		$html .= "<td></td><td></td>";
 		
 		
@@ -958,7 +986,21 @@ class FormComponent implements GuiComponent
 		throw new Exception("$id not found in form");
 	}
 	
-	
+	/**
+     *
+     *  
+     */
+    public function setPlaceholder($id, $phText){            
+
+        foreach($this->form_fields as $field ){
+            if($field->id == $id){                    
+                $field->placeholder = $phText;
+				return;
+            }
+        }
+           
+		throw new Exception("$id not found in form");
+	}
 }
 
 
@@ -974,7 +1016,7 @@ class FormComponentField
 	public $obligatory;
 	public $send_as_hidden;
 	public $hidden;
-	
+	public $placeholder;	
 	
 	public function __construct
 	(
@@ -985,7 +1027,8 @@ class FormComponentField
 		$name			= null, 
 		$obligatory 	= false, 
 		$hidden 		= false, 
-		$send_as_hidden = false
+		$send_as_hidden = false,
+		$planceholder	= null
 	)
 	{
 		$this->id             = $id;
@@ -996,6 +1039,7 @@ class FormComponentField
 		$this->obligatory     = $obligatory;
 		$this->hidden         = $hidden;
 		$this->send_as_hidden = $send_as_hidden;
+		$this->placeholder	  = $planceholder;		
 	}
 	
 	

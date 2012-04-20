@@ -757,7 +757,7 @@ CREATE TABLE IF NOT EXISTS `empresa` (
   `fecha_baja` datetime DEFAULT NULL COMMENT 'Fecha en que se desactivo esa empresa',
   `activo` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Si esta empresa esta activa o no',
   `direccion_web` varchar(20) DEFAULT NULL COMMENT 'Direccion web de la empresa',
-  `cedula` varchar(100) CHARACTER SET armscii8 NOT NULL,
+  `cedula` varchar(100) DEFAULT NULL CHARACTER SET armscii8 NOT NULL,
   PRIMARY KEY (`id_empresa`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='tabla de empresas' AUTO_INCREMENT=1 ;
 

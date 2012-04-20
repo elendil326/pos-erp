@@ -327,7 +327,8 @@ require_once("interfaces/Empresas.interface.php");
                             "fecha_baja"            => null,
                             "razon_social"          => trim( $razon_social ),
                             "representante_legal"   => $representante_legal,
-                            "rfc"                   => $rfc
+                            "rfc"                   => $rfc,
+							"cedula"				=> $cedula
                     ));
 
 

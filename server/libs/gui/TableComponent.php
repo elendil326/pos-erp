@@ -132,6 +132,7 @@ class TableComponent implements GuiComponent{
 
 			// Render id's or not
 			if($this->renderRowIds != null){
+
 				$html .= " id=\"". $this->renderRowIds . $a ."\" ";
 			}
 

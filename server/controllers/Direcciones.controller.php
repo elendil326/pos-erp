@@ -193,10 +193,13 @@ class DireccionController extends ValidacionesController{
                         if($cambio_direccion)
                         {
                              
-                            $_direccion->setUltimaModificacion(date("Y-m-d H:i:s",time()));
+                            $_direccion->setUltimaModificacion( time() );
 
-                            $id_usuario=SesionController::getCurrentUser();
-                                
+                            
+                            $id_usuario =  SesionController::Actual(   );
+
+							$id_usuario = $id_usuario["id_usuario"];
+							
                             if(is_null($id_usuario))
                             {
                                 DAO::transRollback();

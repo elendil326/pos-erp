@@ -4,7 +4,7 @@ function FormatTime($timestamp)
 {
 	// Get time difference and setup arrays
 	$difference = time() - $timestamp;
-	$periods = array("segundos", "minuto", "hora", "dia", "semana", "mes", "years");
+	$periods = array("segundo", "minuto", "hora", "dia", "semana", "mes", "years");
 	$lengths = array("60","60","24","7","4.35","12");
  
 	// Past or present

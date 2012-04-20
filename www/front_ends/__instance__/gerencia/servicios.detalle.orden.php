@@ -121,26 +121,31 @@ $seguimientos = SeguimientoDeServicioDAO::seguimientosPorServicio($_GET["oid"]);
 $header = array(
 	"estado" => "Estado",
 	"fecha_seguimiento" => "Fecha",
-	"id_usuario" => "Usuario que registro",
-	"id_localizacion" => "Sucursal actual"
+	"id_usuario" => "Usuario que registro"
 );
 
-$table = new TableComponent($header, $seguimientos);
 
-function funcion_sucursal($id_sucursal)
-{
+//
+// 
+// 
+// 
+// 
+// 
+// 
+// 
+// 
+$table = new TableComponent($header, $seguimientos);
+$table->renderRowId("comments");
+function funcion_sucursal($id_sucursal){
 	return (SucursalDAO::getByPK($id_sucursal) ? SucursalDAO::getByPK($id_sucursal)->getRazonSocial() : "---------");
 }
 
 function funcion_usuario($id_usuario){
-	
-	
 	if( is_null( $u = UsuarioDAO::getByPK($id_usuario) ) ){
 		return "ERROR";
 	}
 	
 	return $u->getNombre();
-
 }
 
 function funcion_transcurrido($a, $obj){
@@ -177,9 +182,40 @@ $form->hideField( array(
 
 $form->sendHidden( "id_orden_de_servicio" );
 $form->addApiCall( "api/servicios/orden/seguimiento/" );
+$form->setPlaceholder("estado", "aqui es donde escribes");
 $form->setType("estado" , "textarea");
+$form->onApiCallSuccess("comment_success");
 $form->renameField( array( "estado" => "nota" ) );
-
 $page->addComponent( $form ); 
+$page->partialRender();
 
+?>
+<script type="text/javascript" charset="utf-8">
+
+	var comment_success =  function( a, b, c ){
+
+		var guiComponentId = "<?php echo $form->getGuiComponentId(); ?>";
+		
+		var comment = Ext.get(guiComponentId+"nota").getValue();
+		
+		document.getElementById(guiComponentId+"nota").value = "";
+		
+		console.log(comment);
+		
+		var tabla = Ext.get("comments0").parent();
+
+		var child = tabla.createChild({tag:"tr"});
+		
+		var tds1 = child.createChild({ tag:"td" }).update(comment);
+
+		var tds2 = child.createChild({ tag:"td" }).update("Justo ahora");
+		
+		var tds3 = child.createChild({ tag:"td" });
+				
+		child.highlight();
+		
+
+	}
+</script>
+<?php
 $page->render();
