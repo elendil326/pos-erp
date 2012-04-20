@@ -47,13 +47,29 @@
 		$page->nextTab("Sesiones");
 		$sesiones = SesionController::Lista();//SesionDAO::GetAll();
 		$header = array(
-			"id_sesion" => "id_sesion",
-			"id_usuario"=> "id_usuario",
-			"fecha_de_vencimiento"=> "fecha_de_vencimiento",
-			"client_user_agent"=> "client_user_agent",
-			"ip"=> "ip"
+			"id_usuario"	=> "Usuario",
+			"fecha_de_vencimiento"=> "Fecha de vencimiento",
+			"client_user_agent"=> "User agent",
+			"ip"=> "IP"
 		);
 		$tabla = new TableComponent($header, $sesiones["resultados"]);
+
+		function username($id_usuario){
+			$u = UsuarioDAO::getBypK($id_usuario);
+			return  $u->getNombre();
+		}
+		function ft($time){
+			return FormatTime(strtotime($time));
+		}
+		
+		$page->addComponent("<script type=\"text/javascript\" charset=\"utf-8\">
+			function detallesUsuario(id){ window.location = 'personal.usuario.ver.php?uid='+id; }
+		</script>");
+		
+		$tabla->addColRender("id_usuario", "username");
+		$tabla->addColRender("fecha_de_vencimiento", "ft");
+		$tabla->addOnClick("id_usuario", "detallesUsuario");
+		
 		$page->addComponent( $tabla );
 		
 		$page->nextTab("Respaldar");
@@ -62,13 +78,14 @@
 		$page->nextTab( "Personalizar" );
 		//$page->partialRender();
 
-		$page->addComponent("<h2>Logotipo</h2><p>Una imagen principal de 256x256 pixeles.</p>
-		<div id='fi-form'></div>
+		$page->addComponent("<h2>Logotipo</h2>
+		<p>Una imagen principal de 256x256 pixeles.</p>
+		<div id='logo256px'></div>
 		<script type='text/javascript' charset='utf-8'>
 			Ext.onReady(function(){
 
 				    Ext.create('Ext.form.Panel', {
-				        renderTo: 'fi-form',
+				        renderTo: 'logo256px',
 				        width: '100%',
 				        frame: false,
 				        bodyPadding: '10 10 0',
@@ -84,12 +101,12 @@
 				            xtype: 'filefield',
 				            id: 'form-file',
 				            emptyText: 'Seleccione una imagen',
-				            fieldLabel: 'Photo',
+				            fieldLabel: 'Imagen',
 				            name: 'logo',
-				            buttonText: '',
-				            buttonConfig: {
+				            buttonText: 'Buscar archivo',
+				            /*buttonConfig: {
 				                iconCls: 'upload-icon'
-				            }
+				            }*/
 				        }],
 
 				        buttons: [{

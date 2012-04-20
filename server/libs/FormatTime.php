@@ -46,7 +46,7 @@ function FormatTime($timestamp)
 		{
 			if($j == 3 && $difference == 1)
 			{
-				$text = "Tomorrow at ". date("g:i a", $timestamp);
+				$text = "Ayer a las ". date("g:i a", $timestamp);
 			}
 			else
 			{
@@ -57,7 +57,7 @@ function FormatTime($timestamp)
  
 		if($j == 3 && $difference == 1) // Yesterday
 		{
-			$text = "Yesterday at ". date("g:i a", $timestamp);
+			$text = "Ayer a las ". date("g:i a", $timestamp);
 		}
 		else if($j == 3) // Less than a week display -- Monday at 5:28pm
 		{
