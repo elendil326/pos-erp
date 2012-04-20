@@ -6,8 +6,10 @@ Ext.require([
     'Ext.grid.*',
     'Ext.util.*',
     'Ext.state.*',
-	'Ext.ux.grid.TransformGrid'	
+	'Ext.ux.grid.TransformGrid',
+    'Ext.window.MessageBox'
 ]);
+
 
 
 
