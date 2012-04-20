@@ -48,7 +48,7 @@
 	    "id_sucursal",
 	    "id_rol",
 	    "id_clasificacion_proveedor",
-		"id_direccion_alterna",
+            "id_direccion_alterna",
 	    "fecha_asignacion_rol",
 	    "comision_ventas",
 	    "fecha_alta",

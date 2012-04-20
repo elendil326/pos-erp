@@ -246,7 +246,7 @@ function imReadyToStart(  ){
 	
 	console.log("systemsLoaded=" + systemsLoaded );
 		
-	Ext.getBody().mask("cargando..." );
+	//Ext.getBody().mask("cargando..." );
 
 	if( ++systemsLoaded == SYSTEMS_NEEDED ){
 		console.log("***");
