@@ -62,7 +62,7 @@
 		$page->nextTab( "Personalizar" );
 		//$page->partialRender();
 
-		$page->addComponent("<h2>Logotipo</h2>
+		$page->addComponent("<h2>Logotipo</h2><p>Una imagen principal de 256x256 pixeles.</p>
 		<div id='fi-form'></div>
 		<script type='text/javascript' charset='utf-8'>
 			Ext.onReady(function(){
@@ -99,7 +99,7 @@
 				                if(form.isValid()){
 				                    form.submit({
 				                        url: 'c.php',
-				                        waitMsg: 'Uploading your photo...',
+				                        waitMsg: 'Subiendo...',
 				                        success: function(fp, o) {
 				                            msg('Success', 'Processed file ' + o.result.file + ' on the server');
 				                        }

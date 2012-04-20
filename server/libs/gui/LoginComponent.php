@@ -144,7 +144,20 @@ class LoginComponent implements GuiComponent
 		<form action="<?php echo $this->next_hop; ?>" method="POST">
 			<table border="0" cellspacing="5" cellpadding="5">
 				<tr>
-					<td rowspan="6"><img width="256" height="256" src="../../media/safe.png">&nbsp;</td>
+					<td rowspan="6">
+						<?php
+							if(is_file("static/" . IID . ".jpg")){
+								$file = "static/" . IID . ".jpg";
+							}else{
+								$file = "../../media/safe.png";
+							}
+						?>
+						<div style="width: 256px; height: 256px; background-image: url(<?php echo $file; ?>)">
+							
+						</div>
+						<!--<img width="256" height="256" src="<">
+						-->
+					&nbsp;</td>
 				</tr>
 				<tr>
 					<td>
