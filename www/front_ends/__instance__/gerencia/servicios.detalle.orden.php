@@ -200,10 +200,15 @@ $page->partialRender();
 		
 		document.getElementById(guiComponentId+"nota").value = "";
 		
-		console.log(comment);
-		
-		var tabla = Ext.get("comments0").parent();
 
+		
+		var tabla = Ext.get("comments0")
+
+		//si la tabla no existe, vamos a refrescar
+		if(tabla == null) window.location = window.location;
+		
+		tabla = tabla.parent();
+		
 		var child = tabla.createChild({tag:"tr"});
 		
 		var tds1 = child.createChild({ tag:"td" }).update(comment);

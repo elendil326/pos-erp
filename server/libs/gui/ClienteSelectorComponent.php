@@ -127,7 +127,8 @@ class ClienteSelectorComponent implements GuiComponent{
 	            renderTo: "ClienteSelectorComponent_001",
 	            title: '',
 	            width: '100%',
-	            bodyPadding: 10,
+	            bodyPadding: 8,
+				height: "49px",
 	            layout: 'anchor',
 
 	            items: [{

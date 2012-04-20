@@ -127,10 +127,13 @@ function checkForClientPIN()
 		},
 		failure: function (){
 			//client not found !
-			var html = "<div onClick='checkForClient()'>No se ha encontrado el cliente de caffeina."
+			var html = "<div onClick='checkForClient()'>No se ha encontrado el cliente de caffeina. "
 				+ "Toque aqui para reintentar."
-				+ "<div>";
+				+ "</div>";
 
+					
+			console.log(html);
+			
 			Ext.getBody().mask( html, 'x-mask-loading', true );
 		}
 	});
@@ -155,12 +158,20 @@ function checkForClient()
 			//ok client is there...
 			if(DEBUG){console.log("Hanshake exitoso !");}
 			checkForClientPIN();
-		},
+		},							
 		failure: function (){
 			//client not found !
-			var html = "<div onClick='checkForClient()'>No se ha encontrado el cliente de caffeina."
-				+ "Toque aqui para reintentar."
-				+ "<div>";
+			var html = " "
+				+"		<h2><img src = '../../../../media/iconos/1332931344_cross.png'>&nbsp;No se ha encontrado el cliente de caffeina.</h2>"
+				+ " 	<div style='margin:35px' onClick='checkForClient()'>"
+				+ " 		Toque aqui para reintentar."
+				+ "		</div>"
+				+ "		<div style='margin:35px' onClick='downloadClient()'>"
+				+ "		Toque aqui para descargar el cliente."
+				+ "		</div>"
+				+ "		<div style='margin:35px' onClick='skip()'>"
+				+ "		Deseo continuar sin utilizar el cliente."
+				+ "		</div>";
 
 			Ext.getBody().mask( html, 'x-mask-loading', true );
 		}
@@ -169,11 +180,16 @@ function checkForClient()
 }
 
 
+function downloadClient(){
+	
+}
 
 
 
-
-
+function skip(){
+	createLoginForm(  ); 
+	return;
+}
 
 
 
