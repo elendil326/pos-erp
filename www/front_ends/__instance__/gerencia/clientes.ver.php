@@ -151,7 +151,37 @@
 	 *
 	 * ******************************************************** */
 	$page->nextTab("Seguimiento");	
-	$page->addComponent(new TitleComponent("Nuevo seguimiento", 3));
+	
+	
+	
+	
+	//$page->addComponent(new TitleComponent("Nuevo seguimiento", 3));
+	
+	
+	$segs = ClienteSeguimientoDAO::search( new ClienteSeguimiento(array(
+		"id_cliente" => $_GET["cid"]
+
+	)));
+
+	$header = array(
+			"texto" => "Descripcion",
+			"fecha" => "Fecha",
+			"id_usuario" => "Agente"
+			
+		);
+
+	
+	
+	function nagente($id){ $a = UsuarioDAO::getByPK($id); return $a->getNombre(); }
+	function funcion_transcurrido($a, $obj){
+		return FormatTime(($a));
+	}
+	$lseguimientos = new TableComponent($header, $segs);
+	$lseguimientos->addColRender("id_usuario", "nagente");
+	$lseguimientos->addColRender("fecha", "funcion_transcurrido");	
+	$page->addComponent($lseguimientos);
+	
+	
 	$nseguimiento = new DAOFormComponent( new ClienteSeguimiento( array( "id_cliente" => $este_usuario->getIdUsuario() ) ) );
 	$nseguimiento->addApiCall("api/cliente/seguimiento/nuevo");
 	$nseguimiento->settype("texto", "textarea");
@@ -164,22 +194,7 @@
 	$nseguimiento->sendHidden("id_cliente");
 	$page->addComponent( $nseguimiento );
 	
-	$segs = ClienteSeguimientoDAO::search( new ClienteSeguimiento(array(
-		"id_cliente" => $_GET["cid"]
 
-	)));
-
-	$header = array(
-			"fecha" => "Fecha",
-			"id_usuario" => "Agente",
-			"texto" => "Descripcion"
-		);
-
-	function nagente($id){ $a = UsuarioDAO::getByPK($id); return $a->getNombre(); }
-	
-	$lseguimientos = new TableComponent($header, $segs);
-	$lseguimientos->addColRender("id_usuario", "nagente");
-	$page->addComponent($lseguimientos);
 
 
 	$page->render();

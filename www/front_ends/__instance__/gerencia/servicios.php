@@ -55,7 +55,6 @@
 		
 		function funcion_transcurrido($a, $obj){
 			return FormatTime(strtotime($obj["fecha_orden"]));
-
 		}
 
 		$tabla->addColRender("fecha_orden", "funcion_transcurrido");

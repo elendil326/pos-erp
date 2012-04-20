@@ -36,7 +36,7 @@ $page->addComponent(new TitleComponent("Orden de servicio " . $_GET["oid"] . " p
 if ($esta_orden->getActiva()){
 	$menu = new MenuComponent();
 	
-	$menu->addItem("Nuevo seguimiento", "servicios.seguimiento.orden.php?oid=" . $_GET["oid"]);
+	//$menu->addItem("Nuevo seguimiento", "servicios.seguimiento.orden.php?oid=" . $_GET["oid"]);
 
 	$btn_eliminar = new MenuItem("Cancelar orden", null);
 	$btn_eliminar->addApiCall("api/servicios/orden/cancelar", "GET");
@@ -99,15 +99,30 @@ $page->addComponent($form);
 
 
 
+
+$eP = $esta_orden->getExtraParams();
+
+if(!is_null($eP)){
+	$ePObj = json_decode($eP);
+	$page->addComponent( "<table width=100%>" );
+	foreach ($ePObj as $obj) {
+
+		$page->addComponent( "<tr><td style='width:30%'><b>" . $obj->desc . "</b></td>");
+		$page->addComponent( "<td>".$obj->value ."</td></tr>");		
+
+	}
+	$page->addComponent( "</table>" );	
+}
+
 $page->addComponent(new TitleComponent("Seguimientos de esta orden", 2));
 
 $seguimientos = SeguimientoDeServicioDAO::seguimientosPorServicio($_GET["oid"]);
 
 $header = array(
+	"estado" => "Estado",
 	"fecha_seguimiento" => "Fecha",
-	"id_localizacion" => "Sucursal actual",
 	"id_usuario" => "Usuario que registro",
-	"estado" => "Estado"
+	"id_localizacion" => "Sucursal actual"
 );
 
 $table = new TableComponent($header, $seguimientos);
@@ -128,11 +143,43 @@ function funcion_usuario($id_usuario){
 
 }
 
+function funcion_transcurrido($a, $obj){
+	return FormatTime(strtotime($a));
+}
+
 $table->addColRender("id_localizacion", "funcion_sucursal");
 $table->addColRender("id_usuario", "funcion_usuario");
 $table->addColRender("id_usuario_venta", "funcion_usuario");
+$table->addColRender("fecha_seguimiento", "funcion_transcurrido");
 
 
 $page->addComponent($table);
+
+
+//
+// 
+// 
+// 
+// 
+//
+//
+// 
+// 
+$form = new DAOFormComponent( new SeguimientoDeServicio( array("id_orden_de_servicio"=> $_GET["oid"]) ) );
+
+$form->hideField( array( 
+        "id_seguimiento_de_servicio",
+        "id_usuario",
+        "id_sucursal",
+        "fecha_seguimiento",
+		"id_localizacion"
+));
+
+$form->sendHidden( "id_orden_de_servicio" );
+$form->addApiCall( "api/servicios/orden/seguimiento/" );
+$form->setType("estado" , "textarea");
+$form->renameField( array( "estado" => "nota" ) );
+
+$page->addComponent( $form ); 
 
 $page->render();
