@@ -371,7 +371,8 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
 			}
 			
 			if(is_null($direcciones)){
-				throw new InvalidDataException("No hay direcciones");
+				$direcciones = array( new Direccion() );
+				
 			}
 			
             try 
@@ -636,12 +637,12 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
             Logger::log("Listando los detalles del cliente");
             
             //valida que el cliente exista, que sea cliente y que este activo
-            $validar = self::validarParametrosCliente($id_cliente);
+            /*$validar = self::validarParametrosCliente($id_cliente);
             if(is_string($validar))
             {
                 Logger::error($validar);
                 throw new Exception($validar,901);
-            }
+            }*/
             
             //Se regresa un arreglo que contendra en el primer campo el cliente en si, en segundo campo estara
             //su direccion, el tercero sera su direccion alterna, el cuarto sera la sucursal en la que fue dado de alta,

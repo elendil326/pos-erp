@@ -979,10 +979,12 @@ require_once("interfaces/Sucursales.interface.php");
 		$tipo_pago = null
 	)
 	{
-            Logger::log("Realizando la venta");
+            Logger::log("Realizando la venta de caja.....");
             
             //Se obtiene el id del usuario actualmente logueado
-            $id_usuario=SesionController::getCurrentUser();
+            $aS = SesionController::Actual();
+			$id_usuario = $aS["id_usuario"];
+
             if(is_null($id_usuario))
             {
                 Logger::error("No se pudo obtener al usuario de la sesion actual, ya inicio sesion?");
@@ -1324,8 +1326,11 @@ require_once("interfaces/Sucursales.interface.php");
                     throw new Exception("No se pudo realizar la venta: ".$e->getMessage(),901);
                 throw new Exception("No se pudo realizar la venta",901);
             }
+
             DAO::transEnd();
-            Logger::log("venta realizada exitosamente");
+
+            Logger::log("====== Venta realizada exitosamente ======== ");
+
             return array ("id_venta" => $venta->getIdVenta());
 	}
 

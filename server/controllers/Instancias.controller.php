@@ -52,7 +52,8 @@
 				
 			}catch(Exception $e){
 				Logger::error($e);
-				return null;
+				throw $e;
+
 			}
 			
 			try{
@@ -60,7 +61,8 @@
 				
 			}catch(Exception $e){
 				Logger::error($e);
-				return null;
+				throw $e;
+
 				
 			}
 
@@ -71,7 +73,7 @@
 				
 			}catch(Exception $e){
 				Logger::error($e);
-				return null;
+				throw $e;
 				
 			}
 
@@ -83,7 +85,7 @@
 				
 			}catch(Exception $e){
 				Logger::error($e);
-				return null;
+				throw $e;
 				
 			}
 

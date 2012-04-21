@@ -740,6 +740,13 @@ class ProductosController extends ValidacionesController implements IProductos
             throw new Exception($validar);
         } //is_string($validar)*/
         
+		//buscar otro producto con el mismo codigo de producto
+		$search = ProductoDAO::search(new Producto( array( "codigo_producto" => $codigo_producto ) ));
+		
+		if(sizeof($search) > 0){
+			throw new BusinessLogicException("Ya hay un producto con ese codigo de producto");
+		}
+
         //Se verifica que si se recibio precio como metodo de costeo, se reciba un precio,
         //o si se recibe margen, que se reciba un margen de utilidad.
         
@@ -928,7 +935,7 @@ class ProductosController extends ValidacionesController implements IProductos
             throw new Exception("No se pudieron guardar los productos", 901);
         }
         DAO::transEnd();
-        Logger::log("Productos insertados exitosamente");
+        Logger::log("Productos insertados exitosamente....");
         return $id_productos;
     }
     
@@ -1684,6 +1691,8 @@ class ProductosController extends ValidacionesController implements IProductos
 	        );
         } //!is_null($id_producto)
         
+
+
 		if (!is_null($id_sucursal)) {
 			Logger::log("Buscando producto por id_sucursal = $id_sucursal.... " );
 
@@ -1697,10 +1706,17 @@ class ProductosController extends ValidacionesController implements IProductos
 			$results = array();
 
 			foreach ($empresas as $e) {
+
+				Logger::log("suc $id_sucursal pertenece a empresa:" . $e->getIdEmpresa() );
+				
 				$productos_e = ProductoEmpresaDAO::search( new ProductoEmpresa( array("id_empresa" => $e->getIdEmpresa()) ) );
-				Logger::log("suc pertenece a empresa " . $e->getIdEmpresa() );
+				
 				foreach ($productos_e as $p_e) {
-					array_push($results, ProductoDAO::getByPK( $p_e->getIdProducto() )->asArray());
+					$p = ProductoDAO::getByPK( $p_e->getIdProducto() );
+					if(is_null($p)){
+						throw new BusinessLogicException( "el producto ". $p_e->getIdProducto() .  " no existe");
+					}
+					array_push($results, $p->asArray());
 				}
 			}
 			
@@ -1779,6 +1795,7 @@ class ProductosController extends ValidacionesController implements IProductos
         
         //validar el string de descripcion
         $e = self::validarString($descripcion, 100, "descripcion");
+
         if (is_string($e)){
 			Logger::error($e);
 		    throw new Exception($e);
@@ -1818,20 +1835,34 @@ class ProductosController extends ValidacionesController implements IProductos
      **/
     static function NuevaCategoriaUdm($descripcion, $activo = "")
     {
-		Logger::log("Creando una nueva categoria unidad de medida");
+		Logger::log("Creando una nueva categoria unidad de medida....");
         
         //validar el string de descripcion
         $e = self::validarString($descripcion, 100, "descripcion");
+
         if (is_string($e)){
 			Logger::error($e);
 		    throw new Exception($e);
 		}
         
-        
+        //buscar esa descripcion de unidad
+		
+
         $cat_udm = new CategoriaUnidadMedida(array(
-            "descripcion" => $descripcion,
-			"activa" => 1
+            "descripcion" => $descripcion
         ));
+
+
+		$n = CategoriaUnidadMedidaDAO::search( $cat_udm );
+		
+		if(sizeof($n) > 0){
+			throw new BusinessLogicException("Ya existe esta descripcion");
+		}
+		
+		if(is_null($activo)) $activo = true;
+		
+		$cat_udm->setActiva( $activo );
+
         DAO::transBegin();
         try {
             CategoriaUnidadMedidaDAO::save($cat_udm);
@@ -1842,9 +1873,11 @@ class ProductosController extends ValidacionesController implements IProductos
             throw new Exception("No se pudo crear la categoria unidad de medida");
         }
         DAO::transEnd();
+
         Logger::log("Categoria Unidad de Medida creada exitosamente");
+
         return array(
-            "id_categoria_unidad_medida" => $cat_udm->getIdCategoriaUnidadMedida()
+            "id_categoria_unidad_medida" => (int)$cat_udm->getIdCategoriaUnidadMedida()
         );
     }
     
@@ -1864,23 +1897,24 @@ class ProductosController extends ValidacionesController implements IProductos
      **/
     static function BuscarUnidadUdm($limit = 50, $page = null, $query = null, $start = 0)
     {
+	
     }
     
     
     
     
-    /**
-     *
-     *Este metodo modifica la informacion de una unidad
-     *
-     * @param activa int Indica si la unidad esta activa
-     * @param descripcion string Descripción de la unidad de medida
-     * @param factor_conversion float 	 Equivalencia de esta unidad con respecto a la unidad de medida base obtenida de la categoría a la cual pertenece esta unidad. En caso de que se seleccione el valor de tipo_unidad_medida = "Referencia UdM para esta categoria" este valor sera igual a uno automáticamente sin posibilidad de ingresar otro valor diferente
-     * @param tipo_unidad_medida string 	 Tipo enum cuyo valores son los siguientes : "Referencia UdM para esta categoria" (define a esta unidad como la unidad base de referencia de esta categoría, en caso de seleccionar esta opción automáticamente el factor de conversión sera igual a uno sin posibilidad de ingresar otro valor diferente), "Mayor que la UdM de referencia" (indica que esta unidad de medida sera mayor que la unidad de medida base d la categoría que se indique) y "Menor que la UdM de referencia" (indica que esta unidad de medida sera menor que la unidad de medida base de la categoría que se indique)
-     * @param abreviatura string Descripción corta de la unidad, normalmente sera empelada en ticket de venta
-     * @param id_categoria_unidad_medida int Id de la categoría a la cual pertenece la unidad
-     * @param id_unidad_medida int Id de la unidad de medida que se desea editar
-     **/
+	/**
+ 	 *
+ 	 *Este metodo modifica la informacion de una unidad
+ 	 *
+ 	 * @param id_categoria_unidad_medida int Id de la categora a la cual pertenece la unidad
+ 	 * @param id_unidad_medida int Id de la unidad de medida que se desea editar
+ 	 * @param abreviatura string Descripcin corta de la unidad, normalmente sera empelada en ticket de venta
+ 	 * @param activa int Indica si la unidad esta activa
+ 	 * @param descripcion string Descripcin de la unidad de medida
+ 	 * @param factor_conversion float  Equivalencia de esta unidad con respecto a la unidad de medida base obtenida de la categora a la cual pertenece esta unidad. En caso de que se seleccione el valor de tipo_unidad_medida = "Referencia UdM para esta categoria" este valor sera igual a uno automticamente sin posibilidad de ingresar otro valor diferente
+ 	 * @param tipo_unidad_medida string  Tipo enum cuyo valores son los siguientes : "Referencia UdM para esta categoria" (define a esta unidad como la unidad base de referencia de esta categora, en caso de seleccionar esta opcin automticamente el factor de conversin sera igual a uno sin posibilidad de ingresar otro valor diferente), "Mayor que la UdM de referencia" (indica que esta unidad de medida sera mayor que la unidad de medida base d la categora que se indique) y "Menor que la UdM de referencia" (indica que esta unidad de medida sera menor que la unidad de medida base de la categora que se indique)
+ 	 **/
     static function EditarUnidadUdm(
 		$id_categoria_unidad_medida, 
 		$id_unidad_medida, 
@@ -1955,7 +1989,7 @@ class ProductosController extends ValidacionesController implements IProductos
         $validar = self::validarParametrosUdM(null, $abreviatura, $descripcion, $factor_conversion, $id_categoria_unidad_medida, $tipo_unidad_medida, $activa = "");
         if (is_string($validar)) {
             Logger::error($validar);
-            throw new Exception($validar);
+            throw new BusinessLogicException($validar);
         } //is_string($validar)
         
 		if($tipo_unidad_medida == "Referencia UdM para esta categoria")
@@ -1981,7 +2015,7 @@ class ProductosController extends ValidacionesController implements IProductos
         DAO::transEnd();
         Logger::log("Unidad de Medida creada exitosamente");
         return array(
-            "id_unidad_medida" => $udm->getIdUnidadMedida()
+            "id_unidad_medida" => (int)$udm->getIdUnidadMedida()
         );
     }
     
@@ -2125,23 +2159,24 @@ class ProductosController extends ValidacionesController implements IProductos
 
                 try{
                     self::nuevo(
-                        $activo                 = $aProducto["cStatusProducto"], 
-                        $codigo_producto        = $aProducto["cCodigoProducto"],  
-                        $compra_en_mostrador    = false, 
-                        $costo_estandar         = $aProducto["cCostoEstandar"], 
-                        $id_unidad_compra       = $aProducto["cNombreUnidadCompra"], 
-                        $metodo_costeo          = "precio",//$aProducto["cMetodoCosteo"], 
-                        $nombre_producto        = $aProducto["cNombreProducto"], 
-                        $codigo_de_barras       = null, 
-                        $control_de_existencia  = $aProducto["cControlExistencia"], 
-                        $descripcion_producto   = $aProducto["cDescripcionProducto"], 
-                        $foto_del_producto      = null, 
-                        $garantia               = null, 
-                        $id_categoria           = $aProducto["cCodigoValorClasif1"], 
-                        $id_empresas            = null, 
-                        $id_unidad              = 1,//$aProducto["cNombreUnidadBase"], 
-                        $impuestos              = null, 
-                        $precio_de_venta        = $aProducto["cPrecio1"]
+						$activo                 = $aProducto["cStatusProducto"], 
+						$codigo_producto		= $aProducto["cCodigoProducto"],
+						$compra_en_mostrador	= false, 
+						$id_unidad_compra		= $aProducto["cNombreUnidadCompra"], 
+						$metodo_costeo			= "precio",	 
+						$nombre_producto		= $aProducto["cNombreProducto"], 
+						$codigo_de_barras = null, 
+						$control_de_existencia = $aProducto["cControlExistencia"], 
+						$costo_estandar = null, 
+						$descripcion_producto = $aProducto["cDescripcionProducto"], 
+						$foto_del_producto = null, 
+						$garantia = null, 
+						$id_categoria = $aProducto["cCodigoValorClasif1"], 
+						$id_empresas = null, 
+						$id_unidad = null, 
+						$impuestos = null, 
+						$precio_de_venta = $aProducto["cPrecio1"]
+
                     );
                     
                     $productos_importados++;

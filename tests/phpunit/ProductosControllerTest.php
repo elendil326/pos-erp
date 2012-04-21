@@ -14,7 +14,20 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 
 	protected function setUp(){
 		Logger::log("-----------------------------");
+
 		$r = SesionController::Iniciar(123, 1, true);
+
+		if($r["login_succesful"] == false){
+			global $POS_CONFIG;
+			$POS_CONFIG["INSTANCE_CONN"]->Execute("INSERT INTO `usuario` (`id_usuario`, `id_direccion`, `id_direccion_alterna`, `id_sucursal`, `id_rol`, `id_clasificacion_cliente`, `id_clasificacion_proveedor`, `id_moneda`, `fecha_asignacion_rol`, `nombre`, `rfc`, `curp`, `comision_ventas`, `telefono_personal1`, `telefono_personal2`, `fecha_alta`, `fecha_baja`, `activo`, `limite_credito`, `descuento`, `password`, `last_login`, `consignatario`, `salario`, `correo_electronico`, `pagina_web`, `saldo_del_ejercicio`, `ventas_a_credito`, `representante_legal`, `facturar_a_terceros`, `dia_de_pago`, `mensajeria`, `intereses_moratorios`, `denominacion_comercial`, `dias_de_credito`, `cuenta_de_mensajeria`, `dia_de_revision`, `codigo_usuario`, `dias_de_embarque`, `tiempo_entrega`, `cuenta_bancaria`, `id_tarifa_compra`, `tarifa_compra_obtenida`, `id_tarifa_venta`, `tarifa_venta_obtenida`) VALUES
+				(1, NULL, NULL, NULL, 0, NULL, NULL, NULL, '2011-10-24 18:28:24', 'Administrador', NULL, NULL, NULL, NULL, NULL, '2011-10-24 18:28:34', NULL, 1, 0, NULL, '202cb962ac59075b964b07152d234b70', NULL, 0, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, NULL, NULL, 0, 'rol', 0, 'rol');");
+			
+			$r = SesionController::Iniciar(123, 1, true);
+		}
+
+
+		
+		
 	}
 
 	public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
@@ -44,7 +57,8 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 
 
 		$p = ProductosController::Importar( file_get_contents("adminpaq.catalogo.productos.csv") );
-
+		
+		
 		
 		//$this->assertEquals(1,2);
 
@@ -165,16 +179,19 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 										$foto_del_producto = null, 
 										$garantia = null, 
 										$id_unidad = null, 
+										$id_unidad_compra = null, 										
 										$impuestos = null, 
 										$metodo_costeo = null, 
 										$nombre_producto = $nombre_p."-E", //se cambia
 										$peso_producto = null, 
 										$precio = null
-										);			
+										);
+										
 		}
 		
 		
 		public function testBuscarProductosPorID_Sucursal(){
+			
 			$dir_suc = self::RandomString(25,FALSE,FALSE,FALSE);
 			$suc_razon = self::RandomString(10,FALSE,FALSE,FALSE); 
 			
@@ -233,7 +250,7 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 											$precio_de_venta = 12
 											);						
 
-			$res = ProductosController::Buscar($query =null, $id_producto = null, $id_sucursal = $sucursal['id_sucursal'] );
+			$res = ProductosController::Buscar( $query =null, $id_producto = null, $id_sucursal = $sucursal['id_sucursal'] );
 			$this->assertInternalType("int" , $res["numero_de_resultados"],"---- 'testBuscarProductosPorID_Sucursal' 'numero_de_resultados' NO ES UN ENTERO");
 			$this->assertGreaterThan(0, $res['numero_de_resultados'] ,"---- 'testBuscarProductosPorID_Sucursal' SE DEBIÓ DE ENCONTRAR ALMENOS 1 RESULTADO CON NOMBRE PRODUCTO: ".$nombre_p);				
 		}
@@ -276,10 +293,23 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 		public function testBuscarProductosPorQuery(){
 			//se crea un nuevo cliente que es el que debe de ser encontrado en el query
 			$nombre = self::RandomString(15,FALSE,FALSE,FALSE)." - ". time();
+			
 			$codigo = self::RandomString(5,FALSE,FALSE,FALSE);
-        	$nuevo_prod = ProductosController::Nuevo($activo = true,$codigo_producto = $codigo,$compra_mostrador = true,$costo_estandar = "costo",$id_unidad_compra=1,$metodo_costeo ="costo",$nombre_producto = $nombre);
+			
+        	$nuevo_prod = ProductosController::Nuevo(
+									$activo			 = true ,
+									$codigo_producto	= $codigo, 
+									$compra_en_mostrador	= false, 
+									$id_unidad_compra		= null, 
+									$metodo_costeo			= "variable", 
+									$nombre_producto		= $nombre
+								);
+										
 
-			$res = ProductosController::Buscar($query = $nombre,$id_producto = null,$id_sucursal = null);//se busca el prod recien insertado
+			$res = ProductosController::Buscar( $query = $nombre,
+												$id_producto = null,
+												$id_sucursal = null);//se busca el prod recien insertado
+			
 			$this->assertInternalType("int" , $res["numero_de_resultados"],"---- 'testBuscarProductosPorQuery' 'numero_de_resultados' NO ES UN ENTERO");	
 
 			$this->assertGreaterThan(0, $res['numero_de_resultados'] ,"---- 'testBuscarProductosPorQuery' SE DEBIÓ DE ENCONTRAR ALMENOS 1 RESULTADO CON NOMBRE: ".$nombre);		
@@ -375,6 +405,8 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 				
 		}
 
+
+		/*
 		public function testBuscarCategoriaPorID_CategoriaPadre(){
 			//se genera una categoria para despues asignarla como id_padre a la otra
 			$nombre_cat_padre = self::RandomString(15,FALSE,FALSE,FALSE); 
@@ -402,7 +434,9 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 					$this->assertEquals($row['id_categoria'],$cp['id_categoria'],"---- 'testBuscarProductosPorID_CategoriaPadre' LOS IDS NO COINCIDEN SE ENVIÓ EL id_categoria_padre = ".$cp['id_categoria']." Y LA CONSULTA DEVOLVIÓ id_categoria_padre = ".$row['id_categoria']);
 			}		
 		}
-
+		*/
+		
+		
 		public function testDesactivarCategoria(){
 			//se genera una categoria para despues darla de baja
 			$nombre_cat = self::RandomString(15,FALSE,FALSE,FALSE); 
@@ -419,6 +453,7 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 			$this->assertEquals(0,$res->getActiva(),"---- 'testDesactivarCategoria' LA CATEGORIA NO SE DESACTIVÓ  id_categoria= ". $c["id_categoria"]);		
 		}
 
+		/*
 		public function testVolumenEnNuevo(){
 			$codigo_p = self::RandomString(5,FALSE,FALSE,FALSE);
 			$nombre_p = self::RandomString(15,FALSE,FALSE,FALSE); 
@@ -466,6 +501,7 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 			$c = ProductosController::NuevaCategoriaUdm($descripcion = $descripcion_catUdm, $activo = null);
 			$this->assertInternalType("int" , $c["id_categoria"],"---- 'testNuevaCategoriaUdm' 'id_categoria' NO ES UN ENTERO");
 		}
+		*/
 		
 		/**
      	* @expectedException BusinessLogicException
@@ -474,29 +510,46 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 			$descripcion_catUdm = self::RandomString(15,true,FALSE,FALSE); 
 			
 			$c = ProductosController::NuevaCategoriaUdm($descripcion = $descripcion_catUdm, $activo = null);
-			$this->assertInternalType("int" , $c["id_categoria"],"---- 'testNuevaCategoriaUdm' 'id_categoria' NO ES UN ENTERO");
+
+			$this->assertInternalType("int" , $c["id_categoria_unidad_medida"],"---- 'testNuevaCategoriaUdm' 'id_categoria' NO ES UN ENTERO");
+
 			//se intenta insertar otra cat con mismo nombre
 			$cat2 = ProductosController::NuevaCategoriaUdm($descripcion = $descripcion_catUdm, $activo = null);				
 		}
-
+		
+		
+		
+		/*
+		 *
+		 * Aqui editar categoria se refiere a ProductoCategoria, no a CategoriaUdm
+		 */
+		/*
 		public function testEditarCategoriaUdm(){
 			//se crea un nueva categoria
 			$descripcion_catUdm = self::RandomString(15,true,FALSE,FALSE); 
 			$descripcion_editada = self::RandomString(15,true,FALSE,FALSE);
 
 			$c = ProductosController::NuevaCategoriaUdm($descripcion = $descripcion_catUdm, $activo = null);
-			$this->assertInternalType("int" , $c["id_categoria"],"---- 'testEditarCategoriaUdm' 'id_categoria' NO ES UN ENTERO");
+			$this->assertInternalType("int" , $c["id_categoria_unidad_medida"],"'testEditarCategoriaUdm' 'id_categoria' NO ES UN ENTERO");
 
-			$catUdm = CategoriaUnidadMedidaDAO::getByPK($c['id_categoria']);
+			$catUdm = CategoriaUnidadMedidaDAO::getByPK($c['id_categoria_unidad_medida']);
 			//se edita la categoriaUdm recien ingresada
-			ProductosController::EditarCategoria($activa = $catUdm->getActiva(), $descripcion = $descripcion_editada, $c['id_categoria']);			
-			//se redefine el obj para comparar valores
-			$catUdm = CategoriaUnidadMedidaDAO::getByPK($c['id_categoria']);
 			
-			if($catUdm->getDescripcion() != $descripcion_editada)//el valor es diferente, no se actualizó entonces es error
-				$this->assertFalse( True ,"---- 'testEditarCategoriaUdm' NO SE EDITÓ LA CategoriaUdm SE DEBIÓ CAMBIAR: ".$descripcion_catUdm." POR: ".$descripcion_editada);//forzar assertFalse para imprimir error
-		}
+			ProductosController::EditarCategoria(
+					$activa = $catUdm->getActiva(), 
+					$descripcion = $descripcion_editada, 
+					$c['id_categoria_unidad_medida']);
+			
+			
+			//se redefine el obj para comparar valores
+			$catUdm = CategoriaUnidadMedidaDAO::getByPK($c['id_categoria_unidad_medida']);
+			
+			
+			$this->assertEquals( $catUdm->getDescripcion(),  $descripcion_editada, "NO SE EDITÓ LA CategoriaUdm SE DEBIÓ CAMBIAR: ".$descripcion_catUdm." POR: ".$descripcion_editada );
 
+		}
+		*/
+		/*
 		public function testBuscarCategoriaUdmPorQuery(){
 			//se genera una categoria para despues buscarla por su nombre
 			$descripcion_catUdm = self::RandomString(15,true,FALSE,FALSE); 
@@ -508,6 +561,7 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 			$this->assertInternalType("int" , $res["numero_de_resultados"],"---- 'testBuscarCategoriaUdmPorQuery' 'numero_de_resultados' NO ES UN ENTERO");
 			$this->assertGreaterThanOrEqual(1, $res['numero_de_resultados'],"---- 'testBuscarCategoriaUdmPorQuery' SE DEBIÓ DE ENCONTRAR ALMENOS 1 RESULTADO CON nombre = ".$descripcion_catUdm);				
 		}
+		*/
 
 		public function testNuevaUnidadUdm(){
 			$abreviatura_Udm = self::RandomString(5,true,FALSE,FALSE); 
@@ -520,16 +574,18 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 														$abreviatura = $abreviatura_Udm, 
 														$descripcion = $descripcion_Udm, 
 														$factor_conversion = 1, 
-														$id_categoria_unidad_medida = $cat['id_categoria'], 
+														$id_categoria_unidad_medida = $cat['id_categoria_unidad_medida'], 
 														$tipo_unidad_medida = "Referencia UdM para esta categoria", 
 														$activa = null
 													);
 			$this->assertInternalType("int" , $udm["id_unidad_medida"],"---- 'testNuevaUnidadUdm' 'id_unidad_medida' NO ES UN ENTERO");
 		}
 
+
+
 		/**
      	* @expectedException BusinessLogicException
-     	*/
+     	*/			
 		public function testNuevaUnidadUdmNombreRepetido(){
 			$abreviatura_Udm = self::RandomString(5,true,FALSE,FALSE); 
 			$descripcion_Udm = self::RandomString(15,true,FALSE,FALSE); 
@@ -541,7 +597,7 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 														$abreviatura = $abreviatura_Udm, 
 														$descripcion = $descripcion_Udm, 
 														$factor_conversion = 1, 
-														$id_categoria_unidad_medida = $cat['id_categoria'], 
+														$id_categoria_unidad_medida = $cat['id_categoria_unidad_medida'], 
 														$tipo_unidad_medida = "Referencia UdM para esta categoria", 
 														$activa = null
 													);
@@ -551,7 +607,7 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 														$abreviatura = $abreviatura_Udm, 
 														$descripcion = $descripcion_Udm, 
 														$factor_conversion = 1, 
-														$id_categoria_unidad_medida = $cat['id_categoria'], 
+														$id_categoria_unidad_medida = $cat['id_categoria_unidad_medida'], 
 														$tipo_unidad_medida = "Referencia UdM para esta categoria", 
 														$activa = null
 													);			
@@ -570,28 +626,38 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 														$abreviatura = $abreviatura_Udm, 
 														$descripcion = $descripcion_Udm, 
 														$factor_conversion = 1, 
-														$id_categoria_unidad_medida = $cat['id_categoria'], 
+														$id_categoria_unidad_medida = $cat['id_categoria_unidad_medida'], 
 														$tipo_unidad_medida = "Referencia UdM para esta categoria", 
 														$activa = null
 													);
 			$this->assertInternalType("int" , $udm["id_unidad_medida"],"---- 'testEditarUnidadUdm' 'id_unidad_medida' NO ES UN ENTERO");
 
 			$udmObj = UnidadMedidaDAO::getByPK($udm['id_unidad_medida']);
+			
 			//se edita la Udm recien ingresada
-			ProductosController::EditarUnidadUdm($activa = $udmObj->getActiva(), 
+			ProductosController::EditarUnidadUdm(
+												$id_categoria_unidad_medida	 = $udmObj->getIdCategoriaUnidadMedida(), 
+												$id_unidad_medida	= $udmObj->getIdUnidadMedida(), 
+												$abreviatura = $abreviatura_Udm_editada,
+												$activa =  $udmObj->getActiva(), 
 												$descripcion = $udmObj->getDescripcion(), 
 												$factor_conversion = $udmObj->getFactorConversion(), 
-												$tipo_unidad_medida = $udmObj->getTipoUnidadMedida(), 
-												$abreviatura = $abreviatura_Udm_editada, //cambia
-												$id_categoria_unidad_medida = $udmObj->getIdCategoriaUnidadMedida(), 
-												$id_unidad_medida = $udmObj->getIdUnidadMedida());			
+												$tipo_unidad_medida = $udmObj->getTipoUnidadMedida()
+												
+												
+											);			
 			//se redefine el obj para comparar valores
-			$udmObj2 = UnidadMedidaDAO::getByPK($c['id_unidad_medida']);
+			$udmObj2 = UnidadMedidaDAO::getByPK($udmObj->getIdUnidadMedida());
 			
-			if($udmObj2->getAbreviacion() != $abreviatura_Udm_editada)//el valor es diferente, no se actualizó entonces es error
-				$this->assertFalse( True ,"---- 'testEditarUnidadUdm' NO SE EDITÓ LA CategoriaUdm SE DEBIÓ CAMBIAR: ".$descripcion_catUdm." POR: ".$descripcion_editada);//forzar assertFalse para imprimir error
+			$this->assertEquals($udmObj2->getAbreviacion(), $abreviatura_Udm_editada, "NO SE EDITÓ LA CategoriaUdm");
+			
+			
 		}
 
+
+
+
+		/*
 		public function testBuscarUnidadUdmPorQuery(){
 			//se genera una categoria y udm para despues buscarla por su nombre
 			$abreviatura_Udm = self::RandomString(5,true,FALSE,FALSE);
@@ -604,7 +670,7 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 														$abreviatura = $abreviatura_Udm, 
 														$descripcion = $descripcion_Udm, 
 														$factor_conversion = 1, 
-														$id_categoria_unidad_medida = $cat['id_categoria'], 
+														$id_categoria_unidad_medida = $cat['id_categoria_unidad_medida'], 
 														$tipo_unidad_medida = "Referencia UdM para esta categoria", 
 														$activa = null
 													);
@@ -620,7 +686,7 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 			$this->assertGreaterThanOrEqual(1, $res['numero_de_resultados'],"---- 'testBuscarUnidadUdmPorQuery' SE DEBIÓ DE ENCONTRAR ALMENOS 1 RESULTADO CON abreviacion = ".$abreviatura_Udm);				
 		}
 
-
+	*/
 
 }
 

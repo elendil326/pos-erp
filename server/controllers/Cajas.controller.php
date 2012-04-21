@@ -3,20 +3,8 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-class CajasController{
+class CajasController extends ValidacionesController{
 
-    /*
-     * Se valida que un numero este en un rango de un maximo y un minimo inclusivos
-     * Regresa true cuando es valido, y un string cuando no lo es
-     */
-    private static function validarNumero($num, $max_length, $nombre_variable, $min_length=0)
-    {
-        if($num<$min_length||$num>$max_length)
-        {
-            return "La variable ".$nombre_variable." proporcionada (".$num.") no esta en el rango de ".$min_length." - ".$max_length;
-        }
-        return true;
-    }
     
     public static function modificarCaja
         (

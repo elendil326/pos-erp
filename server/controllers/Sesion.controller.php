@@ -98,7 +98,7 @@ class SesionController implements ISesion{
 
 
 		if( $user === NULL ) {
-			//Logger::warn("Credenciales invalidas para usuario {$usuario}");
+			Logger::warn("===== Credenciales invalidas para usuario {$usuario} ====== ");
 			return array( "login_succesful" => false );
 			
 		}

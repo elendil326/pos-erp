@@ -135,7 +135,7 @@ class Logger
   public static final function logSQL( $sql ){
     if(POS_CONFIG_LOG_DB_QUERYS){
 		self::$db_querys ++;
-		self::log( "SQL(" . self::$db_querys . "): " . $sql );
+		self::log( "  SQL(" . self::$db_querys . "): " . $sql );
     }
   }
 

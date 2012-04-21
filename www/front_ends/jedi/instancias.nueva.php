@@ -22,10 +22,12 @@
 				
 				Logger::log("Jedi requested new instance");
 
+				
 				$N_I_ID = InstanciasController::Nueva(null, $_GET["d"]);
 
 				if(is_null($N_I_ID)){
 					//algo salio mal
+					Logger::log("xxxxx algo salio mal con la instancia xxxxxxx");
 					break;
 				}
 				
