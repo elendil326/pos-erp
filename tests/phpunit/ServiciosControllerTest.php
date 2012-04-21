@@ -9,6 +9,8 @@ require_once("../../server/bootstrap.php");
 
 class ServiciosControllerTest extends PHPUnit_Framework_TestCase {
 	
+	private $cservicio ;
+	
 	protected function setUp(){
 		Logger::log("-----------------------------");
 
@@ -18,9 +20,11 @@ class ServiciosControllerTest extends PHPUnit_Framework_TestCase {
 			global $POS_CONFIG;
 			$POS_CONFIG["INSTANCE_CONN"]->Execute("INSERT INTO `usuario` (`id_usuario`, `id_direccion`, `id_direccion_alterna`, `id_sucursal`, `id_rol`, `id_clasificacion_cliente`, `id_clasificacion_proveedor`, `id_moneda`, `fecha_asignacion_rol`, `nombre`, `rfc`, `curp`, `comision_ventas`, `telefono_personal1`, `telefono_personal2`, `fecha_alta`, `fecha_baja`, `activo`, `limite_credito`, `descuento`, `password`, `last_login`, `consignatario`, `salario`, `correo_electronico`, `pagina_web`, `saldo_del_ejercicio`, `ventas_a_credito`, `representante_legal`, `facturar_a_terceros`, `dia_de_pago`, `mensajeria`, `intereses_moratorios`, `denominacion_comercial`, `dias_de_credito`, `cuenta_de_mensajeria`, `dia_de_revision`, `codigo_usuario`, `dias_de_embarque`, `tiempo_entrega`, `cuenta_bancaria`, `id_tarifa_compra`, `tarifa_compra_obtenida`, `id_tarifa_venta`, `tarifa_venta_obtenida`) VALUES
 				(1, NULL, NULL, NULL, 0, NULL, NULL, NULL, '2011-10-24 18:28:24', 'Administrador', NULL, NULL, NULL, NULL, NULL, '2011-10-24 18:28:34', NULL, 1, 0, NULL, '202cb962ac59075b964b07152d234b70', NULL, 0, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, NULL, NULL, 0, 'rol', 0, 'rol');");
+				
+			$r = SesionController::Iniciar(123, 1, true);
 		}
 
-		$r = SesionController::Iniciar(123, 1, true);
+
 		
 
 	}
@@ -35,6 +39,8 @@ class ServiciosControllerTest extends PHPUnit_Framework_TestCase {
 		
 		$this->assertEquals( $servs["numero_de_resultados"], sizeof($servs["resultados"]) );
 		
+		$old_size = sizeof($servs["resultados"]);
+		
 		for ($i=0; $i < $servs["numero_de_resultados"]; $i++) { 
 			$s = $servs["resultados"][$i]->asArray();
 			if(($s["nombre_servicio"] == "prestamo") && ($s["activo"] == 1) ){
@@ -42,26 +48,20 @@ class ServiciosControllerTest extends PHPUnit_Framework_TestCase {
 			}
 		}
 		
+
+		$this->cservicio = "CA91" . time();
+		
 		$s = ServiciosController::Nuevo(
-			"CA01", 
-			false, 
-			0, 
-			"precio", 
-			"prestamo",
-			true, 
-			null, 
-			null, 
-			null, 
-			null, 
-			null, 
-			null, 
-			null, 
-			0
+			$codigo_servicio = $this->cservicio,  
+			$compra_en_mostrador=false, 
+			$costo_estandar	= 0, 
+			$metodo_costeo = "variable", 
+			$nombre_servicio = $this->cservicio
 		);
 		
 		$servs = ServiciosController::Buscar();
 		
-		$this->assertGreaterThan(0, $servs["numero_de_resultados"]);
+		$this->assertGreaterThan($old_size, $servs["numero_de_resultados"]);
 	}
 
 
@@ -69,31 +69,24 @@ class ServiciosControllerTest extends PHPUnit_Framework_TestCase {
 	/**
      * @expectedException BusinessLogicException
      */
-	public function testInsertarNombreRepetido(){
+	public function testInsertarCodigoRepetido(){
 		$s = ServiciosController::Nuevo(
-			"CA01", 
-			false, 
-			0, 
-			"precio", 
-			"prestamo",
-			true, 
-			null, 
-			null, 
-			null, 
-			null, 
-			null, 
-			null, 
-			null, 
-			0
+			$codigo_servicio = $this->cservicio,  
+			$compra_en_mostrador=false, 
+			$costo_estandar	= 0, 
+			$metodo_costeo = "variable", 
+			$nombre_servicio = $this->cservicio
 		);
 	}
 	
+	/*
 	public function testBuscarSoloActivos(){
 		$servs_todos = ServiciosController::Buscar();
 		$servs_activos = ServiciosController::Buscar(true);
 		
 		$this->assertGreaterThan($servs_activos["numero_de_resultados"] , $servs_todos["numero_de_resultados"] );
 	}
+	*/
 	
 	public function testBuscarEliminarYNuevaCategoria(){
 		//buscar la categoria
@@ -113,25 +106,29 @@ class ServiciosControllerTest extends PHPUnit_Framework_TestCase {
 	public function testNuevaOrdenSinCreditoSuficiente(){
 		
 		$s = ServiciosController::Nuevo(
-			"testNuevaOrden-2db94458" . time(), 
-			false, 
-			0, 
-			"precio", 
-			"testNuevaOrden-2db94458" . time(),
-			true, 
-			null, 
-			null, 
-			null, 
-			null, 
-			null, 
-			null, 
-			null, 
-			1542.15 //este servicio cuesta 1542.15
+			$codigo_servicio 		= "testNuevoServicio-2db94458" . time(), 
+			$compra_en_mostrador	= false, 
+			$costo_estandar			= 0, 
+			$metodo_costeo			= "precio", 
+			$nombre_servicio		= "testNuevoServicio-2db94458" . time(), 
+			$activo 				=  true , 	
+			$clasificaciones 		= null, 
+			$control_de_existencia 	= null, 
+			$descripcion_servicio 	= null, 
+			$empresas 				= null, 
+			$extra_params 			= null, 
+			$foto_servicio 			= null, 
+			$garantia 				= null, 
+			$impuestos 				= null, 
+			$precio 				= 1542.15, 
+			$retenciones			= null, 
+			$sucursales 			= null
+		
 		);
 	
 		
 
-		$c = ClientesController::nuevo( "testNuevaOrden-2db94458" . time() );
+		$c = ClientesController::nuevo( "testNuevaOrdenCliente -2db94458" . time() );
 
 		$o = ServiciosController::NuevaOrden(
 				$c["id_cliente"], 
@@ -148,25 +145,28 @@ class ServiciosControllerTest extends PHPUnit_Framework_TestCase {
 	public function testNuevaOrden(){
 		
 		$s = ServiciosController::Nuevo(
-			"testNuevaOrden-2db9445f" . time(), 
-			false, 
-			0, 
-			"precio", 
-			"testNuevaOrden-2db9445f" . time(),
-			true, 
-			null, 
-			null, 
-			null, 
-			null, 
-			null, 
-			null, 
-			null, 
-			1542.15 //este servicio cuesta 1542.15
+			$codigo_servicio 		= "testNuevoServicio-2db94458_2" . time(), 
+			$compra_en_mostrador	= false, 
+			$costo_estandar			= 0, 
+			$metodo_costeo			= "precio", 
+			$nombre_servicio		= "testNuevoServicio-2db94458_2" . time(), 
+			$activo 				=  true , 	
+			$clasificaciones 		= null, 
+			$control_de_existencia 	= null, 
+			$descripcion_servicio 	= null, 
+			$empresas 				= null, 
+			$extra_params 			= null, 
+			$foto_servicio 			= null, 
+			$garantia 				= null, 
+			$impuestos 				= null, 
+			$precio 				= 1542.15, 
+			$retenciones			= null, 
+			$sucursales 			= null
 		);
 	
 		
 
-		$c = ClientesController::nuevo(
+		$c = ClientesController::Nuevo(
 				$razon_social =  "testNuevaOrden-2db9445f" . time() , 
 				$clasificacion_cliente = null, 
 				$codigo_cliente = "t" . time(), 
@@ -311,16 +311,19 @@ class ServiciosControllerTest extends PHPUnit_Framework_TestCase {
 			$metodo_costeo		= "precio", 
 			$nombre_servicio	= "SERV" . time(),
 			$activo = true, 
-			$clasificaciones = null, 
-			$control_de_existencia = null, 
-			$descripcion_servicio = null, 
-			$empresas = null, 
-			$foto_servicio = null, 
-			$garantia = null, 
-			$impuestos = null, 
+			$clasificaciones 		= null, 
+			$control_de_existencia 	= null, 
+			$descripcion_servicio 	= null, 
+			$empresas 				= null, 
+			$extra_params 			= null, 
+			$foto_servicio 			= null, 
+			$garantia 				= null, 
+			$impuestos 				= null,
 			$precio = 0, 
 			$retenciones = null, 
-			$sucursales = null);
+			$sucursales = null
+
+			);
 		
 		
 		//Editar el servicio, (descripcion)

@@ -305,6 +305,7 @@ require_once("interfaces/Servicios.interface.php");
                 {
                     if($servicio->getActivo()){
 						throw new BusinessLogicException("El nombre de servicio (".$nombre_servicio.") ya esta en uso por el servicio ".$servicio->getIdServicio());
+						
 					}
 
                 }
@@ -341,10 +342,11 @@ require_once("interfaces/Servicios.interface.php");
                 {
                     $servicios = ServicioDAO::search( new Servicio( array( "codigo_servicio" => $codigo_servicio ) ) );
                 }
+
                 foreach($servicios as $servicio)
                 {
-                    if($servicio->getActivo())
-                        return "El codigo de servicio (".$codigo_servicio.") esta siendo usado por el servicio ".$servicio->getIdServicio ();
+
+                	throw new BusinessLogicException("El codigo de servicio (".$codigo_servicio.") esta siendo usado por el servicio ".$servicio->getIdServicio ());
                 }
             }
             
@@ -987,6 +989,12 @@ require_once("interfaces/Servicios.interface.php");
 	{  
             Logger::log("Creando nuevo servicio `$nombre_servicio`...");
 
+
+			$r = ServicioDAO::search(new Servicio(array("codigo_servicio" => $codigo_servicio)));
+			
+			if(sizeof($r) > 0){
+				throw new BusinessLogicException("ya existe este codigo de servicio");
+			}
 		
             //se validan los parametros recibidos
             $validar = self::validarParametrosServicio(
@@ -1006,7 +1014,7 @@ require_once("interfaces/Servicios.interface.php");
             if(is_string($validar))
             {
                 Logger::error($validar);
-                throw new Exception($validar);
+                throw new BusinessLogicException($validar);
             }
             
             //valida que se haya recibido el parametro esperado por el metodo de costeo
@@ -1019,6 +1027,7 @@ require_once("interfaces/Servicios.interface.php");
             if(is_null($activo))
                 $activo = 1;
             
+
             //Se inicializa el registro de servicio
             $servicio = new Servicio( array( 
 		                                "costo_estandar"            => $costo_estandar,
@@ -1032,10 +1041,14 @@ require_once("interfaces/Servicios.interface.php");
 		                                "control_existencia"        => $control_de_existencia,
 		                                "foto_servicio"             => $foto_servicio,
 		                                "precio"                    => $precio,
-										"extra_params"				=> json_encode($extra_params)
+										"extra_params"				=> null
                                     ) 
 								);
-            
+
+			if(!is_null($extra_params)){
+				$servicio->setExtraParams(json_encode($extra_params));
+			}
+
             //Se guarda el registro. Si se reciben empresas, sucursales, impuestos y/o retenciones, se guardan 
             //los respectivos registros con la informacion obtenida
             
@@ -1681,16 +1694,18 @@ require_once("interfaces/Servicios.interface.php");
                                                     );
 			//ok, ya tengo el servicio, vamos a ver si necesito parametros extra
 			if(!is_null( $servicio->getExtraParams() )){
+				Logger::log("El servicio require parametros extra.");
 				//si se necesitan, vamos a ver cuales son,
 				$extra_params_sent		= $extra_params;
 				$extra_params_required	= json_decode( $servicio->getExtraParams() );
-
+				
+				//no se enviaron los parametros extra?
+				if(is_null($extra_params_sent)){
+					Logger::warn("no se enviaron parametros extra");
+				}
+				
 				foreach ($extra_params_required	as $epr) {
-
-					Logger::log("extraparam:" . $epr->desc);
-					
-					
-
+					Logger::log("Extraparam:" . $epr->desc);
 				}
 				
 				$orden_de_servicio->setExtraParams( json_encode($extra_params) );
