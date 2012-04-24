@@ -86,15 +86,23 @@
 
 	$page->nextTab("Direccion");
 
+	$menu = new MenuComponent();
+	$menu->addItem("Editar Direccion","clientes.editar.direccion.php?cid=".$este_usuario->getIdUsuario()."&did=".$este_usuario->getIdDireccion() );
+	$page->addComponent($menu);
+
 	$direccion = $este_usuario->getIdDireccion();
 	$direccionObj = DireccionDAO::getByPK( $direccion );
 	
 	if(!is_null($direccionObj)){
+		$usr_ultima = UsuarioDAO::getByPK($direccionObj->getIdUsuarioUltimaModificacion());		
+		$direccionObj->setIdUsuarioUltimaModificacion( $usr_ultima->getNombre() );
+
 		$dform = new DAOFormComponent( $direccionObj );
 		$dform->setEditable(false);		
-		$form->hideField( array( 
+		$dform->hideField( array( 
 				"id_direccion"
-			 ));
+			 ));		
+		$dform->createComboBoxJoin("id_ciudad","nombre",CiudadDAO::getAll(), $direccionObj->getIdCiudad());
 		$page->addComponent( $dform );
 	}
 
