@@ -21,7 +21,9 @@ $esta_orden = OrdenDeServicioDAO::getByPK($_GET["oid"]);
 // 
 
 
+
 $customer         = UsuarioDAO::getByPK($esta_orden->getIdUsuarioVenta());
+
 $link_to_customer = "<a href='clientes.ver.php?cid=" . $esta_orden->getIdUsuarioVenta() . "'>";
 $link_to_customer .= $customer->getNombre();
 $link_to_customer .= "</a>";
@@ -77,8 +79,17 @@ if ($esta_orden->getActiva()){
 $esta_orden->setFechaOrden( FormatTime( strtotime ($esta_orden->getFechaOrden(  ) )) );
 
 
-$asignado = UsuarioDAO::getByPK($esta_orden->getIdUsuarioAsignado());
-$esta_orden->setIdUsuarioAsignado($asignado->getNombre());
+$a = $esta_orden->getIdUsuarioAsignado();
+
+$asignado = UsuarioDAO::getByPK($a);
+
+if(!is_null($asignado)){
+	$esta_orden->setIdUsuarioAsignado($asignado->getNombre());	
+}else{
+	$esta_orden->setIdUsuarioAsignado("");	
+}
+
+
 
 
 $form = new DAOFormComponent($esta_orden);
