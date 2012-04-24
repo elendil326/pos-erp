@@ -1,6 +1,6 @@
 <?php 
 
-	/*require_once("ApiHandler.php");
+require_once("ApiHandler.php");
 
 	require_once("ApiHttpErrors.php");
 
@@ -24,7 +24,7 @@
 
 	require_once("StringValidator.php");
 
-	require_once("Validator.php");*/
+	require_once("Validator.php");
 
 
   class ApiSesionIniciar extends ApiHandler {
@@ -4944,6 +4944,7 @@
 			"extra_params" => new ApiExposedProperty("extra_params", false, POST, array( "json" )),
 			"fecha_entrega" => new ApiExposedProperty("fecha_entrega", false, POST, array( "int" )),
 			"fotografia" => new ApiExposedProperty("fotografia", false, POST, array( "string" )),
+			"id_usuario_asignado" => new ApiExposedProperty("id_usuario_asignado", false, POST, array( "int" )),
 			"precio" => new ApiExposedProperty("precio", false, POST, array( "float" )),
 		);
 	}
@@ -4962,6 +4963,7 @@
 			isset($_POST['extra_params'] ) ? json_decode($_POST['extra_params']) : null,
 			isset($_POST['fecha_entrega'] ) ? $_POST['fecha_entrega'] :  "",
 			isset($_POST['fotografia'] ) ? $_POST['fotografia'] :  null,
+			isset($_POST['id_usuario_asignado'] ) ? $_POST['id_usuario_asignado'] :  null,
 			isset($_POST['precio'] ) ? $_POST['precio'] :  null
 			
 			);
@@ -5263,6 +5265,42 @@
 			
 			isset($_GET['id_orden_de_servicio'] ) ? $_GET['id_orden_de_servicio'] : null,
 			isset($_GET['productos'] ) ? json_decode($_GET['productos']) : null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiServiciosOrdenEditar extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"id_orden" => new ApiExposedProperty("id_orden", true, POST, array( "int" )),
+			"extra_params" => new ApiExposedProperty("extra_params", false, POST, array( "json" )),
+			"fecha_entrega" => new ApiExposedProperty("fecha_entrega", false, POST, array( "int" )),
+			"id_usuario_asignado" => new ApiExposedProperty("id_usuario_asignado", false, POST, array( "int" )),
+			"precio" => new ApiExposedProperty("precio", false, POST, array( "float" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = ServiciosController::EditarOrden( 
+ 			
+			
+			isset($_POST['id_orden'] ) ? $_POST['id_orden'] : null,
+			isset($_POST['extra_params'] ) ? json_decode($_POST['extra_params']) : null,
+			isset($_POST['fecha_entrega'] ) ? $_POST['fecha_entrega'] :  null,
+			isset($_POST['id_usuario_asignado'] ) ? $_POST['id_usuario_asignado'] :  null,
+			isset($_POST['precio'] ) ? $_POST['precio'] :  null
 			
 			);
 		}catch(Exception $e){

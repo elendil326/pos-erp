@@ -80,6 +80,8 @@ if ($esta_orden->getActiva()){
 //
 // Forma de producto
 // 
+
+$esta_orden->setFechaOrden( FormatTime( strtotime ($esta_orden->getFechaOrden(  ) )) );
 $form = new DAOFormComponent($esta_orden);
 $form->setEditable(false);
 
@@ -88,12 +90,16 @@ $form->hideField(array(
 	"id_usuario_venta",
 	"extra_params",
 	"motivo_cancelacion",
-	"fecha_entrega"
+	"fecha_entrega",
+	"cancelada",
+	"adelanto",
+	"activa"
 ));
 
 
 $form->createComboBoxJoin("id_servicio", "nombre_servicio", ServicioDAO::getAll(), $esta_orden->getIdServicio());
 $form->createComboBoxJoin("id_usuario", "nombre", UsuarioDAO::getAll(), $esta_orden->getIdUsuario());
+
 //$form->createComboBoxJoinDistintName("id_usuario_venta", "id_usuario", "nombre", UsuarioDAO::getAll(), $esta_orden->getIdUsuarioVenta());
 $page->addComponent($form);
 
@@ -136,6 +142,7 @@ $header = array(
 // 
 $table = new TableComponent($header, $seguimientos);
 $table->renderRowId("comments");
+$table->addNoData("");
 function funcion_sucursal($id_sucursal){
 	return (SucursalDAO::getByPK($id_sucursal) ? SucursalDAO::getByPK($id_sucursal)->getRazonSocial() : "---------");
 }

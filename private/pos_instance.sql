@@ -686,6 +686,7 @@ CREATE TABLE IF NOT EXISTS `orden_de_servicio` (
   `id_servicio` int(11) NOT NULL COMMENT 'Id del servicio entregado',
   `id_usuario_venta` int(11) NOT NULL COMMENT 'Id del usuario al que se le relaiza la orden',
   `id_usuario` int(11) NOT NULL COMMENT 'Id del usuario que realiza la orden',
+  `id_usuario_asignado` int(11) default NULL COMMENT 'Id del usuario que tiene asignada esta orden (responsable)',
   `fecha_orden` datetime NOT NULL COMMENT 'fecha en la que se realiza la orden',
   `fecha_entrega` datetime NOT NULL COMMENT 'fecha en la que se entrega la orden',
   `activa` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Si la orden esta activa',

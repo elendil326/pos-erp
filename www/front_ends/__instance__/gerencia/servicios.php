@@ -14,12 +14,12 @@
 		
 
 
-		$ordenes = ServiciosController::ListaOrden();
-
+		$ordenes = ServiciosController::ListaOrden(); 
+		
 		if(  $ordenes["numero_de_resultados"] == 1){
-			$msg = "Hay <b style='color:#325C99'>" . $ordenes["numero_de_resultados"] . "</b> orden en espera.";	
+			$msg = "Hay <b style='color:#325C99'>" . $ordenes["numero_de_resultados"] . "</b> orden en espera. <div onclick='window.location=\"servicios.nueva.orden.php\";' class='POS Boton'>+ Nueva orden</div>";	
 		}else{
-			$msg = "Hay <b style='color:#325C99'>" . $ordenes["numero_de_resultados"] . "</b> ordenes en espera.";	
+			$msg = "Hay <b style='color:#325C99'>" . $ordenes["numero_de_resultados"] . "</b> ordenes en espera. <div onclick='window.location=\"servicios.nueva.orden.php\";' class='POS Boton'>+ Nueva orden</div>";	
 		}
 		
 

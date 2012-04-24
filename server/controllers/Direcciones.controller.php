@@ -104,6 +104,11 @@ class DireccionController extends ValidacionesController{
             return $direccion->getIdDireccion();
         }
 	
+	
+	
+	
+	
+	
 		public static function EditarDireccion($direccion)
 		{
 		//verificamos si se cambiaron las direcciones

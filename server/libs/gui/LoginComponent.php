@@ -203,7 +203,10 @@ class LoginComponent implements GuiComponent
 					<td align="right">
 						<?php
 						if(!is_null($this->api_login_method)){
-							?><input type="button" value="Ingresar" onClick="snd_to_api()"/><?php
+							?>
+
+								<div class='POS Boton OK' onClick="snd_to_api()" >Iniciar sesion</div>
+							<?php
 						}else{
 							?><input type="submit" value="Ingresar" onkeypress=""/><?php
 						}

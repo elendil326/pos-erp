@@ -34,6 +34,9 @@ class OrdenDeServicio extends VO
 			if( isset($data['id_usuario']) ){
 				$this->id_usuario = $data['id_usuario'];
 			}
+			if( isset($data['id_usuario_asignado']) ){
+				$this->id_usuario_asignado = $data['id_usuario_asignado'];
+			}
 			if( isset($data['fecha_orden']) ){
 				$this->fecha_orden = $data['fecha_orden'];
 			}
@@ -78,6 +81,7 @@ class OrdenDeServicio extends VO
 			"id_servicio" => $this->id_servicio,
 			"id_usuario_venta" => $this->id_usuario_venta,
 			"id_usuario" => $this->id_usuario,
+			"id_usuario_asignado" => $this->id_usuario_asignado,
 			"fecha_orden" => $this->fecha_orden,
 			"fecha_entrega" => $this->fecha_entrega,
 			"activa" => $this->activa,
@@ -128,6 +132,15 @@ class OrdenDeServicio extends VO
 	  * @var int(11)
 	  */
 	public $id_usuario;
+
+	/**
+	  * id_usuario_asignado
+	  * 
+	  * Id del usuario que tiene asignada esta orden (responsable)<br>
+	  * @access public
+	  * @var int(11)
+	  */
+	public $id_usuario_asignado;
 
 	/**
 	  * fecha_orden
@@ -206,7 +219,7 @@ class OrdenDeServicio extends VO
 	  * 
 	  * Un json con valores extra que se necesitan llenar<br>
 	  * @access public
-	  * @var varchar(2048)
+	  * @var text
 	  */
 	public $extra_params;
 
@@ -308,6 +321,30 @@ class OrdenDeServicio extends VO
 	final public function setIdUsuario( $id_usuario )
 	{
 		$this->id_usuario = $id_usuario;
+	}
+
+	/**
+	  * getIdUsuarioAsignado
+	  * 
+	  * Get the <i>id_usuario_asignado</i> property for this object. Donde <i>id_usuario_asignado</i> es Id del usuario que tiene asignada esta orden (responsable)
+	  * @return int(11)
+	  */
+	final public function getIdUsuarioAsignado()
+	{
+		return $this->id_usuario_asignado;
+	}
+
+	/**
+	  * setIdUsuarioAsignado( $id_usuario_asignado )
+	  * 
+	  * Set the <i>id_usuario_asignado</i> property for this object. Donde <i>id_usuario_asignado</i> es Id del usuario que tiene asignada esta orden (responsable).
+	  * Una validacion basica se hara aqui para comprobar que <i>id_usuario_asignado</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setIdUsuarioAsignado( $id_usuario_asignado )
+	{
+		$this->id_usuario_asignado = $id_usuario_asignado;
 	}
 
 	/**
@@ -506,7 +543,7 @@ class OrdenDeServicio extends VO
 	  * getExtraParams
 	  * 
 	  * Get the <i>extra_params</i> property for this object. Donde <i>extra_params</i> es Un json con valores extra que se necesitan llenar
-	  * @return varchar(2048)
+	  * @return text
 	  */
 	final public function getExtraParams()
 	{
@@ -517,9 +554,9 @@ class OrdenDeServicio extends VO
 	  * setExtraParams( $extra_params )
 	  * 
 	  * Set the <i>extra_params</i> property for this object. Donde <i>extra_params</i> es Un json con valores extra que se necesitan llenar.
-	  * Una validacion basica se hara aqui para comprobar que <i>extra_params</i> es de tipo <i>varchar(2048)</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>extra_params</i> es de tipo <i>text</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param varchar(2048)
+	  * @param text
 	  */
 	final public function setExtraParams( $extra_params )
 	{

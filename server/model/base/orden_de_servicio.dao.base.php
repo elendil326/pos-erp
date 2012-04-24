@@ -141,6 +141,11 @@ abstract class OrdenDeServicioDAOBase extends DAO
 			array_push( $val, $orden_de_servicio->getIdUsuario() );
 		}
 
+		if( ! is_null( $orden_de_servicio->getIdUsuarioAsignado() ) ){
+			$sql .= " `id_usuario_asignado` = ? AND";
+			array_push( $val, $orden_de_servicio->getIdUsuarioAsignado() );
+		}
+
 		if( ! is_null( $orden_de_servicio->getFechaOrden() ) ){
 			$sql .= " `fecha_orden` = ? AND";
 			array_push( $val, $orden_de_servicio->getFechaOrden() );
@@ -216,11 +221,12 @@ abstract class OrdenDeServicioDAOBase extends DAO
 	  **/
 	private static final function update( $orden_de_servicio )
 	{
-		$sql = "UPDATE orden_de_servicio SET  `id_servicio` = ?, `id_usuario_venta` = ?, `id_usuario` = ?, `fecha_orden` = ?, `fecha_entrega` = ?, `activa` = ?, `cancelada` = ?, `descripcion` = ?, `motivo_cancelacion` = ?, `adelanto` = ?, `precio` = ?, `extra_params` = ? WHERE  `id_orden_de_servicio` = ?;";
+		$sql = "UPDATE orden_de_servicio SET  `id_servicio` = ?, `id_usuario_venta` = ?, `id_usuario` = ?, `id_usuario_asignado` = ?, `fecha_orden` = ?, `fecha_entrega` = ?, `activa` = ?, `cancelada` = ?, `descripcion` = ?, `motivo_cancelacion` = ?, `adelanto` = ?, `precio` = ?, `extra_params` = ? WHERE  `id_orden_de_servicio` = ?;";
 		$params = array( 
 			$orden_de_servicio->getIdServicio(), 
 			$orden_de_servicio->getIdUsuarioVenta(), 
 			$orden_de_servicio->getIdUsuario(), 
+			$orden_de_servicio->getIdUsuarioAsignado(), 
 			$orden_de_servicio->getFechaOrden(), 
 			$orden_de_servicio->getFechaEntrega(), 
 			$orden_de_servicio->getActiva(), 
@@ -253,12 +259,13 @@ abstract class OrdenDeServicioDAOBase extends DAO
 	  **/
 	private static final function create( &$orden_de_servicio )
 	{
-		$sql = "INSERT INTO orden_de_servicio ( `id_orden_de_servicio`, `id_servicio`, `id_usuario_venta`, `id_usuario`, `fecha_orden`, `fecha_entrega`, `activa`, `cancelada`, `descripcion`, `motivo_cancelacion`, `adelanto`, `precio`, `extra_params` ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO orden_de_servicio ( `id_orden_de_servicio`, `id_servicio`, `id_usuario_venta`, `id_usuario`, `id_usuario_asignado`, `fecha_orden`, `fecha_entrega`, `activa`, `cancelada`, `descripcion`, `motivo_cancelacion`, `adelanto`, `precio`, `extra_params` ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$orden_de_servicio->getIdOrdenDeServicio(), 
 			$orden_de_servicio->getIdServicio(), 
 			$orden_de_servicio->getIdUsuarioVenta(), 
 			$orden_de_servicio->getIdUsuario(), 
+			$orden_de_servicio->getIdUsuarioAsignado(), 
 			$orden_de_servicio->getFechaOrden(), 
 			$orden_de_servicio->getFechaEntrega(), 
 			$orden_de_servicio->getActiva(), 
@@ -355,6 +362,17 @@ abstract class OrdenDeServicioDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " `id_usuario` = ? AND"; 
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( ( !is_null (($a = $orden_de_servicioA->getIdUsuarioAsignado()) ) ) & ( ! is_null ( ($b = $orden_de_servicioB->getIdUsuarioAsignado()) ) ) ){
+				$sql .= " `id_usuario_asignado` >= ? AND `id_usuario_asignado` <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " `id_usuario_asignado` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

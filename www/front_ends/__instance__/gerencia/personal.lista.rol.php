@@ -15,7 +15,6 @@
 			array(
 				"nombre" => "Nombre",
 				"descripcion"	=> "Descripcion",
-				"descuento" 		=> "Desuento",
 				"salario" 			=> "Salario"
 			),
                          PersonalYAgentesController::ListaRol()

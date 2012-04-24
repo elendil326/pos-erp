@@ -18,6 +18,7 @@ $page->addComponent($csel);
 
 $page->partialRender();
 ?>
+<div id="clienteInfo"></div>
 <script type="text/javascript" charset="utf-8">
 	var SERVICIOS = [];
 	<?php
@@ -82,7 +83,40 @@ $page->partialRender();
         renderTo: "render_date"
     });
 
+
+	function renderClienteInfo(record){
+		html = "";
+
+		
+		html += "<table>"
+		html += "<tr>"
+		html += "<td><a href=''>"+ record.get("nombre") +"</a></td><td></td>"
+		html += "</tr>"
+		html += "<tr>"
+		html += "<td>"+ record.get("saldo_del_ejercicio") +"</td><td></td>"
+		html += "</tr>"
+		html += "</table>"
+		
+		return html;
+	}
+	
+	/*
+		limite_credito,
+		nombre,
+		id_usuario,
+		id_tarifa_venta,
+		fecha_alta,
+		rfc,
+		denominacion_comercial,
+		activo,
+		saldo_del_ejercicio,
+		ventas_a_credito
+	*/
+
+	
     function asignaCliente(record){
+		console.log("cliente seleccionado" , record);
+		Ext.get("clienteInfo").update(renderClienteInfo(record));
         Ext.get('id_cliente').dom.value = record.get('id_usuario');   
     }
 
@@ -205,8 +239,9 @@ $page->partialRender();
         }, 
         {
             callback : function(a){ 
+
                 window.onbeforeunload = function(){}
-                window.location = "servicios.lista.orden.php"; 
+                window.location = "servicios.detalle.orden.php?oid=" + a.id_orden; 
 
             }
         }

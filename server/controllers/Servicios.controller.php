@@ -1604,6 +1604,7 @@ require_once("interfaces/Servicios.interface.php");
 		$extra_params = null, 
 		$fecha_entrega = "", 
 		$fotografia = null, 
+		$id_usuario_asignado = null, 
 		$precio = null
 	)
 	{  
@@ -1812,7 +1813,27 @@ require_once("interfaces/Servicios.interface.php");
 	}
   
 
-
+	/**
+ 	 *
+ 	 *Edita una orden de servicio, generalmente para cambiar de usuario asignado o cambiar el precio.
+ 	 *
+ 	 * @param id_orden int la orden que se intenta editar
+ 	 * @param extra_params json Si esta orden requiere parametros, se enviaran en forma de json. Se evaluaran segun las reglas de extra_params, algunos pueden ser obligatorios y asi.
+ 	 * @param fecha_entrega int Fecha en que se entregara el servicio. En caso de aplicar. Unix Time Stamp
+ 	 * @param id_usuario_asignado int id del usuario que tiene asginada esta orden.... puede ser nadie.
+ 	 * @param precio float en caso de que el metodo de costeo sea variable, hay que mandar un precio final
+ 	 * @return id_orden int la orden que se ha editado
+ 	 **/
+  public static function EditarOrden
+	(
+		$id_orden, 
+		$extra_params = null, 
+		$fecha_entrega = null, 
+		$id_usuario_asignado = null, 
+		$precio = null
+	){
+		
+	}
 
 
 	
