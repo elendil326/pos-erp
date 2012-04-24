@@ -1149,6 +1149,33 @@ class ImpresionesController {
 	     * ************************* */
 	    $datos_receptor = $daoCliente->getNombre() . "\n";
 	    $datos_receptor .= $daoCliente->getRfc();
+            
+            if( $direccion =  DireccionDAO::getByPK($daoCliente->getIdDireccion())){
+                
+                $datos_receptor .= $direccion->getCalle() . " ";
+                $datos_receptor .= $direccion->getNumeroExterior() . " ";
+                
+                if($direccion->getNumeroInterior()){
+                    $datos_receptor .= (" INT " . $direccion->getNumeroInterior() . " ");
+                }
+                
+                if($direccion->getColonia()){
+                    $datos_receptor .= ("Col. " . $direccion->getColonia() . "\n");
+                }
+                
+                if($direccion->getCodigoPostal()){
+                    $datos_receptor .= ( "CP " . $direccion->getCodigoPostal());
+                }
+                                
+                $datos_receptor .= $direccion->getIdCiudad();
+                
+            }
+            
+            
+            
+            
+            
+            //$datos_receptor .= $daoCliente->getDireccion();
 
 	    $receptor = array(
 	        array("receptor" => "<b>Cliente</b>"),
