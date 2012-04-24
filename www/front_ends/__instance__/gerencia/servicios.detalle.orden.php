@@ -36,19 +36,13 @@ $page->addComponent(new TitleComponent("Orden de servicio " . $_GET["oid"] . " p
 if ($esta_orden->getActiva()){
 	$menu = new MenuComponent();
 	
-	//$menu->addItem("Nuevo seguimiento", "servicios.seguimiento.orden.php?oid=" . $_GET["oid"]);
-
 	$btn_eliminar = new MenuItem("Cancelar orden", null);
 	$btn_eliminar->addApiCall("api/servicios/orden/cancelar", "GET");
 	$btn_eliminar->onApiCallSuccessRedirect("servicios.lista.orden.php");
 	$btn_eliminar->addName("cancelar");
 	$funcion_cancelar = " function cancelar_orden(btn){" . "if(btn == 'yes')" . "{" . "var p = {};" . "p.id_orden_de_servicio = " . $_GET["oid"] . ";" . "sendToApi_cancelar(p);" . "}" . "}" . "      " . "function confirmar_cancelacion(){" . " Ext.MessageBox.confirm('Cancelar', 'Desea cancelar esta orden?', cancelar_orden );" . "}";
 	$btn_eliminar->addOnClick("confirmar_cancelacion", $funcion_cancelar);
-		
 
-	
-
-	
 	$menu->addMenuItem($btn_eliminar);
 	$btn_terminar = new MenuItem("Terminar orden", null);
 	$btn_terminar->addApiCall("api/servicios/orden/terminar", "POST");
@@ -58,14 +52,13 @@ if ($esta_orden->getActiva()){
 	$btn_terminar->addOnClick("confirmar_termino", $funcion_terminar);
 		
 
-	
-
-	
 	$menu->addMenuItem($btn_terminar);
 	
+	$editar = new MenuItem("Editar orden", null);
+	$editar->addOnClick("_e", "function _e(){ window.location = 'servicios.detalle.orden.editar.php?oid=". $_GET["oid"] ."' ; }");
+	$menu->addMenuItem($editar);
 	
 	$imp = new MenuItem("Imprimir", null);
-
 	$imp->addOnClick("_p", "function _p(){ window.open('servicios.detalle.orden.impresion.php?oid=". $_GET["oid"] ."'); }");
 	$menu->addMenuItem($imp);
 	
@@ -82,6 +75,12 @@ if ($esta_orden->getActiva()){
 // 
 
 $esta_orden->setFechaOrden( FormatTime( strtotime ($esta_orden->getFechaOrden(  ) )) );
+
+
+$asignado = UsuarioDAO::getByPK($esta_orden->getIdUsuarioAsignado());
+$esta_orden->setIdUsuarioAsignado($asignado->getNombre());
+
+
 $form = new DAOFormComponent($esta_orden);
 $form->setEditable(false);
 

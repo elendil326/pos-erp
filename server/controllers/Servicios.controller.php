@@ -1832,7 +1832,45 @@ require_once("interfaces/Servicios.interface.php");
 		$id_usuario_asignado = null, 
 		$precio = null
 	){
+		Logger::log("Editando orden $id_orden");
 		
+		$orden = OrdenDeServicioDAO::getByPK( $id_orden );
+		
+		if(is_null($orden)){
+			Logger::warn("Esta orden de servicio no existe... saliendo.");
+			throw new InvalidDataException("Esta orden de servicio no existe");
+		}
+		
+		
+		if(!is_null($extra_params)){
+			//aqui falta validar esos extra_params
+			$orden->setExtraParams( $extra_params );
+		}
+		
+		if(!is_null($fecha_entrega)){
+			$orden->setFechaEntrega($fecha_entrega);
+		}
+		
+		
+		if(!is_null($precio)){
+			$orden->setPrecio($precio);
+		}
+		
+		
+		if(!is_null($id_usuario_asignado)){
+			$orden->setIdUsuarioAsignado( $id_usuario_asignado );
+		}
+		
+		
+		try{
+			OrdenDeServicioDAO::save( $orden );
+		}catch(Exception $e){
+			Logger::error($e);
+			throw InvalidDatabaseException($e);
+		}
+		
+		
+
 	}
 
 
