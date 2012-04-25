@@ -140,65 +140,65 @@ class DireccionController extends ValidacionesController{
                         //bandera que indica si cambia algun parametro de la direccion
                         $cambio_direccion = false;
                             
-                        //calle
-                        if( isset( $d->calle ) ){
-                            $cambio_direccion = true;
-                            $_direccion->setCalle( $direccion['calle'] );
-                        }
+                        //calle                                     
+							if(array_key_exists('calle',$direccion)){
+                            	$_direccion->setCalle( $direccion['calle'] );
+								$cambio_direccion = true;
+							}                      
                             
-                        //numero_exterior
-                        if( isset( $d->numero_exterior ) ){
-                            $cambio_direccion = true;
-                            $_direccion->setNumeroExterior( $direccion['numero_exterior'] );
-                        }
+                        //numero_exterior                       
+							if(array_key_exists('numero_exterior',$direccion)){
+		                        $cambio_direccion = true;
+		                        $_direccion->setNumeroExterior( $direccion['numero_exterior'] );
+							}                   
                             
-                        //numero_interior
-                        if( isset( $d->numero_interior ) ){
-                            $cambio_direccion = true;
-                            $_direccion->setNumeroInterior( $direccion['numero_interior'] );
-                        }
+                        //numero_interior                     
+							if(array_key_exists('numero_interior',$direccion)){
+		                        $cambio_direccion = true;
+		                        $_direccion->setNumeroInterior( $direccion['numero_interior'] );
+							}                  
                             
                         //referencia
-                        if( isset( $d->referencia ) ){
-                            $cambio_direccion = true;
-                            $_direccion->setReferencia( $direccion['referencia'] );
-                        }
+							if(array_key_exists('referencia',$direccion)){
+		                        $cambio_direccion = true;
+		                        $_direccion->setReferencia( $direccion['referencia'] );
+							}   
                             
-                        //colonia
-                        if( isset( $d->colonia ) ){
-                            $cambio_direccion = true;
-                            $_direccion->setColonia( $direccion['colonia'] );
-                        }
+                        //colonia             
+							if(array_key_exists('colonia',$direccion)){
+		                        $cambio_direccion = true;
+		                        $_direccion->setColonia( $direccion['colonia'] );
+							}                  
                             
-                        //id_ciudad
-                        if( isset( $d->id_ciudad ) ){
-                            $cambio_direccion = true;
-                            $_direccion->setIdCiudad( $direccion['id_ciudad'] );
-                        }
+                        //id_ciudad                  
+							if(array_key_exists('id_ciudad',$direccion)){
+		                        $cambio_direccion = true;
+		                        $_direccion->setIdCiudad( $direccion['id_ciudad'] );
+							}
+                                           
+                        //codigo_postal                      
+							if(array_key_exists('codigo_postal',$direccion)){
+		                        $cambio_direccion = true;
+		                        $_direccion->setCodigoPostal( $direccion['codigo_postal'] );
+							}                  
                             
-                        //codigo_postal
-                        if( isset( $d->codigo_postal ) ){
-                            $cambio_direccion = true;
-                            $_direccion->setCodigoPostal( $direccion['codigo_postal'] );
-                        }
+                        //telefono                    
+							if(array_key_exists('telefono',$direccion)){
+		                        $cambio_direccion = true;
+		                        $_direccion->setTelefono( $direccion['telefono'] );
+							}                    
                             
-                        //telefono
-                        if( isset( $d->telefono ) ){
-                            $cambio_direccion = true;
-                            $_direccion->setTelefono( $direccion['telefono'] );
-                        }
-                            
-                        //telefono2
-                        if( isset( $d->telefono2 ) ){
-                            $cambio_direccion = true;
-                            $_direccion->setTelefono2( $direccion['telefono2'] );
-                        }
+                        //telefono2                
+							if(array_key_exists('telefono2',$direccion)){
+		                        $cambio_direccion = true;
+		                        $_direccion->setTelefono2( $direccion['telefono2'] );
+							}             
 
                         //Si cambio algun parametro de direccion, se actualiza el usuario que modifica y la fecha
                         if($cambio_direccion)
                         {
                              
-                            $_direccion->setUltimaModificacion( time() );
+                            $_direccion->setUltimaModificacion( date('c') );
 
                             
                             $id_usuario =  SesionController::Actual(   );

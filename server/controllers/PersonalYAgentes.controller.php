@@ -845,15 +845,15 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 						Logger::log( "Insertando direccion..." );
 
                         $address_id = DireccionController::NuevaDireccion(
-				                $calle 				= isset($d["calle"]) ? $d["calle"] : "",
-				                $numero_exterior	= isset($d["numero_exterior"]) ? $d["numero_exterior"] : "",
-				                $colonia			= isset($d["colonia"]) ? $d["colonia"] : "",
+				                $calle 				= isset($d["calle"]) ? $d["calle"] : null,
+				                $numero_exterior	= isset($d["numero_exterior"]) ? $d["numero_exterior"] : null,
+				                $colonia			= isset($d["colonia"]) ? $d["colonia"] : null,
 				                $id_ciudad			= isset($d["id_ciudad"]) ? $d["id_ciudad"] : null,
-				                $codigo_postal		= isset($d["codigo_postal"]) ? $d["codigo_postal"] : "",
-				                $numero_interior	= isset($d["numero_interior"]) ? $d["numero_interior"] : "",
-				                $referencia			= isset($d["referencia"]) ? $d["referencia"] : "",
-				                $telefono			= isset($d["telefono1"]) ? $d["telefono1"] : "",
-				                $telefono2			= isset($d["telefono2"]) ? $d["telefono2"] :"");
+				                $codigo_postal		= isset($d["codigo_postal"]) ? $d["codigo_postal"] : null,
+				                $numero_interior	= isset($d["numero_interior"]) ? $d["numero_interior"] : null,
+				                $referencia			= isset($d["referencia"]) ? $d["referencia"] : null,
+				                $telefono			= isset($d["telefono1"]) ? $d["telefono1"] : null,
+				                $telefono2			= isset($d["telefono2"]) ? $d["telefono2"] : null);
 
 						$usuario->setIdDireccion( $address_id );
                     }
@@ -1374,35 +1374,11 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                         throw new Exception("Las direcciones recibidas no son un arreglo",901);
                     }
                     
-                    //Se eliminan las direcciones de este usuario
-                    $dirs = DireccionDAO::search( new Direccion( array("id_usuario" => $id_usuario) ) );
-                    foreach($dirs as $d)
-                    {
-                        DireccionDAO::delete($d);
-                    }
-                    
                     //Se crean las direcciones recibidas
                     foreach($direcciones as $d)
                     {
-                        //Se valida que la direccion tenga los parametros necesarios
-                        if
-                        (
-                                !array_key_exists("calle", $d)              ||
-                                !array_key_exists("numero_exterior", $d)    ||
-                                !array_key_exists("colonia", $d)            ||
-                                !array_key_exists("id_ciudad", $d)          ||
-                                !array_key_exists("codigo_postal", $d)      ||
-                                !array_key_exists("numero_interior", $d)    ||
-                                !array_key_exists("referencia", $d)         ||
-                                !array_key_exists("telefono1", $d)          ||
-                                !array_key_exists("telefono2", $d)
-                        )
-                        {
-                            throw new Exception("La direccion recibida no cuenta con algun parametro necesario",901);
-                        }
-                        DireccionController::NuevaDireccion($d["calle"], $d["numero_exterior"],
-                                $d["colonia"], $d["id_ciudad"], $d["codigo_postal"], $d["numero_interior"],
-                                $d["referencia"], $d["telefono1"], $d["telefono2"],$usuario->getIdUsuario());
+                        //Se envia la direccion a editar                      
+						DireccionController::EditarDireccion($d);
                     }
                 }
 

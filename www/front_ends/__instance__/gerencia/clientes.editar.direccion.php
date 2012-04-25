@@ -47,7 +47,7 @@
 	</script>
 
 	<?php
-	//$form->onApiCallSuccessRedirect("clientes.ver.php?cid=".$_GET["cid"]."#Direccion");
+	$form->onApiCallSuccessRedirect("clientes.ver.php?cid=".$_GET["cid"]."");
 
 	$page->addComponent($form);
 
