@@ -112,7 +112,8 @@ $form->hideField(array(
 
 $form->createComboBoxJoin("id_servicio", "nombre_servicio", ServicioDAO::getAll(), $esta_orden->getIdServicio());
 $form->createComboBoxJoin("id_usuario", "nombre", UsuarioDAO::getAll(), $esta_orden->getIdUsuario());
-
+$form->setCaption("id_usuario_asignado", "Agente asignado");
+$form->setCaption("id_servicio", "Servicio");
 //$form->createComboBoxJoinDistintName("id_usuario_venta", "id_usuario", "nombre", UsuarioDAO::getAll(), $esta_orden->getIdUsuarioVenta());
 $page->addComponent($form);
 

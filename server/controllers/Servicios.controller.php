@@ -1766,12 +1766,12 @@ require_once("interfaces/Servicios.interface.php");
 			}
 			
 			
-			if($cliente->getLimiteCredito() < $venta->getTotal()){
+			/*if($cliente->getLimiteCredito() < $venta->getTotal()){
 				throw new BusinessLogicException("intentas comprar algo a credito que es mas de lo que tienes");
-			}
+			}*/
 			
 			
-			$cliente->setLimiteCredito( $cliente->getLimiteCredito(  ) - $venta->getTotal() );
+			//$cliente->setLimiteCredito( $cliente->getLimiteCredito(  ) - $venta->getTotal() );
 			
 			
 			try{

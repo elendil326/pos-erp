@@ -136,6 +136,15 @@ POS.API =
 }
 
 
+
+
+
+
+
+
+
+
+
 var nuevoClienteAval =  function( nombre, id_usuario, id_este_usuario ){  
     Ext.Msg.confirm("Agregar Nuevo Aval","En realidad desea agregar a " + nombre + " como nuevo aval?", function(btn) {
 

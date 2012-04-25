@@ -767,7 +767,7 @@ Ext.define("Kitchensink.view.Forms", {
         }, {
             title: "Sliders",
             xtype: "formpanel",
-            items: [{
+            items: [ Signature /*{
                 xtype: "fieldset",
                 defaults: {
                     labelWidth: "35%",
@@ -787,7 +787,7 @@ Ext.define("Kitchensink.view.Forms", {
                     name: "toggle",
                     label: "Toggle"
                 }]
-            }]
+            }*/]
         }, {
             title: "Toolbars",
             xtype: "panel",

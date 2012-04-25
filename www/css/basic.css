@@ -83,7 +83,7 @@ html body{background:#e7e7e7}
 .devsitePage em,.devsitePage .body i{font-style:italic}
 .devsitePage .body h1{font-size: 28px;font-weight:normal;margin:0;margin-bottom:8px}
 .devsitePage .body h2{font-size: 20px;font-weight:normal;letter-spacing:-0.03em;margin:5px 0 5px 0}
-.devsitePage .body h3{font-size: 15px;margin:15px 0 10px 0}
+/*.devsitePage .body h3{font-size: 15px;margin:15px 0 10px 0}*/
 .devsitePage .body dl,.devsitePage .body table,.devsitePage .body pre,.devsitePage .body ul,.devsitePage .body ol,.devsitePage .body p{margin:0;margin-bottom:1em}
 .devsitePage .body pre,.devsitePage .body code,.devsitePage .body table.params td.name{font-family:monospace;color:#006000;font-size: 13px}
 .devsitePage .body h2 code{font-size:inherit}
@@ -139,7 +139,7 @@ html body{background:#e7e7e7}
 .devsitePage .body p.intro b{color:#444}
 .devsitePage .body .contentblock{clear:right;float:left;margin:1.5em 0;position:relative;width:100%}
 .devsitePage .body hr{clear:right;margin:20px 0}
-.devsitePage .body h3{margin-top:25px}
+/*.devsitePage .body h3{margin-top:25px}*/
 .devsitePage .body .contentblock h2{margin:0 0 15px 0;padding:0}
 .devsitePage .body .contentblock h2.mbn{margin:0}
 .devsitePage .body .contentblock h3{color:#999;font-size: 13px;font-weight:normal;margin:0 0 20px 0}

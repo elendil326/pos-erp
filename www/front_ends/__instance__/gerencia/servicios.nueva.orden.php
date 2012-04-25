@@ -90,10 +90,10 @@ $page->partialRender();
 		
 		html += "<table>"
 		html += "<tr>"
-		html += "<td><h2><a href=''>"+ record.get("nombre") +"</a></h2></td><td></td>"
+		html += "<td colspan=2><h3>"+ record.get("nombre") +"</h3>"+ record.get("rfc") +"</td>"
 		html += "</tr>"
 		html += "<tr>"
-		html += "<td>"+ record.get("saldo_del_ejercicio") +"</td><td></td>"
+		html += "<td>Limite de credito:</td><td>"+ record.get("limite_credito") +"</td>"
 		html += "</tr>"
 		html += "</table>"
 		
@@ -241,7 +241,9 @@ $page->partialRender();
 
 
     function nuevaOrdenServicio(){
-
+		
+		//ver si esta chica tiene suficiente limite de credito para este pedo
+		
     
         var option = Ext.get('id_servicio').dom.options[Ext.get('id_servicio').dom.options.selectedIndex].value.split("-");
 
@@ -298,10 +300,8 @@ $page->partialRender();
         }, 
         {
             callback : function(a){ 
-
                 window.onbeforeunload = function(){}
                 window.location = "servicios.detalle.orden.php?oid=" + a.id_orden; 
-
             }
         }
     );
