@@ -134,4 +134,17 @@
 				});
 		</script>");
 
+
+
+
+		$page->nextTab("Mail");
+		
+		/*
+		POSController::EnviarMail(
+			$cuerpo = "cuerpo" , 
+			$destinatario = "alan.gohe@gmail.com", 
+			$titulo	= "titulo"
+		);
+		* */
+
 		$page->render();

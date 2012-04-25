@@ -214,6 +214,19 @@
 	require_once("libs/api/ApiHandler.php");
 
 
+
+
+	//convertir configuracion en globales para
+	//que no se pueda modificar
+	define("MAIL", 				$POS_CONFIG["MAIL"]);
+	define("MAIL_FROM", 	$POS_CONFIG["MAIL_FROM"]);
+	define("MAIL_HOST", 	$POS_CONFIG["MAIL_HOST"]);
+	define("MAIL_PORT", 	$POS_CONFIG["MAIL_PORT"]);
+	define("MAIL_USERNAME", $POS_CONFIG["MAIL_USERNAME"]);
+	define("MAIL_PASSWORD", $POS_CONFIG["MAIL_PASSWORD"]);
+	
+	
+	
 	# *******************************
 	define('POST', "__ISPOST__");
 	define('GET', "__ISGET__");

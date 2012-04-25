@@ -267,7 +267,65 @@ require_once("interfaces/POS.interface.php");
 		$emisor = "no-reply@caffeina.mx"
 	)
     {
-  
+	
+			@require_once "Mail.php";
+			
+			
+	
+			if(!defined("MAIL")){
+				Logger::error("Se intento enviar un correo pero la configuracion de MAIL no esta definida");
+				return;				
+			}
+			
+			
+			if(!MAIL) {
+				Logger::warn("Se intento enviar un correo pero la configuracion de MAIL esta en false");
+				return;	
+			}
+		
+			Logger::log("Enviando correo electronico...");
+
+			Logger::log("	FROM:" . MAIL_FROM);
+			Logger::log("	TO:" . $destinatario);
+			Logger::log("	SUBJECT:" . $titulo);
+
+									
+			$headers = array (
+					'From' 	=> MAIL_FROM,
+					'To' 	=> $destinatario,
+					'Subject' => $titulo
+				);
+
+			$smtp = Mail::factory('smtp',
+				array ('host' 	=> MAIL_HOST,
+					'port' 		=> MAIL_PORT,
+					'auth' 		=> true,
+					'username' 	=> MAIL_USERNAME,
+					'password' 	=> MAIL_PASSWORD));
+
+
+			$mail = $smtp->send($destinatario, $headers, $cuerpo);
+		
+			
+			if(PEAR::isError($mail)){
+				Logger::error(" ***** Error al enviar el correo... ***** " );
+				Logger::error($mail->getMessage());
+				return false;
+			}
+			
+			return true;
+
     }
+
+
+
+
+	private function renderWelcomeEmail($name){
+		
+	}
+
+
+
+
 	
   }

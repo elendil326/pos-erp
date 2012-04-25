@@ -199,14 +199,14 @@ $form->hideField( array(
 		"id_localizacion"
 ));
 
-$form->sendHidden( "id_orden_de_servicio" );
-$form->addApiCall( "api/servicios/orden/seguimiento/" );
-$form->setPlaceholder("estado", "aqui es donde escribes");
-$form->setType("estado" , "textarea");
-$form->onApiCallSuccess("comment_success");
-$form->renameField( array( "estado" => "nota" ) );
-$page->addComponent( $form ); 
-$page->partialRender();
+$form->sendHidden		( "id_orden_de_servicio" );
+$form->addApiCall		( "api/servicios/orden/seguimiento/" );
+$form->setPlaceholder	( "estado", "Escriba aqui" );
+$form->setType			( "estado" , "textarea" );
+$form->onApiCallSuccess	( "comment_success" );
+$form->renameField		( array( "estado" => "nota" ) );
+$page->addComponent		( $form ); 
+$page->partialRender	( );
 
 ?>
 <script type="text/javascript" charset="utf-8">

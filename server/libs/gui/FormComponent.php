@@ -576,14 +576,15 @@ class FormComponent implements GuiComponent
 		
 		if (!is_null($this->send_to_api))
 		{
-			$html .= "<td align=right colspan=2 style='background-color: #EDEFF4;-webkit-border-radius: 5px;'>";
-			$html .= "<div class='POS Boton' onClick=''  >Cancelar</div>";
+			$html .= "<td  colspan=2 style='text-align:right; background-color: #EDEFF4;-webkit-border-radius: 5px;'>";
+			//$html .= "<div class='POS Boton' onClick=''  >Cancelar</div>";
+
 			if (($this->hide_not_obligatory))
 			{
-				$html .= "<div class='POS Boton' onClick='Ext.get(Ext.query(\".hideable\")).show()' >Mas opciones</div>";
+				$html .= "<div align='right' class='POS Boton' onClick='Ext.get(Ext.query(\".hideable\")).show()' >Mas opciones</div>";
 			}
 			
-			$html .= "<div class='POS Boton OK' onClick='this.onClick=null; " . $this->guiComponentId . "getParams()'  >Aceptar</div>";
+			$html .= "<div style='margin-right:0px' class='POS Boton OK' onClick='this.onClick=null; " . $this->guiComponentId . "getParams()'  >Aceptar</div>";
 			$html .= "</td></tr>";
 		}
 		

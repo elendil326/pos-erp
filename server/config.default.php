@@ -52,7 +52,8 @@ $POS_CONFIG["CORE_DB_DEBUG"] 	= false;
 # *******************************
 # Correo Electronico
 # *******************************
-$POS_CONFIG["MAIL_FROM"] 		= "No-Reply <no-reply@caffeina.mx>";
+$POS_CONFIG["MAIL"] 			= false;
+$POS_CONFIG["MAIL_FROM"] 		= "no-reply@caffeina.mx";
 $POS_CONFIG["MAIL_HOST"]		= "mail.caffeina.mx";
 $POS_CONFIG["MAIL_USERNAME"]	= "no-reply@caffeina.mx";
 $POS_CONFIG["MAIL_PASSWORD"]	= "";
