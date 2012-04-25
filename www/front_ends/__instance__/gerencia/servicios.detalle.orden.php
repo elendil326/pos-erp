@@ -79,7 +79,9 @@ if ($esta_orden->getActiva()){
 $esta_orden->setFechaOrden( FormatTime( strtotime ($esta_orden->getFechaOrden(  ) )) );
 
 
-$a = $esta_orden->getIdUsuarioAsignado();
+$a = $esta_orden->getIdUsuarioAsignado( );
+
+
 
 $asignado = UsuarioDAO::getByPK($a);
 

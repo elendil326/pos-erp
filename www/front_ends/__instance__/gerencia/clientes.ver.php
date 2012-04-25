@@ -94,8 +94,10 @@
 	$direccionObj = DireccionDAO::getByPK( $direccion );
 	
 	if(!is_null($direccionObj)){
-		$usr_ultima = UsuarioDAO::getByPK($direccionObj->getIdUsuarioUltimaModificacion());		
-		$direccionObj->setIdUsuarioUltimaModificacion( $usr_ultima->getNombre() );
+		$usr_ultima = UsuarioDAO::getByPK($direccionObj->getIdUsuarioUltimaModificacion());	
+		
+		if(!is_null($usr_ultima))	
+			$direccionObj->setIdUsuarioUltimaModificacion( $usr_ultima->getNombre() );
 
 		$dform = new DAOFormComponent( $direccionObj );
 		$dform->setEditable(false);		

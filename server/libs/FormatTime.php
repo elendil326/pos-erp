@@ -50,7 +50,7 @@ function FormatTime($timestamp)
 			}
 			else
 			{
-				$text = date("F j, Y \a\\t g:i a", $timestamp);
+				$text = date("F j, Y \a \l\a\s g:i a", $timestamp);
 			}
 			return $text;
 		}
@@ -61,15 +61,31 @@ function FormatTime($timestamp)
 		}
 		else if($j == 3) // Less than a week display -- Monday at 5:28pm
 		{
-			$text = date("l \a\\t g:i a", $timestamp);
+			$text = date(" \a \l\a\s g:i a", $timestamp);
+			switch(date("l", $timestamp)){
+				case "Monday": 		$text = "Lunes" . $text; break;
+				case "Tuesday": 	$text = "Martes" . $text; break;
+				case "Wednesday": 	$text = "Miercoles" . $text; break;
+				case "Thursday": 	$text = "Jueves" . $text; break;
+				case "Friday": 		$text = "Viernes" . $text; break;
+				case "Saturday": 	$text = "Sabado" . $text; break;
+				case "Sunday": 		$text = "Domingo" . $text; break;
+
+			}
 		}
 		else if($j < 6 && !($j == 5 && $difference == 12)) // Less than a year display -- June 25 at 5:23am
 		{
-			$text = date("F j \a\\t g:i a", $timestamp);
+			$text = date(" j \a \l\a\s g:i a", $timestamp);
+			
+			switch(date("F", $timestamp)){
+				case "January": $text = "Enero" . $text; break;
+				case "February": $text = "Febrero" . $text; break;
+				case "March": $text = "Marzo" . $text; break;
+			}
 		}
 		else // if over a year or the same month one year ago -- June 30, 2010 at 5:34pm
 		{
-			$text = date("F j, Y \a\\t g:i a", $timestamp);
+			$text = date("F j, Y \a \l\a\s g:i a", $timestamp);
 		}
 	}
  

@@ -62,6 +62,9 @@ $form->addApiCall( "api/servicios/orden/editar", "POST" );
 $form->createComboBoxJoin("id_servicio", "nombre_servicio", ServicioDAO::getAll(), $esta_orden->getIdServicio());
 
 //$form->createComboBoxJoin("id_usuario_asignado", "nombre", UsuarioDAO::getAll(), $esta_orden->getIdUsuarioAsignado());
+
+$personal = UsuarioDAO::search(new Usuario(  ));
+
 $form->createComboBoxJoinDistintName(	$field_name 			= "id_usuario_asignado", 
 										$table_name				= "id_usuario", 
 										$field_name_in_values	= "nombre", 

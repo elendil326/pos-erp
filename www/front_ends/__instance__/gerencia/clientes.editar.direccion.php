@@ -41,13 +41,13 @@
 		function editar_direccion(obj){		
 			return	{	
 				id_cliente		: cliente,
-				direccion 		: Ext.JSON.encode([obj]) 
+				direcciones 		: Ext.JSON.encode([obj]) 
 			}
 		}
 	</script>
 
 	<?php
-	$form->onApiCallSuccessRedirect("clientes.ver.php?cid=".$_GET["cid"]."#Direccion");
+	//$form->onApiCallSuccessRedirect("clientes.ver.php?cid=".$_GET["cid"]."#Direccion");
 
 	$page->addComponent($form);
 

@@ -607,9 +607,22 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
             //Se llama al metodo Editar usuario
             try
             {
-                PersonalYAgentesController::EditarUsuario($id_cliente,$codigo_cliente,null,$email,null,$cuenta_de_mensajeria,$curp,
-                        $denominacion_comercial,$descuento_general,null,null,null,null,null,$direcciones,null,$clasificacion_cliente,
-                        null,$id_moneda,null,null,$id_tarifa_compra,$id_tarifa_venta,$id_cliente_padre,null,null,$limite_credito,null,$razon_social,
+		
+                PersonalYAgentesController::EditarUsuario(
+						$id_cliente,
+						$codigo_cliente,
+						null,
+						$email,
+						null,
+						$cuenta_de_mensajeria,
+						$curp,
+                        $denominacion_comercial,
+						$descuento_general,
+						null,null,null,null,null,
+						$direcciones,null,
+						$clasificacion_cliente,
+                        null,
+						$id_moneda,null,null,$id_tarifa_compra,$id_tarifa_venta,$id_cliente_padre,null,null,$limite_credito,null,$razon_social,
                         $sitio_web,$password,$representante_legal,null,$rfc,null,null,$telefono_personal1,$telefono_personal2);
             }
             catch( Exception $e)

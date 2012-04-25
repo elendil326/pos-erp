@@ -150,7 +150,7 @@ class ClienteSelectorComponent implements GuiComponent{
 
 	                    // Custom rendering template for each item
 	                     getInnerTpl: function() {
-		                        return '<p>{nombre}</p>{rfc}';
+		                        return '<div><b>{nombre}</b></div>{rfc}';
 		                    }
 	                },
 	                pageSize: 10

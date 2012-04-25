@@ -1111,6 +1111,8 @@ require_once("interfaces/PersonalYAgentes.interface.php");
           {
               $usuario->setIdSucursal($id_sucursal);
           }
+
+
           if(!is_null($id_rol))
           {
               if($usuario->getIdRol()!=$id_rol)
@@ -1129,6 +1131,9 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 $usuario->setFechaAsignacionRol(date("Y-m-d H:i:s"));
               }
           }
+
+
+
           if(!is_null($id_clasificacion_cliente))
           {
               $usuario->setIdClasificacionCliente($id_clasificacion_cliente);
@@ -1149,6 +1154,10 @@ require_once("interfaces/PersonalYAgentes.interface.php");
               }
               
           }
+
+
+
+
           if(!is_null($id_clasificacion_proveedor))
           {
               $usuario->setIdClasificacionProveedor($id_clasificacion_proveedor);
@@ -1168,6 +1177,8 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 $usuario->setTarifaVentaObtenida("proveedor");
               }
           }
+
+
           if(!is_null($id_moneda))
           {
               $usuario->setIdMoneda($id_moneda);
@@ -1353,6 +1364,9 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 //Si se reciben direcciones, se borran todas las direcciones de este usuario y se agregan las recibidas.
                 if(!is_null($direcciones))
                 {
+	
+					Logger::log("Editando direcciones...");
+					
                     if(!is_array($direcciones))
                     {
                         throw new Exception("Las direcciones recibidas no son un arreglo",901);

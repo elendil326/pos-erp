@@ -200,7 +200,7 @@ class GerenciaComponentPage extends PosComponentPage{
 		        },
 		        {
 		            "title": "Productos",
-		            "url": "productos.lista.php",
+		            "url": "productos.php",
 		            "children": [
 		                {
 		                    "title": "Lista categoria",
