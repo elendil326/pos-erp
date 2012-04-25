@@ -12,11 +12,21 @@
     //
     // Parametros necesarios
     // 
+	if(isset($_GET["uid"]) && !isset($_GET["id_usuario"])){
+		$_GET["id_usuario"] = $_GET["uid"];
+	}
+	
+	if(isset($_GET["id_usuario"]) && !isset($_GET["uid"])){
+		$_GET["uid"] = $_GET["id_usuario"];
+	}
+	
     $page->requireParam("uid", "GET", "Este usuario no existe.");
+
     $este_usuario   = UsuarioDAO::getByPK($_GET["uid"]);
     $esta_direccion = DireccionDAO::getByPK($este_usuario->getIdDireccion());
     if (is_null($esta_direccion))
         $esta_direccion = new Direccion();
+
 
 
     //
@@ -117,10 +127,90 @@
         
     }
 
-    $page->addComponent(new TitleComponent("Ventas"), 2);
+    
+	$page->partialRender();
+	if(isset($_GET["just_created"]) && ($_GET["just_created"] == 1)){
+		?>
+		<script type="text/javascript" charset="utf-8">
+			
+				function enviarCorreo(){
+					POS.API.POST("api/pos/mail/enviar", 
+						{
+							cuerpo : "Bienvendio",
+							destinatario : "<?php echo $este_usuario->getCorreoElectronico(); ?>", 
+							titulo : "Bienvenido a POS ERP"
+						}, 
+						{
+							callback : function( a ){ 
+								console.log(a);
+							}
+						});
+					Ext.MessageBox.alert('Enviando correo', 'Se ha enviado un correo a <?php echo $este_usuario->getCorreoElectronico(); ?>.');
+				}
+				
+				
+				var win;
+				
+				var required = '';
 
-    $page->addComponent(new TitleComponent("Compras"), 2);
+				html = "<table ><tr ><td>"
+							+"<img src='../../../media/1335388431_Forward.png'>"
+							+"</td><td style='vertical-align:top'><br>"
+							+"<h1>Dele la bienvenida a <?php echo $este_usuario->getNombre(); ?></h1>"
+							+"<p>&iquest; Desea enviar un correo a <?php echo $este_usuario->getNombre(); ?> <span style='color:gray'>(<?php echo $este_usuario->getCorreoElectronico(); ?>)</span> para darle una"
+							+ " breve introduccion a POS ERP ?</p>"
+							+"</td></tr></table>";
 
-    $page->addComponent(new TitleComponent("Ordenes de servicio"), 2);
+			    function showContactForm() {
+			        if (!win) {
+			            var form = Ext.widget('form', {
+			                layout: {
+			                    type: 'vbox',
+			                    align: 'stretch'
+			                },
+			                border: false,
+			                bodyPadding: 5,
+							html : html,
+			                buttons: [{
+			                    text: 'No enviar',
+			                    handler: function() {
+			                        this.up('form').getForm().reset();
+			                        this.up('window').hide();
+			                    }
+			                }, {
+			                    text: 'Enviar',
+			                    handler: function() {
+			                        if (this.up('form').getForm().isValid()) {
+			                            // In a real application, this would submit the form to the configured url
+			                            // this.up('form').getForm().submit();
+			                            this.up('form').getForm().reset();
+			                            this.up('window').hide();
+										enviarCorreo();
+			                        }
+			                    }
+			                }]
+			            });
+
+			            win = Ext.widget('window', {
+			                title: 'Nuevo personal creado correctamente',
+			                closeAction: 'hide',
+			                width: 450,
+			                height: 190,
+			                layout: 'fit',
+			                resizable: false,
+			                modal: true,
+			                items: form
+			            });
+			        }
+			        win.show();
+			    }
+
+
+				setTimeout("showContactForm()", 450);
+		</script>
+		<?php
+	}
+
+	
 
     $page->render();

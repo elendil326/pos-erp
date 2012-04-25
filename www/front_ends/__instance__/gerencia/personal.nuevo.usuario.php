@@ -65,14 +65,13 @@
 	
 
 	$form->addApiCall("api/personal/usuario/nuevo/");
-	$form->onApiCallSuccessRedirect("personal.lista.usuario.php");
+	$form->onApiCallSuccessRedirect("personal.usuario.ver.php?just_created=1");
 
 	$form->makeObligatory(array(
 	    "nombre",
 	    "id_rol",
 	    "password",
-	    "codigo_usuario",
-		"comision_ventas"
+	    "codigo_usuario"
 	));
 
 
@@ -97,5 +96,4 @@
 
 
 	//render the page
-
 	$page->render();

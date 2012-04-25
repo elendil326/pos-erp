@@ -101,6 +101,7 @@ $form->hideField(array(
 	"id_orden_de_servicio",
 	"id_usuario_venta",
 	"extra_params",
+	"id_usuario",
 	"motivo_cancelacion",
 	"fecha_entrega",
 	"cancelada",

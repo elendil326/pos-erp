@@ -323,9 +323,23 @@ class FormComponent implements GuiComponent
 			
 			
 				if (!is_null($this->send_to_api_redirect)){
-
-					$html .= "			window.location = '" . $this->send_to_api_redirect . "&previous_action=ok';\n";
-
+					$html .= "var extra_params= '' ; ";
+					$html .= "for(var prop in a) {
+					  			  if(a.hasOwnProperty(prop))
+										if(prop == 'status') continue;
+										extra_params += '&' + prop + '=' + a[prop];
+								        /*console.log(prop, a[prop]);*/
+								}";
+						
+					if(strrpos ( $this->send_to_api_redirect , "?" ) === FALSE){
+						//no hay '?'
+                    	$html .= "			window.location = '" . $this->send_to_api_redirect . "?'+ extra_params +'&previous_action=ok';\n";						
+					}else{
+						//si hay '?'						
+                    	$html .= "			window.location = '" . $this->send_to_api_redirect . "'+ extra_params +'&previous_action=ok';\n";						
+					}
+					
+					
 				}else{
 					$html .= "Ext.example.msg('Exito', 'Your data was saved!');";
 					

@@ -105,6 +105,13 @@ require_once("interfaces/POS.interface.php");
 		}
 
 		
+		/*
+		array_push($out, array(
+			"texto" => "&iquest; Como crear un cliente ?",
+			"id" => 0,
+			"tipo"	=> "Ayuda"
+		));
+		*/
 
 		
 		return array("numero_de_resultados" => (sizeof($c) + sizeof($p) + sizeof($s)),
@@ -240,7 +247,7 @@ require_once("interfaces/POS.interface.php");
 							(21, 11, 'Ocampo'),
 							(22, 11, 'Penjamo'),
 							(23, 11, 'Pueblo Nuevo'),
-							(24, 11, 'PurÃ­sima del Rincon'),
+							(24, 11, 'Purisima del Rincon'),
 							(25, 11, 'Romita'),
 							(26, 11, 'Salamanca'),
 							(27, 11, 'Salvatierra'),
@@ -296,7 +303,7 @@ require_once("interfaces/POS.interface.php");
 					'Subject' => $titulo
 				);
 
-			$smtp = Mail::factory('smtp',
+			$smtp = @Mail::factory('smtp',
 				array ('host' 	=> MAIL_HOST,
 					'port' 		=> MAIL_PORT,
 					'auth' 		=> true,
@@ -304,25 +311,22 @@ require_once("interfaces/POS.interface.php");
 					'password' 	=> MAIL_PASSWORD));
 
 
-			$mail = $smtp->send($destinatario, $headers, $cuerpo);
+			$mail = @$smtp->send($destinatario, $headers, $cuerpo);
 		
 			
-			if(PEAR::isError($mail)){
+			if(@PEAR::isError($mail)){
 				Logger::error(" ***** Error al enviar el correo... ***** " );
 				Logger::error($mail->getMessage());
-				return false;
+				throw new Exception($mail->getMessage());
 			}
 			
-			return true;
 
+			Logger::log("Correo enviado correctamente a " . $destinatario);
     }
 
 
 
 
-	private function renderWelcomeEmail($name){
-		
-	}
 
 
 

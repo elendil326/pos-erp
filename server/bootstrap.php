@@ -193,6 +193,7 @@
 	require_once("controllers/POS.controller.php");
 	require_once("controllers/Impresiones.controller.php");	
 	require_once("controllers/Cajas.controller.php");
+	require_once("controllers/Ayuda.controller.php");	
 		
 	/*
 	require_once("controllers/Autorizaciones.controller.php");

@@ -970,10 +970,12 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             //Si no, se llama al metodo getAll.
             else
             {
-                $usuarios = UsuarioDAO::byRange( new Usuario( array( "id_rol" => 0 )), new Usuario( array( "id_rol" => 4 )) );
+                $usuarios = UsuarioDAO::buscarEmpleados(  );
             }
             Logger::log("Se obtuvo la lista de usuarios exitosamente con ".count($usuarios)." elementos");
-            return $usuarios;
+
+            return array("numero_de_resultados" => sizeof($usuarios),
+						"resultados" => $usuarios);
 	}
   
 	/**

@@ -106,7 +106,7 @@ class PosComponentPage extends StdComponentPage{
 
 						        Ext.create('Ext.panel.Panel', {
 						            renderTo: "BuscadorComponent_001",
-						            width: '78%',
+						            width: '88%',
 						            bodyPadding: 1,
 									height: "26px",
 						            layout: 'anchor',
@@ -131,13 +131,12 @@ class PosComponentPage extends StdComponentPage{
 									    },
 						                xtype: 'combo',
 						                store: dss,
-						                emptyText : "Busque todo",
+						                emptyText : "Buscar",
 						                //displayField: 'title',
 						                typeAhead: true,
 						                hideLabel: true,
 						                hideTrigger:true,
 						                anchor: '100%',
-
 						                listConfig: {
 											/*Ext.view.BoundListView */
 						                    loadingText: 'Buscando...',

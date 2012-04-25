@@ -10,7 +10,9 @@
 
 	$page->addComponent(new TitleComponent("Usuarios"));
 	$page->addComponent(new MessageComponent("Lista de usuarios"));
-
+	$lista = PersonalYAgentesController::ListaUsuario();
+	$lista = $lista["resultados"];
+	
 	$tabla = new TableComponent(array(
 	    "codigo_usuario" => "Codigo de usuario",
 	    "nombre" => "Nombre",
@@ -20,7 +22,7 @@
 	    "activo" => "Activo",
 	    "consignatario" => "Consignatario",
 	    "saldo_del_ejercicio" => "Saldo"
-	), PersonalYAgentesController::ListaUsuario());
+	), $lista);
 
 	function funcion_rol($id_rol)
 	{

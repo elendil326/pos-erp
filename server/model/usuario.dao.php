@@ -45,7 +45,45 @@ class UsuarioDAO extends UsuarioDAOBase
       return new Usuario($rs);
     }
 
+	public static function buscarEmpleados( $query = null, $how_many = 5000 ){
+		
+		if(is_null($query)){
+			$sql = "select * from usuario where id_rol != 5";
+			$val = array();
+		}else{
+			$parts = explode(" ", $query);
 
+			$sql = "select * from usuario where (";
+			$val = array();
+			$first = true;
+			foreach ($parts as $p) {
+				if($first){
+					$first = false;
+
+				}else{
+					$sql .= " and ";
+				}
+				$sql .= "  nombre like ? ";
+				array_push($val , "%" . $p . "%");
+			}
+			$sql .= " and id_rol != 5 ) ";	
+		}
+		
+
+		
+	
+
+		global $conn;
+		$rs = $conn->Execute($sql, $val);
+		$ar = array( );
+		foreach ($rs as $foo) {
+			$bar =  new Usuario($foo);
+    		array_push( $ar,$bar);
+		}
+
+		return $ar;
+		
+	}
 
 	public static function buscarClientes( $query, $how_many = 5000 ){
 
