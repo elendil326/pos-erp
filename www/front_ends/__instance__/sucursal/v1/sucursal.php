@@ -48,6 +48,7 @@
 			<script type="text/javascript" src="js/sucursal/apps/Aplicacion.Mostrador.js?<?php echo rand(); ?>"></script>
 			<script type="text/javascript" src="js/sucursal/apps/Aplicacion.Salir.js?<?php echo rand(); ?>"></script>
 			<script type="text/javascript" src="js/sucursal/apps/AplicacionComprasMostrador.js?<?php echo rand(); ?>"></script>
+                        <script type="text/javascript" src="js/sucursal/apps/Aplicacion.Servicios.js?<?php echo rand(); ?>"></script>
 <!--
 			<script type="text/javascript" src="js/sucursal/apps/gerente/Aplicacion.Efectivo.js"></script>
 			<script type="text/javascript" src="js/sucursal/apps/gerente/Aplicacion.Operaciones.js"></script>

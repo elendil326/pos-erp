@@ -235,54 +235,54 @@ switch (((int) ($args['action'] ))) {
 
         break;
     case 400:
-        
-        /*$inventario  = InventarioController::Existencias();
-        
-        $json = Array();
-        
-        foreach($inventario['resultados'] as $producto){                               
-        
-            $p = ProductoDAO::getByPK($producto["id_producto"]);
-            
-            Array_push($json, array(
-                //detalles basicos que jamas cambian
-                "productoID" => $producto["id_producto"],
-                "descripcion" => $p->getNombreProducto(),
-                "tratamiento" => 0,
-                "medida" => UnidadMedidaDAO::getByPK($p->getIdUnidad())->getAbreviacion(),
-                "agrupacion" => UnidadMedidaDAO::getByPK($p->getIdUnidad())->getAbreviacion(),
-                "agrupacionTam" => 1,
-                "precioPorAgrupacion" => $p->getPrecio(),
-                //precios de la tabla de detalle inventario !
-                "precioVenta" => $p->getPrecio(),
-                "precioVentaProcesado" => $p->getPrecio(),
-                //las existencias originales, son las existencias
-                //totales menos las existencias procesadas
-                "existencias" => $producto['cantidad'],            
-                //mantendre existenciasOriginales para 
-                //backwards compatibility
-                "existenciasOriginales" => $producto['cantidad'],
-                "existenciasProcesadas" => 0,
-                // estos precios si vienen de la tabla de
-                // actualizacion de precio
-                "precioIntersucursal" => $p->getPrecio(),
-                "precioIntersucursalProcesado" => $p->getPrecio()
-            ));
 
-        
-        }
-               
-        $json = json_encode($json);
-        
-        printf('{ "success": true, "hash" : "%s" , "datos": %s }', md5($json), $json);*/
-        
-        
-        $inventario  = ProductoDAO::getAll();
-        
+        /* $inventario  = InventarioController::Existencias();
+
+          $json = Array();
+
+          foreach($inventario['resultados'] as $producto){
+
+          $p = ProductoDAO::getByPK($producto["id_producto"]);
+
+          Array_push($json, array(
+          //detalles basicos que jamas cambian
+          "productoID" => $producto["id_producto"],
+          "descripcion" => $p->getNombreProducto(),
+          "tratamiento" => 0,
+          "medida" => UnidadMedidaDAO::getByPK($p->getIdUnidad())->getAbreviacion(),
+          "agrupacion" => UnidadMedidaDAO::getByPK($p->getIdUnidad())->getAbreviacion(),
+          "agrupacionTam" => 1,
+          "precioPorAgrupacion" => $p->getPrecio(),
+          //precios de la tabla de detalle inventario !
+          "precioVenta" => $p->getPrecio(),
+          "precioVentaProcesado" => $p->getPrecio(),
+          //las existencias originales, son las existencias
+          //totales menos las existencias procesadas
+          "existencias" => $producto['cantidad'],
+          //mantendre existenciasOriginales para
+          //backwards compatibility
+          "existenciasOriginales" => $producto['cantidad'],
+          "existenciasProcesadas" => 0,
+          // estos precios si vienen de la tabla de
+          // actualizacion de precio
+          "precioIntersucursal" => $p->getPrecio(),
+          "precioIntersucursalProcesado" => $p->getPrecio()
+          ));
+
+
+          }
+
+          $json = json_encode($json);
+
+          printf('{ "success": true, "hash" : "%s" , "datos": %s }', md5($json), $json); */
+
+
+        $inventario = ProductoDAO::getAll();
+
         $json = Array();
-        
-        foreach($inventario as $producto){                                      
-            
+
+        foreach ($inventario as $producto) {
+
             Array_push($json, array(
                 //detalles basicos que jamas cambian
                 "productoID" => $producto->getIdProducto(),
@@ -297,7 +297,7 @@ switch (((int) ($args['action'] ))) {
                 "precioVentaProcesado" => $producto->getPrecio(),
                 //las existencias originales, son las existencias
                 //totales menos las existencias procesadas
-                "existencias" => 0,            
+                "existencias" => 0,
                 //mantendre existenciasOriginales para 
                 //backwards compatibility
                 "existenciasOriginales" => 0,
@@ -307,15 +307,13 @@ switch (((int) ($args['action'] ))) {
                 "precioIntersucursal" => $producto->getPrecio(),
                 "precioIntersucursalProcesado" => $producto->getPrecio()
             ));
-
-        
         }
-               
+
         $json = json_encode($json);
-        
+
         printf('{ "success": true, "hash" : "%s" , "datos": %s }', md5($json), $json);
-        
-        
+
+
         break;
 
     case 500:
@@ -406,6 +404,22 @@ switch (((int) ($args['action'] ))) {
         //dispatch
         $debug = isset($args['DEBUG']) ? "?debug" : "";
         echo "<script>window.location = 'sucursal.php" . $debug . "'; </script>";
+        break;
+
+    case 3000:
+
+        $c = new stdClass();
+
+        $c->servicios = array();
+
+        foreach (ServicioDAO::getAll() as $servicio) {
+            array_push($c->servicios, array(
+                "id_servicio" => $servicio->getIdServicio(),
+                "nombre_servicio" => $servicio->getNombreServicio()
+            ));
+        }
+
+        echo json_encode($c);
         break;
 
         break;
