@@ -20,7 +20,7 @@ Aplicacion.Servicios = function (  ){
         ]
     });
 
-    this.store = new Ext.data.Store({
+    this.lista_servicios_store = new Ext.data.Store({
         model: 'listaDeServicios',
         //sorters: 'nombre',
         sorters: 'nombre_servicio',
@@ -54,7 +54,7 @@ Aplicacion.Servicios = function (  ){
         layout: 'fit',
         items: [{
             xtype: 'list',
-            store: this.store,
+            store: this.lista_servicios_store,
             //Aplicacion.Clientes.currentInstance.listaDeClientesPanel.items.items[0]
             itemTpl: '<div><strong>{id_servicio}</strong> {nombre_servicio}</div>',
             grouped: true,
@@ -72,23 +72,19 @@ Aplicacion.Servicios = function (  ){
         }]
     });
     
+    this.getConfig = function(){
+        return POS.U.g ? {
+            text: 'Servicios',
+            cls: 'launchscreen',
+            card: this.listaDeServiciosPanel        
+        } : {
+            text: 'Servicios',
+            cls: 'launchscreen',
+            card: this.listaDeServiciosPanel,	
+            leaf: true
+        };
+    }
+    
 };
-
-
-Aplicacion.Servicios.prototype.getConfig = function (){
-
-    return POS.U.g ? {
-        text: 'Servicios',
-        cls: 'launchscreen',
-        card: Aplicacion.Servicios.listaDeServiciosPanel        
-    } : {
-        text: 'Servicios',
-        cls: 'launchscreen',
-        card: this.listaDeServiciosPanel,	
-        leaf: true
-    };
-
-};
-
 
 POS.Apps.push( new Aplicacion.Servicios() );
