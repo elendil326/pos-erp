@@ -102,6 +102,7 @@
  	 * @param costo_estandar float Valor del costo estandar del servicio
  	 * @param descripcion_servicio string Descripcion del servicio
  	 * @param empresas string Arreglo de ids de empresas a las que pertenecera este servicio
+ 	 * @param extra_params json 
  	 * @param foto_servicio string Url de la foto del servicio
  	 * @param garantia int Si este servicio tiene una garanta en meses.
  	 * @param impuestos json array de ids de impuestos que tiene este servico
@@ -121,6 +122,7 @@
 		$costo_estandar = null, 
 		$descripcion_servicio = null, 
 		$empresas = null, 
+		$extra_params = null, 
 		$foto_servicio = null, 
 		$garantia = null, 
 		$impuestos = null, 

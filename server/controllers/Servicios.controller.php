@@ -1206,6 +1206,7 @@ require_once("interfaces/Servicios.interface.php");
 		$costo_estandar = null, 
 		$descripcion_servicio = null, 
 		$empresas = null, 
+		$extra_params = null, 
 		$foto_servicio = null, 
 		$garantia = null, 
 		$impuestos = null, 
@@ -1255,6 +1256,12 @@ require_once("interfaces/Servicios.interface.php");
             {
                 $servicio->setControlExistencia($control_de_existencia);
             }
+
+            if(!is_null($extra_params))
+            {
+                $servicio->setExtraParams(json_encode($extra_params));
+            }
+
             if(!is_null($foto_servicio))
             {
                 $servicio->setFotoServicio($foto_servicio);

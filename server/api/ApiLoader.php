@@ -4786,22 +4786,23 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"id_servicio" => new ApiExposedProperty("id_servicio", true, GET, array( "int" )),
-			"clasificaciones" => new ApiExposedProperty("clasificaciones", false, GET, array( "json" )),
-			"codigo_servicio" => new ApiExposedProperty("codigo_servicio", false, GET, array( "string" )),
-			"compra_en_mostrador" => new ApiExposedProperty("compra_en_mostrador", false, GET, array( "string" )),
-			"control_de_existencia" => new ApiExposedProperty("control_de_existencia", false, GET, array( "int" )),
-			"costo_estandar" => new ApiExposedProperty("costo_estandar", false, GET, array( "float" )),
-			"descripcion_servicio" => new ApiExposedProperty("descripcion_servicio", false, GET, array( "string" )),
-			"empresas" => new ApiExposedProperty("empresas", false, GET, array( "string" )),
-			"foto_servicio" => new ApiExposedProperty("foto_servicio", false, GET, array( "string" )),
-			"garantia" => new ApiExposedProperty("garantia", false, GET, array( "int" )),
-			"impuestos" => new ApiExposedProperty("impuestos", false, GET, array( "json" )),
-			"metodo_costeo" => new ApiExposedProperty("metodo_costeo", false, GET, array( "string" )),
-			"nombre_servicio" => new ApiExposedProperty("nombre_servicio", false, GET, array( "string" )),
-			"precio" => new ApiExposedProperty("precio", false, GET, array( "float" )),
-			"retenciones" => new ApiExposedProperty("retenciones", false, GET, array( "json" )),
-			"sucursales" => new ApiExposedProperty("sucursales", false, GET, array( "json" )),
+			"id_servicio" => new ApiExposedProperty("id_servicio", true, POST, array( "int" )),
+			"clasificaciones" => new ApiExposedProperty("clasificaciones", false, POST, array( "json" )),
+			"codigo_servicio" => new ApiExposedProperty("codigo_servicio", false, POST, array( "string" )),
+			"compra_en_mostrador" => new ApiExposedProperty("compra_en_mostrador", false, POST, array( "string" )),
+			"control_de_existencia" => new ApiExposedProperty("control_de_existencia", false, POST, array( "int" )),
+			"costo_estandar" => new ApiExposedProperty("costo_estandar", false, POST, array( "float" )),
+			"descripcion_servicio" => new ApiExposedProperty("descripcion_servicio", false, POST, array( "string" )),
+			"empresas" => new ApiExposedProperty("empresas", false, POST, array( "string" )),
+			"extra_params" => new ApiExposedProperty("extra_params", false, POST, array( "json" )),
+			"foto_servicio" => new ApiExposedProperty("foto_servicio", false, POST, array( "string" )),
+			"garantia" => new ApiExposedProperty("garantia", false, POST, array( "int" )),
+			"impuestos" => new ApiExposedProperty("impuestos", false, POST, array( "json" )),
+			"metodo_costeo" => new ApiExposedProperty("metodo_costeo", false, POST, array( "string" )),
+			"nombre_servicio" => new ApiExposedProperty("nombre_servicio", false, POST, array( "string" )),
+			"precio" => new ApiExposedProperty("precio", false, POST, array( "float" )),
+			"retenciones" => new ApiExposedProperty("retenciones", false, POST, array( "json" )),
+			"sucursales" => new ApiExposedProperty("sucursales", false, POST, array( "json" )),
 		);
 	}
 
@@ -4810,22 +4811,23 @@
  		$this->response = ServiciosController::Editar( 
  			
 			
-			isset($_GET['id_servicio'] ) ? $_GET['id_servicio'] : null,
-			isset($_GET['clasificaciones'] ) ? json_decode($_GET['clasificaciones']) : null,
-			isset($_GET['codigo_servicio'] ) ? $_GET['codigo_servicio'] :  null,
-			isset($_GET['compra_en_mostrador'] ) ? $_GET['compra_en_mostrador'] :  null,
-			isset($_GET['control_de_existencia'] ) ? $_GET['control_de_existencia'] :  null,
-			isset($_GET['costo_estandar'] ) ? $_GET['costo_estandar'] :  null,
-			isset($_GET['descripcion_servicio'] ) ? $_GET['descripcion_servicio'] :  null,
-			isset($_GET['empresas'] ) ? $_GET['empresas'] :  null,
-			isset($_GET['foto_servicio'] ) ? $_GET['foto_servicio'] :  null,
-			isset($_GET['garantia'] ) ? $_GET['garantia'] :  null,
-			isset($_GET['impuestos'] ) ? json_decode($_GET['impuestos']) : null,
-			isset($_GET['metodo_costeo'] ) ? $_GET['metodo_costeo'] :  null,
-			isset($_GET['nombre_servicio'] ) ? $_GET['nombre_servicio'] :  null,
-			isset($_GET['precio'] ) ? $_GET['precio'] :  null,
-			isset($_GET['retenciones'] ) ? json_decode($_GET['retenciones']) : null,
-			isset($_GET['sucursales'] ) ? json_decode($_GET['sucursales']) : null
+			isset($_POST['id_servicio'] ) ? $_POST['id_servicio'] : null,
+			isset($_POST['clasificaciones'] ) ? json_decode($_POST['clasificaciones']) : null,
+			isset($_POST['codigo_servicio'] ) ? $_POST['codigo_servicio'] :  null,
+			isset($_POST['compra_en_mostrador'] ) ? $_POST['compra_en_mostrador'] :  null,
+			isset($_POST['control_de_existencia'] ) ? $_POST['control_de_existencia'] :  null,
+			isset($_POST['costo_estandar'] ) ? $_POST['costo_estandar'] :  null,
+			isset($_POST['descripcion_servicio'] ) ? $_POST['descripcion_servicio'] :  null,
+			isset($_POST['empresas'] ) ? $_POST['empresas'] :  null,
+			isset($_POST['extra_params'] ) ? json_decode($_POST['extra_params']) : null,
+			isset($_POST['foto_servicio'] ) ? $_POST['foto_servicio'] :  null,
+			isset($_POST['garantia'] ) ? $_POST['garantia'] :  null,
+			isset($_POST['impuestos'] ) ? json_decode($_POST['impuestos']) : null,
+			isset($_POST['metodo_costeo'] ) ? $_POST['metodo_costeo'] :  null,
+			isset($_POST['nombre_servicio'] ) ? $_POST['nombre_servicio'] :  null,
+			isset($_POST['precio'] ) ? $_POST['precio'] :  null,
+			isset($_POST['retenciones'] ) ? json_decode($_POST['retenciones']) : null,
+			isset($_POST['sucursales'] ) ? json_decode($_POST['sucursales']) : null
 			
 			);
 		}catch(Exception $e){
