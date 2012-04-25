@@ -16,11 +16,6 @@ $page->requireParam("oid", "GET", "Esta orden de servicio no existe.");
 $esta_orden = OrdenDeServicioDAO::getByPK($_GET["oid"]);
 
 
-//
-// Titulo de la pagina
-// 
-
-
 $customer         = UsuarioDAO::getByPK($esta_orden->getIdUsuarioVenta());
 $link_to_customer = "<a href='clientes.ver.php?cid=" . $esta_orden->getIdUsuarioVenta() . "'>";
 $link_to_customer .= $customer->getNombre();
@@ -31,15 +26,8 @@ $link_to_customer .= "</a>";
 $page->addComponent(new TitleComponent("Orden de servicio " . $_GET["oid"] . " para " . $link_to_customer, 2));
 
 
-
-
-
-//
-// Forma de producto
-// 
-
-$esta_orden->setFechaOrden( FormatTime( strtotime ($esta_orden->getFechaOrden(  ) )) );
 $form = new DAOFormComponent($esta_orden);
+
 $form->setEditable(true);
 
 $form->hideField(array(
@@ -63,16 +51,16 @@ $form->createComboBoxJoin("id_servicio", "nombre_servicio", ServicioDAO::getAll(
 
 //$form->createComboBoxJoin("id_usuario_asignado", "nombre", UsuarioDAO::getAll(), $esta_orden->getIdUsuarioAsignado());
 
-$personal = UsuarioDAO::search(new Usuario(  ));
+$personal = UsuarioDAO::buscarEmpleados();
 
 $form->createComboBoxJoinDistintName(	$field_name 			= "id_usuario_asignado", 
 										$table_name				= "id_usuario", 
 										$field_name_in_values	= "nombre", 
-										$values_array 			= UsuarioDAO::getAll(), 
+										$values_array 			= $personal, 
 										$selected_value 		= null);
 										
 $form->createComboBoxJoin("id_usuario", "nombre", UsuarioDAO::getAll(), $esta_orden->getIdUsuario());
-
+$form->onApiCallSuccessRedirect("servicios.detalle.orden.php?oid=" . $_GET["oid"]);
 //$form->createComboBoxJoinDistintName("id_usuario_venta", "id_usuario", "nombre", UsuarioDAO::getAll(), $esta_orden->getIdUsuarioVenta());
 $page->addComponent($form);
 

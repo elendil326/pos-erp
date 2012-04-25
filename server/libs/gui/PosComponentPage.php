@@ -70,7 +70,7 @@ class PosComponentPage extends StdComponentPage{
 						</a>
 
 <!-- -->
-
+						<?php $s = SesionController::Actual(); if(!is_null($s["id_usuario"])) { ?>
 						<script type="text/javascript" charset="utf-8">
 							
 							Ext.onReady(function(){				
@@ -158,41 +158,8 @@ class PosComponentPage extends StdComponentPage{
 						
 						<div class="search">
 							<div id="BuscadorComponent_001"></div>
-							<!--
-							<form method="get" action="/search">
-								<div class="uiTypeahead" id="u272751_1">
-									<div class="wrap">
-									
-										<div class="innerWrap">
-											<span class="uiSearchInput textInput">
-											<span>
-											
-											<input 
-												type="text" 
-												class="inputtext DOMControl_placeholder" 
-												name="selection" 
-												placeholder="Buscar" 
-												autocomplete="off" 
-												onfocus="" 
-												spellcheck="false"
-												title="Search Documentation / Apps"/>
-												
-											<button type="submit" title="Search Documentation / Apps">
-											<span class="hidden_elem">
-											</span>
-											</button>
-											</span>
-											</span>
-										</div>
-									</div>
-											
-								
-
-
-								</div>
-							</form>
-							-->
 						</div>
+						<?php } ?>
 <!-- -->
 						<div class="clear">
 						</div>

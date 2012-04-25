@@ -73,9 +73,10 @@ $form = new DAOFormComponent($este_producto);
 $form->setEditable(false);
 
 $form->hideField(array(
-    "id_producto"
+    "id_producto",
+	"foto_del_producto"
 ));
-
+/*
 $form->makeObligatory(array(
     "compra_en_mostrador",
     "costo_estandar",
@@ -85,7 +86,7 @@ $form->makeObligatory(array(
     "metodo_costeo",
     "activo"
 ));
-
+*/
 $form->createComboBoxJoinDistintName("id_unidad_compra","id_unidad_medida" ,"abreviacion", UnidadMedidaDAO::getAll(), $este_producto->getIdUnidadCompra());
 
 $form->createComboBoxJoinDistintName("id_unidad", "id_unidad_medida", "abreviacion", UnidadMedidaDAO::getAll(), $este_producto->getIdUnidad());

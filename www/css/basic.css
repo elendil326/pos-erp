@@ -366,6 +366,13 @@ img.tracking_pixel{height:1px;position:absolute;visibility:hidden;width:1px}
 	background: #3D9400;
 }
 
+.POS.Boton.BAD{
+	border: 1px solid red;
+	color: white;
+	text-shadow: 0 1px rgba(0, 0, 0, 0.1);
+	background: #3D9400;
+}
+
 /*
 .POS.Boton.OK:hover{
 	border: 1px solid green;
