@@ -13,7 +13,7 @@
 	//forma de nuevo servicio
 	$form = new DAOFormComponent( array( new Servicio() ) );
 	$form->beforeSend("foo");
-	$form->hideField( array( "id_servicio", "extra_params", "foto_servicio", "compra_en_mostrador"));
+	$form->hideField( array( "id_servicio", "extra_params", "foto_servicio", "compra_en_mostrador","control_existencia"));
 	$form->sendHidden("compra_en_mostrador");
 
 	$form->addApiCall( "api/servicios/nuevo/", "POST" );

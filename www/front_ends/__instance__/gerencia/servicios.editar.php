@@ -26,7 +26,9 @@
 		$form->beforeSend("foo");
 		$form->hideField( array( 
                    "id_servicio",
-                   "activo"                
+                   "activo",
+					"extra_params",
+					"control_existencia"                
 			 	));
 			
         $form->sendHidden("id_servicio");
