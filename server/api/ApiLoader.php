@@ -2,7 +2,6 @@
 
 
 
-
   class ApiSesionIniciar extends ApiHandler {
   
 
@@ -5498,6 +5497,34 @@
 			isset($_POST['destinatario'] ) ? $_POST['destinatario'] : null,
 			isset($_POST['titulo'] ) ? $_POST['titulo'] : null,
 			isset($_POST['emisor'] ) ? $_POST['emisor'] :  "no-reply@caffeina.mx"
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiPosBuscar extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"query" => new ApiExposedProperty("query", true, GET, array( "string" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = POSController::Buscar( 
+ 			
+			
+			isset($_GET['query'] ) ? $_GET['query'] : null
 			
 			);
 		}catch(Exception $e){

@@ -22,9 +22,31 @@ class ProductoDAO extends ProductoDAOBase
 {
 
 	public static function buscarProductos($query, $how_many = 100){
-		$sql = "select * from producto where ( nombre_producto like ? or codigo_producto like ? ) and activo = 1 limit ?; ";
+		
+		
+		/*$sql = "select * from producto where ( nombre_producto like ? or codigo_producto like ? ) and activo = 1 limit ?; ";
+		$val = array( "%" . $query . "%" , "%" . $query . "%" , $how_many );*/
+		
+		
+		
+		$parts = explode(" ", $query);
 
-		$val = array( "%" . $query . "%" , "%" . $query . "%" , $how_many );
+		$sql = "select * from producto where (";
+		$val = array();
+		$first = true;
+		foreach ($parts as $p) {
+			if($first){
+				$first = false;
+				
+			}else{
+				$sql .= " and ";
+			}
+			$sql .= "  nombre_producto like ? ";
+			array_push($val , "%" . $p . "%");
+		}
+		
+		$sql .= " or codigo_producto like ? ) ";
+		array_push($val , "%" . $query . "%");
 		
 		global $conn;
 		$rs = $conn->Execute($sql, $val);

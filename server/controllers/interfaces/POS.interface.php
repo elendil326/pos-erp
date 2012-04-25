@@ -34,6 +34,22 @@
   
 	/**
  	 *
+ 	 *Busca en el erp
+ 	 *
+ 	 * @param query string 
+ 	 * @return numero_de_resultados int 
+ 	 * @return resultados json 
+ 	 **/
+  static function Buscar
+	(
+		$query
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
  	 *Revisar la version que esta actualmente en el servidor. 
  	 *
  	 **/

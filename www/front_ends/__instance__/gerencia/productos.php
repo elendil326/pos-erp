@@ -36,6 +36,6 @@
 		$page->addComponent( $tabla );
 		
 		$page->nextTab("Categorias");
-		$page->nextTab("Lista");
+		$page->nextTab("Estadisticas");
 		
 		$page->render();

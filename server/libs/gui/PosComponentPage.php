@@ -69,16 +69,105 @@ class PosComponentPage extends StdComponentPage{
 							<img style="margin-top:8px; display: none;" id="ajax_loader" src="../../../media/loader.gif">
 						</a>
 
-						<!--
+<!-- -->
+
+						<script type="text/javascript" charset="utf-8">
+							
+							Ext.onReady(function(){				
+
+						        Ext.define("Resultados", {
+						            extend: 'Ext.data.Model',
+						            proxy: {
+						                type: 'ajax',
+									    url : '../api/pos/buscar/',
+									    extraParams : {
+										    auth_token : Ext.util.Cookies.get("at")
+									    },
+						                reader: {
+						                    type: 'json',
+						                    root: 'resultados',
+						                    totalProperty: 'numero_de_resultados'
+						                }
+						            },
+
+						            fields: [
+
+									    {name: 'texto',		mapping: 'texto'},
+									    {name: 'id', 		mapping: 'id'},
+									    {name: 'tipo', 		mapping: 'tipo'}
+									    
+						            ]
+						        });
+
+						        dss = Ext.create('Ext.data.Store', {
+						            pageSize: 10,
+						            model: 'Resultados'
+						        });
+
+						        Ext.create('Ext.panel.Panel', {
+						            renderTo: "BuscadorComponent_001",
+						            width: '78%',
+						            bodyPadding: 1,
+									height: "26px",
+						            layout: 'anchor',
+
+						            items: [{
+									    listeners :{
+										    "select" : function(a,b,c){
+												if(b.length != 1) return;
+												
+												if(b[0].get("tipo") == "cliente"){
+													window.location = "clientes.ver.php?cid=" + b[0].get("id");
+													console.log("fue cliente"); return;
+												}
+												
+												if(b[0].get("tipo") == "producto"){
+													window.location = "productos.ver.php?pid=" + b[0].get("id");													
+													console.log("fue producto"); return;
+												}
+
+												console.log("no fue ninguno :(");
+											}
+									    },
+						                xtype: 'combo',
+						                store: dss,
+						                emptyText : "Busque todo",
+						                //displayField: 'title',
+						                typeAhead: true,
+						                hideLabel: true,
+						                hideTrigger:true,
+						                anchor: '100%',
+
+						                listConfig: {
+											/*Ext.view.BoundListView */
+						                    loadingText: 'Buscando...',
+						                    emptyText: 'No se encontraron clientes.',
+												
+						                    // Custom rendering template for each item
+						                     getInnerTpl: function() {
+							                        return '<div>{tipo}<br><b>{texto}</b></div>';
+							                    }
+						                },
+						                pageSize: 0
+						            }]
+
+
+						        });
+
+					        });//onReady
+						</script>
+						
 						<div class="search">
+							<div id="BuscadorComponent_001"></div>
+							<!--
 							<form method="get" action="/search">
 								<div class="uiTypeahead" id="u272751_1">
 									<div class="wrap">
-										<input type="hidden" autocomplete="off" class="hiddenInput" name="path" value=""/>
+									
 										<div class="innerWrap">
 											<span class="uiSearchInput textInput">
 											<span>
-										
+											
 											<input 
 												type="text" 
 												class="inputtext DOMControl_placeholder" 
@@ -88,6 +177,7 @@ class PosComponentPage extends StdComponentPage{
 												onfocus="" 
 												spellcheck="false"
 												title="Search Documentation / Apps"/>
+												
 											<button type="submit" title="Search Documentation / Apps">
 											<span class="hidden_elem">
 											</span>
@@ -102,8 +192,9 @@ class PosComponentPage extends StdComponentPage{
 
 								</div>
 							</form>
+							-->
 						</div>
-						-->
+<!-- -->
 						<div class="clear">
 						</div>
 					</div>

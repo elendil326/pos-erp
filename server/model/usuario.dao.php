@@ -74,7 +74,7 @@ class UsuarioDAO extends UsuarioDAOBase
 			$bar =  new Usuario($foo);
     		array_push( $ar,$bar);
 		}
-		
+
 		return $ar;
 			
 	}

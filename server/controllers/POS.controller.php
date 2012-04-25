@@ -41,6 +41,78 @@ require_once("interfaces/POS.interface.php");
   
 	}
   
+
+
+
+	/**
+ 	 *
+ 	 *Busca en el erp
+ 	 *
+ 	 * @param query string 
+ 	 * @return numero_de_resultados int 
+ 	 * @return resultados json 
+ 	 **/
+  static function Buscar
+	(
+		$query
+	){
+		
+		$out = array();
+		
+
+		//buscar clientes
+		$c = ClientesController::Buscar(
+			null, 
+			null, 
+			5000, 
+			null, 
+			$query);
+		
+		
+		foreach($c["resultados"] as $cliente){
+			array_push( $out, array(
+				"texto" => $cliente["nombre"],
+				"rfc" => $cliente["rfc"],				
+				"id" => $cliente["id_usuario"],
+				"tipo"	=> "cliente"
+			));
+		}
+		
+
+		
+
+		//buscar productos
+		$p = ProductosController::Buscar($query);
+		
+		foreach($p["resultados"] as $cliente){
+			array_push( $out, array(
+				"texto" => $cliente["nombre_producto"],
+				"id" => $cliente["id_producto"],
+				"tipo"	=> "producto"
+			));
+		}
+		
+		
+		//buscar servicios
+		$s = ServiciosController::Buscar($query);
+		
+		foreach($s["resultados"] as $cliente){
+			array_push( $out, array(
+				"texto" => $cliente["nombre_servicio"],
+				"id" => $cliente["id_servicio"],
+				"tipo"	=> "servicio"
+			));
+		}
+
+		
+
+		
+		return array("numero_de_resultados" => (sizeof($c) + sizeof($p) + sizeof($s)),
+						"resultados" => $out);
+		
+	}
+
+
 	/**
  	 *
  	 *Cuando un cliente pierde comunicacion se lanzan peticiones a intervalos pequenos de tiempo para revisar conectividad. Esos requests deberan hacerse a este metodo para que el servidor se de cuenta de que el cliente perdio conectvidad y tome medidas aparte como llenar estadistica de conectividad, ademas esto asegurara que el cliente puede enviar cambios ( compras, ventas, nuevos clientes ) de regreso al servidor. 
