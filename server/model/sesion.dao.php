@@ -20,6 +20,21 @@ require_once("base/sesion.vo.base.php");
   */
 class SesionDAO extends SesionDAOBase
 {
+	
+	public static function clean(){
+		global $conn;
+		$sql = "DELETE FROM `sesion` WHERE fecha_de_vencimiento > current_time()";
+		try{
+			$rs = $conn->Execute($sql);	
+			
+		}catch(Exception $e){
+			Logger::error($e->getMessage());
+			throw new InvalidDatabaseOperationException($e);
+			return null;
+		}
+	}
+	
+	
 	public static function getUserByAuthToken( $auth_token = null ){
 
 		global $conn;

@@ -63,8 +63,33 @@ class SesionController implements ISesion{
 	}
   
 
+	/**
+	 * Cerrar las sesiones que ya caducaron
+	 * 
+	 * 
+	 * */
+	public static function Limpiar(){
+	//	SesionDAO::clean();
+	}
 
 
+	public static function HeartBeat(){
+		if(!self::isLoggedIn()) return;
+		
+		$s = self::Actual();
+		if(!is_null($s["id_usuario"])){
+			
+			//sesion activa !
+			/*$u = UsuarioDAO::getByPK($s["id_usuario"]);
+			try{
+				$u->setFechaDeVencimiento( date("Y-m-d h:i:j") );
+				
+				UsuarioDAO::save($u);
+			}catch(Exception $e){
+				throw InvalidDatabaseException();
+			}*/
+		}else Logger::log("JN?O");
+	}
 
 	/**
  	 *
@@ -100,7 +125,6 @@ class SesionController implements ISesion{
 		if( $user === NULL ) {
 			Logger::warn("===== Credenciales invalidas para usuario {$usuario} ====== ");
 			return array( "login_succesful" => false );
-			
 		}
 
 		//ok user is ok, buscar su usuario en los tokens actuales

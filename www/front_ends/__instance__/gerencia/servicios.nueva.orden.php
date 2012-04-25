@@ -56,7 +56,7 @@ $page->partialRender();
             <td><label>Adelanto</label></td>
             <td><input type = "text" name = "adelanto" id = "adelanto"value = "" /></td>
         <tr>
-            <td><label>Descripci&oacuten</label></td>
+            <td><label>Descripci&oacute;n</label></td>
             <td><textarea style = "width:100%; height:100%;" name = "descripcion" id = "descripcion"></textarea></td>
         </tr>
 		<tr>
@@ -90,7 +90,7 @@ $page->partialRender();
 		
 		html += "<table>"
 		html += "<tr>"
-		html += "<td><a href=''>"+ record.get("nombre") +"</a></td><td></td>"
+		html += "<td><h2><a href=''>"+ record.get("nombre") +"</a></h2></td><td></td>"
 		html += "</tr>"
 		html += "<tr>"
 		html += "<td>"+ record.get("saldo_del_ejercicio") +"</td><td></td>"
@@ -120,6 +120,9 @@ $page->partialRender();
         Ext.get('id_cliente').dom.value = record.get('id_usuario');   
     }
 
+
+	var CurrentExtraParams = null;
+	
     function formatForm(){
 
         Ext.get('precio').dom.disabled = true;
@@ -143,7 +146,18 @@ $page->partialRender();
 
 		if(SERVICIOS[ option[0] ].extra_params == null){
 			Ext.get("extra_params_el").update("");
+			CurrentExtraParams = null;
+			
 		}else{
+
+			
+			try{
+				CurrentExtraParams = Ext.JSON.decode( SERVICIOS[ option[0] ].extra_params);			
+			}catch(e){
+				console.error(e);
+				CurrentExtraParams = null;
+			}
+			
 			Ext.get("extra_params_el").update(buildExtraParams( SERVICIOS[ option[0] ].extra_params ));
 		}
 
@@ -210,7 +224,12 @@ $page->partialRender();
 				break;
 				
 			}
-			html += "<tr><td>" + obj[i].desc + "</td><td>" + input + "</td></tr>";
+			if(obj[i].obligatory){
+				html += "<tr><td><b>*" + obj[i].desc + "</b></td><td>" + input + "</td></tr>";				
+			}else{
+				html += "<tr><td>" + obj[i].desc + "</td><td>" + input + "</td></tr>";				
+			}
+
 		};
 		
 		html += "</table>";
@@ -219,13 +238,53 @@ $page->partialRender();
 
 	}
 
+
+
     function nuevaOrdenServicio(){
 
     
         var option = Ext.get('id_servicio').dom.options[Ext.get('id_servicio').dom.options.selectedIndex].value.split("-");
 
         var fecha = fecha_entrega.getRawValue().split("/");
+		
+		//Vamos a ver cuales de los extraParams son obligatorios
+		//y cuales llenaron
+		
+		var ep;
+		
+		try{
+			ep = Ext.JSON.decode(getExtraParams());
+			
+		}catch(e){
+			console.error(e);
+			ep = null;
+		}
+		
+		console.log(CurrentExtraParams, ep);
+		var faltan = false;
+		
+		//busquemos solo los obligatorios
+		for (var i=0; i < CurrentExtraParams.length; i++) {
+			if(CurrentExtraParams[i].obligatory){
+				//buscarlo en ep, ya que es obligatorio
+				for (var j = ep.length - 1; j >= 0; j--){
+					if(ep[j].desc == CurrentExtraParams[i].desc){
+						if(ep[j].value.length == 0){
+							faltan = true;
+						}
+						break;
+					}
+				};
+			}
+		};
+		
+		if(faltan){
+			alert("te faltan parametros");
+			return;			
+		}
 
+		
+		
         POS.API.POST(
         "api/servicios/orden/nueva/", 
         {
@@ -233,7 +292,7 @@ $page->partialRender();
             "id_servicio" 	: option[0] ,
             "adelanto" 		: Ext.get('adelanto').dom.value,
             "descripcion" 	: Ext.get('descripcion').getValue(),
-            "fecha_entrega" : Math.round((new Date( fecha[2], fecha[0], fecha[1] )).getTime() / 1000),
+            "fecha_entrega" : Math.round( (new Date( fecha[2], fecha[0], fecha[1] )).getTime() / 1000),
             "precio" 		: Ext.get('precio').getValue(),
 			"extra_params" 	: getExtraParams()
         }, 
@@ -253,46 +312,6 @@ $page->partialRender();
 </script>
 
 <?php
-//forma de nueva orden de servicio
-/* $form = new DAOFormComponent( array( new OrdenDeServicio() ) );
-
-
-  $form->hideField( array(
-  "id_orden_de_servicio",
-  "id_usuario",
-  "fecha_orden",
-  "activa",
-  "cancelada",
-  "motivo_cancelacion"
-  ));
-
-
-  $form->renameField( array(
-  "id_usuario_venta"    => "id_cliente"
-  ));
-
-  $form->addApiCall( "api/servicios/orden/nueva/" );
-  $form->onApiCallSuccessRedirect("servicios.lista.orden.php");
-
-  $form->makeObligatory(array(
-  "id_cliente",
-  "id_servicio"
-  ));
-
-
-  $form->createComboBoxJoin("id_servicio", "nombre_servicio", ServicioDAO::search( new Servicio( array("activo" => 1) ) ) );
-
-  $clientes = $lista = ClientesController::Buscar();
-
-  $form->createComboBoxJoinDistintName(
-  "id_cliente",
-  "id_usuario",
-  "nombre",
-  $clientes["resultados"]
-
-  );
-
-  $page->addComponent( $form ); */
 
 
 //render the page

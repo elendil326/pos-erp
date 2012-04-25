@@ -327,3 +327,15 @@
 	
 	$conn = $POS_CONFIG["INSTANCE_CONN"];
 	
+
+
+	/**
+	 * 
+	 * Actualizar el token de este wey
+	 * 
+	 * 
+	 * */
+	SesionController::Limpiar(); 
+	SesionController::HeartBeat();	
+
+	

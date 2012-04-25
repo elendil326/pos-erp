@@ -407,6 +407,8 @@ class FormComponent implements GuiComponent
 				}
 				
 				$html .= $f->caption;
+
+				
 				
 				if ($f->obligatory === true)
 				{
@@ -417,7 +419,8 @@ class FormComponent implements GuiComponent
 					//$html .= "</div>";
 				}
 				
-				
+				$html .= "<div style='color:gray;font-size:-2px'>" . $f->help . "</div>";
+								
 				if (($f->obligatory === false) && ($this->hide_not_obligatory))
 				{
 					$html .= "</td><td style='display:none' class='hideable'>";
@@ -489,11 +492,11 @@ class FormComponent implements GuiComponent
 					
 					
 					$html .= "</select>";
-					break;
+				break;
+					
 				case "textarea":
 					if ($this->is_editable === false)
 					{
-						//$html .= "<input id='" . $f->id .  "' name='" . $f->name .  "' value='" . $f->value .  "' type='". $f->type ."' >";
 						$html .= $f->value;
 					}
 					else
@@ -750,7 +753,6 @@ class FormComponent implements GuiComponent
 			{
 				if ($this->form_fields[$i]->id === $field)
 				{
-					Logger::log($field . " es obligatorio");
 					$this->form_fields[$i]->obligatory = true;
 				} //if
 				
@@ -1016,6 +1018,38 @@ class FormComponent implements GuiComponent
            
 		throw new Exception("$id not found in form");
 	}
+	
+	
+	
+	/**
+     *
+     *  
+     */
+    public function setCaption($id, $phText){            
+
+        foreach($this->form_fields as $field ){
+            if($field->id == $id){                    
+                $field->caption = $phText;
+				return;
+            }
+        }
+           
+		throw new Exception("$id not found in form");
+	}
+	
+	
+	
+	public function setHelp($id, $phText){            
+
+        foreach($this->form_fields as $field ){
+            if($field->id == $id){                    
+                $field->help = $phText;
+				return;
+            }
+        }
+           
+		throw new Exception("$id not found in form");
+	}
 }
 
 
@@ -1031,7 +1065,9 @@ class FormComponentField
 	public $obligatory;
 	public $send_as_hidden;
 	public $hidden;
-	public $placeholder;	
+	public $placeholder;
+	public $help;	
+
 	
 	public function __construct
 	(
@@ -1055,6 +1091,7 @@ class FormComponentField
 		$this->hidden         = $hidden;
 		$this->send_as_hidden = $send_as_hidden;
 		$this->placeholder	  = $planceholder;		
+		$this->help	 	 		= "";
 	}
 	
 	

@@ -13,7 +13,8 @@
 	//forma de nuevo servicio
 	$form = new DAOFormComponent( array( new Servicio() ) );
 	$form->beforeSend("foo");
-	$form->hideField( array( "id_servicio", "extra_params", "foto_servicio"));
+	$form->hideField( array( "id_servicio", "extra_params", "foto_servicio", "compra_en_mostrador"));
+	$form->sendHidden("compra_en_mostrador");
 
 	$form->addApiCall( "api/servicios/nuevo/", "POST" );
 
@@ -23,8 +24,7 @@
 		"costo_estandar",
 		"metodo_costeo",
 		"nombre_servicio",
-		"codigo_servicio",
-		"compra_en_mostrador"
+		"codigo_servicio"
 	));
 
 	$form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll( ) );
@@ -38,23 +38,10 @@
 	              array( "id" => 0 , "caption" => "no" ) ), 1 );
 	
 	$form->setType("descripcion_servicio", "textarea");
-	
-	$form->sortOrder(array( 
-			"foto_servicio", 
-			"codigo_servicio", 
-			"compra_en_mostrador",
-			"control_existencia",
-			"costo_estandar",
-			"descripcion_servicio",
-			"precio",
-			"garantia",
-			"id_servicio",
-			"metodo_costeo",
-			"nombre_servicio",
-			"activo",
-			"extra_params"
-		));
-		
+
+	$form->setHelp("costo_estandar", "El costo estandar es el costo base que este servicio provoca a la empresa.");
+
+
 	$page->addComponent( $form );
 
 	$page->addComponent(new TitleComponent("&iquest; Necesita mas parametros para su servicio ?", 2));

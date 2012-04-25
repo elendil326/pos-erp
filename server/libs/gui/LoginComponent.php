@@ -198,14 +198,12 @@ class LoginComponent implements GuiComponent
 							onkeypress="(function(e){var k=e.keyCode || e.which;if (k==13){snd_to_api();}})(event)"/></td>
 
 				</tr><tr valign="top">
-					<td></td>
-					<td></td>
-					<td align="right">
+					<td colspan=3 style="text-align:center">
 						<?php
 						if(!is_null($this->api_login_method)){
 							?>
-
-								<div class='POS Boton OK' onClick="snd_to_api()" >Iniciar sesion</div>
+								<div class='POS Boton OK' onClick="snd_to_api()" style='width:150px' >Iniciar sesion</div>
+								<div class='POS Boton' onClick="lostpass()"  style='width:150px' >Olvide mi constrase&ntilde;a</div>
 							<?php
 						}else{
 							?><input type="submit" value="Ingresar" onkeypress=""/><?php
