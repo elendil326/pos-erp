@@ -40,7 +40,7 @@ abstract class TraspasoDAOBase extends DAO
 	  *	Obtener {@link Traspaso} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Traspaso} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Traspaso Un objeto del tipo {@link Traspaso}. NULL si no hay tal registro.

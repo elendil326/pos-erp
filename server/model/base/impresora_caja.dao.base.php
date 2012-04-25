@@ -40,7 +40,7 @@ abstract class ImpresoraCajaDAOBase extends DAO
 	  *	Obtener {@link ImpresoraCaja} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ImpresoraCaja} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ImpresoraCaja Un objeto del tipo {@link ImpresoraCaja}. NULL si no hay tal registro.

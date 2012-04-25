@@ -40,7 +40,7 @@ abstract class LoteEntradaDAOBase extends DAO
 	  *	Obtener {@link LoteEntrada} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link LoteEntrada} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link LoteEntrada Un objeto del tipo {@link LoteEntrada}. NULL si no hay tal registro.

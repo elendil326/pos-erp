@@ -40,7 +40,7 @@ abstract class CompraArpillaDAOBase extends DAO
 	  *	Obtener {@link CompraArpilla} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link CompraArpilla} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link CompraArpilla Un objeto del tipo {@link CompraArpilla}. NULL si no hay tal registro.

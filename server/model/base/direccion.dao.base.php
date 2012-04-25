@@ -40,7 +40,7 @@ abstract class DireccionDAOBase extends DAO
 	  *	Obtener {@link Direccion} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Direccion} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Direccion Un objeto del tipo {@link Direccion}. NULL si no hay tal registro.

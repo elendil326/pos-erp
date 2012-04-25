@@ -40,7 +40,7 @@ abstract class PermisoUsuarioDAOBase extends DAO
 	  *	Obtener {@link PermisoUsuario} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link PermisoUsuario} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link PermisoUsuario Un objeto del tipo {@link PermisoUsuario}. NULL si no hay tal registro.

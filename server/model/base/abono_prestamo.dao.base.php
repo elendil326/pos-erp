@@ -40,7 +40,7 @@ abstract class AbonoPrestamoDAOBase extends DAO
 	  *	Obtener {@link AbonoPrestamo} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link AbonoPrestamo} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link AbonoPrestamo Un objeto del tipo {@link AbonoPrestamo}. NULL si no hay tal registro.

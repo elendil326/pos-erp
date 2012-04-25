@@ -40,7 +40,7 @@ abstract class ReporteDAOBase extends DAO
 	  *	Obtener {@link Reporte} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Reporte} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Reporte Un objeto del tipo {@link Reporte}. NULL si no hay tal registro.

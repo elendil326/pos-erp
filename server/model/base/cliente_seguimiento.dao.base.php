@@ -40,7 +40,7 @@ abstract class ClienteSeguimientoDAOBase extends DAO
 	  *	Obtener {@link ClienteSeguimiento} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ClienteSeguimiento} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ClienteSeguimiento Un objeto del tipo {@link ClienteSeguimiento}. NULL si no hay tal registro.

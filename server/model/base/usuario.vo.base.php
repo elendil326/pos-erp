@@ -157,6 +157,9 @@ class Usuario extends VO
 			if( isset($data['tarifa_venta_obtenida']) ){
 				$this->tarifa_venta_obtenida = $data['tarifa_venta_obtenida'];
 			}
+			if( isset($data['token_recuperacion_pass']) ){
+				$this->token_recuperacion_pass = $data['token_recuperacion_pass'];
+			}
 		}
 	}
 
@@ -214,7 +217,8 @@ class Usuario extends VO
 			"id_tarifa_compra" => $this->id_tarifa_compra,
 			"tarifa_compra_obtenida" => $this->tarifa_compra_obtenida,
 			"id_tarifa_venta" => $this->id_tarifa_venta,
-			"tarifa_venta_obtenida" => $this->tarifa_venta_obtenida
+			"tarifa_venta_obtenida" => $this->tarifa_venta_obtenida,
+			"token_recuperacion_pass" => $this->token_recuperacion_pass
 		); 
 	return json_encode($vec); 
 	}
@@ -625,6 +629,15 @@ class Usuario extends VO
 	  * @var enum('rol','proveedor','cliente','usuario')
 	  */
 	public $tarifa_venta_obtenida;
+
+	/**
+	  * token_recuperacion_pass
+	  * 
+	  * El token que se envia por correo para recuperar contrasena<br>
+	  * @access public
+	  * @var varchar(30)
+	  */
+	public $token_recuperacion_pass;
 
 	/**
 	  * getIdUsuario
@@ -1708,6 +1721,30 @@ class Usuario extends VO
 	final public function setTarifaVentaObtenida( $tarifa_venta_obtenida )
 	{
 		$this->tarifa_venta_obtenida = $tarifa_venta_obtenida;
+	}
+
+	/**
+	  * getTokenRecuperacionPass
+	  * 
+	  * Get the <i>token_recuperacion_pass</i> property for this object. Donde <i>token_recuperacion_pass</i> es El token que se envia por correo para recuperar contrasena
+	  * @return varchar(30)
+	  */
+	final public function getTokenRecuperacionPass()
+	{
+		return $this->token_recuperacion_pass;
+	}
+
+	/**
+	  * setTokenRecuperacionPass( $token_recuperacion_pass )
+	  * 
+	  * Set the <i>token_recuperacion_pass</i> property for this object. Donde <i>token_recuperacion_pass</i> es El token que se envia por correo para recuperar contrasena.
+	  * Una validacion basica se hara aqui para comprobar que <i>token_recuperacion_pass</i> es de tipo <i>varchar(30)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param varchar(30)
+	  */
+	final public function setTokenRecuperacionPass( $token_recuperacion_pass )
+	{
+		$this->token_recuperacion_pass = $token_recuperacion_pass;
 	}
 
 }

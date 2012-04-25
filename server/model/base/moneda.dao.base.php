@@ -40,7 +40,7 @@ abstract class MonedaDAOBase extends DAO
 	  *	Obtener {@link Moneda} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Moneda} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Moneda Un objeto del tipo {@link Moneda}. NULL si no hay tal registro.

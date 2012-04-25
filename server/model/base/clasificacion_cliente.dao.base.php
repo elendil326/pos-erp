@@ -40,7 +40,7 @@ abstract class ClasificacionClienteDAOBase extends DAO
 	  *	Obtener {@link ClasificacionCliente} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ClasificacionCliente} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ClasificacionCliente Un objeto del tipo {@link ClasificacionCliente}. NULL si no hay tal registro.

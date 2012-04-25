@@ -40,7 +40,7 @@ abstract class EmpresaDAOBase extends DAO
 	  *	Obtener {@link Empresa} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Empresa} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Empresa Un objeto del tipo {@link Empresa}. NULL si no hay tal registro.

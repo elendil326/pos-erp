@@ -40,7 +40,7 @@ abstract class BilleteCorteCajaDAOBase extends DAO
 	  *	Obtener {@link BilleteCorteCaja} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link BilleteCorteCaja} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link BilleteCorteCaja Un objeto del tipo {@link BilleteCorteCaja}. NULL si no hay tal registro.

@@ -40,7 +40,7 @@ abstract class ImpuestoProductoDAOBase extends DAO
 	  *	Obtener {@link ImpuestoProducto} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ImpuestoProducto} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ImpuestoProducto Un objeto del tipo {@link ImpuestoProducto}. NULL si no hay tal registro.

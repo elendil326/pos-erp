@@ -40,7 +40,7 @@ abstract class PermisoRolDAOBase extends DAO
 	  *	Obtener {@link PermisoRol} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link PermisoRol} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link PermisoRol Un objeto del tipo {@link PermisoRol}. NULL si no hay tal registro.

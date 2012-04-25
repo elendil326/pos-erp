@@ -40,7 +40,7 @@ abstract class ProductoAbastoProveedorDAOBase extends DAO
 	  *	Obtener {@link ProductoAbastoProveedor} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ProductoAbastoProveedor} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ProductoAbastoProveedor Un objeto del tipo {@link ProductoAbastoProveedor}. NULL si no hay tal registro.

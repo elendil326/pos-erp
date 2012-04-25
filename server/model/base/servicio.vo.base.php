@@ -206,7 +206,7 @@ class Servicio extends VO
 	  * 
 	  * Un json con valores extra que se necesitan llenar<br>
 	  * @access public
-	  * @var varchar(512)
+	  * @var text
 	  */
 	public $extra_params;
 
@@ -506,7 +506,7 @@ class Servicio extends VO
 	  * getExtraParams
 	  * 
 	  * Get the <i>extra_params</i> property for this object. Donde <i>extra_params</i> es Un json con valores extra que se necesitan llenar
-	  * @return varchar(512)
+	  * @return text
 	  */
 	final public function getExtraParams()
 	{
@@ -517,9 +517,9 @@ class Servicio extends VO
 	  * setExtraParams( $extra_params )
 	  * 
 	  * Set the <i>extra_params</i> property for this object. Donde <i>extra_params</i> es Un json con valores extra que se necesitan llenar.
-	  * Una validacion basica se hara aqui para comprobar que <i>extra_params</i> es de tipo <i>varchar(512)</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>extra_params</i> es de tipo <i>text</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param varchar(512)
+	  * @param text
 	  */
 	final public function setExtraParams( $extra_params )
 	{

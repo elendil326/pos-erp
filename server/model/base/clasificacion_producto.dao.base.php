@@ -40,7 +40,7 @@ abstract class ClasificacionProductoDAOBase extends DAO
 	  *	Obtener {@link ClasificacionProducto} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ClasificacionProducto} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ClasificacionProducto Un objeto del tipo {@link ClasificacionProducto}. NULL si no hay tal registro.

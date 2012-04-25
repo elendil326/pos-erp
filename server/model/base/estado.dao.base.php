@@ -40,7 +40,7 @@ abstract class EstadoDAOBase extends DAO
 	  *	Obtener {@link Estado} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Estado} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Estado Un objeto del tipo {@link Estado}. NULL si no hay tal registro.

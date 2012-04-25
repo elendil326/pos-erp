@@ -40,7 +40,7 @@ abstract class OrdenDeServicioPaqueteDAOBase extends DAO
 	  *	Obtener {@link OrdenDeServicioPaquete} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link OrdenDeServicioPaquete} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link OrdenDeServicioPaquete Un objeto del tipo {@link OrdenDeServicioPaquete}. NULL si no hay tal registro.

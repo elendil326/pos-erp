@@ -40,7 +40,7 @@ abstract class CiudadDAOBase extends DAO
 	  *	Obtener {@link Ciudad} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Ciudad} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Ciudad Un objeto del tipo {@link Ciudad}. NULL si no hay tal registro.

@@ -1075,8 +1075,8 @@ class ImpresionesController {
 	     * TITULO
 	     * Datos del emisor, lugar de expedicion, folio, fecha de emision, no de serie
 	     * del certificado del contribuyente
-	     * **************************/
-	
+	     * **************************/            
+            
 	    $e = "<b>" . self::readableText("caffeina software") . "</b>\n";
 	    /*$e .= self::formatAddress(415);
 	    $e .= "RFC: " . "RFC";

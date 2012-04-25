@@ -40,7 +40,7 @@ abstract class DevolucionSobreVentaDAOBase extends DAO
 	  *	Obtener {@link DevolucionSobreVenta} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link DevolucionSobreVenta} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link DevolucionSobreVenta Un objeto del tipo {@link DevolucionSobreVenta}. NULL si no hay tal registro.

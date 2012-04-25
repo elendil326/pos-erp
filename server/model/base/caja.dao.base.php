@@ -40,7 +40,7 @@ abstract class CajaDAOBase extends DAO
 	  *	Obtener {@link Caja} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Caja} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Caja Un objeto del tipo {@link Caja}. NULL si no hay tal registro.

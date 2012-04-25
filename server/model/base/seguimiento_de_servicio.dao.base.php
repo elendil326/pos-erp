@@ -40,7 +40,7 @@ abstract class SeguimientoDeServicioDAOBase extends DAO
 	  *	Obtener {@link SeguimientoDeServicio} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link SeguimientoDeServicio} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link SeguimientoDeServicio Un objeto del tipo {@link SeguimientoDeServicio}. NULL si no hay tal registro.

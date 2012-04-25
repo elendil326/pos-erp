@@ -40,7 +40,7 @@ abstract class InspeccionConsignacionProductoDAOBase extends DAO
 	  *	Obtener {@link InspeccionConsignacionProducto} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link InspeccionConsignacionProducto} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link InspeccionConsignacionProducto Un objeto del tipo {@link InspeccionConsignacionProducto}. NULL si no hay tal registro.

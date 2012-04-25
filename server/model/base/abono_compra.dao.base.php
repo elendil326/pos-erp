@@ -40,7 +40,7 @@ abstract class AbonoCompraDAOBase extends DAO
 	  *	Obtener {@link AbonoCompra} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link AbonoCompra} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link AbonoCompra Un objeto del tipo {@link AbonoCompra}. NULL si no hay tal registro.

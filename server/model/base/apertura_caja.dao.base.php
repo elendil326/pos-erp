@@ -40,7 +40,7 @@ abstract class AperturaCajaDAOBase extends DAO
 	  *	Obtener {@link AperturaCaja} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link AperturaCaja} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link AperturaCaja Un objeto del tipo {@link AperturaCaja}. NULL si no hay tal registro.

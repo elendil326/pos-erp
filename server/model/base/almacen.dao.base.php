@@ -40,7 +40,7 @@ abstract class AlmacenDAOBase extends DAO
 	  *	Obtener {@link Almacen} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Almacen} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Almacen Un objeto del tipo {@link Almacen}. NULL si no hay tal registro.

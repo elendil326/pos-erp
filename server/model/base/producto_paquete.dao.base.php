@@ -40,7 +40,7 @@ abstract class ProductoPaqueteDAOBase extends DAO
 	  *	Obtener {@link ProductoPaquete} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ProductoPaquete} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ProductoPaquete Un objeto del tipo {@link ProductoPaquete}. NULL si no hay tal registro.

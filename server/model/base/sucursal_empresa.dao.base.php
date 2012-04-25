@@ -40,7 +40,7 @@ abstract class SucursalEmpresaDAOBase extends DAO
 	  *	Obtener {@link SucursalEmpresa} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link SucursalEmpresa} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link SucursalEmpresa Un objeto del tipo {@link SucursalEmpresa}. NULL si no hay tal registro.

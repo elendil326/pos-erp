@@ -40,7 +40,7 @@ abstract class VersionDAOBase extends DAO
 	  *	Obtener {@link Version} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Version} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Version Un objeto del tipo {@link Version}. NULL si no hay tal registro.

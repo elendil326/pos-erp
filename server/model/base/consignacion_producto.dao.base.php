@@ -40,7 +40,7 @@ abstract class ConsignacionProductoDAOBase extends DAO
 	  *	Obtener {@link ConsignacionProducto} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ConsignacionProducto} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ConsignacionProducto Un objeto del tipo {@link ConsignacionProducto}. NULL si no hay tal registro.

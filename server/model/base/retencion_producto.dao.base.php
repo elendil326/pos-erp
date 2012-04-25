@@ -40,7 +40,7 @@ abstract class RetencionProductoDAOBase extends DAO
 	  *	Obtener {@link RetencionProducto} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link RetencionProducto} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link RetencionProducto Un objeto del tipo {@link RetencionProducto}. NULL si no hay tal registro.
