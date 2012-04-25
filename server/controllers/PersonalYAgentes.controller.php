@@ -1771,21 +1771,21 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             Logger::log("Creando nuevo rol");
 
             //Se validan lso parametros del rol
-            $validar=self::ValidarParametrosRol(null, $descripcion, $nombre, $salario,$id_tarifa_compra,$id_tarifa_venta);
-            if(is_string($validar))
-            {
-                Logger::error($validar);
-                throw new Exception($validar,901);
-            }
+            //$validar=self::ValidarParametrosRol(null, $descripcion, $nombre, $salario,$id_tarifa_compra,$id_tarifa_venta);
+//            if(is_string($validar))
+//            {
+//                Logger::error($validar);
+//                throw new Exception($validar,901);
+//            }
             
             //Si no se recibe una tarifa de venta, se toma la default
-            if(isset($id_tarifa_venta))
+            if(is_null($id_tarifa_venta))
             {
                 $id_tarifa_venta=1;
             }
             
             //Si no se recibe una tarifa de compra, se toma la default
-            if(isset($id_tarifa_compra))
+            if(is_null($id_tarifa_compra))
             {
                 $id_tarifa_compra=2;
             }
