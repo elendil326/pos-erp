@@ -15,20 +15,14 @@
 		
 		$tabla = new TableComponent( 
 			array(
-				"codigo_producto" => "codigo_producto",
-				"nombre_producto"	=> "nombre_producto",
-				"descripcion" 		=> "descripcion",
-				"activo" 			=> "activo"
+				"codigo_producto" 	=> "Codigo producto",
+				"nombre_producto"	=> "Nombre Producto",
+				"precio" 			=> "Precio"
 			),
 			ProductosController::Lista()
 		);
-		
-                function funcion_activo( $activo )
-                {
-                    return $activo ? "Activo" : "Inactivo";
-                }
-                
-                $tabla->addColRender("activo", "funcion_activo");
+
+		$tabla->addColRender( "precio", "FormatMoney" );
                 
 		$tabla->addOnClick( "id_producto", "(function(a){ window.location = 'productos.ver.php?pid=' + a; })" );
 		

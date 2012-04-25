@@ -1,5 +1,13 @@
 <?php
 
+function FormatMoney($float){
+	
+	//return "$" . $float;
+	return sprintf ( "<b>$</b>%.2f" , $float);
+	
+}
+
+
 function FormatTime($timestamp)
 {
 	// Get time difference and setup arrays
