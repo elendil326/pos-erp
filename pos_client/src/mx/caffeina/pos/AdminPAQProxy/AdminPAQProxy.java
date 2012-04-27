@@ -135,7 +135,7 @@ public class AdminPAQProxy{
 
 			if(cRecord > 1) output.append(", ");
 			
-			output.append("{");
+			output.append("[");
 
 			for( int i=0; i<rowObjects.length; i++) {
 				if(i>0){
@@ -155,7 +155,7 @@ public class AdminPAQProxy{
 
 			}
 
-			output.append( "}"); 			
+			output.append( "]"); 			
 		}	
 
 		output.append("]}");
