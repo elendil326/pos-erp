@@ -127,6 +127,7 @@ public class Dispatcher{
 
 			AdminPAQProxy aproxy = new AdminPAQProxy(  path );
 
+			Logger.log("Termine de ejecutar AdminPAQProxy()");
 			
 			return returnResponse(aproxy.query(sql));
 

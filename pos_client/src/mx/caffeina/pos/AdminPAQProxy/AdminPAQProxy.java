@@ -32,10 +32,11 @@ public class AdminPAQProxy{
 
 		}catch( DBFException e){
 			System.out.println( "E1:" + e.getMessage());
-
+			Logger.log(e.getMessage());
+			
 		}catch( IOException e){
 			System.out.println("E2:" + e.getMessage());
-
+			Logger.log(e.getMessage());
 		}
 	}
 	
@@ -45,7 +46,9 @@ public class AdminPAQProxy{
 
 	
 	public String query(String sql ){
-		Logger.log("doing query:" + sql);
+
+		Logger.log("Doing query:" + sql);
+
 		String [] sql_tokens = sql.trim().split( " " );
 
 		//buscar el from
@@ -84,7 +87,7 @@ public class AdminPAQProxy{
 			System.out.println( "E3:" + dbfe );
 
 		}catch(NullPointerException npe){
-			Logger.error("ADMINPAQPROXY:"+npe);
+			Logger.error("ADMINPAQPROXY:" + npe);
 		}
 
 		//String fieldNames [] = new String[ numberOfFields ];
@@ -139,13 +142,15 @@ public class AdminPAQProxy{
 					output.append(", ");
 				}
 					
-				try{
-					output.append( "\""+reader.getField( i).getName( ) + "\"" + ": \"" + String.valueOf(rowObjects[i]).replaceAll("\\p{Cntrl}", "").replaceAll("[^\\p{ASCII}]", "") + "\" ");	
+				output.append( " \"" + String.valueOf(rowObjects[i]).replaceAll("\\p{Cntrl}", "").replaceAll("[^\\p{ASCII}]", "") + "\" ");	
+				/*try{
+					output.append( " \"" + String.valueOf(rowObjects[i]).replaceAll("\\p{Cntrl}", "").replaceAll("[^\\p{ASCII}]", "") + "\" ");	
+					//output.append( "\""+reader.getField( i).getName( ) + "\"" + ": \"" + String.valueOf(rowObjects[i]).replaceAll("\\p{Cntrl}", "").replaceAll("[^\\p{ASCII}]", "") + "\" ");	
 
 				}catch(DBFException dbfe){
 					Logger.error("While reading record " + i + ":" + dbfe );
 					
-				}
+				}*/
 
 
 			}
