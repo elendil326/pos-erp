@@ -13,7 +13,8 @@ public class AdminPAQProxy{
 	private DBFReader reader;
 	private FileInputStream inputStream;
 	private boolean explorer;
-
+	private String sql;
+	
 	public AdminPAQProxy(String ruta, boolean explorer){
 		this.ruta = ruta;
 		this.reader = null;
@@ -47,9 +48,9 @@ public class AdminPAQProxy{
 
 	
 	public String query(String sql ){
-
+		
 		Logger.log("Doing query:" + sql);
-
+		this.sql = sql;
 		String [] sql_tokens = sql.trim().split( " " );
 
 		//buscar el from
@@ -60,12 +61,19 @@ public class AdminPAQProxy{
 		
 		startCon( sql_tokens[i] );
 
+		String out = "";
+		
+		if( this.explorer ){
+			out = createExplorer();
+		}
+
 		//first level
-		if(sql_tokens[0].equals("select")) return select(sql_tokens);
+		if(sql_tokens[0].equals("select")) out += select(sql_tokens);
 		
-		if(sql_tokens[0].equals("update")) return update(sql_tokens);
+		if(sql_tokens[0].equals("update")) out += update(sql_tokens);
 		
-		return "{error}";
+		return out;
+
 
 
 	}
@@ -75,13 +83,40 @@ public class AdminPAQProxy{
 		return "0";
 	}
 	
+	private String createExplorer(){
+		//query builder
+		String s = "", out = "";
+		try{
+			BufferedReader br = new BufferedReader(new FileReader("html"));			
+			while((s = br.readLine()) != null){
+				
+				if(s.equals("{path}")){
+					s = "<input type=\"hidden\" name=\"path\" value=\""+ this.ruta +"\">";
+				}
+				
+				if(s.equals("{sql}")){
+					s = "<textarea name=\"sql\" cols=\"40\" rows=\"6\" dir=\"ltr\">"+this.sql+"</textarea>";
+				}
+				
+				out += s;
+			}
+		}catch(Exception e){
+			System.out.println(e);
+		}
+		
+		
+		
+		
+		return out;
+	}
+	
 	private String select(String [] sql){
 		
 		StringBuilder output = new StringBuilder();
 		
 		
 		if(this.explorer){
-			output.append("<table><tr>");
+			output.append("<table><tr style='background-color: green'>");
 		}else{
 			output.append("{ \"estructura\" : [ ");						
 		}
@@ -190,15 +225,7 @@ public class AdminPAQProxy{
 					output.append( " \"" + String.valueOf(rowObjects[i]).replaceAll("\\p{Cntrl}", "").replaceAll("[^\\p{ASCII}]", "") + "\" ");	
 				}
 				
-				/*try{
-					output.append( " \"" + String.valueOf(rowObjects[i]).replaceAll("\\p{Cntrl}", "").replaceAll("[^\\p{ASCII}]", "") + "\" ");	
-					//output.append( "\""+reader.getField( i).getName( ) + "\"" + ": \"" + String.valueOf(rowObjects[i]).replaceAll("\\p{Cntrl}", "").replaceAll("[^\\p{ASCII}]", "") + "\" ");	
-
-				}catch(DBFException dbfe){
-					Logger.error("While reading record " + i + ":" + dbfe );
-					
-				}*/
-
+			
 
 			}
 

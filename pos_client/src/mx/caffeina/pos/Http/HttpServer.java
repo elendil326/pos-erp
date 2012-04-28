@@ -140,6 +140,10 @@ public class HttpServer
 				} 
 
 
+				if(Get_Request == null){
+					throw new Exception("solo se aceptan metodos GET por ahora");
+				}
+
 				//send the response
 				Dispatcher d = new Dispatcher();
 

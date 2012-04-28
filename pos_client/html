@@ -1,0 +1,33 @@
+<form method="GET" action=""  id="sqlqueryform"  name="sqlform">
+<input type="hidden" name="action" value="AdminPAQProxy">
+<input type="hidden" name="explorer" value="1">
+{path}
+<a name="querybox"></a>
+<div id="queryboxcontainer">
+<fieldset id="querybox">
+<legend>Run SQL query/queries on server "localhost": </legend>
+<div id="queryfieldscontainer">
+	<div id="sqlquerycontainerfull">
+{sql}
+</div>
+<input type="submit" value="Go">
+<div class="clearfloat"></div>
+</div>
+<div class="clearfloat"></div>
+
+</div>
+
+<div class="formelement">
+</div>
+<div class="formelement">
+
+</div>
+
+
+<div class="clearfloat"></div>
+</fieldset>
+</form>
+
+
+
+
