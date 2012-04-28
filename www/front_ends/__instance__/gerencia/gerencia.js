@@ -1,3 +1,9 @@
+Ext.Loader.setConfig({
+    enabled: true
+});
+
+Ext.Loader.setPath('Ext.ux', 'http://api.caffeina.mx/ext-4.0.0/examples/ux/');
+
 
 
 Ext.require([
@@ -7,7 +13,17 @@ Ext.require([
     'Ext.util.*',
     'Ext.state.*',
 	'Ext.ux.grid.TransformGrid',
-    'Ext.window.MessageBox'
+    'Ext.window.MessageBox',
+	'Ext.tab.*',
+	  'Ext.panel.Panel',
+	  'Ext.button.Button',
+	  'Ext.window.Window',
+	  'Ext.ux.statusbar.StatusBar',
+	  'Ext.toolbar.TextItem',
+	  'Ext.menu.Menu',
+	  'Ext.toolbar.Spacer',
+	  'Ext.button.Split',
+	  'Ext.form.field.TextArea'
 ]);
 
 
@@ -138,10 +154,622 @@ POS.API =
 
 
 
+Ext.define('MGW10005', {
+    extend: 'Ext.data.Model',
+    fields: [
+		{name: 'CIDPRODU01', type: 'string' },
+		{name: 'CCODIGOP01', type: 'string' },
+		{name: 'CNOMBREP01', type: 'string' },
+		{name: 'CTIPOPRO01', type: 'string' },
+		{name: 'CFECHAAL01', type: 'string' },
+		{name: 'CCONTROL01', type: 'string' },
+		{name: 'CIDFOTOP01', type: 'string' },
+		{name: 'CDESCRIP01', type: 'string' },
+		{name: 'CMETODOC01', type: 'string' },
+		{name: 'CPESOPRO01', type: 'string' },
+		{name: 'CCOMVENT01', type: 'string' },
+		{name: 'CCOMCOBR01', type: 'string' },
+		{name: 'CCOSTOES01', type: 'string' },
+		{name: 'CMARGENU01', type: 'string' },
+		{name: 'CSTATUSP01', type: 'string' },
+		{name: 'CIDUNIDA01', type: 'string' },
+		{name: 'CIDUNIDA02', type: 'string' },
+		{name: 'CFECHABAJA', type: 'string' },
+		{name: 'CIMPUESTO1', type: 'string' },
+		{name: 'CIMPUESTO2', type: 'string' },
+		{name: 'CIMPUESTO3', type: 'string' },
+		{name: 'CRETENCI01', type: 'string' },
+		{name: 'CRETENCI02', type: 'string' },
+		{name: 'CIDPADRE01', type: 'string' },
+		{name: 'CIDPADRE02', type: 'string' },
+		{name: 'CIDPADRE03', type: 'string' },
+		{name: 'CIDVALOR01', type: 'string' },
+		{name: 'CIDVALOR02', type: 'string' },
+		{name: 'CIDVALOR03', type: 'string' },
+		{name: 'CIDVALOR04', type: 'string' },
+		{name: 'CIDVALOR05', type: 'string' },
+		{name: 'CIDVALOR06', type: 'string' },
+		{name: 'CSEGCONT01', type: 'string' },
+		{name: 'CSEGCONT02', type: 'string' },
+		{name: 'CSEGCONT03', type: 'string' },
+		{name: 'CTEXTOEX01', type: 'string' },
+		{name: 'CTEXTOEX02', type: 'string' },
+		{name: 'CTEXTOEX03', type: 'string' },
+		{name: 'CFECHAEX01', type: 'string' },
+		{name: 'CIMPORTE01', type: 'string' },
+		{name: 'CIMPORTE02', type: 'string' },
+		{name: 'CIMPORTE03', type: 'string' },
+		{name: 'CIMPORTE04', type: 'string' },
+		{name: 'CPRECIO1', type: 'string' },
+		{name: 'CPRECIO2', type: 'string' },
+		{name: 'CPRECIO3', type: 'string' },
+		{name: 'CPRECIO4', type: 'string' },
+		{name: 'CPRECIO5', type: 'string' },
+		{name: 'CPRECIO6', type: 'string' },
+		{name: 'CPRECIO7', type: 'string' },
+		{name: 'CPRECIO8', type: 'string' },
+		{name: 'CPRECIO9', type: 'string' },
+		{name: 'CPRECIO10', type: 'string' },
+		{name: 'CBANUNID01', type: 'string' },
+		{name: 'CBANCARA01', type: 'string' },
+		{name: 'CBANMETO01', type: 'string' },
+		{name: 'CBANMAXMIN', type: 'string' },
+		{name: 'CBANPRECIO', type: 'string' },
+		{name: 'CBANIMPU01', type: 'string' },
+		{name: 'CBANCODI01', type: 'string' },
+		{name: 'CBANCOMP01', type: 'string' },
+		{name: 'CTIMESTAMP', type: 'string' },
+		{name: 'CERRORCO01', type: 'string' },
+		{name: 'CFECHAER01', type: 'string' },
+		{name: 'CPRECIOC01', type: 'string' },
+		{name: 'CESTADOP01', type: 'string' },
+		{name: 'CBANUBIC01', type: 'string' },
+		{name: 'CESEXENTO', type: 'string' },
+		{name: 'CEXISTEN01', type: 'string' },
+		{name: 'CCOSTOEXT1', type: 'string' },
+		{name: 'CCOSTOEXT2', type: 'string' },
+		{name: 'CCOSTOEXT3', type: 'string' },
+		{name: 'CCOSTOEXT4', type: 'string' },
+		{name: 'CCOSTOEXT5', type: 'string' },
+		{name: 'CFECCOSEX1', type: 'string' },
+		{name: 'CFECCOSEX2', type: 'string' },
+		{name: 'CFECCOSEX3', type: 'string' },
+		{name: 'CFECCOSEX4', type: 'string' },
+		{name: 'CFECCOSEX5', type: 'string' },
+		{name: 'CMONCOSEX1', type: 'string' },
+		{name: 'CMONCOSEX2', type: 'string' },
+		{name: 'CMONCOSEX3', type: 'string' },
+		{name: 'CMONCOSEX4', type: 'string' },
+		{name: 'CMONCOSEX5', type: 'string' },
+		{name: 'CBANCOSEX', type: 'string' },
+		{name: 'CESCUOTAI2', type: 'string' },
+		{name: 'CESCUOTAI3', type: 'string' },
+		{name: 'CIDUNICOM', type: 'string' },
+		{name: 'CIDUNIVEN', type: 'string' },
+		{name: 'CSUBTIPO', type: 'string' },
+		{name: 'CCODALTERN', type: 'string' },
+		{name: 'CNOMALTERN', type: 'string' },
+		{name: 'CDESCCORTA', type: 'string' },
+		{name: 'CIDMONEDA', type: 'string' },
+		{name: 'CUSABASCU', type: 'string' },
+		{name: 'CTIPOPAQUE', type: 'string' },
+		{name: 'CPRECSELEC', type: 'string' },
+		{name: 'CDESGLOSAI', type: 'string' },
+		{name: 'CSEGCONT04', type: 'string' },
+		{name: 'CSEGCONT05', type: 'string' },
+		{name: 'CSEGCONT06', type: 'string' },
+		{name: 'CSEGCONT07', type: 'string' },
+		{name: 'CCTAPRED', type: 'string' },
+		{name: 'CNODESCOMP', type: 'string' }
+    ],
+    idProperty: 'CIDPRODU01'
+});
 
 
 
 
+Ext.define('MGW10002', {
+    extend: 'Ext.data.Model',
+    fields: [
+       {name: 'CIDCLIEN01', type: 'string' },
+       {name: 'CCODIGOC01', type: 'string' },
+       {name: 'CRAZONSO01', type: 'string' },
+       {name: 'CFECHAALTA', type: 'string' },
+       {name: 'CRFC', type: 'string' },
+       {name: 'CCURP', type: 'string' },
+       {name: 'CDENCOME01', type: 'string' },
+       {name: 'CREPLEGAL', type: 'string' },
+       {name: 'CIDMONEDA', type: 'string' },
+       {name: 'CLISTAPR01', type: 'string' },
+       {name: 'CDESCUEN01', type: 'string' },
+       {name: 'CDESCUEN02', type: 'string' },
+       {name: 'CBANVENT01', type: 'string' },
+       {name: 'CIDVALOR01', type: 'string' },
+       {name: 'CIDVALOR02', type: 'string' },
+       {name: 'CIDVALOR03', type: 'string' },
+       {name: 'CIDVALOR04', type: 'string' },
+       {name: 'CIDVALOR05', type: 'string' },
+       {name: 'CIDVALOR06', type: 'string' },
+       {name: 'CTIPOCLI01', type: 'string' },
+       {name: 'CESTATUS', type: 'string' },
+       {name: 'CFECHABAJA', type: 'string' },
+       {name: 'CFECHAUL01', type: 'string' },
+       {name: 'CLIMITEC01', type: 'string' },
+       {name: 'CDIASCRE01', type: 'string' },
+       {name: 'CBANEXCE01', type: 'string' },
+       {name: 'CDESCUEN03', type: 'string' },
+       {name: 'CDIASPRO01', type: 'string' },
+       {name: 'CINTERES01', type: 'string' },
+       {name: 'CDIAPAGO', type: 'string' },
+       {name: 'CDIASREV01', type: 'string' },
+       {name: 'CMENSAJE01', type: 'string' },
+       {name: 'CCUENTAM01', type: 'string' },
+       {name: 'CDIASEMB01', type: 'string' },
+       {name: 'CIDALMACEN', type: 'string' },
+       {name: 'CIDAGENT01', type: 'string' },
+       {name: 'CIDAGENT02', type: 'string' },
+       {name: 'CRESTRIC01', type: 'string' },
+       {name: 'CIMPUESTO1', type: 'string' },
+       {name: 'CIMPUESTO2', type: 'string' },
+       {name: 'CIMPUESTO3', type: 'string' },
+       {name: 'CRETENCI01', type: 'string' },
+       {name: 'CRETENCI02', type: 'string' },
+       {name: 'CIDVALOR07', type: 'string' },
+       {name: 'CIDVALOR08', type: 'string' },
+       {name: 'CIDVALOR09', type: 'string' },
+       {name: 'CIDVALOR10', type: 'string' },
+       {name: 'CIDVALOR11', type: 'string' },
+       {name: 'CIDVALOR12', type: 'string' },
+       {name: 'CLIMITEC02', type: 'string' },
+       {name: 'CDIASCRE02', type: 'string' },
+       {name: 'CTIEMPOE01', type: 'string' },
+       {name: 'CDIASEMB02', type: 'string' },
+       {name: 'CIMPUEST01', type: 'string' },
+       {name: 'CIMPUEST02', type: 'string' },
+       {name: 'CIMPUEST03', type: 'string' },
+       {name: 'CRETENCI03', type: 'string' },
+       {name: 'CRETENCI04', type: 'string' },
+       {name: 'CBANINTE01', type: 'string' },
+       {name: 'CCOMVENT01', type: 'string' },
+       {name: 'CCOMCOBR01', type: 'string' },
+       {name: 'CBANPROD01', type: 'string' },
+       {name: 'CSEGCONT01', type: 'string' },
+       {name: 'CSEGCONT02', type: 'string' },
+       {name: 'CSEGCONT03', type: 'string' },
+       {name: 'CSEGCONT04', type: 'string' },
+       {name: 'CSEGCONT05', type: 'string' },
+       {name: 'CSEGCONT06', type: 'string' },
+       {name: 'CSEGCONT07', type: 'string' },
+       {name: 'CSEGCONT08', type: 'string' },
+       {name: 'CSEGCONT09', type: 'string' },
+       {name: 'CSEGCONT10', type: 'string' },
+       {name: 'CSEGCONT11', type: 'string' },
+       {name: 'CSEGCONT12', type: 'string' },
+       {name: 'CSEGCONT13', type: 'string' },
+       {name: 'CSEGCONT14', type: 'string' },
+       {name: 'CTEXTOEX01', type: 'string' },
+       {name: 'CTEXTOEX02', type: 'string' },
+       {name: 'CTEXTOEX03', type: 'string' },
+       {name: 'CFECHAEX01', type: 'string' },
+       {name: 'CIMPORTE01', type: 'string' },
+       {name: 'CIMPORTE02', type: 'string' },
+       {name: 'CIMPORTE03', type: 'string' },
+       {name: 'CIMPORTE04', type: 'string' },
+       {name: 'CBANDOMI01', type: 'string' },
+       {name: 'CBANCRED01', type: 'string' },
+       {name: 'CBANENVIO', type: 'string' },
+       {name: 'CBANAGENTE', type: 'string' },
+       {name: 'CBANIMPU01', type: 'string' },
+       {name: 'CBANPRECIO', type: 'string' },
+       {name: 'CTIMESTAMP', type: 'string' },
+       {name: 'CFACTERC01', type: 'string' },
+       {name: 'CCOMVENTA', type: 'string' },
+       {name: 'CCOMCOBRO', type: 'string' },
+       {name: 'CIDMONEDA2', type: 'string' },
+       {name: 'CEMAIL1', type: 'string' },
+       {name: 'CEMAIL2', type: 'string' },
+       {name: 'CEMAIL3', type: 'string' },
+       {name: 'CTIPOENTRE', type: 'string' },
+       {name: 'CCONCTEEMA', type: 'string' },
+       {name: 'CFTOADDEND', type: 'string' },
+       {name: 'CIDCERTCTE', type: 'string' },
+       {name: 'CENCRIPENT', type: 'string' },
+       {name: 'CBANCFD', type: 'string' },
+       {name: 'CTEXTOEX04', type: 'string' },
+       {name: 'CTEXTOEX05', type: 'string' },
+       {name: 'CIMPORTE05', type: 'string' },
+       {name: 'CIDADDENDA', type: 'string' },
+       {name: 'CCODPROVCO', type: 'string' },
+       {name: 'CENVACUSE', type: 'string' },
+       {name: 'CCON1NOM', type: 'string' },
+       {name: 'CCON1TEL', type: 'string' },
+       {name: 'CQUITABLAN', type: 'string' },
+       {name: 'CFMTOENTRE', type: 'string' },
+       {name: 'CIDCOMPLEM', type: 'string' },
+       {name: 'CDESGLOSAI', type: 'string' },
+       {name: 'CLIMDOCTOS', type: 'string' },
+       {name: 'CSITIOFTP', type: 'string' },
+       {name: 'CUSRFTP', type: 'string' }
+    ],
+    idProperty: 'CCODIGOC01'
+});
+
+
+
+
+
+
+var AdminPAQExplorer = function(){
+
+	var clientes = Ext.create('Ext.data.ArrayStore', {
+		        model: 'MGW10002',
+		        data: []
+			}),
+		productos = Ext.create('Ext.data.ArrayStore', {
+			        model: 'MGW10005',
+			        data: []
+			});		
+		
+	
+
+	
+	var createWindow = function(){
+		var tabs = Ext.createWidget('tabpanel', {
+	        height: 450,
+	        width: 600,
+			frame: true,
+			modal:true,
+			floating:true,
+			autoShow:true,	
+	        activeTab: 0,
+	        defaults :{
+	            bodyPadding: 10
+	        },
+	        items: [
+					createGridForClientes(),
+					createGridForProds(),
+					{ title: 'Long Text' }
+			]
+	    });
+	}//createWindow
+	
+	
+	
+	
+	var getData = function(table){
+		console.log(1)
+		Ext.data.JsonP.request({
+			url : 'http://192.168.1.109:16001/',
+			params : {
+				"action" : "AdminPAQProxy",
+				sql		: "select * from MGW10002",
+				path	: "C:\\Compacw\\Empresas\\Caffeina\\"
+			},
+			callback : function(status, response){
+				if(!status){
+					return;
+				}
+				
+				clientes.loadData(response.datos);
+				
+			}
+		});
+
+		console.log(2)
+		
+		Ext.data.JsonP.request({
+			url : 'http://192.168.1.109:16001/',
+			params : {
+				"action" : "AdminPAQProxy",
+				sql		: "select * from MGW10005",
+				path	: "C:\\Compacw\\Empresas\\Caffeina\\"
+			},
+			callback : function(status, response){
+				if(!status){
+					return;
+				}
+				
+				productos.loadData(response.datos);
+				
+			}
+		});
+		console.log(3)		
+	}//ajaxtoClient
+	
+	
+	var createGridForProds = function(){
+		
+		return Ext.create('Ext.grid.Panel', {
+	        store: productos, 
+			title : "productos",
+			frame : false,
+	        columns: [
+	            { text     : 'Código del Producto',
+	                width    : 75,
+	                sortable : true,
+	                dataIndex: 'CCODIGOP01'
+	            },
+	            {
+	                text     : 'Nombre del producto',
+	                width    : 75,
+	                sortable : true,
+	                dataIndex: 'CNOMBREP01'
+	            },
+	            {
+	                text     : 'Tipo del Producto',
+	                width    : 75,
+	                sortable : true,
+	                dataIndex: 'CTIPOPRO01'
+	            },
+	            {
+	                text     : 'Descripción detallada',
+	                width    : 75,
+	                sortable : true,
+	                dataIndex: 'CDESCRIP01'
+	            }										
+	        ],
+
+			modal: true,
+	        viewConfig: {
+	            stripeRows: true,
+	            enableTextSelection: true
+	        },
+			bbar: Ext.create('Ext.ux.StatusBar', {
+			            text: 'Mostrando n registros',
+			            // any standard Toolbar items:
+			            items: [
+			                {
+			                    xtype: 'button',
+			                    text: 'Cancelar',
+			                    handler: function (){
+									this.close();
+			                    }
+			                },
+			                {
+			                    xtype: 'button',
+			                    text: 'Importar',
+			                    handler: function (){
+
+			                    }
+			                }
+			            ]
+			        })
+	    });
+	}//createGridForClientes()
+	
+	var createGridForClientes = function(){
+		
+		return Ext.create('Ext.grid.Panel', {
+	        store: clientes, 
+			title : "Clientes",
+	        multiSelect: true,
+			frame : false,
+	        columns: [
+	            { text     : 'Identificador del Cliente', dataIndex: 'CCODIGOC01' },
+	            { text     : 'Código del Cliente',
+	                width    : 75,
+	                sortable : true,
+	                dataIndex: 'CRAZONSO01'
+	            },
+	            {
+	                text     : 'Razón Social',
+	                width    : 75,
+	                sortable : true,
+	                dataIndex: 'CRAZONSO01'
+	            },
+	            {
+	                text     : 'Fecha de alta',
+	                width    : 75,
+	                sortable : true,
+	                dataIndex: 'CFECHAALTA'
+	            },
+	            {
+	                text     : 'RFC',
+	                width    : 75,
+	                sortable : true,
+	                dataIndex: 'CRFC'
+	            },
+	            {
+	                text     : 'CURP',
+	                width    : 75,
+	                sortable : true,
+	                dataIndex: 'CCURP'
+	            },
+	            {
+	                text     : 'Denominación comercial',
+	                width    : 75,
+	                sortable : true,
+	                dataIndex: 'CDENCOME01'
+	            },
+	            {
+	                text     : 'Representante',
+	                width    : 75,
+	                sortable : true,
+	                dataIndex: 'CREPLEGAL'
+	            }										
+	        ],
+
+			modal: true,
+	        viewConfig: {
+	            stripeRows: true,
+	            enableTextSelection: true
+	        },
+			bbar: Ext.create('Ext.ux.StatusBar', {
+			            text: 'Mostrando n registros',
+			            // any standard Toolbar items:
+			            items: [
+			                {
+			                    xtype: 'button',
+			                    text: 'Cancelar',
+			                    handler: function (){
+									this.close();
+			                    }
+			                },
+			                {
+			                    xtype: 'button',
+			                    text: 'Importar',
+			                    handler: function (){
+
+			                    }
+			                }
+			            ]
+			        })
+	    });
+	}//createGridForClientes()
+
+	getData( );	
+	createWindow(  );
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+var importarClientes = function(d){
+	
+
+	Ext.data.JsonP.request({
+		url : 'http://192.168.1.109:16001/',
+		params : {
+			"action" : "AdminPAQProxy",
+			sql		: "select * from MGW10002",
+			path	: "C:\\Compacw\\Empresas\\Caffeina\\"
+		},
+		callback : function(status, response){
+			if(!status){
+				return;
+			}
+			
+			console.log( response);
+			
+			
+	   	 	// create the data store
+		    var clientesAdminPAQ = Ext.create('Ext.data.ArrayStore', {
+		        model: 'MGW10002',
+		        data: response.datos
+		    });
+
+
+
+
+		    // create the Grid
+		    var clientesGrid = Ext.create('Ext.grid.Panel', {
+		        store: clientesAdminPAQ,
+		        stateful: false,
+				title : "Clientes",
+		        multiSelect: true,
+				frame : false,
+		        columns: [
+		            {
+		                text     : 'Identificador del Cliente',
+		                flex     : 1,
+		                sortable : false,
+		                dataIndex: 'CCODIGOC01'
+		            },
+		            {
+		                text     : 'Código del Cliente',
+		                width    : 75,
+		                sortable : true,
+		                dataIndex: 'CRAZONSO01'
+		            },
+		            {
+		                text     : 'Razón Social',
+		                width    : 75,
+		                sortable : true,
+		                dataIndex: 'CRAZONSO01'
+		            },
+		            {
+		                text     : 'Fecha de alta',
+		                width    : 75,
+		                sortable : true,
+		                dataIndex: 'CFECHAALTA'
+		            },
+		            {
+		                text     : 'RFC',
+		                width    : 75,
+		                sortable : true,
+		                dataIndex: 'CRFC'
+		            },
+		            {
+		                text     : 'CURP',
+		                width    : 75,
+		                sortable : true,
+		                dataIndex: 'CCURP'
+		            },
+		            {
+		                text     : 'Denominación comercial',
+		                width    : 75,
+		                sortable : true,
+		                dataIndex: 'CDENCOME01'
+		            },
+		            {
+		                text     : 'Representante',
+		                width    : 75,
+		                sortable : true,
+		                dataIndex: 'CREPLEGAL'
+		            }										
+		        ],
+
+				modal: true,
+		        viewConfig: {
+		            stripeRows: true,
+		            enableTextSelection: true
+		        },
+				bbar: Ext.create('Ext.ux.StatusBar', {
+				            text: 'Mostrando n registros',
+				            // any standard Toolbar items:
+				            items: [
+				                {
+				                    xtype: 'button',
+				                    text: 'Cancelar',
+				                    handler: function (){
+										this.close();
+				                    }
+				                },
+				                {
+				                    xtype: 'button',
+				                    text: 'Importar',
+				                    handler: function (){
+
+				                    }
+				                }
+				            ]
+				        })
+		    });
+		
+		
+			// basic tabs 1, built from existing content
+			    var tabs = Ext.createWidget('tabpanel', {
+			        height: 450,
+			        width: 600,
+					modal:true,
+					floating:true,
+					autoShow:true,	
+			        activeTab: 0,
+			        defaults :{
+			            bodyPadding: 10
+			        },
+			        items: [
+						clientesGrid,
+						{
+			            title: 'Long Text'
+			        }]
+			    });
+		}//callback
+	});
+	
+
+
+}
 
 
 
@@ -242,3 +870,5 @@ Ext.example = function(){
         }
     };
 }();
+
+

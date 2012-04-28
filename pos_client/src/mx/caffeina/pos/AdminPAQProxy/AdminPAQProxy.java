@@ -12,11 +12,12 @@ public class AdminPAQProxy{
 	private String ruta;
 	private DBFReader reader;
 	private FileInputStream inputStream;
+	private boolean explorer;
 
-
-	public AdminPAQProxy(String ruta){
+	public AdminPAQProxy(String ruta, boolean explorer){
 		this.ruta = ruta;
 		this.reader = null;
+		this.explorer = explorer;
 	}
 
 
@@ -76,7 +77,15 @@ public class AdminPAQProxy{
 	
 	private String select(String [] sql){
 		
-		StringBuilder output = new StringBuilder("{ \"estructura\" : [ ");
+		StringBuilder output = new StringBuilder();
+		
+		
+		if(this.explorer){
+			output.append("<table><tr>");
+		}else{
+			output.append("{ \"estructura\" : [ ");						
+		}
+		
 		
 		int numberOfFields = -1;
 
@@ -97,10 +106,20 @@ public class AdminPAQProxy{
 			DBFField field = null;
 			try{
 				if(i>0) {
-					output.append(",");
+					if(this.explorer){
+						output.append(" ");
+					}else{
+						output.append(",");						
+					}
+
 				}
 				
-				output.append( "\"" + reader.getField( i).getName( ) + "\"" );
+				if(this.explorer){
+					output.append( "<td>" + reader.getField( i).getName( ) + "</td>" );
+				}else{
+					output.append( "\"" + reader.getField( i).getName( ) + "\"" );					
+				}
+				
 				
 			}catch( DBFException dbfe ){
 				System.out.println( "E4:" + dbfe );
@@ -112,9 +131,14 @@ public class AdminPAQProxy{
 		// Now, lets us start reading the rows
 		Object []rowObjects = null;
 
-		output.append("] , ");
+		
+		
+		if(this.explorer){
+			output.append( "</tr>" );
+		}else{
+			output.append( "] ,  \"datos\" : [");
+		}
 
-		output.append("\"datos\" : [ ");
 		
 		int cRecord = 0;
 		while( true ) {
@@ -135,14 +159,31 @@ public class AdminPAQProxy{
 
 			if(cRecord > 1) output.append(", ");
 			
-			output.append("[");
+
+			if(this.explorer){
+				output.append( "<tr>" );
+			}else{
+				output.append("[");
+			}
 
 			for( int i=0; i<rowObjects.length; i++) {
 				if(i>0){
-					output.append(", ");
-				}
 					
-				output.append( " \"" + String.valueOf(rowObjects[i]).replaceAll("\\p{Cntrl}", "").replaceAll("[^\\p{ASCII}]", "") + "\" ");	
+					
+					if(this.explorer){
+
+					}else{
+						output.append(", ");
+					}
+				}
+				
+				
+				if(this.explorer){
+					output.append( " <td>" + String.valueOf(rowObjects[i]).replaceAll("\\p{Cntrl}", "").replaceAll("[^\\p{ASCII}]", "") + "</td> ");	
+				}else{
+					output.append( " \"" + String.valueOf(rowObjects[i]).replaceAll("\\p{Cntrl}", "").replaceAll("[^\\p{ASCII}]", "") + "\" ");	
+				}
+				
 				/*try{
 					output.append( " \"" + String.valueOf(rowObjects[i]).replaceAll("\\p{Cntrl}", "").replaceAll("[^\\p{ASCII}]", "") + "\" ");	
 					//output.append( "\""+reader.getField( i).getName( ) + "\"" + ": \"" + String.valueOf(rowObjects[i]).replaceAll("\\p{Cntrl}", "").replaceAll("[^\\p{ASCII}]", "") + "\" ");	
@@ -155,10 +196,20 @@ public class AdminPAQProxy{
 
 			}
 
-			output.append( "]"); 			
+			
+		 	if(this.explorer){
+				output.append( "</tr>");
+			}else{
+				output.append( "]");
+			}		
 		}	
 
-		output.append("]}");
+	 	if(this.explorer){
+			output.append( "</table>");
+		}else{
+			output.append("]}");
+		}
+
 
 		// By now, we have itereated through all of the rows
 		try{

@@ -40,9 +40,21 @@
 		$importarProductos->addField("raw_content", "Contenido de la exportacion CSV", "textarea");
 		$importarProductos->addApiCall("api/producto/importar/", "POST");
 		$page->addComponent( $importarProductos );
-
+		
+		
+		//
+		// Importar usando PosClient
+		// 
+		// 
 		$page->addComponent( new TitleComponent("Importar datos AdminPAQ automaticamente", 2));
 
+		
+		$adminPF = new FormComponent();
+		$adminPF->addField("url", "URL de AdminPAQ", "text" , "http://127.0.0.1:16001/" );
+		$adminPF->addField("path", "Path de la emprsa", "text", "/Users/alanboy/Desktop/BTT2012" );
+		$adminPF->addOnClick("Importar" , "(function(){ new AdminPAQExplorer(); })");
+		$page->addComponent($adminPF);
+		$page->addComponent("<div id='grid-example'></div>");
 
 		$page->nextTab("Sesiones");
 		$sesiones = SesionController::Lista();//SesionDAO::GetAll();

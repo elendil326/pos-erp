@@ -92,6 +92,8 @@ public class Dispatcher{
 
 			String  path = null,
 					sql = null;
+			
+			boolean explorer = false;
 					
 			//buscar argumentos
 			for ( int i = 0; i < args.length ; i++) 
@@ -110,6 +112,13 @@ public class Dispatcher{
 					Logger.log("found `sql` = " + sql);
 					
 				}
+				
+				if( args[i].startsWith("explorer=") ){
+
+					//remove url decoding
+					Logger.log("found `explorer` = " + URLDecoder.decode(args[i].substring( args[i].indexOf("=") +1)));
+					explorer = true;
+				}
 
 			}
 
@@ -125,7 +134,7 @@ public class Dispatcher{
 				return returnResponse("{\"success\": false,  \"response\" : \"No enviaste la consulta sql.\"}");							
 			}
 
-			AdminPAQProxy aproxy = new AdminPAQProxy(  path );
+			AdminPAQProxy aproxy = new AdminPAQProxy(  path, explorer );
 
 			Logger.log("Termine de ejecutar AdminPAQProxy()");
 			

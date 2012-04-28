@@ -112,6 +112,7 @@ class FormComponent implements GuiComponent
 	 * */
 	public function addField($id, $caption, $type, $value = "", $name = null)
 	{
+
 		array_push($this->form_fields, new FormComponentField($id, $caption, $type, $value, $name));
 		return true;
 	}
@@ -295,7 +296,8 @@ class FormComponent implements GuiComponent
 			}
 			
 			if(is_null($this->js_function)){
-				$html .= "	if(!".$this->guiComponentId."found){ ". $this->guiComponentId ."sendToApi( ". $this->guiComponentId."p ); }else{console.log('you have missing data');}\n";				
+				$html .= "	return ". $this->guiComponentId."p ;\n";				
+				//$html .= "	if(!".$this->guiComponentId."found){ ". $this->guiComponentId ."sendToApi( ". $this->guiComponentId."p ); }else{console.log('you have missing data');}\n";				
 			}else{
 				$html .= "	if(!".$this->guiComponentId."found){ ". $this->guiComponentId ."sendToApi( ". $this->js_function . "(" . $this->guiComponentId."p ) ); }else{console.log('you have missing data');}\n";
 			}
@@ -587,7 +589,7 @@ class FormComponent implements GuiComponent
 			{
 				$html .= "<div class='POS Boton' onClick='Ext.get(Ext.query(\".hideable\")).show()' >Mas opciones</div>";
 			}
-			$html .= "<div class='POS Boton OK' onClick='" . $this->on_click["function"] . "' >" . $this->on_click["caption"] . "</div>";			
+			$html .= "<div class='POS Boton OK' onClick='" . $this->on_click["function"] . "(" . $this->guiComponentId . "getParams())' >" . $this->on_click["caption"] . "</div>";			
 			$html .= "</td></tr>";
 		}
 		
