@@ -5,6 +5,7 @@ import com.linuxense.javadbf.*;
 import java.util.ArrayList;
 import mx.caffeina.pos.*;
 
+import java.util.*;
 
 
 public class AdminPAQProxy{
@@ -43,9 +44,12 @@ public class AdminPAQProxy{
 	}
 	
 	private void closeCon(){
-		
+		try{
+			inputStream.close();
+		}catch(Exception e){
+			System.out.println(e);
+		}
 	}
-
 	
 	public String query(String sql ){
 		
@@ -72,6 +76,9 @@ public class AdminPAQProxy{
 		
 		if(sql_tokens[0].equals("update")) out += update(sql_tokens);
 		
+		
+		
+		
 		return out;
 
 
@@ -79,7 +86,7 @@ public class AdminPAQProxy{
 	}
 
 	private String update(String [] sql){
-		
+		set( );
 		return "0";
 	}
 	
@@ -116,6 +123,7 @@ public class AdminPAQProxy{
 		
 		
 		if(this.explorer){
+
 			output.append("<table><tr style='background-color: green'>");
 		}else{
 			output.append("{ \"estructura\" : [ ");						
@@ -150,7 +158,9 @@ public class AdminPAQProxy{
 				}
 				
 				if(this.explorer){
-					output.append( "<td>" + reader.getField( i).getName( ) + "</td>" );
+					output.append( "<td>" 
+						+ reader.getField( i).getName( ) 
+						+ " ("+ (char)reader.getField(i).getDataType() + " " + reader.getField(i).getFieldLength() +")</td>" );
 				}else{
 					output.append( "\"" + reader.getField( i).getName( ) + "\"" );					
 				}
@@ -220,9 +230,9 @@ public class AdminPAQProxy{
 				
 				
 				if(this.explorer){
-					output.append( " <td>" + String.valueOf(rowObjects[i]).replaceAll("\\p{Cntrl}", "").replaceAll("[^\\p{ASCII}]", "") + "</td> ");	
+					output.append( " <td>" + String.valueOf(rowObjects[i]).replaceAll("\\p{Cntrl}", "").replaceAll("[^\\p{ASCII}]", "?") + "</td> ");	
 				}else{
-					output.append( " \"" + String.valueOf(rowObjects[i]).replaceAll("\\p{Cntrl}", "").replaceAll("[^\\p{ASCII}]", "") + "\" ");	
+					output.append( " \"" + String.valueOf(rowObjects[i]).replaceAll("\\p{Cntrl}", "").replaceAll("[^\\p{ASCII}]", "?") + "\" ");	
 				}
 				
 			
@@ -317,43 +327,41 @@ public class AdminPAQProxy{
 
 
 	public String set( ){
-		
-		System.out.println("set() call");
+		/*
 
-		startCon( "MGW10002" );
 
-		String stringRowData[] = {
-			"99.2",
-            "(Ninguno)",
-            "alan gonzalez",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "0.0",
-            "0.0",
-            "null",
-            "null",
-            "0.0",
-            "0.0",
-            "0.0",
-            "0.0",
-            "0.0",
-            "0.0",
-            "0.0",
-            "0.0",
-            "0.0",
-            "null",
-            "null",
-            "null",
-            "0.0",
-            "0.0",
-            "null",
-            "0.0",
-            "null",
-            "0.0",
-            "0.0",
+		String stringRowData2[] = {
+			"1",
+            "codigo",
+            "alan gonzalezzzzzzzzzzzzzzzzzzzdddddddhdhdhdhdhdhdhdhdhdhdhdhdhdhhdhdhdhdhdh",
+            "",//fecha
+            "GOHA880317",
+            "CURP",
+            "denominacion_comerrcial",
+            "representante legal",
+            "9",
+            "10",
+            "11.0", // B
+            "12.0", // B
+            "13",
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
+            "19",
+            "20",
+            "21",
+            "", //fecha
+            "", //fecha
+            "22.0", //B
+            "23",
+            "24.0", //B
+            "25",
+            "26",
+            "27.0", //B
+            "28",
+            "29.0", //B
             "",
             "",
             "0.0",
@@ -442,115 +450,163 @@ public class AdminPAQProxy{
             "0.0",
             "",
             ""};
-
-		Object rowData[]  = new Object[ stringRowData.length  ];          
-
-		int numberOfFields = -1;
-
-		try{
-			numberOfFields = reader.getFieldCount();
-
-		}catch( DBFException dbfe ){
-			System.out.println( "E3:" + dbfe );
-
-		}
-
 		
-		System.out.println("new DBFFields");
-		DBFField fields[] = new DBFField[ numberOfFields];
-
-		for( int i=0; i<numberOfFields; i++){
-
-			DBFField field = null;
-
-			try{
-
-				fields[i] = reader.getField( i );
-
-				switch(fields[i].getDataType( )){
-					case 'C': rowData[ i ] =  stringRowData[i] ; break;
-					case 'D': rowData[ i ] =  new java.util.Date() ; break;
-					case 'L': rowData[ i ] = Boolean.parseBoolean(stringRowData[i]); break;
-					case 'N': 
-					case 'F': 
-					
-						try{
-							rowData[ i ] = Double.parseDouble(stringRowData[i]);
-
-						}catch(Exception e){
-							System.out.println(e);
-							rowData[i] = 0.0;
-						}
-						
-					break;
-				}
-
-
-				System.out.println("-----------------------------------------------");
-				System.out.println(" i           :" +  i );
-				System.out.println(" name        :" + fields[i].getName( ));
-				System.out.println(" datatype    :" + (char)fields[i].getDataType( )+ "," +fields[i].getDataType( ));
-				System.out.println(" fieldlength :" + fields[i].getFieldLength( ));
-				System.out.println(" data        :" + stringRowData[i]);
-
-
-			}catch( DBFException dbfe ){
-				System.out.println( "E4:" + dbfe );
-				break;
-			}
-		}
-
-		System.out.println("rowdata[] = ");
-
+*/
+		Object row[] = {
+			1.0,
+			"codigo",
+			"nombre",
+			new Date(),
+			"rfc",
+			"curp",
+			"asdfadf",
+			"den",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			new Date(),
+			new Date(),
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",			
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",						
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			new Date(),
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0",
+			"1.0"
+		};
 		
-
-        System.out.println("new writer()");
-
 		DBFWriter writer= null;
     	try{
-			writer = new DBFWriter(new File("/Users/alanboy/Desktop/BTT2012/MGW10002.dbf" ));
+			writer = new DBFWriter(new File("/Users/alanboy/win2008shared/Empresas/Caffeina/MGW10002.dbf" ));
+			writer.addRecord( row);
 
 		}catch(Exception e){
 			System.out.println( "E6:" + e );
 		}
 		
-
-		try{
-			inputStream.close();	
-
-		}catch(Exception e){
-			System.out.println( "E6:" + e );
-		}
-
-		try{
-
-			//System.out.println("fields");
-			//writer.setFields( fields);
-
-			//System.out.println("FileOutputStream");
-			//FileOutputStream fos = new FileOutputStream( "/Users/alanboy/Desktop/BTT2012/MGW10002.dbf" );
-
-			System.out.println("addRecord");
-    		//writer.write( fos);
-			writer.addRecord( rowData);
-
-			System.out.println("write");
-			//writer.write( );
-    		//System.out.println("close");
-    		//fos.close();
-
-		}catch (Exception e ){
-			System.out.println(e);
-
-		}
-
-    	
-
-
-
 
     	return "OK";
 	}
 
+
+	private String fillLeft(Object ss, int t){
+
+		String s = String.valueOf(ss);
+		if(s.length() == t) return s;
+		
+		if(s.length() > t) {
+			String foo = s.substring(0, t);
+
+			return foo;
+		}
+		
+		
+		
+
+		
+		while(s.length() != t){
+			s = " " + s;
+		}
+		return s;
+	}
 
 }
