@@ -152,7 +152,7 @@ public class HttpServer
 				out.println("Accept-Ranges: bytes");
 				out.println("Content-Length: " + response.length());
 				out.println("Connection: close");
-				out.println("Content-Type: text/javascript; charset=UTF-8");
+				out.println("Content-Type: text/html; charset=UTF-8");
 				out.println("");
 				
 				//write and flush the response

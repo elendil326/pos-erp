@@ -157,12 +157,18 @@ public class AdminPAQProxy{
 				break;
 			}
 
-			if(cRecord > 1) output.append(", ");
+ 
 			
 
 			if(this.explorer){
-				output.append( "<tr>" );
+				if(cRecord % 2 == 0){
+					output.append( "<tr style='background-color: gray'>" );
+				}else{
+					output.append( "<tr>" );
+				}
+
 			}else{
+				if(cRecord > 1) output.append(", ");
 				output.append("[");
 			}
 
