@@ -421,6 +421,23 @@ switch (((int) ($args['action'] ))) {
 
         echo json_encode($c);
         break;
+        
+    case 3001:
+
+        $c = new stdClass();
+
+        $c->ordenesActivas = array();
+
+        foreach (OrdenDeServicioDAO::search( new OrdenDeServicio( array( "activa"=>1 ) ) ) as $servicio) {
+            array_push($c->ordenesActivas, array(
+                "id_orden_de_servicio" => $servicio->getIdOrdenDeServicio(),
+                "nombre_servicio" => ServicioDAO::getByPK($servicio->getIdServicio())->getNombreServicio(),
+                "nombre_cliente" => UsuarioDAO::getByPK($servicio->getIdUsuarioVenta())->getNombre()
+            ));
+        }
+
+        echo json_encode($c);
+        break;
 
         break;
 }
