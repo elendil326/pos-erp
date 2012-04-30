@@ -1361,6 +1361,9 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
             if(!is_array($a)){
                 $a = object_to_array($a);
 			}
+			
+			if($a["id_aval"]== $id_cliente)//no se puede ser aval de sí mismo
+				continue;
 
 			$clienteAval = new ClienteAval();
 			$clienteAval->setIdAval( $a["id_aval"] );

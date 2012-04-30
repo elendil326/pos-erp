@@ -1649,7 +1649,10 @@ require_once("interfaces/Servicios.interface.php");
         
             }
 
-
+			if($adelanto > $precio){
+				throw new InvalidDataException("El monto del adelanto rebaza el monto del servicio");
+			}
+			
 			$servicio = ServicioDAO::getByPK($id_servicio);
 			
 			if(is_null($servicio)){
