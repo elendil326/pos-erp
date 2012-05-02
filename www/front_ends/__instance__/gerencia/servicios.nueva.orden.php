@@ -86,7 +86,6 @@ $page->partialRender();
 
 	function renderClienteInfo(record){
 		html = "";
-
 		
 		html += "<table>"
 		html += "<tr>"
@@ -94,6 +93,9 @@ $page->partialRender();
 		html += "</tr>"
 		html += "<tr>"
 		html += "<td>Limite de credito:</td><td>"+ record.get("limite_credito") +"</td>"
+		html += "</tr>"
+		html += "<tr>"
+		html += "<td>Saldo Disponible</td><td>"+ record.get("saldo_del_ejercicio") +"</td>"
 		html += "</tr>"
 		html += "</table>"
 		

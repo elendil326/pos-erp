@@ -752,8 +752,8 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             //se ponen los valores por default en limite de credito y saldo del ejercicio
             if(is_null($limite_credito))
                 $limite_credito=0;
-            if(is_null($saldo_del_ejercicio))
-                $saldo_del_ejercicio=0;
+            //if(is_null($saldo_del_ejercicio))
+			$saldo_del_ejercicio = $limite_credito;//** Figu: el saldo del ejercicio es = al limite de credito, cada venta a credito se descontará a saldo del ejerciocio y no a limite de credito
             
             //Si la tarifa de compra o de venta es nula, entonces se tomaran las del clasificaciond el cliente, del proveedor o del rol
             // segun esten disponibles

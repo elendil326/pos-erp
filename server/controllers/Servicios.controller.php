@@ -1628,7 +1628,11 @@ require_once("interfaces/Servicios.interface.php");
             }
 
 			$id_usuario = $s["id_usuario"];
-            
+            $saldo_cliente = UsuarioDAO::getByPK($id_cliente)->getSaldoDelEjercicio();//se trae el monto que le resta por disponer de su limite de credito
+
+			if( $saldo_cliente < $precio )
+				throw new InvalidDataException("El saldo del cliente es insuficiente ($ {$saldo_cliente})");
+			
             //Valida que los datos sean correctos
             $validar = self::validarParametrosOrdenDeServicio(null, $id_servicio, $id_cliente, $descripcion, null, $adelanto);
 
@@ -1683,9 +1687,12 @@ require_once("interfaces/Servicios.interface.php");
 				}			
 			}
 
-
-		
-
+			//Figu: al llegar a este punto si tiene el saldo de la venta, pero se valida aun asi que su limite de credito cubra ese subtotal
+			//esto por si en algun momento se actualiza el limite de credito del cliente (que el admin del sis le decremente su limite por cualquier razon)
+			if(UsuarioDAO::getByPK($id_cliente)->getLimiteCredito() < $subtotal){
+				throw new BusinessLogicException("El limite de credito no cubre este monto");
+			}
+			
 
             //Se inicializa el registro de orden de servicio
             $orden_de_servicio = new OrdenDeServicio( array( 
@@ -1749,7 +1756,7 @@ require_once("interfaces/Servicios.interface.php");
 			$venta->setTotal			($subtotal);
 			$venta->setIdSucursal		($s["id_sucursal"]);
 			$venta->setIdUsuario		($s["id_usuario"]);
-			$venta->setSaldo			($subtotal);
+			$venta->setSaldo			($subtotal);//si hay adelanto se resta al saldo de la venta el adelanto, esta resta se hace al insertar el abono_venta
 			$venta->setCancelada		(false);
 			$venta->setRetencion		(0);
 			
@@ -1767,14 +1774,8 @@ require_once("interfaces/Servicios.interface.php");
 			if($cliente->getIdRol() != 5){
 				throw new InvalidDataException("El cliente al que se le quiere hacer esta venta no es un cliente");
 			}
-			
-			
-			/*if($cliente->getLimiteCredito() < $venta->getTotal()){
-				throw new BusinessLogicException("intentas comprar algo a credito que es mas de lo que tienes");
-			}*/
-			
-			
-			//$cliente->setLimiteCredito( $cliente->getLimiteCredito(  ) - $venta->getTotal() );
+			//se establece el saldo del cliente restandole la venta y a su vez si tiene adelanto se le incrementa su saldo
+			$cliente->setSaldoDelEjercicio(  ( $cliente->getSaldoDelEjercicio() - $venta->getTotal()  )+ $adelanto );
 			
 			
 			try{
@@ -1810,7 +1811,16 @@ require_once("interfaces/Servicios.interface.php");
                 throw new InvalidDatabaseOperationException("No se pudo crear la nueva orden de servicio");
 
             }
-
+			//en caso de existir adelanto se ingresa el abono
+			if($adelanto > 0){
+				try{
+					CargosYAbonosController::NuevoAbono( $id_cliente, $adelanto, "efectivo", $billetes = null, $cheques = null, $id_compra = null, $id_prestamo = null, $venta->getIdVenta(), $nota = "Adelanto de $ {$adelanto} al servicio");
+				}catch(Exception $e){
+					DAO::transRollback();
+					Logger::error($e->getMessage());
+					throw new InvalidDatabaseOperationException("No se pudo crear la nueva orden de servicio");
+				}
+			}
 
             DAO::transEnd();
             Logger::log("Orden de servicio creada exitosamente:");

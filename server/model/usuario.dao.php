@@ -116,4 +116,20 @@ class UsuarioDAO extends UsuarioDAOBase
 		return $ar;
 			
 	}
+
+	public static function saldoCliente($id_cliente){
+		global $conn;
+		$limite_credito = UsuarioDAO::getByPK($id_cliente)->getLimiteCredito();
+      	$sql = "SELECT SUM(venta.saldo) as saldo FROM venta WHERE venta.id_comprador_venta = {$id_cliente} AND venta.saldo > 0;";      	
+		$rs = $conn->GetRow($sql);
+
+		if(count($rs) === 0)
+		{
+		    return $limite_credito;
+		}
+		if($rs['saldo']== null)
+			return $limite_credito;
+			
+		return $limite_credito - $rs['saldo'];				
+	}
 }
