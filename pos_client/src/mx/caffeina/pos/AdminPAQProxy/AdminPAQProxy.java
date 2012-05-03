@@ -4,7 +4,7 @@ import java.io.*;
 import com.linuxense.javadbf.*;
 import java.util.ArrayList;
 import mx.caffeina.pos.*;
-
+import mx.caffeina.pos.MD5Checksum;
 import java.util.*;
 
 
@@ -16,12 +16,21 @@ public class AdminPAQProxy{
 	private boolean explorer;
 	private String sql;
 	
+	public String explorer(  ){
+
+
+		return createExplorer( );
+	}
+	
+	public AdminPAQProxy(){
+
+	}
+	
 	public AdminPAQProxy(String ruta, boolean explorer){
 		this.ruta = ruta;
 		this.reader = null;
 		this.explorer = explorer;
 	}
-
 
 	private void startCon(String file){
 		System.out.println( "AdminPAQProxy: Conectando con ... " + this.ruta + "" + file + ".dbf" );
@@ -91,29 +100,8 @@ public class AdminPAQProxy{
 	}
 	
 	private String createExplorer(){
-		//query builder
-		String s = "", out = "";
-		try{
-			BufferedReader br = new BufferedReader(new FileReader("html"));			
-			while((s = br.readLine()) != null){
-				
-				if(s.equals("{path}")){
-					s = "<input type=\"hidden\" name=\"path\" value=\""+ this.ruta +"\">";
-				}
-				
-				if(s.equals("{sql}")){
-					s = "<textarea name=\"sql\" cols=\"40\" rows=\"6\" dir=\"ltr\">"+this.sql+"</textarea>";
-				}
-				
-				out += s;
-			}
-		}catch(Exception e){
-			System.out.println(e);
-		}
-		
-		
-		
-		
+		String out = Dispatcher.searchModuleInHtml("AdminPAQProxy");
+
 		return out;
 	}
 	
@@ -265,7 +253,6 @@ public class AdminPAQProxy{
 		return output.toString();
 	}
 	
-
 	private String getStructure(  ){
 		int numberOfFields = -1;
 
@@ -323,8 +310,6 @@ public class AdminPAQProxy{
 
 		return output;
 	}
-
-
 
 	public String set( ){
 		/*
@@ -586,7 +571,6 @@ public class AdminPAQProxy{
 
     	return "OK";
 	}
-
 
 	private String fillLeft(Object ss, int t){
 

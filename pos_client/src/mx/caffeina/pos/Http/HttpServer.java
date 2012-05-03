@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.ImageIcon;
 import javax.imageio.ImageIO;
+import java.net.URL;
 
 
 
@@ -97,7 +98,7 @@ public class HttpServer
         ClientServiceThread(Socket s, int clientID) 
         { 
 	
-			Logger.log( "Connection recieved from " + s.getRemoteSocketAddress() );
+			//Logger.log( "Connection recieved from " + s.getRemoteSocketAddress() );
             m_clientSocket = s;
             m_clientID = clientID; 
         } 
@@ -115,7 +116,10 @@ public class HttpServer
             // Print out details of this connection 
             //Logger.log("Accepted Client : ID - " + m_clientID + " : Address - " +  m_clientSocket.getInetAddress()); 
 			
-            try{ 
+			String Get_Request = null,
+					raw_request = null;
+            
+			try{ 
 	
 				in = new BufferedReader(new InputStreamReader(m_clientSocket.getInputStream())); 
 				out = new PrintWriter(new OutputStreamWriter(m_clientSocket.getOutputStream())); 
@@ -125,7 +129,7 @@ public class HttpServer
 
 				// Retrive headers from request
 				String r ;
-				String Get_Request = null;
+			
 				
 				while
 				( 
@@ -135,20 +139,34 @@ public class HttpServer
 				{                     
 					if(r.startsWith("GET"))
 					{
-						Get_Request = r.substring(6, r.indexOf(" HTTP/1.1")); 
+						raw_request = r;
+						
+						if( r.indexOf("HTTP/1.1") == -1){
+							
+						}
+						
+						Get_Request = r.substring(5, r.indexOf("HTTP/1.1"));
+
 					}
 				} 
-
+				
 
 				if(Get_Request == null){
-					throw new Exception("solo se aceptan metodos GET por ahora");
+					throw new Exception("Solo se aceptan metodos GET por ahora.");
 				}
 
 				//send the response
 				Dispatcher d = new Dispatcher();
 
-				String response = d.dispatch(Get_Request);
-			
+				String response ;
+				try{
+					//response = d.dispatch(Get_Request);
+					response = d.dispatch( new URL( Get_Request ));
+					
+				}catch(Exception e){
+					Logger.error("Error while dispatching shit..." + e);
+					response = "error";
+				}
 				//send the headers
 				out.println("HTTP/1.1 200 OK");
 				out.println("Date: Mon, 23 May 2005 22:38:34 GMT");
@@ -162,22 +180,48 @@ public class HttpServer
 				//write and flush the response
 				out.println(response);
 				out.flush();
-			
+				Logger.log(m_clientSocket.getInetAddress() + " " + (new Date()) + " " +raw_request + " " +  " 200");
+				
 			}catch(java.lang.StringIndexOutOfBoundsException sioobe){
-				Logger.error(sioobe);
+				out.println("HTTP/1.1 500 OK");
+				out.println("Date: Mon, 23 May 2005 22:38:34 GMT");
+				out.println("Server: POSWebServer/0.0.3");
+				out.println("Accept-Ranges: bytes");
+				out.println("Content-Length: " + Dispatcher.DispatchError().length());
+				out.println("Connection: close");
+				out.println("Content-Type: text/html; charset=UTF-8");
+				out.println("");
+				out.println( Dispatcher.DispatchError() );
+				out.flush();
+				
+				Logger.log(m_clientSocket.getInetAddress() + " " + (new Date()) + " " +raw_request + " "+ " 500");
+				Logger.error("HttpServer:" + sioobe);
 				
 
-            }catch(Exception e){ 
+            }catch(Exception e){
+				out.println("HTTP/1.1 500 OK");
+				out.println("Date: Mon, 23 May 2005 22:38:34 GMT");
+				out.println("Server: POSWebServer/0.0.3");
+				out.println("Accept-Ranges: bytes");
+				out.println("Content-Length: " + Dispatcher.DispatchError().length());
+				out.println("Connection: close");
+				out.println("Content-Type: text/html; charset=UTF-8");
+				out.println("");
+				out.println( Dispatcher.DispatchError() );
+				out.flush();
+				
+				
+				Logger.log(m_clientSocket.getInetAddress() + " " + (new Date()) + " " +raw_request + " "+ " 500");
 				Logger.error("HttpServer:" + e);
 				
             }finally{ 
-	
+
                 // clean up 
                 try{                     
                     in.close(); 
                     out.close(); 
                     m_clientSocket.close(); 
-                    Logger.log("closing server socket..."); 
+                    //Logger.log("closing server socket..."); 
 					
                 }catch(IOException ioe){ 
 					Logger.error("while closing socket:"+ioe);

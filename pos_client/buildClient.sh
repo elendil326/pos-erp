@@ -44,7 +44,7 @@ date "+BUILT: %Y-%m-%d  %H:%M:%S" >> VERSION
 
 
 ##zip the client
-zip  -Tr client.zip posClient.jar posLoader.jar *.so *.dll lib media VERSION -x \*.svn* \*.DS_Store
+zip  -Tr client.zip posClient.jar posLoader.jar *.so *.dll lib media html VERSION -x \*.svn* \*.DS_Store
 rm -rf bin
 
 

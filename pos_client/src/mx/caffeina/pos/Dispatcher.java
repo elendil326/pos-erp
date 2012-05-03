@@ -7,14 +7,53 @@ import mx.caffeina.pos.Networking.*;
 import mx.caffeina.pos.AdminPAQProxy.*;
 import java.net.URLDecoder;
 
+import java.net.URL;
+
 import java.util.List;
 import org.json.simple.parser.JSONParser;
 
+import java.io.*;
 
 public class Dispatcher{
 	
 	String action = null, data = null, callback = null;
 	
+	
+	public static String searchModuleInHtml(String mod){
+		
+		System.out.println("searchModuleInHtml:" + mod);
+		
+		String s, out = "";
+		
+		try{
+			BufferedReader br = new BufferedReader( new FileReader("html"));
+			
+			
+			while((s=br.readLine()) != null){
+				if( s.trim().equals("-- "+mod+" --") ){
+					System.out.println("found it !");
+					while( ((s=br.readLine()) != null )
+							&& !s.equals("-- /" +mod + " --"))
+					{
+						out += s + "\n";
+					}
+					System.out.println("found the end of it !");
+					break;
+				}
+			}
+
+			
+		
+
+		}catch(IOException ioe){
+			Logger.error(ioe);
+		}
+		return out;		
+	}
+	
+	public static String DispatchError(){
+		return searchModuleInHtml("Index") ;
+	}
 	
 	public String returnResponse(String r){
 		if( callback == null ){
@@ -25,21 +64,19 @@ public class Dispatcher{
 	
 	}
 	
+	
+	
+	public String dispatch(URL url){
+		
+		
+		
+		return "ok";
+		
+	}
+	
 	public String dispatch( String request ){
 
-		
-
-		if(request == null)
-		{
-			Logger.log("Request vacio !");
-			return returnError();
-		}
-
-		if(request.equals("avicon.ico"))
-		{
-			return returnError();
-		}
-
+		request = request.replace('?', '&');
 		
 		String [  ] args = request.split("&");
 		
@@ -55,10 +92,16 @@ public class Dispatcher{
 				callback = args[i].substring(9);								
 		}
 
+		if(request.equals("/favicon.ico")){
+			return "";
+		}
+
 		Logger.log("Request: " + request + "");
 		Logger.log("Dispatching module " + action);
 
-		
+		if(action == null){
+			return searchModuleInHtml("Index");
+		}
 		
 		/**
 		* 
@@ -93,7 +136,8 @@ public class Dispatcher{
 			String  path = null,
 					sql = null;
 			
-			boolean explorer = false;
+			boolean explorer = false,
+					dbdiff	= false;
 					
 			//buscar argumentos
 			for ( int i = 0; i < args.length ; i++) 
@@ -104,7 +148,12 @@ public class Dispatcher{
 					Logger.log("found `path` = " + path);
 				}
 
-
+				if( args[i].startsWith("dbdiff=") ){
+					dbdiff 	= true;
+					Logger.log("found `dbdiff` = " + 1);
+				}
+				
+				
 				if( args[i].startsWith("sql=") ){
 					sql 	= URLDecoder.decode(args[i].substring( args[i].indexOf("=") +1));
 					
@@ -122,25 +171,61 @@ public class Dispatcher{
 
 			}
 
+			if(dbdiff){
+				System.out.println("AdminPAQProxy: DBDIFF");
+				
+				
+				if(explorer){
+					return DBDiff.renderFrontEnd();
+				}
+				
+				if(path == null){
+					Logger.warn("Falto el path a los archivos del admin.");
+					return returnResponse("{\"success\": false,  \"response\" : \"Falto el path a los archivos del admin.\"}");
+				}
+				
+				DBDiff x = new DBDiff( path );
+				return x.queryDB();
 
+				
+			}else if(explorer){
 
-			if(path == null){
-				Logger.warn("Falto el path a los archivos del admin.");
-				return returnResponse("{\"success\": false,  \"response\" : \"Falto el path a los archivos del admin.\"}");
+				System.out.println("AdminPAQProxy: EXPLORER");
+								
+				AdminPAQProxy aproxy = new AdminPAQProxy(   );
+
+				Logger.log("Termine de ejecutar AdminPAQProxy()");
+
+				return returnResponse( aproxy.explorer( ) );
+				
+			}else{
+				
+				
+				
+				if(path == null){
+					Logger.warn("Falto el path a los archivos del admin.");
+					return returnResponse("{\"success\": false,  \"response\" : \"Falto el path a los archivos del admin.\"}");
+				}
+
+				if(sql == null){
+					Logger.warn("No enviaste la consulta sql.");
+					return returnResponse("{\"success\": false,  \"response\" : \"No enviaste la consulta sql.\"}");							
+				}
+				
+				AdminPAQProxy aproxy = new AdminPAQProxy(  path, explorer );
+
+				Logger.log("Termine de ejecutar AdminPAQProxy()");
+
+				return returnResponse(aproxy.query(sql));				
 			}
 
-			if(sql == null){
-				Logger.warn("No enviaste la consulta sql.");
-				return returnResponse("{\"success\": false,  \"response\" : \"No enviaste la consulta sql.\"}");							
-			}
 
-			AdminPAQProxy aproxy = new AdminPAQProxy(  path, explorer );
 
-			Logger.log("Termine de ejecutar AdminPAQProxy()");
-			
-			return returnResponse(aproxy.query(sql));
 
 		}
+
+
+		
 
 
 		/**
@@ -319,7 +404,7 @@ public class Dispatcher{
 
 
 		
-		return returnError();
+		return DispatchError();
 	}
 	
 	

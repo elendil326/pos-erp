@@ -17,8 +17,15 @@
 
 
 
-
-
+	# *******************************
+	# Revision de SubVersion
+	# *******************************
+	exec("svn info", $r_exec);
+	for ($i=0; $i < sizeof($r_exec); $i++) { 
+		if(substr ( $r_exec[$i], 0, 9 ) == "Revision:"){
+			define( "SVN_REV" ,  substr ( $r_exec[$i], 10 ));
+		}
+	}
 
 	
 	# *******************************
@@ -31,6 +38,7 @@
 	date_default_timezone_set ( "America/Mexico_City" );
 
 
+	
 
 	# *******************************
 	# Buscar la configuracion y cargarla

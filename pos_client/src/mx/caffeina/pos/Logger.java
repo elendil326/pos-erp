@@ -51,6 +51,8 @@ public class Logger{
 	public static void log(String text_to_log)
 	{
 		
+
+				
 		if( log_file == null )
 		{
 			//log file not opened, go ahead and do that
@@ -61,7 +63,8 @@ public class Logger{
 			}
 
 		}
-		
+
+		System.out.println( getBaseString() + text_to_log);		
 		log_file.println( getBaseString() + text_to_log );
 		log_file.flush();			
 	}

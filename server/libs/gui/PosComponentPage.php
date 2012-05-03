@@ -243,7 +243,8 @@ class PosComponentPage extends StdComponentPage{
 				<div class="content">
 					
 					<div class="copyright">
-					<a href="http://caffeina.mx"> Caffeina Software</a>
+					
+					CAFFEINA POS ERP: <b>2.0</b>_r<b><?php echo SVN_REV; ?></b> | <a href="http://caffeina.mx"> Caffeina Software</a>
 					</div>
 
 					<div class="links">
