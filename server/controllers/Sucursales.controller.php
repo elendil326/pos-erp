@@ -1022,6 +1022,7 @@ require_once("interfaces/Sucursales.interface.php");
                 if(!is_null($id_caja))
                 {
                     $caja = CajaDAO::getByPK($id_caja);
+
                     if(is_null($caja))
                     {
                         Logger::error("La caja ".$id_caja." no existe");

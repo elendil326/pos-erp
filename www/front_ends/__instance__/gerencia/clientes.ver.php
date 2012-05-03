@@ -56,17 +56,28 @@
 	$form->setEditable(false);
                
 	$form->hideField( array( 
-			"id_usuario",
-			"salario",
-			"id_rol",
-			"comision_ventas",
-			"dia_de_revision",
-			"id_clasificacion_proveedor",
-			"id_direccion",
-			"id_direccion_alterna",
-			"fecha_asignacion_rol",
-			"activo",
-			"password"
+	    "id_usuario",
+	    "id_rol",
+	    "id_clasificacion_proveedor",
+		"id_direccion",
+		"id_direccion_alterna",
+	    "fecha_asignacion_rol",
+	    "comision_ventas",
+	    "fecha_alta",
+	    "fecha_baja",
+	    "activo",
+	    "last_login",
+	    "salario",
+	    "dias_de_embarque",
+	    "consignatario",
+	    "tiempo_entrega",
+	    "cuenta_bancaria",
+		"mensajeria",
+		"token_recuperacion_pass",
+		"ventas_a_credito",
+		"dia_de_pago",
+		"dia_de_revision",
+		"password"
 		 ));
                
                

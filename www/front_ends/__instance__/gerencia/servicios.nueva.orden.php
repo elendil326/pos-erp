@@ -85,11 +85,18 @@ $page->partialRender();
 
 
 	function renderClienteInfo(record){
+		
+		if(record.get("rfc") == null){
+			rfc = "";
+		}else{
+			rfc = record.get("rfc");
+		}
+		
 		html = "";
 		
 		html += "<table>"
 		html += "<tr>"
-		html += "<td colspan=2><h3>"+ record.get("nombre") +"</h3>"+ record.get("rfc") +"</td>"
+		html += "<td colspan=2><h3>"+ record.get("nombre") +"</h3>"+ rfc +"</td>"
 		html += "</tr>"
 		html += "<tr>"
 		html += "<td>Limite de credito:</td><td>"+ record.get("limite_credito") +"</td>"
@@ -265,6 +272,8 @@ $page->partialRender();
 		}
 		
 		console.log(CurrentExtraParams, ep);
+		
+		
 		var faltan = false;
 		
 		//busquemos solo los obligatorios
@@ -282,12 +291,18 @@ $page->partialRender();
 			}
 		};
 		
+		
+		
+		
 		if(faltan){
 			alert("te faltan parametros");
 			return;			
 		}
 
-		
+		if(Ext.get('id_cliente').getValue().length == 0){
+			alert("No haz seleccionado a que cliente deseas ofrecerle el servicio");
+			return;
+		}
 		
         POS.API.POST(
         "api/servicios/orden/nueva/", 

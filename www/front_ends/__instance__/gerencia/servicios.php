@@ -9,12 +9,12 @@
 		$page = new GerenciaTabPage();
 
 		//----------------------------------- 
-		$page->nextTab("Ordenes");
+		$page->nextTab("Ordenes activas");
 		
 		
 
 
-		$ordenes = ServiciosController::ListaOrden(); 
+		$ordenes = ServiciosController::ListaOrden(true); 
 		
 		if(  $ordenes["numero_de_resultados"] == 1){
 			$msg = "Hay <b style='color:#325C99'>" . $ordenes["numero_de_resultados"] . "</b> orden en espera. <div onclick='window.location=\"servicios.nueva.orden.php\";' class='POS Boton'>+ Nueva orden</div>";	
@@ -74,6 +74,46 @@
 
 
 		//----------------------------------- 
+		
+		
+		
+		//----------------------------------- 
+		$page->nextTab("Ordenes");
+		
+		
+
+
+		$ordenes = ServiciosController::ListaOrden(); 
+		
+
+		$page->addComponent(new MessageComponent("<h2>Todas las ordenes de servicio</h2>"));
+
+		$tabla = new TableComponent(array(
+			"id_usuario_venta" => "Cliente",
+			"fecha_orden" => "Fecha Orden",
+			"id_servicio" => "Servicio"
+			
+		), $ordenes["resultados"]);
+
+
+		$tabla->addColRender("fecha_orden", "funcion_transcurrido");
+
+		$tabla->addColRender("activa", "funcion_activa");
+
+		$tabla->addColRender("cancelada", "funcion_cancelada");
+
+		$tabla->addColRender("id_servicio", "funcion_servicio");
+
+		$tabla->addColRender("id_usuario_venta", "funcion_usuario_venta");
+
+		$tabla->addOnClick("id_orden_de_servicio", "(function(a){ window.location = 'servicios.detalle.orden.php?oid=' + a; })");
+
+
+		$page->addComponent($tabla);
+		
+		
+		
+		// -----------
 		$page->nextTab("Servicios");
 		
 		$page->addComponent( new MessageComponent( "Lista de servicios" ) );

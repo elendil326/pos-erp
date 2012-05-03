@@ -35,7 +35,7 @@ $page->addComponent(new TitleComponent("Orden de servicio " . $_GET["oid"] . " p
 //
 // Menu de opciones
 // 
-if ($esta_orden->getActiva()){
+if ( $esta_orden->getActiva() ){
 	$menu = new MenuComponent();
 	
 	$btn_eliminar = new MenuItem("Cancelar orden", null);

@@ -566,7 +566,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 		$direcciones = null, 
 		$email = null, 
 		$id_cliente_padre = null, 
-		$id_moneda = 0, 
+		$id_moneda = null, 
 		$id_tarifa_compra = null, 
 		$id_tarifa_venta = null, 
 		$limite_credito = null, 
@@ -581,7 +581,9 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 	)
 	{  
             Logger::log("Editando cliente ".$id_cliente);
-            
+       		$args = func_get_args();
+			
+			var_dump($args);     
             if(!is_null($password))
             {
                 $validar = self::validarParametrosCliente($id_cliente);
@@ -622,8 +624,26 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 						$direcciones,null,
 						$clasificacion_cliente,
                         null,
-						$id_moneda,null,null,$id_tarifa_compra,$id_tarifa_venta,$id_cliente_padre,null,null,$limite_credito,null,$razon_social,
-                        $sitio_web,$password,$representante_legal,null,$rfc,null,null,$telefono_personal1,$telefono_personal2);
+						$id_moneda,
+						null,
+						null,
+						$id_tarifa_compra,
+						$id_tarifa_venta,
+						$id_cliente_padre,
+						null,
+						null,
+						$limite_credito,
+						null,
+						$razon_social,
+                        $sitio_web,
+						$password,
+						$representante_legal,
+						null,
+						$rfc,
+						null,
+						null,
+						$telefono_personal1,
+						$telefono_personal2);
             }
             catch( Exception $e)
             {

@@ -34,7 +34,13 @@
 	    "dias_de_embarque",
 	    "consignatario",
 	    "tiempo_entrega",
-	    "cuenta_bancaria"
+	    "cuenta_bancaria",
+		"mensajeria",
+		"token_recuperacion_pass",
+		"ventas_a_credito",
+		"dia_de_pago",
+		"dia_de_revision",
+		
 	));
 
 	$form->renameField(array(
