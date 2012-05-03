@@ -81,7 +81,7 @@
 	$form->onApiCallSuccessRedirect("clientes.lista.php");
 
 	$form->makeObligatory(array(
-	    "razon_social", "calle","codigo_postal","numero_exterior"
+	    "razon_social"
 	));
 	
 	$form->createComboBoxJoin("id_ciudad", "nombre", CiudadDAO::getAll());
@@ -100,7 +100,7 @@
 	    "pagina_web" 			=> "direccion_web"
 	));
 
-	$form->makeObligatory("razon_social","calle","codigo_postal","numero_exterior");
+	$form->makeObligatory("razon_social");
 
 	$page->addComponent($form);
 

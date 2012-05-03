@@ -425,13 +425,13 @@ CREATE TABLE IF NOT EXISTS `devolucion_sobre_venta` (
 
 CREATE TABLE IF NOT EXISTS `direccion` (
   `id_direccion` int(11) NOT NULL AUTO_INCREMENT COMMENT 'El id de esta direccion',
-  `calle` varchar(128) NOT NULL,
-  `numero_exterior` varchar(8) NOT NULL,
+  `calle` varchar(128) DEFAULT NULL,
+  `numero_exterior` varchar(8) DEFAULT NULL,
   `numero_interior` varchar(8) DEFAULT NULL,
   `referencia` varchar(256) DEFAULT NULL,
   `colonia` varchar(128) DEFAULT NULL,
   `id_ciudad` int(11) DEFAULT NULL,
-  `codigo_postal` varchar(10) NOT NULL,
+  `codigo_postal` varchar(10) DEFAULT NULL,
   `telefono` varchar(32) DEFAULT NULL,
   `telefono2` varchar(32) DEFAULT NULL COMMENT 'Telefono alterno de la direccion',
   `ultima_modificacion` datetime NOT NULL COMMENT 'La ultima vez que este registro se modifico',

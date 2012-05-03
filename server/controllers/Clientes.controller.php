@@ -372,7 +372,6 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
 			
 			if(is_null($direcciones)){
 				$direcciones = array( new Direccion() );
-				
 			}
 			
             try 

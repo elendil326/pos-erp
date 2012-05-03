@@ -2147,7 +2147,10 @@ class CargosYAbonosController extends ValidacionesController implements ICargosY
             $abono->setIdVenta($id_venta);
             $abono->setIdReceptor($id_usuario);
             $abono->setIdDeudor($id_deudor);
-            $usuario->setSaldoDelEjercicio($usuario->getSaldoDelEjercicio() + $monto);
+            //(OLD) $usuario->setSaldoDelEjercicio($usuario->getSaldoDelEjercicio() + $monto); 
+			//Figu: se establece el saldo del cliente restandole la venta y a su vez si tiene adelanto se le incrementa su saldo
+			$usuario->setSaldoDelEjercicio(  ( $usuario->getSaldoDelEjercicio() - $operacion->getTotal()  )+ $monto );
+
             $from = 3;
         } else {
             Logger::error("No se recibio si el abono sera para una venta, una compra o un prestamo, no se hace nada");

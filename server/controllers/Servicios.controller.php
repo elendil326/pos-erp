@@ -1510,23 +1510,41 @@ require_once("interfaces/Servicios.interface.php");
 	{  
             Logger::log("listando las ordenes");
             
-			$filtered = false;
-			$filteredSearchObj = new OrdenDeServicio();
-
-			if(!is_null( $activa )){
-				$filteredSearchObj->setActiva($activa);
-				$filtered = true;
-			}
-			
-			if($filtered){
-				$ordenes = OrdenDeServicioDAO::search( $filteredSearchObj );
-				
-			}else{
-				$ordenes = OrdenDeServicioDAO::getAll();
-				
-			}
-            
-
+            /*
+            if($parametros)
+            {
+                //Si se reciben parametros, se usan dos objetos para comparar las fechas, el primero alamcena los demas parametros
+                //y el otro almacena limites de fechas para traer solo las ordenes en rango
+                $orden_criterio_1 = new OrdenDeServicio(
+                        array(
+                            "id_servicio"       => $id_servicio,
+                            "id_usuario_venta"  => $id_usuario_venta,
+                            "activa"            => $activa,
+                            "cancelada"         => $cancelada
+                        )
+                        );
+                $orden_criterio_2 = new OrdenDeServicio();
+                if(!is_null($fecha_desde))
+                {
+                    $orden_criterio_1->setFechaOrden($fecha_desde);
+                    if(!is_null($fecha_hasta))
+                        $orden_criterio_2->setFechaOrden ($fecha_hasta);
+                    else
+                        $orden_criterio_2->setFechaOrden (date("Y-m-d H:i:s"));
+                }
+                else if(!is_null($fecha_hasta))
+                {
+                    $orden_criterio_1->setFechaOrden($fecha_hasta);
+                    $orden_criterio_2->setFechaOrden("1000-01-01 00:00:01");
+                }
+                $ordenes = OrdenDeServicioDAO::byRange($orden_criterio_1, $orden_criterio_2);
+            }
+            else
+            {
+                $ordenes = OrdenDeServicioDAO::getAll();
+            }
+			*/
+			 $ordenes = OrdenDeServicioDAO::getAll();
 			
             Logger::log("Lista de ordenes traida exitosamente con ".count($ordenes)." elementos");
 
@@ -1601,8 +1619,6 @@ require_once("interfaces/Servicios.interface.php");
             Logger::log("   id_servicio=" . $id_servicio);
             Logger::log("   id_cliente =" . $id_cliente);			
 
-			
-
             //Se obtiene al usuario de la sesion actual
             $s = SesionController::Actual();
 
@@ -1612,21 +1628,10 @@ require_once("interfaces/Servicios.interface.php");
             }
 
 			$id_usuario = $s["id_usuario"];
+            $saldo_cliente = UsuarioDAO::getByPK($id_cliente)->getSaldoDelEjercicio();//se trae el monto que le resta por disponer de su limite de credito
 
-			$cliente = UsuarioDAO::getByPK($id_cliente);
-			
-			if(is_null($cliente)){
-				throw new InvalidDataException("Este cliente no existe.");
-			}
-
-			//se trae el monto que le resta por disponer de su limite de credito			
-            $saldo_cliente = $cliente->getSaldoDelEjercicio();
-/*
-			if( $saldo_cliente < $precio ){
-				Logger::warn("El saldo del cliente es insuficiente ($ {$saldo_cliente})");
+			if( $saldo_cliente < $precio )
 				throw new InvalidDataException("El saldo del cliente es insuficiente ($ {$saldo_cliente})");
-			}
-*/
 			
             //Valida que los datos sean correctos
             $validar = self::validarParametrosOrdenDeServicio(null, $id_servicio, $id_cliente, $descripcion, null, $adelanto);
@@ -1645,16 +1650,14 @@ require_once("interfaces/Servicios.interface.php");
                 if($adelanto < 0){
                     throw new InvalidDataException("No es un valor de adelanto valido");
                 }
+        
             }
-
 
 			if($adelanto > $precio){
 				throw new InvalidDataException("El monto del adelanto rebaza el monto del servicio");
 			}
-
 			
 			$servicio = ServicioDAO::getByPK($id_servicio);
-
 			
 			if(is_null($servicio)){
 				throw new InvalidDataException("Este servicio no existe");
@@ -1684,10 +1687,8 @@ require_once("interfaces/Servicios.interface.php");
 				}			
 			}
 
-			// Figu: al llegar a este punto si tiene el saldo de la venta, pero se 
-			// valida aun asi que su limite de credito cubra ese subtotal
-			// esto por si en algun momento se actualiza el limite de credito del 
-			// cliente (que el admin del sis le decremente su limite por cualquier razon)
+			//Figu: al llegar a este punto si tiene el saldo de la venta, pero se valida aun asi que su limite de credito cubra ese subtotal
+			//esto por si en algun momento se actualiza el limite de credito del cliente (que el admin del sis le decremente su limite por cualquier razon)
 			if(UsuarioDAO::getByPK($id_cliente)->getLimiteCredito() < $subtotal){
 				throw new BusinessLogicException("El limite de credito no cubre este monto");
 			}
@@ -1695,6 +1696,7 @@ require_once("interfaces/Servicios.interface.php");
 
             //Se inicializa el registro de orden de servicio
             $orden_de_servicio = new OrdenDeServicio( array( 
+                                                            
                                                             "id_servicio"       => $id_servicio,
                                                             "id_usuario_venta"  => $id_cliente,
                                                             "id_usuario"        => $id_usuario,
@@ -1705,9 +1707,9 @@ require_once("interfaces/Servicios.interface.php");
                                                             "descripcion"       => $descripcion,
                                                             "adelanto"          => $adelanto,
                                                             "precio"            => $subtotal
-														)
+                                                            
+                                                            )
                                                     );
-
 			//ok, ya tengo el servicio, vamos a ver si necesito parametros extra
 			if(!is_null( $servicio->getExtraParams() )){
 				Logger::log("El servicio require parametros extra.");
@@ -1717,7 +1719,7 @@ require_once("interfaces/Servicios.interface.php");
 				
 				//no se enviaron los parametros extra?
 				if(is_null($extra_params_sent)){
-					Logger::warn("No se enviaron parametros extra");
+					Logger::warn("no se enviaron parametros extra");
 				}
 				
 				foreach ($extra_params_required	as $epr) {
@@ -1773,15 +1775,11 @@ require_once("interfaces/Servicios.interface.php");
 				throw new InvalidDataException("El cliente al que se le quiere hacer esta venta no es un cliente");
 			}
 			
-			//se establece el saldo del cliente restandole la venta y a su vez si tiene adelanto se le incrementa su saldo
-			$cliente->setSaldoDelEjercicio(  ( $cliente->getSaldoDelEjercicio() - $venta->getTotal()  )+ $adelanto );
-			
-			
 			try{
-				Logger::log("Insertando la venta ....");
+				Logger::log("Insertando la venta y modificando el saldo_del_ejercicio del cliente....");
 				UsuarioDAO::save( $cliente );
                 VentaDAO::save( $venta );
-    
+    			
         	}catch(Exception $e){
                 DAO::transRollback();
                 Logger::error($e->getMessage());
@@ -1819,6 +1817,17 @@ require_once("interfaces/Servicios.interface.php");
 					Logger::error($e->getMessage());
 					throw new InvalidDatabaseOperationException("No se pudo crear la nueva orden de servicio");
 				}
+			}else{//no hay abono de acualquir manera se debe decrementar su saldo por el valor de la venta
+				
+				$cliente->setSaldoDelEjercicio(  ( $cliente->getSaldoDelEjercicio() - $venta->getTotal()  ) );
+				try{
+					Logger::log("Actualizando el saldo del cliente....");
+					UsuarioDAO::save( $cliente );				
+		    	}catch(Exception $e){
+		            DAO::transRollback();
+		            Logger::error($e->getMessage());
+		            throw new InvalidDatabaseOperationException("No se pudo crear la nueva orden de servicio");
+		        }
 			}
 
             DAO::transEnd();
@@ -1859,8 +1868,7 @@ require_once("interfaces/Servicios.interface.php");
 			Logger::warn("Esta orden de servicio no existe... saliendo.");
 			throw new InvalidDataException("Esta orden de servicio no existe");
 		}
-		
-		
+				
 		if(!is_null($extra_params)){
 			//aqui falta validar esos extra_params
 			$orden->setExtraParams( $extra_params );
@@ -1880,6 +1888,11 @@ require_once("interfaces/Servicios.interface.php");
 			$orden->setIdUsuarioAsignado( $id_usuario_asignado );
 		}
 		
+		$saldo_cliente = UsuarioDAO::getByPK($orden->getIdUsuarioVenta())->getSaldoDelEjercicio();//se trae el monto que le resta por disponer de su limite de credito
+
+		if( $saldo_cliente < $precio )
+			throw new InvalidDataException("El saldo del cliente es insuficiente ($ {$saldo_cliente})");
+
 		
 		try{
 			OrdenDeServicioDAO::save( $orden );
@@ -2311,26 +2324,9 @@ require_once("interfaces/Servicios.interface.php");
             try
             {
                 OrdenDeServicioDAO::save($orden_de_servicio);
-
-                /*SucursalesController::VenderCaja(
-						$descuento, 
-						$orden_de_servicio->getIdUsuarioVenta(),
-                        $impuesto, 
-						$retencion, 
-						$subtotal, 
-						$tipo_venta, 
-						$total, 
-						$billetes_cambio, 
-						$billetes_pago,
-                        $cheques,
-						$detalle_orden, 
-						null, 
-						$detalle_productos, 
-						null, 
-						null,
-						null,
-						$saldo,
-						$tipo_de_pago );*/
+                SucursalesController::VenderCaja($descuento, $orden_de_servicio->getIdUsuarioVenta(),
+                        $impuesto, $retencion, $subtotal, $tipo_venta, $total, $billetes_cambio, $billetes_pago,
+                        $cheques,$detalle_orden, null, $detalle_productos, null, null,null,$saldo,$tipo_de_pago);
             }
             catch(Exception $e)
             {
