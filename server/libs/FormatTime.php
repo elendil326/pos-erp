@@ -70,6 +70,7 @@ function FormatTime($timestamp)
 		else if($j == 3) // Less than a week display -- Monday at 5:28pm
 		{
 			$text = date(" \a \l\a\s g:i a", $timestamp);
+			
 			switch(date("l", $timestamp)){
 				case "Monday": 		$text = "Lunes" . $text; break;
 				case "Tuesday": 	$text = "Martes" . $text; break;
@@ -86,9 +87,18 @@ function FormatTime($timestamp)
 			$text = date(" j \a \l\a\s g:i a", $timestamp);
 			
 			switch(date("F", $timestamp)){
-				case "January": $text = "Enero" . $text; break;
-				case "February": $text = "Febrero" . $text; break;
-				case "March": $text = "Marzo" . $text; break;
+				case "January": 	$text = "Enero" 	. $text; break;
+				case "February": 	$text = "Febrero" 	. $text; break;
+				case "March": 		$text = "Marzo" 	. $text; break;
+				case "April": 		$text = "Abril" 	. $text; break;	
+				case "May": 		$text = "Mayo" 	. $text; break;	
+				case "June": 		$text = "Junio" 	. $text; break;	
+				case "July": 		$text = "Julio" 	. $text; break;	
+				case "August": 		$text = "Agosto" 	. $text; break;	
+				case "September": 		$text = "Septiembre" 	. $text; break;	
+				case "October": 		$text = "Octubre" 	. $text; break;	
+				case "November": 		$text = "Noviembre" 	. $text; break;	
+				case "December": 		$text = "Diciembre" 	. $text; break;																				
 			}
 		}
 		else // if over a year or the same month one year ago -- June 30, 2010 at 5:34pm
