@@ -25,6 +25,9 @@ class Venta extends VO
 			if( isset($data['id_venta']) ){
 				$this->id_venta = $data['id_venta'];
 			}
+			if( isset($data['es_cotizacion']) ){
+				$this->es_cotizacion = $data['es_cotizacion'];
+			}
 			if( isset($data['id_caja']) ){
 				$this->id_caja = $data['id_caja'];
 			}
@@ -84,6 +87,7 @@ class Venta extends VO
 	{ 
 		$vec = array( 
 			"id_venta" => $this->id_venta,
+			"es_cotizacion" => $this->es_cotizacion,
 			"id_caja" => $this->id_caja,
 			"id_venta_caja" => $this->id_venta_caja,
 			"id_comprador_venta" => $this->id_comprador_venta,
@@ -113,6 +117,15 @@ class Venta extends VO
 	  * @var int(11)
 	  */
 	public $id_venta;
+
+	/**
+	  * es_cotizacion
+	  * 
+	  * verdadero si es una cotizacion<br>
+	  * @access public
+	  * @var NOT
+	  */
+	public $es_cotizacion;
 
 	/**
 	  * id_caja
@@ -275,6 +288,30 @@ class Venta extends VO
 	final public function setIdVenta( $id_venta )
 	{
 		$this->id_venta = $id_venta;
+	}
+
+	/**
+	  * getEsCotizacion
+	  * 
+	  * Get the <i>es_cotizacion</i> property for this object. Donde <i>es_cotizacion</i> es verdadero si es una cotizacion
+	  * @return NOT
+	  */
+	final public function getEsCotizacion()
+	{
+		return $this->es_cotizacion;
+	}
+
+	/**
+	  * setEsCotizacion( $es_cotizacion )
+	  * 
+	  * Set the <i>es_cotizacion</i> property for this object. Donde <i>es_cotizacion</i> es verdadero si es una cotizacion.
+	  * Una validacion basica se hara aqui para comprobar que <i>es_cotizacion</i> es de tipo <i>NOT</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param NOT
+	  */
+	final public function setEsCotizacion( $es_cotizacion )
+	{
+		$this->es_cotizacion = $es_cotizacion;
 	}
 
 	/**

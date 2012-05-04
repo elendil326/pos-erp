@@ -45,7 +45,7 @@ class ProductoDAO extends ProductoDAOBase
 			array_push($val , "%" . $p . "%");
 		}
 		
-		$sql .= " or codigo_producto like ? ) ";
+		$sql .= " or codigo_producto like ? ) limit 20 ";
 		array_push($val , "%" . $query . "%");
 		
 		global $conn;

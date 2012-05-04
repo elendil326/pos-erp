@@ -464,6 +464,169 @@ require_once("interfaces/Ventas.interface.php");
             return $detalle_venta_arpilla;
 	}
   
+
+
+
+    private static function Cotizar
+    (
+        $descuento, 
+        $id_comprador_venta, 
+        $impuesto, 
+        $subtotal, 
+        $tipo_venta, 
+        $total, 
+        $datos_cheque = null, 
+        $detalle_orden = null, 
+        $detalle_paquete = null, 
+        $detalle_venta = null,
+        $id_sucursal = null, 
+        $saldo = "0", 
+        $tipo_de_pago = null
+    ){
+        Logger::log("Cotizando ....");
+
+        Logger::log("Realizando la venta de caja.....");
+            
+            //Se obtiene el id del usuario actualmente logueado
+            $aS = SesionController::Actual();
+            $id_usuario = $aS["id_usuario"];
+
+            //Se busca al usuario comprador
+            $usuario = UsuarioDAO::getByPK($id_comprador_venta);
+            
+
+
+            if(!is_null($id_sucursal))
+            {
+                $sucursal = SucursalDAO::getByPK($id_sucursal); 
+                
+                if(is_null( $sucursal)){
+                    Logger::error("La sucursal ".$id_sucursal." no existe");
+                    throw new InvalidDataException("La sucursal no existe",901);
+                }
+                
+                if(!$sucursal->getActiva())
+                {
+                    Logger::error("La sucursal ".$id_sucursal." esta desactivada");
+                    throw new InvalidDataException("La sucursal esta desactivada",901);
+                }
+                
+            }
+
+            
+            //Se inicializa la venta con los parametros obtenidos
+            $venta=new Venta();
+            $venta->setRetencion(0);
+            $venta->setEsCotizacion(true);
+            $venta->setIdCompradorVenta($id_comprador_venta);
+            $venta->setSubtotal($subtotal);
+            $venta->setImpuesto($impuesto);
+            $venta->setTotal($total);
+            $venta->setDescuento($descuento);
+            $venta->setTipoDeVenta($tipo_venta);
+            $venta->setIdCaja(null);
+            $venta->setIdSucursal($id_sucursal);
+            $venta->setIdUsuario($id_usuario);
+            $venta->setIdVentaCaja(NULL);
+            $venta->setCancelada(0);
+            $venta->setTipoDePago(null);
+            $venta->setSaldo(0);
+            $venta->setFecha(date("Y-m-d H:i:s",time()));
+            
+
+            DAO::transBegin();
+
+            try
+            {
+                VentaDAO::save($venta);
+
+            }catch(Exception $e){
+                
+                DAO::transRollback();
+                Logger::error("No se pudo realizar la venta: ".$e);
+                throw new Exception("No se pudo realizar la venta",901);
+            }
+                
+            //Si el detalle de las ordenes compradas, el detalle de los paquetes y el detalle de los productos
+            //son nulos, manda error.
+            if(is_null($detalle_orden)&&is_null($detalle_paquete)&&is_null($detalle_venta))
+            {
+                throw new InvalidDataException ("No se recibieron ni paquetes ni productos ni servicios para esta venta",901);
+            }
+                
+            //Por cada detalle, se valida la informacion recibida, se guarda en un registro
+            //que contiene el id de la venta generada y se guarda el detalle en su respectiva tabla.
+
+                
+            
+            if(!is_null($detalle_venta))
+            {
+                
+                $detalle_producto = object_to_array($detalle_venta);
+                
+                if(!is_array($detalle_producto))
+                {
+                    throw new Exception("El detalle del producto es invalido",901);
+                }
+
+                $d_producto = new VentaProducto();
+                $d_producto->setIdVenta($venta->getIdVenta());
+
+                foreach($detalle_producto as $d_p)
+                {
+                    
+                    if
+                    (
+                            !array_key_exists("id_producto", $d_p)   ||
+                            !array_key_exists("cantidad", $d_p)     ||
+                            !array_key_exists("precio", $d_p)       ||
+                            !array_key_exists("descuento", $d_p)    ||
+                            !array_key_exists("impuesto", $d_p)     ||
+                            !array_key_exists("retencion", $d_p)    ||
+                            !array_key_exists("id_unidad", $d_p)
+                    )
+                    {
+                        throw new Exception("El detalle del producto es invalido",901);
+                    }
+                    
+                    
+                    $producto=ProductoDAO::getByPK($d_p["id_producto"]);
+                    $d_producto->setCantidad($d_p["cantidad"]);
+                    $d_producto->setDescuento($d_p["descuento"]);
+                    $d_producto->setIdProducto($d_p["id_producto"]);
+                    $d_producto->setIdUnidad($d_p["id_unidad"]);
+                    $d_producto->setImpuesto($d_p["impuesto"]);
+                    $d_producto->setPrecio($d_p["precio"]);
+                    $d_producto->setRetencion($d_p["retencion"]);
+                    
+                    
+                    
+                    try
+                    {
+                        VentaProductoDAO::save($d_producto);
+
+                    }catch(Exception $e){
+                        
+                        DAO::transRollback();
+                        Logger::error("No se pudo realizar la venta: ".$e);
+                        throw new Exception("No se pudo realizar la venta",901);
+                    }
+                }
+            }/* Fin de if para detalle_producto */
+                
+                
+
+
+            DAO::transEnd();
+
+            Logger::log("====== Cotizacion realizada exitosamente ======== ");
+            
+            return array ("id_venta" => $venta->getIdVenta());
+
+
+       
+    }
+
 	/**
  	 *
  	 *Genera una venta fuera de caja, puede usarse para que el administrador venda directamente a clientes especiales. EL usuario y la sucursal seran tomados de la sesion. La fecha se tomara del servidor. La empresa sera tomada del alamacen del que fueron tomados los productos
@@ -493,11 +656,34 @@ require_once("interfaces/Ventas.interface.php");
         $detalle_orden = null, 
         $detalle_paquete = null, 
         $detalle_venta = null, 
+        $es_cotizacion =  false , 
         $id_sucursal = null, 
         $saldo = "0", 
         $tipo_de_pago = null
 	)
 	{  
+
+
+            if($es_cotizacion){
+               return self::Cotizar(
+                        $descuento, 
+                        $id_comprador_venta, 
+                        $impuesto, 
+                        $subtotal, 
+                        $tipo_venta, 
+                        $total, 
+                        $datos_cheque, 
+                        $detalle_orden, 
+                        $detalle_paquete, 
+                        $detalle_venta, 
+                        $id_sucursal, 
+                        $saldo, 
+                        $tipo_de_pago
+                    );
+            }
+
+
+
             Logger::log("Creando nueva venta fuera de caja");
             
             //validar que vengan datos en detalles
@@ -528,27 +714,6 @@ require_once("interfaces/Ventas.interface.php");
             //Se utiliza el metodo de Sucursal controller, dejando que tome la caja y la sucursal como nulos
             try{
             	$venta = SucursalesController::VenderCaja(
-
-                        /*  $descuento, 
-                            $id_comprador, 
-                            $impuesto, 
-                            $retencion, 
-                            $subtotal, 
-                            $tipo_venta, 
-                            $total, 
-                            $billetes_cambio = null, 
-                            $billetes_pago = null, 
-                            $cheques = null, 
-                            $detalle_orden = null, 
-                            $detalle_paquete = null, 
-                            $detalle_producto = null, 
-                            $id_caja = null, 
-                            $id_sucursal = null, 
-                            $id_venta_caja = null, 
-                            $saldo = 0, 
-                            $tipo_pago = null
-                        */
-
 							$descuento,
 							$id_comprador_venta,
 							$impuesto,

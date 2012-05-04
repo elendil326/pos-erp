@@ -47,15 +47,26 @@ class ShoppingCartComponent implements GuiComponent {
 	    'Ext.form.*',
 	    'Ext.grid.*',
 	    'Ext.util.*',
-	    'Ext.state.*'	
+	    'Ext.state.*'
 	]);
 	
 	
 	/* ********************************************************
-	 *	Carrito
+     /\  \         /\  \         /\  \         /\  \          ___        /\  \         /\  \    
+    /::\  \       /::\  \       /::\  \       /::\  \        /\  \       \:\  \       /::\  \   
+   /:/\:\  \     /:/\:\  \     /:/\:\  \     /:/\:\  \       \:\  \       \:\  \     /:/\:\  \  
+  /:/  \:\  \   /::\~\:\  \   /::\~\:\  \   /::\~\:\  \      /::\__\      /::\  \   /:/  \:\  \ 
+ /:/__/ \:\__\ /:/\:\ \:\__\ /:/\:\ \:\__\ /:/\:\ \:\__\  __/:/\/__/     /:/\:\__\ /:/__/ \:\__\
+ \:\  \  \/__/ \/__\:\/:/  / \/_|::\/:/  / \/_|::\/:/  / /\/:/  /       /:/  \/__/ \:\  \ /:/  /
+  \:\  \            \::/  /     |:|::/  /     |:|::/  /  \::/__/       /:/  /       \:\  /:/  / 
+   \:\  \           /:/  /      |:|\/__/      |:|\/__/    \:\__\       \/__/         \:\/:/  /  
+    \:\__\         /:/  /       |:|  |        |:|  |       \/__/                      \::/  /   
+     \/__/         \/__/         \|__|         \|__|                                   \/__/ 
 	 * ******************************************************** */
 	var actualizar_carrito = function(){
-		
+
+		console.group("ACTUALIZAR CARRITO");
+
 		console.log("Actualizando el carrito");
 		
 		// 
@@ -73,22 +84,19 @@ class ShoppingCartComponent implements GuiComponent {
 		var subtotal = 0;
 		var tarifaActual = 1;
 		
-		if(cliente_seleccionado !== null){
-			tarifaActual = cliente_seleccionado.get("id_tarifa_venta");
-			
-		}else{
-			
-			
-		}
+		tarifaActual = Ext.get("tarifa_seleccionada").getValue();
+		console.log("la tarifa actual es :" + tarifaActual);
+
 
 		for (var i=0; i < carrito_store_count; i++) {
-			
+						
 			var p = carrito_store.getAt(i);
 			
 			var tarifasProducto = p.get("tarifas");
 
 			for (var j=0; j < tarifasProducto.length; j++) {
 				if(tarifasProducto[j].id_tarifa == tarifaActual){
+						console.log("ya encontre el precio de esta tarifa");
 						subtotal += parseFloat( tarifasProducto[j].precio ) * parseFloat( p.get("cantidad") ) ;
 						break;
 				}
@@ -96,6 +104,7 @@ class ShoppingCartComponent implements GuiComponent {
 		};
 		
 		Ext.get("carrito_subtotal").update(Ext.util.Format.usMoney( subtotal ));
+
 		Ext.get("carrito_total").update(Ext.util.Format.usMoney( subtotal ));
 		
 		
@@ -146,15 +155,27 @@ class ShoppingCartComponent implements GuiComponent {
 
 				
 			};
-		}
+		}//if(sucursal)
+
+		console.groupEnd();
 	}
 
 
 	
-	
-	/* ********************************************************
-	 *	Clientes
-	 * ******************************************************** */
+	/* ****************************************************************************************************************
+	      ___           ___                   ___           ___           ___           ___           ___     
+	     /\  \         /\__\      ___        /\  \         /\__\         /\  \         /\  \         /\  \    
+	    /::\  \       /:/  /     /\  \      /::\  \       /::|  |        \:\  \       /::\  \       /::\  \   
+	   /:/\:\  \     /:/  /      \:\  \    /:/\:\  \     /:|:|  |         \:\  \     /:/\:\  \     /:/\ \  \  
+	  /:/  \:\  \   /:/  /       /::\__\  /::\~\:\  \   /:/|:|  |__       /::\  \   /::\~\:\  \   _\:\~\ \  \ 
+	 /:/__/ \:\__\ /:/__/     __/:/\/__/ /:/\:\ \:\__\ /:/ |:| /\__\     /:/\:\__\ /:/\:\ \:\__\ /\ \:\ \ \__\
+	 \:\  \  \/__/ \:\  \    /\/:/  /    \:\~\:\ \/__/ \/__|:|/:/  /    /:/  \/__/ \:\~\:\ \/__/ \:\ \:\ \/__/
+	  \:\  \        \:\  \   \::/__/      \:\ \:\__\       |:/:/  /    /:/  /       \:\ \:\__\    \:\ \:\__\  
+	   \:\  \        \:\  \   \:\__\       \:\ \/__/       |::/  /     \/__/         \:\ \/__/     \:\/:/  /  
+	    \:\__\        \:\__\   \/__/        \:\__\         /:/  /                     \:\__\        \::/  /   
+	     \/__/         \/__/                 \/__/         \/__/                       \/__/         \/__/                                                                                                                                                                                                
+	   ****************************************************************************************************************  */
+
 	var cliente_seleccionado = null;
 	var seleccion_de_cliente = function(a,c){
 		
@@ -175,10 +196,20 @@ class ShoppingCartComponent implements GuiComponent {
 		actualizar_carrito();	
 	};
 	
-	
+
 	
 	/* ********************************************************
-	 *	Venta
+      ___           ___           ___           ___           ___     
+     /\__\         /\  \         /\__\         /\  \         /\  \    
+    /:/  /        /::\  \       /::|  |        \:\  \       /::\  \   
+   /:/  /        /:/\:\  \     /:|:|  |         \:\  \     /:/\:\  \  
+  /:/__/  ___   /::\~\:\  \   /:/|:|  |__       /::\  \   /::\~\:\  \ 
+  |:|  | /\__\ /:/\:\ \:\__\ /:/ |:| /\__\     /:/\:\__\ /:/\:\ \:\__\
+  |:|  |/:/  / \:\~\:\ \/__/ \/__|:|/:/  /    /:/  \/__/ \/__\:\/:/  /
+  |:|__/:/  /   \:\ \:\__\       |:/:/  /    /:/  /           \::/  / 
+   \::::/__/     \:\ \/__/       |::/  /     \/__/            /:/  /  
+    ~~~~          \:\__\         /:/  /                      /:/  /   
+                   \/__/         \/__/                       \/__/ 
 	 * ******************************************************** */
 	var validar_venta_a_credito = function (clienteStore, carrito){
 		
@@ -241,15 +272,20 @@ class ShoppingCartComponent implements GuiComponent {
 
 
 	var seleccionar_producto = function( a, p ){
-		
+
+		console.group("SELECCION DE PRODUCTO");
+
 		console.log( "Seleccionando producto", p );
 		
 		//ponerle cantidad inicial de 1
+		console.log("cantidad inicial de 1");
 		p[0].set("cantidad", 1);
 		
 		//agregar produco al store
 		carrito_store.add( p[0] );
 		
+		console.groupEnd();
+
 		actualizar_carrito();
 	}
 	
@@ -258,6 +294,7 @@ class ShoppingCartComponent implements GuiComponent {
 	var seleccion_de_tarifa = function(id_tarifa){
 		
 		console.log("Tarifa seleccionada:" + id_tarifa);
+		actualizar_carrito();
 	}
 	
 	var carrito_store;
@@ -272,6 +309,31 @@ class ShoppingCartComponent implements GuiComponent {
 			//
 			// 
 			// 
+
+
+			var carrito_store_count = carrito_store.count();
+			var subtotal = 0;
+			var tarifaActual = 1;
+			
+			tarifaActual = Ext.get("tarifa_seleccionada").getValue();
+			console.log("la tarifa actual es :" + tarifaActual);
+
+
+			for (var i=0; i < carrito_store_count; i++) {
+							
+				var p = carrito_store.getAt(i);
+				
+				var tarifasProducto = p.get("tarifas");
+
+				for (var j=0; j < tarifasProducto.length; j++) {
+					if(tarifasProducto[j].id_tarifa == tarifaActual){
+							console.log("ya encontre el precio de esta tarifa");
+							subtotal += parseFloat( tarifasProducto[j].precio ) * parseFloat( p.get("cantidad") ) ;
+							break;
+					}
+				}
+			};
+
 			for (var i=0; i < carrito_store.count(); i++) {
 
 				var p = carrito_store.getAt( i );
@@ -296,10 +358,10 @@ class ShoppingCartComponent implements GuiComponent {
 				retencion 			: 0,
 				descuento 			: 0,
 				impuesto 			: 0,
-				subtotal			: 5,
-				total 				: 5,
+				subtotal			: subtotal,
+				total 				: subtotal,
 				tipo_venta 			: "contado",
-				id_sucursal			: sucursal_seleccionada,
+				id_sucursal			: null,
 				detalle_venta 		: Ext.JSON.encode( detalle_de_venta )
 			};
 
@@ -310,7 +372,13 @@ class ShoppingCartComponent implements GuiComponent {
 				ventaObj.id_comprador_venta	= cliente_seleccionado.get("id_usuario");
 			}
 
-			
+			if(Ext.get("sucursal_seleccionada") !==  undefined){
+				ventaObj.id_sucursal = Ext.get("sucursal_seleccionada").getValue();
+
+			}else if( sucursal_seleccionada !== undefined || sucursal_seleccionada != null ){
+				ventaObj.id_sucursal = sucursal_seleccionada;
+
+			}	
 		
 			return ventaObj;
 	}
@@ -318,20 +386,8 @@ class ShoppingCartComponent implements GuiComponent {
 
 	var doCotizar = function(){
 		var ventaObj = retriveData();
-		console.log(ventaObj);		
-	}
-	
-	var doVenta = function (){
-		
-		if( sucursal_seleccionada === undefined || sucursal_seleccionada === null ){
-			window.scrollTo(0, Ext.get("SeleccionDeSucursal").getY() - 80);			
-			Ext.get("SeleccionDeSucursal").highlight();
-			return;
-		}
-		
-		
-		
-		var ventaObj = retriveData();
+		ventaObj.es_cotizacion = true;
+
 		//
 		// Enviar al API
 		// 
@@ -342,6 +398,38 @@ class ShoppingCartComponent implements GuiComponent {
 				callback : function(r){
 					if(r.status === "ok"){
 						window.location = "ventas.detalle.php?vid=" + r.id_venta + "&last_action=ok";
+
+					}else{
+						console.error(r);
+						Ext.MessageBox.alert("Nueva venta", "Algo salio mal.");
+					}
+				}
+			});
+	}
+	
+	var doVenta = function (){
+		
+		var ventaObj = retriveData();
+		ventaObj.es_cotizacion = false;
+
+		if( ventaObj.id_sucursal == null ){
+				window.scrollTo(0, Ext.get("SeleccionDeSucursal").getY() - 20);			
+				Ext.get("SeleccionDeSucursal").highlight();
+				return;
+		}	
+
+		
+		//
+		// Enviar al API
+		// 
+		POS.API.POST(
+			"api/ventas/nueva/", 
+			ventaObj,
+			{
+				callback : function(r){
+					if(r.status === "ok"){
+						window.location = "ventas.detalle.php?vid=" + r.id_venta + "&last_action=ok";
+
 					}else{
 						console.error(r);
 						Ext.MessageBox.alert("Nueva venta", "Algo salio mal.");
@@ -648,16 +736,13 @@ class ShoppingCartComponent implements GuiComponent {
 		                sortable : true,
 		                dataIndex: 'tarifas',
 						renderer : function(tarifasArray){
+
 							/* ***** **** ***** 
 								tarifasArray tiene las tarifas para 
 								este producto solo hay que ver que cliente
 								esta seleccionado para mostrar la adecuada
 							***** **** ***** */
-							if(cliente_seleccionado == null){
-								return Ext.util.Format.usMoney( 0 );								
-							}
-							
-							var tf = cliente_seleccionado.get("id_tarifa_venta");
+							var tf = Ext.get("tarifa_seleccionada").getValue();
 							
 							for (var i=0; i < tarifasArray.length; i++) {
 								if(tarifasArray[i].id_tarifa == tf){
@@ -666,6 +751,7 @@ class ShoppingCartComponent implements GuiComponent {
 							}
 							
 							return "X";
+
 						}
 		            },		
 		            {
@@ -673,12 +759,8 @@ class ShoppingCartComponent implements GuiComponent {
 		                width    : 75,
 		                sortable : true,
 						renderer : function(a,b,producto){
-
-							if(cliente_seleccionado == null){
-								return Ext.util.Format.usMoney( producto.get("cantidad") );
-							}
 							
-							var tf = cliente_seleccionado.get("id_tarifa_venta");
+							var tf =  Ext.get("tarifa_seleccionada").getValue();
 							var tarifasArray = producto.get("tarifas");
 							
 							for (var i=0; i < tarifasArray.length; i++) {
@@ -724,9 +806,33 @@ class ShoppingCartComponent implements GuiComponent {
 						Sucursal:
 						<div >
 							<?php
-								$selector_de_suc = new SucursalSelectorComponent();
-								$selector_de_suc->addJsCallback("seleccionar_sucursal");
-								$selector_de_suc->renderCmp();
+								$sucursales = SucursalDAO::getAll();
+								if(sizeof($sucursales) == 0){
+									?><div style="color:gray; font-size:9px">[No hay sucursales]</div><?php
+
+								} else if(sizeof($sucursales) > 10){
+									$selector_de_suc = new SucursalSelectorComponent();
+									$selector_de_suc->addJsCallback("seleccionar_sucursal");
+									$selector_de_suc->renderCmp();	
+
+								}else{
+									
+									?>
+									<select id="sucursal_seleccionada" onChange="seleccionar_sucursal(this.value)" >
+										<?php
+
+											for ($i=0; $i < sizeof($sucursales); $i++) { 
+												echo "<option value=\"".$sucursales[$i]->getIdSucursal()."\" >".$sucursales[$i]->getRazonSocial()."</option>";
+											}
+										?>
+									</select>
+
+									
+									<?php
+
+								}
+
+								
 							?>						
 						</div>
 					</td>
@@ -742,7 +848,7 @@ class ShoppingCartComponent implements GuiComponent {
 					<td id="SeleccionDeImpuestos">
 						Tipo de tarifa:
 						<div >
-							<select onChange="seleccion_de_tarifa(this.value)" >
+							<select id="tarifa_seleccionada" onChange="seleccion_de_tarifa(this.value)" >
 								<?php
 									
 									$tarifas = TarifaDAO::obtenerTarifasActuales("venta");

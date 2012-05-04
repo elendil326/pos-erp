@@ -126,6 +126,11 @@ abstract class VentaDAOBase extends DAO
 			array_push( $val, $venta->getIdVenta() );
 		}
 
+		if( ! is_null( $venta->getEsCotizacion() ) ){
+			$sql .= " `es_cotizacion` = ? AND";
+			array_push( $val, $venta->getEsCotizacion() );
+		}
+
 		if( ! is_null( $venta->getIdCaja() ) ){
 			$sql .= " `id_caja` = ? AND";
 			array_push( $val, $venta->getIdCaja() );
@@ -223,7 +228,7 @@ abstract class VentaDAOBase extends DAO
 	  *	
 	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
 	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
-	  * aqui, sin embargo. El valor de retorno indica cuÃ¡ntas filas se vieron afectadas.
+	  * aqui, sin embargo. El valor de retorno indica cu‡ntas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
@@ -231,8 +236,9 @@ abstract class VentaDAOBase extends DAO
 	  **/
 	private static final function update( $venta )
 	{
-		$sql = "UPDATE venta SET  `id_caja` = ?, `id_venta_caja` = ?, `id_comprador_venta` = ?, `tipo_de_venta` = ?, `fecha` = ?, `subtotal` = ?, `impuesto` = ?, `descuento` = ?, `total` = ?, `id_sucursal` = ?, `id_usuario` = ?, `saldo` = ?, `cancelada` = ?, `tipo_de_pago` = ?, `retencion` = ? WHERE  `id_venta` = ?;";
+		$sql = "UPDATE venta SET  `es_cotizacion` = ?, `id_caja` = ?, `id_venta_caja` = ?, `id_comprador_venta` = ?, `tipo_de_venta` = ?, `fecha` = ?, `subtotal` = ?, `impuesto` = ?, `descuento` = ?, `total` = ?, `id_sucursal` = ?, `id_usuario` = ?, `saldo` = ?, `cancelada` = ?, `tipo_de_pago` = ?, `retencion` = ? WHERE  `id_venta` = ?;";
 		$params = array( 
+			$venta->getEsCotizacion(), 
 			$venta->getIdCaja(), 
 			$venta->getIdVentaCaja(), 
 			$venta->getIdCompradorVenta(), 
@@ -271,9 +277,10 @@ abstract class VentaDAOBase extends DAO
 	  **/
 	private static final function create( &$venta )
 	{
-		$sql = "INSERT INTO venta ( `id_venta`, `id_caja`, `id_venta_caja`, `id_comprador_venta`, `tipo_de_venta`, `fecha`, `subtotal`, `impuesto`, `descuento`, `total`, `id_sucursal`, `id_usuario`, `saldo`, `cancelada`, `tipo_de_pago`, `retencion` ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO venta ( `id_venta`, `es_cotizacion`, `id_caja`, `id_venta_caja`, `id_comprador_venta`, `tipo_de_venta`, `fecha`, `subtotal`, `impuesto`, `descuento`, `total`, `id_sucursal`, `id_usuario`, `saldo`, `cancelada`, `tipo_de_pago`, `retencion` ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$venta->getIdVenta(), 
+			$venta->getEsCotizacion(), 
 			$venta->getIdCaja(), 
 			$venta->getIdVentaCaja(), 
 			$venta->getIdCompradorVenta(), 
@@ -343,6 +350,17 @@ abstract class VentaDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " `id_venta` = ? AND"; 
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( ( !is_null (($a = $ventaA->getEsCotizacion()) ) ) & ( ! is_null ( ($b = $ventaB->getEsCotizacion()) ) ) ){
+				$sql .= " `es_cotizacion` >= ? AND `es_cotizacion` <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " `es_cotizacion` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

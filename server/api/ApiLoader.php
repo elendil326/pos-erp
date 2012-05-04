@@ -3108,6 +3108,7 @@
 			"detalle_orden" => new ApiExposedProperty("detalle_orden", false, POST, array( "json" )),
 			"detalle_paquete" => new ApiExposedProperty("detalle_paquete", false, POST, array( "json" )),
 			"detalle_venta" => new ApiExposedProperty("detalle_venta", false, POST, array( "json" )),
+			"es_cotizacion" => new ApiExposedProperty("es_cotizacion", false, POST, array( "bool" )),
 			"id_sucursal" => new ApiExposedProperty("id_sucursal", false, POST, array( "int" )),
 			"saldo" => new ApiExposedProperty("saldo", false, POST, array( "float" )),
 			"tipo_de_pago" => new ApiExposedProperty("tipo_de_pago", false, POST, array( "string" )),
@@ -3129,6 +3130,7 @@
 			isset($_POST['detalle_orden'] ) ? json_decode($_POST['detalle_orden']) : null,
 			isset($_POST['detalle_paquete'] ) ? json_decode($_POST['detalle_paquete']) : null,
 			isset($_POST['detalle_venta'] ) ? json_decode($_POST['detalle_venta']) : null,
+			isset($_POST['es_cotizacion'] ) ? $_POST['es_cotizacion'] :  false ,
 			isset($_POST['id_sucursal'] ) ? $_POST['id_sucursal'] :  null,
 			isset($_POST['saldo'] ) ? $_POST['saldo'] :  "0",
 			isset($_POST['tipo_de_pago'] ) ? $_POST['tipo_de_pago'] :  null

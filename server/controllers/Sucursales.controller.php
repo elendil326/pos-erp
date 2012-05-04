@@ -662,19 +662,7 @@ require_once("interfaces/Sucursales.interface.php");
                     return $e;
             }
             
-            //valida que la unidad exista en la base de datos
-            if(!is_null($id_unidad))
-            {
-                $unidad = UnidadDAO::getByPK($id_unidad);
-                if(is_null($unidad))
-                {
-                        return "La unidad con id ".$id_unidad." no existe";
-                }
-                if(!$unidad->getActiva())
-                {
-                    return "La unidad ".$id_unidad." no esta activa";
-                }
-            }
+           
             
             //no se encontro error, regresa true
             return true;
@@ -894,12 +882,7 @@ require_once("interfaces/Sucursales.interface.php");
                     return $e;
             }
             
-            //valida que la unidad exista en la base de datos
-            if(!is_null($id_unidad))
-            {
-                if(is_null(UnidadDAO::getByPK($id_unidad)))
-                        return "La unidad con id ".$id_unidad." no existe";
-            }
+
             
             //no se encontro error, regresa true
             return true;
@@ -1335,6 +1318,11 @@ require_once("interfaces/Sucursales.interface.php");
             return array ("id_venta" => $venta->getIdVenta());
 	}
 
+
+
+    
+
+
         /*
          * Este metodo analiza los arreglos del detalle de una venta y regresa
          * un arreglo de dos dimensiones donde un renglon cuenta con los ids
@@ -1502,7 +1490,7 @@ require_once("interfaces/Sucursales.interface.php");
             //Si productos_almacen queda vacío, quiere decir que no se encontro el producto en ningún almacen de esta sucursal
             if(empty ($productos_almacen)){
 				Logger::log("No se encontro el producto en los almacenes de esta sucursal");
-                throw new Exception("No se encontro el producto en los almacenes de esta sucursal");
+                throw new BusinessLogicException("No se encontro el producto en los almacenes de esta sucursal");
             }
             
             //La cantidad de producto que estamos buscando vender
@@ -1511,12 +1499,7 @@ require_once("interfaces/Sucursales.interface.php");
             //El numero de almacenes que cuentan con el producto
             $n_almacenes = count($productos_almacen);
             
-            //La unidad en la que se encuentra el producto, si no existe ocurre un error fatal.
-            $unidad=UnidadDAO::getByPK($detalle_producto->getIdUnidad());
-            if(is_null($unidad))
-            {
-                throw new Exception("FATAL!!! este producto no tiene unidad");
-            }
+
             
             /*
              * Este algoritmo se basa en dos casos posibles
@@ -3209,10 +3192,8 @@ require_once("interfaces/Sucursales.interface.php");
                     {
                         throw new Exception("El producto con id: ".$p["id_producto"]." no existe");
                     }
-                    if(is_null(UnidadDAO::getByPK($p["id_unidad"])))
-                    {
-                        throw new Exception("La unidad con id: ".$p["id_unidad"]." no existe");
-                    }
+
+
                     $validar = self::validarNumero($p["cantidad"], 1.8e200, "cantidad");
                     if(is_string($validar))
                     {

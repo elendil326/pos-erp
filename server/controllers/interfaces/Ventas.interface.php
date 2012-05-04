@@ -96,6 +96,7 @@ Si hay dos productos en una misma sucursal pero disntintos almacenes entonces se
  	 * @param detalle_orden json Objetos que contendran los ids y las cantidades de las ordenes que se venden
  	 * @param detalle_paquete json Arreglo de ids de los paquetes con sus cantidades que se venden
  	 * @param detalle_venta json {            id_producto: 5,            cantidad: 1,            precio: 5,            descuento: 0,            impuesto: 0,            retencion: 0,            id_unidad: 1}Un arreglo en forma de json co los parametros de cada producto.
+ 	 * @param es_cotizacion bool 
  	 * @param id_sucursal int Id de la sucursal de la cual se tomaran los productos.
  	 * @param saldo float Saldo que ha sido aportado a la venta
  	 * @param tipo_de_pago string Si la venta es pagada con tarjeta, con efectivo o con cheque
@@ -113,6 +114,7 @@ Si hay dos productos en una misma sucursal pero disntintos almacenes entonces se
 		$detalle_orden = null, 
 		$detalle_paquete = null, 
 		$detalle_venta = null, 
+		$es_cotizacion =  false , 
 		$id_sucursal = null, 
 		$saldo = "0", 
 		$tipo_de_pago = null

@@ -1116,6 +1116,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
 
 CREATE TABLE IF NOT EXISTS `venta` (
   `id_venta` int(11) NOT NULL AUTO_INCREMENT,
+  `es_cotizacion`int(1) NOT NULL COMMENT 'verdadero si es una cotizacion',
   `id_caja` int(11) DEFAULT NULL COMMENT 'la caja donde se hizo la venta, esta puede ser null ya que un gerente puede vender en el sistema web',
   `id_venta_caja` int(11) DEFAULT NULL COMMENT 'el id de la venta de esta caja',
   `id_comprador_venta` int(11) NOT NULL COMMENT 'Id del usuario al que se le vende',
