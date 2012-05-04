@@ -10,6 +10,7 @@
 	$page->addComponent(new MessageComponent("Lista de ordenes de servicio"));
 
 	$ordenes = ServiciosController::ListaOrden();
+	
 
 	$tabla = new TableComponent(array(
 		"fecha_orden" => "Fecha Orden",

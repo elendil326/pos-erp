@@ -11,6 +11,7 @@
 	$page->partialRender();
 
 
+	/*
 	?>
 		<table>
 			<tr>
@@ -20,6 +21,8 @@
 
 		</table>
 	<?php
+	*/
+	
 
 	$banner = new BannerComponent("POS ERP", "Bienvenido a POS ERP <br>un sistema de gestion empresarial", "../../../media/EAbydW1M_XR.png");
 	$page->addComponent( $banner );
@@ -33,13 +36,13 @@
 	/* *************************************************
 	 * Orden de Servicio Pendientes
 	 * ************************************************* */
-	
+
 	$s = SesionController::Actual();
 
 	$ordenes_mias = OrdenDeServicioDAO::search(new OrdenDeServicio(array( 
 							"id_usuario_asignado" => $s["id_usuario"],
-							"activa" => true
-							)));
+							"activa" 			=> true
+						)));
 
 	switch(sizeof($ordenes_mias)){
 		case 0: break;
@@ -55,52 +58,6 @@
 	
 
 	
-
-	//clientes
-
-	//empresas
-
-	//sucursales
-
-	//productos
-
-	//personal
-
-
-	$page->partialRender();
-	?>
-	<!--
-	<h3 style="margin-top:170px">Al parecer aun no esta aprovechando todo el potencial de Caffeina POS.</h3>
-		<table>
-			<tr>
-				<td><img src="../../../media/iconos/1332931020_Photomanipulation.png"></td>
-				<td>
-				<table>
-					<tr>
-						<td><img src="../../../media/iconos/1332931344_cross.png"></td>
-						<td>De de alta a su empresa.</td>
-						
-					</tr>
-					<tr>
-						<td><img src="../../../media/iconos/1332931344_cross.png"></td>
-						<td>De de alta sus sucursales.</td>
-						
-					</tr>
-					<tr>
-						<td><img src="../../../media/iconos/1332931349_tick.png"></td>
-						<td></td>
-						
-					</tr>										
-					
-				</table>
-				</td>
-			</tr>
-		</table>
-		
-
-	-->
-
-	<?php
 	
 	
 	

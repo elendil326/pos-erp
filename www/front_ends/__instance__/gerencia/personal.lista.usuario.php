@@ -8,8 +8,9 @@
 
 	$page = new GerenciaComponentPage();
 
-	$page->addComponent(new TitleComponent("Usuarios"));
+	$page->addComponent(new TitleComponent("Personal y Agentes"));
 	$page->addComponent(new MessageComponent("Lista de usuarios"));
+
 	$lista = PersonalYAgentesController::ListaUsuario();
 	$lista = $lista["resultados"];
 	
@@ -17,11 +18,7 @@
 	    "codigo_usuario" => "Codigo de usuario",
 	    "nombre" => "Nombre",
 	    "id_rol" => "Rol",
-	    "id_clasificacion_cliente" => "Clasificacion de cliente",
-	    "id_clasificacion_proveedor" => "Clasificacion de proveedor",
-	    "activo" => "Activo",
-	    "consignatario" => "Consignatario",
-	    "saldo_del_ejercicio" => "Saldo"
+	    "activo" => "Activo"
 	), $lista);
 
 	function funcion_rol($id_rol)
