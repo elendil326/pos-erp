@@ -20,19 +20,29 @@ require_once("base/regla.vo.base.php");
   */
 class ReglaDAO extends ReglaDAOBase
 {
+
+
     public static function aplicarReglas( array $reglas, VO $obj, $cantidad = null,$id_unidad = null)
     {
+        Logger::log("aplicando reglas de tarifa");    
+        Logger::log( sizeof($reglas) . " reglas.");
+        Logger::log( $cantidad . " unidades de idunidad="  .$id_unidad );
         
         $precio_base = 0;
         
         if(!($obj instanceof Paquete))
         {
+
+            Logger::log("El objeto *NO* es un Paquete");
+
             if($obj->getMetodoCosteo()=="costo")
             {
+                Logger::log("El metodo de costeo es : costo");
                 $precio_base = $obj->getCostoEstandar();
             }
             else if($obj->getMetodoCosteo()=="precio")
             {
+                Logger::log("El metodo de costeo es : precio");
                 $precio_base = $obj->getPrecio();
             }
             else
@@ -44,10 +54,13 @@ class ReglaDAO extends ReglaDAOBase
         }
         else
         {
+
             $precio_base = $obj->getPrecio();
+            Logger::log("El objeto es un Paquete, el precio marcado base es:" . $precio_base );
+
         }
         
-        Logger::log(" El precio base recibido es ".$precio_base);
+        Logger::log(" El precio base recibido es " . $precio_base);
         
         $precio_final = 0;
         
@@ -61,6 +74,8 @@ class ReglaDAO extends ReglaDAOBase
                 throw new Exception("La regla recibida no es un VO valido");
             }
             
+            Logger::log("procesando regla..." .  $regla->getIdRegla() );
+
             //Si la regla especifica que actuara sobre algun tipo especial, se evalua si el objeto recibido entra en esa clasificacion
             if
             (
@@ -75,6 +90,10 @@ class ReglaDAO extends ReglaDAOBase
                 
                 $encontrado = false;  //Bandera que indicara si se encontro que la regla es aplicable o no
                 
+
+
+
+
                 //Si la regla especifica una clasificacion de producto y el objeto es un producto,
                 //entonces se busca la clasificacion especificada por la regla en las clasificaciones del producto.
                 //Si es encontrada se cambia a verdadero la bandera.
@@ -84,6 +103,9 @@ class ReglaDAO extends ReglaDAOBase
                         $obj instanceof Producto                        
                 )
                 {
+
+                    Logger::log("Si la regla especifica una clasificacion de producto y el objeto es un producto");
+
                     $clasificaciones_producto = ProductoClasificacionDAO::search( 
                             new ProductoClasificacion( array( "id_producto" => $obj->getIdProducto() ) ) );
                     foreach($clasificaciones_producto as $clasificacion_producto)
@@ -95,6 +117,12 @@ class ReglaDAO extends ReglaDAOBase
                         }
                     }
                 }
+
+
+
+
+
+
                 //Si aun no esta activa la bandera, la regla especifica una clasificacion de servicio y el objeto es un servicio,
                 //entonces se busca la clasificacion esecificada por la regla en las clasificaciones del servicio.
                 //Si es encontrada se cambia a verdadero la bandera
@@ -105,6 +133,7 @@ class ReglaDAO extends ReglaDAOBase
                         $obj instanceof Servicio
                 )
                 {
+                    Logger::log("la regla especifica una clasificacion de servicio y el objeto es un servicio,");
                     $clasificaciones_servicio = ServicioClasificacionDAO::search( 
                             new ServicioClasificacion( array( "id_servicio" => $obj->getIdServicio() ) ) );
                     foreach($clasificaciones_servicio as $clasificacion_servicio)
@@ -116,6 +145,14 @@ class ReglaDAO extends ReglaDAOBase
                         }
                     }
                 }
+
+
+
+
+
+
+
+
                 //Si aun no esta activa la bandera, la regla especifica un producto y el objeto es un producto,
                 //entonces se compara el id especificado por la regla con el id del producto. Si son iguales, 
                 //verifica si la regla especifica una unidad. De ser asi, verifica que la unidad especificada
@@ -128,6 +165,7 @@ class ReglaDAO extends ReglaDAOBase
                         $obj instanceof Producto            
                 )
                 {
+                    Logger::log("la regla especifica un producto y el objeto es un producto");
                     if($obj->getIdProducto()==$regla->getIdProducto())
                     {
                         if(!is_null($regla->getIdUnidad()))
@@ -143,6 +181,13 @@ class ReglaDAO extends ReglaDAOBase
                         }
                     }
                 }
+
+
+
+
+
+
+
                 //Si la bandera aun no esta activa, la regla especifica un servicio y el objeto es un servicio,
                 //entonces se verifica que el id especificado por la regla sea igual al del servicio. Si son
                 //iguales entonces se cambia la bandera a verdadero.
@@ -153,11 +198,20 @@ class ReglaDAO extends ReglaDAOBase
                         $obj instanceof Servicio
                 )
                 {
+                    Logger::log("la regla especifica un servicio y el objeto es un servicio,");
                     if($obj->getIdServicio()==$regla->getIdServicio())
                     {
                         $encontrado = true;
                     }
                 }
+
+
+
+
+
+
+
+
                 //Si la bandera aun no esta activa, la regla especifica un paquete y el objeto es un paquete,
                 //entonces se verifica que el id especificado por al regla sea igual al del paquete. Si son
                 //iguales entonces se cambia la bandera a verdadero.
@@ -168,20 +222,29 @@ class ReglaDAO extends ReglaDAOBase
                         $obj instanceof Paquete
                 )
                 {
+                    Logger::log("la regla especifica un paquete y el objeto es un paquete,");
                     if($obj->getIdPaquete()==$regla->getIdPaquete())
                     {
                         $encontrado = true;
                     }
                 }
-            }
+
+
+                if($encontrado)
+                {
+                    Logger::log("Encontre un filtro especifico, saliendo de este pedo... ");
+                    continue;
+                }
+
+            }//if
             
-            if(!$encontrado)
-            {
-                continue;
-            }
-            
-            $precio_final = $precio_base * (1+ $regla->getPorcentajeUtilidad());
-            
+            Logger::log("No encontre un filtro especifico, continuando... ");
+
+            Logger::log("precio_final = precio_base * ( 1 +  (regla->getPorcentajeUtilidad()/100 ));");
+
+            $precio_final = $precio_base * ( 1 +  ($regla->getPorcentajeUtilidad()/100 ));
+            Logger::log("$precio_final = $precio_base * ( 1 +  (" . $regla->getPorcentajeUtilidad() . "/100 ));");
+
             $metodo_redondeo = $regla->getMetodoRedondeo();
             
             /*

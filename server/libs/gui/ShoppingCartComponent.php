@@ -50,6 +50,10 @@ class ShoppingCartComponent implements GuiComponent {
 	    'Ext.state.*'	
 	]);
 	
+	
+	/* ********************************************************
+	 *	Carrito
+	 * ******************************************************** */
 	var actualizar_carrito = function(){
 		
 		console.log("Actualizando el carrito");
@@ -71,6 +75,10 @@ class ShoppingCartComponent implements GuiComponent {
 		
 		if(cliente_seleccionado !== null){
 			tarifaActual = cliente_seleccionado.get("id_tarifa_venta");
+			
+		}else{
+			
+			
 		}
 
 		for (var i=0; i < carrito_store_count; i++) {
@@ -143,6 +151,10 @@ class ShoppingCartComponent implements GuiComponent {
 
 
 	
+	
+	/* ********************************************************
+	 *	Clientes
+	 * ******************************************************** */
 	var cliente_seleccionado = null;
 	var seleccion_de_cliente = function(a,c){
 		
@@ -165,6 +177,9 @@ class ShoppingCartComponent implements GuiComponent {
 	
 	
 	
+	/* ********************************************************
+	 *	Venta
+	 * ******************************************************** */
 	var validar_venta_a_credito = function (clienteStore, carrito){
 		
 		if(clienteStore === null){
@@ -240,61 +255,83 @@ class ShoppingCartComponent implements GuiComponent {
 	
 	var tipo_de_pago_seleccionado = "efectivo";
 	
-
+	var seleccion_de_tarifa = function(id_tarifa){
+		
+		console.log("Tarifa seleccionada:" + id_tarifa);
+	}
 	
 	var carrito_store;
 
+	var retriveData = function(){
+
+			//
+			// crear un objeto con los productos
+			//
+			var detalle_de_venta = [];
+
+			//
+			// 
+			// 
+			for (var i=0; i < carrito_store.count(); i++) {
+
+				var p = carrito_store.getAt( i );
+
+				console.log(p);
+
+				detalle_de_venta.push({
+					id_producto : p.get("id_producto"),
+					cantidad 	: p.get("cantidad"),
+					precio		: 2,
+					descuento	: 0,
+					impuesto	: 0,
+					retencion	: 0,
+					id_unidad	: 1
+				});
+			}
+
+			//
+			// 
+			// 
+			ventaObj = {
+				retencion 			: 0,
+				descuento 			: 0,
+				impuesto 			: 0,
+				subtotal			: 5,
+				total 				: 5,
+				tipo_venta 			: "contado",
+				id_sucursal			: sucursal_seleccionada,
+				detalle_venta 		: Ext.JSON.encode( detalle_de_venta )
+			};
+
+
+			if(cliente_seleccionado == null){
+				ventaObj.id_comprador_venta = null;
+			}else{
+				ventaObj.id_comprador_venta	= cliente_seleccionado.get("id_usuario");
+			}
+
+			
+		
+			return ventaObj;
+	}
+
+
+	var doCotizar = function(){
+		var ventaObj = retriveData();
+		console.log(ventaObj);		
+	}
 	
 	var doVenta = function (){
 		
-		//
-		// Validar los datos
-		// 
 		if( sucursal_seleccionada === undefined || sucursal_seleccionada === null ){
-			
+			window.scrollTo(0, Ext.get("SeleccionDeSucursal").getY() - 80);			
 			Ext.get("SeleccionDeSucursal").highlight();
 			return;
-			
-		}
-
-		
-		//
-		// crear un objeto con los productos
-		//
-		var detalle_de_venta = [];
-		
-		//
-		// 
-		// 
-		for (var i=0; i < carrito_store.count(); i++) {
-
-			var p = carrito_store.getAt(i);
-			detalle_de_venta.push({
-				id_producto : p.get("id_producto"),
-				cantidad 	: p.get("cantidad"),
-				precio		: 2,
-				descuento	: 0,
-				impuesto	: 0,
-				retencion	: 0,
-				id_unidad	: 1
-			});
 		}
 		
-		//
-		// 
-		// 
-		ventaObj = {
-			retencion 			: 0,
-			descuento 			: 0,
-			impuesto 			: 0,
-			subtotal			: 5,
-			total 				: 5,
-			tipo_venta 			: "contado",
-			id_comprador_venta	: cliente_seleccionado.get("id_usuario"),
-			id_sucursal			: sucursal_seleccionada,
-			detalle_venta 		: Ext.JSON.encode( detalle_de_venta )
-		};
 		
+		
+		var ventaObj = retriveData();
 		//
 		// Enviar al API
 		// 
@@ -583,7 +620,7 @@ class ShoppingCartComponent implements GuiComponent {
 		        columns: [
 		            {
 		                text     : 'codigo_producto',
-		                width    : 75,
+		                width    : 95,
 		                sortable : false,
 		                dataIndex: 'codigo_producto'
 		            },
@@ -608,7 +645,6 @@ class ShoppingCartComponent implements GuiComponent {
 		            },		
 		            {
 		                text     : 'Precio',
-		                flex     : 1,
 		                sortable : true,
 		                dataIndex: 'tarifas',
 						renderer : function(tarifasArray){
@@ -704,9 +740,17 @@ class ShoppingCartComponent implements GuiComponent {
 						</div>
 					</td>
 					<td id="SeleccionDeImpuestos">
-						Impuestos que aplicaran a esta venta:
+						Tipo de tarifa:
 						<div >
-	
+							<select onChange="seleccion_de_tarifa(this.value)" >
+								<?php
+									
+									$tarifas = TarifaDAO::obtenerTarifasActuales("venta");
+									for ($i=0; $i < sizeof($tarifas); $i++) { 
+										echo "<option value=\"".$tarifas[$i]["id_tarifa"]."\" >".$tarifas[$i]["nombre"]."</option>";
+									}
+								?>
+							</select>
 						</div>
 					</td>
 					<td id="SeleccionDeTipoDePago">
@@ -759,7 +803,8 @@ class ShoppingCartComponent implements GuiComponent {
 			</table>
 			
 			<div class="POS Boton" onClick="cancelarVenta()">Cancelar</div>
-			<div class="POS Boton" onClick="doVenta()">Vender</div>
+			<div class="POS Boton" onClick="doCotizar()">Solo cotizar</div>
+			<div class="POS Boton OK" onClick="doVenta()">Vender</div>
 			
 		<?php
 	}

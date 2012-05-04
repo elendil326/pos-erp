@@ -17,7 +17,12 @@ $page->requireParam("pid", "GET", "Este producto no existe.");
 $este_producto = ProductoDAO::getByPK($_GET["pid"]);
 
 $precios = TarifasController::_CalcularTarifa( $este_producto, "venta" );
-//var_dump($precios);//
+
+$precios_html = "<table><tr><td colspan=2><h3>Tarifas</h3></td></tr>	";
+for ($i=0; $i < sizeof($precios); $i++) { 
+	$precios_html .= "<tr><td>".$precios[$i]["descripcion"] . "</td><td>" . FormatMoney($precios[$i]["precio"]) . "</td>";
+}
+$precios_html .= "</table>";
 
 $page->addComponent("
 <table>
@@ -26,7 +31,7 @@ $page->addComponent("
         <td><h2>" . $este_producto->getNombreProducto() . "</h2></td>
     </tr>
     <tr>
-        <td>" .  $este_producto->getPrecio() . "</td>
+        <td>" .  $precios_html . "</td>
     </tr>
 </table>
 <script type=\"text/javascript\">
@@ -40,10 +45,10 @@ $page->addComponent("
         src=\"https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=".  $este_producto->getCodigoProducto() . "&callback=gimgcb\">
 </script>");
 
+
+
+
 $page->nextTab("General");
-
-
-
 
 //
 // Forma de producto
@@ -53,19 +58,13 @@ $form->setEditable(false);
 
 $form->hideField(array(
     "id_producto",
-	"foto_del_producto"
-));
-/*
-$form->makeObligatory(array(
-    "compra_en_mostrador",
-    "costo_estandar",
-    "nombre_producto",
-    "id_empresas",
-    "codigo_producto",
-    "metodo_costeo",
-    "activo"
-));
-*/
+	"foto_del_producto",
+	"precio",
+	"id_unidad_compra",
+	"control_de_existencia",
+	"activo"
+	));
+
 $form->createComboBoxJoinDistintName("id_unidad_compra","id_unidad_medida" ,"abreviacion", UnidadMedidaDAO::getAll(), $este_producto->getIdUnidadCompra());
 
 $form->createComboBoxJoinDistintName("id_unidad", "id_unidad_medida", "abreviacion", UnidadMedidaDAO::getAll(), $este_producto->getIdUnidad());
