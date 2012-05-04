@@ -325,31 +325,29 @@ class ShoppingCartComponent implements GuiComponent {
 				
 				var tarifasProducto = p.get("tarifas");
 
+				var precio_con_tarifa = -1; 
+
 				for (var j=0; j < tarifasProducto.length; j++) {
 					if(tarifasProducto[j].id_tarifa == tarifaActual){
 							console.log("ya encontre el precio de esta tarifa");
-							subtotal += parseFloat( tarifasProducto[j].precio ) * parseFloat( p.get("cantidad") ) ;
+							precio_con_tarifa = parseFloat( tarifasProducto[j].precio );
+							subtotal +=  precio_con_tarifa * parseFloat( p.get("cantidad") ) ;
 							break;
 					}
 				}
-			};
-
-			for (var i=0; i < carrito_store.count(); i++) {
-
-				var p = carrito_store.getAt( i );
-
-				console.log(p);
 
 				detalle_de_venta.push({
 					id_producto : p.get("id_producto"),
 					cantidad 	: p.get("cantidad"),
-					precio		: 2,
+					precio		: precio_con_tarifa,
 					descuento	: 0,
 					impuesto	: 0,
 					retencion	: 0,
 					id_unidad	: 1
 				});
-			}
+
+			};
+
 
 			//
 			// 
@@ -362,6 +360,7 @@ class ShoppingCartComponent implements GuiComponent {
 				total 				: subtotal,
 				tipo_venta 			: "contado",
 				id_sucursal			: null,
+				id_tarifa 			: tarifaActual,
 				detalle_venta 		: Ext.JSON.encode( detalle_de_venta )
 			};
 

@@ -248,6 +248,9 @@ require_once("interfaces/Ventas.interface.php");
             return $detalle;
 	}
   
+
+
+
 	/**
  	 *
  	 *Lista las ventas, puede filtrarse por empresa, sucursal, por el total, si estan liquidadas o no, por canceladas, y puede ordenarse por sus atributos.
@@ -372,6 +375,9 @@ require_once("interfaces/Ventas.interface.php");
             return $output;
 	}
   
+
+
+
 	/**
  	 *
  	 *Metodo que cancela una venta
@@ -384,7 +390,7 @@ require_once("interfaces/Ventas.interface.php");
 		$billetes = null, 
 		$id_caja = null
 	)
-	{  
+    {  
              Logger::log("Cancenlando venta ".$id_venta);
             
             //valida que la venta exista y que este activa
@@ -445,7 +451,7 @@ require_once("interfaces/Ventas.interface.php");
             DAO::transEnd();
             Logger::log("Venta cancelada exitosamente");
   
-	}
+    }
   
 	/**
  	 *
@@ -467,6 +473,13 @@ require_once("interfaces/Ventas.interface.php");
 
 
 
+
+
+
+
+
+
+
     private static function Cotizar
     (
         $descuento, 
@@ -483,18 +496,14 @@ require_once("interfaces/Ventas.interface.php");
         $saldo = "0", 
         $tipo_de_pago = null
     ){
-        Logger::log("Cotizando ....");
-
-        Logger::log("Realizando la venta de caja.....");
-            
+            Logger::log("Cotizando ....");
+        
             //Se obtiene el id del usuario actualmente logueado
             $aS = SesionController::Actual();
             $id_usuario = $aS["id_usuario"];
 
             //Se busca al usuario comprador
             $usuario = UsuarioDAO::getByPK($id_comprador_venta);
-            
-
 
             if(!is_null($id_sucursal))
             {
@@ -569,11 +578,15 @@ require_once("interfaces/Ventas.interface.php");
                     throw new Exception("El detalle del producto es invalido",901);
                 }
 
-                $d_producto = new VentaProducto();
-                $d_producto->setIdVenta($venta->getIdVenta());
+                
+
+                
 
                 foreach($detalle_producto as $d_p)
                 {
+
+                    $d_producto = new VentaProducto();
+                    $d_producto->setIdVenta($venta->getIdVenta());
                     
                     if
                     (
@@ -589,17 +602,19 @@ require_once("interfaces/Ventas.interface.php");
                         throw new Exception("El detalle del producto es invalido",901);
                     }
                     
-                    
-                    $producto=ProductoDAO::getByPK($d_p["id_producto"]);
-                    $d_producto->setCantidad($d_p["cantidad"]);
-                    $d_producto->setDescuento($d_p["descuento"]);
-                    $d_producto->setIdProducto($d_p["id_producto"]);
-                    $d_producto->setIdUnidad($d_p["id_unidad"]);
-                    $d_producto->setImpuesto($d_p["impuesto"]);
-                    $d_producto->setPrecio($d_p["precio"]);
-                    $d_producto->setRetencion($d_p["retencion"]);
+                    Logger::log("Insertando venta_producto:" );
                     
                     
+
+                    $d_producto->setCantidad    ( $d_p["cantidad"]  );
+                    $d_producto->setDescuento   ( $d_p["descuento"] );
+                    $d_producto->setIdProducto  ( $d_p["id_producto"]);
+                    $d_producto->setIdUnidad    ( $d_p["id_unidad"] );
+                    $d_producto->setImpuesto    ( $d_p["impuesto"]  );
+                    $d_producto->setPrecio      ( $d_p["precio"]    );
+                    $d_producto->setRetencion   ( $d_p["retencion"] );
+                    
+                    Logger::log( $d_producto );
                     
                     try
                     {
@@ -620,7 +635,7 @@ require_once("interfaces/Ventas.interface.php");
             DAO::transEnd();
 
             Logger::log("====== Cotizacion realizada exitosamente ======== ");
-            
+            die("asdfasdf");
             return array ("id_venta" => $venta->getIdVenta());
 
 

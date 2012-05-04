@@ -8,9 +8,7 @@ require_once("libs/ezpdf/class.ezpdf.php");
 
 class ImpresionesController {
 
-	private static function FormatMoney($foo){
-		return $foo;
-	}
+
 	
 	private static function puntos_cm($medida, $resolucion=72) {
 	    //// 2.54 cm / pulgada
@@ -177,7 +175,10 @@ class ImpresionesController {
 	            'descripcion' => 'Descripcion                                                                                                     ', 'precio' => 'Precio', 'importe' => 'Importe'),
 	    );
 
-	    
+	    $subtotal = 0;
+	    $total = 0;
+	    $impuesto = 0;
+
 	    foreach ($productos as $p) {
 
 	        	$prodDao = ProductoDAO::getByPK( $p->getIdProducto() );
@@ -186,6 +187,10 @@ class ImpresionesController {
 	            $prod['descripcion'] = $prodDao->getNombreProducto();
 	            $prod['precio'] = FormatMoney($p->getPrecio(), DONT_USE_HTML);
 	            $prod['importe'] = FormatMoney($p->getPrecio() * $p->getCantidad(), DONT_USE_HTML);
+
+
+	            $subtotal +=  ($p->getPrecio() * $p->getCantidad());
+	            $total = $subtotal;
 
 	            array_push($elementos, $prod);
 	        
@@ -196,31 +201,29 @@ class ImpresionesController {
 	    array_push($elementos, array("cantidad" => "",
 	        "descripcion" => "",
 	        "precio" => "Subtotal",
-	        "importe" => FormatMoney(11, DONT_USE_HTML)));
+	        "importe" => FormatMoney($subtotal, DONT_USE_HTML)));
 
 	    array_push($elementos, array("cantidad" => "",
 	        "descripcion" => "",
 	        "precio" => "Descuento",
-	        "importe" => FormatMoney(11, DONT_USE_HTML)));
+	        "importe" => FormatMoney(0, DONT_USE_HTML)));
 
 	    array_push($elementos, array("cantidad" => "",
 	        "descripcion" => "",
 	        "precio" => "IVA",
-	        "importe" => FormatMoney(11, DONT_USE_HTML)));
+	        "importe" => FormatMoney(0, DONT_USE_HTML)));
 
 	    array_push($elementos, array("cantidad" => "",
 	        "descripcion" => "",
 	        "precio" => "Total",
-	        "importe" => FormatMoney(11, DONT_USE_HTML)));
+	        "importe" => FormatMoney($total, DONT_USE_HTML)));
 
 	
 	    $pdf->ezSetY(self::puntos_cm(18.6));
 	
 	    $opciones_tabla['xPos'] = self::puntos_cm(2);
 	    $opciones_tabla['width'] = self::puntos_cm(16.2);
-	
-	
-	    $pdf->ezText("", 10, array('justification' => 'center'));
+
 	    $pdf->ezTable($elementos, "", "", $opciones_tabla);
 	}
 
