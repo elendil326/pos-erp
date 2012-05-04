@@ -92,7 +92,8 @@
 	$esta_venta->setSaldo(	FormatMoney(	$esta_venta->getSaldo()));
 	$esta_venta->setTotal(	FormatMoney(	$esta_venta->getTotal()));
 	$esta_venta->setSubtotal(FormatMoney(	$esta_venta->getSubtotal()));
-	$esta_venta->setFecha(	FormatTime(		$esta_venta->getFecha()));
+
+	$esta_venta->setFecha( 	FormatTime(		$esta_venta->getFecha(), "SUPLEMENTARY" ));
 
 	$form = new DAOFormComponent($esta_venta);
 
@@ -123,7 +124,7 @@
 
 	if( sizeof($productos = VentaProductoDAO::search(new VentaProducto(array("id_venta" => $_GET["vid"])))) > 0 ){
 
-			$page->addComponent(new TitleComponent("Productos de esta venta", 3));
+			$page->addComponent(new TitleComponent("Productos en esta venta", 3));
 
 			$tabla = new TableComponent(array(
 				"id_producto" => "Producto",
@@ -132,7 +133,9 @@
 			), $productos);
 
 			
-			$tabla->addColRender("id_producto", "funcion_producto");
+			$tabla->addColRender("id_producto", 	"funcion_producto");
+			$tabla->addColRender("cantidad", 		"FormatMoney");
+			$tabla->addColRender("precio", "FormatMoney");
 
 			$page->addComponent($tabla);
 	}

@@ -41,8 +41,12 @@ $page->addComponent(new TitleComponent("Orden de servicio " . $_GET["oid"] . " p
 //
 // Menu de opciones
 // 
+
+$menu = new MenuComponent();
+
+
 if ( $esta_orden->getActiva() ){
-	$menu = new MenuComponent();
+	
 	
 	$btn_eliminar = new MenuItem("Cancelar orden", null);
 	$btn_eliminar->addApiCall("api/servicios/orden/cancelar", "GET");
@@ -66,16 +70,16 @@ if ( $esta_orden->getActiva() ){
 	$editar->addOnClick("_e", "function _e(){ window.location = 'servicios.detalle.orden.editar.php?oid=". $_GET["oid"] ."' ; }");
 	$menu->addMenuItem($editar);
 	
-	$imp = new MenuItem(" <img src='../../../media/iconos/printer.png'> Imprimir", null);
-	$imp->addOnClick("_p", "function _p(){ window.open('servicios.detalle.orden.impresion.php?oid=". $_GET["oid"] ."'); }");
-	$menu->addMenuItem($imp);
-	
-	
-		
-	$page->addComponent($menu);
+
 }
 
+$imp = new MenuItem(" <img src='../../../media/iconos/printer.png'> Imprimir", null);
+$imp->addOnClick("_p", "function _p(){ window.open('servicios.detalle.orden.impresion.php?oid=". $_GET["oid"] ."'); }");
+$menu->addMenuItem($imp);
 
+
+	
+$page->addComponent($menu);
 
 
 //

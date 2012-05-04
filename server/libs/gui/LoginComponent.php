@@ -152,8 +152,7 @@ class LoginComponent implements GuiComponent
 								$file = "../../media/safe.png";
 							}
 						?>
-						<div style="width: 256px; height: 256px; background-image: url(<?php echo $file; ?>)">
-							
+						<div style="width: 256px; height: 256px; background-size:256px; background-repeat: no-repeat; background-image: url(<?php echo $file; ?>)">
 						</div>
 						<!--<img width="256" height="256" src="<">
 						-->

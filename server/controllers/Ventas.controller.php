@@ -635,7 +635,7 @@ require_once("interfaces/Ventas.interface.php");
             DAO::transEnd();
 
             Logger::log("====== Cotizacion realizada exitosamente ======== ");
-            die("asdfasdf");
+            
             return array ("id_venta" => $venta->getIdVenta());
 
 

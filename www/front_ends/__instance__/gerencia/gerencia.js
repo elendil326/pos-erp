@@ -872,3 +872,53 @@ Ext.example = function(){
 }();
 
 
+ var drawMap = function ( result, status ) {
+
+
+    if(result.length == 0){
+        document.getElementById("map_canvas").innerHTML = "<div align='center'> Imposible localizar esta direccion. </div>"; 
+        return;
+    }
+
+    var myLatlng = result[0].geometry.location;
+
+    var myOptions = {
+      zoom: 17,
+      center: myLatlng,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+	  navigationControl : true
+    }
+
+	try{
+    	var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+	}catch(e){
+        document.getElementById("map_canvas").innerHTML = "<div align='center'> Imposible crear el mapa.</div>";
+        return;
+	}
+    
+
+    m = new google.maps.Marker({
+        map: map,
+        position: myLatlng
+    });
+
+
+  };
+
+    function startMap( direccion ){
+
+	    GeocoderRequest = {
+		    address : direccion + ", Mexico"
+	    };
+	    try{
+
+		    gc = new google.maps.Geocoder( );
+
+		    gc.geocode(GeocoderRequest,  drawMap);
+		
+	    }catch(e){
+		    console.log(e)
+	    }
+
+
+    }

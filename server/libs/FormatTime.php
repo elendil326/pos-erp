@@ -8,8 +8,11 @@ function FormatMoney($float){
 }
 
 
-function FormatTime($timestamp)
+function FormatTime($timestamp, $type = "FB")
 {
+
+
+
 
 	if(!is_numeric($timestamp)){
 		$timestamp = strtotime($timestamp);
@@ -112,5 +115,7 @@ function FormatTime($timestamp)
 		}
 	}
  
+ 	$text = "<div title='".date("F j, Y \a \l\a\s g:i a", $timestamp)."'> " . $text . "</div>";
+
 	return $text;
 }

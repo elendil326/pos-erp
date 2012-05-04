@@ -162,7 +162,8 @@ class ClienteSelectorComponent implements GuiComponent{
         });//onReady
 
         </script>
-					
+		<div style="">
+
         <table border="0" style="width: 100%" >
 			<tr id="SeleccionDeCliente">
 				<td colspan="4">
@@ -177,7 +178,7 @@ class ClienteSelectorComponent implements GuiComponent{
 
 		<div id="ClienteSelectorComponent_001"><!-- buscar clientes --></div>		        
 		&nbsp;<bR>
-
+		</div>
 		<?php
 
 	}//renderCmp

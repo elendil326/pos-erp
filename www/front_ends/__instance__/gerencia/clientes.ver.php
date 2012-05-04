@@ -25,15 +25,25 @@
 	
 	$page->nextTab("Panorama");
 
-
+	$page->addComponent(new TitleComponent("Ultima actividad",3));
 	
+
+	//buscar sus ventas
+	$ventas = VentaDAO::search(new Venta(array( "id_comprador_venta"  => $este_usuario->getIdUsuario() )));
+
+
+	$actividad = $ventas;
+
+	$header = array("fecha" => "fecha");
+
+	$tabla = new TableComponent($header, $actividad);
+	$page->addComponent($tabla);
+
+
+
 
 	$page->nextTab("General");
 
-
-
-
-	
 	//
 	// Menu de opciones
 	// 
@@ -101,8 +111,23 @@
 	$menu->addItem("Editar Direccion","clientes.editar.direccion.php?cid=".$este_usuario->getIdUsuario()."&did=".$este_usuario->getIdDireccion() );
 	$page->addComponent($menu);
 
+
+
 	$direccion = $este_usuario->getIdDireccion();
 	$direccionObj = DireccionDAO::getByPK( $direccion );
+
+	if(!is_null($direccionObj)){
+		$page->addComponent(new FreeHtmlComponent("<div id=\"map_canvas\"></div>"));
+		$page->addComponent(new FreeHtmlComponent("<script>startMap(\""
+																. $direccionObj->getCalle() 
+																. " ,"
+																. $direccionObj->getColonia() 
+																. "\");</Script>"));
+	}
+
+	
+
+	
 	
 	if(!is_null($direccionObj)){
 		$usr_ultima = UsuarioDAO::getByPK($direccionObj->getIdUsuarioUltimaModificacion());	
@@ -113,14 +138,16 @@
 		$dform = new DAOFormComponent( $direccionObj );
 		$dform->setEditable(false);		
 		$dform->hideField( array( 
-				"id_direccion"
+				"id_direccion",
+				"id_usuario_ultima_modificacion",
+				"ultima_modificacion"
 			 ));		
 		$dform->createComboBoxJoin("id_ciudad","nombre",CiudadDAO::getAll(), $direccionObj->getIdCiudad());
 		$page->addComponent( $dform );
 	}
 
 	
-	
+
 	
 	
 	/* ********************************************************

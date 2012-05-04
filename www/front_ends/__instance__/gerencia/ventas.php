@@ -28,6 +28,12 @@
          * Ventas
          * ********************************************************************* */
         $page->nextTab("Ventas");
+        
+        $menu = new MenuComponent();
+        $menu->addItem("Nueva venta", "ventas.nueva.php");
+        $page->addComponent( $menu);
+
+
         $ventas = new Venta(array("es_cotizacion" => false, "cancelada" => false));
         $tabla = new TableComponent( 
                 array(
@@ -54,6 +60,12 @@
          * Cotizaciones
          * ********************************************************************* */
         $page->nextTab("Cotizaciones");
+
+        $menu = new MenuComponent();
+        $menu->addItem("Nueva cotizacion", "ventas.nueva.php");
+        $page->addComponent( $menu);
+
+
         $cotizaciones = new Venta(array("es_cotizacion" => true));
         $tabla = new TableComponent( 
                 array(
