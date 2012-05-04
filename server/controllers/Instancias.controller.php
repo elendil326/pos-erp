@@ -240,4 +240,158 @@
 		public static function Eliminar($instance_token){
 			
 		}
+
+		public static function Actualizar_Todas_Instancias(){
+			$result = "";
+			
+			global $POS_CONFIG;
+			$sql = "SELECT * FROM instances;";
+			$rs =  $POS_CONFIG["CORE_CONN"]->Execute($sql);
+			$instancias = $rs->GetArray();
+			
+			foreach($instancias as $ins){
+				/*$rs = self::backup_only_data($ins['instance_id'],$ins['db_host'], $ins['db_user'], $ins['db_password'], $ins['db_name'], $tables = '*', $backup_values = true, $return_as_string = false,'../../../static_content/db_backups/');
+				if(!is_null($rs)){	
+					$result.= $rs."\n";
+					continue;//ya no seguir con el proceso
+				}
+				*/
+				//$rs = self::Eliminar_Tablas_BD($ins['instance_id'],$ins['db_host'], $ins['db_user'], $ins['db_password'], $ins['db_name']);
+				self::Eliminar_Tablas_BD(87,'localhost', 'pos_instance_87', 'pos_instance_87', 'pos_instance_87');
+				break;
+			}
+			$result = "nada";
+			if(strlen($result)>0)
+				return $result;
+			else 
+				return null;
+		}
+
+		public static function Eliminar_Tablas_BD($instance_id,$host,$user, $pass, $name){
+			Logger::log("Deleting Tables from instance {$instance_id}");
+			try{
+				$link = @mysql_connect($host,$user,$pass);
+				@mysql_select_db($name,$link);
+				if($link == null){
+					Logger::log( "No se pudo abrir la conexion para la BD: {$name} " );
+					return "No se pudo abrir la conexion para la BD: {$name} con id: {$instance_id}";	
+				}
+			}catch(ADODB_Exception $e){								
+				Logger::log( "No se pudo abrir la conexion para la BD: {$name} ".$e->msg );
+				return "No se pudo abrir la conexion para la BD: {$name} con id: {$instance_id} . Error: ".$e->msg;
+			}
+			
+			mysql_query("SET foreign_key_checks = 0");//deshabilitar llave foraneas
+
+			$tables = array();
+			$result = mysql_query('SHOW TABLES');
+			$i=0;
+			//se eliminan las tablas
+			while($row = mysql_fetch_row($result)){//row = nombre de la tabla
+				$rss = mysql_query("DROP TABLE IF EXISTS {$name}.".$row[0]." CASCADE;");											
+			}
+			
+		}
+
+		public static function Insertar_Tablas_A_BD(){
+
+		}
+
+		public static function Insertar_Datos(){
+
+		}
+		
+		public static function backup_only_data($instance_id, $host, $user, $pass, $name, $tables = '*', $backup_values = true, $return_as_string = false,$destiny_file){
+			Logger::log( "Updating Instance DB {$name}");
+			try{
+				$link = @mysql_connect($host,$user,$pass);
+				@mysql_select_db($name,$link);
+				if($link == null){
+					Logger::log( "No se pudo abrir la conexion para la BD: {$name} " );
+					return "No se pudo abrir la conexion para la BD: {$name} con id: {$instance_id}";	
+				}
+			}catch(ADODB_Exception $e){								
+				Logger::log( "No se pudo abrir la conexion para la BD: {$name} ".$e->msg );
+				return "No se pudo abrir la conexion para la BD: {$name} con id: {$instance_id} . Error: ".$e->msg;
+			}
+
+			//get all of the tables
+		  	if($tables == '*'){
+				$tables = array();
+				$result = mysql_query('SHOW TABLES');
+
+				while($row = mysql_fetch_row($result))
+			  		$tables[] = $row[0];
+		  	}else{
+				$tables = is_array($tables) ? $tables : explode(',',$tables);
+			}
+
+			$return = "";
+
+		  	//cycle through
+		  	foreach($tables as $table)
+		  	{
+				$result = mysql_query('SELECT * FROM '.$table);
+				$num_fields = mysql_num_fields($result);
+
+				//$return.= 'DROP TABLE '.$table.';';
+				$row2 = mysql_fetch_row(mysql_query('SHOW CREATE TABLE '.$table));
+				//$return.= "\n\n".$row2[1].";\n\n";
+
+				if($backup_values)
+				{
+					for ($i = 0; $i < $num_fields; $i++) 
+					{
+					  while($row = mysql_fetch_row($result))
+					  {
+						$return.= 'INSERT INTO '.$table.' VALUES(';
+						for($j=0; $j<$num_fields; $j++) 
+						{
+						  $row[$j] = addslashes($row[$j]);
+						  $row[$j] = @ereg_replace("\n","\\n",$row[$j]);
+						  if (isset($row[$j])) { $return.= '"'.$row[$j].'"' ; } else { $return.= '""'; }
+						  if ($j<($num_fields-1)) { $return.= ','; }
+						}
+						$return.= ");\n";
+					  }
+					}			
+				}
+
+				$return.="\n";
+		  	}
+	
+			if($return_as_string)
+				return $return;
+
+			$fname = $destiny_file.'db-backup-'.time().'-'.(md5(implode(',',$tables))).'.sql';
+			try{
+			  	$handle = @fopen($fname,'w+');
+			  	@fwrite($handle, $return);
+			  	@fclose($handle);
+			}catch(Exception $e){
+				Logger::log( $e->getMessage() );
+				return $e->getMessage();				
+			}
+
+			return null;//cuando regresa null todo bien
+
+		}//fin back_up tables
+
+		public static function formatfilesize( $data ) {
+	        // bytes
+	        if( $data < 1024 ) {
+	            return $data . " bytes";
+	        }
+
+	        // kilobytes
+	        else if( $data < 1024000 ) {
+	            return round( ( $data / 1024 ), 1 ) . "k";
+	        }
+
+	        // megabytes
+	        else {
+	            return round( ( $data / 1024000 ), 1 ) . " MB";
+	        }
+		}
+
 	}
