@@ -6,6 +6,36 @@
 
 	require_once("../../../../server/bootstrap.php");
 
+
+
+	function funcion_producto($id_producto)
+	{
+		return ProductoDAO::getByPK($id_producto) ? ProductoDAO::getByPK($id_producto)->getNombreProducto() : "---------";
+	}
+
+	function funcion_orden_de_servicio($id_orden_de_servicio)
+	{
+		return OrdenDeServicioDAO::getByPK($id_orden_de_servicio) ? ServicioDAO::getByPK(OrdenDeServicioDAO::getByPK($id_orden_de_servicio)->getIdServicio())->getNombreServicio() : "---------";
+	}
+
+	function nombre_receptor($id_receptor, $obj)
+	{
+		if($obj["cancelado"] == 1){
+			return "<font title = \"Abono cancelado debido a {$obj['motivo_cancelacion']}\" style = \"color:red; cursor: help;\" >" . UsuarioDAO::getByPK($id_receptor)->getNombre() . "</font>";    
+		}        
+
+		return UsuarioDAO::getByPK($id_receptor)->getNombre();
+	}
+
+
+	function isCancelado($foo, $obj){
+		if($obj["cancelado"] == 1){
+			return "<font title = \"Abono cancelado debido a {$obj['motivo_cancelacion']}\" style = \"color:red; cursor: help;\" >{$foo}</font>";    
+		}
+
+		return $foo;  
+	}
+
 	$page = new GerenciaComponentPage();
 
 	//
@@ -18,17 +48,23 @@
 
 	//
 	// Titulo de la pagina
-	// 
-	$page->addComponent(new TitleComponent("Detalles de la venta " . $esta_venta->getIdVenta(), 2));
+	//
+	if($esta_venta->getEsCotizacion()){
+		$page->addComponent(new TitleComponent("Detalles de la cotizacion " . $esta_venta->getIdVenta(), 2));
+	}else{
+		$page->addComponent(new TitleComponent("Detalles de la venta " . $esta_venta->getIdVenta(), 2));
+	}
+	
 
 
 	//
 	// Menu de opciones
 	// 
-	if (!$esta_venta->getCancelada())
+	$menu = new MenuComponent();
+
+	if (!$esta_venta->getEsCotizacion() && !$esta_venta->getCancelada())
 	{
-		$menu = new MenuComponent();
-	
+		
 		if ($esta_venta->getTipoDeVenta() == "credito")
 		{
 			$menu->addItem("Abonar a esta venta", "cargos_y_abonos.nuevo.abono.php?vid=" . $_GET["vid"] . "&did=" . $esta_venta->getIdCompradorVenta());
@@ -45,12 +81,18 @@
 	
 		$menu->addMenuItem($btn_eliminar);
 	
-		$page->addComponent($menu);
 	}
 
-	//
-	// Forma de producto
-	// 
+
+	$btn = new MenuItem("<img src='../../../media/iconos/printer.png'> Imprimir", null);
+	$menu->addMenuItem($btn);
+	$page->addComponent($menu);
+
+	$esta_venta->setSaldo(	FormatMoney(	$esta_venta->getSaldo()));
+	$esta_venta->setTotal(	FormatMoney(	$esta_venta->getTotal()));
+	$esta_venta->setSubtotal(FormatMoney(	$esta_venta->getSubtotal()));
+	$esta_venta->setFecha(	FormatTime(		$esta_venta->getFecha()));
+
 	$form = new DAOFormComponent($esta_venta);
 
 	$form->setEditable(false);
@@ -61,113 +103,61 @@
 		"id_venta_caja",
 		"id_comprador_venta",
 		"id_sucursal",
-		"id_usuario"
+		"id_usuario",
+		"impuesto",
+		"retencion",
+		"es_cotizacion",
+		"cancelada",
+		"tipo_de_pago"
 	));
+
+	if($esta_venta->getTipoDeVenta() == "contado"){
+		$form->hideField("saldo");
+	}
 
 	$page->addComponent($form);
 
-	$page->addComponent(new TitleComponent("Productos de esta venta", 3));
 
-	$tabla = new TableComponent(array(
-		"id_producto" => "Producto",
-		"id_unidad" => "Unidad",
-		"cantidad" => "Cantidad",
-		"precio" => "Precio Unitario",
-		"descuento" => "Descuento",
-		"impuesto" => "Impuesto",
-		"retencion" => "Retencion"
-	), VentaProductoDAO::search(new VentaProducto(array(
-		"id_venta" => $_GET["vid"]
-	))));
 
-	function funcion_producto($id_producto)
-	{
-		return ProductoDAO::getByPK($id_producto) ? ProductoDAO::getByPK($id_producto)->getNombreProducto() : "---------";
+
+	if( sizeof($productos = VentaProductoDAO::search(new VentaProducto(array("id_venta" => $_GET["vid"])))) > 0 ){
+
+			$page->addComponent(new TitleComponent("Productos de esta venta", 3));
+
+			$tabla = new TableComponent(array(
+				"id_producto" => "Producto",
+				"cantidad" => "Cantidad",
+				"precio" => "Precio Unitario",
+			), $productos);
+
+			
+			$tabla->addColRender("id_producto", "funcion_producto");
+
+			$page->addComponent($tabla);
 	}
 
-	$tabla->addColRender("id_producto", "funcion_producto");
 
-	$page->addComponent($tabla);
-
-	$page->addComponent(new TitleComponent("Ordenes de servicio de esta venta", 3));
+	
 
 
-	if(($v = VentaOrdenDAO::search(new VentaOrden(array(
-		"id_venta" => $_GET["vid"]
-	)))) > 0){
+	if(sizeof($v = VentaOrdenDAO::search(new VentaOrden(array("id_venta" => $_GET["vid"] )))) > 0){
+
+		$page->addComponent(new TitleComponent("Ordenes de servicio de esta venta", 3));
 
 		$tabla = new TableComponent(array(
 			"id_orden_de_servicio" => "Orden de Servicio",
 			"precio" => "Precio",
 			"descuento" => "Descuento"
 		), $v);	
-
-	}
-
-	
-
-	function funcion_orden_de_servicio($id_orden_de_servicio)
-	{
-		return OrdenDeServicioDAO::getByPK($id_orden_de_servicio) ? ServicioDAO::getByPK(OrdenDeServicioDAO::getByPK($id_orden_de_servicio)->getIdServicio())->getNombreServicio() : "---------";
-	}
-
-	$tabla->addColRender("id_orden_de_servicio", "funcion_orden_de_servicio");
-
-	$page->addComponent($tabla);
-
-	$page->addComponent(new TitleComponent("Paquetes de esta venta", 3));
-
-
-	$page->partialRender();
-	
-
-	function funcion_paquete($id_paquete){
-		return PaqueteDAO::getByPK($id_paquete) ? PaqueteDAO::getByPK($id_paquete)->getNombre() : "---------";
-	}
-
-	if(($p = VentaPaqueteDAO::search(new VentaPaquete(array(
-		"id_venta" => $_GET["vid"]
-	)))) > 0){
-
 		
-		$tabla = new TableComponent(array(
-			"id_paquete" => "Paquete",
-			"cantidad" => "Cantidad",
-			"precio" => "Precio Unitario",
-			"descuento" => "Descuento",
-			"impuesto" => "Impuesto",
-			"retencion" => "Retencion"
-		), $p);
 
-		$tabla->addColRender("id_paquete", "funcion_paquete");
+		$tabla->addColRender("id_orden_de_servicio", "funcion_orden_de_servicio");
 
 		$page->addComponent($tabla);
 	}
 
-
-
 	
 
-/*
-	$page->addComponent(new TitleComponent("Informacion de Arpilla", 3));
-
-	$tabla = new TableComponent(array(
-		"folio" => "Folio",
-		"productor" => "Productor",
-		"numero_de_viaje" => "Numero de viaje",
-		"fecha_origen" => "Fecha en que se envio",
-		"peso_origen" => "Peso en el origen",
-		"peso_recibido" => "Peso recibido",
-		"arpillas" => "Arpillas",
-		"peso_por_arpilla" => "Peso por arpilla",
-		"merma_por_arpilla" => "Merma por arpilla",
-		"total_origen" => "Total en el origen"
-	), VentaArpillaDAO::search(new VentaArpilla(array(
-		"id_venta" => $_GET["vid"]
-	))));
-
-	$page->addComponent($tabla);
-*/
 
    	$page->addComponent(new TitleComponent("Abonos a esta venta", 3));
 
@@ -181,25 +171,6 @@
 		"id_venta" => $_GET["vid"]
 	))));
 
-	function nombre_receptor($id_receptor, $obj)
-	{
-        if($obj["cancelado"] == 1){
-            return "<font title = \"Abono cancelado debido a {$obj['motivo_cancelacion']}\" style = \"color:red; cursor: help;\" >" . UsuarioDAO::getByPK($id_receptor)->getNombre() . "</font>";    
-        }        
-
-		return UsuarioDAO::getByPK($id_receptor)->getNombre();
-	}
-    
-
-    function isCancelado($foo, $obj){
-
-        if($obj["cancelado"] == 1){
-            return "<font title = \"Abono cancelado debido a {$obj['motivo_cancelacion']}\" style = \"color:red; cursor: help;\" >{$foo}</font>";    
-        }
-
-        return $foo;    
-        
-    }
 
 	$tabla_abonos->addColRender("monto", "isCancelado");
 	$tabla_abonos->addColRender("id_receptor", "nombre_receptor");

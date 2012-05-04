@@ -24,9 +24,15 @@ $esta_orden = OrdenDeServicioDAO::getByPK($_GET["oid"]);
 
 $customer         = UsuarioDAO::getByPK($esta_orden->getIdUsuarioVenta());
 
-$link_to_customer = "<a href='clientes.ver.php?cid=" . $esta_orden->getIdUsuarioVenta() . "'>";
-$link_to_customer .= $customer->getNombre();
-$link_to_customer .= "</a>";
+if(!is_null($customer)){
+	$link_to_customer = "<a href='clientes.ver.php?cid=" . $esta_orden->getIdUsuarioVenta() . "'>";
+	$link_to_customer .= $customer->getNombre();
+	$link_to_customer .= "</a>";
+}else{
+	$link_to_customer = "<span style='color:gray'>este cliente ya no existe</span>.";
+}
+
+
 
 
 
@@ -60,7 +66,7 @@ if ( $esta_orden->getActiva() ){
 	$editar->addOnClick("_e", "function _e(){ window.location = 'servicios.detalle.orden.editar.php?oid=". $_GET["oid"] ."' ; }");
 	$menu->addMenuItem($editar);
 	
-	$imp = new MenuItem("Imprimir", null);
+	$imp = new MenuItem(" <img src='../../../media/iconos/printer.png'> Imprimir", null);
 	$imp->addOnClick("_p", "function _p(){ window.open('servicios.detalle.orden.impresion.php?oid=". $_GET["oid"] ."'); }");
 	$menu->addMenuItem($imp);
 	
@@ -88,7 +94,7 @@ $asignado = UsuarioDAO::getByPK($a);
 if(!is_null($asignado)){
 	$esta_orden->setIdUsuarioAsignado($asignado->getNombre());	
 }else{
-	$esta_orden->setIdUsuarioAsignado("");	
+	$esta_orden->setIdUsuarioAsignado("<img src='../../../media/iconos/user_delete.png'> Nadie esta asignado");	
 }
 
 
@@ -113,6 +119,7 @@ $form->hideField(array(
 $form->createComboBoxJoin("id_servicio", "nombre_servicio", ServicioDAO::getAll(), $esta_orden->getIdServicio());
 $form->createComboBoxJoin("id_usuario", "nombre", UsuarioDAO::getAll(), $esta_orden->getIdUsuario());
 $form->setCaption("id_usuario_asignado", "Agente asignado");
+
 $form->setCaption("id_servicio", "Servicio");
 //$form->createComboBoxJoinDistintName("id_usuario_venta", "id_usuario", "nombre", UsuarioDAO::getAll(), $esta_orden->getIdUsuarioVenta());
 $page->addComponent($form);
