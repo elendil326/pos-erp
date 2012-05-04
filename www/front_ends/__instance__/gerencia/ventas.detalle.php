@@ -85,6 +85,7 @@
 
 
 	$btn = new MenuItem("<img src='../../../media/iconos/printer.png'> Imprimir", null);
+	$btn->addOnClick("i", "function i(){window.location = 'ventas.detalle.imprimir.php?vid=" . $esta_venta->getIdVenta() . "';}");
 	$menu->addMenuItem($btn);
 	$page->addComponent($menu);
 

@@ -80,10 +80,8 @@ class ImpresionesController {
 
 
 
-	private static function createPdf($title = ""){
-		
+	private static function createPdf( $title = ""){
 
-	    
 	    $pdf = new Cezpdf( $paper = 'letter');
 
 		if (is_file(POS_PATH_TO_SERVER_ROOT . "libs/ezpdf/fonts/Helvetica.afm")){
@@ -105,9 +103,6 @@ class ImpresionesController {
 
 
 	private static function drawBasicGuide( &$pdf ){
-
-	    
-
 
 	    /**************************
 	     * LOGO
@@ -151,13 +146,10 @@ class ImpresionesController {
 	    $pdf->addJpegFromFile("../www/media/logo_simbolo.jpg", self::puntos_cm(15.9), self::puntos_cm(.95), 25);
 
 	    $pdf->addText( self::puntos_cm(16.70), self::puntos_cm(1.30), 8, "caffeina.mx");	
-	
-
-
 	}
 
 
-	private static function printProducts(&$pdf, $productos ){
+	private static function printProducts( &$pdf, $productos ){
 	    $opciones_tabla = array();
 	    $opciones_tabla['showLines'] = 0;
 	    $opciones_tabla['showHeadings'] = 0;
@@ -233,10 +225,7 @@ class ImpresionesController {
 	}
 
 
-
-
-
-	private static function printClient(&$pdf, $daoCliente){
+	private static function printClient( &$pdf, $daoCliente){
 
 
 
@@ -310,6 +299,7 @@ class ImpresionesController {
 		
 		$ventaDao = VentaDAO::getByPK($id_venta);
 		$clienteDao = UsuarioDAO::getByPK( $ventaDao->getIdCompradorVenta() );
+		$agenteDao = UsuarioDAO::getByPK( $ventaDao->getIdUsuario() );
 		$ventaProductoDaoArray = VentaProductoDAO::search( new VentaProducto( array(
 				"id_venta" => $id_venta
 			) ) );
@@ -322,9 +312,6 @@ class ImpresionesController {
 
 		}
 
-
-
-	    
 
 	    $opciones_tabla = array();
 	    $opciones_tabla['showLines'] = 0;
@@ -340,21 +327,39 @@ class ImpresionesController {
 	    $opciones_tabla['colGap'] = 3;
 
 	    
-	
-		
-	    $datos = array(
-	        array("col" => "<b>Venta</b>"),
-	        array("col" =>  $ventaDao->getIdVenta()),
+		if($ventaDao->getEsCotizacion()){
+			$datos = array(
+		        array("col" => "<b>Cotizacion</b>"),
+		        array("col" =>  $ventaDao->getIdVenta()),
 
-	        array("col" => "<b>Numero de orden</b>"),
-	        array("col" =>  "daoOrden->getIdOrdenDeServicio()" ),
-		
-	        array("col" => "<b>Fecha de venta</b>"),
-	        array("col" => $ventaDao->getFecha()),
+		        array("col" => "<b>Numero de orden</b>"),
+		        array("col" =>  "" ),
+			
+		        array("col" => "<b>Fecha de venta</b>"),
+		        array("col" => $ventaDao->getFecha()),
 
-	        array("col" => "<b>Agente de venta</b>"),
-	        array("col" => self::readableText(  "cajero->getNombre()" ))
-	    );
+		        array("col" => "<b>Agente que cotizo</b>"),
+		        array("col" => self::readableText(  $agenteDao->getNombre() ))
+	    	);
+
+		}else{
+
+			$datos = array(
+		        array("col" => "<b>Venta</b>"),
+		        array("col" =>  $ventaDao->getIdVenta()),
+
+		        array("col" => "<b>Numero de orden</b>"),
+		        array("col" =>  "" ),
+			
+		        array("col" => "<b>Fecha de venta</b>"),
+		        array("col" => $ventaDao->getFecha()),
+
+		        array("col" => "<b>Agente de venta</b>"),
+		        array("col" => self::readableText(  $agenteDao->getNombre() ))
+	    	);
+		}
+		
+	 
 
 	    $pdf->ezSetY(self::puntos_cm(26.8));
 
@@ -370,282 +375,12 @@ class ImpresionesController {
 
 		self::printClient($pdf, $clienteDao);
 
-
-
-
 		self::drawBasicGuide( $pdf );
 
 
-		
-
 	    $pdf->ezStream();
 
-	    return;
-	
-		$venta = VentaDAO::getByPK($id_venta);
 
-	    if ($venta == null) {
-	        die("esta venta no existe");
-	    }
-
-
-
-	    return;
-
-
-
-
-	    /*     * ************************
-	     * TITULO
-	     * Datos del emisor, lugar de expedicion, folio, fecha de emision, no de serie
-	     * del certificado del contribuyente
-	     * ************************* */
-	    $e = "<b>" . self::readableText($emisor->nombre) . "</b>\n";
-	    $e .= formatAddress($emisor);
-	    $e .= "RFC: " . $emisor->rfc . "\n\n";
-
-	    //datos de la sucursal
-	    //$s = "<b>Lugar de expedicion</b>\n";
-	    //$s .= formatAddress($sucursal);
-	    $e .= "<b>Lugar de expedicion</b>\n";
-	    if ($sucursal->getIdSucursal() != '0') {
-	        $e .= formatAddress($sucursal);
-	    }
-
-
-	    $datos = array(
-	        array(
-	            "emisor" => $e/* ,
-	          'sucursal' => $s, */
-	        )
-	    );
-
-	    //$pdf->ezSetY(puntos_cm(26.7));
-	    $pdf->ezSetY(puntos_cm(28.7));
-	    $opciones_tabla = array();
-	    $opciones_tabla['showLines'] = 0;
-	    $opciones_tabla['showHeadings'] = 0;
-	    $opciones_tabla['shaded'] = 0;
-	    $opciones_tabla['fontSize'] = 8;
-	    //$opciones_tabla['xOrientation'] = 'right';
-	    $opciones_tabla['xOrientation'] = 'right';
-	    //$opciones_tabla['xPos'] = puntos_cm(3);
-	    $opciones_tabla['xPos'] = puntos_cm(7.5);
-	    $opciones_tabla['width'] = puntos_cm(11);
-	    $opciones_tabla['textCol'] = array(0, 0, 0);
-	    $opciones_tabla['titleFontSize'] = 12;
-	    $opciones_tabla['rowGap'] = 3;
-	    $opciones_tabla['colGap'] = 3;
-
-	    $pdf->ezTable($datos, "", "", $opciones_tabla);
-
-	    $datos = array(
-	        array("col" => "<b>Folio</b>"),
-	        array("col" => $factura->getIdFolio()),
-	        array("col" => "<b>Fecha y hora de Emision</b>"),
-	        array("col" => $factura->getFechaEmision()),
-	        array("col" => "<b>Numero de serie del certificado del contribuyente</b>"),
-	        array("col" => $serie_cert_contribuyente)
-	    );
-
-	    $pdf->ezSetY(puntos_cm(28.7));
-
-	    $opciones_tabla['xPos'] = puntos_cm(14.2);
-	    $opciones_tabla['width'] = puntos_cm(4);
-	    $opciones_tabla['showLines'] = 0;
-	    $opciones_tabla['shaded'] = 2;
-	    $opciones_tabla['shadeCol'] = array(1, 1, 1);
-	    $opciones_tabla['shadeCol2'] = array(0.8984375, 0.95703125, 0.99609375);
-	    $pdf->ezTable($datos, "", "", $opciones_tabla);
-
-	    roundRect($pdf, puntos_cm(14.2), puntos_cm(28.7), puntos_cm(4), puntos_cm(4));
-
-
-
-	    /*     * ************************
-	     * Receptor del comprobante fiscal
-	     * Datos del receptor
-	     * ************************* */
-	    $datos_receptor = self::readableText($cliente->getRazonSocial()) . "\n";
-	    $datos_receptor .= formatAddress($cliente);
-	    $datos_receptor .= "RFC:" . $cliente->getRfc();
-
-	    $receptor = array(
-	        array("receptor" => "<b>Receptor del comprobante fiscal</b>"),
-	        array("receptor" => $datos_receptor),
-	    );
-
-	    $pdf->ezSetY(puntos_cm(24.3));
-	    $opciones_tabla['xPos'] = puntos_cm(2);
-	    $opciones_tabla['width'] = puntos_cm(8.2);
-	    $opciones_tabla['showLines'] = 0;
-	    $pdf->ezTable($receptor, "", "", $opciones_tabla);
-
-
-
-
-	    /*     * ************************
-	     * 	Timbrado
-	     * ************************* */
-	    $pdf->ezSetY(puntos_cm(24.3));
-	    $opciones_tabla['xPos'] = puntos_cm(10.4);
-	    $opciones_tabla['width'] = puntos_cm(7.8);
-	    $timbre = array(
-	        array("dat" => "<b>Folio Fiscal</b>"),
-	        array("dat" => $factura->getFolioFiscal()),
-	        array("dat" => "<b>Fecha y hora de certificacion</b>"),
-	        array("dat" => $factura->getFechaCertificacion()),
-	        array("dat" => "<b>Numero de serie del certificaco del sat</b>"),
-	        array("dat" => $factura->getNumeroCertificadoSat())
-	    );
-
-	    $pdf->ezTable($timbre, "", "", $opciones_tabla);
-
-	    roundRect($pdf, puntos_cm(2), puntos_cm(24.3), puntos_cm(16.2), puntos_cm(3.2));
-
-
-
-	    /*     * ************************
-	     * Tipo de comprobante
-	     * ************************* */
-	    $pdf->ezSetY(puntos_cm(20.9));
-	    $opciones_tabla['xPos'] = puntos_cm(2);
-	    $opciones_tabla['width'] = puntos_cm(16.2);
-	    $comprobante = array(
-	        array("r1" => "Tipo de comprobante",
-	            "r2" => "Moneda",
-	            "r3" => "Tipo de cambio",
-	            "r4" => "<b>Version</b>"),
-	        array("r1" => self::readableText($factura->getTipoComprobante()),
-	            "r2" => "MXN",
-	            "r3" => "1.0",
-	            "r4" => "3.0"),
-	    );
-	    $pdf->ezTable($comprobante, "", "", $opciones_tabla);
-
-	    roundRect($pdf, puntos_cm(2), puntos_cm(20.9), puntos_cm(16.2), puntos_cm(1.2));
-
-	    /*     * ************************
-	     * PRODUCTOS
-	     * ************************* */
-	    $elementos = array(
-	        array('cantidad' => 'Cantidad',
-	            'descripcion' => 'Descripcion                                                                                                     ', 'precio' => 'Precio', 'importe' => 'Importe'),
-	    );
-
-
-	    foreach ($productos as $p) {
-	        if ($p["cantidadProc"] > 0) {
-
-	            $prod['cantidad'] = $p["cantidadProc"];
-	            $prod['descripcion'] = $p["descripcion"] . " PROCESADA";
-	            $prod['precio'] = FormatMoney($p["precioProc"], DONT_USE_HTML);
-	            $prod['importe'] = FormatMoney($p["precioProc"] * $p["cantidadProc"], DONT_USE_HTML);
-
-	            array_push($elementos, $prod);
-	        }
-
-	        if ($p["cantidad"] > 0) {
-	            $prod['cantidad'] = $p["cantidad"];
-	            $prod['descripcion'] = $p["descripcion"];
-	            $prod['precio'] = FormatMoney($p["precio"], DONT_USE_HTML);
-	            $prod['importe'] = FormatMoney($p["precio"] * $p["cantidad"], DONT_USE_HTML);
-
-	            array_push($elementos, $prod);
-	        }
-	    }
-
-
-
-	    array_push($elementos, array("cantidad" => "",
-	        "descripcion" => "",
-	        "precio" => "Subtotal",
-	        "importe" => FormatMoney($venta->getSubTotal(), DONT_USE_HTML)));
-
-	    array_push($elementos, array("cantidad" => "",
-	        "descripcion" => "",
-	        "precio" => "Descuento",
-	        "importe" => FormatMoney($venta->getDescuento(), DONT_USE_HTML)));
-
-	    array_push($elementos, array("cantidad" => "",
-	        "descripcion" => "",
-	        "precio" => "IVA",
-	        "importe" => FormatMoney($venta->getIVA(), DONT_USE_HTML)));
-
-	    array_push($elementos, array("cantidad" => "",
-	        "descripcion" => "",
-	        "precio" => "Total",
-	        "importe" => FormatMoney($venta->getTotal(), DONT_USE_HTML)));
-
-
-	    $pdf->ezText("", 10, array('justification' => 'center'));
-	    $pdf->ezTable($elementos, "", "", $opciones_tabla);
-
-	    $pdf->addJpegFromFile("../static_content/qr_codes/" . $qr_file_name, 30, 30, 150);
-
-	    roundRect($pdf, puntos_cm(2), puntos_cm(19.7 - .25), puntos_cm(16.2), puntos_cm(13.2));
-
-	    /*     * ************************
-	     * Tipo de pago
-	     * ************************* */
-	    $pdf->ezText("\nPago en una sola exibicion", 9, array('justification' => 'center'));
-
-	    /*     * ************************
-	     * DATOS DE SELLOS
-	     * ************************* */
-
-
-
-	    $sellos = array(
-	        array("r1" => "Sello digital del emisor:"),
-	        array("r1" => $factura->getSelloDigitalEmisor()),
-	        array("r1" => "Sello digital del SAT:"),
-	        array("r1" => $factura->getSelloDigitalSat()),
-	        array("r1" => "Cadena original del complemento de certificacion digital del sat:"),
-	        array("r1" => $factura->getCadenaOriginal())
-	    );
-
-	    $pdf->ezSetY(puntos_cm(6.0));
-	    $opciones_tabla['xPos'] = puntos_cm(6);
-	    $opciones_tabla['width'] = puntos_cm(12.4);
-	    $opciones_tabla['fontSize'] = 6;
-	    $opciones_tabla['showLines'] = 0;
-	    $pdf->ezTable($sellos, "", "", $opciones_tabla);
-
-
-
-	    /*     * ************************
-	     * notas de abajo
-	     * ************************* */
-	    $pdf->setLineStyle(1);
-	    $pdf->setStrokeColor(0.3359375, 0.578125, 0.89453125);
-
-	    $pdf->line(puntos_cm(2), puntos_cm(1.3), puntos_cm(18.2), puntos_cm(1.3));
-
-
-	    $pdf->addText(puntos_cm(2), puntos_cm(1.0), 7, "Este documento es una representacion impresa de un CFDI");
-
-
-
-	    $pdf->addJpegFromFile("../www/media/logo_simbolo.jpg", puntos_cm(15.9), puntos_cm(.25), 25);
-
-
-	    $pdf->addText(puntos_cm(16.70), puntos_cm(.60), 8, "caffeina.mx");
-
-
-	    $pdf->setLineStyle(1, 'round', '', array(0, 2));
-	    $pdf->setStrokeColor(0.3359375, 0.578125, 0.89453125);
-
-	    $pdf->line(puntos_cm(8.2 + 2), puntos_cm(24.3 - .15), puntos_cm(8.2 + 2), puntos_cm(21.051));
-
-
-	    $documento_pdf = $pdf->ezOutput(1);
-
-	    $pdf->ezStream();
-
-	    //ok ya la hize, var si existe este documento en static content, sino, guardarlo
-	    if (!is_file("../static_content/facturas/" . $_SESSION["INSTANCE_ID"] . "_" . $venta->getIdVenta() . ".pdf"))
-	        file_put_contents("../static_content/facturas/" . $_SESSION["INSTANCE_ID"] . "_" . $venta->getIdVenta() . ".pdf", $documento_pdf);
 	}
 
 
@@ -670,11 +405,6 @@ class ImpresionesController {
 		self::printClient($pdf, $daoCliente);
 	    
 
-
-
-	
-	
-	
 	    /**************************
 	     * TITULO
 	     * Datos del emisor, lugar de expedicion, folio, fecha de emision, no de serie
