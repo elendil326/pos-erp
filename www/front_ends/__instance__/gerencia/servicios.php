@@ -8,6 +8,9 @@
 
 		$page = new GerenciaTabPage();
 
+
+		$page->addComponent(new TitleComponent("Servicios",1));
+
 		//----------------------------------- 
 		$page->nextTab("Ordenes activas");
 		

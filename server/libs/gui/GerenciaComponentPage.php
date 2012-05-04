@@ -273,28 +273,6 @@ class GerenciaComponentPage extends PosComponentPage{
 		            ]
 		        },
 		        {
-		            "title": "Proveedores",
-		            "url": "proveedores.lista.php",
-		            "children": [
-		                {
-		                    "title": "Proveedores",
-		                    "url": "proveedores.lista.php"
-		                },
-		                {
-		                    "title": "Nuevo proveedor",
-		                    "url": "proveedores.nuevo.php"
-		                },
-		                {
-		                    "title": "Clasificacion",
-		                    "url": "proveedores.lista.clasificacion.php"
-		                },
-		                {
-		                    "title": "Nueva clasificacion",
-		                    "url": "proveedores.nueva.clasificacion.php"
-		                }
-		            ]
-		        },
-		        {
 		            "title": "Servicios",
 		            "url": "servicios.php",
 		            "children": [
@@ -340,24 +318,19 @@ class GerenciaComponentPage extends PosComponentPage{
 		        },
 		        {
 		            "title": "Ventas",
-		            "url": "ventas.lista.php",
+		            "url": "ventas.php",
 		            "children": [
-		                {
-		                    "title": "Lista",
-		                    "url": "ventas.lista.php"
-		                },
 		                {
 		                    "title": "Nueva",
 		                    "url": "ventas.nueva.php"
-		                },
-		                {
-		                    "title": "Nueva venta por arpilla",
-		                    "url": "ventas.nueva.venta.arpilla.php"
 		                }
 		            ]
 		        }
 		    ]
 		}';
+
+
+
 		return;
 		$this->main_menu_json = '
 				{

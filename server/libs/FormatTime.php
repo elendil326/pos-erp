@@ -10,6 +10,11 @@ function FormatMoney($float){
 
 function FormatTime($timestamp)
 {
+
+	if(!is_numeric($timestamp)){
+		$timestamp = strtotime($timestamp);
+	}
+
 	// Get time difference and setup arrays
 	$difference = time() - $timestamp;
 	$periods = array("segundo", "minuto", "hora", "dia", "semana", "mes", "years");
