@@ -30,8 +30,9 @@ class TarifasController extends ValidacionesController implements ITarifas{
 		foreach($tarifas as $t)	{
 
 			array_push( $respuesta, array(
-				"id_tarifa"  => $t["id_tarifa"],
-				"precio"	 => ReglaDAO::aplicarReglas( $t["reglas"], $obj )
+				"id_tarifa"   => $t["id_tarifa"],
+				"precio"	  => ReglaDAO::aplicarReglas( $t["reglas"], $obj ),
+				"descripcion" => $t["nombre"]
 			));
 		}
 

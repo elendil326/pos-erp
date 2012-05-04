@@ -475,7 +475,6 @@ class ShoppingCartComponent implements GuiComponent {
 	        },
 
 	        fields: [
-	
 				{name: 'activo', 				mapping: 'activo'},
 				{name: 'codigo_de_barras', 		mapping: 'codigo_de_barras'},
 				{name: 'codigo_producto', 		mapping: 'codigo_producto'},
@@ -516,7 +515,7 @@ class ShoppingCartComponent implements GuiComponent {
 	            displayField: 'title',
 	            typeAhead: true,
 	            hideLabel: true,
-				emptyText : "Busque productos aqui",
+				emptyText : "Buscando por descripcion, nombre o codigo de barras.",
 	            hideTrigger:false,
 	            anchor: '100%',
 				listeners :{
@@ -583,12 +582,6 @@ class ShoppingCartComponent implements GuiComponent {
 		        stateId: 'stateGrid',
 		        columns: [
 		            {
-		                text     : 'id_producto',
-						width	 : 75,
-		                sortable : false,
-		                dataIndex: 'id_producto'
-		            },
-		            {
 		                text     : 'codigo_producto',
 		                width    : 75,
 		                sortable : false,
@@ -634,7 +627,7 @@ class ShoppingCartComponent implements GuiComponent {
 								if(tarifasArray[i].id_tarifa == tf){
 									return Ext.util.Format.usMoney( tarifasArray[i].precio );
 								}
-							};
+							}
 							
 							return "X";
 						}

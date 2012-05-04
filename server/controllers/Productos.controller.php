@@ -1732,7 +1732,6 @@ class ProductosController extends ValidacionesController implements IProductos
         
         $resultado = array();
         
-        
         foreach ($productos as $p) {
             $r = $p->asArray();
             

@@ -16,6 +16,8 @@ $page->requireParam("pid", "GET", "Este producto no existe.");
 
 $este_producto = ProductoDAO::getByPK($_GET["pid"]);
 
+$precios = TarifasController::_CalcularTarifa( $este_producto, "venta" );
+//var_dump($precios);//
 
 $page->addComponent("
 <table>
@@ -41,29 +43,6 @@ $page->addComponent("
 $page->nextTab("General");
 
 
-
-
-
-//
-// Menu de opciones
-//
-
-    $menu = new MenuComponent();
-    $menu->addItem("Editar este producto", "productos.editar.php?pid=" . $_GET["pid"]);
-    //$menu->addItem("Desactivar este producto", null);
-    
-    $btn_eliminar = new MenuItem("Desactivar este producto", null);
-    $btn_eliminar->addApiCall("api/producto/desactivar", "GET");
-    $btn_eliminar->onApiCallSuccessRedirect("productos.lista.php");
-    $btn_eliminar->addName("eliminar");
-    
-    $funcion_eliminar = " function eliminar_producto(btn){" . "if(btn == 'yes')" . "{" . "var p = {};" . "p.id_producto = " . $_GET["pid"] . ";" . "sendToApi_eliminar(p);" . "}" . "}" . "      " . "function confirmar(){" . " Ext.MessageBox.confirm('Desactivar', 'Desea eliminar este producto?', eliminar_producto );" . "}";
-    
-    $btn_eliminar->addOnClick("confirmar", $funcion_eliminar);
-    
-    $menu->addMenuItem($btn_eliminar);
-    
-    $page->addComponent($menu);
 
 
 //
@@ -106,5 +85,25 @@ $entrada_lote->sendHidden("productos");
 $entrada_lote->addApiCall("api/almacen/lote/entrada", "POST");
 
 $page->addComponent( $entrada_lote );
+
+
+$page->nextTab("Configuracion");
+
+$menu = new MenuComponent();
+$menu->addItem("Editar este producto", "productos.editar.php?pid=" . $_GET["pid"]);
+//$menu->addItem("Desactivar este producto", null);
+
+$btn_eliminar = new MenuItem("Desactivar este producto", null);
+$btn_eliminar->addApiCall("api/producto/desactivar", "GET");
+$btn_eliminar->onApiCallSuccessRedirect("productos.lista.php");
+$btn_eliminar->addName("eliminar");
+
+$funcion_eliminar = " function eliminar_producto(btn){" . "if(btn == 'yes')" . "{" . "var p = {};" . "p.id_producto = " . $_GET["pid"] . ";" . "sendToApi_eliminar(p);" . "}" . "}" . "      " . "function confirmar(){" . " Ext.MessageBox.confirm('Desactivar', 'Desea eliminar este producto?', eliminar_producto );" . "}";
+
+$btn_eliminar->addOnClick("confirmar", $funcion_eliminar);
+
+$menu->addMenuItem($btn_eliminar);
+
+$page->addComponent($menu);
 
 $page->render();
