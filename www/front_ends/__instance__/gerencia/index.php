@@ -19,13 +19,42 @@
 			</tr>
 
 		</table>
-		
 	<?php
 
 	$banner = new BannerComponent("POS ERP", "Bienvenido a POS ERP <br>un sistema de gestion empresarial", "../../../media/EAbydW1M_XR.png");
 	$page->addComponent( $banner );
-	$page->partialRender();
+	
 
+	$page->addComponent("<hr>");
+
+	
+
+
+	/* *************************************************
+	 * Orden de Servicio Pendientes
+	 * ************************************************* */
+	
+	$s = SesionController::Actual();
+
+	$ordenes_mias = OrdenDeServicioDAO::search(new OrdenDeServicio(array( 
+							"id_usuario_asignado" => $s["id_usuario"],
+							"activa" => true
+							)));
+
+	switch(sizeof($ordenes_mias)){
+		case 0: break;
+
+		case 1:
+			$page->addComponent(new TitleComponent("Tienes 1 orden de servicio pendiente.", 3));
+		break;
+
+		default:
+			$page->addComponent(new TitleComponent("Tienes " . sizeof($ordenes_mias) . " ordenes de servicio pendientes.", 3));
+			
+	}
+	
+
+	
 
 	//clientes
 
@@ -38,6 +67,7 @@
 	//personal
 
 
+	$page->partialRender();
 	?>
 	<!--
 	<h3 style="margin-top:170px">Al parecer aun no esta aprovechando todo el potencial de Caffeina POS.</h3>

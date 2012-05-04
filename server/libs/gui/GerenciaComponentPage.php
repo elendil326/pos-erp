@@ -985,9 +985,15 @@ class GerenciaComponentPage extends PosComponentPage{
 	}
 
 	protected function _renderTopMenu()	{
+
+		$s = SesionController::Actual();
+
+		$u = UsuarioDAO::getByPK($s["id_usuario"]);
+
+
 		?>
 			<a class="l" href="./c.php">Configuracion</a>
-			<a class="l" href="./../?cs=1">Salir</a>
+			<a class="l" href="./../?cs=1">(<?php echo $u->getNombre(); ?>) Salir</a>
 		<?php
 	}
 	

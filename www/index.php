@@ -16,10 +16,9 @@
 	<h1>Caffeina POS</h1>
 	<h3 style='margin-top: 0px;'>Enterprise Resource Planning</h3>
 	<img src="media/main_site/oferta.png">
-
+	<?php
 
 	
-	<?php
 	
 
 	$page->render(   );
