@@ -44,9 +44,6 @@
          * ********************************************************************* */
 		$page->nextTab("Ordenes activas");
 		
-		
-
-
 		$ordenes = ServiciosController::ListaOrden(true); 
 		
 		if(  $ordenes["numero_de_resultados"] == 1){
@@ -81,7 +78,7 @@
 		/* ********************************************************************* 
          * Ordenes activas
          * ********************************************************************* */
-		$page->nextTab("Ordenes");
+		$page->nextTab("Todas las Ordenes");
 		
 		
 

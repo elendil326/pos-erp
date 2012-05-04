@@ -4,6 +4,35 @@
 
 	require_once("../../../../server/bootstrap.php");
 
+
+
+
+	function getEmpresaNombre($eid){
+		$e = EmpresaDAO::getByPK($eid);
+		return $e->getRazonSocial();
+	}
+	
+	function funcion_abierta( $abierta ){
+		return $abierta ? "Abierta" : "Cerrada";
+	}
+
+	function funcion_activa( $activa ){
+		return $activa ? "Activa" : "Inactiva";
+	}
+	function funcion_empresa( $id_empresa ){
+		return EmpresaDAO::getByPK($id_empresa) ? EmpresaDAO::getByPK($id_empresa)->getRazonSocial() : "------";
+	}
+
+	function funcion_tipo_almacen( $id_tipo_almacen ){
+		return TipoAlmacenDAO::getByPK($id_tipo_almacen) ? TipoAlmacenDAO::getByPK($id_tipo_almacen)->getDescripcion() : "------";
+	}
+
+	function funcion_activo( $activo ){
+		return ($activo) ? "Activo" : "Inactivo";
+	}
+
+
+
 	$page = new GerenciaTabPage(  );
 
 
@@ -18,7 +47,7 @@
 	//
 	// Titulo de la pagina
 	// 
-	$page->addComponent( new TitleComponent( "Detalles de " . $esta_sucursal->getRazonSocial() , 2 ));
+	$page->addComponent( new TitleComponent( "Detalles de sucursal " . $esta_sucursal->getRazonSocial() , 2 ));
 		
 	$page->nextTab("Detalles");
 	
@@ -111,10 +140,7 @@
 	$suce = SucursalEmpresaDAO::search( new SucursalEmpresa( array( "id_sucursal" => $_GET["sid"] ) ) );
 	$empresas_vinculadas = new TableComponent( array( "id_empresa" => "empresas vinculadas" ), $suce );
 	
-	function getEmpresaNombre($eid){
-		$e = EmpresaDAO::getByPK($eid);
-		return $e->getRazonSocial();
-	}
+
 	$empresas_vinculadas->addColRender( "id_empresa", "getEmpresaNombre" );
 	
 	$page->addComponent( $empresas_vinculadas );
@@ -146,14 +172,6 @@
 	);
 
 
-	function funcion_abierta( $abierta ){
-		return $abierta ? "Abierta" : "Cerrada";
-	}
-
-	function funcion_activa( $activa ){
-		return $activa ? "Activa" : "Inactiva";
-	}
-
 	$tabla->addColRender("abierta", "funcion_abierta");
 	$tabla->addColRender("activa", "funcion_activa");
 
@@ -179,17 +197,7 @@
 		$sucs["resultados"]        
 	);
 
-	function funcion_empresa( $id_empresa ){
-		return EmpresaDAO::getByPK($id_empresa) ? EmpresaDAO::getByPK($id_empresa)->getRazonSocial() : "------";
-	}
 
-	function funcion_tipo_almacen( $id_tipo_almacen ){
-		return TipoAlmacenDAO::getByPK($id_tipo_almacen) ? TipoAlmacenDAO::getByPK($id_tipo_almacen)->getDescripcion() : "------";
-	}
-
-	function funcion_activo( $activo ){
-		return ($activo) ? "Activo" : "Inactivo";
-	}
 
 	$tabla->addColRender("id_empresa", "funcion_empresa");
 	$tabla->addColRender("id_tipo_almacen", "funcion_tipo_almacen");
@@ -201,7 +209,7 @@
 
 
 
-	$page->addComponent(new TitleComponent("Nuevo almacen en esta sucuersal", 3));
+	$page->addComponent(new TitleComponent("Nuevo almacen en esta sucuersal", 2 ));
 	
 	$nalmacen_obj = new Almacen();
 	$nalmacen_obj->setIdSucursal( $esta_sucursal->getIdSucursal() );

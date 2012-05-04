@@ -102,7 +102,18 @@ if(!is_null($asignado)){
 }
 
 
+//$form->createComboBoxJoin("id_servicio", "nombre_servicio", ServicioDAO::getAll(), $esta_orden->getIdServicio());
+//$form->createComboBoxJoin("id_usuario", "nombre", UsuarioDAO::getAll(), $esta_orden->getIdUsuario());
 
+
+$servicio = ServicioDAO::getByPK($esta_orden->getIdServicio());
+$esta_orden->setIdServicio($servicio->getNombreServicio());
+
+
+$agente = UsuarioDAO::getByPK($esta_orden->getIdUsuario());
+$esta_orden->setIdUsuario( $agente->getNombre() );
+
+$esta_orden->setPrecio(FormatMoney($esta_orden->getPrecio()));
 
 $form = new DAOFormComponent($esta_orden);
 $form->setEditable(false);
@@ -111,17 +122,19 @@ $form->hideField(array(
 	"id_orden_de_servicio",
 	"id_usuario_venta",
 	"extra_params",
-	"id_usuario",
 	"motivo_cancelacion",
 	"fecha_entrega",
 	"cancelada",
 	"adelanto",
-	"activa"
+	"activa",
+	"descripcion"
 ));
 
 
-$form->createComboBoxJoin("id_servicio", "nombre_servicio", ServicioDAO::getAll(), $esta_orden->getIdServicio());
-$form->createComboBoxJoin("id_usuario", "nombre", UsuarioDAO::getAll(), $esta_orden->getIdUsuario());
+
+
+
+
 $form->setCaption("id_usuario_asignado", "Agente asignado");
 
 $form->setCaption("id_servicio", "Servicio");
@@ -210,6 +223,7 @@ $form->hideField( array(
         "id_sucursal",
         "fecha_seguimiento",
 		"id_localizacion"
+
 ));
 
 $form->sendHidden		( "id_orden_de_servicio" );

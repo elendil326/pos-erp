@@ -1508,7 +1508,19 @@ require_once("interfaces/Servicios.interface.php");
 		$id_usuario_venta = null
 	)
 	{  
-            Logger::log("listando las ordenes");
+            Logger::log("listando ordenes....");
+
+
+            $os = new OrdenDeServicio(array(
+                        "id_servicio"       => $id_servicio,
+                        "id_usuario_venta"  => $id_usuario_venta,
+                        "activa"            => $activa,
+                        "cancelada"         => $cancelada
+                    ));
+            
+            $ordenes = OrdenDeServicioDAO::search($os);
+
+            return array("numero_de_resultados" => count($ordenes), "resultados" => $ordenes);
             
             /*
             if($parametros)
@@ -1544,7 +1556,7 @@ require_once("interfaces/Servicios.interface.php");
                 $ordenes = OrdenDeServicioDAO::getAll();
             }
 			*/
-			 $ordenes = OrdenDeServicioDAO::getAll();
+			$ordenes = OrdenDeServicioDAO::getAll();
 			
             Logger::log("Lista de ordenes traida exitosamente con ".count($ordenes)." elementos");
 

@@ -883,7 +883,7 @@ Ext.example = function(){
     var myLatlng = result[0].geometry.location;
 
     var myOptions = {
-      zoom: 17,
+      zoom: 16,
       center: myLatlng,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
 	  navigationControl : true

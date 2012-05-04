@@ -61,6 +61,14 @@
 	// Forma de producto
 	// 
 
+    $t = TarifaDAO::getByPK( $este_usuario->getIdTarifaVenta() );
+    if(is_null($t)){
+		$este_usuario->setIdTarifaVenta("-----" );
+    }else{
+    	$este_usuario->setIdTarifaVenta($t->getNombre() );	
+    }
+    
+
 	$form = new DAOFormComponent( $este_usuario );
 	
 	$form->setEditable(false);
@@ -87,23 +95,29 @@
 		"ventas_a_credito",
 		"dia_de_pago",
 		"dia_de_revision",
-		"password"
-		 ));
-               
-               
-               
-               
-    $form->createComboBoxJoin( "id_rol", "nombre", RolDAO::getAll() , $este_usuario->getIdRol());
+		"password",
+		"id_sucursal"
+	));
+
+	
+
+    
     $form->createComboBoxJoin( "id_moneda", "nombre", MonedaDAO::getAll() , $este_usuario->getIdMoneda());
     $form->createComboBoxJoin( "id_clasificacion_cliente", "nombre", ClasificacionClienteDAO::getAll() , $este_usuario->getIdClasificacionCliente());
 
     $form->createComboBoxJoin( "id_clasificacion_proveedor", "nombre", ClasificacionProveedorDAO::getAll(), $este_usuario->getIdClasificacionProveedor() );
 	$form->createComboBoxJoin( "id_sucursal", "razon_social", SucursalDAO::getAll(), $este_usuario->getIdSucursal() );
 
-	$form->createComboBoxJoinDistintName("id_tarifa_venta", "id_tarifa" ,"nombre",TarifaDAO::search(new Tarifa(array("id_tarifa"=>$este_usuario->getIdTarifaVenta()))));
+	$form->setCaption("id_tarifa_venta", "Tarifa de Venta");
 	$form->createComboBoxJoin("id_tarifa_compra", "nombre", TarifaDAO::search(new Tarifa(array("id_tarifa"=>$este_usuario->getIdTarifaCompra()))));
 
 	$page->addComponent( $form );
+
+
+
+
+
+
 
 	$page->nextTab("Direccion");
 
@@ -117,11 +131,23 @@
 	$direccionObj = DireccionDAO::getByPK( $direccion );
 
 	if(!is_null($direccionObj)){
+
+		$ciudad = CiudadDAO::getByPK( $direccionObj->getIdCiudad() );
+
+		if(null === $ciudad){
+			$ciudad = new Ciudad();
+		}
+
+
 		$page->addComponent(new FreeHtmlComponent("<div id=\"map_canvas\"></div>"));
 		$page->addComponent(new FreeHtmlComponent("<script>startMap(\""
 																. $direccionObj->getCalle() 
-																. " ,"
+																. " "
+																. $direccionObj->getNumeroExterior() 
+																. ", "																
 																. $direccionObj->getColonia() 
+																. ", "
+																. $ciudad->getNombre() 
 																. "\");</Script>"));
 	}
 
