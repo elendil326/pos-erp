@@ -4,7 +4,8 @@
 
 //require_once("libs/ezpdf/class.pdf.php");
 //require_once("libs/ezpdf/class.ezpdf.php");
-
+require_once("libs/ezpdf/class.pdf.php");
+require_once("libs/ezpdf/class.ezpdf.php");
 
 class ImpresionesController {
 
@@ -1028,8 +1029,7 @@ class ImpresionesController {
 		$daoSucursal = SucursalDAO::getByPK($daoVenta->getIdSucursal());
 		$daoServicio = ServicioDAO::getByPK( $daoOrden->getIdServicio() );
 		
-		require_once("libs/ezpdf/class.pdf.php");
-		require_once("libs/ezpdf/class.ezpdf.php");
+
 
 	    $pdf = new Cezpdf( $paper = 'letter');
 
@@ -1050,14 +1050,20 @@ class ImpresionesController {
 	    /**************************
 	     * LOGO
 	     **************************/
-		$logo = "http://static.caffeina.mx/logos.png";
-		
+
+		$logo = "../static/".IID.".jpg";
+
 	    if (substr($logo, -3) == "jpg" || substr($logo, -3) == "JPG" || substr($logo, -4) == "jpeg" || substr($logo, -4) == "JPEG") {
-	        $pdf->addJpegFromFile($logo, self::puntos_cm(2), self::puntos_cm(23.8), self::puntos_cm(3.5));
-	
+	        $pdf->addJpegFromFile($logo, self::puntos_cm(2), self::puntos_cm(24), self::puntos_cm(4.1));
+
+				
 	    } elseif (substr($logo, -3) == "png" || substr($logo, -3) == "PNG") {
-	        $pdf->addPngFromFile($logo , self::puntos_cm(2), self::puntos_cm(23.8), self::puntos_cm(3.5));
-	
+	        $pdf->addPngFromFile($logo, self::puntos_cm(2), self::puntos_cm(24), self::puntos_cm(4.1));
+
+
+
+			Logger::log("png");	
+			
 	    } else {
 	        Logger::log("Verifique la configuracion del pos_config, la extension de la imagen del logo no es compatible");
 	        die("La extension de la imagen usada para el logo del negocio no es valida.");
@@ -1077,7 +1083,7 @@ class ImpresionesController {
 	     * del certificado del contribuyente
 	     * **************************/            
             
-	    $e = "<b>" . self::readableText("caffeina software") . "</b>\n";
+	    $e = ""; //"<b>" . self::readableText("caffeina software") . "</b>\n";
 	    /*$e .= self::formatAddress(415);
 	    $e .= "RFC: " . "RFC";
 
@@ -1252,6 +1258,9 @@ class ImpresionesController {
 
 	    return;
 	}
+
+
+
 
 	/**
 	 * Obtiene informacion acerca de los documentos y con que impresoras se deben de imprimir
@@ -1508,7 +1517,7 @@ class ImpresionesController {
 	    $pdf->addText(puntos_cm(2), puntos_cm(1.0), 7, "Fecha de impresion: " . date("d/m/y") . " " . date("H:i:s"));
 
 	    //addJpegFromFile(imgFileName,x,y,w,[h])
-	    $pdf->addJpegFromFile("../www/media/logo_simbolo.jpg", puntos_cm(15.9), puntos_cm(.25), 25);
+	    //$pdf->addJpegFromFile("../www/media/logo_simbolo.jpg", puntos_cm(15.9), puntos_cm(.25), 25);
 
 
 	    $pdf->addText(puntos_cm(16.70), puntos_cm(.60), 8, "caffeina.mx");

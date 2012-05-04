@@ -1630,8 +1630,9 @@ require_once("interfaces/Servicios.interface.php");
 			$id_usuario = $s["id_usuario"];
             $saldo_cliente = UsuarioDAO::getByPK($id_cliente)->getSaldoDelEjercicio();//se trae el monto que le resta por disponer de su limite de credito
 
-			if( $saldo_cliente < $precio )
+/*			if( $saldo_cliente < $precio )
 				throw new InvalidDataException("El saldo del cliente es insuficiente ($ {$saldo_cliente})");
+*/
 			
             //Valida que los datos sean correctos
             $validar = self::validarParametrosOrdenDeServicio(null, $id_servicio, $id_cliente, $descripcion, null, $adelanto);
@@ -1687,12 +1688,15 @@ require_once("interfaces/Servicios.interface.php");
 				}			
 			}
 
+
+
+/*
 			//Figu: al llegar a este punto si tiene el saldo de la venta, pero se valida aun asi que su limite de credito cubra ese subtotal
 			//esto por si en algun momento se actualiza el limite de credito del cliente (que el admin del sis le decremente su limite por cualquier razon)
 			if(UsuarioDAO::getByPK($id_cliente)->getLimiteCredito() < $subtotal){
 				throw new BusinessLogicException("El limite de credito no cubre este monto");
 			}
-			
+*/			
 
             //Se inicializa el registro de orden de servicio
             $orden_de_servicio = new OrdenDeServicio( array( 
@@ -2324,9 +2328,10 @@ require_once("interfaces/Servicios.interface.php");
             try
             {
                 OrdenDeServicioDAO::save($orden_de_servicio);
-                SucursalesController::VenderCaja($descuento, $orden_de_servicio->getIdUsuarioVenta(),
+/*                SucursalesController::VenderCaja($descuento, $orden_de_servicio->getIdUsuarioVenta(),
                         $impuesto, $retencion, $subtotal, $tipo_venta, $total, $billetes_cambio, $billetes_pago,
-                        $cheques,$detalle_orden, null, $detalle_productos, null, null,null,$saldo,$tipo_de_pago);
+                       $cheques,$detalle_orden, null, $detalle_productos, null, null,null,$saldo,$tipo_de_pago);
+*/
             }
             catch(Exception $e)
             {

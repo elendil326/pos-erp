@@ -187,7 +187,7 @@ html body{background:#e7e7e7}
 .devsitePage .menu a.l{display:block;float:left}
 .devsitePage .menu a.l{line-height:29px;padding:2px 11px 2px}
 .devsitePage .menu a.l:hover, .devsitePage .menu a.logo:hover{background:#1a3c6c;text-decoration:none}
-.devsitePage .menu .search{float:right;padding:5px 20px 5px 20px;width:280px}
+.devsitePage .menu .search{float:right;padding:5px 20px 5px 20px;width:215px}
 .devsitePage .menu .uiTypeahead{border:0}
 .devsitePage .menu .uiTypeahead .wrap{border:0}
 .devsitePage .menu .uiSearchInput{border:0}

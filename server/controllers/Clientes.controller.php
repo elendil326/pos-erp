@@ -580,9 +580,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 	)
 	{  
             Logger::log("Editando cliente ".$id_cliente);
-       		$args = func_get_args();
-			
-			var_dump($args);     
+
             if(!is_null($password))
             {
                 $validar = self::validarParametrosCliente($id_cliente);

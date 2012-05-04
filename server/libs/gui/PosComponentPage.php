@@ -34,8 +34,11 @@ class PosComponentPage extends StdComponentPage{
 
 
 				<link rel="stylesheet" type="text/css" href="http://api.caffeina.mx/ext-4.0.0/resources/css/ext-all.css" /> 
-			    <script type="text/javascript" src="http://api.caffeina.mx/ext-4.0.0/ext-all-debug.js"></script>
+			    <script type="text/javascript" src="http://api.caffeina.mx/ext-4.0.0/ext-all.js"></script>
 			
+			<!--
+				<script type="text/javascript" charset="utf-8" src="http://cdn.sencha.io/ext-4.1.0-gpl/ext-all.js"></script>
+			-->
 				<?php if (is_file("../../css/basic.css") ) { ?><link type="text/css" rel="stylesheet" href="../../css/basic.css"/><?php } ?>
 				<?php if (is_file("../../../css/basic.css") ) { ?><link type="text/css" rel="stylesheet" href="../../../css/basic.css"/><?php } ?>
 				<?php if (is_file("css/basic.css") ) { ?><link type="text/css" rel="stylesheet" href="css/basic.css"/><?php } ?>								
@@ -136,7 +139,7 @@ class PosComponentPage extends StdComponentPage{
 						                typeAhead: true,
 						                hideLabel: true,
 						                hideTrigger:true,
-						                anchor: '100%',
+
 						                listConfig: {
 											/*Ext.view.BoundListView */
 						                    loadingText: 'Buscando...',
