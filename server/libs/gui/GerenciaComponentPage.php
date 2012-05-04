@@ -1014,7 +1014,7 @@ class GerenciaComponentPage extends PosComponentPage{
 	protected function _renderTopMenu()	{
 		?>
 			<a class="l" href="./c.php">Configuracion</a>
-			<a class="l" href="./../?cs=1">(alan)Salir</a>
+			<a class="l" href="./../?cs=1">Salir</a>
 		<?php
 	}
 	
