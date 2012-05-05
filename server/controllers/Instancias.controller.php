@@ -242,25 +242,35 @@
 		}
 
 		public static function Actualizar_Todas_Instancias(){
+			Logger::log("Updating Instances}");
 			$result = "";
-			
+			$out = "";
+			$file_name_cons = 'db-backup-'.time().'.sql';
+			$destiny_file = '../../../static_content/db_backups/';
 			global $POS_CONFIG;
 			$sql = "SELECT * FROM instances;";
 			$rs =  $POS_CONFIG["CORE_CONN"]->Execute($sql);
 			$instancias = $rs->GetArray();
 			
 			foreach($instancias as $ins){
-				/*$rs = self::backup_only_data($ins['instance_id'],$ins['db_host'], $ins['db_user'], $ins['db_password'], $ins['db_name'], $tables = '*', $backup_values = true, $return_as_string = false,'../../../static_content/db_backups/');
-				if(!is_null($rs)){	
-					$result.= $rs."\n";
+				$file_name = 'instance_'.$ins['instance_id'].'-'.$file_name_cons;
+				$out = self::backup_only_data($ins['instance_id'],$ins['db_host'], $ins['db_user'], $ins['db_password'], $ins['db_name'], $tables = '*', $backup_values = true, $return_as_string = false,$destiny_file,$file_name);
+				if(!is_null($out)){	
+					$result.= $out."\n";
 					continue;//ya no seguir con el proceso
 				}
-				*/
-				//$rs = self::Eliminar_Tablas_BD($ins['instance_id'],$ins['db_host'], $ins['db_user'], $ins['db_password'], $ins['db_name']);
-				self::Eliminar_Tablas_BD(87,'localhost', 'pos_instance_87', 'pos_instance_87', 'pos_instance_87');
-				break;
+				
+				$out = self::Eliminar_Tablas_BD($ins['instance_id'],$ins['db_host'], $ins['db_user'], $ins['db_password'], $ins['db_name']);				
+				if(!is_null($out))
+					$result.= $out."\n";
+				$out = self::Insertar_Estructura_Tablas_A_BD($ins['instance_id'],$ins['db_host'], $ins['db_user'], $ins['db_password'], $ins['db_name']);
+				if(!is_null($out))
+					$result.= $out."\n";
+				$out = self::Insertar_Datos_Desde_Respaldo($ins['instance_id'],$ins['db_host'], $ins['db_user'], $ins['db_password'], $ins['db_name'],$destiny_file.$file_name);
+				if(!is_null($out))
+					$result.= $out."\n";
 			}
-			$result = "nada";
+			
 			if(strlen($result)>0)
 				return $result;
 			else 
@@ -285,24 +295,104 @@
 
 			$tables = array();
 			$result = mysql_query('SHOW TABLES');
-			$i=0;
+			
 			//se eliminan las tablas
 			while($row = mysql_fetch_row($result)){//row = nombre de la tabla
 				$rss = mysql_query("DROP TABLE IF EXISTS {$name}.".$row[0]." CASCADE;");											
 			}
+			return null;
+		}
+
+		public static function Insertar_Estructura_Tablas_A_BD($instance_id,$host,$user, $pass, $name){
+			$out ="";
+			try{
+				$link = @mysql_connect($host,$user,$pass);
+				@mysql_select_db($name,$link);
+				if($link == null){
+					Logger::log( "No se pudo abrir la conexion para la BD: {$name} " );
+					return "No se pudo abrir la conexion para la BD: {$name} con id: {$instance_id}";	
+				}
+			}catch(ADODB_Exception $e){								
+				Logger::log( "No se pudo abrir la conexion para la BD: {$name} ".$e->msg );
+				return "No se pudo abrir la conexion para la BD: {$name} con id: {$instance_id} . Error: ".$e->msg;
+			}
+
+			Logger::log("Inserting Tables to instance {$instance_id}");
+			//insertar tablas
+			$instalation_script = file_get_contents( POS_PATH_TO_SERVER_ROOT . DIRECTORY_SEPARATOR .  ".." . DIRECTORY_SEPARATOR . "private" . DIRECTORY_SEPARATOR . "pos_instance.sql");
+			$queries = explode(  ";", $instalation_script);
+			try {
+				
+				for ($i=0; $i < sizeof($queries); $i++) { 
+					if(strlen( trim( $queries[$i] ) ) == 0) continue;
+					$rs = mysql_query(  $queries[$i] . ";" );
+					if($rs)
+						;
+					else{
+						Logger::log(mysql_error());
+						$out.= mysql_error()."\n";
+					}
+				}			
+				
+			}catch(ADODB_Exception $e){
+		        Logger::error($e->msg);
+				return $e->msg;
+		    }
 			
+			if(strlen($out) > 0)
+				return $out;
+			
+			return null;
 		}
 
-		public static function Insertar_Tablas_A_BD(){
+		public static function Insertar_Datos_Desde_Respaldo($instance_id, $host, $user, $pass, $name,$source_file){
+			Logger::log( "Restoring data from file to Instance DB {$instance_id}");
+			
+			$out ="";
+			try{
+				$link = @mysql_connect($host,$user,$pass);
+				@mysql_select_db($name,$link);
+				if($link == null){
+					Logger::log( "No se pudo abrir la conexion para la BD: {$name} " );
+					return "No se pudo abrir la conexion para la BD: {$name} con id: {$instance_id}";	
+				}
+			}catch(ADODB_Exception $e){								
+				Logger::log( "No se pudo abrir la conexion para la BD: {$name} ".$e->msg );
+				return "No se pudo abrir la conexion para la BD: {$name} con id: {$instance_id} . Error: ".$e->msg;
+			}
+
+			
+			//llenar los datos respaldados
+			$data_script = file_get_contents( $source_file );
+			$queries = explode(  ";", $data_script);
+			try {
+				
+				for ($i=0; $i < sizeof($queries); $i++) { 
+					if(strlen( trim( $queries[$i] ) ) == 0) continue;
+					$rs = mysql_query(  $queries[$i] . ";" );
+					if($rs)
+						;
+					else{
+						Logger::log("Consulta: {$queries[$i]} ; Error: ".mysql_error());
+						$out.= mysql_error()."\n";
+					}
+				}				
+				
+			}catch(ADODB_Exception $e){
+		        Logger::error($e->msg);
+				return $e->msg;
+		    }
+			
+			if(strlen($out) > 0)
+				return $out;
+			
+			return null;
 
 		}
 
-		public static function Insertar_Datos(){
-
-		}
 		
-		public static function backup_only_data($instance_id, $host, $user, $pass, $name, $tables = '*', $backup_values = true, $return_as_string = false,$destiny_file){
-			Logger::log( "Updating Instance DB {$name}");
+		public static function backup_only_data($instance_id, $host, $user, $pass, $name, $tables = '*', $backup_values = true, $return_as_string = false,$destiny_file, $file_name){
+			Logger::log( "Backup to Instance {$instance_id}");
 			try{
 				$link = @mysql_connect($host,$user,$pass);
 				@mysql_select_db($name,$link);
@@ -363,7 +453,7 @@
 			if($return_as_string)
 				return $return;
 
-			$fname = $destiny_file.'db-backup-'.time().'-'.(md5(implode(',',$tables))).'.sql';
+			$fname = $destiny_file.$file_name;
 			try{
 			  	$handle = @fopen($fname,'w+');
 			  	@fwrite($handle, $return);
