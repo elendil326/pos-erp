@@ -177,7 +177,7 @@ class PosComponentPage extends StdComponentPage{
 						<div id="bodyMenu" class="bodyMenu">
 							<div>
 															<?php
-							if(is_file("../static/" . IID . ".jpg")){
+							if(defined("IID") && is_file("../static/" . IID . ".jpg")){
 								$file = "../static/" . IID . ".jpg";
 								?>
 								<div style="

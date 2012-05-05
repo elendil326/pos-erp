@@ -2000,13 +2000,13 @@ require_once("interfaces/Servicios.interface.php");
 	(
 		$id_orden, 
 		$tipo_venta, 
-		$billetes_cambio = null, 
-		$billetes_pago = null, 
-		$cheques = null, 
-		$descuento = null, 
-		$id_venta_caja = null, 
-		$saldo = null, 
-		$tipo_de_pago = null
+		$billetes_cambio  = null, 
+		$billetes_pago    = null, 
+		$cheques          = null, 
+		$descuento        = null, 
+		$id_venta_caja    = null, 
+		$saldo            = null, 
+		$tipo_de_pago     = null
 	)
 	{  
             Logger::log("Terminando orden de servicio ".$id_orden. " ...");

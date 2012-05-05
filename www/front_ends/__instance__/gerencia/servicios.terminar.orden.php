@@ -13,7 +13,7 @@
 	//titulos
 	$page->addComponent( new TitleComponent( "Terminar Orden " ) );
 
-	$form = new DAOFormComponent( array (new Venta() ) );
+	$form = new DAOFormComponent(  new Venta()   );
 
 	$form->addField("id_orden", "id_orden", "text", $_GET["oid"]);
 
@@ -26,7 +26,6 @@
 		"fecha",
 		"subtotal",
 		"impuesto",
-		"total",
 		"id_sucursal",
 		"id_usuario",
 		"cancelada",
@@ -43,7 +42,7 @@
 	$form->onApiCallSuccessRedirect( "servicios.php" );
 
 	$form->makeObligatory(array( 
-	"tipo_venta"
+		"tipo_venta"
 	));
 
 	$form->createComboBoxJoin("tipo_venta", "tipo_venta", array( "credito" , "contado" ));

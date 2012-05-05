@@ -54,17 +54,18 @@ if ( $esta_orden->getActiva() ){
 	$btn_eliminar->addName("cancelar");
 	$funcion_cancelar = " function cancelar_orden(btn){" . "if(btn == 'yes')" . "{" . "var p = {};" . "p.id_orden_de_servicio = " . $_GET["oid"] . ";" . "sendToApi_cancelar(p);" . "}" . "}" . "      " . "function confirmar_cancelacion(){" . " Ext.MessageBox.confirm('Cancelar', 'Desea cancelar esta orden?', cancelar_orden );" . "}";
 	$btn_eliminar->addOnClick("confirmar_cancelacion", $funcion_cancelar);
-
 	$menu->addMenuItem($btn_eliminar);
-	$btn_terminar = new MenuItem("Terminar orden", null);
-	$btn_terminar->addApiCall("api/servicios/orden/terminar", "POST");
-	$btn_terminar->onApiCallSuccessRedirect("servicios.lista.orden.php");
-	$btn_terminar->addName("terminar");
-	$funcion_terminar = " function terminar_orden(btn){" . "if(btn == 'yes')" . "{" . "window.location = \"servicios.terminar.orden.php?oid=" . $_GET["oid"] . "\";" . "}" . "}" . "      " . "function confirmar_termino(){" . " Ext.MessageBox.confirm('Terminar', 'Desea terminar esta orden?', terminar_orden );" . "}";
-	$btn_terminar->addOnClick("confirmar_termino", $funcion_terminar);
-		
 
+
+
+	$btn_terminar = new MenuItem("Terminar orden", null);
+	$btn_terminar->addName("terminar");
+	$funcion_terminar = " function redir_terminar( ){ window.location = \"servicios.terminar.orden.php?oid=" . $_GET["oid"] . "\"; } ";
+	$btn_terminar->addOnClick("redir_terminar", $funcion_terminar);
 	$menu->addMenuItem($btn_terminar);
+
+
+
 	
 	$editar = new MenuItem("Editar orden", null);
 	$editar->addOnClick("_e", "function _e(){ window.location = 'servicios.detalle.orden.editar.php?oid=". $_GET["oid"] ."' ; }");

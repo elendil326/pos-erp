@@ -89,8 +89,7 @@
 
 			$h = "<script>
 	 			var currentTab = '';
-				
-				
+
 				if(window.location.hash.length == 0){
 					Ext.get('tab_". $this->tabs[0]["title"] ."').setStyle('display', 'block');
 					Ext.get('atab_". $this->tabs[0]["title"] ."').toggleCls('selected');
