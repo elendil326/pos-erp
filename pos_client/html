@@ -1,4 +1,4 @@
--- Index --
+-- html_header --
 
 <!doctype html>
 <html>
@@ -8,7 +8,7 @@
 	body {
 		margin:0;
 		font-family:Helvetica,Arial,sans-serif;
-		color:#444;
+		
 		background-color:#ffffff;
 		background:white;
 		url( http://static.caffeina.mx/bg_texture.png) repeat scroll 0px 0px !important;
@@ -31,15 +31,20 @@
 	}
 
 	#header {
-		background-image:url(http://static.caffeina.mx/PICT3466.JPG);
-		height:192px;
+		
+		
 		background-repeat:no-repeat;
 		background-position:50% 0;
 		background-color:white;
 		position:relative;
 		background-image:url(http://static.caffeina.mx/lab.jpg);
 		background-position-x:50%;
-		height:333px;
+		
+
+
+
+		height: 172px;
+		
 	}
 	
 
@@ -140,19 +145,17 @@
 		line-height:24px;
 	}
 	#header h1 {
-		font-size:55px;
-		font-weight:bold;
-		line-height:36px;
-		margin:42px 0 0 -4px;
-		text-shadow:1px 1px 4px #000;
-		color:#fff;
-		font-family:'ff-din-web-1','ff-din-web-2','HelveticaNeue-Light','Helvetica Neue Light','Helvetica Neue',Arial,Helvetica,sans-serif;
-		width:640px;
-		letter-spacing:-3px;
-		width:600px;
-		line-height:48px;
-		margin-top:146px;
-		left:-1px;
+font-size: 45px;
+font-weight: bold;
+line-height: 36px;
+margin: 32px 0 0 -4px;
+text-shadow: 1px 1px 4px black;
+color: white;
+font-family: 'ff-din-web-1', 'ff-din-web-2', 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+width: 800px;
+letter-spacing: -3px;
+overflow: hidden;
+height: 45px;
 	}
 
 	#header p.subhead {
@@ -210,8 +213,8 @@
 				</p>
 				<ul class="nav">
 
-					<li><a href="/?&action=AdminPAQProxy">AdminPAQProxy</a></li>
-					<li><a href="/?&action=basculas">Basculas</a></li>
+					<li><a href="/html/adminpaq/">AdminPAQProxy</a></li>
+					<li><a href="/html/basculas/">Basculas</a></li>
 					<li class="last"><a href="http://www3.caffeina.mx/art.php?cid=3">Contacto</a></li>
 				</ul>
 			</div>
@@ -221,29 +224,20 @@
 		<div id="header-main">
 			<h1>Caffeina POS_CLIENT</h1>
 			<p class="subhead">
-				Caffeina POS_CLIENT es una aplicacion 
-			</p>
-			<p class="subhead">
 	
 			</p>
 			<div id="hero">
-	
 			</div>
 		</div>
 		<!-- header-main -->
 	</div>
 	<!-- header -->
 	<div id="content">
-		<div class="blue-lighter">
-			<p class="intro">
-				Modulos:
-				
-			</p>
-		</div>
-		<div class="four-col">
-			</span></a>
-		</p>
-	</div>
+-- /html_header --
+
+-- html_footer --
+
+
 	<!-- four-col -->
 	<div class="four-col last cool-text">
 		<div style="margin-top: 25px; text-align: center; ">
@@ -269,7 +263,7 @@
 </body>
 </html>
 
--- /Index --
+-- /html_footer --
 
 
 
@@ -277,16 +271,15 @@
 
 -- AdminPAQProxy --
 <form method="GET" action=""  id="sqlqueryform"  name="sqlform">
-<input type="hidden" name="action" value="AdminPAQProxy">
-<input type="hidden" name="explorer" value="1">
-{path}
+
 <a name="querybox"></a>
 <div id="queryboxcontainer">
 <fieldset id="querybox">
-<legend>Run SQL query/queries on server "localhost": </legend>
+<legend>Run SQL query/queries on  <input type='text' name='path' value='{path}' style="width:300px"> </legend>
 <div id="queryfieldscontainer">
 	<div id="sqlquerycontainerfull">
-{sql}
+	<textarea name="sql" style="width:100%" rows=5>{sql}</textarea>
+	
 </div>
 <input type="submit" value="Go">
 <div class="clearfloat"></div>
@@ -300,6 +293,7 @@
 <div class="clearfloat"></div>
 </fieldset>
 </form>
+{tabla}
 -- /AdminPAQProxy --
 
 -- Error --

@@ -116,9 +116,12 @@ public class HttpServer
             // Print out details of this connection 
             //Logger.log("Accepted Client : ID - " + m_clientID + " : Address - " +  m_clientSocket.getInetAddress()); 
 			
-			String Get_Request = null,
-					raw_request = null;
-            
+			String  Get_Request = null,
+					raw_request = "",
+					Host_Request = null;
+
+            HttpResponder response = null;
+
 			try{ 
 	
 				in = new BufferedReader(new InputStreamReader(m_clientSocket.getInputStream())); 
@@ -133,20 +136,18 @@ public class HttpServer
 				
 				while
 				( 
-					(( r = in.readLine() ) != null)
-					&& r.length() > 0
+					(( r = in.readLine() ) != null) && (r.length() > 0)
 				) 
 				{                     
 					if(r.startsWith("GET"))
 					{
-						raw_request = r;
-						
-						if( r.indexOf("HTTP/1.1") == -1){
-							
-						}
-						
 						Get_Request = r.substring(5, r.indexOf("HTTP/1.1"));
+					}
 
+
+					if(r.startsWith("Host"))
+					{
+						Host_Request = r.substring(6);
 					}
 				} 
 				
@@ -157,64 +158,90 @@ public class HttpServer
 
 				//send the response
 				Dispatcher d = new Dispatcher();
+				raw_request = "http://" + Host_Request + "/" + Get_Request;
 
-				String response ;
 				try{
 					//response = d.dispatch(Get_Request);
-					response = d.dispatch( new URL( Get_Request ));
+					response = d.dispatch( new URL( raw_request ));
 					
+
+				}catch( MalformedURLException m ){
+					Logger.error(m + " " + Get_Request);
+
+
 				}catch(Exception e){
-					Logger.error("Error while dispatching shit..." + e);
-					response = "error";
+					Logger.error(  e);
+
+
 				}
-				//send the headers
-				out.println("HTTP/1.1 200 OK");
-				out.println("Date: Mon, 23 May 2005 22:38:34 GMT");
-				out.println("Server: POSWebServer/0.0.3");
-				out.println("Accept-Ranges: bytes");
-				out.println("Content-Length: " + response.length());
-				out.println("Connection: close");
-				out.println("Content-Type: text/html; charset=UTF-8");
-				out.println("");
-				
-				//write and flush the response
-				out.println(response);
-				out.flush();
-				Logger.log(m_clientSocket.getInetAddress() + " " + (new Date()) + " " +raw_request + " " +  " 200");
+
+
+
+
 				
 			}catch(java.lang.StringIndexOutOfBoundsException sioobe){
-				out.println("HTTP/1.1 500 OK");
-				out.println("Date: Mon, 23 May 2005 22:38:34 GMT");
-				out.println("Server: POSWebServer/0.0.3");
-				out.println("Accept-Ranges: bytes");
-				out.println("Content-Length: " + Dispatcher.DispatchError().length());
-				out.println("Connection: close");
-				out.println("Content-Type: text/html; charset=UTF-8");
-				out.println("");
-				out.println( Dispatcher.DispatchError() );
-				out.flush();
-				
-				Logger.log(m_clientSocket.getInetAddress() + " " + (new Date()) + " " +raw_request + " "+ " 500");
+				out.println("HTTP/1.1 500 SERVER ERROR");
 				Logger.error("HttpServer:" + sioobe);
 				
 
             }catch(Exception e){
-				out.println("HTTP/1.1 500 OK");
-				out.println("Date: Mon, 23 May 2005 22:38:34 GMT");
-				out.println("Server: POSWebServer/0.0.3");
-				out.println("Accept-Ranges: bytes");
-				out.println("Content-Length: " + Dispatcher.DispatchError().length());
-				out.println("Connection: close");
-				out.println("Content-Type: text/html; charset=UTF-8");
-				out.println("");
-				out.println( Dispatcher.DispatchError() );
-				out.flush();
-				
-				
-				Logger.log(m_clientSocket.getInetAddress() + " " + (new Date()) + " " +raw_request + " "+ " 500");
+				out.println("HTTP/1.1 500 SERVER ERROR");
 				Logger.error("HttpServer:" + e);
 				
+
             }finally{ 
+
+            	
+
+				if(response == null){
+					out.println("HTTP/1.1 404 NOT FOUND");
+
+				}else{
+					//send the headers
+					out.println("HTTP/1.1 200 OK");
+
+				}
+
+				out.println("Date: " + new Date());
+				out.println("Server: POSWebServer/0.0.4");
+				out.println("Accept-Ranges: bytes");
+
+
+				if(response == null){
+					out.println("Content-Length: 0" );
+				}else{
+					out.println("Content-Length: " + response.getResponse().length() );	
+				}
+				
+				out.println("Connection: close");
+
+				if(response == null){
+					out.println("Content-Type: text/html; charset=UTF-8");
+				}else{
+					out.println("Content-Type: "+response.getContentType()+"; charset=UTF-8");
+				}
+
+				
+				out.println("");
+				
+				//write and flush the response
+				if(response == null){
+					out.println("" );
+
+				}else{
+					out.println(response.getResponse());
+
+				}
+
+				out.flush();
+
+				Logger.log( 
+					m_clientSocket.getInetAddress().toString().substring(1)
+					+ " | " 
+					+raw_request 
+					+ "");
+                
+
 
                 // clean up 
                 try{                     

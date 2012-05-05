@@ -8,32 +8,135 @@ import mx.caffeina.pos.MD5Checksum;
 import java.util.*;
 
 
-public class AdminPAQProxy{
+
+public class AdminPAQProxy extends HttpResponder{
 
 	private String ruta;
 	private DBFReader reader;
 	private FileInputStream inputStream;
 	private boolean explorer;
 	private String sql;
-	
+	private String last_error;	
+
+
+	public AdminPAQProxy(String [] path, String [] query){
+		
+		super(path, query);
+
+		last_error = null;
+	}
+
+
+	public String getResponse(){
+
+		if(dataType.equals("json")) {
+			bootstrap();
+			return getJson();
+		}
+
+		return getHtml();
+	}
+
+
+	private String getHtml(){
+
+		if(last_error != null){
+			return renderError("html");
+		}
+
+		String rawHtml = searchHtmlBase("AdminPAQProxy"),
+				outHtml = "";
+
+		outHtml = rawHtml.replaceAll("\\{sql\\}",  ""+searchInQuery("sql") );
+
+		outHtml = outHtml.replaceAll("\\{path\\}", ""+searchInQuery("path") );
+
+
+		if(searchInQuery("sql") != null){
+			outHtml = outHtml.replaceAll("\\{tabla\\}", query(searchInQuery("sql")) );
+
+		}else{
+			outHtml = outHtml.replaceAll("\\{tabla\\}", "" );
+		}
+
+		return buildHtml( outHtml );
+	}
+
+
+	private String getJson(){
+		if(last_error != null){
+			return renderError("json");
+		}
+		return "json";
+	}
+
+
+	private String renderError(String type){
+		if(type.equals("html")){
+			return "<h1>Error</h1><p>" + last_error + "</p>";
+
+		}else{
+			return "{\"status\":\"error\", \"error\": \""+last_error+"\"}";
+
+		}
+	}
+
+
+	private void bootstrap(){
+
+		ruta = searchInQuery("path");
+
+		if(ruta == null){
+			last_error = "No enviaste la ruta";
+			return;
+		}
+
+
+		File f = new File( ruta );
+
+		if(!f.isDirectory()){
+			last_error = "La ruta `"+f+"` no existe.";
+			return;
+		}
+
+		return;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	public String explorer(  ){
-
-
 		return createExplorer( );
 	}
 	
-	public AdminPAQProxy(){
-
-	}
-	
-	public AdminPAQProxy(String ruta, boolean explorer){
-		this.ruta = ruta;
-		this.reader = null;
-		this.explorer = explorer;
-	}
 
 	private void startCon(String file){
-		System.out.println( "AdminPAQProxy: Conectando con ... " + this.ruta + "" + file + ".dbf" );
+		//System.out.println( "AdminPAQProxy: Conectando con ... " + this.ruta + "" + file + ".dbf" );
 
 		try {
 
@@ -60,10 +163,14 @@ public class AdminPAQProxy{
 		}
 	}
 	
+
+
 	public String query(String sql ){
 		
 		Logger.log("Doing query:" + sql);
+
 		this.sql = sql;
+
 		String [] sql_tokens = sql.trim().split( " " );
 
 		//buscar el from
@@ -75,10 +182,6 @@ public class AdminPAQProxy{
 		startCon( sql_tokens[i] );
 
 		String out = "";
-		
-		if( this.explorer ){
-			out = createExplorer();
-		}
 
 		//first level
 		if(sql_tokens[0].equals("select")) out += select(sql_tokens);
@@ -89,9 +192,6 @@ public class AdminPAQProxy{
 		
 		
 		return out;
-
-
-
 	}
 
 	private String update(String [] sql){
@@ -110,11 +210,12 @@ public class AdminPAQProxy{
 		StringBuilder output = new StringBuilder();
 		
 		
-		if(this.explorer){
+		if(dataType.equals("html")){
+			output.append("<table style='font-size:10px'><tr style='background-color: green'>");
 
-			output.append("<table><tr style='background-color: green'>");
 		}else{
-			output.append("{ \"estructura\" : [ ");						
+			output.append("{ \"estructura\" : [ ");	
+
 		}
 		
 		
@@ -137,7 +238,7 @@ public class AdminPAQProxy{
 			DBFField field = null;
 			try{
 				if(i>0) {
-					if(this.explorer){
+					if(dataType.equals("html")){
 						output.append(" ");
 					}else{
 						output.append(",");						
@@ -145,7 +246,7 @@ public class AdminPAQProxy{
 
 				}
 				
-				if(this.explorer){
+				if(dataType.equals("html")){
 					output.append( "<td>" 
 						+ reader.getField( i).getName( ) 
 						+ " ("+ (char)reader.getField(i).getDataType() + " " + reader.getField(i).getFieldLength() +")</td>" );
@@ -166,7 +267,7 @@ public class AdminPAQProxy{
 
 		
 		
-		if(this.explorer){
+		if(dataType.equals("html")){
 			output.append( "</tr>" );
 		}else{
 			output.append( "] ,  \"datos\" : [");
@@ -193,7 +294,7 @@ public class AdminPAQProxy{
  
 			
 
-			if(this.explorer){
+			if(dataType.equals("html")){
 				if(cRecord % 2 == 0){
 					output.append( "<tr style='background-color: gray'>" );
 				}else{
@@ -209,7 +310,7 @@ public class AdminPAQProxy{
 				if(i>0){
 					
 					
-					if(this.explorer){
+					if(dataType.equals("html")){
 
 					}else{
 						output.append(", ");
@@ -217,7 +318,7 @@ public class AdminPAQProxy{
 				}
 				
 				
-				if(this.explorer){
+				if(dataType.equals("html")){
 					output.append( " <td>" + String.valueOf(rowObjects[i]).replaceAll("\\p{Cntrl}", "").replaceAll("[^\\p{ASCII}]", "?") + "</td> ");	
 				}else{
 					output.append( " \"" + String.valueOf(rowObjects[i]).replaceAll("\\p{Cntrl}", "").replaceAll("[^\\p{ASCII}]", "?") + "\" ");	
@@ -228,14 +329,14 @@ public class AdminPAQProxy{
 			}
 
 			
-		 	if(this.explorer){
+		 	if(dataType.equals("html")){
 				output.append( "</tr>");
 			}else{
 				output.append( "]");
 			}		
 		}	
 
-	 	if(this.explorer){
+	 	if(dataType.equals("html")){
 			output.append( "</table>");
 		}else{
 			output.append("]}");
@@ -253,6 +354,8 @@ public class AdminPAQProxy{
 		return output.toString();
 	}
 	
+
+
 	private String getStructure(  ){
 		int numberOfFields = -1;
 
@@ -436,7 +539,7 @@ public class AdminPAQProxy{
             "",
             ""};
 		
-*/
+		*/
 		Object row[] = {
 			1.0,
 			"codigo",

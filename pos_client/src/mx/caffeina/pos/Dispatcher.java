@@ -5,6 +5,7 @@ import mx.caffeina.pos.Impresiones.*;
 import mx.caffeina.pos.Bascula.*;
 import mx.caffeina.pos.Networking.*;
 import mx.caffeina.pos.AdminPAQProxy.*;
+import mx.caffeina.pos.Welcome.*;
 import java.net.URLDecoder;
 
 import java.net.URL;
@@ -16,8 +17,9 @@ import java.io.*;
 
 public class Dispatcher{
 	
+
+
 	String action = null, data = null, callback = null;
-	
 	
 	public static String searchModuleInHtml(String mod){
 		
@@ -51,10 +53,19 @@ public class Dispatcher{
 		return out;		
 	}
 	
+
+
+
+
+
 	public static String DispatchError(){
 		return searchModuleInHtml("Index") ;
 	}
 	
+
+
+
+
 	public String returnResponse(String r){
 		if( callback == null ){
 			return r;
@@ -66,14 +77,102 @@ public class Dispatcher{
 	
 	
 	
-	public String dispatch(URL url){
+	public HttpResponder dispatch(URL url){
 		
-		
-		
-		return "ok";
+		if(url.getPath().equals("/favicon.ico")){
+			return null;
+		}
+
+		String path [] = url.getPath().substring(1).split("/");
+		String query [];
+
+		if(url.getQuery() == null){
+			//no se envio query
+			query = new String[0];
+
+		}else{
+			query = url.getQuery().split("&");
+
+		}
+
+
+		//error handling
+		switch(path.length){
+			case 0:
+				//no se envio path, supongamos que se envio,
+				//html/welcome
+				path = new String[]{"html", "welcome"};
+			break;
+
+			case 1:
+				if((path[0].equals("html") || path[0].equals("json"))){
+					//se envio el tipo que se quiere
+					path = new String[]{ path[0], "welcome"};
+					
+				}else{
+					//no se envio que tipo
+					if(path[0].length() == 0){
+						path = new String[]{ "html", "welcome"};
+					}else{
+						path = new String[]{ "html", path[0] };
+					}
+				}
+			break;
+
+			default:
+				if(path[0].equals("html") || path[0].equals("json")){
+					
+				}else{
+					//no se envio el tipo que se quiere
+					String [] _path = new String[ path.length + 1 ];
+					_path[0] = "html";
+					for ( int i = 0; i < path.length; i++) {
+						_path[i+1] = path[i];
+					}
+
+					path = _path;
+				}
+		}
+
+
+
+
+
+		//ok, ya tengo todo en path, y query.
+		//Vamos a buscar apps para estas madres
+		HttpResponder response = null;
+
+		if(path[1].equals("welcome")){
+			response = new Welcome(path, query);
+
+		}else if(path[1].equals("impresionesv1") || path[1].equals("Printer")){
+
+
+		}else if(path[1].equals("adminpaq") || path[1].equals("AdminPAQProxy")){
+			response = new AdminPAQProxy(path, query);
+
+		}else if(path[1].equals("impresionesv2") || path[1].equals("impresiones")){
+
+		}else if(path[1].equals("networking")){
+
+		}else if(path[1].equals("bascula")){
+
+		}else if(path[1].equals("welcome")){
+
+		}else{
+			//no encontre el modulo que quieres
+
+		}
+
+
+
+		return response;
 		
 	}
-	
+
+
+
+	/*
 	public String dispatch( String request ){
 
 		request = request.replace('?', '&');
@@ -103,34 +202,18 @@ public class Dispatcher{
 			return searchModuleInHtml("Index");
 		}
 		
-		/**
-		* 
-		* 	El saludo para saber que el cliente esta vivo
-		* 
-		* 
-		* */
+
 		if(action.equals("handshake")){
 			returnResponse("{\"success\": true, \"payload\": \"Hi !\" }");
 			
 		}
 		
-		/**
-		* 
-		* 	Despachar a impresiones
-		* 
-		* 
-		* */
+
 		if(action.equals("Printer")){
 			return returnResponse(ServidorImpresion.Print( data )) ;	
 		}
 
 
-		/**
-		* 
-		* 	Despachar a AdminPAQProxy
-		* 
-		* 
-		* */
 		if(action.equals("AdminPAQProxy")){
 
 			String  path = null,
@@ -228,23 +311,12 @@ public class Dispatcher{
 		
 
 
-		/**
-		* 
-		* 	Despachar a impresiones
-		* 
-		* 
-		* */
 		if(action.equals("Impresiones")){
 			return returnResponse(Impresiones.Print( data ) );
 				
 		}		
 
-		/**
-		* 
-		* 	Despachar a networking
-		* 
-		* 
-		* */
+
 		if(action.equals("networking")){
 			String response = Networking.getMacAddd( );			
 			return returnResponse	("{\"success\": true,  \"response\" : \""+response+"\"}");		
@@ -253,19 +325,9 @@ public class Dispatcher{
 
 
 
-
-
-
-
-		/**
-		* 
-		* 	Despachar a bascula
-		* 
-		* 
-		* */
 		if(action.equals("bascula")){
 			
-			/**
+			/ **
 			* 	###### PORT STATUS ########
 			*	get_free_ports=true
 			*	
@@ -280,7 +342,7 @@ public class Dispatcher{
 			*   discard_first=(1)|[integer]
 			*   read_next=(9)|[integer]
 			* 
-			* */
+			* * /
 			String  get_free_ports 	= "false",
 					port 			= "COM1",
 					send_command 	= "",
@@ -313,18 +375,18 @@ public class Dispatcher{
 					read_next 		= args[i].substring( args[i].indexOf("=") +1);											
 			}
 			
-			/*
+			/ *
 			Logger.log("    get_free_ports =" 	+ get_free_ports 	+ ";");
 			Logger.log("    port           =" 	+ port 				+ ";");
 			Logger.log("    send_command   ="	+ send_command 		+ ";");
 			Logger.log("    discard_first  ="	+ discard_first 	+ ";");						
 			Logger.log("    read_next      ="   + read_next 		+ ";");
 			Logger.log("    read_random    ="   + read_random 		+ ";");
-			*/
+			* /
 
-			/** ****************************
+			/ ** ****************************
 			* 	Read random data
-			*   **************************** */			
+			*   **************************** * /			
 			if(read_random.equals("true")){
 				return callback + "({\"success\": true, \"reading\" : \""+ ( (int)(Math.random() * 100) ) +"KG\"});";
 				
@@ -333,9 +395,9 @@ public class Dispatcher{
 			
 			
 			
-			/** ****************************
+			/ ** ****************************
 			* 	Get free ports
-			*   **************************** */
+			*   **************************** * /
 			if(get_free_ports.equals("true"))
 			{
 
@@ -368,9 +430,9 @@ public class Dispatcher{
 			}
 			
 			
-			/** ****************************
+			/ ** ****************************
 			* 	The other shit
-			*   **************************** */
+			*   **************************** * /
 			try{
 				Bascula b = new Bascula( port );
 				
@@ -406,7 +468,7 @@ public class Dispatcher{
 		
 		return DispatchError();
 	}
-	
+	*/
 	
 	
 	String returnError(){
