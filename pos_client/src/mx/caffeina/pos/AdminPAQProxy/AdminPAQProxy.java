@@ -22,20 +22,37 @@ public class AdminPAQProxy extends HttpResponder{
 	public AdminPAQProxy(String [] path, String [] query){
 		
 		super(path, query);
-
+		this.ruta = null;
 		last_error = null;
 	}
 
 
+
+
+
+
 	public String getResponse(){
+		//dispatch submodules
+
+		if(( path.length > 2 )  && path[2].equals("dbdiff")){
+			bootstrapJson();
+			DBDiff dbdiff = new DBDiff(searchInQuery("path"));
+			return	dbdiff.renderFrontEnd();
+		}
 
 		if(dataType.equals("json")) {
-			bootstrap();
+			bootstrapJson();
 			return getJson();
 		}
 
+		bootstrapHtml();
 		return getHtml();
 	}
+
+
+
+
+
 
 
 	private String getHtml(){
@@ -63,12 +80,19 @@ public class AdminPAQProxy extends HttpResponder{
 	}
 
 
+
+
+
 	private String getJson(){
 		if(last_error != null){
 			return renderError("json");
 		}
-		return "json";
+		return query(searchInQuery("sql"));
 	}
+
+
+
+
 
 
 	private String renderError(String type){
@@ -82,20 +106,39 @@ public class AdminPAQProxy extends HttpResponder{
 	}
 
 
-	private void bootstrap(){
 
-		ruta = searchInQuery("path");
 
-		if(ruta == null){
-			last_error = "No enviaste la ruta";
+	private void bootstrapHtml(){
+		if(
+			(searchInQuery("sql") != null)
+			&& 
+			(searchInQuery("path") == null)
+		){
+			last_error = "Enviaste sql pero no la ruta";
 			return;
 		}
 
 
-		File f = new File( ruta );
+		this.ruta = searchInQuery("path");
+	}
+
+
+	private void bootstrapJson(){
+
+		this.ruta = searchInQuery("path");
+
+		if(this.ruta == null){
+			last_error = "No enviaste la ruta";
+			Logger.log("No enviaste la ruta, necesitas enviar path.");
+			return;
+		}
+
+
+		File f = new File( this.ruta );
 
 		if(!f.isDirectory()){
 			last_error = "La ruta `"+f+"` no existe.";
+			Logger.log(last_error);
 			return;
 		}
 
@@ -136,7 +179,7 @@ public class AdminPAQProxy extends HttpResponder{
 	
 
 	private void startCon(String file){
-		//System.out.println( "AdminPAQProxy: Conectando con ... " + this.ruta + "" + file + ".dbf" );
+		Logger.log( "AdminPAQProxy: Conectando con ... " + this.ruta + "" + file + ".dbf" );
 
 		try {
 
