@@ -43,12 +43,12 @@ public class AdminPAQProxy extends HttpResponder{
 		if(dataType.equals("json")) {
 			bootstrapJson();
 
-			if(searchInQuery("callback")){
+			if(searchInQuery("callback") != null){
 				return (searchInQuery("callback") + "(" + getJson() + ");");
 
 			}else{
 				return getJson() ;
-				
+
 			}
 			
 		}
@@ -225,27 +225,88 @@ public class AdminPAQProxy extends HttpResponder{
 		String [] sql_tokens = sql.trim().split( " " );
 
 		//buscar el from
-		int i = -1;
-		while( !sql_tokens[++i].equals("from") );
-		
-		i++;
-		
-		startCon( sql_tokens[i] );
+
 
 		String out = "";
 
 		//first level
-		if(sql_tokens[0].equals("select")) out += select(sql_tokens);
+		if(sql_tokens[0].equals("select")){
+			int i = -1;
+			while( !sql_tokens[++i].equals("from") );
+			i++;
+			startCon( sql_tokens[i] );
+
+			out += select(sql_tokens);	
+		} 
 		
 		if(sql_tokens[0].equals("update")) out += update(sql_tokens);
 		
-		
-		
+		if(sql_tokens[0].equals("insert")){
+			int i = -1;
+			while( !sql_tokens[++i].equals("into") );
+			i++;
+			startCon( sql_tokens[i] );
+
+			out += insert(sql_tokens);	
+		} 
 		
 		return out;
 	}
 
+
+
+	/**
+	  *		INSERT INTO `apertura_caja` (
+	  *	      `id_apertura_caja` ,
+	  *		  `id_caja` ,
+	  *		  `fecha` ,
+	  *		  `saldo` ,
+	  *		  `id_cajero`
+	  *  	) VALUES (
+	  *		  '1',  '1',  '1',  '1', NULL
+	  *	    );
+	  **/
+	private String insert (String [] sql){
+		String rawSql = "";
+		for ( int a = 0; a < sql.length;  a++) {
+			rawSql += sql [a] + " ";
+
+		}
+
+
+		int i = 0;
+		while( i < rawSql.length() && (rawSql.charAt(i) != '(' )) i++;
+
+		if((i+1) == rawSql.length()){
+
+		}
+
+		ArrayList<String> fieldsToInsert = new ArrayList<String>();
+
+		String [] fields = rawSql.substring( rawSql.indexOf("(")+1, rawSql.indexOf(")") ).split(",");
+
+		System.out.println( rawSql );
+
+		for (int z = 0; z < fields.length ; z++ ) {
+			System.out.println("--> " + fields[z]);
+			
+		}
+
+		return "0";
+		//insert 
+		//into
+
+		//*,
+		//) 
+		//VALUES 
+		//(
+	}
+
 	private String update(String [] sql){
+
+
+		//update 
+
 		set( );
 		return "0";
 	}
@@ -256,8 +317,20 @@ public class AdminPAQProxy extends HttpResponder{
 		return out;
 	}
 	
+
+	private String selectField(){
+		return "";
+	}
+
+
 	private String select(String [] sql){
 		
+		//Seleccionar que tablas?
+		if(!sql[1].equals("*")){
+
+		}
+
+
 		StringBuilder output = new StringBuilder();
 		
 		
@@ -280,6 +353,7 @@ public class AdminPAQProxy extends HttpResponder{
 
 		}catch(NullPointerException npe){
 			Logger.error("ADMINPAQPROXY:" + npe);
+
 		}
 
 		String fieldNames [] = new String[ numberOfFields ];
