@@ -255,51 +255,161 @@ public class AdminPAQProxy extends HttpResponder{
 
 
 
-	/**
-	  *		INSERT INTO `apertura_caja` (
-	  *	      `id_apertura_caja` ,
-	  *		  `id_caja` ,
-	  *		  `fecha` ,
-	  *		  `saldo` ,
-	  *		  `id_cajero`
-	  *  	) VALUES (
-	  *		  '1',  '1',  '1',  '1', NULL
-	  *	    );
-	  **/
+
+
+
+
 	private String insert (String [] sql){
+
+
 		String rawSql = "";
 		for ( int a = 0; a < sql.length;  a++) {
 			rawSql += sql [a] + " ";
 
 		}
 
+		Logger.log("looking for fields");
 
 		int i = 0;
 		while( i < rawSql.length() && (rawSql.charAt(i) != '(' )) i++;
 
+
+
 		if((i+1) == rawSql.length()){
-
-		}
-
-		ArrayList<String> fieldsToInsert = new ArrayList<String>();
-
-		String [] fields = rawSql.substring( rawSql.indexOf("(")+1, rawSql.indexOf(")") ).split(",");
-
-		System.out.println( rawSql );
-
-		for (int z = 0; z < fields.length ; z++ ) {
-			System.out.println("--> " + fields[z]);
 			
 		}
 
-		return "0";
-		//insert 
-		//into
+		String [] fields = rawSql.substring( rawSql.indexOf("(")+1, rawSql.indexOf(")") ).split(",");
+		for (int z = 0; z < fields.length ; z++ ){
+			//System.out.println("--> " + fields[z].trim() );
+		}
 
-		//*,
-		//) 
-		//VALUES 
-		//(
+		String [] values = rawSql.substring( rawSql.lastIndexOf("(")+1, rawSql.lastIndexOf(")") ).split(",");
+		for (int z = 0; z < fields.length ; z++ ){
+			//System.out.println("--> " + values[z].trim() );
+		}
+
+		
+
+		if(values.length != fields.length){
+			return "NOPE";
+		}
+		
+		Logger.log("found " + fields.length +  " values to insert..");
+
+
+
+		Logger.log("retriving actual table structure...");
+
+		//ok, vamos a buscar que tabla quieres, y vamos a leer sus 
+		//Fields
+		int numberOfFields = -1;
+
+		try{
+			numberOfFields = reader.getFieldCount();
+
+		}catch( DBFException dbfe ){
+			System.out.println( "E3:" + dbfe );
+
+		}catch(NullPointerException npe){
+			Logger.error("ADMINPAQPROXY:" + npe);
+
+		}
+
+		Logger.log("got " + numberOfFields + " fields on structure.");
+
+		String fieldNames [] 	= new String[ numberOfFields ];
+		Object fieldToInsert [] = new Object[ numberOfFields ];
+
+		nextField:
+		for( i=0; i<numberOfFields; i++) {
+
+			DBFField field = null;
+
+			try{
+
+				//System.out.println("-->" + reader.getField(i).getName() );
+
+				Logger.log("writing...");
+
+				for( int j = 0; j < fields.length; j++ ){
+					if(fields[j].trim().equals( reader.getField(i).getName().trim() )){
+						Logger.log("found field in value in sql");
+						fieldToInsert[ i ] = values[ j ].toString().trim().toString();
+						
+						if(
+							( fieldToInsert[ i ].toString().charAt(0) == '\"' )
+							&& 
+							(fieldToInsert[ i ].toString().charAt( fieldToInsert[ i ].toString().length() -1  ) == '\"' )
+						){
+
+								Logger.log("its string !, removing quotes");
+								fieldToInsert[ i ] = fieldToInsert[ i ].toString().substring( 1, fieldToInsert[ i ].toString().length() -1 );
+						}
+						
+						continue nextField;
+					}
+				}
+				
+				Logger.log("writing default value");
+				//no lo encontre, insertemos el valor default
+				switch( reader.getField(i).getDataType() ){
+					case 'D':
+						fieldToInsert[ i ] = new Date();	
+					break;
+					case 'C':
+						fieldToInsert[ i ] = "";
+					break;
+					case 'N':
+					case 'B':
+					case 'F':
+						fieldToInsert[ i ] = "0.0";
+					break;
+
+					default:
+						fieldToInsert[ i ] = "null";
+				}
+
+			}catch(com.linuxense.javadbf.DBFException dbfe){
+				Logger.error(dbfe);
+				System.out.println(dbfe);
+				return "0";
+
+			}
+
+
+
+			/*
+				//(char)reader.getField(i).getDataType()
+				//reader.getField(i).getFieldLength()
+				//reader.getField( i).getName( )
+				fieldToInsert[ i ] = null;
+			*/
+		}
+
+
+
+		Logger.log("Closing file for reading..");
+		closeCon();
+
+		for (int o = 0; o < fieldToInsert.length; o++ ) {
+			System.out.println(" :::  " + fieldToInsert[ o]);
+		}
+
+		DBFWriter writer= null;
+    	try{
+			writer = new DBFWriter(new File("/Users/alanboy/win2008shared/Empresas/Caffeina/MGW10002.dbf" ));
+			writer.addRecord( fieldToInsert);
+
+		}catch(Exception e){
+			System.out.println( "E6:" + e );
+		}
+
+
+
+
+		return "0";
+
 	}
 
 	private String update(String [] sql){
