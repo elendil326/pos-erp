@@ -42,7 +42,7 @@ public class AdminPAQProxy extends HttpResponder{
 
 		if(dataType.equals("json")) {
 			bootstrapJson();
-			return getJson();
+			return (searchInQuery("callback") + "(" + getJson() + ");");
 		}
 
 		bootstrapHtml();
@@ -274,7 +274,7 @@ public class AdminPAQProxy extends HttpResponder{
 			Logger.error("ADMINPAQPROXY:" + npe);
 		}
 
-		//String fieldNames [] = new String[ numberOfFields ];
+		String fieldNames [] = new String[ numberOfFields ];
 
 		for( int i=0; i<numberOfFields; i++) {
 
@@ -297,6 +297,7 @@ public class AdminPAQProxy extends HttpResponder{
 					output.append( "\"" + reader.getField( i).getName( ) + "\"" );					
 				}
 				
+				fieldNames[i] = reader.getField( i).getName( );
 				
 			}catch( DBFException dbfe ){
 				System.out.println( "E4:" + dbfe );
@@ -346,7 +347,7 @@ public class AdminPAQProxy extends HttpResponder{
 
 			}else{
 				if(cRecord > 1) output.append(", ");
-				output.append("[");
+				output.append("{");
 			}
 
 			for( int i=0; i<rowObjects.length; i++) {
@@ -364,7 +365,9 @@ public class AdminPAQProxy extends HttpResponder{
 				if(dataType.equals("html")){
 					output.append( " <td>" + String.valueOf(rowObjects[i]).replaceAll("\\p{Cntrl}", "").replaceAll("[^\\p{ASCII}]", "?") + "</td> ");	
 				}else{
-					output.append( " \"" + String.valueOf(rowObjects[i]).replaceAll("\\p{Cntrl}", "").replaceAll("[^\\p{ASCII}]", "?") + "\" ");	
+					
+					output.append(" \""+fieldNames[i]+"\" : "
+									+ " \"" + String.valueOf(rowObjects[i]).replaceAll("\\p{Cntrl}", "").replaceAll("[^\\p{ASCII}]", "?") + "\" ");
 				}
 				
 			
@@ -375,7 +378,7 @@ public class AdminPAQProxy extends HttpResponder{
 		 	if(dataType.equals("html")){
 				output.append( "</tr>");
 			}else{
-				output.append( "]");
+				output.append( "}");
 			}		
 		}	
 

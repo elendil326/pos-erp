@@ -12,13 +12,16 @@ import java.net.URL;
 import mx.caffeina.pos.*;
 
 
-
+/**
+  *
+  * 	REMEMBER TO CHANGE THE PASSPHRARE FOR PRODUCTION !!! 
+  **/
 
 /**
   * http://neopatel.blogspot.mx/2010/05/java-comsunnethttpserverhttpserver.html
   * http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6563368
   * keytool -genkey -alias mydomain -keyalg RSA -keystore keystore.jks -keysize 2048
-  *
+  * 
   **/
 
 
@@ -47,9 +50,6 @@ class PosClientHttpsHandler implements HttpHandler {
 			//System.out.println( h.get("Accept-Charset"));
 			//System.out.println(t.getRemoteAddress());
 			//t.getRequestMethod()
-
-			
-
 
 			URL url = new URL("https://" + host.trim() + t.getRequestURI().toString().trim());
 			

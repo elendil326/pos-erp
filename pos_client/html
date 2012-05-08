@@ -270,6 +270,8 @@ height: 45px;
 
 
 -- AdminPAQProxy --
+<a href="dbdiff">dbdiff</a>
+
 <form method="GET" action=""  id="sqlqueryform"  name="sqlform">
 
 <a name="querybox"></a>
