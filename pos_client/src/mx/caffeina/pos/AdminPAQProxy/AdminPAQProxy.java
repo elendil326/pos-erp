@@ -42,7 +42,15 @@ public class AdminPAQProxy extends HttpResponder{
 
 		if(dataType.equals("json")) {
 			bootstrapJson();
-			return (searchInQuery("callback") + "(" + getJson() + ");");
+
+			if(searchInQuery("callback")){
+				return (searchInQuery("callback") + "(" + getJson() + ");");
+
+			}else{
+				return getJson() ;
+				
+			}
+			
 		}
 
 		bootstrapHtml();
