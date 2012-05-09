@@ -62,13 +62,19 @@ class PosClientHttpsHandler implements HttpHandler {
 			response = d.dispatch( url );
 
 			String stringResponse = response.getResponse();
+			
+			Headers rHeaders = t.getResponseHeaders();
+
+			rHeaders.set("Content-Type", response.getContentType() );
 
 			t.sendResponseHeaders(200, stringResponse.length());
+
+
 
 			OutputStream os = t.getResponseBody();
 			
 			os.write(stringResponse.getBytes());
-			
+
 			os.close();
        }
 }

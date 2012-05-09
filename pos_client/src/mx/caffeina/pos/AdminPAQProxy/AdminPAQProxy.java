@@ -319,52 +319,54 @@ public class AdminPAQProxy extends HttpResponder{
 
 		String fieldNames [] 	= new String[ numberOfFields ];
 		Object fieldToInsert [] = new Object[ numberOfFields ];
+		int structureLoopIndex;
+		int sqlLoopIndex;
+		int j;
 
 		nextField:
-		for( i=0; i<numberOfFields; i++) {
+		for( i = 0, structureLoopIndex = 0; i < numberOfFields; i++, structureLoopIndex++) {
 
 			DBFField field = null;
 
 			try{
 
-				//System.out.println("-->" + reader.getField(i).getName() );
-				Logger.log("writing field ..." + reader.getField(i).getName() );
+				Logger.log("writing field ..." + reader.getField(structureLoopIndex).getName() );
 
-				for( int j = 0; j < fields.length; j++ ){
+				for( j = 0, sqlLoopIndex = 0; j < fields.length; j++, sqlLoopIndex++ ){
 					
 
-					if(fields[j].trim().equals( reader.getField(j).getName().trim() )){
+					if(fields[sqlLoopIndex].trim().equals( reader.getField(structureLoopIndex).getName().trim() )){
 						
 						Logger.log("Found field in value in sql...");
 						
-						fieldToInsert[ i ] = values[ j ].toString().trim().toString();
+						fieldToInsert[ structureLoopIndex ] = values[ sqlLoopIndex ].toString().trim().toString();
 						
-						switch( reader.getField(j).getDataType() ){
+						switch( reader.getField(structureLoopIndex).getDataType() ){
 							case 'D':
 								Logger.log("Date !");
 								if(
-									(( fieldToInsert[ i ].toString().charAt(0) == '\"' )
+									(( fieldToInsert[ structureLoopIndex ].toString().charAt(0) == '\"' )
 									&& 
-									(fieldToInsert[ i ].toString().charAt( fieldToInsert[ i ].toString().length() -1  ) == '\"' ))
+									(fieldToInsert[ structureLoopIndex ].toString().charAt( fieldToInsert[ structureLoopIndex ].toString().length() -1  ) == '\"' ))
 									||
-									(( fieldToInsert[ i ].toString().charAt(0) == '\'' )
+									(( fieldToInsert[ structureLoopIndex ].toString().charAt(0) == '\'' )
 									&& 
-									(fieldToInsert[ i ].toString().charAt( fieldToInsert[ i ].toString().length() -1  ) == '\'' ))
+									(fieldToInsert[ structureLoopIndex ].toString().charAt( fieldToInsert[ structureLoopIndex ].toString().length() -1  ) == '\'' ))
 								){
 
-									fieldToInsert[ i ] = fieldToInsert[ i ].toString().substring( 1, fieldToInsert[ i ].toString().length() -1 );
+									fieldToInsert[ structureLoopIndex ] = fieldToInsert[ structureLoopIndex ].toString().substring( 1, fieldToInsert[ structureLoopIndex ].toString().length() -1 );
 									DateFormat df = DateFormat.getDateInstance();
 
 									try{
-										fieldToInsert[ i ] = df.parse(fieldToInsert[ i ].toString());	
+										fieldToInsert[ structureLoopIndex ] = df.parse(fieldToInsert[ structureLoopIndex ].toString());	
 									}catch( java.text.ParseException pe){
 										Logger.error( pe);
 									}
 									
 
 
-								} else if( fieldToInsert[ i ].toString().trim().equals("NOW()")){
-										fieldToInsert[ i ] = new Date();
+								} else if( fieldToInsert[ structureLoopIndex ].toString().trim().equals("NOW()")){
+										fieldToInsert[ structureLoopIndex ] = new Date();
 
 								}
 								
@@ -373,24 +375,24 @@ public class AdminPAQProxy extends HttpResponder{
 							case 'C':
 								Logger.log("Char");
 								if(
-									( fieldToInsert[ i ].toString().charAt(0) == '\"' )
+									( fieldToInsert[ structureLoopIndex ].toString().charAt(0) == '\"' )
 									&& 
-									(fieldToInsert[ i ].toString().charAt( fieldToInsert[ i ].toString().length() -1  ) == '\"' )
+									(fieldToInsert[ structureLoopIndex ].toString().charAt( fieldToInsert[ structureLoopIndex ].toString().length() -1  ) == '\"' )
 								){
 
 										Logger.log("its string !, removing quotes");
-										fieldToInsert[ i ] = fieldToInsert[ i ].toString().substring( 1, fieldToInsert[ i ].toString().length() -1 );
+										fieldToInsert[ structureLoopIndex ] = fieldToInsert[ structureLoopIndex ].toString().substring( 1, fieldToInsert[ structureLoopIndex ].toString().length() -1 );
 
 								} else if(
-									( fieldToInsert[ i ].toString().charAt(0) == '\'' )
+									( fieldToInsert[ structureLoopIndex ].toString().charAt(0) == '\'' )
 									&& 
-									(fieldToInsert[ i ].toString().charAt( fieldToInsert[ i ].toString().length() -1  ) == '\'' )
+									(fieldToInsert[ structureLoopIndex ].toString().charAt( fieldToInsert[ structureLoopIndex ].toString().length() -1  ) == '\'' )
 								){
 										Logger.log("its string !, removing quotes");
-										fieldToInsert[ i ] = fieldToInsert[ i ].toString().substring( 1, fieldToInsert[ i ].toString().length() -1 );
+										fieldToInsert[ structureLoopIndex ] = fieldToInsert[ structureLoopIndex ].toString().substring( 1, fieldToInsert[ structureLoopIndex ].toString().length() -1 );
 
 								} else{
-										fieldToInsert[ i ] = "";
+										fieldToInsert[ structureLoopIndex ] = "";
 
 								}
 
@@ -411,21 +413,21 @@ public class AdminPAQProxy extends HttpResponder{
 				Logger.log("writing default value");
 
 				//no lo encontre, insertemos el valor default
-				switch( reader.getField(i).getDataType() ){
+				switch( reader.getField(structureLoopIndex).getDataType() ){
 					case 'D':
-						fieldToInsert[ i ] = new Date();	
+						fieldToInsert[ structureLoopIndex ] = new Date();	
 					break;
 					case 'C':
-						fieldToInsert[ i ] = "";
+						fieldToInsert[ structureLoopIndex ] = "";
 					break;
 					case 'N':
 					case 'B':
 					case 'F':
-						fieldToInsert[ i ] = "0.0";
+						fieldToInsert[ structureLoopIndex ] = "0.0";
 					break;
 
 					default:
-						fieldToInsert[ i ] = "null";
+						fieldToInsert[ structureLoopIndex ] = "null";
 				}
 
 			}catch(com.linuxense.javadbf.DBFException dbfe){
@@ -449,13 +451,17 @@ public class AdminPAQProxy extends HttpResponder{
 		DBFWriter writer= null;
     	try{
 
-    		
+    		Logger.log("buscare la tabla a la que insertare..");
 
-			int i = -1;
-			while( !sql_tokens[++i].equals("into") );
-			i++;
+			int p = -1;
+			while( !sql[++p].trim().equals("into") );
+			p++;
 
-			writer = new DBFWriter(new File( this.ruta + "" + sql_tokens[i] + ".dbf" ));
+			String ruta = this.ruta  + sql[p] + ".dbf";
+			
+			System.out.println("ahora si escribiento en :" +  ruta );
+			Logger.log( "ahora si escribiento en :" +  ruta );
+			writer = new DBFWriter(new File( ruta ));
 
 			writer.addRecord( fieldToInsert);
 
