@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import mx.caffeina.pos.*;
 import mx.caffeina.pos.MD5Checksum;
 import java.util.*;
-
+import java.text.DateFormat;
 
 
 public class AdminPAQProxy extends HttpResponder{
@@ -20,7 +20,6 @@ public class AdminPAQProxy extends HttpResponder{
 
 
 	public AdminPAQProxy(String [] path, String [] query){
-		
 		super(path, query);
 		this.ruta = null;
 		last_error = null;
@@ -329,29 +328,88 @@ public class AdminPAQProxy extends HttpResponder{
 			try{
 
 				//System.out.println("-->" + reader.getField(i).getName() );
-
-				Logger.log("writing...");
+				Logger.log("writing field ..." + reader.getField(i).getName() );
 
 				for( int j = 0; j < fields.length; j++ ){
-					if(fields[j].trim().equals( reader.getField(i).getName().trim() )){
-						Logger.log("found field in value in sql");
+					
+
+					if(fields[j].trim().equals( reader.getField(j).getName().trim() )){
+						
+						Logger.log("Found field in value in sql...");
+						
 						fieldToInsert[ i ] = values[ j ].toString().trim().toString();
 						
-						if(
-							( fieldToInsert[ i ].toString().charAt(0) == '\"' )
-							&& 
-							(fieldToInsert[ i ].toString().charAt( fieldToInsert[ i ].toString().length() -1  ) == '\"' )
-						){
+						switch( reader.getField(j).getDataType() ){
+							case 'D':
+								Logger.log("Date !");
+								if(
+									(( fieldToInsert[ i ].toString().charAt(0) == '\"' )
+									&& 
+									(fieldToInsert[ i ].toString().charAt( fieldToInsert[ i ].toString().length() -1  ) == '\"' ))
+									||
+									(( fieldToInsert[ i ].toString().charAt(0) == '\'' )
+									&& 
+									(fieldToInsert[ i ].toString().charAt( fieldToInsert[ i ].toString().length() -1  ) == '\'' ))
+								){
 
-								Logger.log("its string !, removing quotes");
-								fieldToInsert[ i ] = fieldToInsert[ i ].toString().substring( 1, fieldToInsert[ i ].toString().length() -1 );
+									fieldToInsert[ i ] = fieldToInsert[ i ].toString().substring( 1, fieldToInsert[ i ].toString().length() -1 );
+									DateFormat df = DateFormat.getDateInstance();
+
+									try{
+										fieldToInsert[ i ] = df.parse(fieldToInsert[ i ].toString());	
+									}catch( java.text.ParseException pe){
+										Logger.error( pe);
+									}
+									
+
+
+								} else if( fieldToInsert[ i ].toString().trim().equals("NOW()")){
+										fieldToInsert[ i ] = new Date();
+
+								}
+								
+							break;
+
+							case 'C':
+								Logger.log("Char");
+								if(
+									( fieldToInsert[ i ].toString().charAt(0) == '\"' )
+									&& 
+									(fieldToInsert[ i ].toString().charAt( fieldToInsert[ i ].toString().length() -1  ) == '\"' )
+								){
+
+										Logger.log("its string !, removing quotes");
+										fieldToInsert[ i ] = fieldToInsert[ i ].toString().substring( 1, fieldToInsert[ i ].toString().length() -1 );
+
+								} else if(
+									( fieldToInsert[ i ].toString().charAt(0) == '\'' )
+									&& 
+									(fieldToInsert[ i ].toString().charAt( fieldToInsert[ i ].toString().length() -1  ) == '\'' )
+								){
+										Logger.log("its string !, removing quotes");
+										fieldToInsert[ i ] = fieldToInsert[ i ].toString().substring( 1, fieldToInsert[ i ].toString().length() -1 );
+
+								} else{
+										fieldToInsert[ i ] = "";
+
+								}
+
+							break;
+							case 'N':
+							case 'B':
+							case 'F':
+								Logger.log("NBF");
+								//fieldToInsert[ i ] = "0.0";
+							break;
+
 						}
-						
+
 						continue nextField;
 					}
-				}
+				}//for fields in query
 				
 				Logger.log("writing default value");
+
 				//no lo encontre, insertemos el valor default
 				switch( reader.getField(i).getDataType() ){
 					case 'D':
@@ -373,32 +431,32 @@ public class AdminPAQProxy extends HttpResponder{
 			}catch(com.linuxense.javadbf.DBFException dbfe){
 				Logger.error(dbfe);
 				System.out.println(dbfe);
-				return "0";
+				return "{ \"status\" : \"error\" }";
 
 			}
 
-
-
-			/*
-				//(char)reader.getField(i).getDataType()
-				//reader.getField(i).getFieldLength()
-				//reader.getField( i).getName( )
-				fieldToInsert[ i ] = null;
-			*/
-		}
+		}//for structure fields
 
 
 
 		Logger.log("Closing file for reading..");
 		closeCon();
 
-		for (int o = 0; o < fieldToInsert.length; o++ ) {
+		/*for (int o = 0; o < fieldToInsert.length; o++ ) {
 			System.out.println(" :::  " + fieldToInsert[ o]);
-		}
+		}*/
 
 		DBFWriter writer= null;
     	try{
-			writer = new DBFWriter(new File("/Users/alanboy/win2008shared/Empresas/Caffeina/MGW10002.dbf" ));
+
+    		
+
+			int i = -1;
+			while( !sql_tokens[++i].equals("into") );
+			i++;
+
+			writer = new DBFWriter(new File( this.ruta + "" + sql_tokens[i] + ".dbf" ));
+
 			writer.addRecord( fieldToInsert);
 
 		}catch(Exception e){
@@ -408,16 +466,11 @@ public class AdminPAQProxy extends HttpResponder{
 
 
 
-		return "0";
+		return "{ \"status\" : \"ok\" }";
 
 	}
 
 	private String update(String [] sql){
-
-
-		//update 
-
-		set( );
 		return "0";
 	}
 	
@@ -652,286 +705,6 @@ public class AdminPAQProxy extends HttpResponder{
 		return output;
 	}
 
-	public String set( ){
-		/*
-
-
-		String stringRowData2[] = {
-			"1",
-            "codigo",
-            "alan gonzalezzzzzzzzzzzzzzzzzzzdddddddhdhdhdhdhdhdhdhdhdhdhdhdhdhhdhdhdhdhdh",
-            "",//fecha
-            "GOHA880317",
-            "CURP",
-            "denominacion_comerrcial",
-            "representante legal",
-            "9",
-            "10",
-            "11.0", // B
-            "12.0", // B
-            "13",
-            "14",
-            "15",
-            "16",
-            "17",
-            "18",
-            "19",
-            "20",
-            "21",
-            "", //fecha
-            "", //fecha
-            "22.0", //B
-            "23",
-            "24.0", //B
-            "25",
-            "26",
-            "27.0", //B
-            "28",
-            "29.0", //B
-            "",
-            "",
-            "0.0",
-            "0.0",
-            "0.0",
-            "0.0",
-            "0.0",
-            "null",
-            "null",
-            "null",
-            "null",
-            "null",
-            "0.0",
-            "0.0",
-            "0.0",
-            "0.0",
-            "0.0",
-            "0.0",
-            "null",
-            "0.0",
-            "0.0",
-            "0.0",
-            "null",
-            "null",
-            "null",
-            "null",
-            "null",
-            "0.0",
-            "null",
-            "null",
-            "0.0",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "null",
-            "null",
-            "null",
-            "null",
-            "null",
-            "0.0",
-            "0.0",
-            "0.0",
-            "0.0",
-            "0.0",
-            "0.0",
-            "",
-            "0.0",
-            "null",
-            "null",
-            "0.0",
-            "",
-            "",
-            "",
-            "0.0",
-            "0.0",
-            "0.0",
-            "0.0",
-            "0.0",
-            "0.0",
-            "",
-            "",
-            "null",
-            "0.0",
-            "0.0",
-            "0.0",
-            "",
-            "",
-            "0.0",
-            "0.0",
-            "-1.0",
-            "0.0",
-            "0.0",
-            "",
-            ""};
-		
-		*/
-		Object row[] = {
-			1.0,
-			"codigo",
-			"nombre",
-			new Date(),
-			"rfc",
-			"curp",
-			"asdfadf",
-			"den",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			new Date(),
-			new Date(),
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",			
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",						
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			new Date(),
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0",
-			"1.0"
-		};
-		
-		DBFWriter writer= null;
-    	try{
-			writer = new DBFWriter(new File("/Users/alanboy/win2008shared/Empresas/Caffeina/MGW10002.dbf" ));
-			writer.addRecord( row);
-
-		}catch(Exception e){
-			System.out.println( "E6:" + e );
-		}
-		
-
-    	return "OK";
-	}
-
-	private String fillLeft(Object ss, int t){
-
-		String s = String.valueOf(ss);
-		if(s.length() == t) return s;
-		
-		if(s.length() > t) {
-			String foo = s.substring(0, t);
-
-			return foo;
-		}
-		
-		
-		
-
-		
-		while(s.length() != t){
-			s = " " + s;
-		}
-		return s;
-	}
+	
 
 }
