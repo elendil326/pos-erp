@@ -414,16 +414,19 @@ public class AdminPAQProxy extends HttpResponder{
 
 				//no lo encontre, insertemos el valor default
 				switch( reader.getField(structureLoopIndex).getDataType() ){
+					
 					case 'D':
 						fieldToInsert[ structureLoopIndex ] = new Date();	
 					break;
+
 					case 'C':
 						fieldToInsert[ structureLoopIndex ] = "";
 					break;
+
 					case 'N':
 					case 'B':
 					case 'F':
-						fieldToInsert[ structureLoopIndex ] = "0.0";
+						fieldToInsert[ structureLoopIndex ] = 0.0;
 					break;
 
 					default:
@@ -458,7 +461,7 @@ public class AdminPAQProxy extends HttpResponder{
 			p++;
 
 			String ruta = this.ruta  + sql[p] + ".dbf";
-			
+
 			System.out.println("ahora si escribiento en :" +  ruta );
 			Logger.log( "ahora si escribiento en :" +  ruta );
 			writer = new DBFWriter(new File( ruta ));
