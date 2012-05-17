@@ -330,14 +330,14 @@ public class AdminPAQProxy extends HttpResponder{
 
 			try{
 
-				Logger.log("writing field ..." + reader.getField(structureLoopIndex).getName() );
+				//Logger.log("writing field ..." + reader.getField(structureLoopIndex).getName() );
 
 				for( j = 0, sqlLoopIndex = 0; j < fields.length; j++, sqlLoopIndex++ ){
 					
 
 					if(fields[sqlLoopIndex].trim().equals( reader.getField(structureLoopIndex).getName().trim() )){
 						
-						Logger.log("Found field in value in sql...");
+						//Logger.log("Found field in value in sql...");
 						
 						fieldToInsert[ structureLoopIndex ] = values[ sqlLoopIndex ].toString().trim().toString();
 						
@@ -410,7 +410,7 @@ public class AdminPAQProxy extends HttpResponder{
 					}
 				}//for fields in query
 				
-				Logger.log("writing default value");
+				//Logger.log("writing default value");
 
 				//no lo encontre, insertemos el valor default
 				switch( reader.getField(structureLoopIndex).getDataType() ){
@@ -445,6 +445,7 @@ public class AdminPAQProxy extends HttpResponder{
 
 
 		Logger.log("Closing file for reading..");
+
 		closeCon();
 
 		/*for (int o = 0; o < fieldToInsert.length; o++ ) {
@@ -463,13 +464,16 @@ public class AdminPAQProxy extends HttpResponder{
 			String ruta = this.ruta  + sql[p] + ".dbf";
 
 			System.out.println("ahora si escribiento en :" +  ruta );
+
 			Logger.log( "ahora si escribiento en :" +  ruta );
+
 			writer = new DBFWriter(new File( ruta ));
 
 			writer.addRecord( fieldToInsert);
 
 		}catch(Exception e){
 			System.out.println( "E6:" + e );
+
 		}
 
 

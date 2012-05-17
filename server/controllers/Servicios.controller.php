@@ -1768,6 +1768,7 @@ require_once("interfaces/Servicios.interface.php");
 			$venta->setTipoDeVenta		("credito");
 			$venta->setFecha			(date("Y-m-d H:i:s"));
 			$venta->setSubtotal			($subtotal);
+			$venta->setEsCotizacion			(0);			
 			$venta->setImpuesto			(0);
 			$venta->setTotal			($subtotal);
 			$venta->setIdSucursal		($s["id_sucursal"]);

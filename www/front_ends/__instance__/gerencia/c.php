@@ -159,4 +159,8 @@
 		);
 		* */
 
+		$page->nextTab("POS_CLIENT");
+
+
+
 		$page->render();
