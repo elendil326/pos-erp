@@ -29,5 +29,6 @@ RewriteRule ^([a-zA-Z0-9_-]+)/s/(.*)$					__instance__/sucursal/$2?_instance_=$1
 RewriteRule ^([a-zA-Z0-9_-]+)/api/(.*)$					__instance__/api/$2?_instance_=$1&%{QUERY_STRING} [L]
 
 RewriteRule ^([a-zA-Z0-9_-]+)/$						__instance__/?_instance_=$1&%{QUERY_STRING} [L]
+RewriteRule ^([a-zA-Z0-9_-]+)/dl.php$						__instance__/dl.php?_instance_=$1&%{QUERY_STRING} [L]
 #RewriteRule ^([a-zA-Z0-9_-]+)$ 							__instance__/?_instance_=$1&%{QUERY_STRING} [L]
 

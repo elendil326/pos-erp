@@ -32,7 +32,13 @@ class JediComponentPage extends PosComponentPage{
 		                    "url": "instancias.nueva.php"
 		                }
 		            ]
-		        }
+		        },
+				{
+					
+					"title" : "Logs",
+					"url"	: "logs.php"
+					
+				}
 		        
 		    ]
 		}';

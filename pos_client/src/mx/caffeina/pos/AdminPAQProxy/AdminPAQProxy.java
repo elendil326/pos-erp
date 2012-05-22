@@ -422,8 +422,11 @@ public class AdminPAQProxy extends HttpResponder{
 					case 'C':
 						fieldToInsert[ structureLoopIndex ] = "";
 					break;
-
+					
 					case 'N':
+						fieldToInsert[ structureLoopIndex ] = null;
+					break;
+
 					case 'B':
 					case 'F':
 						fieldToInsert[ structureLoopIndex ] = 0.0;
