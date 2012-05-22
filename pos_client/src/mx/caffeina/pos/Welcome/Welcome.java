@@ -10,7 +10,14 @@ public class Welcome extends HttpResponder{
 
 	public String getResponse(){
 		if(dataType.equals("json")){
-			return "{ \"status\" : \"ok\" }";
+			
+			if(searchInQuery("callback") == null){
+				return "{ \"status\" : \"ok\" }";				
+			}else{
+				return searchInQuery("callback") + "({ \"status\" : \"ok\" });";
+			}
+			
+
 
 		}
 		
