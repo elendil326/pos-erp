@@ -14,10 +14,14 @@ html body{background:#e7e7e7}
 .devsitePage a.uiButton:hover,
 .devsitePage a.itemAnchor:hover{text-decoration:none}
 .devsitePage img{border:0}
+
+/*
 .devsitePage table{border:0;margin:0;border-collapse:collapse;border-spacing:0}
 .devsitePage table td,
 .devsitePage table th{border:0;padding:0;text-align:left;vertical-align:top}
 .devsitePage table th{font-weight:bold}
+*/
+
 .devsitePage h1,
 .devsitePage h2,
 .devsitePage h3,
@@ -93,7 +97,8 @@ html body{background:#e7e7e7}
 
 /* ESTILO DE LA TABLA */ 
 /* afecta a extjs, hay que hacerle override luego */
-.devsitePage .body table td,.devsitePage .body table th{
+
+/*.devsitePage .body table td,.devsitePage .body table th{
 		border:1px solid #eee;
 		text-align:left;
 		padding:6px;
@@ -102,7 +107,7 @@ html body{background:#e7e7e7}
 		padding-right:10px;
 		vertical-align:top;
 	}
-
+*/
 .devsitePage .body table td.closeButton{padding-right:0}
 .devsitePage .body table.noborder td{border:0}
 .devsitePage .body table.bordered td,.devsitePage .body table.bordered th{border:1px solid #ddd}

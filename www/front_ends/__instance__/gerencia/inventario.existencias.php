@@ -7,46 +7,94 @@
 		require_once("../../../../server/bootstrap.php");
 
 		$page = new GerenciaComponentPage();
+		
+		$page->addComponent( new TitleComponent( "Mapa de existencias" ) );
+		
+		$page->partialRender();
+	
 
-		$page->addComponent( new TitleComponent( "Existencias" ) );
+		?>
+		
+		<script type='text/javascript' src='https://www.google.com/jsapi'></script>
+	    <script type='text/javascript'>
+	      google.load('visualization', '1', {packages:['orgchart']});
+	      google.setOnLoadCallback(drawChart);
+	      function drawChart() {
+	        var data = new google.visualization.DataTable();
+	        data.addColumn('string', 'Name');
+	        data.addColumn('string', 'Manager');
+/*	        data.addColumn('string', 'ToolTip'); */
+	        data.addRows([
+				/*
+	          [{v:'Mike', f:'Mike<div style="color:red; font-style:italic">President</div>'}, '', 'The President'],
+	          [{v:'Jim', f:'Jim<div style="color:red; font-style:italic">Vice President</div>'}, 'Mike', 'VP'],
+	          ['Alice', 'Mike', ''],
+	          ['Bob', 'Jim', 'Bob Sponge'],
+	          ['Carol', 'Bob', ''],
+			  ['Carol2', 'Bob', '']	
+			  */
+			
+				<?php
+							$empresas 	= EmpresaDAO::getAll();
+
+
+							//iterar empresas
+							foreach($empresas as $e){
+
+
+								echo "[ '".$e->getRazonSocial()."', '' ], ";
+
+
+
+								//buscar sucursales de compui
+
+								$id_sucursales = SucursalEmpresaDAO::search( new SucursalEmpresa( array( "id_empresa" => $e->getIdEmpresa() ) ) );
+
+								//iterear sucursales
+								foreach($id_sucursales as $id_s){
+
+									$s = SucursalDAO::getByPK( $id_s->getIdSucursal() );
+
+									echo "[ '".$s->getRazonSocial()."', '".$e->getRazonSocial()."' ], ";
+									//iterar almacenes
+									$almacenes = AlmacenDAO::search( new Almacen( array ( "id_almacen" )) );
+
+									foreach ($almacenes as $a) {
+
+										echo "[ '".$a->getNombre()."', '".$s->getRazonSocial()."' ], ";
+
+
+									}//for-each sucursales
+
+								}//for-each id_sucursales
+
+								/*
+								$almacenes 	= AlmacenDAO::GetAll();
+								$lotes		= LoteDAO::GetAll();			
+								*/
+		
+							}//for-each empresas
+							
+					?>
+	        ]);
+	        var chart = new google.visualization.OrgChart(document.getElementById('chart_div'));
+	        chart.draw(data, {allowHtml:true});
+	      }
+	    </script>
+	  
+
+	  
+	    <div id='chart_div'></div>
+		
+		
+		
+		
+		<?php
+
+
 		
 		$inventario = InventarioController::Existencias();
 		$inventario = $inventario["resultados"];
 		
-
-		$tabla = new TableComponent( 
-			array(
-                "id_producto"                   => "Producto",
-				"nombre_almacen"                    => "Almacen",
-				"cantidad"               		=> "Cantidad"
-			),
-			$inventario
-		);
-        
-
-        
-				function funcion_producto($id_producto)
-                {
-                    return (ProductoDAO::getByPK($id_producto) ? ProductoDAO::getByPK($id_producto)->getNombreProducto() : "-----" );
-                }
-
-                function funcion_almacen($id_almacen)
-                {
-                    return (AlmacenDAO::getByPK($id_almacen) ? AlmacenDAO::getByPK($id_almacen)->getNombre() : "----" );
-                }
-
-                function funcion_unidad($id_unidad)
-                {
-                    return (UnidadDAO::getByPK($id_unidad) ? UnidadDAO::getByPK($id_unidad)->getNombre() : "-----" );
-                }
-
-                $tabla->addColRender("id_producto", "funcion_producto");
-                $tabla->addColRender("id_almacen", "funcion_almacen");
-                //$tabla->addColRender("id_unidad", "funcion_unidad");
-        
-		$tabla->addOnClick( "id_producto", "(function(a){ window.location = 'productos.ver.php?pid=' + a; })" );
-		
-			
-		$page->addComponent( $tabla );
                 
 		$page->render();

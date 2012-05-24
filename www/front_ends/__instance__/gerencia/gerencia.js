@@ -401,7 +401,7 @@ Ext.define('MGW10002', {
 
 var AdminPAQExplorer = function( id_botones ){
 	
-	console.warn("AdminPAQExplorer");
+	
 	
 	var id_form_botones = id_botones;
 
@@ -465,11 +465,15 @@ var AdminPAQExplorer = function( id_botones ){
 			params : {
 				sql		: "select * from MGW10005",
 				path	: Ext.get( id_form_botones +"path").getValue()//"C:\\Compacw\\Empresas\\Caffeina\\"
+																		//C:\Compacw\Empresas\Caffeina\
 			},
 			callback : function(status, response){
+				
 				if(!status){
 					return;
 				}
+				
+
 				
 				productos.loadData(response.datos);
 				

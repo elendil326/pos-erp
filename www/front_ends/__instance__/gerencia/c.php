@@ -56,7 +56,7 @@
 
 		
 		$adminPF = new FormComponent();
-		$adminPF->addField("url", "URL de AdminPAQ", "text" , "https://192.168.0.15:16001/json/AdminPAQProxy/" );
+		$adminPF->addField("url", "URL de AdminPAQ", "text" , "https://192.168.0.14:16001/json/AdminPAQProxy/" );
 		$adminPF->addField("path", "Path de la emprsa", "text", "" );
 		$adminPF->addOnClick("Importar" , "(function(){ new AdminPAQExplorer( \"". $adminPF->getGuiComponentId() ."\" ); })");
 		$page->addComponent($adminPF);
