@@ -227,7 +227,9 @@
 	$nalmacen->createComboBoxJoin( "activo", "foo", array(  "foo" => "si" ) );
 	
 	$nalmacen->addApiCall("api/almacen/nuevo", "POST");
-	//$nalmacen->onApiCallSuccessRedirect("");
+	$nalmacen->onApiCallSuccessRedirect(".");
+
+
 	
 	$page->addComponent($nalmacen);
 	$page->render();
