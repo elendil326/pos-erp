@@ -103,8 +103,17 @@ class UsuarioDAO extends UsuarioDAOBase
 			array_push($val , "%" . $p . "%");
 		}
 		
+		$sql .= " or telefono_personal1 like ? ";
+		array_push($val, $query);
+		
+		$sql .= " or telefono_personal2 like ? ";
+		array_push($val, $query);
+		
+		$sql .= " or rfc like ? ";
+		array_push($val, $query);
+		
 		$sql .= " and id_rol = 5 ) ";
-
+		
 		global $conn;
 		$rs = $conn->Execute($sql, $val);
 		$ar = array( );
