@@ -279,43 +279,93 @@
 
 		public static function Eliminar_Tablas_BD($instance_id,$host,$user, $pass, $name){
 			Logger::log("Deleting Tables from instance {$instance_id}");
-			try{
-				$link = @mysql_connect($host,$user,$pass);
-				@mysql_select_db($name,$link);
-				if($link == null){
-					Logger::log( "No se pudo abrir la conexion para la BD: {$name} " );
-					return "No se pudo abrir la conexion para la BD: {$name} con id: {$instance_id}";	
-				}
-			}catch(ADODB_Exception $e){								
-				Logger::log( "No se pudo abrir la conexion para la BD: {$name} ".$e->msg );
-				return "No se pudo abrir la conexion para la BD: {$name} con id: {$instance_id} . Error: ".$e->msg;
-			}
+			//conexion a la instancia
 			
-			mysql_query("SET foreign_key_checks = 0");//deshabilitar llave foraneas
+			$instance_con["INSTANCE_CONN"] = null;
+			
+			try{
+
+				$instance_con["INSTANCE_CONN"] = ADONewConnection($rs["db_driver"]);
+				$instance_con["INSTANCE_CONN"]->debug = $rs["db_debug"];
+				$instance_con["INSTANCE_CONN"]->PConnect($host, $user, $pass, $name);
+
+				if(!$instance_con["INSTANCE_CONN"])
+				{
+
+					Logger::error( "Imposible conectarme a la base de datos de la instancia {$instance_id}." );
+					die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));    
+				}
+
+			} catch (ADODB_Exception $ado_e) {
+	
+				Logger::error( $ado_e );
+				die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));
+		
+		
+
+			}catch ( Exception $e ){
+				Logger::error( $e );
+				die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));
+			}
+
+			if($instance_con["INSTANCE_CONN"] === NULL){
+				Logger::error("Imposible conectarse con la base de datos de la instancia {$instance_id}");
+				die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));
+			}
+	
+			$instance_db_con = $instance_con["INSTANCE_CONN"];
+			//fin con
+			
+			$instance_db_con ->Execute ("SET foreign_key_checks = 0");//deshabilitar llave foraneas
 
 			$tables = array();
-			$result = mysql_query('SHOW TABLES');
+			$result = $instance_db_con->Execute('SHOW TABLES');
 			
 			//se eliminan las tablas
-			while($row = mysql_fetch_row($result)){//row = nombre de la tabla
-				$rss = mysql_query("DROP TABLE IF EXISTS {$name}.".$row[0]." CASCADE;");											
+			while($row = $result->FetchRow()){//row = nombre de la tabla
+				$rss = $instance_db_con->Execute("DROP TABLE IF EXISTS {$name}.".$row[0]." CASCADE;");											
 			}
 			return null;
 		}
 
 		public static function Insertar_Estructura_Tablas_A_BD($instance_id,$host,$user, $pass, $name){
 			$out ="";
+			//conexion a la instancia
+			
+			$instance_con["INSTANCE_CONN"] = null;
+			
 			try{
-				$link = @mysql_connect($host,$user,$pass);
-				@mysql_select_db($name,$link);
-				if($link == null){
-					Logger::log( "No se pudo abrir la conexion para la BD: {$name} " );
-					return "No se pudo abrir la conexion para la BD: {$name} con id: {$instance_id}";	
+
+				$instance_con["INSTANCE_CONN"] = ADONewConnection($rs["db_driver"]);
+				$instance_con["INSTANCE_CONN"]->debug = $rs["db_debug"];
+				$instance_con["INSTANCE_CONN"]->PConnect($host, $user, $pass, $name);
+
+				if(!$instance_con["INSTANCE_CONN"])
+				{
+
+					Logger::error( "Imposible conectarme a la base de datos de la instancia {$instance_id}." );
+					die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));    
 				}
-			}catch(ADODB_Exception $e){								
-				Logger::log( "No se pudo abrir la conexion para la BD: {$name} ".$e->msg );
-				return "No se pudo abrir la conexion para la BD: {$name} con id: {$instance_id} . Error: ".$e->msg;
+
+			} catch (ADODB_Exception $ado_e) {
+	
+				Logger::error( $ado_e );
+				die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));
+		
+		
+
+			}catch ( Exception $e ){
+				Logger::error( $e );
+				die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));
 			}
+
+			if($instance_con["INSTANCE_CONN"] === NULL){
+				Logger::error("Imposible conectarse con la base de datos de la instancia {$instance_id}");
+				die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));
+			}
+	
+			$instance_db_con = $instance_con["INSTANCE_CONN"];
+			//fin con
 
 			Logger::log("Inserting Tables to instance {$instance_id}");
 			//insertar tablas
@@ -325,12 +375,12 @@
 				
 				for ($i=0; $i < sizeof($queries); $i++) { 
 					if(strlen( trim( $queries[$i] ) ) == 0) continue;
-					$rs = mysql_query(  $queries[$i] . ";" );
+					$rs = $instance_db_con ->Execute (  $queries[$i] . ";" );
 					if($rs)
 						;
 					else{
-						Logger::log(mysql_error());
-						$out.= mysql_error()."\n";
+						Logger::log("Error al ejecuar la consulta: {$queries[i]}");
+						$out.= "Error al ejecutar la consulta: {$queries[i]}"."\n";
 					}
 				}			
 				
@@ -349,17 +399,42 @@
 			Logger::log( "Restoring data from file to Instance DB {$instance_id}");
 			
 			$out ="";
+			//conexion a la instancia
+			
+			$instance_con["INSTANCE_CONN"] = null;
+			
 			try{
-				$link = @mysql_connect($host,$user,$pass);
-				@mysql_select_db($name,$link);
-				if($link == null){
-					Logger::log( "No se pudo abrir la conexion para la BD: {$name} " );
-					return "No se pudo abrir la conexion para la BD: {$name} con id: {$instance_id}";	
+
+				$instance_con["INSTANCE_CONN"] = ADONewConnection($rs["db_driver"]);
+				$instance_con["INSTANCE_CONN"]->debug = $rs["db_debug"];
+				$instance_con["INSTANCE_CONN"]->PConnect($host, $user, $pass, $name);
+
+				if(!$instance_con["INSTANCE_CONN"])
+				{
+
+					Logger::error( "Imposible conectarme a la base de datos de la instancia {$instance_id}." );
+					die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));    
 				}
-			}catch(ADODB_Exception $e){								
-				Logger::log( "No se pudo abrir la conexion para la BD: {$name} ".$e->msg );
-				return "No se pudo abrir la conexion para la BD: {$name} con id: {$instance_id} . Error: ".$e->msg;
+
+			} catch (ADODB_Exception $ado_e) {
+	
+				Logger::error( $ado_e );
+				die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));
+		
+		
+
+			}catch ( Exception $e ){
+				Logger::error( $e );
+				die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));
 			}
+
+			if($instance_con["INSTANCE_CONN"] === NULL){
+				Logger::error("Imposible conectarse con la base de datos de la instancia {$instance_id}");
+				die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));
+			}
+	
+			$instance_db_con = $instance_con["INSTANCE_CONN"];
+			//fin con
 
 			
 			//llenar los datos respaldados
@@ -369,12 +444,12 @@
 				
 				for ($i=0; $i < sizeof($queries); $i++) { 
 					if(strlen( trim( $queries[$i] ) ) == 0) continue;
-					$rs = mysql_query(  $queries[$i] . ";" );
+					$rs = $instance_db_con->Execute(  $queries[$i] . ";" );
 					if($rs)
 						;
 					else{
-						Logger::log("Consulta: {$queries[$i]} ; Error: ".mysql_error());
-						$out.= mysql_error()."\n";
+						Logger::log("Consulta: {$queries[$i]} ; Error! ");
+						$out.= "Consulta: {$queries[$i]} ; Error! "."\n";
 					}
 				}				
 				
@@ -393,24 +468,51 @@
 		
 		public static function backup_only_data($instance_id, $host, $user, $pass, $name, $tables = '*', $backup_values = true, $return_as_string = false,$destiny_file, $file_name){
 			Logger::log( "Backup to Instance {$instance_id}");
+			
+			//conexion a la instancia
+			
+			$instance_con["INSTANCE_CONN"] = null;
+			
 			try{
-				$link = @mysql_connect($host,$user,$pass);
-				@mysql_select_db($name,$link);
-				if($link == null){
-					Logger::log( "No se pudo abrir la conexion para la BD: {$name} " );
-					return "No se pudo abrir la conexion para la BD: {$name} con id: {$instance_id}";	
+
+				$instance_con["INSTANCE_CONN"] = ADONewConnection($rs["db_driver"]);
+				$instance_con["INSTANCE_CONN"]->debug = $rs["db_debug"];
+				$instance_con["INSTANCE_CONN"]->PConnect($host, $user, $pass, $name);
+
+				if(!$instance_con["INSTANCE_CONN"])
+				{
+
+					Logger::error( "Imposible conectarme a la base de datos de la instancia {$instance_id}." );
+					die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));    
 				}
-			}catch(ADODB_Exception $e){								
-				Logger::log( "No se pudo abrir la conexion para la BD: {$name} ".$e->msg );
-				return "No se pudo abrir la conexion para la BD: {$name} con id: {$instance_id} . Error: ".$e->msg;
+
+			} catch (ADODB_Exception $ado_e) {
+	
+				Logger::error( $ado_e );
+				die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));
+		
+		
+
+			}catch ( Exception $e ){
+				Logger::error( $e );
+				die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));
 			}
+
+			if($instance_con["INSTANCE_CONN"] === NULL){
+				Logger::error("Imposible conectarse con la base de datos de la instancia {$instance_id}");
+				die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));
+			}
+	
+			$instance_db_con = $instance_con["INSTANCE_CONN"];
+			//fin con
 
 			//get all of the tables
 		  	if($tables == '*'){
 				$tables = array();
-				$result = mysql_query('SHOW TABLES');
-
-				while($row = mysql_fetch_row($result))
+				//$result = mysql_query('SHOW TABLES');
+				$sql = "SHOW TABLES";
+				$ress =  $instance_db_con->Execute($sql);
+				while($row = $ress-> FetchRow() )
 			  		$tables[] = $row[0];
 		  	}else{
 				$tables = is_array($tables) ? $tables : explode(',',$tables);
@@ -421,20 +523,26 @@
 		  	//cycle through
 		  	foreach($tables as $table)
 		  	{
-				$result = mysql_query('SELECT * FROM '.$table);
-				$num_fields = mysql_num_fields($result);
+				$sql2 = 'SELECT * FROM '.$table;				
+				$result = $instance_db_con->Execute($sql2);				
+				$num_fields = $result->FieldCount();
 
-				//$return.= 'DROP TABLE '.$table.';';
-				$row2 = mysql_fetch_row(mysql_query('SHOW CREATE TABLE '.$table));
-				//$return.= "\n\n".$row2[1].";\n\n";
+				$sql3 = 'SHOW COLUMNS FROM '.$table;				
+				$cols = $instance_db_con->Execute($sql3);
+				$cols_str = " (";
+				while( $rw = $cols->FetchRow() )
+					$cols_str .= "`".$rw[0]."`, ";
+				
+				$cols_str = substr ( $cols_str , 0 , -2 );
+				$cols_str .= " ) ";
 
 				if($backup_values)
 				{
 					for ($i = 0; $i < $num_fields; $i++) 
 					{
-					  while($row = mysql_fetch_row($result))
+					  while($row = $result->FetchRow() )
 					  {
-						$return.= 'INSERT INTO '.$table.' VALUES(';
+						$return.= 'INSERT INTO '.$table.$cols_str.' VALUES(';
 						for($j=0; $j<$num_fields; $j++) 
 						{
 						  $row[$j] = addslashes($row[$j]);
