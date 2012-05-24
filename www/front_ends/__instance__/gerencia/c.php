@@ -42,6 +42,12 @@
 		$page->addComponent( $importarProductos );
 		
 		
+		
+		
+		
+		
+		
+		
 		//
 		// Importar usando PosClient
 		// 
@@ -50,11 +56,18 @@
 
 		
 		$adminPF = new FormComponent();
-		$adminPF->addField("url", "URL de AdminPAQ", "text" , "http://127.0.0.1:16001/" );
-		$adminPF->addField("path", "Path de la emprsa", "text", "/Users/alanboy/Desktop/BTT2012" );
-		$adminPF->addOnClick("Importar" , "(function(){ new AdminPAQExplorer(); })");
+		$adminPF->addField("url", "URL de AdminPAQ", "text" , "https://192.168.0.15:16001/json/AdminPAQProxy/" );
+		$adminPF->addField("path", "Path de la emprsa", "text", "" );
+		$adminPF->addOnClick("Importar" , "(function(){ new AdminPAQExplorer( \"". $adminPF->getGuiComponentId() ."\" ); })");
 		$page->addComponent($adminPF);
-		$page->addComponent("<div id='grid-example'></div>");
+
+		
+		
+		
+		
+		
+		
+		
 
 		$page->nextTab("Sesiones");
 		$sesiones = SesionController::Lista();//SesionDAO::GetAll();
@@ -84,7 +97,28 @@
 		
 		$page->addComponent( $tabla );
 		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		$page->nextTab("Respaldar");
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 		$page->nextTab( "Personalizar" );

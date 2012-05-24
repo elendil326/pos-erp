@@ -293,16 +293,28 @@ class FormComponent implements GuiComponent
 				$html .= "\n\t\t\t}\n";
 				$html .= "\t\t}\n";
 				$html .= "\t}\n";
+				
 			}
 			
+			
+			
 			if(is_null($this->js_function)){
-				//$html .= "	return ". $this->guiComponentId."p ;\n";
-				//$html .= "	if(!".$this->guiComponentId."found){ ". $this->guiComponentId ."sendToApi( ". $this->guiComponentId."p ); }else{console.log('you have missing data');}\n";				
-				$html .= "	if(!".$this->guiComponentId."found){ ". $this->guiComponentId ."sendToApi( ". $this->js_function . "(" . $this->guiComponentId."p ) ); }else{console.log('you have missing data');}\n";
+
+				if(is_null($this->on_click)){
+					$html .= "	if(!".$this->guiComponentId."found){ ". $this->guiComponentId ."sendToApi( ". $this->js_function . "(" . $this->guiComponentId."p ) ); }else{console.log('you have missing data');}\n";					
+				}else{
+					//$html .= "	if(!".$this->guiComponentId."found){ ". $this->on_click["function"] ."(" . $this->guiComponentId."p  ); }else{console.log('you have missing data');}\n";
+					$html .= "return {}";
+				}
+				
+				
+				
 			}else{
 				$html .= "	if(!".$this->guiComponentId."found){ ". $this->guiComponentId ."sendToApi( ". $this->js_function . "(" . $this->guiComponentId."p ) ); }else{console.log('you have missing data');}\n";
 			}
 
+
+			
 			$html .= "}\n\n";
 			
 			

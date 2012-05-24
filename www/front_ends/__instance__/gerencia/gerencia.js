@@ -399,7 +399,11 @@ Ext.define('MGW10002', {
 
 
 
-var AdminPAQExplorer = function(){
+var AdminPAQExplorer = function( id_botones ){
+	
+	console.warn("AdminPAQExplorer");
+	
+	var id_form_botones = id_botones;
 
 	var clientes = Ext.create('Ext.data.ArrayStore', {
 		        model: 'MGW10002',
@@ -416,8 +420,9 @@ var AdminPAQExplorer = function(){
 	var createWindow = function(){
 		var tabs = Ext.createWidget('tabpanel', {
 	        height: 450,
-	        width: 600,
+	        width: 650,
 			frame: true,
+			closable: true,
 			modal:true,
 			floating:true,
 			autoShow:true,	
@@ -427,23 +432,21 @@ var AdminPAQExplorer = function(){
 	        },
 	        items: [
 					createGridForClientes(),
-					createGridForProds(),
-					{ title: 'Long Text' }
+					createGridForProds()
 			]
 	    });
 	}//createWindow
 	
-	
-	
+
+		
 	
 	var getData = function(table){
 		console.log(1)
 		Ext.data.JsonP.request({
-			url : 'http://192.168.1.109:16001/',
+			url : Ext.get( id_form_botones +"url").getValue(),
 			params : {
-				"action" : "AdminPAQProxy",
 				sql		: "select * from MGW10002",
-				path	: "C:\\Compacw\\Empresas\\Caffeina\\"
+				path	: Ext.get( id_form_botones +"path").getValue()//"C:\\Compacw\\Empresas\\Caffeina\\"
 			},
 			callback : function(status, response){
 				if(!status){
@@ -458,11 +461,10 @@ var AdminPAQExplorer = function(){
 		console.log(2)
 		
 		Ext.data.JsonP.request({
-			url : 'http://192.168.1.109:16001/',
+			url : Ext.get( id_form_botones +"url").getValue(),//'https://192.168.0.15:16001/json/AdminPAQProxy/',
 			params : {
-				"action" : "AdminPAQProxy",
 				sql		: "select * from MGW10005",
-				path	: "C:\\Compacw\\Empresas\\Caffeina\\"
+				path	: Ext.get( id_form_botones +"path").getValue()//"C:\\Compacw\\Empresas\\Caffeina\\"
 			},
 			callback : function(status, response){
 				if(!status){
@@ -589,7 +591,6 @@ var AdminPAQExplorer = function(){
 	            }										
 	        ],
 
-			modal: true,
 	        viewConfig: {
 	            stripeRows: true,
 	            enableTextSelection: true
@@ -602,7 +603,7 @@ var AdminPAQExplorer = function(){
 			                    xtype: 'button',
 			                    text: 'Cancelar',
 			                    handler: function (){
-									this.close();
+									//this.close();
 			                    }
 			                },
 			                {
