@@ -790,7 +790,7 @@ class ShoppingCartComponent implements GuiComponent {
 </script>
 			<h2>Nueva venta</h2>
 
-			<table border="0" style="width: 100%">
+			<table border="0" style="width: 100%" class="">
 				<tr id="SeleccionDeCliente">
 					<td colspan="4">
 						<div id="buscar_cliente_01">

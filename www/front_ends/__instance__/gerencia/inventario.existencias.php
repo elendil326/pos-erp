@@ -23,7 +23,8 @@
 	        var data = new google.visualization.DataTable();
 	        data.addColumn('string', 'Name');
 	        data.addColumn('string', 'Manager');
-/*	        data.addColumn('string', 'ToolTip'); */
+			/*data.addColumn('string', 'ToolTip'); */
+			
 	        data.addRows([
 				/*
 	          [{v:'Mike', f:'Mike<div style="color:red; font-style:italic">President</div>'}, '', 'The President'],
@@ -61,7 +62,6 @@
 										echo "/* almacen, sucursal */ [ '".$a->getNombre()."', '".$s->getRazonSocial()."' ], \n";
 
 										//lotes de esa sucursal
-										
 										$lotes = LoteDAO::search( new Lote( array ( "id_almacen" => $a->getIdAlmacen() ) ) );
 										
 										foreach ($lotes as $l) {
@@ -70,23 +70,24 @@
 											
 										}
 										
-										
 									}//for-each sucursales
 
 								}//for-each id_sucursales
 
-								/*
-								$almacenes 	= AlmacenDAO::GetAll();
-								$lotes		= LoteDAO::GetAll();			
-								*/
-		
 							}//for-each empresas
 							
 					?>
 	        ]);
 	        var chart = new google.visualization.OrgChart(document.getElementById('chart_div'));
+	
 	        chart.draw(data, {allowHtml:true});
+	
+			google.visualization.events.addListener(chart, 'select', function(a,b,c) {
+				console.log(chart.getSelection()[0].row,a,b,c);
+			  });
 	      }
+	
+	
 	    </script>
 
 	    <div id='chart_div'></div>

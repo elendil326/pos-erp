@@ -72,7 +72,26 @@ $form->createComboBoxJoinDistintName("id_unidad", "id_unidad_medida", "abreviaci
 $page->addComponent($form);
 
 
+
+
+
+
+
+
+
+
+
 $page->nextTab("Existencias");
+
+$existencias = LoteProductoDAO::search( new LoteProducto( array( "id_producto" => $_GET["pid"] ) ) );
+
+$table_e = new TableComponent(array(
+	"id_lote" => "id_lote",
+	"cantidad" => "cantidad",
+	"id_unidad" => "id_unidad"
+),
+$existencias);
+$page->addComponent($table_e);
 
 $entrada_lote = new FormComponent(  );
 

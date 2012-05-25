@@ -28,7 +28,8 @@ html body{background:#e7e7e7}
 .devsitePage h4{margin:0;padding:0;border:0}
 .devsitePage .clear{clear:both}
 .devsitePage .body .content{margin:auto;max-width:980px}
-.devsitePage .header,
+
+/*.devsitePage .header,
 .devsitePage .body,
 .devsitePage .body p,
 .devsitePage .body ul,
@@ -36,7 +37,7 @@ html body{background:#e7e7e7}
 .devsitePage .body li,
 .devsitePage .body th,
 .devsitePage .body th,
-.devsitePage .body td{font-size: 12px}
+.devsitePage .body td{font-size: 12px}*/
 .devsitePage .body pre,
 .devsitePage .body p,
 .devsitePage .body li,
@@ -98,15 +99,24 @@ html body{background:#e7e7e7}
 /* ESTILO DE LA TABLA */ 
 /* afecta a extjs, hay que hacerle override luego */
 
-.devsitePage .body table td,.devsitePage .body table th{
+
+
+
+.devsitePage .body table td,
+.devsitePage .body table th{
 		border:1px solid #eee;
 		text-align:left;
-		padding:6px;
-		padding-top:4px;
-		padding-bottom:4px;
-		padding-right:10px;
+		padding: 4px 10px 4px 6px;
 		vertical-align:top;
-	}
+}
+	
+	/*
+	tr>.x-grid-cell {
+		border:0px !important;
+		padding:0px !important;
+
+	}*/
+
 
 .devsitePage .body table td.closeButton{padding-right:0}
 .devsitePage .body table.noborder td{border:0}
