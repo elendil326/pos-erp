@@ -16,7 +16,7 @@ public class AdminPAQProxy extends HttpResponder{
 	private FileInputStream inputStream;
 	private boolean explorer;
 	private String sql;
-	private String last_error;	
+	private String last_error;
 
 
 	public AdminPAQProxy(String [] path, String [] query){
@@ -25,18 +25,26 @@ public class AdminPAQProxy extends HttpResponder{
 		last_error = null;
 	}
 
-
-
-
-
-
 	public String getResponse(){
 		//dispatch submodules
 
 		if(( path.length > 2 )  && path[2].equals("dbdiff")){
+			
+			System.out.println("dbdiff nigga");
+			
 			bootstrapJson();
-			DBDiff dbdiff = new DBDiff(searchInQuery("path"));
-			return	dbdiff.renderFrontEnd();
+			
+
+			
+			if(searchInQuery("queryDB") != null){
+				DBDiff dbdiff = new DBDiff(searchInQuery("path"));
+				return	dbdiff.queryDB();
+				
+			}else{
+				return DBDiff.renderFrontEnd();
+				
+			}
+
 		}
 
 		if(dataType.equals("json")) {

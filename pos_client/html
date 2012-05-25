@@ -311,7 +311,7 @@ height: 45px;
 	
 	function check( cb ){
 		$.ajax({
-		  url: '/',
+		  url: '/json/AdminPAQProxy/dbdiff/',
 		  dataType : "json",
 		  success: function(a){
 			if(a.success === undefined)
@@ -320,8 +320,7 @@ height: 45px;
 			$("#status").html(a.reason);
 		  },
 		  data :{
-			action:"AdminPAQProxy",
-			dbdiff:"1",
+			queryDB : 1,
 			path: $("#path").val()
 		}
 		});
