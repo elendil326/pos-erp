@@ -9,10 +9,7 @@
 		 * 
 		 * 
 		 * */
-		public static function Nueva(
-			$instance_token = null,
-			$descripcion = null
-		){
+		public static function Nueva( $instance_token = null, $descripcion = null ){
 			
 			if( is_null($instance_token) ){
 				return self::Nueva( md5( time() ) , $descripcion );
@@ -173,9 +170,7 @@
 			Logger::log("Instancia $I_ID creada correctamente... ");
 			return (int)$I_ID;
 		}
-		
-		
-		
+
 		public static function BuscarPorId( $I_ID ){
 			global $POS_CONFIG;
 			
@@ -198,8 +193,7 @@
 			
 			return $res;
 		}
-		
-		
+
 		public static function BuscarPorToken($instance_token = null){
 			
 			global $POS_CONFIG;
@@ -465,7 +459,6 @@
 
 		}
 
-		
 		public static function backup_only_data($instance_id, $host, $user, $pass, $name, $tables = '*', $backup_values = true, $return_as_string = false,$destiny_file, $file_name){
 			Logger::log( "Backup to Instance {$instance_id}");
 			
@@ -592,4 +585,15 @@
 	        }
 		}
 
+		public static function requestDemo($userEmail){
+			//busquemos si ese email es valido
+			
+			//busquemos ese email en la bd
+			
+			//generemos el token a enviar
+			
+			//insertemos nuevo request
+			
+			//
+		}
 	}
