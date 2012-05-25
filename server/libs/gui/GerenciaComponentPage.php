@@ -992,8 +992,12 @@ class GerenciaComponentPage extends PosComponentPage{
 
 
 		?>
+
 			<a class="l" href="./c.php">Configuracion</a>
-			<a class="l" href="./../?cs=1">(<?php echo $u->getNombre(); ?>) Salir</a>
+			<a class="l" href="./helper.php">Ayuda</a>
+			<a class="l">(<?php echo $u->getNombre(); ?>)</a>
+
+			<a class="l" href="./../?cs=1"> Salir</a>
 		<?php
 	}
 	
