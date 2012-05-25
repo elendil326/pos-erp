@@ -1092,13 +1092,15 @@ Creo que este metodo tiene que estar bajo sucursal.
     
         $sesion = SesionController::Actual();
 
-        try{
+		$l = new Lote( array(
+	            "id_almacen" => $almacen->getIdAlmacen(),
+	            "id_usuario" => $sesion['id_usuario'],
+	            "folio" => is_null($folio) ? "" : $folio
+        	) );
 
-            LoteDAO::save( $l = new Lote( array(
-                "id_almacen" => $almacen->getIdAlmacen(),
-                "id_usuario" => $sesion['id_usuario'],
-                "folio" => is_null($folio)? "" : $folio
-            ) ) );       
+        try{
+			
+            LoteDAO::save( $l );       
 
         }catch(Exception $e){                
 

@@ -42,12 +42,9 @@
 							foreach($empresas as $e){
 
 
-								echo "[ '".$e->getRazonSocial()."', '' ], ";
-
-
-
+								echo "[ '".$e->getRazonSocial()."', '' ],\n ";
+								
 								//buscar sucursales de compui
-
 								$id_sucursales = SucursalEmpresaDAO::search( new SucursalEmpresa( array( "id_empresa" => $e->getIdEmpresa() ) ) );
 
 								//iterear sucursales
@@ -55,15 +52,25 @@
 
 									$s = SucursalDAO::getByPK( $id_s->getIdSucursal() );
 
-									echo "[ '".$s->getRazonSocial()."', '".$e->getRazonSocial()."' ], ";
+									echo "/* sucursal, empresa */[ '".$s->getRazonSocial()."', '".$e->getRazonSocial()."' ], \n";
 									//iterar almacenes
 									$almacenes = AlmacenDAO::search( new Almacen( array ( "id_almacen" )) );
 
 									foreach ($almacenes as $a) {
 
-										echo "[ '".$a->getNombre()."', '".$s->getRazonSocial()."' ], ";
+										echo "/* almacen, sucursal */ [ '".$a->getNombre()."', '".$s->getRazonSocial()."' ], \n";
 
-
+										//lotes de esa sucursal
+										
+										$lotes = LoteDAO::search( new Lote( array ( "id_almacen" => $a->getIdAlmacen() ) ) );
+										
+										foreach ($lotes as $l) {
+											
+											echo "/* lote, almacen */[ '". $l->getFolio() ."', '". $a->getNombre() ."' ], \n";
+											
+										}
+										
+										
 									}//for-each sucursales
 
 								}//for-each id_sucursales
@@ -81,20 +88,15 @@
 	        chart.draw(data, {allowHtml:true});
 	      }
 	    </script>
-	  
 
-	  
 	    <div id='chart_div'></div>
-		
-		
-		
-		
 		<?php
 
 
+		//$page->add
+		$nuevoLote = new DAOFormComponent(new Lote());
+		$nuevoLote->addApiCall("api/almacen/lote/nuevo", "POST");
+
+		$page->addComponent($nuevoLote);
 		
-		$inventario = InventarioController::Existencias();
-		$inventario = $inventario["resultados"];
-		
-                
 		$page->render();
