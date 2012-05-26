@@ -203,20 +203,18 @@
 	require_once("controllers/Cajas.controller.php");
 	require_once("controllers/Ayuda.controller.php");	
 	require_once("controllers/Proveedores.controller.php");
+	require_once("controllers/Compras.controller.php");
+		
+		
 			
 	/*
 	require_once("controllers/Autorizaciones.controller.php");
-
 	require_once("controllers/Cheques.controller.php");
-	require_once("controllers/Compras.controller.php");
 	require_once("controllers/Consignaciones.controller.php");
 	require_once("controllers/Contabilidad.controller.php");
 	require_once("controllers/Documentos.controller.php");
-
 	require_once("controllers/Impuestos.controller.php");
 	require_once("controllers/Paquetes.controller.php");
-	
-
 	require_once("controllers/Reportes.controller.php");
 	require_once("controllers/TransportacionYFletes.controller.php");
 	*/
@@ -241,11 +239,6 @@
 	define('POST', "__ISPOST__");
 	define('GET', "__ISGET__");
 	define('BYPASS', '-1');
-	/*define('ADMIN', '1');
-	define('CONTESTANT', '2');
-	define('JUDGE', '3');
-	define('VISITOR', '4');
-	*/
 	# *******************************
 	
 
@@ -255,6 +248,9 @@
 		$_GET["_instance_"] = $POS_CONFIG["PHPUNIT_INSTANCE_TO_TEST"];		
 		define("BYPASS_INSTANCE_CHECK", false);
 	}
+
+
+
 
 	# *******************************
 	# Buscar esta instancia si es que la necesito
@@ -340,7 +336,7 @@
 
 	/**
 	 * 
-	 * Actualizar el token de este wey
+	 * Actualizar el token de este usuario
 	 * 
 	 * 
 	 * */

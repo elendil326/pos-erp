@@ -1699,6 +1699,7 @@ require_once("interfaces/Sucursales.interface.php");
             
             //Se obtiene el id del usuario de la sesion actual
             $id_usuario=SesionController::getCurrentUser();
+			
             if(is_null($id_usuario))
             {
                 Logger::error("No se pudo obtener al usuario de la sesion actual, ya inicio sesion?");
@@ -1707,6 +1708,7 @@ require_once("interfaces/Sucursales.interface.php");
             
             //Se validan los parametros recibidos
             $validar = self::validarParametrosCompra(null,$id_compra_caja,$id_vendedor,$tipo_compra,$subtotal,$impuesto,$descuento,$total,$id_empresa,$saldo,null,$tipo_pago,$retencion);
+			
             if(is_string($validar))
             {
                 Logger::error($validar);

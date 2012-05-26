@@ -1066,11 +1066,7 @@ class BuyingCartComponent
 
 			console.log("Actualizando el carrito");
 
-			// 
-			// Actualizar la tabla de productos 
-			// seleccionados
-			//
-			grid.getView().refresh();
+
 
 			// 
 			// Calcular precios e importes
@@ -1082,28 +1078,34 @@ class BuyingCartComponent
 			//tarifaActual = Ext.get("tarifa_seleccionada").getValue();
 			//console.log("la tarifa actual es :" + tarifaActual);
 
-		/*
+
 			for (var i=0; i < carrito_store_count; i++) {
 
 				var p = carrito_store.getAt(i);
 
-				var tarifasProducto = p.get("tarifas");
-
-				for (var j=0; j < tarifasProducto.length; j++) {
-					if(tarifasProducto[j].id_tarifa == tarifaActual){
-							console.log("ya encontre el precio de esta tarifa");
-							subtotal += parseFloat( tarifasProducto[j].precio ) * parseFloat( p.get("cantidad") ) ;
-							break;
-					}
-				}
+				 console.log(i + " : " + p.get("precio") + "," + p.get("cantidad"), p);
+				 
+				var this_importe  =parseFloat( p.get("precio") ) * parseFloat( p.get("cantidad") ) ;
+				
+				subtotal += this_importe;
+				 
+				p.set("importe", this_importe);
+				
 			};
-		*/
+
 			Ext.get("carrito_subtotal").update(Ext.util.Format.usMoney( subtotal ));
 
 			Ext.get("carrito_total").update(Ext.util.Format.usMoney( subtotal ));
 
 
-
+			// 
+			// Actualizar la tabla de productos 
+			// seleccionados
+			//
+			grid.getView().refresh();
+			
+			
+			
 
 			console.groupEnd();
 		}
@@ -1375,36 +1377,23 @@ class BuyingCartComponent
 				// 
 				// 
 
-
 				var carrito_store_count = carrito_store.count();
 				var subtotal = 0;
-				var tarifaActual = 1;
-
-				tarifaActual = Ext.get("tarifa_seleccionada").getValue();
-				console.log("la tarifa actual es :" + tarifaActual);
 
 
 				for (var i=0; i < carrito_store_count; i++) {
 
 					var p = carrito_store.getAt(i);
-
-					var tarifasProducto = p.get("tarifas");
-
-					var precio_con_tarifa = -1; 
-
-					for (var j=0; j < tarifasProducto.length; j++) {
-						if(tarifasProducto[j].id_tarifa == tarifaActual){
-								console.log("ya encontre el precio de esta tarifa");
-								precio_con_tarifa = parseFloat( tarifasProducto[j].precio );
-								subtotal +=  precio_con_tarifa * parseFloat( p.get("cantidad") ) ;
-								break;
-						}
-					}
+ 
+					
+					subtotal +=  parseFloat( p.get("precio") )  * parseFloat( p.get("cantidad") ) ;
+					
 
 					detalle_de_venta.push({
 						id_producto : p.get("id_producto"),
 						cantidad 	: p.get("cantidad"),
-						precio		: precio_con_tarifa,
+						precio		: p.get("precio"),
+						lote		: p.get("lote"),
 						descuento	: 0,
 						impuesto	: 0,
 						retencion	: 0,
@@ -1423,26 +1412,25 @@ class BuyingCartComponent
 					impuesto 			: 0,
 					subtotal			: subtotal,
 					total 				: subtotal,
-					tipo_venta 			: "contado",
+					tipo_compra 		: "contado",
 					id_sucursal			: null,
-					id_tarifa 			: tarifaActual,
-					detalle_venta 		: Ext.JSON.encode( detalle_de_venta )
+					detalle 			: Ext.JSON.encode( detalle_de_venta ),
+					id_empresa			: 1
 				};
-
-
+ 
+		
+		
+		
+		 
+		
+		
+		
 				if(cliente_seleccionado == null){
-					ventaObj.id_comprador_venta = null;
+					ventaObj.id_usuario_compra = null;
 				}else{
-					ventaObj.id_comprador_venta	= cliente_seleccionado.get("id_usuario");
+					ventaObj.id_usuario_compra	= cliente_seleccionado.get("id_usuario");
 				}
 
-				if(Ext.get("sucursal_seleccionada") !==  undefined){
-					ventaObj.id_sucursal = Ext.get("sucursal_seleccionada").getValue();
-
-				}else if( sucursal_seleccionada !== undefined || sucursal_seleccionada != null ){
-					ventaObj.id_sucursal = sucursal_seleccionada;
-
-				}	
 
 				return ventaObj;
 		}
@@ -1471,32 +1459,33 @@ class BuyingCartComponent
 				});
 		}
 
-		var doVenta = function (){
-
+		var doCompra = function (){
+			
+			console.log("doComptra() called");
+			
 			var ventaObj = retriveData();
+			
+			console.log("ventaObj=", ventaObj);
+			
 			ventaObj.es_cotizacion = false;
 
-			if( ventaObj.id_sucursal == null ){
-					window.scrollTo(0, Ext.get("SeleccionDeSucursal").getY() - 20);			
-					Ext.get("SeleccionDeSucursal").highlight();
-					return;
-			}	
 
 
 			//
 			// Enviar al API
 			// 
 			POS.API.POST(
-				"api/ventas/nueva/", 
+				"api/compras/nueva/", 
 				ventaObj,
 				{
 					callback : function(r){
 						if(r.status === "ok"){
-							window.location = "ventas.detalle.php?vid=" + r.id_venta + "&last_action=ok";
+							//window.location = "ventas.detalle.php?vid=" + r.id_venta + "&last_action=ok";
+							
 
 						}else{
 							console.error(r);
-							Ext.MessageBox.alert("Nueva venta", "Algo salio mal.");
+							Ext.MessageBox.alert("Nueva compra", "Algo salio mal.");
 						}
 					}
 				});
@@ -1789,8 +1778,8 @@ var grid;
 			           { name: 'descripcion',  			type: 'string'},
 			           { name: 'precio',  				type: 'float'},
 			           { name: 'cantidad',  			type: 'float'},
-					   { name: 'importe',  			type: 'float'},
-					   { name: 'lote',  			type: 'string'}
+					   { name: 'importe',  				type: 'float'},
+					   { name: 'lote',  				type: 'string'}
 			        ],
 					listeners : {
 						datachanged : actualizar_carrito
@@ -1805,19 +1794,19 @@ var grid;
 			        stateId: 'stateGridCompra',
 			        columns: [
 			            {
-			                text     : 'codigo_producto',
+			                text     : 'Codigo producto',
 			                width    : 95,
 			                sortable : false,
 			                dataIndex: 'codigo_producto'
 			            },
 			            {
-			                text     : 'nombre_producto',
+			                text     : 'Nombre',
 			                flex     : 1,
 			                sortable : true,
 			                dataIndex: 'nombre_producto'
 			            },
 			            {
-			                text     : 'cantidad',
+			                text     : 'Cantidad',
 							dataIndex: 'cantidad',
 			                sortable : false,
 							renderer : function(x){
@@ -1832,7 +1821,7 @@ var grid;
 			            {
 			                text     : 'Precio',
 			                sortable : true,
-			                dataIndex: 'tarifas',
+			                dataIndex: 'precio',
 							renderer : Ext.util.Format.usMoney,
 							field: {
 				                xtype: 'numberfield'
@@ -1841,7 +1830,8 @@ var grid;
 			            {
 			                text     : 'Lote',
 			                width    : 75,
-				            field :{
+			                dataIndex: 'lote',
+				            field : {
 				            	xtype : "combobox",
 				            	typeAhead: true,
 				                triggerAction: 'all',
@@ -1851,16 +1841,18 @@ var grid;
 				                listClass: 'x-combo-list-small',
 				                displayField: "folio",
 				                listConfig: {
-				                loadingText: 'Buscando...',
-				                // Custom rendering template for each item
-				                getInnerTpl: function(a,b,c) {
-									return "<p style='margin:0px'>{folio}</p>";
-				                }
-				            },
-				            }
-			            },		
+				                	loadingText: 'Buscando...',
+				                	
+				                	// Custom rendering template for each item
+				                	getInnerTpl: function(a,b,c) {
+										return "<p style='margin:0px'>{folio}</p>";
+				                	}
+				            	},
+				            }//field
+			            },
 			            {
 			                text     : 'Importe',
+			                dataIndex: 'importe',
 			                width    : 75,
 			                sortable : true,
 							renderer : Ext.util.Format.usMoney
@@ -2008,7 +2000,7 @@ var grid;
 				<!--
 				<div class="POS Boton" onClick="doCotizar()">Solo cotizar</div>
 			-->
-				<div class="POS Boton OK" onClick="doVenta()">Comprar</div>
+				<div class="POS Boton OK" onClick="doCompra()">Comprar</div>
 
 			<?php
     }

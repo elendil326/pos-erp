@@ -6,49 +6,9 @@ require_once("interfaces/Compras.interface.php");
   *
   **/
 	
-  class ComprasController implements ICompras{
+  class ComprasController extends ValidacionesController implements ICompras{
 	
       
-      
-      //Metodo para pruebas que simula la obtencion del id de la sucursal actual
-        private static function getSucursal()
-        {
-            return 1;
-        }
-        
-        //metodo para pruebas que simula la obtencion del id de la caja actual
-        private static function getCaja()
-        {
-            return 1;
-        }
-        
-        
-        /*
-         *Se valida que un string tenga longitud en un rango de un maximo inclusivo y un minimo exclusvio.
-         *Regresa true cuando es valido, y un string cuando no lo es.
-         */
-          private static function validarString($string, $max_length, $nombre_variable,$min_length=0)
-	{
-		if(strlen($string)<=$min_length||strlen($string)>$max_length)
-		{
-		    return "La longitud de la variable ".$nombre_variable." proporcionada (".$string.") no esta en el rango de ".$min_length." - ".$max_length;
-		}
-		return true;
-        }
-
-
-        /*
-         * Se valida que un numero este en un rango de un maximo y un minimo inclusivos
-         * Regresa true cuando es valido, y un string cuando no lo es
-         */
-	private static function validarNumero($num, $max_length, $nombre_variable, $min_length=0)
-	{
-	    if($num<$min_length||$num>$max_length)
-	    {
-	        return "La variable ".$nombre_variable." proporcionada (".$num.") no esta en el rango de ".$min_length." - ".$max_length;
-	    }
-	    return true;
-	}
         
         
         /*
@@ -583,16 +543,267 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
 		$tipo_de_pago = null
 	)
 	{  
-            Logger::log("Creando nueva compra");
-           
+            Logger::log(" ===== Creando nueva compra... ===== ");
+			
+			
+			//validemos al comprador
+			$proveedor = UsuarioDAO::getByPK($id_usuario_compra);
+			
+			if(is_null($proveedor)){
+				Logger::error("el provedor $id_usuario_compra no exite");
+				throw new InvalidDataException("El proveedor no existe");
+			}
+			
+			
+			if($proveedor->getActivo() == false){
+				throw new BusinessLogicException("No se puede comprar de un proveedor no activo.");
+			}
+			
+			//validemos la empresa
+			$empresa = EmpresaDAO::getByPK( $id_empresa );
+			
+			if(is_null($empresa)){
+				Logger::error("La empresa $id_empresa no existe");
+				throw new InvalidDataException("La empresa que compra no existe.");
+			}
+			
+			if($empresa->getActivo() == false){
+				throw new BusinessLogicException("Una empresa inactiva no puede hacer compras.");
+			}
+			
+			
+			
+			
+			//validemos los valores conocidos
+			//( 0 >= descuento > 100, subtotal > 0, total >= subtotal, etc etc)
+			
+			
+			//validemos sucursal
+			$sucursal = null;
+			
+			if(!is_null($id_sucursal)){
+				$sucursal = SucursalDAO::getByPK($id_sucursal);
+				
+				if(is_null($sucursal)){
+					Logger::error("La sucursal $id_sucursal no existe");
+					//throw new InvalidDataException("La sucural que se envio no existe.");
+				}
+			}
+			
+			
+			
+			
+			//validemos detalles de compra
+			//debe traer 
+			// 	-id_producto
+			//	-cantidad
+			//	-precio
+			//	-lote
+           	if(!is_array($detalle)){
+           		throw InvalidDataException("El detalle no es un arreglo");
+           	}
+			
+			
+			for ($detalleIterator=0; $detalleIterator < sizeof($detalle); $detalleIterator++) { 
+				
+				//por cada producto
+		   		//	-debe existir
+		   		//	-si se lo compro a un proveedor no hay pedo
+		   		// 	 si se lo compro a un cliente, debe de tener comprar_caja = 1
+		   		//	-debe tener cantidad mayor a 0
+		   		//	-que exista el lote a donde va a ir
+				$p = $detalle[$detalleIterator];
+				
+				if(!isset($p->precio)){
+					throw new InvalidArgumentException("No se envio el precio");
+				}
+				
+				if(!isset($p->id_producto)){
+					throw new InvalidArgumentException("No se envio el id_producto");
+				}
+				
+				if(!isset($p->cantidad)){
+					throw new InvalidArgumentException("No se envio la cantidad");
+				}
+				
+				if(!isset($p->lote)){
+					throw new InvalidArgumentException("No se envio el lote");
+				}
+				
+				
+				$producto = ProductoDAO::getByPK($p->id_producto);
+				
+				if(is_null($producto)){
+					throw new InvalidArgumentException("El producto a comprar no existe");
+				}
+				
+				if($p->cantidad <= 0){
+					throw new InvalidArgumentException("No puedes comprar 0 unidades");
+				}
+				
+				
+				
+			}
+			
+			$s = SesionController::getCurrentUser();
+
+			//terminaron las validaciones
+			$compra = new Compra();
+			$compra->setIdVendedorCompra( $id_usuario_compra);
+			$compra->setTipoDeCompra(	$tipo_compra);
+			$compra->setFecha(time());
+			$compra->setSubtotal($subtotal);
+			$compra->setImpuesto(0);
+			$compra->setDescuento(0);
+			$compra->setTotal($subtotal);
+			$compra->setIdUsuario($s->getIdUsuario());
+			$compra->setIdEmpresa($id_empresa);
+			$compra->setSaldo(0);
+			$compra->setCancelada(false);
+			$compra->setTipoDePago($tipo_de_pago);
+			$compra->setRetencion(0);
+		   	
+			try{
+				DAO::transBegin();
+				
+				CompraDAO::save($compra);
+				
+			}catch(Exception $e){
+				DAO::transRollback();
+				throw InvalidDatabaseOperationException($e);
+			}
+			
+			
+			
+			
+			for ($detalleIterator=0; $detalleIterator < sizeof($detalle); $detalleIterator++) { 
+				
+				//por cada producto
+		   		//	--- procesos ---
+	   			//	-insertar en productoempresa
+	   			//	-insertar en loteproducto
+	   			//	-insertar en entradalote
+	   			//	-si el tipo de precio de venta es costo, actualizar
+	   			//	-insertar compra producto
+				$p = $detalle[$detalleIterator];
+				
+				try{
+					
+					ProductoEmpresaDAO::save( new ProductoEmpresa( array(
+							"id_empresa" => $id_empresa,
+							"id_producto" => $p->id_producto
+						) ) );
+						
+					
+					//busquemos el id del lote
+					$l = LoteDAO::search(new Lote(array(
+							"folio" => $p->lote
+						)));
+						
+					$l = $l[0];
+					
+					
+					//busequemos si este producto ya existe en este lote
+					$lp = LoteProductoDAO::getByPK($l->getIdLote(), $p->id_producto);
+					
+					if(is_null($lp)){
+						//no existe, insertar
+						LoteProductoDAO::save ( $loteProducto = new LoteProducto(array(
+								"id_lote" 		=> $l->getIdLote(),
+								"id_producto" 	=> $p->id_producto,
+								"cantidad" 		=> $p->cantidad, 
+								"id_unidad"		=> 1
+							) ) );
+											
+					}else{
+						//ya existe, sumar
+						
+						//Aqui falta revisar que las unidades sean las mismas
+						Logger::warn("Aqui falta revisar que las unidades sean las mismas...");
+						$lp->setCantidad( $lp->getCantidad() + $p->cantidad );
+						LoteProductoDAO::save( $lp );
+						
+					}
+					
+
+					
+
+						
+						
+					LoteEntradaDAO::save ( $loteEntrada = new LoteEntrada(array(
+							"id_lote" 		=>$l->getIdLote(), 
+							"id_usuario"	=>$s->getIdUsuario(),
+							"fecha_registro"=>time(),
+							"motivo"		=>"Compra a Proveedor"
+						) ) );						
+
+					LoteEntradaProductoDAO::save (new LoteEntradaProducto(array(
+							"id_lote_entrada" 	=> $loteEntrada->getIdLoteEntrada(),
+							"id_producto"		=> $p->id_producto,
+							"id_unidad"			=> 1,
+							"cantidad"			=> $p->cantidad
+						) ) );
+					
+					CompraProductoDAO::save ($compraProducto = new CompraProducto(array(
+							"id_compra"			=> $compra->getIdCompra(),
+							"id_producto"		=> $p->id_producto,
+							"cantidad"			=> $p->cantidad,
+							"precio"			=> $p->precio,
+							"descuento"			=> 0,
+							"impuesto"			=> 0,
+							"id_unidad"			=> 1,
+							"retencion"			=> 0
+						) ) );
+					
+				}catch(exception $e){
+					DAO::transRollback();
+					throw InvalidDatabaseOperationException($e);
+					
+				}
+				
+				
+				
+			}			
+			
+
+		   		
+		   try{
+				DAO::transEnd();
+
+			}catch(Exception $e){
+				throw InvalidDatabaseOperationException($e);
+			}
+		   
+		   
+		   
+		   
+		   
+		   
+		   	/*
+		   
             //Se utiliza el metodo comprar caja de sucursal
             try
             {
-                $compra = SucursalesController::ComprarCaja($descuento,$detalle,$id_empresa,$id_usuario_compra,
-                        $impuesto,$retencion,$subtotal,$tipo_compra,$total,null,null,$cheques,null,null,$id_sucursal,$saldo,$tipo_de_pago);
-            }
-            catch(Exception $e)
-            {
+                $compra = SucursalesController::ComprarCaja(
+                				$descuento,
+                				$detalle,
+                				$id_empresa,
+                				$id_usuario_compra,
+                        		$impuesto,
+                        		$retencion,
+                        		$subtotal,
+                        		$tipo_compra,
+                        		$total,
+                        		null,
+                        		null,
+                        		$cheques,
+                        		null,
+                        		null,
+                        		$id_sucursal,
+                        		$saldo,
+                        		$tipo_de_pago);
+								
+            }catch(Exception $e) {
                 Logger::error("No se pudo crear la nueva compra: ".$e);
                 if($e->getCode()==901)
                     throw new Exception("No se pudo crear la nueva compra: ".$e->getMessage(),901);
@@ -601,5 +812,9 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
             
             Logger::log("Compra creada exitosamente");
             return array( "id_compra" => $compra["id_compra_cliente"] );
+			 * 
+			 * 
+	*/		 
+	Logger::log("===== COMPRA EXITOSA ===== ");
 	}
   }
