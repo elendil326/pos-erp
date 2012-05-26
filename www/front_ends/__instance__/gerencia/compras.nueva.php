@@ -9,3 +9,4 @@
 		$page = new GerenciaComponentPage();
 		$page->addComponent( new BuyingCartComponent(  ) );
 		$page->render();
+

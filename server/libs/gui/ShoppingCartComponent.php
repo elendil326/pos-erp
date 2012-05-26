@@ -457,6 +457,7 @@ abstract class CartComponent
 		};
 
 
+var grid;
 
 		Ext.onReady(function(){
 
@@ -694,7 +695,7 @@ abstract class CartComponent
 			    });
 
 			    // create the Grid
-			    var grid = Ext.create('Ext.grid.Panel', {
+			    grid = Ext.create('Ext.grid.Panel', {
 			        store: carrito_store,
 					plugins: [cellEditing],
 			        stateful: true,
@@ -1042,7 +1043,8 @@ class BuyingCartComponent
 		    'Ext.form.*',
 		    'Ext.grid.*',
 		    'Ext.util.*',
-		    'Ext.state.*'
+		    'Ext.state.*',
+		    'Ext.selection.CellModel',
 		]);
 
 
@@ -1070,8 +1072,6 @@ class BuyingCartComponent
 			//
 			grid.getView().refresh();
 
-
-
 			// 
 			// Calcular precios e importes
 			//		
@@ -1079,10 +1079,10 @@ class BuyingCartComponent
 			var subtotal = 0;
 			var tarifaActual = 1;
 
-			tarifaActual = Ext.get("tarifa_seleccionada").getValue();
-			console.log("la tarifa actual es :" + tarifaActual);
+			//tarifaActual = Ext.get("tarifa_seleccionada").getValue();
+			//console.log("la tarifa actual es :" + tarifaActual);
 
-
+		/*
 			for (var i=0; i < carrito_store_count; i++) {
 
 				var p = carrito_store.getAt(i);
@@ -1097,60 +1097,13 @@ class BuyingCartComponent
 					}
 				}
 			};
-
+		*/
 			Ext.get("carrito_subtotal").update(Ext.util.Format.usMoney( subtotal ));
 
 			Ext.get("carrito_total").update(Ext.util.Format.usMoney( subtotal ));
 
 
 
-			// 
-			// Buscar existencias
-			//
-			if(sucursal_seleccionada !== null){
-				//
-				// si hay una sucursal seleccionada
-				// podemos calcular si hay existencias
-				//
-				for (var i=0; i < carrito_store_count; i++) {
-
-					var p = carrito_store.getAt(i);
-
-					var existencias = p.get("existencias");
-
-
-
-					var found_existencias = false;
-
-					for (var ei=0; ei < existencias.length; ei++) {
-						//
-						// buscar la sucursal que
-						// tengo seleccionada
-						//
-						if( existencias[ei].id_sucursal == sucursal_seleccionada ){
-
-							console.log(existencias[ei].id_sucursal,  sucursal_seleccionada)
-
-							found_existencias = true;
-
-							if( p.get("cantidad") > existencias[ei].cantidad ){
-
-								console.warn("se necesitan" + p.get("cantidad") + " pero solo tengo "+ existencias[ei].cantidad);
-							}else{
-								console.log("quiero " + p.get("cantidad") + " y tengo "+ existencias[ei].cantidad);							
-							}
-							break;
-						}
-					}
-
-
-					if(found_existencias === false){
-						console.warn("No hay ningun tipo de existencias");
-					}
-
-
-				};
-			}//if(sucursal)
 
 			console.groupEnd();
 		}
@@ -1296,7 +1249,7 @@ class BuyingCartComponent
 
                     items: [{
                         flex: 1,
-                        name: 'codigo',
+                        name: 'codigo_producto',
                         afterLabelTextTpl: required,
                         fieldLabel: 'Codigo',
                         allowBlank: false
@@ -1312,15 +1265,18 @@ class BuyingCartComponent
                 }, {
                     xtype: 'textfield',
                     fieldLabel: 'Metodo costeo',
+                    name : "metodo_costeo",
                     afterLabelTextTpl: required,
                     allowBlank: false
                 }, {
                     xtype: 'textfield',
+                    name: 'id_unidad_compra',
                     fieldLabel: 'Unidad compra',
                     afterLabelTextTpl: required,
                     allowBlank: false
                 }, {
                     xtype: 'textfield',
+                    name : "codigo_de_barras",
                     fieldLabel: 'Codigo de barras',
                     afterLabelTextTpl: required,
                     allowBlank: true
@@ -1335,23 +1291,34 @@ class BuyingCartComponent
                 }, {
                     text: 'Guardar producto',
                     handler: function() {
-                        /*if (this.up('form').getForm().isValid()) {
-                            // In a real application, this would submit the form to the configured url
-                            // this.up('form').getForm().submit();
-                            this.up('form').getForm().reset();
-                            this.up('window').hide();
-                            Ext.MessageBox.alert('Thank you!', 'Your inquiry has been sent. We will respond as soon as possible.');
-                        }*/
+                        if (this.up('form').getForm().isValid()) {
+                        	
+                        	var params = this.up("form").getValues();
+                        	
+                        	params.activo = 1;
+                        	params.compra_en_mostrador = 0;
+                        	
+							var options = {
+								callback: function(){
+									Ext.getCmp("nuevo_producto_quick").destroy();
+                        			//Ext.MessageBox.alert('Thank you!', 'Your inquiry has been sent. We will respond as soon as possible.');	
+                        		}
+							};
+							
+                        	POS.API.POST("api/producto/nuevo", params, options);
 
-                            this.up('window').destroy();
-                            Ext.MessageBox.alert('Thank you!', 'Your inquiry has been sent. We will respond as soon as possible.');
+                        }
+
+
+                        
                     }
                 }]
             });
 
             Ext.widget('window', {
-                title: 'Contact Us',
-                closeAction: 'hide',
+            	id : "nuevo_producto_quick",
+                title: 'Nuevo Producto',
+                closeAction: 'destroy',
                 width: 500,
                 height: 300,
                 layout: 'fit',
@@ -1376,6 +1343,7 @@ class BuyingCartComponent
 
 			//ponerle cantidad inicial de 1
 			console.log("cantidad inicial de 1");
+			
 			p[0].set("cantidad", 1);
 
 			//agregar produco al store
@@ -1559,7 +1527,7 @@ class BuyingCartComponent
 		};
 
 
-
+var grid;
 		Ext.onReady(function(){
 
 
@@ -1715,7 +1683,8 @@ class BuyingCartComponent
 					{name: 'tarifas',				mapping: 'tarifas'},			
 					{name: 'existencias',			mapping: 'existencias'},
 					{name: 'cantidad' 				/* not in the original response */ },
-					{name: 'query' 					/* not in the original response */ }
+					{name: 'query' 					/* not in the original response */ },
+					{name: 'lote' 					/* not in the original response */ }
 		        ]
 		    });
 
@@ -1766,9 +1735,42 @@ class BuyingCartComponent
 			  * ***************************************************************** */
 
 
+			/** *****************************************************************
+			  * LOTES
+			  *
+			  * ***************************************************************** */
+			Ext.define("Lote", {
+		        extend: 'Ext.data.Model',
+		        proxy: {
+		            type: 'ajax',
+					url : '../api/almacen/lote/buscar/',
+					extraParams : {
+						auth_token : Ext.util.Cookies.get("at")
+					},
+		            reader: {
+		                type: 'json',
+		                root: 'resultados',
+		                totalProperty: 'numero_de_resultados'
+		            }
+		        },
 
+		        fields: [
+					{name: 'id_lote', 				mapping: 'id_lote'},
+					{name: 'id_almacen', 			mapping: 'id_almacen'},
+					{name: 'folio', 				mapping: 'folio'},
+		        ]
+		    });
 
+		  var   lotes = Ext.create('Ext.data.Store', {
+		        pageSize: 10,
+		        model: 'Lote'
+		    });		
 
+		   
+			/** *****************************************************************
+			  * /LOTES
+			  *
+			  * ***************************************************************** */
 
 
 
@@ -1786,7 +1788,9 @@ class BuyingCartComponent
 			           { name: 'nombre_producto',     	type: 'string'},
 			           { name: 'descripcion',  			type: 'string'},
 			           { name: 'precio',  				type: 'float'},
-			           { name: 'cantidad',  			type: 'float'}
+			           { name: 'cantidad',  			type: 'float'},
+					   { name: 'importe',  			type: 'float'},
+					   { name: 'lote',  			type: 'string'}
 			        ],
 					listeners : {
 						datachanged : actualizar_carrito
@@ -1794,11 +1798,11 @@ class BuyingCartComponent
 			    });
 
 			    // create the Grid
-			    var grid = Ext.create('Ext.grid.Panel', {
+			    grid = Ext.create('Ext.grid.Panel', {
 			        store: carrito_store,
 					plugins: [cellEditing],
 			        stateful: true,
-			        stateId: 'stateGrid',
+			        stateId: 'stateGridCompra',
 			        columns: [
 			            {
 			                text     : 'codigo_producto',
@@ -1829,48 +1833,45 @@ class BuyingCartComponent
 			                text     : 'Precio',
 			                sortable : true,
 			                dataIndex: 'tarifas',
-							renderer : function(tarifasArray){
-
-								/* ***** **** ***** 
-									tarifasArray tiene las tarifas para 
-									este producto solo hay que ver que cliente
-									esta seleccionado para mostrar la adecuada
-								***** **** ***** */
-								var tf = Ext.get("tarifa_seleccionada").getValue();
-
-								for (var i=0; i < tarifasArray.length; i++) {
-									if(tarifasArray[i].id_tarifa == tf){
-										return Ext.util.Format.usMoney( tarifasArray[i].precio );
-									}
-								}
-
-								return "X";
-
-							}
+							renderer : Ext.util.Format.usMoney,
+							field: {
+				                xtype: 'numberfield'
+				            }
+			            },
+			            {
+			                text     : 'Lote',
+			                width    : 75,
+				            field :{
+				            	xtype : "combobox",
+				            	typeAhead: true,
+				                triggerAction: 'all',
+				                selectOnTab: true,
+				                store: lotes,
+				                lazyRender: true,
+				                listClass: 'x-combo-list-small',
+				                displayField: "folio",
+				                listConfig: {
+				                loadingText: 'Buscando...',
+				                // Custom rendering template for each item
+				                getInnerTpl: function(a,b,c) {
+									return "<p style='margin:0px'>{folio}</p>";
+				                }
+				            },
+				            }
 			            },		
 			            {
 			                text     : 'Importe',
 			                width    : 75,
 			                sortable : true,
-							renderer : function(a,b,producto){
-
-								var tf =  Ext.get("tarifa_seleccionada").getValue();
-								var tarifasArray = producto.get("tarifas");
-
-								for (var i=0; i < tarifasArray.length; i++) {
-									if(tarifasArray[i].id_tarifa == tf){
-										return Ext.util.Format.usMoney( 
-											parseFloat(tarifasArray[i].precio ) * parseFloat(producto.get("cantidad")) );
-									}
-								};
-							}
+							renderer : Ext.util.Format.usMoney
 			            }
+			            
 			        ],
 			        height: 350,
 			        width: "100%",
 			        renderTo: 'carrito_de_compras_grid',
 			        viewConfig: {
-			            stripeRows: true
+			            stripeRows: false
 			        }
 			    });		
 

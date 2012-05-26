@@ -177,7 +177,8 @@
  	 *
  	 * @param activo bool Si el valor no es obtenido, se listaran los proveedores tanto activos como inactivos. Si su valor es true, se mostraran solo los proveedores activos, si es false, se mostraran solo los proveedores inactivos.
  	 * @param orden string Nombre de la columan por el cual se ordenara la lista
- 	 * @return proveedores json Objeto que contendra la lista de proveedores.
+ 	 * @return resultados json Objeto que contendra la lista de proveedores.
+ 	 * @return numero_de_resultados int 
  	 **/
   static function Lista
 	(
@@ -200,19 +201,7 @@
  	 * @param cuenta_bancaria string Cuenta bancaria del proveedor
  	 * @param dias_de_credito int Dias de credito que otorga el proveedor
  	 * @param dias_embarque int Dias en que el proveedor embarca ( Lunes, Martes, Miercoles, Jueves..)
- 	 * @param direcciones json [{
-    "tipo": 1,
-    "calle": "Francisco I Madero",
-    "numero_exterior": "1009A",
-
-    "numero_interior": 12,
-    "colonia": "centro",
-    "codigo_postal": "38000",
-    "telefono1": "4611223312",
-    "telefono2": "",
-        "id_ciudad": 3,
-    "referencia": "El local naranja"
-}]
+ 	 * @param direcciones json [{    "tipo": 1,    "calle": "Francisco I Madero",    "numero_exterior": "1009A",    "numero_interior": 12,    "colonia": "centro",    "codigo_postal": "38000",    "telefono1": "4611223312",    "telefono2": "",        "id_ciudad": 3,    "referencia": "El local naranja"}]
  	 * @param direccion_web string Direccion web del proveedor
  	 * @param email string Correo electronico del proveedor
  	 * @param id_moneda int Id de la moneda preferente del proveedor

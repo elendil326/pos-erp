@@ -2,6 +2,7 @@
 
 
 
+
   class ApiSesionIniciar extends ApiHandler {
   
 
@@ -3258,28 +3259,28 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"codigo_proveedor" => new ApiExposedProperty("codigo_proveedor", true, GET, array( "string" )),
-			"id_tipo_proveedor" => new ApiExposedProperty("id_tipo_proveedor", true, GET, array( "int" )),
-			"nombre" => new ApiExposedProperty("nombre", true, GET, array( "string" )),
-			"password" => new ApiExposedProperty("password", true, GET, array( "string" )),
-			"activo" => new ApiExposedProperty("activo", false, GET, array( "bool" )),
-			"cuenta_bancaria" => new ApiExposedProperty("cuenta_bancaria", false, GET, array( "string" )),
-			"dias_de_credito" => new ApiExposedProperty("dias_de_credito", false, GET, array( "int" )),
-			"dias_embarque" => new ApiExposedProperty("dias_embarque", false, GET, array( "int" )),
-			"direcciones" => new ApiExposedProperty("direcciones", false, GET, array( "json" )),
-			"direccion_web" => new ApiExposedProperty("direccion_web", false, GET, array( "string" )),
-			"email" => new ApiExposedProperty("email", false, GET, array( "string" )),
-			"id_moneda" => new ApiExposedProperty("id_moneda", false, GET, array( "int" )),
-			"id_tarifa_compra" => new ApiExposedProperty("id_tarifa_compra", false, GET, array( "int" )),
-			"id_tarifa_venta" => new ApiExposedProperty("id_tarifa_venta", false, GET, array( "int" )),
-			"impuestos" => new ApiExposedProperty("impuestos", false, GET, array( "json" )),
-			"limite_credito" => new ApiExposedProperty("limite_credito", false, GET, array( "float" )),
-			"representante_legal" => new ApiExposedProperty("representante_legal", false, GET, array( "string" )),
-			"retenciones" => new ApiExposedProperty("retenciones", false, GET, array( "json" )),
-			"rfc" => new ApiExposedProperty("rfc", false, GET, array( "string" )),
-			"telefono_personal1" => new ApiExposedProperty("telefono_personal1", false, GET, array( "string" )),
-			"telefono_personal2" => new ApiExposedProperty("telefono_personal2", false, GET, array( "string" )),
-			"tiempo_entrega" => new ApiExposedProperty("tiempo_entrega", false, GET, array( "string" )),
+			"codigo_proveedor" => new ApiExposedProperty("codigo_proveedor", true, POST, array( "string" )),
+			"id_tipo_proveedor" => new ApiExposedProperty("id_tipo_proveedor", true, POST, array( "int" )),
+			"nombre" => new ApiExposedProperty("nombre", true, POST, array( "string" )),
+			"password" => new ApiExposedProperty("password", true, POST, array( "string" )),
+			"activo" => new ApiExposedProperty("activo", false, POST, array( "bool" )),
+			"cuenta_bancaria" => new ApiExposedProperty("cuenta_bancaria", false, POST, array( "string" )),
+			"dias_de_credito" => new ApiExposedProperty("dias_de_credito", false, POST, array( "int" )),
+			"dias_embarque" => new ApiExposedProperty("dias_embarque", false, POST, array( "int" )),
+			"direcciones" => new ApiExposedProperty("direcciones", false, POST, array( "json" )),
+			"direccion_web" => new ApiExposedProperty("direccion_web", false, POST, array( "string" )),
+			"email" => new ApiExposedProperty("email", false, POST, array( "string" )),
+			"id_moneda" => new ApiExposedProperty("id_moneda", false, POST, array( "int" )),
+			"id_tarifa_compra" => new ApiExposedProperty("id_tarifa_compra", false, POST, array( "int" )),
+			"id_tarifa_venta" => new ApiExposedProperty("id_tarifa_venta", false, POST, array( "int" )),
+			"impuestos" => new ApiExposedProperty("impuestos", false, POST, array( "json" )),
+			"limite_credito" => new ApiExposedProperty("limite_credito", false, POST, array( "float" )),
+			"representante_legal" => new ApiExposedProperty("representante_legal", false, POST, array( "string" )),
+			"retenciones" => new ApiExposedProperty("retenciones", false, POST, array( "json" )),
+			"rfc" => new ApiExposedProperty("rfc", false, POST, array( "string" )),
+			"telefono_personal1" => new ApiExposedProperty("telefono_personal1", false, POST, array( "string" )),
+			"telefono_personal2" => new ApiExposedProperty("telefono_personal2", false, POST, array( "string" )),
+			"tiempo_entrega" => new ApiExposedProperty("tiempo_entrega", false, POST, array( "string" )),
 		);
 	}
 
@@ -3288,28 +3289,28 @@
  		$this->response = ProveedoresController::Nuevo( 
  			
 			
-			isset($_GET['codigo_proveedor'] ) ? $_GET['codigo_proveedor'] : null,
-			isset($_GET['id_tipo_proveedor'] ) ? $_GET['id_tipo_proveedor'] : null,
-			isset($_GET['nombre'] ) ? $_GET['nombre'] : null,
-			isset($_GET['password'] ) ? $_GET['password'] : null,
-			isset($_GET['activo'] ) ? $_GET['activo'] :  null,
-			isset($_GET['cuenta_bancaria'] ) ? $_GET['cuenta_bancaria'] :  null,
-			isset($_GET['dias_de_credito'] ) ? $_GET['dias_de_credito'] :  null,
-			isset($_GET['dias_embarque'] ) ? $_GET['dias_embarque'] :  true ,
-			isset($_GET['direcciones'] ) ? json_decode($_GET['direcciones']) : null,
-			isset($_GET['direccion_web'] ) ? $_GET['direccion_web'] :  null,
-			isset($_GET['email'] ) ? $_GET['email'] :  null,
-			isset($_GET['id_moneda'] ) ? $_GET['id_moneda'] :  null,
-			isset($_GET['id_tarifa_compra'] ) ? $_GET['id_tarifa_compra'] :  null,
-			isset($_GET['id_tarifa_venta'] ) ? $_GET['id_tarifa_venta'] :  null,
-			isset($_GET['impuestos'] ) ? json_decode($_GET['impuestos']) : null,
-			isset($_GET['limite_credito'] ) ? $_GET['limite_credito'] :  null,
-			isset($_GET['representante_legal'] ) ? $_GET['representante_legal'] :  null,
-			isset($_GET['retenciones'] ) ? json_decode($_GET['retenciones']) : null,
-			isset($_GET['rfc'] ) ? $_GET['rfc'] :  null,
-			isset($_GET['telefono_personal1'] ) ? $_GET['telefono_personal1'] :  null,
-			isset($_GET['telefono_personal2'] ) ? $_GET['telefono_personal2'] :  null,
-			isset($_GET['tiempo_entrega'] ) ? $_GET['tiempo_entrega'] :  null
+			isset($_POST['codigo_proveedor'] ) ? $_POST['codigo_proveedor'] : null,
+			isset($_POST['id_tipo_proveedor'] ) ? $_POST['id_tipo_proveedor'] : null,
+			isset($_POST['nombre'] ) ? $_POST['nombre'] : null,
+			isset($_POST['password'] ) ? $_POST['password'] : null,
+			isset($_POST['activo'] ) ? $_POST['activo'] :  null,
+			isset($_POST['cuenta_bancaria'] ) ? $_POST['cuenta_bancaria'] :  null,
+			isset($_POST['dias_de_credito'] ) ? $_POST['dias_de_credito'] :  null,
+			isset($_POST['dias_embarque'] ) ? $_POST['dias_embarque'] :  true ,
+			isset($_POST['direcciones'] ) ? json_decode($_POST['direcciones']) : null,
+			isset($_POST['direccion_web'] ) ? $_POST['direccion_web'] :  null,
+			isset($_POST['email'] ) ? $_POST['email'] :  null,
+			isset($_POST['id_moneda'] ) ? $_POST['id_moneda'] :  null,
+			isset($_POST['id_tarifa_compra'] ) ? $_POST['id_tarifa_compra'] :  null,
+			isset($_POST['id_tarifa_venta'] ) ? $_POST['id_tarifa_venta'] :  null,
+			isset($_POST['impuestos'] ) ? json_decode($_POST['impuestos']) : null,
+			isset($_POST['limite_credito'] ) ? $_POST['limite_credito'] :  null,
+			isset($_POST['representante_legal'] ) ? $_POST['representante_legal'] :  null,
+			isset($_POST['retenciones'] ) ? json_decode($_POST['retenciones']) : null,
+			isset($_POST['rfc'] ) ? $_POST['rfc'] :  null,
+			isset($_POST['telefono_personal1'] ) ? $_POST['telefono_personal1'] :  null,
+			isset($_POST['telefono_personal2'] ) ? $_POST['telefono_personal2'] :  null,
+			isset($_POST['tiempo_entrega'] ) ? $_POST['tiempo_entrega'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -7929,6 +7930,32 @@
 			isset($_GET['fecha_envio_programada'] ) ? $_GET['fecha_envio_programada'] : null,
 			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null,
 			isset($_GET['productos'] ) ? json_decode($_GET['productos']) : null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiAlmacenLoteBuscar extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = AlmacenesController::BuscarLote( 
+ 			
+		
 			
 			);
 		}catch(Exception $e){

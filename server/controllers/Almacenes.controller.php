@@ -1343,5 +1343,28 @@ Creo que este metodo tiene que estar bajo sucursal.
 		$productos
 	){} 
 
-
+ 
+	/**
+ 	 *
+ 	 *buscar entre todos los lotes del sistema
+ 	 *
+ 	 * @return resultados json 
+ 	 * @return numero_de_resultados int 
+ 	 **/
+  static function BuscarLote
+	(
+	){
+		
+		
+		$lotes = LoteDAO::getAll();
+		
+		return array(
+			"resultados" => $lotes,
+			"numero_de_resultados" => sizeof($lotes )
+		);
+		
+	}
+  
+  
+	
 }
