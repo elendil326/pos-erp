@@ -36,8 +36,17 @@ class JediComponentPage extends PosComponentPage{
 				{
 					
 					"title" : "Logs",
-					"url"	: "logs.php"
-					
+					"url"	: "logs.php",
+					"children": [
+		                {
+		                    "title": "Acceso",
+		                    "url": "logs.php"
+		                },
+		                {
+		                    "title": "Error",
+		                    "url": "logs.error.php"
+		                }
+		            ]
 				}
 		        
 		    ]

@@ -12,7 +12,10 @@
 	<link rel="stylesheet" type="text/css" href="media/main_site/s.css">
 
 	
-	<body>
+	<body style="background-image: url(media/main_site/c.png);
+				 background-repeat: no-repeat;
+				background-position-x: 50%
+">
 
 
 	    <div class="topbar js-topbar">
@@ -39,8 +42,8 @@
 	    </div>
 
 
-	    <div class="blue-sky">
-	      <div class="body-content">
+	    <div class="blue-sky" >
+	      <div class="body-content" >
 		
 		
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
@@ -131,7 +134,7 @@
 					</td>
 				</tr>
 				</table>
-				<div style="margin-left: 130px">
+				<div style="margin-left: 130px; margin-bottom: 100px; margin-top:50px">
 					<h2><strong>Solicitar una instancia de 30 dias</strong></h2>
 					<form action="?t=thanks" class="signup" method="post">
 						<div class="placeholding-input">
@@ -150,7 +153,7 @@
 				
 				<?php case "welcome" : ?>	
 				<?php default : ?>	
-				<table border=0>
+				<table border=0 style="margin-top:-25px">
 		          <tr>
 		            <td rowspan=2>
 		              <img 
@@ -171,7 +174,7 @@
 
 
 		        <div class="">
-		          <a href="?t=signup"><img class="" src="media/main_site/oferta.png"></a>
+		          <a href="?t=signup"><img style="margin-top:-20px" src="media/main_site/oferta.png"></a>
 		        </div>
 				<?php break; ?><!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 				<?php }?>
@@ -182,7 +185,7 @@
 
 
 
-	        <div class="footer" style="margin-top:30px;">
+	        <div class="footer" style="margin-top:0px;">
 
 	          <ul class="links">
 	            <li class="first">&copy; 2012 Caffeina Software |</li>
