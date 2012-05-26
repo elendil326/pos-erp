@@ -5,17 +5,31 @@ class Logger
 
   private static $db_querys = 0;
 
-  public static final function read($lines = 100){
+  public static final function read($which = "access", $lines = 100){
 
-        if(!file_exists(POS_CONFIG_LOG_ACCESS_FILE)){
-            die("POS: Unable to open logfile:" .POS_CONFIG_LOG_ACCESS_FILE );
+	switch($which){
+		case "access":
+		    $file = POS_CONFIG_LOG_ACCESS_FILE;
+		break;
+		
+		case "error":
+		    $file = POS_CONFIG_LOG_ERROR_FILE;
+		break;
+		
+		default:
+		return;
+		
+		
+	}
+        if(!file_exists($file)){
+            die("POS: Unable to open logfile:" .$file );
         }
 
     // $file: Name of file to open
     // $lines: Number of lines to obtain from the end of the file
     // $header: flag to indicate that the file contains a header which should not be included if the number of lines in the file is <= lines
     
-    $file = POS_CONFIG_LOG_ACCESS_FILE;
+
      $header = null;
     global $error_string;
     

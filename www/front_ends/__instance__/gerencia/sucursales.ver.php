@@ -209,7 +209,7 @@
 
 
 
-	$page->addComponent(new TitleComponent("Nuevo almacen en esta sucuersal", 2 ));
+	$page->addComponent(new TitleComponent("Nuevo almacen en esta sucursal", 2 ));
 	
 	$nalmacen_obj = new Almacen();
 	$nalmacen_obj->setIdSucursal( $esta_sucursal->getIdSucursal() );

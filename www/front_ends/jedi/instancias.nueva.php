@@ -64,9 +64,9 @@
 	  *
 	  **/
 	$p->addComponent( new TitleComponent( "Nueva instancia" ) );
-	$p->addComponent( new TitleComponent( "Automatizado", 2 ) );
+
 	
-	$p->addComponent( new FreeHtmlComponent( 'Descripcion <input type="text" style="font-size: 17px;" id="_new_instance_desc">&nbsp;'));
+	$p->addComponent( new FreeHtmlComponent( '<input type="text" style="font-size: 17px;" placeholder="Descripcion" id="_new_instance_desc">&nbsp;'));
 	$p->addComponent( new FreeHtmlComponent( '<div class="POS Boton OK"  onclick="window.location=\'instancias.nueva.php?do=nueva&d=\'+HtmlEncode(Ext.get(\'_new_instance_desc\').getValue());">Nueva Instancia</div>') );	
 
 	$p->addComponent( new FreeHtmlComponent( "<hr>") );

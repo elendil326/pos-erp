@@ -19,7 +19,7 @@
 	$page->partialRender();
 	
 	
-	$lines =  Logger::read(1000);
+	$lines =  Logger::read("access",1000);
 
 	$this_ip = "127.0.0.1";
 

@@ -41,26 +41,18 @@
 	  * Lista de instancias
 	  *
 	  **/
-	$p->addComponent( new TitleComponent( "Instancias instaladas", 2 ) );
+	$p->addComponent( new TitleComponent( "Instancias instaladas", 3 ) );
 
-	$p->addComponent( new FreeHtmlComponent( '<div class="POS Boton OK"  onclick="window.location=\'instancias.lista.php?do=actualizar_instancias\'">Actualizar Instancias</div>') );	
+	//$p->addComponent( new FreeHtmlComponent( '<div class="POS Boton OK"  onclick="window.location=\'instancias.lista.php?do=actualizar_instancias\'">Actualizar Instancias</div>') );	
 
 	$headers = array( 	"instance_id" => "Instance ID",
 						"fecha_creacion" => "Creada",
-	 					"descripcion" => "Descripcion",
-						"instance_token" => "Token");
+	 					"descripcion" => "Descripcion");
 	
 	
 	
 	$t = new TableComponent( $headers , InstanciasController::Buscar());
-	function todate($unixtime){
-		if($unixtime == 0){
-			return "";
-		}
-		return date("r", $unixtime);
-	}
-	$t->addColRender( "fecha_creacion", "todate" );
-	
+	$t->addColRender( "fecha_creacion", "FormatTime" );
 	$t->addOnClick( "instance_id" , "(function(i){window.location='instancias.ver.php?id='+i;})"  );
 	$p->addComponent( $t );	
 
