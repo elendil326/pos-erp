@@ -611,7 +611,13 @@ class ProductosController extends ValidacionesController implements IProductos
      * @param id_sucursal int Id de la sucursal de la cual se vern los productos.
      * @return productos json Objeto que contendr� el arreglo de productos en inventario.
      **/
-    public static function Lista($activo = null, $compra_en_mostrador = null, $id_almacen = null, $id_empresa = null, $metodo_costeo = null)
+    public static function Lista(
+        $activo = null, 
+        $compra_en_mostrador = null,
+        $id_almacen = null, 
+        $id_empresa = null, 
+        $metodo_costeo = null
+    )
     {
         Logger::log("Listando los productos");
         $productos  = array();
@@ -1720,6 +1726,13 @@ class ProductosController extends ValidacionesController implements IProductos
 				}
 			}
 			
+            if(sizeof($results) == 0){
+                array_push($results, array(
+                        "nombre_producto" => "lksadjfklaj",
+                        "descripcion" => "asdf"
+                    ));
+            }
+
 			return array(
 				"numero_de_resultados" => sizeof( $results ),
 				"resultados" => $results
@@ -1748,6 +1761,18 @@ class ProductosController extends ValidacionesController implements IProductos
             array_push($resultado, $r);
         } //$productos as $p
         
+
+
+        if((strlen($query) > 0) && (sizeof($resultado) == 0)){
+            array_push($resultado, array(
+                    "nombre_producto" => "El producto <i>$query</i> no se encuentra.",
+                    "descripcion" => "&iquest; Desea agregarlo ahora ?",
+                    "id_producto" => -99,
+                    "query" => $query
+                ));
+        }
+
+
         return array(
             "resultados" => $resultado,
             "numero_de_resultados" => sizeof($resultado)

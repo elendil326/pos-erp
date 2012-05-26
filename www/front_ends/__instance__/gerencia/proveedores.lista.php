@@ -13,16 +13,14 @@
 		
 		
 		
-		$proveedoresLista = 			ProveedoresController::Lista();
+		$proveedoresLista =  ProveedoresController::Lista();
+		
 		$tabla = new TableComponent( 
 			array(
-                "codigo_usuario"                => "Codigo de usuario",
 				"nombre"                        => "Nombre",
-				"id_rol"                        => "Rol",
 				"id_clasificacion_proveedor" 	=> "Clasificacion de proveedor",
                 "activo"                        => "Activo",
-                "consignatario"                 => "Consignatario",
-                "saldo_del_ejercicio"           => "Saldo"
+                "consignatario"                 => "Consignatario"
 			),
 			$proveedoresLista["resultados"]
 
