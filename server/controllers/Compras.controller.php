@@ -649,19 +649,19 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
 
 			//terminaron las validaciones
 			$compra = new Compra();
-			$compra->setIdVendedorCompra( $id_usuario_compra);
-			$compra->setTipoDeCompra(	$tipo_compra);
-			$compra->setFecha(time());
-			$compra->setSubtotal($subtotal);
-			$compra->setImpuesto(0);
-			$compra->setDescuento(0);
-			$compra->setTotal($subtotal);
-			$compra->setIdUsuario($s->getIdUsuario());
-			$compra->setIdEmpresa($id_empresa);
-			$compra->setSaldo(0);
-			$compra->setCancelada(false);
-			$compra->setTipoDePago($tipo_de_pago);
-			$compra->setRetencion(0);
+			$compra->setIdVendedorCompra	( $id_usuario_compra	);
+			$compra->setTipoDeCompra		( $tipo_compra			);
+			$compra->setFecha				( time()				);
+			$compra->setSubtotal			( $subtotal				);
+			$compra->setImpuesto			( 0						);
+			$compra->setDescuento			( 0						);
+			$compra->setTotal				( $subtotal				);
+			$compra->setIdUsuario			( $s->getIdUsuario()	);
+			$compra->setIdEmpresa			( $id_empresa			);
+			$compra->setSaldo				( 0						);
+			$compra->setCancelada			( false					);
+			$compra->setTipoDePago			( $tipo_de_pago			);
+			$compra->setRetencion			( 0						);
 		   	
 			try{
 				DAO::transBegin();
@@ -778,43 +778,10 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
 		   
 		   
 		   
-		   
-		   	/*
-		   
-            //Se utiliza el metodo comprar caja de sucursal
-            try
-            {
-                $compra = SucursalesController::ComprarCaja(
-                				$descuento,
-                				$detalle,
-                				$id_empresa,
-                				$id_usuario_compra,
-                        		$impuesto,
-                        		$retencion,
-                        		$subtotal,
-                        		$tipo_compra,
-                        		$total,
-                        		null,
-                        		null,
-                        		$cheques,
-                        		null,
-                        		null,
-                        		$id_sucursal,
-                        		$saldo,
-                        		$tipo_de_pago);
-								
-            }catch(Exception $e) {
-                Logger::error("No se pudo crear la nueva compra: ".$e);
-                if($e->getCode()==901)
-                    throw new Exception("No se pudo crear la nueva compra: ".$e->getMessage(),901);
-                throw new Exception("No se pudo crear la nueva compra, consulte a su administrador de sistema",901);
-            }
-            
-            Logger::log("Compra creada exitosamente");
-            return array( "id_compra" => $compra["id_compra_cliente"] );
-			 * 
-			 * 
-	*/		 
-	Logger::log("===== COMPRA EXITOSA ===== ");
+			Logger::log("===== COMPRA ". $compra->getIdCompra() ." EXITOSA ===== ");
+			
+			return array(
+					"id_compra" => $compra->getIdCompra()
+				);
 	}
   }
