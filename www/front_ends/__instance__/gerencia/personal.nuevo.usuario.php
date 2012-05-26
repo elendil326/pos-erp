@@ -11,6 +11,9 @@
 
 	//forma de nuevo usuario
 	$page->addComponent(new TitleComponent("Datos del usuario", 3));
+	
+	$page->addComponent("<p>Si desea enviar un mensaje de bienvenida al nuevo usuario, no olvide ingresar su correo electronico</p>");
+	
 	$form = new DAOFormComponent(array(
 	    new Usuario(),
 	    new Direccion()

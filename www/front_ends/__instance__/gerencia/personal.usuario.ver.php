@@ -63,8 +63,39 @@
     $form->setEditable(false);
     //$form->setEditable(false);        
     $form->hideField(array(
-        "id_usuario",
-        "id_direccion"
+		 "id_usuario",
+		    "id_direccion",
+		    "id_direccion_alterna",
+		    "id_sucursal",
+		    "fecha_asignacion_rol",
+		    "fecha_alta",
+		    "fecha_baja",
+		    "activo",
+		    "last_login",
+		    "consignatario",
+		    "ventas_a_credito",
+		    "tiempo_entrega",
+			"tarifa_compra_obtenida",
+			"id_tarifa_venta",
+			"denominacion_comercial",
+			"descuento",
+			"dia_de_revision",
+			"dias_de_credito",
+			"id_clasificacion_proveedor",
+			"facturar_a_terceros",
+			"id_clasificacion_cliente",
+			"id_moneda",
+			"dias_de_embarque",
+			"cuenta_de_mensajeria",
+			"saldo_del_ejercicio",
+			"limite_credito",
+			"mensajeria",
+			"intereses_moratorios",
+			"representante_legal",
+			"id_tarifa_compra",
+			"token_recuperacion_pass",
+			"tarifa_venta_obtenida",
+			"password"
     ));
 
     $form->createComboBoxJoin("id_ciudad", "nombre", CiudadDAO::getAll(), $esta_direccion->getIdCiudad());
@@ -129,7 +160,11 @@
 
     
 	$page->partialRender();
-	if(isset($_GET["just_created"]) && ($_GET["just_created"] == 1)){
+	
+	if(	isset($_GET["just_created"]) 
+		&& ($_GET["just_created"] == 1)
+		&& ($este_usuario->getCorreoElectronico() !== null ) 
+		){
 		?>
 		<script type="text/javascript" charset="utf-8">
 			
