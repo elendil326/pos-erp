@@ -48,3 +48,14 @@ CREATE TABLE IF NOT EXISTS `users` (
   PRIMARY KEY (`id_user`),
   KEY `email` (`email`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+
+
+CREATE TABLE IF NOT EXISTS  `instance_request` (
+`id_request` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`email` VARCHAR( 32 ) NOT NULL ,
+`fecha` INT NOT NULL ,
+`ip` VARCHAR( 19 ) NOT NULL ,
+`token` VARCHAR( 32 ) NOT NULL ,
+INDEX (  `email` )
+) ENGINE = MYISAM ;

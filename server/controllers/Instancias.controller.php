@@ -11,13 +11,15 @@
 		 * */
 		public static function Nueva( $instance_token = null, $descripcion = null ){
 			
+			Logger::log("======== NUEVA INSTANCIA =============");
+			
 			if( is_null($instance_token) ){
 				return self::Nueva( md5( time() ) , $descripcion );
 			}
 			
 			//primero busquemos ese token
 			if( !is_null(self::BuscarPorToken( $instance_token ) ) ){
-				Logger::warn("Instance `$instance_token` ya existe. Abortando `InstanciasController::Nueva()`.");
+				Logger::error("Instance `$instance_token` ya existe. Abortando `InstanciasController::Nueva()`.");
 				return null;
 			}
 			
@@ -168,6 +170,10 @@
 		    }					
 
 			Logger::log("Instancia $I_ID creada correctamente... ");
+			
+			Logger::log("======== / NUEVA INSTANCIA =============");
+			
+			
 			return (int)$I_ID;
 		}
 
@@ -586,14 +592,90 @@
 		}
 
 		public static function requestDemo($userEmail){
+			
+			global $POS_CONFIG;
+						
+			Logger::log("Somebody requested trial instance");
+			
 			//busquemos si ese email es valido
 			
+			
+			
 			//busquemos ese email en la bd
+			$sql = "select id_request from instance_request where email = ? ";
+			$res = $POS_CONFIG["CORE_CONN"]->GetRow( $sql , array( $userEmail ) );
 			
+			if(!empty($res)){
+				//ya solicito la instancia
+				Logger::warn("Este usuario ya ha solicitado instancia antes");
+				return false;
+			}
+			
+
+
 			//generemos el token a enviar
+			$time = time();
 			
+			$token = md5( $time . "caffeinaSoftware" ) ;
+			
+			Logger::log("token will be " . $token);
+
 			//insertemos nuevo request
+			$sql = "INSERT INTO `instance_request` (`id_request`, `email`, `fecha`, `ip`, `token`)
+			 			VALUES ( NULL, ?, ?, ?, ?);";
 			
-			//
+			$res = $POS_CONFIG["CORE_CONN"]->Execute( $sql , array( $userEmail, $time, $_SERVER["REMOTE_ADDR"], $token ) );
+			
+			
+			//enviar el correo electronico
+			
+			
 		}
+		
+		
+		
+		public static function validateDemo($token){
+			global $POS_CONFIG;
+						
+			Logger::log("Somebody requested validate: token: " . $token);
+
+			
+			//busquemos ese token en la bd
+			$sql = "select id_request, date_validated, email from instance_request where token = ? ";
+			$res = $POS_CONFIG["CORE_CONN"]->GetRow( $sql , array( $token ) );
+			
+			if(empty($res)){
+				//ya solicito la instancia
+				Logger::error("Este token no existe !");
+				return false;
+			}
+			
+			
+			Logger::log("encontre el token para id=" . $res["id_request"]);
+			
+			
+			if(!is_null($res["date_validated"])){
+				Logger::log("este ya fue validado");
+				return false;
+			}
+			
+			
+			$startTime = time();
+
+					
+			
+			$iid = self::Nueva( $token, $res["id_request"] . " requested this instance as a demo" );
+			
+			
+			$sql = "UPDATE  `instance_request` 
+					SET  `date_validated` =  ?, `date_installed` = ? 
+					WHERE `id_request` = ?;";			
+			
+			$res = $POS_CONFIG["CORE_CONN"]->Execute( $sql , array( $startTime, time(), $res["id_request"] ) );
+
+			return $iid;
+			
+		}//validateDemo
+			
+			
 	}

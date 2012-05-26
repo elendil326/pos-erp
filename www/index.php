@@ -67,7 +67,15 @@
 					}
 					
 					
+					$r = InstanciasController::requestDemo( $_POST["email"] );
 					
+					if($r === false){
+						//
+						?>
+						<h1>Whoops</h1>
+						<?php
+						break;
+					}
 					
 					
 					?>
@@ -97,7 +105,11 @@
 				
 				
 				
-			
+				<?php case "by_email" : ?>
+				<?php
+					$r = InstanciasController::validateDemo( $_GET["key"] );
+				?>
+				<?php break; ?><!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 				
 				
 				
