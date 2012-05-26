@@ -227,9 +227,11 @@
 	$nalmacen->createComboBoxJoin( "activo", "foo", array(  "foo" => "si" ) );
 	
 	$nalmacen->addApiCall("api/almacen/nuevo", "POST");
-	$nalmacen->onApiCallSuccessRedirect(".");
+	$nalmacen->onApiCallSuccessRedirect("sucursales.ver.php?sid=". $_GET["sid"]."");
 
-
+	$nalmacen->setCaption("id_tipo_almacen", "Tipo de almacen");
+	$nalmacen->setCaption("id_empresa", "Empresa");
+	$nalmacen->makeObligatory(array("id_empresa", "id_sucursal", "id_tipo_almacen", "nombre"));
 	
 	$page->addComponent($nalmacen);
 	$page->render();
