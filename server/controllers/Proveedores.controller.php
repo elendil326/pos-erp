@@ -6,48 +6,10 @@ require_once("interfaces/Proveedores.interface.php");
   *
   **/
 	
-  class ProveedoresController implements IProveedores{
+  class ProveedoresController extends ValidacionesController implements IProveedores {
   
+    
       
-        //Metodo para pruebas que simula la obtencion del id de la sucursal actual
-        private static function getSucursal()
-        {
-            return 1;
-        }
-        
-        //metodo para pruebas que simula la obtencion del id de la caja actual
-        private static function getCaja()
-        {
-            return 1;
-        }
-      
-        
-        /*
-         *Se valida que un string tenga longitud en un rango de un maximo inclusivo y un minimo exclusvio.
-         *Regresa true cuando es valido, y un string cuando no lo es.
-         */
-          private static function validarString($string, $max_length, $nombre_variable,$min_length=0)
-	{
-		if(strlen($string)<=$min_length||strlen($string)>$max_length)
-		{
-		    return "La longitud de la variable ".$nombre_variable." proporcionada (".$string.") no esta en el rango de ".$min_length." - ".$max_length;
-		}
-		return true;
-        }
-
-
-        /*
-         * Se valida que un numero este en un rango de un maximo y un minimo inclusivos
-         * Regresa true cuando es valido, y un string cuando no lo es
-         */
-	private static function validarNumero($num, $max_length, $nombre_variable, $min_length=0)
-	{
-	    if($num<$min_length||$num>$max_length)
-	    {
-	        return "La variable ".$nombre_variable." proporcionada (".$num.") no esta en el rango de ".$min_length." - ".$max_length;
-	    }
-	    return true;
-	}
       
         /*
          * Valida los parametros de la tabla clasificacion proveedor. Regresa un string con el error en caso de haber uno,
@@ -549,60 +511,11 @@ require_once("interfaces/Proveedores.interface.php");
 	{  
             Logger::log("Listando los proveedores");
             
-            //valida que el parametro orden sea valido
-                if
-                (
-                        !is_null($orden)                        &&
-                        $orden != "id_usuario"                  &&
-                        $orden != "id_direccion"                &&
-                        $orden != "id_direccion_alterna"        &&
-                        $orden != "id_sucursal"                 &&
-                        $orden != "id_rol"                      &&
-                        $orden != "id_clasificacion_cliente"    &&
-                        $orden != "id_clasificacion_proveedor"  &&
-                        $orden != "id_moneda"                   &&
-                        $orden != "fecha_asignacion_rol"        &&
-                        $orden != "nombre"                      &&
-                        $orden != "rfc"                         &&
-                        $orden != "curp"                        &&
-                        $orden != "comision_ventas"             &&
-                        $orden != "telefono_personal1"          &&
-                        $orden != "telefono_personal2"          &&
-                        $orden != "fecha_alta"                  &&
-                        $orden != "fecha_baja"                  &&
-                        $orden != "activo"                      &&
-                        $orden != "limite_credito"              &&
-                        $orden != "descuento"                   &&
-                        $orden != "password"                    &&
-                        $orden != "last_login"                  &&
-                        $orden != "consignatario"               &&
-                        $orden != "salario"                     &&
-                        $orden != "correo_electronico"          &&
-                        $orden != "pagina_web"                  &&
-                        $orden != "saldo_del_ejercicio"         &&
-                        $orden != "ventas_a_credito"            &&
-                        $orden != "representante_legal"         &&
-                        $orden != "facturar_a_terceros"         &&
-                        $orden != "dia_de_pago"                 &&
-                        $orden != "mensajeria"                  &&
-                        $orden != "intereses_moratorios"        &&
-                        $orden != "denominacion_comercial"      &&
-                        $orden != "dias_de_credito"             &&
-                        $orden != "cuenta_de_mensajeria"        &&
-                        $orden != "dia_de_revision"             &&
-                        $orden != "codigo_usuario"              &&
-                        $orden != "dias_de_embarque"            &&
-                        $orden != "tiempo_entrega"              &&
-                        $orden != "cuenta_bancaria"
-                )
-                {
-                    Logger::error("La variable orden (".$orden.") no es valido");
-                    throw new Exception("La variable orden (".$orden.") no es valido");
-                }
+
                 $proveedores = array();
                 
                 //Solo se obtendran los usuarios cuya clasificacion de cliente no sea nula.
-                $usuario_proveedores = UsuarioDAO::byRange(new Usuario( array( "id_clasificacion_proveedor" => 1 ) ),
+                $usuario_proveedores = UsuarioDAO::byRange(new Usuario( array( "id_clasificacion_proveedor" => 0) ),
                         new Usuario( array( "id_clasificacion_proveedor" => PHP_INT_MAX) ),$orden);
                 
                 //Si no se reciben parametros, la lista final sera la variable usuario_clientes,
@@ -616,8 +529,13 @@ require_once("interfaces/Proveedores.interface.php");
                 {
                     $proveedores = $usuario_proveedores;
                 }
+
                 Logger::log("La lista de proveedores fue obtenida exitosamente con ".count($proveedores)." elementos");
-                return $proveedores;
+
+                return array(
+                		"resultados" => $proveedores,
+						"numero_de_resultados" => sizeof($proveedores)
+                );
             
 	}
   

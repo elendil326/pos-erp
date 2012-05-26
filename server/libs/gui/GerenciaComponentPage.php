@@ -258,6 +258,28 @@ class GerenciaComponentPage extends PosComponentPage{
 		                }
 		            ]
 		        },
+		    {
+	            "title": "Proveedores",
+	            "url": "proveedores.lista.php",
+	            "children": [
+			        {
+			                "title" : "Proveedores",
+			                "url"   : "proveedores.lista.php"
+			        },
+			        {
+			                "title" : "Nuevo proveedor",
+			                "url"   : "proveedores.nuevo.php"
+			        },
+	                {
+	                        "title" : "Clasificacion",
+	                        "url"   : "proveedores.lista.clasificacion.php"
+	                },
+	                {
+	                        "title" : "Nueva clasificacion",
+	                        "url"   : "proveedores.nueva.clasificacion.php"
+	                }
+	            ]
+	        },
 		        {
 		            "title": "Tarifas",
 		            "url": "tarifas.lista.php",

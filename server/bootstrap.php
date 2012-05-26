@@ -202,7 +202,8 @@
 	require_once("controllers/Impresiones.controller.php");	
 	require_once("controllers/Cajas.controller.php");
 	require_once("controllers/Ayuda.controller.php");	
-		
+	require_once("controllers/Proveedores.controller.php");
+			
 	/*
 	require_once("controllers/Autorizaciones.controller.php");
 
@@ -215,7 +216,7 @@
 	require_once("controllers/Impuestos.controller.php");
 	require_once("controllers/Paquetes.controller.php");
 	
-	require_once("controllers/Proveedores.controller.php");
+
 	require_once("controllers/Reportes.controller.php");
 	require_once("controllers/TransportacionYFletes.controller.php");
 	*/

@@ -13,7 +13,7 @@
 		
 		
 		
-		
+		$proveedoresLista = 			ProveedoresController::Lista();
 		$tabla = new TableComponent( 
 			array(
                 "codigo_usuario"                => "Codigo de usuario",
@@ -24,7 +24,8 @@
                 "consignatario"                 => "Consignatario",
                 "saldo_del_ejercicio"           => "Saldo"
 			),
-			ProveedoresController::Lista()
+			$proveedoresLista["resultados"]
+
 		);
     
         function funcion_rol($id_rol)
