@@ -43,7 +43,7 @@
 							foreach($empresas as $e){
 
 
-								echo "[ '".$e->getRazonSocial()."', '' ],\n ";
+								echo "[ { v: '".$e->getRazonSocial()."', f: '<div>Empresa</div>".$e->getRazonSocial()."' } , '' ],\n ";
 								
 								//buscar sucursales de compui
 								$id_sucursales = SucursalEmpresaDAO::search( new SucursalEmpresa( array( "id_empresa" => $e->getIdEmpresa() ) ) );
@@ -53,20 +53,20 @@
 
 									$s = SucursalDAO::getByPK( $id_s->getIdSucursal() );
 
-									echo "/* sucursal, empresa */[ '".$s->getRazonSocial()."', '".$e->getRazonSocial()."' ], \n";
+									echo "/* sucursal, empresa */[  { v: '".$s->getRazonSocial()."', f: '<div>Sucursal</div>".$s->getRazonSocial()."' } , '".$e->getRazonSocial()."' ], \n";
 									//iterar almacenes
 									$almacenes = AlmacenDAO::search( new Almacen( array ( "id_almacen" )) );
 
 									foreach ($almacenes as $a) {
 
-										echo "/* almacen, sucursal */ [ '".$a->getNombre()."', '".$s->getRazonSocial()."' ], \n";
+										echo "/* almacen, sucursal */ [ { v: '".$a->getNombre()."', f: '<div>Almacen</div>".$a->getNombre()."' }, '".$s->getRazonSocial()."' ], \n";
 
 										//lotes de esa sucursal
 										$lotes = LoteDAO::search( new Lote( array ( "id_almacen" => $a->getIdAlmacen() ) ) );
 										
 										foreach ($lotes as $l) {
 											
-											echo "/* lote, almacen */[ '". $l->getFolio() ."', '". $a->getNombre() ."' ], \n";
+											echo "/* lote, almacen */[ { v: '".$l->getFolio()."', f: '<div>Lote</div>".$l->getFolio()."' }, '". $a->getNombre() ."' ], \n";
 											
 										}
 										
