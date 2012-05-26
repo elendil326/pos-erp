@@ -542,8 +542,12 @@ class FormComponent implements GuiComponent
                          
                          $html .= "</script>";
                      
-                         break;
+                break;
+				case "password":
+				
+					$html .= "<input placeholder='Contrasena' id='" . $this->guiComponentId . $f->id . "' name='" . $f->name . "' value='" . $f->value . "' type='password' >";
 					
+				break;
 				//
 				// Everything else
 				// 

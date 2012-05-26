@@ -53,7 +53,11 @@
 		"referencia",
 		"intereses_moratorios",
 		"representante_legal",
-		"id_tarifa_compra"
+		"id_tarifa_compra",
+		"token_recuperacion_pass",
+		"tarifa_venta_obtenida",
+		"telefono",
+		"telefono2"		
 	));
 
 	$form->createComboBoxJoin("id_ciudad", "nombre", CiudadDAO::getAll());
@@ -66,6 +70,8 @@
 
 	$form->addApiCall("api/personal/usuario/nuevo/");
 	$form->onApiCallSuccessRedirect("personal.usuario.ver.php?just_created=1");
+	
+	$form->setType("password", "password");
 
 	$form->makeObligatory(array(
 	    "nombre",
@@ -76,7 +82,7 @@
 
 
 
-
+	
 
 	$form->createComboBoxJoin("id_rol", "nombre", RolDAO::getAll() );
 
