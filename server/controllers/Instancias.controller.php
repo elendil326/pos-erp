@@ -664,7 +664,7 @@
 
 					
 			
-			$iid = self::Nueva( $token, $res["id_request"] . " requested this instance as a demo" );
+			$iid = self::Nueva( $token, $res["email"] . " requested this instance as a demo" );
 			
 			
 			$sql = "UPDATE  `instance_request` 

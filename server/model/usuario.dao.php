@@ -89,7 +89,7 @@ class UsuarioDAO extends UsuarioDAOBase
 
 		$parts = explode(" ", $query);
 
-		$sql = "select * from usuario where (";
+		$sql = "select * from usuario where ( (";
 		$val = array();
 		$first = true;
 		foreach ($parts as $p) {
@@ -112,7 +112,7 @@ class UsuarioDAO extends UsuarioDAOBase
 		$sql .= " or rfc like ? ";
 		array_push($val, $query);
 		
-		$sql .= " and id_rol = 5 ) ";
+		$sql .= ") and id_rol = 5 ) ";
 		
 		global $conn;
 		$rs = $conn->Execute($sql, $val);
