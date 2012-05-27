@@ -26,12 +26,12 @@
 	echo "<pre style='overflow: scroll; padding: 5px; margin-left:-10px; width: 103%; background: whiteSmoke; margin-bottom:5px; font-size:8.5px;'>";
 
 	for($a = sizeof($lines) - 1; $a >= 0 ; $a-- ){
-		echo "<div style='color: black;  '>" . $lines[$a] . "\n</div>" ;
+		//echo "<div style='color: black;  '>" . $lines[$a] . "\n</div>" ;
 				
-		/*
+		
 	    $linea = explode(  "|", $lines[$a] );
 
-		if( sizeof($linea) > 1 ){
+		if( (sizeof($linea) > 1)  && filter_var( trim($linea[1]) , FILTER_VALIDATE_IP)){
 
 			$ip = $linea[1];
 
@@ -45,9 +45,9 @@
 
 		}else{
 
-			echo "<div>   ->" . $lines[$a] . "\n</div>" ;		
+			echo "<div>" . $lines[$a] . "\n</div>" ;		
 		}
-		* */
+		
 	}
 	echo "</pre>";
 	
