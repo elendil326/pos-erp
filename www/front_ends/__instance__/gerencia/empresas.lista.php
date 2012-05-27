@@ -26,8 +26,11 @@
 		function funcion_activa($activa){
 			return $activa ? "Activa" : "Inactiva";
 		}
+		
+		
 
 		$tabla->addColRender("activo", "funcion_activa");
+		$tabla->addColRender("fecha_alta", "FormatTime");
                 
 		$tabla->addOnClick( "id_empresa", "(function(a){window.location = 'empresas.ver.php?eid='+a;})" );
 		

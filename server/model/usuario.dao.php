@@ -30,7 +30,7 @@ class UsuarioDAO extends UsuarioDAOBase
 
       global $conn;
 
-      $sql = "SELECT * FROM usuario WHERE ( (id_usuario = ? OR correo_electronico = ? OR codigo_usuario = ? ) AND password = ?) LIMIT 1;";
+      $sql = "SELECT * FROM usuario WHERE ( (id_usuario = ? OR correo_electronico = ? OR codigo_usuario = ? ) AND password = ? and activo = 1) LIMIT 1;";
 
       $params = array( $user, $user, $user, md5($password) );
 
