@@ -69,7 +69,7 @@
                         "id_tipo_proveedor"
 		));
 	
-	
+	$form->setType("password", "password");
 	
 	$page->addComponent( $form );
 
