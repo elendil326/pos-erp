@@ -74,9 +74,10 @@
 					
 					if($r === false){
 						//
-						?>
-						<h1>Whoops</h1>
-						<?php
+						?><h1>Whoops</h1><br><br><?php
+						
+						
+						
 						break;
 					}
 					

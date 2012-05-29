@@ -59,7 +59,7 @@
                         "dias_de_embarque"  => "dias_embarque"
 		));
 	
-	$form->addApiCall( "api/proveedor/nuevo/", "GET" );
+	$form->addApiCall( "api/proveedor/nuevo/", "POST" );
         $form->onApiCallSuccessRedirect("proveedores.lista.php");
 	
 	$form->makeObligatory(array( 
