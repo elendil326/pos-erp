@@ -100,9 +100,6 @@ $table_e->addColRender("id_lote", "lotename");
 $table_e->addColRender("id_unidad", "unidadname");
 
 
-
-
-
 $page->addComponent("<hr>");
 $page->addComponent(new TitleComponent("Nueva entrada",2));
 
@@ -112,13 +109,45 @@ $entrada_lote->createComboBoxJoin("id_lote", "id_lote", LoteDAO::getAll(   ) );
 $entrada_lote->addField("cantidad", "Cantidad", "text");
 $entrada_lote->addField("productos", "", "text", "\"   [ { \\\"id_producto\\\" : ". $_GET["pid"] .", \\\"cantidad\\\"    : 40 } ]   \"");
 $entrada_lote->sendHidden("productos");
+
+$entrada_lote->beforeSend("beforeSendNuevaEntrada");
 $entrada_lote->addApiCall("api/almacen/lote/entrada", "POST");
+
+$page->addComponent("<script> function beforeSendNuevaEntrada(a){ 
+				console.log('beforeSend(' + a + ')');
+				var aPdec = Ext.JSON.decode(a.productos);
+				console.log(aPdec);
+				aPdec[0].cantidad = a.cantidad;
+				a.productos = Ext.JSON.encode(aPdec);
+				return a;
+			}</script>");
+			
 $page->addComponent( $entrada_lote );
 
 
 
 
-$page->nextTab("Entradas y salidas");
+
+
+
+
+
+
+
+
+$page->nextTab("Historial");
+//mostrar entradas
+//LoteEntrada
+//LoteSalida
+
+
+
+
+
+
+
+
+
 
 $page->nextTab("Configuracion");
 $menu = new MenuComponent();
