@@ -20,5 +20,33 @@ require_once("base/lote_salida_producto.vo.base.php");
   */
 class LoteSalidaProductoDAO extends LoteSalidaProductoDAOBase
 {
+	public static function obtenerSalidaPorProducto($id_producto, $dias = 60){
 
+		$sql = "SELECT 
+					le.id_lote_salida,
+					lep.id_producto,
+					lep.cantidad,
+					le.id_lote,
+					le.id_usuario,
+					le.fecha_registro,
+					le.motivo
+				FROM 
+					lote_salida le,
+					lote_salida_producto lep 
+				WHERE 
+					lep.id_lote_salida = le.id_lote_salida
+					and lep.id_producto = ?";
+
+
+		global $conn;
+		$rs = $conn->Execute($sql, array($id_producto));
+		$allData = array();
+		foreach ($rs as $foo) {
+			$foo["tipo"] = "SALIDA";
+    		array_push( $allData, $foo);
+			//id_billete
+		}
+		return $allData;
+
+	}
 }

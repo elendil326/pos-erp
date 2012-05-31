@@ -107,7 +107,7 @@ $entrada_lote = new FormComponent(  );
 $entrada_lote->addField("id_lote", "Lote", "combobox" );
 $entrada_lote->createComboBoxJoin("id_lote", "id_lote", LoteDAO::getAll(   ) );
 $entrada_lote->addField("cantidad", "Cantidad", "text");
-$entrada_lote->addField("productos", "", "text", "\"   [ { \\\"id_producto\\\" : ". $_GET["pid"] .", \\\"cantidad\\\"    : 40 } ]   \"");
+$entrada_lote->addField("productos", "", "text", "\"   [ { \\\"id_producto\\\" : ". $_GET["pid"] .", \\\"cantidad\\\"    : 0 } ]   \"");
 $entrada_lote->sendHidden("productos");
 
 $entrada_lote->beforeSend("beforeSendNuevaEntrada");
@@ -137,12 +137,62 @@ $page->addComponent( $entrada_lote );
 
 $page->nextTab("Historial");
 //mostrar entradas
-//LoteEntrada
+$entradas = LoteEntradaProductoDAO::obtenerEntradaPorProducto( $_GET["pid"] );
+$salidas = LoteSalidaProductoDAO::obtenerSalidaPorProducto( $_GET["pid"] );
+
+$merged = array_merge($entradas, $salidas);
+
+$header = Array(
+		//"id_producto" 	=> "id_producto",
+		"tipo"			=> "Movimiento",
+		"cantidad"		=> "Cantidad",
+		"id_lote"		=> "Lote",
+		"id_usuario"	=> "Usuario",
+		"fecha_registro"=> "Fecha"
+		//"motivo"		=> "Motivo"
+	);
+$tabla = new TableComponent($header, $merged);
+$tabla->addColRender("id_usuario", "username");
+$tabla->addColRender("fecha_registro", "FormatTime");
+$tabla->addColRender("id_lote", "idlote");
+
+function username($idu){
+	$u = UsuarioDAO::getByPK($idu);
+	return $u->getNombre();
+}
+
+function idlote(){
+	
+}
+
+$page->addComponent($tabla);
+
+
+
+/*
+$salidas = LoteSalidaProductoDAO::search(new LoteSalidaProducto( array( "id_producto" => $_GET["pid"]) ));
+
+$merged = array_merge($entradas, $salidas);
+
+$header = Array(
+		"id_producto" => "id_producto",
+		"cantidad"	=> "cantidad"
+	);
+	
+$historial = array();
+
+for ($i=0; $i < sizeof($merged); $i++) { 
+	$historial[$i] = LoteEntradaDAO::getByPK( $merged[$i]->id_lote_entrada );
+}
+
+$tabla = new TableComponent($header, $historial);
+$page->addComponent($tabla);
+
 //LoteSalida
 
 
 
-
+*/
 
 
 
