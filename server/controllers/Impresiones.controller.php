@@ -218,7 +218,14 @@ class ImpresionesController {
 	        "precio" => "Total",
 	        "importe" => FormatMoney($total, DONT_USE_HTML)));
 
-	
+		$letra = new CNumeroaLetra();
+		$letra->setNumero($total);
+		
+	    array_push($elementos, array("cantidad" => "",
+	        "descripcion" => $letra->letra(),
+	        "precio" => "",
+	        "importe" => ""));		
+		
 	    $pdf->ezSetY(self::puntos_cm(18.6));
 	
 	    $opciones_tabla['xPos'] = self::puntos_cm(2);

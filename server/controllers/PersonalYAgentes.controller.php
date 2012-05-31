@@ -979,6 +979,15 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 						"resultados" => $usuarios);
 	}
   
+
+
+
+
+	public static function EditarObj(UsuarioDAO $usuario, DireccionDAO $direccion){
+		
+	}
+
+
 	/**
  	 *
  	 *Editar los detalles de un usuario.
@@ -1385,6 +1394,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 
                 //si se han obtenido nuevos impuestos se llama al metodo save para que actualice
                 //los ya existentes y almacene los nuevos
+/*
                 if(!is_null($impuestos))
                 {
                      $impuestos = object_to_array($impuestos);
@@ -1456,7 +1466,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                         }
                     }
                 }
-
+*/
                 //Si cambio el rol, se borran todos los permisos del usuario y se le asignan los
                 //permisos del nuevo rol.
                 $permisos_usuario = PermisoUsuarioDAO::search( new PermisoUsuario( array( "id_usuario" => $id_usuario ) ) );
