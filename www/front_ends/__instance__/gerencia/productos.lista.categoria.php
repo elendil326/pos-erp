@@ -30,6 +30,9 @@
 
 				function funcion_id_categoria_padre( $id_categoria_padre )
                 {
+					if( ! is_numeric($id_categoria_padre) )
+						return "";
+
 					$cat = ClasificacionProductoDAO::getByPk($id_categoria_padre);
                     return $cat->getNombre();
                 }
