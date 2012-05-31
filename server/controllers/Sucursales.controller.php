@@ -1043,6 +1043,7 @@ require_once("interfaces/Sucursales.interface.php");
             $venta->setTipoDeVenta($tipo_venta);
             $venta->setIdCaja($id_caja);
             $venta->setIdSucursal($id_sucursal);
+            $venta->setEsCotizacion(0);
             $venta->setIdUsuario($id_usuario);
             $venta->setIdVentaCaja($id_venta_caja);
             $venta->setCancelada(0);
@@ -1442,14 +1443,44 @@ require_once("interfaces/Sucursales.interface.php");
             }
         }
         
-        
+
+
+
+        private static function DescontarDeAlmacenes (
+	        VentaProducto $detalle_producto,
+            $id_sucursal	
+		){
+			//Validemos la sucursal
+			$sucursal = SucursalDAO::GetByPK($id_sucursal);
+			
+			if(is_null($sucursal)){
+				throw new InvalidDataException("Esta sucursal no existe");
+			}
+			
+			
+			if(!$sucursal->getActiva()){
+				throw new BusinessLogicException("No se pueden descontar de una sucursal inactiva");
+			}
+			
+			
+			
+			//buscar sus lotes y buscar que exista el proudcto en esos lotes
+			$almacenes = AlmacenDAO::search(new Almacen(array("id_sucursal" => $id_sucursal)));
+			
+			if(sizeof($almacenes) == 0 ){
+				throw new InvalidDataException("Eesta scuursal no tien almacenes");
+			}
+
+			$existencias = ProductoDAO::buscarProductoEnSucursal($detalle_producto->getIdProducto(), $id_sucursal);
+
+		}
         /*
          * Este metodo recibe un registro de la tabla venta_producto y la sucursal,
          * de tal forma que descontara de los almacenes de esa sucursal de manera uniforme
          * el producto recibido en el registro de venta_producto
          */
 
-        private static function DescontarDeAlmacenes
+        private static function DescontarDeAlmacenes2
         (
                 VentaProducto $detalle_producto,
                 $id_sucursal

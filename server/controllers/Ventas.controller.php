@@ -678,7 +678,7 @@ require_once("interfaces/Ventas.interface.php");
 	)
 	{  
 
-
+		
             if($es_cotizacion){
                return self::Cotizar(
                         $descuento, 
@@ -699,7 +699,7 @@ require_once("interfaces/Ventas.interface.php");
 
 
 
-            Logger::log("Creando nueva venta fuera de caja");
+            Logger::log("Creando nueva venta fuera de caja.....");
             
             //validar que vengan datos en detalles
             if( is_null($detalle_orden) && is_null($detalle_venta) && is_null($detalle_paquete) ){

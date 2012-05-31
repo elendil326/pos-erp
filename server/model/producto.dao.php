@@ -58,4 +58,33 @@ class ProductoDAO extends ProductoDAOBase
 		return $ar;
 	}
   
+
+
+
+
+	public static function buscarProductoEnSucursal($id_producto, $id_sucursal){
+			$sql = "SELECT
+				lp.cantidad,
+				lp.id_unidad,
+				lp.id_lote,
+				l.folio
+			FROM 
+				lote_producto lp,
+				lote l,
+				sucursal s,
+				almacen a
+			WHERE 
+				lp.id_producto = ?
+				and lp.id_lote = l.id_lote
+				and l.id_almacen = a.id_almacen
+				and a.id_sucursal = ?";
+				
+			global $conn;
+			$rs = $conn->Execute($sql, array($id_producto, $id_sucursal));
+			$ar = array( );
+			foreach ($rs as $foo) {
+	    		array_push( $ar, $foo);
+			}
+			return $ar;
+	}
 }
