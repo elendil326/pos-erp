@@ -134,7 +134,7 @@
 
 			
 			$tabla->addColRender("id_producto", 	"funcion_producto");
-			$tabla->addColRender("cantidad", 		"FormatMoney");
+			//$tabla->addColRender("cantidad", 		"FormatMoney");
 			$tabla->addColRender("precio", "FormatMoney");
 
 			$page->addComponent($tabla);

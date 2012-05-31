@@ -53,6 +53,7 @@ $page->nextTab("General");
 //
 // Forma de producto
 // 
+$este_producto->setCostoEstandar(FormatMoney($este_producto->getCostoEstandar()));
 $form = new DAOFormComponent($este_producto);
 $form->setEditable(false);
 

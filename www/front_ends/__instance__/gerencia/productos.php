@@ -12,17 +12,27 @@
 
 		$page->nextTab("Lista");
 		
+		$cols = array(
+			"codigo_producto" 	=> "Codigo producto",
+			"nombre_producto"	=> "Nombre Producto",
+			"precio" 			=> "Precio"
+		);
+		
 		
 		$tabla = new TableComponent( 
-			array(
-				"codigo_producto" 	=> "Codigo producto",
-				"nombre_producto"	=> "Nombre Producto",
-				"precio" 			=> "Precio"
-			),
+			$cols,
 			ProductosController::Lista()
 		);
-
-		$tabla->addColRender( "precio", "FormatMoney" );
+	
+	
+		function precio($precio, $obj){
+			if($obj["metodo_costeo"] === "costo"){
+				return FormatMoney($obj["costo_estandar"]);
+			}
+			return FormatMoney($precio);
+			
+		}
+		$tabla->addColRender( "precio", "precio" );
                 
 		$tabla->addOnClick( "id_producto", "(function(a){ window.location = 'productos.ver.php?pid=' + a; })" );
 		
