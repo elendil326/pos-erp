@@ -15,7 +15,7 @@
 			 ));
 
 
-		$form->addApiCall( "api/impuestos_retenciones/impuesto/nuevo" );
+		$form->addApiCall( "api/impuesto/nuevo" );
                 $form->onApiCallSuccessRedirect("impuestos.lista.impuesto.php");
 		
 		$form->makeObligatory( array(

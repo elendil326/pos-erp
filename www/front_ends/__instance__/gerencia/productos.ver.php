@@ -86,27 +86,41 @@ $page->nextTab("Existencias");
 $existencias = LoteProductoDAO::search( new LoteProducto( array( "id_producto" => $_GET["pid"] ) ) );
 
 $table_e = new TableComponent(array(
-	"id_lote" => "id_lote",
-	"cantidad" => "cantidad",
-	"id_unidad" => "id_unidad"
+	"id_lote" => "Lote",
+	"cantidad" => "Cantidad",
+	"id_unidad" => "Unidad"
 ),
 $existencias);
+
+function lotename($l){ $ll = LoteDAO::GetByPK($l); return $ll->getFolio();	 }
+function unidadname($l){ $ll = UnidadMedidaDAO::GetByPK($l); if (is_null($ll)) return "ERROR"; return $ll->getAbreviacion();  }
+
 $page->addComponent($table_e);
+$table_e->addColRender("id_lote", "lotename");
+$table_e->addColRender("id_unidad", "unidadname");
+
+
+
+
+
+$page->addComponent("<hr>");
+$page->addComponent(new TitleComponent("Nueva entrada",2));
 
 $entrada_lote = new FormComponent(  );
-
-$entrada_lote->addField("id_lote", "lote", "combobox" );
+$entrada_lote->addField("id_lote", "Lote", "combobox" );
 $entrada_lote->createComboBoxJoin("id_lote", "id_lote", LoteDAO::getAll(   ) );
 $entrada_lote->addField("cantidad", "Cantidad", "text");
 $entrada_lote->addField("productos", "", "text", "\"   [ { \\\"id_producto\\\" : ". $_GET["pid"] .", \\\"cantidad\\\"    : 40 } ]   \"");
 $entrada_lote->sendHidden("productos");
 $entrada_lote->addApiCall("api/almacen/lote/entrada", "POST");
-
 $page->addComponent( $entrada_lote );
 
 
-$page->nextTab("Configuracion");
 
+
+$page->nextTab("Entradas y salidas");
+
+$page->nextTab("Configuracion");
 $menu = new MenuComponent();
 $menu->addItem("Editar este producto", "productos.editar.php?pid=" . $_GET["pid"]);
 //$menu->addItem("Desactivar este producto", null);
