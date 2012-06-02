@@ -45,11 +45,18 @@ class UsuarioDAO extends UsuarioDAOBase
       return new Usuario($rs);
     }
 
-	public static function buscarEmpleados( $query = null, $how_many = 5000 ){
+	public static function buscarEmpleados( $query = null, $how_many = 5000, $activos = 1 ){
 		
 		if(is_null($query)){
-			$sql = "select * from usuario where id_rol != 5";
+			$sql = "select * from usuario where ( id_rol != 5";
+			$sql .= " and id_clasificacion_proveedor IS NULL  ";
+			$sql .= " and activo = ? ) ";
+			
+			
 			$val = array();
+			array_push($val , $activos);
+			
+			
 		}else{
 			$parts = explode(" ", $query);
 
@@ -66,7 +73,10 @@ class UsuarioDAO extends UsuarioDAOBase
 				$sql .= "  nombre like ? ";
 				array_push($val , "%" . $p . "%");
 			}
-			$sql .= " and id_rol != 5 ) ";	
+			$sql .= " and id_rol != 5  ";
+			$sql .= " and id_clasificacion_proveedor IS NULL  ";
+			$sql .= " and activo = ? ) ";
+			array_push($val , $activos);
 		}
 		
 

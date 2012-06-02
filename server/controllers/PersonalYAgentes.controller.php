@@ -947,7 +947,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 		$ordenar = null
 	)
 	{  
-            Logger::log("Listando a los usuarios");
+            Logger::log("Listando a los usuarios $activo");
 
             //valida el parametro activo.
             $validar=self::validarParametrosUsuario(null, null, null, null, null, null, null, $activo);
@@ -956,23 +956,17 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 Logger::error($validar);
                 throw new Exception($validar,901);
             }
+
+
+
             //inicializamos el arreglo que contendra la lista.
             $usuarios=array();
 
-            //valida el parametro ordenar.
-            //Ordenar tiene que ser un string que corresponda al nombre de un campo de la tabla usuario
-            
             //Si se paso el parametro activo, se llama al metodo search
-            if(!is_null($activo))
-            {
-                $usuarios=UsuarioDAO::search(new Usuario( array( "activo" => $activo ) ),$ordenar);
-            }
+            if(is_null($activo))  $activo = 1;
 
-            //Si no, se llama al metodo getAll.
-            else
-            {
-                $usuarios = UsuarioDAO::buscarEmpleados(  );
-            }
+            $usuarios = UsuarioDAO::buscarEmpleados( null, 5000, $activo );
+
             Logger::log("Se obtuvo la lista de usuarios exitosamente con ".count($usuarios)." elementos");
 
             return array("numero_de_resultados" => sizeof($usuarios),

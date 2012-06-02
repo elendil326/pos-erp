@@ -51,6 +51,7 @@
         $tabla->addColRender("subtotal", "FormatMoney");
         $tabla->addColRender("total", "FormatMoney");        
         $tabla->addColRender("saldo", "FormatMoney");        
+        $tabla->addColRender("descuento", "FormatMoney");        
         $tabla->addColRender("id_comprador_venta", "getUserName");
         $tabla->addOnClick( "id_venta", "(function(a){ window.location = 'ventas.detalle.php?vid=' + a; })" );
         $page->addComponent( $tabla );

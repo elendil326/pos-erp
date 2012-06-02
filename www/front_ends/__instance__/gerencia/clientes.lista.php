@@ -27,7 +27,7 @@
 			$lista["resultados"]
 		);
 
- 
+ 		$tabla->addColRender("saldo_del_ejercicio", "FormatMoney");
 
          /*
         function funcion_clasificacion_cliente($id_clasificacion_cliente){

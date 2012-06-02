@@ -26,7 +26,9 @@ class TableComponent implements GuiComponent{
 		$this->simple_render = false;
 	}
 	
-	
+	public function setRows($rows ){
+		$this->rows = $rows;
+	}
 
 
 
