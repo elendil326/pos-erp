@@ -16,6 +16,16 @@ $page->requireParam("pid", "GET", "Este producto no existe.");
 
 $este_producto = ProductoDAO::getByPK($_GET["pid"]);
 
+
+
+
+
+
+
+
+
+
+
 $precios = TarifasController::_CalcularTarifa( $este_producto, "venta" );
 
 $precios_html = "<table><tr><td colspan=2><h3>Tarifas</h3></td></tr>	";
@@ -24,8 +34,24 @@ for ($i=0; $i < sizeof($precios); $i++) {
 }
 $precios_html .= "</table>";
 
+
+
+
+
+
+
+if(is_null($este_producto->getFotoDelProducto())){
+	$page->addComponent("<div class=\"canvas\">
+				&iquest; Es esta una imagen descriptiva de su producto?
+			</div>
+		");
+}
+	
+
+
 $page->addComponent("
-<table>
+<table  class=\"canvas\">
+
     <tr>
         <td rowspan=2><div id=\"gimg\"></div></td>
         <td><h2>" . $este_producto->getNombreProducto() . "</h2></td>
@@ -44,6 +70,14 @@ $page->addComponent("
         type=\"text/javascript\" 
         src=\"https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=".  $este_producto->getCodigoProducto() . "&callback=gimgcb\">
 </script>");
+
+
+
+
+
+
+
+
 
 
 

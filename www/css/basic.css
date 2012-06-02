@@ -605,3 +605,18 @@ table.tabs{
 		box-shadow: 0px 0px 5px rgba(0, 0, 0, .52);
 
  	}
+
+
+
+	
+	.canvas { 
+		margin-bottom: 10px;
+		padding: 5px;
+
+		background: #EEE;
+		border-radius: 5px;
+		-moz-box-shadow: 0px 0px 5px rgba(0, 0, 0, .52);
+		-webkit-box-shadow: 0px 0px 5px rgba(0, 0, 0, .52);
+		box-shadow: 0px 0px 5px rgba(0, 0, 0, .52);
+
+ 	}
