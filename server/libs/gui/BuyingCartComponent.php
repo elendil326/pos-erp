@@ -23,6 +23,7 @@ class BuyingCartComponent /* extends CartComponent */ implements GuiComponent
 		    'Ext.selection.CellModel',
 		]);
 
+		var grid;
 
 		/* ********************************************************
 	     /\  \         /\  \         /\  \         /\  \          ___        /\  \         /\  \    
@@ -492,7 +493,7 @@ class BuyingCartComponent /* extends CartComponent */ implements GuiComponent
 		};
 
 
-var grid;
+
 		Ext.onReady(function(){
 
 
@@ -659,7 +660,7 @@ var grid;
 		    });		
 
 		    Ext.create('Ext.panel.Panel', {
-		        renderTo: "ShoppingCartComponent_001",
+		        renderTo: "BuyingCartComponent_001",
 		        title: '',
 		        width: '100%',
 		        bodyPadding: 10,
@@ -677,12 +678,14 @@ var grid;
 		            anchor: '100%',
 					listeners :{
 						"select" : function(a,b,c){
-							console.log("LS:" , a,b,c);
-							//seleccionar_producto(a,b,c);
+							//console.log("LS:" , a,b,c);
+							seleccionar_producto(a,b,c);
 						}
+						
 					},
 		            listConfig: {
 		                loadingText: 'Buscando...',
+		
 		                emptyText: 'No se encontraron productos.',
 
 		                // Custom rendering template for each item
@@ -954,7 +957,7 @@ var grid;
 					-->
 				</table>
 
-				<div id="ShoppingCartComponent_001"><!-- buscar productos --></div>
+				<div id="BuyingCartComponent_001"><!-- buscar productos --></div>
 
 				<div id="carrito_de_compras" style="margin: 5px auto;">
 					<div id="carrito_de_compras_grid"></div>

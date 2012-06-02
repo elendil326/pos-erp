@@ -67,3 +67,7 @@ $POS_CONFIG["MAIL_METHOD"]		= "SMTP";
 # phpunit
 # *******************************
 $POS_CONFIG["PHPUNIT_INSTANCE_TO_TEST"]		= "71";
+
+
+$POS_CONFIG["GOOGLE_ANALYTICS_ID"]		= null;
+

@@ -626,9 +626,15 @@
 			
 			$res = $POS_CONFIG["CORE_CONN"]->Execute( $sql , array( $userEmail, $time, $_SERVER["REMOTE_ADDR"], $token ) );
 			
+			$cuerpo = "Bienvenido a su cuenta de POS ERP\n\n";
+			$cuerpo .= "Por favor siga el siguiente enlace para continuar con su inscripcion:";
+			$cuerpo .= "\n\nhttp://pos2.labs2.caffeina.mx/?t=by_email&key=" . $token;
 			
 			//enviar el correo electronico
-			
+			POSController::EnviarMail(
+				$cuerpo, 
+				$userEmail, 
+				"Bienvenido a POS ERP");
 			
 		}
 		
@@ -647,7 +653,7 @@
 			if(empty($res)){
 				//ya solicito la instancia
 				Logger::error("Este token no existe !");
-				return false;
+				return array("success" => false, "reason" => "No existe esta llave de solicitud.");
 			}
 			
 			
@@ -656,7 +662,9 @@
 			
 			if(!is_null($res["date_validated"])){
 				Logger::log("este ya fue validado");
-				return false;
+
+				
+				return array("success" => false, "reason" => "Esta llave de solicitud ya ha sido creada. Si olvido sus credenciales o necesita mas ayuda haga click aqui.");
 			}
 			
 			
@@ -672,8 +680,25 @@
 					WHERE `id_request` = ?;";			
 			
 			$res = $POS_CONFIG["CORE_CONN"]->Execute( $sql , array( $startTime, time(), $res["id_request"] ) );
+			
+			
+			$cuerpo = "Su nueva instancia de POS ERP ha sido creada con exito !\n\n";
+			$cuerpo .= "Puede acceder a su cuenta en la siguiente direccion:";
+			$cuerpo .= "\n\nhttp://127.0.0.1/caffeina/pos/branches/v1_5/www/front_ends/". $token ."/";
+			$cuerpo .= "\n\nHemos creado una cuenta de aministrador para usted, el usuario es: `1` y su contraseña es `123` sin las comillas.";
 
-			return $iid;
+			$cuerpo .= "";
+			
+			//enviar el correo electronico
+			POSController::EnviarMail(
+				$cuerpo, 
+				$userEmail, 
+				"Su cuenta POS ERP esta lista");
+			
+			
+			
+			return array("success" => true, "reason" => "Su instancia se ha creado con exito.");
+			
 			
 		}//validateDemo
 			

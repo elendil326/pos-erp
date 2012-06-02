@@ -4,19 +4,27 @@
 		define("BYPASS_INSTANCE_CHECK", true);
 		require_once("../server/bootstrap.php");
 	}
-	
+
+
+
+	if(isset($_POST["t"]) && ($_POST["t"] == "ajax_validation")){
+
+			$r = InstanciasController::validateDemo( $_POST["key"] );
+
+			echo json_encode($r);
+			
+			exit;
+	}
+
 ?><html>
 	<head>
-	<title>POS ERP</title>
+		<title>POS ERP</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="media/main_site/s.css">
 	</head>
-	<link rel="stylesheet" type="text/css" href="media/main_site/s.css">
-
-	
 	<body style="background-image: url(media/main_site/c.png);
 				 background-repeat: no-repeat;
-				background-position-x: 50%
-">
-
+				background-position-x: 50%">
 
 	    <div class="topbar js-topbar">
 	      <div class="global-nav" data-section-term="top_nav">
@@ -111,11 +119,57 @@
 				
 				<?php case "by_email" : ?>
 				<?php
-					$r = InstanciasController::validateDemo( $_GET["key"] );
+					//hacer ajaxaso a t=ajax_validation para crear
+					?>
+						<div id="response">
+							<table border="0">
+								<tr><td colspan=2>
+									<h2>Bienvenido de regreso.</h2>
+								</td></tr>
+								<tr>
+									<td ><img src="media/loader.gif"></td>
+									<td ><p style="padding-top:10px">Por favor espere mientras creamos su nueva instancia.</td>								
+								</tr>
+							</table>							
+						</div>
+
+						<script type="text/javascript" charset="utf-8">
+							$(document).ready(function(){
+								$.ajax({
+								  url: 'index.php',
+								  type: 'POST',
+								  dataType: 'json',
+								  data: {
+										t : "ajax_validation",
+										key : "<?php echo $_GET["key"]; ?>"
+									},
+								  success: function(data) {
+
+									if(data.success){
+								    	$('#response').html(data.reason);
+									}else{
+										
+										$("#response").html(
+											"<h2>Algo no salio bien</h2>" + 
+												data.reason
+												+ "<br><br>"
+											);
+									}
+
+								  }
+								});								
+							})
+
+						</script>
+					<?php
 				?>
 				<?php break; ?><!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 				
-				
+				<?php case "ajax_validation" : ?>
+				<?php
+					$r = InstanciasController::validateDemo( $_GET["key"] );
+				?>
+				<?php break; ?><!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 				
 				<?php case "signup" : ?>
 				<table border='0'>
@@ -199,6 +253,22 @@
 	      </div>
 	    </div>
 
+		<?php
+		if(defined("GOOGLE_ANALYTICS_ID") && !is_null(GOOGLE_ANALYTICS_ID)){
+				?>
+				<script type="text/javascript">
+				  var _gaq = _gaq || [];
+				  _gaq.push(['_setAccount', '<?php echo GOOGLE_ANALYTICS_ID; ?>']);
+				  _gaq.push(['_trackPageview']);
 
+				  (function() {
+				    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+				    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+				    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+				  })();
+				</script>
+				<?php
+		}
+		?>
 	</body>
 	</html>

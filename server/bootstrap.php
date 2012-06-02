@@ -235,7 +235,8 @@
 	define("MAIL_USERNAME", $POS_CONFIG["MAIL_USERNAME"]);
 	define("MAIL_PASSWORD", $POS_CONFIG["MAIL_PASSWORD"]);
 	
-	
+	define("GOOGLE_ANALYTICS_ID", $POS_CONFIG["GOOGLE_ANALYTICS_ID"]);
+
 	
 	# *******************************
 	define('POST', "__ISPOST__");

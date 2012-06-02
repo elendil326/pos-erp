@@ -5,6 +5,7 @@ class PosComponentPage extends StdComponentPage{
 
 	private $main_menu_json;
 	private $title;
+	private $GA;
 	
 	function __construct( $title = "Gerencia"){
 		$this->title = $title;
@@ -12,6 +13,12 @@ class PosComponentPage extends StdComponentPage{
 		$this->partial_render_n = 0;
 		$this->partial_render = false;
 		$this->parital_head_rendered = false;		
+		
+		if(defined("GOOGLE_ANALYTICS_ID") && !is_null(GOOGLE_ANALYTICS_ID)){
+			$this->GA = GOOGLE_ANALYTICS_ID;
+		}else{
+			$this->GA = null;
+		}
 	}
 	
 	private $partial_render_n;
@@ -22,6 +29,8 @@ class PosComponentPage extends StdComponentPage{
 		$this->partial_render = true;
 		$this->render();
 	}
+
+
 
 	private function _renderWrapper()	{
 		if(!$this->parital_head_rendered){
@@ -291,7 +300,28 @@ class PosComponentPage extends StdComponentPage{
 
 			
 		</div>
+		<?php
+		
+		if(!is_null($this->GA)){
+			?>
+			<script type="text/javascript">
 
+			  var _gaq = _gaq || [];
+			  _gaq.push(['_setAccount', <?php echo $this->GA; ?>]);
+			  _gaq.push(['_trackPageview']);
+
+			  (function() {
+			    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+			  })();
+
+			</script>
+			<?php
+		}
+
+		
+		?>
 		</body>
 		</html>
 	

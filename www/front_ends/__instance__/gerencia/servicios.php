@@ -30,9 +30,7 @@
 		}
 		
 		
-		function funcion_transcurrido($a, $obj){
-			return FormatTime(strtotime($obj["fecha_orden"]));
-		}
+
 
 		$page = new GerenciaTabPage();
 
@@ -64,7 +62,7 @@
 		), $ordenes["resultados"]);
 
 
-		$tabla->addColRender("fecha_orden", "funcion_transcurrido");
+		$tabla->addColRender("fecha_orden", "FormatTime");
 		$tabla->addColRender("activa", "funcion_activa");
 		$tabla->addColRender("cancelada", "funcion_cancelada");
 		$tabla->addColRender("id_servicio", "funcion_servicio");
@@ -96,7 +94,7 @@
 		), $ordenes["resultados"]);
 
 
-		$tabla->addColRender("fecha_orden", "funcion_transcurrido");
+		$tabla->addColRender("fecha_orden", "FormatTime");
 
 		$tabla->addColRender("activa", "funcion_activa");
 

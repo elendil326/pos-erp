@@ -47,6 +47,7 @@
 	    "id_usuario",
 	    "id_sucursal",
 	    "id_rol",
+	"token_recuperacion_pass",
 	    "id_clasificacion_proveedor",
             "id_direccion_alterna",
 	    "fecha_asignacion_rol",
