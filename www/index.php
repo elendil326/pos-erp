@@ -41,7 +41,8 @@
 	            </ul>
 	            <div class="pull-right">
 	              <ul class="nav secondary-nav">
-	                <li><a href="front_ends/j/" id="">CAdmin</a></li>
+	                <li><a href="http://labs2.caffeina.mx/public/apis/?repname=pos" id="">API</a></li>
+	                <li><a href="mailto:contacto@caffeina.mx" id="">Contacto</a></li>	
 	              </ul>
 	            </div>
 	          </div>
@@ -146,7 +147,13 @@
 								  success: function(data) {
 
 									if(data.success){
-								    	$('#response').html(data.reason);
+								    	$('#response').html( "<h2>" + data.reason + "</h2>"
+										 + "Puede ingresar a su instancia haciendo click " 
+										+ "<a href='http://pos2.labs2.caffeina.mx/front_ends/<?php echo $_GET["key"]; ?>/'>aqui</a>. "
+										+ "Tambien hemos enviado esta liga junto con "
+										+ " otra informacion importante a su correo electronico."
+										+ "<br><br>"
+										);
 									}else{
 										
 										$("#response").html(
@@ -244,10 +251,10 @@
 
 	          <ul class="links">
 	            <li class="first">&copy; 2012 Caffeina Software |</li>
-	            <li><a href="/about">Acerca de caffeina</a></li>
-	            <li><a href="/about">Contacto</a></li>
-	            <li><a href="/help">Ayuda</a></li>
-	          <li><a href="http://status.caffeina.com/">Status</a></li>
+	            <li><a href="http://www3.caffeina.mx/">Acerca de caffeina</a></li>
+	            <li><a href="http://www3.caffeina.mx/">Contacto</a></li>
+	            <li><a href="http://www3.caffeina.mx/art.php?cid=3">Ayuda</a></li>
+	            <li><a href="http://labs2.caffeina.mx/public/apis/?repname=pos">API</a></li>	
 	          </ul>
 	        </div>
 	      </div>
