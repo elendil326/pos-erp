@@ -205,7 +205,6 @@ input[type=text]:focus {
 .nav .nav-home-logged-out {
   width: 105px;
   height: 20px;
-  background-image: url(../t1/img/twitter_logo_top_bar.png);
   background-position: 0 0;
   margin-top: -4px;
 }
@@ -219,7 +218,6 @@ input[type=text]:focus {
 /* Backgrounds
 ------------------------- */
 .global-nav {
-  background-image: url(../t1/img/twitter_web_sprite_bgs.png);
   background-position: 0 0; background-color: #252525;
   background-repeat: repeat-x;
 }
@@ -227,7 +225,6 @@ input[type=text]:focus {
 /* Icons
 ------------------------- */
 i {
-  background-image: url(../t1/img/twitter_web_sprite_icons.png);
   background-position: 0 0;
   background-repeat: no-repeat;
   display: inline-block;

@@ -307,7 +307,7 @@ class PosComponentPage extends StdComponentPage{
 			<script type="text/javascript">
 
 			  var _gaq = _gaq || [];
-			  _gaq.push(['_setAccount', <?php echo $this->GA; ?>]);
+			  _gaq.push(['_setAccount', '<?php echo $this->GA; ?>']);
 			  _gaq.push(['_trackPageview']);
 
 			  (function() {
