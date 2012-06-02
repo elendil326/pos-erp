@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link ImpuestoSucursal }. 
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access private
   * @abstract
   * @package docs
@@ -40,20 +40,26 @@ abstract class ImpuestoSucursalDAOBase extends DAO
 	  *	Obtener {@link ImpuestoSucursal} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ImpuestoSucursal} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ImpuestoSucursal Un objeto del tipo {@link ImpuestoSucursal}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_impuesto, $id_sucursal )
 	{
+		if(  is_null( $id_impuesto ) || is_null( $id_sucursal )  ){ return NULL; }
+            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "ImpuestoSucursal-" . $id_impuesto."-" . $id_sucursal ))){
+                Logger::log("REDIS !");
+                return new ImpuestoSucursal($obj);
+            }
 		$sql = "SELECT * FROM impuesto_sucursal WHERE (id_impuesto = ? AND id_sucursal = ? ) LIMIT 1;";
 		$params = array(  $id_impuesto, $id_sucursal );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0)return NULL;
-			$foo = new ImpuestoSucursal( $rs );
-			return $foo;
+		if(count($rs)==0) return NULL;
+		$foo = new ImpuestoSucursal( $rs );
+		if(!is_null(self::$redisConection)) self::$redisConection->set(  "ImpuestoSucursal-" . $id_impuesto."-" . $id_sucursal, $foo );
+		return $foo;
 	}
 
 
@@ -87,8 +93,7 @@ abstract class ImpuestoSucursalDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new ImpuestoSucursal($foo);
     		array_push( $allData, $bar);
-			//id_impuesto
-			//id_sucursal
+                if(!is_null(self::$redisConection)) self::$redisConection->set(  "ImpuestoSucursal-" . $bar->getIdImpuesto()."-" . $bar->getIdSucursal(), $bar );
 		}
 		return $allData;
 	}
@@ -144,6 +149,7 @@ abstract class ImpuestoSucursalDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new ImpuestoSucursal($foo);
     		array_push( $ar,$bar);
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ImpuestoSucursal-" . $bar->getIdImpuesto()."-" . $bar->getIdSucursal(), $bar );
 		}
 		return $ar;
 	}
@@ -263,7 +269,8 @@ abstract class ImpuestoSucursalDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new ImpuestoSucursal($foo));
+    		array_push( $ar, $bar = new ImpuestoSucursal($foo));
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ImpuestoSucursal-" . $bar->getIdImpuesto()."-" . $bar->getIdSucursal(), $bar );
 		}
 		return $ar;
 	}

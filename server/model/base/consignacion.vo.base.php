@@ -2,7 +2,7 @@
 /** Value Object file for table consignacion.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access public
   * @package docs
   * 
@@ -22,6 +22,10 @@ class Consignacion extends VO
 	{ 
 		if(isset($data))
 		{
+                    if(is_string($data))
+                        $data = self::object_to_array(json_decode($data));
+
+
 			if( isset($data['id_consignacion']) ){
 				$this->id_consignacion = $data['id_consignacion'];
 			}
@@ -142,7 +146,7 @@ class Consignacion extends VO
 	  * 
 	  * la fecha que se creo esta consignacion<br>
 	  * @access public
-	  * @var datetime
+	  * @var int(11)
 	  */
 	public $fecha_creacion;
 
@@ -196,7 +200,7 @@ class Consignacion extends VO
 	  * 
 	  * Fecha en que se termino la consignacion, si la consignacion fue cancelada, la fecha de cancelacion se guardara aqui<br>
 	  * @access public
-	  * @var datetime
+	  * @var int(11)
 	  */
 	public $fecha_termino;
 
@@ -340,7 +344,7 @@ class Consignacion extends VO
 	  * getFechaCreacion
 	  * 
 	  * Get the <i>fecha_creacion</i> property for this object. Donde <i>fecha_creacion</i> es la fecha que se creo esta consignacion
-	  * @return datetime
+	  * @return int(11)
 	  */
 	final public function getFechaCreacion()
 	{
@@ -351,9 +355,9 @@ class Consignacion extends VO
 	  * setFechaCreacion( $fecha_creacion )
 	  * 
 	  * Set the <i>fecha_creacion</i> property for this object. Donde <i>fecha_creacion</i> es la fecha que se creo esta consignacion.
-	  * Una validacion basica se hara aqui para comprobar que <i>fecha_creacion</i> es de tipo <i>datetime</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha_creacion</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param datetime
+	  * @param int(11)
 	  */
 	final public function setFechaCreacion( $fecha_creacion )
 	{
@@ -484,7 +488,7 @@ class Consignacion extends VO
 	  * getFechaTermino
 	  * 
 	  * Get the <i>fecha_termino</i> property for this object. Donde <i>fecha_termino</i> es Fecha en que se termino la consignacion, si la consignacion fue cancelada, la fecha de cancelacion se guardara aqui
-	  * @return datetime
+	  * @return int(11)
 	  */
 	final public function getFechaTermino()
 	{
@@ -495,9 +499,9 @@ class Consignacion extends VO
 	  * setFechaTermino( $fecha_termino )
 	  * 
 	  * Set the <i>fecha_termino</i> property for this object. Donde <i>fecha_termino</i> es Fecha en que se termino la consignacion, si la consignacion fue cancelada, la fecha de cancelacion se guardara aqui.
-	  * Una validacion basica se hara aqui para comprobar que <i>fecha_termino</i> es de tipo <i>datetime</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha_termino</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param datetime
+	  * @param int(11)
 	  */
 	final public function setFechaTermino( $fecha_termino )
 	{

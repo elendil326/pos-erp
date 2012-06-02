@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link BilleteCaja }. 
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access private
   * @abstract
   * @package docs
@@ -40,20 +40,26 @@ abstract class BilleteCajaDAOBase extends DAO
 	  *	Obtener {@link BilleteCaja} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link BilleteCaja} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link BilleteCaja Un objeto del tipo {@link BilleteCaja}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_billete, $id_caja )
 	{
+		if(  is_null( $id_billete ) || is_null( $id_caja )  ){ return NULL; }
+            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "BilleteCaja-" . $id_billete."-" . $id_caja ))){
+                Logger::log("REDIS !");
+                return new BilleteCaja($obj);
+            }
 		$sql = "SELECT * FROM billete_caja WHERE (id_billete = ? AND id_caja = ? ) LIMIT 1;";
 		$params = array(  $id_billete, $id_caja );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0)return NULL;
-			$foo = new BilleteCaja( $rs );
-			return $foo;
+		if(count($rs)==0) return NULL;
+		$foo = new BilleteCaja( $rs );
+		if(!is_null(self::$redisConection)) self::$redisConection->set(  "BilleteCaja-" . $id_billete."-" . $id_caja, $foo );
+		return $foo;
 	}
 
 
@@ -87,8 +93,7 @@ abstract class BilleteCajaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new BilleteCaja($foo);
     		array_push( $allData, $bar);
-			//id_billete
-			//id_caja
+                if(!is_null(self::$redisConection)) self::$redisConection->set(  "BilleteCaja-" . $bar->getIdBillete()."-" . $bar->getIdCaja(), $bar );
 		}
 		return $allData;
 	}
@@ -149,6 +154,7 @@ abstract class BilleteCajaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new BilleteCaja($foo);
     		array_push( $ar,$bar);
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "BilleteCaja-" . $bar->getIdBillete()."-" . $bar->getIdCaja(), $bar );
 		}
 		return $ar;
 	}
@@ -288,7 +294,8 @@ abstract class BilleteCajaDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new BilleteCaja($foo));
+    		array_push( $ar, $bar = new BilleteCaja($foo));
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "BilleteCaja-" . $bar->getIdBillete()."-" . $bar->getIdCaja(), $bar );
 		}
 		return $ar;
 	}

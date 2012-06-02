@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link Billete }. 
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access private
   * @abstract
   * @package docs
@@ -40,20 +40,26 @@ abstract class BilleteDAOBase extends DAO
 	  *	Obtener {@link Billete} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Billete} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Billete Un objeto del tipo {@link Billete}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_billete )
 	{
+		if(  is_null( $id_billete )  ){ return NULL; }
+            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "Billete-" . $id_billete ))){
+                Logger::log("REDIS !");
+                return new Billete($obj);
+            }
 		$sql = "SELECT * FROM billete WHERE (id_billete = ? ) LIMIT 1;";
 		$params = array(  $id_billete );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0)return NULL;
-			$foo = new Billete( $rs );
-			return $foo;
+		if(count($rs)==0) return NULL;
+		$foo = new Billete( $rs );
+		if(!is_null(self::$redisConection)) self::$redisConection->set(  "Billete-" . $id_billete, $foo );
+		return $foo;
 	}
 
 
@@ -87,7 +93,7 @@ abstract class BilleteDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new Billete($foo);
     		array_push( $allData, $bar);
-			//id_billete
+                if(!is_null(self::$redisConection)) self::$redisConection->set(  "Billete-" . $bar->getIdBillete(), $bar );
 		}
 		return $allData;
 	}
@@ -163,6 +169,7 @@ abstract class BilleteDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Billete($foo);
     		array_push( $ar,$bar);
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Billete-" . $bar->getIdBillete(), $bar );
 		}
 		return $ar;
 	}
@@ -342,7 +349,8 @@ abstract class BilleteDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new Billete($foo));
+    		array_push( $ar, $bar = new Billete($foo));
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Billete-" . $bar->getIdBillete(), $bar );
 		}
 		return $ar;
 	}

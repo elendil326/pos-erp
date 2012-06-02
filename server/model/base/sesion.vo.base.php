@@ -2,7 +2,7 @@
 /** Value Object file for table sesion.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access public
   * @package docs
   * 
@@ -22,6 +22,10 @@ class Sesion extends VO
 	{ 
 		if(isset($data))
 		{
+                    if(is_string($data))
+                        $data = self::object_to_array(json_decode($data));
+
+
 			if( isset($data['id_sesion']) ){
 				$this->id_sesion = $data['id_sesion'];
 			}
@@ -97,7 +101,7 @@ class Sesion extends VO
 	  * 
 	  *  [Campo no documentado]<br>
 	  * @access public
-	  * @var datetime
+	  * @var int(11)
 	  */
 	public $fecha_de_vencimiento;
 
@@ -199,7 +203,7 @@ class Sesion extends VO
 	  * getFechaDeVencimiento
 	  * 
 	  * Get the <i>fecha_de_vencimiento</i> property for this object. Donde <i>fecha_de_vencimiento</i> es  [Campo no documentado]
-	  * @return datetime
+	  * @return int(11)
 	  */
 	final public function getFechaDeVencimiento()
 	{
@@ -210,9 +214,9 @@ class Sesion extends VO
 	  * setFechaDeVencimiento( $fecha_de_vencimiento )
 	  * 
 	  * Set the <i>fecha_de_vencimiento</i> property for this object. Donde <i>fecha_de_vencimiento</i> es  [Campo no documentado].
-	  * Una validacion basica se hara aqui para comprobar que <i>fecha_de_vencimiento</i> es de tipo <i>datetime</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha_de_vencimiento</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param datetime
+	  * @param int(11)
 	  */
 	final public function setFechaDeVencimiento( $fecha_de_vencimiento )
 	{

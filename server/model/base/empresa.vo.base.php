@@ -2,7 +2,7 @@
 /** Value Object file for table empresa.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access public
   * @package docs
   * 
@@ -22,6 +22,10 @@ class Empresa extends VO
 	{ 
 		if(isset($data))
 		{
+                    if(is_string($data))
+                        $data = self::object_to_array(json_decode($data));
+
+
 			if( isset($data['id_empresa']) ){
 				$this->id_empresa = $data['id_empresa'];
 			}
@@ -131,7 +135,7 @@ class Empresa extends VO
 	  * 
 	  * Fecha en que se creo esta empresa<br>
 	  * @access public
-	  * @var datetime
+	  * @var int(11)
 	  */
 	public $fecha_alta;
 
@@ -140,7 +144,7 @@ class Empresa extends VO
 	  * 
 	  * Fecha en que se desactivo esa empresa<br>
 	  * @access public
-	  * @var datetime
+	  * @var int(11)
 	  */
 	public $fecha_baja;
 
@@ -299,7 +303,7 @@ class Empresa extends VO
 	  * getFechaAlta
 	  * 
 	  * Get the <i>fecha_alta</i> property for this object. Donde <i>fecha_alta</i> es Fecha en que se creo esta empresa
-	  * @return datetime
+	  * @return int(11)
 	  */
 	final public function getFechaAlta()
 	{
@@ -310,9 +314,9 @@ class Empresa extends VO
 	  * setFechaAlta( $fecha_alta )
 	  * 
 	  * Set the <i>fecha_alta</i> property for this object. Donde <i>fecha_alta</i> es Fecha en que se creo esta empresa.
-	  * Una validacion basica se hara aqui para comprobar que <i>fecha_alta</i> es de tipo <i>datetime</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha_alta</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param datetime
+	  * @param int(11)
 	  */
 	final public function setFechaAlta( $fecha_alta )
 	{
@@ -323,7 +327,7 @@ class Empresa extends VO
 	  * getFechaBaja
 	  * 
 	  * Get the <i>fecha_baja</i> property for this object. Donde <i>fecha_baja</i> es Fecha en que se desactivo esa empresa
-	  * @return datetime
+	  * @return int(11)
 	  */
 	final public function getFechaBaja()
 	{
@@ -334,9 +338,9 @@ class Empresa extends VO
 	  * setFechaBaja( $fecha_baja )
 	  * 
 	  * Set the <i>fecha_baja</i> property for this object. Donde <i>fecha_baja</i> es Fecha en que se desactivo esa empresa.
-	  * Una validacion basica se hara aqui para comprobar que <i>fecha_baja</i> es de tipo <i>datetime</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha_baja</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param datetime
+	  * @param int(11)
 	  */
 	final public function setFechaBaja( $fecha_baja )
 	{

@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link Compra }. 
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access private
   * @abstract
   * @package docs
@@ -40,20 +40,26 @@ abstract class CompraDAOBase extends DAO
 	  *	Obtener {@link Compra} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Compra} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Compra Un objeto del tipo {@link Compra}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_compra )
 	{
+		if(  is_null( $id_compra )  ){ return NULL; }
+            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "Compra-" . $id_compra ))){
+                Logger::log("REDIS !");
+                return new Compra($obj);
+            }
 		$sql = "SELECT * FROM compra WHERE (id_compra = ? ) LIMIT 1;";
 		$params = array(  $id_compra );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0)return NULL;
-			$foo = new Compra( $rs );
-			return $foo;
+		if(count($rs)==0) return NULL;
+		$foo = new Compra( $rs );
+		if(!is_null(self::$redisConection)) self::$redisConection->set(  "Compra-" . $id_compra, $foo );
+		return $foo;
 	}
 
 
@@ -87,7 +93,7 @@ abstract class CompraDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new Compra($foo);
     		array_push( $allData, $bar);
-			//id_compra
+                if(!is_null(self::$redisConection)) self::$redisConection->set(  "Compra-" . $bar->getIdCompra(), $bar );
 		}
 		return $allData;
 	}
@@ -218,6 +224,7 @@ abstract class CompraDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Compra($foo);
     		array_push( $ar,$bar);
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Compra-" . $bar->getIdCompra(), $bar );
 		}
 		return $ar;
 	}
@@ -540,7 +547,8 @@ abstract class CompraDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new Compra($foo));
+    		array_push( $ar, $bar = new Compra($foo));
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Compra-" . $bar->getIdCompra(), $bar );
 		}
 		return $ar;
 	}

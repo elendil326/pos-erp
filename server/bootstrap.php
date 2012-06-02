@@ -95,7 +95,7 @@
 	require_once('libs/adodb5/adodb-exceptions.inc.php');
 
 
-
+	require_once("libs/predis/lib/Predis/Autoloader.php");
 
 
 	# *******************************
@@ -346,4 +346,5 @@
 	SesionController::Limpiar(); 
 	SesionController::HeartBeat();	
 
+	DAO::predis("db".$rs["instance_id"], "127.0.0.1");
 	

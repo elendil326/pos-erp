@@ -2,7 +2,7 @@
 /** Value Object file for table cierre_caja.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access public
   * @package docs
   * 
@@ -22,6 +22,10 @@ class CierreCaja extends VO
 	{ 
 		if(isset($data))
 		{
+                    if(is_string($data))
+                        $data = self::object_to_array(json_decode($data));
+
+
 			if( isset($data['id_cierre_caja']) ){
 				$this->id_cierre_caja = $data['id_cierre_caja'];
 			}
@@ -97,7 +101,7 @@ class CierreCaja extends VO
 	  * 
 	  * fecha en que se realiza la operacion<br>
 	  * @access public
-	  * @var datetime
+	  * @var int(11)
 	  */
 	public $fecha;
 
@@ -113,7 +117,7 @@ class CierreCaja extends VO
 	/**
 	  * saldo_esperado
 	  * 
-	  * Saldo que debería de haber en la caja después de todos los movimientos del día<br>
+	  * Saldo que deberÃ­a de haber en la caja despuÃ©s de todos los movimientos del dÃ­a<br>
 	  * @access public
 	  * @var float
 	  */
@@ -199,7 +203,7 @@ class CierreCaja extends VO
 	  * getFecha
 	  * 
 	  * Get the <i>fecha</i> property for this object. Donde <i>fecha</i> es fecha en que se realiza la operacion
-	  * @return datetime
+	  * @return int(11)
 	  */
 	final public function getFecha()
 	{
@@ -210,9 +214,9 @@ class CierreCaja extends VO
 	  * setFecha( $fecha )
 	  * 
 	  * Set the <i>fecha</i> property for this object. Donde <i>fecha</i> es fecha en que se realiza la operacion.
-	  * Una validacion basica se hara aqui para comprobar que <i>fecha</i> es de tipo <i>datetime</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param datetime
+	  * @param int(11)
 	  */
 	final public function setFecha( $fecha )
 	{
@@ -246,7 +250,7 @@ class CierreCaja extends VO
 	/**
 	  * getSaldoEsperado
 	  * 
-	  * Get the <i>saldo_esperado</i> property for this object. Donde <i>saldo_esperado</i> es Saldo que debería de haber en la caja después de todos los movimientos del día
+	  * Get the <i>saldo_esperado</i> property for this object. Donde <i>saldo_esperado</i> es Saldo que deberÃ­a de haber en la caja despuÃ©s de todos los movimientos del dÃ­a
 	  * @return float
 	  */
 	final public function getSaldoEsperado()
@@ -257,7 +261,7 @@ class CierreCaja extends VO
 	/**
 	  * setSaldoEsperado( $saldo_esperado )
 	  * 
-	  * Set the <i>saldo_esperado</i> property for this object. Donde <i>saldo_esperado</i> es Saldo que debería de haber en la caja después de todos los movimientos del día.
+	  * Set the <i>saldo_esperado</i> property for this object. Donde <i>saldo_esperado</i> es Saldo que deberÃ­a de haber en la caja despuÃ©s de todos los movimientos del dÃ­a.
 	  * Una validacion basica se hara aqui para comprobar que <i>saldo_esperado</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float

@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link AbonoCompra }. 
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access private
   * @abstract
   * @package docs
@@ -40,20 +40,26 @@ abstract class AbonoCompraDAOBase extends DAO
 	  *	Obtener {@link AbonoCompra} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link AbonoCompra} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link AbonoCompra Un objeto del tipo {@link AbonoCompra}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_abono_compra )
 	{
+		if(  is_null( $id_abono_compra )  ){ return NULL; }
+            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "AbonoCompra-" . $id_abono_compra ))){
+                Logger::log("REDIS !");
+                return new AbonoCompra($obj);
+            }
 		$sql = "SELECT * FROM abono_compra WHERE (id_abono_compra = ? ) LIMIT 1;";
 		$params = array(  $id_abono_compra );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0)return NULL;
-			$foo = new AbonoCompra( $rs );
-			return $foo;
+		if(count($rs)==0) return NULL;
+		$foo = new AbonoCompra( $rs );
+		if(!is_null(self::$redisConection)) self::$redisConection->set(  "AbonoCompra-" . $id_abono_compra, $foo );
+		return $foo;
 	}
 
 
@@ -87,7 +93,7 @@ abstract class AbonoCompraDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new AbonoCompra($foo);
     		array_push( $allData, $bar);
-			//id_abono_compra
+                if(!is_null(self::$redisConection)) self::$redisConection->set(  "AbonoCompra-" . $bar->getIdAbonoCompra(), $bar );
 		}
 		return $allData;
 	}
@@ -193,6 +199,7 @@ abstract class AbonoCompraDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new AbonoCompra($foo);
     		array_push( $ar,$bar);
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "AbonoCompra-" . $bar->getIdAbonoCompra(), $bar );
 		}
 		return $ar;
 	}
@@ -450,7 +457,8 @@ abstract class AbonoCompraDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new AbonoCompra($foo));
+    		array_push( $ar, $bar = new AbonoCompra($foo));
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "AbonoCompra-" . $bar->getIdAbonoCompra(), $bar );
 		}
 		return $ar;
 	}

@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link InspeccionConsignacionProducto }. 
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access private
   * @abstract
   * @package docs
@@ -40,20 +40,26 @@ abstract class InspeccionConsignacionProductoDAOBase extends DAO
 	  *	Obtener {@link InspeccionConsignacionProducto} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link InspeccionConsignacionProducto} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link InspeccionConsignacionProducto Un objeto del tipo {@link InspeccionConsignacionProducto}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_inspeccion_consignacion, $id_producto, $id_unidad )
 	{
+		if(  is_null( $id_inspeccion_consignacion ) || is_null( $id_producto ) || is_null( $id_unidad )  ){ return NULL; }
+            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "InspeccionConsignacionProducto-" . $id_inspeccion_consignacion."-" . $id_producto."-" . $id_unidad ))){
+                Logger::log("REDIS !");
+                return new InspeccionConsignacionProducto($obj);
+            }
 		$sql = "SELECT * FROM inspeccion_consignacion_producto WHERE (id_inspeccion_consignacion = ? AND id_producto = ? AND id_unidad = ? ) LIMIT 1;";
 		$params = array(  $id_inspeccion_consignacion, $id_producto, $id_unidad );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0)return NULL;
-			$foo = new InspeccionConsignacionProducto( $rs );
-			return $foo;
+		if(count($rs)==0) return NULL;
+		$foo = new InspeccionConsignacionProducto( $rs );
+		if(!is_null(self::$redisConection)) self::$redisConection->set(  "InspeccionConsignacionProducto-" . $id_inspeccion_consignacion."-" . $id_producto."-" . $id_unidad, $foo );
+		return $foo;
 	}
 
 
@@ -87,9 +93,7 @@ abstract class InspeccionConsignacionProductoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new InspeccionConsignacionProducto($foo);
     		array_push( $allData, $bar);
-			//id_inspeccion_consignacion
-			//id_producto
-			//id_unidad
+                if(!is_null(self::$redisConection)) self::$redisConection->set(  "InspeccionConsignacionProducto-" . $bar->getIdInspeccionConsignacion()."-" . $bar->getIdProducto()."-" . $bar->getIdUnidad(), $bar );
 		}
 		return $allData;
 	}
@@ -165,6 +169,7 @@ abstract class InspeccionConsignacionProductoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new InspeccionConsignacionProducto($foo);
     		array_push( $ar,$bar);
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "InspeccionConsignacionProducto-" . $bar->getIdInspeccionConsignacion()."-" . $bar->getIdProducto()."-" . $bar->getIdUnidad(), $bar );
 		}
 		return $ar;
 	}
@@ -342,7 +347,8 @@ abstract class InspeccionConsignacionProductoDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new InspeccionConsignacionProducto($foo));
+    		array_push( $ar, $bar = new InspeccionConsignacionProducto($foo));
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "InspeccionConsignacionProducto-" . $bar->getIdInspeccionConsignacion()."-" . $bar->getIdProducto()."-" . $bar->getIdUnidad(), $bar );
 		}
 		return $ar;
 	}

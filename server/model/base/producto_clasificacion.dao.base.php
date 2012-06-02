@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link ProductoClasificacion }. 
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access private
   * @abstract
   * @package docs
@@ -40,20 +40,26 @@ abstract class ProductoClasificacionDAOBase extends DAO
 	  *	Obtener {@link ProductoClasificacion} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ProductoClasificacion} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ProductoClasificacion Un objeto del tipo {@link ProductoClasificacion}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_producto, $id_clasificacion_producto )
 	{
+		if(  is_null( $id_producto ) || is_null( $id_clasificacion_producto )  ){ return NULL; }
+            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "ProductoClasificacion-" . $id_producto."-" . $id_clasificacion_producto ))){
+                Logger::log("REDIS !");
+                return new ProductoClasificacion($obj);
+            }
 		$sql = "SELECT * FROM producto_clasificacion WHERE (id_producto = ? AND id_clasificacion_producto = ? ) LIMIT 1;";
 		$params = array(  $id_producto, $id_clasificacion_producto );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0)return NULL;
-			$foo = new ProductoClasificacion( $rs );
-			return $foo;
+		if(count($rs)==0) return NULL;
+		$foo = new ProductoClasificacion( $rs );
+		if(!is_null(self::$redisConection)) self::$redisConection->set(  "ProductoClasificacion-" . $id_producto."-" . $id_clasificacion_producto, $foo );
+		return $foo;
 	}
 
 
@@ -87,8 +93,7 @@ abstract class ProductoClasificacionDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new ProductoClasificacion($foo);
     		array_push( $allData, $bar);
-			//id_producto
-			//id_clasificacion_producto
+                if(!is_null(self::$redisConection)) self::$redisConection->set(  "ProductoClasificacion-" . $bar->getIdProducto()."-" . $bar->getIdClasificacionProducto(), $bar );
 		}
 		return $allData;
 	}
@@ -144,6 +149,7 @@ abstract class ProductoClasificacionDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new ProductoClasificacion($foo);
     		array_push( $ar,$bar);
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ProductoClasificacion-" . $bar->getIdProducto()."-" . $bar->getIdClasificacionProducto(), $bar );
 		}
 		return $ar;
 	}
@@ -263,7 +269,8 @@ abstract class ProductoClasificacionDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new ProductoClasificacion($foo));
+    		array_push( $ar, $bar = new ProductoClasificacion($foo));
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ProductoClasificacion-" . $bar->getIdProducto()."-" . $bar->getIdClasificacionProducto(), $bar );
 		}
 		return $ar;
 	}

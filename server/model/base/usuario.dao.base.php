@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link Usuario }. 
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access private
   * @abstract
   * @package docs
@@ -40,20 +40,26 @@ abstract class UsuarioDAOBase extends DAO
 	  *	Obtener {@link Usuario} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Usuario} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Usuario Un objeto del tipo {@link Usuario}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_usuario )
 	{
+		if(  is_null( $id_usuario )  ){ return NULL; }
+            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "Usuario-" . $id_usuario ))){
+                Logger::log("REDIS !");
+                return new Usuario($obj);
+            }
 		$sql = "SELECT * FROM usuario WHERE (id_usuario = ? ) LIMIT 1;";
 		$params = array(  $id_usuario );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0)return NULL;
-			$foo = new Usuario( $rs );
-			return $foo;
+		if(count($rs)==0) return NULL;
+		$foo = new Usuario( $rs );
+		if(!is_null(self::$redisConection)) self::$redisConection->set(  "Usuario-" . $id_usuario, $foo );
+		return $foo;
 	}
 
 
@@ -87,7 +93,7 @@ abstract class UsuarioDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new Usuario($foo);
     		array_push( $allData, $bar);
-			//id_usuario
+                if(!is_null(self::$redisConection)) self::$redisConection->set(  "Usuario-" . $bar->getIdUsuario(), $bar );
 		}
 		return $allData;
 	}
@@ -363,6 +369,7 @@ abstract class UsuarioDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Usuario($foo);
     		array_push( $ar,$bar);
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Usuario-" . $bar->getIdUsuario(), $bar );
 		}
 		return $ar;
 	}
@@ -1062,7 +1069,8 @@ abstract class UsuarioDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new Usuario($foo));
+    		array_push( $ar, $bar = new Usuario($foo));
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Usuario-" . $bar->getIdUsuario(), $bar );
 		}
 		return $ar;
 	}

@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link Direccion }. 
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access private
   * @abstract
   * @package docs
@@ -40,20 +40,26 @@ abstract class DireccionDAOBase extends DAO
 	  *	Obtener {@link Direccion} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Direccion} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Direccion Un objeto del tipo {@link Direccion}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_direccion )
 	{
+		if(  is_null( $id_direccion )  ){ return NULL; }
+            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "Direccion-" . $id_direccion ))){
+                Logger::log("REDIS !");
+                return new Direccion($obj);
+            }
 		$sql = "SELECT * FROM direccion WHERE (id_direccion = ? ) LIMIT 1;";
 		$params = array(  $id_direccion );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0)return NULL;
-			$foo = new Direccion( $rs );
-			return $foo;
+		if(count($rs)==0) return NULL;
+		$foo = new Direccion( $rs );
+		if(!is_null(self::$redisConection)) self::$redisConection->set(  "Direccion-" . $id_direccion, $foo );
+		return $foo;
 	}
 
 
@@ -87,7 +93,7 @@ abstract class DireccionDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new Direccion($foo);
     		array_push( $allData, $bar);
-			//id_direccion
+                if(!is_null(self::$redisConection)) self::$redisConection->set(  "Direccion-" . $bar->getIdDireccion(), $bar );
 		}
 		return $allData;
 	}
@@ -193,6 +199,7 @@ abstract class DireccionDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Direccion($foo);
     		array_push( $ar,$bar);
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Direccion-" . $bar->getIdDireccion(), $bar );
 		}
 		return $ar;
 	}
@@ -450,7 +457,8 @@ abstract class DireccionDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new Direccion($foo));
+    		array_push( $ar, $bar = new Direccion($foo));
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Direccion-" . $bar->getIdDireccion(), $bar );
 		}
 		return $ar;
 	}

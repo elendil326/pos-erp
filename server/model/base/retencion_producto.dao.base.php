@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link RetencionProducto }. 
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access private
   * @abstract
   * @package docs
@@ -40,20 +40,26 @@ abstract class RetencionProductoDAOBase extends DAO
 	  *	Obtener {@link RetencionProducto} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link RetencionProducto} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link RetencionProducto Un objeto del tipo {@link RetencionProducto}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_retencion, $id_producto )
 	{
+		if(  is_null( $id_retencion ) || is_null( $id_producto )  ){ return NULL; }
+            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "RetencionProducto-" . $id_retencion."-" . $id_producto ))){
+                Logger::log("REDIS !");
+                return new RetencionProducto($obj);
+            }
 		$sql = "SELECT * FROM retencion_producto WHERE (id_retencion = ? AND id_producto = ? ) LIMIT 1;";
 		$params = array(  $id_retencion, $id_producto );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0)return NULL;
-			$foo = new RetencionProducto( $rs );
-			return $foo;
+		if(count($rs)==0) return NULL;
+		$foo = new RetencionProducto( $rs );
+		if(!is_null(self::$redisConection)) self::$redisConection->set(  "RetencionProducto-" . $id_retencion."-" . $id_producto, $foo );
+		return $foo;
 	}
 
 
@@ -87,8 +93,7 @@ abstract class RetencionProductoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new RetencionProducto($foo);
     		array_push( $allData, $bar);
-			//id_retencion
-			//id_producto
+                if(!is_null(self::$redisConection)) self::$redisConection->set(  "RetencionProducto-" . $bar->getIdRetencion()."-" . $bar->getIdProducto(), $bar );
 		}
 		return $allData;
 	}
@@ -144,6 +149,7 @@ abstract class RetencionProductoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new RetencionProducto($foo);
     		array_push( $ar,$bar);
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "RetencionProducto-" . $bar->getIdRetencion()."-" . $bar->getIdProducto(), $bar );
 		}
 		return $ar;
 	}
@@ -263,7 +269,8 @@ abstract class RetencionProductoDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new RetencionProducto($foo));
+    		array_push( $ar, $bar = new RetencionProducto($foo));
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "RetencionProducto-" . $bar->getIdRetencion()."-" . $bar->getIdProducto(), $bar );
 		}
 		return $ar;
 	}

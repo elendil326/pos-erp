@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link ConsignacionProducto }. 
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access private
   * @abstract
   * @package docs
@@ -40,20 +40,26 @@ abstract class ConsignacionProductoDAOBase extends DAO
 	  *	Obtener {@link ConsignacionProducto} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ConsignacionProducto} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ConsignacionProducto Un objeto del tipo {@link ConsignacionProducto}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_consignacion, $id_producto, $id_unidad )
 	{
+		if(  is_null( $id_consignacion ) || is_null( $id_producto ) || is_null( $id_unidad )  ){ return NULL; }
+            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "ConsignacionProducto-" . $id_consignacion."-" . $id_producto."-" . $id_unidad ))){
+                Logger::log("REDIS !");
+                return new ConsignacionProducto($obj);
+            }
 		$sql = "SELECT * FROM consignacion_producto WHERE (id_consignacion = ? AND id_producto = ? AND id_unidad = ? ) LIMIT 1;";
 		$params = array(  $id_consignacion, $id_producto, $id_unidad );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0)return NULL;
-			$foo = new ConsignacionProducto( $rs );
-			return $foo;
+		if(count($rs)==0) return NULL;
+		$foo = new ConsignacionProducto( $rs );
+		if(!is_null(self::$redisConection)) self::$redisConection->set(  "ConsignacionProducto-" . $id_consignacion."-" . $id_producto."-" . $id_unidad, $foo );
+		return $foo;
 	}
 
 
@@ -87,9 +93,7 @@ abstract class ConsignacionProductoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new ConsignacionProducto($foo);
     		array_push( $allData, $bar);
-			//id_consignacion
-			//id_producto
-			//id_unidad
+                if(!is_null(self::$redisConection)) self::$redisConection->set(  "ConsignacionProducto-" . $bar->getIdConsignacion()."-" . $bar->getIdProducto()."-" . $bar->getIdUnidad(), $bar );
 		}
 		return $allData;
 	}
@@ -175,6 +179,7 @@ abstract class ConsignacionProductoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new ConsignacionProducto($foo);
     		array_push( $ar,$bar);
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ConsignacionProducto-" . $bar->getIdConsignacion()."-" . $bar->getIdProducto()."-" . $bar->getIdUnidad(), $bar );
 		}
 		return $ar;
 	}
@@ -378,7 +383,8 @@ abstract class ConsignacionProductoDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new ConsignacionProducto($foo));
+    		array_push( $ar, $bar = new ConsignacionProducto($foo));
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ConsignacionProducto-" . $bar->getIdConsignacion()."-" . $bar->getIdProducto()."-" . $bar->getIdUnidad(), $bar );
 		}
 		return $ar;
 	}

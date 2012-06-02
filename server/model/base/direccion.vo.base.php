@@ -2,7 +2,7 @@
 /** Value Object file for table direccion.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access public
   * @package docs
   * 
@@ -22,6 +22,10 @@ class Direccion extends VO
 	{ 
 		if(isset($data))
 		{
+                    if(is_string($data))
+                        $data = self::object_to_array(json_decode($data));
+
+
 			if( isset($data['id_direccion']) ){
 				$this->id_direccion = $data['id_direccion'];
 			}
@@ -184,7 +188,7 @@ class Direccion extends VO
 	  * 
 	  * La ultima vez que este registro se modifico<br>
 	  * @access public
-	  * @var datetime
+	  * @var int(11)
 	  */
 	public $ultima_modificacion;
 
@@ -445,7 +449,7 @@ class Direccion extends VO
 	  * getUltimaModificacion
 	  * 
 	  * Get the <i>ultima_modificacion</i> property for this object. Donde <i>ultima_modificacion</i> es La ultima vez que este registro se modifico
-	  * @return datetime
+	  * @return int(11)
 	  */
 	final public function getUltimaModificacion()
 	{
@@ -456,9 +460,9 @@ class Direccion extends VO
 	  * setUltimaModificacion( $ultima_modificacion )
 	  * 
 	  * Set the <i>ultima_modificacion</i> property for this object. Donde <i>ultima_modificacion</i> es La ultima vez que este registro se modifico.
-	  * Una validacion basica se hara aqui para comprobar que <i>ultima_modificacion</i> es de tipo <i>datetime</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>ultima_modificacion</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param datetime
+	  * @param int(11)
 	  */
 	final public function setUltimaModificacion( $ultima_modificacion )
 	{

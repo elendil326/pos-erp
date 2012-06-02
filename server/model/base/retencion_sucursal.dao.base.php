@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link RetencionSucursal }. 
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access private
   * @abstract
   * @package docs
@@ -40,20 +40,26 @@ abstract class RetencionSucursalDAOBase extends DAO
 	  *	Obtener {@link RetencionSucursal} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link RetencionSucursal} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link RetencionSucursal Un objeto del tipo {@link RetencionSucursal}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_retencion, $id_sucursal )
 	{
+		if(  is_null( $id_retencion ) || is_null( $id_sucursal )  ){ return NULL; }
+            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "RetencionSucursal-" . $id_retencion."-" . $id_sucursal ))){
+                Logger::log("REDIS !");
+                return new RetencionSucursal($obj);
+            }
 		$sql = "SELECT * FROM retencion_sucursal WHERE (id_retencion = ? AND id_sucursal = ? ) LIMIT 1;";
 		$params = array(  $id_retencion, $id_sucursal );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0)return NULL;
-			$foo = new RetencionSucursal( $rs );
-			return $foo;
+		if(count($rs)==0) return NULL;
+		$foo = new RetencionSucursal( $rs );
+		if(!is_null(self::$redisConection)) self::$redisConection->set(  "RetencionSucursal-" . $id_retencion."-" . $id_sucursal, $foo );
+		return $foo;
 	}
 
 
@@ -87,8 +93,7 @@ abstract class RetencionSucursalDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new RetencionSucursal($foo);
     		array_push( $allData, $bar);
-			//id_retencion
-			//id_sucursal
+                if(!is_null(self::$redisConection)) self::$redisConection->set(  "RetencionSucursal-" . $bar->getIdRetencion()."-" . $bar->getIdSucursal(), $bar );
 		}
 		return $allData;
 	}
@@ -144,6 +149,7 @@ abstract class RetencionSucursalDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new RetencionSucursal($foo);
     		array_push( $ar,$bar);
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "RetencionSucursal-" . $bar->getIdRetencion()."-" . $bar->getIdSucursal(), $bar );
 		}
 		return $ar;
 	}
@@ -263,7 +269,8 @@ abstract class RetencionSucursalDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new RetencionSucursal($foo));
+    		array_push( $ar, $bar = new RetencionSucursal($foo));
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "RetencionSucursal-" . $bar->getIdRetencion()."-" . $bar->getIdSucursal(), $bar );
 		}
 		return $ar;
 	}

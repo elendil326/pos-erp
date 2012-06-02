@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link OrdenDeServicioPaquete }. 
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access private
   * @abstract
   * @package docs
@@ -40,20 +40,26 @@ abstract class OrdenDeServicioPaqueteDAOBase extends DAO
 	  *	Obtener {@link OrdenDeServicioPaquete} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link OrdenDeServicioPaquete} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link OrdenDeServicioPaquete Un objeto del tipo {@link OrdenDeServicioPaquete}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_servicio, $id_paquete )
 	{
+		if(  is_null( $id_servicio ) || is_null( $id_paquete )  ){ return NULL; }
+            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "OrdenDeServicioPaquete-" . $id_servicio."-" . $id_paquete ))){
+                Logger::log("REDIS !");
+                return new OrdenDeServicioPaquete($obj);
+            }
 		$sql = "SELECT * FROM orden_de_servicio_paquete WHERE (id_servicio = ? AND id_paquete = ? ) LIMIT 1;";
 		$params = array(  $id_servicio, $id_paquete );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0)return NULL;
-			$foo = new OrdenDeServicioPaquete( $rs );
-			return $foo;
+		if(count($rs)==0) return NULL;
+		$foo = new OrdenDeServicioPaquete( $rs );
+		if(!is_null(self::$redisConection)) self::$redisConection->set(  "OrdenDeServicioPaquete-" . $id_servicio."-" . $id_paquete, $foo );
+		return $foo;
 	}
 
 
@@ -87,8 +93,7 @@ abstract class OrdenDeServicioPaqueteDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new OrdenDeServicioPaquete($foo);
     		array_push( $allData, $bar);
-			//id_servicio
-			//id_paquete
+                if(!is_null(self::$redisConection)) self::$redisConection->set(  "OrdenDeServicioPaquete-" . $bar->getIdServicio()."-" . $bar->getIdPaquete(), $bar );
 		}
 		return $allData;
 	}
@@ -149,6 +154,7 @@ abstract class OrdenDeServicioPaqueteDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new OrdenDeServicioPaquete($foo);
     		array_push( $ar,$bar);
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "OrdenDeServicioPaquete-" . $bar->getIdServicio()."-" . $bar->getIdPaquete(), $bar );
 		}
 		return $ar;
 	}
@@ -288,7 +294,8 @@ abstract class OrdenDeServicioPaqueteDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new OrdenDeServicioPaquete($foo));
+    		array_push( $ar, $bar = new OrdenDeServicioPaquete($foo));
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "OrdenDeServicioPaquete-" . $bar->getIdServicio()."-" . $bar->getIdPaquete(), $bar );
 		}
 		return $ar;
 	}

@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link ClasificacionCliente }. 
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access private
   * @abstract
   * @package docs
@@ -40,20 +40,26 @@ abstract class ClasificacionClienteDAOBase extends DAO
 	  *	Obtener {@link ClasificacionCliente} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ClasificacionCliente} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ClasificacionCliente Un objeto del tipo {@link ClasificacionCliente}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_clasificacion_cliente )
 	{
+		if(  is_null( $id_clasificacion_cliente )  ){ return NULL; }
+            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "ClasificacionCliente-" . $id_clasificacion_cliente ))){
+                Logger::log("REDIS !");
+                return new ClasificacionCliente($obj);
+            }
 		$sql = "SELECT * FROM clasificacion_cliente WHERE (id_clasificacion_cliente = ? ) LIMIT 1;";
 		$params = array(  $id_clasificacion_cliente );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0)return NULL;
-			$foo = new ClasificacionCliente( $rs );
-			return $foo;
+		if(count($rs)==0) return NULL;
+		$foo = new ClasificacionCliente( $rs );
+		if(!is_null(self::$redisConection)) self::$redisConection->set(  "ClasificacionCliente-" . $id_clasificacion_cliente, $foo );
+		return $foo;
 	}
 
 
@@ -87,7 +93,7 @@ abstract class ClasificacionClienteDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new ClasificacionCliente($foo);
     		array_push( $allData, $bar);
-			//id_clasificacion_cliente
+                if(!is_null(self::$redisConection)) self::$redisConection->set(  "ClasificacionCliente-" . $bar->getIdClasificacionCliente(), $bar );
 		}
 		return $allData;
 	}
@@ -163,6 +169,7 @@ abstract class ClasificacionClienteDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new ClasificacionCliente($foo);
     		array_push( $ar,$bar);
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ClasificacionCliente-" . $bar->getIdClasificacionCliente(), $bar );
 		}
 		return $ar;
 	}
@@ -342,7 +349,8 @@ abstract class ClasificacionClienteDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new ClasificacionCliente($foo));
+    		array_push( $ar, $bar = new ClasificacionCliente($foo));
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ClasificacionCliente-" . $bar->getIdClasificacionCliente(), $bar );
 		}
 		return $ar;
 	}

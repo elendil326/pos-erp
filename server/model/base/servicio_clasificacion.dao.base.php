@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link ServicioClasificacion }. 
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access private
   * @abstract
   * @package docs
@@ -40,20 +40,26 @@ abstract class ServicioClasificacionDAOBase extends DAO
 	  *	Obtener {@link ServicioClasificacion} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ServicioClasificacion} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ServicioClasificacion Un objeto del tipo {@link ServicioClasificacion}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_servicio, $id_clasificacion_servicio )
 	{
+		if(  is_null( $id_servicio ) || is_null( $id_clasificacion_servicio )  ){ return NULL; }
+            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "ServicioClasificacion-" . $id_servicio."-" . $id_clasificacion_servicio ))){
+                Logger::log("REDIS !");
+                return new ServicioClasificacion($obj);
+            }
 		$sql = "SELECT * FROM servicio_clasificacion WHERE (id_servicio = ? AND id_clasificacion_servicio = ? ) LIMIT 1;";
 		$params = array(  $id_servicio, $id_clasificacion_servicio );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0)return NULL;
-			$foo = new ServicioClasificacion( $rs );
-			return $foo;
+		if(count($rs)==0) return NULL;
+		$foo = new ServicioClasificacion( $rs );
+		if(!is_null(self::$redisConection)) self::$redisConection->set(  "ServicioClasificacion-" . $id_servicio."-" . $id_clasificacion_servicio, $foo );
+		return $foo;
 	}
 
 
@@ -87,8 +93,7 @@ abstract class ServicioClasificacionDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new ServicioClasificacion($foo);
     		array_push( $allData, $bar);
-			//id_servicio
-			//id_clasificacion_servicio
+                if(!is_null(self::$redisConection)) self::$redisConection->set(  "ServicioClasificacion-" . $bar->getIdServicio()."-" . $bar->getIdClasificacionServicio(), $bar );
 		}
 		return $allData;
 	}
@@ -144,6 +149,7 @@ abstract class ServicioClasificacionDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new ServicioClasificacion($foo);
     		array_push( $ar,$bar);
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ServicioClasificacion-" . $bar->getIdServicio()."-" . $bar->getIdClasificacionServicio(), $bar );
 		}
 		return $ar;
 	}
@@ -263,7 +269,8 @@ abstract class ServicioClasificacionDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new ServicioClasificacion($foo));
+    		array_push( $ar, $bar = new ServicioClasificacion($foo));
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ServicioClasificacion-" . $bar->getIdServicio()."-" . $bar->getIdClasificacionServicio(), $bar );
 		}
 		return $ar;
 	}

@@ -2,7 +2,7 @@
 /** Value Object file for table lote_salida.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access public
   * @package docs
   * 
@@ -22,6 +22,10 @@ class LoteSalida extends VO
 	{ 
 		if(isset($data))
 		{
+                    if(is_string($data))
+                        $data = self::object_to_array(json_decode($data));
+
+
 			if( isset($data['id_lote_salida']) ){
 				$this->id_lote_salida = $data['id_lote_salida'];
 			}
@@ -93,7 +97,7 @@ class LoteSalida extends VO
 	  * 
 	  * Fecha en que se registra el movimiento<br>
 	  * @access public
-	  * @var datetime
+	  * @var int(11)
 	  */
 	public $fecha_registro;
 
@@ -186,7 +190,7 @@ class LoteSalida extends VO
 	  * getFechaRegistro
 	  * 
 	  * Get the <i>fecha_registro</i> property for this object. Donde <i>fecha_registro</i> es Fecha en que se registra el movimiento
-	  * @return datetime
+	  * @return int(11)
 	  */
 	final public function getFechaRegistro()
 	{
@@ -197,9 +201,9 @@ class LoteSalida extends VO
 	  * setFechaRegistro( $fecha_registro )
 	  * 
 	  * Set the <i>fecha_registro</i> property for this object. Donde <i>fecha_registro</i> es Fecha en que se registra el movimiento.
-	  * Una validacion basica se hara aqui para comprobar que <i>fecha_registro</i> es de tipo <i>datetime</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha_registro</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param datetime
+	  * @param int(11)
 	  */
 	final public function setFechaRegistro( $fecha_registro )
 	{

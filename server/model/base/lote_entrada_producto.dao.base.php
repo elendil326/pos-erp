@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link LoteEntradaProducto }. 
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access private
   * @abstract
   * @package docs
@@ -40,20 +40,26 @@ abstract class LoteEntradaProductoDAOBase extends DAO
 	  *	Obtener {@link LoteEntradaProducto} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link LoteEntradaProducto} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link LoteEntradaProducto Un objeto del tipo {@link LoteEntradaProducto}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_lote_entrada, $id_producto, $id_unidad )
 	{
+		if(  is_null( $id_lote_entrada ) || is_null( $id_producto ) || is_null( $id_unidad )  ){ return NULL; }
+            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "LoteEntradaProducto-" . $id_lote_entrada."-" . $id_producto."-" . $id_unidad ))){
+                Logger::log("REDIS !");
+                return new LoteEntradaProducto($obj);
+            }
 		$sql = "SELECT * FROM lote_entrada_producto WHERE (id_lote_entrada = ? AND id_producto = ? AND id_unidad = ? ) LIMIT 1;";
 		$params = array(  $id_lote_entrada, $id_producto, $id_unidad );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0)return NULL;
-			$foo = new LoteEntradaProducto( $rs );
-			return $foo;
+		if(count($rs)==0) return NULL;
+		$foo = new LoteEntradaProducto( $rs );
+		if(!is_null(self::$redisConection)) self::$redisConection->set(  "LoteEntradaProducto-" . $id_lote_entrada."-" . $id_producto."-" . $id_unidad, $foo );
+		return $foo;
 	}
 
 
@@ -87,9 +93,7 @@ abstract class LoteEntradaProductoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new LoteEntradaProducto($foo);
     		array_push( $allData, $bar);
-			//id_lote_entrada
-			//id_producto
-			//id_unidad
+                if(!is_null(self::$redisConection)) self::$redisConection->set(  "LoteEntradaProducto-" . $bar->getIdLoteEntrada()."-" . $bar->getIdProducto()."-" . $bar->getIdUnidad(), $bar );
 		}
 		return $allData;
 	}
@@ -155,6 +159,7 @@ abstract class LoteEntradaProductoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new LoteEntradaProducto($foo);
     		array_push( $ar,$bar);
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "LoteEntradaProducto-" . $bar->getIdLoteEntrada()."-" . $bar->getIdProducto()."-" . $bar->getIdUnidad(), $bar );
 		}
 		return $ar;
 	}
@@ -306,7 +311,8 @@ abstract class LoteEntradaProductoDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new LoteEntradaProducto($foo));
+    		array_push( $ar, $bar = new LoteEntradaProducto($foo));
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "LoteEntradaProducto-" . $bar->getIdLoteEntrada()."-" . $bar->getIdProducto()."-" . $bar->getIdUnidad(), $bar );
 		}
 		return $ar;
 	}

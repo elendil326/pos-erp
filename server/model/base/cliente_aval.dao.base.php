@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link ClienteAval }. 
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access private
   * @abstract
   * @package docs
@@ -40,20 +40,26 @@ abstract class ClienteAvalDAOBase extends DAO
 	  *	Obtener {@link ClienteAval} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ClienteAval} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ClienteAval Un objeto del tipo {@link ClienteAval}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_cliente, $id_aval )
 	{
+		if(  is_null( $id_cliente ) || is_null( $id_aval )  ){ return NULL; }
+            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "ClienteAval-" . $id_cliente."-" . $id_aval ))){
+                Logger::log("REDIS !");
+                return new ClienteAval($obj);
+            }
 		$sql = "SELECT * FROM cliente_aval WHERE (id_cliente = ? AND id_aval = ? ) LIMIT 1;";
 		$params = array(  $id_cliente, $id_aval );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0)return NULL;
-			$foo = new ClienteAval( $rs );
-			return $foo;
+		if(count($rs)==0) return NULL;
+		$foo = new ClienteAval( $rs );
+		if(!is_null(self::$redisConection)) self::$redisConection->set(  "ClienteAval-" . $id_cliente."-" . $id_aval, $foo );
+		return $foo;
 	}
 
 
@@ -87,8 +93,7 @@ abstract class ClienteAvalDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new ClienteAval($foo);
     		array_push( $allData, $bar);
-			//id_cliente
-			//id_aval
+                if(!is_null(self::$redisConection)) self::$redisConection->set(  "ClienteAval-" . $bar->getIdCliente()."-" . $bar->getIdAval(), $bar );
 		}
 		return $allData;
 	}
@@ -149,6 +154,7 @@ abstract class ClienteAvalDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new ClienteAval($foo);
     		array_push( $ar,$bar);
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ClienteAval-" . $bar->getIdCliente()."-" . $bar->getIdAval(), $bar );
 		}
 		return $ar;
 	}
@@ -288,7 +294,8 @@ abstract class ClienteAvalDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new ClienteAval($foo));
+    		array_push( $ar, $bar = new ClienteAval($foo));
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ClienteAval-" . $bar->getIdCliente()."-" . $bar->getIdAval(), $bar );
 		}
 		return $ar;
 	}

@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link ConceptoIngreso }. 
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access private
   * @abstract
   * @package docs
@@ -40,20 +40,26 @@ abstract class ConceptoIngresoDAOBase extends DAO
 	  *	Obtener {@link ConceptoIngreso} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ConceptoIngreso} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ConceptoIngreso Un objeto del tipo {@link ConceptoIngreso}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_concepto_ingreso )
 	{
+		if(  is_null( $id_concepto_ingreso )  ){ return NULL; }
+            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "ConceptoIngreso-" . $id_concepto_ingreso ))){
+                Logger::log("REDIS !");
+                return new ConceptoIngreso($obj);
+            }
 		$sql = "SELECT * FROM concepto_ingreso WHERE (id_concepto_ingreso = ? ) LIMIT 1;";
 		$params = array(  $id_concepto_ingreso );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0)return NULL;
-			$foo = new ConceptoIngreso( $rs );
-			return $foo;
+		if(count($rs)==0) return NULL;
+		$foo = new ConceptoIngreso( $rs );
+		if(!is_null(self::$redisConection)) self::$redisConection->set(  "ConceptoIngreso-" . $id_concepto_ingreso, $foo );
+		return $foo;
 	}
 
 
@@ -87,7 +93,7 @@ abstract class ConceptoIngresoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new ConceptoIngreso($foo);
     		array_push( $allData, $bar);
-			//id_concepto_ingreso
+                if(!is_null(self::$redisConection)) self::$redisConection->set(  "ConceptoIngreso-" . $bar->getIdConceptoIngreso(), $bar );
 		}
 		return $allData;
 	}
@@ -158,6 +164,7 @@ abstract class ConceptoIngresoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new ConceptoIngreso($foo);
     		array_push( $ar,$bar);
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ConceptoIngreso-" . $bar->getIdConceptoIngreso(), $bar );
 		}
 		return $ar;
 	}
@@ -324,7 +331,8 @@ abstract class ConceptoIngresoDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new ConceptoIngreso($foo));
+    		array_push( $ar, $bar = new ConceptoIngreso($foo));
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ConceptoIngreso-" . $bar->getIdConceptoIngreso(), $bar );
 		}
 		return $ar;
 	}

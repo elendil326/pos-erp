@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link Tarifa }. 
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access private
   * @abstract
   * @package docs
@@ -40,20 +40,26 @@ abstract class TarifaDAOBase extends DAO
 	  *	Obtener {@link Tarifa} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Tarifa} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Tarifa Un objeto del tipo {@link Tarifa}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_tarifa )
 	{
+		if(  is_null( $id_tarifa )  ){ return NULL; }
+            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "Tarifa-" . $id_tarifa ))){
+                Logger::log("REDIS !");
+                return new Tarifa($obj);
+            }
 		$sql = "SELECT * FROM tarifa WHERE (id_tarifa = ? ) LIMIT 1;";
 		$params = array(  $id_tarifa );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0)return NULL;
-			$foo = new Tarifa( $rs );
-			return $foo;
+		if(count($rs)==0) return NULL;
+		$foo = new Tarifa( $rs );
+		if(!is_null(self::$redisConection)) self::$redisConection->set(  "Tarifa-" . $id_tarifa, $foo );
+		return $foo;
 	}
 
 
@@ -87,7 +93,7 @@ abstract class TarifaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new Tarifa($foo);
     		array_push( $allData, $bar);
-			//id_tarifa
+                if(!is_null(self::$redisConection)) self::$redisConection->set(  "Tarifa-" . $bar->getIdTarifa(), $bar );
 		}
 		return $allData;
 	}
@@ -173,6 +179,7 @@ abstract class TarifaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Tarifa($foo);
     		array_push( $ar,$bar);
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Tarifa-" . $bar->getIdTarifa(), $bar );
 		}
 		return $ar;
 	}
@@ -378,7 +385,8 @@ abstract class TarifaDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new Tarifa($foo));
+    		array_push( $ar, $bar = new Tarifa($foo));
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Tarifa-" . $bar->getIdTarifa(), $bar );
 		}
 		return $ar;
 	}

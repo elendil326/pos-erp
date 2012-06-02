@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link PaqueteEmpresa }. 
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access private
   * @abstract
   * @package docs
@@ -40,20 +40,26 @@ abstract class PaqueteEmpresaDAOBase extends DAO
 	  *	Obtener {@link PaqueteEmpresa} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link PaqueteEmpresa} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link PaqueteEmpresa Un objeto del tipo {@link PaqueteEmpresa}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_paquete, $id_empresa )
 	{
+		if(  is_null( $id_paquete ) || is_null( $id_empresa )  ){ return NULL; }
+            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "PaqueteEmpresa-" . $id_paquete."-" . $id_empresa ))){
+                Logger::log("REDIS !");
+                return new PaqueteEmpresa($obj);
+            }
 		$sql = "SELECT * FROM paquete_empresa WHERE (id_paquete = ? AND id_empresa = ? ) LIMIT 1;";
 		$params = array(  $id_paquete, $id_empresa );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0)return NULL;
-			$foo = new PaqueteEmpresa( $rs );
-			return $foo;
+		if(count($rs)==0) return NULL;
+		$foo = new PaqueteEmpresa( $rs );
+		if(!is_null(self::$redisConection)) self::$redisConection->set(  "PaqueteEmpresa-" . $id_paquete."-" . $id_empresa, $foo );
+		return $foo;
 	}
 
 
@@ -87,8 +93,7 @@ abstract class PaqueteEmpresaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new PaqueteEmpresa($foo);
     		array_push( $allData, $bar);
-			//id_paquete
-			//id_empresa
+                if(!is_null(self::$redisConection)) self::$redisConection->set(  "PaqueteEmpresa-" . $bar->getIdPaquete()."-" . $bar->getIdEmpresa(), $bar );
 		}
 		return $allData;
 	}
@@ -144,6 +149,7 @@ abstract class PaqueteEmpresaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new PaqueteEmpresa($foo);
     		array_push( $ar,$bar);
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "PaqueteEmpresa-" . $bar->getIdPaquete()."-" . $bar->getIdEmpresa(), $bar );
 		}
 		return $ar;
 	}
@@ -263,7 +269,8 @@ abstract class PaqueteEmpresaDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new PaqueteEmpresa($foo));
+    		array_push( $ar, $bar = new PaqueteEmpresa($foo));
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "PaqueteEmpresa-" . $bar->getIdPaquete()."-" . $bar->getIdEmpresa(), $bar );
 		}
 		return $ar;
 	}

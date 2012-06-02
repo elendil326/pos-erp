@@ -2,7 +2,7 @@
 /** Value Object file for table ingreso.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access public
   * @package docs
   * 
@@ -22,6 +22,10 @@ class Ingreso extends VO
 	{ 
 		if(isset($data))
 		{
+                    if(is_string($data))
+                        $data = self::object_to_array(json_decode($data));
+
+
 			if( isset($data['id_ingreso']) ){
 				$this->id_ingreso = $data['id_ingreso'];
 			}
@@ -138,7 +142,7 @@ class Ingreso extends VO
 	  * 
 	  * la fecha de cuando el ingreso se hizo<br>
 	  * @access public
-	  * @var datetime
+	  * @var int(11)
 	  */
 	public $fecha_del_ingreso;
 
@@ -147,7 +151,7 @@ class Ingreso extends VO
 	  * 
 	  * fecha de cuando el ingreso se registro en el sistema<br>
 	  * @access public
-	  * @var datetime
+	  * @var int(11)
 	  */
 	public $fecha_de_registro;
 
@@ -327,7 +331,7 @@ class Ingreso extends VO
 	  * getFechaDelIngreso
 	  * 
 	  * Get the <i>fecha_del_ingreso</i> property for this object. Donde <i>fecha_del_ingreso</i> es la fecha de cuando el ingreso se hizo
-	  * @return datetime
+	  * @return int(11)
 	  */
 	final public function getFechaDelIngreso()
 	{
@@ -338,9 +342,9 @@ class Ingreso extends VO
 	  * setFechaDelIngreso( $fecha_del_ingreso )
 	  * 
 	  * Set the <i>fecha_del_ingreso</i> property for this object. Donde <i>fecha_del_ingreso</i> es la fecha de cuando el ingreso se hizo.
-	  * Una validacion basica se hara aqui para comprobar que <i>fecha_del_ingreso</i> es de tipo <i>datetime</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha_del_ingreso</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param datetime
+	  * @param int(11)
 	  */
 	final public function setFechaDelIngreso( $fecha_del_ingreso )
 	{
@@ -351,7 +355,7 @@ class Ingreso extends VO
 	  * getFechaDeRegistro
 	  * 
 	  * Get the <i>fecha_de_registro</i> property for this object. Donde <i>fecha_de_registro</i> es fecha de cuando el ingreso se registro en el sistema
-	  * @return datetime
+	  * @return int(11)
 	  */
 	final public function getFechaDeRegistro()
 	{
@@ -362,9 +366,9 @@ class Ingreso extends VO
 	  * setFechaDeRegistro( $fecha_de_registro )
 	  * 
 	  * Set the <i>fecha_de_registro</i> property for this object. Donde <i>fecha_de_registro</i> es fecha de cuando el ingreso se registro en el sistema.
-	  * Una validacion basica se hara aqui para comprobar que <i>fecha_de_registro</i> es de tipo <i>datetime</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha_de_registro</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param datetime
+	  * @param int(11)
 	  */
 	final public function setFechaDeRegistro( $fecha_de_registro )
 	{

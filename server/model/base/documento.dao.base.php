@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link Documento }. 
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access private
   * @abstract
   * @package docs
@@ -40,20 +40,26 @@ abstract class DocumentoDAOBase extends DAO
 	  *	Obtener {@link Documento} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Documento} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Documento Un objeto del tipo {@link Documento}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_documento )
 	{
+		if(  is_null( $id_documento )  ){ return NULL; }
+            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "Documento-" . $id_documento ))){
+                Logger::log("REDIS !");
+                return new Documento($obj);
+            }
 		$sql = "SELECT * FROM documento WHERE (id_documento = ? ) LIMIT 1;";
 		$params = array(  $id_documento );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0)return NULL;
-			$foo = new Documento( $rs );
-			return $foo;
+		if(count($rs)==0) return NULL;
+		$foo = new Documento( $rs );
+		if(!is_null(self::$redisConection)) self::$redisConection->set(  "Documento-" . $id_documento, $foo );
+		return $foo;
 	}
 
 
@@ -87,7 +93,7 @@ abstract class DocumentoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new Documento($foo);
     		array_push( $allData, $bar);
-			//id_documento
+                if(!is_null(self::$redisConection)) self::$redisConection->set(  "Documento-" . $bar->getIdDocumento(), $bar );
 		}
 		return $allData;
 	}
@@ -138,6 +144,7 @@ abstract class DocumentoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Documento($foo);
     		array_push( $ar,$bar);
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Documento-" . $bar->getIdDocumento(), $bar );
 		}
 		return $ar;
 	}
@@ -245,7 +252,8 @@ abstract class DocumentoDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new Documento($foo));
+    		array_push( $ar, $bar = new Documento($foo));
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Documento-" . $bar->getIdDocumento(), $bar );
 		}
 		return $ar;
 	}

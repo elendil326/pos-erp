@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link Moneda }. 
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access private
   * @abstract
   * @package docs
@@ -40,20 +40,26 @@ abstract class MonedaDAOBase extends DAO
 	  *	Obtener {@link Moneda} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Moneda} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Moneda Un objeto del tipo {@link Moneda}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_moneda )
 	{
+		if(  is_null( $id_moneda )  ){ return NULL; }
+            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "Moneda-" . $id_moneda ))){
+                Logger::log("REDIS !");
+                return new Moneda($obj);
+            }
 		$sql = "SELECT * FROM moneda WHERE (id_moneda = ? ) LIMIT 1;";
 		$params = array(  $id_moneda );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0)return NULL;
-			$foo = new Moneda( $rs );
-			return $foo;
+		if(count($rs)==0) return NULL;
+		$foo = new Moneda( $rs );
+		if(!is_null(self::$redisConection)) self::$redisConection->set(  "Moneda-" . $id_moneda, $foo );
+		return $foo;
 	}
 
 
@@ -87,7 +93,7 @@ abstract class MonedaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new Moneda($foo);
     		array_push( $allData, $bar);
-			//id_moneda
+                if(!is_null(self::$redisConection)) self::$redisConection->set(  "Moneda-" . $bar->getIdMoneda(), $bar );
 		}
 		return $allData;
 	}
@@ -153,6 +159,7 @@ abstract class MonedaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Moneda($foo);
     		array_push( $ar,$bar);
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Moneda-" . $bar->getIdMoneda(), $bar );
 		}
 		return $ar;
 	}
@@ -306,7 +313,8 @@ abstract class MonedaDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new Moneda($foo));
+    		array_push( $ar, $bar = new Moneda($foo));
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Moneda-" . $bar->getIdMoneda(), $bar );
 		}
 		return $ar;
 	}

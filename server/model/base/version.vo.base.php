@@ -2,7 +2,7 @@
 /** Value Object file for table version.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access public
   * @package docs
   * 
@@ -22,6 +22,10 @@ class Version extends VO
 	{ 
 		if(isset($data))
 		{
+                    if(is_string($data))
+                        $data = self::object_to_array(json_decode($data));
+
+
 			if( isset($data['id_version']) ){
 				$this->id_version = $data['id_version'];
 			}
@@ -110,7 +114,7 @@ class Version extends VO
 	  * 
 	  * Fecha a partir de la cual se aplican las reglas de esta version<br>
 	  * @access public
-	  * @var datetime
+	  * @var int(11)
 	  */
 	public $fecha_inicio;
 
@@ -119,7 +123,7 @@ class Version extends VO
 	  * 
 	  * Fecha a partir de la cual se dejaran de aplicar las reglas de esta version<br>
 	  * @access public
-	  * @var datetime
+	  * @var int(11)
 	  */
 	public $fecha_fin;
 
@@ -236,7 +240,7 @@ class Version extends VO
 	  * getFechaInicio
 	  * 
 	  * Get the <i>fecha_inicio</i> property for this object. Donde <i>fecha_inicio</i> es Fecha a partir de la cual se aplican las reglas de esta version
-	  * @return datetime
+	  * @return int(11)
 	  */
 	final public function getFechaInicio()
 	{
@@ -247,9 +251,9 @@ class Version extends VO
 	  * setFechaInicio( $fecha_inicio )
 	  * 
 	  * Set the <i>fecha_inicio</i> property for this object. Donde <i>fecha_inicio</i> es Fecha a partir de la cual se aplican las reglas de esta version.
-	  * Una validacion basica se hara aqui para comprobar que <i>fecha_inicio</i> es de tipo <i>datetime</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha_inicio</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param datetime
+	  * @param int(11)
 	  */
 	final public function setFechaInicio( $fecha_inicio )
 	{
@@ -260,7 +264,7 @@ class Version extends VO
 	  * getFechaFin
 	  * 
 	  * Get the <i>fecha_fin</i> property for this object. Donde <i>fecha_fin</i> es Fecha a partir de la cual se dejaran de aplicar las reglas de esta version
-	  * @return datetime
+	  * @return int(11)
 	  */
 	final public function getFechaFin()
 	{
@@ -271,9 +275,9 @@ class Version extends VO
 	  * setFechaFin( $fecha_fin )
 	  * 
 	  * Set the <i>fecha_fin</i> property for this object. Donde <i>fecha_fin</i> es Fecha a partir de la cual se dejaran de aplicar las reglas de esta version.
-	  * Una validacion basica se hara aqui para comprobar que <i>fecha_fin</i> es de tipo <i>datetime</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha_fin</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param datetime
+	  * @param int(11)
 	  */
 	final public function setFechaFin( $fecha_fin )
 	{

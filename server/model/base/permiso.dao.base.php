@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link Permiso }. 
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access private
   * @abstract
   * @package docs
@@ -40,20 +40,26 @@ abstract class PermisoDAOBase extends DAO
 	  *	Obtener {@link Permiso} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Permiso} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Permiso Un objeto del tipo {@link Permiso}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_permiso )
 	{
+		if(  is_null( $id_permiso )  ){ return NULL; }
+            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "Permiso-" . $id_permiso ))){
+                Logger::log("REDIS !");
+                return new Permiso($obj);
+            }
 		$sql = "SELECT * FROM permiso WHERE (id_permiso = ? ) LIMIT 1;";
 		$params = array(  $id_permiso );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0)return NULL;
-			$foo = new Permiso( $rs );
-			return $foo;
+		if(count($rs)==0) return NULL;
+		$foo = new Permiso( $rs );
+		if(!is_null(self::$redisConection)) self::$redisConection->set(  "Permiso-" . $id_permiso, $foo );
+		return $foo;
 	}
 
 
@@ -87,7 +93,7 @@ abstract class PermisoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new Permiso($foo);
     		array_push( $allData, $bar);
-			//id_permiso
+                if(!is_null(self::$redisConection)) self::$redisConection->set(  "Permiso-" . $bar->getIdPermiso(), $bar );
 		}
 		return $allData;
 	}
@@ -143,6 +149,7 @@ abstract class PermisoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Permiso($foo);
     		array_push( $ar,$bar);
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Permiso-" . $bar->getIdPermiso(), $bar );
 		}
 		return $ar;
 	}
@@ -270,7 +277,8 @@ abstract class PermisoDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new Permiso($foo));
+    		array_push( $ar, $bar = new Permiso($foo));
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Permiso-" . $bar->getIdPermiso(), $bar );
 		}
 		return $ar;
 	}

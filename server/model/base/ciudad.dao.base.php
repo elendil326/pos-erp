@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link Ciudad }. 
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access private
   * @abstract
   * @package docs
@@ -40,20 +40,26 @@ abstract class CiudadDAOBase extends DAO
 	  *	Obtener {@link Ciudad} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Ciudad} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Ciudad Un objeto del tipo {@link Ciudad}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_ciudad )
 	{
+		if(  is_null( $id_ciudad )  ){ return NULL; }
+            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "Ciudad-" . $id_ciudad ))){
+                Logger::log("REDIS !");
+                return new Ciudad($obj);
+            }
 		$sql = "SELECT * FROM ciudad WHERE (id_ciudad = ? ) LIMIT 1;";
 		$params = array(  $id_ciudad );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0)return NULL;
-			$foo = new Ciudad( $rs );
-			return $foo;
+		if(count($rs)==0) return NULL;
+		$foo = new Ciudad( $rs );
+		if(!is_null(self::$redisConection)) self::$redisConection->set(  "Ciudad-" . $id_ciudad, $foo );
+		return $foo;
 	}
 
 
@@ -87,7 +93,7 @@ abstract class CiudadDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new Ciudad($foo);
     		array_push( $allData, $bar);
-			//id_ciudad
+                if(!is_null(self::$redisConection)) self::$redisConection->set(  "Ciudad-" . $bar->getIdCiudad(), $bar );
 		}
 		return $allData;
 	}
@@ -148,6 +154,7 @@ abstract class CiudadDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Ciudad($foo);
     		array_push( $ar,$bar);
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Ciudad-" . $bar->getIdCiudad(), $bar );
 		}
 		return $ar;
 	}
@@ -288,7 +295,8 @@ abstract class CiudadDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new Ciudad($foo));
+    		array_push( $ar, $bar = new Ciudad($foo));
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Ciudad-" . $bar->getIdCiudad(), $bar );
 		}
 		return $ar;
 	}

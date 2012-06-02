@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link Ingreso }. 
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access private
   * @abstract
   * @package docs
@@ -40,20 +40,26 @@ abstract class IngresoDAOBase extends DAO
 	  *	Obtener {@link Ingreso} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Ingreso} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Ingreso Un objeto del tipo {@link Ingreso}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_ingreso )
 	{
+		if(  is_null( $id_ingreso )  ){ return NULL; }
+            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "Ingreso-" . $id_ingreso ))){
+                Logger::log("REDIS !");
+                return new Ingreso($obj);
+            }
 		$sql = "SELECT * FROM ingreso WHERE (id_ingreso = ? ) LIMIT 1;";
 		$params = array(  $id_ingreso );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0)return NULL;
-			$foo = new Ingreso( $rs );
-			return $foo;
+		if(count($rs)==0) return NULL;
+		$foo = new Ingreso( $rs );
+		if(!is_null(self::$redisConection)) self::$redisConection->set(  "Ingreso-" . $id_ingreso, $foo );
+		return $foo;
 	}
 
 
@@ -87,7 +93,7 @@ abstract class IngresoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new Ingreso($foo);
     		array_push( $allData, $bar);
-			//id_ingreso
+                if(!is_null(self::$redisConection)) self::$redisConection->set(  "Ingreso-" . $bar->getIdIngreso(), $bar );
 		}
 		return $allData;
 	}
@@ -203,6 +209,7 @@ abstract class IngresoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Ingreso($foo);
     		array_push( $ar,$bar);
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Ingreso-" . $bar->getIdIngreso(), $bar );
 		}
 		return $ar;
 	}
@@ -486,7 +493,8 @@ abstract class IngresoDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new Ingreso($foo));
+    		array_push( $ar, $bar = new Ingreso($foo));
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Ingreso-" . $bar->getIdIngreso(), $bar );
 		}
 		return $ar;
 	}

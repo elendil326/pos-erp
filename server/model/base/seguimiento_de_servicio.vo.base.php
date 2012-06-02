@@ -2,7 +2,7 @@
 /** Value Object file for table seguimiento_de_servicio.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access public
   * @package docs
   * 
@@ -22,6 +22,10 @@ class SeguimientoDeServicio extends VO
 	{ 
 		if(isset($data))
 		{
+                    if(is_string($data))
+                        $data = self::object_to_array(json_decode($data));
+
+
 			if( isset($data['id_seguimiento_de_servicio']) ){
 				$this->id_seguimiento_de_servicio = $data['id_seguimiento_de_servicio'];
 			}
@@ -128,7 +132,7 @@ class SeguimientoDeServicio extends VO
 	  * 
 	  * Fecha en la que se realizo el seguimiento<br>
 	  * @access public
-	  * @var datetime
+	  * @var int(11)
 	  */
 	public $fecha_seguimiento;
 
@@ -284,7 +288,7 @@ class SeguimientoDeServicio extends VO
 	  * getFechaSeguimiento
 	  * 
 	  * Get the <i>fecha_seguimiento</i> property for this object. Donde <i>fecha_seguimiento</i> es Fecha en la que se realizo el seguimiento
-	  * @return datetime
+	  * @return int(11)
 	  */
 	final public function getFechaSeguimiento()
 	{
@@ -295,9 +299,9 @@ class SeguimientoDeServicio extends VO
 	  * setFechaSeguimiento( $fecha_seguimiento )
 	  * 
 	  * Set the <i>fecha_seguimiento</i> property for this object. Donde <i>fecha_seguimiento</i> es Fecha en la que se realizo el seguimiento.
-	  * Una validacion basica se hara aqui para comprobar que <i>fecha_seguimiento</i> es de tipo <i>datetime</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha_seguimiento</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param datetime
+	  * @param int(11)
 	  */
 	final public function setFechaSeguimiento( $fecha_seguimiento )
 	{

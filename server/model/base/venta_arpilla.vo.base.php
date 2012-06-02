@@ -2,7 +2,7 @@
 /** Value Object file for table venta_arpilla.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access public
   * @package docs
   * 
@@ -22,6 +22,10 @@ class VentaArpilla extends VO
 	{ 
 		if(isset($data))
 		{
+                    if(is_string($data))
+                        $data = self::object_to_array(json_decode($data));
+
+
 			if( isset($data['id_venta_arpilla']) ){
 				$this->id_venta_arpilla = $data['id_venta_arpilla'];
 			}
@@ -119,9 +123,9 @@ class VentaArpilla extends VO
 	/**
 	  * fecha_origen
 	  * 
-	  * Fecha en la que se envía el embarque<br>
+	  * Fecha en la que se envÃ­a el embarque<br>
 	  * @access public
-	  * @var datetime
+	  * @var int(11)
 	  */
 	public $fecha_origen;
 
@@ -276,8 +280,8 @@ class VentaArpilla extends VO
 	/**
 	  * getFechaOrigen
 	  * 
-	  * Get the <i>fecha_origen</i> property for this object. Donde <i>fecha_origen</i> es Fecha en la que se envía el embarque
-	  * @return datetime
+	  * Get the <i>fecha_origen</i> property for this object. Donde <i>fecha_origen</i> es Fecha en la que se envÃ­a el embarque
+	  * @return int(11)
 	  */
 	final public function getFechaOrigen()
 	{
@@ -287,10 +291,10 @@ class VentaArpilla extends VO
 	/**
 	  * setFechaOrigen( $fecha_origen )
 	  * 
-	  * Set the <i>fecha_origen</i> property for this object. Donde <i>fecha_origen</i> es Fecha en la que se envía el embarque.
-	  * Una validacion basica se hara aqui para comprobar que <i>fecha_origen</i> es de tipo <i>datetime</i>. 
+	  * Set the <i>fecha_origen</i> property for this object. Donde <i>fecha_origen</i> es Fecha en la que se envÃ­a el embarque.
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha_origen</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param datetime
+	  * @param int(11)
 	  */
 	final public function setFechaOrigen( $fecha_origen )
 	{

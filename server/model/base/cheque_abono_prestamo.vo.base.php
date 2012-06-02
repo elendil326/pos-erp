@@ -2,7 +2,7 @@
 /** Value Object file for table cheque_abono_prestamo.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access public
   * @package docs
   * 
@@ -22,6 +22,10 @@ class ChequeAbonoPrestamo extends VO
 	{ 
 		if(isset($data))
 		{
+                    if(is_string($data))
+                        $data = self::object_to_array(json_decode($data));
+
+
 			if( isset($data['id_cheque']) ){
 				$this->id_cheque = $data['id_cheque'];
 			}

@@ -2,7 +2,7 @@
 /** Value Object file for table orden_de_servicio.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access public
   * @package docs
   * 
@@ -22,6 +22,10 @@ class OrdenDeServicio extends VO
 	{ 
 		if(isset($data))
 		{
+                    if(is_string($data))
+                        $data = self::object_to_array(json_decode($data));
+
+
 			if( isset($data['id_orden_de_servicio']) ){
 				$this->id_orden_de_servicio = $data['id_orden_de_servicio'];
 			}
@@ -147,7 +151,7 @@ class OrdenDeServicio extends VO
 	  * 
 	  * fecha en la que se realiza la orden<br>
 	  * @access public
-	  * @var datetime
+	  * @var int(11)
 	  */
 	public $fecha_orden;
 
@@ -156,7 +160,7 @@ class OrdenDeServicio extends VO
 	  * 
 	  * fecha en la que se entrega la orden<br>
 	  * @access public
-	  * @var datetime
+	  * @var int(11)
 	  */
 	public $fecha_entrega;
 
@@ -351,7 +355,7 @@ class OrdenDeServicio extends VO
 	  * getFechaOrden
 	  * 
 	  * Get the <i>fecha_orden</i> property for this object. Donde <i>fecha_orden</i> es fecha en la que se realiza la orden
-	  * @return datetime
+	  * @return int(11)
 	  */
 	final public function getFechaOrden()
 	{
@@ -362,9 +366,9 @@ class OrdenDeServicio extends VO
 	  * setFechaOrden( $fecha_orden )
 	  * 
 	  * Set the <i>fecha_orden</i> property for this object. Donde <i>fecha_orden</i> es fecha en la que se realiza la orden.
-	  * Una validacion basica se hara aqui para comprobar que <i>fecha_orden</i> es de tipo <i>datetime</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha_orden</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param datetime
+	  * @param int(11)
 	  */
 	final public function setFechaOrden( $fecha_orden )
 	{
@@ -375,7 +379,7 @@ class OrdenDeServicio extends VO
 	  * getFechaEntrega
 	  * 
 	  * Get the <i>fecha_entrega</i> property for this object. Donde <i>fecha_entrega</i> es fecha en la que se entrega la orden
-	  * @return datetime
+	  * @return int(11)
 	  */
 	final public function getFechaEntrega()
 	{
@@ -386,9 +390,9 @@ class OrdenDeServicio extends VO
 	  * setFechaEntrega( $fecha_entrega )
 	  * 
 	  * Set the <i>fecha_entrega</i> property for this object. Donde <i>fecha_entrega</i> es fecha en la que se entrega la orden.
-	  * Una validacion basica se hara aqui para comprobar que <i>fecha_entrega</i> es de tipo <i>datetime</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha_entrega</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param datetime
+	  * @param int(11)
 	  */
 	final public function setFechaEntrega( $fecha_entrega )
 	{

@@ -2,7 +2,7 @@
 /** Value Object file for table prestamo.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access public
   * @package docs
   * 
@@ -22,6 +22,10 @@ class Prestamo extends VO
 	{ 
 		if(isset($data))
 		{
+                    if(is_string($data))
+                        $data = self::object_to_array(json_decode($data));
+
+
 			if( isset($data['id_prestamo']) ){
 				$this->id_prestamo = $data['id_prestamo'];
 			}
@@ -154,7 +158,7 @@ class Prestamo extends VO
 	  * 
 	  * Fecha en que se realiza el prestamo<br>
 	  * @access public
-	  * @var datetime
+	  * @var int(11)
 	  */
 	public $fecha;
 
@@ -358,7 +362,7 @@ class Prestamo extends VO
 	  * getFecha
 	  * 
 	  * Get the <i>fecha</i> property for this object. Donde <i>fecha</i> es Fecha en que se realiza el prestamo
-	  * @return datetime
+	  * @return int(11)
 	  */
 	final public function getFecha()
 	{
@@ -369,9 +373,9 @@ class Prestamo extends VO
 	  * setFecha( $fecha )
 	  * 
 	  * Set the <i>fecha</i> property for this object. Donde <i>fecha</i> es Fecha en que se realiza el prestamo.
-	  * Una validacion basica se hara aqui para comprobar que <i>fecha</i> es de tipo <i>datetime</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param datetime
+	  * @param int(11)
 	  */
 	final public function setFecha( $fecha )
 	{

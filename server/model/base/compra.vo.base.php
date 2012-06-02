@@ -2,7 +2,7 @@
 /** Value Object file for table compra.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access public
   * @package docs
   * 
@@ -22,6 +22,10 @@ class Compra extends VO
 	{ 
 		if(isset($data))
 		{
+                    if(is_string($data))
+                        $data = self::object_to_array(json_decode($data));
+
+
 			if( isset($data['id_compra']) ){
 				$this->id_compra = $data['id_compra'];
 			}
@@ -159,7 +163,7 @@ class Compra extends VO
 	  * 
 	  * la fecha de esta venta<br>
 	  * @access public
-	  * @var datetime
+	  * @var int(11)
 	  */
 	public $fecha;
 
@@ -390,7 +394,7 @@ class Compra extends VO
 	  * getFecha
 	  * 
 	  * Get the <i>fecha</i> property for this object. Donde <i>fecha</i> es la fecha de esta venta
-	  * @return datetime
+	  * @return int(11)
 	  */
 	final public function getFecha()
 	{
@@ -401,9 +405,9 @@ class Compra extends VO
 	  * setFecha( $fecha )
 	  * 
 	  * Set the <i>fecha</i> property for this object. Donde <i>fecha</i> es la fecha de esta venta.
-	  * Una validacion basica se hara aqui para comprobar que <i>fecha</i> es de tipo <i>datetime</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param datetime
+	  * @param int(11)
 	  */
 	final public function setFecha( $fecha )
 	{

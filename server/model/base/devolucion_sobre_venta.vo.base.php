@@ -2,7 +2,7 @@
 /** Value Object file for table devolucion_sobre_venta.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access public
   * @package docs
   * 
@@ -22,6 +22,10 @@ class DevolucionSobreVenta extends VO
 	{ 
 		if(isset($data))
 		{
+                    if(is_string($data))
+                        $data = self::object_to_array(json_decode($data));
+
+
 			if( isset($data['id_devolucion_sobre_venta']) ){
 				$this->id_devolucion_sobre_venta = $data['id_devolucion_sobre_venta'];
 			}
@@ -93,7 +97,7 @@ class DevolucionSobreVenta extends VO
 	  * 
 	  * Fecha en que se realiza la devolucion<br>
 	  * @access public
-	  * @var datetime
+	  * @var int(11)
 	  */
 	public $fecha;
 
@@ -186,7 +190,7 @@ class DevolucionSobreVenta extends VO
 	  * getFecha
 	  * 
 	  * Get the <i>fecha</i> property for this object. Donde <i>fecha</i> es Fecha en que se realiza la devolucion
-	  * @return datetime
+	  * @return int(11)
 	  */
 	final public function getFecha()
 	{
@@ -197,9 +201,9 @@ class DevolucionSobreVenta extends VO
 	  * setFecha( $fecha )
 	  * 
 	  * Set the <i>fecha</i> property for this object. Donde <i>fecha</i> es Fecha en que se realiza la devolucion.
-	  * Una validacion basica se hara aqui para comprobar que <i>fecha</i> es de tipo <i>datetime</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param datetime
+	  * @param int(11)
 	  */
 	final public function setFecha( $fecha )
 	{

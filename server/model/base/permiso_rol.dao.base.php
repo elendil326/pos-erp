@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link PermisoRol }. 
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access private
   * @abstract
   * @package docs
@@ -40,20 +40,26 @@ abstract class PermisoRolDAOBase extends DAO
 	  *	Obtener {@link PermisoRol} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link PermisoRol} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link PermisoRol Un objeto del tipo {@link PermisoRol}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_permiso, $id_rol )
 	{
+		if(  is_null( $id_permiso ) || is_null( $id_rol )  ){ return NULL; }
+            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "PermisoRol-" . $id_permiso."-" . $id_rol ))){
+                Logger::log("REDIS !");
+                return new PermisoRol($obj);
+            }
 		$sql = "SELECT * FROM permiso_rol WHERE (id_permiso = ? AND id_rol = ? ) LIMIT 1;";
 		$params = array(  $id_permiso, $id_rol );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0)return NULL;
-			$foo = new PermisoRol( $rs );
-			return $foo;
+		if(count($rs)==0) return NULL;
+		$foo = new PermisoRol( $rs );
+		if(!is_null(self::$redisConection)) self::$redisConection->set(  "PermisoRol-" . $id_permiso."-" . $id_rol, $foo );
+		return $foo;
 	}
 
 
@@ -87,8 +93,7 @@ abstract class PermisoRolDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new PermisoRol($foo);
     		array_push( $allData, $bar);
-			//id_permiso
-			//id_rol
+                if(!is_null(self::$redisConection)) self::$redisConection->set(  "PermisoRol-" . $bar->getIdPermiso()."-" . $bar->getIdRol(), $bar );
 		}
 		return $allData;
 	}
@@ -144,6 +149,7 @@ abstract class PermisoRolDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new PermisoRol($foo);
     		array_push( $ar,$bar);
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "PermisoRol-" . $bar->getIdPermiso()."-" . $bar->getIdRol(), $bar );
 		}
 		return $ar;
 	}
@@ -263,7 +269,8 @@ abstract class PermisoRolDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new PermisoRol($foo));
+    		array_push( $ar, $bar = new PermisoRol($foo));
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "PermisoRol-" . $bar->getIdPermiso()."-" . $bar->getIdRol(), $bar );
 		}
 		return $ar;
 	}

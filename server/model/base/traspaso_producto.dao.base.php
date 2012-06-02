@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link TraspasoProducto }. 
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access private
   * @abstract
   * @package docs
@@ -40,20 +40,26 @@ abstract class TraspasoProductoDAOBase extends DAO
 	  *	Obtener {@link TraspasoProducto} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link TraspasoProducto} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link TraspasoProducto Un objeto del tipo {@link TraspasoProducto}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_traspaso, $id_producto, $id_unidad )
 	{
+		if(  is_null( $id_traspaso ) || is_null( $id_producto ) || is_null( $id_unidad )  ){ return NULL; }
+            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "TraspasoProducto-" . $id_traspaso."-" . $id_producto."-" . $id_unidad ))){
+                Logger::log("REDIS !");
+                return new TraspasoProducto($obj);
+            }
 		$sql = "SELECT * FROM traspaso_producto WHERE (id_traspaso = ? AND id_producto = ? AND id_unidad = ? ) LIMIT 1;";
 		$params = array(  $id_traspaso, $id_producto, $id_unidad );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0)return NULL;
-			$foo = new TraspasoProducto( $rs );
-			return $foo;
+		if(count($rs)==0) return NULL;
+		$foo = new TraspasoProducto( $rs );
+		if(!is_null(self::$redisConection)) self::$redisConection->set(  "TraspasoProducto-" . $id_traspaso."-" . $id_producto."-" . $id_unidad, $foo );
+		return $foo;
 	}
 
 
@@ -87,9 +93,7 @@ abstract class TraspasoProductoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new TraspasoProducto($foo);
     		array_push( $allData, $bar);
-			//id_traspaso
-			//id_producto
-			//id_unidad
+                if(!is_null(self::$redisConection)) self::$redisConection->set(  "TraspasoProducto-" . $bar->getIdTraspaso()."-" . $bar->getIdProducto()."-" . $bar->getIdUnidad(), $bar );
 		}
 		return $allData;
 	}
@@ -165,6 +169,7 @@ abstract class TraspasoProductoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new TraspasoProducto($foo);
     		array_push( $ar,$bar);
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "TraspasoProducto-" . $bar->getIdTraspaso()."-" . $bar->getIdProducto()."-" . $bar->getIdUnidad(), $bar );
 		}
 		return $ar;
 	}
@@ -342,7 +347,8 @@ abstract class TraspasoProductoDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new TraspasoProducto($foo));
+    		array_push( $ar, $bar = new TraspasoProducto($foo));
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "TraspasoProducto-" . $bar->getIdTraspaso()."-" . $bar->getIdProducto()."-" . $bar->getIdUnidad(), $bar );
 		}
 		return $ar;
 	}

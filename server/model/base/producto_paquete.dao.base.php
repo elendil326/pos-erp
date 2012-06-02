@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link ProductoPaquete }. 
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access private
   * @abstract
   * @package docs
@@ -40,20 +40,26 @@ abstract class ProductoPaqueteDAOBase extends DAO
 	  *	Obtener {@link ProductoPaquete} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ProductoPaquete} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ProductoPaquete Un objeto del tipo {@link ProductoPaquete}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_producto, $id_paquete, $id_unidad )
 	{
+		if(  is_null( $id_producto ) || is_null( $id_paquete ) || is_null( $id_unidad )  ){ return NULL; }
+            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "ProductoPaquete-" . $id_producto."-" . $id_paquete."-" . $id_unidad ))){
+                Logger::log("REDIS !");
+                return new ProductoPaquete($obj);
+            }
 		$sql = "SELECT * FROM producto_paquete WHERE (id_producto = ? AND id_paquete = ? AND id_unidad = ? ) LIMIT 1;";
 		$params = array(  $id_producto, $id_paquete, $id_unidad );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0)return NULL;
-			$foo = new ProductoPaquete( $rs );
-			return $foo;
+		if(count($rs)==0) return NULL;
+		$foo = new ProductoPaquete( $rs );
+		if(!is_null(self::$redisConection)) self::$redisConection->set(  "ProductoPaquete-" . $id_producto."-" . $id_paquete."-" . $id_unidad, $foo );
+		return $foo;
 	}
 
 
@@ -87,9 +93,7 @@ abstract class ProductoPaqueteDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new ProductoPaquete($foo);
     		array_push( $allData, $bar);
-			//id_producto
-			//id_paquete
-			//id_unidad
+                if(!is_null(self::$redisConection)) self::$redisConection->set(  "ProductoPaquete-" . $bar->getIdProducto()."-" . $bar->getIdPaquete()."-" . $bar->getIdUnidad(), $bar );
 		}
 		return $allData;
 	}
@@ -155,6 +159,7 @@ abstract class ProductoPaqueteDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new ProductoPaquete($foo);
     		array_push( $ar,$bar);
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ProductoPaquete-" . $bar->getIdProducto()."-" . $bar->getIdPaquete()."-" . $bar->getIdUnidad(), $bar );
 		}
 		return $ar;
 	}
@@ -306,7 +311,8 @@ abstract class ProductoPaqueteDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new ProductoPaquete($foo));
+    		array_push( $ar, $bar = new ProductoPaquete($foo));
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ProductoPaquete-" . $bar->getIdProducto()."-" . $bar->getIdPaquete()."-" . $bar->getIdUnidad(), $bar );
 		}
 		return $ar;
 	}

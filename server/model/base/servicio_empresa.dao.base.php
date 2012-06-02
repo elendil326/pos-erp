@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link ServicioEmpresa }. 
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access private
   * @abstract
   * @package docs
@@ -40,20 +40,26 @@ abstract class ServicioEmpresaDAOBase extends DAO
 	  *	Obtener {@link ServicioEmpresa} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ServicioEmpresa} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ServicioEmpresa Un objeto del tipo {@link ServicioEmpresa}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_servicio, $id_empresa )
 	{
+		if(  is_null( $id_servicio ) || is_null( $id_empresa )  ){ return NULL; }
+            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "ServicioEmpresa-" . $id_servicio."-" . $id_empresa ))){
+                Logger::log("REDIS !");
+                return new ServicioEmpresa($obj);
+            }
 		$sql = "SELECT * FROM servicio_empresa WHERE (id_servicio = ? AND id_empresa = ? ) LIMIT 1;";
 		$params = array(  $id_servicio, $id_empresa );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0)return NULL;
-			$foo = new ServicioEmpresa( $rs );
-			return $foo;
+		if(count($rs)==0) return NULL;
+		$foo = new ServicioEmpresa( $rs );
+		if(!is_null(self::$redisConection)) self::$redisConection->set(  "ServicioEmpresa-" . $id_servicio."-" . $id_empresa, $foo );
+		return $foo;
 	}
 
 
@@ -87,8 +93,7 @@ abstract class ServicioEmpresaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new ServicioEmpresa($foo);
     		array_push( $allData, $bar);
-			//id_servicio
-			//id_empresa
+                if(!is_null(self::$redisConection)) self::$redisConection->set(  "ServicioEmpresa-" . $bar->getIdServicio()."-" . $bar->getIdEmpresa(), $bar );
 		}
 		return $allData;
 	}
@@ -144,6 +149,7 @@ abstract class ServicioEmpresaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new ServicioEmpresa($foo);
     		array_push( $ar,$bar);
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ServicioEmpresa-" . $bar->getIdServicio()."-" . $bar->getIdEmpresa(), $bar );
 		}
 		return $ar;
 	}
@@ -263,7 +269,8 @@ abstract class ServicioEmpresaDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new ServicioEmpresa($foo));
+    		array_push( $ar, $bar = new ServicioEmpresa($foo));
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ServicioEmpresa-" . $bar->getIdServicio()."-" . $bar->getIdEmpresa(), $bar );
 		}
 		return $ar;
 	}

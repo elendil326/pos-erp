@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link CorteDeCaja }. 
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access private
   * @abstract
   * @package docs
@@ -40,20 +40,26 @@ abstract class CorteDeCajaDAOBase extends DAO
 	  *	Obtener {@link CorteDeCaja} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link CorteDeCaja} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link CorteDeCaja Un objeto del tipo {@link CorteDeCaja}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_corte_de_caja )
 	{
+		if(  is_null( $id_corte_de_caja )  ){ return NULL; }
+            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "CorteDeCaja-" . $id_corte_de_caja ))){
+                Logger::log("REDIS !");
+                return new CorteDeCaja($obj);
+            }
 		$sql = "SELECT * FROM corte_de_caja WHERE (id_corte_de_caja = ? ) LIMIT 1;";
 		$params = array(  $id_corte_de_caja );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0)return NULL;
-			$foo = new CorteDeCaja( $rs );
-			return $foo;
+		if(count($rs)==0) return NULL;
+		$foo = new CorteDeCaja( $rs );
+		if(!is_null(self::$redisConection)) self::$redisConection->set(  "CorteDeCaja-" . $id_corte_de_caja, $foo );
+		return $foo;
 	}
 
 
@@ -87,7 +93,7 @@ abstract class CorteDeCajaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new CorteDeCaja($foo);
     		array_push( $allData, $bar);
-			//id_corte_de_caja
+                if(!is_null(self::$redisConection)) self::$redisConection->set(  "CorteDeCaja-" . $bar->getIdCorteDeCaja(), $bar );
 		}
 		return $allData;
 	}
@@ -173,6 +179,7 @@ abstract class CorteDeCajaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new CorteDeCaja($foo);
     		array_push( $ar,$bar);
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "CorteDeCaja-" . $bar->getIdCorteDeCaja(), $bar );
 		}
 		return $ar;
 	}
@@ -378,7 +385,8 @@ abstract class CorteDeCajaDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new CorteDeCaja($foo));
+    		array_push( $ar, $bar = new CorteDeCaja($foo));
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "CorteDeCaja-" . $bar->getIdCorteDeCaja(), $bar );
 		}
 		return $ar;
 	}

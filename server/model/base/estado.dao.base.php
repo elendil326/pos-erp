@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link Estado }. 
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access private
   * @abstract
   * @package docs
@@ -40,20 +40,26 @@ abstract class EstadoDAOBase extends DAO
 	  *	Obtener {@link Estado} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Estado} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Estado Un objeto del tipo {@link Estado}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_estado )
 	{
+		if(  is_null( $id_estado )  ){ return NULL; }
+            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "Estado-" . $id_estado ))){
+                Logger::log("REDIS !");
+                return new Estado($obj);
+            }
 		$sql = "SELECT * FROM estado WHERE (id_estado = ? ) LIMIT 1;";
 		$params = array(  $id_estado );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0)return NULL;
-			$foo = new Estado( $rs );
-			return $foo;
+		if(count($rs)==0) return NULL;
+		$foo = new Estado( $rs );
+		if(!is_null(self::$redisConection)) self::$redisConection->set(  "Estado-" . $id_estado, $foo );
+		return $foo;
 	}
 
 
@@ -87,7 +93,7 @@ abstract class EstadoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new Estado($foo);
     		array_push( $allData, $bar);
-			//id_estado
+                if(!is_null(self::$redisConection)) self::$redisConection->set(  "Estado-" . $bar->getIdEstado(), $bar );
 		}
 		return $allData;
 	}
@@ -143,6 +149,7 @@ abstract class EstadoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Estado($foo);
     		array_push( $ar,$bar);
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Estado-" . $bar->getIdEstado(), $bar );
 		}
 		return $ar;
 	}
@@ -270,7 +277,8 @@ abstract class EstadoDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new Estado($foo));
+    		array_push( $ar, $bar = new Estado($foo));
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Estado-" . $bar->getIdEstado(), $bar );
 		}
 		return $ar;
 	}

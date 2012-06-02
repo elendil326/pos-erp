@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link Gasto }. 
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access private
   * @abstract
   * @package docs
@@ -40,20 +40,26 @@ abstract class GastoDAOBase extends DAO
 	  *	Obtener {@link Gasto} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Gasto} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Gasto Un objeto del tipo {@link Gasto}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_gasto )
 	{
+		if(  is_null( $id_gasto )  ){ return NULL; }
+            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "Gasto-" . $id_gasto ))){
+                Logger::log("REDIS !");
+                return new Gasto($obj);
+            }
 		$sql = "SELECT * FROM gasto WHERE (id_gasto = ? ) LIMIT 1;";
 		$params = array(  $id_gasto );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0)return NULL;
-			$foo = new Gasto( $rs );
-			return $foo;
+		if(count($rs)==0) return NULL;
+		$foo = new Gasto( $rs );
+		if(!is_null(self::$redisConection)) self::$redisConection->set(  "Gasto-" . $id_gasto, $foo );
+		return $foo;
 	}
 
 
@@ -87,7 +93,7 @@ abstract class GastoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new Gasto($foo);
     		array_push( $allData, $bar);
-			//id_gasto
+                if(!is_null(self::$redisConection)) self::$redisConection->set(  "Gasto-" . $bar->getIdGasto(), $bar );
 		}
 		return $allData;
 	}
@@ -208,6 +214,7 @@ abstract class GastoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Gasto($foo);
     		array_push( $ar,$bar);
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Gasto-" . $bar->getIdGasto(), $bar );
 		}
 		return $ar;
 	}
@@ -504,7 +511,8 @@ abstract class GastoDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new Gasto($foo));
+    		array_push( $ar, $bar = new Gasto($foo));
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Gasto-" . $bar->getIdGasto(), $bar );
 		}
 		return $ar;
 	}

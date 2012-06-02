@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link RetencionUsuario }. 
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access private
   * @abstract
   * @package docs
@@ -40,20 +40,26 @@ abstract class RetencionUsuarioDAOBase extends DAO
 	  *	Obtener {@link RetencionUsuario} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link RetencionUsuario} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link RetencionUsuario Un objeto del tipo {@link RetencionUsuario}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_retencion, $id_usuario )
 	{
+		if(  is_null( $id_retencion ) || is_null( $id_usuario )  ){ return NULL; }
+            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "RetencionUsuario-" . $id_retencion."-" . $id_usuario ))){
+                Logger::log("REDIS !");
+                return new RetencionUsuario($obj);
+            }
 		$sql = "SELECT * FROM retencion_usuario WHERE (id_retencion = ? AND id_usuario = ? ) LIMIT 1;";
 		$params = array(  $id_retencion, $id_usuario );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0)return NULL;
-			$foo = new RetencionUsuario( $rs );
-			return $foo;
+		if(count($rs)==0) return NULL;
+		$foo = new RetencionUsuario( $rs );
+		if(!is_null(self::$redisConection)) self::$redisConection->set(  "RetencionUsuario-" . $id_retencion."-" . $id_usuario, $foo );
+		return $foo;
 	}
 
 
@@ -87,8 +93,7 @@ abstract class RetencionUsuarioDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new RetencionUsuario($foo);
     		array_push( $allData, $bar);
-			//id_retencion
-			//id_usuario
+                if(!is_null(self::$redisConection)) self::$redisConection->set(  "RetencionUsuario-" . $bar->getIdRetencion()."-" . $bar->getIdUsuario(), $bar );
 		}
 		return $allData;
 	}
@@ -144,6 +149,7 @@ abstract class RetencionUsuarioDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new RetencionUsuario($foo);
     		array_push( $ar,$bar);
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "RetencionUsuario-" . $bar->getIdRetencion()."-" . $bar->getIdUsuario(), $bar );
 		}
 		return $ar;
 	}
@@ -263,7 +269,8 @@ abstract class RetencionUsuarioDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new RetencionUsuario($foo));
+    		array_push( $ar, $bar = new RetencionUsuario($foo));
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "RetencionUsuario-" . $bar->getIdRetencion()."-" . $bar->getIdUsuario(), $bar );
 		}
 		return $ar;
 	}

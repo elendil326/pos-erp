@@ -2,7 +2,7 @@
 /** Value Object file for table apertura_caja.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access public
   * @package docs
   * 
@@ -22,6 +22,10 @@ class AperturaCaja extends VO
 	{ 
 		if(isset($data))
 		{
+                    if(is_string($data))
+                        $data = self::object_to_array(json_decode($data));
+
+
 			if( isset($data['id_apertura_caja']) ){
 				$this->id_apertura_caja = $data['id_apertura_caja'];
 			}
@@ -84,7 +88,7 @@ class AperturaCaja extends VO
 	  * 
 	  * Fecha en que se realizo la apertura de caja<br>
 	  * @access public
-	  * @var datetime
+	  * @var int(11)
 	  */
 	public $fecha;
 
@@ -100,7 +104,7 @@ class AperturaCaja extends VO
 	/**
 	  * id_cajero
 	  * 
-	  * Id del usuario que realizará las funciones de cajero<br>
+	  * Id del usuario que realizarÃ¡ las funciones de cajero<br>
 	  * @access public
 	  * @var int(11)
 	  */
@@ -162,7 +166,7 @@ class AperturaCaja extends VO
 	  * getFecha
 	  * 
 	  * Get the <i>fecha</i> property for this object. Donde <i>fecha</i> es Fecha en que se realizo la apertura de caja
-	  * @return datetime
+	  * @return int(11)
 	  */
 	final public function getFecha()
 	{
@@ -173,9 +177,9 @@ class AperturaCaja extends VO
 	  * setFecha( $fecha )
 	  * 
 	  * Set the <i>fecha</i> property for this object. Donde <i>fecha</i> es Fecha en que se realizo la apertura de caja.
-	  * Una validacion basica se hara aqui para comprobar que <i>fecha</i> es de tipo <i>datetime</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param datetime
+	  * @param int(11)
 	  */
 	final public function setFecha( $fecha )
 	{
@@ -209,7 +213,7 @@ class AperturaCaja extends VO
 	/**
 	  * getIdCajero
 	  * 
-	  * Get the <i>id_cajero</i> property for this object. Donde <i>id_cajero</i> es Id del usuario que realizará las funciones de cajero
+	  * Get the <i>id_cajero</i> property for this object. Donde <i>id_cajero</i> es Id del usuario que realizarÃ¡ las funciones de cajero
 	  * @return int(11)
 	  */
 	final public function getIdCajero()
@@ -220,7 +224,7 @@ class AperturaCaja extends VO
 	/**
 	  * setIdCajero( $id_cajero )
 	  * 
-	  * Set the <i>id_cajero</i> property for this object. Donde <i>id_cajero</i> es Id del usuario que realizará las funciones de cajero.
+	  * Set the <i>id_cajero</i> property for this object. Donde <i>id_cajero</i> es Id del usuario que realizarÃ¡ las funciones de cajero.
 	  * Una validacion basica se hara aqui para comprobar que <i>id_cajero</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param int(11)

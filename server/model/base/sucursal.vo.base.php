@@ -2,7 +2,7 @@
 /** Value Object file for table sucursal.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access public
   * @package docs
   * 
@@ -22,6 +22,10 @@ class Sucursal extends VO
 	{ 
 		if(isset($data))
 		{
+                    if(is_string($data))
+                        $data = self::object_to_array(json_decode($data));
+
+
 			if( isset($data['id_sucursal']) ){
 				$this->id_sucursal = $data['id_sucursal'];
 			}
@@ -149,7 +153,7 @@ class Sucursal extends VO
 	  * 
 	  * Fecha en que se creo la sucursal<br>
 	  * @access public
-	  * @var datetime
+	  * @var int(11)
 	  */
 	public $fecha_apertura;
 
@@ -167,7 +171,7 @@ class Sucursal extends VO
 	  * 
 	  * Fecha en que se dio de baja esta sucursal<br>
 	  * @access public
-	  * @var datetime
+	  * @var int(11)
 	  */
 	public $fecha_baja;
 
@@ -347,7 +351,7 @@ class Sucursal extends VO
 	  * getFechaApertura
 	  * 
 	  * Get the <i>fecha_apertura</i> property for this object. Donde <i>fecha_apertura</i> es Fecha en que se creo la sucursal
-	  * @return datetime
+	  * @return int(11)
 	  */
 	final public function getFechaApertura()
 	{
@@ -358,9 +362,9 @@ class Sucursal extends VO
 	  * setFechaApertura( $fecha_apertura )
 	  * 
 	  * Set the <i>fecha_apertura</i> property for this object. Donde <i>fecha_apertura</i> es Fecha en que se creo la sucursal.
-	  * Una validacion basica se hara aqui para comprobar que <i>fecha_apertura</i> es de tipo <i>datetime</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha_apertura</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param datetime
+	  * @param int(11)
 	  */
 	final public function setFechaApertura( $fecha_apertura )
 	{
@@ -395,7 +399,7 @@ class Sucursal extends VO
 	  * getFechaBaja
 	  * 
 	  * Get the <i>fecha_baja</i> property for this object. Donde <i>fecha_baja</i> es Fecha en que se dio de baja esta sucursal
-	  * @return datetime
+	  * @return int(11)
 	  */
 	final public function getFechaBaja()
 	{
@@ -406,9 +410,9 @@ class Sucursal extends VO
 	  * setFechaBaja( $fecha_baja )
 	  * 
 	  * Set the <i>fecha_baja</i> property for this object. Donde <i>fecha_baja</i> es Fecha en que se dio de baja esta sucursal.
-	  * Una validacion basica se hara aqui para comprobar que <i>fecha_baja</i> es de tipo <i>datetime</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha_baja</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param datetime
+	  * @param int(11)
 	  */
 	final public function setFechaBaja( $fecha_baja )
 	{

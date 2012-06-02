@@ -2,7 +2,7 @@
 /** Value Object file for table traspaso.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access public
   * @package docs
   * 
@@ -22,6 +22,10 @@ class Traspaso extends VO
 	{ 
 		if(isset($data))
 		{
+                    if(is_string($data))
+                        $data = self::object_to_array(json_decode($data));
+
+
 			if( isset($data['id_traspaso']) ){
 				$this->id_traspaso = $data['id_traspaso'];
 			}
@@ -139,7 +143,7 @@ class Traspaso extends VO
 	  * 
 	  * Fecha en que se envia<br>
 	  * @access public
-	  * @var datetime
+	  * @var int(11)
 	  */
 	public $fecha_envio;
 
@@ -166,7 +170,7 @@ class Traspaso extends VO
 	  * 
 	  * Fecha en que se recibe el envio<br>
 	  * @access public
-	  * @var datetime
+	  * @var int(11)
 	  */
 	public $fecha_recibo;
 
@@ -325,7 +329,7 @@ class Traspaso extends VO
 	  * getFechaEnvio
 	  * 
 	  * Get the <i>fecha_envio</i> property for this object. Donde <i>fecha_envio</i> es Fecha en que se envia
-	  * @return datetime
+	  * @return int(11)
 	  */
 	final public function getFechaEnvio()
 	{
@@ -336,9 +340,9 @@ class Traspaso extends VO
 	  * setFechaEnvio( $fecha_envio )
 	  * 
 	  * Set the <i>fecha_envio</i> property for this object. Donde <i>fecha_envio</i> es Fecha en que se envia.
-	  * Una validacion basica se hara aqui para comprobar que <i>fecha_envio</i> es de tipo <i>datetime</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha_envio</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param datetime
+	  * @param int(11)
 	  */
 	final public function setFechaEnvio( $fecha_envio )
 	{
@@ -397,7 +401,7 @@ class Traspaso extends VO
 	  * getFechaRecibo
 	  * 
 	  * Get the <i>fecha_recibo</i> property for this object. Donde <i>fecha_recibo</i> es Fecha en que se recibe el envio
-	  * @return datetime
+	  * @return int(11)
 	  */
 	final public function getFechaRecibo()
 	{
@@ -408,9 +412,9 @@ class Traspaso extends VO
 	  * setFechaRecibo( $fecha_recibo )
 	  * 
 	  * Set the <i>fecha_recibo</i> property for this object. Donde <i>fecha_recibo</i> es Fecha en que se recibe el envio.
-	  * Una validacion basica se hara aqui para comprobar que <i>fecha_recibo</i> es de tipo <i>datetime</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha_recibo</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param datetime
+	  * @param int(11)
 	  */
 	final public function setFechaRecibo( $fecha_recibo )
 	{

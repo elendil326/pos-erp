@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link ImpresoraCaja }. 
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access private
   * @abstract
   * @package docs
@@ -40,20 +40,26 @@ abstract class ImpresoraCajaDAOBase extends DAO
 	  *	Obtener {@link ImpresoraCaja} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ImpresoraCaja} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ImpresoraCaja Un objeto del tipo {@link ImpresoraCaja}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_impresora, $id_caja )
 	{
+		if(  is_null( $id_impresora ) || is_null( $id_caja )  ){ return NULL; }
+            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "ImpresoraCaja-" . $id_impresora."-" . $id_caja ))){
+                Logger::log("REDIS !");
+                return new ImpresoraCaja($obj);
+            }
 		$sql = "SELECT * FROM impresora_caja WHERE (id_impresora = ? AND id_caja = ? ) LIMIT 1;";
 		$params = array(  $id_impresora, $id_caja );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0)return NULL;
-			$foo = new ImpresoraCaja( $rs );
-			return $foo;
+		if(count($rs)==0) return NULL;
+		$foo = new ImpresoraCaja( $rs );
+		if(!is_null(self::$redisConection)) self::$redisConection->set(  "ImpresoraCaja-" . $id_impresora."-" . $id_caja, $foo );
+		return $foo;
 	}
 
 
@@ -87,8 +93,7 @@ abstract class ImpresoraCajaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new ImpresoraCaja($foo);
     		array_push( $allData, $bar);
-			//id_impresora
-			//id_caja
+                if(!is_null(self::$redisConection)) self::$redisConection->set(  "ImpresoraCaja-" . $bar->getIdImpresora()."-" . $bar->getIdCaja(), $bar );
 		}
 		return $allData;
 	}
@@ -144,6 +149,7 @@ abstract class ImpresoraCajaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new ImpresoraCaja($foo);
     		array_push( $ar,$bar);
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ImpresoraCaja-" . $bar->getIdImpresora()."-" . $bar->getIdCaja(), $bar );
 		}
 		return $ar;
 	}
@@ -263,7 +269,8 @@ abstract class ImpresoraCajaDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new ImpresoraCaja($foo));
+    		array_push( $ar, $bar = new ImpresoraCaja($foo));
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ImpresoraCaja-" . $bar->getIdImpresora()."-" . $bar->getIdCaja(), $bar );
 		}
 		return $ar;
 	}

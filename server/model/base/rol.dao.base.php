@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link Rol }. 
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access private
   * @abstract
   * @package docs
@@ -40,20 +40,26 @@ abstract class RolDAOBase extends DAO
 	  *	Obtener {@link Rol} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Rol} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Rol Un objeto del tipo {@link Rol}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_rol )
 	{
+		if(  is_null( $id_rol )  ){ return NULL; }
+            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "Rol-" . $id_rol ))){
+                Logger::log("REDIS !");
+                return new Rol($obj);
+            }
 		$sql = "SELECT * FROM rol WHERE (id_rol = ? ) LIMIT 1;";
 		$params = array(  $id_rol );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0)return NULL;
-			$foo = new Rol( $rs );
-			return $foo;
+		if(count($rs)==0) return NULL;
+		$foo = new Rol( $rs );
+		if(!is_null(self::$redisConection)) self::$redisConection->set(  "Rol-" . $id_rol, $foo );
+		return $foo;
 	}
 
 
@@ -87,7 +93,7 @@ abstract class RolDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new Rol($foo);
     		array_push( $allData, $bar);
-			//id_rol
+                if(!is_null(self::$redisConection)) self::$redisConection->set(  "Rol-" . $bar->getIdRol(), $bar );
 		}
 		return $allData;
 	}
@@ -163,6 +169,7 @@ abstract class RolDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Rol($foo);
     		array_push( $ar,$bar);
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Rol-" . $bar->getIdRol(), $bar );
 		}
 		return $ar;
 	}
@@ -342,7 +349,8 @@ abstract class RolDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new Rol($foo));
+    		array_push( $ar, $bar = new Rol($foo));
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Rol-" . $bar->getIdRol(), $bar );
 		}
 		return $ar;
 	}

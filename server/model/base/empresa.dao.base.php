@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link Empresa }. 
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access private
   * @abstract
   * @package docs
@@ -40,20 +40,26 @@ abstract class EmpresaDAOBase extends DAO
 	  *	Obtener {@link Empresa} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Empresa} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Empresa Un objeto del tipo {@link Empresa}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_empresa )
 	{
+		if(  is_null( $id_empresa )  ){ return NULL; }
+            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "Empresa-" . $id_empresa ))){
+                Logger::log("REDIS !");
+                return new Empresa($obj);
+            }
 		$sql = "SELECT * FROM empresa WHERE (id_empresa = ? ) LIMIT 1;";
 		$params = array(  $id_empresa );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0)return NULL;
-			$foo = new Empresa( $rs );
-			return $foo;
+		if(count($rs)==0) return NULL;
+		$foo = new Empresa( $rs );
+		if(!is_null(self::$redisConection)) self::$redisConection->set(  "Empresa-" . $id_empresa, $foo );
+		return $foo;
 	}
 
 
@@ -87,7 +93,7 @@ abstract class EmpresaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new Empresa($foo);
     		array_push( $allData, $bar);
-			//id_empresa
+                if(!is_null(self::$redisConection)) self::$redisConection->set(  "Empresa-" . $bar->getIdEmpresa(), $bar );
 		}
 		return $allData;
 	}
@@ -183,6 +189,7 @@ abstract class EmpresaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Empresa($foo);
     		array_push( $ar,$bar);
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Empresa-" . $bar->getIdEmpresa(), $bar );
 		}
 		return $ar;
 	}
@@ -414,7 +421,8 @@ abstract class EmpresaDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new Empresa($foo));
+    		array_push( $ar, $bar = new Empresa($foo));
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Empresa-" . $bar->getIdEmpresa(), $bar );
 		}
 		return $ar;
 	}

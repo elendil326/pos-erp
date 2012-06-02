@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link SeguimientoDeServicio }. 
-  * @author Anonymous
+  * @author someone@caffeina.mx
   * @access private
   * @abstract
   * @package docs
@@ -40,20 +40,26 @@ abstract class SeguimientoDeServicioDAOBase extends DAO
 	  *	Obtener {@link SeguimientoDeServicio} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link SeguimientoDeServicio} de la base de datos 
-	  * usando sus llaves primarias. 
+      * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link SeguimientoDeServicio Un objeto del tipo {@link SeguimientoDeServicio}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_seguimiento_de_servicio )
 	{
+		if(  is_null( $id_seguimiento_de_servicio )  ){ return NULL; }
+            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "SeguimientoDeServicio-" . $id_seguimiento_de_servicio ))){
+                Logger::log("REDIS !");
+                return new SeguimientoDeServicio($obj);
+            }
 		$sql = "SELECT * FROM seguimiento_de_servicio WHERE (id_seguimiento_de_servicio = ? ) LIMIT 1;";
 		$params = array(  $id_seguimiento_de_servicio );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0)return NULL;
-			$foo = new SeguimientoDeServicio( $rs );
-			return $foo;
+		if(count($rs)==0) return NULL;
+		$foo = new SeguimientoDeServicio( $rs );
+		if(!is_null(self::$redisConection)) self::$redisConection->set(  "SeguimientoDeServicio-" . $id_seguimiento_de_servicio, $foo );
+		return $foo;
 	}
 
 
@@ -87,7 +93,7 @@ abstract class SeguimientoDeServicioDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new SeguimientoDeServicio($foo);
     		array_push( $allData, $bar);
-			//id_seguimiento_de_servicio
+                if(!is_null(self::$redisConection)) self::$redisConection->set(  "SeguimientoDeServicio-" . $bar->getIdSeguimientoDeServicio(), $bar );
 		}
 		return $allData;
 	}
@@ -168,6 +174,7 @@ abstract class SeguimientoDeServicioDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new SeguimientoDeServicio($foo);
     		array_push( $ar,$bar);
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "SeguimientoDeServicio-" . $bar->getIdSeguimientoDeServicio(), $bar );
 		}
 		return $ar;
 	}
@@ -360,7 +367,8 @@ abstract class SeguimientoDeServicioDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new SeguimientoDeServicio($foo));
+    		array_push( $ar, $bar = new SeguimientoDeServicio($foo));
+                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "SeguimientoDeServicio-" . $bar->getIdSeguimientoDeServicio(), $bar );
 		}
 		return $ar;
 	}
