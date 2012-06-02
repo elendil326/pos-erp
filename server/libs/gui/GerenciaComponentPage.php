@@ -282,7 +282,36 @@ class GerenciaComponentPage extends PosComponentPage{
 	                        "url"   : "proveedores.nueva.clasificacion.php"
 	                }
 	            ]
-	        },
+	        },    {
+		            "title": "Reportes",
+		            "url": "reportes.php",
+		            "children": [
+		                {
+		                        "title" : "Productos por cliente",
+		                        "url"   : "reportes.productos.cliente.php"
+		                },
+		                {
+		                        "title" : "Detalle",
+		                        "url"   : "reportes.detalle.php"
+		                },
+		                {
+		                        "title" : "Lista",
+		                        "url"   : "reportes.lista.php"
+		                },
+		                {
+		                        "title" : "Nuevo",
+		                        "url"   : "reportes.nuevo.php"
+		                },
+		                {
+		                        "title" : "Revisar sintaxis de nuevo",
+		                        "url"   : "reportes.revisar_sintaxys.nuevo.php"
+		                },
+		                {
+		                        "title" : "Servicio por cliente",
+		                        "url"   : "reportes.servicio.cliente.php"
+		                }
+		            ]
+		        },
 		        {
 		            "title": "Tarifas",
 		            "url": "tarifas.lista.php",
