@@ -94,10 +94,13 @@
 		<?php
 
 
-		//$page->add
+		$page->addComponent(new TitleComponent("Nuevo lote", 2));
 		$nuevoLote = new DAOFormComponent(new Lote());
 		$nuevoLote->addApiCall("api/almacen/lote/nuevo", "POST");
-
+		$nuevoLote->makeObligatory(array("id_almacen", "folio"));
+		$nuevoLote->hideField(array("id_usuario", "id_lote"));
+		$nuevoLote->createComboBoxJoin("id_almacen", "nombre", AlmacenDAO::GetAll());
+		$nuevoLote->setCaption("id_almacen", "Almacen contenedor");
 		$page->addComponent($nuevoLote);
 		
 		$page->render();

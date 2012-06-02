@@ -422,7 +422,7 @@ abstract class CartComponent
 				{
 					callback : function(r){
 						if(r.status === "ok"){
-							//window.location = "ventas.detalle.php?vid=" + r.id_venta + "&last_action=ok";
+							window.location = "ventas.detalle.php?vid=" + r.id_venta + "&last_action=ok";
 
 						}else{
 							console.error(r);

@@ -110,7 +110,7 @@ $entrada_lote->createComboBoxJoin("id_lote", "id_lote", LoteDAO::getAll(   ) );
 $entrada_lote->addField("cantidad", "Cantidad", "text");
 $entrada_lote->addField("productos", "", "text", "\"   [ { \\\"id_producto\\\" : ". $_GET["pid"] .", \\\"cantidad\\\"    : 0 } ]   \"");
 $entrada_lote->sendHidden("productos");
-
+$entrada_lote->makeObligatory(array( "id_lote"));
 $entrada_lote->beforeSend("beforeSendNuevaEntrada");
 $entrada_lote->addApiCall("api/almacen/lote/entrada", "POST");
 
