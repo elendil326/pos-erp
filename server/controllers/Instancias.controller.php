@@ -684,7 +684,7 @@
 			
 			$cuerpo = "Su nueva instancia de POS ERP ha sido creada con exito !\n\n";
 			$cuerpo .= "Puede acceder a su cuenta en la siguiente direccion:";
-			$cuerpo .= "\n\nhttp://127.0.0.1/caffeina/pos/branches/v1_5/www/front_ends/". $token ."/";
+			$cuerpo .= "\n\nhttp://pos2.labs2.caffeina.mx/front_ends/". $token ."/";
 			$cuerpo .= "\n\nHemos creado una cuenta de aministrador para usted, el usuario es: `1` y su contraseña es `123` sin las comillas.";
 
 			$cuerpo .= "";
