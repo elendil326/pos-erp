@@ -673,16 +673,7 @@
 					
 			
 			$iid = self::Nueva( $token, $res["email"] . " requested this instance as a demo" );
-			
-			
-			$sql = "UPDATE  `instance_request` 
-					SET  `date_validated` =  ?, `date_installed` = ? 
-					WHERE `id_request` = ?;";			
-			
-			$POS_CONFIG["CORE_CONN"]->Execute( $sql , array( $startTime, time(), $res["id_request"] ) );
-			
-			Logger::log("Done with installation.");
-			
+
 			Logger::log("Sending email....");
 			
 			$cuerpo = "Su nueva instancia de POS ERP ha sido creada con exito !\n\n";
@@ -699,7 +690,12 @@
 				"Su cuenta POS ERP esta lista");
 			
 			
+			$sql = "UPDATE  `instance_request`  SET  `date_validated` =  ?, `date_installed` = ?  WHERE `id_request` = ?;";						
+			$POS_CONFIG["CORE_CONN"]->Execute( $sql , array( $startTime, time(), $res["id_request"] ) );
 			
+			Logger::log("Done with installation.");
+			
+						
 			return array("success" => true, "reason" => "Su instancia se ha creado con exito.");
 			
 			
