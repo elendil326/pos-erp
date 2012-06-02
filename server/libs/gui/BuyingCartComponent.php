@@ -1,34 +1,13 @@
 <?php
 
 
-/**
- * ShoppingCartComponent
- * 
- * ShoppingCartComponent es un componente para crear carros de compras
- * facilmente, incluye una caja de busqueda para seleccionar productos
- * o bien.
- *
- * 
- * Hay unas cuantas cosas a considerar:
- * Hay que seleccionar un cliente o una caja comun.
- * Los productos pueden ser computestos, servicios, u otras cosas.
- * Hay otras caracteristicas como "PAPA FIANA" en los productos.
- * Considerar el promedio, o procesadas y originales y todo eso.
- * Manejar Remisiones.
- * Fecha.
- * Cambio de precios.
- * 
- * 
- * 
- * 
- * */
-
-abstract class CartComponent
+class BuyingCartComponent /* extends CartComponent */ implements GuiComponent
 {
-    protected $CartType;
-    
-    
-    
+    function __construct()
+    {
+	
+    }
+ 
     
     function renderCmp()
     {
@@ -40,7 +19,8 @@ abstract class CartComponent
 		    'Ext.form.*',
 		    'Ext.grid.*',
 		    'Ext.util.*',
-		    'Ext.state.*'
+		    'Ext.state.*',
+		    'Ext.selection.CellModel',
 		]);
 
 
@@ -62,12 +42,6 @@ abstract class CartComponent
 
 			console.log("Actualizando el carrito");
 
-			// 
-			// Actualizar la tabla de productos 
-			// seleccionados
-			//
-			grid.getView().refresh();
-
 
 
 			// 
@@ -77,23 +51,22 @@ abstract class CartComponent
 			var subtotal = 0;
 			var tarifaActual = 1;
 
-			tarifaActual = Ext.get("tarifa_seleccionada").getValue();
-			console.log("la tarifa actual es :" + tarifaActual);
+			//tarifaActual = Ext.get("tarifa_seleccionada").getValue();
+			//console.log("la tarifa actual es :" + tarifaActual);
 
 
 			for (var i=0; i < carrito_store_count; i++) {
 
 				var p = carrito_store.getAt(i);
 
-				var tarifasProducto = p.get("tarifas");
-
-				for (var j=0; j < tarifasProducto.length; j++) {
-					if(tarifasProducto[j].id_tarifa == tarifaActual){
-							console.log("ya encontre el precio de esta tarifa");
-							subtotal += parseFloat( tarifasProducto[j].precio ) * parseFloat( p.get("cantidad") ) ;
-							break;
-					}
-				}
+				 console.log(i + " : " + p.get("precio") + "," + p.get("cantidad"), p);
+				 
+				var this_importe  =parseFloat( p.get("precio") ) * parseFloat( p.get("cantidad") ) ;
+				
+				subtotal += this_importe;
+				 
+				p.set("importe", this_importe);
+				
 			};
 
 			Ext.get("carrito_subtotal").update(Ext.util.Format.usMoney( subtotal ));
@@ -101,54 +74,14 @@ abstract class CartComponent
 			Ext.get("carrito_total").update(Ext.util.Format.usMoney( subtotal ));
 
 
-
 			// 
-			// Buscar existencias
+			// Actualizar la tabla de productos 
+			// seleccionados
 			//
-			if(sucursal_seleccionada !== null){
-				//
-				// si hay una sucursal seleccionada
-				// podemos calcular si hay existencias
-				//
-				for (var i=0; i < carrito_store_count; i++) {
-
-					var p = carrito_store.getAt(i);
-
-					var existencias = p.get("existencias");
-
-
-
-					var found_existencias = false;
-
-					for (var ei=0; ei < existencias.length; ei++) {
-						//
-						// buscar la sucursal que
-						// tengo seleccionada
-						//
-						if( existencias[ei].id_sucursal == sucursal_seleccionada ){
-
-							console.log(existencias[ei].id_sucursal,  sucursal_seleccionada)
-
-							found_existencias = true;
-
-							if( p.get("cantidad") > existencias[ei].cantidad ){
-
-								console.warn("se necesitan" + p.get("cantidad") + " pero solo tengo "+ existencias[ei].cantidad);
-							}else{
-								console.log("quiero " + p.get("cantidad") + " y tengo "+ existencias[ei].cantidad);							
-							}
-							break;
-						}
-					}
-
-
-					if(found_existencias === false){
-						console.warn("No hay ningun tipo de existencias");
-					}
-
-
-				};
-			}//if(sucursal)
+			grid.getView().refresh();
+			
+			
+			
 
 			console.groupEnd();
 		}
@@ -174,15 +107,15 @@ abstract class CartComponent
 
 			cliente_seleccionado = c[0];
 
-			console.log("Cliente seleccionado", cliente_seleccionado);
+			console.log("Proveedor seleccionado", cliente_seleccionado);
 
 			Ext.get("buscar_cliente_01").enableDisplayMode('block').hide();
-			var pphtml = "<h3 style='margin:0px'>Venta para <a target=\"_blank\" href='clientes.ver.php?cid="+cliente_seleccionado.get("id_usuario")+"'>" + cliente_seleccionado.get("nombre") + "</a></h3>";
+			var pphtml = "<h3 style='margin:0px'>Compra de <a target=\"_blank\" href='clientes.ver.php?cid="+cliente_seleccionado.get("id_usuario")+"'>" + cliente_seleccionado.get("nombre") + "</a></h3>";
 
 			if( cliente_seleccionado.get("rfc") !== null )
 				pphtml += "<p>" + cliente_seleccionado.get("rfc") + "</p>";
 
-			pphtml += "<br><div class='POS Boton' onClick='buscar_cliente()'  >Buscar otro cliente</div>";
+			pphtml += "<br><div class='POS Boton' onClick='buscar_cliente()'  >Cambiar de proveedor</div>";
 
 			Ext.get("buscar_cliente_02").update(pphtml).show();
 
@@ -262,18 +195,133 @@ abstract class CartComponent
 
 
 
+		
+		function AddProduct( name ){
+
+			var required = '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>';
+			
+
+            var form = Ext.widget('form', {
+                layout: {
+                    type: 'vbox',
+                    align: 'stretch'
+                },
+                border: false,
+                bodyPadding: 10,
+
+                fieldDefaults: {
+                    labelAlign: 'top',
+                    labelWidth: 100,
+                    labelStyle: 'font-weight:bold'
+                },
+                items: [{
+                    xtype: 'fieldcontainer',
+                    fieldLabel: 'Detalles del producto',
+                    labelStyle: 'font-weight:bold;padding:0',
+                    layout: 'hbox',
+                    defaultType: 'textfield',
+
+                    fieldDefaults: {
+                        labelAlign: 'top'
+                    },
+
+                    items: [{
+                        flex: 1,
+                        name: 'codigo_producto',
+                        afterLabelTextTpl: required,
+                        fieldLabel: 'Codigo',
+                        allowBlank: false
+                    }, {
+                        flex: 2,
+                        name: 'nombre_producto',
+                        afterLabelTextTpl: required,
+                        fieldLabel: 'Nombre del producto',
+                        allowBlank: false,
+                        value: name,
+                        margins: '0 0 0 5'
+                    }]
+                }, {
+                    xtype: 'textfield',
+                    fieldLabel: 'Metodo costeo',
+                    name : "metodo_costeo",
+                    afterLabelTextTpl: required,
+                    allowBlank: false
+                }, {
+                    xtype: 'textfield',
+                    name: 'id_unidad_compra',
+                    fieldLabel: 'Unidad compra',
+                    afterLabelTextTpl: required,
+                    allowBlank: false
+                }, {
+                    xtype: 'textfield',
+                    name : "codigo_de_barras",
+                    fieldLabel: 'Codigo de barras',
+                    afterLabelTextTpl: required,
+                    allowBlank: true
+                }],
+
+                buttons: [{
+                    text: 'Cancelar',
+                    handler: function() {
+                        
+                        this.up('window').destroy();
+                    }
+                }, {
+                    text: 'Guardar producto',
+                    handler: function() {
+                        if (this.up('form').getForm().isValid()) {
+                        	
+                        	var params = this.up("form").getValues();
+                        	
+                        	params.activo = 1;
+                        	params.compra_en_mostrador = 0;
+                        	
+							var options = {
+								callback: function(){
+									Ext.getCmp("nuevo_producto_quick").destroy();
+                        			//Ext.MessageBox.alert('Thank you!', 'Your inquiry has been sent. We will respond as soon as possible.');	
+                        		}
+							};
+							
+                        	POS.API.POST("api/producto/nuevo", params, options);
+
+                        }
+
+
+                        
+                    }
+                }]
+            });
+
+            Ext.widget('window', {
+            	id : "nuevo_producto_quick",
+                title: 'Nuevo Producto',
+                closeAction: 'destroy',
+                width: 500,
+                height: 300,
+                layout: 'fit',
+                resizable: false,
+                modal: true,
+                items: form
+            }).show();
+        
+
+		}
 
 
 		var seleccionar_producto = function( a, p ){
-
-
+			
+			if( p[0].get("id_producto") == -99 ){
+				AddProduct( p[0].get("query")  );
+				return;
+			}
 			console.group("SELECCION DE PRODUCTO");
 
 			console.log( "Seleccionando producto", p );
 
 			//ponerle cantidad inicial de 1
 			console.log("cantidad inicial de 1");
-
+			
 			p[0].set("cantidad", 1);
 
 			//agregar produco al store
@@ -305,36 +353,23 @@ abstract class CartComponent
 				// 
 				// 
 
-
 				var carrito_store_count = carrito_store.count();
 				var subtotal = 0;
-				var tarifaActual = 1;
-
-				tarifaActual = Ext.get("tarifa_seleccionada").getValue();
-				console.log("la tarifa actual es :" + tarifaActual);
 
 
 				for (var i=0; i < carrito_store_count; i++) {
 
 					var p = carrito_store.getAt(i);
-
-					var tarifasProducto = p.get("tarifas");
-
-					var precio_con_tarifa = -1; 
-
-					for (var j=0; j < tarifasProducto.length; j++) {
-						if(tarifasProducto[j].id_tarifa == tarifaActual){
-								console.log("ya encontre el precio de esta tarifa");
-								precio_con_tarifa = parseFloat( tarifasProducto[j].precio );
-								subtotal +=  precio_con_tarifa * parseFloat( p.get("cantidad") ) ;
-								break;
-						}
-					}
+ 
+					
+					subtotal +=  parseFloat( p.get("precio") )  * parseFloat( p.get("cantidad") ) ;
+					
 
 					detalle_de_venta.push({
 						id_producto : p.get("id_producto"),
 						cantidad 	: p.get("cantidad"),
-						precio		: precio_con_tarifa,
+						precio		: p.get("precio"),
+						lote		: p.get("lote"),
 						descuento	: 0,
 						impuesto	: 0,
 						retencion	: 0,
@@ -353,26 +388,25 @@ abstract class CartComponent
 					impuesto 			: 0,
 					subtotal			: subtotal,
 					total 				: subtotal,
-					tipo_venta 			: "contado",
+					tipo_compra 		: "contado",
 					id_sucursal			: null,
-					id_tarifa 			: tarifaActual,
-					detalle_venta 		: Ext.JSON.encode( detalle_de_venta )
+					detalle 			: Ext.JSON.encode( detalle_de_venta ),
+					id_empresa			: empresa_seleccionada
 				};
-
-
+ 
+		
+		
+		
+		 
+		
+		
+		
 				if(cliente_seleccionado == null){
-					ventaObj.id_comprador_venta = null;
+					ventaObj.id_usuario_compra = null;
 				}else{
-					ventaObj.id_comprador_venta	= cliente_seleccionado.get("id_usuario");
+					ventaObj.id_usuario_compra	= cliente_seleccionado.get("id_usuario");
 				}
 
-				if(Ext.get("sucursal_seleccionada") !==  undefined){
-					ventaObj.id_sucursal = Ext.get("sucursal_seleccionada").getValue();
-
-				}else if( sucursal_seleccionada !== undefined || sucursal_seleccionada != null ){
-					ventaObj.id_sucursal = sucursal_seleccionada;
-
-				}	
 
 				return ventaObj;
 		}
@@ -401,32 +435,33 @@ abstract class CartComponent
 				});
 		}
 
-		var doVenta = function (){
-
+		var doCompra = function (){
+			
+			console.log("doComptra() called");
+			
 			var ventaObj = retriveData();
-			ventaObj.es_cotizacion = 0;
+			
+			console.log("ventaObj=", ventaObj);
+			
+			ventaObj.es_cotizacion = false;
 
-			if( ventaObj.id_sucursal == null ){
-					window.scrollTo(0, Ext.get("SeleccionDeSucursal").getY() - 20);			
-					Ext.get("SeleccionDeSucursal").highlight();
-					return;
-			}	
 
 
 			//
 			// Enviar al API
 			// 
 			POS.API.POST(
-				"api/ventas/nueva/", 
+				"api/compras/nueva/", 
 				ventaObj,
 				{
 					callback : function(r){
 						if(r.status === "ok"){
-							window.location = "ventas.detalle.php?vid=" + r.id_venta + "&last_action=ok";
+							//window.location = "ventas.detalle.php?vid=" + r.id_venta + "&last_action=ok";
+							
 
 						}else{
 							console.error(r);
-							Ext.MessageBox.alert("Nueva venta", "Algo salio mal.");
+							Ext.MessageBox.alert("Nueva compra", "Algo salio mal.");
 						}
 					}
 				});
@@ -445,20 +480,19 @@ abstract class CartComponent
 		});
 
 
-		var sucursal_seleccionada = null;
+		var empresa_seleccionada = null;
 
-		var seleccionar_sucursal = function( sucursalStore ){
+		var seleccionar_empresa = function( empresa ){
 			//sucursalStore
-			console.log(sucursalStore.get("id_sucursal") + " seleccionada...");
+			console.log(empresa.get("id_empresa") + " seleccionada...");
 
-			sucursal_seleccionada = sucursalStore.get("id_sucursal");
+			empresa_seleccionada = empresa.get("id_empresa");
 
 			actualizar_carrito();
 		};
 
 
 var grid;
-
 		Ext.onReady(function(){
 
 
@@ -471,7 +505,7 @@ var grid;
 		        extend: 'Ext.data.Model',
 		        proxy: {
 		            type: 'ajax',
-					url : '../api/cliente/buscar/',
+					url : '../api/proveedor/lista/',
 					extraParams : {
 						auth_token : Ext.util.Cookies.get("at")
 					},
@@ -613,7 +647,9 @@ var grid;
 					{name: 'precio',				mapping: 'precio'},
 					{name: 'tarifas',				mapping: 'tarifas'},			
 					{name: 'existencias',			mapping: 'existencias'},
-					{name: 'cantidad' 				/* not in the original response */ }
+					{name: 'cantidad' 				/* not in the original response */ },
+					{name: 'query' 					/* not in the original response */ },
+					{name: 'lote' 					/* not in the original response */ }
 		        ]
 		    });
 
@@ -633,13 +669,17 @@ var grid;
 		            xtype: 'combo',
 		            store: pdts,
 		            displayField: 'title',
+		            id : "seleccion_producto_cart",
 		            typeAhead: true,
 		            hideLabel: true,
 					emptyText : "Buscando por descripcion, nombre o codigo de barras.",
 		            hideTrigger:false,
 		            anchor: '100%',
 					listeners :{
-						"select" : seleccionar_producto
+						"select" : function(a,b,c){
+							console.log("LS:" , a,b,c);
+							//seleccionar_producto(a,b,c);
+						}
 					},
 		            listConfig: {
 		                loadingText: 'Buscando...',
@@ -655,10 +695,6 @@ var grid;
 		                }
 		            },
 		            pageSize: 10
-		        }, {
-		            xtype: 'component',
-		            style: 'margin-top:10px',
-		            html: 'Buscando por descripcion, nombre o codigo de barras.'
 		        }]
 		    });/* Ext.create */
 			/** *****************************************************************
@@ -667,9 +703,42 @@ var grid;
 			  * ***************************************************************** */
 
 
+			/** *****************************************************************
+			  * LOTES
+			  *
+			  * ***************************************************************** */
+			Ext.define("Lote", {
+		        extend: 'Ext.data.Model',
+		        proxy: {
+		            type: 'ajax',
+					url : '../api/almacen/lote/buscar/',
+					extraParams : {
+						auth_token : Ext.util.Cookies.get("at")
+					},
+		            reader: {
+		                type: 'json',
+		                root: 'resultados',
+		                totalProperty: 'numero_de_resultados'
+		            }
+		        },
 
+		        fields: [
+					{name: 'id_lote', 				mapping: 'id_lote'},
+					{name: 'id_almacen', 			mapping: 'id_almacen'},
+					{name: 'folio', 				mapping: 'folio'},
+		        ]
+		    });
 
+		  var   lotes = Ext.create('Ext.data.Store', {
+		        pageSize: 10,
+		        model: 'Lote'
+		    });		
 
+		   
+			/** *****************************************************************
+			  * /LOTES
+			  *
+			  * ***************************************************************** */
 
 
 
@@ -687,7 +756,9 @@ var grid;
 			           { name: 'nombre_producto',     	type: 'string'},
 			           { name: 'descripcion',  			type: 'string'},
 			           { name: 'precio',  				type: 'float'},
-			           { name: 'cantidad',  			type: 'float'}
+			           { name: 'cantidad',  			type: 'float'},
+					   { name: 'importe',  				type: 'float'},
+					   { name: 'lote',  				type: 'string'}
 			        ],
 					listeners : {
 						datachanged : actualizar_carrito
@@ -698,9 +769,9 @@ var grid;
 			    grid = Ext.create('Ext.grid.Panel', {
 			        store: carrito_store,
 					plugins: [cellEditing],
-			        stateful: false,
-					bodyCls: 'foo',
-			        stateId: 'stateGrid2',
+										bodyCls: 'foo',
+			        stateful: true,
+			        stateId: 'stateGridCompra',
 			        columns: [
 			            {
 			                text     : 'Codigo producto',
@@ -709,7 +780,7 @@ var grid;
 			                dataIndex: 'codigo_producto'
 			            },
 			            {
-			                text     : 'Nombre producto',
+			                text     : 'Nombre',
 			                flex     : 1,
 			                sortable : true,
 			                dataIndex: 'nombre_producto'
@@ -730,49 +801,49 @@ var grid;
 			            {
 			                text     : 'Precio',
 			                sortable : true,
-			                dataIndex: 'tarifas',
-							renderer : function(tarifasArray){
-
-								/* ***** **** ***** 
-									tarifasArray tiene las tarifas para 
-									este producto solo hay que ver que cliente
-									esta seleccionado para mostrar la adecuada
-								***** **** ***** */
-								var tf = Ext.get("tarifa_seleccionada").getValue();
-
-								for (var i=0; i < tarifasArray.length; i++) {
-									if(tarifasArray[i].id_tarifa == tf){
-										return Ext.util.Format.usMoney( tarifasArray[i].precio );
-									}
-								}
-
-								return "X";
-
-							}
-			            },		
+			                dataIndex: 'precio',
+							renderer : Ext.util.Format.usMoney,
+							field: {
+				                xtype: 'numberfield'
+				            }
+			            },
+			            {
+			                text     : 'Lote',
+			                width    : 75,
+			                dataIndex: 'lote',
+				            field : {
+				            	xtype : "combobox",
+				            	typeAhead: true,
+				                triggerAction: 'all',
+				                selectOnTab: true,
+				                store: lotes,
+				                lazyRender: true,
+				                listClass: 'x-combo-list-small',
+				                displayField: "folio",
+				                listConfig: {
+				                	loadingText: 'Buscando...',
+				                	
+				                	// Custom rendering template for each item
+				                	getInnerTpl: function(a,b,c) {
+										return "<p style='margin:0px'>{folio}</p>";
+				                	}
+				            	},
+				            }//field
+			            },
 			            {
 			                text     : 'Importe',
+			                dataIndex: 'importe',
 			                width    : 75,
 			                sortable : true,
-							renderer : function(a,b,producto){
-
-								var tf =  Ext.get("tarifa_seleccionada").getValue();
-								var tarifasArray = producto.get("tarifas");
-
-								for (var i=0; i < tarifasArray.length; i++) {
-									if(tarifasArray[i].id_tarifa == tf){
-										return Ext.util.Format.usMoney( 
-											parseFloat(tarifasArray[i].precio ) * parseFloat(producto.get("cantidad")) );
-									}
-								};
-							}
+							renderer : Ext.util.Format.usMoney
 			            }
+			            
 			        ],
 			        height: 350,
 			        width: "100%",
 			        renderTo: 'carrito_de_compras_grid',
 			        viewConfig: {
-			            stripeRows: true
+			            stripeRows: false
 			        }
 			    });		
 
@@ -785,54 +856,57 @@ var grid;
 
 
 	</script>
-				<h2>Nueva venta</h2>
+				<h2>Nueva compra</h2>
 
 				<table border="0" style="width: 100%" class="">
 					<tr id="SeleccionDeCliente">
 						<td colspan="4">
 							<div id="buscar_cliente_01">
-								<p style="margin-bottom: 0px;">Buscar cliente</p>
+								<p style="margin-bottom: 0px;">Proveedor</p>
 								<div style="margin-bottom: 15px;" id="ShoppingCartComponent_002"><!-- clientes --></div>				
 							</div>
 							<div id="buscar_cliente_02" style="display:none; margin-bottom: 0px"></div>						
 						</td>
 					</tr>
+
+
+
 					<tr>
+						
 						<td id="SeleccionDeSucursal">
-							Sucursal:
+
+							Empresa que compra:
 							<div >
-								<?php
-        $sucursales = SucursalDAO::getAll();
-        if (sizeof($sucursales) == 0) {
-?><div style="color:gray; font-size:9px">[No hay sucursales]</div><?php
+							<?php
+					        $empresas = EmpresaDAO::getAll();
+					        if (sizeof($empresas) == 0) {
+								?><div style="color:gray; font-size:9px">[No hay empresas]</div><?php
+					        } else if (sizeof($empresas) > 10) {
+								$selector_de_suc = new EmpresaSelectorComponent();
+								$selector_de_suc->addJsCallback("seleccionar_empresa");
+								$selector_de_suc->renderCmp();
             
-        } else if (sizeof($sucursales) > 10) {
-            $selector_de_suc = new SucursalSelectorComponent();
-            $selector_de_suc->addJsCallback("seleccionar_sucursal");
-            $selector_de_suc->renderCmp();
+					        } else {
+						
+								?><script type="text/javascript" charset="utf-8">
+									empresa_seleccionada = <?php echo$empresas[0]->getIdEmpresa(); ?>;
+								</script><?php
+								
+								?><select id="empresa_seleccionada" onChange="seleccionar_empresa(this.value)" ><?php
+            					
+					            for ($i = 0; $i < sizeof($empresas); $i++) {
+					                echo "<option value=\"" . $empresas[$i]->getIdEmpresa() . "\" >" . $empresas[$i]->getRazonSocial() . "</option>";
+					            }
+								?></select><?php
             
-        } else {
-?>
-										<select id="sucursal_seleccionada" onChange="seleccionar_sucursal(this.value)" >
-											<?php
-            
-            for ($i = 0; $i < sizeof($sucursales); $i++) {
-                echo "<option value=\"" . $sucursales[$i]->getIdSucursal() . "\" >" . $sucursales[$i]->getRazonSocial() . "</option>";
-            }
-?>
-										</select>
-
-
-										<?php
-            
-        }
-        
-        
-?>						
+					        }
+        					?>						
 							</div>
+
 						</td>
+
 						<td id="SeleccionDeTipoDeVenta">
-							Tipo de venta:
+							Tipo de compra:
 							<div >
 								<select onChange="seleccion_tipo_de_venta(this.value)">
 									<option value="contado" selected>Contado</option>
@@ -855,6 +929,7 @@ var grid;
 							</div>
 						</td>
 						<td id="SeleccionDeTipoDePago">
+							<!--
 							Tipo de pago:
 							<div >
 								<select name="" onChange="tipo_de_pago_seleccionado = this.value">
@@ -862,8 +937,10 @@ var grid;
 									<option value="cheque">cheque</option>
 								</select>
 							</div>
+							-->
 						</td>										
 					</tr>
+					<!--
 					<tr>
 						<td id="SeleccionDeDescuento">
 							Descuento:
@@ -874,7 +951,7 @@ var grid;
 							</select>
 						</td>										
 					</tr>
-
+					-->
 				</table>
 
 				<div id="ShoppingCartComponent_001"><!-- buscar productos --></div>
@@ -896,132 +973,19 @@ var grid;
 				</table>
 
 				<div class="POS Boton" onClick="cancelarVenta()">Cancelar</div>
+				<!--
 				<div class="POS Boton" onClick="doCotizar()">Solo cotizar</div>
-				<div class="POS Boton OK" onClick="doVenta()">Vender</div>
+			-->
+				<div class="POS Boton OK" onClick="doCompra()">Comprar</div>
 
 			<?php
     }
-    
-    
-    
+       
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+class ShoppingCartComponent extends CartComponent implements GuiComponent
+{
+    function __construct()
+    {
+    }
+}

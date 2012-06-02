@@ -155,7 +155,7 @@
 	require_once("libs/gui/SucursalSelectorComponent.php");
 	require_once("libs/gui/EmpresaSelectorComponent.php");
 	require_once("libs/gui/ReporteComponent.php");	
-	
+	require_once("libs/gui/BuyingCartComponent.php");		
 	
 	require_once("libs/gui/BannerComponent.php");		
 	require_once("libs/gui/ClienteSelectorComponent.php");	
