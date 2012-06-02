@@ -237,6 +237,30 @@
 
 		}
 		
+		
+		public static function BuscarRequests(  ){
+			
+			global $POS_CONFIG;
+			
+			$sql = "select * from instance_request order by fecha desc";
+			
+			//($sql,$inputarr=false,$force_array=false,$first2cols=false)
+			
+			$res = $POS_CONFIG["CORE_CONN"]->GetAssoc( $sql, false, false, false );
+			
+			if(empty($res)) return NULL;
+			
+			$a = array();
+			
+			foreach ($res as $v) {
+				array_push( $a, $v );
+			}
+			
+			return $a;
+
+		}
+		
+		
 		public static function Eliminar($instance_token){
 			
 		}

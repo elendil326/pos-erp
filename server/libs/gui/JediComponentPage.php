@@ -47,6 +47,12 @@ class JediComponentPage extends PosComponentPage{
 		                    "url": "logs.error.php"
 		                }
 		            ]
+				},
+				{
+					
+					"title" : "DemoRequests",
+					"url"	: "requests.php"
+		            
 				}
 		        
 		    ]
