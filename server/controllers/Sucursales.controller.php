@@ -1471,9 +1471,84 @@ require_once("interfaces/Sucursales.interface.php");
 				throw new InvalidDataException("Eesta scuursal no tien almacenes");
 			}
 
-			$existencias = ProductoDAO::buscarProductoEnSucursal($detalle_producto->getIdProducto(), $id_sucursal);
+			
+			$existencias = ProductoDAO::buscarProductoEnSucursal(
+								$detalle_producto->getIdProducto(),
+								$id_sucursal
+							);
+			
+			$total_existencias = 0;
+			
+			$a_descontar = array();
+			$necesito = $detalle_producto->getCantidad();
+			
+			Logger::log("Necesito " . $necesito);
+			
+			foreach($existencias as $e){
+				
+				Logger::log("en el lote ".$e["id_lote"]." tengo " . $e["cantidad"]);
+				$total_existencias += $e["cantidad"];				
+
+				if( ($necesito - $e["cantidad"]) < 0 ){
+					//me basta con el producto
+					//en este lote
+					Logger::log("con este me basta...");
+					
+					array_push($a_descontar, array(
+						"id_lote" => $e["id_lote"],
+						"cantidad"	=> $necesito
+					));					
+					
+					$necesito = 0;
+				}else{
+					Logger::log("no me basta, necesito mas...");
+					array_push($a_descontar, array(
+						"id_lote" => $e["id_lote"],
+						"cantidad"	=> $e["cantidad"]
+					));
+					
+					$necesito -= $e["cantidad"];
+					
+				}
+				
+			}
+
+
+			if($total_existencias < $detalle_producto->getCantidad()){
+				throw new BusinessLogicException("No hay suficientes existencias en los lotes de esta sucursal.");
+			}
+
+
+			for ($i=0; $i < sizeof($a_descontar); $i++) { 
+				Logger::log("desonctando ". $a_descontar[$i]["cantidad"] ." de lote " . $a_descontar[$i]["id_lote"]);
+				
+				AlmacenesController::SalidaLote(
+					/*id_lote*/ 
+					$a_descontar[$i]["id_lote"], 
+					
+					/*productos*/
+					array( array(
+						"id_producto" => $detalle_producto->getIdProducto(),
+						"cantidad" => $a_descontar[$i]["cantidad"]
+					)), 
+					
+					/*motivo*/ 
+					"venta" );
+			}
+			
+			
+			//while($cantidad > 0){
+				//AlmacenController::SalidaLote( /* id_lote */, /* productos */, /* motivo */ "venta" );
+			//}
+
+			
+			
 
 		}
+		
+		
+		
+		
         /*
          * Este metodo recibe un registro de la tabla venta_producto y la sucursal,
          * de tal forma que descontara de los almacenes de esa sucursal de manera uniforme

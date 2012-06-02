@@ -953,6 +953,14 @@ Creo que este metodo tiene que estar bajo sucursal.
 
 
 
+	
+
+	public static function DescontarDeLote($id_producto, $id_lote, $cantidad){
+		
+		
+		
+	}
+
 
 
 
