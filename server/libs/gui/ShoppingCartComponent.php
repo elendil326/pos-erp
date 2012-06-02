@@ -698,23 +698,24 @@ var grid;
 			    grid = Ext.create('Ext.grid.Panel', {
 			        store: carrito_store,
 					plugins: [cellEditing],
-			        stateful: true,
-			        stateId: 'stateGrid',
+			        stateful: false,
+					bodyCls: 'foo',
+			        stateId: 'stateGrid2',
 			        columns: [
 			            {
-			                text     : 'codigo_producto',
+			                text     : 'Codigo producto',
 			                width    : 95,
 			                sortable : false,
 			                dataIndex: 'codigo_producto'
 			            },
 			            {
-			                text     : 'nombre_producto',
+			                text     : 'Nombre producto',
 			                flex     : 1,
 			                sortable : true,
 			                dataIndex: 'nombre_producto'
 			            },
 			            {
-			                text     : 'cantidad',
+			                text     : 'Cantidad',
 							dataIndex: 'cantidad',
 			                sortable : false,
 							renderer : function(x){
@@ -1415,7 +1416,7 @@ class BuyingCartComponent
 					tipo_compra 		: "contado",
 					id_sucursal			: null,
 					detalle 			: Ext.JSON.encode( detalle_de_venta ),
-					id_empresa			: 1
+					id_empresa			: empresa_seleccionada
 				};
  
 		
@@ -1504,13 +1505,13 @@ class BuyingCartComponent
 		});
 
 
-		var sucursal_seleccionada = null;
+		var empresa_seleccionada = null;
 
-		var seleccionar_sucursal = function( sucursalStore ){
+		var seleccionar_empresa = function( empresa ){
 			//sucursalStore
-			console.log(sucursalStore.get("id_sucursal") + " seleccionada...");
+			console.log(empresa.get("id_empresa") + " seleccionada...");
 
-			sucursal_seleccionada = sucursalStore.get("id_sucursal");
+			empresa_seleccionada = empresa.get("id_empresa");
 
 			actualizar_carrito();
 		};
@@ -1790,6 +1791,7 @@ var grid;
 			    grid = Ext.create('Ext.grid.Panel', {
 			        store: carrito_store,
 					plugins: [cellEditing],
+										bodyCls: 'foo',
 			        stateful: true,
 			        stateId: 'stateGridCompra',
 			        columns: [
@@ -1894,39 +1896,35 @@ var grid;
 					<tr>
 						
 						<td id="SeleccionDeSucursal">
-							<!--
-							Sucursal:
+
+							Empresa que compra:
 							<div >
-								<?php
-        $sucursales = SucursalDAO::getAll();
-        if (sizeof($sucursales) == 0) {
-?><div style="color:gray; font-size:9px">[No hay sucursales]</div><?php
+							<?php
+					        $empresas = EmpresaDAO::getAll();
+					        if (sizeof($empresas) == 0) {
+								?><div style="color:gray; font-size:9px">[No hay empresas]</div><?php
+					        } else if (sizeof($empresas) > 10) {
+								$selector_de_suc = new EmpresaSelectorComponent();
+								$selector_de_suc->addJsCallback("seleccionar_empresa");
+								$selector_de_suc->renderCmp();
             
-        } else if (sizeof($sucursales) > 10) {
-            $selector_de_suc = new SucursalSelectorComponent();
-            $selector_de_suc->addJsCallback("seleccionar_sucursal");
-            $selector_de_suc->renderCmp();
+					        } else {
+						
+								?><script type="text/javascript" charset="utf-8">
+									empresa_seleccionada = <?php echo $empresas[0]->getIdEmpresa(); ?>;
+								</script><?php
+								
+								?><select id="empresa_seleccionada" onChange="seleccionar_empresa(this.value)" ><?php
+            					
+					            for ($i = 0; $i < sizeof($empresas); $i++) {
+					                echo "<option value=\"" . $empresas[$i]->getIdEmpresa() . "\" >" . $empresas[$i]->getRazonSocial() . "</option>";
+					            }
+								?></select><?php
             
-        } else {
-?>
-										<select id="sucursal_seleccionada" onChange="seleccionar_sucursal(this.value)" >
-											<?php
-            
-            for ($i = 0; $i < sizeof($sucursales); $i++) {
-                echo "<option value=\"" . $sucursales[$i]->getIdSucursal() . "\" >" . $sucursales[$i]->getRazonSocial() . "</option>";
-            }
-?>
-										</select>
-
-
-										<?php
-            
-        }
-        
-        
-?>						
+					        }
+        					?>						
 							</div>
-						-->
+
 						</td>
 
 						<td id="SeleccionDeTipoDeVenta">

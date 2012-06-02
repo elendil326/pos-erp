@@ -708,12 +708,14 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
 					
 					if(is_null($lp)){
 						//no existe, insertar
-						LoteProductoDAO::save ( $loteProducto = new LoteProducto(array(
+						$loteProducto = new LoteProducto(array(
 								"id_lote" 		=> $l->getIdLote(),
 								"id_producto" 	=> $p->id_producto,
 								"cantidad" 		=> $p->cantidad, 
 								"id_unidad"		=> 1
-							) ) );
+							) );
+							
+						LoteProductoDAO::save ( $loteProducto);
 											
 					}else{
 						//ya existe, sumar
@@ -727,15 +729,15 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
 					
 
 					
-
-						
-						
-					LoteEntradaDAO::save ( $loteEntrada = new LoteEntrada(array(
+					$loteEntrada = new LoteEntrada(array(
 							"id_lote" 		=>$l->getIdLote(), 
 							"id_usuario"	=>$s->getIdUsuario(),
 							"fecha_registro"=>time(),
 							"motivo"		=>"Compra a Proveedor"
-						) ) );						
+						) );
+						
+						
+					LoteEntradaDAO::save ( $loteEntrada );						
 
 					LoteEntradaProductoDAO::save (new LoteEntradaProducto(array(
 							"id_lote_entrada" 	=> $loteEntrada->getIdLoteEntrada(),
@@ -743,8 +745,8 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
 							"id_unidad"			=> 1,
 							"cantidad"			=> $p->cantidad
 						) ) );
-					
-					CompraProductoDAO::save ($compraProducto = new CompraProducto(array(
+						
+					$compraProducto = new CompraProducto(array(
 							"id_compra"			=> $compra->getIdCompra(),
 							"id_producto"		=> $p->id_producto,
 							"cantidad"			=> $p->cantidad,
@@ -753,7 +755,9 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
 							"impuesto"			=> 0,
 							"id_unidad"			=> 1,
 							"retencion"			=> 0
-						) ) );
+						) );
+						
+					CompraProductoDAO::save ( $compraProducto);
 					
 				}catch(exception $e){
 					DAO::transRollback();

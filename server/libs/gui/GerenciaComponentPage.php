@@ -6,7 +6,10 @@ class GerenciaComponentPage extends PosComponentPage{
 	private $main_menu_json;
 
 	function __construct( $title = "Gerencia"){
-
+		
+		$file = $_SERVER["PHP_SELF"];
+		Logger::log($file);
+		
 		parent::__construct( $title );
 
 		//check for user login status
