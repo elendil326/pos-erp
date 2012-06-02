@@ -664,7 +664,7 @@
 				Logger::log("este ya fue validado");
 
 				
-				return array("success" => false, "reason" => "Esta llave de solicitud ya ha sido creada. Si olvido sus credenciales o necesita mas ayuda haga click aqui.");
+				return array("success" => false, "reason" => "Esta llave de solicitud ya ha sido creada. Para acceder a ella haga click <a href=\"http://pos2.labs2.caffeina.mx/front_ends/". $token ."/\">aqui</a>.");
 			}
 			
 			
@@ -692,7 +692,7 @@
 			//enviar el correo electronico
 			POSController::EnviarMail(
 				$cuerpo, 
-				$userEmail, 
+				$res["email"], 
 				"Su cuenta POS ERP esta lista");
 			
 			
