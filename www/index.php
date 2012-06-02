@@ -193,7 +193,7 @@
 					<h2><strong>Solicitar una instancia de 30 dias</strong></h2>
 					<form action="?t=thanks" class="signup" method="post">
 						<div class="placeholding-input">
-							<input type="text" class="text-input" autocomplete="off" name="email" maxlength="20" placeholder="Correo electronico">
+							<input type="text" class="text-input" autocomplete="off" name="email" maxlength="50" placeholder="Correo electronico">
 							<button type="submit" class="btn signup-btn">
 							Solicitar instancia </button>
 						</div>
