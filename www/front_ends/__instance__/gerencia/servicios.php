@@ -139,6 +139,7 @@
 		}
 
 		$tabla->addColRender("activo", "funcion_activo");
+		$tabla->addColRender("precio", "FormatMoney");		
 
 		$tabla->addOnClick( "id_servicio", "(function(a){ window.location = 'servicios.ver.php?sid=' + a; })" );
 

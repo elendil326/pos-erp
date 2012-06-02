@@ -238,7 +238,7 @@ require_once("interfaces/Compras.interface.php");
                     }
                     else
                     {
-                        $compra_criterio_2->setFecha(date("Y-m-d H:i:s",time()));
+                        $compra_criterio_2->setFecha( time());
                     }
                 }
                 else if($fecha_final!=null)

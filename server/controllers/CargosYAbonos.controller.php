@@ -487,7 +487,7 @@ class CargosYAbonosController extends ValidacionesController implements ICargosY
         $ingreso->setIdUsuario($id_usuario);
         $ingreso->setMonto($monto);
         $ingreso->setNota($nota);
-        $ingreso->setFechaDeRegistro(date("Y-m-d H:i:s", time()));
+        $ingreso->setFechaDeRegistro( time() );
         DAO::transBegin();
         try {
             IngresoDAO::save($ingreso);
@@ -934,7 +934,7 @@ class CargosYAbonosController extends ValidacionesController implements ICargosY
                     if (!is_null($fecha_maxima))
                         $abono_criterio_compra2->setFecha($fecha_maxima);
                     else
-                        $abono_criterio_compra2->setFecha(date("Y-m-d H:i:s", time()));
+                        $abono_criterio_compra2->setFecha(time());
                 } else if (!is_null($fecha_maxima)) {
                     //
                     //Si no se recibio fecha minima pero si fecha maxima
@@ -953,10 +953,11 @@ class CargosYAbonosController extends ValidacionesController implements ICargosY
                     //Se crea un segundo timestamp con el año, el mes y el dia de hoy pero
                     //con la hora 23:59:59 y se almacena como fecha en el objeto 2.
                     //
-                    $hoy = mktime(0, 0, 0, date("m"), date("d"), date("Y"));
-                    $abono_criterio_compra->setFecha(date("Y-m-d H:i:s", $hoy));
+
+                    $abono_criterio_compra->setFecha(time());
+
                     $manana = mktime(23, 59, 59, date("m"), date("d"), date("Y"));
-                    $abono_criterio_compra2->setFecha(date("Y-m-d H:i:s", $manana));
+                    $abono_criterio_compra2->setFecha(  $manana );
                 }
                 
                 $abono_criterio_compra->setIdCompra($id_compra);
@@ -1030,7 +1031,7 @@ class CargosYAbonosController extends ValidacionesController implements ICargosY
                     if (!is_null($fecha_maxima))
                         $abono_criterio_venta2->setFecha($fecha_maxima);
                     else
-                        $abono_criterio_venta2->setFecha(date("Y-m-d H:i:s", time()));
+                        $abono_criterio_venta2->setFecha( time() );
                 } else if (!is_null($fecha_maxima)) {
                     //
                     //Si no se recibio fecha minima pero si fecha maxima

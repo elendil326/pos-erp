@@ -13,14 +13,21 @@
 	//titulos
 	$page->addComponent( new TitleComponent( "Terminar Orden " ) );
 
-	$form = new DAOFormComponent(  new Venta()   );
+	$v = new Venta();
+	$v->setEsCotizacion(0);
+
+	$form = new DAOFormComponent(  $v  );
+
 
 	$form->addField("id_orden", "id_orden", "text", $_GET["oid"]);
 
 	$form->hideField( array( 
 		"id_orden",
+		"total",
 		"id_venta",
 		"id_caja",
+		"saldo",
+		"es_cotizacion",
 		"id_venta_caja",    
 		"id_comprador_venta",
 		"fecha",
@@ -35,7 +42,7 @@
 
 	$form->renameField(array( "tipo_de_venta" => "tipo_venta" ));
 
-	$form->sendHidden("id_orden");
+	$form->sendHidden(array( "id_orden", "es_cotizacion" ));
 
 	$form->addApiCall( "api/servicios/orden/terminar/");
 

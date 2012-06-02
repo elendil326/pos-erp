@@ -323,7 +323,7 @@ require_once("interfaces/Empresas.interface.php");
             //Se crea la empresa con los parametros obtenidos.
             $e = new Empresa(array(
                             "activo"                => true,
-                            "fecha_alta"            => date("Y-m-d H:i:s",time()),
+                            "fecha_alta"            => time(),
                             "fecha_baja"            => null,
                             "razon_social"          => trim( $razon_social ),
                             "representante_legal"   => $representante_legal,
@@ -516,7 +516,7 @@ require_once("interfaces/Empresas.interface.php");
             
             //Se cambia el campo activo a falso y se registra la fecha de baja como hoy
             $empresa->setActivo(0);
-            $empresa->setFechaBaja(date("Y-m-d H:i:s"));
+            $empresa->setFechaBaja(time());
             
             //Se buscan los productos pertenecientes a esta empresa y 
             //se inicializa una variable temporal producto_empresa

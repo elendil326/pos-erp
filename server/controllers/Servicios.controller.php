@@ -1542,7 +1542,7 @@ require_once("interfaces/Servicios.interface.php");
                     if(!is_null($fecha_hasta))
                         $orden_criterio_2->setFechaOrden ($fecha_hasta);
                     else
-                        $orden_criterio_2->setFechaOrden (date("Y-m-d H:i:s"));
+                        $orden_criterio_2->setFechaOrden (time());
                 }
                 else if(!is_null($fecha_hasta))
                 {
@@ -1716,7 +1716,7 @@ require_once("interfaces/Servicios.interface.php");
                                                             "id_servicio"       => $id_servicio,
                                                             "id_usuario_venta"  => $id_cliente,
                                                             "id_usuario"        => $id_usuario,
-                                                            "fecha_orden"       => date("Y-m-d H:i:s"),
+                                                            "fecha_orden"       => time(),
                                                             "fecha_entrega"     => $fecha_entrega,
                                                             "activa"            => 1,
                                                             "cancelada"         => 0,
@@ -1766,7 +1766,7 @@ require_once("interfaces/Servicios.interface.php");
 			
 			$venta->setIdCompradorVenta	($id_cliente);
 			$venta->setTipoDeVenta		("credito");
-			$venta->setFecha			(date("Y-m-d H:i:s"));
+			$venta->setFecha			(time());
 			$venta->setSubtotal			($subtotal);
 			$venta->setEsCotizacion			(0);			
 			$venta->setImpuesto			(0);
@@ -1968,7 +1968,7 @@ require_once("interfaces/Servicios.interface.php");
 													"estado"                => $nota,
 													"id_usuario"            => $id_usuario,
 													"id_sucursal"           => $id_sucursal,
-													"fecha_seguimiento"     => date("Y-m-d H:i:s")
+													"fecha_seguimiento"     => time()
                                                    ));
             
             DAO::transBegin();
@@ -2061,7 +2061,7 @@ require_once("interfaces/Servicios.interface.php");
             $orden_de_servicio = OrdenDeServicioDAO::getByPK($id_orden);
             
             $orden_de_servicio->setActiva(0);
-            $orden_de_servicio->setFechaEntrega(date("Y-m-d H:i:s"));
+            $orden_de_servicio->setFechaEntrega(time());
             
             //valida el parametro tipo_venta
             if($tipo_venta!="credito"&&$tipo_venta!="contado")

@@ -87,7 +87,7 @@ $page->addComponent($menu);
 // Forma de producto
 // 
 
-$esta_orden->setFechaOrden( FormatTime( strtotime ($esta_orden->getFechaOrden(  ) )) );
+$esta_orden->setFechaOrden( FormatTime(  ($esta_orden->getFechaOrden(  ) )) );
 
 
 $a = $esta_orden->getIdUsuarioAsignado( );
@@ -194,14 +194,12 @@ function funcion_usuario($id_usuario){
 	return $u->getNombre();
 }
 
-function funcion_transcurrido($a, $obj){
-	return FormatTime(strtotime($a));
-}
+
 
 $table->addColRender("id_localizacion", "funcion_sucursal");
 $table->addColRender("id_usuario", "funcion_usuario");
 $table->addColRender("id_usuario_venta", "funcion_usuario");
-$table->addColRender("fecha_seguimiento", "funcion_transcurrido");
+$table->addColRender("fecha_seguimiento", "FormatTime");
 
 
 $page->addComponent($table);

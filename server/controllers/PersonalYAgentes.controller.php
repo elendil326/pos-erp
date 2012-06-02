@@ -784,14 +784,14 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                                 "id_clasificacion_cliente"  => $id_clasificacion_cliente,
                                 "id_clasificacion_proveedor"=> $id_clasificacion_proveedor,
                                 "id_moneda"                 => $id_moneda,
-                                "fecha_asignacion_rol"      => date("Y-m-d H:i:s"),
+                                "fecha_asignacion_rol"      => time(),
                                 "nombre"                    => $nombre,
                                 "rfc"                       => $rfc,
                                 "curp"                      => $curp,
                                 "comision_ventas"           => $comision_ventas,
                                 "telefono_personal1"        => $telefono_personal1,
                                 "telefono_personal2"        => $telefono_personal2,
-                                "fecha_alta"                => date("Y-m-d H:i:s"),
+                                "fecha_alta"                => time(),
                                 "activo"                    => 1,
                                 "limite_credito"            => $limite_credito,
                                 "descuento"                 => $descuento,
@@ -1134,7 +1134,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                     $usuario->setIdTarifaVenta($rol_nuevo->getIdTarifaVenta());
                 }
                 $usuario->setIdRol($id_rol);
-                $usuario->setFechaAsignacionRol(date("Y-m-d H:i:s"));
+                $usuario->setFechaAsignacionRol(time());
               }
           }
 
@@ -1973,7 +1973,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 
             //Se cambia su estado activo a falso y se le asigna como hoy la fecha de baja.
             $usuario->setActivo(0);
-            $usuario->setFechaBaja(date("Y-m-d H:i:s"));
+            $usuario->setFechaBaja(time());
             DAO::transBegin();
             try
             {

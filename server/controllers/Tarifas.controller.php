@@ -884,7 +884,7 @@ Solo puede asignarse como default de ventas una tarifa de tipo venta
             {
                 if(is_null($version->getFechaInicio()))
                 {
-                    $version->setFechaInicio(date("Y-m-d H:i:s"));
+                    $version->setFechaInicio(time());
                 }
                 else
                 {
@@ -1070,7 +1070,7 @@ Las tarifas solo pueden tener una version activa.
             {
                 if(is_null($fecha_inicio))
                 {
-                    $fecha_inicio = date("Y-m-d H:i:s");
+                    $fecha_inicio = time();
                 }
                 else
                 {

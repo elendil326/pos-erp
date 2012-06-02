@@ -1048,7 +1048,7 @@ require_once("interfaces/Sucursales.interface.php");
             $venta->setIdVentaCaja($id_venta_caja);
             $venta->setCancelada(0);
             $venta->setTipoDePago($tipo_pago);
-            $venta->setFecha(date("Y-m-d H:i:s",time()));
+            $venta->setFecha(time());
             DAO::transBegin();
             try
             {
@@ -1838,7 +1838,7 @@ require_once("interfaces/Sucursales.interface.php");
             $compra->setIdCompraCaja($id_compra_caja);
             $compra->setCancelada(0);
             $compra->setTipoDePago($tipo_pago);
-            $compra->setFecha(date("Y-m-d H:i:s",time()));
+            $compra->setFecha(time());
             $compra->setIdEmpresa($id_empresa);
             DAO::transBegin();
             try
@@ -2141,7 +2141,7 @@ require_once("interfaces/Sucursales.interface.php");
             //Se declara la apertura de la caja
             $apertura_caja=new AperturaCaja();
             $apertura_caja->setIdCaja($id_caja);
-            $apertura_caja->setFecha(date("Y-m-d H:i:s",time()));
+            $apertura_caja->setFecha(time());
             $apertura_caja->setIdCajero($id_cajero);
             $apertura_caja->setSaldo($saldo);
             $caja->setAbierta(1);
@@ -2239,7 +2239,7 @@ require_once("interfaces/Sucursales.interface.php");
             $sucursal->setIdGerente		($id_gerente);
             $sucursal->setDescripcion	($descripcion);
 			
-            $sucursal->setFechaApertura	( date("Y-m-d H:i:s",time()) );
+            $sucursal->setFechaApertura	( time() );
 
             DAO::transBegin();
 
@@ -2619,7 +2619,7 @@ require_once("interfaces/Sucursales.interface.php");
                     array(
                         "id_caja" => $id_caja,
                         "id_cajero" => $id_cajero,
-                        "fecha" => date("Y-m-d H:i:s",time()),
+                        "fecha" => time(),
                         "saldo_real" => $saldo_real,
                         "saldo_esperado" => $caja->getSaldo()
                     )
@@ -2861,7 +2861,7 @@ require_once("interfaces/Sucursales.interface.php");
                                 "id_caja" => $id_caja,
                                 "id_cajero" => $id_cajero,
                                 "id_cajero_nuevo" => $id_cajero_nuevo,
-                                "fecha" => date("Y-m-d H:i:s",time()),
+                                "fecha" => time(),
                                 "saldo_real" => $saldo_real,
                                 "saldo_esperado" => $caja->getSaldo(),
                                 "saldo_final" => $saldo_final
@@ -3122,7 +3122,7 @@ require_once("interfaces/Sucursales.interface.php");
             
             $almacenes = AlmacenDAO::search( new Almacen( array( "id_sucursal" => $id_sucursal ) ) );
             
-            $sucursal->setFechaBaja(date("Y-m-d H:i:s"));
+            $sucursal->setFechaBaja(time());
             $sucursal->setActiva(0);
             DAO::transBegin();
             try
@@ -3388,7 +3388,7 @@ require_once("interfaces/Sucursales.interface.php");
             }
             
             //Actualiza el registro del traspaso
-            $traspaso->setFechaEnvio(date("Y-m-d H:i:s"));
+            $traspaso->setFechaEnvio(time());
             $traspaso->setIdUsuarioEnvia($id_usuario);
             $traspaso->setEstado("Enviado");
             
@@ -3481,7 +3481,7 @@ require_once("interfaces/Sucursales.interface.php");
             
             //Actualiza el registro de traspaso
             $traspaso->setIdUsuarioRecibe($id_usuario);
-            $traspaso->setFechaRecibo(date("Y-m-d H:i:s"));
+            $traspaso->setFechaRecibo(time());
             $traspaso->setEstado("Recibido");
             $traspaso->setCompleto(1);
             DAO::transBegin();

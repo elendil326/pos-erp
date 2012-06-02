@@ -81,7 +81,7 @@ class DireccionController extends ValidacionesController{
             $direccion->setReferencia($referencia);
             $direccion->setTelefono($telefono);
             $direccion->setTelefono2($telefono2);
-            $direccion->setUltimaModificacion( date( "Y-m-d H:i:s" , time() ));
+            $direccion->setUltimaModificacion( time() );
             $direccion->setIdUsuarioUltimaModificacion($id_usuario);
 
 
@@ -198,7 +198,7 @@ class DireccionController extends ValidacionesController{
                         if($cambio_direccion)
                         {
                              
-                            $_direccion->setUltimaModificacion( date('c') );
+                            $_direccion->setUltimaModificacion( time() );
 
                             
                             $id_usuario =  SesionController::Actual(   );

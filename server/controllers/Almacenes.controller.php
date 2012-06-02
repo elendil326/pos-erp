@@ -316,7 +316,7 @@ Creo que este metodo tiene que estar bajo sucursal.
             $entrada_almacen->setIdAlmacen($id_almacen);
             $entrada_almacen->setMotivo($motivo);
             $entrada_almacen->setIdUsuario($id_usuario);
-            $entrada_almacen->setFechaRegistro(date("Y-m-d H:i:s",time()));
+            $entrada_almacen->setFechaRegistro(time());
             DAO::transBegin();
             try
             {
@@ -549,7 +549,7 @@ Creo que este metodo tiene que estar bajo sucursal.
             $salida_almacen = new SalidaAlmacen(array(
                             "id_almacen" => $id_almacen,
                             "id_usuario" => $id_usuario,
-                            "fecha_registro" => date("Y-m-d H:i:s",time()),
+                            "fecha_registro" => time(),
                             "motivo" => $motivo
                                     )
                                 );

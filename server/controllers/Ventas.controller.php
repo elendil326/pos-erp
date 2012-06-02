@@ -540,7 +540,7 @@ require_once("interfaces/Ventas.interface.php");
             $venta->setCancelada(0);
             $venta->setTipoDePago(null);
             $venta->setSaldo(0);
-            $venta->setFecha(date("Y-m-d H:i:s",time()));
+            $venta->setFecha(time());
             
 
             DAO::transBegin();

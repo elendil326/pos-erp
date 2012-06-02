@@ -38,7 +38,7 @@
     //
     // Menu de opciones
     // 
-    if ($este_usuario->getActivo()) {
+
         $menu = new MenuComponent();
         $menu->addItem("Editar este usuario", "personal.editar.usuario.php?uid=" . $_GET["uid"]);
         
@@ -50,12 +50,13 @@
         $funcion_eliminar = " function eliminar_usuario(btn){" . "if(btn == 'yes')" . "{" . "var p = {};" . "p.id_usuario = " . $_GET["uid"] . ";" . "sendToApi_eliminar(p);" . "}" . "}" . "      " . "function confirmar(){" . " Ext.MessageBox.confirm('Desactivar', 'Desea eliminar este usuario?', eliminar_usuario );" . "}";
         
         $btn_eliminar->addOnClick("confirmar", $funcion_eliminar);
-        
-        $menu->addMenuItem($btn_eliminar);
+    	if ($este_usuario->getActivo()) {        
+			$menu->addMenuItem($btn_eliminar);
+		}
         
         
         $page->addComponent($menu);
-    }
+    
     //
     // Forma de producto
     // 
