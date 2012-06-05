@@ -68,10 +68,6 @@ class GerenciaComponentPage extends PosComponentPage{
 		                {
 		                    "title": "Nueva",
 		                    "url": "compras.nueva.php"
-		                },
-		                {
-		                    "title": "Nueva compra en arpillas",
-		                    "url": "compras.nueva.compra.arpilla.php"
 		                }
 		            ]
 		        },
