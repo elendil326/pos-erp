@@ -8,29 +8,51 @@
 
 		$page = new GerenciaTabPage();
 
-		$page->nextTab("tab1");
+		$page->addComponent(new TitleComponent("Catalogo de clientes", 2));
 
-		$page->addComponent("hola, estoy dentro de tab1");
-		$page->addComponent("hola, yo tambien estoy dentro de tab1<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>");
 
-		$page->nextTab("tab2");		
+		$page->nextTab("Lista");
+		
+		
+		
+		$cselector = new ClienteSelectorComponent( );
+		$cselector->addJsCallback( "(function(a){ window.location = 'clientes.ver.php?cid='+a.get('id_usuario'); })" );
+		$page->addComponent( $cselector);
 
-		$page->addComponent("hola, estoy dentro de tab2<br><br><br>");
-		$page->addComponent("hola, yo tambien estoy dentro de tab2<br><br><br><br><br><br><br>");
-		$page->addComponent("hola, estoy dentro de tab2<br><br><br>");
-		$page->addComponent("hola, yo tambien estoy dentro de tab2<br><br><br><br><br><br><br>");$page->addComponent("hola, estoy dentro de tab2<br><br><br>");
-		$page->addComponent("hola, yo tambien estoy dentro de tab2<br><br><br><br><br><br><br>");$page->addComponent("hola, estoy dentro de tab2<br><br><br>");
-		$page->addComponent("hola, yo tambien estoy dentro de tab2<br><br><br><br><br><br><br>");$page->addComponent("hola, estoy dentro de tab2<br><br><br>");
-		$page->addComponent("hola, yo tambien estoy dentro de tab2<br><br><br><br><br><br><br>");$page->addComponent("hola, estoy dentro de tab2<br><br><br>");
-		$page->addComponent("hola, yo tambien estoy dentro de tab2<br><br><br><br><br><br><br>");$page->addComponent("hola, estoy dentro de tab2<br><br><br>");
-		$page->addComponent("hola, yo tambien estoy dentro de tab2<br><br><br><br><br><br><br>");
+		$lista = ClientesController::Buscar();
+		
+		$tabla = new TableComponent( 
+			array(
+				"nombre"                        => "Nombre",
+				"activo"                        => "Activo",
+				"saldo_del_ejercicio"           => "Saldo"
+			),
+			$lista["resultados"]
+		);
 
-		$page->nextTab("tab3");		
+ 		$tabla->addColRender("saldo_del_ejercicio", "FormatMoney");
+        
+        function funcion_activo($activo){
+            return ($activo ? "Activo" : "Inactivo" );
+        }
+        
+        function funcion_consignatario($consignatario){
+            return ($consignatario ? "Consignatario" : "----" );
+        }
+                
 
-		$page->addComponent("hola, estoy dentro de tab2<br><br><br>");
-		$page->addComponent("hola, yo tambien estoy dentro de tab2<br><br><br><br><br><br><br>");
-		$page->addComponent("hola, estoy dentro de tab2<br><br><br>");
-	
+        //$tabla->addColRender("id_clasificacion_cliente", "funcion_clasificacion_cliente");
+        $tabla->addColRender("activo", "funcion_activo");
+        $tabla->addColRender("consignatario", "funcion_consignatario");
+		$tabla->addOnClick( "id_usuario", "(function(a){ window.location = 'clientes.ver.php?cid=' + a; })" );
+		
+			
+		$page->addComponent( $tabla );
+
+		$page->nextTab("Clasificaciones");
+		
+		$page->nextTab("Reporr");		
+			
 		$page->render();
 
 

@@ -9,9 +9,14 @@
 	// Parametros necesarios
 	// 
 	$page->requireParam("did", "GET", "Esta direccion no existe.");
+	
 	$page->requireParam("cid", "GET", "Esta usuario no existe.");
+	
 	$esta_dir = DireccionDAO::getByPK($_GET["did"]);
-
+	
+	if(is_null($esta_dir)){
+		Logger::error("this dude has no address...");
+	}
 	//titulos
 	$page->addComponent(new TitleComponent("Editar direccion: " . $esta_dir->getColonia()));
 

@@ -683,11 +683,13 @@ require_once("interfaces/Proveedores.interface.php");
             Logger::log("Editando proveedor ".$id_proveedor);
             
             //Se utiliza el metodo editar usuario de personalyagentes, este se encarga de las validaciones
-            try
-            {
+            try {
+	
+
+	
                 $provedores = PersonalYAgentesController::EditarUsuario(
 						$id_proveedor,
-						$calle,
+						null,
 						null,
 						$codigo_postal,
 						null,
