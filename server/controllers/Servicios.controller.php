@@ -1658,6 +1658,7 @@ require_once("interfaces/Servicios.interface.php");
             //Si no se recibe adelanto se toma como cero
             if(is_null($adelanto)){
 	    		$adelanto = 0;
+	
 			}else{
 
                 if($adelanto < 0){
@@ -1681,13 +1682,14 @@ require_once("interfaces/Servicios.interface.php");
 			
 			
 			$subtotal = 0;
+			
 			if($servicio->getMetodoCosteo() == "variable"){
 				if(is_null($precio)){
 					throw new InvalidDataException("Este servicio es de precio variable y no se envio el precio");
 				}
 
-                if($precio <= 0){
-                    throw new InvalidDataException("$precio no es un precio valido");
+                if($precio < 0){
+                    throw new InvalidDataException("$precio no es un precio valido, es menor a 0");
                 }
 
 				$subtotal = $precio;
