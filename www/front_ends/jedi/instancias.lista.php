@@ -43,7 +43,7 @@
 	  **/
 	$p->addComponent( new TitleComponent( "Instancias instaladas", 3 ) );
 
-	//$p->addComponent( new FreeHtmlComponent( '<div class="POS Boton OK"  onclick="window.location=\'instancias.lista.php?do=actualizar_instancias\'">Actualizar Instancias</div>') );	
+	$p->addComponent( new FreeHtmlComponent( '<div class="POS Boton OK"  onclick="window.location=\'instancias.lista.php?do=actualizar_instancias\'">Actualizar Instancias</div>') );	
 
 	$headers = array( 	"instance_id" => "Instance ID",
 						"fecha_creacion" => "Creada",

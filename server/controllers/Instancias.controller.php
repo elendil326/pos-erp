@@ -272,7 +272,7 @@
 			$file_name_cons = 'db-backup-'.time().'.sql';
 			$destiny_file = '../../../static_content/db_backups/';
 			global $POS_CONFIG;
-			$sql = "SELECT * FROM instances;";
+			$sql = "SELECT * FROM instances;";//  where instance_id = 91;";
 			$rs =  $POS_CONFIG["CORE_CONN"]->Execute($sql);
 			$instancias = $rs->GetArray();
 			
@@ -463,7 +463,7 @@
 			
 			//llenar los datos respaldados
 			$data_script = file_get_contents( $source_file );
-			$queries = explode(  ";", $data_script);
+			$queries = explode(  ";\n", $data_script);
 			try {
 				
 				for ($i=0; $i < sizeof($queries); $i++) { 
