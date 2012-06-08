@@ -1907,14 +1907,15 @@ require_once("interfaces/Servicios.interface.php");
 			$orden->setIdUsuarioAsignado( $id_usuario_asignado );
 		}
 		
-		$saldo_cliente = UsuarioDAO::getByPK($orden->getIdUsuarioVenta())->getSaldoDelEjercicio();//se trae el monto que le resta por disponer de su limite de credito
+		/*$saldo_cliente = UsuarioDAO::getByPK($orden->getIdUsuarioVenta())->getSaldoDelEjercicio();//se trae el monto que le resta por disponer de su limite de credito
 
 		if( $saldo_cliente < $precio )
 			throw new InvalidDataException("El saldo del cliente es insuficiente ($ {$saldo_cliente})");
-
+			*/
 		
 		try{
 			OrdenDeServicioDAO::save( $orden );
+			
 		}catch(Exception $e){
 			Logger::error($e);
 			throw InvalidDatabaseException($e);
