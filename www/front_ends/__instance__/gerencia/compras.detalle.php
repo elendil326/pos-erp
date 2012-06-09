@@ -59,8 +59,14 @@
 	// Forma de producto
 	// 
 	$esta_compra->setFecha( FormatTime($esta_compra -> getFecha()) );
+
+	$esta_compra->setImpuesto(FormatMoney($esta_compra->getImpuesto()));
+	$esta_compra->setDescuento(FormatMoney($esta_compra->getDescuento()));
+	$esta_compra->setSubtotal(FormatMoney($esta_compra->getSubtotal()));
+	$esta_compra->setTotal(FormatMoney($esta_compra->getTotal()));
+
 	
-	
+				
 	$form = new DAOFormComponent($esta_compra);
 
 	$form->setEditable(false);
@@ -72,28 +78,32 @@
 	    "id_vendedor_compra",
 	    "id_sucursal",
 	    "id_usuario",
+		"saldo",
+		"retencion",
 	    "id_empresa"
 	));
 
 	$page->addComponent($form);
 
-	$page->addComponent(new TitleComponent("Productos de esta compra"), 3);
+	$page->addComponent(new TitleComponent("Productos de esta compra", 3));
 
 	$tabla = new TableComponent(array(
 	    "id_producto" => "Producto",
 	    "id_unidad" => "Unidad",
 	    "cantidad" => "Cantidad",
 	    "precio" => "Precio Unitario",
-	    "descuento" => "Descuento",
-	    "impuesto" => "Impuesto",
-	    "retencion" => "Retencion"
+		"impuesto" => "Importe"
 	), CompraProductoDAO::search(new CompraProducto(array(
 	    "id_compra" => $_GET["cid"]
 	))));
 
 
-
+	function cImporte ($foo, $obj){
+		return FormatMoney( $obj["precio"] * $obj["cantidad"] );
+	}
+	$tabla->addColRender("precio", "FormatMoney");
 	$tabla->addColRender("id_producto", "funcion_producto");
+	$tabla->addColRender("impuesto", "cImporte");
 
 	$page->addComponent($tabla);
 
