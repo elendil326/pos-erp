@@ -1915,7 +1915,7 @@ CREATE TABLE IF NOT EXISTS `venta_producto` (
   `id_venta` int(11) NOT NULL COMMENT 'id de la venta',
   `id_producto` int(11) NOT NULL COMMENT 'id del producto vendido',
   `precio` float NOT NULL COMMENT 'precio unitario con el que se vendio el producto',
-  `cantidad` int(11) NOT NULL COMMENT 'cantidad de producto que se vendio',
+  `cantidad` float NOT NULL COMMENT 'cantidad de producto que se vendio',
   `descuento` float NOT NULL COMMENT 'descuento que se aplico al producto',
   `impuesto` float NOT NULL COMMENT 'impuesto que se aplico al producto',
   `retencion` float NOT NULL COMMENT 'Retencion unitaria en el producto',
