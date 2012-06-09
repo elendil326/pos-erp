@@ -58,10 +58,13 @@
 	//
 	// Forma de producto
 	// 
+	$esta_compra->setFecha( FormatTime($esta_compra -> getFecha()) );
+	
+	
 	$form = new DAOFormComponent($esta_compra);
 
 	$form->setEditable(false);
-
+	
 	$form->hideField(array(
 	    "id_compra",
 	    "id_caja",
@@ -94,23 +97,5 @@
 
 	$page->addComponent($tabla);
 
-	$page->addComponent(new TitleComponent("Informacion de Arpilla"), 3);
-
-	$tabla = new TableComponent(array(
-	    "folio" => "Folio",
-	    "productor" => "Productor",
-	    "numero_de_viaje" => "Numero de viaje",
-	    "fecha_origen" => "Fecha en que se envio",
-	    "peso_origen" => "Peso en el origen",
-	    "peso_recibido" => "Peso recibido",
-	    "arpillas" => "Arpillas",
-	    "peso_por_arpilla" => "Peso por arpilla",
-	    "merma_por_arpilla" => "Merma por arpilla",
-	    "total_origen" => "Total en el origen"
-	), CompraArpillaDAO::search(new CompraArpilla(array(
-	    "id_compra" => $_GET["cid"]
-	))));
-
-	$page->addComponent($tabla);
 
 	$page->render();

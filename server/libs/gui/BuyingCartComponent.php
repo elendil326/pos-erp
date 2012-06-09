@@ -70,9 +70,28 @@ class BuyingCartComponent /* extends CartComponent */ implements GuiComponent
 				
 			};
 
+			
+			
 			Ext.get("carrito_subtotal").update(Ext.util.Format.usMoney( subtotal ));
+			
+			var impuesto = 0;
+			<?php
+				//listar impuestos
+				$i = ImpuestosController::Lista();
+				$iLista = $i["resultados"];
+				$impuestos_to = 0;
+				//carrito_impuesto
+				foreach ($iLista as $imp) {
+					$impuestos_to = $imp->getMontoPorcentaje();
+				}
 
-			Ext.get("carrito_total").update(Ext.util.Format.usMoney( subtotal ));
+				echo "impuesto = subtotal * " . $impuestos_to . ";";
+				
+			?>
+
+			Ext.get("carrito_impuesto").update(Ext.util.Format.usMoney( impuesto ));
+			
+			Ext.get("carrito_total").update(Ext.util.Format.usMoney( subtotal + impuesto ));
 
 
 			// 
@@ -968,6 +987,10 @@ class BuyingCartComponent /* extends CartComponent */ implements GuiComponent
 					<tr>
 						<td>Subtotal</td>
 						<td id="carrito_subtotal"></td>
+					</tr>
+					<tr>
+						<td>Impuesto</td>
+						<td id="carrito_impuesto"></td>
 					</tr>
 					<tr>
 						<td>Total</td>
