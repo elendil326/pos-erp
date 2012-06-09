@@ -766,7 +766,46 @@ class BuyingCartComponent /* extends CartComponent */ implements GuiComponent
 			  *
 			  * ***************************************************************** */
 
+				/** *****************************************************************
+				  * Unidades
+				  *
+				  * ***************************************************************** */
+				Ext.define("UnidadMedida", {
+			        extend: 'Ext.data.Model',
+			        proxy: {
+			            type: 'ajax',
+						url : '../api/producto/udm/unidad/buscar/',
+						extraParams : {
+							auth_token : Ext.util.Cookies.get("at")
+						},
+			            reader: {
+			                type: 'json',
+			                root: 'resultados',
+			                totalProperty: 'numero_de_resultados'
+			            }
+			        },
 
+			        fields: [
+						{name: 'id_unidad_medida', 				mapping: 'id_unidad_medida'},
+						{name: 'id_categoria_unidad_medida', 	mapping: 'id_categoria_unidad_medida'},
+						{name: 'descripcion', 					mapping: 'descripcion'},
+						{name: 'abreviacion', 					mapping: 'abreviacion'},
+						{name: 'tipo_unidad_medida', 			mapping: 'tipo_unidad_medida'},
+						{name: 'factor_conversion', 			mapping: 'factor_conversion'},
+						{name: 'activa', 						mapping: 'activa'},
+			        ]
+			    });
+			
+			  var   unidadMedida = Ext.create('Ext.data.Store', {
+			        pageSize: 10,
+			        model: 'UnidadMedida'
+			    });		
+
+
+				/** *****************************************************************
+				  * /Unidades
+				  *
+				  * ***************************************************************** */
 
 			/** *****************************************************************
 			  * CARRITO
@@ -817,13 +856,36 @@ class BuyingCartComponent /* extends CartComponent */ implements GuiComponent
 			                sortable : false,
 							renderer : function(x){
 								if(x === undefined)  x = 1;
-								return x + ' Qty';
+								return x + '';
 							},
 							field: {
 				                xtype: 'numberfield'
 				            }
 
-			            },		
+			            },
+			            {
+			                text     : 'Unidad',
+			                width    : 75,
+			                dataIndex: 'id_unidad',
+				            field : {
+				            	xtype : "combobox",
+				            	typeAhead: true,
+				                triggerAction: 'all',
+				                selectOnTab: true,
+				                store: unidadMedida,
+				                lazyRender: true,
+				                listClass: 'x-combo-list-small',
+				                displayField: "abreviacion",
+				                listConfig: {
+				                	loadingText: 'Buscando...',
+				                	
+				                	// Custom rendering template for each item
+				                	getInnerTpl: function(a,b,c) {
+										return "<p style='margin:0px'>{abreviacion}</p>";
+				                	}
+				            	},
+				            }//field
+			            },
 			            {
 			                text     : 'Precio',
 			                sortable : true,

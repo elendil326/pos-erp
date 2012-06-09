@@ -59,6 +59,7 @@
 
 		$page->addComponent(new TitleComponent("Nueva unidad de medida", 3));
 		
+		
 		$nudmf = new DAOFormComponent(new UnidadMedida());
 		$nudmf->hideField(array("id_unidad_medida"));
 		$nudmf->addApiCall("api/producto/udm/unidad/nueva", "POST");
