@@ -2,7 +2,6 @@
 
 
 
-
   class ApiSesionIniciar extends ApiHandler {
   
 
@@ -4998,14 +4997,6 @@
 	{
 		$this->request = array(	
 			"id_orden" => new ApiExposedProperty("id_orden", true, POST, array( "int" )),
-			"tipo_venta" => new ApiExposedProperty("tipo_venta", true, POST, array( "string" )),
-			"billetes_cambio" => new ApiExposedProperty("billetes_cambio", false, POST, array( "json" )),
-			"billetes_pago" => new ApiExposedProperty("billetes_pago", false, POST, array( "json" )),
-			"cheques" => new ApiExposedProperty("cheques", false, POST, array( "json" )),
-			"descuento" => new ApiExposedProperty("descuento", false, POST, array( "float" )),
-			"id_venta_caja" => new ApiExposedProperty("id_venta_caja", false, POST, array( "int" )),
-			"saldo" => new ApiExposedProperty("saldo", false, POST, array( "float" )),
-			"tipo_de_pago" => new ApiExposedProperty("tipo_de_pago", false, POST, array( "string" )),
 		);
 	}
 
@@ -5014,15 +5005,7 @@
  		$this->response = ServiciosController::TerminarOrden( 
  			
 			
-			isset($_POST['id_orden'] ) ? $_POST['id_orden'] : null,
-			isset($_POST['tipo_venta'] ) ? $_POST['tipo_venta'] : null,
-			isset($_POST['billetes_cambio'] ) ? json_decode($_POST['billetes_cambio']) : null,
-			isset($_POST['billetes_pago'] ) ? json_decode($_POST['billetes_pago']) : null,
-			isset($_POST['cheques'] ) ? json_decode($_POST['cheques']) : null,
-			isset($_POST['descuento'] ) ? $_POST['descuento'] :  null,
-			isset($_POST['id_venta_caja'] ) ? $_POST['id_venta_caja'] :  null,
-			isset($_POST['saldo'] ) ? $_POST['saldo'] :  null,
-			isset($_POST['tipo_de_pago'] ) ? $_POST['tipo_de_pago'] :  null
+			isset($_POST['id_orden'] ) ? $_POST['id_orden'] : null
 			
 			);
 		}catch(Exception $e){
@@ -6018,16 +6001,9 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"aplicacion" => new ApiExposedProperty("aplicacion", true, POST, array( "int" )),
-			"codigo" => new ApiExposedProperty("codigo", true, POST, array( "string" )),
-			"importe" => new ApiExposedProperty("importe", true, POST, array( "float" )),
-			"impuestos_en_hijos" => new ApiExposedProperty("impuestos_en_hijos", true, POST, array( "bool" )),
-			"impuestos_hijos" => new ApiExposedProperty("impuestos_hijos", true, POST, array( "json" )),
-			"incluido_en_importe_base" => new ApiExposedProperty("incluido_en_importe_base", true, POST, array( "bool" )),
+			"monto_porcentaje" => new ApiExposedProperty("monto_porcentaje", true, POST, array( "float" )),
 			"nombre" => new ApiExposedProperty("nombre", true, POST, array( "string" )),
-			"secuencia" => new ApiExposedProperty("secuencia", true, POST, array( "int" )),
-			"tipo" => new ApiExposedProperty("tipo", true, POST, array( "int" )),
-			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "string" )),
+			"tipo" => new ApiExposedProperty("tipo", false, POST, array( "int" )),
 		);
 	}
 
@@ -6036,16 +6012,9 @@
  		$this->response = ImpuestosController::Nuevo( 
  			
 			
-			isset($_POST['aplicacion'] ) ? $_POST['aplicacion'] : null,
-			isset($_POST['codigo'] ) ? $_POST['codigo'] : null,
-			isset($_POST['importe'] ) ? $_POST['importe'] : null,
-			isset($_POST['impuestos_en_hijos'] ) ? $_POST['impuestos_en_hijos'] : null,
-			isset($_POST['impuestos_hijos'] ) ? json_decode($_POST['impuestos_hijos']) : null,
-			isset($_POST['incluido_en_importe_base'] ) ? $_POST['incluido_en_importe_base'] : null,
+			isset($_POST['monto_porcentaje'] ) ? $_POST['monto_porcentaje'] : null,
 			isset($_POST['nombre'] ) ? $_POST['nombre'] : null,
-			isset($_POST['secuencia'] ) ? $_POST['secuencia'] : null,
-			isset($_POST['tipo'] ) ? $_POST['tipo'] : null,
-			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null
+			isset($_POST['tipo'] ) ? $_POST['tipo'] :  ""
 			
 			);
 		}catch(Exception $e){
@@ -6064,17 +6033,10 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"aplicacion" => new ApiExposedProperty("aplicacion", true, GET, array( "string" )),
-			"codigo" => new ApiExposedProperty("codigo", true, GET, array( "string" )),
-			"descripcion" => new ApiExposedProperty("descripcion", true, GET, array( "string" )),
-			"id_impuesto" => new ApiExposedProperty("id_impuesto", true, GET, array( "int" )),
-			"importe" => new ApiExposedProperty("importe", true, GET, array( "float" )),
-			"impuestos_en_hijos" => new ApiExposedProperty("impuestos_en_hijos", true, GET, array( "bool" )),
-			"impuestos_hijos" => new ApiExposedProperty("impuestos_hijos", true, GET, array( "json" )),
-			"incluido_en_importe_base" => new ApiExposedProperty("incluido_en_importe_base", true, GET, array( "bool" )),
-			"secuencia" => new ApiExposedProperty("secuencia", true, GET, array( "int" )),
-			"tipo" => new ApiExposedProperty("tipo", true, GET, array( "int" )),
-			"nombre" => new ApiExposedProperty("nombre", false, GET, array( "string" )),
+			"id_impuesto" => new ApiExposedProperty("id_impuesto", true, POST, array( "int" )),
+			"monto_porcentaje" => new ApiExposedProperty("monto_porcentaje", false, POST, array( "float" )),
+			"nombre" => new ApiExposedProperty("nombre", false, POST, array( "string" )),
+			"tipo" => new ApiExposedProperty("tipo", false, POST, array( "int" )),
 		);
 	}
 
@@ -6083,17 +6045,10 @@
  		$this->response = ImpuestosController::Editar( 
  			
 			
-			isset($_GET['aplicacion'] ) ? $_GET['aplicacion'] : null,
-			isset($_GET['codigo'] ) ? $_GET['codigo'] : null,
-			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
-			isset($_GET['id_impuesto'] ) ? $_GET['id_impuesto'] : null,
-			isset($_GET['importe'] ) ? $_GET['importe'] : null,
-			isset($_GET['impuestos_en_hijos'] ) ? $_GET['impuestos_en_hijos'] : null,
-			isset($_GET['impuestos_hijos'] ) ? json_decode($_GET['impuestos_hijos']) : null,
-			isset($_GET['incluido_en_importe_base'] ) ? $_GET['incluido_en_importe_base'] : null,
-			isset($_GET['secuencia'] ) ? $_GET['secuencia'] : null,
-			isset($_GET['tipo'] ) ? $_GET['tipo'] : null,
-			isset($_GET['nombre'] ) ? $_GET['nombre'] :  null
+			isset($_POST['id_impuesto'] ) ? $_POST['id_impuesto'] : null,
+			isset($_POST['monto_porcentaje'] ) ? $_POST['monto_porcentaje'] :  null,
+			isset($_POST['nombre'] ) ? $_POST['nombre'] :  null,
+			isset($_POST['tipo'] ) ? $_POST['tipo'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -6112,10 +6067,7 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"limit" => new ApiExposedProperty("limit", false, GET, array( "string" )),
 			"query" => new ApiExposedProperty("query", false, GET, array( "string" )),
-			"sort" => new ApiExposedProperty("sort", false, GET, array( "string" )),
-			"start" => new ApiExposedProperty("start", false, GET, array( "string" )),
 		);
 	}
 
@@ -6124,10 +6076,7 @@
  		$this->response = ImpuestosController::Lista( 
  			
 			
-			isset($_GET['limit'] ) ? $_GET['limit'] :  null,
-			isset($_GET['query'] ) ? $_GET['query'] :  null,
-			isset($_GET['sort'] ) ? $_GET['sort'] :  null,
-			isset($_GET['start'] ) ? $_GET['start'] :  null
+			isset($_GET['query'] ) ? $_GET['query'] :  null
 			
 			);
 		}catch(Exception $e){

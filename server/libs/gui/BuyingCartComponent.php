@@ -457,7 +457,7 @@ class BuyingCartComponent /* extends CartComponent */ implements GuiComponent
 				{
 					callback : function(r){
 						if(r.status === "ok"){
-							window.location = "ventas.detalle.php?vid=" + r.id_venta + "&last_action=ok";
+							window.location = "compras.detalle.php?cid=" + r.id_compra + "&last_action=ok";
 							
 
 						}else{
