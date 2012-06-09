@@ -1785,9 +1785,7 @@ class ProductosController extends ValidacionesController implements IProductos
     }
 
 
-    public static function EquivalenciaListaUnidad($orden = null)
-    {
-    }
+
 
 
 
@@ -1922,6 +1920,14 @@ class ProductosController extends ValidacionesController implements IProductos
     static function BuscarUnidadUdm($limit = 50, $page = null, $query = null, $start = 0)
     {
 	
+		$r = UnidadMedidaDAO::getAll();
+	
+		return array(
+			"resultados" => $r,
+			"numero_de_resultados" => sizeof($r)
+		);
+	
+	
     }
     
     
@@ -2007,14 +2013,15 @@ class ProductosController extends ValidacionesController implements IProductos
      **/
     static function NuevaUnidadUdm($abreviatura, $descripcion, $factor_conversion, $id_categoria_unidad_medida, $tipo_unidad_medida, $activa = "")
     {
+	
 		Logger::log("Creando una nueva unidad de medida");
         
         //valida los parametros recibidos
-        $validar = self::validarParametrosUdM(null, $abreviatura, $descripcion, $factor_conversion, $id_categoria_unidad_medida, $tipo_unidad_medida, $activa = "");
+        /*$validar = self::validarParametrosUdM(null, $abreviatura, $descripcion, $factor_conversion, $id_categoria_unidad_medida, $tipo_unidad_medida, $activa = "");
         if (is_string($validar)) {
             Logger::error($validar);
             throw new BusinessLogicException($validar);
-        } //is_string($validar)
+        } //is_string($validar)*/
         
 		if($tipo_unidad_medida == "Referencia UdM para esta categoria")
 			$factor_conversion = 1;

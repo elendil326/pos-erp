@@ -7,7 +7,7 @@
 		require_once("../../../../server/bootstrap.php");
 
 		$page = new GerenciaComponentPage();
-
+/*
                 $page->addComponent( new TitleComponent( "Unidades" ) );
 		$page->addComponent( new MessageComponent( "Lista unidades" ) );
 		
@@ -35,8 +35,8 @@
                 $tabla->addColRender("es_entero", "funcion_es_entero");
                 
 		$tabla->addOnClick( "id_unidad", "(function(a){ window.location = 'productos.unidad.ver.php?uid=' + a; })" );
-		
+		*/
 			
-		$page->addComponent( $tabla );
+//		$page->addComponent( $tabla );
                 
 		$page->render();

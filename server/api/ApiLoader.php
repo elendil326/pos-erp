@@ -6475,12 +6475,12 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"abreviacion" => new ApiExposedProperty("abreviacion", true, GET, array( "string" )),
-			"descripcion" => new ApiExposedProperty("descripcion", true, GET, array( "string" )),
-			"factor_conversion" => new ApiExposedProperty("factor_conversion", true, GET, array( "float" )),
-			"id_categoria_unidad_medida" => new ApiExposedProperty("id_categoria_unidad_medida", true, GET, array( "int" )),
-			"tipo_unidad_medida" => new ApiExposedProperty("tipo_unidad_medida", true, GET, array( "string" )),
-			"activa" => new ApiExposedProperty("activa", false, GET, array( "string" )),
+			"abreviacion" => new ApiExposedProperty("abreviacion", true, POST, array( "string" )),
+			"descripcion" => new ApiExposedProperty("descripcion", true, POST, array( "string" )),
+			"factor_conversion" => new ApiExposedProperty("factor_conversion", true, POST, array( "float" )),
+			"id_categoria_unidad_medida" => new ApiExposedProperty("id_categoria_unidad_medida", true, POST, array( "int" )),
+			"tipo_unidad_medida" => new ApiExposedProperty("tipo_unidad_medida", true, POST, array( "string" )),
+			"activa" => new ApiExposedProperty("activa", false, POST, array( "string" )),
 		);
 	}
 
@@ -6489,12 +6489,12 @@
  		$this->response = ProductosController::NuevaUnidadUdm( 
  			
 			
-			isset($_GET['abreviacion'] ) ? $_GET['abreviacion'] : null,
-			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
-			isset($_GET['factor_conversion'] ) ? $_GET['factor_conversion'] : null,
-			isset($_GET['id_categoria_unidad_medida'] ) ? $_GET['id_categoria_unidad_medida'] : null,
-			isset($_GET['tipo_unidad_medida'] ) ? $_GET['tipo_unidad_medida'] : null,
-			isset($_GET['activa'] ) ? $_GET['activa'] :  ""
+			isset($_POST['abreviacion'] ) ? $_POST['abreviacion'] : null,
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] : null,
+			isset($_POST['factor_conversion'] ) ? $_POST['factor_conversion'] : null,
+			isset($_POST['id_categoria_unidad_medida'] ) ? $_POST['id_categoria_unidad_medida'] : null,
+			isset($_POST['tipo_unidad_medida'] ) ? $_POST['tipo_unidad_medida'] : null,
+			isset($_POST['activa'] ) ? $_POST['activa'] :  ""
 			
 			);
 		}catch(Exception $e){
