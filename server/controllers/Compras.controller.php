@@ -653,9 +653,9 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
 			$compra->setTipoDeCompra		( $tipo_compra			);
 			$compra->setFecha				( time()				);
 			$compra->setSubtotal			( $subtotal				);
-			$compra->setImpuesto			( 0						);
-			$compra->setDescuento			( 0						);
-			$compra->setTotal				( $subtotal				);
+			$compra->setImpuesto			( $impuesto				);
+			$compra->setDescuento			( $descuento			);
+			$compra->setTotal				( $subtotal + $impuesto	);
 			$compra->setIdUsuario			( $s->getIdUsuario()	);
 			$compra->setIdEmpresa			( $id_empresa			);
 			$compra->setSaldo				( 0						);

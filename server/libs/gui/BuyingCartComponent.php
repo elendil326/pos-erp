@@ -70,28 +70,13 @@ class BuyingCartComponent /* extends CartComponent */ implements GuiComponent
 				
 			};
 
-			
-			
-			Ext.get("carrito_subtotal").update(Ext.util.Format.usMoney( subtotal ));
-			
-			var impuesto = 0;
-			<?php
-				//listar impuestos
-				$i = ImpuestosController::Lista();
-				$iLista = $i["resultados"];
-				$impuestos_to = 0;
-				//carrito_impuesto
-				foreach ($iLista as $imp) {
-					$impuestos_to = $imp->getMontoPorcentaje();
-				}
 
-				echo "impuesto = subtotal * " . $impuestos_to . ";";
-				
-			?>
-
-			Ext.get("carrito_impuesto").update(Ext.util.Format.usMoney( impuesto ));
+			data  = retriveData();
 			
-			Ext.get("carrito_total").update(Ext.util.Format.usMoney( subtotal + impuesto ));
+			Ext.get("carrito_subtotal").update(Ext.util.Format.usMoney( data.subtotal ));
+			Ext.get("carrito_impuesto").update("+"  + Ext.util.Format.usMoney( data.impuesto ));
+			Ext.get("carrito_total").update(Ext.util.Format.usMoney( data.subtotal + data.impuesto ));
+			Ext.get("carrito_descuento").update( "-" + Ext.util.Format.usMoney( data.descuento ));			
 
 
 			// 
@@ -182,22 +167,23 @@ class BuyingCartComponent /* extends CartComponent */ implements GuiComponent
 		//
 		// Valor default de venta
 		// 
-		var tipo_de_venta = "contado";
+		var tipo_de_compra = "contado";
 
-		var seleccion_tipo_de_venta = function(tipo){
+		var seleccion_tipo_de_compra = function(tipo){
 			switch(tipo){
 				case "credito" :
-					console.log("seleccion_tipo_de_venta(credito)");
-					validar_venta_a_credito(cliente_seleccionado, carrito_store );
-
+					console.log("seleccion_tipo_de_compra(credito)");
+					//validar_venta_a_credito(cliente_seleccionado, carrito_store );
+					tipo_de_compra = tipo;
 				break;
 
 				case "contado" :
-					console.log("seleccion_tipo_de_venta(contado)");			
+					console.log("seleccion_tipo_de_compra(contado)");			
+					tipo_de_compra = tipo;
 				break;
 
 				default:
-					throw new Exception( "seleccion_tipo_de_venta(): tipo invalido" );
+					throw new Exception( "seleccion_tipo_de_compra(): tipo invalido" );
 			}
 		}
 
@@ -402,25 +388,43 @@ class BuyingCartComponent /* extends CartComponent */ implements GuiComponent
 				//
 				// 
 				// 
+				
+				var impuesto = 0, descuento = 0;
+				
+				descuento = Ext.get("descuento_seleccionado_val").getValue();
+				
+				var dAplicado = (descuento/100) * subtotal;
+				
+				subtotal -= dAplicado;
+				
+				<?php
+					//listar impuestos
+					$i = ImpuestosController::Lista();
+					$iLista = $i["resultados"];
+					$impuestos_to = 0;
+					//carrito_impuesto
+					foreach ($iLista as $imp) {
+						$impuestos_to = $imp->getMontoPorcentaje();
+					}
+
+					echo "impuesto = subtotal * " . $impuestos_to . ";";
+
+				?>				
+				
+				
 				ventaObj = {
 					retencion 			: 0,
-					descuento 			: 0,
-					impuesto 			: 0,
+					descuento 			: dAplicado,
+					impuesto 			: impuesto,
 					subtotal			: subtotal,
-					total 				: subtotal,
-					tipo_compra 		: "contado",
+					total 				: subtotal + impuesto,
+					tipo_compra 		: tipo_de_compra,
 					id_sucursal			: null,
 					detalle 			: Ext.JSON.encode( detalle_de_venta ),
 					id_empresa			: empresa_seleccionada
 				};
- 
-		
-		
-		
-		 
-		
-		
-		
+
+
 				if(cliente_seleccionado == null){
 					ventaObj.id_usuario_compra = null;
 				}else{
@@ -930,7 +934,7 @@ class BuyingCartComponent /* extends CartComponent */ implements GuiComponent
 						<td id="SeleccionDeTipoDeVenta">
 							Tipo de compra:
 							<div >
-								<select onChange="seleccion_tipo_de_venta(this.value)">
+								<select onChange="seleccion_tipo_de_compra(this.value)">
 									<option value="contado" selected>Contado</option>
 									<option value="credito">Credito</option>
 								</select>
@@ -951,29 +955,24 @@ class BuyingCartComponent /* extends CartComponent */ implements GuiComponent
 							</div>
 						</td>
 						<td id="SeleccionDeTipoDePago">
-							<!--
-							Tipo de pago:
-							<div >
-								<select name="" onChange="tipo_de_pago_seleccionado = this.value">
-									<option value="efectivo">efectivo</option>
-									<option value="cheque">cheque</option>
-								</select>
-							</div>
-							-->
+							
+								<div >
+										
+								</div>
 						</td>										
 					</tr>
-					<!--
+
 					<tr>
 						<td id="SeleccionDeDescuento">
 							Descuento:
-							<input type="text" name="some_name" value="" id="">
-							<select name="" id="">
+							<input type="text" id="descuento_seleccionado_val"  value="0" >
+							<select id="descuento_seleccionado_tipo"onChange="actualizar_carrito()">
 								<option value="porciento">%</option>
-								<option value="pesos">pesos</option>
+								<option value="MXN">MXN</option>
 							</select>
 						</td>										
 					</tr>
-					-->
+
 				</table>
 
 				<div id="BuyingCartComponent_001"><!-- buscar productos --></div>
@@ -988,6 +987,12 @@ class BuyingCartComponent /* extends CartComponent */ implements GuiComponent
 						<td>Subtotal</td>
 						<td id="carrito_subtotal"></td>
 					</tr>
+					
+					<tr>
+						<td>Descuento</td>
+						<td id="carrito_descuento"></td>
+					</tr>
+					
 					<tr>
 						<td>Impuesto</td>
 						<td id="carrito_impuesto"></td>
