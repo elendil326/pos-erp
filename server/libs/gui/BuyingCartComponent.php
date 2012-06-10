@@ -379,7 +379,7 @@ class BuyingCartComponent /* extends CartComponent */ implements GuiComponent
 						descuento	: 0,
 						impuesto	: 0,
 						retencion	: 0,
-						id_unidad	: 1
+						id_unidad	: p.get("id_unidad")
 					});
 
 				};
@@ -395,7 +395,7 @@ class BuyingCartComponent /* extends CartComponent */ implements GuiComponent
 				
 				var dAplicado = (descuento/100) * subtotal;
 				
-				subtotal -= dAplicado;
+				
 				
 				<?php
 					//listar impuestos
@@ -436,29 +436,6 @@ class BuyingCartComponent /* extends CartComponent */ implements GuiComponent
 		}
 
 
-		var doCotizar = function(){
-			var ventaObj = retriveData();
-			ventaObj.es_cotizacion = true;
-
-			//
-			// Enviar al API
-			// 
-			POS.API.POST(
-				"api/ventas/nueva/", 
-				ventaObj,
-				{
-					callback : function(r){
-						if(r.status === "ok"){
-							window.location = "ventas.detalle.php?vid=" + r.id_venta + "&last_action=ok";
-
-						}else{
-							console.error(r);
-							Ext.MessageBox.alert("Nueva venta", "Algo salio mal.");
-						}
-					}
-				});
-		}
-
 		var doCompra = function (){
 			
 			console.log("doComptra() called");
@@ -480,7 +457,7 @@ class BuyingCartComponent /* extends CartComponent */ implements GuiComponent
 				{
 					callback : function(r){
 						if(r.status === "ok"){
-							window.location = "compras.detalle.php?cid=" + r.id_compra + "&last_action=ok";
+							//window.location = "compras.detalle.php?cid=" + r.id_compra + "&last_action=ok";
 							
 
 						}else{
@@ -852,7 +829,7 @@ class BuyingCartComponent /* extends CartComponent */ implements GuiComponent
 			            },
 			            {
 			                text     : 'Cantidad',
-							width	 : 50,
+							width	 : 60,
 							dataIndex: 'cantidad',
 			                sortable : false,
 							renderer : function(x){
@@ -1028,8 +1005,8 @@ class BuyingCartComponent /* extends CartComponent */ implements GuiComponent
 					<tr>
 						<td id="SeleccionDeDescuento">
 							Descuento:
-							<input type="text" id="descuento_seleccionado_val"  value="0" >
-							<select id="descuento_seleccionado_tipo"onChange="actualizar_carrito()">
+							<input type="text" id="descuento_seleccionado_val" onchange="actualizar_carrito()" value="0" >
+							<select id="descuento_seleccionado_tipo" onChange="actualizar_carrito()">
 								<option value="porciento">%</option>
 								<option value="MXN">MXN</option>
 							</select>

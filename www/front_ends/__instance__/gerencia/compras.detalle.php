@@ -89,8 +89,8 @@
 
 	$tabla = new TableComponent(array(
 	    "id_producto" => "Producto",
-	    "id_unidad" => "Unidad",
 	    "cantidad" => "Cantidad",
+	    "id_unidad" => "Unidad",	
 	    "precio" => "Precio Unitario",
 		"impuesto" => "Importe"
 	), CompraProductoDAO::search(new CompraProducto(array(
@@ -101,6 +101,13 @@
 	function cImporte ($foo, $obj){
 		return FormatMoney( $obj["precio"] * $obj["cantidad"] );
 	}
+	
+	function toReadableUnidad($v,  $obj){
+		$u = UnidadMedidaDAO::getByPK($v);
+		return $u->getDescripcion();
+	}
+	
+	$tabla->addColRender("id_unidad", "toReadableUnidad");
 	$tabla->addColRender("precio", "FormatMoney");
 	$tabla->addColRender("id_producto", "funcion_producto");
 	$tabla->addColRender("impuesto", "cImporte");

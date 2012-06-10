@@ -703,6 +703,17 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
 					$l = $l[0];
 					
 					
+					//busquemos la unidad que nos mandaron
+					$uAbreviacion = $p->id_unidad;
+					$uResults = UnidadMedidaDAO::search(new UnidadMedida(array("abreviacion" => $uAbreviacion, "activa" => 1)));
+					
+					if(sizeof($uResults) != 1){
+						throw new InvalidDataException("La unidad de medida `". $p->id_unidad  ."` no existe, o no esta activa.");
+						
+					}else{
+						$p->id_unidad = $uResults[0]->getIdUnidadMedida();
+					}
+					
 					//busequemos si este producto ya existe en este lote
 					$lp = LoteProductoDAO::getByPK($l->getIdLote(), $p->id_producto);
 					
@@ -712,7 +723,7 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
 								"id_lote" 		=> $l->getIdLote(),
 								"id_producto" 	=> $p->id_producto,
 								"cantidad" 		=> $p->cantidad, 
-								"id_unidad"		=> 1
+								"id_unidad"		=> $p->id_unidad
 							) );
 							
 						LoteProductoDAO::save ( $loteProducto);
@@ -742,7 +753,7 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
 					LoteEntradaProductoDAO::save (new LoteEntradaProducto(array(
 							"id_lote_entrada" 	=> $loteEntrada->getIdLoteEntrada(),
 							"id_producto"		=> $p->id_producto,
-							"id_unidad"			=> 1,
+							"id_unidad"			=> $p->id_unidad,
 							"cantidad"			=> $p->cantidad
 						) ) );
 						
@@ -753,15 +764,18 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
 							"precio"			=> $p->precio,
 							"descuento"			=> 0,
 							"impuesto"			=> 0,
-							"id_unidad"			=> 1,
+							"id_unidad"			=> $p->id_unidad,
 							"retencion"			=> 0
 						) );
 						
 					CompraProductoDAO::save ( $compraProducto);
 					
+				}catch(InvalidDataException $e){
+					throw $e;
+					
 				}catch(exception $e){
 					DAO::transRollback();
-					throw InvalidDatabaseOperationException($e);
+					throw new InvalidDatabaseOperationException($e);
 					
 				}
 				
