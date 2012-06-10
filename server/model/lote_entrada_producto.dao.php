@@ -27,6 +27,7 @@ class LoteEntradaProductoDAO extends LoteEntradaProductoDAOBase
 					lep.id_producto,
 					lep.cantidad,
 					le.id_lote,
+					lep.id_unidad,
 					le.id_usuario,
 					le.fecha_registro,
 					le.motivo

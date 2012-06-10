@@ -457,7 +457,7 @@ class BuyingCartComponent /* extends CartComponent */ implements GuiComponent
 				{
 					callback : function(r){
 						if(r.status === "ok"){
-							//window.location = "compras.detalle.php?cid=" + r.id_compra + "&last_action=ok";
+							window.location = "compras.detalle.php?cid=" + r.id_compra + "&last_action=ok";
 							
 
 						}else{
@@ -1008,7 +1008,7 @@ class BuyingCartComponent /* extends CartComponent */ implements GuiComponent
 							<input type="text" id="descuento_seleccionado_val" onchange="actualizar_carrito()" value="0" >
 							<select id="descuento_seleccionado_tipo" onChange="actualizar_carrito()">
 								<option value="porciento">%</option>
-								<option value="MXN">MXN</option>
+				<!--				<option value="MXN">MXN</option> -->
 							</select>
 						</td>										
 					</tr>
