@@ -852,6 +852,7 @@ class BuyingCartComponent /* extends CartComponent */ implements GuiComponent
 			            },
 			            {
 			                text     : 'Cantidad',
+							width	 : 50,
 							dataIndex: 'cantidad',
 			                sortable : false,
 							renderer : function(x){

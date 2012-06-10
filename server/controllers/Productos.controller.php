@@ -1868,8 +1868,6 @@ class ProductosController extends ValidacionesController implements IProductos
 		}
         
         //buscar esa descripcion de unidad
-		
-
         $cat_udm = new CategoriaUnidadMedida(array(
             "descripcion" => $descripcion
         ));
@@ -1888,14 +1886,15 @@ class ProductosController extends ValidacionesController implements IProductos
         DAO::transBegin();
         try {
             CategoriaUnidadMedidaDAO::save($cat_udm);
-        }
-        catch (Exception $e) {
+
+        }catch (Exception $e) {
             DAO::transRollback();
             Logger::error("No se pudo crear la categoria unidad de medida: " . $e);
             throw new Exception("No se pudo crear la categoria unidad de medida");
-        }
-        DAO::transEnd();
 
+        }
+
+        DAO::transEnd();
         Logger::log("Categoria Unidad de Medida creada exitosamente");
 
         return array(

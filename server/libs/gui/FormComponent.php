@@ -779,10 +779,16 @@ class FormComponent implements GuiComponent
 		}
 	}
 	
+	
+	
 	/**
 	 *
 	 *
 	 * */
+	public function createRelation( $fkColumn, $pkOtherTable ){
+		
+	}
+	
 	public function createComboBoxJoin($field_name, $field_name_in_values, $values_array, $selected_value = null)
 	{
 		if (sizeof($values_array) == 0)

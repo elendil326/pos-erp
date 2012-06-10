@@ -28,7 +28,7 @@ html body{background:#e7e7e7}
 .devsitePage h1,
 .devsitePage h2,
 .devsitePage h3,
-.devsitePage h4{margin:0;padding:0;border:0}
+.devsitePage h4{margin:0; margin-bottom:3px; padding:0;border:0}
 .devsitePage .clear{clear:both}
 .devsitePage .body .content{margin:auto;max-width:980px}
 
