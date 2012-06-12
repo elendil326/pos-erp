@@ -190,7 +190,24 @@ class SesionController implements ISesion{
 		self::$_current_user = $user;
 		self::$_is_logged_in = true;
 		
-		return array( "auth_token" => $nueva_sesion->getAuthToken(), "login_succesful" => true );
+		
+		switch($user->getIdRol()){
+			case 0:
+			case 1:
+			case 2:						
+			case 3:			
+			case 4: $next_url = "g/"; break;
+			
+			case 5: $next_url = "c/"; break;
+
+			
+		}
+		
+		return array( 
+				"auth_token" => $nueva_sesion->getAuthToken(), 
+				"login_succesful" => true,
+				"siguiente_url" => $next_url
+			);
 	}
   
 

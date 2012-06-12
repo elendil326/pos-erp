@@ -49,10 +49,10 @@
 			
 		$page->addComponent( $tabla );
 
-		$page->nextTab("Clasificaciones");
+/*		$page->nextTab("Clasificaciones");
 		
 		$page->nextTab("Reporr");		
-			
+*/			
 		$page->render();
 
 

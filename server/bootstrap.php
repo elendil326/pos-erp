@@ -137,6 +137,7 @@
 	require_once("libs/gui/StdPage.php");
 	require_once("libs/gui/StdComponentPage.php");
 
+	
 	require_once("libs/gui/GuiComponent.php");
 	require_once("libs/gui/LoginComponent.php");
 	require_once("libs/gui/FormComponent.php");
@@ -145,9 +146,12 @@
 	require_once("libs/gui/MenuComponent.php");
 	require_once("libs/gui/TitleComponent.php");
 	require_once("libs/gui/TableComponent.php");
-	require_once("libs/gui/PosComponentPage.php");		
+	require_once("libs/gui/PosComponentPage.php");	
+		
+	require_once("libs/gui/ClienteComponentPage.php");		
 	require_once("libs/gui/GerenciaComponentPage.php");
 	require_once("libs/gui/GerenciaTabPage.php");
+	
 	require_once("libs/gui/JediComponentPage.php");
 	require_once("libs/gui/FreeHtmlComponent.php");
 

@@ -22,6 +22,10 @@ RewriteRule ^([a-zA-Z0-9_-]+)/g/gerencia.js$			__instance__/gerencia/gerencia.js
 RewriteRule ^([a-zA-Z0-9_-]+)/g/(.*\.php)?(.*)$			__instance__/gerencia/$2?_instance_=$1&%{QUERY_STRING} [L]
 
 
+# GERENCIA #
+RewriteRule ^([a-zA-Z0-9_-]+)/c/gerencia.js$			__instance__/cliente/gerencia.js [L]
+RewriteRule ^([a-zA-Z0-9_-]+)/c/(.*\.php)?(.*)$			__instance__/cliente/$2?_instance_=$1&%{QUERY_STRING} [L]
+
 # SUCURSAL #
 RewriteRule ^([a-zA-Z0-9_-]+)/s/(.*)$					__instance__/sucursal/$2?_instance_=$1&%{QUERY_STRING} [L]
 
