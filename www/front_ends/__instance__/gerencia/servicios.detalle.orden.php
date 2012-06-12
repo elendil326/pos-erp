@@ -152,7 +152,7 @@ if(!is_null($eP)){
 	$page->addComponent( "<table width=100%>" );
 	foreach ($ePObj as $obj) {
 
-		$page->addComponent( "<tr><td style='width:30%'><b>" . $obj->desc . "</b></td>");
+		$page->addComponent( "<tr><td style='width:30%'><b>" . utf8_decode( $obj->desc ) . "</b></td>");
 		$page->addComponent( "<td>".$obj->value ."</td></tr>");		
 
 	}
@@ -256,7 +256,7 @@ $page->partialRender	( );
 		
 		var child = tabla.createChild({tag:"tr"});
 		
-		var tds1 = child.createChild({ tag:"td" }).update(comment);
+		var tds1 = child.createChild({ tag:"td" }).update( comment );
 
 		var tds2 = child.createChild({ tag:"td" }).update("Justo ahora");
 		
