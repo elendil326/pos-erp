@@ -39,18 +39,15 @@
 
 
 
-
+	
 	if(is_null($este_producto->getFotoDelProducto())){
-		$page->addComponent("<div class=\"canvas\">
-					&iquest; Es esta una imagen descriptiva de su producto?
-				</div>
-			");
+		//$page->addComponent(" &iquest; Es esta una imagen descriptiva de su producto?");
 	}
 	
 
 
 	$page->addComponent("
-	<table  class=\"canvas\">
+	<table  class=\"\">
 
 	    <tr>
 	        <td rowspan=2><div id=\"gimg\"></div></td>
@@ -92,17 +89,19 @@
 	$form->setEditable(false);
 
 	$form->hideField(array(
-	    "id_producto",
-		"foto_del_producto",
-		"precio",
-		"id_unidad_compra",
-		"control_de_existencia",
-		"activo"
+	  	  "id_producto",
+			"foto_del_producto",
+			"precio",
+			"control_de_existencia",
+			"activo"
 		));
 
-	$form->createComboBoxJoinDistintName("id_unidad_compra","id_unidad_medida" ,"abreviacion", UnidadMedidaDAO::getAll(), $este_producto->getIdUnidadCompra());
+	$form->setCaption("id_unidad", "Unidad de medida");
+	$form->setCaption("id_unidad_compra", "Unidad de medida al comprar");	
+	
+	$form->createComboBoxJoinDistintName("id_unidad_compra","id_unidad_medida" ,"descripcion", UnidadMedidaDAO::getAll(), $este_producto->getIdUnidadCompra());
 
-	$form->createComboBoxJoinDistintName("id_unidad", "id_unidad_medida", "abreviacion", UnidadMedidaDAO::getAll(), $este_producto->getIdUnidad());
+	$form->createComboBoxJoinDistintName("id_unidad", "id_unidad_medida", "descripcion", UnidadMedidaDAO::getAll(), $este_producto->getIdUnidad());
 
 	$page->addComponent($form);
 

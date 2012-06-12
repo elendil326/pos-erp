@@ -543,7 +543,8 @@ class ShoppingCartComponent extends CartComponent implements GuiComponent
 							renderer: function (cantidad, a, storeObj){
 								var um = unidadMedida.getById(parseInt( storeObj.get("id_unidad") ) );
 								if(um == null){
-									return cantidad + " whoopas" ;
+									alert("Hay un problema con las unidades del producto recien seleccionado. Porfavor verifique que tenga una unidad especificada.");
+									return cantidad + " ERROR EN UNIDADES" ;
 								}
 								
 								return cantidad + " " + um.get("descripcion");
