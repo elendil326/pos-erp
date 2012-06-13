@@ -100,6 +100,8 @@ class ImpresionesController {
 	}
 
 
+
+
 	private static function drawBasicGuide( &$pdf ){
 
 	    /**************************
@@ -107,21 +109,20 @@ class ImpresionesController {
 	     **************************/
 
 		$logo = "../static/".IID.".jpg";
-
+		
+		Logger::log("existe_logo=".is_file($logo));
+		
 	    if (substr($logo, -3) == "jpg" || substr($logo, -3) == "JPG" || substr($logo, -4) == "jpeg" || substr($logo, -4) == "JPEG") {
-	        $pdf->addJpegFromFile($logo, self::puntos_cm(2), self::puntos_cm(24), self::puntos_cm(4.1));
+			$pdf->addJpegFromFile($logo, self::puntos_cm(2), self::puntos_cm(24), self::puntos_cm(4.1) );
+			Logger::log("jpg");
 
-				
 	    } elseif (substr($logo, -3) == "png" || substr($logo, -3) == "PNG") {
 	        $pdf->addPngFromFile($logo, self::puntos_cm(2), self::puntos_cm(24), self::puntos_cm(4.1));
-
-
-
 			Logger::log("png");	
-			
+
 	    } else {
 	        Logger::log("Verifique la configuracion del pos_config, la extension de la imagen del logo no es compatible");
-	        die("La extension de la imagen usada para el logo del negocio no es valida.");
+	        
 	    }
 
 
@@ -139,9 +140,9 @@ class ImpresionesController {
 
 	    $pdf->line( self::puntos_cm(1.9), self::puntos_cm(2.0), self::puntos_cm(18.1), self::puntos_cm(2.0));
 
-	    $pdf->addText( self::puntos_cm(2), self::puntos_cm(1.61), 7, "Fecha de impresion: " . date('Y-m-d'));
+	    $pdf->addText( self::puntos_cm(2), self::puntos_cm(1.61), 7, "Fecha de impresion: " . date('d/m/Y')  );
 
-	    $pdf->addJpegFromFile("../www/media/logo_simbolo.jpg", self::puntos_cm(15.9), self::puntos_cm(.95), 25);
+//	    $pdf->addPngFromFile("../../../media/main_site/c.png", self::puntos_cm(15.9), self::puntos_cm(.95), 25, 25);
 
 	    $pdf->addText( self::puntos_cm(16.70), self::puntos_cm(1.30), 8, "caffeina.mx");	
 	}
@@ -181,19 +182,40 @@ class ImpresionesController {
 
 	    foreach ($productos as $p) {
 
-	        	$prodDao = ProductoDAO::getByPK( $p->getIdProducto() );
+				if($p instanceof VentaProducto  ){
+		        	$prodDao = ProductoDAO::getByPK( $p->getIdProducto() );
 
-	            $prod['cantidad'] = $p->getCantidad();
-	            $prod['descripcion'] = $prodDao->getNombreProducto();
-	            $prod['precio'] = FormatMoney($p->getPrecio(), DONT_USE_HTML);
-	            $prod['importe'] = FormatMoney($p->getPrecio() * $p->getCantidad(), DONT_USE_HTML);
+		            $prod['cantidad'] = $p->getCantidad();
+		            $prod['descripcion'] = $prodDao->getNombreProducto();
+		            $prod['precio'] = FormatMoney($p->getPrecio(), DONT_USE_HTML);
+		            $prod['importe'] = FormatMoney($p->getPrecio() * $p->getCantidad(), DONT_USE_HTML);
 
 
-	            $subtotal +=  ($p->getPrecio() * $p->getCantidad());
-	            $total = $subtotal;
+		            $subtotal +=  ($p->getPrecio() * $p->getCantidad());
+		            $total = $subtotal;
 
-	            array_push($elementos, $prod);
-	        
+					
+		
+				}else if($p instanceof VentaOrden){
+					
+					$ordenDao = OrdenDeServicioDAO::getByPK( $p->getIdOrdenDeServicio() );
+					$serv = ServicioDAO::getByPK( $ordenDao->getIdServicio() );
+					
+		            $prod['cantidad'] = "-";
+		            $prod['descripcion'] = $serv->getNombreServicio();
+		
+		            $prod['precio'] = FormatMoney($p->getPrecio(), DONT_USE_HTML);
+		            $prod['importe'] = FormatMoney($p->getPrecio() , DONT_USE_HTML);
+
+
+		            $subtotal +=  ($p->getPrecio() );
+		
+		            $total = $subtotal;
+
+		            
+				}
+
+	        	array_push($elementos, $prod);
 	    }
 
 
@@ -310,9 +332,10 @@ class ImpresionesController {
 		$ventaDao = VentaDAO::getByPK($id_venta);
 		$clienteDao = UsuarioDAO::getByPK( $ventaDao->getIdCompradorVenta() );
 		$agenteDao = UsuarioDAO::getByPK( $ventaDao->getIdUsuario() );
-		$ventaProductoDaoArray = VentaProductoDAO::search( new VentaProducto( array(
-				"id_venta" => $id_venta
-			) ) );
+		
+	
+		
+
 
 		if($ventaDao->getEsCotizacion()){
 			$pdf =	self::createPdf("Cotizacion");
@@ -381,12 +404,26 @@ class ImpresionesController {
 	    $opciones_tabla['shadeCol2'] = array(0.8984375, 0.95703125, 0.99609375);
 	    $pdf->ezTable($datos, "", "", $opciones_tabla);
 
-		self::printProducts($pdf, $ventaProductoDaoArray);
+
+
+
+			$ventaProducto = VentaProductoDAO::search( new VentaProducto( array(
+					"id_venta" => $id_venta
+				) ) );
+
+			$ventaOrden = VentaOrdenDAO::search( new VentaOrden( array(
+					"id_venta" => $id_venta
+				) ) );
+
+		$prods = array_merge($ventaProducto, $ventaOrden );
+
+		
+
+		self::printProducts($pdf, $prods);
 
 		self::printClient($pdf, $clienteDao);
 
 		self::drawBasicGuide( $pdf );
-
 
 	    $pdf->ezStream();
 
