@@ -17,49 +17,67 @@ class ImpresionesController {
 	    return ( $medida / (2.54) ) * $resolucion;
 	}
 
-	private static function readableText($bar) {
-	    $foo = explode(" ", $bar);
+	private static function readableText($raw) {
+	/*	    $foo = explode(" ", $bar);
 	    $end = "";
 	    foreach ($foo as $i) {
 	        $end .= ucfirst(strtolower(trim($i))) . " ";
 	    }
-
-	    return trim($end);
+		*/
+	    return (html_entity_decode($raw));
 	}
 
+
+
+
+
 	private static function formatAddress($id_direccion) {
+		
 		if( is_null($daoDireccion = DireccionDAO::getByPK( $id_direccion ))){
-			throw new InvalidDataException("Esta direccion no existe.");
+			throw new InvalidDataException("Esta  no existe.");
 		}
 
-        $out = self::readableText($daoDireccion->getCalle()) . " " . $daoDireccion->getNumeroExterior();
+        $out = self::readableText($daoDireccion->getCalle()) . " " . $daoDireccion->getNumeroExterior(). " ";
 
         if ($daoDireccion->getNumeroInterior() != null)
-            $out .= "\n" . self::readableText($daoDireccion->getNumeroInterior());
+            $out .= " Interior " . self::readableText($daoDireccion->getNumeroInterior());
 
-        $out .= " " . self::readableText($daoDireccion->getColonia());
 
-        if (strlen($daoDireccion->getCodigoPostal()) > 0) {
-            $out .= " C.P. " . $daoDireccion->getCodigoPostal() . "\n";
-        }
+        $out .= "\nColonia " . self::readableText($daoDireccion->getColonia());
+
+
 
         if (!is_null($daoDireccion->getIdCiudad())) {
-            $out .= self::readableText($daoDireccion->getIdCiudad()) . ", ";
-            $out .= self::readableText("d->getEstado()") . ", ";
+
+			$cDao = CiudadDAO::getByPK($daoDireccion->getIdCiudad());
+			if(!is_null($cDao)){
+				$out .= "\n";
+	            $out .= self::readableText($cDao->getNombre()) . ", ";
+	
+				$e = EstadoDAO::getByPK($cDao->getIdEstado());
+				
+				if(!is_null($e)){
+					$out .= self::readableText($e->getNombre()) . "";	
+				}
+	            
+			}
+
+        }
+
+        if (strlen($daoDireccion->getCodigoPostal()) > 0) {
+            $out .= "\nC.P. " . $daoDireccion->getCodigoPostal() . "\n";
         }
 
 
-        $out .= self::readableText("Mexico") . "\n";
     
 
 	    return $out;
 	}
 
 	private static function roundRect($pdf, $x, $y, $w, $h) {
-
 	    $pdf->setStrokeColor(0.3359375, 0.578125, 0.89453125);
 	    $pdf->setLineStyle(1);
-
+	
 	    $x -= self::puntos_cm(0.1);
 	    $y -= 2;
 
@@ -73,8 +91,6 @@ class ImpresionesController {
 	    $pdf->partEllipse($x + $w - 3, $y - $h + 3, 360, 240, 3); //bottom-right
 	    $pdf->partEllipse($x + 3, $y - $h + 3, 180, 270, 3); //bottom-left
 	}
-
-
 
 
 
@@ -264,29 +280,13 @@ class ImpresionesController {
 	    /* *************************
 	     * Cliente
 	     * ************************* */
-	    $datos_receptor = $daoCliente->getNombre() . "\n";
+	    $datos_receptor = self::readableText( $daoCliente->getNombre() ). "\n";
 	    $datos_receptor .= $daoCliente->getRfc();
-            
-        if( $direccion =  DireccionDAO::getByPK($daoCliente->getIdDireccion())){
-            
-            $datos_receptor .= $direccion->getCalle() . " ";
-            $datos_receptor .= $direccion->getNumeroExterior() . " ";
-            
-            if($direccion->getNumeroInterior()){
-                $datos_receptor .= (" INT " . $direccion->getNumeroInterior() . " ");
-            }
-            
-            if($direccion->getColonia()){
-                $datos_receptor .= ("Col. " . $direccion->getColonia() . "\n");
-            }
-            
-            if($direccion->getCodigoPostal()){
-                $datos_receptor .= ( "CP " . $direccion->getCodigoPostal());
-            }
-                            
-            $datos_receptor .= $direccion->getIdCiudad();
-            
-        }
+	
+		if(!is_null($daoCliente->getIdDireccion()))
+			$datos_receptor .= self::formatAddress($daoCliente->getIdDireccion());
+  		
+		
 
 
 
@@ -324,6 +324,22 @@ class ImpresionesController {
 	    $opciones_tabla['showLines'] = 0;
 
 	    $pdf->ezTable($receptor, "", "", $opciones_tabla);
+	
+	
+	
+	
+		$pdf->setLineStyle(1, 'round', '', array(0, 2));
+		
+	    $pdf->setStrokeColor(0.3359375, 0.578125, 0.89453125);
+	
+	    $pdf->line(
+			self::puntos_cm(8.2 + 2), 
+			self::puntos_cm(21.89 ), 
+			self::puntos_cm(8.2 + 2), 
+			self::puntos_cm(18.751)
+		);
+		
+	    $pdf->setLineStyle(.5,'','',array(0));
 	}
 
 
@@ -440,10 +456,9 @@ class ImpresionesController {
 		$daoOrden = OrdenDeServicioDAO::getByPK($id_orden);
 		$daoCliente = UsuarioDAO::getByPK( $daoOrden->getIdUsuarioVenta() );
 		$daoAgente = UsuarioDAO::getByPK( $daoOrden->getIdUsuario() );
-		$daoArrayVentaOrden = VentaOrdenDAO::search( new VentaOrden( array( "id_orden_de_servicio" => $id_orden  ) ) );
-		$daoVentaOrden = $daoArrayVentaOrden[0];
-		$daoVenta = VentaDAO::getByPK($daoVentaOrden->getIdVenta());
-		$daoSucursal = SucursalDAO::getByPK($daoVenta->getIdSucursal());
+		
+		
+
 		$daoServicio = ServicioDAO::getByPK( $daoOrden->getIdServicio() );
 		
 
@@ -493,7 +508,7 @@ class ImpresionesController {
 	    $pdf->ezTable($datos, "", "", $opciones_tabla);
 	
 
-	    $cajero = UsuarioDAO::getByPK( $daoVenta->getIdUsuario() );
+
 		
 
 		
@@ -505,10 +520,10 @@ class ImpresionesController {
 	        array("col" =>  $daoOrden->getIdOrdenDeServicio() ),
 		
 	        array("col" => "<b>Fecha de venta</b>"),
-	        array("col" => $daoVenta->getFecha()),
+	        array("col" => ""),
 
 	        array("col" => "<b>Agente de venta</b>"),
-	        array("col" => self::readableText(  $cajero->getNombre() ))
+	        array("col" => "")
 	    );
 
 	    $pdf->ezSetY(self::puntos_cm(26.8));
@@ -563,6 +578,13 @@ class ImpresionesController {
 	    $pdf->ezTable($elementos, "", "", $opciones_tabla);
 
 		self::drawBasicGuide($pdf);
+		
+		$qr_file_name = self::getQrCodeFromGoogle("http://pos2.labs2.caffeina.mx");
+		
+		$pdf->addJpegFromFile("../../../../static_content/qr_codes/" . $qr_file_name, 
+				self::puntos_cm(10), 
+				self::puntos_cm(22.6),
+				self::puntos_cm(3));
 
 	    $pdf->ezStream();
 
@@ -769,6 +791,56 @@ class ImpresionesController {
 	}
 
 
+
+
+	private static function getQrCodeFromGoogle($string, $retry = 3) {
+
+		$file_name = md5($string);
+		
+	    $file_full_path = "../../../../static_content/qr_codes/" . $file_name . ".jpg";
+
+	    if (is_file($file_full_path)) {
+	        Logger::log("Ya existe este codigo QR");
+	        return $file_name . ".jpg";
+	    }
+
+	    //el codigo no existe, sacarlo de google
+	    //primero tengo que ver si es posible que escriba en la carpeta de qr codes
+	    if (!is_writable("../../../../static_content/qr_codes/")) {
+	        Logger::error("No puedo escribir en la carpeta de QRCODES !");
+	        return null;
+	    }
+
+
+	    Logger::log("Codigo QR no esta en static, sacarlo de google");
+
+
+	    $google_api_call = "https://chart.googleapis.com/chart?chs=150x150&cht=qr&chld=H|1&choe=UTF-8&chl=";
+
+	    $f = file_get_contents($google_api_call . urlencode($string));
+
+	    if ($f == null) {
+		
+			if($retry == 0){
+				Logger::error("Ive tried too long, giving up...");
+				return null;
+			}
+		
+	        //volver a intentar
+	        Logger::log("FALLE AL OBTENER EL QR CODE DE GOOGLE, REINTENTANDO...");
+	
+	        obternerQRCode($string, $retry - 1);
+	    }
+
+	    file_put_contents($file_full_path, $f);
+
+	    //la imagen esta en png, hay que convertirla a jpg para que no haya pedos en el pdf
+	    $image = imagecreatefrompng($file_full_path);
+	    imagejpeg($image, "../../../../static_content/qr_codes/" . $file_name . ".jpg", 100);
+	    imagedestroy($image);
+
+	    return $file_name . ".jpg";
+	}
 	
 	
 }

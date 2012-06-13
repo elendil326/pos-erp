@@ -49,9 +49,15 @@
 			
 		$page->addComponent( $tabla );
 
-/*		$page->nextTab("Clasificaciones");
+		$page->nextTab("Interacciones");
 		
-		$page->nextTab("Reporr");		
+		//lista de clientes con los que se cuenta correo electronico
+		
+		
+		
+		
+		
+/*		$page->nextTab("Reporr");		
 */			
 		$page->render();
 
