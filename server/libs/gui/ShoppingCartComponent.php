@@ -538,7 +538,8 @@ class ShoppingCartComponent extends CartComponent implements GuiComponent
 							dataIndex: 'cantidad',
 			                sortable : false,
 							field: {
-				                xtype: 'numberfield'
+				                xtype: 'numberfield',
+								decimalPrecision : 4				
 				            },
 							renderer: function (cantidad, a, storeObj){
 								var um = unidadMedida.getById(parseInt( storeObj.get("id_unidad") ) );

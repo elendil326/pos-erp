@@ -536,7 +536,8 @@ class BuyingCartComponent extends CartComponent implements GuiComponent
 								return x + '';
 							},
 							field: {
-				                xtype: 'numberfield'
+				                xtype: 'numberfield',
+								decimalPrecision : 4
 				            }
 
 			            },
@@ -660,7 +661,7 @@ class BuyingCartComponent extends CartComponent implements GuiComponent
 								?><select id="empresa_seleccionada" onChange="seleccionar_empresa(this.value)" ><?php
             					
 					            for ($i = 0; $i < sizeof($empresas); $i++) {
-					                echo "<option value=\"" . $empresas[$i]->getIdEmpresa() . "\" >" . $empresas[$i]->getRazonSocial() . "</option>";
+					                echo "<option value=\"" . $empresas[$i]->getIdEmpresa() . "\" >" . utf8_decode($empresas[$i]->getRazonSocial()) . "</option>";
 					            }
 								?></select><?php
             
@@ -721,32 +722,47 @@ class BuyingCartComponent extends CartComponent implements GuiComponent
 				</div>
 
 
-				<table>
-					<tr>
-						<td>Subtotal</td>
-						<td id="carrito_subtotal"></td>
-					</tr>
-					
-					<tr>
-						<td>Descuento</td>
-						<td id="carrito_descuento"></td>
-					</tr>
-					
-					<tr>
-						<td>Impuesto</td>
-						<td id="carrito_impuesto"></td>
-					</tr>
-					<tr>
-						<td>Total</td>
-						<td id="carrito_total"></td>
-					</tr>				
-				</table>
 
-				<div class="POS Boton" onClick="cancelarVenta()">Cancelar</div>
-				<!--
-				<div class="POS Boton" onClick="doCotizar()">Solo cotizar</div>
-			-->
-				<div class="POS Boton OK" onClick="doCompra()">Comprar</div>
+				<div style="border:1px solid #99BBE8;	;box-sizing: border-box;
+					-moz-box-sizing: border-box;
+					-ms-box-sizing: border-box;
+					-webkit-box-sizing: border-box; 
+					margin-bottom: 20px">
+
+
+					<table style="margin-bottom: 0px;
+					width: 200px;
+					margin-right: 0px;
+					margin-left: auto;">
+						<tr>
+							<td>Subtotal</td>
+							<td id="carrito_subtotal"></td>
+						</tr>
+
+						<tr>
+							<td>Descuento</td>
+							<td id="carrito_descuento"></td>
+						</tr>
+
+						<tr>
+							<td>Impuesto</td>
+							<td id="carrito_impuesto"></td>
+						</tr>
+						<tr>
+							<td><strong>Total</strong></td>
+							<td id="carrito_total"></td>
+						</tr>				
+					</table>
+				</div>
+				
+				
+				
+				
+					<div class="POS Boton" onClick="cancelarVenta()">Cancelar</div>
+					<!--
+					<div class="POS Boton" onClick="doCotizar()">Solo cotizar</div>
+				-->
+					<div class="POS Boton OK" onClick="doCompra()">Comprar</div>
 
 			<?php
     }
