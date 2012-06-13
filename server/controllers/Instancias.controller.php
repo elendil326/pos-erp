@@ -265,14 +265,26 @@
 			
 		}
 
-		public static function Actualizar_Todas_Instancias(){
+		public static function Actualizar_Todas_Instancias($instance_ids){
+			$ids_string =" WHERE instance_id = ";
+			$ids =json_decode($instance_ids);
+			
+			for($i=0; $i< count($ids); $i++){
+				if($i == 0)
+					$ids_string .= "".$ids[$i];
+				else
+					$ids_string .= " OR instance_id = ".$ids[$i];
+			}
+			
 			Logger::log("Updating Instances}");
 			$result = "";
 			$out = "";
 			$file_name_cons = 'db-backup-'.time().'.sql';
 			$destiny_file = '../../../static_content/db_backups/';
 			global $POS_CONFIG;
-			$sql = "SELECT * FROM instances;";//  where instance_id = 91;";
+			$sql = "SELECT * FROM instances $ids_string;";
+			echo ($sql);
+			
 			$rs =  $POS_CONFIG["CORE_CONN"]->Execute($sql);
 			$instancias = $rs->GetArray();
 			
