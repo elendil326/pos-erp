@@ -94,7 +94,7 @@ class ImpresionesController {
 
 
 
-	private static function createPdf( $title = ""){
+	private static function createPdf( $title = "", $subtitle = "", $qr_string = ""){
 
 	    $pdf = new Cezpdf( $paper = 'letter');
 
@@ -112,6 +112,10 @@ class ImpresionesController {
 	     * ENCABEZADO
 	     ***************************/
 	    $pdf->addText( self::puntos_cm(7.1), self::puntos_cm(26.1), 18, utf8_decode($title));
+	    $pdf->addText( self::puntos_cm(7.1), self::puntos_cm(25.5), 12, utf8_decode($subtitle));	
+	
+
+				
 	    return $pdf;
 	}
 
@@ -144,8 +148,18 @@ class ImpresionesController {
 
 		 self::roundRect($pdf, self::puntos_cm(14.2), self::puntos_cm(26.8), self::puntos_cm(4), self::puntos_cm(4.25));
 		 self::roundRect($pdf, self::puntos_cm(2), self::puntos_cm(22), self::puntos_cm(16.2), self::puntos_cm(3.2));
-		 self::roundRect($pdf, self::puntos_cm(2), self::puntos_cm(18.6), self::puntos_cm(16.2), self::puntos_cm(16.0));
-
+		 self::roundRect($pdf, self::puntos_cm(2), self::puntos_cm(18.6), self::puntos_cm(16.2), self::puntos_cm(13.0));
+		
+		 self::roundRect($pdf, self::puntos_cm(2), self::puntos_cm(5.4), self::puntos_cm(16.2), self::puntos_cm(3.05));
+		
+		
+		$qr_file_name = self::getQrCodeFromGoogle("http://pos2.labs2.caffeina.mx");		
+		$pdf->addJpegFromFile("../../../../static_content/qr_codes/" . $qr_file_name, 
+				self::puntos_cm(2), 
+				self::puntos_cm(2.45),
+				self::puntos_cm(2.8));
+				
+				
 
  	    /*     * ************************
 	     * notas de abajo
@@ -156,9 +170,7 @@ class ImpresionesController {
 
 	    $pdf->line( self::puntos_cm(1.9), self::puntos_cm(2.0), self::puntos_cm(18.1), self::puntos_cm(2.0));
 
-	    $pdf->addText( self::puntos_cm(2), self::puntos_cm(1.61), 7, "Fecha de impresion: " . date('d/m/Y')  );
-
-//	    $pdf->addPngFromFile("../../../media/main_site/c.png", self::puntos_cm(15.9), self::puntos_cm(.95), 25, 25);
+	    $pdf->addText( self::puntos_cm(2), self::puntos_cm(1.61), 7, "Generado " . date('H:i:s d/m/Y')  );
 
 	    $pdf->addText( self::puntos_cm(16.70), self::puntos_cm(1.30), 8, "caffeina.mx");	
 	}
@@ -200,15 +212,20 @@ class ImpresionesController {
 
 				if($p instanceof VentaProducto  ){
 		        	$prodDao = ProductoDAO::getByPK( $p->getIdProducto() );
+					if(!is_null($prodDao)){
+			            $prod['cantidad'] = $p->getCantidad();
+			            $prod['descripcion'] = $prodDao->getNombreProducto();
+			            $prod['precio'] = FormatMoney($p->getPrecio(), DONT_USE_HTML);
+			            $prod['importe'] = FormatMoney($p->getPrecio() * $p->getCantidad(), DONT_USE_HTML);
 
-		            $prod['cantidad'] = $p->getCantidad();
-		            $prod['descripcion'] = $prodDao->getNombreProducto();
-		            $prod['precio'] = FormatMoney($p->getPrecio(), DONT_USE_HTML);
-		            $prod['importe'] = FormatMoney($p->getPrecio() * $p->getCantidad(), DONT_USE_HTML);
+			            $subtotal +=  ($p->getPrecio() * $p->getCantidad());
+			            $total = $subtotal;		
+			
+			        	array_push($elementos, $prod);				
+					}else{
+						Logger::error("El producto que se intentaba imprimir ya no existe !!");
+					}
 
-
-		            $subtotal +=  ($p->getPrecio() * $p->getCantidad());
-		            $total = $subtotal;
 
 					
 		
@@ -228,10 +245,10 @@ class ImpresionesController {
 		
 		            $total = $subtotal;
 
-		            
+	        		array_push($elementos, $prod);		            
 				}
 
-	        	array_push($elementos, $prod);
+
 	    }
 
 
@@ -339,7 +356,7 @@ class ImpresionesController {
 			self::puntos_cm(18.751)
 		);
 		
-	    $pdf->setLineStyle(.5,'','',array(0));
+	    $pdf->setLineStyle(0,'','',array(0));
 	}
 
 
@@ -462,34 +479,11 @@ class ImpresionesController {
 		$daoServicio = ServicioDAO::getByPK( $daoOrden->getIdServicio() );
 		
 
-		$pdf = self::createPdf("Orden de servicio");
+		$pdf = self::createPdf("Orden de Servicio " . $id_orden, $daoServicio->getNombreServicio());
 
 		self::printClient($pdf, $daoCliente);
 	    
 
-	    /**************************
-	     * TITULO
-	     * Datos del emisor, lugar de expedicion, folio, fecha de emision, no de serie
-	     * del certificado del contribuyente
-	     * **************************/            
-            
-	    $e = ""; //"<b>" . self::readableText("caffeina software") . "</b>\n";
-	    /*$e .= self::formatAddress(415);
-	    $e .= "RFC: " . "RFC";
-
-	    //datos de la sucursal
-		if(!is_null($daoSucursal)){
-	    	$e .= "\n\n<b>Lugar de expedicion</b>\n";
-	    	$e .= self::formatAddress( 415 );
-		}
-		*/
-
-	    $datos = array(
-	        array(
-	            "emisor" => $e,
-	      //      'sucursal' => $s,
-	        )
-	    );
 
 	    
 	    $opciones_tabla = array();
@@ -505,13 +499,7 @@ class ImpresionesController {
 	    $opciones_tabla['rowGap'] = 3;
 	    $opciones_tabla['colGap'] = 3;
 
-	    $pdf->ezTable($datos, "", "", $opciones_tabla);
-	
 
-
-		
-
-		
 	    $datos = array(
 	        array("col" => "<b>Servicio</b>"),
 	        array("col" =>  $daoServicio->getCodigoServicio()),
@@ -519,11 +507,9 @@ class ImpresionesController {
 	        array("col" => "<b>Numero de orden</b>"),
 	        array("col" =>  $daoOrden->getIdOrdenDeServicio() ),
 		
-	        array("col" => "<b>Fecha de venta</b>"),
+	        array("col" => "<b>Fecha de entrega</b>"),
 	        array("col" => ""),
 
-	        array("col" => "<b>Agente de venta</b>"),
-	        array("col" => "")
 	    );
 
 	    $pdf->ezSetY(self::puntos_cm(26.8));
@@ -545,7 +531,7 @@ class ImpresionesController {
 	     * ************************* */
 
 	    $elementos = array(
-	        array(  'cantidad' 	=> '',
+	        array(  'cantidad' 	=> 'Detalles de la orden',
 	            	'unidad'		=>''
 				)
 		);
@@ -579,12 +565,7 @@ class ImpresionesController {
 
 		self::drawBasicGuide($pdf);
 		
-		$qr_file_name = self::getQrCodeFromGoogle("http://pos2.labs2.caffeina.mx");
-		
-		$pdf->addJpegFromFile("../../../../static_content/qr_codes/" . $qr_file_name, 
-				self::puntos_cm(10), 
-				self::puntos_cm(22.6),
-				self::puntos_cm(3));
+
 
 	    $pdf->ezStream();
 
