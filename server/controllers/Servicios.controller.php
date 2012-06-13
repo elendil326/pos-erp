@@ -6,7 +6,7 @@ require_once("interfaces/Servicios.interface.php");
   *
   **/
 	
-  class ServiciosController extends ValidacionesController implements IServicios{
+class ServiciosController extends ValidacionesController implements IServicios{
   
         
         /*
@@ -97,6 +97,11 @@ require_once("interfaces/Servicios.interface.php");
             return true;
         }
         
+
+
+
+
+
         /*
          * Valida los parametros de la tabla clasificacion_servicio. Regresa un string con el error si se encuentra
          * alguno, regresa verdadero en caso contrario
@@ -173,6 +178,10 @@ require_once("interfaces/Servicios.interface.php");
             return true;
         }
         
+
+
+
+
         /*
          * Valida los parametros de la tabla orden_de_servicio. Regres aun string con el error si se ha encontrado
          * alguno. En caso contrario regresa verdadero
@@ -521,6 +530,9 @@ require_once("interfaces/Servicios.interface.php");
         
       
       
+
+
+
       
   
 	/**
@@ -1650,11 +1662,6 @@ require_once("interfaces/Servicios.interface.php");
             $validar = self::validarParametrosOrdenDeServicio(null, $id_servicio, $id_cliente, $descripcion, null, $adelanto);
 
 
-			//validar que exista el servicio
-			//valir que el cliente exista
-			//validar la descripcion
-
-
             //Si no se recibe adelanto se toma como cero
             if(is_null($adelanto)){
 	    		$adelanto = 0;
@@ -1762,100 +1769,15 @@ require_once("interfaces/Servicios.interface.php");
 			$s = SesionController::Actual();
 
 			//proceder a insertar venta a credito para este servicio
-			$venta = new Venta();
-			
-			Logger::error( "There is plenty of hard-coded stuff here !");
-			
-			$venta->setIdCompradorVenta	($id_cliente);
-			$venta->setTipoDeVenta		("credito");
-			$venta->setFecha			(time());
-			$venta->setSubtotal			($subtotal);
-			$venta->setEsCotizacion			(0);			
-			$venta->setImpuesto			(0);
-			$venta->setTotal			($subtotal);
-			$venta->setIdSucursal		($s["id_sucursal"]);
-			$venta->setIdUsuario		($s["id_usuario"]);
-			$venta->setSaldo			($subtotal);//si hay adelanto se resta al saldo de la venta el adelanto, esta resta se hace al insertar el abono_venta
-			$venta->setCancelada		(false);
-			$venta->setRetencion		(0);
-			
-
-			
-			//vamos a ver si este dude tiene suficient credito para esto
-			
-			$cliente = UsuarioDAO::getByPK( $id_cliente );
-			
-			if(is_null($cliente)){
-				throw new InvalidDataException("El cliente al que se le quiere vender no existe");
-			}
-			
-			//validar que sea un cliente
-			if($cliente->getIdRol() != 5){
-				throw new InvalidDataException("El cliente al que se le quiere hacer esta venta no es un cliente");
-			}
-			
-			try{
-				Logger::log("Insertando la venta y modificando el saldo_del_ejercicio del cliente....");
-				UsuarioDAO::save( $cliente );
-                VentaDAO::save( $venta );
-    			
-        	}catch(Exception $e){
-                DAO::transRollback();
-                Logger::error($e->getMessage());
-                throw new InvalidDatabaseOperationException("No se pudo crear la nueva orden de servicio");
-
-            }
-
-
-			$venta_orden = new VentaOrden();
-
-			$venta_orden->setIdVenta			( $venta->getIdVenta() );
-			$venta_orden->setIdOrdenDeServicio	( $orden_de_servicio->getIdOrdenDeServicio() );
-			$venta_orden->setPrecio				( $subtotal);
-			$venta_orden->setDescuento			( 0);
-			$venta_orden->setImpuesto			( 0);
-			$venta_orden->setRetencion			( 0);
+			/*
 			
 			
-			try{
-				Logger::log("Insertando la orden de venta....");
-                VentaOrdenDAO::save( $venta_orden );
-    
-        	}catch(Exception $e){
-                DAO::transRollback();
-                Logger::error($e->getMessage());
-                throw new InvalidDatabaseOperationException("No se pudo crear la nueva orden de servicio");
-
-            }
-			//en caso de existir adelanto se ingresa el abono
-			if($adelanto > 0){
-				try{
-					CargosYAbonosController::NuevoAbono( $id_cliente, $adelanto, "efectivo", $billetes = null, $cheques = null, $id_compra = null, $id_prestamo = null, $venta->getIdVenta(), $nota = "Adelanto de $ {$adelanto} al servicio");
-				}catch(Exception $e){
-					DAO::transRollback();
-					Logger::error($e->getMessage());
-					throw new InvalidDatabaseOperationException("No se pudo crear la nueva orden de servicio");
-				}
-			}else{//no hay abono de acualquir manera se debe decrementar su saldo por el valor de la venta
-				
-				$cliente->setSaldoDelEjercicio(  ( $cliente->getSaldoDelEjercicio() - $venta->getTotal()  ) );
-				try{
-					Logger::log("Actualizando el saldo del cliente....");
-					UsuarioDAO::save( $cliente );				
-		    	}catch(Exception $e){
-		            DAO::transRollback();
-		            Logger::error($e->getMessage());
-		            throw new InvalidDatabaseOperationException("No se pudo crear la nueva orden de servicio");
-		        }
-			}
-
+			*/
             DAO::transEnd();
             Logger::log("Orden de servicio creada exitosamente:");
 			Logger::log("	orden de servicio=" . $orden_de_servicio->getIdOrdenDeServicio());
-			Logger::log("	id de venta		 =" . $venta->getIdVenta() );
-            return array( 
-					"id_orden" => (int)$orden_de_servicio->getIdOrdenDeServicio(),
-					"id_venta" => (int)$venta->getIdVenta() );
+
+            return array( "id_orden" => (int)$orden_de_servicio->getIdOrdenDeServicio() );
             
 	}
   
@@ -1965,7 +1887,6 @@ require_once("interfaces/Servicios.interface.php");
             }*/
             
             $seguimiento_de_servicio = new SeguimientoDeServicio( array(  
-
 													"id_localizacion"       => $id_localizacion,
 													"id_orden_de_servicio"  => $id_orden_de_servicio,
 													"estado"                => $nota,
@@ -2002,13 +1923,144 @@ require_once("interfaces/Servicios.interface.php");
  	 **/
 	public static function TerminarOrden
 	(
-		$id_orden
+		$id_orden, 
+		$id_venta = null
 	)
 	{  
-            
 		
+			Logger::log("Terminando orden " . $id_orden . " ");
+			
+			if(!is_null($id_venta)){
+				Logger::log("asignando a venta " . $id_venta);
+				
+				//que la venta exista
+				
+				$v = VentaDAO::getByPK($id_venta);
+				
+				if(is_null($v)){
+					throw new InvalidDataException("La venta a la que se quiere asignar no existe.");
+				}
+				
+				
+			}
+			
+            //ver que exista la orden de servicio
+			$ods = OrdenDeServicioDAO::getByPK( $id_orden);
+			
+			if(is_null($ods)){
+				throw new InvalidDataException("La orden de servicio que desea terminar no existe");
+			}
+
+			if(!$ods->getActiva()){
+				throw new BusinessLogicException("La orden que quieres terminar ya no esta terminada.");
+			}
+
+			DAO::transBegin();
+			
+			try{
+				$ods->setActiva(0);
+				OrdenDeServicioDAO::save($ods);
+				
+			}catch(Exception $e){
+				throw InvalidDatabaseOperationException($e);
+				
+			}
+
+
+			if(!is_null($id_venta)){
+				$vo = new VentaOrdenDAO();
+				$vo->setIdVenta( $id_venta );
+				$vo->setIdOrdenDeServicio( $id_orden );
+				$vo->setPrecio( $ods->getPrecio() );
+				$vo->setDescuento( 0);
+				$vo->setImpuesto( 0 );
+				$vo->setRetencion( 0);
+				
+				
+				try{
+					VentaOrdenDAO::save( $vo );
+					
+				}catch(Exception $e){
+					throw InvalidDatabaseOperationException($e);
+					
+				}
+				
+				
+				
+			}else{
+				
+				//crearle una nueva venta
+				$venta = new Venta();
+
+				$s = SesionController::Actual();
+
+				Logger::error( "There is plenty of hard-coded stuff here !");
+
+				$venta->setIdCompradorVenta	( $ods->getIdUsuarioVenta() );
+				$venta->setTipoDeVenta		( "contado" );
+				$venta->setFecha			(time());
+				$venta->setSubtotal			(0);
+				$venta->setEsCotizacion		(0);			
+				$venta->setImpuesto			(0);
+				$venta->setTotal			(0);
+				$venta->setIdSucursal		($s["id_sucursal"]);
+				$venta->setIdUsuario		($s["id_usuario"]);
+				$venta->setSaldo			(0);//si hay adelanto se resta al saldo de la venta el adelanto, esta resta se hace al insertar el abono_venta
+				$venta->setCancelada		(false);
+				$venta->setRetencion		(0);
+
+				//vamos a ver si este dude tiene suficient credito para esto
+
+
+
+				try{
+					Logger::log("Insertando la venta ....");
+					
+	                VentaDAO::save( $venta );
+
+	        	}catch(Exception $e){
+	                DAO::transRollback();
+	                Logger::error($e->getMessage());
+	                throw new InvalidDatabaseOperationException("No se pudo crear la nueva orden de servicio");
+
+	            }
+
+
+				$venta_orden = new VentaOrden();
+
+				$venta_orden->setIdVenta			( $venta->getIdVenta() );
+				$venta_orden->setIdOrdenDeServicio	( $ods->getIdOrdenDeServicio() );
+				$venta_orden->setPrecio				( 0);
+				$venta_orden->setDescuento			( 0);
+				$venta_orden->setImpuesto			( 0);
+				$venta_orden->setRetencion			( 0);
+
+
+				try{
+					Logger::log("Insertando la orden de venta....");
+	                VentaOrdenDAO::save( $venta_orden );
+
+	        	}catch(Exception $e){
+	                DAO::transRollback();
+	                Logger::error($e->getMessage());
+	                throw new InvalidDatabaseOperationException("No se pudo crear la nueva orden de servicio");
+	            }
+	
+				$id_venta = $venta->getIdVenta();
+				
+			}
+
+
+			DAO::transEnd();
+	
 		
             Logger::log("La orden de servicio se ha terminado exitosamente");
+			
+
+			return array(
+				"id_venta" => $id_venta
+			);
+
 	}
   
 

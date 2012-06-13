@@ -1,7 +1,6 @@
 <?php 
 
 
-
   class ApiSesionIniciar extends ApiHandler {
   
 
@@ -4997,6 +4996,7 @@
 	{
 		$this->request = array(	
 			"id_orden" => new ApiExposedProperty("id_orden", true, POST, array( "int" )),
+			"id_venta" => new ApiExposedProperty("id_venta", false, POST, array( "int" )),
 		);
 	}
 
@@ -5005,7 +5005,8 @@
  		$this->response = ServiciosController::TerminarOrden( 
  			
 			
-			isset($_POST['id_orden'] ) ? $_POST['id_orden'] : null
+			isset($_POST['id_orden'] ) ? $_POST['id_orden'] : null,
+			isset($_POST['id_venta'] ) ? $_POST['id_venta'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -6513,8 +6514,8 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"descripcion" => new ApiExposedProperty("descripcion", true, GET, array( "string" )),
-			"activo" => new ApiExposedProperty("activo", false, GET, array( "int" )),
+			"descripcion" => new ApiExposedProperty("descripcion", true, POST, array( "string" )),
+			"activo" => new ApiExposedProperty("activo", false, POST, array( "int" )),
 		);
 	}
 
@@ -6523,8 +6524,8 @@
  		$this->response = ProductosController::NuevaCategoriaUdm( 
  			
 			
-			isset($_GET['descripcion'] ) ? $_GET['descripcion'] : null,
-			isset($_GET['activo'] ) ? $_GET['activo'] :  ""
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] : null,
+			isset($_POST['activo'] ) ? $_POST['activo'] :  ""
 			
 			);
 		}catch(Exception $e){

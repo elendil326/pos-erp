@@ -113,6 +113,7 @@
 		    // to use for the editor at each column.
 		    var grid = Ext.create('Ext.grid.Panel', {
 		        store: extraParamsStore,
+				bodyCls: 'foo',
 				id : "extra-params-grid",
 		        columns: [{
 		            header: 'Descripcion',

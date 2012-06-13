@@ -931,3 +931,8 @@ Ext.example = function(){
 
 
 
+
+
+function FormatMoney(m){
+	return "$" + m;
+}

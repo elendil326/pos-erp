@@ -302,7 +302,7 @@
   
 	/**
  	 *
- 	 *Una nueva orden de servicio a prestar. Este debe ser un servicio activo. Y prestable desde la sucursal desde donde se inicio la llamada. Los conceptos a llenar estan definidos por el concepto. Se guardara el id del agente que inicio la orden y el id del cliente. La fecha se tomara del servidor.
+ 	 *Una nueva orden de servicio a prestar. Este debe ser un servicio activo. Y prestable desde la sucursal desde donde se inicio la llamada. Los conceptos a llenar estan definidos por el concepto. Se guardara el id del agente que inicio la orden y el id del cliente. 
  	 *
  	 * @param id_cliente int Id del cliente que contrata el servicio
  	 * @param id_servicio int Id del servicio que se contrata
@@ -316,7 +316,6 @@
  	 * @param id_usuario_asignado int id del usuario que tiene asginada esta orden.... puede ser nadie.
  	 * @param precio float en caso de que el metodo de costeo sea variable, hay que mandar un precio final
  	 * @return id_orden int Id de la orden que se creo.
- 	 * @return id_venta string `id_venta` de la venta que genero este servicio
  	 **/
   static function NuevaOrden
 	(
@@ -377,10 +376,13 @@
  	 *Dar por terminada una orden.
  	 *
  	 * @param id_orden int Id de la orden a terminar
+ 	 * @param id_venta int Si se desea agregar esta orden de servicio a una venta existente, debe mandarse el id de venta. De lo contrario, se creara una nueva venta que contendra solo esta orden. En caso de enviar una venta existente esta debe estar abierta, es decir no puede estar ya saldada.
+ 	 * @return id_venta int El id de la venta que contiene a esta orden de servicio. Puede ser una existente en caso de haber enviado id_venta o uno nuevo en caso contrario.
  	 **/
   static function TerminarOrden
 	(
-		$id_orden
+		$id_orden, 
+		$id_venta = null
 	);  
   
   
