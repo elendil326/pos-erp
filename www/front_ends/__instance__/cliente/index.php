@@ -7,7 +7,7 @@
 	
 	
 	
-	$page = new ClienteComponentPage();
+	$page = new ClienteComponentPage("Bienvendio a POS ERP");
 	$banner = new BannerComponent("POS ERP", "Bienvenido a POS ERP <br>un sistema de gestion empresarial", "../../../media/EAbydW1M_XR.png");
 	$page->addComponent($banner);
 	
@@ -21,12 +21,12 @@
 	$ordenes = OrdenDeServicioDAO::search( $ordenes_array );
 	
 	if(sizeof($ordenes) > 0 ){
-		$page->addComponent("Sus ordenes");
+		
+		$page->addComponent(new TitleComponent("Sus ordenes de servicio",2));
 		
 		$table = new TableComponent(array(
-			"activa" => "activa",
-			"id_servicio" => "id_servicio",
-			"fecha_orden" => "fecha de Orden"
+			"id_servicio" => "Servicio",
+			"fecha_orden" => "Fecha"
 		), $ordenes);
 		
 		function renderIdServicio($id){
@@ -34,6 +34,9 @@
 			return $serv->getNombreServicio();
 		}
 		
+		$table->addColRender("fecha_orden", "FormatTime");
+		$table->addOnClick("id_orden_de_servicio", "(function(a){ window.location = 'servicios.detalle.orden.php?oid='+a; })");
+
 		$table->addColRender("id_servicio", "renderIdServicio");
 		$page->addComponent($table);
 	}

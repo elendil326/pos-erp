@@ -13,7 +13,7 @@
 
 		$page->nextTab("Lista");
 		
-		
+		$page->addComponent( "<div class='POS Boton' onClick='window.location=\"clientes.nuevo.php\"'>Nuevo cliente</div> " );
 		
 		$cselector = new ClienteSelectorComponent( );
 		$cselector->addJsCallback( "(function(a){ window.location = 'clientes.ver.php?cid='+a.get('id_usuario'); })" );

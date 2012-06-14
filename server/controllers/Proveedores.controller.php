@@ -515,7 +515,7 @@ require_once("interfaces/Proveedores.interface.php");
                 $proveedores = array();
                 
                 //Solo se obtendran los usuarios cuya clasificacion de cliente no sea nula.
-                $usuario_proveedores = UsuarioDAO::byRange(new Usuario( array( "id_clasificacion_proveedor" => 0) ),
+                $usuario_proveedores = UsuarioDAO::byRange(new Usuario( array( "id_clasificacion_proveedor" => 0 , "id_rol" => 6) ),
                         new Usuario( array( "id_clasificacion_proveedor" => PHP_INT_MAX) ),$orden);
                 
                 //Si no se reciben parametros, la lista final sera la variable usuario_clientes,

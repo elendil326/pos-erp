@@ -343,7 +343,7 @@ class ImpresionesController {
 	    $pdf->ezTable($receptor, "", "", $opciones_tabla);
 	
 	
-	
+	/*
 	
 		$pdf->setLineStyle(1, 'round', '', array(0, 2));
 		
@@ -357,6 +357,14 @@ class ImpresionesController {
 		);
 		
 	    $pdf->setLineStyle(0,'','',array(0));
+	*/
+		    $pdf->setStrokeColor(0.3359375, 0.578125, 0.89453125);
+	$pdf->line(
+		self::puntos_cm(8.2 + 2), 
+		self::puntos_cm(21.91 ), 
+		self::puntos_cm(8.2 + 2), 
+		self::puntos_cm(18.751)
+	);
 	}
 
 

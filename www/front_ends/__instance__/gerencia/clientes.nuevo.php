@@ -79,7 +79,8 @@
 	$form->createComboBoxJoin("id_clasificacion_cliente", "nombre", ClasificacionClienteDAO::getAll());
 
 	$form->addApiCall("api/cliente/nuevo/");
-	$form->onApiCallSuccessRedirect("clientes.lista.php");
+	
+	$form->onApiCallSuccessRedirect("clientes.ver.php");
 
 	$form->makeObligatory(array(
 	    "razon_social"

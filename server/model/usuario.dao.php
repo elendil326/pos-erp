@@ -151,4 +151,10 @@ class UsuarioDAO extends UsuarioDAOBase
 			
 		return $limite_credito - $rs['saldo'];				
 	}
+	
+	
+	
+	public static function traerSeguimientos( Usuario $usuario ){
+		$id = $usuario->getIdUsuario();
+	}
 }

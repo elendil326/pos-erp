@@ -5,16 +5,20 @@
 	require_once("../../../../server/bootstrap.php");
 
 	$page = new GerenciaTabPage(  );
+	
+	if(isset($_GET["id_cliente"])){
+		$este_usuario = UsuarioDAO::getByPK( $_GET["id_cliente"] );
+				
+	}else if(isset($_GET["cid"])){
+		$este_usuario = UsuarioDAO::getByPK( $_GET["cid"] );		
+	}
 
-	$este_usuario = UsuarioDAO::getByPK( $_GET["cid"] );
 	
 	if(is_null($este_usuario)){
-		die;
+		die("Este cliente no existe.");
 	}
-	//
-	// Parametros necesarios
-	// 
-	$page->requireParam(  "cid", "GET", "Este cliente no existe." );
+	
+
 
 
 	//
@@ -51,10 +55,16 @@
 
            $menu = new MenuComponent();
 
-           $menu->addItem("Editar este cliente", "clientes.editar.php?cid=".$_GET["cid"]);
-
+           $menu->addItem("Editar", "clientes.editar.php?cid=" . $este_usuario->getIdUsuario());
+           $menu->addItem("Desactivar", "clientes.desactivar.php?cid=" . $este_usuario->getIdUsuario());
            $page->addComponent( $menu);
-       }
+       }else{
+	
+	       $menu = new MenuComponent();
+
+           $menu->addItem("Reactivar", "clientes.desactivar.php?cid=" . $este_usuario->getIdUsuario());
+           $page->addComponent( $menu);
+		}
 
 
 	//
@@ -241,7 +251,7 @@
 	
 	
 	$segs = ClienteSeguimientoDAO::search( new ClienteSeguimiento(array(
-		"id_cliente" => $_GET["cid"]
+		"id_cliente" => $este_usuario->getIdUsuario()
 
 	)));
 
@@ -255,9 +265,11 @@
 	
 	
 	function nagente($id){ $a = UsuarioDAO::getByPK($id); return $a->getNombre(); }
+	
 	function funcion_transcurrido($a, $obj){
 		return FormatTime(($a));
 	}
+	
 	$lseguimientos = new TableComponent($header, $segs);
 	$lseguimientos->addColRender("id_usuario", "nagente");
 	$lseguimientos->addColRender("fecha", "funcion_transcurrido");	
