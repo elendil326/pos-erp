@@ -27,7 +27,11 @@
 
                 $form->addApiCall( "api/cliente/clasificacion/editar/" );
                 $form->onApiCallSuccessRedirect("clientes.lista.clasificacion.php");
+				$form->createComboBoxJoinDistintName("id_tarifa_venta", "id_tarifa" ,"nombre", TarifaDAO::search(new Tarifa(array("tipo_tarifa"=>"venta"))));
+				$form->createComboBoxJoin("id_tarifa_compra", "nombre", TarifaDAO::search(new Tarifa(array("tipo_tarifa"=>"compra"))));
 
+				$form->setCaption("id_tarifa_venta","Tarifa de venta");
+				$form->setCaption("id_tarifa_compra","Tarifa de compra");
                 $page->addComponent( $form );
 
 

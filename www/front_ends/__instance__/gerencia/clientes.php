@@ -24,7 +24,7 @@
 		$tabla = new TableComponent( 
 			array(
 				"nombre"                        => "Nombre",
-				"activo"                        => "Activo",
+				"id_clasificacion_cliente"		=> "Clasifiacion",
 				"saldo_del_ejercicio"           => "Saldo"
 			),
 			$lista["resultados"]
@@ -39,9 +39,15 @@
         function funcion_consignatario($consignatario){
             return ($consignatario ? "Consignatario" : "----" );
         }
-                
 
-        //$tabla->addColRender("id_clasificacion_cliente", "funcion_clasificacion_cliente");
+        function funcion_clasificacion_cliente($id_clasifiacion){
+			if(is_null($id_clasifiacion)) return "";
+			$c = ClasificacionClienteDAO::getByPK($id_clasifiacion);
+			if(is_null($c)) return "";			
+			return $c->getNombre();
+		}
+
+        $tabla->addColRender("id_clasificacion_cliente", "funcion_clasificacion_cliente");
         $tabla->addColRender("activo", "funcion_activo");
         $tabla->addColRender("consignatario", "funcion_consignatario");
 		$tabla->addOnClick( "id_usuario", "(function(a){ window.location = 'clientes.ver.php?cid=' + a; })" );

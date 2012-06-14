@@ -66,7 +66,7 @@
 	$form->createComboBoxJoin( "tarifa_venta_obtenida", "tarifa_venta_obtenida", array("rol", "proveedor", "cliente","usuario") );
 
 	$form->addApiCall("api/cliente/editar/", "POST");
-	$form->onApiCallSuccessRedirect("clientes.lista.php");
+	$form->onApiCallSuccessRedirect("clientes.ver.php?cid=" . $_GET["cid"]);
 
 
 
