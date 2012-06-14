@@ -547,17 +547,16 @@ class BuyingCartComponent extends CartComponent implements GuiComponent
 			                dataIndex: 'id_unidad',
 				            field : {
 				            	xtype : "combobox",
-				            	typeAhead: true,
 				                triggerAction: 'all',
 				                selectOnTab: true,
+								allowBlank: false,
+								autoSelect: true,
+								editable: false,
 				                store: unidadMedida,
 				                lazyRender: true,
 				                listClass: 'x-combo-list-small',
 				                displayField: "abreviacion",
 				                listConfig: {
-				                	loadingText: 'Buscando...',
-				                	
-				                	// Custom rendering template for each item
 				                	getInnerTpl: function(a,b,c) {
 										return "<p style='margin:0px'>{abreviacion}</p>";
 				                	}

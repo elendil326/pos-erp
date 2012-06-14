@@ -130,7 +130,11 @@
 	$direccion = $este_usuario->getIdDireccion();
 	$direccionObj = DireccionDAO::getByPK( $direccion );
 
-	if(!is_null($direccionObj)){
+	if(is_null($direccionObj)){
+		
+		
+		
+	}else{
 
 		$ciudad = CiudadDAO::getByPK( $direccionObj->getIdCiudad() );
 

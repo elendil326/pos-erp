@@ -40,7 +40,42 @@ class DireccionController extends ValidacionesController{
 
         }
 	
+		public static function NuevaDireccionParaUsuario($id_usuario)
+		{
 
+			
+			$u = UsuarioDAO::getByPK($id_usuario);
+			
+			if (is_null($u)){
+				throw invalidDataException("el $id_usuario no existe");
+			}
+
+			if(!is_null($u->getIdDireccion())){
+				throw new InvalidDataException("el $id_usuario ya tiene una direccion");
+			}
+
+
+			$did = self::NuevaDireccion("","","","","");
+			
+			
+			DAO::transBegin();
+			
+			$u->setIdDireccion($did);
+			
+            try{
+                UsuarioDAO::save($u);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                throw new Exception("No se pudo crear la direccion: ".$e);
+            }
+
+            DAO::transEnd();
+		}
+		
+		
+		
         public static function NuevaDireccion(
                 $calle,
                 $numero_exterior,

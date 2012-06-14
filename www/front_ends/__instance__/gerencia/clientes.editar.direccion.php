@@ -8,15 +8,63 @@
 
 	// Parametros necesarios
 	// 
-	$page->requireParam("did", "GET", "Esta direccion no existe.");
+
 	
 	$page->requireParam("cid", "GET", "Esta usuario no existe.");
 	
-	$esta_dir = DireccionDAO::getByPK($_GET["did"]);
+	
+	$this_client = UsuarioDAO::getByPK( $_GET["cid"] );
+	
+	if(is_null($this_client->getIdDireccion())){
+		
+		//no existe direccion
+		Logger::log("El uid=" . $_GET["cid"] . " no tiene direccion. Insertando." );
+		
+		DireccionController::NuevaDireccionParaUsuario(  $_GET["cid"] );
+		
+		//recargar el objeto de cliente
+		$this_client = UsuarioDAO::getByPK( $_GET["cid"] );
+	}
+	
+
+	
+	$esta_dir = DireccionDAO::getByPK($this_client->getIdDireccion());
+	
 	
 	if(is_null($esta_dir)){
-		Logger::error("this dude has no address...");
+		//esta definida pero el registro no existe por alguna razon
+		Logger::error("user " . $_GET["cid"] . " se supone que tiene id direccion = " .$this_client->getIdDireccion()   . " , pero esta en null ...");
+		
+		DAO::transBegin();
+		
+		$this_client->setIdDireccion(NULL);
+		
+        try{
+            UsuarioDAO::save($this_client);
+
+			DireccionController::NuevaDireccionParaUsuario(  $this_client->getIdUsuario() );
+			
+			//recargar el objeto de cliente
+			$this_client = UsuarioDAO::getByPK( $_GET["cid"] );
+			
+        } catch(Exception $e) {
+            DAO::transRollback();
+            throw new Exception("No se pudo crear la direccion: ".$e);
+
+        }
+
+        DAO::transEnd();
+		
 	}
+	
+	
+	
+	
+	
+	$esta_dir = DireccionDAO::getByPK($this_client->getIdDireccion());
+	
+
+	
 	//titulos
 	$page->addComponent(new TitleComponent("Editar direccion: " . $esta_dir->getColonia()));
 
@@ -33,6 +81,7 @@
 	$form->sendHidden("id_direccion");
 
 	$form->createComboBoxJoin("id_ciudad", "nombre", CiudadDAO::getAll(), $esta_dir->getIdCiudad());
+	$form->setCaption("id_ciudad", "Ciudad");
 
 	$form->addApiCall("api/cliente/editar/");
 	$form->beforeSend("editar_direccion");

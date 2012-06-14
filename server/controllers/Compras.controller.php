@@ -695,11 +695,21 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
 						) ) );
 						
 					
+					if(is_null($p->lote)){
+						throw new InvalidDataException("No selecciono a que lote ira el producto " . $p->id_producto);
+					}
+					
+
+					if(strlen($p->lote) == 0){
+						throw new InvalidDataException("No selecciono a que lote ira el producto " . $p->id_producto);
+					}
+					
 					//busquemos el id del lote
 					$l = LoteDAO::search(new Lote(array(
 							"folio" => $p->lote
 						)));
-						
+					
+					
 					$l = $l[0];
 					
 					
