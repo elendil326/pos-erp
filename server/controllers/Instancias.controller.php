@@ -283,7 +283,7 @@
 			$destiny_file = '../../../static_content/db_backups/';
 			global $POS_CONFIG;
 			$sql = "SELECT * FROM instances $ids_string;";
-			echo ($sql);
+			
 			
 			$rs =  $POS_CONFIG["CORE_CONN"]->Execute($sql);
 			$instancias = $rs->GetArray();
@@ -316,7 +316,18 @@
 		public static function Eliminar_Tablas_BD($instance_id,$host,$user, $pass, $name){
 			Logger::log("Deleting Tables from instance {$instance_id}");
 			//conexion a la instancia
+			$sql = "SELECT * FROM instances WHERE ( instance_id = {$instance_id} ) LIMIT 1;";
 			
+			Logger::log("------ Finding db connection, query: {$sql}");
+			global $POS_CONFIG;
+			$rs = $POS_CONFIG["CORE_CONN"]->GetRow($sql);
+			
+
+			if(count($rs) === 0)
+			{
+				Logger::warn("La instancia con el id {". $instance_id ."} no exite !");
+				die(header("HTTP/1.1 404 NOT FOUND"));
+			}
 			$instance_con["INSTANCE_CONN"] = null;
 			
 			try{
@@ -367,7 +378,17 @@
 		public static function Insertar_Estructura_Tablas_A_BD($instance_id,$host,$user, $pass, $name){
 			$out ="";
 			//conexion a la instancia
+			$sql = "SELECT * FROM instances WHERE ( instance_id = {$instance_id} ) LIMIT 1;";
 			
+			global $POS_CONFIG;
+			$rs = $POS_CONFIG["CORE_CONN"]->GetRow($sql);
+
+			if(count($rs) === 0)
+			{
+				Logger::warn("La instancia con el id {". $instance_id ."} no exite !");
+				die(header("HTTP/1.1 404 NOT FOUND"));
+			}
+
 			$instance_con["INSTANCE_CONN"] = null;
 			
 			try{
@@ -436,6 +457,16 @@
 			
 			$out ="";
 			//conexion a la instancia
+			$sql = "SELECT * FROM instances WHERE ( instance_id = {$instance_id} ) LIMIT 1;";
+			
+			global $POS_CONFIG;	
+			$rs = $POS_CONFIG["CORE_CONN"]->GetRow($sql);
+
+			if(count($rs) === 0)
+			{
+				Logger::warn("La instancia con el id {". $instance_id ."} no exite !");
+				die(header("HTTP/1.1 404 NOT FOUND"));
+			}
 			
 			$instance_con["INSTANCE_CONN"] = null;
 			
@@ -505,7 +536,16 @@
 			Logger::log( "Backup to Instance {$instance_id}");
 			
 			//conexion a la instancia
+			$sql = "SELECT * FROM instances WHERE ( instance_id = {$instance_id} ) LIMIT 1;";
 			
+			global $POS_CONFIG;
+			$rs = $POS_CONFIG["CORE_CONN"]->GetRow($sql);
+
+			if(count($rs) === 0)
+			{
+				Logger::warn("La instancia con el id {". $instance_id ."} no exite !");
+				die(header("HTTP/1.1 404 NOT FOUND"));
+			}
 			$instance_con["INSTANCE_CONN"] = null;
 			
 			try{
@@ -568,24 +608,49 @@
 				while( $rw = $cols->FetchRow() )
 					$cols_str .= "`".$rw[0]."`, ";
 				
+				$cols2 = $instance_db_con->GetArray($sql3);			
+
 				$cols_str = substr ( $cols_str , 0 , -2 );
 				$cols_str .= " ) ";
-
+				$cmd = "";
 				if($backup_values)
 				{
 					for ($i = 0; $i < $num_fields; $i++) 
 					{
 					  while($row = $result->FetchRow() )
 					  {
-						$return.= 'INSERT INTO '.$table.$cols_str.' VALUES(';
+						$cmd .= 'INSERT INTO '.$table.$cols_str.' VALUES(';
 						for($j=0; $j<$num_fields; $j++) 
 						{
-						  $row[$j] = addslashes($row[$j]);
-						  $row[$j] = @ereg_replace("\n","\\n",$row[$j]);
-						  if (isset($row[$j])) { $return.= '"'.$row[$j].'"' ; } else { $return.= '""'; }
-						  if ($j<($num_fields-1)) { $return.= ','; }
+							$row[$j] = addslashes($row[$j]);
+							$row[$j] = @ereg_replace("\n","\\n",$row[$j]);
+							$value = $row[$j];
+							
+							if ( strlen( trim($value) ) > 0 ) 
+							{ 							
+								$cmd.= '"'.$row[$j].'"' ; 
+							} 
+							else 
+							{ 
+								$null_column = $cols2[$j]['Field'];
+								if( $j == ($num_fields -1) )//es el ultimo campo
+									$cmd = str_replace(", `".$null_column."` ", '' , $cmd );//no se concatena ya que se hace la susuticion y se devuelve la cadena entera
+								else
+									$cmd = str_replace("`".$null_column."`, ", '' , $cmd );//no se concatena ya que se hace la susuticion y se devuelve la cadena entera
+
+								Logger::log("COLUMNA SIN VALOR, Se va a reeplazar {$null_column} por '' para que no salga en el Insert");
+							}
+
+							if ($j<($num_fields-1)) 
+							{ 
+								if( strlen( trim($value) ) > 0 )
+									$cmd.= ','; 
+							}
 						}
-						$return.= ");\n";
+						$cmd.= ");\n";
+						$cmd = str_replace(',)', ')' , $cmd );//no se concatena ya que se hace la susuticion y se devuelve la cadena entera
+						$return .= $cmd;
+						$cmd ="";
 					  }
 					}			
 				}

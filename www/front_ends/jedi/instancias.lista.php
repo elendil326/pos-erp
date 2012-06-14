@@ -19,7 +19,7 @@
 				}
 				
 				//todo salio bien...
-				//header("Location: instancias.lista.php");
+				header("Location: instancias.lista.php");
 			break;
 			default:
 			
