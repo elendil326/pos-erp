@@ -98,7 +98,7 @@
 		$page->addComponent(new TitleComponent("Nueva categoria de unidad de medida", 3));
 		$ncudmf = new DAOFormComponent(new CategoriaUnidadMedida());
 		$ncudmf->hideField(array("id_categoria_unidad_medida"));
-		$ncudmf->addApiCall("api/producto/udm/categoria/nueva", "GET");
+		$ncudmf->addApiCall("api/producto/udm/categoria/nueva", "POST");
 		$page->addComponent( $ncudmf );
 		
 		
