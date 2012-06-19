@@ -1652,7 +1652,8 @@ class ServiciosController extends ValidacionesController implements IServicios{
             }
 
 			$id_usuario = $s["id_usuario"];
-            $saldo_cliente = UsuarioDAO::getByPK($id_cliente)->getSaldoDelEjercicio();//se trae el monto que le resta por disponer de su limite de credito
+			$cliente = UsuarioDAO::getByPK($id_cliente);
+            $saldo_cliente = $cliente->getSaldoDelEjercicio();//se trae el monto que le resta por disponer de su limite de credito
 
 /*			if( $saldo_cliente < $precio )
 				throw new InvalidDataException("El saldo del cliente es insuficiente ($ {$saldo_cliente})");
@@ -1774,8 +1775,34 @@ class ServiciosController extends ValidacionesController implements IServicios{
 			
 			*/
             DAO::transEnd();
+
             Logger::log("Orden de servicio creada exitosamente:");
-			Logger::log("	orden de servicio=" . $orden_de_servicio->getIdOrdenDeServicio());
+	    	Logger::log("	orden de servicio=" . $orden_de_servicio->getIdOrdenDeServicio());
+
+
+			//ok, ya se hizo correctamente, vamos a ver si le enviamos correo al cliente
+
+			if(!is_null($cliente->getCorreoElectronico())){
+
+				Logger::log("enviando correo a " .  $cliente->getCorreoElectronico() );
+
+				$servicio = ServicioDAO::getByPK($id_servicio);
+
+				$cuerpo = "Estimado " . $cliente->getNombre() . "\n\n"
+						. "Le escribimos para informale que su orden de servcio "
+						. "numero ". $orden_de_servicio->getIdOrdenDeServicio() . " "
+						. "referente a " . $servicio->getNombreServicio(). " "
+						. "esta siendo procesada y usted puede revisar su estatus en "
+						. "cualquier momento mediante nuestra pagina web en: \n\n"
+						. "http://pos2.labs2.caffeina.mx/front_ends/" . INSTANCE_TOKEN . "/?from=email" ;
+
+
+				$destinatario = $cliente->getCorreoElectronico();
+
+				$titulo = "Su orden de servicio ";
+
+				POSController::EnviarMail(		$cuerpo, $destinatario, $titulo );
+			}
 
             return array( "id_orden" => (int)$orden_de_servicio->getIdOrdenDeServicio() );
             

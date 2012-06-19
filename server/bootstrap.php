@@ -308,7 +308,11 @@
 	# *******************************
 	
 	$POS_CONFIG["INSTANCE_CONN"] = null;
+
 	define("IID", $rs["instance_id"]);
+	define("INSTANCE_ID", $rs["instance_id"]);
+	define("INSTANCE_TOKEN", $_GET["_instance_"]);
+
 	try{
 
 	    $POS_CONFIG["INSTANCE_CONN"] = ADONewConnection($rs["db_driver"]);

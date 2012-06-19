@@ -1049,9 +1049,12 @@ require_once("interfaces/Sucursales.interface.php");
             $venta->setCancelada(0);
             $venta->setTipoDePago($tipo_pago);
             $venta->setFecha(time());
+
             DAO::transBegin();
+
             try
             {
+
                 //Si la venta es de contado, se verifica el tipo de pago para realizar modificaciones
                 if($tipo_venta==="contado")
                 {   
@@ -1241,7 +1244,17 @@ require_once("interfaces/Sucursales.interface.php");
                         
                         //Se descuentan los productos especificados de los almacenes.
 						
-                        self::DescontarDeAlmacenes($d_producto, $id_sucursal );
+						try{
+	                        self::DescontarDeAlmacenes($d_producto, $id_sucursal );							
+
+						}catch(BusinessLogicException $ble){
+							throw $ble;
+
+						}catch( Exception $e){
+							Logger::error($e);
+				
+						}
+
                     }
                 }/* Fin de if para detalle_producto */
                 
@@ -1303,6 +1316,9 @@ require_once("interfaces/Sucursales.interface.php");
                     VentaEmpresaDAO::save($venta_empresa);
                 }
             } /* Fin del try */
+            catch(BusinessLogicException $ble){
+				throw $ble;
+			}
             catch(Exception $e)
             {
                 DAO::transRollback();
@@ -1450,9 +1466,15 @@ require_once("interfaces/Sucursales.interface.php");
 	        VentaProducto $detalle_producto,
             $id_sucursal	
 		){
+
+
+			Logger::log(" ===== Descontando de almacenes ====== ");
+
 			//Validemos la sucursal
 			$sucursal = SucursalDAO::GetByPK($id_sucursal);
-			
+
+			Logger::log("sucursal=" . $id_sucursal);
+
 			if(is_null($sucursal)){
 				throw new InvalidDataException("Esta sucursal no existe");
 			}
@@ -1467,8 +1489,9 @@ require_once("interfaces/Sucursales.interface.php");
 			//buscar sus lotes y buscar que exista el proudcto en esos lotes
 			$almacenes = AlmacenDAO::search(new Almacen(array("id_sucursal" => $id_sucursal)));
 			
+
 			if(sizeof($almacenes) == 0 ){
-				throw new InvalidDataException("Eesta scuursal no tien almacenes");
+				throw new InvalidDataException("Esta scursal no tiene almacenes");
 			}
 
 			
@@ -1480,13 +1503,15 @@ require_once("interfaces/Sucursales.interface.php");
 			$total_existencias = 0;
 			
 			$a_descontar = array();
+
 			$necesito = $detalle_producto->getCantidad();
 			
-			Logger::log("Necesito " . $necesito);
+			Logger::log("Necesito " . $necesito . " del producto pid=" . $detalle_producto->getIdProducto());
 			
 			foreach($existencias as $e){
 				
-				Logger::log("en el lote ".$e["id_lote"]." tengo " . $e["cantidad"]);
+				Logger::log("En el lote idlote=".$e["id_lote"]." tengo c=" . $e["cantidad"]);
+
 				$total_existencias += $e["cantidad"];				
 
 				if( ($necesito - $e["cantidad"]) < 0 ){
@@ -1515,12 +1540,13 @@ require_once("interfaces/Sucursales.interface.php");
 
 
 			if($total_existencias < $detalle_producto->getCantidad()){
-				throw new BusinessLogicException("No hay suficientes existencias en los lotes de esta sucursal.");
+				$_p = ProductoDAO::getByPK( $detalle_producto->getIdProducto() );
+				throw new BusinessLogicException("No hay suficientes existencias  del producto ".$_p->getCodigoProducto(). " en los almacenes de esta sucursal.");
 			}
 
 
 			for ($i=0; $i < sizeof($a_descontar); $i++) { 
-				Logger::log("desonctando ". $a_descontar[$i]["cantidad"] ." de lote " . $a_descontar[$i]["id_lote"]);
+				Logger::log("Descontando ". $a_descontar[$i]["cantidad"] ." de lote  id_lote=" . $a_descontar[$i]["id_lote"]);
 				
 				AlmacenesController::SalidaLote(
 					/*id_lote*/ 
@@ -1542,7 +1568,7 @@ require_once("interfaces/Sucursales.interface.php");
 			//}
 
 			
-			
+			Logger::log(" ===== Descontando de almacenes [OK] ====== ");
 
 		}
 		

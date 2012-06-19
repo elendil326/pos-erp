@@ -274,7 +274,11 @@ require_once("interfaces/POS.interface.php");
 		$emisor = "no-reply@caffeina.mx"
 	)
     {
-	
+			if(!is_file("Mail.php"))	{
+				Logger::error("no esta isntalado mail.php ");
+				return;
+			}
+
 			@require_once "Mail.php";
 			
 			

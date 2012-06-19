@@ -749,7 +749,11 @@ require_once("interfaces/Ventas.interface.php");
 							$tipo_de_pago
 						);
 
-            }catch(Exception $e){
+            }catch(BusinessLogicException $ble){
+				Logger::error("**************************");
+				throw $ble;
+
+			}catch(Exception $e){
 	
                 Logger::error("No se pudo crear la nueva venta: ".$e);
 
