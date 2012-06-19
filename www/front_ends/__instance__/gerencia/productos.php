@@ -15,6 +15,7 @@
 		$cols = array(
 			"codigo_producto" 	=> "Codigo producto",
 			"nombre_producto"	=> "Nombre Producto",
+			"id_unidad" 		=> "Existencias",
 			"precio" 			=> "Precio"
 		);
 		
@@ -32,18 +33,52 @@
 			return FormatMoney($precio);
 			
 		}
+	
+		function calcExistencias($id_unidad, $row){
+			$unidadM = UnidadMedidaDAO::getByPK($id_unidad);
+
+			if(is_null($unidadM)){
+				return ProductoDAO::ExistenciasTotales( $row["id_producto"] );
+			}
+
+			return ProductoDAO::ExistenciasTotales( $row["id_producto"] )
+						. " " . $unidadM->getAbreviacion();
+		}
+
 		$tabla->addColRender( "precio", "precio" );
-                
+        $tabla->addColRender( "id_unidad" , "calcExistencias");
 		$tabla->addOnClick( "id_producto", "(function(a){ window.location = 'productos.ver.php?pid=' + a; })" );
 		
 			
 		$page->addComponent( $tabla );
+
+
+
+
+
+
+
+
+
+
+
 		
 		$page->nextTab("Categorias");
 		
 		
 		
 		
+
+
+
+
+
+
+
+
+
+
+
 		
 		
 		

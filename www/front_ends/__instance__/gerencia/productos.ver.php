@@ -25,17 +25,21 @@
 
 
 
-
+	$nexistencias = ProductoDAO::ExistenciasTotales( $este_producto->getIdProducto() );
 	$precios = TarifasController::_CalcularTarifa( $este_producto, "venta" );
 
-	$precios_html = "<table><tr><td colspan=2><h3>Tarifas</h3></td></tr>	";
+	$html = "<table><tr><td colspan=2><h3>Tarifas</h3></td></tr>	";
+
 	for ($i=0; $i < sizeof($precios); $i++) { 
-		$precios_html .= "<tr><td>".$precios[$i]["descripcion"] . "</td><td>" . FormatMoney($precios[$i]["precio"]) . "</td>";
+		$html .= "<tr><td>".$precios[$i]["descripcion"] . "</td><td>" . FormatMoney($precios[$i]["precio"]) . "</td>";
 	}
-	$precios_html .= "</table>";
+
+	$html .= "<tr><td colspan=2><h3>Existencias</h3></td></tr><tr><td> ". $nexistencias." </td></tr></tr>";
+
+	$html .= "</table>";
 
 
-
+	
 
 
 
@@ -54,7 +58,7 @@
 	        <td><h2>" . $este_producto->getNombreProducto() . "</h2></td>
 	    </tr>
 	    <tr>
-	        <td>" .  $precios_html . "</td>
+	        <td>" .  $html . "</td>
 	    </tr>
 	</table>
 	<script type=\"text/javascript\">

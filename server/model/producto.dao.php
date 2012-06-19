@@ -59,7 +59,18 @@ class ProductoDAO extends ProductoDAOBase
 	}
   
 
+	public static function ExistenciasTotales($id_producto){
 
+		$lotes = LoteProductoDAO::search( new LoteProducto( array( "id_producto" => $id_producto ) ) );
+		
+		$total = 0;
+
+		foreach($lotes as $l ){
+			$total += $l->getCantidad();
+		}
+
+		return $total;
+	}
 
 
 	public static function buscarProductoEnSucursal($id_producto, $id_sucursal){
