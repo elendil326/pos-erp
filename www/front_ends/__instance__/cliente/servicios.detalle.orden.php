@@ -6,7 +6,7 @@ define("BYPASS_INSTANCE_CHECK", false);
 
 require_once("../../../../server/bootstrap.php");
 
-$page = new ClienteComponentPage();
+$page = new ClienteTabPage();
 
 
 //
@@ -46,6 +46,8 @@ $page->addComponent(new TitleComponent("Orden de servicio " . $_GET["oid"] . " p
 //
 // Menu de opciones
 // 
+
+$page->nextTab("General");
 
 $menu = new MenuComponent();
 
@@ -112,12 +114,14 @@ $form->hideField(array(
 
 
 
+$form->setCaption("id_usuario", "Agente de venta");
 
-
-$form->setCaption("id_usuario_asignado", "Agente asignado");
+$form->setCaption("id_usuario_asignado", "Tecnico asignado");
 
 $form->setCaption("id_servicio", "Servicio");
+
 //$form->createComboBoxJoinDistintName("id_usuario_venta", "id_usuario", "nombre", UsuarioDAO::getAll(), $esta_orden->getIdUsuarioVenta());
+
 $page->addComponent($form);
 
 
@@ -205,14 +209,14 @@ $form->hideField( array(
 
 $form->sendHidden		( "id_orden_de_servicio" );
 $form->addApiCall		( "api/servicios/orden/seguimiento/" );
-$form->setPlaceholder	( "estado", "Escriba aqui" );
+$form->setPlaceholder		( "estado", "Escriba aqui" );
 $form->setType			( "estado" , "textarea" );
-$form->onApiCallSuccess	( "comment_success" );
+$form->onApiCallSuccess		( "comment_success" );
 $form->renameField		( array( "estado" => "nota" ) );
 $page->addComponent		( $form ); 
-$page->partialRender	( );
+//$page->partialRender	( );
 
-?>
+$js = '
 <script type="text/javascript" charset="utf-8">
 
 	var comment_success =  function( a, b, c ){
@@ -245,5 +249,20 @@ $page->partialRender	( );
 
 	}
 </script>
-<?php
+';
+$page->addComponent($js);
+
+$page->nextTab("Camara");
+
+
+$v_html = '
+	<div class="canvas" style="width:648px">
+		<!-- http://www.axis.com/techsup/cam_servers/dev/cam_http_api_2.php#api_blocks_image_video_mjpg_video -->
+		<!--<img src="http://bass-celaya.no-ip.org/axis-cgi/jpg/image.cgi">-->
+		<img src="http://bass-celaya.no-ip.org/mjpg/1/video.mjpg">
+		
+	</div>';
+
+$page->addComponent($v_html);
+
 $page->render();

@@ -5,9 +5,10 @@ class ClienteComponentPage extends PosComponentPage{
 
 	private $main_menu_json;
 
-	function __construct( $title = "Gerencia"){
+	function __construct( $title = "Clientes"){
 		
 		$file = $_SERVER["PHP_SELF"];
+
 		Logger::log($file);
 		
 		parent::__construct( $title );

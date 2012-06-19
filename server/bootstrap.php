@@ -165,7 +165,7 @@
 	
 	require_once("libs/gui/BannerComponent.php");		
 	require_once("libs/gui/ClienteSelectorComponent.php");	
-	
+	require_once("libs/gui/ClienteTabPage.php");	
 
 
 
