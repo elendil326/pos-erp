@@ -84,12 +84,16 @@
 		
 		$page->nextTab("Unidades");
 		
-		$u = ProductosController::BuscarUnidadUdm();
+		
+		$page->addComponent(new TitleComponent("Lista de unidades existentes", 2));
+
+		$u = ProductosController::BuscarUnidadUdm(   );
 		
 		$tUnidades = new TableComponent(array(
-			"abreviacion" =>"Nombre",
 			"id_categoria_unidad_medida" =>"Categoria",
-			"activa" =>"activa"
+			"abreviacion" =>"Nombre",
+			"factor_conversion" => "Factor de conversion",
+			"activa" =>"Activa"
 		),$u["resultados"]);
 		
 		function nombreRender($v, $obj){
@@ -101,6 +105,30 @@
 			return $c->getDescripcion();
 		}
 
+		function uFactorConversion($fConversion, $obj){
+			if($fConversion == 1) return "-";
+
+			//de lo contrario, buscar a que categoria pertenece
+			//y poner $fConversion . unidad_referencia
+			$ref = UnidadMedidaDAO::search( new UnidadMedida( array(
+					"id_categoria_unidad_medida" => $obj["id_categoria_unidad_medida"],
+					"factor_conversion" => 1
+				)) );
+
+			if(sizeof($ref) == 0){
+				return "Error. No hay unidad ref.";
+			}
+
+			if(sizeof($ref) > 1){
+				return "Error. Hay mas de una ref.";
+			}
+
+			return $fConversion . " " . $ref[0]->getDescripcion();
+
+		}
+
+
+		$tUnidades->addColRender("factor_conversion", "uFactorConversion");		
 		$tUnidades->addColRender("id_categoria_unidad_medida", "uCatRender");		
 		$tUnidades->addColRender("abreviacion", "nombreRender");
 		$page->addcomponent($tUnidades);
@@ -110,7 +138,7 @@
 
 
 
-		$page->addComponent(new TitleComponent("Nueva unidad de medida", 3));
+		$page->addComponent(new TitleComponent("Nueva unidad de medida", 2));
 
 
 
@@ -121,7 +149,7 @@
 		$nudmf->addApiCall("api/producto/udm/unidad/nueva", "POST");
 		$nudmf->createComboBoxJoin("id_categoria_unidad_medida", "descripcion", CategoriaUnidadMedidaDAO::getAll());
 		$nudmf->createComboBoxJoin(	"tipo_unidad_medida", "desc", array( "desc" => "No Referencia" ) );
-		$nudmf->createComboBoxJoin(	"activa", null,  array( "si", "no" ) );
+		$nudmf->createComboBoxJoin(	"activa", null,  array( "Si", "No" ) );
 		$nudmf->setCaption("id_categoria_unidad_medida", "Categoria");
 		$nudmf->makeObligatory(array("abreviacion", "descripcion", "factor_conversion", "id_categoria_unidad_medida", "tipo_unidad_medida"));
 		$page->addComponent( $nudmf );
@@ -130,10 +158,12 @@
 		
 		
 		
-		$page->addComponent(new TitleComponent("Nueva categoria de unidad de medida", 3));
+		$page->addComponent(new TitleComponent("Nueva categoria de unidad de medida", 2));
 		$ncudmf = new DAOFormComponent(new CategoriaUnidadMedida());
 		$ncudmf->hideField(array("id_categoria_unidad_medida"));
+		$ncudmf->createComboBoxJoin(	"activa", null,  array( "Si", "No" ) );
 		$ncudmf->addApiCall("api/producto/udm/categoria/nueva", "POST");
+		$ncudmf->makeObligatory(array("descripcion"));
 		$page->addComponent( $ncudmf );
 		
 		

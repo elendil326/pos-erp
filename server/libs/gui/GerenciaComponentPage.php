@@ -190,36 +190,20 @@ class GerenciaComponentPage extends PosComponentPage{
 		            "url": "productos.php",
 		            "children": [
 		                {
-		                    "title": "Lista categoria",
-		                    "url": "productos.lista.categoria.php"
-		                },
-		                {
-		                    "title": "Nueva categoria",
-		                    "url": "productos.nueva.categoria.php"
-		                },
-		                {
 		                    "title": "Lista de productos",
-		                    "url": "productos.lista.php"
+		                    "url": "productos.php#Lista"
+		                },
+		                {
+		                    "title": "Categoria",
+		                    "url": "productos.php#Categorias"
 		                },
 		                {
 		                    "title": "Nuevo producto",
 		                    "url": "productos.nuevo.php"
 		                },		             
 		                {
-		                    "title": "Lista Unidades de Medida",
-		                    "url": "productos.lista.unidad_medida.php"
-		                },		          
-		                {
-		                    "title": "Nueva Unidad Medida",
-		                    "url": "productos.nueva.unidad_medida.php"
-		                },
-						{
-		                    "title": "Lista Categorias Unidades de Medida",
-		                    "url": "productos.lista.categoria_unidad_medida.php"
-		                },	
-		                {
-		                    "title": "Nueva Categoria Unidad Medida",
-		                    "url": "productos.nueva.categoria_unidad_medida.php"
+		                    "title": "Unidades",
+		                    "url": "productos.php#Unidades"
 		                }
 		            ]
 		        },

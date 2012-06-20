@@ -734,7 +734,7 @@ class ProductosController extends ValidacionesController implements IProductos
 		$precio_de_venta = null
 	)
     {
-        Logger::log("Creando nuevo producto `$codigo_producto` ....");
+        Logger::log("======= Creando nuevo producto `$codigo_producto` ==== ;");
         
         //valida los parametros recibidos
         /*$validar = self::validarParametrosProducto(null, $compra_en_mostrador, $metodo_costeo, $activo, $codigo_producto, $nombre_producto, $garantia, $costo_estandar, $id_unidad_compra, $control_de_existencia, $descripcion_producto, $foto_del_producto, $costo_extra_almacen = null, $codigo_de_barras, $peso_producto = null, $id_unidad, $precio_de_venta);
@@ -748,6 +748,7 @@ class ProductosController extends ValidacionesController implements IProductos
         
 		//buscar otro producto con el mismo codigo de producto
 		$search = ProductoDAO::search(new Producto( array( "codigo_producto" => $codigo_producto ) ));
+
 		
 		if(sizeof($search) > 0){
 			throw new BusinessLogicException("Ya hay un producto con ese codigo de producto");
@@ -783,7 +784,8 @@ class ProductosController extends ValidacionesController implements IProductos
             "codigo_de_barras" => trim($codigo_de_barras),
             //"peso_producto" => $peso_producto,
             "id_unidad" => $id_unidad,
-            "precio" => $precio_de_venta
+            "precio" => $precio_de_venta,
+            "id_unidad_compra" => $id_unidad_compra
         ));
         
         DAO::transBegin();
@@ -865,16 +867,21 @@ class ProductosController extends ValidacionesController implements IProductos
         }
         catch (Exception $e) {
             DAO::transRollback();
+
             Logger::error("No se pudo guardar el nuevo producto: " . $e);
+
             if ($e->getCode() == 901)
                 throw new BusinessLogicException("No se pudo guardar el nuevo producto: " . $e->getMessage(), 901);
+
             throw new BusinessLogicException("No se pudo guardar el nuevo producto " . $e->getMessage(), 901);
         }
+
         DAO::transEnd();
+        
         Logger::log("Producto creado exitosamente, id=".$producto->getIdProducto());
-        return array(
-            "id_producto" => (int)$producto->getIdProducto()
-        );
+
+        return array( "id_producto" => (int)$producto->getIdProducto() );
+        
     }
     
     /**

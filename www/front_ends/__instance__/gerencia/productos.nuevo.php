@@ -30,18 +30,22 @@
 	    "codigo_producto",
 	    "metodo_costeo",
 	    "activo",
-	    "id_unidad_compra"
+	    "id_unidad_compra",
+	    "id_unidad"
 	));
 
-	$form->createComboBoxJoinDistintName("id_unidad_compra","id_unidad_medida" ,"abreviacion", UnidadMedidaDAO::search(new UnidadMedida(array(
+	$form->createComboBoxJoinDistintName("id_unidad_compra","id_unidad_medida" ,"descripcion", UnidadMedidaDAO::search(new UnidadMedida(array(
 	    "activa" => 1
 	))));
 	
+	$form->setCaption("id_unidad_compra", "Unidad de compra");
 	
-	$form->createComboBoxJoinDistintName("id_unidad", "id_unidad_medida", "abreviacion", UnidadMedidaDAO::search(new UnidadMedida(array(
+	$form->createComboBoxJoinDistintName("id_unidad", "id_unidad_medida", "descripcion", UnidadMedidaDAO::search(new UnidadMedida(array(
 	    "activa" => 1
 	))));
 	
+	$form->setCaption("id_unidad", "Unidades de este producto");
+
 	$form->createComboBoxJoin("metodo_costeo", "metodo_costeo", array(
 	    "precio",
 	    "costo"

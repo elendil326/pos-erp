@@ -1736,7 +1736,7 @@ CREATE TABLE IF NOT EXISTS `unidad_medida` (
   `id_categoria_unidad_medida` int(11) NOT NULL COMMENT 'Id de la categoria de unidad de medidad a la que pertenece',
   `descripcion` varchar(50) NOT NULL COMMENT 'Descripcion de la nueva unidad de medida',
   `abreviacion` varchar(50) NOT NULL COMMENT 'Descripcion corta de la nueva unidad de medida',
-  `tipo_unidad_medida` enum('Referencia UdM para esta categoria','Mayor que la UdM de referencia','Menor que la UdM de referencia') NOT NULL COMMENT 'Indica que tipo de unidad de medida',
+  `tipo_unidad_medida` enum('referencia','no-referencia') NOT NULL COMMENT 'Indica que tipo de unidad de medida',
   `factor_conversion` float NOT NULL COMMENT 'Numero de veces que es mas grande esta UdM que la de referencia',
   `activa` tinyint(1) NOT NULL,
   PRIMARY KEY (`id_unidad_medida`),

@@ -63,3 +63,21 @@ INSERT INTO `version` (`id_version`, `id_tarifa`, `nombre`, `activa`, `fecha_ini
 (1, 1, 'none', 1, NULL, NULL, 1);
 
 INSERT INTO `moneda` (`id_moneda`, `nombre`, `simbolo`, `activa`) VALUES ('1', 'Peso', 'MXN', '1');
+
+
+INSERT INTO `categoria_unidad_medida` (`id_categoria_unidad_medida`, `descripcion`, `activa`) VALUES
+(1, 'Longitud', 1),
+(2, 'Masa', 1),
+(3, 'Tiempo', 1),
+(4, 'Unidad', 1);
+
+INSERT INTO `unidad_medida` (`id_unidad_medida`, `id_categoria_unidad_medida`, `descripcion`, `abreviacion`, `tipo_unidad_medida`, `factor_conversion`, `activa`) VALUES
+(1, 1, 'METRO', 'M', '', 1, 1),
+(2, 1, 'CENTIMETRO', 'CM', '', 0.01, 1),
+(3, 1, 'MILIMETRO', 'MM', '', 0.001, 1),
+(4, 2, 'KILOGRAMO', 'KG', '', 1, 1),
+(5, 2, 'GRAMO', 'G', '', 0.001, 1),
+(6, 4, 'UNIDAD', 'U', '', 1, 1),
+(7, 4, 'MILLAR', 'MIL', '', 0.001, 1);
+
+
