@@ -17,6 +17,9 @@ class ImpresionesController {
 	    return ( $medida / (2.54) ) * $resolucion;
 	}
 
+
+
+
 	private static function readableText($raw) {
 	/*	    $foo = explode(" ", $bar);
 	    $end = "";
@@ -24,7 +27,8 @@ class ImpresionesController {
 	        $end .= ucfirst(strtolower(trim($i))) . " ";
 	    }
 		*/
-	    return (html_entity_decode($raw));
+	    return (html_entity_decode($raw). " ");
+		//return $raw;
 	}
 
 
@@ -153,7 +157,8 @@ class ImpresionesController {
 		 self::roundRect($pdf, self::puntos_cm(2), self::puntos_cm(5.4), self::puntos_cm(16.2), self::puntos_cm(3.05));
 		
 		
-		$qr_file_name = self::getQrCodeFromGoogle("http://pos2.labs2.caffeina.mx");		
+		$qr_file_name = self::getQrCodeFromGoogle("http://pos2.labs2.caffeina.mx/front_ends/");		
+
 		$pdf->addJpegFromFile("../../../../static_content/qr_codes/" . $qr_file_name, 
 				self::puntos_cm(2), 
 				self::puntos_cm(2.45),
@@ -400,6 +405,8 @@ class ImpresionesController {
 	    $opciones_tabla['rowGap'] = 3;
 	    $opciones_tabla['colGap'] = 3;
 
+
+		$f = date("d/m/y", $ventaDao->getFecha()) . " " . date("H:i:s", $ventaDao->getFecha());
 	    
 		if($ventaDao->getEsCotizacion()){
 			$datos = array(
@@ -410,7 +417,7 @@ class ImpresionesController {
 		        array("col" =>  "" ),
 			
 		        array("col" => "<b>Fecha de venta</b>"),
-		        array("col" => $ventaDao->getFecha()),
+		        array("col" => $f),
 
 		        array("col" => "<b>Agente que cotizo</b>"),
 		        array("col" => self::readableText(  $agenteDao->getNombre() ))
@@ -422,11 +429,11 @@ class ImpresionesController {
 		        array("col" => "<b>Venta</b>"),
 		        array("col" =>  $ventaDao->getIdVenta()),
 
-		        array("col" => "<b>Numero de orden</b>"),
+		        array("col" => "<b></b>"),
 		        array("col" =>  "" ),
 			
 		        array("col" => "<b>Fecha de venta</b>"),
-		        array("col" => $ventaDao->getFecha()),
+		        array("col" => $f),
 
 		        array("col" => "<b>Agente de venta</b>"),
 		        array("col" => self::readableText(  $agenteDao->getNombre() ))
