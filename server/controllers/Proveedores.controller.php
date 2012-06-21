@@ -613,6 +613,10 @@ require_once("interfaces/Proveedores.interface.php");
                     $limite_credito,null,$direccion_web,$representante_legal,$retenciones,$rfc,null,null,$telefono_personal1,$telefono_personal2,
                     $tiempo_entrega);
             }
+            catch(BusinessLogicException $ble){
+                //propagate
+                throw $ble;
+            }
             catch(Exception $e)
             {
                 Logger::error("No se pudo crear al nuevo proveedor: ".$e);

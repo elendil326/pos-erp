@@ -47,7 +47,8 @@ INSERT INTO `rol` (`id_rol`, `nombre`, `descripcion`, `salario`, `id_tarifa_comp
 
 
 INSERT INTO `tipo_almacen` (`id_tipo_almacen`, `descripcion`) VALUES
-(2, 'Consignacion');
+(2, 'CONSIGNACION'),
+(3, 'GENERAL');
 
 INSERT INTO `tarifa` (`id_tarifa`, `nombre`, `tipo_tarifa`, `activa`, `id_moneda`, `default`, `id_version_default`, `id_version_activa`) VALUES
 (1, 'none', 'venta', 1, 1, 1, NULL, 1);

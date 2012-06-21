@@ -1036,19 +1036,37 @@ Creo que este metodo tiene que estar bajo sucursal.
 
             try{
 
+                $_p = ProductoDAO::getByPK($productos[$i]["id_producto"]);
                 $lp = LoteProductoDAO::getByPK( $id_lote, $productos[$i]["id_producto"] );
 
                 if(!is_null($lp)){
                     Logger::log("Este producto ya existia en este lote");
-                    $lp->setCantidad( $lp->getCantidad() +  $productos[$i]["cantidad"]);
+
+                    //revisemos si es de la misma unidad
+                    if($lp->getIdUnidad() == $_p->getIdUnidad()){
+                        //es igual, solo hay que sumar
+                        $lp->setCantidad( $lp->getCantidad() +  $productos[$i]["cantidad"]);    
+
+                    }else{
+                        //no es igual, hay que convertir
+                        $r = UnidadMedidaDAO::convertir($_p->getIdUnidad(), $lp->getIdUnidad(), $productos[$i]["cantidad"] );
+                        $lp->setCantidad( $lp->getCantidad() +  $r  );    
+                    }
+                    
 
                 }else{
+
                     Logger::log("primera vez que se pone este producto en este lote");
+
+                   
+
+                    
+
                     $lp = new LoteProducto( array(
                         "id_lote" => $id_lote,
                         "id_producto" => $productos[$i]["id_producto"],
                         "cantidad" => $productos[$i]["cantidad"],
-                        "id_unidad" => 1
+                        "id_unidad" => $_p->getIdUnidad()
                     ));
                 }
                 
@@ -1058,7 +1076,7 @@ Creo que este metodo tiene que estar bajo sucursal.
                 LoteEntradaProductoDAO::save(new LoteEntradaProducto(array(
                         "id_lote_entrada" => $_lote->getIdLoteEntrada(),
                         "id_producto"   => $productos[$i]["id_producto"],
-                        "id_unidad" => 1,
+                        "id_unidad" => $_p->getIdUnidad(),
                         "cantidad"  => $productos[$i]["cantidad"]
                     )));
 

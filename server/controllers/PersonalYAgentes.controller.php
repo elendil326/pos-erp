@@ -744,7 +744,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 {
                     Logger::error("El password (".$password.") no puede ser igual al codigo de usuario
                         (".$codigo_usuario.") ni al correo electronico (".$correo_electronico.")");
-                    throw new Exception("El password (".$password.") no puede ser igual al codigo de usuario
+                    throw new BusinessLogicException("El password (".$password.") no puede ser igual al codigo de usuario
                         (".$codigo_usuario.") ni al correo electronico (".$correo_electronico.")",901);
                 }
             }
@@ -910,6 +910,9 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                 {
                     PermisoUsuarioDAO::save( new PermisoUsuario( array( "id_usuario" => $usuario->getIdUsuario() , "id_permiso" => $permiso_rol->getIdPermiso() ) ) );
                 }
+            }
+            catch(BusinessLogicExceptoin $ble){
+              throw $ble;
             }
             catch(Exception $e)
             {

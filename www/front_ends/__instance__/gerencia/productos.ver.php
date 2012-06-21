@@ -89,7 +89,24 @@
 	// Forma de producto
 	// 
 	$este_producto->setCostoEstandar(FormatMoney($este_producto->getCostoEstandar()));
+
+	$um = UnidadMedidaDAO::getByPK($este_producto->getIdUnidadCompra(  ) );
+	if(!is_null($um)){
+		$este_producto->setIdUnidadCompra( $um->getDescripcion() ) ;	
+	}
+	
+	
+	$um = UnidadMedidaDAO::getByPK($este_producto->getIdUnidad(  ));
+	if(!is_null($um)){
+		$este_producto->setIdUnidad( $um->getDescripcion() ) ;	
+	}
+
+	//$form->createComboBoxJoinDistintName("id_unidad_compra","id_unidad_medida" ,"descripcion", UnidadMedidaDAO::getAll(), $este_producto->getIdUnidadCompra());
+
+	//$form->createComboBoxJoinDistintName("id_unidad", "id_unidad_medida", "descripcion", UnidadMedidaDAO::getAll(), $este_producto->getIdUnidad());
+
 	$form = new DAOFormComponent($este_producto);
+
 	$form->setEditable(false);
 
 	$form->hideField(array(
@@ -97,15 +114,12 @@
 			"foto_del_producto",
 			"precio",
 			"control_de_existencia",
-			"activo"
+			"activo",
+			"compra_en_mostrador"
 		));
 
 	$form->setCaption("id_unidad", "Unidad de medida");
 	$form->setCaption("id_unidad_compra", "Unidad de medida al comprar");	
-	
-	$form->createComboBoxJoinDistintName("id_unidad_compra","id_unidad_medida" ,"descripcion", UnidadMedidaDAO::getAll(), $este_producto->getIdUnidadCompra());
-
-	$form->createComboBoxJoinDistintName("id_unidad", "id_unidad_medida", "descripcion", UnidadMedidaDAO::getAll(), $este_producto->getIdUnidad());
 
 	$page->addComponent($form);
 
@@ -143,11 +157,26 @@
 
 	$entrada_lote = new FormComponent(  );
 	$entrada_lote->addField("id_lote", "Lote", "combobox" );
-	$entrada_lote->createComboBoxJoin("id_lote", "id_lote", LoteDAO::getAll(   ) );
+
+	//$entrada_lote->createComboBoxJoin("id_lote", "id_lote", LoteDAO::getAll(   ) );
+	$entrada_lote->createComboBoxJoinDistintName("id_lote","id_lote" ,"folio", LoteDAO::getAll());
+	$entrada_lote->setHelp("id_lote", "Lote a donde se insertara este arrivo");
+
+
 	$entrada_lote->addField("cantidad", "Cantidad", "text");
+	$este_producto = ProductoDAO::GetByPK($_GET["pid"]);
+	$um = UnidadMedidaDAO::getByPK( $este_producto->getIdUnidad(  ) );
+	if(!is_null($um)){
+		$entrada_lote->setHelp("cantidad", "Cantidad en " .  $um->getDescripcion());
+	}else{
+		$entrada_lote->setHelp("cantidad", "Error!");	
+	}
+	
+
+	
 	$entrada_lote->addField("productos", "", "text", "\"   [ { \\\"id_producto\\\" : ". $_GET["pid"] .", \\\"cantidad\\\"    : 0 } ]   \"");
 	$entrada_lote->sendHidden("productos");
-	$entrada_lote->makeObligatory(array( "id_lote"));
+	$entrada_lote->makeObligatory(array( "id_lote", "cantidad"));
 	$entrada_lote->beforeSend("beforeSendNuevaEntrada");
 	$entrada_lote->addApiCall("api/almacen/lote/entrada", "POST");
 
