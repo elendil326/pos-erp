@@ -208,6 +208,7 @@ class SesionController implements ISesion{
 				"login_succesful" => true,
 				"siguiente_url" => $next_url
 			);
+
 	}
   
 
@@ -296,15 +297,30 @@ class SesionController implements ISesion{
 			return true;
 		}
 		
-		//Logger::log("getting session mananger");
-		$sm = SessionManager::getInstance();
-		
-		$auth_token = $sm->GetCookie("at");
+
+		$auth_token = null;
+
+
+		if(isset($_GET["at"]) ){
+			$auth_token =$_GET["at"];
+
+		} else if(isset($_POST["at"])){
+			$auth_token =$_POST["at"];
+
+		} else {
+			$sm = SessionManager::getInstance();
+			$auth_token = $sm->GetCookie("at");
+
+		}
+
+
+
 		
 		if( is_null($auth_token) ) {
-			//Logger::log("there is no auth token in the cookie");
+			Logger::log("there is no auth token in the cookie");
 			self::$_is_logged_in = false;
 			return false;
+
 		}
 		
 		////Logger::log("There is a session token in the cookie, lets test it.");
@@ -328,18 +344,14 @@ class SesionController implements ISesion{
 	
 
 
-	private static function login($auth_token, $user_id, $rol_id ){
-		//Logger::log("setting cookies");
+	private static function login( $auth_token, $user_id, $rol_id ){
 		
 		if(headers_sent()){
-			//Logger::warn("Headers already sent while doing login (cookies).");
 			return;
 		}
 		
 		$sm = SessionManager::getInstance( );
-		
 
-		
 		$sm->SetCookie( 'at',  $auth_token, 	time()+60*60*24, '/' );
 		$sm->SetCookie( 'rid', $rol_id, 		time()+60*60*24, '/' );
 		$sm->SetCookie( 'uid', $user_id, 		time()+60*60*24, '/' );
@@ -358,20 +370,35 @@ class SesionController implements ISesion{
 		}		
 
 
-		$sm = SessionManager::getInstance();
-		$auth_token = $sm->GetCookie( "at" );
+		$auth_token = null;
+
+
+		if(isset($_GET["auth_token"]) ){
+			$auth_token =$_GET["auth_token"];
+
+		} else if(isset($_POST["auth_token"])){
+			$auth_token =$_POST["auth_token"];
+
+		} else if(isset($_GET["at"])){
+			$auth_token =$_GET["at"];
+
+		} else if(isset($_POST["at"])){
+			$auth_token =$_POST["at"];
+
+		} else {
+			$sm = SessionManager::getInstance();
+			$auth_token = $sm->GetCookie("at");
+
+		}
 		
 		self::$_current_user = null;
 		
-		//Logger::log("getCurrentUser()");
-		
-		//there is no authtoken cookie
+				
 		if(!is_null($auth_token)){
-			//Logger::log("cookie");			
 			self::$_current_user = SesionDAO::getUserByAuthToken( $auth_token );	
 		}
 		
-
+/*
 		//there is authtoken in the POST message
 		if( isset($_POST["at"]) && !is_null($_POST["at"]) ){
 			//Logger::log("post");
@@ -383,7 +410,8 @@ class SesionController implements ISesion{
 			//Logger::log("get");
 			self::$_current_user = SesionDAO::getUserByAuthToken( $_GET["at"] );
 		}
-		
+	
+*/	
 		return self::$_current_user;
 
 			
