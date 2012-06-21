@@ -737,13 +737,29 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
 							) );
 							
 						LoteProductoDAO::save ( $loteProducto);
-											
+										
 					}else{
 						//ya existe, sumar
 						
-						//Aqui falta revisar que las unidades sean las mismas
-						Logger::warn("Aqui falta revisar que las unidades sean las mismas...");
-						$lp->setCantidad( $lp->getCantidad() + $p->cantidad );
+						
+						
+                        //revisemos si es de la misma unidad
+                        if($lp->getIdUnidad() == $p->id_unidad){
+                            //es igual, solo hay que sumar
+                            $lp->setCantidad( $lp->getCantidad() +  $p->id_unidad);    
+
+                        }else{
+                            //no es igual, hay que convertir
+
+
+                            $r = UnidadMedidaDAO::convertir($p->id_unidad, $lp->getIdUnidad(), $p->cantidad );
+                            $lp->setCantidad( $lp->getCantidad() +  $r  );    
+                        }
+
+
+						//$lp->setCantidad( $lp->getCantidad() + $p->cantidad );
+
+
 						LoteProductoDAO::save( $lp );
 						
 					}

@@ -54,7 +54,7 @@ public static function convertir( $id_unidad_desde,  $id_unidad_destino,  $canti
       $intermediate = $cantidad_desde * $uRef->getFactorConversion();
 
       //convertir a destino
-      $result = $intermediate * $uTo->getFactorConversion();
+      $result = $intermediate / $uTo->getFactorConversion();
 
       //regresar
       return $result;
