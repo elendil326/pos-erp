@@ -19,7 +19,8 @@
                         "activa"
 		 ));
 
-	
+	$form->createComboBoxJoin("id_categoria_padre", "nombre", ClasificacionProductoDAO::getAll());	
+
 	$form->addApiCall( "api/producto/categoria/nueva/" , "GET");
         $form->onApiCallSuccessRedirect("productos.lista.categoria.php");
 	

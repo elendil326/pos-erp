@@ -34,7 +34,7 @@
 						return "";
 
 					$cat = ClasificacionProductoDAO::getByPk($id_categoria_padre);
-                    return $cat->getNombre();
+                    return ($cat ==null)?"":$cat->getNombre();
                 }
                 
                 $tabla->addColRender("id_categoria_padre", "funcion_id_categoria_padre");

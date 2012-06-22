@@ -404,6 +404,14 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
             DAO::transBegin();
             try
             {
+				$com_prod = new CompraProducto();
+				$com_prod->setIdCompra($id_compra);
+				
+				$prods_compra = CompraProductoDAO::search($com_prod);
+				foreach($prods_compra as $p){
+					//De que almacen/inventario lo descuento? , del almacen de la empresa? como identifico el lote de entrada prod?
+				}
+				
                 CompraDAO::save($compra);
                 
                 //Si la compra fue a credito, se cancelan todos los abonos hechos al mismo y el dinero se queda a cuenta del usuario.

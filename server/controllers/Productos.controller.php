@@ -931,11 +931,13 @@ class ProductosController extends ValidacionesController implements IProductos
                 array_push($id_productos, self::Nuevo( 
 						1, 
 						$producto["codigo_producto"],
-						$producto["compra_en_mostrador"], 
-						$producto["costo_estandar"],
-						null,
-						"costo",
-						$producto["nombre_producto"]
+						$producto["compra_en_mostrador"],
+						null, // id_unidad_compra
+						$producto["metodo_costeo"],
+						$producto["nombre_producto"],
+						null, //codigo_barras
+						null, //control de existencia
+						$producto["costo_estandar"]
 						));
 
             } //$productos as $producto
