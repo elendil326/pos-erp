@@ -20,5 +20,21 @@ require_once("base/extra_params_estructura.vo.base.php");
   */
 class ExtraParamsEstructuraDAO extends ExtraParamsEstructuraDAOBase
 {
+  public static function getByTabla($tabla){
 
+      $sql = "SELECT * FROM extra_params_estructura WHERE ( tabla = ? ) LIMIT 1;";
+      $params = array(  $id_almacen );
+
+      global $conn;
+      $rs = $conn->Execute($sql, $params);
+
+      $ar = array();
+      foreach ($rs as $foo) {
+        $bar =  new ExtraParamsEstructura($foo);
+        array_push( $ar,$bar);
+      }
+      return $ar;
+      
+
+  }
 }

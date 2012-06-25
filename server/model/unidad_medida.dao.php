@@ -33,7 +33,7 @@ public static function convertir( $id_unidad_desde,  $id_unidad_destino,  $canti
 
       //verifiquemos que las dos unidades sean de la misma categoria
       if($uFrom->getIdCategoriaUnidadMedida() != $uTo->getIdCategoriaUnidadMedida()){
-        throw new BusinessLogicExpetion("No se pueden convertir entre diferentes categorias");
+        throw new BusinessLogicException("No se pueden convertir entre diferentes categorias");
       }
 
 

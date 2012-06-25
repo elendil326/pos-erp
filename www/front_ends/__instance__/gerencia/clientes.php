@@ -63,8 +63,13 @@
 		
 		
 		
-/*		$page->nextTab("Reporr");		
-*/			
+
+		$page->nextTab("Configuracion");
+
+		$page->addComponent(new TitleComponent("Columnas extra",2));
+
+		$epc = ExtraParamsEstructuraDAO::getByTabla("clientes");
+
 		$page->render();
 
 

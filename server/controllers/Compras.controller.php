@@ -589,7 +589,9 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
 			//validemos sucursal
 			$sucursal = null;
 			
-			if(!is_null($id_sucursal)){
+			if(!is_null($id_sucursal)
+                    && (strlen($id_sucursal) > 0)
+                ){
 				$sucursal = SucursalDAO::getByPK($id_sucursal);
 				
 				if(is_null($sucursal)){
@@ -805,9 +807,12 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
 					CompraProductoDAO::save ( $compraProducto);
 					
 				}catch(InvalidDataException $e){
+                    Logger::error($e);
+                    DAO::transRollback();
 					throw $e;
 					
 				}catch(exception $e){
+                    Logger::error($e);
 					DAO::transRollback();
 					throw new InvalidDatabaseOperationException($e);
 					
