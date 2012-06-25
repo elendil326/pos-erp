@@ -22,11 +22,17 @@ class ExtraParamsEstructuraDAO extends ExtraParamsEstructuraDAOBase
 {
   public static function getByTabla($tabla){
 
-      $sql = "SELECT * FROM extra_params_estructura WHERE ( tabla = ? ) LIMIT 1;";
-      $params = array(  $id_almacen );
+      $sql = "SELECT * FROM extra_params_estructuras WHERE ( tabla = ? ) LIMIT 1;";
+      $params = array(  $tabla );
 
       global $conn;
-      $rs = $conn->Execute($sql, $params);
+      try{
+        $rs = $conn->Execute($sql, $params);  
+      }catch(ADODB_Exception $ae){
+        Logger::error($ae);
+        return array();
+      }
+      
 
       $ar = array();
       foreach ($rs as $foo) {
