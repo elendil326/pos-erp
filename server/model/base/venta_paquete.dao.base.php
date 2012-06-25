@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link VentaPaquete }. 
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -40,26 +40,20 @@ abstract class VentaPaqueteDAOBase extends DAO
 	  *	Obtener {@link VentaPaquete} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link VentaPaquete} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link VentaPaquete Un objeto del tipo {@link VentaPaquete}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_venta, $id_paquete )
 	{
-		if(  is_null( $id_venta ) || is_null( $id_paquete )  ){ return NULL; }
-            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "VentaPaquete-" . $id_venta."-" . $id_paquete ))){
-                Logger::log("REDIS !");
-                return new VentaPaquete($obj);
-            }
 		$sql = "SELECT * FROM venta_paquete WHERE (id_venta = ? AND id_paquete = ? ) LIMIT 1;";
 		$params = array(  $id_venta, $id_paquete );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0) return NULL;
-		$foo = new VentaPaquete( $rs );
-		if(!is_null(self::$redisConection)) self::$redisConection->set(  "VentaPaquete-" . $id_venta."-" . $id_paquete, $foo );
-		return $foo;
+		if(count($rs)==0)return NULL;
+			$foo = new VentaPaquete( $rs );
+			return $foo;
 	}
 
 
@@ -93,7 +87,8 @@ abstract class VentaPaqueteDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new VentaPaquete($foo);
     		array_push( $allData, $bar);
-                if(!is_null(self::$redisConection)) self::$redisConection->set(  "VentaPaquete-" . $bar->getIdVenta()."-" . $bar->getIdPaquete(), $bar );
+			//id_venta
+			//id_paquete
 		}
 		return $allData;
 	}
@@ -164,7 +159,6 @@ abstract class VentaPaqueteDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new VentaPaquete($foo);
     		array_push( $ar,$bar);
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "VentaPaquete-" . $bar->getIdVenta()."-" . $bar->getIdPaquete(), $bar );
 		}
 		return $ar;
 	}
@@ -330,8 +324,7 @@ abstract class VentaPaqueteDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, $bar = new VentaPaquete($foo));
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "VentaPaquete-" . $bar->getIdVenta()."-" . $bar->getIdPaquete(), $bar );
+    		array_push( $ar, new VentaPaquete($foo));
 		}
 		return $ar;
 	}

@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link ImpuestoClasificacionProveedor }. 
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -40,26 +40,20 @@ abstract class ImpuestoClasificacionProveedorDAOBase extends DAO
 	  *	Obtener {@link ImpuestoClasificacionProveedor} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ImpuestoClasificacionProveedor} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ImpuestoClasificacionProveedor Un objeto del tipo {@link ImpuestoClasificacionProveedor}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_impuesto, $id_clasificacion_proveedor )
 	{
-		if(  is_null( $id_impuesto ) || is_null( $id_clasificacion_proveedor )  ){ return NULL; }
-            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "ImpuestoClasificacionProveedor-" . $id_impuesto."-" . $id_clasificacion_proveedor ))){
-                Logger::log("REDIS !");
-                return new ImpuestoClasificacionProveedor($obj);
-            }
 		$sql = "SELECT * FROM impuesto_clasificacion_proveedor WHERE (id_impuesto = ? AND id_clasificacion_proveedor = ? ) LIMIT 1;";
 		$params = array(  $id_impuesto, $id_clasificacion_proveedor );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0) return NULL;
-		$foo = new ImpuestoClasificacionProveedor( $rs );
-		if(!is_null(self::$redisConection)) self::$redisConection->set(  "ImpuestoClasificacionProveedor-" . $id_impuesto."-" . $id_clasificacion_proveedor, $foo );
-		return $foo;
+		if(count($rs)==0)return NULL;
+			$foo = new ImpuestoClasificacionProveedor( $rs );
+			return $foo;
 	}
 
 
@@ -93,7 +87,8 @@ abstract class ImpuestoClasificacionProveedorDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new ImpuestoClasificacionProveedor($foo);
     		array_push( $allData, $bar);
-                if(!is_null(self::$redisConection)) self::$redisConection->set(  "ImpuestoClasificacionProveedor-" . $bar->getIdImpuesto()."-" . $bar->getIdClasificacionProveedor(), $bar );
+			//id_impuesto
+			//id_clasificacion_proveedor
 		}
 		return $allData;
 	}
@@ -149,7 +144,6 @@ abstract class ImpuestoClasificacionProveedorDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new ImpuestoClasificacionProveedor($foo);
     		array_push( $ar,$bar);
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ImpuestoClasificacionProveedor-" . $bar->getIdImpuesto()."-" . $bar->getIdClasificacionProveedor(), $bar );
 		}
 		return $ar;
 	}
@@ -269,8 +263,7 @@ abstract class ImpuestoClasificacionProveedorDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, $bar = new ImpuestoClasificacionProveedor($foo));
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ImpuestoClasificacionProveedor-" . $bar->getIdImpuesto()."-" . $bar->getIdClasificacionProveedor(), $bar );
+    		array_push( $ar, new ImpuestoClasificacionProveedor($foo));
 		}
 		return $ar;
 	}

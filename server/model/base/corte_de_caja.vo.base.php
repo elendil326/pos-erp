@@ -2,7 +2,7 @@
 /** Value Object file for table corte_de_caja.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access public
   * @package docs
   * 
@@ -22,10 +22,6 @@ class CorteDeCaja extends VO
 	{ 
 		if(isset($data))
 		{
-                    if(is_string($data))
-                        $data = self::object_to_array(json_decode($data));
-
-
 			if( isset($data['id_corte_de_caja']) ){
 				$this->id_corte_de_caja = $data['id_corte_de_caja'];
 			}
@@ -134,7 +130,7 @@ class CorteDeCaja extends VO
 	/**
 	  * saldo_esperado
 	  * 
-	  * Saldo que se espera de acuerdo a las ventas realizadas apartir del Ãºltimo corte de caja o a la apertura de la misma<br>
+	  * Saldo que se espera de acuerdo a las ventas realizadas apartir del ÃƒÂºltimo corte de caja o a la apertura de la misma<br>
 	  * @access public
 	  * @var float
 	  */
@@ -143,7 +139,7 @@ class CorteDeCaja extends VO
 	/**
 	  * saldo_final
 	  * 
-	  * Saldo que se deja en caja despuÃ©s de realizar el corte<br>
+	  * Saldo que se deja en caja despuÃƒÂ©s de realizar el corte<br>
 	  * @access public
 	  * @var float
 	  */
@@ -300,7 +296,7 @@ class CorteDeCaja extends VO
 	/**
 	  * getSaldoEsperado
 	  * 
-	  * Get the <i>saldo_esperado</i> property for this object. Donde <i>saldo_esperado</i> es Saldo que se espera de acuerdo a las ventas realizadas apartir del Ãºltimo corte de caja o a la apertura de la misma
+	  * Get the <i>saldo_esperado</i> property for this object. Donde <i>saldo_esperado</i> es Saldo que se espera de acuerdo a las ventas realizadas apartir del ÃƒÂºltimo corte de caja o a la apertura de la misma
 	  * @return float
 	  */
 	final public function getSaldoEsperado()
@@ -311,7 +307,7 @@ class CorteDeCaja extends VO
 	/**
 	  * setSaldoEsperado( $saldo_esperado )
 	  * 
-	  * Set the <i>saldo_esperado</i> property for this object. Donde <i>saldo_esperado</i> es Saldo que se espera de acuerdo a las ventas realizadas apartir del Ãºltimo corte de caja o a la apertura de la misma.
+	  * Set the <i>saldo_esperado</i> property for this object. Donde <i>saldo_esperado</i> es Saldo que se espera de acuerdo a las ventas realizadas apartir del ÃƒÂºltimo corte de caja o a la apertura de la misma.
 	  * Una validacion basica se hara aqui para comprobar que <i>saldo_esperado</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
@@ -324,7 +320,7 @@ class CorteDeCaja extends VO
 	/**
 	  * getSaldoFinal
 	  * 
-	  * Get the <i>saldo_final</i> property for this object. Donde <i>saldo_final</i> es Saldo que se deja en caja despuÃ©s de realizar el corte
+	  * Get the <i>saldo_final</i> property for this object. Donde <i>saldo_final</i> es Saldo que se deja en caja despuÃƒÂ©s de realizar el corte
 	  * @return float
 	  */
 	final public function getSaldoFinal()
@@ -335,7 +331,7 @@ class CorteDeCaja extends VO
 	/**
 	  * setSaldoFinal( $saldo_final )
 	  * 
-	  * Set the <i>saldo_final</i> property for this object. Donde <i>saldo_final</i> es Saldo que se deja en caja despuÃ©s de realizar el corte.
+	  * Set the <i>saldo_final</i> property for this object. Donde <i>saldo_final</i> es Saldo que se deja en caja despuÃƒÂ©s de realizar el corte.
 	  * Una validacion basica se hara aqui para comprobar que <i>saldo_final</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float

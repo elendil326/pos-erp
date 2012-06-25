@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link Version }. 
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -40,26 +40,20 @@ abstract class VersionDAOBase extends DAO
 	  *	Obtener {@link Version} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Version} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Version Un objeto del tipo {@link Version}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_version )
 	{
-		if(  is_null( $id_version )  ){ return NULL; }
-            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "Version-" . $id_version ))){
-                Logger::log("REDIS !");
-                return new Version($obj);
-            }
 		$sql = "SELECT * FROM version WHERE (id_version = ? ) LIMIT 1;";
 		$params = array(  $id_version );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0) return NULL;
-		$foo = new Version( $rs );
-		if(!is_null(self::$redisConection)) self::$redisConection->set(  "Version-" . $id_version, $foo );
-		return $foo;
+		if(count($rs)==0)return NULL;
+			$foo = new Version( $rs );
+			return $foo;
 	}
 
 
@@ -93,7 +87,7 @@ abstract class VersionDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new Version($foo);
     		array_push( $allData, $bar);
-                if(!is_null(self::$redisConection)) self::$redisConection->set(  "Version-" . $bar->getIdVersion(), $bar );
+			//id_version
 		}
 		return $allData;
 	}
@@ -174,7 +168,6 @@ abstract class VersionDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Version($foo);
     		array_push( $ar,$bar);
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Version-" . $bar->getIdVersion(), $bar );
 		}
 		return $ar;
 	}
@@ -367,8 +360,7 @@ abstract class VersionDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, $bar = new Version($foo));
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Version-" . $bar->getIdVersion(), $bar );
+    		array_push( $ar, new Version($foo));
 		}
 		return $ar;
 	}

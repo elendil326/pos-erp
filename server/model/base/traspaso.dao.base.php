@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link Traspaso }. 
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -40,26 +40,20 @@ abstract class TraspasoDAOBase extends DAO
 	  *	Obtener {@link Traspaso} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Traspaso} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Traspaso Un objeto del tipo {@link Traspaso}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_traspaso )
 	{
-		if(  is_null( $id_traspaso )  ){ return NULL; }
-            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "Traspaso-" . $id_traspaso ))){
-                Logger::log("REDIS !");
-                return new Traspaso($obj);
-            }
 		$sql = "SELECT * FROM traspaso WHERE (id_traspaso = ? ) LIMIT 1;";
 		$params = array(  $id_traspaso );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0) return NULL;
-		$foo = new Traspaso( $rs );
-		if(!is_null(self::$redisConection)) self::$redisConection->set(  "Traspaso-" . $id_traspaso, $foo );
-		return $foo;
+		if(count($rs)==0)return NULL;
+			$foo = new Traspaso( $rs );
+			return $foo;
 	}
 
 
@@ -93,7 +87,7 @@ abstract class TraspasoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new Traspaso($foo);
     		array_push( $allData, $bar);
-                if(!is_null(self::$redisConection)) self::$redisConection->set(  "Traspaso-" . $bar->getIdTraspaso(), $bar );
+			//id_traspaso
 		}
 		return $allData;
 	}
@@ -199,7 +193,6 @@ abstract class TraspasoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Traspaso($foo);
     		array_push( $ar,$bar);
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Traspaso-" . $bar->getIdTraspaso(), $bar );
 		}
 		return $ar;
 	}
@@ -457,8 +450,7 @@ abstract class TraspasoDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, $bar = new Traspaso($foo));
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Traspaso-" . $bar->getIdTraspaso(), $bar );
+    		array_push( $ar, new Traspaso($foo));
 		}
 		return $ar;
 	}

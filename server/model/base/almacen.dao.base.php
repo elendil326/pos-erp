@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link Almacen }. 
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -40,26 +40,20 @@ abstract class AlmacenDAOBase extends DAO
 	  *	Obtener {@link Almacen} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Almacen} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Almacen Un objeto del tipo {@link Almacen}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_almacen )
 	{
-		if(  is_null( $id_almacen )  ){ return NULL; }
-            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "Almacen-" . $id_almacen ))){
-                Logger::log("REDIS !");
-                return new Almacen($obj);
-            }
 		$sql = "SELECT * FROM almacen WHERE (id_almacen = ? ) LIMIT 1;";
 		$params = array(  $id_almacen );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0) return NULL;
-		$foo = new Almacen( $rs );
-		if(!is_null(self::$redisConection)) self::$redisConection->set(  "Almacen-" . $id_almacen, $foo );
-		return $foo;
+		if(count($rs)==0)return NULL;
+			$foo = new Almacen( $rs );
+			return $foo;
 	}
 
 
@@ -93,7 +87,7 @@ abstract class AlmacenDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new Almacen($foo);
     		array_push( $allData, $bar);
-                if(!is_null(self::$redisConection)) self::$redisConection->set(  "Almacen-" . $bar->getIdAlmacen(), $bar );
+			//id_almacen
 		}
 		return $allData;
 	}
@@ -174,7 +168,6 @@ abstract class AlmacenDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Almacen($foo);
     		array_push( $ar,$bar);
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Almacen-" . $bar->getIdAlmacen(), $bar );
 		}
 		return $ar;
 	}
@@ -367,8 +360,7 @@ abstract class AlmacenDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, $bar = new Almacen($foo));
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Almacen-" . $bar->getIdAlmacen(), $bar );
+    		array_push( $ar, new Almacen($foo));
 		}
 		return $ar;
 	}

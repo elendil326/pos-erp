@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link VentaArpilla }. 
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -40,26 +40,20 @@ abstract class VentaArpillaDAOBase extends DAO
 	  *	Obtener {@link VentaArpilla} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link VentaArpilla} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link VentaArpilla Un objeto del tipo {@link VentaArpilla}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_venta_arpilla )
 	{
-		if(  is_null( $id_venta_arpilla )  ){ return NULL; }
-            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "VentaArpilla-" . $id_venta_arpilla ))){
-                Logger::log("REDIS !");
-                return new VentaArpilla($obj);
-            }
 		$sql = "SELECT * FROM venta_arpilla WHERE (id_venta_arpilla = ? ) LIMIT 1;";
 		$params = array(  $id_venta_arpilla );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0) return NULL;
-		$foo = new VentaArpilla( $rs );
-		if(!is_null(self::$redisConection)) self::$redisConection->set(  "VentaArpilla-" . $id_venta_arpilla, $foo );
-		return $foo;
+		if(count($rs)==0)return NULL;
+			$foo = new VentaArpilla( $rs );
+			return $foo;
 	}
 
 
@@ -93,7 +87,7 @@ abstract class VentaArpillaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new VentaArpilla($foo);
     		array_push( $allData, $bar);
-                if(!is_null(self::$redisConection)) self::$redisConection->set(  "VentaArpilla-" . $bar->getIdVentaArpilla(), $bar );
+			//id_venta_arpilla
 		}
 		return $allData;
 	}
@@ -199,7 +193,6 @@ abstract class VentaArpillaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new VentaArpilla($foo);
     		array_push( $ar,$bar);
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "VentaArpilla-" . $bar->getIdVentaArpilla(), $bar );
 		}
 		return $ar;
 	}
@@ -457,8 +450,7 @@ abstract class VentaArpillaDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, $bar = new VentaArpilla($foo));
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "VentaArpilla-" . $bar->getIdVentaArpilla(), $bar );
+    		array_push( $ar, new VentaArpilla($foo));
 		}
 		return $ar;
 	}

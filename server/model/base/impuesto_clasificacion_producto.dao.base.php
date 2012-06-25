@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link ImpuestoClasificacionProducto }. 
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -40,26 +40,20 @@ abstract class ImpuestoClasificacionProductoDAOBase extends DAO
 	  *	Obtener {@link ImpuestoClasificacionProducto} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ImpuestoClasificacionProducto} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ImpuestoClasificacionProducto Un objeto del tipo {@link ImpuestoClasificacionProducto}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_impuesto, $id_clasificacion_producto )
 	{
-		if(  is_null( $id_impuesto ) || is_null( $id_clasificacion_producto )  ){ return NULL; }
-            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "ImpuestoClasificacionProducto-" . $id_impuesto."-" . $id_clasificacion_producto ))){
-                Logger::log("REDIS !");
-                return new ImpuestoClasificacionProducto($obj);
-            }
 		$sql = "SELECT * FROM impuesto_clasificacion_producto WHERE (id_impuesto = ? AND id_clasificacion_producto = ? ) LIMIT 1;";
 		$params = array(  $id_impuesto, $id_clasificacion_producto );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0) return NULL;
-		$foo = new ImpuestoClasificacionProducto( $rs );
-		if(!is_null(self::$redisConection)) self::$redisConection->set(  "ImpuestoClasificacionProducto-" . $id_impuesto."-" . $id_clasificacion_producto, $foo );
-		return $foo;
+		if(count($rs)==0)return NULL;
+			$foo = new ImpuestoClasificacionProducto( $rs );
+			return $foo;
 	}
 
 
@@ -93,7 +87,8 @@ abstract class ImpuestoClasificacionProductoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new ImpuestoClasificacionProducto($foo);
     		array_push( $allData, $bar);
-                if(!is_null(self::$redisConection)) self::$redisConection->set(  "ImpuestoClasificacionProducto-" . $bar->getIdImpuesto()."-" . $bar->getIdClasificacionProducto(), $bar );
+			//id_impuesto
+			//id_clasificacion_producto
 		}
 		return $allData;
 	}
@@ -149,7 +144,6 @@ abstract class ImpuestoClasificacionProductoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new ImpuestoClasificacionProducto($foo);
     		array_push( $ar,$bar);
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ImpuestoClasificacionProducto-" . $bar->getIdImpuesto()."-" . $bar->getIdClasificacionProducto(), $bar );
 		}
 		return $ar;
 	}
@@ -269,8 +263,7 @@ abstract class ImpuestoClasificacionProductoDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, $bar = new ImpuestoClasificacionProducto($foo));
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ImpuestoClasificacionProducto-" . $bar->getIdImpuesto()."-" . $bar->getIdClasificacionProducto(), $bar );
+    		array_push( $ar, new ImpuestoClasificacionProducto($foo));
 		}
 		return $ar;
 	}

@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link ClasificacionProducto }. 
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -40,26 +40,20 @@ abstract class ClasificacionProductoDAOBase extends DAO
 	  *	Obtener {@link ClasificacionProducto} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ClasificacionProducto} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ClasificacionProducto Un objeto del tipo {@link ClasificacionProducto}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_clasificacion_producto )
 	{
-		if(  is_null( $id_clasificacion_producto )  ){ return NULL; }
-            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "ClasificacionProducto-" . $id_clasificacion_producto ))){
-                Logger::log("REDIS !");
-                return new ClasificacionProducto($obj);
-            }
 		$sql = "SELECT * FROM clasificacion_producto WHERE (id_clasificacion_producto = ? ) LIMIT 1;";
 		$params = array(  $id_clasificacion_producto );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0) return NULL;
-		$foo = new ClasificacionProducto( $rs );
-		if(!is_null(self::$redisConection)) self::$redisConection->set(  "ClasificacionProducto-" . $id_clasificacion_producto, $foo );
-		return $foo;
+		if(count($rs)==0)return NULL;
+			$foo = new ClasificacionProducto( $rs );
+			return $foo;
 	}
 
 
@@ -93,7 +87,7 @@ abstract class ClasificacionProductoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new ClasificacionProducto($foo);
     		array_push( $allData, $bar);
-                if(!is_null(self::$redisConection)) self::$redisConection->set(  "ClasificacionProducto-" . $bar->getIdClasificacionProducto(), $bar );
+			//id_clasificacion_producto
 		}
 		return $allData;
 	}
@@ -164,7 +158,6 @@ abstract class ClasificacionProductoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new ClasificacionProducto($foo);
     		array_push( $ar,$bar);
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ClasificacionProducto-" . $bar->getIdClasificacionProducto(), $bar );
 		}
 		return $ar;
 	}
@@ -331,8 +324,7 @@ abstract class ClasificacionProductoDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, $bar = new ClasificacionProducto($foo));
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ClasificacionProducto-" . $bar->getIdClasificacionProducto(), $bar );
+    		array_push( $ar, new ClasificacionProducto($foo));
 		}
 		return $ar;
 	}

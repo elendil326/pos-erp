@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link Prestamo }. 
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -40,26 +40,20 @@ abstract class PrestamoDAOBase extends DAO
 	  *	Obtener {@link Prestamo} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Prestamo} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Prestamo Un objeto del tipo {@link Prestamo}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_prestamo )
 	{
-		if(  is_null( $id_prestamo )  ){ return NULL; }
-            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "Prestamo-" . $id_prestamo ))){
-                Logger::log("REDIS !");
-                return new Prestamo($obj);
-            }
 		$sql = "SELECT * FROM prestamo WHERE (id_prestamo = ? ) LIMIT 1;";
 		$params = array(  $id_prestamo );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0) return NULL;
-		$foo = new Prestamo( $rs );
-		if(!is_null(self::$redisConection)) self::$redisConection->set(  "Prestamo-" . $id_prestamo, $foo );
-		return $foo;
+		if(count($rs)==0)return NULL;
+			$foo = new Prestamo( $rs );
+			return $foo;
 	}
 
 
@@ -93,7 +87,7 @@ abstract class PrestamoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new Prestamo($foo);
     		array_push( $allData, $bar);
-                if(!is_null(self::$redisConection)) self::$redisConection->set(  "Prestamo-" . $bar->getIdPrestamo(), $bar );
+			//id_prestamo
 		}
 		return $allData;
 	}
@@ -184,7 +178,6 @@ abstract class PrestamoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Prestamo($foo);
     		array_push( $ar,$bar);
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Prestamo-" . $bar->getIdPrestamo(), $bar );
 		}
 		return $ar;
 	}
@@ -403,8 +396,7 @@ abstract class PrestamoDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, $bar = new Prestamo($foo));
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Prestamo-" . $bar->getIdPrestamo(), $bar );
+    		array_push( $ar, new Prestamo($foo));
 		}
 		return $ar;
 	}

@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link Ubicacion }. 
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -40,26 +40,20 @@ abstract class UbicacionDAOBase extends DAO
 	  *	Obtener {@link Ubicacion} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Ubicacion} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Ubicacion Un objeto del tipo {@link Ubicacion}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_ubicacion )
 	{
-		if(  is_null( $id_ubicacion )  ){ return NULL; }
-            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "Ubicacion-" . $id_ubicacion ))){
-                Logger::log("REDIS !");
-                return new Ubicacion($obj);
-            }
 		$sql = "SELECT * FROM ubicacion WHERE (id_ubicacion = ? ) LIMIT 1;";
 		$params = array(  $id_ubicacion );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0) return NULL;
-		$foo = new Ubicacion( $rs );
-		if(!is_null(self::$redisConection)) self::$redisConection->set(  "Ubicacion-" . $id_ubicacion, $foo );
-		return $foo;
+		if(count($rs)==0)return NULL;
+			$foo = new Ubicacion( $rs );
+			return $foo;
 	}
 
 
@@ -93,7 +87,7 @@ abstract class UbicacionDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new Ubicacion($foo);
     		array_push( $allData, $bar);
-                if(!is_null(self::$redisConection)) self::$redisConection->set(  "Ubicacion-" . $bar->getIdUbicacion(), $bar );
+			//id_ubicacion
 		}
 		return $allData;
 	}
@@ -164,7 +158,6 @@ abstract class UbicacionDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Ubicacion($foo);
     		array_push( $ar,$bar);
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Ubicacion-" . $bar->getIdUbicacion(), $bar );
 		}
 		return $ar;
 	}
@@ -331,8 +324,7 @@ abstract class UbicacionDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, $bar = new Ubicacion($foo));
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Ubicacion-" . $bar->getIdUbicacion(), $bar );
+    		array_push( $ar, new Ubicacion($foo));
 		}
 		return $ar;
 	}

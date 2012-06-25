@@ -2,7 +2,7 @@
 /** Value Object file for table lote_salida.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access public
   * @package docs
   * 
@@ -22,10 +22,6 @@ class LoteSalida extends VO
 	{ 
 		if(isset($data))
 		{
-                    if(is_string($data))
-                        $data = self::object_to_array(json_decode($data));
-
-
 			if( isset($data['id_lote_salida']) ){
 				$this->id_lote_salida = $data['id_lote_salida'];
 			}

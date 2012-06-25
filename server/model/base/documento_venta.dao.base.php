@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link DocumentoVenta }. 
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -40,26 +40,20 @@ abstract class DocumentoVentaDAOBase extends DAO
 	  *	Obtener {@link DocumentoVenta} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link DocumentoVenta} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link DocumentoVenta Un objeto del tipo {@link DocumentoVenta}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_documento, $id_venta )
 	{
-		if(  is_null( $id_documento ) || is_null( $id_venta )  ){ return NULL; }
-            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "DocumentoVenta-" . $id_documento."-" . $id_venta ))){
-                Logger::log("REDIS !");
-                return new DocumentoVenta($obj);
-            }
 		$sql = "SELECT * FROM documento_venta WHERE (id_documento = ? AND id_venta = ? ) LIMIT 1;";
 		$params = array(  $id_documento, $id_venta );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0) return NULL;
-		$foo = new DocumentoVenta( $rs );
-		if(!is_null(self::$redisConection)) self::$redisConection->set(  "DocumentoVenta-" . $id_documento."-" . $id_venta, $foo );
-		return $foo;
+		if(count($rs)==0)return NULL;
+			$foo = new DocumentoVenta( $rs );
+			return $foo;
 	}
 
 
@@ -93,7 +87,8 @@ abstract class DocumentoVentaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new DocumentoVenta($foo);
     		array_push( $allData, $bar);
-                if(!is_null(self::$redisConection)) self::$redisConection->set(  "DocumentoVenta-" . $bar->getIdDocumento()."-" . $bar->getIdVenta(), $bar );
+			//id_documento
+			//id_venta
 		}
 		return $allData;
 	}
@@ -149,7 +144,6 @@ abstract class DocumentoVentaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new DocumentoVenta($foo);
     		array_push( $ar,$bar);
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "DocumentoVenta-" . $bar->getIdDocumento()."-" . $bar->getIdVenta(), $bar );
 		}
 		return $ar;
 	}
@@ -269,8 +263,7 @@ abstract class DocumentoVentaDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, $bar = new DocumentoVenta($foo));
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "DocumentoVenta-" . $bar->getIdDocumento()."-" . $bar->getIdVenta(), $bar );
+    		array_push( $ar, new DocumentoVenta($foo));
 		}
 		return $ar;
 	}

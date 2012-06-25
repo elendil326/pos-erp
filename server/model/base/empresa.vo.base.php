@@ -2,7 +2,7 @@
 /** Value Object file for table empresa.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access public
   * @package docs
   * 
@@ -22,10 +22,6 @@ class Empresa extends VO
 	{ 
 		if(isset($data))
 		{
-                    if(is_string($data))
-                        $data = self::object_to_array(json_decode($data));
-
-
 			if( isset($data['id_empresa']) ){
 				$this->id_empresa = $data['id_empresa'];
 			}

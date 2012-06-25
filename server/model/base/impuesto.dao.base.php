@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link Impuesto }. 
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -40,26 +40,20 @@ abstract class ImpuestoDAOBase extends DAO
 	  *	Obtener {@link Impuesto} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Impuesto} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Impuesto Un objeto del tipo {@link Impuesto}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_impuesto )
 	{
-		if(  is_null( $id_impuesto )  ){ return NULL; }
-            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "Impuesto-" . $id_impuesto ))){
-                Logger::log("REDIS !");
-                return new Impuesto($obj);
-            }
 		$sql = "SELECT * FROM impuesto WHERE (id_impuesto = ? ) LIMIT 1;";
 		$params = array(  $id_impuesto );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0) return NULL;
-		$foo = new Impuesto( $rs );
-		if(!is_null(self::$redisConection)) self::$redisConection->set(  "Impuesto-" . $id_impuesto, $foo );
-		return $foo;
+		if(count($rs)==0)return NULL;
+			$foo = new Impuesto( $rs );
+			return $foo;
 	}
 
 
@@ -93,7 +87,7 @@ abstract class ImpuestoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new Impuesto($foo);
     		array_push( $allData, $bar);
-                if(!is_null(self::$redisConection)) self::$redisConection->set(  "Impuesto-" . $bar->getIdImpuesto(), $bar );
+			//id_impuesto
 		}
 		return $allData;
 	}
@@ -164,7 +158,6 @@ abstract class ImpuestoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Impuesto($foo);
     		array_push( $ar,$bar);
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Impuesto-" . $bar->getIdImpuesto(), $bar );
 		}
 		return $ar;
 	}
@@ -331,8 +324,7 @@ abstract class ImpuestoDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, $bar = new Impuesto($foo));
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Impuesto-" . $bar->getIdImpuesto(), $bar );
+    		array_push( $ar, new Impuesto($foo));
 		}
 		return $ar;
 	}

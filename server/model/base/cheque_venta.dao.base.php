@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link ChequeVenta }. 
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -40,26 +40,20 @@ abstract class ChequeVentaDAOBase extends DAO
 	  *	Obtener {@link ChequeVenta} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ChequeVenta} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ChequeVenta Un objeto del tipo {@link ChequeVenta}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_cheque, $id_venta )
 	{
-		if(  is_null( $id_cheque ) || is_null( $id_venta )  ){ return NULL; }
-            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "ChequeVenta-" . $id_cheque."-" . $id_venta ))){
-                Logger::log("REDIS !");
-                return new ChequeVenta($obj);
-            }
 		$sql = "SELECT * FROM cheque_venta WHERE (id_cheque = ? AND id_venta = ? ) LIMIT 1;";
 		$params = array(  $id_cheque, $id_venta );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0) return NULL;
-		$foo = new ChequeVenta( $rs );
-		if(!is_null(self::$redisConection)) self::$redisConection->set(  "ChequeVenta-" . $id_cheque."-" . $id_venta, $foo );
-		return $foo;
+		if(count($rs)==0)return NULL;
+			$foo = new ChequeVenta( $rs );
+			return $foo;
 	}
 
 
@@ -93,7 +87,8 @@ abstract class ChequeVentaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new ChequeVenta($foo);
     		array_push( $allData, $bar);
-                if(!is_null(self::$redisConection)) self::$redisConection->set(  "ChequeVenta-" . $bar->getIdCheque()."-" . $bar->getIdVenta(), $bar );
+			//id_cheque
+			//id_venta
 		}
 		return $allData;
 	}
@@ -149,7 +144,6 @@ abstract class ChequeVentaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new ChequeVenta($foo);
     		array_push( $ar,$bar);
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ChequeVenta-" . $bar->getIdCheque()."-" . $bar->getIdVenta(), $bar );
 		}
 		return $ar;
 	}
@@ -269,8 +263,7 @@ abstract class ChequeVentaDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, $bar = new ChequeVenta($foo));
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ChequeVenta-" . $bar->getIdCheque()."-" . $bar->getIdVenta(), $bar );
+    		array_push( $ar, new ChequeVenta($foo));
 		}
 		return $ar;
 	}

@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link ChequeAbonoPrestamo }. 
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -40,26 +40,20 @@ abstract class ChequeAbonoPrestamoDAOBase extends DAO
 	  *	Obtener {@link ChequeAbonoPrestamo} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ChequeAbonoPrestamo} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ChequeAbonoPrestamo Un objeto del tipo {@link ChequeAbonoPrestamo}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_cheque, $id_abono_prestamo )
 	{
-		if(  is_null( $id_cheque ) || is_null( $id_abono_prestamo )  ){ return NULL; }
-            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "ChequeAbonoPrestamo-" . $id_cheque."-" . $id_abono_prestamo ))){
-                Logger::log("REDIS !");
-                return new ChequeAbonoPrestamo($obj);
-            }
 		$sql = "SELECT * FROM cheque_abono_prestamo WHERE (id_cheque = ? AND id_abono_prestamo = ? ) LIMIT 1;";
 		$params = array(  $id_cheque, $id_abono_prestamo );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0) return NULL;
-		$foo = new ChequeAbonoPrestamo( $rs );
-		if(!is_null(self::$redisConection)) self::$redisConection->set(  "ChequeAbonoPrestamo-" . $id_cheque."-" . $id_abono_prestamo, $foo );
-		return $foo;
+		if(count($rs)==0)return NULL;
+			$foo = new ChequeAbonoPrestamo( $rs );
+			return $foo;
 	}
 
 
@@ -93,7 +87,8 @@ abstract class ChequeAbonoPrestamoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new ChequeAbonoPrestamo($foo);
     		array_push( $allData, $bar);
-                if(!is_null(self::$redisConection)) self::$redisConection->set(  "ChequeAbonoPrestamo-" . $bar->getIdCheque()."-" . $bar->getIdAbonoPrestamo(), $bar );
+			//id_cheque
+			//id_abono_prestamo
 		}
 		return $allData;
 	}
@@ -149,7 +144,6 @@ abstract class ChequeAbonoPrestamoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new ChequeAbonoPrestamo($foo);
     		array_push( $ar,$bar);
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ChequeAbonoPrestamo-" . $bar->getIdCheque()."-" . $bar->getIdAbonoPrestamo(), $bar );
 		}
 		return $ar;
 	}
@@ -269,8 +263,7 @@ abstract class ChequeAbonoPrestamoDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, $bar = new ChequeAbonoPrestamo($foo));
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ChequeAbonoPrestamo-" . $bar->getIdCheque()."-" . $bar->getIdAbonoPrestamo(), $bar );
+    		array_push( $ar, new ChequeAbonoPrestamo($foo));
 		}
 		return $ar;
 	}

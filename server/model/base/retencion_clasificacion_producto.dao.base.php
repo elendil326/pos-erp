@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link RetencionClasificacionProducto }. 
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -40,26 +40,20 @@ abstract class RetencionClasificacionProductoDAOBase extends DAO
 	  *	Obtener {@link RetencionClasificacionProducto} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link RetencionClasificacionProducto} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link RetencionClasificacionProducto Un objeto del tipo {@link RetencionClasificacionProducto}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_retencion, $id_clasificacion_producto )
 	{
-		if(  is_null( $id_retencion ) || is_null( $id_clasificacion_producto )  ){ return NULL; }
-            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "RetencionClasificacionProducto-" . $id_retencion."-" . $id_clasificacion_producto ))){
-                Logger::log("REDIS !");
-                return new RetencionClasificacionProducto($obj);
-            }
 		$sql = "SELECT * FROM retencion_clasificacion_producto WHERE (id_retencion = ? AND id_clasificacion_producto = ? ) LIMIT 1;";
 		$params = array(  $id_retencion, $id_clasificacion_producto );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0) return NULL;
-		$foo = new RetencionClasificacionProducto( $rs );
-		if(!is_null(self::$redisConection)) self::$redisConection->set(  "RetencionClasificacionProducto-" . $id_retencion."-" . $id_clasificacion_producto, $foo );
-		return $foo;
+		if(count($rs)==0)return NULL;
+			$foo = new RetencionClasificacionProducto( $rs );
+			return $foo;
 	}
 
 
@@ -93,7 +87,8 @@ abstract class RetencionClasificacionProductoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new RetencionClasificacionProducto($foo);
     		array_push( $allData, $bar);
-                if(!is_null(self::$redisConection)) self::$redisConection->set(  "RetencionClasificacionProducto-" . $bar->getIdRetencion()."-" . $bar->getIdClasificacionProducto(), $bar );
+			//id_retencion
+			//id_clasificacion_producto
 		}
 		return $allData;
 	}
@@ -149,7 +144,6 @@ abstract class RetencionClasificacionProductoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new RetencionClasificacionProducto($foo);
     		array_push( $ar,$bar);
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "RetencionClasificacionProducto-" . $bar->getIdRetencion()."-" . $bar->getIdClasificacionProducto(), $bar );
 		}
 		return $ar;
 	}
@@ -269,8 +263,7 @@ abstract class RetencionClasificacionProductoDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, $bar = new RetencionClasificacionProducto($foo));
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "RetencionClasificacionProducto-" . $bar->getIdRetencion()."-" . $bar->getIdClasificacionProducto(), $bar );
+    		array_push( $ar, new RetencionClasificacionProducto($foo));
 		}
 		return $ar;
 	}

@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link ClasificacionProveedor }. 
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -40,26 +40,20 @@ abstract class ClasificacionProveedorDAOBase extends DAO
 	  *	Obtener {@link ClasificacionProveedor} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ClasificacionProveedor} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ClasificacionProveedor Un objeto del tipo {@link ClasificacionProveedor}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_clasificacion_proveedor )
 	{
-		if(  is_null( $id_clasificacion_proveedor )  ){ return NULL; }
-            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "ClasificacionProveedor-" . $id_clasificacion_proveedor ))){
-                Logger::log("REDIS !");
-                return new ClasificacionProveedor($obj);
-            }
 		$sql = "SELECT * FROM clasificacion_proveedor WHERE (id_clasificacion_proveedor = ? ) LIMIT 1;";
 		$params = array(  $id_clasificacion_proveedor );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0) return NULL;
-		$foo = new ClasificacionProveedor( $rs );
-		if(!is_null(self::$redisConection)) self::$redisConection->set(  "ClasificacionProveedor-" . $id_clasificacion_proveedor, $foo );
-		return $foo;
+		if(count($rs)==0)return NULL;
+			$foo = new ClasificacionProveedor( $rs );
+			return $foo;
 	}
 
 
@@ -93,7 +87,7 @@ abstract class ClasificacionProveedorDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new ClasificacionProveedor($foo);
     		array_push( $allData, $bar);
-                if(!is_null(self::$redisConection)) self::$redisConection->set(  "ClasificacionProveedor-" . $bar->getIdClasificacionProveedor(), $bar );
+			//id_clasificacion_proveedor
 		}
 		return $allData;
 	}
@@ -169,7 +163,6 @@ abstract class ClasificacionProveedorDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new ClasificacionProveedor($foo);
     		array_push( $ar,$bar);
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ClasificacionProveedor-" . $bar->getIdClasificacionProveedor(), $bar );
 		}
 		return $ar;
 	}
@@ -349,8 +342,7 @@ abstract class ClasificacionProveedorDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, $bar = new ClasificacionProveedor($foo));
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ClasificacionProveedor-" . $bar->getIdClasificacionProveedor(), $bar );
+    		array_push( $ar, new ClasificacionProveedor($foo));
 		}
 		return $ar;
 	}

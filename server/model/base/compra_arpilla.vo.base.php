@@ -2,7 +2,7 @@
 /** Value Object file for table compra_arpilla.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access public
   * @package docs
   * 
@@ -22,10 +22,6 @@ class CompraArpilla extends VO
 	{ 
 		if(isset($data))
 		{
-                    if(is_string($data))
-                        $data = self::object_to_array(json_decode($data));
-
-
 			if( isset($data['id_compra_arpilla']) ){
 				$this->id_compra_arpilla = $data['id_compra_arpilla'];
 			}
@@ -123,7 +119,7 @@ class CompraArpilla extends VO
 	/**
 	  * fecha_origen
 	  * 
-	  * Fecha en la que se envÃ­o el embarque<br>
+	  * Fecha en la que se envÃƒÂ­o el embarque<br>
 	  * @access public
 	  * @var int(11)
 	  */
@@ -141,7 +137,7 @@ class CompraArpilla extends VO
 	/**
 	  * numero_de_viaje
 	  * 
-	  * NÃºmero de viaje<br>
+	  * NÃƒÂºmero de viaje<br>
 	  * @access public
 	  * @var varchar(11)
 	  */
@@ -195,7 +191,7 @@ class CompraArpilla extends VO
 	/**
 	  * total_origen
 	  * 
-	  * El valor del embarque segÃºn el proveedor<br>
+	  * El valor del embarque segÃƒÂºn el proveedor<br>
 	  * @access public
 	  * @var float
 	  */
@@ -280,7 +276,7 @@ class CompraArpilla extends VO
 	/**
 	  * getFechaOrigen
 	  * 
-	  * Get the <i>fecha_origen</i> property for this object. Donde <i>fecha_origen</i> es Fecha en la que se envÃ­o el embarque
+	  * Get the <i>fecha_origen</i> property for this object. Donde <i>fecha_origen</i> es Fecha en la que se envÃƒÂ­o el embarque
 	  * @return int(11)
 	  */
 	final public function getFechaOrigen()
@@ -291,7 +287,7 @@ class CompraArpilla extends VO
 	/**
 	  * setFechaOrigen( $fecha_origen )
 	  * 
-	  * Set the <i>fecha_origen</i> property for this object. Donde <i>fecha_origen</i> es Fecha en la que se envÃ­o el embarque.
+	  * Set the <i>fecha_origen</i> property for this object. Donde <i>fecha_origen</i> es Fecha en la que se envÃƒÂ­o el embarque.
 	  * Una validacion basica se hara aqui para comprobar que <i>fecha_origen</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param int(11)
@@ -328,7 +324,7 @@ class CompraArpilla extends VO
 	/**
 	  * getNumeroDeViaje
 	  * 
-	  * Get the <i>numero_de_viaje</i> property for this object. Donde <i>numero_de_viaje</i> es NÃºmero de viaje
+	  * Get the <i>numero_de_viaje</i> property for this object. Donde <i>numero_de_viaje</i> es NÃƒÂºmero de viaje
 	  * @return varchar(11)
 	  */
 	final public function getNumeroDeViaje()
@@ -339,7 +335,7 @@ class CompraArpilla extends VO
 	/**
 	  * setNumeroDeViaje( $numero_de_viaje )
 	  * 
-	  * Set the <i>numero_de_viaje</i> property for this object. Donde <i>numero_de_viaje</i> es NÃºmero de viaje.
+	  * Set the <i>numero_de_viaje</i> property for this object. Donde <i>numero_de_viaje</i> es NÃƒÂºmero de viaje.
 	  * Una validacion basica se hara aqui para comprobar que <i>numero_de_viaje</i> es de tipo <i>varchar(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param varchar(11)
@@ -472,7 +468,7 @@ class CompraArpilla extends VO
 	/**
 	  * getTotalOrigen
 	  * 
-	  * Get the <i>total_origen</i> property for this object. Donde <i>total_origen</i> es El valor del embarque segÃºn el proveedor
+	  * Get the <i>total_origen</i> property for this object. Donde <i>total_origen</i> es El valor del embarque segÃƒÂºn el proveedor
 	  * @return float
 	  */
 	final public function getTotalOrigen()
@@ -483,7 +479,7 @@ class CompraArpilla extends VO
 	/**
 	  * setTotalOrigen( $total_origen )
 	  * 
-	  * Set the <i>total_origen</i> property for this object. Donde <i>total_origen</i> es El valor del embarque segÃºn el proveedor.
+	  * Set the <i>total_origen</i> property for this object. Donde <i>total_origen</i> es El valor del embarque segÃƒÂºn el proveedor.
 	  * Una validacion basica se hara aqui para comprobar que <i>total_origen</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float

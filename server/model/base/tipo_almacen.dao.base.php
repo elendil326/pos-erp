@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link TipoAlmacen }. 
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -40,26 +40,20 @@ abstract class TipoAlmacenDAOBase extends DAO
 	  *	Obtener {@link TipoAlmacen} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link TipoAlmacen} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link TipoAlmacen Un objeto del tipo {@link TipoAlmacen}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_tipo_almacen )
 	{
-		if(  is_null( $id_tipo_almacen )  ){ return NULL; }
-            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "TipoAlmacen-" . $id_tipo_almacen ))){
-                Logger::log("REDIS !");
-                return new TipoAlmacen($obj);
-            }
 		$sql = "SELECT * FROM tipo_almacen WHERE (id_tipo_almacen = ? ) LIMIT 1;";
 		$params = array(  $id_tipo_almacen );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0) return NULL;
-		$foo = new TipoAlmacen( $rs );
-		if(!is_null(self::$redisConection)) self::$redisConection->set(  "TipoAlmacen-" . $id_tipo_almacen, $foo );
-		return $foo;
+		if(count($rs)==0)return NULL;
+			$foo = new TipoAlmacen( $rs );
+			return $foo;
 	}
 
 
@@ -93,7 +87,7 @@ abstract class TipoAlmacenDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new TipoAlmacen($foo);
     		array_push( $allData, $bar);
-                if(!is_null(self::$redisConection)) self::$redisConection->set(  "TipoAlmacen-" . $bar->getIdTipoAlmacen(), $bar );
+			//id_tipo_almacen
 		}
 		return $allData;
 	}
@@ -154,7 +148,6 @@ abstract class TipoAlmacenDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new TipoAlmacen($foo);
     		array_push( $ar,$bar);
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "TipoAlmacen-" . $bar->getIdTipoAlmacen(), $bar );
 		}
 		return $ar;
 	}
@@ -295,8 +288,7 @@ abstract class TipoAlmacenDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, $bar = new TipoAlmacen($foo));
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "TipoAlmacen-" . $bar->getIdTipoAlmacen(), $bar );
+    		array_push( $ar, new TipoAlmacen($foo));
 		}
 		return $ar;
 	}

@@ -2,7 +2,7 @@
 /** Value Object file for table cierre_caja.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access public
   * @package docs
   * 
@@ -22,10 +22,6 @@ class CierreCaja extends VO
 	{ 
 		if(isset($data))
 		{
-                    if(is_string($data))
-                        $data = self::object_to_array(json_decode($data));
-
-
 			if( isset($data['id_cierre_caja']) ){
 				$this->id_cierre_caja = $data['id_cierre_caja'];
 			}
@@ -117,7 +113,7 @@ class CierreCaja extends VO
 	/**
 	  * saldo_esperado
 	  * 
-	  * Saldo que deberÃ­a de haber en la caja despuÃ©s de todos los movimientos del dÃ­a<br>
+	  * Saldo que deberÃƒÂ­a de haber en la caja despuÃƒÂ©s de todos los movimientos del dÃƒÂ­a<br>
 	  * @access public
 	  * @var float
 	  */
@@ -250,7 +246,7 @@ class CierreCaja extends VO
 	/**
 	  * getSaldoEsperado
 	  * 
-	  * Get the <i>saldo_esperado</i> property for this object. Donde <i>saldo_esperado</i> es Saldo que deberÃ­a de haber en la caja despuÃ©s de todos los movimientos del dÃ­a
+	  * Get the <i>saldo_esperado</i> property for this object. Donde <i>saldo_esperado</i> es Saldo que deberÃƒÂ­a de haber en la caja despuÃƒÂ©s de todos los movimientos del dÃƒÂ­a
 	  * @return float
 	  */
 	final public function getSaldoEsperado()
@@ -261,7 +257,7 @@ class CierreCaja extends VO
 	/**
 	  * setSaldoEsperado( $saldo_esperado )
 	  * 
-	  * Set the <i>saldo_esperado</i> property for this object. Donde <i>saldo_esperado</i> es Saldo que deberÃ­a de haber en la caja despuÃ©s de todos los movimientos del dÃ­a.
+	  * Set the <i>saldo_esperado</i> property for this object. Donde <i>saldo_esperado</i> es Saldo que deberÃƒÂ­a de haber en la caja despuÃƒÂ©s de todos los movimientos del dÃƒÂ­a.
 	  * Una validacion basica se hara aqui para comprobar que <i>saldo_esperado</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float

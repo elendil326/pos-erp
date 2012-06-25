@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link Reporte }. 
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -40,26 +40,20 @@ abstract class ReporteDAOBase extends DAO
 	  *	Obtener {@link Reporte} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Reporte} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Reporte Un objeto del tipo {@link Reporte}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_reporte )
 	{
-		if(  is_null( $id_reporte )  ){ return NULL; }
-            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "Reporte-" . $id_reporte ))){
-                Logger::log("REDIS !");
-                return new Reporte($obj);
-            }
 		$sql = "SELECT * FROM reporte WHERE (id_reporte = ? ) LIMIT 1;";
 		$params = array(  $id_reporte );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0) return NULL;
-		$foo = new Reporte( $rs );
-		if(!is_null(self::$redisConection)) self::$redisConection->set(  "Reporte-" . $id_reporte, $foo );
-		return $foo;
+		if(count($rs)==0)return NULL;
+			$foo = new Reporte( $rs );
+			return $foo;
 	}
 
 
@@ -93,7 +87,7 @@ abstract class ReporteDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new Reporte($foo);
     		array_push( $allData, $bar);
-                if(!is_null(self::$redisConection)) self::$redisConection->set(  "Reporte-" . $bar->getIdReporte(), $bar );
+			//id_reporte
 		}
 		return $allData;
 	}
@@ -144,7 +138,6 @@ abstract class ReporteDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Reporte($foo);
     		array_push( $ar,$bar);
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Reporte-" . $bar->getIdReporte(), $bar );
 		}
 		return $ar;
 	}
@@ -252,8 +245,7 @@ abstract class ReporteDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, $bar = new Reporte($foo));
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Reporte-" . $bar->getIdReporte(), $bar );
+    		array_push( $ar, new Reporte($foo));
 		}
 		return $ar;
 	}

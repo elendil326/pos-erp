@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link BilleteCorteCaja }. 
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -40,26 +40,20 @@ abstract class BilleteCorteCajaDAOBase extends DAO
 	  *	Obtener {@link BilleteCorteCaja} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link BilleteCorteCaja} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link BilleteCorteCaja Un objeto del tipo {@link BilleteCorteCaja}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_billete, $id_corte_caja )
 	{
-		if(  is_null( $id_billete ) || is_null( $id_corte_caja )  ){ return NULL; }
-            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "BilleteCorteCaja-" . $id_billete."-" . $id_corte_caja ))){
-                Logger::log("REDIS !");
-                return new BilleteCorteCaja($obj);
-            }
 		$sql = "SELECT * FROM billete_corte_caja WHERE (id_billete = ? AND id_corte_caja = ? ) LIMIT 1;";
 		$params = array(  $id_billete, $id_corte_caja );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0) return NULL;
-		$foo = new BilleteCorteCaja( $rs );
-		if(!is_null(self::$redisConection)) self::$redisConection->set(  "BilleteCorteCaja-" . $id_billete."-" . $id_corte_caja, $foo );
-		return $foo;
+		if(count($rs)==0)return NULL;
+			$foo = new BilleteCorteCaja( $rs );
+			return $foo;
 	}
 
 
@@ -93,7 +87,8 @@ abstract class BilleteCorteCajaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new BilleteCorteCaja($foo);
     		array_push( $allData, $bar);
-                if(!is_null(self::$redisConection)) self::$redisConection->set(  "BilleteCorteCaja-" . $bar->getIdBillete()."-" . $bar->getIdCorteCaja(), $bar );
+			//id_billete
+			//id_corte_caja
 		}
 		return $allData;
 	}
@@ -169,7 +164,6 @@ abstract class BilleteCorteCajaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new BilleteCorteCaja($foo);
     		array_push( $ar,$bar);
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "BilleteCorteCaja-" . $bar->getIdBillete()."-" . $bar->getIdCorteCaja(), $bar );
 		}
 		return $ar;
 	}
@@ -348,8 +342,7 @@ abstract class BilleteCorteCajaDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, $bar = new BilleteCorteCaja($foo));
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "BilleteCorteCaja-" . $bar->getIdBillete()."-" . $bar->getIdCorteCaja(), $bar );
+    		array_push( $ar, new BilleteCorteCaja($foo));
 		}
 		return $ar;
 	}

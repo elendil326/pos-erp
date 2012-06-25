@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link Consignacion }. 
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -40,26 +40,20 @@ abstract class ConsignacionDAOBase extends DAO
 	  *	Obtener {@link Consignacion} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Consignacion} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Consignacion Un objeto del tipo {@link Consignacion}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_consignacion )
 	{
-		if(  is_null( $id_consignacion )  ){ return NULL; }
-            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "Consignacion-" . $id_consignacion ))){
-                Logger::log("REDIS !");
-                return new Consignacion($obj);
-            }
 		$sql = "SELECT * FROM consignacion WHERE (id_consignacion = ? ) LIMIT 1;";
 		$params = array(  $id_consignacion );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0) return NULL;
-		$foo = new Consignacion( $rs );
-		if(!is_null(self::$redisConection)) self::$redisConection->set(  "Consignacion-" . $id_consignacion, $foo );
-		return $foo;
+		if(count($rs)==0)return NULL;
+			$foo = new Consignacion( $rs );
+			return $foo;
 	}
 
 
@@ -93,7 +87,7 @@ abstract class ConsignacionDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new Consignacion($foo);
     		array_push( $allData, $bar);
-                if(!is_null(self::$redisConection)) self::$redisConection->set(  "Consignacion-" . $bar->getIdConsignacion(), $bar );
+			//id_consignacion
 		}
 		return $allData;
 	}
@@ -214,7 +208,6 @@ abstract class ConsignacionDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Consignacion($foo);
     		array_push( $ar,$bar);
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Consignacion-" . $bar->getIdConsignacion(), $bar );
 		}
 		return $ar;
 	}
@@ -511,8 +504,7 @@ abstract class ConsignacionDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, $bar = new Consignacion($foo));
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Consignacion-" . $bar->getIdConsignacion(), $bar );
+    		array_push( $ar, new Consignacion($foo));
 		}
 		return $ar;
 	}

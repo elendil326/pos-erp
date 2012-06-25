@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link Autorizacion }. 
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -40,26 +40,20 @@ abstract class AutorizacionDAOBase extends DAO
 	  *	Obtener {@link Autorizacion} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Autorizacion} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Autorizacion Un objeto del tipo {@link Autorizacion}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_autorizacion )
 	{
-		if(  is_null( $id_autorizacion )  ){ return NULL; }
-            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "Autorizacion-" . $id_autorizacion ))){
-                Logger::log("REDIS !");
-                return new Autorizacion($obj);
-            }
 		$sql = "SELECT * FROM autorizacion WHERE (id_autorizacion = ? ) LIMIT 1;";
 		$params = array(  $id_autorizacion );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0) return NULL;
-		$foo = new Autorizacion( $rs );
-		if(!is_null(self::$redisConection)) self::$redisConection->set(  "Autorizacion-" . $id_autorizacion, $foo );
-		return $foo;
+		if(count($rs)==0)return NULL;
+			$foo = new Autorizacion( $rs );
+			return $foo;
 	}
 
 
@@ -93,7 +87,7 @@ abstract class AutorizacionDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new Autorizacion($foo);
     		array_push( $allData, $bar);
-                if(!is_null(self::$redisConection)) self::$redisConection->set(  "Autorizacion-" . $bar->getIdAutorizacion(), $bar );
+			//id_autorizacion
 		}
 		return $allData;
 	}
@@ -144,7 +138,6 @@ abstract class AutorizacionDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Autorizacion($foo);
     		array_push( $ar,$bar);
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Autorizacion-" . $bar->getIdAutorizacion(), $bar );
 		}
 		return $ar;
 	}
@@ -252,8 +245,7 @@ abstract class AutorizacionDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, $bar = new Autorizacion($foo));
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Autorizacion-" . $bar->getIdAutorizacion(), $bar );
+    		array_push( $ar, new Autorizacion($foo));
 		}
 		return $ar;
 	}

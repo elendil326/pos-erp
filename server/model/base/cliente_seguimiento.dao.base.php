@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link ClienteSeguimiento }. 
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -40,26 +40,20 @@ abstract class ClienteSeguimientoDAOBase extends DAO
 	  *	Obtener {@link ClienteSeguimiento} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ClienteSeguimiento} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ClienteSeguimiento Un objeto del tipo {@link ClienteSeguimiento}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_cliente_seguimiento )
 	{
-		if(  is_null( $id_cliente_seguimiento )  ){ return NULL; }
-            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "ClienteSeguimiento-" . $id_cliente_seguimiento ))){
-                Logger::log("REDIS !");
-                return new ClienteSeguimiento($obj);
-            }
 		$sql = "SELECT * FROM cliente_seguimiento WHERE (id_cliente_seguimiento = ? ) LIMIT 1;";
 		$params = array(  $id_cliente_seguimiento );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0) return NULL;
-		$foo = new ClienteSeguimiento( $rs );
-		if(!is_null(self::$redisConection)) self::$redisConection->set(  "ClienteSeguimiento-" . $id_cliente_seguimiento, $foo );
-		return $foo;
+		if(count($rs)==0)return NULL;
+			$foo = new ClienteSeguimiento( $rs );
+			return $foo;
 	}
 
 
@@ -93,7 +87,7 @@ abstract class ClienteSeguimientoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new ClienteSeguimiento($foo);
     		array_push( $allData, $bar);
-                if(!is_null(self::$redisConection)) self::$redisConection->set(  "ClienteSeguimiento-" . $bar->getIdClienteSeguimiento(), $bar );
+			//id_cliente_seguimiento
 		}
 		return $allData;
 	}
@@ -164,7 +158,6 @@ abstract class ClienteSeguimientoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new ClienteSeguimiento($foo);
     		array_push( $ar,$bar);
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ClienteSeguimiento-" . $bar->getIdClienteSeguimiento(), $bar );
 		}
 		return $ar;
 	}
@@ -331,8 +324,7 @@ abstract class ClienteSeguimientoDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, $bar = new ClienteSeguimiento($foo));
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ClienteSeguimiento-" . $bar->getIdClienteSeguimiento(), $bar );
+    		array_push( $ar, new ClienteSeguimiento($foo));
 		}
 		return $ar;
 	}

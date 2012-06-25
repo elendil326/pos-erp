@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link Paquete }. 
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -40,26 +40,20 @@ abstract class PaqueteDAOBase extends DAO
 	  *	Obtener {@link Paquete} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Paquete} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Paquete Un objeto del tipo {@link Paquete}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_paquete )
 	{
-		if(  is_null( $id_paquete )  ){ return NULL; }
-            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "Paquete-" . $id_paquete ))){
-                Logger::log("REDIS !");
-                return new Paquete($obj);
-            }
 		$sql = "SELECT * FROM paquete WHERE (id_paquete = ? ) LIMIT 1;";
 		$params = array(  $id_paquete );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0) return NULL;
-		$foo = new Paquete( $rs );
-		if(!is_null(self::$redisConection)) self::$redisConection->set(  "Paquete-" . $id_paquete, $foo );
-		return $foo;
+		if(count($rs)==0)return NULL;
+			$foo = new Paquete( $rs );
+			return $foo;
 	}
 
 
@@ -93,7 +87,7 @@ abstract class PaqueteDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new Paquete($foo);
     		array_push( $allData, $bar);
-                if(!is_null(self::$redisConection)) self::$redisConection->set(  "Paquete-" . $bar->getIdPaquete(), $bar );
+			//id_paquete
 		}
 		return $allData;
 	}
@@ -174,7 +168,6 @@ abstract class PaqueteDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Paquete($foo);
     		array_push( $ar,$bar);
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Paquete-" . $bar->getIdPaquete(), $bar );
 		}
 		return $ar;
 	}
@@ -367,8 +360,7 @@ abstract class PaqueteDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, $bar = new Paquete($foo));
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Paquete-" . $bar->getIdPaquete(), $bar );
+    		array_push( $ar, new Paquete($foo));
 		}
 		return $ar;
 	}

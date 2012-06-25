@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link OrdenDeServicio }. 
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -40,26 +40,20 @@ abstract class OrdenDeServicioDAOBase extends DAO
 	  *	Obtener {@link OrdenDeServicio} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link OrdenDeServicio} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link OrdenDeServicio Un objeto del tipo {@link OrdenDeServicio}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_orden_de_servicio )
 	{
-		if(  is_null( $id_orden_de_servicio )  ){ return NULL; }
-            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "OrdenDeServicio-" . $id_orden_de_servicio ))){
-                Logger::log("REDIS !");
-                return new OrdenDeServicio($obj);
-            }
 		$sql = "SELECT * FROM orden_de_servicio WHERE (id_orden_de_servicio = ? ) LIMIT 1;";
 		$params = array(  $id_orden_de_servicio );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0) return NULL;
-		$foo = new OrdenDeServicio( $rs );
-		if(!is_null(self::$redisConection)) self::$redisConection->set(  "OrdenDeServicio-" . $id_orden_de_servicio, $foo );
-		return $foo;
+		if(count($rs)==0)return NULL;
+			$foo = new OrdenDeServicio( $rs );
+			return $foo;
 	}
 
 
@@ -93,7 +87,7 @@ abstract class OrdenDeServicioDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new OrdenDeServicio($foo);
     		array_push( $allData, $bar);
-                if(!is_null(self::$redisConection)) self::$redisConection->set(  "OrdenDeServicio-" . $bar->getIdOrdenDeServicio(), $bar );
+			//id_orden_de_servicio
 		}
 		return $allData;
 	}
@@ -209,7 +203,6 @@ abstract class OrdenDeServicioDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new OrdenDeServicio($foo);
     		array_push( $ar,$bar);
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "OrdenDeServicio-" . $bar->getIdOrdenDeServicio(), $bar );
 		}
 		return $ar;
 	}
@@ -493,8 +486,7 @@ abstract class OrdenDeServicioDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, $bar = new OrdenDeServicio($foo));
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "OrdenDeServicio-" . $bar->getIdOrdenDeServicio(), $bar );
+    		array_push( $ar, new OrdenDeServicio($foo));
 		}
 		return $ar;
 	}

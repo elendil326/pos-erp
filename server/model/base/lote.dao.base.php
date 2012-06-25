@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link Lote }. 
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -40,26 +40,20 @@ abstract class LoteDAOBase extends DAO
 	  *	Obtener {@link Lote} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Lote} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Lote Un objeto del tipo {@link Lote}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_lote )
 	{
-		if(  is_null( $id_lote )  ){ return NULL; }
-            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "Lote-" . $id_lote ))){
-                Logger::log("REDIS !");
-                return new Lote($obj);
-            }
 		$sql = "SELECT * FROM lote WHERE (id_lote = ? ) LIMIT 1;";
 		$params = array(  $id_lote );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0) return NULL;
-		$foo = new Lote( $rs );
-		if(!is_null(self::$redisConection)) self::$redisConection->set(  "Lote-" . $id_lote, $foo );
-		return $foo;
+		if(count($rs)==0)return NULL;
+			$foo = new Lote( $rs );
+			return $foo;
 	}
 
 
@@ -93,7 +87,7 @@ abstract class LoteDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new Lote($foo);
     		array_push( $allData, $bar);
-                if(!is_null(self::$redisConection)) self::$redisConection->set(  "Lote-" . $bar->getIdLote(), $bar );
+			//id_lote
 		}
 		return $allData;
 	}
@@ -159,7 +153,6 @@ abstract class LoteDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Lote($foo);
     		array_push( $ar,$bar);
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Lote-" . $bar->getIdLote(), $bar );
 		}
 		return $ar;
 	}
@@ -313,8 +306,7 @@ abstract class LoteDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, $bar = new Lote($foo));
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Lote-" . $bar->getIdLote(), $bar );
+    		array_push( $ar, new Lote($foo));
 		}
 		return $ar;
 	}

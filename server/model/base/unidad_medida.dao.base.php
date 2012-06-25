@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link UnidadMedida }. 
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -40,26 +40,20 @@ abstract class UnidadMedidaDAOBase extends DAO
 	  *	Obtener {@link UnidadMedida} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link UnidadMedida} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link UnidadMedida Un objeto del tipo {@link UnidadMedida}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_unidad_medida )
 	{
-		if(  is_null( $id_unidad_medida )  ){ return NULL; }
-            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "UnidadMedida-" . $id_unidad_medida ))){
-                Logger::log("REDIS !");
-                return new UnidadMedida($obj);
-            }
 		$sql = "SELECT * FROM unidad_medida WHERE (id_unidad_medida = ? ) LIMIT 1;";
 		$params = array(  $id_unidad_medida );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0) return NULL;
-		$foo = new UnidadMedida( $rs );
-		if(!is_null(self::$redisConection)) self::$redisConection->set(  "UnidadMedida-" . $id_unidad_medida, $foo );
-		return $foo;
+		if(count($rs)==0)return NULL;
+			$foo = new UnidadMedida( $rs );
+			return $foo;
 	}
 
 
@@ -93,7 +87,7 @@ abstract class UnidadMedidaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new UnidadMedida($foo);
     		array_push( $allData, $bar);
-                if(!is_null(self::$redisConection)) self::$redisConection->set(  "UnidadMedida-" . $bar->getIdUnidadMedida(), $bar );
+			//id_unidad_medida
 		}
 		return $allData;
 	}
@@ -174,7 +168,6 @@ abstract class UnidadMedidaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new UnidadMedida($foo);
     		array_push( $ar,$bar);
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "UnidadMedida-" . $bar->getIdUnidadMedida(), $bar );
 		}
 		return $ar;
 	}
@@ -367,8 +360,7 @@ abstract class UnidadMedidaDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, $bar = new UnidadMedida($foo));
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "UnidadMedida-" . $bar->getIdUnidadMedida(), $bar );
+    		array_push( $ar, new UnidadMedida($foo));
 		}
 		return $ar;
 	}

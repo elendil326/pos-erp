@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link Caja }. 
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -40,26 +40,20 @@ abstract class CajaDAOBase extends DAO
 	  *	Obtener {@link Caja} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Caja} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Caja Un objeto del tipo {@link Caja}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_caja )
 	{
-		if(  is_null( $id_caja )  ){ return NULL; }
-            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "Caja-" . $id_caja ))){
-                Logger::log("REDIS !");
-                return new Caja($obj);
-            }
 		$sql = "SELECT * FROM caja WHERE (id_caja = ? ) LIMIT 1;";
 		$params = array(  $id_caja );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0) return NULL;
-		$foo = new Caja( $rs );
-		if(!is_null(self::$redisConection)) self::$redisConection->set(  "Caja-" . $id_caja, $foo );
-		return $foo;
+		if(count($rs)==0)return NULL;
+			$foo = new Caja( $rs );
+			return $foo;
 	}
 
 
@@ -93,7 +87,7 @@ abstract class CajaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new Caja($foo);
     		array_push( $allData, $bar);
-                if(!is_null(self::$redisConection)) self::$redisConection->set(  "Caja-" . $bar->getIdCaja(), $bar );
+			//id_caja
 		}
 		return $allData;
 	}
@@ -179,7 +173,6 @@ abstract class CajaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Caja($foo);
     		array_push( $ar,$bar);
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Caja-" . $bar->getIdCaja(), $bar );
 		}
 		return $ar;
 	}
@@ -385,8 +378,7 @@ abstract class CajaDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, $bar = new Caja($foo));
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Caja-" . $bar->getIdCaja(), $bar );
+    		array_push( $ar, new Caja($foo));
 		}
 		return $ar;
 	}

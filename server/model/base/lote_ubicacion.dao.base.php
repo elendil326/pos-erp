@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link LoteUbicacion }. 
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -40,26 +40,20 @@ abstract class LoteUbicacionDAOBase extends DAO
 	  *	Obtener {@link LoteUbicacion} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link LoteUbicacion} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link LoteUbicacion Un objeto del tipo {@link LoteUbicacion}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_lote, $id_ubicacion )
 	{
-		if(  is_null( $id_lote ) || is_null( $id_ubicacion )  ){ return NULL; }
-            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "LoteUbicacion-" . $id_lote."-" . $id_ubicacion ))){
-                Logger::log("REDIS !");
-                return new LoteUbicacion($obj);
-            }
 		$sql = "SELECT * FROM lote_ubicacion WHERE (id_lote = ? AND id_ubicacion = ? ) LIMIT 1;";
 		$params = array(  $id_lote, $id_ubicacion );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0) return NULL;
-		$foo = new LoteUbicacion( $rs );
-		if(!is_null(self::$redisConection)) self::$redisConection->set(  "LoteUbicacion-" . $id_lote."-" . $id_ubicacion, $foo );
-		return $foo;
+		if(count($rs)==0)return NULL;
+			$foo = new LoteUbicacion( $rs );
+			return $foo;
 	}
 
 
@@ -93,7 +87,8 @@ abstract class LoteUbicacionDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new LoteUbicacion($foo);
     		array_push( $allData, $bar);
-                if(!is_null(self::$redisConection)) self::$redisConection->set(  "LoteUbicacion-" . $bar->getIdLote()."-" . $bar->getIdUbicacion(), $bar );
+			//id_lote
+			//id_ubicacion
 		}
 		return $allData;
 	}
@@ -149,7 +144,6 @@ abstract class LoteUbicacionDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new LoteUbicacion($foo);
     		array_push( $ar,$bar);
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "LoteUbicacion-" . $bar->getIdLote()."-" . $bar->getIdUbicacion(), $bar );
 		}
 		return $ar;
 	}
@@ -269,8 +263,7 @@ abstract class LoteUbicacionDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, $bar = new LoteUbicacion($foo));
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "LoteUbicacion-" . $bar->getIdLote()."-" . $bar->getIdUbicacion(), $bar );
+    		array_push( $ar, new LoteUbicacion($foo));
 		}
 		return $ar;
 	}

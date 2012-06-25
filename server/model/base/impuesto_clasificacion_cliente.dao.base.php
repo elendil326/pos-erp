@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link ImpuestoClasificacionCliente }. 
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -40,26 +40,20 @@ abstract class ImpuestoClasificacionClienteDAOBase extends DAO
 	  *	Obtener {@link ImpuestoClasificacionCliente} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ImpuestoClasificacionCliente} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ImpuestoClasificacionCliente Un objeto del tipo {@link ImpuestoClasificacionCliente}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_impuesto, $id_clasificacion_cliente )
 	{
-		if(  is_null( $id_impuesto ) || is_null( $id_clasificacion_cliente )  ){ return NULL; }
-            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "ImpuestoClasificacionCliente-" . $id_impuesto."-" . $id_clasificacion_cliente ))){
-                Logger::log("REDIS !");
-                return new ImpuestoClasificacionCliente($obj);
-            }
 		$sql = "SELECT * FROM impuesto_clasificacion_cliente WHERE (id_impuesto = ? AND id_clasificacion_cliente = ? ) LIMIT 1;";
 		$params = array(  $id_impuesto, $id_clasificacion_cliente );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0) return NULL;
-		$foo = new ImpuestoClasificacionCliente( $rs );
-		if(!is_null(self::$redisConection)) self::$redisConection->set(  "ImpuestoClasificacionCliente-" . $id_impuesto."-" . $id_clasificacion_cliente, $foo );
-		return $foo;
+		if(count($rs)==0)return NULL;
+			$foo = new ImpuestoClasificacionCliente( $rs );
+			return $foo;
 	}
 
 
@@ -93,7 +87,8 @@ abstract class ImpuestoClasificacionClienteDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new ImpuestoClasificacionCliente($foo);
     		array_push( $allData, $bar);
-                if(!is_null(self::$redisConection)) self::$redisConection->set(  "ImpuestoClasificacionCliente-" . $bar->getIdImpuesto()."-" . $bar->getIdClasificacionCliente(), $bar );
+			//id_impuesto
+			//id_clasificacion_cliente
 		}
 		return $allData;
 	}
@@ -149,7 +144,6 @@ abstract class ImpuestoClasificacionClienteDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new ImpuestoClasificacionCliente($foo);
     		array_push( $ar,$bar);
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ImpuestoClasificacionCliente-" . $bar->getIdImpuesto()."-" . $bar->getIdClasificacionCliente(), $bar );
 		}
 		return $ar;
 	}
@@ -269,8 +263,7 @@ abstract class ImpuestoClasificacionClienteDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, $bar = new ImpuestoClasificacionCliente($foo));
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ImpuestoClasificacionCliente-" . $bar->getIdImpuesto()."-" . $bar->getIdClasificacionCliente(), $bar );
+    		array_push( $ar, new ImpuestoClasificacionCliente($foo));
 		}
 		return $ar;
 	}

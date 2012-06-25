@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link LoteSalida }. 
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -40,26 +40,20 @@ abstract class LoteSalidaDAOBase extends DAO
 	  *	Obtener {@link LoteSalida} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link LoteSalida} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link LoteSalida Un objeto del tipo {@link LoteSalida}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_lote_salida )
 	{
-		if(  is_null( $id_lote_salida )  ){ return NULL; }
-            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "LoteSalida-" . $id_lote_salida ))){
-                Logger::log("REDIS !");
-                return new LoteSalida($obj);
-            }
 		$sql = "SELECT * FROM lote_salida WHERE (id_lote_salida = ? ) LIMIT 1;";
 		$params = array(  $id_lote_salida );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0) return NULL;
-		$foo = new LoteSalida( $rs );
-		if(!is_null(self::$redisConection)) self::$redisConection->set(  "LoteSalida-" . $id_lote_salida, $foo );
-		return $foo;
+		if(count($rs)==0)return NULL;
+			$foo = new LoteSalida( $rs );
+			return $foo;
 	}
 
 
@@ -93,7 +87,7 @@ abstract class LoteSalidaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new LoteSalida($foo);
     		array_push( $allData, $bar);
-                if(!is_null(self::$redisConection)) self::$redisConection->set(  "LoteSalida-" . $bar->getIdLoteSalida(), $bar );
+			//id_lote_salida
 		}
 		return $allData;
 	}
@@ -164,7 +158,6 @@ abstract class LoteSalidaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new LoteSalida($foo);
     		array_push( $ar,$bar);
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "LoteSalida-" . $bar->getIdLoteSalida(), $bar );
 		}
 		return $ar;
 	}
@@ -331,8 +324,7 @@ abstract class LoteSalidaDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, $bar = new LoteSalida($foo));
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "LoteSalida-" . $bar->getIdLoteSalida(), $bar );
+    		array_push( $ar, new LoteSalida($foo));
 		}
 		return $ar;
 	}

@@ -2,7 +2,7 @@
 /** Value Object file for table concepto_gasto.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access public
   * @package docs
   * 
@@ -22,10 +22,6 @@ class ConceptoGasto extends VO
 	{ 
 		if(isset($data))
 		{
-                    if(is_string($data))
-                        $data = self::object_to_array(json_decode($data));
-
-
 			if( isset($data['id_concepto_gasto']) ){
 				$this->id_concepto_gasto = $data['id_concepto_gasto'];
 			}

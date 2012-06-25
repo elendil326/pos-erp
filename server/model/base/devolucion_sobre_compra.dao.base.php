@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link DevolucionSobreCompra }. 
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -40,26 +40,20 @@ abstract class DevolucionSobreCompraDAOBase extends DAO
 	  *	Obtener {@link DevolucionSobreCompra} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link DevolucionSobreCompra} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link DevolucionSobreCompra Un objeto del tipo {@link DevolucionSobreCompra}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_devolucion_sobre_compra )
 	{
-		if(  is_null( $id_devolucion_sobre_compra )  ){ return NULL; }
-            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "DevolucionSobreCompra-" . $id_devolucion_sobre_compra ))){
-                Logger::log("REDIS !");
-                return new DevolucionSobreCompra($obj);
-            }
 		$sql = "SELECT * FROM devolucion_sobre_compra WHERE (id_devolucion_sobre_compra = ? ) LIMIT 1;";
 		$params = array(  $id_devolucion_sobre_compra );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0) return NULL;
-		$foo = new DevolucionSobreCompra( $rs );
-		if(!is_null(self::$redisConection)) self::$redisConection->set(  "DevolucionSobreCompra-" . $id_devolucion_sobre_compra, $foo );
-		return $foo;
+		if(count($rs)==0)return NULL;
+			$foo = new DevolucionSobreCompra( $rs );
+			return $foo;
 	}
 
 
@@ -93,7 +87,7 @@ abstract class DevolucionSobreCompraDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new DevolucionSobreCompra($foo);
     		array_push( $allData, $bar);
-                if(!is_null(self::$redisConection)) self::$redisConection->set(  "DevolucionSobreCompra-" . $bar->getIdDevolucionSobreCompra(), $bar );
+			//id_devolucion_sobre_compra
 		}
 		return $allData;
 	}
@@ -164,7 +158,6 @@ abstract class DevolucionSobreCompraDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new DevolucionSobreCompra($foo);
     		array_push( $ar,$bar);
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "DevolucionSobreCompra-" . $bar->getIdDevolucionSobreCompra(), $bar );
 		}
 		return $ar;
 	}
@@ -331,8 +324,7 @@ abstract class DevolucionSobreCompraDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, $bar = new DevolucionSobreCompra($foo));
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "DevolucionSobreCompra-" . $bar->getIdDevolucionSobreCompra(), $bar );
+    		array_push( $ar, new DevolucionSobreCompra($foo));
 		}
 		return $ar;
 	}

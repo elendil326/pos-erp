@@ -2,7 +2,7 @@
 /** Value Object file for table usuario.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access public
   * @package docs
   * 
@@ -22,10 +22,6 @@ class Usuario extends VO
 	{ 
 		if(isset($data))
 		{
-                    if(is_string($data))
-                        $data = self::object_to_array(json_decode($data));
-
-
 			if( isset($data['id_usuario']) ){
 				$this->id_usuario = $data['id_usuario'];
 			}
@@ -268,7 +264,7 @@ class Usuario extends VO
 	/**
 	  * id_rol
 	  * 
-	  * Id del rol que desempeÃ±ara el usuario en la instancia<br>
+	  * Id del rol que desempeÃƒÂ±ara el usuario en la instancia<br>
 	  * @access public
 	  * @var int(11)
 	  */
@@ -511,7 +507,7 @@ class Usuario extends VO
 	/**
 	  * mensajeria
 	  * 
-	  * Si el cliente cuenta con una cuenta de mensajerÃ­a y paqueterÃ­a<br>
+	  * Si el cliente cuenta con una cuenta de mensajerÃƒÂ­a y paqueterÃƒÂ­a<br>
 	  * @access public
 	  * @var tinyint(1)
 	  */
@@ -529,7 +525,7 @@ class Usuario extends VO
 	/**
 	  * denominacion_comercial
 	  * 
-	  * DenominaciÃ³n comercial del cliente<br>
+	  * DenominaciÃƒÂ³n comercial del cliente<br>
 	  * @access public
 	  * @var varchar(100)
 	  */
@@ -538,7 +534,7 @@ class Usuario extends VO
 	/**
 	  * dias_de_credito
 	  * 
-	  * DÃ­as de crÃ©dito que se le darÃ¡n al cliente<br>
+	  * DÃƒÂ­as de crÃƒÂ©dito que se le darÃƒÂ¡n al cliente<br>
 	  * @access public
 	  * @var int(11)
 	  */
@@ -556,7 +552,7 @@ class Usuario extends VO
 	/**
 	  * dia_de_revision
 	  * 
-	  * Fecha de revisiÃ³n del cliente<br>
+	  * Fecha de revisiÃƒÂ³n del cliente<br>
 	  * @access public
 	  * @var int(11)
 	  */
@@ -583,7 +579,7 @@ class Usuario extends VO
 	/**
 	  * tiempo_entrega
 	  * 
-	  * Tiempo de entrega del proveedor en dÃ­as<br>
+	  * Tiempo de entrega del proveedor en dÃƒÂ­as<br>
 	  * @access public
 	  * @var int(11)
 	  */
@@ -746,7 +742,7 @@ class Usuario extends VO
 	/**
 	  * getIdRol
 	  * 
-	  * Get the <i>id_rol</i> property for this object. Donde <i>id_rol</i> es Id del rol que desempeÃ±ara el usuario en la instancia
+	  * Get the <i>id_rol</i> property for this object. Donde <i>id_rol</i> es Id del rol que desempeÃƒÂ±ara el usuario en la instancia
 	  * @return int(11)
 	  */
 	final public function getIdRol()
@@ -757,7 +753,7 @@ class Usuario extends VO
 	/**
 	  * setIdRol( $id_rol )
 	  * 
-	  * Set the <i>id_rol</i> property for this object. Donde <i>id_rol</i> es Id del rol que desempeÃ±ara el usuario en la instancia.
+	  * Set the <i>id_rol</i> property for this object. Donde <i>id_rol</i> es Id del rol que desempeÃƒÂ±ara el usuario en la instancia.
 	  * Una validacion basica se hara aqui para comprobar que <i>id_rol</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param int(11)
@@ -1394,7 +1390,7 @@ class Usuario extends VO
 	/**
 	  * getMensajeria
 	  * 
-	  * Get the <i>mensajeria</i> property for this object. Donde <i>mensajeria</i> es Si el cliente cuenta con una cuenta de mensajerÃ­a y paqueterÃ­a
+	  * Get the <i>mensajeria</i> property for this object. Donde <i>mensajeria</i> es Si el cliente cuenta con una cuenta de mensajerÃƒÂ­a y paqueterÃƒÂ­a
 	  * @return tinyint(1)
 	  */
 	final public function getMensajeria()
@@ -1405,7 +1401,7 @@ class Usuario extends VO
 	/**
 	  * setMensajeria( $mensajeria )
 	  * 
-	  * Set the <i>mensajeria</i> property for this object. Donde <i>mensajeria</i> es Si el cliente cuenta con una cuenta de mensajerÃ­a y paqueterÃ­a.
+	  * Set the <i>mensajeria</i> property for this object. Donde <i>mensajeria</i> es Si el cliente cuenta con una cuenta de mensajerÃƒÂ­a y paqueterÃƒÂ­a.
 	  * Una validacion basica se hara aqui para comprobar que <i>mensajeria</i> es de tipo <i>tinyint(1)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param tinyint(1)
@@ -1442,7 +1438,7 @@ class Usuario extends VO
 	/**
 	  * getDenominacionComercial
 	  * 
-	  * Get the <i>denominacion_comercial</i> property for this object. Donde <i>denominacion_comercial</i> es DenominaciÃ³n comercial del cliente
+	  * Get the <i>denominacion_comercial</i> property for this object. Donde <i>denominacion_comercial</i> es DenominaciÃƒÂ³n comercial del cliente
 	  * @return varchar(100)
 	  */
 	final public function getDenominacionComercial()
@@ -1453,7 +1449,7 @@ class Usuario extends VO
 	/**
 	  * setDenominacionComercial( $denominacion_comercial )
 	  * 
-	  * Set the <i>denominacion_comercial</i> property for this object. Donde <i>denominacion_comercial</i> es DenominaciÃ³n comercial del cliente.
+	  * Set the <i>denominacion_comercial</i> property for this object. Donde <i>denominacion_comercial</i> es DenominaciÃƒÂ³n comercial del cliente.
 	  * Una validacion basica se hara aqui para comprobar que <i>denominacion_comercial</i> es de tipo <i>varchar(100)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param varchar(100)
@@ -1466,7 +1462,7 @@ class Usuario extends VO
 	/**
 	  * getDiasDeCredito
 	  * 
-	  * Get the <i>dias_de_credito</i> property for this object. Donde <i>dias_de_credito</i> es DÃ­as de crÃ©dito que se le darÃ¡n al cliente
+	  * Get the <i>dias_de_credito</i> property for this object. Donde <i>dias_de_credito</i> es DÃƒÂ­as de crÃƒÂ©dito que se le darÃƒÂ¡n al cliente
 	  * @return int(11)
 	  */
 	final public function getDiasDeCredito()
@@ -1477,7 +1473,7 @@ class Usuario extends VO
 	/**
 	  * setDiasDeCredito( $dias_de_credito )
 	  * 
-	  * Set the <i>dias_de_credito</i> property for this object. Donde <i>dias_de_credito</i> es DÃ­as de crÃ©dito que se le darÃ¡n al cliente.
+	  * Set the <i>dias_de_credito</i> property for this object. Donde <i>dias_de_credito</i> es DÃƒÂ­as de crÃƒÂ©dito que se le darÃƒÂ¡n al cliente.
 	  * Una validacion basica se hara aqui para comprobar que <i>dias_de_credito</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param int(11)
@@ -1514,7 +1510,7 @@ class Usuario extends VO
 	/**
 	  * getDiaDeRevision
 	  * 
-	  * Get the <i>dia_de_revision</i> property for this object. Donde <i>dia_de_revision</i> es Fecha de revisiÃ³n del cliente
+	  * Get the <i>dia_de_revision</i> property for this object. Donde <i>dia_de_revision</i> es Fecha de revisiÃƒÂ³n del cliente
 	  * @return int(11)
 	  */
 	final public function getDiaDeRevision()
@@ -1525,7 +1521,7 @@ class Usuario extends VO
 	/**
 	  * setDiaDeRevision( $dia_de_revision )
 	  * 
-	  * Set the <i>dia_de_revision</i> property for this object. Donde <i>dia_de_revision</i> es Fecha de revisiÃ³n del cliente.
+	  * Set the <i>dia_de_revision</i> property for this object. Donde <i>dia_de_revision</i> es Fecha de revisiÃƒÂ³n del cliente.
 	  * Una validacion basica se hara aqui para comprobar que <i>dia_de_revision</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param int(11)
@@ -1586,7 +1582,7 @@ class Usuario extends VO
 	/**
 	  * getTiempoEntrega
 	  * 
-	  * Get the <i>tiempo_entrega</i> property for this object. Donde <i>tiempo_entrega</i> es Tiempo de entrega del proveedor en dÃ­as
+	  * Get the <i>tiempo_entrega</i> property for this object. Donde <i>tiempo_entrega</i> es Tiempo de entrega del proveedor en dÃƒÂ­as
 	  * @return int(11)
 	  */
 	final public function getTiempoEntrega()
@@ -1597,7 +1593,7 @@ class Usuario extends VO
 	/**
 	  * setTiempoEntrega( $tiempo_entrega )
 	  * 
-	  * Set the <i>tiempo_entrega</i> property for this object. Donde <i>tiempo_entrega</i> es Tiempo de entrega del proveedor en dÃ­as.
+	  * Set the <i>tiempo_entrega</i> property for this object. Donde <i>tiempo_entrega</i> es Tiempo de entrega del proveedor en dÃƒÂ­as.
 	  * Una validacion basica se hara aqui para comprobar que <i>tiempo_entrega</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param int(11)

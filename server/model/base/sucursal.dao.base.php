@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link Sucursal }. 
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -40,26 +40,20 @@ abstract class SucursalDAOBase extends DAO
 	  *	Obtener {@link Sucursal} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Sucursal} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Sucursal Un objeto del tipo {@link Sucursal}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_sucursal )
 	{
-		if(  is_null( $id_sucursal )  ){ return NULL; }
-            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "Sucursal-" . $id_sucursal ))){
-                Logger::log("REDIS !");
-                return new Sucursal($obj);
-            }
 		$sql = "SELECT * FROM sucursal WHERE (id_sucursal = ? ) LIMIT 1;";
 		$params = array(  $id_sucursal );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0) return NULL;
-		$foo = new Sucursal( $rs );
-		if(!is_null(self::$redisConection)) self::$redisConection->set(  "Sucursal-" . $id_sucursal, $foo );
-		return $foo;
+		if(count($rs)==0)return NULL;
+			$foo = new Sucursal( $rs );
+			return $foo;
 	}
 
 
@@ -93,7 +87,7 @@ abstract class SucursalDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new Sucursal($foo);
     		array_push( $allData, $bar);
-                if(!is_null(self::$redisConection)) self::$redisConection->set(  "Sucursal-" . $bar->getIdSucursal(), $bar );
+			//id_sucursal
 		}
 		return $allData;
 	}
@@ -189,7 +183,6 @@ abstract class SucursalDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Sucursal($foo);
     		array_push( $ar,$bar);
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Sucursal-" . $bar->getIdSucursal(), $bar );
 		}
 		return $ar;
 	}
@@ -421,8 +414,7 @@ abstract class SucursalDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, $bar = new Sucursal($foo));
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Sucursal-" . $bar->getIdSucursal(), $bar );
+    		array_push( $ar, new Sucursal($foo));
 		}
 		return $ar;
 	}

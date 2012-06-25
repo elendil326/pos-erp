@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link ProductoAbastoProveedor }. 
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -40,26 +40,20 @@ abstract class ProductoAbastoProveedorDAOBase extends DAO
 	  *	Obtener {@link ProductoAbastoProveedor} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ProductoAbastoProveedor} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ProductoAbastoProveedor Un objeto del tipo {@link ProductoAbastoProveedor}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_abasto_proveedor, $id_producto, $id_unidad )
 	{
-		if(  is_null( $id_abasto_proveedor ) || is_null( $id_producto ) || is_null( $id_unidad )  ){ return NULL; }
-            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "ProductoAbastoProveedor-" . $id_abasto_proveedor."-" . $id_producto."-" . $id_unidad ))){
-                Logger::log("REDIS !");
-                return new ProductoAbastoProveedor($obj);
-            }
 		$sql = "SELECT * FROM producto_abasto_proveedor WHERE (id_abasto_proveedor = ? AND id_producto = ? AND id_unidad = ? ) LIMIT 1;";
 		$params = array(  $id_abasto_proveedor, $id_producto, $id_unidad );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0) return NULL;
-		$foo = new ProductoAbastoProveedor( $rs );
-		if(!is_null(self::$redisConection)) self::$redisConection->set(  "ProductoAbastoProveedor-" . $id_abasto_proveedor."-" . $id_producto."-" . $id_unidad, $foo );
-		return $foo;
+		if(count($rs)==0)return NULL;
+			$foo = new ProductoAbastoProveedor( $rs );
+			return $foo;
 	}
 
 
@@ -93,7 +87,9 @@ abstract class ProductoAbastoProveedorDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new ProductoAbastoProveedor($foo);
     		array_push( $allData, $bar);
-                if(!is_null(self::$redisConection)) self::$redisConection->set(  "ProductoAbastoProveedor-" . $bar->getIdAbastoProveedor()."-" . $bar->getIdProducto()."-" . $bar->getIdUnidad(), $bar );
+			//id_abasto_proveedor
+			//id_producto
+			//id_unidad
 		}
 		return $allData;
 	}
@@ -159,7 +155,6 @@ abstract class ProductoAbastoProveedorDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new ProductoAbastoProveedor($foo);
     		array_push( $ar,$bar);
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ProductoAbastoProveedor-" . $bar->getIdAbastoProveedor()."-" . $bar->getIdProducto()."-" . $bar->getIdUnidad(), $bar );
 		}
 		return $ar;
 	}
@@ -311,8 +306,7 @@ abstract class ProductoAbastoProveedorDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, $bar = new ProductoAbastoProveedor($foo));
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ProductoAbastoProveedor-" . $bar->getIdAbastoProveedor()."-" . $bar->getIdProducto()."-" . $bar->getIdUnidad(), $bar );
+    		array_push( $ar, new ProductoAbastoProveedor($foo));
 		}
 		return $ar;
 	}

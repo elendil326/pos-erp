@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link AperturaCaja }. 
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -40,26 +40,20 @@ abstract class AperturaCajaDAOBase extends DAO
 	  *	Obtener {@link AperturaCaja} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link AperturaCaja} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link AperturaCaja Un objeto del tipo {@link AperturaCaja}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_apertura_caja )
 	{
-		if(  is_null( $id_apertura_caja )  ){ return NULL; }
-            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "AperturaCaja-" . $id_apertura_caja ))){
-                Logger::log("REDIS !");
-                return new AperturaCaja($obj);
-            }
 		$sql = "SELECT * FROM apertura_caja WHERE (id_apertura_caja = ? ) LIMIT 1;";
 		$params = array(  $id_apertura_caja );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0) return NULL;
-		$foo = new AperturaCaja( $rs );
-		if(!is_null(self::$redisConection)) self::$redisConection->set(  "AperturaCaja-" . $id_apertura_caja, $foo );
-		return $foo;
+		if(count($rs)==0)return NULL;
+			$foo = new AperturaCaja( $rs );
+			return $foo;
 	}
 
 
@@ -93,7 +87,7 @@ abstract class AperturaCajaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new AperturaCaja($foo);
     		array_push( $allData, $bar);
-                if(!is_null(self::$redisConection)) self::$redisConection->set(  "AperturaCaja-" . $bar->getIdAperturaCaja(), $bar );
+			//id_apertura_caja
 		}
 		return $allData;
 	}
@@ -164,7 +158,6 @@ abstract class AperturaCajaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new AperturaCaja($foo);
     		array_push( $ar,$bar);
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "AperturaCaja-" . $bar->getIdAperturaCaja(), $bar );
 		}
 		return $ar;
 	}
@@ -331,8 +324,7 @@ abstract class AperturaCajaDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, $bar = new AperturaCaja($foo));
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "AperturaCaja-" . $bar->getIdAperturaCaja(), $bar );
+    		array_push( $ar, new AperturaCaja($foo));
 		}
 		return $ar;
 	}

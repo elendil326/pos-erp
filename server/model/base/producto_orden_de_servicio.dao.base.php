@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link ProductoOrdenDeServicio }. 
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -40,26 +40,20 @@ abstract class ProductoOrdenDeServicioDAOBase extends DAO
 	  *	Obtener {@link ProductoOrdenDeServicio} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ProductoOrdenDeServicio} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ProductoOrdenDeServicio Un objeto del tipo {@link ProductoOrdenDeServicio}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_orden_de_servicio, $id_producto, $id_unidad )
 	{
-		if(  is_null( $id_orden_de_servicio ) || is_null( $id_producto ) || is_null( $id_unidad )  ){ return NULL; }
-            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "ProductoOrdenDeServicio-" . $id_orden_de_servicio."-" . $id_producto."-" . $id_unidad ))){
-                Logger::log("REDIS !");
-                return new ProductoOrdenDeServicio($obj);
-            }
 		$sql = "SELECT * FROM producto_orden_de_servicio WHERE (id_orden_de_servicio = ? AND id_producto = ? AND id_unidad = ? ) LIMIT 1;";
 		$params = array(  $id_orden_de_servicio, $id_producto, $id_unidad );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0) return NULL;
-		$foo = new ProductoOrdenDeServicio( $rs );
-		if(!is_null(self::$redisConection)) self::$redisConection->set(  "ProductoOrdenDeServicio-" . $id_orden_de_servicio."-" . $id_producto."-" . $id_unidad, $foo );
-		return $foo;
+		if(count($rs)==0)return NULL;
+			$foo = new ProductoOrdenDeServicio( $rs );
+			return $foo;
 	}
 
 
@@ -93,7 +87,9 @@ abstract class ProductoOrdenDeServicioDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new ProductoOrdenDeServicio($foo);
     		array_push( $allData, $bar);
-                if(!is_null(self::$redisConection)) self::$redisConection->set(  "ProductoOrdenDeServicio-" . $bar->getIdOrdenDeServicio()."-" . $bar->getIdProducto()."-" . $bar->getIdUnidad(), $bar );
+			//id_orden_de_servicio
+			//id_producto
+			//id_unidad
 		}
 		return $allData;
 	}
@@ -179,7 +175,6 @@ abstract class ProductoOrdenDeServicioDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new ProductoOrdenDeServicio($foo);
     		array_push( $ar,$bar);
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ProductoOrdenDeServicio-" . $bar->getIdOrdenDeServicio()."-" . $bar->getIdProducto()."-" . $bar->getIdUnidad(), $bar );
 		}
 		return $ar;
 	}
@@ -383,8 +378,7 @@ abstract class ProductoOrdenDeServicioDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, $bar = new ProductoOrdenDeServicio($foo));
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ProductoOrdenDeServicio-" . $bar->getIdOrdenDeServicio()."-" . $bar->getIdProducto()."-" . $bar->getIdUnidad(), $bar );
+    		array_push( $ar, new ProductoOrdenDeServicio($foo));
 		}
 		return $ar;
 	}

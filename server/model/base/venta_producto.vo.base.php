@@ -2,7 +2,7 @@
 /** Value Object file for table venta_producto.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access public
   * @package docs
   * 
@@ -22,10 +22,6 @@ class VentaProducto extends VO
 	{ 
 		if(isset($data))
 		{
-                    if(is_string($data))
-                        $data = self::object_to_array(json_decode($data));
-
-
 			if( isset($data['id_venta']) ){
 				$this->id_venta = $data['id_venta'];
 			}
@@ -109,7 +105,7 @@ class VentaProducto extends VO
 	  * 
 	  * cantidad de producto que se vendio<br>
 	  * @access public
-	  * @var int(11)
+	  * @var float
 	  */
 	public $cantidad;
 
@@ -230,7 +226,7 @@ class VentaProducto extends VO
 	  * getCantidad
 	  * 
 	  * Get the <i>cantidad</i> property for this object. Donde <i>cantidad</i> es cantidad de producto que se vendio
-	  * @return int(11)
+	  * @return float
 	  */
 	final public function getCantidad()
 	{
@@ -241,9 +237,9 @@ class VentaProducto extends VO
 	  * setCantidad( $cantidad )
 	  * 
 	  * Set the <i>cantidad</i> property for this object. Donde <i>cantidad</i> es cantidad de producto que se vendio.
-	  * Una validacion basica se hara aqui para comprobar que <i>cantidad</i> es de tipo <i>int(11)</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>cantidad</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param int(11)
+	  * @param float
 	  */
 	final public function setCantidad( $cantidad )
 	{

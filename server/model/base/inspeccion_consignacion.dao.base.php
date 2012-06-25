@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link InspeccionConsignacion }. 
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -40,26 +40,20 @@ abstract class InspeccionConsignacionDAOBase extends DAO
 	  *	Obtener {@link InspeccionConsignacion} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link InspeccionConsignacion} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link InspeccionConsignacion Un objeto del tipo {@link InspeccionConsignacion}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_inspeccion_consignacion )
 	{
-		if(  is_null( $id_inspeccion_consignacion )  ){ return NULL; }
-            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "InspeccionConsignacion-" . $id_inspeccion_consignacion ))){
-                Logger::log("REDIS !");
-                return new InspeccionConsignacion($obj);
-            }
 		$sql = "SELECT * FROM inspeccion_consignacion WHERE (id_inspeccion_consignacion = ? ) LIMIT 1;";
 		$params = array(  $id_inspeccion_consignacion );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0) return NULL;
-		$foo = new InspeccionConsignacion( $rs );
-		if(!is_null(self::$redisConection)) self::$redisConection->set(  "InspeccionConsignacion-" . $id_inspeccion_consignacion, $foo );
-		return $foo;
+		if(count($rs)==0)return NULL;
+			$foo = new InspeccionConsignacion( $rs );
+			return $foo;
 	}
 
 
@@ -93,7 +87,7 @@ abstract class InspeccionConsignacionDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new InspeccionConsignacion($foo);
     		array_push( $allData, $bar);
-                if(!is_null(self::$redisConection)) self::$redisConection->set(  "InspeccionConsignacion-" . $bar->getIdInspeccionConsignacion(), $bar );
+			//id_inspeccion_consignacion
 		}
 		return $allData;
 	}
@@ -179,7 +173,6 @@ abstract class InspeccionConsignacionDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new InspeccionConsignacion($foo);
     		array_push( $ar,$bar);
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "InspeccionConsignacion-" . $bar->getIdInspeccionConsignacion(), $bar );
 		}
 		return $ar;
 	}
@@ -385,8 +378,7 @@ abstract class InspeccionConsignacionDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, $bar = new InspeccionConsignacion($foo));
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "InspeccionConsignacion-" . $bar->getIdInspeccionConsignacion(), $bar );
+    		array_push( $ar, new InspeccionConsignacion($foo));
 		}
 		return $ar;
 	}

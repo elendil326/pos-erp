@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link Cheque }. 
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -40,26 +40,20 @@ abstract class ChequeDAOBase extends DAO
 	  *	Obtener {@link Cheque} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link Cheque} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link Cheque Un objeto del tipo {@link Cheque}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_cheque )
 	{
-		if(  is_null( $id_cheque )  ){ return NULL; }
-            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "Cheque-" . $id_cheque ))){
-                Logger::log("REDIS !");
-                return new Cheque($obj);
-            }
 		$sql = "SELECT * FROM cheque WHERE (id_cheque = ? ) LIMIT 1;";
 		$params = array(  $id_cheque );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0) return NULL;
-		$foo = new Cheque( $rs );
-		if(!is_null(self::$redisConection)) self::$redisConection->set(  "Cheque-" . $id_cheque, $foo );
-		return $foo;
+		if(count($rs)==0)return NULL;
+			$foo = new Cheque( $rs );
+			return $foo;
 	}
 
 
@@ -93,7 +87,7 @@ abstract class ChequeDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new Cheque($foo);
     		array_push( $allData, $bar);
-                if(!is_null(self::$redisConection)) self::$redisConection->set(  "Cheque-" . $bar->getIdCheque(), $bar );
+			//id_cheque
 		}
 		return $allData;
 	}
@@ -169,7 +163,6 @@ abstract class ChequeDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new Cheque($foo);
     		array_push( $ar,$bar);
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Cheque-" . $bar->getIdCheque(), $bar );
 		}
 		return $ar;
 	}
@@ -349,8 +342,7 @@ abstract class ChequeDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, $bar = new Cheque($foo));
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "Cheque-" . $bar->getIdCheque(), $bar );
+    		array_push( $ar, new Cheque($foo));
 		}
 		return $ar;
 	}

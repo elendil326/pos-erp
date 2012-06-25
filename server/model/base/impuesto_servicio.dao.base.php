@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link ImpuestoServicio }. 
-  * @author someone@caffeina.mx
+  * @author Anonymous
   * @access private
   * @abstract
   * @package docs
@@ -40,26 +40,20 @@ abstract class ImpuestoServicioDAOBase extends DAO
 	  *	Obtener {@link ImpuestoServicio} por llave primaria. 
 	  *	
 	  * Este metodo cargara un objeto {@link ImpuestoServicio} de la base de datos 
-      * usando sus llaves primarias. 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
 	  * @return @link ImpuestoServicio Un objeto del tipo {@link ImpuestoServicio}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_impuesto, $id_servicio )
 	{
-		if(  is_null( $id_impuesto ) || is_null( $id_servicio )  ){ return NULL; }
-            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( "ImpuestoServicio-" . $id_impuesto."-" . $id_servicio ))){
-                Logger::log("REDIS !");
-                return new ImpuestoServicio($obj);
-            }
 		$sql = "SELECT * FROM impuesto_servicio WHERE (id_impuesto = ? AND id_servicio = ? ) LIMIT 1;";
 		$params = array(  $id_impuesto, $id_servicio );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
-		if(count($rs)==0) return NULL;
-		$foo = new ImpuestoServicio( $rs );
-		if(!is_null(self::$redisConection)) self::$redisConection->set(  "ImpuestoServicio-" . $id_impuesto."-" . $id_servicio, $foo );
-		return $foo;
+		if(count($rs)==0)return NULL;
+			$foo = new ImpuestoServicio( $rs );
+			return $foo;
 	}
 
 
@@ -93,7 +87,8 @@ abstract class ImpuestoServicioDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new ImpuestoServicio($foo);
     		array_push( $allData, $bar);
-                if(!is_null(self::$redisConection)) self::$redisConection->set(  "ImpuestoServicio-" . $bar->getIdImpuesto()."-" . $bar->getIdServicio(), $bar );
+			//id_impuesto
+			//id_servicio
 		}
 		return $allData;
 	}
@@ -149,7 +144,6 @@ abstract class ImpuestoServicioDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new ImpuestoServicio($foo);
     		array_push( $ar,$bar);
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ImpuestoServicio-" . $bar->getIdImpuesto()."-" . $bar->getIdServicio(), $bar );
 		}
 		return $ar;
 	}
@@ -269,8 +263,7 @@ abstract class ImpuestoServicioDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, $bar = new ImpuestoServicio($foo));
-                    if(!is_null(self::$redisConection)) self::$redisConection->set(  "ImpuestoServicio-" . $bar->getIdImpuesto()."-" . $bar->getIdServicio(), $bar );
+    		array_push( $ar, new ImpuestoServicio($foo));
 		}
 		return $ar;
 	}
