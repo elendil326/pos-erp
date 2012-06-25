@@ -64,7 +64,7 @@ require_once ('ingreso.dao.php');
 require_once ('inspeccion_consignacion.dao.php');
 require_once ('inspeccion_consignacion_producto.dao.php');
 require_once ('lote.dao.php');
-require_once ('lote_almacen.dao.php');
+
 require_once ('lote_entrada.dao.php');
 require_once ('lote_entrada_producto.dao.php');
 require_once ('lote_producto.dao.php');
@@ -128,8 +128,8 @@ require_once ('tipo_almacen.dao.php');
 require_once ('traspaso.dao.php');
 require_once ('traspaso_producto.dao.php');
 require_once ('ubicacion.dao.php');
-require_once ('unidad.dao.php');
-require_once ('unidad_equivalencia.dao.php');
+
+
 require_once ('unidad_medida.dao.php');
 require_once ('usuario.dao.php');
 require_once ('venta.dao.php');
@@ -142,3 +142,6 @@ require_once ('venta_producto.dao.php');
 require_once ('version.dao.php');
 
 require_once ('cliente_seguimiento.dao.php');
+
+require_once ('extra_params_estructura.dao.php');
+require_once ('extra_params_valores.dao.php');

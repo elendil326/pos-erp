@@ -117,7 +117,7 @@ define("AUTH_TOKEN", $response->auth_token);
 
 $post_data = array(
     'at' => AUTH_TOKEN,
-    'razon_social' => 'dilba monica del moral'
+    'razon_social' => $_POST["rs"]
 );
 
 
@@ -130,4 +130,34 @@ if ($result['status'] != 'ok'){
 
  
 }
+
+
+
+
+
+
+var obj = {
+		razon_scocial 		: $("#rs"),
+		representante_legal	: $("#rl"),
+		rfc					: $("#rfc"),
+		telefono1			: $("#t1"),
+		telefono2			: $("#t2"),
+		email 				: $("#email"),
+		calle				: $("#calle"),
+		numero_interior		: $("#ni"),
+		numero_exterior		: $("#ne"),
+		colonia				: $("#colonia"),
+		ciudad				: $("#ciudad"),
+		codigo_postal 		: $("#cp")
+};
+
+$.ajax({
+  url: 'nuevo_socio.php',
+  data : obj,
+  method : 'post',
+  success: function(data) {
+	console.log(data);
+  }
+});
+
 
