@@ -15,7 +15,7 @@ if(class_exists ( $api_classname ) === false) {
 	die(header("HTTP/1.1 404 NOT FOUND"));
 }
 
-Logger::log("[API CALL]" . $api_classname);
+Logger::log("[API CALL] " . $api_classname);
 
 $api = new $api_classname;	
 

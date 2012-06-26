@@ -1,8 +1,6 @@
 <?php 
 
 
-
-
   class ApiSesionIniciar extends ApiHandler {
   
 
@@ -5556,6 +5554,36 @@
 			isset($_POST['tipo'] ) ? $_POST['tipo'] : null,
 			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  "",
 			isset($_POST['longitud'] ) ? $_POST['longitud'] :  ""
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiPosBdColumnaEliminar extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"campo" => new ApiExposedProperty("campo", true, POST, array( "string" )),
+			"tabla" => new ApiExposedProperty("tabla", true, POST, array( "string" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = POSController::EliminarColumnaBd( 
+ 			
+			
+			isset($_POST['campo'] ) ? $_POST['campo'] : null,
+			isset($_POST['tabla'] ) ? $_POST['tabla'] : null
 			
 			);
 		}catch(Exception $e){

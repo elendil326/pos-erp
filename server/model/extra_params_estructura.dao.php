@@ -20,12 +20,25 @@ require_once("base/extra_params_estructura.vo.base.php");
   */
 class ExtraParamsEstructuraDAO extends ExtraParamsEstructuraDAOBase
 {
+
+
+  public static function getByTablaCampo($tabla, $campo){
+    $tb = new ExtraParamsEstructura(array("tabla" => $tabla, "campo" => $campo ));
+    $tbr = self::search( $tb );
+
+    if( sizeof($tbr) != 1){ return NULL;}
+
+    return $tbr[ 0 ] ;
+
+  }
+
   public static function getByTabla($tabla){
 
-      $sql = "SELECT * FROM extra_params_estructura WHERE ( tabla = ? ) LIMIT 1;";
+      $sql = "SELECT * FROM extra_params_estructura WHERE ( tabla = ? );";
       $params = array(  $tabla );
 
       global $conn;
+
       try{
         $rs = $conn->Execute($sql, $params);  
       }catch(ADODB_Exception $ae){
@@ -40,7 +53,11 @@ class ExtraParamsEstructuraDAO extends ExtraParamsEstructuraDAOBase
         array_push( $ar,$bar);
       }
       return $ar;
-      
-
   }
+
+
+
+
+
+
 }

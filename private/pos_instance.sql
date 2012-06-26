@@ -775,7 +775,7 @@ CREATE TABLE IF NOT EXISTS `estado` (
 
 
 CREATE TABLE IF NOT EXISTS `extra_params_estructura` (
-  `id_extra_params_estructura` int(11) NOT NULL DEFAULT '0',
+  `id_extra_params_estructura` int(11) NOT NULL AUTO_INCREMENT,
   `tabla` varchar(16) COLLATE utf8_spanish_ci NOT NULL,
   `campo` varchar(16) COLLATE utf8_spanish_ci NOT NULL,
   `tipo` enum('string','int','float','bool','date') COLLATE utf8_spanish_ci NOT NULL,
@@ -785,8 +785,7 @@ CREATE TABLE IF NOT EXISTS `extra_params_estructura` (
   `descripcion` text COLLATE utf8_spanish_ci,
   PRIMARY KEY (`id_extra_params_estructura`),
   UNIQUE KEY `tabla` (`tabla`,`campo`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
-
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 

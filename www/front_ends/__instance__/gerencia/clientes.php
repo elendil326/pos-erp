@@ -67,31 +67,63 @@
 		$page->nextTab("Configuracion");
 
 		$page->addComponent(new TitleComponent("Columnas extra",2));
+		$page->addComponent(new TitleComponent("Columnas activas",3));
 
 		$epc = ExtraParamsEstructuraDAO::getByTabla("clientes");
 
+
+
 		$h = array(
+
 			"campo" => "campo",
 			"tipo" => "tipo",
 			"longitud" => "longitud",
-			"obligatorio" => "olbigatorio"
+			"obligatorio" => "olbigatorio",
+			"id_extra_params_estructura" => "opciones"
 		);
-
 
 		$tabla = new TableComponent( $h, $epc );
 
+		$page->addComponent('
+				<script>
+					function delExtraCol(id, t, c){
+						POS.API.POST("api/pos/bd/columna/eliminar", { 
+								tabla : t,
+								campo : c
+							}, {callback: function(){
+
+							}});
+					}
+				</script>
+			');
+		function smenu($id, $obj ){
+			return '<div class="POS Boton" onClick="delExtraCol('. $id .', \''. $obj["tabla"] .'\',\''. $obj["campo"] .'\' )">Eliminar</div>';
+		}
+		$tabla->addColRender("id_extra_params_estructura", "smenu");
 		$page->addComponent($tabla);
 
 
-		$page->addComponent(new TitleComponent("Nueva columna extra", 2));
+
+
+
+
+
+
+
+
+
+		$page->addComponent(new TitleComponent("Nueva columna", 3));
 
 		$nceObj = new ExtraParamsEstructura();
 		$nceObj->setTabla("\"clientes\"");
 		$nuevaColumnaForm = new DAOFormComponent( $nceObj );
 		$nuevaColumnaForm->addApiCall("api/pos/bd/columna/nueva", "POST");
-		$nuevaColumnaForm->makeObligatory(array( "campo", "tipo", "longitud", "olbigatorio" ));
+		$nuevaColumnaForm->makeObligatory(array( "campo", "tipo", "longitud", "olbigatorio","obligatorio", "caption" ));
 		$nuevaColumnaForm->hideField( array("id_extra_params_estructura", "tabla") );
 		$nuevaColumnaForm->sendHidden("tabla");
+		$nuevaColumnaForm->setType("descripcion", "textarea");
+		$nuevaColumnaForm->createComboBoxJoin("tipo", null, array("string", "int", "float", "date") );		
+		$nuevaColumnaForm->createComboBoxJoin("obligatorio", null, array("Si", "No") );
 		$page->addComponent( $nuevaColumnaForm );
 
 

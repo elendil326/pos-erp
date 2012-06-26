@@ -66,6 +66,10 @@ class ApiOutputFormatter
         }
         catch(ApiException $e)
         {
+
+            
+
+
             // If something goes wrong, set the proper header
             $temp_arr = $e->getArrayMessage();
             header($temp_arr["header"]);
@@ -75,6 +79,9 @@ class ApiOutputFormatter
             die( $this->FormatOuput($temp_arr) );
 
         }
+
+
+        
 
         echo $this->FormatOuput($val);
         

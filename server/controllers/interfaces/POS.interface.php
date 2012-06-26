@@ -10,6 +10,22 @@
   
 	/**
  	 *
+ 	 *Eliminar una columna extra
+ 	 *
+ 	 * @param campo string 
+ 	 * @param tabla string 
+ 	 **/
+  static function EliminarColumnaBd
+	(
+		$campo, 
+		$tabla
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
  	 *No la agrega fisicamente a la BD pero fuera del API se puede asumir que si.
  	 *
  	 * @param campo string un id que identifique este campo. No puede haber 2 campos iguales para una misma tabla.

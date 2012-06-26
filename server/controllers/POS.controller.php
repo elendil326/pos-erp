@@ -330,6 +330,23 @@ require_once("interfaces/POS.interface.php");
 
 
 
+    
+    public static function EliminarColumnaBd
+    (
+    	$campo, 
+		$tabla
+	){
+
+    	$r = ExtraParamsEstructuraDAO::getByTablaCampo($tabla, $campo);
+
+    	if(is_null($r)) throw InvalidDataException("No existe tal campo en tal tabla");
+
+
+    	ExtraParamsEstructuraDAO::delete($r);
+
+    }
+
+
 
     public static function NuevaColumnaBd
     (
