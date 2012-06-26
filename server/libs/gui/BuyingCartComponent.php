@@ -654,7 +654,7 @@ class BuyingCartComponent extends CartComponent implements GuiComponent
 					        } else {
 						
 								?><script type="text/javascript" charset="utf-8">
-									empresa_seleccionada = <?php echo$empresas[0]->getIdEmpresa(); ?>;
+									empresa_seleccionada = <?php echo $empresas[0]->getIdEmpresa(); ?>;
 								</script><?php
 								
 								?><select id="empresa_seleccionada" onChange="seleccionar_empresa(this.value)" ><?php

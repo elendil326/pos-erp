@@ -22,32 +22,32 @@ class ReglaDAO extends ReglaDAOBase
 {
 
 
-    public static function aplicarReglas( array $reglas, VO $obj, $cantidad = null,$id_unidad = null)
+    public static function aplicarReglas( array $reglas, VO $obj, $cantidad = null, $id_unidad = null)
     {
-        Logger::log("aplicando reglas de tarifa");    
-        Logger::log( sizeof($reglas) . " reglas.");
-        Logger::log( $cantidad . " unidades de idunidad="  .$id_unidad );
+        //Logger::log("aplicando reglas de tarifa");    
+        //Logger::log( sizeof($reglas) . " reglas.");
+        //Logger::log( $cantidad . " unidades de idunidad="  .$id_unidad );
         
         $precio_base = 0;
         
         if(!($obj instanceof Paquete))
         {
 
-            Logger::log("El objeto *NO* es un Paquete");
+            
 
             if($obj->getMetodoCosteo()=="costo")
             {
-                Logger::log("El metodo de costeo es : costo");
+            
                 $precio_base = $obj->getCostoEstandar();
             }
             else if($obj->getMetodoCosteo()=="precio")
             {
-                Logger::log("El metodo de costeo es : precio");
+            
                 $precio_base = $obj->getPrecio();
             }
             else
             {
-                Logger::error("El producto o servicio tiene un metodo de costeo invalido. USANDO `metodo_de_costeo` = PRECIO");
+            
                 $precio_base = $obj->getPrecio();
                 //throw new Exception("El producto o servicio tiene un metodo de costeo invalido", 901);
             }
@@ -56,11 +56,11 @@ class ReglaDAO extends ReglaDAOBase
         {
 
             $precio_base = $obj->getPrecio();
-            Logger::log("El objeto es un Paquete, el precio marcado base es:" . $precio_base );
+            
 
         }
         
-        Logger::log(" El precio base recibido es " . $precio_base);
+        
         
         $precio_final = 0;
         
@@ -301,7 +301,7 @@ class ReglaDAO extends ReglaDAOBase
             $precio_base = $precio_final;
             
         }
-        Logger::log("El precio despues de todas las reglas es ".$precio_base);
+        //Logger::log("El precio despues de todas las reglas es ".$precio_base);
         
         return $precio_base;
     }

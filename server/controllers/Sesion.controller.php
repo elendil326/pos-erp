@@ -77,6 +77,7 @@ class SesionController implements ISesion{
 		if(!self::isLoggedIn()) return;
 		
 		$s = self::Actual();
+		
 		if(!is_null($s["id_usuario"])){
 			
 			//sesion activa !

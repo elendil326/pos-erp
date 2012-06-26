@@ -53,20 +53,19 @@
  		 *
  		 **/
 
- 		if(sizeof($this->tabs) == 0)  throw new Exception ("there are no tabs in your tabpage");
+ 		if(sizeof($this->tabs) > 0){
 
- 		$h = "<table style='margin-top:10px' class=\"tabs\" ><tr>";
+	 		$h = "<table style='margin-top:10px' class=\"tabs\" ><tr>";
 
- 		for ($ti=0; $ti < sizeof($this->tabs); $ti++) { 
-			$h .= "<td style='max-width:84px' id='atab_" . $this->tabs[$ti]["title"] . "' >
-					<a href='#". $this->tabs[$ti]["title"] ."'>" . $this->tabs[$ti]["title"] . "</a>
-				</td>";
- 		}
+	 		for ($ti=0; $ti < sizeof($this->tabs); $ti++) { 
+				$h .= "<td style='max-width:84px' id='atab_" . $this->tabs[$ti]["title"] . "' >
+						<a href='#". $this->tabs[$ti]["title"] ."'>" . $this->tabs[$ti]["title"] . "</a>
+					</td>";
+	 		}
 
- 		$h .= "<td class=\"dummy\"></td></tr></table>";
-			
- 		parent::addComponent($h);
-
+	 		$h .= "<td class=\"dummy\"></td></tr></table>";
+				
+	 		parent::addComponent($h);
 
  		/**
  		 *
@@ -117,6 +116,11 @@
 				}</script>";
 
 	 		parent::addComponent($h);
+
+ 		}  //throw new Exception ("there are no tabs in your tabpage");
+
+
+
 
  		parent::render();		
  	}

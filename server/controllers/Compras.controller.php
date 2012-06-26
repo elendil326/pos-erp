@@ -761,8 +761,15 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
                         }else{
                             //no es igual, hay que convertir
 
+                            try{
+                                $r = UnidadMedidaDAO::convertir($p->id_unidad, $lp->getIdUnidad(), $p->cantidad );    
 
-                            $r = UnidadMedidaDAO::convertir($p->id_unidad, $lp->getIdUnidad(), $p->cantidad );
+                            }catch(BusinessLogicException $ide){
+                                //no se pudo convertir porque son de 
+                                //diferentes categorias
+                                throw $ide; //mostrar una excpetion mas fresona
+                            }
+                            
                             $lp->setCantidad( $lp->getCantidad() +  $r  );    
                         }
 

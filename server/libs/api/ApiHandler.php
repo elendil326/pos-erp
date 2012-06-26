@@ -155,7 +155,6 @@ abstract class ApiHandler
             $this->CheckPermissions();
                         
             // Process input
-
             $this->GetRequest();       
 
             
@@ -171,7 +170,22 @@ abstract class ApiHandler
         catch (ApiException $e)
         {
             // Propagate the exception
-			Logger::error($e);
+            Logger::error("============= API EXCEPTION ===================");
+			
+            $em = $e->getArrayMessage();
+            
+            Logger::error($em["error"]);
+            
+            if($this->request !== null) {
+                foreach($this->request as $id => $obj ){
+                    
+                    Logger::error( $id . "  :  " . $obj->getValue());
+                }    
+            }
+            
+            Logger::error($e);
+            
+            Logger::error("============= /API EXCEPTION ===================");
             throw $e;
         }
         

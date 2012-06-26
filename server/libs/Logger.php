@@ -155,7 +155,12 @@ class Logger
 
 
   public static final function error ( $msg ){
-    self::log(  "ERROR: " . $msg, true );
+    
+    $arr = explode("\n", $msg);
+    foreach ($arr as $l) {
+    self::log(  "ERROR: " . $l, true );    
+    }
+    
   }
 
 

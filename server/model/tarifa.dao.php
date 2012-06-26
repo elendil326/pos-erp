@@ -24,7 +24,7 @@ class TarifaDAO extends TarifaDAOBase
         public static function obtenerTarifasActuales($tipo_tarifa)
         {
 	
-            Logger::log("Obteniendo tarifas de ".$tipo_tarifa);
+            //Logger::log("Obteniendo tarifas de ".$tipo_tarifa);
 
 			switch($tipo_tarifa){
 				case "venta":
@@ -95,7 +95,7 @@ class TarifaDAO extends TarifaDAOBase
                 array_push($reglas,$regla);
             }
             
-            Logger::log("Se obtuvieron ".count($reglas)." tarifas con sus respectivas reglas");
+            //Logger::log("Se obtuvieron ".count($reglas)." tarifas con sus respectivas reglas");
             
             return $reglas;
         }

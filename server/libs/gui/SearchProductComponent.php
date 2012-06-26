@@ -68,7 +68,7 @@ class SearchProductComponent implements GuiComponent{
 	            hideTrigger:false,
 	            anchor: '100%',
 				listeners :{
-					"select" : <?php /** **** ** */ echo $this->js_callback;  /** **** ** */?>
+					"select" : <?php  echo $this->js_callback;  ?>
 				},
 	            listConfig: {
 	                loadingText: 'Buscando...',
