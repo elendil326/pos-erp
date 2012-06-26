@@ -29,11 +29,25 @@ class ExtraParamsValoresDAO extends ExtraParamsValoresDAOBase
     //ver si esta tabla existe
 
     //buscar esa madre
-    $es = new ExtraParamsEstructura(array(
-          "tabla" => $tabla
-      ));
+    try{
+      $es = new ExtraParamsEstructura(array(
+            "tabla" => $tabla
+        ));  
+    }catch(Exception $e){
+      Logger::error($e);
+      return array();
+    }
+    
 
-    $ncols = ExtraParamsEstructuraDAO::search( $es );
+    
+    try{
+      $ncols = ExtraParamsEstructuraDAO::search( $es );
+
+    }catch(ADODB_Exception $e){
+      Logger::error($e);
+      return array();
+    }
+
 
     if(sizeof($ncols) == 0){
       //no hay nuevas columnas de esta tabla

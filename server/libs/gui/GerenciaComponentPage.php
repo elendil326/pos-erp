@@ -7,8 +7,7 @@ class GerenciaComponentPage extends PosComponentPage{
 
 	function __construct( $title = "Gerencia"){
 		
-		$file = $_SERVER["PHP_SELF"];
-		Logger::log($file);
+
 		
 		parent::__construct( $title );
 

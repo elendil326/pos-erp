@@ -11,5 +11,9 @@
 	// 
 	$page->requireParam("vid", "GET", "Esta venta/cotizacion no existe.");
 
-
-	ImpresionesController::Venta($_GET["vid"]);
+	try{
+		ImpresionesController::Venta($_GET["vid"]);
+	}catch(InvalidDataException $e){
+		$page->addComponent($e->getMessage());
+		$page->render();
+	}

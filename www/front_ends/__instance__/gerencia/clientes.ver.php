@@ -125,7 +125,7 @@
 
 
 
-
+/*
 	//buscar los parametros extra
 	$out = ExtraParamsValoresDAO::getVals("clientes", $este_usuario->getIdUsuario());
 
@@ -143,7 +143,7 @@
 	
 
 	$page->addComponent($epform);
-
+*/
 
 
 	$page->nextTab("Direccion");

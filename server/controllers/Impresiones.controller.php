@@ -21,14 +21,15 @@ class ImpresionesController {
 
 
 	private static function readableText($raw) {
-	/*	    $foo = explode(" ", $bar);
+	    return (html_entity_decode($raw). " ");
+	    $foo = explode(" ", $raw);
 	    $end = "";
 	    foreach ($foo as $i) {
 	        $end .= ucfirst(strtolower(trim($i))) . " ";
 	    }
-		*/
-	    return (html_entity_decode($raw). " ");
-		//return $raw;
+		
+	    
+		return $end;
 	}
 
 
@@ -164,7 +165,13 @@ class ImpresionesController {
 				self::puntos_cm(2.45),
 				self::puntos_cm(2.8));
 				
-				
+		$pdf->setStrokeColor(0.3359375, 0.578125, 0.89453125);
+		$pdf->line(
+			self::puntos_cm(8.2 + 2), 
+			self::puntos_cm(21.91 ), 
+			self::puntos_cm(8.2 + 2), 
+			self::puntos_cm(18.751)
+		);
 
  	    /*     * ************************
 	     * notas de abajo
@@ -310,7 +317,10 @@ class ImpresionesController {
 
 	private static function printClient( &$pdf, $daoCliente){
 
-
+		if($daoCliente === null){
+			Logger::error("Se intento imprimir un cliente que no existe");
+			return;
+		}
 
 	    /* *************************
 	     * Cliente
@@ -353,6 +363,7 @@ class ImpresionesController {
 	    $opciones_tabla['shaded'] = 2;
 	    $opciones_tabla['shadeCol'] = array(1, 1, 1);
 	    $opciones_tabla['shadeCol2'] = array(0.8984375, 0.95703125, 0.99609375);
+
 	    $pdf->ezSetY(self::puntos_cm(22));
 	    $opciones_tabla['xPos'] = self::puntos_cm(2);
 	    $opciones_tabla['width'] = self::puntos_cm(16.2);
@@ -361,39 +372,20 @@ class ImpresionesController {
 	    $pdf->ezTable($receptor, "", "", $opciones_tabla);
 	
 	
-	/*
-	
-		$pdf->setLineStyle(1, 'round', '', array(0, 2));
 		
-	    $pdf->setStrokeColor(0.3359375, 0.578125, 0.89453125);
-	
-	    $pdf->line(
-			self::puntos_cm(8.2 + 2), 
-			self::puntos_cm(21.89 ), 
-			self::puntos_cm(8.2 + 2), 
-			self::puntos_cm(18.751)
-		);
-		
-	    $pdf->setLineStyle(0,'','',array(0));
-	*/
-		    $pdf->setStrokeColor(0.3359375, 0.578125, 0.89453125);
-	$pdf->line(
-		self::puntos_cm(8.2 + 2), 
-		self::puntos_cm(21.91 ), 
-		self::puntos_cm(8.2 + 2), 
-		self::puntos_cm(18.751)
-	);
 	}
 
 
 	public static function Venta($id_venta) {
 		
 		$ventaDao = VentaDAO::getByPK($id_venta);
+
+		if($ventaDao === null){
+			throw new InvalidDataException("Esta venta no existe");
+		}
+
 		$clienteDao = UsuarioDAO::getByPK( $ventaDao->getIdCompradorVenta() );
 		$agenteDao = UsuarioDAO::getByPK( $ventaDao->getIdUsuario() );
-		
-	
-		
 
 
 		if($ventaDao->getEsCotizacion()){

@@ -29,7 +29,7 @@ class ExtraParamsEstructuraDAO extends ExtraParamsEstructuraDAOBase
       try{
         $rs = $conn->Execute($sql, $params);  
       }catch(ADODB_Exception $ae){
-        Logger::error($ae);
+        Logger::error("EEE:" . $ae);
         return array();
       }
       

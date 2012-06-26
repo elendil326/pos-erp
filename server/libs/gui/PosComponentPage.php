@@ -8,6 +8,10 @@ class PosComponentPage extends StdComponentPage{
 	private $GA;
 	
 	function __construct( $title = "Gerencia"){
+		
+		$file = $_SERVER["PHP_SELF"];
+		Logger::log("[FRONTEND] " . $file);
+
 		$this->title = $title;
 		parent::__construct( $title );
 		$this->partial_render_n = 0;
