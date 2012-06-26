@@ -218,7 +218,17 @@ class ImpresionesController {
 				if($p instanceof VentaProducto  ){
 		        	$prodDao = ProductoDAO::getByPK( $p->getIdProducto() );
 					if(!is_null($prodDao)){
-			            $prod['cantidad'] = $p->getCantidad();
+
+						$prod['cantidad'] = $p->getCantidad();
+						
+						if(!is_null($p->getIdUnidad())){
+							$unidad = UnidadMedidaDAO::getByPK($p->getIdUnidad());
+							if(!is_null($unidad)){
+								$prod['cantidad'] .= " " . $unidad->getAbreviacion();	
+							}
+							
+						}
+			            
 			            $prod['descripcion'] = $prodDao->getNombreProducto();
 			            $prod['precio'] = FormatMoney($p->getPrecio(), DONT_USE_HTML);
 			            $prod['importe'] = FormatMoney($p->getPrecio() * $p->getCantidad(), DONT_USE_HTML);
@@ -251,40 +261,43 @@ class ImpresionesController {
 		            $total = $subtotal;
 
 	        		array_push($elementos, $prod);		            
+				}else if($p instanceof Venta){
+
+
+
+				    array_push($elementos, array("cantidad" => "",
+				        "descripcion" => "",
+				        "precio" => "Subtotal",
+				        "importe" => FormatMoney($p->getSubtotal(), DONT_USE_HTML)));
+
+				    array_push($elementos, array("cantidad" => "",
+				        "descripcion" => "",
+				        "precio" => "Descuento",
+				        "importe" => FormatMoney($p->getDescuento(), DONT_USE_HTML)));
+
+				    array_push($elementos, array("cantidad" => "",
+				        "descripcion" => "",
+				        "precio" => "IVA",
+				        "importe" => FormatMoney($p->getImpuesto(), DONT_USE_HTML)));
+
+				    array_push($elementos, array("cantidad" => "",
+				        "descripcion" => "",
+				        "precio" => "Total",
+				        "importe" => FormatMoney($p->getTotal(), DONT_USE_HTML)));
+
+					$letra = new CNumeroaLetra();
+					$letra->setNumero($p->getTotal());
+					
+				    array_push($elementos, array("cantidad" => "",
+				        "descripcion" => $letra->letra(),
+				        "precio" => "",
+				        "importe" => ""));
 				}
 
 
 	    }
 
-
-
-	    array_push($elementos, array("cantidad" => "",
-	        "descripcion" => "",
-	        "precio" => "Subtotal",
-	        "importe" => FormatMoney($subtotal, DONT_USE_HTML)));
-
-	    array_push($elementos, array("cantidad" => "",
-	        "descripcion" => "",
-	        "precio" => "Descuento",
-	        "importe" => FormatMoney(0, DONT_USE_HTML)));
-
-	    array_push($elementos, array("cantidad" => "",
-	        "descripcion" => "",
-	        "precio" => "IVA",
-	        "importe" => FormatMoney(0, DONT_USE_HTML)));
-
-	    array_push($elementos, array("cantidad" => "",
-	        "descripcion" => "",
-	        "precio" => "Total",
-	        "importe" => FormatMoney($total, DONT_USE_HTML)));
-
-		$letra = new CNumeroaLetra();
-		$letra->setNumero($total);
 		
-	    array_push($elementos, array("cantidad" => "",
-	        "descripcion" => $letra->letra(),
-	        "precio" => "",
-	        "importe" => ""));		
 		
 	    $pdf->ezSetY(self::puntos_cm(18.6));
 	
@@ -465,6 +478,7 @@ class ImpresionesController {
 
 		$prods = array_merge($ventaProducto, $ventaOrden );
 
+		array_push($prods, $ventaDao);
 		
 
 		self::printProducts($pdf, $prods);

@@ -28,6 +28,9 @@ class ExtraParamsValores extends VO
 			if( isset($data['id_extra_params_estructura']) ){
 				$this->id_extra_params_estructura = $data['id_extra_params_estructura'];
 			}
+			if( isset($data['id_pk_tabla']) ){
+				$this->id_pk_tabla = $data['id_pk_tabla'];
+			}
 			if( isset($data['val']) ){
 				$this->val = $data['val'];
 			}
@@ -46,6 +49,7 @@ class ExtraParamsValores extends VO
 		$vec = array( 
 			"id_extra_params_valores" => $this->id_extra_params_valores,
 			"id_extra_params_estructura" => $this->id_extra_params_estructura,
+			"id_pk_tabla" => $this->id_pk_tabla,
 			"val" => $this->val
 		); 
 	return json_encode($vec); 
@@ -69,6 +73,15 @@ class ExtraParamsValores extends VO
 	  * @var int(11)
 	  */
 	public $id_extra_params_estructura;
+
+	/**
+	  * id_pk_tabla
+	  * 
+	  * el id del objeto en la tabla a la que se le agrego la columna<br>
+	  * @access public
+	  * @var int(11)
+	  */
+	public $id_pk_tabla;
 
 	/**
 	  * val
@@ -127,6 +140,30 @@ class ExtraParamsValores extends VO
 	final public function setIdExtraParamsEstructura( $id_extra_params_estructura )
 	{
 		$this->id_extra_params_estructura = $id_extra_params_estructura;
+	}
+
+	/**
+	  * getIdPkTabla
+	  * 
+	  * Get the <i>id_pk_tabla</i> property for this object. Donde <i>id_pk_tabla</i> es el id del objeto en la tabla a la que se le agrego la columna
+	  * @return int(11)
+	  */
+	final public function getIdPkTabla()
+	{
+		return $this->id_pk_tabla;
+	}
+
+	/**
+	  * setIdPkTabla( $id_pk_tabla )
+	  * 
+	  * Set the <i>id_pk_tabla</i> property for this object. Donde <i>id_pk_tabla</i> es el id del objeto en la tabla a la que se le agrego la columna.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_pk_tabla</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setIdPkTabla( $id_pk_tabla )
+	{
+		$this->id_pk_tabla = $id_pk_tabla;
 	}
 
 	/**

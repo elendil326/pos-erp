@@ -797,6 +797,7 @@ CREATE TABLE IF NOT EXISTS `extra_params_estructura` (
 CREATE TABLE IF NOT EXISTS `extra_params_valores` (
   `id_extra_params_valores` int(11) NOT NULL,
   `id_extra_params_estructura` int(11) NOT NULL,
+  `id_pk_tabla` int(11) NOT NULL COMMENT 'el id del objeto en la tabla a la que se le agrego la columna',
   `val` varchar(256) COLLATE utf8_spanish_ci NOT NULL,
   PRIMARY KEY (`id_extra_params_valores`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;

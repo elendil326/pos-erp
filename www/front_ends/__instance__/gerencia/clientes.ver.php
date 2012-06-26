@@ -126,6 +126,23 @@
 
 
 
+	//buscar los parametros extra
+	$out = ExtraParamsValoresDAO::getVals("clientes", $este_usuario->getIdUsuario());
+
+	$epform = new FormComponent();
+	$epform->setEditable(false);
+	
+
+	foreach($out as $ep){
+		$epform->addField($ep["campo"], $ep["caption"], $ep["tipo"], $ep["val"]);
+		if(!is_null($ep["descripcion"])){
+			$epform->setHelp($ep["campo"], $ep["descripcion"]);	
+		}
+		
+	}
+	
+
+	$page->addComponent($epform);
 
 
 

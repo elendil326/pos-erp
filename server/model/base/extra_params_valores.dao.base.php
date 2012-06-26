@@ -131,6 +131,11 @@ abstract class ExtraParamsValoresDAOBase extends DAO
 			array_push( $val, $extra_params_valores->getIdExtraParamsEstructura() );
 		}
 
+		if( ! is_null( $extra_params_valores->getIdPkTabla() ) ){
+			$sql .= " `id_pk_tabla` = ? AND";
+			array_push( $val, $extra_params_valores->getIdPkTabla() );
+		}
+
 		if( ! is_null( $extra_params_valores->getVal() ) ){
 			$sql .= " `val` = ? AND";
 			array_push( $val, $extra_params_valores->getVal() );
@@ -166,9 +171,10 @@ abstract class ExtraParamsValoresDAOBase extends DAO
 	  **/
 	private static final function update( $extra_params_valores )
 	{
-		$sql = "UPDATE extra_params_valores SET  `id_extra_params_estructura` = ?, `val` = ? WHERE  `id_extra_params_valores` = ?;";
+		$sql = "UPDATE extra_params_valores SET  `id_extra_params_estructura` = ?, `id_pk_tabla` = ?, `val` = ? WHERE  `id_extra_params_valores` = ?;";
 		$params = array( 
 			$extra_params_valores->getIdExtraParamsEstructura(), 
+			$extra_params_valores->getIdPkTabla(), 
 			$extra_params_valores->getVal(), 
 			$extra_params_valores->getIdExtraParamsValores(), );
 		global $conn;
@@ -193,10 +199,11 @@ abstract class ExtraParamsValoresDAOBase extends DAO
 	  **/
 	private static final function create( &$extra_params_valores )
 	{
-		$sql = "INSERT INTO extra_params_valores ( `id_extra_params_valores`, `id_extra_params_estructura`, `val` ) VALUES ( ?, ?, ?);";
+		$sql = "INSERT INTO extra_params_valores ( `id_extra_params_valores`, `id_extra_params_estructura`, `id_pk_tabla`, `val` ) VALUES ( ?, ?, ?, ?);";
 		$params = array( 
 			$extra_params_valores->getIdExtraParamsValores(), 
 			$extra_params_valores->getIdExtraParamsEstructura(), 
+			$extra_params_valores->getIdPkTabla(), 
 			$extra_params_valores->getVal(), 
 		 );
 		global $conn;
@@ -263,6 +270,17 @@ abstract class ExtraParamsValoresDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " `id_extra_params_estructura` = ? AND"; 
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( ( !is_null (($a = $extra_params_valoresA->getIdPkTabla()) ) ) & ( ! is_null ( ($b = $extra_params_valoresB->getIdPkTabla()) ) ) ){
+				$sql .= " `id_pk_tabla` >= ? AND `id_pk_tabla` <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " `id_pk_tabla` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
