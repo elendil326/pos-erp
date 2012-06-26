@@ -70,10 +70,30 @@
 
 		$epc = ExtraParamsEstructuraDAO::getByTabla("clientes");
 
-		$h = array();
+		$h = array(
+			"campo" => "campo",
+			"tipo" => "tipo",
+			"longitud" => "longitud",
+			"obligatorio" => "olbigatorio"
+		);
 
 
 		$tabla = new TableComponent( $h, $epc );
+
+		$page->addComponent($tabla);
+
+
+		$page->addComponent(new TitleComponent("Nueva columna extra", 2));
+
+		$nceObj = new ExtraParamsEstructura();
+		$nceObj->setTabla("\"clientes\"");
+		$nuevaColumnaForm = new DAOFormComponent( $nceObj );
+		$nuevaColumnaForm->addApiCall("api/pos/bd/columna/nueva", "POST");
+		$nuevaColumnaForm->makeObligatory(array( "campo", "tipo", "longitud", "olbigatorio" ));
+		$nuevaColumnaForm->hideField( array("id_extra_params_estructura", "tabla") );
+		$nuevaColumnaForm->sendHidden("tabla");
+		$page->addComponent( $nuevaColumnaForm );
+
 
 		$page->render();
 

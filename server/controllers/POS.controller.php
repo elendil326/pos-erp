@@ -331,7 +331,54 @@ require_once("interfaces/POS.interface.php");
 
 
 
+    public static function NuevaColumnaBd
+    (
+		$campo, 
+		$caption, 
+		$obligatorio, 
+		$tabla, 
+		$tipo, 
+		$descripcion = "", 
+		$longitud = ""
+    )
+    {
 
+    	//busquemos que exista la tabla
+    	switch($tabla){
+    		case "clientes":
+
+    		break;
+
+    		default:
+    			throw new InvalidDataException("No puede crear una nueva columna para la tabla $tabla"); 
+    	}
+
+    	//veamos que no exista la combinacion de tabla-campo
+
+
+    	//validar tipo y longitud
+
+
+    	//crear objeto
+    	$ncbd = new ExtraParamsEstructura();
+    	
+    	  
+		$ncbd->setTabla($tabla);
+		$ncbd->setCampo($campo);
+		$ncbd->setTipo($tipo);
+		$ncbd->setLongitud($longitud);
+		$ncbd->setObligatorio($obligatorio);
+		$ncbd->setCaption($caption);
+		$ncbd->setDescripcion($descripcion);
+
+  		
+
+    	//insertar
+		ExtraParamsEstructuraDAO::save( $ncbd );
+		
+		return array("id_columna" =>  $ncbd->getIdExtraParamsEstructura() );
+
+    }
 
 
 

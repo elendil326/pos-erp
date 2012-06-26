@@ -151,6 +151,16 @@ abstract class ExtraParamsEstructuraDAOBase extends DAO
 			array_push( $val, $extra_params_estructura->getObligatorio() );
 		}
 
+		if( ! is_null( $extra_params_estructura->getCaption() ) ){
+			$sql .= " `caption` = ? AND";
+			array_push( $val, $extra_params_estructura->getCaption() );
+		}
+
+		if( ! is_null( $extra_params_estructura->getDescripcion() ) ){
+			$sql .= " `descripcion` = ? AND";
+			array_push( $val, $extra_params_estructura->getDescripcion() );
+		}
+
 		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
@@ -181,13 +191,15 @@ abstract class ExtraParamsEstructuraDAOBase extends DAO
 	  **/
 	private static final function update( $extra_params_estructura )
 	{
-		$sql = "UPDATE extra_params_estructura SET  `tabla` = ?, `campo` = ?, `tipo` = ?, `longitud` = ?, `obligatorio` = ? WHERE  `id_extra_params_estructura` = ?;";
+		$sql = "UPDATE extra_params_estructura SET  `tabla` = ?, `campo` = ?, `tipo` = ?, `longitud` = ?, `obligatorio` = ?, `caption` = ?, `descripcion` = ? WHERE  `id_extra_params_estructura` = ?;";
 		$params = array( 
 			$extra_params_estructura->getTabla(), 
 			$extra_params_estructura->getCampo(), 
 			$extra_params_estructura->getTipo(), 
 			$extra_params_estructura->getLongitud(), 
 			$extra_params_estructura->getObligatorio(), 
+			$extra_params_estructura->getCaption(), 
+			$extra_params_estructura->getDescripcion(), 
 			$extra_params_estructura->getIdExtraParamsEstructura(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -211,7 +223,7 @@ abstract class ExtraParamsEstructuraDAOBase extends DAO
 	  **/
 	private static final function create( &$extra_params_estructura )
 	{
-		$sql = "INSERT INTO extra_params_estructura ( `id_extra_params_estructura`, `tabla`, `campo`, `tipo`, `longitud`, `obligatorio` ) VALUES ( ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO extra_params_estructura ( `id_extra_params_estructura`, `tabla`, `campo`, `tipo`, `longitud`, `obligatorio`, `caption`, `descripcion` ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$extra_params_estructura->getIdExtraParamsEstructura(), 
 			$extra_params_estructura->getTabla(), 
@@ -219,6 +231,8 @@ abstract class ExtraParamsEstructuraDAOBase extends DAO
 			$extra_params_estructura->getTipo(), 
 			$extra_params_estructura->getLongitud(), 
 			$extra_params_estructura->getObligatorio(), 
+			$extra_params_estructura->getCaption(), 
+			$extra_params_estructura->getDescripcion(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -328,6 +342,28 @@ abstract class ExtraParamsEstructuraDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " `obligatorio` = ? AND"; 
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( ( !is_null (($a = $extra_params_estructuraA->getCaption()) ) ) & ( ! is_null ( ($b = $extra_params_estructuraB->getCaption()) ) ) ){
+				$sql .= " `caption` >= ? AND `caption` <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " `caption` = ? AND"; 
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( ( !is_null (($a = $extra_params_estructuraA->getDescripcion()) ) ) & ( ! is_null ( ($b = $extra_params_estructuraB->getDescripcion()) ) ) ){
+				$sql .= " `descripcion` >= ? AND `descripcion` <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " `descripcion` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

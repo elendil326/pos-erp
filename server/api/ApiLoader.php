@@ -1,6 +1,8 @@
 <?php 
 
 
+
+
   class ApiSesionIniciar extends ApiHandler {
   
 
@@ -5514,6 +5516,46 @@
  			
 			
 			isset($_GET['query'] ) ? $_GET['query'] : null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiPosBdColumnaNueva extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"campo" => new ApiExposedProperty("campo", true, POST, array( "string" )),
+			"caption" => new ApiExposedProperty("caption", true, POST, array( "string" )),
+			"obligatorio" => new ApiExposedProperty("obligatorio", true, POST, array( "bool" )),
+			"tabla" => new ApiExposedProperty("tabla", true, POST, array( "string" )),
+			"tipo" => new ApiExposedProperty("tipo", true, POST, array( "enum" )),
+			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "string" )),
+			"longitud" => new ApiExposedProperty("longitud", false, POST, array( "int" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = POSController::NuevaColumnaBd( 
+ 			
+			
+			isset($_POST['campo'] ) ? $_POST['campo'] : null,
+			isset($_POST['caption'] ) ? $_POST['caption'] : null,
+			isset($_POST['obligatorio'] ) ? $_POST['obligatorio'] : null,
+			isset($_POST['tabla'] ) ? $_POST['tabla'] : null,
+			isset($_POST['tipo'] ) ? $_POST['tipo'] : null,
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  "",
+			isset($_POST['longitud'] ) ? $_POST['longitud'] :  ""
 			
 			);
 		}catch(Exception $e){

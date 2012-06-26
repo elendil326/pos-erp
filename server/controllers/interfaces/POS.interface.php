@@ -10,6 +10,33 @@
   
 	/**
  	 *
+ 	 *No la agrega fisicamente a la BD pero fuera del API se puede asumir que si.
+ 	 *
+ 	 * @param campo string un id que identifique este campo. No puede haber 2 campos iguales para una misma tabla.
+ 	 * @param caption string El texto que se mostrara al pedir este campo.
+ 	 * @param obligatorio bool Si el campo es obligatorio para esta tabla.
+ 	 * @param tabla string La tabla padre. La tabla debe existir fisicamente salvo unas tablas que hemos creado para usted.
+ 	 * @param tipo enum "string","int","float","date","bool"
+ 	 * @param descripcion string La descrpcion de ayuda para este campo.
+ 	 * @param longitud int 
+ 	 * @return id_extra_params_estructura int El id de esta estructura
+ 	 **/
+  static function NuevaColumnaBd
+	(
+		$campo, 
+		$caption, 
+		$obligatorio, 
+		$tabla, 
+		$tipo, 
+		$descripcion = "", 
+		$longitud = ""
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
  	 *Metodo que elimina todos los registros en la base de datos, especialmente util para hacer pruebas unitarias. Este metodo NO estara disponible al publico.
  	 *
  	 **/

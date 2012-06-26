@@ -40,6 +40,12 @@ class ExtraParamsEstructura extends VO
 			if( isset($data['obligatorio']) ){
 				$this->obligatorio = $data['obligatorio'];
 			}
+			if( isset($data['caption']) ){
+				$this->caption = $data['caption'];
+			}
+			if( isset($data['descripcion']) ){
+				$this->descripcion = $data['descripcion'];
+			}
 		}
 	}
 
@@ -58,7 +64,9 @@ class ExtraParamsEstructura extends VO
 			"campo" => $this->campo,
 			"tipo" => $this->tipo,
 			"longitud" => $this->longitud,
-			"obligatorio" => $this->obligatorio
+			"obligatorio" => $this->obligatorio,
+			"caption" => $this->caption,
+			"descripcion" => $this->descripcion
 		); 
 	return json_encode($vec); 
 	}
@@ -96,7 +104,7 @@ class ExtraParamsEstructura extends VO
 	  * 
 	  *  [Campo no documentado]<br>
 	  * @access public
-	  * @var enum('string','int','float','bool')
+	  * @var enum('string','int','float','bool','date')
 	  */
 	public $tipo;
 
@@ -117,6 +125,24 @@ class ExtraParamsEstructura extends VO
 	  * @var tinyint(1)
 	  */
 	public $obligatorio;
+
+	/**
+	  * caption
+	  * 
+	  *  [Campo no documentado]<br>
+	  * @access public
+	  * @var varchar(32)
+	  */
+	public $caption;
+
+	/**
+	  * descripcion
+	  * 
+	  *  [Campo no documentado]<br>
+	  * @access public
+	  * @var text
+	  */
+	public $descripcion;
 
 	/**
 	  * getIdExtraParamsEstructura
@@ -196,7 +222,7 @@ class ExtraParamsEstructura extends VO
 	  * getTipo
 	  * 
 	  * Get the <i>tipo</i> property for this object. Donde <i>tipo</i> es  [Campo no documentado]
-	  * @return enum('string','int','float','bool')
+	  * @return enum('string','int','float','bool','date')
 	  */
 	final public function getTipo()
 	{
@@ -207,9 +233,9 @@ class ExtraParamsEstructura extends VO
 	  * setTipo( $tipo )
 	  * 
 	  * Set the <i>tipo</i> property for this object. Donde <i>tipo</i> es  [Campo no documentado].
-	  * Una validacion basica se hara aqui para comprobar que <i>tipo</i> es de tipo <i>enum('string','int','float','bool')</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>tipo</i> es de tipo <i>enum('string','int','float','bool','date')</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param enum('string','int','float','bool')
+	  * @param enum('string','int','float','bool','date')
 	  */
 	final public function setTipo( $tipo )
 	{
@@ -262,6 +288,54 @@ class ExtraParamsEstructura extends VO
 	final public function setObligatorio( $obligatorio )
 	{
 		$this->obligatorio = $obligatorio;
+	}
+
+	/**
+	  * getCaption
+	  * 
+	  * Get the <i>caption</i> property for this object. Donde <i>caption</i> es  [Campo no documentado]
+	  * @return varchar(32)
+	  */
+	final public function getCaption()
+	{
+		return $this->caption;
+	}
+
+	/**
+	  * setCaption( $caption )
+	  * 
+	  * Set the <i>caption</i> property for this object. Donde <i>caption</i> es  [Campo no documentado].
+	  * Una validacion basica se hara aqui para comprobar que <i>caption</i> es de tipo <i>varchar(32)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param varchar(32)
+	  */
+	final public function setCaption( $caption )
+	{
+		$this->caption = $caption;
+	}
+
+	/**
+	  * getDescripcion
+	  * 
+	  * Get the <i>descripcion</i> property for this object. Donde <i>descripcion</i> es  [Campo no documentado]
+	  * @return text
+	  */
+	final public function getDescripcion()
+	{
+		return $this->descripcion;
+	}
+
+	/**
+	  * setDescripcion( $descripcion )
+	  * 
+	  * Set the <i>descripcion</i> property for this object. Donde <i>descripcion</i> es  [Campo no documentado].
+	  * Una validacion basica se hara aqui para comprobar que <i>descripcion</i> es de tipo <i>text</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param text
+	  */
+	final public function setDescripcion( $descripcion )
+	{
+		$this->descripcion = $descripcion;
 	}
 
 }
