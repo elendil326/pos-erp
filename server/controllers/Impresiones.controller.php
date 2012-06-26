@@ -135,15 +135,15 @@ class ImpresionesController {
 
 		$logo = "../static/".IID.".jpg";
 		
-		Logger::log("existe_logo=".is_file($logo));
+		//Logger::log("existe_logo=".is_file($logo));
 		
 	    if (substr($logo, -3) == "jpg" || substr($logo, -3) == "JPG" || substr($logo, -4) == "jpeg" || substr($logo, -4) == "JPEG") {
 			$pdf->addJpegFromFile($logo, self::puntos_cm(2), self::puntos_cm(24), self::puntos_cm(4.1) );
-			Logger::log("jpg");
+			
 
 	    } elseif (substr($logo, -3) == "png" || substr($logo, -3) == "PNG") {
 	        $pdf->addPngFromFile($logo, self::puntos_cm(2), self::puntos_cm(24), self::puntos_cm(4.1));
-			Logger::log("png");	
+			
 
 	    } else {
 	        Logger::log("Verifique la configuracion del pos_config, la extension de la imagen del logo no es compatible");
@@ -802,7 +802,6 @@ class ImpresionesController {
 	    $file_full_path = "../../../../static_content/qr_codes/" . $file_name . ".jpg";
 
 	    if (is_file($file_full_path)) {
-	        Logger::log("Ya existe este codigo QR");
 	        return $file_name . ".jpg";
 	    }
 

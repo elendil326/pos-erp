@@ -12,7 +12,7 @@
 	$este_cliente = UsuarioDAO::getByPK($_GET["cid"]);
 
 	//titulos
-	$page->addComponent(new TitleComponent("Editar cliente: " . $este_cliente->getNombre()));
+	$page->addComponent(new TitleComponent("Editando a " . $este_cliente->getNombre(), 2));
 
 	//forma de nuevo cliente
 
@@ -81,6 +81,28 @@
 	));
 
 	$page->addComponent($form);
+
+
+	$page->addComponent("<hr>");
+
+
+	//buscar los parametros extra
+	$out = ExtraParamsValoresDAO::getVals("clientes", $este_cliente->getIdUsuario());
+
+	$epform = new FormComponent();
+	$epform->setEditable(true);
+	
+
+	foreach($out as $ep){
+		$epform->addField($ep["campo"], $ep["caption"], $ep["tipo"], $ep["val"]);
+		if(!is_null($ep["descripcion"])){
+			$epform->setHelp($ep["campo"], $ep["descripcion"]);	
+		}
+		
+	}
+	
+
+	$page->addComponent($epform);
 
 
 	//render the page
