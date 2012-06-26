@@ -14,11 +14,15 @@
 	$page->requireParam("pid", "GET", "Este producto no existe.");
 
 
+
 	$este_producto = ProductoDAO::getByPK($_GET["pid"]);
 
 
 
-
+	if(is_null($este_producto)){
+		$page->render();
+		exit;
+	}
 
 
 
