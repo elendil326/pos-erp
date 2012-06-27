@@ -409,7 +409,13 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
 				
 				$prods_compra = CompraProductoDAO::search($com_prod);
 				foreach($prods_compra as $p){
-					//De que almacen/inventario lo descuento? , del almacen de la empresa? como identifico el lote de entrada prod?
+					$ven_prod = new VentaProducto();//De que almacen/inventario lo descuento? , del almacen de la empresa? como identifico el lote de entrada prod?
+					$ven_prod->setIdProducto();
+					$ven_prod->setCantidad( $p->getCantidad() );
+					$ven_prod->setPrecio( $p->getPrecio() );
+					$ven_prod->setDescuento( $p->getDescuento() );
+					
+					SucursalesController::DescontarDeAlmacenes($ven_prod, $compra->getIdSucursal() );
 				}
 				
                 CompraDAO::save($compra);
