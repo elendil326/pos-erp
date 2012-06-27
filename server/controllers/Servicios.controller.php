@@ -1995,7 +1995,7 @@ class ServiciosController extends ValidacionesController implements IServicios{
 
 
 			if(!is_null($id_venta)){
-				$vo = new VentaOrdenDAO();
+				$vo = new VentaOrden();
 				$vo->setIdVenta( $id_venta );
 				$vo->setIdOrdenDeServicio( $id_orden );
 				$vo->setPrecio( $ods->getPrecio() );

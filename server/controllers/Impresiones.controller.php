@@ -830,7 +830,7 @@ class ImpresionesController {
 	        //volver a intentar
 	        Logger::log("FALLE AL OBTENER EL QR CODE DE GOOGLE, REINTENTANDO...");
 	
-	        obternerQRCode($string, $retry - 1);
+	        return self::getQrCodeFromGoogle($string, $retry - 1);
 	    }
 
 	    file_put_contents($file_full_path, $f);
