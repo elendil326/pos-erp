@@ -122,7 +122,7 @@
 		$nuevaColumnaForm->hideField( array("id_extra_params_estructura", "tabla") );
 		$nuevaColumnaForm->sendHidden("tabla");
 		$nuevaColumnaForm->setType("descripcion", "textarea");
-		$nuevaColumnaForm->createComboBoxJoin("tipo", null, array("string", "int", "float", "date") );		
+		$nuevaColumnaForm->createComboBoxJoin("tipo", null, array("string", "int", "float", "date", "bool") );		
 		$nuevaColumnaForm->createComboBoxJoin("obligatorio", null, array("Si", "No") );
 		$page->addComponent( $nuevaColumnaForm );
 

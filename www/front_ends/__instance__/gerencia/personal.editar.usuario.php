@@ -25,9 +25,12 @@
 	if(is_null($esta_direccion)){
 		$esta_direccion = new Direccion();
 	}
-		
 	
+
+	$este_usuario->setPassword("");
+
 	$form = new DAOFormComponent( $este_usuario  );
+
 	$form->hideField( array( 
 		"id_usuario",
 		"id_direccion",
@@ -39,7 +42,6 @@
 		"activo",
 		"last_login",
 		"consignatario",
-		"password",
 		"id_clasificacion_cliente",
 		"id_clasificacion_proveedor",
 		"tarifa_venta_obtenida",
@@ -65,11 +67,23 @@
 
 	$form->addApiCall( "api/personal/usuario/editar/" );
 	
-	$form->onApiCallSuccessRedirect("personal.lista.usuario.php");
+	//$form->onApiCallSuccessRedirect("personal.lista.usuario.php");
 
 	$form->createComboBoxJoin( "id_rol", "nombre", RolDAO::getAll(), $este_usuario->getIdRol() );
 
 	$form->createComboBoxJoin( "id_moneda", "nombre", MonedaDAO::search( new Moneda( array( "activa" => 1 ) ) ),$este_usuario->getIdMoneda() );
+
+	$form->setType("password", "password");
+
+	$page->addComponent('
+		<script>
+			function beforeEdit(p){
+				console.log(p);
+				return p;
+			}
+		</script>');
+
+	$form->beforeSend("beforeEdit");
 
 	$page->addComponent( $form );
 
