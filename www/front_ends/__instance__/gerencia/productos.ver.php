@@ -148,7 +148,21 @@
 	),
 	$existencias);
 
-	function lotename($l){ $ll = LoteDAO::GetByPK($l); return $ll->getFolio();	 }
+	function lotename($l){ 
+
+		$lvo = LoteDAO::GetByPK($l); 
+
+		if(is_null($lvo)){ return ""; }
+
+
+		$avo = AlmacenDAO::getByPK( $lvo->getIdAlmacen() );
+
+		return $lvo->getFolio() . "[ Almacen ". $avo ->getNombre()  ." ]";
+
+	}
+
+
+
 	function unidadname($l){ $ll = UnidadMedidaDAO::GetByPK($l); if (is_null($ll)) return "ERROR"; return $ll->getAbreviacion();  }
 
 	$page->addComponent($table_e);
