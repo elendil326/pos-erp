@@ -7,33 +7,49 @@ Class PosErp{
     private $waiting;
     private $instance_token;
     private $url;
+    private $incoming_login_results;
+    private $at;
 
-
-    private function __construct(){
+    private function __construct($i_token){
         $this->waiting = false;
-        $this->instance_token = null;
-        $this->url = "asdf";
+        $this->instance_token = $i_token;
+        $this->url = "http://pos2.labs2.caffeina.mx/";
+        $this->incoming_login_results = false;
+        $this->at = null;
     }
 
-    function __clone(){}
-
-    function __destroy(){}
 
 
+    function __clone(){
 
 
-    public static function getInstance(){
+    }
+
+
+
+    function __destroy(){
+
+
+    }
+
+
+
+
+    public static function getInstance( $i_token = null ){
+
         if(self::$singleton_obj === null){
-            self::$singleton_obj = new PosErp();
+
+            if($i_token === null){
+                throw new Exception("You must pass your instance token when calling getInstance() for the first time.");
+            }
+
+            self::$singleton_obj = new PosErp($i_token);
         }
 
         return self::$singleton_obj;  
     }
 
 
-    public function setInstance($token){
-        $this->instance_token = $token;
-    }
 
 
     private function postRequest($url, $data, $referer='') {
@@ -99,29 +115,104 @@ Class PosErp{
         );
     }
 
+    
 
-    private function ApiCall($method, $address){
+
+
+    private function BeforeCall( $api_name, $toSendParams ){
+        if($api_name == "api/sesion/iniciar"){
+            $this->incoming_login_results = true;
+
+        } elseif( !is_null($this->at)){
+
+            //there is an `at` associated with this session
+            //lets check if there is at defined in the params
+            if(array_key_exists("at", $toSendParams)){
+                //he has his own at, send that one
+
+            }else{
+                //lets use the one we have
+                $toSendParams["at"] = $this->at; 
+
+            }
+            
+            
+        }
+
+        return $toSendParams;
+    }
+
+
+
+
+    private function AfterCall( $result ){
+
+        //decode json
+        $response = json_decode($result);
+
+        if($this->incoming_login_results){
+            if($response->login_succesful){
+                $this->at = $response->auth_token;
+            }
+        }
+        
+        $this->incoming_login_results = false;
+
+        return $response;
+
+    }
+
+
+
+
+
+    private function ApiCall($method, $address, $params ){
+
+        $params = $this->BeforeCall($method, $params );
 
         if(is_null($this->instance_token)){
             throw new Exception("You have not supplied any instance token", 1);
         }
 
+
+
+        $this->BeforeCall();
+
+
+
+
         if($method === "POST"){
+           $r = $this->postRequest($this->url . "/front_ends/" . $this->instance_token . "/" . $address , $params );
+            return $this->AfterCall( $r['content'] );
+
 
         }else if($method === "GET"){
+            //convert params to ?x=y& format
+           $params = http_build_query($params);
+           $r = file_get_contents($this->url . "/front_ends/" . $this->instance_token . "/" . $address . "/?" . $params);
+           return $this->AfterCall( $r );
+
 
         }else{
             throw new Exception("Http methdos must be POST or GET", 1);
             
+
         }
 
+        
     }
 
 
 
-    public function NuevoCliente($uno, $dos){
-
+    public function POST($api_name, $parameters){
+        $r = $this->ApiCall( "POST", $api_name, $parameters );
     }
+
+
+    public function GET($api_name, $parameters){
+        $r = $this->ApiCall( "GET", $api_name, $parameters );
+    }
+
 
 }
 
@@ -134,103 +225,21 @@ Class PosErp{
 
 
 
-$api = PosErp::getInstance("aslkdfjaslkdfjlkasjdfs");
-$api->SesionIniciar(23, 425435);
-$api->NuevoCliente(2,4);
+$api = PosErp::getInstance("1e65da5dbe04139ee8d810568f1fd406");
+
+
+$api->POST("api/sesion/iniciar", array( 
+        'password' => '123',
+        'usuario' => '1'
+     ));
+
+
+$api->POST("api/cliente/nuevo", array( 
+        'razon_social' => 'Alan Gonzalez'
+     ));
 
 
 
 exit;
 
 
-
-
-
-
-
-
-$url_base = "http://127.0.0.1/caffeina/v1_5/www/front_ends/1e65da5dbe04139ee8d810568f1fd406";
-
-$post_data = array(
-    'password' => '123',
-    'usuario' => '1',
-	'request_token' => true
-);
-
-$result = post_request($url_base . '/api/sesion/iniciar', $post_data);
- 
-if ($result['status'] != 'ok'){
-
-    echo 'A error occured: ' . $result['error'];  
-	exit;
-
- 
-}
-
-
-
-$response = json_decode($result['content']);
-
-
-
-
-if(!$response->login_succesful){
-	echo "invalida";
-	exit;
-}
-
-
-
-define("AUTH_TOKEN", $response->auth_token);
-
-
-
-
-
-$post_data = array(
-    'at' => AUTH_TOKEN,
-    'razon_social' => $_POST["rs"]
-);
-
-
-$result = post_request($url_base . '/api/cliente/nuevo', $post_data);
-
-if ($result['status'] != 'ok'){
-
-    echo 'A error occured: ' . $result['error'];  
-	exit;
-
- 
-}
-
-
-
-
-
-/*
-var obj = {
-		razon_scocial 		: $("#rs"),
-		representante_legal	: $("#rl"),
-		rfc					: $("#rfc"),
-		telefono1			: $("#t1"),
-		telefono2			: $("#t2"),
-		email 				: $("#email"),
-		calle				: $("#calle"),
-		numero_interior		: $("#ni"),
-		numero_exterior		: $("#ne"),
-		colonia				: $("#colonia"),
-		ciudad				: $("#ciudad"),
-		codigo_postal 		: $("#cp")
-};
-
-$.ajax({
-  url: 'nuevo_socio.php',
-  data : obj,
-  method : 'post',
-  success: function(data) {
-	console.log(data);
-  }
-});
-
-
-*/
