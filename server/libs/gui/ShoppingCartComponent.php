@@ -252,11 +252,12 @@ class ShoppingCartComponent extends CartComponent implements GuiComponent
 				case "credito" :
 					console.log("seleccion_tipo_de_venta(credito)");
 					validar_venta_a_credito(cliente_seleccionado, carrito_store );
-
+					tipo_de_venta = "credito";
 				break;
 
 				case "contado" :
 					console.log("seleccion_tipo_de_venta(contado)");			
+					tipo_de_venta = "contado";
 				break;
 
 				default:

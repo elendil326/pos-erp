@@ -1958,18 +1958,18 @@ class ServiciosController extends ValidacionesController implements IServicios{
 			Logger::log("Terminando orden " . $id_orden . " ");
 			
 			if(!is_null($id_venta)){
-				Logger::log("asignando a venta " . $id_venta);
+
+				Logger::log("Asignando orden a id_venta=" . $id_venta);
 				
 				//que la venta exista
-				
 				$v = VentaDAO::getByPK($id_venta);
 				
 				if(is_null($v)){
 					throw new InvalidDataException("La venta a la que se quiere asignar no existe.");
 				}
-				
-				
 			}
+
+
 			
             //ver que exista la orden de servicio
 			$ods = OrdenDeServicioDAO::getByPK( $id_orden);
@@ -1978,9 +1978,11 @@ class ServiciosController extends ValidacionesController implements IServicios{
 				throw new InvalidDataException("La orden de servicio que desea terminar no existe");
 			}
 
+
 			if(!$ods->getActiva()){
 				throw new BusinessLogicException("La orden que quieres terminar ya no esta terminada.");
 			}
+
 
 			DAO::transBegin();
 			
@@ -2004,6 +2006,12 @@ class ServiciosController extends ValidacionesController implements IServicios{
 				$vo->setRetencion( 0);
 				
 				
+                //Actualizar totales
+
+                $ventaVo = VentaDAO::getByPK($id_venta);
+                
+
+
 				try{
 					VentaOrdenDAO::save( $vo );
 					

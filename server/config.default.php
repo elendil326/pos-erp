@@ -11,7 +11,7 @@ $POS_CONFIG["LOG_ERROR_FILE"] 	= "/var/log/mx.caffeina.pos/error.log";
 $POS_CONFIG["LOG_TRACKBACK"] 	= false;
 $POS_CONFIG["LOG_DB_QUERYS"] 	= true;
 
-
+$POS_CONFIG["LOG_FULL_API_CALLS"] 	= true;
 
 
 

@@ -144,6 +144,17 @@ abstract class ApiHandler
     // This function should be called 
     public function ExecuteApi()
     {
+
+
+        if(LOG_FULL_API_CALLS){
+
+            Logger::log("============= API CALL: ". $_GET["_api_"] ." ===================");
+            
+        }else{
+
+            Logger::log("[API CALL] " . $_GET["_api_"]);
+        }
+
         try
         {   
             $this->CheckAuthorization();
@@ -157,15 +168,35 @@ abstract class ApiHandler
             // Process input
             $this->GetRequest();       
 
+            if(LOG_FULL_API_CALLS){
+
             
+                if($this->request !== null) {
+                    foreach($this->request as $id => $obj ){
+                        Logger::log("  " . $id . "  :  " . $obj->getValue());
+                    }    
+                }
+                Logger::log("");
+                
+
+            }
+
+
+           
+
+                    
             $this->ValidateRequest();
 
             // Generate output
             $this->GenerateResponse();
 
             $this->response["status"] = "ok";
+
+            if(LOG_FULL_API_CALLS) Logger::log("============= /API CALL ===================");
             
-            return $this->response;       
+            return $this->response;  
+
+                
         }
         catch (ApiException $e)
         {
@@ -191,5 +222,3 @@ abstract class ApiHandler
         
     }
 }
-
-?>
