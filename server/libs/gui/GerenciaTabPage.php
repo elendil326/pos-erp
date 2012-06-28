@@ -95,7 +95,7 @@
 			$h = "<script>
 				var TabPage = TabPage || {};
 				TabPage.tabs = [$tabs_for_js];
-				TabPage.tabsH = [];
+				
 				TabPage.currentTab = '';
 				</script>";
 

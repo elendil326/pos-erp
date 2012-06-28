@@ -82,7 +82,7 @@ var main = function ()
 
 	if(window.TabPage !== undefined){
 
-		console.log(TabPage.tabs);
+		
 
 		if(window.location.hash.length == 0){
 			//no hay tab seleccionado
@@ -106,41 +106,30 @@ var main = function ()
 
 			Ext.get('tab_'+TabPage.tabs[t]).setVisibilityMode(Ext.Element.VISIBILITY);
 
-			TabPage.tabsH[ TabPage.tabs.length - t - 1 ] = Ext.get('tab_'+TabPage.tabs[t]).getHeight();
+			//TabPage.tabsH[ TabPage.tabs.length - t - 1 ] = Ext.get('tab_'+TabPage.tabs[t]).getHeight();
 
 
 			//Ext.get('tab_'+TabPage.tabs[t]).setVisibilityMode(Ext.Element.DISPLAY);
 
-			if(TabPage.currentTab == TabPage.tabs[t]) { console.log("not hidding " + TabPage.tabs[t]); continue; }
-			
-			console.log("hidding:" + TabPage.tabs[t]);
+			if(TabPage.currentTab == TabPage.tabs[t]) {  continue; }
 
-			
-			Ext.get('tab_'+TabPage.tabs[t]).setHeight(0);//setStyle('display', 'none');
-			Ext.get('tab_'+TabPage.tabs[t]).hide();//setStyle('display', 'none');
+			Ext.get('tab_'+TabPage.tabs[t]).setHeight(0);
+			Ext.get('tab_'+TabPage.tabs[t]).hide();
 			
 		};
 
-		console.log(TabPage.tabsH);
+		
 
 
 		if ( 'onhashchange' in window ) {
-			//console.log('`onhashchange` available....');
+			
 
 			window.onhashchange = function() {
 
 				if((TabPage.currentTab.length > 0) && (Ext.get('tab_'+TabPage.currentTab) != null)){
 					//ocultar la que ya esta
-					//Ext.get('tab_'+currentTab).setStyle('display', 'none');
-					console.log("ocualtando " +TabPage.currentTab );
 					
-					//antes de ocultarlo guardar su tamano
-					for (var ti = 0; ti < TabPage.tabs.length; ti++) {
-						if( TabPage.tabs[ti] == TabPage.currentTab){
-							TabPage.tabsH[ti] = Ext.get('tab_'+TabPage.currentTab).getHeight(  );
-						}
-					};
-
+				
 					Ext.get('tab_'+TabPage.currentTab).hide();
 					Ext.get('tab_'+TabPage.currentTab).setHeight(0);
 					Ext.get('atab_'+TabPage.currentTab).toggleCls('selected');
@@ -154,11 +143,15 @@ var main = function ()
 				Ext.get('tab_'+TabPage.currentTab).show();
 				for (var ti = 0; ti < TabPage.tabs.length; ti++) {
 					if( TabPage.tabs[ti] == TabPage.currentTab){
-						Ext.get('tab_'+TabPage.currentTab).setHeight( TabPage.tabsH[ti] );
+						Ext.get('tab_'+TabPage.currentTab).setHeight('auto');
+					
 					}
 				};
 				Ext.get('atab_'+TabPage.currentTab).toggleCls('selected');
 			}
+		}else{
+			console.log('`onhashchange` NOT Available....');
+
 		}
 
 	}//if(window.TabPage !== undefined)
@@ -166,7 +159,7 @@ var main = function ()
 
 }
 
-var alanboy;
+
 Ext.onReady(main);
 
 
