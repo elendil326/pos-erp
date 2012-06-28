@@ -39,7 +39,7 @@ Ext.require([
 var main = function ()
 {
 	
-	if(!Ext.isIE) console.log("JS FRWK READY");
+	console.log("JS FRWK READY");
 
 	//window.onbeforeunload = function(){}
 
@@ -68,9 +68,17 @@ var main = function ()
 	if((window.TableComponent !== undefined) && (TableComponent.convertToExtJs !== undefined)){
 		for (var i = TableComponent.convertToExtJs.length - 1; i >= 0; i--) {
 
-			alanboy = Ext.create('Ext.ux.grid.TransformGrid', TableComponent.convertToExtJs[i], {
+			Ext.create('Ext.ux.grid.TransformGrid', TableComponent.convertToExtJs[i], {
 	            //stripeRows: true,
-	            bodyCls: 'overrideTHTD'
+	            bodyCls: 'overrideTHTD',
+	            listeners: {
+	            	'itemclick' : function(a,b,c ){
+	            		console.log("ITEM CLICK id=" + b.raw.id, i +1 );
+						
+						eval(TableComponent.ExtJsTables[i+1].actionFunction+"("+b.raw.id+")")
+	            		
+	            	}
+	            }
 	           
 	        }).render();	
 		};

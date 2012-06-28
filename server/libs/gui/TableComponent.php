@@ -28,13 +28,20 @@ class TableComponent implements GuiComponent{
 		$this->convertToExtjs = false;
 	}
 	
-	public function setRows($rows ){
+
+
+	public function setRows($rows )
+	{
 		$this->rows = $rows;
 	}
+
+
 
 	public function convertToExtJs($tof){
 		$this->convertToExtjs = $tof;
 	}
+
+
 
 	public function renderRowId( $prefix )
 	{
@@ -58,6 +65,8 @@ class TableComponent implements GuiComponent{
 	}
 	
 	
+
+
 	public function addOnClick( $actionField , $actionFunction, $sendJSON = false, $sendId = false )
 	{
 		$this->actionField 	  	= $actionField;
@@ -95,12 +104,21 @@ class TableComponent implements GuiComponent{
 
 				if(typeof TableComponent.convertToExtJs === "undefined"){
 					TableComponent.convertToExtJs = ["'. $id .'"];
-				
+					TableComponent.ExtJsTables = [{ 
+						id : "'.$id.'",
+						actionFunction : "'.$this->actionFunction.'"
+					}];
+
+
 				}else{
 					TableComponent.convertToExtJs.push("'.$id.'");
 
-				}
-			</script>';
+					TableComponent.ExtJsTables.push({
+						id : "'.$id.'",
+						actionFunction : "'.$this->actionFunction.'"
+					});
+						
+				}</script>';
 		}
 
 
@@ -138,16 +156,37 @@ class TableComponent implements GuiComponent{
 			// Render action fields if necesary
 			// 
 			if( isset($this->actionField)){
-				if($this->actionSendJSON){
-					$html .= '<tr style=" cursor: pointer;" onClick="' . $this->actionFunction. '( \''. urlencode(json_encode($row)) . '\' )" ';
+				//action field !
+				if($this->convertToExtjs){
+					$html .= '<tr  ';
 
-				}elseif($this->actionSendID){
-					$html .= '<tr style=" cursor: pointer;" onClick="' . $this->actionFunction. '( \'' . $this->renderRowIds . $a . '\' )" ';
+					if($this->actionSendJSON){
+						//$html .= '<tr style=" cursor: pointer;" onClick="' . $this->actionFunction. '( \''. urlencode(json_encode($row)) . '\' )" ';
+
+					}elseif($this->actionSendID){
+						//$html .= '<tr style=" cursor: pointer;" onClick="' . $this->actionFunction. '( \'' . $this->renderRowIds . $a . '\' )" ';
+
+					}else{
+						//$html .= '<tr style=" cursor: pointer;" onClick="' ." ';
+
+						//$this->actionFunction. '( ' . $row[ $this->actionField ] . ' )
+						$html .= " id='" . $row[ $this->actionField ] . "' ";
+					}
 
 				}else{
-					$html .= '<tr style=" cursor: pointer;" onClick="' . $this->actionFunction. '( ' . $row[ $this->actionField ] . ' )" ';		
-							
+
+					if($this->actionSendJSON){
+						$html .= '<tr style=" cursor: pointer;" onClick="' . $this->actionFunction. '( \''. urlencode(json_encode($row)) . '\' )" ';
+
+					}elseif($this->actionSendID){
+						$html .= '<tr style=" cursor: pointer;" onClick="' . $this->actionFunction. '( \'' . $this->renderRowIds . $a . '\' )" ';
+
+					}else{
+						$html .= '<tr style=" cursor: pointer;" onClick="' . $this->actionFunction. '( ' . $row[ $this->actionField ] . ' )" ';		
+								
+					}					
 				}
+
 				
 			}else{
 				// or else just render the tr
@@ -157,12 +196,19 @@ class TableComponent implements GuiComponent{
 
 			// Render id's or not
 			if($this->renderRowIds != null){
-
 				$html .= " id=\"". $this->renderRowIds . $a ."\" ";
 			}
 
 			// Render the effect
-            $html .= ' onmouseover="this.style.backgroundColor = \'#D7EAFF\'" onmouseout="this.style.backgroundColor = \'white\'" >';
+
+			if($this->convertToExtjs){
+            	//extjs already has this effect
+            	$html .= '>';
+
+            }else{
+            	
+            	$html .= ' onmouseover="this.style.backgroundColor = \'#D7EAFF\'" onmouseout="this.style.backgroundColor = \'white\'" >';
+            }
             
 			$i = 0;
 			
@@ -172,12 +218,8 @@ class TableComponent implements GuiComponent{
 				  *	Just print the damn rows
 				  **/				
 				foreach($this->rows[$a] as $column){
-					if($i++ % 2 == 0){
-						$bgc = "";
-					}else{
-						$bgc = ""; //"rgba(200, 200, 200, 0.199219)";
-					}
-					$html .=  "<td align='left' style='background-color:".$bgc.";'>" . $column . "</td>";
+
+					$html .=  "<td align='left' >" . $column . "</td>";
 				}
 
 			}else{
@@ -199,18 +241,13 @@ class TableComponent implements GuiComponent{
 							}
 						}
 						
-						if($i++ % 2 == 0){
-							$bgc = "";
-						}else{
-							$bgc = ""; //"rgba(200, 200, 200, 0.199219)";
-						}
 						
 						if( $found ){
 							
-							$html .=  "<td align='left' style='background-color:".$bgc.";'>" . call_user_func( $found[$key] , $row[ $key ], $row ) . "</td>";							
+							$html .=  "<td align='left' >" . call_user_func( $found[$key] , $row[ $key ], $row ) . "</td>";							
 
 						}else{
-							$html .=  "<td align='left' style='background-color:".$bgc.";'>" . $row[ $key ] . "</td>";
+							$html .=  "<td align='left'  >" . $row[ $key ] . "</td>";
 						}
 						
 
