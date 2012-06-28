@@ -72,9 +72,13 @@
  		 * Actual wrapped tabs
  		 *
  		 **/
+ 		$tabs_for_js = "";
+
  		for ($ti=0; $ti < sizeof($this->tabs); $ti++) { 
 
-			parent::addComponent("<div class='gTab' style='display:none' id='tab_" . $this->tabs[$ti]["title"] . "'>");	
+			parent::addComponent("<div class='gTab'  id='tab_" . $this->tabs[$ti]["title"] . "'>");	
+
+			$tabs_for_js .= "'" . $this->tabs[$ti]["title"] . "',";
 
  			for ($ti_cmps=0; $ti_cmps < sizeof( $this->tabs[$ti]["components"] ); $ti_cmps++) { 
  				
@@ -86,34 +90,14 @@
  			parent::addComponent("</div>");
  		}
 
+
+
 			$h = "<script>
-	 			var currentTab = '';
-
-				if(window.location.hash.length == 0){
-					Ext.get('tab_". $this->tabs[0]["title"] ."').setStyle('display', 'block');
-					Ext.get('atab_". $this->tabs[0]["title"] ."').toggleCls('selected');
-					currentTab = '". $this->tabs[0]["title"] ."';
-				}else{
-					currentTab = window.location.hash.substr(1);
-					Ext.get('tab_'+currentTab).setStyle('display', 'block');
-					Ext.get('atab_'+currentTab).toggleCls('selected');						
-				}
-
-	 			if ( 'onhashchange' in window ) {
-	 				console.log('`onhashchange` available....');
-
-				    window.onhashchange = function() {
-
-						if((currentTab.length > 0) && (Ext.get('tab_'+currentTab) != null)){
-							Ext.get('tab_'+currentTab).setStyle('display', 'none');
-							Ext.get('atab_'+currentTab).toggleCls('selected');						
-						}
-
-						currentTab = window.location.hash.substr(1);
-						Ext.get('tab_'+currentTab).setStyle('display', 'block');
-						Ext.get('atab_'+currentTab).toggleCls('selected');
-				    }
-				}</script>";
+				var TabPage = TabPage || {};
+				TabPage.tabs = [$tabs_for_js];
+				TabPage.tabsH = [];
+				TabPage.currentTab = '';
+				</script>";
 
 	 		parent::addComponent($h);
 

@@ -1,3 +1,10 @@
+//for IE
+var console = console || { log: function(){}, group : function(){}, groupEnd : function(){} };
+
+//for IE even when cnsole is defined:
+console.group =  console.group || function(){};
+console.groupEnd =  console.groupEnd || function(){};
+
 Ext.Loader.setConfig({
     enabled: true
 });
@@ -18,7 +25,7 @@ Ext.require([
 	  'Ext.panel.Panel',
 	  'Ext.button.Button',
 	  'Ext.window.Window',
-	  'Ext.ux.statusbar.StatusBar',
+	 // 'Ext.ux.statusbar.StatusBar',
 	  'Ext.toolbar.TextItem',
 	  'Ext.menu.Menu',
 	  'Ext.toolbar.Spacer',
@@ -31,13 +38,14 @@ Ext.require([
 
 var main = function ()
 {
-	console.log("JS FRWK READY");
+	
+	if(!Ext.isIE) console.log("JS FRWK READY");
 
 	//window.onbeforeunload = function(){}
 
 	var els = Ext.select("input").elements;
 
-	console.log("Ataching on before unload events...");
+	if(!Ext.isIE) console.log("Ataching on before unload events...");
 	
 	for (var i = els.length - 1; i >= 0; i--){
 		Ext.get(els[i]).on(
@@ -56,21 +64,109 @@ var main = function ()
 	if(document.location.search.indexOf("previous_action=ok") > -1)
 		Ext.example.msg('Exito', '!!!');
 
+
 	if((window.TableComponent !== undefined) && (TableComponent.convertToExtJs !== undefined)){
 		for (var i = TableComponent.convertToExtJs.length - 1; i >= 0; i--) {
 
-			Ext.create('Ext.ux.grid.TransformGrid', TableComponent.convertToExtJs[i], {
-	            stripeRows: true,
+			alanboy = Ext.create('Ext.ux.grid.TransformGrid', TableComponent.convertToExtJs[i], {
+	            //stripeRows: true,
 	            bodyCls: 'overrideTHTD'
+	           
 	        }).render();	
 		};
 		
 	}
 
 
+
+
+	if(window.TabPage !== undefined){
+
+		console.log(TabPage.tabs);
+
+		if(window.location.hash.length == 0){
+			//no hay tab seleccionado
+			//Ext.get('tab_'+TabPage.tabs[0]).setStyle('display', 'block');
+			Ext.get('atab_'+TabPage.tabs[0]).toggleCls('selected');
+			TabPage.currentTab = TabPage.tabs[0];
+
+		}else{
+			//si hay
+			TabPage.currentTab = window.location.hash.substr(1);
+
+			//Ext.get('tab_'+TabPage.currentTab).setStyle('display', 'block');
+
+			Ext.get('atab_'+TabPage.currentTab).toggleCls('selected');
+			
+		}
+
+
+		//hide the other ones
+		for (var t = TabPage.tabs.length - 1; t >= 0; t--) {
+
+			Ext.get('tab_'+TabPage.tabs[t]).setVisibilityMode(Ext.Element.VISIBILITY);
+
+			TabPage.tabsH[ TabPage.tabs.length - t - 1 ] = Ext.get('tab_'+TabPage.tabs[t]).getHeight();
+
+
+			//Ext.get('tab_'+TabPage.tabs[t]).setVisibilityMode(Ext.Element.DISPLAY);
+
+			if(TabPage.currentTab == TabPage.tabs[t]) { console.log("not hidding " + TabPage.tabs[t]); continue; }
+			
+			console.log("hidding:" + TabPage.tabs[t]);
+
+			
+			Ext.get('tab_'+TabPage.tabs[t]).setHeight(0);//setStyle('display', 'none');
+			Ext.get('tab_'+TabPage.tabs[t]).hide();//setStyle('display', 'none');
+			
+		};
+
+		console.log(TabPage.tabsH);
+
+
+		if ( 'onhashchange' in window ) {
+			//console.log('`onhashchange` available....');
+
+			window.onhashchange = function() {
+
+				if((TabPage.currentTab.length > 0) && (Ext.get('tab_'+TabPage.currentTab) != null)){
+					//ocultar la que ya esta
+					//Ext.get('tab_'+currentTab).setStyle('display', 'none');
+					console.log("ocualtando " +TabPage.currentTab );
+					
+					//antes de ocultarlo guardar su tamano
+					for (var ti = 0; ti < TabPage.tabs.length; ti++) {
+						if( TabPage.tabs[ti] == TabPage.currentTab){
+							TabPage.tabsH[ti] = Ext.get('tab_'+TabPage.currentTab).getHeight(  );
+						}
+					};
+
+					Ext.get('tab_'+TabPage.currentTab).hide();
+					Ext.get('tab_'+TabPage.currentTab).setHeight(0);
+					Ext.get('atab_'+TabPage.currentTab).toggleCls('selected');
+
+
+				}
+
+				//currentTab = window.location.hash.substr(1);
+				TabPage.currentTab = window.location.hash.substr(1);
+
+				Ext.get('tab_'+TabPage.currentTab).show();
+				for (var ti = 0; ti < TabPage.tabs.length; ti++) {
+					if( TabPage.tabs[ti] == TabPage.currentTab){
+						Ext.get('tab_'+TabPage.currentTab).setHeight( TabPage.tabsH[ti] );
+					}
+				};
+				Ext.get('atab_'+TabPage.currentTab).toggleCls('selected');
+			}
+		}
+
+	}//if(window.TabPage !== undefined)
+	
+
 }
 
-
+var alanboy;
 Ext.onReady(main);
 
 
