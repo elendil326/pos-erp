@@ -3,34 +3,30 @@
 class Logger
 {
 
-  private static $db_querys = 0;
+    private static $db_querys = 0;
 
-  public static final function read($which = "access", $lines = 100){
+    public static final function read($which = "access", $lines = 100){
 
-	switch($which){
-		case "access":
-		    $file = POS_CONFIG_LOG_ACCESS_FILE;
-		break;
-		
-		case "error":
-		    $file = POS_CONFIG_LOG_ERROR_FILE;
-		break;
-		
-		default:
-		return;
-		
-		
-	}
+    	switch($which){
+    		case "access":
+    		    $file = POS_CONFIG_LOG_ACCESS_FILE;
+    		break;
+    		
+    		case "error":
+    		    $file = POS_CONFIG_LOG_ERROR_FILE;
+    		break;
+    		
+    		default:
+    		return;
+    		
+    		
+    	}
         if(!file_exists($file)){
             die("POS: Unable to open logfile:" .$file );
         }
 
-    // $file: Name of file to open
-    // $lines: Number of lines to obtain from the end of the file
-    // $header: flag to indicate that the file contains a header which should not be included if the number of lines in the file is <= lines
-    
 
-     $header = null;
+    $header = null;
     global $error_string;
     
     // Number of lines read per time
@@ -147,21 +143,36 @@ class Logger
   
   
   public static final function logSQL( $sql ){
+
     if(POS_CONFIG_LOG_DB_QUERYS){
+
+        
+
 		self::$db_querys ++;
-		self::log( "  SQL(" . self::$db_querys . "): " . $sql );
+		
+
+        //$arr = explode("\n", $sql); foreach ($arr as $l) { self::log( "SQL(" . self::$db_querys . "): " . $l ); }
+
+        $sql = str_replace("\n", " ", $sql); self::log( "SQL(" . self::$db_querys . "): " . $sql  );
     }
   }
+
+
+
+
 
 
   public static final function error ( $msg ){
     
     $arr = explode("\n", $msg);
     foreach ($arr as $l) {
-    self::log(  "ERROR: " . $l, true );    
+        self::log(  "ERROR: " . $l, true );    
     }
     
   }
+
+
+
 
 
   public static final function warn ($msg ){
@@ -184,6 +195,7 @@ class Logger
         if(!POS_CONFIG_LOG_TO_FILE)
             return;
         
+        $msg = str_replace("\n", " ", $msg);
 		if($msg instanceof Exception ){
 			return self::error($msg);
 		}
@@ -229,9 +241,11 @@ class Logger
 			}
 
 		}
-		*/
+        */
+		
 
 
+    $track = "";
     if(POS_CONFIG_LOG_TRACKBACK){
 		$d = debug_backtrace();
 		
@@ -239,15 +253,17 @@ class Logger
 		
 		for ($i= 1; $i < sizeof($d) -1 ; $i++) { 
 			//        $track .= isset($d[$i]["function"]) ? "->" . $d[$i]["function"] : "*" ;
-			$track .= isset($d[$i]["file"]) ? substr( strrchr( $d[$i]["file"], "/" ), 1 )  : "*"; 
-			$track .= isset($d[$i]["line"]) ? ":" .  $d[$i]["line"] ." "  : "* " ;
+			$track .= isset($d[$i]["file"]) ? substr( strrchr( $d[$i]["file"], "\\" ), 1 )  : "*"; 
+            $track .= isset($d[$i]["file"]) ? substr( strrchr( $d[$i]["file"], "/" ), 1 )  : "*"; 
+			$track .= isset($d[$i]["line"]) ? ":" .  $d[$i]["line"] ." <-"  : "* " ;
 		}
 		
-		$out .=  $track ;      
+		
     }
 
 
-	fwrite($log, $out. " | " . $msg . "\n");
+	fwrite($log, $out. " | " . $msg . "". $track ."\n");
+
 	fclose($log);
 
 	if($err_log){
@@ -262,4 +278,142 @@ class Logger
   
   
   
+}
+
+
+
+
+
+define("LFP",'LOG_ACCESS_FILE');
+
+function LogTrace($Argument, $lfn = LFP, $itw = '  ')
+{
+    Logger::log("=====\r", 3, $lfn); 
+    Logger::log("[BEGIN BACKTRACE]\r", 3, $lfn); 
+    $it = '';
+    $Ts = array_reverse(debug_backtrace());
+    foreach($Ts as $T)
+       {  
+        if($T['function'] != 'include' && $T['function'] != 'require' && $T['function'] != 'include_once' && $T['function'] != 'require_once')
+        {
+            $ft = $it . '<'. basename($T['file']) . '> on line ' . $T['line'];  
+            if($T['function'] != 'LogTrace')
+            {
+                if(isset($T['class']))
+                    $ft .= ' in method ' . $T['class'] . $T['type'];
+                else 
+                    $ft .= ' in function ';
+                $ft .= $Trace['function'] . '(';
+            }
+            else
+                $ft .= '(';
+            if(isset($T['args'][0]))
+            {
+                if($T['function'] != 'LogTrace')
+                {
+                    $ct = '';
+                    foreach($T['args'] as $A)
+                    {
+                        $ft .= $ct . LogVar($A, '', $it, $itw, 0);
+                        $ct = $it . $itw . ',';
+                    }
+                }
+                else
+                    $ft .= LogVar($T['args'][0], '', $it, $itw, 0);
+            }
+            $ft .= $it . ")\r";
+            Logger::log($ft, 3, $lfn); 
+            $it .= $itw;
+        }            
+    }
+    Logger::log("[END BACKTRACE]\r", 3, $lfn);
+}
+
+function LogVar(&$Var, $vn, $pit, $itw, $nlvl, $m = '')
+{
+    if($nlvl>=16) return;
+    if($nlvl==0){$tv=serialize($Var);$tv=unserialize($tv);}
+    else $tv=&$Var; 
+    $it=$pit.$itw;
+    for($i=0; $i<$nlvl;$i++) $it.='.'.$itw;
+    $o='';$nl="\n";
+    if(is_array($tv))
+    {
+        if(strlen($vn)>0) $o.=$it.$m.'<array> $'.$vn.' = (';
+        else $o.="\r".$it.$m.'<array> = (';
+        $o.= $nl;$AK=array_keys($tv);
+        foreach($AK as $AN) {$AV=&$tv[$AN];$o.=LogVar($AV,$AN,$pit,$itw,$nlvl+1);}
+        $o.=$it.')'.$nl;
+    }
+    else if(is_string($tv))
+    {
+        if(strlen($vn)>0)$o.=$it.$m.'<string> $'.$vn.' = ';
+        else $o.=' '.$m.'<string> = ';
+        if($tv===null) $o.='NULL';
+        else $o.='"'.$tv.'"';
+        $o.=$nl;
+    }
+    else if(is_bool($tv))
+    {
+        if(strlen($vn) > 0) $o.=$it.$m.'<boolean> $'.$vn.' = ';
+        else $o.=' '.$m.'<boolean> = ';
+        if($tv===true) $o.='TRUE';
+        else $o.='FALSE';
+        $o.=$nl;
+    }
+    else if(is_object($tv))
+    {
+        if(strlen($vn)>0)
+        {
+            $o.=$pit.$itw;
+            for($i=0;$i<$nlvl;$i++) $o.='.'.$itw;
+            $o.=$m.'<'.get_class($tv).'::$'.$vn.'> = {'.$nl;
+        }
+        else $o.=' '.$m.'<'.get_class($tv).'::> = {'.$nl;
+        $R=new ReflectionClass($tv);
+        $o.=$it.'.'.$itw.'Class methods {'.$nl;
+        $CM=$R->getMethods();
+        foreach($CM as $MN => $MV)
+        {
+            $o.=$it.'.'.$itw.'.'.$itw.implode(' ',Reflection::getModifierNames($MV->getModifiers())).' '.$MV->getName().'(';
+            $MP=$MV->getParameters(); $ct='';
+            foreach($MP as $MPN => $MPV)
+            {
+                $o.=$ct; $o.=$MPV->isOptional()?'[':'';
+                if($MPV->isArray()) $o.='<array> ';
+                else if($MPV->getClass()!==null) $o.='<'.$MPV->getClass()->getName().'::> ';
+                $o.=$MPV->isPassedByReference()?'&':''; $o.='$'.$MPV->getName();
+                if($MPV->isDefaultValueAvailable())
+                 {
+                    if($MPV->getDefaultValue()===null) $o.=' = NULL';
+                    else if($MPV->getDefaultValue()===true) $o.=' = TRUE';
+                    else if($MPV->getDefaultValue()===false) $o.=' = FALSE';    
+                    else $o.=' = '.$MPV->getDefaultValue();    
+                }
+                $o.=$MPV->isOptional()?']':''; $ct=', ';
+            }
+            $o.=')'.$nl;
+        }
+        $o.=$it.'.'.$itw.'}'.$nl; $o.=$it.'.'.$itw.'Class properties {'.$nl;
+        $CV=$R->getProperties();
+        foreach($CV as $CN => $CV)
+        {
+            $M=implode(' ',Reflection::getModifierNames($CV->getModifiers())).' ';
+            $CV->setAccessible(true); 
+            $o.=LogVar($CV->getValue($tv),$CV->getName(),$pit,$itw,$nlvl+2,$M);
+        }
+        $o.=$it.'.'.$itw.'}'.$nl; $o.=$it.'.'.$itw.'Object variables {'.$nl;
+         $OVs=get_object_vars($tv);    
+        foreach($OVs as $ON => $OV) $o.=LogVar($OV,$ON,$pit,$itw,$nlvl+2);
+        $o.=$it.'.'.$itw.'}'.$nl; $o.=$pit.$itw;
+        for($i=0;$i<$nlvl;$i++)    $o.='.'.$itw;
+        $o.='}'.$nl;
+    }
+    else
+    {
+        if(strlen($vn)>0) $o.=$it.$m.'<'.gettype($tv).'> $'.$vn.' = '.$tv;
+        else $o.=' '.$m.'<'.gettype($tv).'> = '.$tv;
+        $o.=$nl;
+    }          
+    return $o;    
 }

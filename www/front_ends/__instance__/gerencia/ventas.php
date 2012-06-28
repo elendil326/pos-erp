@@ -45,7 +45,7 @@
                         "saldo"                  => "Saldo",
                         "fecha"                  => "Fecha"
                 ),
-                 VentaDAO::search( $ventas )
+                 VentaDAO::search( $ventas, "fecha", "desc" )
         );
         $tabla->addColRender("fecha", "FormatTime");
         $tabla->addColRender("subtotal", "FormatMoney");

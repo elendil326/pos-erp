@@ -1555,7 +1555,8 @@ require_once("interfaces/Sucursales.interface.php");
 					/*productos*/
 					array( array(
 						"id_producto" => $detalle_producto->getIdProducto(),
-						"cantidad" => $a_descontar[$i]["cantidad"]
+						"cantidad" => $a_descontar[$i]["cantidad"],
+                        "id_unidad" => $detalle_producto->getIdUnidad()
 					)), 
 					
 					/*motivo*/ 

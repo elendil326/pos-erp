@@ -1222,7 +1222,7 @@ Creo que este metodo tiene que estar bajo sucursal.
                 LoteSalidaProductoDAO::save(new LoteSalidaProducto(array(
                         "id_lote_salida" => $sl->getIdLoteSalida(),
                         "id_producto"   => $productos[$i]["id_producto"],
-                        "id_unidad" => 1,
+                        "id_unidad" => $productos[$i]["id_unidad"],
                         "cantidad"  => $productos[$i]["cantidad"]
                     )));
 

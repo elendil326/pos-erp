@@ -360,3 +360,8 @@
 
 	//DAO::predis("db".$rs["instance_id"], "127.0.0.1");
 	
+
+	//Tets new debug function
+	/*date_default_timezone_set('Europe/Bucharest');
+	$date = new DateTime('2010-01-28');
+	LogTrace($date); */
