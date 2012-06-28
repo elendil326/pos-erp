@@ -51,6 +51,11 @@
 		$tabla->addOnClick( "id_usuario", "(function(a){ window.location = 'clientes.ver.php?cid=' + a; })" );
 		
 			
-		$page->addComponent( $tabla );
+		//$page->addComponent( $tabla );
                 
+
+
+        $page->partialRender();
+        
+
 		$page->render();

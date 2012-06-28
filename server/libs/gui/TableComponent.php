@@ -12,6 +12,7 @@ class TableComponent implements GuiComponent{
 	private	$actionSendID;
 	private $renderRowIds;
 	private $specialRender;
+	private $convertToExtjs;
 	
 	private $noDataText;
 
@@ -24,13 +25,16 @@ class TableComponent implements GuiComponent{
 		$renderRowIds = null;
 		$this->noDataText = "No hay datos para mostrar.";
 		$this->simple_render = false;
+		$this->convertToExtjs = false;
 	}
 	
 	public function setRows($rows ){
 		$this->rows = $rows;
 	}
 
-
+	public function convertToExtJs($tof){
+		$this->convertToExtjs = $tof;
+	}
 
 	public function renderRowId( $prefix )
 	{
@@ -73,6 +77,9 @@ class TableComponent implements GuiComponent{
 
 	public function renderCmp(  ){
 		
+		//create some id;
+		$id = "tc" . md5( rand() );
+
 		//
 		// Si no hay datos, regresa el mensaje 
 		// 
@@ -80,19 +87,35 @@ class TableComponent implements GuiComponent{
 			return $this->noDataText;
 		}
 		
-		
+		$html = "";
+
+		if($this->convertToExtjs){
+			$html .= '<script>
+				var TableComponent = TableComponent || {};
+
+				if(typeof TableComponent.convertToExtJs === "undefined"){
+					TableComponent.convertToExtJs = ["'. $id .'"];
+				
+				}else{
+					TableComponent.convertToExtJs.push("'.$id.'");
+
+				}
+			</script>';
+		}
+
+
 		//
 		// Iniciar la creacion de la tabla
 		// 
-		$html = '<table border="0" style="width:100%" >';
-		$html .= '<tr align = "left">';
+		$html .= '<table border="0" style="width:100%" id="'.$id.'">';
+		$html .= '<thead align = "left">';
 		
 		// Renderear los headers
 		foreach ( $this->header  as $key => $value){
 			$html .= '<th>' . $value . '</th>';			
 		}
 
-		$html .= '</tr>';
+		$html .= '</thead><tbody>';
 		
 		// Cicle trought rows
 		for( $a = 0; $a < sizeof( $this->rows ) ; $a++ ){
@@ -202,7 +225,7 @@ class TableComponent implements GuiComponent{
 			$html .='</tr>';
 		}
 		
-		$html .= "</table>";
+		$html .= "<tbody></table>";
 		
 
 		return $html;

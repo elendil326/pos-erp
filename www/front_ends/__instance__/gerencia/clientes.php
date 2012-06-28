@@ -30,6 +30,7 @@
 			$lista["resultados"]
 		);
 
+		$tabla->convertToExtJs(true);
  		$tabla->addColRender("saldo_del_ejercicio", "FormatMoney");
         
         function funcion_activo($activo){
@@ -125,6 +126,8 @@
 		$nuevaColumnaForm->createComboBoxJoin("tipo", null, array("string", "int", "float", "date", "bool") );		
 		$nuevaColumnaForm->createComboBoxJoin("obligatorio", null, array("Si", "No") );
 		$page->addComponent( $nuevaColumnaForm );
+
+
 
 
 		$page->render();

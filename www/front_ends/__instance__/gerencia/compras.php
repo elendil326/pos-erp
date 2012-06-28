@@ -34,7 +34,7 @@
 	$tabla->addColRender("impuesto", "FormatMoney");
 	$tabla->addColRender("total", "FormatMoney");
 	$tabla->addColRender("saldo", "FormatMoney");
-
+	$tabla->convertToExtJs(true);
 	$tabla->addOnClick("id_compra", "(function(a){ window.location = 'compras.detalle.php?cid=' + a; })");
 
 	$page->addComponent($tabla);

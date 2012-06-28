@@ -54,7 +54,19 @@ var main = function ()
 	}
 
 	if(document.location.search.indexOf("previous_action=ok") > -1)
-		Ext.example.msg('Exito', 'Your data was saved!');
+		Ext.example.msg('Exito', '!!!');
+
+	if((window.TableComponent !== undefined) && (TableComponent.convertToExtJs !== undefined)){
+		for (var i = TableComponent.convertToExtJs.length - 1; i >= 0; i--) {
+
+			Ext.create('Ext.ux.grid.TransformGrid', TableComponent.convertToExtJs[i], {
+	            stripeRows: true,
+	            bodyCls: 'overrideTHTD'
+	        }).render();	
+		};
+		
+	}
+
 
 }
 

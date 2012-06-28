@@ -157,7 +157,7 @@
 
 		$avo = AlmacenDAO::getByPK( $lvo->getIdAlmacen() );
 
-		return $lvo->getFolio() . "[ Almacen ". $avo ->getNombre()  ." ]";
+		return $lvo->getFolio() . " <div style='font-size:11px; color: gray;'>Almacen ". $avo ->getNombre()  ."</div>";
 
 	}
 
@@ -242,6 +242,12 @@
 	$tabla->addColRender("cantidad", "rCantidad");
 	$tabla->addColRender("fecha_registro", "FormatTime");
 	$tabla->addColRender("id_lote", "idlote");
+	$tabla->addColRender("tipo", "tipoMov");
+
+	function tipoMov($tipo, $obj){
+
+		return $tipo . "<div style='color:gray; font-size:11px'>" . ucfirst($obj["motivo"]) . "</div>";
+	}
 
 	function username($idu){
 		$u = UsuarioDAO::getByPK($idu);

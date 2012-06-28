@@ -510,7 +510,7 @@ class BuyingCartComponent extends CartComponent implements GuiComponent
 			    grid = Ext.create('Ext.grid.Panel', {
 			        store: carrito_store,
 					plugins: [cellEditing],
-										bodyCls: 'foo',
+										bodyCls: 'overrideTHTD',
 			        stateful: true,
 			        stateId: 'stateGridCompra',
 			        columns: [

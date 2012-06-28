@@ -108,6 +108,13 @@ html body{background:#e7e7e7}
 	vertical-align:top;
 }
 
+.overrideTHTD th, .overrideTHTD td{
+	text-align:left;
+	padding: 0px !important;
+	border:0px !important;
+	vertical-align:top;
+}
+
 .devsitePage .body table td,
 .devsitePage .body table th{
 		border:1px solid #eee;
