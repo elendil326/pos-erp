@@ -400,6 +400,7 @@ class FormComponent implements GuiComponent
 			
 			if ($f->type !== "hidden")
 			{
+
 				if (($f->obligatory === false) && ($this->hide_not_obligatory))
 				{
 					$html .= "<td style='display:none' class='hideable'>";
@@ -506,6 +507,13 @@ class FormComponent implements GuiComponent
 					}
 					
 					
+					$html .= "</select>";
+				break;
+
+				case "bool":
+					$html .= "<select  id='" . $this->guiComponentId . $f->id . "' name='" . $f->name . "'>";
+					$html .= "<option value='1'>Si</option>";
+					$html .= "<option value='0'>No</option>";
 					$html .= "</select>";
 				break;
 					
