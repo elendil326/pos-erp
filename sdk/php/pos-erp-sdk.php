@@ -168,7 +168,7 @@ Class PosErp{
 
     private function ApiCall($method, $address, $params ){
 
-        $params = $this->BeforeCall($method, $params );
+        $params = $this->BeforeCall($address, $params );
 
         if(is_null($this->instance_token)){
             throw new Exception("You have not supplied any instance token", 1);
@@ -205,12 +205,12 @@ Class PosErp{
 
 
     public function POST($api_name, $parameters){
-        $r = $this->ApiCall( "POST", $api_name, $parameters );
+        return $this->ApiCall( "POST", $api_name, $parameters );
     }
 
 
     public function GET($api_name, $parameters){
-        $r = $this->ApiCall( "GET", $api_name, $parameters );
+        return $this->ApiCall( "GET", $api_name, $parameters );
     }
 
 
@@ -221,7 +221,7 @@ Class PosErp{
 
 
 
-
+/*
 
 
 
@@ -242,4 +242,4 @@ $api->POST("api/cliente/nuevo", array(
 
 exit;
 
-
+*/
