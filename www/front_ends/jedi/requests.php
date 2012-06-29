@@ -37,7 +37,8 @@
 		return FormatTime($ut);
 	}
 
-	
+	$t->addOnClick("id_request", "(function(a){window.location = 'requests.ver.php?rid='+a;})");
+
 	$t->addColRender("fecha", "FormatTimeSpecial");
 	$t->addColRender("date_validated", "FormatTimeSpecial");
 	$t->addColRender("date_installed", "FormatTimeSpecial");

@@ -17,7 +17,12 @@ class MenuComponent implements GuiComponent
     
     function addMenuItem($menu_item)
     {
-        array_push($this->items, $menu_item);
+        if($menu_item instanceof MenuItem){
+            array_push($this->items, $menu_item);    
+        }else{
+            throw new Exception("arg is not instance of MenuItem");
+        }
+        
     }
     
     

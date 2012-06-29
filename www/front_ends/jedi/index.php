@@ -9,14 +9,12 @@
 
 	$p = new JediComponentPage( );
 
-	$p->addComponent( new TitleComponent( "Welcome" ) );
+	$p->addComponent( new TitleComponent( "POS ERP JEDI INTERFACE" ) );
 
 	
 	$t = new SimpleTableComponent();
 	
-	$t->addRow("PHP"	, "OK");
-	$t->addRow("MySQL"	, "OK");
-	$t->addRow("Perl"	, "OK");
+
 
 	$p->addComponent( $t );	
 

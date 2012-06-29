@@ -238,15 +238,23 @@
 		}
 		
 		
-		public static function BuscarRequests(  ){
+		public static function BuscarRequests( $id = null ){
 			
 			global $POS_CONFIG;
-			
-			$sql = "select * from instance_request order by fecha desc";
-			
-			//($sql,$inputarr=false,$force_array=false,$first2cols=false)
-			
-			$res = $POS_CONFIG["CORE_CONN"]->GetAssoc( $sql, false, false, false );
+
+			$vals = false;
+
+			if(is_null($id)){
+				$sql = "select * from instance_request order by fecha desc";
+
+			}else{
+				$sql = "select * from instance_request where id_request = ?";
+				$vals = array($id);
+
+			}
+
+
+			$res = $POS_CONFIG["CORE_CONN"]->GetAssoc( $sql, $vals, false, false );
 			
 			if(empty($res)) return NULL;
 			
