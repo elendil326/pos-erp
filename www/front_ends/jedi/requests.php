@@ -22,10 +22,13 @@
 	$headers = array( 	"id_request" 	=> "request_id",
 						"email" 		=> "email",
 	 					"ip" 			=> "ip",
+	 					"fecha" 		=> "date_requested",
+	 					"date_validated" => "date_validated",
 	 					"date_installed" => "date_installed");	
 	
 	
 	$t = new TableComponent( $headers , InstanciasController::BuscarRequests());
+
 	function FormatTimeSpecial($ut){
 		if(is_null($ut) or (strlen($ut) == 0)){
 			return "";
@@ -33,7 +36,12 @@
 		
 		return FormatTime($ut);
 	}
+
+	
+	$t->addColRender("fecha", "FormatTimeSpecial");
+	$t->addColRender("date_validated", "FormatTimeSpecial");
 	$t->addColRender("date_installed", "FormatTimeSpecial");
+
 	$p->addComponent( $t );	
 
 

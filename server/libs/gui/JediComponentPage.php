@@ -30,6 +30,10 @@ class JediComponentPage extends PosComponentPage{
 		                {
 		                    "title": "Nueva instancia",
 		                    "url": "instancias.nueva.php"
+		                },
+		                 {
+		                    "title": "Bases de Datos",
+		                    "url": "instancias.bd.php"
 		                }
 		            ]
 		        },
