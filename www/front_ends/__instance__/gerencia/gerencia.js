@@ -1,10 +1,3 @@
-//for IE
-var console = console || { log: function(){}, group : function(){}, groupEnd : function(){} };
-
-//for IE even when cnsole is defined:
-console.group =  console.group || function(){};
-console.groupEnd =  console.groupEnd || function(){};
-
 Ext.Loader.setConfig({
     enabled: true
 });
@@ -25,7 +18,7 @@ Ext.require([
 	  'Ext.panel.Panel',
 	  'Ext.button.Button',
 	  'Ext.window.Window',
-	 // 'Ext.ux.statusbar.StatusBar',
+	  'Ext.ux.statusbar.StatusBar',
 	  'Ext.toolbar.TextItem',
 	  'Ext.menu.Menu',
 	  'Ext.toolbar.Spacer',
@@ -38,14 +31,13 @@ Ext.require([
 
 var main = function ()
 {
-	
 	console.log("JS FRWK READY");
 
 	//window.onbeforeunload = function(){}
 
 	var els = Ext.select("input").elements;
 
-	if(!Ext.isIE) console.log("Ataching on before unload events...");
+	console.log("Ataching on before unload events...");
 	
 	for (var i = els.length - 1; i >= 0; i--){
 		Ext.get(els[i]).on(
@@ -62,108 +54,7 @@ var main = function ()
 	}
 
 	if(document.location.search.indexOf("previous_action=ok") > -1)
-		Ext.example.msg('Exito', '!!!');
-
-
-	if((window.TableComponent !== undefined) && (TableComponent.convertToExtJs !== undefined)){
-		for (var i = TableComponent.convertToExtJs.length - 1; i >= 0; i--) {
-
-			Ext.create('Ext.ux.grid.TransformGrid', TableComponent.convertToExtJs[i], {
-	            //stripeRows: true,
-	            bodyCls: 'overrideTHTD',
-	            listeners: {
-	            	'itemclick' : function(a,b,c ){
-	            		console.log("ITEM CLICK id=" + b.raw.id, i +1 );
-						
-						eval(TableComponent.ExtJsTables[i+1].actionFunction+"("+b.raw.id+")")
-	            		
-	            	}
-	            }
-	           
-	        }).render();	
-		};
-		
-	}
-
-
-
-
-	if(window.TabPage !== undefined){
-
-		
-
-		if(window.location.hash.length == 0){
-			//no hay tab seleccionado
-			//Ext.get('tab_'+TabPage.tabs[0]).setStyle('display', 'block');
-			Ext.get('atab_'+TabPage.tabs[0]).toggleCls('selected');
-			TabPage.currentTab = TabPage.tabs[0];
-
-		}else{
-			//si hay
-			TabPage.currentTab = window.location.hash.substr(1);
-
-			//Ext.get('tab_'+TabPage.currentTab).setStyle('display', 'block');
-
-			Ext.get('atab_'+TabPage.currentTab).toggleCls('selected');
-			
-		}
-
-
-		//hide the other ones
-		for (var t = TabPage.tabs.length - 1; t >= 0; t--) {
-
-			Ext.get('tab_'+TabPage.tabs[t]).setVisibilityMode(Ext.Element.VISIBILITY);
-
-			//TabPage.tabsH[ TabPage.tabs.length - t - 1 ] = Ext.get('tab_'+TabPage.tabs[t]).getHeight();
-
-
-			//Ext.get('tab_'+TabPage.tabs[t]).setVisibilityMode(Ext.Element.DISPLAY);
-
-			if(TabPage.currentTab == TabPage.tabs[t]) {  continue; }
-
-			Ext.get('tab_'+TabPage.tabs[t]).setHeight(0);
-			Ext.get('tab_'+TabPage.tabs[t]).hide();
-			
-		};
-
-		
-
-
-		if ( 'onhashchange' in window ) {
-			
-
-			window.onhashchange = function() {
-
-				if((TabPage.currentTab.length > 0) && (Ext.get('tab_'+TabPage.currentTab) != null)){
-					//ocultar la que ya esta
-					
-				
-					Ext.get('tab_'+TabPage.currentTab).hide();
-					Ext.get('tab_'+TabPage.currentTab).setHeight(0);
-					Ext.get('atab_'+TabPage.currentTab).toggleCls('selected');
-
-
-				}
-
-				//currentTab = window.location.hash.substr(1);
-				TabPage.currentTab = window.location.hash.substr(1);
-
-				Ext.get('tab_'+TabPage.currentTab).show();
-				for (var ti = 0; ti < TabPage.tabs.length; ti++) {
-					if( TabPage.tabs[ti] == TabPage.currentTab){
-						Ext.get('tab_'+TabPage.currentTab).setHeight('auto');
-					
-					}
-				};
-				Ext.get('atab_'+TabPage.currentTab).toggleCls('selected');
-			}
-		}else{
-			console.log('`onhashchange` NOT Available....');
-
-		}
-
-	}//if(window.TabPage !== undefined)
-	
+		Ext.example.msg('Exito', 'Your data was saved!');
 
 }
 

@@ -37,11 +37,12 @@
 
 			$octetos = explode(".", $ip);
 
-			if(trim($this_ip) == trim($ip)){
-				echo "<div style='color: white; background-color: rgb( " . $octetos[1] . " , " . $octetos[2] . " , " . $octetos[3] . ")'><strike>" . $lines[$a] . "</strike>\n</div>" ;					
-			}else{
-				echo "<div style='color: rgb(".( 255 -$octetos[1] ) .", 0, ".( 255 -$octetos[3] ) ."); background-color: rgb( " . $octetos[1] . " , " . $octetos[2] . " , " . $octetos[3] . ")'>" . $lines[$a] . "\n</div>" ;					
+			if(($epos = strpos($lines[$a], "ERROR:")) !== false){
+
+				$lines[$a] = substr_replace($lines[$a], "<span style='color:red; background-color:white'>ERROR:", $epos, 6 ) . "</span>";
 			}
+
+			echo "<div style='color: rgb(".( 255 -$octetos[1] ) .", 0, ".( 255 -$octetos[3] ) ."); background-color: rgb( " . $octetos[1] . " , " . $octetos[2] . " , " . $octetos[3] . ")'>" . $lines[$a] . "\n</div>" ;
 
 		}else{
 

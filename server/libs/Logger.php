@@ -262,6 +262,8 @@ class Logger
     }
 
 
+
+
 	fwrite($log, $out. " | " . $msg . "". $track ."\n");
 
 	fclose($log);
