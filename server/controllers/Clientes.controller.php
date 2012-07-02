@@ -324,26 +324,27 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
  	 **/
 	public static function Nuevo
 	(
-		$razon_social, 
-		$clasificacion_cliente = null, 
-		$codigo_cliente = null, 
-		$cuenta_de_mensajeria = null, 
-		$curp = null, 
-		$denominacion_comercial = null, 
-		$descuento_general = 0, 
-		$direcciones = null, 
-		$email = null, 
-		$id_cliente_padre = null, 
-		$id_moneda =  1 , 
-		$id_tarifa_compra = null, 
-		$id_tarifa_venta = null, 
-		$limite_credito = 0, 
-		$password = null, 
-		$representante_legal = null, 
-		$rfc = null, 
-		$sitio_web = null, 
-		$telefono_personal1 = null, 
-		$telefono_personal2 = null
+        $razon_social, 
+        $clasificacion_cliente = null, 
+        $codigo_cliente = null, 
+        $cuenta_de_mensajeria = null, 
+        $curp = null, 
+        $denominacion_comercial = null, 
+        $descuento_general = "0", 
+        $direcciones = null, 
+        $email = null, 
+        $extra_params = null, 
+        $id_cliente_padre = null, 
+        $id_moneda =  1 , 
+        $id_tarifa_compra = null, 
+        $id_tarifa_venta = null, 
+        $limite_credito = "0", 
+        $password = null, 
+        $representante_legal = null, 
+        $rfc = null, 
+        $sitio_web = null, 
+        $telefono_personal1 = null, 
+        $telefono_personal2 = null
 	)
 	{
             Logger::log("Creando nuevo cliente `$razon_social`...");
@@ -373,6 +374,9 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
 			if(is_null($direcciones)){
 				$direcciones = array( new Direccion() );
 			}
+
+
+
 			
             try 
             {
@@ -555,28 +559,29 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
  	 **/
 	public static function Editar
 	(
-		$id_cliente, 
-		$clasificacion_cliente = null, 
-		$codigo_cliente = null, 
-		$cuenta_de_mensajeria = null, 
-		$curp = null, 
-		$denominacion_comercial = null, 
-		$descuento_general = null, 
-		$direcciones = null, 
-		$email = null, 
-		$id_cliente_padre = null, 
-		$id_moneda = null, 
-		$id_tarifa_compra = null, 
-		$id_tarifa_venta = null, 
-		$limite_credito = null, 
-		$password = null, 
-		$password_anterior = null, 
-		$razon_social = null, 
-		$representante_legal = null, 
-		$rfc = null, 
-		$sitio_web = null, 
-		$telefono_personal1 = null, 
-		$telefono_personal2 = null
+        $id_cliente, 
+        $clasificacion_cliente = null, 
+        $codigo_cliente = null, 
+        $cuenta_de_mensajeria = null, 
+        $curp = null, 
+        $denominacion_comercial = null, 
+        $descuento_general = null, 
+        $direcciones = null, 
+        $email = null, 
+        $extra_params = null, 
+        $id_cliente_padre = null, 
+        $id_moneda = null, 
+        $id_tarifa_compra = null, 
+        $id_tarifa_venta = null, 
+        $limite_credito = null, 
+        $password = null, 
+        $password_anterior = null, 
+        $razon_social = null, 
+        $representante_legal = null, 
+        $rfc = null, 
+        $sitio_web = null, 
+        $telefono_personal1 = null, 
+        $telefono_personal2 = null
 	)
 	{  
             Logger::log("Editando cliente ".$id_cliente);
@@ -641,6 +646,10 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 						null,
 						$telefono_personal1,
 						$telefono_personal2);
+
+
+                ExtraParamsValoresDAO::setVals("clientes", $extra_params, $id_cliente);
+
             }
             catch( Exception $e)
             {

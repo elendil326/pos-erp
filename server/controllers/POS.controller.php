@@ -336,10 +336,11 @@ require_once("interfaces/POS.interface.php");
     	$campo, 
 		$tabla
 	){
+		Logger::log("Eliminando campo $campo, de tabla $tabla");
 
     	$r = ExtraParamsEstructuraDAO::getByTablaCampo($tabla, $campo);
 
-    	if(is_null($r)) throw InvalidDataException("No existe tal campo en tal tabla");
+    	if(is_null($r)) throw new InvalidDataException("No existe tal campo en tal tabla");
 
 
     	ExtraParamsEstructuraDAO::delete($r);

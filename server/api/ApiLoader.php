@@ -1,6 +1,8 @@
 <?php 
 
 
+
+
   class ApiSesionIniciar extends ApiHandler {
   
 
@@ -296,6 +298,7 @@
 			"descuento_general" => new ApiExposedProperty("descuento_general", false, POST, array( "float" )),
 			"direcciones" => new ApiExposedProperty("direcciones", false, POST, array( "json" )),
 			"email" => new ApiExposedProperty("email", false, POST, array( "string" )),
+			"extra_params" => new ApiExposedProperty("extra_params", false, POST, array( "json" )),
 			"id_cliente_padre" => new ApiExposedProperty("id_cliente_padre", false, POST, array( "int" )),
 			"id_moneda" => new ApiExposedProperty("id_moneda", false, POST, array( "int" )),
 			"id_tarifa_compra" => new ApiExposedProperty("id_tarifa_compra", false, POST, array( "int" )),
@@ -324,6 +327,7 @@
 			isset($_POST['descuento_general'] ) ? $_POST['descuento_general'] :  "0",
 			isset($_POST['direcciones'] ) ? json_decode($_POST['direcciones']) : null,
 			isset($_POST['email'] ) ? $_POST['email'] :  null,
+			isset($_POST['extra_params'] ) ? json_decode($_POST['extra_params']) : null,
 			isset($_POST['id_cliente_padre'] ) ? $_POST['id_cliente_padre'] :  null,
 			isset($_POST['id_moneda'] ) ? $_POST['id_moneda'] :  1 ,
 			isset($_POST['id_tarifa_compra'] ) ? $_POST['id_tarifa_compra'] :  null,
@@ -362,6 +366,7 @@
 			"descuento_general" => new ApiExposedProperty("descuento_general", false, POST, array( "float" )),
 			"direcciones" => new ApiExposedProperty("direcciones", false, POST, array( "json" )),
 			"email" => new ApiExposedProperty("email", false, POST, array( "string" )),
+			"extra_params" => new ApiExposedProperty("extra_params", false, POST, array( "json" )),
 			"id_cliente_padre" => new ApiExposedProperty("id_cliente_padre", false, POST, array( "int" )),
 			"id_moneda" => new ApiExposedProperty("id_moneda", false, POST, array( "int" )),
 			"id_tarifa_compra" => new ApiExposedProperty("id_tarifa_compra", false, POST, array( "int" )),
@@ -392,6 +397,7 @@
 			isset($_POST['descuento_general'] ) ? $_POST['descuento_general'] :  null,
 			isset($_POST['direcciones'] ) ? json_decode($_POST['direcciones']) : null,
 			isset($_POST['email'] ) ? $_POST['email'] :  null,
+			isset($_POST['extra_params'] ) ? json_decode($_POST['extra_params']) : null,
 			isset($_POST['id_cliente_padre'] ) ? $_POST['id_cliente_padre'] :  null,
 			isset($_POST['id_moneda'] ) ? $_POST['id_moneda'] :  null,
 			isset($_POST['id_tarifa_compra'] ) ? $_POST['id_tarifa_compra'] :  null,

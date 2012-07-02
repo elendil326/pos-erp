@@ -135,7 +135,20 @@
 		
 	}
 	
+	$epform->beforeSend("editar_extra_p");
 
+	$page->addComponent('
+			<script>
+				var cliente = ' . $_GET["cid"] . ';
+				function editar_extra_p(obj){		
+					return	{	
+						id_cliente		: cliente,
+						extra_params	: Ext.JSON.encode(obj) 
+					}
+				}
+			</script>
+		');
+	$epform->addApiCall("api/cliente/editar/", "POST");
 	$page->addComponent($epform);
 
 
@@ -241,7 +254,7 @@
 
 	$page->addComponent('
 			<script>
-				var cliente = ' . $_GET["cid"] . '
+				var cliente = ' . $_GET["cid"] . ';
 				function editar_direccion(obj){		
 					return	{	
 						id_cliente		: cliente,

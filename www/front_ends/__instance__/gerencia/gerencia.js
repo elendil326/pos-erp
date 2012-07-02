@@ -39,7 +39,7 @@ Ext.require([
 var main = function ()
 {
 	
-	console.log("JS FRWK READY");
+	if(!Ext.isIE) console.log("JS FRWK READY");
 
 
 	//window.onbeforeunload = function(){}
@@ -77,7 +77,7 @@ var main = function ()
 	            bodyCls: 'overrideTHTD',
 	            listeners: {
 	            	'itemclick' : function(a,b,c ){
-	            		console.log("ITEM CLICK id=" + b.raw.id, i +1 );
+	            		if(!Ext.isIE)  console.log("ITEM CLICK id=" + b.raw.id, i +1 );
 						
 						eval(TableComponent.ExtJsTables[i+1].actionFunction+"("+b.raw.id+")")
 	            		
@@ -160,7 +160,7 @@ var main = function ()
 				Ext.get('atab_'+TabPage.currentTab).toggleCls('selected');
 			}
 		}else{
-			console.log('`onhashchange` NOT Available....');
+			if(!Ext.isIE)  console.log('`onhashchange` NOT Available....');
 
 		}
 

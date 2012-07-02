@@ -23,6 +23,99 @@ class ExtraParamsValoresDAO extends ExtraParamsValoresDAOBase
 
 
 
+  public static function setVals($tabla, $extra_params, $fk_id){
+      if(is_null($extra_params)){
+        return false;
+      }
+      
+      //buscar esa madre
+      try{
+        $es = new ExtraParamsEstructura(array(
+              "tabla" => $tabla
+          ));  
+      }catch(Exception $e){
+        Logger::error($e);
+        return false;
+      }
+      
+
+      
+      try{
+        $ncols = ExtraParamsEstructuraDAO::search( $es );
+
+      }catch(ADODB_Exception $e){
+        Logger::error($e);
+        return false;
+      }
+
+
+      if(sizeof($ncols) == 0){
+        //no hay nuevas columnas de esta tabla
+        return false;
+      }
+
+      /*
+      $extra_params
+      object(stdClass)#30 (3) {
+        ["esposa"]=>
+        string(1) "0"
+        ["date"]=>
+        string(19) "2012-07-02T00:00:00"
+        ["bool"]=>
+        string(1) "1"
+      }
+      */
+
+      for ($nc=0; $nc < sizeof($ncols); $nc++) { 
+
+          $campo = $ncols[$nc]->getCampo();
+
+          if( property_exists ( $extra_params, $campo ) ){
+              //Logger::log("$campo esta definido en el objeto....");  
+              //si me enviaron esta propiedad,
+              //vamos a insertarla
+              $v = ExtraParamsValoresDAO::search(
+                                      new ExtraParamsValores(
+                                        array(
+                                          "id_extra_params_estructura" => $ncols[$nc]->getIdExtraParamsEstructura(),
+                                          "id_pk_tabla"=>$fk_id
+                                        )
+                                      )
+                                  );
+
+              if(sizeof($v) == 1){
+                //editarlo
+                $v = $v[0];
+                $v->setVal( $extra_params->$campo );
+
+              }else{
+                //crearlo
+                $v = new ExtraParamsValores();
+                $v->setVal($extra_params->$campo);
+                $v->setIdPkTabla($fk_id);
+                $v->setIdExtraParamsEstructura($ncols[$nc]->getIdExtraParamsEstructura());
+
+              }
+
+
+              //salvarlo
+              try{
+                ExtraParamsValoresDAO::save( $v );
+
+              }catch(Exception $e){
+                throw $e;
+
+              }
+          }
+          
+      }
+
+
+  }
+
+
+
+
 
 
   public static function getVals($tabla, $id_pk_tabla){

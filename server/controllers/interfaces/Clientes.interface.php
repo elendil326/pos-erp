@@ -157,13 +157,14 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
  	 * @param descuento_general float porcentaje de descuento que se le dara al cliente, va desde 0 - 100 %
  	 * @param direcciones json [{    "tipo": 1,    "calle": "Francisco I Madero",    "numero_exterior": "1009A",    "numero_interior": 12,    "colonia": "centro",    "codigo_postal": "38000",    "telefono1": "4611223312",    "telefono2": "",       "id_ciudad": 3,    "referencia": "El local naranja"}]
  	 * @param email string E-mail del cliente.
+ 	 * @param extra_params json Si es que hay nuevos columnas, creadas mediante api/pos/bd/columna/nueva, para clientes, entonces enviar un json con los extra_params a editar.
  	 * @param id_cliente_padre int Id del cliente padre al cual pertenece, en caso de querer construir una jerarquia de empresas
  	 * @param id_moneda int `id_moneda` del tipo de moneda que se usara para mostrarle al cliente.El `id_moneda` de la moneda default es 0, que corresponde al peso mexicano.
  	 * @param id_tarifa_compra int Id de la tarifa de compra por default que se le asiganara a este cliente
  	 * @param id_tarifa_venta int Id de la tarifa de venta por default que se le asiganara a este cliente
  	 * @param limite_credito float Limite de credito del usuario en la moneda base del sistema.
  	 * @param password string Password del cliente
- 	 * @param password_anterior string En caso de modificar el password, es requerido este campo
+ 	 * @param password_anterior string En caso de modificar el password, es requerido este campo en caso de que lo este editando el mismo cliente.
  	 * @param razon_social string Nombre o razon social del cliente.
  	 * @param representante_legal string Nombre del representante legal del cliente.
  	 * @param rfc string RFC del cliente.
@@ -182,6 +183,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 		$descuento_general = null, 
 		$direcciones = null, 
 		$email = null, 
+		$extra_params = null, 
 		$id_cliente_padre = null, 
 		$id_moneda = null, 
 		$id_tarifa_compra = null, 
@@ -219,6 +221,7 @@ No se puede asignar como cliente padre un cliente que esta inactivo
  	 * @param descuento_general float porcentaje de descuento que se le dara al cliente, va desde 0 - 100 %
  	 * @param direcciones json [{    "tipo": "fiscal",    "calle": "Francisco I Madero",    "numero_exterior": "1009A",    "numero_interior": 12,    "colonia": "centro",    "codigo_postal": "38000",    "telefono1": "4611223312",    "telefono2": "",       "id_ciudad": 3,    "referencia": "El local naranja"}]
  	 * @param email string E-mail del cliente
+ 	 * @param extra_params json 
  	 * @param id_cliente_padre int Id del cliente padre al cual pertenece, en caso de querer construir una jerarquia de empresas
  	 * @param id_moneda int `id_moneda` del tipo de moneda que se usara para mostrarle al cliente.El `id_moneda` de la moneda default es 0, que corresponde al peso mexicano.
  	 * @param id_tarifa_compra int Id de la tarifa de compra por default para este cliente
@@ -243,6 +246,7 @@ No se puede asignar como cliente padre un cliente que esta inactivo
 		$descuento_general = "0", 
 		$direcciones = null, 
 		$email = null, 
+		$extra_params = null, 
 		$id_cliente_padre = null, 
 		$id_moneda =  1 , 
 		$id_tarifa_compra = null, 
