@@ -38,7 +38,8 @@
 		$html .= "<tr><td>".$precios[$i]["descripcion"] . "</td><td>" . FormatMoney($precios[$i]["precio"]) . "</td>";
 	}
 
-	$html .= "<tr><td colspan=2><h3>Existencias</h3></td></tr><tr><td> ". $nexistencias." </td></tr></tr>";
+	$um = UnidadMedidaDAO::getByPK( $este_producto->getIdUnidad() );
+	$html .= "<tr><td colspan=2><h3>Existencias</h3></td></tr><tr><td> ". $nexistencias." " . $um->getDescripcion() ."</td></tr></tr>";
 
 	$html .= "</table>";
 

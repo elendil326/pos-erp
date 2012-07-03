@@ -509,7 +509,7 @@ require_once("interfaces/Ventas.interface.php");
                         //revisemos si es de la misma unidad
                         if($lp->getIdUnidad() == $p->getIdUnidad()){
                             //es igual, solo hay que sumar
-                            $lp->setCantidad( $lp->getCantidad() +  $p->getIdUnidad());    
+                            $lp->setCantidad( $lp->getCantidad() +  $p->getCantidad());    
 
                         }else{
                             //no es igual, hay que convertir
@@ -541,7 +541,7 @@ require_once("interfaces/Ventas.interface.php");
                             "id_lote"       =>$l->getIdLote(), 
                             "id_usuario"    =>$s->getIdUsuario(),
                             "fecha_registro"=>time(),
-                            "motivo"        =>"Venta Cancelada"
+                            "motivo"        =>"Venta (".$id_venta.") Cancelada"
                         ) );
                         
                         
