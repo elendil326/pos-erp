@@ -20,6 +20,81 @@ class LoginComponent implements GuiComponent
 		?>
 		<script type="text/javascript" charset="utf-8">
 		
+				function enviarCorreo(){
+					POS.API.POST("api/pos/mail/enviar", 
+						{
+							cuerpo : "Bienvendio",
+							destinatario : "", 
+							titulo : "Bienvenido a POS ERP"
+						}, 
+						{
+							callback : function( a ){ 
+								if(!Ext.isIE)console.log(a);
+							}
+						});
+					Ext.MessageBox.alert('Enviando correo', 'Se ha enviado un correo a <?php // echO $este_usuario->getCorreoElectronico(); ?>.');
+				}
+				
+				
+				var win;
+				
+				var required = '';
+
+				html = "<table ><tr ><td>"
+							+"<img src='../../../media/1335388431_Forward.png'>"
+							+"</td><td style='vertical-align:top'><br>"
+							+"<h1>Dele la bienvenida a </h1>"
+							+"<p>&iquest; Desea enviar un correo a  <span style='color:gray'>( )</span> para darle una"
+							+ " breve introduccion a POS ERP ?</p>"
+							+"</td></tr></table>";
+
+			    function lostpass() {
+			        if (!win) {
+			            var form = Ext.widget('form', {
+			                layout: {
+			                    type: 'vbox',
+			                    align: 'stretch'
+			                },
+			                border: false,
+			                bodyPadding: 5,
+							html : html,
+			                buttons: [{
+			                    text: 'No enviar',
+			                    handler: function() {
+			                        this.up('form').getForm().reset();
+			                        this.up('window').hide();
+			                    }
+			                }, {
+			                    text: 'Enviar',
+			                    handler: function() {
+			                        if (this.up('form').getForm().isValid()) {
+			                            // In a real application, this would submit the form to the configured url
+			                            // this.up('form').getForm().submit();
+			                            this.up('form').getForm().reset();
+			                            this.up('window').hide();
+										enviarCorreo();
+			                        }
+			                    }
+			                }]
+			            });
+
+			            win = Ext.widget('window', {
+			                title: 'Nuevo personal creado correctamente',
+			                closeAction: 'hide',
+			                width: 450,
+			                height: 190,
+			                layout: 'fit',
+			                resizable: false,
+			                modal: true,
+			                items: form
+			            });
+			        }
+			        win.show();
+			    }
+
+
+
+
 			var getParameterByName = function (name){
 			  name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
 			  var regexS = "[\\?&]" + name + "=([^&#]*)";
@@ -30,7 +105,9 @@ class LoginComponent implements GuiComponent
 			  else
 			    return decodeURIComponent(results[1].replace(/\+/g, " "));
 			}
-			
+
+
+
 			
 			var snd_to_api = function (   ){
 				Ext.Ajax.request({
@@ -38,7 +115,7 @@ class LoginComponent implements GuiComponent
 					url 	: "<?php echo $this->api_login_method; ?>",
 					success : function(a,b,c){ 
 						/* POS.API.ajaxCallBack( callback, a, b, c );  */
-						console.log("back")
+						
 						try{
 							o = Ext.JSON.decode( a.responseText );
 
@@ -55,7 +132,7 @@ class LoginComponent implements GuiComponent
 
 						}
 						
-						console.log(o)
+						if(!Ext.isIE)console.log(o)
 						
 						if(o.login_succesful === false){
 							//credenciales invalidas
