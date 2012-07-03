@@ -227,6 +227,20 @@
 
 	$merged = array_merge($entradas, $salidas);
 
+	function cmpByFecha( $a, $b ){
+
+		if ($a["fecha_registro"] == $b["fecha_registro"]) {
+        	return 0;
+    	}
+
+    	return ($a["fecha_registro"] < $b["fecha_registro"]) ? 1 : -1;
+
+	}
+
+	usort($merged, "cmpByFecha");
+
+	//var_dump($merged);
+
 	$header = Array(
 			//"id_producto" 	=> "id_producto",
 			"tipo"			=> "Movimiento",

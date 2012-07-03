@@ -833,7 +833,7 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
 				
 				
 				
-			}			
+			}//for			
 			
 
 		   		

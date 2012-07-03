@@ -391,32 +391,206 @@ require_once("interfaces/Ventas.interface.php");
 		$id_caja = null
 	)
     {  
-             Logger::log("Cancenlando venta ".$id_venta);
+             Logger::log("======= Cancenlando venta ".$id_venta . " ===========");
             
             //valida que la venta exista y que este activa
-            $venta=VentaDAO::getByPK($id_venta);
-            if($venta==null)
-            {
+            $venta = VentaDAO::getByPK($id_venta);
+
+            if($venta==null){
                 Logger::error("La venta con id: ".$id_venta." no existe");
                 throw new Exception("La venta con id: ".$id_venta." no existe");
+
             }
-            if($venta->getCancelada())
-            {
+
+
+            if($venta->getCancelada()){
                 Logger::warn("La venta ya ha sido cancelada");
                 return;
             }
             
-            //Obtiene al usuario al que se le vendio
-            $usuario=UsuarioDAO::getByPK($venta->getIdCompradorVenta());
-            if($usuario==null)
-            {
-                Logger::error("FATAL!!! Esta venta apunta a un usuario que no existe");
-                throw new Exception("FATAL!!! Esta venta apunta a un usuario que no existe");
-            }
-            
+
             //Deja la venta como cancelada y la guarda. 
             $venta->setCancelada(1);
+
+
+            //Obtiene al usuario al que se le vendio
+            $usuario=UsuarioDAO::getByPK($venta->getIdCompradorVenta());
+            if($usuario==null){
+                Logger::error("FATAL!!! Esta venta apunta a un usuario que no existe");
+                throw new Exception("FATAL!!! Esta venta apunta a un usuario que no existe");
+
+            }
+            
+
+
+
+
+
+
+
+
+
+
+
+
             DAO::transBegin();
+
+            // regresar de almacenes
+            // obtener los productos que se vendieron
+            // insertalos como neuvo ingreso
+
+            $detalle = VentaProductoDAO::search( new VentaProducto( array( "id_venta" => $id_venta ) )  );
+
+
+            for ( $detalleIterator=0; $detalleIterator < sizeof($detalle); $detalleIterator++ ) { 
+                
+                //por cada producto
+                //  --- procesos ---
+                //  -insertar en productoempresa
+                //  -insertar en loteproducto
+                //  -insertar en entradalote
+                //  -si el tipo de precio de venta es costo, actualizar
+                //  -insertar compra producto
+                $p = $detalle[$detalleIterator];
+                
+                try{
+                    /*
+                    ProductoEmpresaDAO::save( new ProductoEmpresa( array(
+                            "id_empresa" => $id_empresa,
+                            "id_producto" => $p->getIdProducto()
+                        ) ) );
+                        
+                    
+                    if(is_null($p->lote)){
+                        throw new InvalidDataException("No selecciono a que lote ira el producto " . $p->id_producto);
+                    }
+                    
+
+                    if(strlen($p->lote) == 0){
+                        throw new InvalidDataException("No selecciono a que lote ira el producto " . $p->id_producto);
+                    }
+                    */
+
+                    //busquemos el id del lote
+                    $l = LoteDAO::getByPk(1);
+                    
+                    
+                    
+                    
+                    
+                    //busquemos la unidad que nos mandaron
+                    
+                    $uResults = UnidadMedidaDAO::search(new UnidadMedida(array("id_unidad_medida" => $p->getIdUnidad(), "activa" => 1)));
+                    
+                    if(sizeof($uResults) != 1){
+                        throw new InvalidDataException("La unidad de medida `". $p->id_unidad  ."` no existe, o no esta activa.");
+                        
+                    }
+                    
+                    //busequemos si este producto ya existe en este lote
+                    $lp = LoteProductoDAO::getByPK( $l->getIdLote(), $p->getIdProducto() );
+                    
+                    if(is_null($lp)){
+                        //no existe, insertar
+                        $loteProducto = new LoteProducto(array(
+                                "id_lote"       => $l->getIdLote(),
+                                "id_producto"   => $p->getIdProducto(),
+                                "cantidad"      => $p->getCantidad(), 
+                                "id_unidad"     => $p->getIdUnidad()
+                            ) );
+                            
+                        LoteProductoDAO::save ( $loteProducto);
+                                        
+                    }else{
+                        //ya existe, sumar
+                        
+                        
+                        
+                        //revisemos si es de la misma unidad
+                        if($lp->getIdUnidad() == $p->getIdUnidad()){
+                            //es igual, solo hay que sumar
+                            $lp->setCantidad( $lp->getCantidad() +  $p->getIdUnidad());    
+
+                        }else{
+                            //no es igual, hay que convertir
+
+                            try{
+                                $r = UnidadMedidaDAO::convertir($p->getIdUnidad(), $lp->getIdUnidad(), $p->getCantidad() );    
+
+                            }catch(BusinessLogicException $ide){
+                                //no se pudo convertir porque son de 
+                                //diferentes categorias
+                                throw $ide; //mostrar una excpetion mas fresona
+                            }
+                            
+                            $lp->setCantidad( $lp->getCantidad() +  $r  );    
+                        }
+
+
+                        //$lp->setCantidad( $lp->getCantidad() + $p->cantidad );
+
+
+                        LoteProductoDAO::save( $lp );
+                        
+                    }
+                    
+                    $s = SesionController::getCurrentUser();
+
+                    
+                    $loteEntrada = new LoteEntrada(array(
+                            "id_lote"       =>$l->getIdLote(), 
+                            "id_usuario"    =>$s->getIdUsuario(),
+                            "fecha_registro"=>time(),
+                            "motivo"        =>"Venta Cancelada"
+                        ) );
+                        
+                        
+                    LoteEntradaDAO::save ( $loteEntrada );                      
+
+                    LoteEntradaProductoDAO::save (new LoteEntradaProducto(array(
+                            "id_lote_entrada"   => $loteEntrada->getIdLoteEntrada(),
+                            "id_producto"       => $p->getIdProducto(),
+                            "id_unidad"         => $p->getIdUnidad(),
+                            "cantidad"          => $p->getCantidad()
+                        ) ) );
+                        
+                    /*
+                    $compraProducto = new CompraProducto(array(
+                            "id_compra"         => $compra->getIdCompra(),
+                            "id_producto"       => $p->id_producto,
+                            "cantidad"          => $p->cantidad,
+                            "precio"            => $p->precio,
+                            "descuento"         => 0,
+                            "impuesto"          => 0,
+                            "id_unidad"         => $p->id_unidad,
+                            "retencion"         => 0
+                        ) );
+                    
+                    CompraProductoDAO::save ( $compraProducto);
+                    */
+
+                }catch(InvalidDataException $e){
+                    Logger::error($e);
+                    DAO::transRollback();
+                    throw $e;
+                    
+                }catch(exception $e){
+                    Logger::error($e);
+                    DAO::transRollback();
+                    throw new InvalidDatabaseOperationException($e);
+                    
+                }
+                
+                
+                
+            }   
+
+
+
+
+
+
+
             try
             {
                 VentaDAO::save($venta);
