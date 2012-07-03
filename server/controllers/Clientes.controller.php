@@ -433,7 +433,7 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
 
             if(!is_null($email)){
 
-                $cuerpo = "Se le ha creado una cuenta en http://pos2.labs2.caffeina.mx/" . INSTANCE_TOKEN . "/\n\n"
+                $cuerpo = "Se le ha creado una cuenta en http://pos2.labs2.caffeina.mx/front_ends/" . INSTANCE_TOKEN . "/\n\n"
                     . "Usuario: " . $email . "\n"
                     . "Contraseña: " . $password;
 
