@@ -51,11 +51,15 @@
 	//
 	if($esta_venta->getEsCotizacion()){
 		$page->addComponent(new TitleComponent("Detalles de la cotizacion " . $esta_venta->getIdVenta(), 2));
+
 	}else{
 		$page->addComponent(new TitleComponent("Detalles de la venta " . $esta_venta->getIdVenta(), 2));
+
 	}
 	
-
+	if($esta_venta->getCancelada()){
+		$page->addComponent(new TitleComponent("[CANCELADA]",3));
+	}
 
 	//
 	// Menu de opciones
