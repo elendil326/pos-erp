@@ -75,7 +75,7 @@
                         "total"                  => "Total",
                         "fecha"                  => "Fecha"
                 ),
-                 VentaDAO::search( $cotizaciones )
+                 VentaDAO::search( $cotizaciones, "fecha", "desc" )
         );
 
         $tabla->addOnClick( "id_venta", "(function(a){ window.location = 'ventas.detalle.php?vid=' + a; })" );
@@ -101,7 +101,7 @@
                         "saldo"                  => "Saldo",
                         "fecha"                  => "Fecha"
                 ),
-                 VentaDAO::search( $ventas )
+                 VentaDAO::search( $ventas, "fecha", "desc"  )
         );
         $tabla->addColRender("fecha", "FormatTime");
         $tabla->addColRender("subtotal", "FormatMoney");
