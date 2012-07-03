@@ -148,7 +148,8 @@ class ExtraParamsValoresDAO extends ExtraParamsValoresDAOBase
     }
 
     $nvals = new ExtraParamsValores(array( 
-        "tabla" => $tabla
+        "tabla" => $tabla,
+        "id_pk_tabla" => $id_pk_tabla
       ));
 
 

@@ -215,12 +215,12 @@ class LoginComponent implements GuiComponent
 		</style>
 		<div align="center" class="LoginComponent">
 			
-			<table cellspacing="0">
+			<table cellspacing="0" >
 				<tr>
 					
 
 		<form action="<?php echo $this->next_hop; ?>" method="POST">
-			<table border="0" cellspacing="5" cellpadding="5">
+			<table border="0" cellspacing="5" cellpadding="5" class='overrideTHTD'>
 				<tr>
 					<td rowspan="6">
 						<?php
@@ -230,7 +230,8 @@ class LoginComponent implements GuiComponent
 								$file = "../../media/safe.png";
 							}
 						?>
-						<div style="width: 256px; height: 256px; background-size:256px; background-repeat: no-repeat; background-image: url(<?php echo $file; ?>)">
+						<div style="width: 256px; height: 265px; background-size:256px; background-repeat: no-repeat; background-image: url(<?php echo $file; ?>)">
+							&nbsp;
 						</div>
 						<!--<img width="256" height="256" src="<">
 						-->
@@ -256,7 +257,7 @@ class LoginComponent implements GuiComponent
 				</tr>
 				<tr>
 					<td></td>
-					<td align="right">Usuario</td>
+					<td style="text-align:right" align="right">Usuario</td>
 					<td>
 						<input 
 							type="text" 
@@ -266,7 +267,7 @@ class LoginComponent implements GuiComponent
 							onkeypress="(function(e){var k=e.keyCode || e.which;if (k==13){snd_to_api();}})(event)"/></td>
 				</tr><tr>
 					<td></td>
-					<td align="right">Contrase&ntilde;a</td><td>
+					<td align="right" style="text-align:right">Contrase&ntilde;a&nbsp;</td><td>
 						<input 
 							type="password" 
 							id="password" 
@@ -279,7 +280,7 @@ class LoginComponent implements GuiComponent
 						<?php
 						if(!is_null($this->api_login_method)){
 							?>
-								<div class='POS Boton OK' onClick="snd_to_api()" style='width:150px' >Iniciar sesion</div>
+								<div class='POS Boton OK' onClick="snd_to_api()" style='width:150px' >&nbsp;Iniciar sesion</div>
 								<div class='POS Boton' onClick="lostpass()"  style='width:150px' >Olvide mi constrase&ntilde;a</div>
 							<?php
 						}else{

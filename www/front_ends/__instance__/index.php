@@ -13,7 +13,19 @@
 		die(header( "Location: g/" ));
 	}
 
-	$page = new PosComponentPage();
+	$page = new PosComponentPage("Iniciar sesion");
+	$page->addComponent("<style>
+		.devsitePage .nav > .content{
+			background:white;	
+		}
+		.devsitePage .menu a.logo {
+			border-right: 0px;
+			padding: 0px;
+		}
+		.devsitePage .bodyText{
+			margin-left: 0px;
+		}</style>");
+
 	$login = new LoginComponent();
 	$login->setLoginApiCall("api/sesion/iniciar/");
 	$page->addComponent( $login );
