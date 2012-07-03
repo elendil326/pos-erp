@@ -241,7 +241,7 @@ require_once("interfaces/POS.interface.php");
 							(15, 11, 'Irapuato'),
 							(16, 11, 'Jaral del Progreso'),
 							(17, 11, 'Jerecuaro'),
-							(18, 11, 'LeÃ³n'),
+							(18, 11, 'Leon'),
 							(19, 11, 'Manuel Doblado'),
 							(20, 11, 'Moroleon'),
 							(21, 11, 'Ocampo'),
