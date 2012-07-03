@@ -57,9 +57,21 @@
 		"dias_de_credito",
 		"facturar_a_terceros",
 		"limite_credito",
-		"token_recuperacion_pass"
+		"token_recuperacion_pass",
+		"tiempo_entrega",
+		"ventas_a_credito",
+		"descuento",
+		"dias_de_embarque",
+		"cuenta_de_mensajeria"
 	));
 
+
+	$form->setCaption("rfc", "RFC");
+	$form->setCaption("id_moneda", "Moneda default");
+
+
+	$form->setCaption("id_rol", "Rol");
+	$form->setHelp("id_rol", "Rol");
 
 	$form->sendHidden("id_usuario");
 
@@ -67,7 +79,9 @@
 
 	$form->addApiCall( "api/personal/usuario/editar/" );
 	
-	//$form->onApiCallSuccessRedirect("personal.lista.usuario.php");
+	$form->onApiCallSuccessRedirect("personal.usuario.ver.php?uid=" . $_GET["uid"] );
+	
+	$form->renameField(array( "telefono_personal1" => "telefono_personal_1","telefono_personal2" => "telefono_pesrsonal_2"));
 
 	$form->createComboBoxJoin( "id_rol", "nombre", RolDAO::getAll(), $este_usuario->getIdRol() );
 

@@ -62,42 +62,49 @@
     // 
     $form = new DAOFormComponent($este_usuario);
     $form->setEditable(false);
-    //$form->setEditable(false);        
+        
     $form->hideField(array(
-		 "id_usuario",
-		    "id_direccion",
-		    "id_direccion_alterna",
-		    "id_sucursal",
-		    "fecha_asignacion_rol",
-		    "fecha_alta",
-		    "fecha_baja",
-		    "activo",
-		    "last_login",
-		    "consignatario",
-		    "ventas_a_credito",
-		    "tiempo_entrega",
-			"tarifa_compra_obtenida",
-			"id_tarifa_venta",
-			"denominacion_comercial",
-			"descuento",
-			"dia_de_revision",
-			"dias_de_credito",
-			"id_clasificacion_proveedor",
-			"facturar_a_terceros",
-			"id_clasificacion_cliente",
-			"id_moneda",
-			"dias_de_embarque",
-			"cuenta_de_mensajeria",
-			"saldo_del_ejercicio",
-			"limite_credito",
-			"mensajeria",
-			"intereses_moratorios",
-			"representante_legal",
-			"id_tarifa_compra",
-			"token_recuperacion_pass",
-			"tarifa_venta_obtenida",
-			"password"
+		"id_direccion",
+		"id_direccion_alterna",
+		"id_sucursal",
+		"fecha_asignacion_rol",
+		"fecha_alta",
+		"fecha_baja",
+		"activo",
+		"last_login",
+		"consignatario",
+		"id_clasificacion_cliente",
+		"id_clasificacion_proveedor",
+		"tarifa_venta_obtenida",
+		"tarifa_compra_obtenida",
+		"id_tarifa_compra",
+		"id_tarifa_venta",
+		"saldo_del_ejercicio",
+		"intereses_moratorios",
+		"representante_legal",
+		"pagina_web",
+		"mensajeria",
+		"denominacion_comercial",
+		"dias_de_credito",
+		"facturar_a_terceros",
+		"limite_credito",
+		"token_recuperacion_pass",
+		"tiempo_entrega",
+		"ventas_a_credito",
+		"descuento",
+		"dias_de_embarque",
+		"cuenta_de_mensajeria",
+		"password",
+		"id_usuario"
     ));
+
+	$form->setCaption("rfc", "RFC");
+	$form->setCaption("id_moneda", "Moneda default");
+	
+
+	$form->setCaption("id_rol", "Rol");
+	$form->setHelp("id_rol", "Rol");
+
 
     $form->createComboBoxJoin("id_ciudad", "nombre", CiudadDAO::getAll(), $esta_direccion->getIdCiudad());
     $form->createComboBoxJoin("id_rol", "nombre", RolDAO::getAll(), $este_usuario->getIdRol());

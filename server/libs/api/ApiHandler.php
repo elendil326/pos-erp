@@ -146,14 +146,7 @@ abstract class ApiHandler
     {
 
 
-        if(LOG_FULL_API_CALLS){
-
-            Logger::log("============= API CALL: ". $_GET["_api_"] ." ===================");
-            
-        }else{
-
-            Logger::log("[API CALL] " . $_GET["_api_"]);
-        }
+        
 
         try
         {   
@@ -170,12 +163,29 @@ abstract class ApiHandler
 
             if(LOG_FULL_API_CALLS){
 
+                Logger::log("============= API CALL: ". $_GET["_api_"] ." ===================");
+            
+            }else{
+                $out = "";
+
+                if($this->request !== null) {
+                    foreach($this->request as $id => $obj ){
+                        $out .= " " . $id . "=" . $obj->getValue() . ",";
+                    }    
+                }
+                Logger::log("[API CALL] " . $_GET["_api_"] . " ( "  . $out .  ")" );
+            }
+
+
+            if(LOG_FULL_API_CALLS){
+
             
                 if($this->request !== null) {
                     foreach($this->request as $id => $obj ){
                         Logger::log("  " . $id . "  :  " . $obj->getValue());
                     }    
                 }
+
                 Logger::log("");
                 
 
