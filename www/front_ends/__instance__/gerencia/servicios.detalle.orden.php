@@ -109,7 +109,11 @@ $esta_orden->setIdServicio($servicio->getNombreServicio());
 
 
 $agente = UsuarioDAO::getByPK($esta_orden->getIdUsuario());
-$esta_orden->setIdUsuario( $agente->getNombre() );
+
+if(!is_null($agente)) {
+	$esta_orden->setIdUsuario( $agente->getNombre() );	
+}
+
 
 $esta_orden->setPrecio(FormatMoney($esta_orden->getPrecio()));
 
