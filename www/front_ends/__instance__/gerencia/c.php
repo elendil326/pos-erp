@@ -11,20 +11,38 @@
 		// 
 		// 
 		if(!empty($_FILES)){
-
 			Logger::log( "subiendo nuevo logotipo ... ");
-			
 			move_uploaded_file ( $_FILES["logo"]["tmp_name"], "../static/".IID.".jpg" );
-			
 			die('{"status": "ok"}');
 		}
 
+
+
+
 		$page = new GerenciaTabPage(  );
+		$page->addComponent(new TitleComponent("Configuracion de POS ERP"));
+
 		
-		$page->addComponent(new TitleComponent("Configuracion"));
-		
-		
+
+
+
+
+
+
 		$page->nextTab("Importar");
+		$page->addComponent( new TitleComponent("Importar datos CSV", 2));
+		$page->addComponent("
+			&iquest; Como debo formar el archivo CSV ?
+
+			");
+
+		$importarClientes = new FormComponent();
+		$importarClientes->addField("raw_content", "Contenido de la archivo CSV", "textarea");
+		$importarClientes->addApiCall("api/clientes/importar/", "POST");
+		$page->addComponent( $importarClientes );
+		$page->addComponent("<hr>");
+
+
 
 		$page->addComponent( new TitleComponent("Importar datos AdminPAQ mediante archivos TXT", 2));
 		$page->addComponent( new TitleComponent("Importar clientes", 3));

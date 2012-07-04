@@ -1150,24 +1150,89 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 	}
 	
 
+    private static function ImportarAdminPAQ(){}
 
 
-	public static function Importar($raw_contents ){
+
+
+
+    private static function ImportarCSV($lines){
+        Logger::log("----- importando como csv ------- ");
+
+        $header = explode(",", $lines[0]);
+        Logger::log("hay ". sizeof($header) . " cabeceras");
+    
+        for ($i=1; $i < sizeof($lines); $i++) { 
+                $_cliente = array();
+
+                $_exploded_line = explode(",", $lines[$i]);
+
+                for ($idata=0; $idata < sizeof($header); $idata++) { 
+                     $_cliente[ $header[$idata] ] = $_exploded_line[$idata];
+               }
+
+               
+
+               try{
+                   self::Nuevo(
+                        array_key_exists("razon_social", $_cliente) ? $_cliente["razon_social"] : NULL,
+                        array_key_exists("clasificacion_cliente", $_cliente) ? $_cliente["clasificacion_cliente"] : NULL,
+                        array_key_exists("codigo_cliente", $_cliente) ? $_cliente["codigo_cliente"] : NULL,
+                        array_key_exists("cuenta_de_mensajeria", $_cliente) ? $_cliente["cuenta_de_mensajeria"] : NULL,
+                        array_key_exists("denominacion_comercial", $_cliente) ? $_cliente["denominacion_comercial"] : NULL,
+                        array_key_exists("descuento_general", $_cliente) ? $_cliente["descuento_general"] : NULL,
+                        NULL, //array_key_exists("direcciones", $_cliente) ? $_cliente[""] : NULL,
+                        array_key_exists("email", $_cliente) ? $_cliente["email"] : NULL,
+                        NULL, //extra_params
+                        array_key_exists("id_cliente_padre", $_cliente) ? $_cliente["id_cliente_padre"] : NULL,
+                        array_key_exists("id_moneda", $_cliente) ? $_cliente["id_moneda"] : NULL,
+                        array_key_exists("id_tarifa_compra", $_cliente) ? $_cliente["id_tarifa_compra"] : NULL,
+                        array_key_exists("id_tarifa_venta", $_cliente) ? $_cliente["id_tarifa_venta"] : NULL,
+                        array_key_exists("limite_credito", $_cliente) ? $_cliente["limite_credito"] : NULL,
+                        array_key_exists("password", $_cliente) ? $_cliente["password"] : NULL,
+                        array_key_exists("representante_legal", $_cliente) ? $_cliente["representante_legal"] : NULL,
+                        array_key_exists("rfc", $_cliente) ? $_cliente["rfc"] : NULL,
+                        array_key_exists("sitio_web", $_cliente) ? $_cliente["sitio_web"] : NULL,
+                        array_key_exists("telefono_personal1", $_cliente) ? $_cliente["telefono_personal1"] : NULL,
+                        array_key_exists("telefono_personal2", $_cliente) ? $_cliente["telefono_personal2"] : NULL
+                    );
+            }catch(Exception $e){
+                throw $e;
+            }
+
+        }//for
+
+    }
+
+
+
+
+	public static function Importar ( $raw_contents ){
 		
-		Logger::log("Importando clientes...");
+		Logger::log("====== Importando clientes ========");
 		
 		Logger::log("El tamaño del archivo es de " . strlen( $raw_contents ) . " bytes.");
 		
 		$lines = explode( "\n", $raw_contents );
 
-		$nline = -1; 
+		$nline = 0; 
 
 		//buscar las llaves de cliente
-		while( $lines[++$nline] != "MGW10002");
-				
+		while( ( $nline < sizeof($lines) ) && ($lines[$nline] != "MGW10002" ) ) $nline++;
+		
+        if($nline >= sizeof($lines)){
+            //no econtre esa madre de adminpaq, es un SCV
+            return self::ImportarCSV($lines);
+        }
+
+
+
+
+
+
 		//llaves
 		$llaves = array();
-		for ($z=0; ( $lines[++$nline] != "/MGW10002"); $z++) { 
+		for ($z=0; ( $lines[++$nline] != "/MGW10002")  && ( $nline < sizeof($lines)); $z++) { 
 			$llave [ $z ] = $lines[$nline];
 			// n - |CRFC|
 		}
@@ -1188,7 +1253,9 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 			$nline++;
 
 			for ($z = 0; $z < $campos; $z++, $nline++) { 
-
+                $_cliente[ $llave [ $z ]] = $lines[$nline];
+            }
+                /*
 				switch( $llave [ $z ]  ){
 					case "CCODIGOCLIENTE" 			: $_cliente["CCODIGOCLIENTE"] = $lines[$nline];  break; 
 					case "CRAZONSOCIAL" 				: $_cliente["CRAZONSOCIAL"] = $lines[$nline];  break; 
@@ -1285,9 +1352,9 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 					case "CCOMCOBRO" 					: $_cliente["CCOMCOBRO"] = $lines[$nline];  break; 
 					case "CFACTERC01" 				: $_cliente["CFACTERC01"] = $lines[$nline];  break; 
 					case "CCODPROVCO" 				: $_cliente["CCODPROVCO"] = $lines[$nline];  break;
-
-				}
-			}
+        
+				}*/
+			
 
 			$adress = array();
 			
@@ -1317,6 +1384,9 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 				);
 
 			}
+
+
+
 			
 			$c = self::Nuevo(
 					$razon_social			= $_cliente["CRAZONSOCIAL"], 

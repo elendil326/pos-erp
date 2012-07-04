@@ -30,7 +30,7 @@
 			$lista["resultados"]
 		);
 
-		$tabla->convertToExtJs(true);
+		$tabla->convertToExtJs(false);
  		$tabla->addColRender("saldo_del_ejercicio", "FormatMoney");
         
         function funcion_activo($activo){

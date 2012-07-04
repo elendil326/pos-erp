@@ -30,12 +30,9 @@ public class AdminPAQProxy extends HttpResponder{
         // https://127.0.0.1:16001/json/adminpaq/sdk/?param=1
         // String s = searchInQuery("param") ; // s = "1";
 
-
         String s = searchInQuery("esposa") ;
 
         System.out.println(s);
-
-
 
         return "{ regresa un json ! }"; 
         

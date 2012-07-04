@@ -179,5 +179,5 @@ echo $f->file();
 
 
 for ($i=0; $i < sizeof($files); $i++) { 
-	unlink($files[$i]);	
+	unlink($files[$i]	);	
 }
