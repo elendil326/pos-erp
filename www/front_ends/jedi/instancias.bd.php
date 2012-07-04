@@ -14,7 +14,7 @@ define("BYPASS_INSTANCE_CHECK", true);
 				
 				
 				$result = InstanciasController::Actualizar_Todas_Instancias($_GET['instance_ids']);
-
+				
 				if(!is_null($result)){//algo salio mal						
 					break;
 				}

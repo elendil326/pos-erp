@@ -66,6 +66,7 @@
 	$p->addComponent( new TitleComponent( "Nueva instancia" ) );
 
 	
+	$p->addComponent( new FreeHtmlComponent( '<input type="text" style="font-size: 17px;" placeholder="Token" id="_new_instance_toke">&nbsp;'));
 	$p->addComponent( new FreeHtmlComponent( '<input type="text" style="font-size: 17px;" placeholder="Descripcion" id="_new_instance_desc">&nbsp;'));
 	$p->addComponent( new FreeHtmlComponent( '<div class="POS Boton OK"  onclick="window.location=\'instancias.nueva.php?do=nueva&d=\'+HtmlEncode(Ext.get(\'_new_instance_desc\').getValue());">Nueva Instancia</div>') );	
 

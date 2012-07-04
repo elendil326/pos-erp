@@ -42,7 +42,8 @@ Se puede ordenar por los atributos de producto.
 	)
 	{  
 		
-			Logger::log("Listando las existencias....");
+			
+
             $e = AlmacenDAO::Existencias();
             return array( "resultados" => $e , "numero_de_resultados" => sizeof($e) );
 

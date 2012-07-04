@@ -89,7 +89,7 @@
         /* ********************************************************************* 
          * Ventas canceladas
          * ********************************************************************* */
-        $page->nextTab("Ventas caneladas");
+        $page->nextTab("Canceladas");
         $ventas = new Venta(array("es_cotizacion" => false, "cancelada" => true));
         $tabla = new TableComponent( 
                 array(

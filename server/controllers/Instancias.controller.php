@@ -200,6 +200,17 @@
 			return $res;
 		}
 
+
+
+
+
+
+
+
+
+
+
+
 		public static function BuscarPorToken($instance_token = null){
 			
 			global $POS_CONFIG;
@@ -212,8 +223,27 @@
 			
 			return $res;
 			
+		}
+
+
+/*
+
+		public static function BuscarPorId($id = null){
+			
+			global $POS_CONFIG;
+			
+			$sql = "select * from instances where instance_id = ?";
+			
+			$res = $POS_CONFIG["CORE_CONN"]->GetRow( $sql , array( $instance_token ) );
+			
+			if(empty($res)) return NULL;
+			
+			return $res;
 			
 		}
+
+*/
+
 		
 		public static function Buscar(  ){
 			
@@ -236,6 +266,21 @@
 			return $a;
 
 		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		
 		
 		public static function BuscarRequests( $id = null ){
@@ -268,28 +313,64 @@
 
 		}
 		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		
 		public static function Eliminar($instance_token){
 			
 		}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		public static function Actualizar_Todas_Instancias($instance_ids){
+
 			$ids_string =" WHERE instance_id = ";
+
 			$ids =json_decode($instance_ids);
 			
 			for($i=0; $i< count($ids); $i++){
+			
 				if($i == 0)
 					$ids_string .= "".$ids[$i];
 				else
 					$ids_string .= " OR instance_id = ".$ids[$i];
 			}
 			
-			Logger::log("Updating Instances}");
+			Logger::log("Updating Instances.....");
+
 			$result = "";
 			$out = "";
 			$file_name_cons = 'db-backup-'.time().'.sql';
 			$destiny_file = '../../../static_content/db_backups/';
+
 			global $POS_CONFIG;
+
 			$sql = "SELECT * FROM instances $ids_string;";
 			
 			
@@ -304,13 +385,18 @@
 					continue;//ya no seguir con el proceso
 				}
 				
-				$out = self::Eliminar_Tablas_BD($ins['instance_id'],$ins['db_host'], $ins['db_user'], $ins['db_password'], $ins['db_name']);				
+				$out = self::Eliminar_Tablas_BD($ins['instance_id'],$ins['db_host'], $ins['db_user'], $ins['db_password'], $ins['db_name']);
+
 				if(!is_null($out))
 					$result.= $out."\n";
+
 				$out = self::Insertar_Estructura_Tablas_A_BD($ins['instance_id'],$ins['db_host'], $ins['db_user'], $ins['db_password'], $ins['db_name']);
+				
 				if(!is_null($out))
 					$result.= $out."\n";
+				
 				$out = self::Insertar_Datos_Desde_Respaldo($ins['instance_id'],$ins['db_host'], $ins['db_user'], $ins['db_password'], $ins['db_name'],$destiny_file.$file_name);
+				
 				if(!is_null($out))
 					$result.= $out."\n";
 			}
@@ -320,6 +406,34 @@
 			else 
 				return null;
 		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 		public static function Eliminar_Tablas_BD($instance_id,$host,$user, $pass, $name){
 			Logger::log("Deleting Tables from instance {$instance_id}");
@@ -382,6 +496,21 @@
 			}
 			return null;
 		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 		public static function Insertar_Estructura_Tablas_A_BD($instance_id,$host,$user, $pass, $name){
 			$out ="";
@@ -459,6 +588,22 @@
 			
 			return null;
 		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 		public static function Insertar_Datos_Desde_Respaldo($instance_id, $host, $user, $pass, $name,$source_file){
 			Logger::log( "Restoring data from file to Instance DB {$instance_id}");
@@ -540,8 +685,25 @@
 
 		}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		public static function backup_only_data($instance_id, $host, $user, $pass, $name, $tables = '*', $backup_values = true, $return_as_string = false,$destiny_file, $file_name){
-			Logger::log( "Backup to Instance {$instance_id}");
+
+			Logger::log( "Backup  Instance {$instance_id}");
 			
 			//conexion a la instancia
 			$sql = "SELECT * FROM instances WHERE ( instance_id = {$instance_id} ) LIMIT 1;";
@@ -671,9 +833,10 @@
 
 			$fname = $destiny_file.$file_name;
 			try{
-			  	$handle = @fopen($fname,'w+');
-			  	@fwrite($handle, $return);
-			  	@fclose($handle);
+			  	$handle = fopen($fname,'w+');
+			  	fwrite($handle, $return);
+			  	fclose($handle);
+
 			}catch(Exception $e){
 				Logger::log( $e->getMessage() );
 				return $e->getMessage();				
@@ -682,6 +845,26 @@
 			return null;//cuando regresa null todo bien
 
 		}//fin back_up tables
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 		public static function formatfilesize( $data ) {
 	        // bytes
@@ -699,6 +882,14 @@
 	            return round( ( $data / 1024000 ), 1 ) . " MB";
 	        }
 		}
+
+
+
+
+
+
+
+
 
 		public static function requestDemo($userEmail){
 			

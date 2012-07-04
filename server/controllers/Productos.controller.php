@@ -1747,7 +1747,7 @@ class ProductosController extends ValidacionesController implements IProductos
 				"resultados" => $results
 			);
 
-		}
+		}//if (!is_null($id_sucursal))
 		
 		
         $productos = ProductoDAO::buscarProductos($query);
