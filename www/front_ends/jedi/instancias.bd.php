@@ -41,7 +41,7 @@ define("BYPASS_INSTANCE_CHECK", true);
 	?>
 	
 	<script>
-	var ids= new Array();
+		var ids= new Array();
 		
 		function addId(instance_id){
 			var esta = false;
@@ -54,13 +54,15 @@ define("BYPASS_INSTANCE_CHECK", true);
 						ids.splice(i,1);
 				}
 			}
+
 			if(!esta)
 				ids.push(instance_id);
 			
 		}
 	
+
 		function actualizarInstancias(){
-			console.log(ids);
+			
 			if(ids.length < 1){
 				alert('No ha seleccionado ninguna instancia para actualizar');
 				return;
@@ -70,6 +72,17 @@ define("BYPASS_INSTANCE_CHECK", true);
 			window.location='instancias.bd.php?do=actualizar_instancias&instance_ids='+Ext.JSON.encode(ids);
 		}
 		
+
+
+		function dlInstancias(){
+			if(ids.length < 1){
+				alert('No ha seleccionado ninguna instancia para descargar');
+				return;
+			}
+			console.log("Encodeado:",Ext.JSON.encode(ids));
+
+			window.location='instancias.bd.dl.php?&instance_ids='+Ext.JSON.encode(ids);
+		}
 	</script>
 	
 	<?php
@@ -105,7 +118,8 @@ define("BYPASS_INSTANCE_CHECK", true);
 	}
 
 
-	$p->addComponent( new FreeHtmlComponent( '<div class="POS Boton OK"  onclick="actualizarInstancias()">Actualizar instancias seleccionadas</div>') );	
+	$p->addComponent( new FreeHtmlComponent( '<div class="POS Boton OK"  onclick="actualizarInstancias()">Actualizar instancias</div>') );	
+	$p->addComponent( new FreeHtmlComponent( '<div class="POS Boton OK"  onclick="dlInstancias()">Descargar instancias</div>') );	
 
 	$p->render( );
 

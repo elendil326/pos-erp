@@ -128,8 +128,10 @@ Set maximum execution time in seconds (0 means no limit).
 set_time_limit(0);
 
 //
-$ids = explode(",", $_GET["ids"]);
 
+
+$ids = json_decode($_GET["instance_ids"]);
+//$ids = explode(",", $_GET["ids"]);
 
 $prefix = time() . rand();
 $files = array();
