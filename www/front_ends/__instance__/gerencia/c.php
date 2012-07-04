@@ -30,11 +30,8 @@
 
 
 		$page->nextTab("Importar");
-		$page->addComponent( new TitleComponent("Importar datos CSV", 2));
-		$page->addComponent("
-			&iquest; Como debo formar el archivo CSV ?
-
-			");
+		$page->addComponent( new TitleComponent("Importar datos CSV/AdminPAQ/Excel", 2));
+		//$page->addComponent("&iquest; Como debo formar el archivo CSV ?");
 
 		$importarClientes = new FormComponent();
 		$importarClientes->addField("raw_content", "Contenido de la archivo CSV", "textarea");
@@ -45,12 +42,13 @@
 
 
 		$page->addComponent( new TitleComponent("Importar datos AdminPAQ mediante archivos TXT", 2));
+/*
 		$page->addComponent( new TitleComponent("Importar clientes", 3));
 		$importarClientes = new FormComponent();
 		$importarClientes->addField("raw_content", "Contenido de la exportacion CSV", "textarea");
 		$importarClientes->addApiCall("api/clientes/importar/", "POST");
 		$page->addComponent( $importarClientes );
-
+*/
 
 
 		$page->addComponent( new TitleComponent("Importar productos", 3));
@@ -213,6 +211,6 @@
 
 		$page->nextTab("POS_CLIENT");
 
-
+		$page->addComponent("<a href='../dl.php?file=client'><div class='POS Boton' >Descargar POS Client</div></a>");
 
 		$page->render();
