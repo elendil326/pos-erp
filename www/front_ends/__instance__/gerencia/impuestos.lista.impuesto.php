@@ -17,7 +17,7 @@
 				"es_monto"  => "Es monto",
 				"descripcion" => "Descripcion"
 			),
-                         ImpuestosYRetencionesController::ListaImpuesto()
+                        ImpuestosYRetencionesController::ListaImpuesto()
 		);
 		
                 function funcion_es_monto($es_monto)

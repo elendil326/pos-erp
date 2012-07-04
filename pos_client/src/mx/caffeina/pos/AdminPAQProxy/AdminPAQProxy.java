@@ -25,6 +25,23 @@ public class AdminPAQProxy extends HttpResponder{
 		last_error = null;
 	}
 
+
+    private String sdk(  ){
+        // https://127.0.0.1:16001/json/adminpaq/sdk/?param=1
+        // String s = searchInQuery("param") ; // s = "1";
+
+
+        String s = searchInQuery("esposa") ;
+
+        System.out.println(s);
+
+
+
+        return "{ regresa un json ! }"; 
+        
+    }
+
+
 	public String getResponse(){
 		//dispatch submodules
 
@@ -40,15 +57,27 @@ public class AdminPAQProxy extends HttpResponder{
 				DBDiff dbdiff = new DBDiff(searchInQuery("path"));
 				return	dbdiff.queryDB();
 				
-			}else{
+			} else{
 				return DBDiff.renderFrontEnd();
 				
 			}
 
 		}
 
+
+
+		if(( path.length > 2 )  && path[2].equals("sdk")){
+			
+			System.out.println("sdk nigga");
+            return sdk();
+
+		}
+
+
+
 		if(dataType.equals("json")) {
-			bootstrapJson();
+
+            bootstrapJson();
 
 			if(searchInQuery("callback") != null){
 				return (searchInQuery("callback") + "(" + getJson() + ");");
