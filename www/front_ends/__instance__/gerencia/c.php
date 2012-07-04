@@ -20,6 +20,7 @@
 
 
 		$page = new GerenciaTabPage(  );
+		$page->addComponent("<script>Ext.Ajax.timeout = 3 * 60 * 1000;/* 3 minutos */ </script>");
 		$page->addComponent(new TitleComponent("Configuracion de POS ERP"));
 
 		

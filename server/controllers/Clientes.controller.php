@@ -1150,59 +1150,140 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 	}
 	
 
-    private static function ImportarAdminPAQ(){}
 
 
 
 
 
-    private static function ImportarCSV($lines){
+    private static function ImportarAdminPAQ(){
+
+    }
+
+
+
+
+
+
+
+
+
+
+    private static function ImportarCSV($raw_contents){
+
         Logger::log("----- importando como csv ------- ");
 
-        $header = explode(",", $lines[0]);
-        Logger::log("hay ". sizeof($header) . " cabeceras");
-    
-        for ($i=1; $i < sizeof($lines); $i++) { 
-                $_cliente = array();
 
-                $_exploded_line = explode(",", $lines[$i]);
+//      array str_getcsv ( string $input [, string $delimiter = ',' [, string $enclosure = '"' [, string $escape = '\\' ]]] )
 
-                for ($idata=0; $idata < sizeof($header); $idata++) { 
-                     $_cliente[ $header[$idata] ] = $_exploded_line[$idata];
-               }
+        $firstLine =   strpos( $raw_contents , "\n");
 
-               
+        $head = str_getcsv( substr ( $raw_contents , 0 , $firstLine), ',' ,'"' );
 
-               try{
+        $data = str_getcsv( substr ( $raw_contents , $firstLine ), ',' ,'"' );
+
+        $soh = sizeof($head);
+
+        
+        
+
+        $indices_names = array(
+                               
+                                "razon_social", 
+                                "clasificacion_cliente", 
+                                "codigo_cliente", 
+                                "cuenta_de_mensajeria", 
+                                "curp", 
+                                "denominacion_comercial", 
+                                "descuento_general", 
+                                "direcciones", 
+                                "email", 
+                                "extra_params", 
+                                "id_cliente_padre", 
+                                "id_moneda", 
+                                "id_tarifa_compra", 
+                                "id_tarifa_venta", 
+                                "limite_credito", 
+                                "password", 
+                                "representante_legal", 
+                                "rfc", 
+                                "sitio_web", 
+                                "telefono_personal1", 
+                                "telefono_personal2"
+                                );
+
+        for ($i=0; $i < sizeof($indices_names); $i++) { 
+            $indices[$indices_names[$i]] = array_search($indices_names[$i], $head);
+        }
+        
+        $iteraciones = sizeof($data) / $soh;
+
+        /*var_dump($indices);
+        var_dump($head);
+        var_dump($data);*/
+
+        Logger::log("soh=" . $soh . " , sod=" . sizeof($data) . " , " . " it=" . $iteraciones);
+        
+
+        $i = 0;
+
+        while( $i < $iteraciones ) { 
+
+                try{
+
+                    /*
+                    for ($h=0; $h < sizeof($indices_names); $h++) { 
+                        //$indices_names[$h]
+                        if($indices[$indices_names[$h]] !== FALSE)
+                        Logger::log($indices_names[$h] . " =   ($i * $soh) + " . $indices[$indices_names[$h]]  . " = " . (($i * $soh) + $indices[$indices_names[$h]] ) . " = " .   ($data[ ($i * $soh) + $indices[$indices_names[$h]] ])    );     
+                    }*/
+                   
+
+                    if( ($i * $soh) + $indices["razon_social"] >= $soh ){
+                        //ya no hay campos 
+                        break;
+                    }
+
                    self::Nuevo(
-                        array_key_exists("razon_social", $_cliente) ? $_cliente["razon_social"] : NULL,
-                        array_key_exists("clasificacion_cliente", $_cliente) ? $_cliente["clasificacion_cliente"] : NULL,
-                        array_key_exists("codigo_cliente", $_cliente) ? $_cliente["codigo_cliente"] : NULL,
-                        array_key_exists("cuenta_de_mensajeria", $_cliente) ? $_cliente["cuenta_de_mensajeria"] : NULL,
-                        array_key_exists("denominacion_comercial", $_cliente) ? $_cliente["denominacion_comercial"] : NULL,
-                        array_key_exists("descuento_general", $_cliente) ? $_cliente["descuento_general"] : NULL,
-                        NULL, //array_key_exists("direcciones", $_cliente) ? $_cliente[""] : NULL,
-                        array_key_exists("email", $_cliente) ? $_cliente["email"] : NULL,
+                        $indices["razon_social"] !== FALSE ?            $data[ ($i * $soh) + $indices["razon_social"] ] : NULL,
+                        $indices["clasificacion_cliente"] !== FALSE ?   $data[ ($i * $soh) + $indices["clasificacion_cliente"] ] : NULL,
+                        $indices["codigo_cliente"] !== FALSE ?          $data[ ($i * $soh) + $indices["codigo_cliente"] ] : NULL,
+                        $indices["cuenta_de_mensajeria"] !== FALSE ?    $data[ ($i * $soh) + $indices["cuenta_de_mensajeria"] ] : NULL,
+                        $indices["curp"] !== FALSE ?                    $data[ ($i * $soh) + $indices["curp"] ] : NULL,
+                        $indices["denominacion_comercial"] !== FALSE ?  $data[ ($i * $soh) + $indices["denominacion_comercial"] ] : NULL,
+                        $indices["descuento_general"] !== FALSE ?       $data[ ($i * $soh) + $indices["descuento_general"] ] : NULL,
+                        NULL, //direcciones
+                        $indices["email"] !== FALSE ?                   $data[ ($i * $soh) + $indices["email"] ] : NULL,
                         NULL, //extra_params
-                        array_key_exists("id_cliente_padre", $_cliente) ? $_cliente["id_cliente_padre"] : NULL,
-                        array_key_exists("id_moneda", $_cliente) ? $_cliente["id_moneda"] : NULL,
-                        array_key_exists("id_tarifa_compra", $_cliente) ? $_cliente["id_tarifa_compra"] : NULL,
-                        array_key_exists("id_tarifa_venta", $_cliente) ? $_cliente["id_tarifa_venta"] : NULL,
-                        array_key_exists("limite_credito", $_cliente) ? $_cliente["limite_credito"] : NULL,
-                        array_key_exists("password", $_cliente) ? $_cliente["password"] : NULL,
-                        array_key_exists("representante_legal", $_cliente) ? $_cliente["representante_legal"] : NULL,
-                        array_key_exists("rfc", $_cliente) ? $_cliente["rfc"] : NULL,
-                        array_key_exists("sitio_web", $_cliente) ? $_cliente["sitio_web"] : NULL,
-                        array_key_exists("telefono_personal1", $_cliente) ? $_cliente["telefono_personal1"] : NULL,
-                        array_key_exists("telefono_personal2", $_cliente) ? $_cliente["telefono_personal2"] : NULL
-                    );
-            }catch(Exception $e){
-                throw $e;
-            }
+                        $indices["id_cliente_padre"] !== FALSE ?        $data[ ($i * $soh) + $indices["id_cliente_padre"] ] : NULL,
+                        $indices["id_moneda"] !== FALSE ?               $data[ ($i * $soh) + $indices["id_moneda"] ] : NULL,
+                        $indices["id_tarifa_compra"] !== FALSE ?        $data[ ($i * $soh) + $indices["id_tarifa_compra"] ] : NULL,
+                        $indices["id_tarifa_venta"] !== FALSE ?         $data[ ($i * $soh) + $indices["id_tarifa_venta"] ] : NULL,
+                        $indices["limite_credito"] !== FALSE ?          $data[ ($i * $soh) + $indices["limite_credito"] ] : NULL,
+                        $indices["password"] !== FALSE ?                $data[ ($i * $soh) + $indices["password"] ] : NULL,
+                        $indices["representante_legal"] !== FALSE ?     $data[ ($i * $soh) + $indices["representante_legal"] ] : NULL,
+                        $indices["rfc"] !== FALSE ?                     $data[ ($i * $soh) + $indices["rfc"] ] : NULL,
+                        $indices["sitio_web"] !== FALSE ?               $data[ ($i * $soh) + $indices["sitio_web"] ] : NULL,
+                        $indices["telefono_personal1"] !== FALSE ?      $data[ ($i * $soh) + $indices["telefono_personal1"] ] : NULL,
+                        $indices["telefono_personal2"] !== FALSE ?      $data[ ($i * $soh) + $indices["telefono_personal2"] ] : NULL
+
+                   );
+           
+                }catch(Exception $e){
+                    Logger::Warn($e);
+                    //continuar
+                }
+
+
+                $i ++;
 
         }//for
 
     }
+
+
+
+
+
 
 
 
@@ -1222,7 +1303,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 		
         if($nline >= sizeof($lines)){
             //no econtre esa madre de adminpaq, es un SCV
-            return self::ImportarCSV($lines);
+            return self::ImportarCSV($raw_contents);
         }
 
 
