@@ -177,3 +177,7 @@ header("Content-type: application/octet-stream");
 header("Content-disposition: attachment; filename=zipfile.zip");
 echo $f->file();
 
+
+for ($i=0; $i < sizeof($files); $i++) { 
+	unlink($files[$i]);	
+}
