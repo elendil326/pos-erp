@@ -1,5 +1,7 @@
 
 RewriteEngine on
+RewriteBase /pos/front_ends/
+#RewriteOptions Inherit
 
 Options +FollowSymlinks 
 #-Indexes
@@ -9,7 +11,7 @@ Options +FollowSymlinks
 
 
 # JEDI #
-RewriteRule ^j/$										jedi/index.php?%{QUERY_STRING} [L]
+RewriteRule ^j/$							jedi/index.php?%{QUERY_STRING} [L]
 RewriteRule ^j/(.*)$									jedi/$1?%{QUERY_STRING} [L]
 
 
