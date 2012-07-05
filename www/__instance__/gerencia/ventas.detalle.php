@@ -145,7 +145,7 @@
 
 
 	function function_importe($foo, $obj){
-		return FormatMoney( $obj["precio"]  * $obj["cantidad"]);
+		return FormatMoney( (float)$obj["precio"]  * (float)$obj["cantidad"]);
 	}
 
 
@@ -161,7 +161,7 @@
 			), $productos);
 
 			
-			$tabla->addColRender("importe", 	"function_importe");
+			$tabla->addColRender("id_unidad", 	"function_importe");
 			$tabla->addColRender("id_producto", 	"funcion_producto");
 			//$tabla->addColRender("cantidad", 		"FormatMoney");
 			$tabla->addColRender("precio", "FormatMoney");
