@@ -1,0 +1,405 @@
+-- html_header --
+
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<style>
+	body {
+		margin:0;
+		font-family:Helvetica,Arial,sans-serif;
+		
+		background-color:#ffffff;
+		background:white;
+		url( http://static.caffeina.mx/bg_texture.png) repeat scroll 0px 0px !important;
+
+	}
+
+	
+	:link:focus,:visited:focus {
+		-moz-outline:none;
+		outline:none;
+	}
+	
+	
+	hr {
+		border:0;
+		border-bottom:1px solid #ddd;
+		height:1px;
+		padding:14px 0 0 0;
+		clear:both;
+	}
+
+	#header {
+		
+		
+		background-repeat:no-repeat;
+		background-position:50% 0;
+		background-color:white;
+		position:relative;
+		background-image:url(http://static.caffeina.mx/lab.jpg);
+		background-position-x:50%;
+		
+
+
+
+		height: 172px;
+		
+	}
+	
+
+	#header #top-bar {
+		background-image:url(http://static.caffeina.mx/fondo_top_bar.png);
+		background-repeat:repeat-x;
+		height:80px;
+		display:block;
+	}
+	#header-content {
+		width:940px;
+		margin:0 auto;
+		position:relative;
+	}
+	ul.nav {
+		list-style-type:none;
+		margin:0;
+		padding:0;
+		position:absolute;
+		top:24px;
+		right:0;
+		font-family:'ff-din-web-1','ff-din-web-2',"Helvetica Neue",Arial,Helvetica,sans-serif;
+	}
+
+
+	ul.nav li {
+		display:inline;
+	}
+	ul.nav li a {
+		color:#fff;
+		text-decoration:none;
+		display:block;
+		float:left;
+		margin-left:12px;
+		text-transform:uppercase;
+		font-size:13px;
+		color:white;
+		padding:4px 10px;
+		text-shadow:1px 1px 1px #000;
+		font-weight:700;
+		-webkit-transition-property:background-color,color;
+		-ms-transition:0.5s;
+		-webkit-transition-duration:0.2s,0.2s;
+		-moz-border-radius:15px;
+		-webkit-border-radius:15px;
+		border-radius:15px;
+	}
+
+	ul.nav li a:hover {
+		background-color:rgba(255,255,255,0.2);
+		color:#fff;
+	}
+	#header-main {
+		width:940px;
+		margin:0 auto;
+		position:relative;
+	}
+
+	#header p {
+		margin:0;
+	}
+	
+	#header p.logo a {
+		display:block;
+		background-image:url(http://static.caffeina.mx/logos.png);
+		background-repeat:no-repeat;
+		background-position:0 0px;
+		height:76px;
+		width:199px;
+		text-indent:-10000px;
+		padding-top:15px;
+	}
+
+
+	#content {
+		width:940px;
+		margin:10px auto 0 auto;
+	}
+	
+	h1 {
+		font-size:45px;
+		font-weight:bold;
+		line-height:36px;
+		padding-bottom:15px;
+		margin:32px 0 0 -4px;
+		text-shadow:1px 1px 4px #000;
+		color:#000;
+		font-family:'ff-din-web-1','ff-din-web-2','HelveticaNeue-Light','Helvetica Neue Light','Helvetica Neue',Arial,Helvetica,sans-serif;
+		width:640px;
+		letter-spacing:-1px;
+	}
+	h2 {
+		color:#000;
+		margin:26px 0 -3px -1px;
+		text-shadow:1px 1px 2px #000;
+		font-size:22px;
+		font-weight:100;
+		line-height:24px;
+	}
+	#header h1 {
+font-size: 45px;
+font-weight: bold;
+line-height: 36px;
+margin: 32px 0 0 -4px;
+text-shadow: 1px 1px 4px black;
+color: white;
+font-family: 'ff-din-web-1', 'ff-din-web-2', 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+width: 800px;
+letter-spacing: -3px;
+overflow: hidden;
+height: 45px;
+	}
+
+	#header p.subhead {
+		color:#fff;
+		width:700px;
+		padding-right:360px;
+		margin:1px 0 -3px -1px;
+		text-shadow:1px 1px 2px #000;
+		font-size:22px;
+		font-weight:100;
+		line-height:24px;
+	}
+	#header p.subhead strong a {
+		font-weight:800;
+		/*color:#72a73c;
+		*/ color:#3f8ce9;
+		text-decoration:none;
+	}
+	#header p.subhead strong a:hover {
+		text-decoration:underline;
+	}
+
+	#header #hero {
+		position:absolute;
+		bottom:4px;
+		right:-47px;
+	}
+
+	#content {
+		position:relative;
+	}
+	#content #main {
+		width:620px;
+		float:left;
+		position:relative;
+		margin-top:2px;
+	}
+
+	#content p {
+		margin:0px;
+		font-size:15px;
+		line-height:20px;
+		font-family:Helvetica,Arial,sans-serif;
+	}
+
+		</style>
+</head>
+<body>
+<div id="wrapper">
+	<div id="header">
+		<div id="top-bar">
+			<div id="header-content">
+				<p class="logo">
+					<a href="http://www3.caffeina.mx">caffeina</a>
+				</p>
+				<ul class="nav">
+
+					<li><a href="/html/adminpaq/">AdminPAQProxy</a></li>
+					<li><a href="/html/basculas/">Basculas</a></li>
+					<li class="last"><a href="http://www3.caffeina.mx/art.php?cid=3">Contacto</a></li>
+				</ul>
+			</div>
+			<!-- header-content -->
+		</div>
+		<!-- top-bar -->
+		<div id="header-main">
+			<h1>Caffeina POS_CLIENT</h1>
+			<p class="subhead">
+	
+			</p>
+			<div id="hero">
+			</div>
+		</div>
+		<!-- header-main -->
+	</div>
+	<!-- header -->
+	<div id="content">
+-- /html_header --
+
+-- html_footer --
+
+
+	<!-- four-col -->
+	<div class="four-col last cool-text">
+		<div style="margin-top: 25px; text-align: center; ">
+			
+		</div>
+		<!-- four-col -->
+		<hr>
+		<div class="twelve-col last footer">
+			<p>
+			</p>
+		</div>
+		<!-- four-col box -->
+		<!-- footer -->
+
+		<div align='center' style="padding-bottom: 10px; font-size: 10px;">
+			<img src='http://static.caffeina.mx/logo_simbolo.png'><br>
+			 2011 Caffeina Mexico
+		</div>
+	</div>
+	<!-- content -->
+</div>
+<!-- wrapper -->
+</body>
+</html>
+
+-- /html_footer --
+
+
+
+
+
+-- AdminPAQProxy --
+<a href="dbdiff">dbdiff</a>
+
+<form method="GET" action=""  id="sqlqueryform"  name="sqlform">
+
+<a name="querybox"></a>
+<div id="queryboxcontainer">
+<fieldset id="querybox">
+<legend>Run SQL query/queries on  <input type='text' name='path' value='{path}' style="width:300px"> </legend>
+<div id="queryfieldscontainer">
+	<div id="sqlquerycontainerfull">
+	<textarea name="sql" style="width:100%" rows=5>{sql}</textarea>
+	
+</div>
+<input type="submit" value="Go">
+<div class="clearfloat"></div>
+</div>
+<div class="clearfloat"></div>
+</div>
+<div class="formelement">
+</div>
+<div class="formelement">
+</div>
+<div class="clearfloat"></div>
+</fieldset>
+</form>
+{tabla}
+-- /AdminPAQProxy --
+
+-- Error --
+-- /Error --
+
+
+-- DbDiff --
+<script type="text/javascript" charset="utf-8" src="http://api.caffeina.mx/jquery/jquery-1.4.2.min.js"></script>
+
+<script>
+	var oldResults = null,
+		newResults = null;
+	
+	function check( cb ){
+		$.ajax({
+		  url: '/json/AdminPAQProxy/dbdiff/',
+		  dataType : "json",
+		  success: function(a){
+			if(a.success === undefined)
+			return cb.call(null, a);
+			
+			$("#status").html(a.reason);
+		  },
+		  data :{
+			queryDB : 1,
+			path: $("#path").val()
+		}
+		});
+	}
+	
+	function boot(){
+		check( function( data ){
+			oldResults = data;
+		});
+	}
+	
+	
+	function compare(){
+		if(null === oldResults) {
+			$("#status").html("OK! Now do your action and click check again.");
+			return boot();	
+		}
+		
+		
+		check(function(data){
+			newResults = data;
+			
+			if(newResults.length != oldResults.length){
+				$("#status").html("<b>file count mismatch: something is wrong.</b>");
+				return;
+			}
+			
+			var changedHtml = "",
+				changedCount = 0;
+
+			
+			for (var i=0; i < newResults.length; i++) {
+				
+				if(newResults[i].file 
+					!= oldResults[i].file 
+				){
+					$("#status").html("<b>file order mismatch: something is wrong.</b>");
+					return;
+				}
+					
+				
+
+				if( newResults[i].md5
+					!== oldResults[i].md5
+				){
+					changedHtml += "<tr><td>" + newResults[i].file + "</td></tr>";
+					changedCount ++;
+				}
+				
+				
+			};
+			
+			oldResults = newResults;
+			
+			if( changedCount == 0 ){
+				$("#status").html("No changes were made to the files.");
+			}else{
+				
+				$("#status").html("<table>" 
+									+ changedCount + " file(s) changed.</tr>"
+									+ changedHtml + "</table>");				
+			}
+
+		});
+	}
+	
+	
+	
+</script>
+<html>
+	<div id="status">
+		Click check!
+	</div>
+	<input type="text"  placeholder="path to adminpaq files" id="path">
+	<input type="button" value="test" onClick="compare()">
+</html>
+-- /DbDiff --
+
+
+
+
+

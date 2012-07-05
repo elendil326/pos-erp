@@ -1,0 +1,43 @@
+
+RewriteEngine on
+
+#RewriteBase /pos/
+RewriteBase /caffeina/www/
+
+
+
+Options +FollowSymlinks 
+#-Indexes
+
+#RewriteRule ^([0-9]*)/ingenieria/(.*\.php)?(.*)$		__instance__/ingenieria/$2?_instance_=$1&%{QUERY_STRING} [L]
+
+
+
+# JEDI #
+RewriteRule ^j/$										jedi/index.php?%{QUERY_STRING} [L]
+RewriteRule ^j/(.*)$									jedi/$1?%{QUERY_STRING} [L]
+
+
+
+# STATIC #
+RewriteRule ^([a-zA-Z0-9_-]+)/static/(.*\.jpg)$			__instance__/static/$2 [L]
+
+# GERENCIA #
+RewriteRule ^([a-zA-Z0-9_-]+)/g/gerencia.js$			__instance__/gerencia/gerencia.js [L]
+RewriteRule ^([a-zA-Z0-9_-]+)/g/(.*\.php)?(.*)$	    __instance__/gerencia/$2?_instance_=$1&%{QUERY_STRING} [L]
+
+
+# GERENCIA #
+RewriteRule ^([a-zA-Z0-9_-]+)/c/gerencia.js$			__instance__/cliente/gerencia.js [L]
+RewriteRule ^([a-zA-Z0-9_-]+)/c/(.*\.php)?(.*)$			__instance__/cliente/$2?_instance_=$1&%{QUERY_STRING} [L]
+
+# SUCURSAL #
+RewriteRule ^([a-zA-Z0-9_-]+)/s/(.*)$					__instance__/sucursal/$2?_instance_=$1&%{QUERY_STRING} [L]
+
+
+RewriteRule ^([a-zA-Z0-9_-]+)/api/(.*)$					__instance__/api/$2?_instance_=$1&%{QUERY_STRING} [L]
+
+RewriteRule ^([a-zA-Z0-9_-]+)/$						__instance__/?_instance_=$1&%{QUERY_STRING} [L]
+RewriteRule ^([a-zA-Z0-9_-]+)/dl.php$						__instance__/dl.php?_instance_=$1&%{QUERY_STRING} [L]
+#RewriteRule ^([a-zA-Z0-9_-]+)$ 							__instance__/?_instance_=$1&%{QUERY_STRING} [L]
+

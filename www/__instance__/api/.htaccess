@@ -1,0 +1,8 @@
+RewriteEngine on
+#RewriteBase /pos/__instance__/api/
+RewriteBase /caffeina/www/__instance__/api/
+
+Options +FollowSymlinks
+
+
+RewriteRule ^(.*)$						ApiLoader.php?_api_=$1&%{QUERY_STRING} [L]
