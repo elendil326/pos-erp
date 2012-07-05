@@ -10,6 +10,32 @@
   
 	/**
  	 *
+ 	 *editar una columna dado su campo y tabla
+ 	 *
+ 	 * @param campo string 
+ 	 * @param tabla string 
+ 	 * @param caption string 
+ 	 * @param descripcion string 
+ 	 * @param longitud int 
+ 	 * @param obligatorio bool 
+ 	 * @param tipo enum "string","int","float","date","bool","contacto","enum","direccion"
+ 	 **/
+  static function EditarColumnaBd
+	(
+		$campo, 
+		$tabla, 
+		$caption = "", 
+		$descripcion = "", 
+		$longitud = "", 
+		$obligatorio = "", 
+		$tipo = ""
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
  	 *Eliminar una columna extra
  	 *
  	 * @param campo string 
@@ -32,7 +58,7 @@
  	 * @param caption string El texto que se mostrara al pedir este campo.
  	 * @param obligatorio bool Si el campo es obligatorio para esta tabla.
  	 * @param tabla string La tabla padre. La tabla debe existir fisicamente salvo unas tablas que hemos creado para usted.
- 	 * @param tipo enum "string","int","float","date","bool"
+ 	 * @param tipo enum "string","int","float","date","bool","contacto","enum","direccion"
  	 * @param descripcion string La descrpcion de ayuda para este campo.
  	 * @param longitud int 
  	 * @return id_extra_params_estructura int El id de esta estructura

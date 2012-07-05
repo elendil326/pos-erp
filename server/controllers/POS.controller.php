@@ -7,8 +7,9 @@ require_once("interfaces/POS.interface.php");
   **/
 	
   class POSController implements IPOS{
-  
-  
+
+
+
 	/**
  	 *
  	 *Si un perdidad de conectividad sucediera, es responsabilidad del cliente registrar las ventas o compras realizadas desde que se perdio conectividad. Cuando se restablezca la conexcion se deberan enviar las ventas o compras. 
@@ -347,6 +348,59 @@ require_once("interfaces/POS.interface.php");
 
     }
 
+  
+    
+	/**
+ 	 *
+ 	 *editar una columna dado su campo y tabla
+ 	 *
+ 	 * @param campo string 
+ 	 * @param tabla string 
+ 	 * @param caption string 
+ 	 * @param descripcion string 
+ 	 * @param longitud int 
+ 	 * @param obligatorio bool 
+ 	 * @param tipo enum "string","int","float","date","bool","contacto","enum","direccion"
+ 	 **/
+  	static function EditarColumnaBd
+	(
+		$campo, 
+		$tabla, 
+		$caption = "", 
+		$descripcion = "", 
+		$longitud = "", 
+		$obligatorio = "", 
+		$tipo = ""
+	){
+
+		//busquemos que exista la tabla
+    	switch($tabla){
+    		case "clientes":
+
+    		break;
+
+    		default:
+    			throw new InvalidDataException("No puede crear una nueva columna para la tabla $tabla"); 
+    	}
+
+
+
+    	$ncbd = ExtraParamsEstructuraDAO::getByTablaCampo($tabla, $campo);
+
+    	//$ncbd->setTabla($tabla);
+		$ncbd->setCampo($campo);
+		$ncbd->setTipo($tipo);
+		$ncbd->setLongitud($longitud);
+		$ncbd->setObligatorio($obligatorio);
+		$ncbd->setCaption($caption);
+		$ncbd->setDescripcion($descripcion);
+
+  		
+    	//insertar
+		ExtraParamsEstructuraDAO::save( $ncbd );
+		
+	}
+  
 
 
     public static function NuevaColumnaBd

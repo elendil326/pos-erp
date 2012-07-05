@@ -290,7 +290,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos.
  	 *Crea una nueva categor?a para unidades
  	 *
  	 * @param descripcion string Descripcin de la categora
- 	 * @param activo int Indica si la categoría esta activa, en caso de no indicarlo se tomara como activo
+ 	 * @param activo int Indica si la categora esta activa, en caso de no indicarlo se tomara como activo
  	 * @return id_categoria int Id de la categoria
  	 **/
   static function NuevaCategoriaUdm

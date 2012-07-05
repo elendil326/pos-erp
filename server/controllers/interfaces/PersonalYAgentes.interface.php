@@ -415,4 +415,20 @@
   
   
 	
+  
+	/**
+ 	 *
+ 	 *eviar un mail a esa persona para resetear su pass
+ 	 *
+ 	 * @param clave string 
+ 	 * @param email string 
+ 	 **/
+  static function PasswordRecordarUsuario
+	(
+		$clave = "", 
+		$email = ""
+	);  
+  
+  
+	
   }

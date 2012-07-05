@@ -2124,4 +2124,28 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             Logger::log("Lista de usuarios con sus permisos obtenida exitosamente con ".count($permisos_usuario)." elementos");
             return $permisos_usuario;
         }
+
+
+
+
+
+
+
+
+
+
+  /**
+   *
+   *eviar un mail a esa persona para resetear su pass
+   *
+   * @param clave string 
+   * @param email string 
+   **/
+  public static function PasswordRecordarUsuario
+  (
+    $clave = "", 
+    $email = ""
+  ){
+
+  }
   }

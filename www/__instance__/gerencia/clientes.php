@@ -91,6 +91,7 @@
 
 		$page->addComponent('
 				<script>
+		
 					function delExtraCol(id, t, c){
 						POS.API.POST("api/pos/bd/columna/eliminar", { 
 								tabla : t,
@@ -99,11 +100,149 @@
 
 							}});
 					}
+
+					function editExtraCol(id,t,c, fObj){
+
+					
+						var jObj = Ext.JSON.decode(Url.decode(fObj));
+
+						console.log(jObj)
+
+
+						var required = \'<span style="color:red;font-weight:bold" data-qtip="Required">*</span>\';
+			
+
+			            var form = Ext.widget(\'form\', {
+			                layout: {
+			                    type: \'vbox\',
+			                    align: \'stretch\'
+			                },
+			                border: false,
+			                bodyPadding: 10,
+
+			                fieldDefaults: {
+			                    labelAlign: \'top\',
+			                    labelWidth: 100,
+			                    labelStyle: \'font-weight:bold\'
+			                },
+			                items: [{
+			                    xtype: \'fieldcontainer\',
+			                    fieldLabel: \'Editando campo \' + c,
+			                    labelStyle: \'font-weight:bold;padding:0\',
+			                    layout: \'hbox\',
+			                    defaultType: \'textfield\',
+
+			                    fieldDefaults: {
+			                        labelAlign: \'top\'
+			                    },
+
+			                    items: [{
+			                        flex: 1,
+			                        name: \'campo\',
+			                        afterLabelTextTpl: required,
+			                        fieldLabel: \'Campo\',
+			                        allowBlank: false,
+			                        value : c
+			                    }, {
+			                        flex: 2,
+			                        name: \'tabla\',
+			                        afterLabelTextTpl: required,
+			                        fieldLabel: \'Tabla\',
+			                        allowBlank: false,
+			                        editable: false,
+			                        value: t,
+			                        margins: \'0 0 0 5\'
+			                    }]
+			                }, {
+			                    xtype: \'textfield\',
+			                    fieldLabel: \'Tipo\',
+			                    name : "tipo",
+			                    afterLabelTextTpl: required,
+			                    allowBlank: false,
+			                    value :jObj.tipo
+			                }, {
+			                    xtype: \'textfield\',
+			                    name: \'longitud\',
+			                    fieldLabel: \'Longitud\',
+			                    afterLabelTextTpl: required,
+			                    allowBlank: false,
+			                    value : jObj.longitud
+			                }, {
+			                    xtype: \'textfield\',
+			                    name : "obligatorio",
+			                    fieldLabel: \'Obligatorio\',
+			                    afterLabelTextTpl: required,
+			                    allowBlank: true,
+			                    value : jObj.obligatorio
+			                }, {
+			                    xtype: \'textfield\',
+			                    name: \'caption\',
+			                    fieldLabel: \'Caption\',
+			                    afterLabelTextTpl: required,
+			                    allowBlank: false,
+			                    value : jObj.caption
+			                }, {
+			                    xtype: \'textfield\',
+			                    name : "descripcion",
+			                    fieldLabel: \'Descripcion\',
+			                    afterLabelTextTpl: required,
+			                    allowBlank: true,
+			                    value : jObj.descripcion
+			                }],
+
+			                buttons: [{
+			                    text: \'Cancelar\',
+			                    handler: function() {
+			                        
+			                        this.up(\'window\').destroy();
+			                    }
+			                }, {
+			                    text: \'Guardar producto\',
+			                    handler: function() {
+			                        if (this.up(\'form\').getForm().isValid()) {
+			                        	
+			                        	var params = this.up("form").getValues();
+			                        	
+			                        	params.activo = 1;
+			                        	params.compra_en_mostrador = 0;
+			                        	
+										var options = {
+											callback: function(){
+												Ext.getCmp("editarCampoQuick").destroy();
+			                        		}
+										};
+										
+			                        	POS.API.POST("api/pos/bd/columna/editar", params, options);
+
+			                        }
+
+
+			                        
+			                    }
+			                }]
+			            });
+
+			            Ext.widget(\'window\', {
+			            	id : "editarCampoQuick",
+			                title: \'Nuevo Producto\',
+			                closeAction: \'destroy\',
+			                width: 500,
+			                height: 350,
+			                layout: \'fit\',
+			                resizable: false,
+			                modal: true,
+			                items: form
+			            }).show();
+
+					}
 				</script>
 			');
+
 		function smenu($id, $obj ){
-			return '<div class="POS Boton" onClick="delExtraCol('. $id .', \''. $obj["tabla"] .'\',\''. $obj["campo"] .'\' )">Eliminar</div>';
+			return '<div class="POS Boton" onClick="delExtraCol('. $id .', \''. $obj["tabla"] .'\',\''. $obj["campo"] .'\' )">Eliminar</div>'
+					. '<div class="POS Boton" onClick="editExtraCol('. $id .', \''. $obj["tabla"] .'\',\''. $obj["campo"] .'\' , \''  . urlencode(json_encode($obj)) . '\' )">Editar</div>';
 		}
+
 		$tabla->addColRender("id_extra_params_estructura", "smenu");
 		$page->addComponent($tabla);
 
