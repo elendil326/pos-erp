@@ -227,7 +227,7 @@ class LoginComponent implements GuiComponent
 							if(is_file("static/" . IID . ".jpg")){
 								$file = "static/" . IID . ".jpg";
 							}else{
-								$file = "../../media/safe.png";
+								$file = "../media/safe.png";
 							}
 						?>
 						<div style="width: 256px; height: 265px; background-size:256px; background-repeat: no-repeat; background-image: url(<?php echo $file; ?>)">
@@ -296,7 +296,7 @@ class LoginComponent implements GuiComponent
 				</tr>
 				<tr>
 					<td align=center style="text-align:center">
-						<a href="s/v1/"><img src="../../media/1334968530_iPad.png"></a><br>
+						<a href="s/v1/"><img src="../media/1334968530_iPad.png"></a><br>
 						iPad
 					</td>
 				</tr>				

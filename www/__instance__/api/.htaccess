@@ -1,4 +1,5 @@
 RewriteEngine on
+RewriteBase /pos/__instance__/api/
 
 Options +FollowSymlinks
 

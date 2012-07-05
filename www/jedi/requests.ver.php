@@ -5,7 +5,7 @@
 	define("BYPASS_INSTANCE_CHECK", true);
 
 
-	require_once("../../../server/bootstrap.php");
+	require_once("../../server/bootstrap.php");
 	
 	$request = InstanciasController::BuscarRequests($_GET["rid"]);
 	$this_request = $request[0];

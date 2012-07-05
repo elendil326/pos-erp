@@ -13,17 +13,21 @@
 		protected static $isTrans = false;
 		protected static $transCount = 0;
 		
-                protected static $redisConection = null;
-                public static function predis($dbname, $host){
+        protected static $redisConection = null;
+        
+        public static function predis($dbname, $host){
                     if(!is_null(self::$redisConection)){
                         return;
                     }
+                    
                     Predis\Autoloader::register();
                     self::$redisConection = new Predis\Client(array(
                         'host'     => $host, 
                         'database' => $dbname
                     ));
-                }
+        }
+
+
 		public static function transBegin (){
 			
 			self::$transCount ++;

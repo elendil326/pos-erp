@@ -1,7 +1,9 @@
 
 RewriteEngine on
-RewriteBase /pos/front_ends/
-#RewriteOptions Inherit
+RewriteBase /pos/
+
+
+
 
 Options +FollowSymlinks 
 #-Indexes
@@ -11,7 +13,7 @@ Options +FollowSymlinks
 
 
 # JEDI #
-RewriteRule ^j/$							jedi/index.php?%{QUERY_STRING} [L]
+RewriteRule ^j/$										jedi/index.php?%{QUERY_STRING} [L]
 RewriteRule ^j/(.*)$									jedi/$1?%{QUERY_STRING} [L]
 
 
@@ -21,7 +23,7 @@ RewriteRule ^([a-zA-Z0-9_-]+)/static/(.*\.jpg)$			__instance__/static/$2 [L]
 
 # GERENCIA #
 RewriteRule ^([a-zA-Z0-9_-]+)/g/gerencia.js$			__instance__/gerencia/gerencia.js [L]
-RewriteRule ^([a-zA-Z0-9_-]+)/g/(.*\.php)?(.*)$			__instance__/gerencia/$2?_instance_=$1&%{QUERY_STRING} [L]
+RewriteRule ^([a-zA-Z0-9_-]+)/g/(.*\.php)?(.*)$	    __instance__/gerencia/$2?_instance_=$1&%{QUERY_STRING} [L]
 
 
 # GERENCIA #

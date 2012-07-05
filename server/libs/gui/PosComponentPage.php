@@ -52,8 +52,8 @@ class PosComponentPage extends StdComponentPage{
 			<!--
 				<script type="text/javascript" charset="utf-8" src="http://cdn.sencha.io/ext-4.1.0-gpl/ext-all.js"></script>
 			-->
+				<?php if (is_file("../css/basic.css") ) { ?><link type="text/css" rel="stylesheet" href="../css/basic.css"/><?php } ?>
 				<?php if (is_file("../../css/basic.css") ) { ?><link type="text/css" rel="stylesheet" href="../../css/basic.css"/><?php } ?>
-				<?php if (is_file("../../../css/basic.css") ) { ?><link type="text/css" rel="stylesheet" href="../../../css/basic.css"/><?php } ?>
 				<?php if (is_file("css/basic.css") ) { ?><link type="text/css" rel="stylesheet" href="css/basic.css"/><?php } ?>								
 				
 
@@ -82,7 +82,7 @@ class PosComponentPage extends StdComponentPage{
 
 
 						<a class="l">
-							<img style="margin-top:8px; display: none;" id="ajax_loader" src="../../../media/loader.gif">
+							<img style="margin-top:8px; display: none;" id="ajax_loader" src="../../media/loader.gif">
 						</a>
 
 <!-- -->
@@ -296,7 +296,7 @@ class PosComponentPage extends StdComponentPage{
 					<div class="links">
 						<a href="">Admin</a>
 						<a href="">API Publica</a>
-						<a href="front_ends/j/">Desarrolladores</a>
+						<a href="pos/j/">Desarrolladores</a>
 
 					</div>
 				</div>

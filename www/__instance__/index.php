@@ -1,6 +1,6 @@
 <?php
 
-	require_once("../../../server/bootstrap.php");
+	require_once("../../server/bootstrap.php");
 
 	if(isset($_GET["cs"]) && ($_GET["cs"] == 1)){
 		SesionController::Cerrar();
