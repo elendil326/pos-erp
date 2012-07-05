@@ -31,10 +31,10 @@
 		public static function transBegin (){
 			
 			self::$transCount ++;
-			Logger::log("Iniciando transaccion (".self::$transCount.")");
+			//Logger::log("Iniciando transaccion (".self::$transCount.")");
 			
 			if(self::$isTrans){
-				//Logger::log("Transaccion ya ha sido iniciada antes.");
+				//Logger::warn("Transaccion ya ha sido iniciada antes.");
 				return;
 			}
 			
@@ -47,31 +47,31 @@
 		public static function transEnd (  ){
 			
 			if(!self::$isTrans){
-				Logger::log("Transaccion commit pero no hay transaccion activa !!.");
+				Logger::error("Transaccion commit pero no hay transaccion activa !!.");
 				return;
 			}
 			
 			self::$transCount --;
-			Logger::log("Terminando transaccion (".self::$transCount.")");
+			//Logger::log("Terminando transaccion (".self::$transCount.")");
 			
 			if(self::$transCount > 0){
 				return;
 			}
 			global $conn;
 			$conn->CompleteTrans();
-			Logger::log("Transaccion commit !!");
+			//Logger::log("Transaccion commit !!");
 			self::$isTrans = false;
 		}
 		public static function transRollback (  ){
 			if(!self::$isTrans){
-				Logger::log("Transaccion rollback pero no hay transaccion activa !!.");
+				Logger::error("Transaccion rollback pero no hay transaccion activa !!.");
 				return;
 			}
 			
 			self::$transCount = 0;
 			global $conn;
 			$conn->FailTrans();
-			Logger::log("Transaccion rollback !");
+			Logger::warn("Transaccion rollback !");
 			self::$isTrans = false;
 		}
 		}

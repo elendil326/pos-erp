@@ -347,7 +347,7 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
         $telefono_personal2 = null
 	)
 	{
-            Logger::log("Creando nuevo cliente `$razon_social`...");
+            
             
             //Se toma la sucursal actual para asignarsela al cliente
             $actual = SesionController::Actual();
@@ -423,9 +423,8 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
             }
             catch(Exception $e)
             {
-                Logger::error("No se pudo crear al cliente: ".$e);
-                if($e->getCode()==901)
-                    throw new Exception("No se pudo crear al cliente: ".$e->getMessage());
+                Logger::error($e->getMessage());
+
                 throw new Exception("No se pudo crear al cliente, consulte a su administrador de sistema");
             }
             
@@ -433,7 +432,7 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
 
             if(!is_null($email)){
 
-                $cuerpo = "Se le ha creado una cuenta en http://pos2.labs2.caffeina.mx/front_ends/" . INSTANCE_TOKEN . "/\n\n"
+                $cuerpo = "Se le ha creado una cuenta en http://www.caffeina.mx/pos/" . INSTANCE_TOKEN . "/\n\n"
                     . "Usuario: " . $email . "\n"
                     . "Contraseña: " . $password;
 
@@ -446,7 +445,7 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
             }
 
 
-            Logger::log("Cliente creado correctamente... id=" . $cliente["id_usuario"]);
+            //Logger::log("Cliente creado correctamente... id=" . $cliente["id_usuario"]);
 
             return array( "id_cliente" => (int)$cliente["id_usuario"]);
             
@@ -481,9 +480,9 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
  	 * @param texto_extra string Comentario sobre la direccin del cliente.
  	 * @param colonia string Colonia del cliente
  	 **/
-	public static function Editar_perfil
+	private static function Editar_perfil
 	(
-                $id_cliente, 
+        $id_cliente, 
 		$calle =  null, 
 		$clasificacion_cliente =  null, 
 		$codigo_cliente = null, 
@@ -1208,12 +1207,30 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
                                 "rfc", 
                                 "sitio_web", 
                                 "telefono_personal1", 
-                                "telefono_personal2"
+                                "telefono_personal2",
+
+                                "calle",
+                                "numero_exterior",    
+                                "numero_interior",    
+                                "colonia",    
+                                "codigo_postal",    
+                                "telefono1",
+                                "telefono2",
+                                "id_ciudad",
+                                "referencia"
                                 );
+
 
         for ($i=0; $i < sizeof($indices_names); $i++) { 
             $indices[$indices_names[$i]] = array_search($indices_names[$i], $head);
         }
+        
+
+        //indices, del 0 al max_indice
+        //quitar los que esten en $indices[*]
+        $extra_params_indices = array();
+        
+
         
         $iteraciones = sizeof($data) / $soh;
 
@@ -1237,13 +1254,22 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
                         Logger::log($indices_names[$h] . " =   ($i * $soh) + " . $indices[$indices_names[$h]]  . " = " . (($i * $soh) + $indices[$indices_names[$h]] ) . " = " .   ($data[ ($i * $soh) + $indices[$indices_names[$h]] ])    );     
                     }*/
                    
-
-                    if( ($i * $soh) + $indices["razon_social"] >= $soh ){
+                    /*
+                    if( (($i * $soh) + $indices["razon_social"]) >= $soh ){
                         //ya no hay campos 
+                        Logger::log("//ya no hay campos ");
                         break;
-                    }
+                    }*/
 
-                   self::Nuevo(
+                    //buscar todos los demas parametros que no estan en 
+                    //$indicies, y mandarlos como un arreglo asociativo
+                    //a extra_params
+                    $extra_params = array();
+
+                    //indices, del 0 al max_indice
+                    //quitar los que esten en $indices[*]
+
+                    $nc = self::Nuevo(
                         $indices["razon_social"] !== FALSE ?            $data[ ($i * $soh) + $indices["razon_social"] ] : NULL,
                         $indices["clasificacion_cliente"] !== FALSE ?   $data[ ($i * $soh) + $indices["clasificacion_cliente"] ] : NULL,
                         $indices["codigo_cliente"] !== FALSE ?          $data[ ($i * $soh) + $indices["codigo_cliente"] ] : NULL,
@@ -1251,7 +1277,19 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
                         $indices["curp"] !== FALSE ?                    $data[ ($i * $soh) + $indices["curp"] ] : NULL,
                         $indices["denominacion_comercial"] !== FALSE ?  $data[ ($i * $soh) + $indices["denominacion_comercial"] ] : NULL,
                         $indices["descuento_general"] !== FALSE ?       $data[ ($i * $soh) + $indices["descuento_general"] ] : NULL,
-                        NULL, //direcciones
+                        /* direcciones */ array(
+                                array(
+                                        "calle"             => $indices["calle"] !== FALSE ? $data[ ($i * $soh) + $indices["calle"] ] : NULL,
+                                        "numero_exterior"   => $indices["numero_exterior"] !== FALSE ? $data[ ($i * $soh) + $indices["numero_exterior"] ] : NULL,    
+                                        "numero_interior"   => $indices["numero_interior"] !== FALSE ? $data[ ($i * $soh) + $indices["numero_interior"] ] : NULL,    
+                                        "colonia"           => $indices["colonia"] !== FALSE ? $data[ ($i * $soh) + $indices["colonia"] ] : NULL,    
+                                        "codigo_postal"     => $indices["codigo_postal"] !== FALSE ? $data[ ($i * $soh) + $indices["codigo_postal"] ] : NULL,    
+                                        "telefono1"         => $indices["telefono1"] !== FALSE ? $data[ ($i * $soh) + $indices["telefono1"] ] : NULL,
+                                        "telefono2"         => $indices["telefono2"] !== FALSE ? $data[ ($i * $soh) + $indices["telefono2"] ] : NULL,
+                                        "id_ciudad"         => $indices["id_ciudad"] !== FALSE ? $data[ ($i * $soh) + $indices["id_ciudad"] ] : NULL,
+                                        "referencia"        => $indices["referencia"] !== FALSE ? $data[ ($i * $soh) + $indices["referencia"] ] : NULL
+                                    )
+                            ), 
                         $indices["email"] !== FALSE ?                   $data[ ($i * $soh) + $indices["email"] ] : NULL,
                         NULL, //extra_params
                         $indices["id_cliente_padre"] !== FALSE ?        $data[ ($i * $soh) + $indices["id_cliente_padre"] ] : NULL,
@@ -1267,7 +1305,10 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
                         $indices["telefono_personal2"] !== FALSE ?      $data[ ($i * $soh) + $indices["telefono_personal2"] ] : NULL
 
                    );
-           
+                    
+
+                    ExtraParamsValoresDAO::setVals("clientes", $extra_params, $nc["id_cliente"]);
+
                 }catch(Exception $e){
                     Logger::Warn($e);
                     //continuar

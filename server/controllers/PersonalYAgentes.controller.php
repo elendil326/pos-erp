@@ -672,80 +672,85 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                     throw new Exception("Las direcciones recibidas no son un arreglo",901);
                 }
             }
+
+
             
             //se verifica que el codigo de usuario no sea repetido
             if(!is_null($codigo_usuario))
             {
-                $usuarios=UsuarioDAO::search(new Usuario(array( "codigo_usuario" => $codigo_usuario )));
-                foreach($usuarios as $usuario)
-                {
-                    if($usuario->getActivo())
-                    {
-                        Logger::error("El codigo de usuario ".$codigo_usuario." ya esta en uso");
+                $usuarioscod = UsuarioDAO::search(new Usuario(array( "codigo_usuario" => $codigo_usuario )));
+
+                if(sizeof($usuarioscod) > 0)
                         throw new Exception("El codigo de usuario ".$codigo_usuario." ya esta en uso",901);
-                    }
-                }
+
             }
+
+
+
+
 
             //se verifica que el rfc no sea repetido
             if(!is_null($rfc))
             {
-                $usuarios=UsuarioDAO::search(new Usuario(array( "rfc" => $rfc )));
+                $usuariosrfc = UsuarioDAO::search(new Usuario(array( "rfc" => $rfc, "activo" => 1 )));
 
-                foreach($usuarios as $usuario)
-                {
-                    if($usuario->getActivo())
-                    {
-                        Logger::error("El rfc ".$rfc." ya existe");
-                       // throw new InvalidDataException("El rfc ".$rfc." ya existe",901);
-                    }
+                if(sizeof($usuariosrfc) > 0) {
+                  $rfc = null;
+                  Logger::error("El rfc ".$rfc." ya existe");
+                  //throw new BusinessLogicException("El rfc ".$rfc." ya existe");
                 }
+                
             }
 
             //se verifica que la curp no sea repetida
             if(!is_null($curp))
             {
-                $usuarios=UsuarioDAO::search(new Usuario(array( "curp" => $curp )));
-                foreach($usuarios as $usuario)
-                {
-                    if($usuario->getActivo())
-                    {
-                        Logger::error("La curp ".$curp." ya existe");
-                        throw new Exception("La curp ".$curp." ya existe",901);
-                    }
+                $usuarios=UsuarioDAO::search(new Usuario(array( "curp" => $curp , "activo" => 1)));
+
+                if(sizeof($usuarios) > 0) {
+                    Logger::error("La curp ".$curp." ya existe");
                 }
+                
             }
 
+
+
+
             //se verifica que los telefonos no sean iguales
-            if(!is_null($telefono_personal1)&&$telefono_personal1==$telefono_personal2)
-            {
+            if(!is_null($telefono_personal1)&&$telefono_personal1==$telefono_personal2){
                 Logger::error("El telefono personal es igual al telefno personal alterno: ".$telefono_personal1."  ".$telefono_personal2);
-                throw new Exception("El telefono personal es igual al telefno personal alterno: ".$telefono_personal1."  ".$telefono_personal2,901);
+                //throw new Exception("El telefono personal es igual al telefno personal alterno: ".$telefono_personal1."  ".$telefono_personal2,901);
             }
+
+
+
 
             //se verifica que el correo electronico no se repita
             if(!is_null($correo_electronico))
             {
-                $usuarios=UsuarioDAO::search(new Usuario( array( "correo_electronico" => $correo_electronico ) ));
-                foreach($usuarios as $usuario)
-                {
-                    if($usuario->getActivo())
-                    {
-                        Logger::error("El correo electronico ".$correo_electronico." ya esta en uso");
-                        //throw new Exception("El correo electronico ".$correo_electronico." ya esta en uso",901);
-                    }
+
+                //todo, validar un correo 
+
+                $usuariose = UsuarioDAO::search(new Usuario( array( "correo_electronico" => $correo_electronico, "activo" => 1 ) ));
+
+                if(sizeof($usuariose) > 0){
+                    //throw new BusinessLogicException("El correo electronico ".$correo_electronico." ya esta en uso");
+                  Logger::error("El correo electronico ".$correo_electronico." ya esta en uso");
+                  $correo_electronico = null;
                 }
             }
+
+
+
 
             //se verifica como medida de seguridad que el password no sea igual al codigo de usaurio ni al correo electronico
             if(!is_null($password))
             {
                 if($password==$codigo_usuario||$password==$correo_electronico)
                 {
-                    Logger::error("El password (".$password.") no puede ser igual al codigo de usuario
-                        (".$codigo_usuario.") ni al correo electronico (".$correo_electronico.")");
-                    throw new BusinessLogicException("El password (".$password.") no puede ser igual al codigo de usuario
-                        (".$codigo_usuario.") ni al correo electronico (".$correo_electronico.")",901);
+                    Logger::error("El password (".$password.") no puede ser igual al codigo de usuario (".$codigo_usuario.") ni al correo electronico (".$correo_electronico.")");
+
+                    throw new BusinessLogicException("El password (".$password.") no puede ser igual al codigo de usuario (".$codigo_usuario.") ni al correo electronico (".$correo_electronico.")",901);
                 }
             }
 
@@ -753,6 +758,9 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             if(is_null($limite_credito))
                 $limite_credito=0;
             
+
+
+
 			if(is_null($saldo_del_ejercicio))
 				$saldo_del_ejercicio = 0;
 			
@@ -843,7 +851,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 							throw new InvalidDataException("Las direcciones deben ser un arreglo de arreglos.");
 						}
                        
-						Logger::log( "Insertando direccion..." );
+						
 
                         $address_id = DireccionController::NuevaDireccion(
 				                $calle 				= isset($d["calle"]) ? $d["calle"] : null,

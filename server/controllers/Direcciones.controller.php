@@ -88,7 +88,7 @@ class DireccionController extends ValidacionesController{
                 $telefono2=null
         )
         {
-            Logger::log("Insertando nueva direccion ...");
+          
 
 
 

@@ -21,6 +21,10 @@
 
 		$lista = ClientesController::Buscar();
 		
+
+
+		$page->addComponent(sizeof($lista["resultados"]) ." clientes.");
+		
 		$tabla = new TableComponent( 
 			array(
 				"nombre"                        => "Nombre",

@@ -1,7 +1,8 @@
 
 RewriteEngine on
-RewriteBase /pos/
 
+#RewriteBase /pos/
+RewriteBase /caffeina/www/
 
 
 

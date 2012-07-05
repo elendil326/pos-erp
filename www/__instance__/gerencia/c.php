@@ -10,34 +10,59 @@
 		// 
 		// 
 		// 
-		if(!empty($_FILES)){
-			Logger::log( "subiendo nuevo logotipo ... ");
-			move_uploaded_file ( $_FILES["logo"]["tmp_name"], "../static/".IID.".jpg" );
-			die('{"status": "ok"}');
+
+
+
+
+		if(!empty($_FILES) ){
+
+			if(!SesionController::isLoggedIn()){
+        		throw new ApiException( $this->error_dispatcher->invalidAuthToken() );
+			}
+
+			set_time_limit ( 300 );
+
+			Logger::log( "Subiendo archivo ... ");
+
+
+			if(isset($_REQUEST["type"]) == "csv"){
+				move_uploaded_file ( $_FILES["logo"]["tmp_name"], "../../../static_content/".IID.".csv" );
+				ClientesController::Importar( file_get_contents( "../../../static_content/".IID.".csv" ) );	
+
+			}
+
+
+			if(isset($_REQUEST["type"]) == "logo"){
+				move_uploaded_file ( $_FILES["logo"]["tmp_name"], "../static/".IID.".jpg" );
+				
+			}
+			
+			echo '{"status":"ok"}';
+			exit;
 		}
 
 
 
 
 		$page = new GerenciaTabPage(  );
-		$page->addComponent("<script>Ext.Ajax.timeout = 3 * 60 * 1000;/* 3 minutos */ </script>");
+		$page->addComponent("<script>Ext.Ajax.timeout = 5 * 60 * 1000; /* 5 minutos */ </script>");
 		$page->addComponent(new TitleComponent("Configuracion de POS ERP"));
 
 		
 
 
-
-
-
-
 		$page->nextTab("Importar");
 		$page->addComponent( new TitleComponent("Importar datos CSV/AdminPAQ/Excel", 2));
-		//$page->addComponent("&iquest; Como debo formar el archivo CSV ?");
+		$page->addComponent(" <div id='csvup'></div>");
 
+
+		//$page->addComponent("&iquest; Como debo formar el archivo CSV ?");
+/*
 		$importarClientes = new FormComponent();
 		$importarClientes->addField("raw_content", "Contenido de la archivo CSV", "textarea");
 		$importarClientes->addApiCall("api/clientes/importar/", "POST");
 		$page->addComponent( $importarClientes );
+		*/
 		$page->addComponent("<hr>");
 
 
@@ -139,16 +164,21 @@
 		
 		
 		$page->nextTab( "Personalizar" );
-		//$page->partialRender();
-
-		$page->addComponent("<h2>Logotipo</h2>
-		<p>Una imagen principal de 256x256 pixeles.</p>
-		<div id='logo256px'></div>
-		<script type='text/javascript' charset='utf-8'>
+		$page->addComponent(" <div id='logo256up'></div>
+			<script type='text/javascript' charset='utf-8'>
 			Ext.onReady(function(){
 
+
+
+
+
+
+
+
+
+
 				    Ext.create('Ext.form.Panel', {
-				        renderTo: 'logo256px',
+				        renderTo: 'logo256up',
 				        width: '100%',
 				        frame: false,
 				        bodyPadding: '10 10 0',
@@ -170,6 +200,15 @@
 				            /*buttonConfig: {
 				                iconCls: 'upload-icon'
 				            }*/
+				        },{
+				            xtype: 'hiddenfield',
+				            value : 'logo',
+				            name: 'type'
+				        },
+				        {
+				            xtype: 'hiddenfield',
+				            value : Ext.util.Cookies.get('at'),
+				            name: 'auth_token'
 				        }],
 
 				        buttons: [{
@@ -180,8 +219,12 @@
 				                    form.submit({
 				                        url: 'c.php',
 				                        waitMsg: 'Subiendo...',
+				                        timeout : 60 * 10,
 				                        success: function(fp, o) {
 				                            msg('Success', 'Processed file ' + o.result.file + ' on the server');
+				                        },
+				                        failure : function(fp,o){
+				                        	msg('Error!', 'Perror horribleserver');
 				                        }
 				                    });
 				                }
@@ -194,8 +237,93 @@
 				        }]
 				    });
 
+
+
+					Ext.create('Ext.form.Panel', {
+				        renderTo: 'csvup',
+				        width: '100%',
+				        frame: false,
+				        bodyPadding: '10 10 0',
+
+				        defaults: {
+				            anchor: '100%',
+				            allowBlank: false,
+				            msgTarget: 'side',
+				            labelWidth: 50
+				        },
+
+				        items: [{
+				            xtype: 'filefield',
+				            id: 'form-filecsv',
+				            emptyText: 'Seleccione una imagen',
+				            fieldLabel: 'Imagen',
+				            name: 'logo',
+				            buttonText: 'Buscar archivo',
+				            /*buttonConfig: {
+				                iconCls: 'upload-icon'
+				            }*/
+				        },{
+				            xtype: 'hiddenfield',
+				           	value : 'csv',
+				            name: 'type'
+				        },
+				        {
+				            xtype: 'hiddenfield',
+				            value : Ext.util.Cookies.get('at'),
+				            name: 'auth_token'
+				        }],
+
+				        buttons: [{
+				            text: 'Subir archivo',
+				            handler: function(){
+				                var form = this.up('form').getForm();
+				                if(form.isValid()){
+				                    form.submit({
+				                        url: 'c.php',
+				                        waitMsg: 'Subiendo...',
+				                        timeout : 60 * 10,
+				                        success: function(fp, o) {
+				                            msg('Success', 'Processed file ' + o.result.file + ' on the server');
+				                        },
+				                        failure : function(fp,o){
+				                        	msg('Error!', 'Perror horribleserver');
+				                        }
+				                    });
+				                }
+				            }
+				        },{
+				            text: 'Cancelar',
+				            handler: function() {
+				                this.up('form').getForm().reset();
+				            }
+				        }]
+				    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+				    
+
 				});
+
+
+
+
+
 		</script>");
+
+		
 
 
 
