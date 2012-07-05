@@ -158,9 +158,9 @@ class ImpresionesController {
 		 self::roundRect($pdf, self::puntos_cm(2), self::puntos_cm(5.4), self::puntos_cm(16.2), self::puntos_cm(3.05));
 		
 		
-		$qr_file_name = self::getQrCodeFromGoogle("http://pos2.labs2.caffeina.mx/front_ends/");		
+		$qr_file_name = self::getQrCodeFromGoogle("http://www.caffeina.mx/pos/");		
 
-		$pdf->addJpegFromFile("../../../../static_content/qr_codes/" . $qr_file_name, 
+		$pdf->addJpegFromFile("../../../static_content/qr_codes/" . $qr_file_name, 
 				self::puntos_cm(2), 
 				self::puntos_cm(2.45),
 				self::puntos_cm(2.8));
@@ -799,7 +799,7 @@ class ImpresionesController {
 
 		$file_name = md5($string);
 		
-	    $file_full_path = "../../../../static_content/qr_codes/" . $file_name . ".jpg";
+	    $file_full_path = "../../../static_content/qr_codes/" . $file_name . ".jpg";
 
 	    if (is_file($file_full_path)) {
 	        return $file_name . ".jpg";
@@ -807,7 +807,7 @@ class ImpresionesController {
 
 	    //el codigo no existe, sacarlo de google
 	    //primero tengo que ver si es posible que escriba en la carpeta de qr codes
-	    if (!is_writable("../../../../static_content/qr_codes/")) {
+	    if (!is_writable("../../../static_content/qr_codes/")) {
 	        Logger::error("No puedo escribir en la carpeta de QRCODES !");
 	        return null;
 	    }
@@ -837,7 +837,7 @@ class ImpresionesController {
 
 	    //la imagen esta en png, hay que convertirla a jpg para que no haya pedos en el pdf
 	    $image = imagecreatefrompng($file_full_path);
-	    imagejpeg($image, "../../../../static_content/qr_codes/" . $file_name . ".jpg", 100);
+	    imagejpeg($image, "../../../static_content/qr_codes/" . $file_name . ".jpg", 100);
 	    imagedestroy($image);
 
 	    return $file_name . ".jpg";
