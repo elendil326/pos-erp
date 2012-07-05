@@ -1,6 +1,6 @@
 RewriteEngine on
-#RewriteBase /pos/__instance__/api/
-RewriteBase /caffeina/www/__instance__/api/
+RewriteBase /pos/__instance__/api/
+#RewriteBase /caffeina/www/__instance__/api/
 
 Options +FollowSymlinks
 

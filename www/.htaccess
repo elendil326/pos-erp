@@ -1,10 +1,7 @@
 
 RewriteEngine on
 
-#RewriteBase /pos/
-RewriteBase /caffeina/www/
-
-
+RewriteBase /pos/
 
 Options +FollowSymlinks 
 #-Indexes
