@@ -2,7 +2,7 @@
 
 	define("I_AM_SUCURSAL", true);
 	
-	require_once( "../../../../../server/bootstrap.php" );
+	require_once( "../../../../server/bootstrap.php" );
 
 	Logger::log(">> sucursal(v1)index.php <<");
 	

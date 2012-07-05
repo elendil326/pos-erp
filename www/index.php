@@ -41,7 +41,7 @@
 	            </ul>
 	            <div class="pull-right">
 	              <ul class="nav secondary-nav">
-	              	<li><a href="fe/j/" id="">Staff</a></li>
+	              	<li><a href="j/" id="">Staff</a></li>
 	                <li><a href="http://labs2.caffeina.mx/public/apis/?repname=pos" id="">API</a></li>
 	                <li><a href="mailto:contacto@caffeina.mx" id="">Contacto</a></li>	
 	              </ul>
