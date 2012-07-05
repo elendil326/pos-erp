@@ -20,19 +20,19 @@
         		throw new ApiException( $this->error_dispatcher->invalidAuthToken() );
 			}
 
-			set_time_limit ( 300 );
+			set_time_limit ( 600 );
 
 			Logger::log( "Subiendo archivo ... ");
 
 
-			if(isset($_REQUEST["type"]) == "csv"){
+			if($_REQUEST["type"] == "csv"){
 				move_uploaded_file ( $_FILES["logo"]["tmp_name"], "../../../static_content/".IID.".csv" );
 				ClientesController::Importar( file_get_contents( "../../../static_content/".IID.".csv" ) );	
 
 			}
 
 
-			if(isset($_REQUEST["type"]) == "logo"){
+			if($_REQUEST["type"] == "logo"){
 				move_uploaded_file ( $_FILES["logo"]["tmp_name"], "../static/".IID.".jpg" );
 				
 			}
@@ -123,6 +123,7 @@
 
 		function username($id_usuario){
 			$u = UsuarioDAO::getBypK($id_usuario);
+			if(is_null($u)) return "ERROR";
 			return  $u->getNombre();
 		}
 		function ft($time){
@@ -221,10 +222,10 @@
 				                        waitMsg: 'Subiendo...',
 				                        timeout : 60 * 10,
 				                        success: function(fp, o) {
-				                            msg('Success', 'Processed file ' + o.result.file + ' on the server');
+				                            console.log('ok', fp, o);
 				                        },
 				                        failure : function(fp,o){
-				                        	msg('Error!', 'Perror horribleserver');
+				                        	console.log('error', fp, o);
 				                        }
 				                    });
 				                }
@@ -283,10 +284,10 @@
 				                        waitMsg: 'Subiendo...',
 				                        timeout : 60 * 10,
 				                        success: function(fp, o) {
-				                            msg('Success', 'Processed file ' + o.result.file + ' on the server');
+				                          console.log('error', fp, o);
 				                        },
 				                        failure : function(fp,o){
-				                        	msg('Error!', 'Perror horribleserver');
+				                        	console.log('error', fp, o);
 				                        }
 				                    });
 				                }

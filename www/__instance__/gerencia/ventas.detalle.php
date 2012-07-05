@@ -36,12 +36,32 @@
 		return $foo;  
 	}
 
+
+
+
+
+
+
+
+
+
+
+
+
 	$page = new GerenciaComponentPage();
 
 	//
 	// Requerir parametros
 	// 
 	$page->requireParam("vid", "GET", "Esta venta no existe.");
+	
+	
+
+
+
+	VentasController::ActualizarTotales($_GET["vid"]);
+	
+
 	$esta_venta = VentaDAO::getByPK($_GET["vid"]);
 
 
@@ -88,7 +108,7 @@
 	}
 
 
-	$btn = new MenuItem("<img src='../../../media/iconos/printer.png'> Imprimir", null);
+	$btn = new MenuItem("<img src='../../media/iconos/printer.png'> Imprimir", null);
 	$btn->addOnClick("i", "function i(){window.location = 'ventas.detalle.imprimir.php?vid=" . $esta_venta->getIdVenta() . "';}");
 	$menu->addMenuItem($btn);
 	$page->addComponent($menu);
@@ -124,6 +144,9 @@
 	$page->addComponent($form);
 
 
+	function function_importe($foo, $obj){
+		return FormatMoney( $obj["precio"]  * $obj["cantidad"]);
+	}
 
 
 	if( sizeof($productos = VentaProductoDAO::search(new VentaProducto(array("id_venta" => $_GET["vid"])))) > 0 ){
@@ -134,9 +157,11 @@
 				"id_producto" => "Producto",
 				"cantidad" => "Cantidad",
 				"precio" => "Precio Unitario",
+				"id_unidad" => "Importe"
 			), $productos);
 
 			
+			$tabla->addColRender("importe", 	"function_importe");
 			$tabla->addColRender("id_producto", 	"funcion_producto");
 			//$tabla->addColRender("cantidad", 		"FormatMoney");
 			$tabla->addColRender("precio", "FormatMoney");

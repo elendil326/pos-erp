@@ -24,9 +24,14 @@ class ExtraParamsValoresDAO extends ExtraParamsValoresDAOBase
 
 
   public static function setVals($tabla, $extra_params, $fk_id){
+
+
+
       if(is_null($extra_params)){
         return false;
       }
+
+      if(sizeof($extra_params) == 0) return false;
       
       //buscar esa madre
       try{
@@ -65,6 +70,10 @@ class ExtraParamsValoresDAO extends ExtraParamsValoresDAOBase
         string(1) "1"
       }
       */
+      if(is_array($extra_params)){
+        $extra_params = (object)$extra_params;
+      }
+
 
       for ($nc=0; $nc < sizeof($ncols); $nc++) { 
 

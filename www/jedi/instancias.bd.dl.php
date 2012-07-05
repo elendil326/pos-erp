@@ -2,7 +2,7 @@
 
 	define("BYPASS_INSTANCE_CHECK", true);
 
-	require_once("../../../server/bootstrap.php");
+	require_once("../../server/bootstrap.php");
 
 function OutputFile($file, $name, $mime_type='')
 {
@@ -156,7 +156,7 @@ for($i = 0; $i < sizeof($ids); $i++){
 	$r = InstanciasController::BuscarPorId( $ids[$i] );
 
 	$file_name = $prefix . 'ibddl'.$ids[$i] . ".sql";
-	$destiny_file = '../../../static_content/db_backups/'; 
+	$destiny_file = '../../static_content/db_backups/'; 
 
 	array_push($files, $destiny_file . $file_name );
 	array_push($file_id, $ids[$i]  );

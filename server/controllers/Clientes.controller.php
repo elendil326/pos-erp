@@ -420,6 +420,10 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
 								null,
 								$telefono_personal1,
 								$telefono_personal2);
+                
+
+                ExtraParamsValoresDAO::setVals("clientes", $extra_params, $cliente["id_usuario"]);
+
             }
             catch(Exception $e)
             {
@@ -1223,13 +1227,28 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 
         for ($i=0; $i < sizeof($indices_names); $i++) { 
             $indices[$indices_names[$i]] = array_search($indices_names[$i], $head);
+
+            /*if( $indices[$indices_names[$i]] !== FALSE ) 
+                    Logger::log("there is NORMAL param at $i => " . $head[ $indices[$indices_names[$i]] ]  );*/
+
         }
         
 
         //indices, del 0 al max_indice
         //quitar los que esten en $indices[*]
         $extra_params_indices = array();
-        
+
+        for ($i=0; $i < sizeof($head); $i++) { 
+            
+            if(array_search($i, $indices) !== FALSE )    continue;
+
+            array_push($extra_params_indices, $i);
+
+            /*Logger::log("there is extra param at $i => " . $head[ $i ] );*/
+        }
+
+            
+            
 
         
         $iteraciones = sizeof($data) / $soh;
@@ -1265,9 +1284,11 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
                     //$indicies, y mandarlos como un arreglo asociativo
                     //a extra_params
                     $extra_params = array();
-
-                    //indices, del 0 al max_indice
-                    //quitar los que esten en $indices[*]
+                    for ($j=0; $j < sizeof($extra_params_indices); $j++) { 
+                        $extra_params[ $head[ $extra_params_indices[ $j ] ] ] = $data[ ($i * $soh) + $extra_params_indices[ $j ] ];
+                    }
+                    
+                    
 
                     $nc = self::Nuevo(
                         $indices["razon_social"] !== FALSE ?            $data[ ($i * $soh) + $indices["razon_social"] ] : NULL,
@@ -1291,7 +1312,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
                                     )
                             ), 
                         $indices["email"] !== FALSE ?                   $data[ ($i * $soh) + $indices["email"] ] : NULL,
-                        NULL, //extra_params
+                        /* extra_params */  $extra_params, 
                         $indices["id_cliente_padre"] !== FALSE ?        $data[ ($i * $soh) + $indices["id_cliente_padre"] ] : NULL,
                         $indices["id_moneda"] !== FALSE ?               $data[ ($i * $soh) + $indices["id_moneda"] ] : NULL,
                         $indices["id_tarifa_compra"] !== FALSE ?        $data[ ($i * $soh) + $indices["id_tarifa_compra"] ] : NULL,
@@ -1307,7 +1328,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
                    );
                     
 
-                    ExtraParamsValoresDAO::setVals("clientes", $extra_params, $nc["id_cliente"]);
+                    
 
                 }catch(Exception $e){
                     Logger::Warn($e);
