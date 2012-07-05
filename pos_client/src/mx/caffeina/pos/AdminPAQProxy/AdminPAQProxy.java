@@ -9,6 +9,8 @@ import java.util.*;
 import java.text.DateFormat;
 
 
+
+
 public class AdminPAQProxy extends HttpResponder{
 
 	private String ruta;
@@ -30,11 +32,149 @@ public class AdminPAQProxy extends HttpResponder{
         // https://127.0.0.1:16001/json/adminpaq/sdk/?param=1
         // String s = searchInQuery("param") ; // s = "1";
 
-        String s = searchInQuery("esposa") ;
+        //------DATOS OBLIGATORIOS
+        String params = "";
+        String numEmpresa = searchInQuery("numEmpresa");
+        String path = searchInQuery("path");
+        String accion = searchInQuery("accion");
+        String numDatos = searchInQuery("numDatos");
+        Calendar c = new GregorianCalendar();
+        String fechaActual = (c.get(Calendar.MONTH) >= 9 ? "" + (c.get(Calendar.MONTH) + 1) : "0" + (c.get(Calendar.MONTH) + 1)) + "/" + (c.get(Calendar.DATE) >= 10 ? "" + c.get(Calendar.DATE) : "0" + c.get(Calendar.DATE)) + "/" + Integer.toString(c.get(Calendar.YEAR));
+        String fechaActual2 = (c.get(Calendar.DATE) >= 10 ? "" + c.get(Calendar.DATE) : "0" + c.get(Calendar.DATE)) + "/" + (c.get(Calendar.MONTH) >= 9 ? "" + (c.get(Calendar.MONTH) + 1) : "0" + (c.get(Calendar.MONTH) + 1)) + "/" + Integer.toString(c.get(Calendar.YEAR));
 
-        System.out.println(s);
+        
+        if(numEmpresa.equals(null)){
+            return "{\"success\"false\"reason\":\"falta numero de empresa\"}"; 
+        }
 
-        return "{ regresa un json ! }"; 
+        if(numDatos.equals(null)){
+            return "{\"success\"false\"reason\":\"falta indicar el numero de movimientos a realizar.\"}"; 
+        }
+
+        switch(Integer.parseInt(accion)){
+            //alta de un cliente 
+            case 1 :                                          
+                String codigo_cliente = searchInQuery("codCteProv"); //2 OK
+
+                if(codigo_cliente.equals(null)){
+                    return "{\"success\"false\"reason\":\"falta indicar el numero de cliente.\"}"; 
+                }
+
+                String razon_social = searchInQuery("razonSocial");; //3 OK
+
+                if(razon_social.equals(null)){
+                    return "{\"success\"false\"reason\":\"falta indicar la razon social.\"}"; 
+                }
+
+                String rfc = searchInQuery("rfc");//4 OK
+
+                if(rfc.equals(null)){
+                    return "{\"success\"false\"reason\":\"falta indicar el RFC.\"}"; 
+                }
+
+                String curp = searchInQuery("curp");;//5
+
+                if(curp.equals(null)){
+                    razon_social = "";
+                }    
+
+                String denominacion_comercial = searchInQuery("denCom");//6
+
+                if(denominacion_comercial.equals(null)){
+                    denominacion_comercial = "";
+                } 
+
+                String representante_legal = searchInQuery("repLegal");//7
+
+                if(representante_legal.equals(null)){
+                    representante_legal = "";
+                } 
+
+                String venta_credito = searchInQuery("ventaCredito");//8
+
+                if(venta_credito.equals(null)){
+                    venta_credito = "";
+                }
+
+                String tipo_cliente = searchInQuery("tipo");//9
+
+                if(tipo_cliente.equals(null)){
+                    return "{\"success\"false\"reason\":\"falta indicar el tipo de CteProv.\"}"; 
+                }
+
+                String estatus = searchInQuery("status");//10
+
+                if(estatus.equals(null)){
+                    return "{\"success\"false\"reason\":\"falta indicar el estatus del CteProv.\"}"; 
+                }
+
+                String limite_credito = searchInQuery("limiteCredito");//11
+
+                if(limite_credito.equals(null)){
+                     limite_credito = "0";
+                }
+
+                String fecha_alta = fechaActual2;//12
+                
+                params = path + " " + numEmpresa + " " + codigo_cliente + " " + razon_social + " " + rfc + " " + curp + " " + denominacion_comercial + " " + representante_legal + " " + venta_credito + " " + tipo_cliente + " " + estatus + " " + limite_credito + " " + fecha_alta;
+            
+                break;
+
+            case 2 :               
+                String serieDocumento = searchInQuery("serieDocumento");
+
+                if(serieDocumento.equals(null)){
+                    return "{\"success\"false\"reason\":\"falta indicar la serie del documento.\"}"; 
+                }
+
+                String fechaDocumento = fechaActual; //mm/dd/aaaa                
+
+                String codCteProv = searchInQuery("codCteProv");
+
+                if(codCteProv.equals(null)){
+                    return "{\"success\"false\"reason\":\"falta indicar el codigo del CteProv.\"}"; 
+                }
+
+                String codProdSer = searchInQuery("codProdSer");
+
+                if(codProdSer.equals(null)){
+                    return "{\"success\"false\"reason\":\"falta indicar el codigo del ProdSer.\"}"; 
+                }
+
+                String codAlmacen = searchInQuery("docAlmacen");
+
+                if(codAlmacen.equals(null)){
+                    return "{\"success\"false\"reason\":\"falta indicar el codigo del Almacen.\"}"; 
+                }
+
+                String numUnidades = searchInQuery("numUnidades");
+        
+                if(numUnidades.equals(null)){
+                    return "{\"success\"false\"reason\":\"falta indicar el numero de unidades.\"}"; 
+                }
+
+                String precioUnitario = searchInQuery("precioUnitario");
+
+                if(precioUnitario.equals(null)){
+                    return "{\"success\"false\"reason\":\"falta indicar el precio unitario.\"}"; 
+                }
+
+                String codConcepto = searchInQuery("dodConcepto"); ////(Tabla MGW10006) 5 Factura de contado, 4 Factura a credito, 21 Compra a Proveedor 
+
+                if(codConcepto.equals(null)){
+                    return "{\"success\"false\"reason\":\"falta indicar el codigo del concepto.\"}"; 
+                }
+
+                params = path + " " + numEmpresa + " " + serieDocumento + " " + fechaDocumento + " " + codCteProv + " " + codProdSer + " " + codAlmacen + " " + numUnidades + " " + precioUnitario + " " + codConcepto;
+
+                break;                                    
+        }
+
+        TestRuntime test = new TestRuntime(params);
+
+        //System.out.println(s);
+
+        return "{\"success\" : " + test.success + " \"reason\":\"" + test.reason + "\"}"; 
         
     }
 
@@ -757,4 +897,97 @@ public class AdminPAQProxy extends HttpResponder{
 
 	
 
+}
+
+
+
+class TestRuntime {
+
+    public String code = "";
+    public Boolean success = false;
+    public String reason = "";
+
+    /**
+     * Creates a new instance of PruebaRuntime
+     */
+    public TestRuntime(String params) {
+
+        
+
+        //System.out.println("Se ejecutara : " + params);
+
+        try {
+            // Se lanza el ejecutable. 
+            Process p = Runtime.getRuntime().exec(params);
+
+            // Se obtiene el stream de salida del programa 
+            InputStream is = p.getInputStream();
+
+            /*
+             * Se prepara un bufferedReader para poder leer la salida más
+             * comodamente.
+             */
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+
+            // Se lee la primera linea 
+            String aux = br.readLine();
+
+            // Mientras se haya leido alguna linea 
+            while (aux != null) {
+                // Se escribe la linea en pantalla 
+                System.out.println(aux);
+
+                // y se lee la siguiente. 
+                aux = br.readLine();
+            }
+
+            StringTokenizer tokens = new StringTokenizer(aux);
+
+            Boolean param = true;
+            String token = "";
+            while(tokens.hasMoreTokens()){
+            
+                token = tokens.nextToken();
+                
+                if(param == true){                                
+                    
+                    this.code = token;
+                    
+                    if(token.equals("100")){                    
+                        this.success = true;
+                        this.reason = "Ok";
+                        break;
+                    }else{
+                        this.success = false;   
+                        token = "Error " + token + ",";;
+                    }                
+                }
+
+                this.reason += (token + " ");
+                param = false;
+            }
+
+            //------------------------------------------
+
+            /*File archivo = new File("C:\\sdk_adminpaq\\cteprov");
+            FileReader fr = new FileReader(archivo);
+            br = new BufferedReader(fr);
+            
+            String linea = br.readLine();
+            
+            System.out.println(linea);*/
+
+            //------------------------------------------
+
+
+        } catch (Exception e) {
+            // Excepciones si hay algún problema al arrancar el ejecutable o al leer su salida.*/
+            e.printStackTrace();
+        }
+    }
+
+    TestRuntime() {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+    
 }
