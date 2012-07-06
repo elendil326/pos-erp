@@ -73,7 +73,7 @@ public class AdminPAQProxy extends HttpResponder{
             a = Integer.parseInt(accion);
 
         }catch(NumberFormatException e){
-            r = "{\"success\" : false, \"reason\":\"Indique el numero de movimientos a realizar.\"}";
+            r = "{\"success\" : false, \"reason\":\"Indique el numero de movimientos a realizar, mas informacion - " + e.getMessage() + " \"}";
             System.out.println(r);
             return r;
         }
@@ -210,7 +210,7 @@ public class AdminPAQProxy extends HttpResponder{
                     return r;
                 }
 
-                String codConcepto = searchInQuery("dodConcepto"); ////(Tabla MGW10006) 5 Factura de contado, 4 Factura a credito, 21 Compra a Proveedor 
+                String codConcepto = searchInQuery("codConcepto"); ////(Tabla MGW10006) 5 Factura de contado, 4 Factura a credito, 21 Compra a Proveedor 
 
                 if(codConcepto == null){
                     r = "{\"success\" : false, \"reason\":\"falta indicar el codigo del concepto.\"}"; 
@@ -237,7 +237,7 @@ public class AdminPAQProxy extends HttpResponder{
 
         //System.out.println(s);
 
-        r = "{\"success\" : " + test.success + " \"reason\":\"" + test.reason + "\"}"; 
+        r = "{\"success\" : " + test.success + ", \"reason\":\"" + test.reason + "\"}"; 
         System.out.println(r);
 
         System.out.println("--- 8 ---");
@@ -1050,7 +1050,10 @@ class TestRuntime {
 
         } catch (Exception e) {
             // Excepciones si hay algún problema al arrancar el ejecutable o al leer su salida.*/
-            e.printStackTrace();
+            //e.printStackTrace();
+            this.success = false;
+            this.code = "300";
+            this.reason = "Error : " + e.getMessage().replace("\"", "'");
         }
     }
 
