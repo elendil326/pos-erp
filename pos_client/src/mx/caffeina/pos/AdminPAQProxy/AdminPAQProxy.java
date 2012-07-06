@@ -1007,17 +1007,18 @@ class TestRuntime {
 
             // Se lee la primera linea 
             String aux = br.readLine();
+            System.out.println("Se leyo : " + aux);
 
             System.out.println("--- 6.2 ---");
 
             // Mientras se haya leido alguna linea 
-            while (aux != null) {
+            /*while (aux != null) {
                 // Se escribe la linea en pantalla 
                 System.out.println(aux);
 
                 // y se lee la siguiente. 
                 aux = br.readLine();
-            }
+            }*/
 
             System.out.println("--- 6.3 ---");
 
