@@ -176,7 +176,7 @@ Class PosErp{
 
 
 
-        $this->BeforeCall();
+        //$this->BeforeCall();
 
 
 
