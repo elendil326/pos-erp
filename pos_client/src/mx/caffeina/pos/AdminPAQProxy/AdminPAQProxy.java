@@ -1064,8 +1064,8 @@ class TestRuntime {
                     if(token.equals("100")){   
                         System.out.println("-->ENTRO<--");                 
                         this.success = true;
-                        this.reason = "Ok";
-                        break;
+                        //this.reason = "Ok";
+                        //break;
                     }else{
                         System.out.println("-->NO ENTRO<--");        
                         this.success = false;   
