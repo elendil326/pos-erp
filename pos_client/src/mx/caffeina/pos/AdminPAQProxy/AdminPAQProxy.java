@@ -1058,6 +1058,8 @@ class TestRuntime {
                 if(param == true){                                
                     
                     this.code = token;
+
+                    System.out.println("-->" + token + "<--");
                     
                     if(token == "100"){                    
                         this.success = true;
