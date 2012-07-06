@@ -79,7 +79,7 @@ public class AdminPAQProxy extends HttpResponder{
             a = Integer.parseInt(accion);
 
         }catch(NumberFormatException e){
-            r = "{\"success\" : false, \"reason\":\"Indique el numero de movimientos a realizar, mas informacion - " + e.getMessage() + " \"}";
+            r = "{\"success\" : false, \"reason\":\"Indique el numero de movimientos a realizar, mas informacion - " + e.getMessage().replace("\"", "'") + " \"}";
             System.out.println(r);
             return r;
         }
@@ -150,7 +150,7 @@ public class AdminPAQProxy extends HttpResponder{
                     a = Integer.parseInt(tipo_cliente);
 
                 }catch(NumberFormatException e){
-                    r = "{\"success\" : false, \"reason\":\"El tipo de CteProv debe de ser un valor entero - " + e.getMessage() + " \"}";
+                    r = "{\"success\" : false, \"reason\":\"El tipo de CteProv debe de ser un valor entero - " + e.getMessage().replace("\"", "'") + " \"}";
                     System.out.println(r);
                     return r;
                 }
@@ -254,7 +254,7 @@ public class AdminPAQProxy extends HttpResponder{
                     b = Integer.parseInt(codConcepto);
 
                 }catch(NumberFormatException e){
-                    r = "{\"success\" : false, \"reason\":\"El codigo de concepto debe de ser un valor entero - " + e.getMessage() + " \"}";
+                    r = "{\"success\" : false, \"reason\":\"El codigo de concepto debe de ser un valor entero - " + e.getMessage().replace("\"", "'") + " \"}";
                     System.out.println(r);
                     return r;
                 }
