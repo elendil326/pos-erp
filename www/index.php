@@ -252,9 +252,9 @@
 
 	          <ul class="links">
 	            <li class="first">&copy; 2012 Caffeina Software |</li>
-	            <li><a href="http://www3.caffeina.mx/">Acerca de caffeina</a></li>
-	            <li><a href="http://www3.caffeina.mx/">Contacto</a></li>
-	            <li><a href="http://www3.caffeina.mx/art.php?cid=3">Ayuda</a></li>
+	            <li><a href="http://www.caffeina.mx/">Acerca de caffeina</a></li>
+	            <li><a href="http://www.caffeina.mx/">Contacto</a></li>
+	            <li><a href="http://www.caffeina.mx/art.php?cid=3">Ayuda</a></li>
 	            <li><a href="http://labs2.caffeina.mx/public/apis/?repname=pos">API</a></li>	
 	          </ul>
 	        </div>

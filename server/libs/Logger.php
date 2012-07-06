@@ -22,7 +22,8 @@ class Logger
     		
     	}
         if(!file_exists($file)){
-            die("POS: Unable to open logfile:" .$file );
+            
+            return array();
         }
 
 

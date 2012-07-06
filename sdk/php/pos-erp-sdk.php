@@ -13,7 +13,7 @@ Class PosErp{
     private function __construct($i_token){
         $this->waiting = false;
         $this->instance_token = $i_token;
-        $this->url = "http://pos2.labs2.caffeina.mx/";
+        $this->url = "http://www.caffeina.mx/pos/";
         $this->incoming_login_results = false;
         $this->at = null;
     }
@@ -182,14 +182,14 @@ Class PosErp{
 
 
         if($method === "POST"){
-           $r = $this->postRequest($this->url . "/front_ends/" . $this->instance_token . "/" . $address , $params );
+           $r = $this->postRequest($this->url .  $this->instance_token . "/" . $address , $params );
             return $this->AfterCall( $r['content'] );
 
 
         }else if($method === "GET"){
             //convert params to ?x=y& format
            $params = http_build_query($params);
-           $r = file_get_contents($this->url . "/front_ends/" . $this->instance_token . "/" . $address . "/?" . $params);
+           $r = file_get_contents($this->url .  $this->instance_token . "/" . $address . "/?" . $params);
            return $this->AfterCall( $r );
 
 
