@@ -224,6 +224,31 @@ public class AdminPAQProxy extends HttpResponder{
                     return r;
                 }
 
+                int b = 0;
+
+                try{
+
+                    b = Integer.parseInt(codConcepto);
+
+                }catch(NumberFormatException e){
+                    r = "{\"success\" : false, \"reason\":\"El codigo de concepto debe de ser un valor entero - " + e.getMessage() + " \"}";
+                    System.out.println(r);
+                    return r;
+                }
+
+                switch(b){
+                    case 4: //factura a credito
+                    break;
+                    case 5: //factura de contado
+                    break;
+                    case 21: //compra a proveedor
+                    break;
+                    default :
+                        r = "{\"success\" : false, \"reason\":\"Codigo de concepto invalido\"}";
+                        System.out.println(r);
+                        return r; 
+                }
+
                 params = path + " " + numEmpresa + " " + serieDocumento + " " + fechaDocumento + " " + codCteProv + " " + codProdSer + " " + codAlmacen + " " + numUnidades + " " + precioUnitario + " " + codConcepto;
 
                 break;   
