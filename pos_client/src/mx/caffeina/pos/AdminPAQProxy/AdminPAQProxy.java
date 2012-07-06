@@ -49,7 +49,7 @@ public class AdminPAQProxy extends HttpResponder{
         
         System.out.println("--- 2 ---");
 
-        if(numEmpresa != null){            
+        if(numEmpresa == null){            
             r = "{\"success\" : false, \"reason\":\"falta numero de empresa\"}"; 
             System.out.println(r);
             return r;
@@ -57,7 +57,7 @@ public class AdminPAQProxy extends HttpResponder{
 
         System.out.println("--- 3 ---");
 
-        if(numDatos != null){
+        if(numDatos == null){
             r = "{\"success\" : false, \"reason\":\"falta indicar el numero de movimientos a realizar.\"}";
             System.out.println(r);
             return r;
@@ -85,7 +85,7 @@ public class AdminPAQProxy extends HttpResponder{
             case 1 :                                          
                 String codigo_cliente = searchInQuery("codCteProv"); //2 OK
 
-                if(codigo_cliente != null){
+                if(codigo_cliente == null){
                     r = "{\"success\" : false, \"reason\":\"falta indicar el numero de cliente.\"}"; 
                     System.out.println(r);
                     return r;
@@ -93,7 +93,7 @@ public class AdminPAQProxy extends HttpResponder{
 
                 String razon_social = searchInQuery("razonSocial");; //3 OK
 
-                if(razon_social != null){
+                if(razon_social == null){
                     r = "{\"success\" : false, \"reason\":\"falta indicar la razon social.\"}"; 
                     System.out.println(r);
                     return r;
@@ -101,7 +101,7 @@ public class AdminPAQProxy extends HttpResponder{
 
                 String rfc = searchInQuery("rfc");//4 OK
 
-                if(rfc != null){
+                if(rfc == null){
                     r = "{\"success\" : false, \"reason\":\"falta indicar el RFC.\"}"; 
                     System.out.println(r);
                     return r;
@@ -109,31 +109,31 @@ public class AdminPAQProxy extends HttpResponder{
 
                 String curp = searchInQuery("curp");;//5
 
-                if(curp != null){
+                if(curp == null){
                     razon_social = "";
                 }    
 
                 String denominacion_comercial = searchInQuery("denCom");//6
 
-                if(denominacion_comercial != null){
+                if(denominacion_comercial == null){
                     denominacion_comercial = "";
                 } 
 
                 String representante_legal = searchInQuery("repLegal");//7
 
-                if(representante_legal != null){
+                if(representante_legal == null){
                     representante_legal = "";
                 } 
 
                 String venta_credito = searchInQuery("ventaCredito");//8
 
-                if(venta_credito != null){
+                if(venta_credito == null){
                     venta_credito = "";
                 }
 
                 String tipo_cliente = searchInQuery("tipo");//9
 
-                if(tipo_cliente != null){
+                if(tipo_cliente == null){
                     r = "{\"success\" : false, \"reason\":\"falta indicar el tipo de CteProv.\"}"; 
                     System.out.println(r);
                     return r;
@@ -141,7 +141,7 @@ public class AdminPAQProxy extends HttpResponder{
 
                 String estatus = searchInQuery("status");//10
 
-                if(estatus != null){
+                if(estatus == null){
                     r = "{\"success\" : false, \"reason\":\"falta indicar el estatus del CteProv.\"}"; 
                     System.out.println(r);
                     return r;
@@ -149,7 +149,7 @@ public class AdminPAQProxy extends HttpResponder{
 
                 String limite_credito = searchInQuery("limiteCredito");//11
 
-                if(limite_credito != null){
+                if(limite_credito == null){
                      limite_credito = "0";
                 }
 
@@ -162,7 +162,7 @@ public class AdminPAQProxy extends HttpResponder{
             case 2 :               
                 String serieDocumento = searchInQuery("serieDocumento");
 
-                if(serieDocumento != null){
+                if(serieDocumento == null){
                     r = "{\"success\" : false, \"reason\":\"falta indicar la serie del documento.\"}"; 
                     System.out.println(r);
                     return r;
@@ -172,7 +172,7 @@ public class AdminPAQProxy extends HttpResponder{
 
                 String codCteProv = searchInQuery("codCteProv");
 
-                if(codCteProv != null){
+                if(codCteProv == null){
                     r = "{\"success\" : false, \"reason\":\"falta indicar el codigo del CteProv.\"}";
                     System.out.println(r);
                     return r; 
@@ -180,7 +180,7 @@ public class AdminPAQProxy extends HttpResponder{
 
                 String codProdSer = searchInQuery("codProdSer");
 
-                if(codProdSer != null){
+                if(codProdSer == null){
                     r = "{\"success\" : false, \"reason\":\"falta indicar el codigo del ProdSer.\"}"; 
                     System.out.println(r);
                     return r;
@@ -188,7 +188,7 @@ public class AdminPAQProxy extends HttpResponder{
 
                 String codAlmacen = searchInQuery("docAlmacen");
 
-                if(codAlmacen != null){
+                if(codAlmacen == null){
                     r = "{\"success\" : false, \"reason\":\"falta indicar el codigo del Almacen.\"}"; 
                     System.out.println(r);
                     return r;
@@ -196,7 +196,7 @@ public class AdminPAQProxy extends HttpResponder{
 
                 String numUnidades = searchInQuery("numUnidades");
         
-                if(numUnidades != null){
+                if(numUnidades == null){
                     r = "{\"success\" : false, \"reason\":\"falta indicar el numero de unidades.\"}"; 
                     System.out.println(r);
                     return r;
@@ -204,7 +204,7 @@ public class AdminPAQProxy extends HttpResponder{
 
                 String precioUnitario = searchInQuery("precioUnitario");
 
-                if(precioUnitario != null){
+                if(precioUnitario == null){
                     r = "{\"success\" : false, \"reason\":\"falta indicar el precio unitario.\"}"; 
                     System.out.println(r);
                     return r;
@@ -212,7 +212,7 @@ public class AdminPAQProxy extends HttpResponder{
 
                 String codConcepto = searchInQuery("dodConcepto"); ////(Tabla MGW10006) 5 Factura de contado, 4 Factura a credito, 21 Compra a Proveedor 
 
-                if(codConcepto != null){
+                if(codConcepto == null){
                     r = "{\"success\" : false, \"reason\":\"falta indicar el codigo del concepto.\"}"; 
                     System.out.println(r);
                     return r;
