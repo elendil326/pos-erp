@@ -268,7 +268,7 @@ public class AdminPAQProxy extends HttpResponder{
 
         //System.out.println(s);
 
-        r = "{\"success\" : " + test.success + ", \"reason\":\"" + test.reason + "\"}"; 
+        r = "{\"success\" : " + test.success + ", \"code\" : " + test.code + ", \"reason\":\"" + test.reason + "\"}"; 
         System.out.println(r);
 
         System.out.println("--- 8 ---");
