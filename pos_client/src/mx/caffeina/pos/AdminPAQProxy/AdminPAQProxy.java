@@ -28,7 +28,10 @@ public class AdminPAQProxy extends HttpResponder{
 	}
 
 
-    private String sdk(  ){
+    private String sdk(){   
+
+        System.out.println("--- 1 ---");  
+
         // https://127.0.0.1:16001/json/adminpaq/sdk/?param=1
         // String s = searchInQuery("param") ; // s = "1";
 
@@ -42,75 +45,111 @@ public class AdminPAQProxy extends HttpResponder{
         String fechaActual = (c.get(Calendar.MONTH) >= 9 ? "" + (c.get(Calendar.MONTH) + 1) : "0" + (c.get(Calendar.MONTH) + 1)) + "/" + (c.get(Calendar.DATE) >= 10 ? "" + c.get(Calendar.DATE) : "0" + c.get(Calendar.DATE)) + "/" + Integer.toString(c.get(Calendar.YEAR));
         String fechaActual2 = (c.get(Calendar.DATE) >= 10 ? "" + c.get(Calendar.DATE) : "0" + c.get(Calendar.DATE)) + "/" + (c.get(Calendar.MONTH) >= 9 ? "" + (c.get(Calendar.MONTH) + 1) : "0" + (c.get(Calendar.MONTH) + 1)) + "/" + Integer.toString(c.get(Calendar.YEAR));
 
+        String r = "";
         
-        if(numEmpresa.equals(null)){
-            return "{\"success\"false\"reason\":\"falta numero de empresa\"}"; 
+        System.out.println("--- 2 ---");
+
+        if(numEmpresa != null){            
+            r = "{\"success\" : false, \"reason\":\"falta numero de empresa\"}"; 
+            System.out.println(r);
+            return r;
         }
 
-        if(numDatos.equals(null)){
-            return "{\"success\"false\"reason\":\"falta indicar el numero de movimientos a realizar.\"}"; 
+        System.out.println("--- 3 ---");
+
+        if(numDatos != null){
+            r = "{\"success\" : false, \"reason\":\"falta indicar el numero de movimientos a realizar.\"}";
+            System.out.println(r);
+            return r;
         }
 
-        switch(Integer.parseInt(accion)){
+        System.out.println("--- 4 ---");
+
+
+        int a = 0;
+
+        try{
+
+            a = Integer.parseInt(accion);
+
+        }catch(NumberFormatException e){
+            r = "{\"success\" : false, \"reason\":\"Indique el numero de movimientos a realizar.\"}";
+            System.out.println(r);
+            return r;
+        }
+
+        System.out.println("--- 5 ---");
+
+        switch(a){
             //alta de un cliente 
             case 1 :                                          
                 String codigo_cliente = searchInQuery("codCteProv"); //2 OK
 
-                if(codigo_cliente.equals(null)){
-                    return "{\"success\"false\"reason\":\"falta indicar el numero de cliente.\"}"; 
+                if(codigo_cliente != null){
+                    r = "{\"success\" : false, \"reason\":\"falta indicar el numero de cliente.\"}"; 
+                    System.out.println(r);
+                    return r;
                 }
 
                 String razon_social = searchInQuery("razonSocial");; //3 OK
 
-                if(razon_social.equals(null)){
-                    return "{\"success\"false\"reason\":\"falta indicar la razon social.\"}"; 
+                if(razon_social != null){
+                    r = "{\"success\" : false, \"reason\":\"falta indicar la razon social.\"}"; 
+                    System.out.println(r);
+                    return r;
                 }
 
                 String rfc = searchInQuery("rfc");//4 OK
 
-                if(rfc.equals(null)){
-                    return "{\"success\"false\"reason\":\"falta indicar el RFC.\"}"; 
+                if(rfc != null){
+                    r = "{\"success\" : false, \"reason\":\"falta indicar el RFC.\"}"; 
+                    System.out.println(r);
+                    return r;
                 }
 
                 String curp = searchInQuery("curp");;//5
 
-                if(curp.equals(null)){
+                if(curp != null){
                     razon_social = "";
                 }    
 
                 String denominacion_comercial = searchInQuery("denCom");//6
 
-                if(denominacion_comercial.equals(null)){
+                if(denominacion_comercial != null){
                     denominacion_comercial = "";
                 } 
 
                 String representante_legal = searchInQuery("repLegal");//7
 
-                if(representante_legal.equals(null)){
+                if(representante_legal != null){
                     representante_legal = "";
                 } 
 
                 String venta_credito = searchInQuery("ventaCredito");//8
 
-                if(venta_credito.equals(null)){
+                if(venta_credito != null){
                     venta_credito = "";
                 }
 
                 String tipo_cliente = searchInQuery("tipo");//9
 
-                if(tipo_cliente.equals(null)){
-                    return "{\"success\"false\"reason\":\"falta indicar el tipo de CteProv.\"}"; 
+                if(tipo_cliente != null){
+                    r = "{\"success\" : false, \"reason\":\"falta indicar el tipo de CteProv.\"}"; 
+                    System.out.println(r);
+                    return r;
                 }
 
                 String estatus = searchInQuery("status");//10
 
-                if(estatus.equals(null)){
-                    return "{\"success\"false\"reason\":\"falta indicar el estatus del CteProv.\"}"; 
+                if(estatus != null){
+                    r = "{\"success\" : false, \"reason\":\"falta indicar el estatus del CteProv.\"}"; 
+                    System.out.println(r);
+                    return r;
                 }
 
                 String limite_credito = searchInQuery("limiteCredito");//11
 
-                if(limite_credito.equals(null)){
+                if(limite_credito != null){
                      limite_credito = "0";
                 }
 
@@ -123,58 +162,87 @@ public class AdminPAQProxy extends HttpResponder{
             case 2 :               
                 String serieDocumento = searchInQuery("serieDocumento");
 
-                if(serieDocumento.equals(null)){
-                    return "{\"success\"false\"reason\":\"falta indicar la serie del documento.\"}"; 
+                if(serieDocumento != null){
+                    r = "{\"success\" : false, \"reason\":\"falta indicar la serie del documento.\"}"; 
+                    System.out.println(r);
+                    return r;
                 }
 
                 String fechaDocumento = fechaActual; //mm/dd/aaaa                
 
                 String codCteProv = searchInQuery("codCteProv");
 
-                if(codCteProv.equals(null)){
-                    return "{\"success\"false\"reason\":\"falta indicar el codigo del CteProv.\"}"; 
+                if(codCteProv != null){
+                    r = "{\"success\" : false, \"reason\":\"falta indicar el codigo del CteProv.\"}";
+                    System.out.println(r);
+                    return r; 
                 }
 
                 String codProdSer = searchInQuery("codProdSer");
 
-                if(codProdSer.equals(null)){
-                    return "{\"success\"false\"reason\":\"falta indicar el codigo del ProdSer.\"}"; 
+                if(codProdSer != null){
+                    r = "{\"success\" : false, \"reason\":\"falta indicar el codigo del ProdSer.\"}"; 
+                    System.out.println(r);
+                    return r;
                 }
 
                 String codAlmacen = searchInQuery("docAlmacen");
 
-                if(codAlmacen.equals(null)){
-                    return "{\"success\"false\"reason\":\"falta indicar el codigo del Almacen.\"}"; 
+                if(codAlmacen != null){
+                    r = "{\"success\" : false, \"reason\":\"falta indicar el codigo del Almacen.\"}"; 
+                    System.out.println(r);
+                    return r;
                 }
 
                 String numUnidades = searchInQuery("numUnidades");
         
-                if(numUnidades.equals(null)){
-                    return "{\"success\"false\"reason\":\"falta indicar el numero de unidades.\"}"; 
+                if(numUnidades != null){
+                    r = "{\"success\" : false, \"reason\":\"falta indicar el numero de unidades.\"}"; 
+                    System.out.println(r);
+                    return r;
                 }
 
                 String precioUnitario = searchInQuery("precioUnitario");
 
-                if(precioUnitario.equals(null)){
-                    return "{\"success\"false\"reason\":\"falta indicar el precio unitario.\"}"; 
+                if(precioUnitario != null){
+                    r = "{\"success\" : false, \"reason\":\"falta indicar el precio unitario.\"}"; 
+                    System.out.println(r);
+                    return r;
                 }
 
                 String codConcepto = searchInQuery("dodConcepto"); ////(Tabla MGW10006) 5 Factura de contado, 4 Factura a credito, 21 Compra a Proveedor 
 
-                if(codConcepto.equals(null)){
-                    return "{\"success\"false\"reason\":\"falta indicar el codigo del concepto.\"}"; 
+                if(codConcepto != null){
+                    r = "{\"success\" : false, \"reason\":\"falta indicar el codigo del concepto.\"}"; 
+                    System.out.println(r);
+                    return r;
                 }
 
                 params = path + " " + numEmpresa + " " + serieDocumento + " " + fechaDocumento + " " + codCteProv + " " + codProdSer + " " + codAlmacen + " " + numUnidades + " " + precioUnitario + " " + codConcepto;
 
-                break;                                    
+                break;   
+
+                default :    
+
+                r = "{\"success\" : false, \"reason\":\"Accion desconocida.\"}";
+                System.out.println(r);
+                return r;                              
         }
+
+        System.out.println("--- 6 ---");
 
         TestRuntime test = new TestRuntime(params);
 
+        System.out.println("--- 7 ---");
+
         //System.out.println(s);
 
-        return "{\"success\" : " + test.success + " \"reason\":\"" + test.reason + "\"}"; 
+        r = "{\"success\" : " + test.success + " \"reason\":\"" + test.reason + "\"}"; 
+        System.out.println(r);
+
+        System.out.println("--- 8 ---");
+
+        return r;
         
     }
 
