@@ -377,8 +377,11 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
 
 
             if(is_null($password)){
-                $password = "pass" . rand(1,9);
+                $password = "pass" . rand(1,9) .  rand(1,9);
             }
+
+
+            
 			
             try 
             {
@@ -434,19 +437,7 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
             
 
 
-            if(!is_null($email)){
-
-                $cuerpo = "Se le ha creado una cuenta en http://www.caffeina.mx/pos/" . INSTANCE_TOKEN . "/\n\n"
-                    . "Usuario: " . $email . "\n"
-                    . "Contraseña: " . $password;
-
-                PosController::EnviarMail(
-                        $cuerpo, 
-                        $email, 
-                        "Bienvenido a su cuenta en POS ERP"
-                    );
-    
-            }
+            
 
 
             //Logger::log("Cliente creado correctamente... id=" . $cliente["id_usuario"]);

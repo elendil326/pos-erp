@@ -717,7 +717,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 
 
             //se verifica que los telefonos no sean iguales
-            if(!is_null($telefono_personal1)&&$telefono_personal1==$telefono_personal2){
+            if(!is_null($telefono_personal1) && $telefono_personal1==$telefono_personal2){
                 Logger::error("El telefono personal es igual al telefno personal alterno: ".$telefono_personal1."  ".$telefono_personal2);
                 //throw new Exception("El telefono personal es igual al telefno personal alterno: ".$telefono_personal1."  ".$telefono_personal2,901);
             }
@@ -730,14 +730,22 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             {
 
                 //todo, validar un correo 
+                if ( !filter_var($_REQUEST['email'], FILTER_VALIDATE_EMAIL) ) {           
+                  $correo_electronico = null ;
+                  Logger::error("El correo electronico ".$correo_electronico." es invalido");
 
-                $usuariose = UsuarioDAO::search(new Usuario( array( "correo_electronico" => $correo_electronico, "activo" => 1 ) ));
+                } else {
 
-                if(sizeof($usuariose) > 0){
-                    //throw new BusinessLogicException("El correo electronico ".$correo_electronico." ya esta en uso");
-                  Logger::error("El correo electronico ".$correo_electronico." ya esta en uso");
-                  $correo_electronico = null;
+                  $usuariose = UsuarioDAO::search(new Usuario( array( "correo_electronico" => $correo_electronico, "activo" => 1 ) ));
+
+                  if(sizeof($usuariose) > 0){
+                      //throw new BusinessLogicException("El correo electronico ".$correo_electronico." ya esta en uso");
+                    Logger::error("El correo electronico ".$correo_electronico." ya esta en uso");
+                    $correo_electronico = null;
+                  }
+
                 }
+
             }
 
 
@@ -752,7 +760,14 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 
                     throw new BusinessLogicException("El password (".$password.") no puede ser igual al codigo de usuario (".$codigo_usuario.") ni al correo electronico (".$correo_electronico.")",901);
                 }
+
+            }else{
+              $password = "alk" .rand(1,9).rand(1,9);
+
             }
+
+
+
 
             //se ponen los valores por default en limite de credito y saldo del ejercicio
             if(is_null($limite_credito))
@@ -761,8 +776,8 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 
 
 
-			if(is_null($saldo_del_ejercicio))
-				$saldo_del_ejercicio = 0;
+    			if(is_null($saldo_del_ejercicio))
+    				$saldo_del_ejercicio = 0;
 			
             //Si la tarifa de compra o de venta es nula, entonces se tomaran las del clasificaciond el cliente, del proveedor o del rol
             // segun esten disponibles
@@ -932,6 +947,26 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             }
             DAO::transEnd();
             Logger::log("Usuario creado exitosamente con id".$usuario->getIdUsuario());
+
+
+
+            if(!is_null($email)){
+
+                $cuerpo = "Se le ha creado una cuenta en http://www.caffeina.mx/pos/" . INSTANCE_TOKEN . "/\n\n"
+                    . "Usuario: " . $email . "\n"
+                    . "Contraseña: " . $password;
+
+                PosController::EnviarMail(
+                        $cuerpo, 
+                        $email, 
+                        "Bienvenido a su cuenta en POS ERP"
+                    );
+    
+            }
+
+
+
+
             return array( "id_usuario" => $usuario->getIdUsuario() );
 	}
   

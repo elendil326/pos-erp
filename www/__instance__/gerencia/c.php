@@ -173,11 +173,6 @@
 
 
 
-
-
-
-
-
 				    Ext.create('Ext.form.Panel', {
 				        renderTo: 'logo256up',
 				        width: '100%',
@@ -237,6 +232,10 @@
 				            }
 				        }]
 				    });
+
+
+
+
 
 
 

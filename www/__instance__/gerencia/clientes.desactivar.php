@@ -10,7 +10,7 @@
 	?>
 		<script>
 		function doDeactivate(){
-			
+			//POS.API.POST("api/cliente/editar",{id_cliente:4813},{callback:function(){}});			
 		}
 		</script>
 	

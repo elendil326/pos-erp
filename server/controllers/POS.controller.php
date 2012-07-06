@@ -285,13 +285,13 @@ require_once("interfaces/POS.interface.php");
 			
 	
 			if(!defined("MAIL")){
-				Logger::error("Se intento enviar un correo pero la configuracion de MAIL no esta definida");
+				Logger::error("Se intento enviar un correo a ". $destinatario ." pero la configuracion de MAIL no esta definida.");
 				return;				
 			}
 			
 			
 			if(!MAIL) {
-				Logger::warn("Se intento enviar un correo pero la configuracion de MAIL esta en false");
+				Logger::error("Se intento enviar un correo a ". $destinatario ." pero la configuracion de MAIL esta apagada.");
 				return;	
 			}
 		
