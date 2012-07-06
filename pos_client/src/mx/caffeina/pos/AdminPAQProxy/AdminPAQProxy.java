@@ -1031,7 +1031,7 @@ class TestRuntime {
                     
                     this.code = token;
                     
-                    if(token.equals("100")){                    
+                    if(token == "100"){                    
                         this.success = true;
                         this.reason = "Ok";
                         break;
