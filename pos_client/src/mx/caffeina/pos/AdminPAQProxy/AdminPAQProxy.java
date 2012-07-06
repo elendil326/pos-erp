@@ -49,6 +49,12 @@ public class AdminPAQProxy extends HttpResponder{
         
         System.out.println("--- 2 ---");
 
+        if(path == null){
+            r = "{\"success\" : false, \"reason\":\"indique la ubicacion del recurso\"}"; 
+            System.out.println(r);
+            return r; 
+        }
+
         if(numEmpresa == null){            
             r = "{\"success\" : false, \"reason\":\"falta numero de empresa\"}"; 
             System.out.println(r);
