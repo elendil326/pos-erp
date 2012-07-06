@@ -145,19 +145,17 @@ public class AdminPAQProxy extends HttpResponder{
                     return r;
                 }
 
-                int b = 0;
-
                 try{
 
-                    b = Integer.parseInt(tipo_cliente);
+                    a = Integer.parseInt(tipo_cliente);
 
                 }catch(NumberFormatException e){
                     r = "{\"success\" : false, \"reason\":\"El tipo de CteProv debe de ser un valor entero - " + e.getMessage() + " \"}";
                     System.out.println(r);
                     return r;
                 }
-
-                switch(b){
+                System.out.println("-->" + a + "<--");
+                switch(a){
                     case 1: //cliente
                     break;
                     case 2: //cliente-proveedor
