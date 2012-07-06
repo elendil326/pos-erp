@@ -1069,6 +1069,7 @@ class TestRuntime {
                         this.reason = "Ok";
                         break;
                     }else{
+                        System.out.println("-->NO ENTRO<--");        
                         this.success = false;   
                         token = "Error " + token + ",";;
                     }                
