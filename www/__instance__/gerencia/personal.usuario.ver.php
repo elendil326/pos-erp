@@ -179,7 +179,7 @@
 				function enviarCorreo(){
 					POS.API.POST("api/pos/mail/enviar", 
 						{
-							cuerpo : "Bienvendio",
+							cuerpo : "Bienvenido a su cuenta en pos ERP, ingrese en la siguiente direccion: http://www.caffeina.mx/pos/<?php echo INSTANCE_TOKEN; ?>/ ",
 							destinatario : "<?php echo $este_usuario->getCorreoElectronico(); ?>", 
 							titulo : "Bienvenido a POS ERP"
 						}, 

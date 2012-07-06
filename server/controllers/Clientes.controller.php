@@ -438,9 +438,22 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
 
 
             
+            /*
+                if(!is_null($email)){
 
+                $cuerpo = "Se le ha creado una cuenta en http://www.caffeina.mx/pos/" . INSTANCE_TOKEN . "/\n\n"
+                    . "Usuario: " . $email . "\n"
+                    . "Contraseña: " . $password;
 
-            //Logger::log("Cliente creado correctamente... id=" . $cliente["id_usuario"]);
+                PosController::EnviarMail(
+                        $cuerpo, 
+                        $email, 
+                        "Bienvenido a su cuenta en POS ERP"
+                    );
+    
+            }*/
+
+            
 
             return array( "id_cliente" => (int)$cliente["id_usuario"]);
             
@@ -671,6 +684,8 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
                     throw new Exception("El cliente no pudo ser modificado: ".$e->getMessage());
                 throw new Exception("El cliente no pudo ser modificado, consulte a su administrador de sistema");
             }
+
+            
             Logger::log("Cliente editado exitosamente");
 	}
   

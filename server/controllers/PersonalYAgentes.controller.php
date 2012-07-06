@@ -950,19 +950,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 
 
 
-            if(!is_null($email)){
-
-                $cuerpo = "Se le ha creado una cuenta en http://www.caffeina.mx/pos/" . INSTANCE_TOKEN . "/\n\n"
-                    . "Usuario: " . $email . "\n"
-                    . "Contraseña: " . $password;
-
-                PosController::EnviarMail(
-                        $cuerpo, 
-                        $email, 
-                        "Bienvenido a su cuenta en POS ERP"
-                    );
-    
-            }
+            
 
 
 
