@@ -1019,6 +1019,8 @@ class TestRuntime {
                 aux = br.readLine();
             }
 
+            System.out.println("--- 6.3 ---");
+
             StringTokenizer tokens = new StringTokenizer(aux);
 
             Boolean param = true;
@@ -1044,6 +1046,8 @@ class TestRuntime {
                 this.reason += (token + " ");
                 param = false;
             }
+
+            System.out.println("--- 6.4 ---");            
 
             //------------------------------------------
 
