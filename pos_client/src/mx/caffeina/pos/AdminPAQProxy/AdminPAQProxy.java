@@ -7,7 +7,7 @@ import mx.caffeina.pos.*;
 import mx.caffeina.pos.MD5Checksum;
 import java.util.*;
 import java.text.DateFormat;
-
+import java.net.URLEncoder;
 
 
 
@@ -92,7 +92,7 @@ public class AdminPAQProxy extends HttpResponder{
                 String codigo_cliente = searchInQuery("codCteProv"); //2 OK
 
                 if(codigo_cliente == null){
-                    r = "{\"success\" : false, \"reason\":\"falta indicar el numero de cliente.\"}"; 
+                    r = "{\"success\" : false, \"reason\":\"falta indicar el codigo de cliente.\"}"; 
                     System.out.println(r);
                     return r;
                 }
@@ -143,6 +143,31 @@ public class AdminPAQProxy extends HttpResponder{
                     r = "{\"success\" : false, \"reason\":\"falta indicar el tipo de CteProv.\"}"; 
                     System.out.println(r);
                     return r;
+                }
+
+                int b = 0;
+
+                try{
+
+                    b = Integer.parseInt(tipo_cliente);
+
+                }catch(NumberFormatException e){
+                    r = "{\"success\" : false, \"reason\":\"El tipo de CteProv debe de ser un valor entero - " + e.getMessage() + " \"}";
+                    System.out.println(r);
+                    return r;
+                }
+
+                switch(b){
+                    case 1: //cliente
+                    break;
+                    case 2: //cliente-proveedor
+                    break;
+                    case 3: //proveedor
+                    break;
+                    default :
+                        r = "{\"success\" : false, \"reason\":\"Tipo CteProv invalido\"}";
+                        System.out.println(r);
+                        return r; 
                 }
 
                 String estatus = searchInQuery("status");//10
