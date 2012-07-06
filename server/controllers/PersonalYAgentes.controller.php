@@ -725,12 +725,12 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 
 
 
-            //se verifica que el correo electronico no se repita
+            //se verifica que el correo electronico no se repita 
             if(!is_null($correo_electronico))
             {
 
                 //todo, validar un correo 
-                if ( !filter_var($_REQUEST['email'], FILTER_VALIDATE_EMAIL) ) {           
+                if ( !filter_var($correo_electronico, FILTER_VALIDATE_EMAIL) ) {           
                   $correo_electronico = null ;
                   Logger::error("El correo electronico ".$correo_electronico." es invalido");
 
