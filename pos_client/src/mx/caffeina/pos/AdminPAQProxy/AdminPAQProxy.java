@@ -1055,15 +1055,13 @@ class TestRuntime {
             
                 token = tokens.nextToken();
                 
-                if(param == true){  
-
-                    param = false;                              
+                if(param == true){                                           
                     
-                    this.code = token;
+                    this.code = new String(token);
 
                     System.out.println("-->" + token + "<--");
                     
-                    if(token == "100"){   
+                    if(token.equals("100")){   
                         System.out.println("-->ENTRO<--");                 
                         this.success = true;
                         this.reason = "Ok";
@@ -1076,6 +1074,8 @@ class TestRuntime {
                 }
 
                 this.reason += (token + " ");
+
+                param = false;         
                 
             }
 
