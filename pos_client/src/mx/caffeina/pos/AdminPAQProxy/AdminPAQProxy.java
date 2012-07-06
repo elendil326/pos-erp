@@ -30,7 +30,7 @@ public class AdminPAQProxy extends HttpResponder{
 
     private String sdk(){   
 
-        System.out.println("--- 1 ---");  
+        //System.out.println("--- 1 ---");  
 
         // https://127.0.0.1:16001/json/adminpaq/sdk/?param=1
         // String s = searchInQuery("param") ; // s = "1";
@@ -47,7 +47,7 @@ public class AdminPAQProxy extends HttpResponder{
 
         String r = "";
         
-        System.out.println("--- 2 ---");
+        //System.out.println("--- 2 ---");
 
         if(path == null){
             r = "{\"success\" : false, \"reason\":\"indique la ubicacion del recurso\"}"; 
@@ -61,7 +61,7 @@ public class AdminPAQProxy extends HttpResponder{
             return r;
         }
 
-        System.out.println("--- 3 ---");
+        //System.out.println("--- 3 ---");
 
         if(numDatos == null){
             r = "{\"success\" : false, \"reason\":\"falta indicar el numero de movimientos a realizar.\"}";
@@ -69,7 +69,7 @@ public class AdminPAQProxy extends HttpResponder{
             return r;
         }
 
-        System.out.println("--- 4 ---");
+        //System.out.println("--- 4 ---");
 
 
         int a = 0;
@@ -84,7 +84,7 @@ public class AdminPAQProxy extends HttpResponder{
             return r;
         }
 
-        System.out.println("--- 5 ---");
+        //System.out.println("--- 5 ---");
 
         switch(a){
             //alta de un cliente 
@@ -247,11 +247,9 @@ public class AdminPAQProxy extends HttpResponder{
                     return r;
                 }
 
-                int b = 0;
-
                 try{
 
-                    b = Integer.parseInt(codConcepto);
+                    a = Integer.parseInt(codConcepto);
 
                 }catch(NumberFormatException e){
                     r = "{\"success\" : false, \"reason\":\"El codigo de concepto debe de ser un valor entero - " + e.getMessage().replace("\"", "'") + " \"}";
@@ -259,7 +257,7 @@ public class AdminPAQProxy extends HttpResponder{
                     return r;
                 }
 
-                switch(b){
+                switch(a){
                     case 4: //factura a credito
                     break;
                     case 5: //factura de contado
@@ -283,18 +281,18 @@ public class AdminPAQProxy extends HttpResponder{
                 return r;                              
         }
 
-        System.out.println("--- 6aa ---");
+        //System.out.println("--- 6aa ---");
 
         TestRuntime test = new TestRuntime(params);
 
-        System.out.println("--- 7 ---");
+        //System.out.println("--- 7 ---");
 
         //System.out.println(s);
 
         r = "{\"success\" : " + test.success + ", \"code\" : " + test.code + ", \"reason\":\"" + test.reason + "\"}"; 
         System.out.println(r);
 
-        System.out.println("--- 8 ---");
+        //System.out.println("--- 8 ---");
 
         return r;
         
@@ -1051,13 +1049,13 @@ class TestRuntime {
              */
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
-            System.out.println("--- 6.1 ---");
+            //System.out.println("--- 6.1 ---");
 
             // Se lee la primera linea 
             String aux = br.readLine();
-            System.out.println("Se leyo : " + aux);
+            System.out.println("EXE : " + aux);
 
-            System.out.println("--- 6.2 ---");
+            //System.out.println("--- 6.2 ---");
 
             // Mientras se haya leido alguna linea 
             /*while (aux != null) {
@@ -1068,7 +1066,7 @@ class TestRuntime {
                 aux = br.readLine();
             }*/
 
-            System.out.println("--- 6.3 ---");
+            //System.out.println("--- 6.3 ---");
 
             StringTokenizer tokens = new StringTokenizer(aux);
 
@@ -1082,15 +1080,15 @@ class TestRuntime {
                     
                     this.code = new String(token);
 
-                    System.out.println("-->" + token + "<--");
+                    //System.out.println("-->" + token + "<--");
                     
                     if(token.equals("100")){   
-                        System.out.println("-->ENTRO<--");                 
+                        //System.out.println("-->ENTRO<--");                 
                         this.success = true;
                         //this.reason = "Ok";
                         //break;
                     }else{
-                        System.out.println("-->NO ENTRO<--");        
+                        //System.out.println("-->NO ENTRO<--");        
                         this.success = false;   
                         token = "Error " + token + ",";;
                     }                
@@ -1102,7 +1100,7 @@ class TestRuntime {
                 
             }
 
-            System.out.println("--- 6.4 ---");            
+            //System.out.println("--- 6.4 ---");            
 
             //------------------------------------------
 
