@@ -235,7 +235,7 @@ public class AdminPAQProxy extends HttpResponder{
                 return r;                              
         }
 
-        System.out.println("--- 6 ---");
+        System.out.println("--- 6aa ---");
 
         TestRuntime test = new TestRuntime(params);
 
@@ -1003,8 +1003,12 @@ class TestRuntime {
              */
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
+            System.out.println("--- 6.1 ---");
+
             // Se lee la primera linea 
             String aux = br.readLine();
+
+            System.out.println("--- 6.2 ---");
 
             // Mientras se haya leido alguna linea 
             while (aux != null) {
