@@ -343,7 +343,13 @@ public class AdminPAQProxy extends HttpResponder{
         if(( path.length > 2 )  && path[2].equals("ping")){
 			
 			System.out.println("-- ping --");
-            return ping();
+            if(searchInQuery("callback") != null){
+				return (searchInQuery("callback") + "(" + ping() + ");");
+
+			}else{
+				return ping() ;
+
+			}
 
 		}
 
