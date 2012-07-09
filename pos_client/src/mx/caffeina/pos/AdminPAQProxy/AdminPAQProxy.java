@@ -299,6 +299,16 @@ public class AdminPAQProxy extends HttpResponder{
     }
 
 
+    private String ping(){  
+
+         String r = "{\"success\":\"true\", \"message\" : \"ping successful\"}";
+
+         System.out.println(r);
+
+         return r;
+
+    }
+
 	public String getResponse(){
 		//dispatch submodules
 
@@ -327,6 +337,13 @@ public class AdminPAQProxy extends HttpResponder{
 			
 			System.out.println("sdk nigga");
             return sdk();
+
+		}
+
+        if(( path.length > 2 )  && path[2].equals("ping")){
+			
+			System.out.println("-- ping --");
+            return ping();
 
 		}
 
