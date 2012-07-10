@@ -306,6 +306,7 @@ public class AdminPAQProxy extends HttpResponder{
         String numEmpresa = searchInQuery("numEmpresa");
         String path = searchInQuery("path");
         String r = "";
+        String reason = "";
         
         if(path == null){
             r = "{\"success\" : false, \"reason\":\"indique el path del programa de conexion\"}";
@@ -321,9 +322,25 @@ public class AdminPAQProxy extends HttpResponder{
         
         params = URLDecoder.decode(path) + " " + numEmpresa ;
         
-        TestRuntime test = new TestRuntime(params);        
+        TestRuntime test = new TestRuntime(params);     
         
-        r = "{\"success\" : " + test.success + ", \"code\" : " + test.code + ", \"reason\":\"" + test.reason + "\"}"; 
+        reason = test.reason;
+
+        //-------------------------
+        if (test.success == true){
+
+            String[] arrayResponse = test.reason.split(" ");
+            try{
+                reason = arrayResponse[1];
+            }catch(Exception e){
+                r = "{\"success\" : false, \"reason\":\"Respuesta inesperada -> " + e.getMessage().replace("\"", "'") + "\"}";
+                System.out.println(r);
+                return r;
+            }
+        }
+        //------------------------   
+        
+        r = "{\"success\" : " + test.success + ", \"code\" : " + test.code + ", \"reason\":\"" + reason + "\"}"; 
         System.out.println(r);
         
         return r;
