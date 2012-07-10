@@ -301,11 +301,30 @@ public class AdminPAQProxy extends HttpResponder{
 
     private String ping(){  
 
-         String r = "{\"success\":\"true\", \"message\" : \"ping successful\"}";
+        String params = "";
+        String numEmpresa = searchInQuery("numEmpresa");
+        String path = searchInQuery("path");
 
-         System.out.println(r);
+        if(path == null){
+            r = "{\"success\" : false, \"reason\":\"indique el path del programa de conexion\"}";
+            System.out.println(r);
+            return r;
+        }
 
-         return r;
+        if(numEmpresa == null){
+            r = "{\"success\" : false, \"reason\":\"falta numero de empresa\"}";
+            System.out.println(r);
+            return r;
+        }
+
+        params = URLDecoder.decode(path) + " " + numEmpresa ;
+
+        TestRuntime test = new TestRuntime(params);        
+
+        r = "{\"success\" : " + test.success + ", \"code\" : " + test.code + ", \"reason\":\"" + test.reason + "\"}"; 
+        System.out.println(r);
+
+        return r;
 
     }
 
