@@ -8,6 +8,7 @@ import mx.caffeina.pos.MD5Checksum;
 import java.util.*;
 import java.text.DateFormat;
 import java.net.URLEncoder;
+import java.net.URLDecoder;
 
 
 
@@ -304,26 +305,27 @@ public class AdminPAQProxy extends HttpResponder{
         String params = "";
         String numEmpresa = searchInQuery("numEmpresa");
         String path = searchInQuery("path");
-
+        String r = "";
+        
         if(path == null){
             r = "{\"success\" : false, \"reason\":\"indique el path del programa de conexion\"}";
             System.out.println(r);
             return r;
         }
-
+        
         if(numEmpresa == null){
             r = "{\"success\" : false, \"reason\":\"falta numero de empresa\"}";
             System.out.println(r);
             return r;
         }
-
+        
         params = URLDecoder.decode(path) + " " + numEmpresa ;
-
+        
         TestRuntime test = new TestRuntime(params);        
-
+        
         r = "{\"success\" : " + test.success + ", \"code\" : " + test.code + ", \"reason\":\"" + test.reason + "\"}"; 
         System.out.println(r);
-
+        
         return r;
 
     }
