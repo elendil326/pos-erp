@@ -20,6 +20,7 @@ class ImpresionesController {
 
 
 
+
 	private static function readableText($raw) {
 	    return (html_entity_decode($raw). " ");
 	    $foo = explode(" ", $raw);
@@ -186,6 +187,145 @@ class ImpresionesController {
 
 	    $pdf->addText( self::puntos_cm(16.70), self::puntos_cm(1.30), 8, "caffeina.mx");	
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	public static function Documento($id_documento, $params = NULL){
+
+
+ 		$pdf = new Cezpdf( $paper = 'letter');
+
+		if (is_file(POS_PATH_TO_SERVER_ROOT . "libs/ezpdf/fonts/Helvetica.afm")){
+			$pdf->selectFont(POS_PATH_TO_SERVER_ROOT . "libs/ezpdf/fonts/Helvetica.afm");
+			
+		}else{
+			throw new Exception();
+			
+		}
+
+
+
+		$decoded_json  = json_decode($id_documento);
+
+
+
+		function foo($bar){
+			
+			return 790 - $bar;
+		}
+		
+
+		for ($i=0; $i < sizeof($decoded_json->body); $i++) { 
+			
+			switch($decoded_json->body[$i]->type){
+
+				case "text" :
+
+					//$decoded_json->body[$i]->value
+					while( ($posI = strpos ( $decoded_json->body[$i]->value, "{")) !== FALSE){
+						$posF = strpos ( $decoded_json->body[$i]->value, "}");
+
+						$key = substr ( $decoded_json->body[$i]->value, $posI +1 , $posF - $posI -1 );
+
+						if(TRUE === array_key_exists($key, $params)){
+
+							$decoded_json->body[$i]->value = substr_replace( 
+								$decoded_json->body[$i]->value, 
+								$params[$key], 
+								$posI, 
+								$posF - $posI + 1);
+
+
+
+						}else{
+							$decoded_json->body[$i]->value = substr_replace( 
+								$decoded_json->body[$i]->value, 
+								"", 
+								$posI, 
+								$posF - $posI + 1);
+
+
+						}
+
+						
+						
+					}
+
+					$pdf->addText( 
+						$decoded_json->body[$i]->x, 
+						foo($decoded_json->body[$i]->y), 
+						$decoded_json->body[$i]->fontSize, 
+						utf8_decode($decoded_json->body[$i]->value) );
+				break;
+
+
+
+
+				case "round-box" :
+						$x = $decoded_json->body[$i]->x;
+						$y = $decoded_json->body[$i]->y;
+						$w = $decoded_json->body[$i]->w;
+						$h = $decoded_json->body[$i]->h;
+
+					    $pdf->setStrokeColor(0.3359375, 0.578125, 0.89453125);
+	    				$pdf->setLineStyle(1);
+				
+					    $pdf->line($x + 2, $y, $x + $w - 2, $y); //arriba
+					    $pdf->line($x, $y - 2, $x, $y - $h + 2);  //izquierda
+					    $pdf->line($x + 2, $y - $h, $x + $w - 2, $y - $h); //abajo
+					    $pdf->line($x + $w, $y - 2, $x + $w, $y - $h + 2); //derecha		
+
+					    $pdf->partEllipse($x + 3, $y - 3, 90, 180, 3); //top-left
+					    $pdf->partEllipse($x + $w - 3, $y - 3, 0, 90, 3); //top-right
+					    $pdf->partEllipse($x + $w - 3, $y - $h + 3, 360, 240, 3); //bottom-right
+					    $pdf->partEllipse($x + 3, $y - $h + 3, 180, 270, 3); //bottom-left
+				break;
+			}
+
+		}
+
+
+
+
+	    //margenes de un centimetro para toda la pagina
+	    $pdf->ezSetMargins(1, 1, 1, 1);
+
+	    /**************************
+	     * ENCABEZADO
+	     ***************************/
+	    //$pdf->addText( self::puntos_cm(7.1), self::puntos_cm(26.1), 18, utf8_decode($title));
+	    //$pdf->addText( self::puntos_cm(7.1), self::puntos_cm(25.5), 12, utf8_decode($subtitle));	
+	
+		$pdf->ezStream();
+				
+	    
+	    die;
+
+	}
+
+
+
+
+
+
+
+
+
 
 
 	private static function printProducts( &$pdf, $productos ){

@@ -109,6 +109,48 @@ class GerenciaComponentPage extends PosComponentPage{
 		            ]
 		        },
 		        {
+		            "title": "Documentos",
+		            "url": "documentos.php",
+		            "children": [
+		                {
+		                        "title" : "Editar",
+		                        "url"   : "documentos.editar.php"
+		                },
+		                {
+		                        "title" : "Imprimir estado de cuenta",
+		                        "url"   : "documentos.imprimir.estado.cuenta.php"
+		                },
+		                {
+		                        "title" : "Cancelar factura",
+		                        "url"   : "documentos.cancelar.factura.php"
+		                },
+		                {
+		                        "title" : "Generar factura",
+		                        "url"   : "documentos.generar.factura.php"
+		                },
+		                {
+		                        "title" : "Imprimir factura",
+		                        "url"   : "documentos.imprimir.factura.php"
+		                },
+		                {
+		                        "title" : "Imprimir XML de factura",
+		                        "url"   : "documentos.imprimir_xml.factura.php"
+		                },
+		                {
+		                        "title" : "Lista",
+		                        "url"   : "documentos.lista.php"
+		                },
+		                {
+		                        "title" : "Imprimir nota de venta",
+		                        "url"   : "documentos.imprimir.nota_de_venta.php"
+		                },
+		                {
+		                        "title" : "Nuevo",
+		                        "url"   : "documentos.nuevo.php"
+		                }
+		            ]
+		        },
+		        {
 		            "title": "Efectivo",
 		            "url": "efectivo.php",
 		            "children": [

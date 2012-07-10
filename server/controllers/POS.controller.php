@@ -453,7 +453,11 @@ require_once("interfaces/POS.interface.php");
   		
 
     	//insertar
-		ExtraParamsEstructuraDAO::save( $ncbd );
+    	try{
+			ExtraParamsEstructuraDAO::save( $ncbd );
+		}catch(Exception $e){
+			throw new InvalidDataException("El campo `". $campo ."` ya existe en esta tabla.");
+		}
 		
 		return array("id_columna" =>  $ncbd->getIdExtraParamsEstructura() );
 

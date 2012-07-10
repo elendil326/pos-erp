@@ -223,7 +223,7 @@ POS.API =
 			       });
 			
 		}catch(e){
-			console.error("JSON NOT DECODABLE:" , a.responseText);
+			
 			Ext.MessageBox.show({
 			           title: 'Error',
 			           msg: "Ocurrio un problema con la solicitud, porfavor intente de nuevo en un momento.",

@@ -92,6 +92,7 @@
 		$page->nextTab("Configuracion");
 
 		$page->addComponent(new TitleComponent("Columnas extra",2));
+		$page->addComponent('<div class="POS Boton" onClick="exportar()">Exportar/Importar columnas</div>');
 		$page->addComponent(new TitleComponent("Columnas activas",3));
 
 		$epc = ExtraParamsEstructuraDAO::getByTabla("clientes");
@@ -312,7 +313,7 @@
 		$export_json = json_encode( $qr );
 
 
-		$page->addComponent('<div class="POS Boton" onClick="exportar()">Exportar/Importar columnas</div>');
+		
 		$page->addComponent('
 				<script>
 				function exportar(){
@@ -359,10 +360,11 @@
 			                    },
 
 			                    items: [{
-			                        flex: 1,
-			                        inputId: \'json_to_import\',
+			                        flex 	: 1,
+			                        inputId	: \'json_to_import\',
 			                        allowBlank: true,
-			                        value : 3
+			                        emptyText : "Insertar aqui el json de otra exportacion",
+			                        height 	: 150
 			                    }]
 			                }],
 
@@ -372,7 +374,7 @@
 			                        this.up(\'window\').destroy();
 			                    }
 			                }, {
-			                    text: \'Guardar cambios\',
+			                    text: \'Importar columnas\',
 			                    handler: function(a,b,c) {
 			                    	try{
 			                    		r = Ext.JSON.decode(Ext.get("json_to_import").getValue());
