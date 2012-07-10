@@ -387,6 +387,13 @@ require_once("interfaces/POS.interface.php");
 
     	$ncbd = ExtraParamsEstructuraDAO::getByTablaCampo($tabla, $campo);
 
+    	if(is_null($ncbd)){
+    		throw new InvalidDataException("La combinacion $tabla, $campo no existe.");
+	   	}
+
+
+
+
     	//$ncbd->setTabla($tabla);
 		$ncbd->setCampo($campo);
 		$ncbd->setTipo($tipo);

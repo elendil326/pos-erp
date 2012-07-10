@@ -60,13 +60,33 @@
 			
 		$page->addComponent( $tabla );
 
+
+
+
+
+
+
+
+
+
+
 		$page->nextTab("Interacciones");
 		
 		//lista de clientes con los que se cuenta correo electronico
 		
 		
+
+
+
 		
 		
+
+
+
+
+
+
+
 		
 
 		$page->nextTab("Configuracion");
@@ -105,9 +125,6 @@
 
 					
 						var jObj = Ext.JSON.decode(Url.decode(fObj));
-
-						console.log(jObj)
-
 
 						var required = \'<span style="color:red;font-weight:bold" data-qtip="Required">*</span>\';
 			
@@ -197,7 +214,7 @@
 			                        this.up(\'window\').destroy();
 			                    }
 			                }, {
-			                    text: \'Guardar producto\',
+			                    text: \'Guardar cambios\',
 			                    handler: function() {
 			                        if (this.up(\'form\').getForm().isValid()) {
 			                        	
@@ -224,10 +241,10 @@
 
 			            Ext.widget(\'window\', {
 			            	id : "editarCampoQuick",
-			                title: \'Nuevo Producto\',
+			                title: \'Editar campo\',
 			                closeAction: \'destroy\',
 			                width: 500,
-			                height: 350,
+			                height: 450,
 			                layout: \'fit\',
 			                resizable: false,
 			                modal: true,
@@ -273,6 +290,131 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		$q = new ExtraParamsEstructura( array("tabla" => "clientes"));
+		$qr = ExtraParamsEstructuraDAO::search($q);
+		for ($i=0; $i < sizeof($qr); $i++) { 
+			unset($qr[$i]->id_extra_params_estructura);
+		}
+		$export_json = json_encode( $qr );
+
+
+		$page->addComponent('<div class="POS Boton" onClick="exportar()">Exportar/Importar columnas</div>');
+		$page->addComponent('
+				<script>
+				function exportar(){
+					var form = Ext.widget(\'form\', {
+			                layout: {
+			                    type: \'vbox\',
+			                    align: \'stretch\'
+			                },
+			                border: false,
+			                bodyPadding: 10,
+
+			                fieldDefaults: {
+			                    labelAlign: \'top\',
+			                    labelWidth: 100,
+			                    labelStyle: \'font-weight:bold\'
+			                },
+			                items: [{
+			                    xtype: \'fieldcontainer\',
+			                    fieldLabel: \'Exportar \',
+			                    labelStyle: \'font-weight:bold;padding:0\',
+			                    layout: \'hbox\',
+			                    defaultType: \'textareafield\',
+
+			                    fieldDefaults: {
+			                        labelAlign: \'top\'
+			                    },
+
+			                    items: [{
+			                        flex: 1,
+			                        name: \'campo\',
+			                        fieldLabel: \'Campo\',
+			                        allowBlank: true,
+			                        value : \'' . $export_json . '\'
+			                    }]
+			                }, {
+			                    xtype: \'fieldcontainer\',
+			                    fieldLabel: \'Importar \',
+			                    labelStyle: \'font-weight:bold;padding:0\',
+			                    layout: \'hbox\',
+			                    defaultType: \'textareafield\',
+
+			                    fieldDefaults: {
+			                        labelAlign: \'top\'
+			                    },
+
+			                    items: [{
+			                        flex: 1,
+			                        inputId: \'json_to_import\',
+			                        allowBlank: true,
+			                        value : 3
+			                    }]
+			                }],
+
+			                buttons: [{
+			                    text: \'Cancelar\',
+			                    handler: function() {
+			                        this.up(\'window\').destroy();
+			                    }
+			                }, {
+			                    text: \'Guardar cambios\',
+			                    handler: function(a,b,c) {
+			                    	try{
+			                    		r = Ext.JSON.decode(Ext.get("json_to_import").getValue());
+			                    	}catch(e){
+			                    		return;
+			                    	}
+
+			                    	
+			                    	//@TODO validar
+
+			                    	var options = {
+			                    		callback : function(){
+			                    			console.log(\'ok\');
+			                    		}
+			                    	};
+
+
+			                    	for ($i=0; $i < r.length; $i++) { 
+			                    		var params = r[$i];
+			                    		params.tabla = "clientes";
+			                    		POS.API.POST("api/pos/bd/columna/nueva", params, options);
+			                    	}
+			                        
+			                        
+			                    }
+			                }]
+			            });
+
+			            Ext.widget(\'window\', {
+			            	id : "exportarCampos",
+			                title: \'Exprtar campos\',
+			                closeAction: \'destroy\',
+			                width: 500,
+			                height: 450,
+			                layout: \'fit\',
+			                resizable: false,
+			                modal: true,
+			                items: form
+			            }).show();
+				}
+				</script>
+			');
 		$page->render();
 
 

@@ -19,9 +19,10 @@
 	$form->addApiCall("api/producto/nuevo/");
 	$form->onApiCallSuccessRedirect("productos.lista.php");
 	$form->renameField(array( "precio" => "precio_de_venta" ));
-	$form->hideField(array(
-	    "id_producto"
-	));
+	$form->hideField(array( "id_producto", "peso_producto" ));
+	$form->renameField( array("descripcion" => "descripcion_producto"));
+
+
 
 	$form->makeObligatory(array(
 	    "compra_en_mostrador",
