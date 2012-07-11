@@ -24,6 +24,7 @@
 
 			Logger::log( "Subiendo archivo ... ");
 
+			
 
 			if($_REQUEST["type"] == "csv-clientes"){
 				move_uploaded_file ( $_FILES["logo"]["tmp_name"], "../../../static_content/".IID."-clientes.csv" );
@@ -57,7 +58,9 @@
 		$page->addComponent("<script>Ext.Ajax.timeout = 5 * 60 * 1000; /* 5 minutos */ </script>");
 		$page->addComponent(new TitleComponent("Configuracion de POS ERP"));
 
-		
+		if(!is_writable("../../../static_content/")){
+			$page->addComponent(" <div id=''>ALERTA: No se pueden subir archivos. Contacte a un administrador de POS ERP</div>");	
+		}
 
 
 		$page->nextTab("Importar");

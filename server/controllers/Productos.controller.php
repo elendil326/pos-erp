@@ -2108,7 +2108,7 @@ class ProductosController extends ValidacionesController implements IProductos
 
 
     private static function importarCSV( $raw_contents ){
-        Loggger::log("Importando como CSV");
+        Logger::log("Importando como CSV");
 
          $firstLine =   strpos( $raw_contents , "\n");
 
@@ -2127,7 +2127,7 @@ class ProductosController extends ValidacionesController implements IProductos
                         "compra_en_mostrador",
                         "id_unidad_compra",
                         "metodo_costeo" ,
-                        "nombre_producto" ,
+                        "nombre_producto",
                         "codigo_de_barras",
                         "control_de_existencia",
                         "costo_estandar",
@@ -2215,7 +2215,7 @@ class ProductosController extends ValidacionesController implements IProductos
                         $indices["compra_en_mostrador"] !== FALSE ?            $data[ ($i * $soh) + $indices["compra_en_mostrador"] ] : 0,
                         $indices["id_unidad_compra"] !== FALSE ?            $data[ ($i * $soh) + $indices["id_unidad_compra"] ] : 6,
                         $indices["metodo_costeo"] !== FALSE ?            $data[ ($i * $soh) + $indices["metodo_costeo"] ] : "precio",
-                        $indices["nombre_producto "] !== FALSE ?            $data[ ($i * $soh) + $indices["nombre_producto"] ] : NULL,
+                        $indices["nombre_producto"] !== FALSE ?            $data[ ($i * $soh) + $indices["nombre_producto"] ] : NULL,
                         $indices["codigo_de_barras"] !== FALSE ?            $data[ ($i * $soh) + $indices["codigo_de_barras"] ] : NULL,
                         $indices["control_de_existencia"] !== FALSE ?            $data[ ($i * $soh) + $indices["control_de_existencia"] ] : NULL,
                         $indices["costo_estandar"] !== FALSE ?            $data[ ($i * $soh) + $indices["costo_estandar"] ] : NULL,
