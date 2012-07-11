@@ -239,7 +239,7 @@ abstract class ExtraParamsEstructuraDAOBase extends DAO
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
 		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
-		/* save autoincremented value on obj */   /*  */ 
+		/* save autoincremented value on obj */  $extra_params_estructura->setIdExtraParamsEstructura( $conn->Insert_ID() ); /*  */ 
 		return $ar;
 	}
 

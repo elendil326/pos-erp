@@ -2,7 +2,6 @@
 
 
 
-
   class ApiSesionIniciar extends ApiHandler {
   
 
@@ -5671,25 +5670,27 @@
   
   
 
-  class ApiDocumentoLista extends ApiHandler {
+  class ApiDocumentoBuscar extends ApiHandler {
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"activos" => new ApiExposedProperty("activos", true, GET, array( "bool" )),
+			"activos" => new ApiExposedProperty("activos", false, GET, array( "bool" )),
 			"id_empresa" => new ApiExposedProperty("id_empresa", false, GET, array( "int" )),
+			"nombre" => new ApiExposedProperty("nombre", false, GET, array( "string" )),
 		);
 	}
 
 	protected function GenerateResponse() {		
 		try{
- 		$this->response = DocumentosController::Lista( 
+ 		$this->response = DocumentosController::Buscar( 
  			
 			
-			isset($_GET['activos'] ) ? $_GET['activos'] : null,
-			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] :  null
+			isset($_GET['activos'] ) ? $_GET['activos'] :  "",
+			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] :  null,
+			isset($_GET['nombre'] ) ? $_GET['nombre'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -5708,6 +5709,12 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
+			"json_impresion" => new ApiExposedProperty("json_impresion", true, POST, array( "json" )),
+			"nombre" => new ApiExposedProperty("nombre", true, POST, array( "string" )),
+			"activo" => new ApiExposedProperty("activo", false, POST, array( "bool" )),
+			"foliado" => new ApiExposedProperty("foliado", false, POST, array( "json" )),
+			"id_empresa" => new ApiExposedProperty("id_empresa", false, POST, array( "int" )),
+			"id_sucursal" => new ApiExposedProperty("id_sucursal", false, POST, array( "int" )),
 		);
 	}
 
@@ -5715,7 +5722,13 @@
 		try{
  		$this->response = DocumentosController::Nuevo( 
  			
-		
+			
+			isset($_POST['json_impresion'] ) ? json_decode($_POST['json_impresion']) : null,
+			isset($_POST['nombre'] ) ? $_POST['nombre'] : null,
+			isset($_POST['activo'] ) ? $_POST['activo'] :  1 ,
+			isset($_POST['foliado'] ) ? json_decode($_POST['foliado']) : null,
+			isset($_POST['id_empresa'] ) ? $_POST['id_empresa'] :  null,
+			isset($_POST['id_sucursal'] ) ? $_POST['id_sucursal'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -5734,7 +5747,13 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"id_documento" => new ApiExposedProperty("id_documento", true, GET, array( "int" )),
+			"id_documento" => new ApiExposedProperty("id_documento", true, POST, array( "int" )),
+			"activo" => new ApiExposedProperty("activo", false, POST, array( "bool" )),
+			"foliado" => new ApiExposedProperty("foliado", false, POST, array( "json" )),
+			"id_empresa" => new ApiExposedProperty("id_empresa", false, POST, array( "int" )),
+			"id_sucursal" => new ApiExposedProperty("id_sucursal", false, POST, array( "int" )),
+			"json_impresion" => new ApiExposedProperty("json_impresion", false, POST, array( "string" )),
+			"nombre" => new ApiExposedProperty("nombre", false, POST, array( "string" )),
 		);
 	}
 
@@ -5743,33 +5762,13 @@
  		$this->response = DocumentosController::Editar( 
  			
 			
-			isset($_GET['id_documento'] ) ? $_GET['id_documento'] : null
-			
-			);
-		}catch(Exception $e){
- 			//Logger::error($e);
-			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
-		}
- 	}
-  }
-  
-  
-
-  class ApiDocumentoFacturaImprimirXml extends ApiHandler {
-  
-
-	protected function DeclareAllowedRoles(){  return BYPASS;  }
-	protected function GetRequest()
-	{
-		$this->request = array(	
-		);
-	}
-
-	protected function GenerateResponse() {		
-		try{
- 		$this->response = DocumentosController::XmlImprimirFactura( 
- 			
-		
+			isset($_POST['id_documento'] ) ? $_POST['id_documento'] : null,
+			isset($_POST['activo'] ) ? $_POST['activo'] :  null,
+			isset($_POST['foliado'] ) ? json_decode($_POST['foliado']) : null,
+			isset($_POST['id_empresa'] ) ? $_POST['id_empresa'] :  null,
+			isset($_POST['id_sucursal'] ) ? $_POST['id_sucursal'] :  null,
+			isset($_POST['json_impresion'] ) ? $_POST['json_impresion'] :  null,
+			isset($_POST['nombre'] ) ? $_POST['nombre'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -5856,64 +5855,6 @@
 			
 			isset($_GET['id_cliente'] ) ? $_GET['id_cliente'] : null,
 			isset($_GET['id_venta'] ) ? $_GET['id_venta'] : null
-			
-			);
-		}catch(Exception $e){
- 			//Logger::error($e);
-			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
-		}
- 	}
-  }
-  
-  
-
-  class ApiDocumentoNotaDeVentaImprimir extends ApiHandler {
-  
-
-	protected function DeclareAllowedRoles(){  return BYPASS;  }
-	protected function GetRequest()
-	{
-		$this->request = array(	
-			"id_impresora" => new ApiExposedProperty("id_impresora", true, GET, array( "int" )),
-			"id_venta" => new ApiExposedProperty("id_venta", true, GET, array( "int" )),
-		);
-	}
-
-	protected function GenerateResponse() {		
-		try{
- 		$this->response = DocumentosController::ImprimirVentaDeNota( 
- 			
-			
-			isset($_GET['id_impresora'] ) ? $_GET['id_impresora'] : null,
-			isset($_GET['id_venta'] ) ? $_GET['id_venta'] : null
-			
-			);
-		}catch(Exception $e){
- 			//Logger::error($e);
-			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
-		}
- 	}
-  }
-  
-  
-
-  class ApiDocumentoEstadoDeCuentaImprimir extends ApiHandler {
-  
-
-	protected function DeclareAllowedRoles(){  return BYPASS;  }
-	protected function GetRequest()
-	{
-		$this->request = array(	
-			"id_cliente" => new ApiExposedProperty("id_cliente", true, GET, array( "int" )),
-		);
-	}
-
-	protected function GenerateResponse() {		
-		try{
- 		$this->response = DocumentosController::ImprimirCuentaDeEstado( 
- 			
-			
-			isset($_GET['id_cliente'] ) ? $_GET['id_cliente'] : null
 			
 			);
 		}catch(Exception $e){

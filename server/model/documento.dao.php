@@ -5,7 +5,7 @@ require_once("base/documento.dao.base.php");
 require_once("base/documento.vo.base.php");
 /** Page-level DocBlock .
   * 
-  * @author Andres
+  * @author Anonymous
   * @package docs
   * 
   */
@@ -13,7 +13,7 @@ require_once("base/documento.vo.base.php");
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link Documento }. 
-  * @author Andres
+  * @author Anonymous
   * @access public
   * @package docs
   * 

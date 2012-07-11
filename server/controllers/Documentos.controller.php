@@ -1,5 +1,10 @@
 <?php
 require_once("interfaces/Documentos.interface.php");
+
+
+
+
+
 /**
   *
   *
@@ -15,80 +20,60 @@ require_once("interfaces/Documentos.interface.php");
  	 *
  	 * @param activos bool Si no se obtiene este valor, se listaran los documentos activos e inactivos. Si su valor es true, mostrara solo los documentos activos, si es false, mostrara solo los documentos inactivos.
  	 * @param id_empresa int Id de la empresa de la cual se tomaran sus documentos.
- 	 * @return documentos json Objeto que contendrá la información de los documentos.
+ 	 * @param nombre string Buscar por nombre
+ 	 * @return resultados json Objeto que contendr la informacin de los documentos.
+ 	 * @return numero_de_resultados int 
  	 **/
-	public static function Lista
+  public static function Buscar
 	(
-		$activos, 
-		$id_empresa = null
-	)
-	{  
-  
-  
-	}
-  
-	/**
- 	 *
- 	 *Crea un nuevo documento.
+		$activos = "", 
+		$id_empresa = null, 
+		$nombre = null
+	){
 
-Update : Falta indicar en los argumentos el si el documeto esta activo y a que sucursal pertenece.
- 	 *
- 	 * @return id_documento int Id del nuevo documento
- 	 **/
-	public static function Nuevo
-	(
-	)
-	{  
-  
-  
+		$q = DocumentoBaseDAO::search( new DocumentoBase( array( "nombre" => $nombre ) ) );
+
+		return array(
+			"resultados" => $q,
+			"numero_de_resultados" => sizeof($q));
+		
 	}
+
+  	
+  
+  
+	
   
 	/**
  	 *
  	 *Update : Falta indicar en los argumentos el si el documeto esta activo y a que sucursal pertenece.
  	 *
  	 * @param id_documento int Id del documento a editar.
+ 	 * @param activo bool 
+ 	 * @param foliado json 
+ 	 * @param id_empresa int 
+ 	 * @param id_sucursal int 
+ 	 * @param json_impresion string 
+ 	 * @param nombre string 
  	 **/
-	public static function Editar
+  public static function Editar
 	(
-		$id_documento
-	)
-	{  
-  
-  
-	}
-  
-	/**
- 	 *
- 	 *Imprime el xml de una factura.
+		$id_documento, 
+		$activo = null, 
+		$foliado = null, 
+		$id_empresa = null, 
+		$id_sucursal = null, 
+		$json_impresion = null, 
+		$nombre = null
+	){
 
-Update : No se si este metodo tenga una utilidad real, ya que cuando se recibe el XML timbrado, se crea el archivo .xml y en el unico momento que se vuelve a ocupar es para enviarlo por correo al cliente.
- 	 *
- 	 **/
-	public static function Imprimir_xmlFactura
-	(
-	)
-	{  
-  
-  
+
 	}
-  
-	/**
- 	 *
- 	 *Imprime una factura
-Update : La respuesta solo deber?a de contener success :true | false, y en caso de error, su descripcion, no se necesita apra anda en el JSON de respuesta una propiedad factura.
- 	 *
- 	 * @param id_folio int Id de la factura que se desea imprimir.
- 	 * @return factura json Objeto con la informacion de la factura
- 	 **/
-	public static function ImprimirFactura
-	(
-		$id_folio
-	)
-	{  
+
   
   
-	}
+  
+	
   
 	/**
  	 *
@@ -96,14 +81,18 @@ Update : La respuesta solo deber?a de contener success :true | false, y en caso 
  	 *
  	 * @param id_folio int Id de la factura a eliminar
  	 **/
-	public static function CancelarFactura
+  public static function CancelarFactura
 	(
 		$id_folio
-	)
-	{  
-  
-  
+	){
+
+
 	}
+
+  
+  
+  
+	
   
 	/**
  	 *
@@ -115,46 +104,98 @@ Update : Falta especificar si seria una factura detallada (cuando en los concept
  	 * @param id_venta int Id de la venta sobre la cual se facturara
  	 * @return id_folio int Id de la factura generada
  	 **/
-	public static function GenerarFactura
+  public static function GenerarFactura
 	(
 		$id_cliente, 
 		$id_venta
-	)
-	{  
-  
-  
+	){
+
+
 	}
+
+  
+  
+  
+	
   
 	/**
  	 *
- 	 *Imprime una nota de venta de acuerdo al id_venta y al id_impresora
+ 	 *Imprime una factura
+Update : La respuesta solo deber?a de contener success :true | false, y en caso de error, su descripcion, no se necesita apra anda en el JSON de respuesta una propiedad factura.
  	 *
- 	 * @param id_impresora int Id de la impresora en la que se imprimira
- 	 * @param id_venta int Id de la venta que se imprimira
+ 	 * @param id_folio int Id de la factura que se desea imprimir.
+ 	 * @return factura json Objeto con la informacion de la factura
  	 **/
-	public static function ImprimirNota_de_venta
+  public static function ImprimirFactura
 	(
-		$id_impresora, 
-		$id_venta
-	)
-	{  
-  
-  
+		$id_folio
+	){
+
+
 	}
+
+  
+  
+  
+	
   
 	/**
  	 *
- 	 *Imprime un estado de cuenta de un cliente.
+ 	 *Crea un nuevo documento.
+
  	 *
- 	 * @param id_cliente int Id del cliente del cual se imprimirán 
- 	 * @return estado_cuenta json Objeto que contendrá la información del estado de cuenta del cliente
+ 	 * @param json_impresion json El json que se utilizara para imprimir este documento.
+ 	 * @param nombre string Nombre del documento
+ 	 * @param activo bool Si esta activo o si no se puede realizar documentos de este tipo.
+ 	 * @param foliado json El json que describe como sera el foliado de este documento. Incluye en que folio va.
+ 	 * @param id_empresa int Si pertence a una empresa en especifico, o puede realizarse en cualquier empresa.
+ 	 * @param id_sucursal int Si pertenece a una sucursal en especifico o puede realizarse en cualquier sucursal.
+ 	 * @return id_documento int Id del nuevo documento
  	 **/
-	public static function ImprimirEstado_de_cuenta
+  public static function Nuevo
 	(
-		$id_cliente
-	)
-	{  
-  
-  
+		$json_impresion, 
+		$nombre, 
+		$activo =  1 , 
+		$foliado = null, 
+		$id_empresa = null, 
+		$id_sucursal = null
+	){
+
+		if(is_null($json_impresion)){
+			throw new InvalidDataException("El json de impresion no es valido.");
+		}
+
+
+
+		$q = DocumentoBaseDAO::search( new DocumentoBase( array( "nombre" => $nombre ) ) );
+
+		if(sizeof($q) > 0 ) throw new InvalidDataException("Ya existe un documento con este nombre.");
+
+		$nDoc = new DocumentoBase();
+		$nDoc->setJsonImpresion( json_encode($json_impresion));
+		$nDoc->setNombre($nombre);
+		$nDoc->setActivo($activo);
+		/* @TODO $nDoc->setFoliado($foliado); */
+		$nDoc->setIdEmpresa($id_empresa);
+		$nDoc->setIdSucursal($id_sucursal);
+		$nDoc->setUltimaModificacion(time());
+
+
+		
+
+		try{
+
+			DocumentoBaseDAO::save( $nDoc );
+
+		}catch(Exception $e){
+			throw new InvalidDatabaseOperationException ($e);
+		}
+
+
+		return array("id_documento_base" => $nDoc->getIdDocumentoBase() );
+
 	}
+
+ 
   }

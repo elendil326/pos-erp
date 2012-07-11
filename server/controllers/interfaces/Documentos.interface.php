@@ -10,13 +10,19 @@
   
 	/**
  	 *
- 	 *Update : Falta indicar en los argumentos el si el documeto esta activo y a que sucursal pertenece.
+ 	 *Lista los documentos en el sistema. Se puede filtrar por activos y por la empresa. Se puede ordenar por sus atributos
  	 *
- 	 * @param id_documento int Id del documento a editar.
+ 	 * @param activos bool Si no se obtiene este valor, se listaran los documentos activos e inactivos. Si su valor es true, mostrara solo los documentos activos, si es false, mostrara solo los documentos inactivos.
+ 	 * @param id_empresa int Id de la empresa de la cual se tomaran sus documentos.
+ 	 * @param nombre string Buscar por nombre
+ 	 * @return resultados json Objeto que contendr la informacin de los documentos.
+ 	 * @return numero_de_resultados int 
  	 **/
-  static function Editar
+  static function Buscar
 	(
-		$id_documento
+		$activos = "", 
+		$id_empresa = null, 
+		$nombre = null
 	);  
   
   
@@ -24,14 +30,25 @@
   
 	/**
  	 *
- 	 *Imprime un estado de cuenta de un cliente.
+ 	 *Update : Falta indicar en los argumentos el si el documeto esta activo y a que sucursal pertenece.
  	 *
- 	 * @param id_cliente int Id del cliente del cual se imprimirán 
- 	 * @return estado_cuenta json Objeto que contendrá la información del estado de cuenta del cliente
+ 	 * @param id_documento int Id del documento a editar.
+ 	 * @param activo bool 
+ 	 * @param foliado json 
+ 	 * @param id_empresa int 
+ 	 * @param id_sucursal int 
+ 	 * @param json_impresion string 
+ 	 * @param nombre string 
  	 **/
-  static function ImprimirCuentaDeEstado
+  static function Editar
 	(
-		$id_cliente
+		$id_documento, 
+		$activo = null, 
+		$foliado = null, 
+		$id_empresa = null, 
+		$id_sucursal = null, 
+		$json_impresion = null, 
+		$nombre = null
 	);  
   
   
@@ -88,61 +105,25 @@ Update : La respuesta solo deber?a de contener success :true | false, y en caso 
   
 	/**
  	 *
- 	 *Imprime el xml de una factura.
-
-Update : No se si este metodo tenga una utilidad real, ya que cuando se recibe el XML timbrado, se crea el archivo .xml y en el unico momento que se vuelve a ocupar es para enviarlo por correo al cliente.
- 	 *
- 	 **/
-  static function XmlImprimirFactura
-	(
-	);  
-  
-  
-	
-  
-	/**
- 	 *
- 	 *Lista los documentos en el sistema. Se puede filtrar por activos y por la empresa. Se puede ordenar por sus atributos
- 	 *
- 	 * @param activos bool Si no se obtiene este valor, se listaran los documentos activos e inactivos. Si su valor es true, mostrara solo los documentos activos, si es false, mostrara solo los documentos inactivos.
- 	 * @param id_empresa int Id de la empresa de la cual se tomaran sus documentos.
- 	 * @return documentos json Objeto que contendrá la información de los documentos.
- 	 **/
-  static function Lista
-	(
-		$activos, 
-		$id_empresa = null
-	);  
-  
-  
-	
-  
-	/**
- 	 *
- 	 *Imprime una nota de venta de acuerdo al id_venta y al id_impresora
- 	 *
- 	 * @param id_impresora int Id de la impresora en la que se imprimira
- 	 * @param id_venta int Id de la venta que se imprimira
- 	 **/
-  static function ImprimirVentaDeNota
-	(
-		$id_impresora, 
-		$id_venta
-	);  
-  
-  
-	
-  
-	/**
- 	 *
  	 *Crea un nuevo documento.
 
-Update : Falta indicar en los argumentos el si el documeto esta activo y a que sucursal pertenece.
  	 *
+ 	 * @param json_impresion json El json que se utilizara para imprimir este documento.
+ 	 * @param nombre string Nombre del documento
+ 	 * @param activo bool Si esta activo o si no se puede realizar documentos de este tipo.
+ 	 * @param foliado json El json que describe como sera el foliado de este documento. Incluye en que folio va.
+ 	 * @param id_empresa int Si pertence a una empresa en especifico, o puede realizarse en cualquier empresa.
+ 	 * @param id_sucursal int Si pertenece a una sucursal en especifico o puede realizarse en cualquier sucursal.
  	 * @return id_documento int Id del nuevo documento
  	 **/
   static function Nuevo
 	(
+		$json_impresion, 
+		$nombre, 
+		$activo =  1 , 
+		$foliado = null, 
+		$id_empresa = null, 
+		$id_sucursal = null
 	);  
   
   

@@ -9,6 +9,24 @@
 		$page = new GerenciaComponentPage();
 
 
+
+		$page->addComponent(new TitleComponent( "Nuevo Documento", 1));
+		$f = new DAOFormComponent(  new DocumentoBase());
+		$f->addApiCall("api/documento/nuevo", "POST");
+		$f->hideField(array(
+				"id_documento_base",
+				"ultima_modificacion"
+			));
+		$f->setType("json_impresion", "textarea");
+		$page->addComponent($f);
+
+		$page->render();
+
+
+
+		
+die;
+
 		$json = '{
 			"margin-top" : 1,
 			"margin-bottom" : 1,
@@ -47,10 +65,12 @@
 			]
 		}';
 		$json = '{
-			"margin-top" : 1,
+			"margin-top" 	: 1,
 			"margin-bottom" : 1,
-			"margin-left" : 1,
-			"margin-right" : 1,
+			"margin-left" 	: 1,
+			"margin-right" 	: 1,
+			"width"  		: 612,
+			"height" 		: 492,
 			"body" : [
 				{
 					"type" 		: "text",

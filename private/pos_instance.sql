@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jun 25, 2012 at 02:27 PM
+-- Generation Time: Jul 11, 2012 at 02:24 PM
 -- Server version: 5.1.54
 -- PHP Version: 5.3.5-1ubuntu7.8
 
@@ -502,7 +502,7 @@ CREATE TABLE IF NOT EXISTS `compra` (
   `tipo_de_pago` enum('cheque','tarjeta','efectivo') DEFAULT NULL COMMENT 'Si la compra fue pagada con tarjeta, cheque o efectivo',
   `retencion` float NOT NULL COMMENT 'Monto de retencion',
   PRIMARY KEY (`id_compra`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 -- --------------------------------------------------------
 
@@ -686,7 +686,7 @@ CREATE TABLE IF NOT EXISTS `direccion` (
   `id_usuario_ultima_modificacion` int(11) NOT NULL COMMENT 'quien fue el usuario que modifico este registro la ultima vez',
   PRIMARY KEY (`id_direccion`),
   KEY `id_ciudad` (`id_ciudad`,`id_usuario_ultima_modificacion`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
 
 -- --------------------------------------------------------
 
@@ -696,44 +696,30 @@ CREATE TABLE IF NOT EXISTS `direccion` (
 
 CREATE TABLE IF NOT EXISTS `documento` (
   `id_documento` int(11) NOT NULL AUTO_INCREMENT,
+  `id_documento_base` int(11) NOT NULL,
+  `folio` varchar(8) COLLATE utf8_spanish_ci NOT NULL,
+  `fecha` int(11) NOT NULL,
+  `id_operacion` int(11) NOT NULL,
   PRIMARY KEY (`id_documento`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `documento_base`
+--
+
+CREATE TABLE IF NOT EXISTS `documento_base` (
+  `id_documento_base` int(11) NOT NULL AUTO_INCREMENT,
+  `id_empresa` int(11) DEFAULT NULL,
+  `id_sucursal` int(11) DEFAULT NULL,
+  `nombre` varchar(32) NOT NULL,
+  `activo` tinyint(1) NOT NULL,
+  `json_impresion` longtext NOT NULL,
+  `ultima_modificacion` int(11) NOT NULL,
+  PRIMARY KEY (`id_documento_base`),
+  UNIQUE KEY `nombre` (`nombre`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `documento_cliente`
---
-
-CREATE TABLE IF NOT EXISTS `documento_cliente` (
-  `id_documento` int(11) NOT NULL COMMENT 'Id del documento que se aplica al cliente',
-  `id_cliente` int(11) NOT NULL COMMENT 'Id cliente',
-  PRIMARY KEY (`id_documento`,`id_cliente`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle entre un documento y el cliente al que se le aplica';
-
--- --------------------------------------------------------
-
---
--- Table structure for table `documento_compra`
---
-
-CREATE TABLE IF NOT EXISTS `documento_compra` (
-  `id_documento` int(11) NOT NULL COMMENT 'id del documento que se aplica a la compra',
-  `id_compra` int(11) NOT NULL COMMENT 'id de la compra',
-  PRIMARY KEY (`id_documento`,`id_compra`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle entre un documento y la compra';
-
--- --------------------------------------------------------
-
---
--- Table structure for table `documento_venta`
---
-
-CREATE TABLE IF NOT EXISTS `documento_venta` (
-  `id_documento` int(11) NOT NULL COMMENT 'Id del documento que se aplica a la venta',
-  `id_venta` int(11) NOT NULL COMMENT 'id de la venta',
-  PRIMARY KEY (`id_documento`,`id_venta`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle entre un documento y la venta';
 
 -- --------------------------------------------------------
 
@@ -773,7 +759,6 @@ CREATE TABLE IF NOT EXISTS `estado` (
 -- Table structure for table `extra_params_estructura`
 --
 
-
 CREATE TABLE IF NOT EXISTS `extra_params_estructura` (
   `id_extra_params_estructura` int(11) NOT NULL AUTO_INCREMENT,
   `tabla` varchar(16) COLLATE utf8_spanish_ci NOT NULL,
@@ -785,7 +770,7 @@ CREATE TABLE IF NOT EXISTS `extra_params_estructura` (
   `descripcion` text COLLATE utf8_spanish_ci,
   PRIMARY KEY (`id_extra_params_estructura`),
   UNIQUE KEY `tabla` (`tabla`,`campo`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 
@@ -794,12 +779,12 @@ CREATE TABLE IF NOT EXISTS `extra_params_estructura` (
 --
 
 CREATE TABLE IF NOT EXISTS `extra_params_valores` (
-  `id_extra_params_valores` int(11) NOT NULL AUTO_INCREMENT,
+  `id_extra_params_valores` int(11) NOT NULL,
   `id_extra_params_estructura` int(11) NOT NULL,
   `id_pk_tabla` int(11) NOT NULL COMMENT 'el id del objeto en la tabla a la que se le agrego la columna',
   `val` varchar(256) COLLATE utf8_spanish_ci NOT NULL,
   PRIMARY KEY (`id_extra_params_valores`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 -- --------------------------------------------------------
 
@@ -1058,7 +1043,7 @@ CREATE TABLE IF NOT EXISTS `lote_entrada` (
   `fecha_registro` int(11) NOT NULL COMMENT 'Fecha en que se registra el movimiento',
   `motivo` varchar(255) DEFAULT NULL COMMENT 'motivo por le cual entra producto al almacen',
   PRIMARY KEY (`id_lote_entrada`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Registro de entradas de un lote' AUTO_INCREMENT=11 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Registro de entradas de un lote' AUTO_INCREMENT=12 ;
 
 -- --------------------------------------------------------
 
@@ -1301,7 +1286,7 @@ CREATE TABLE IF NOT EXISTS `producto` (
   `precio` float DEFAULT NULL COMMENT 'El precio fijo del producto',
   `id_unidad_compra` int(11) DEFAULT NULL COMMENT 'Id de la unidad de compra del producto',
   PRIMARY KEY (`id_producto`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1871 ;
 
 -- --------------------------------------------------------
 
@@ -1642,7 +1627,7 @@ CREATE TABLE IF NOT EXISTS `sesion` (
   PRIMARY KEY (`id_sesion`),
   UNIQUE KEY `id_usuario` (`id_usuario`),
   KEY `auth_token` (`auth_token`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Mantiene un seguimiento de las sesiones activas en el sistem' AUTO_INCREMENT=28 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Mantiene un seguimiento de las sesiones activas en el sistem' AUTO_INCREMENT=34 ;
 
 -- --------------------------------------------------------
 
@@ -1832,7 +1817,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `tarifa_venta_obtenida` enum('rol','proveedor','cliente','usuario') NOT NULL COMMENT 'Indica de donde fue obtenida la tarifa de venta',
   `token_recuperacion_pass` varchar(30) CHARACTER SET latin1 DEFAULT NULL COMMENT 'El token que se envia por correo para recuperar contrasena',
   PRIMARY KEY (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='tabla de usuarios' AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='tabla de usuarios' AUTO_INCREMENT=8 ;
 
 -- --------------------------------------------------------
 

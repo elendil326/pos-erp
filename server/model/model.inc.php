@@ -41,9 +41,7 @@ require_once ('devolucion_sobre_compra.dao.php');
 require_once ('devolucion_sobre_venta.dao.php');
 require_once ('direccion.dao.php');
 require_once ('documento.dao.php');
-require_once ('documento_cliente.dao.php');
-require_once ('documento_compra.dao.php');
-require_once ('documento_venta.dao.php');
+require_once ('documento_base.dao.php');
 require_once ('empresa.dao.php');
 /*require_once ('entrada_almacen.dao.php');*/
 require_once ('estado.dao.php');

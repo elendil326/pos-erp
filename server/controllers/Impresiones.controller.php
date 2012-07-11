@@ -208,7 +208,14 @@ class ImpresionesController {
 	public static function Documento($id_documento, $params = NULL){
 
 
- 		$pdf = new Cezpdf( $paper = 'letter');
+
+
+
+		$decoded_json  = json_decode($id_documento);
+
+
+
+ 		$pdf = new Cezpdf( array(0,0,$decoded_json->width, $decoded_json->height));
 
 		if (is_file(POS_PATH_TO_SERVER_ROOT . "libs/ezpdf/fonts/Helvetica.afm")){
 			$pdf->selectFont(POS_PATH_TO_SERVER_ROOT . "libs/ezpdf/fonts/Helvetica.afm");
@@ -218,16 +225,6 @@ class ImpresionesController {
 			
 		}
 
-
-
-		$decoded_json  = json_decode($id_documento);
-
-
-
-		function foo($bar){
-			
-			return 790 - $bar;
-		}
 		
 
 		for ($i=0; $i < sizeof($decoded_json->body); $i++) { 
@@ -268,7 +265,7 @@ class ImpresionesController {
 
 					$pdf->addText( 
 						$decoded_json->body[$i]->x, 
-						foo($decoded_json->body[$i]->y), 
+						$decoded_json->body[$i]->y,
 						$decoded_json->body[$i]->fontSize, 
 						utf8_decode($decoded_json->body[$i]->value) );
 				break;

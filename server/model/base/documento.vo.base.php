@@ -25,6 +25,18 @@ class Documento extends VO
 			if( isset($data['id_documento']) ){
 				$this->id_documento = $data['id_documento'];
 			}
+			if( isset($data['id_documento_base']) ){
+				$this->id_documento_base = $data['id_documento_base'];
+			}
+			if( isset($data['folio']) ){
+				$this->folio = $data['folio'];
+			}
+			if( isset($data['fecha']) ){
+				$this->fecha = $data['fecha'];
+			}
+			if( isset($data['id_operacion']) ){
+				$this->id_operacion = $data['id_operacion'];
+			}
 		}
 	}
 
@@ -38,7 +50,11 @@ class Documento extends VO
 	public function __toString( )
 	{ 
 		$vec = array( 
-			"id_documento" => $this->id_documento
+			"id_documento" => $this->id_documento,
+			"id_documento_base" => $this->id_documento_base,
+			"folio" => $this->folio,
+			"fecha" => $this->fecha,
+			"id_operacion" => $this->id_operacion
 		); 
 	return json_encode($vec); 
 	}
@@ -53,6 +69,42 @@ class Documento extends VO
 	  * @var int(11)
 	  */
 	public $id_documento;
+
+	/**
+	  * id_documento_base
+	  * 
+	  *  [Campo no documentado]<br>
+	  * @access public
+	  * @var int(11)
+	  */
+	public $id_documento_base;
+
+	/**
+	  * folio
+	  * 
+	  *  [Campo no documentado]<br>
+	  * @access public
+	  * @var varchar(8)
+	  */
+	public $folio;
+
+	/**
+	  * fecha
+	  * 
+	  *  [Campo no documentado]<br>
+	  * @access public
+	  * @var int(11)
+	  */
+	public $fecha;
+
+	/**
+	  * id_operacion
+	  * 
+	  *  [Campo no documentado]<br>
+	  * @access public
+	  * @var int(11)
+	  */
+	public $id_operacion;
 
 	/**
 	  * getIdDocumento
@@ -80,6 +132,102 @@ class Documento extends VO
 	final public function setIdDocumento( $id_documento )
 	{
 		$this->id_documento = $id_documento;
+	}
+
+	/**
+	  * getIdDocumentoBase
+	  * 
+	  * Get the <i>id_documento_base</i> property for this object. Donde <i>id_documento_base</i> es  [Campo no documentado]
+	  * @return int(11)
+	  */
+	final public function getIdDocumentoBase()
+	{
+		return $this->id_documento_base;
+	}
+
+	/**
+	  * setIdDocumentoBase( $id_documento_base )
+	  * 
+	  * Set the <i>id_documento_base</i> property for this object. Donde <i>id_documento_base</i> es  [Campo no documentado].
+	  * Una validacion basica se hara aqui para comprobar que <i>id_documento_base</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setIdDocumentoBase( $id_documento_base )
+	{
+		$this->id_documento_base = $id_documento_base;
+	}
+
+	/**
+	  * getFolio
+	  * 
+	  * Get the <i>folio</i> property for this object. Donde <i>folio</i> es  [Campo no documentado]
+	  * @return varchar(8)
+	  */
+	final public function getFolio()
+	{
+		return $this->folio;
+	}
+
+	/**
+	  * setFolio( $folio )
+	  * 
+	  * Set the <i>folio</i> property for this object. Donde <i>folio</i> es  [Campo no documentado].
+	  * Una validacion basica se hara aqui para comprobar que <i>folio</i> es de tipo <i>varchar(8)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param varchar(8)
+	  */
+	final public function setFolio( $folio )
+	{
+		$this->folio = $folio;
+	}
+
+	/**
+	  * getFecha
+	  * 
+	  * Get the <i>fecha</i> property for this object. Donde <i>fecha</i> es  [Campo no documentado]
+	  * @return int(11)
+	  */
+	final public function getFecha()
+	{
+		return $this->fecha;
+	}
+
+	/**
+	  * setFecha( $fecha )
+	  * 
+	  * Set the <i>fecha</i> property for this object. Donde <i>fecha</i> es  [Campo no documentado].
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setFecha( $fecha )
+	{
+		$this->fecha = $fecha;
+	}
+
+	/**
+	  * getIdOperacion
+	  * 
+	  * Get the <i>id_operacion</i> property for this object. Donde <i>id_operacion</i> es  [Campo no documentado]
+	  * @return int(11)
+	  */
+	final public function getIdOperacion()
+	{
+		return $this->id_operacion;
+	}
+
+	/**
+	  * setIdOperacion( $id_operacion )
+	  * 
+	  * Set the <i>id_operacion</i> property for this object. Donde <i>id_operacion</i> es  [Campo no documentado].
+	  * Una validacion basica se hara aqui para comprobar que <i>id_operacion</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setIdOperacion( $id_operacion )
+	{
+		$this->id_operacion = $id_operacion;
 	}
 
 }

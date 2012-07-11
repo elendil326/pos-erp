@@ -213,7 +213,7 @@
 	require_once("controllers/Proveedores.controller.php");
 	require_once("controllers/Compras.controller.php");
 	require_once("controllers/Impuestos.controller.php");
-		
+	require_once("controllers/Documentos.controller.php");
 		
 			
 	/*
@@ -222,7 +222,7 @@
 	require_once("controllers/Consignaciones.controller.php");
 	require_once("controllers/Contabilidad.controller.php");
 	
-	require_once("controllers/Documentos.controller.php");
+	
 
 	require_once("controllers/Paquetes.controller.php");
 	require_once("controllers/Reportes.controller.php");

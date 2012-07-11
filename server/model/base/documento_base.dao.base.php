@@ -1,58 +1,58 @@
 <?php
-/** Documento Data Access Object (DAO) Base.
+/** DocumentoBase Data Access Object (DAO) Base.
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
-  * almacenar de forma permanente y recuperar instancias de objetos {@link Documento }. 
+  * almacenar de forma permanente y recuperar instancias de objetos {@link DocumentoBase }. 
   * @author Anonymous
   * @access private
   * @abstract
   * @package docs
   * 
   */
-abstract class DocumentoDAOBase extends DAO
+abstract class DocumentoBaseDAOBase extends DAO
 {
 
 	/**
 	  *	Guardar registros. 
 	  *	
-	  *	Este metodo guarda el estado actual del objeto {@link Documento} pasado en la base de datos. La llave 
+	  *	Este metodo guarda el estado actual del objeto {@link DocumentoBase} pasado en la base de datos. La llave 
 	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara o combinacion de llaves
 	  *	primarias describen una fila que no se encuentra en la base de datos, entonces save() creara una nueva fila, insertando
 	  *	en ese objeto el ID recien creado.
 	  *	
 	  *	@static
 	  * @throws Exception si la operacion fallo.
-	  * @param Documento [$documento] El objeto de tipo Documento
+	  * @param DocumentoBase [$documento_base] El objeto de tipo DocumentoBase
 	  * @return Un entero mayor o igual a cero denotando las filas afectadas.
 	  **/
-	public static final function save( &$documento )
+	public static final function save( &$documento_base )
 	{
-		if( ! is_null ( self::getByPK(  $documento->getIdDocumento() ) ) )
+		if( ! is_null ( self::getByPK(  $documento_base->getIdDocumentoBase() ) ) )
 		{
-			try{ return DocumentoDAOBase::update( $documento) ; } catch(Exception $e){ throw $e; }
+			try{ return DocumentoBaseDAOBase::update( $documento_base) ; } catch(Exception $e){ throw $e; }
 		}else{
-			try{ return DocumentoDAOBase::create( $documento) ; } catch(Exception $e){ throw $e; }
+			try{ return DocumentoBaseDAOBase::create( $documento_base) ; } catch(Exception $e){ throw $e; }
 		}
 	}
 
 
 	/**
-	  *	Obtener {@link Documento} por llave primaria. 
+	  *	Obtener {@link DocumentoBase} por llave primaria. 
 	  *	
-	  * Este metodo cargara un objeto {@link Documento} de la base de datos 
+	  * Este metodo cargara un objeto {@link DocumentoBase} de la base de datos 
 	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
-	  * @return @link Documento Un objeto del tipo {@link Documento}. NULL si no hay tal registro.
+	  * @return @link DocumentoBase Un objeto del tipo {@link DocumentoBase}. NULL si no hay tal registro.
 	  **/
-	public static final function getByPK(  $id_documento )
+	public static final function getByPK(  $id_documento_base )
 	{
-		$sql = "SELECT * FROM documento WHERE (id_documento = ? ) LIMIT 1;";
-		$params = array(  $id_documento );
+		$sql = "SELECT * FROM documento_base WHERE (id_documento_base = ? ) LIMIT 1;";
+		$params = array(  $id_documento_base );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
-			$foo = new Documento( $rs );
+			$foo = new DocumentoBase( $rs );
 			return $foo;
 	}
 
@@ -61,7 +61,7 @@ abstract class DocumentoDAOBase extends DAO
 	  *	Obtener todas las filas.
 	  *	
 	  * Esta funcion leera todos los contenidos de la tabla en la base de datos y construira
-	  * un vector que contiene objetos de tipo {@link Documento}. Tenga en cuenta que este metodo
+	  * un vector que contiene objetos de tipo {@link DocumentoBase}. Tenga en cuenta que este metodo
 	  * consumen enormes cantidades de recursos si la tabla tiene muchas filas. 
 	  * Este metodo solo debe usarse cuando las tablas destino tienen solo pequenas cantidades de datos o se usan sus parametros para obtener un menor numero de filas.
 	  *	
@@ -70,11 +70,11 @@ abstract class DocumentoDAOBase extends DAO
 	  * @param $columnas_por_pagina Columnas por pagina.
 	  * @param $orden Debe ser una cadena con el nombre de una columna en la base de datos.
 	  * @param $tipo_de_orden 'ASC' o 'DESC' el default es 'ASC'
-	  * @return Array Un arreglo que contiene objetos del tipo {@link Documento}.
+	  * @return Array Un arreglo que contiene objetos del tipo {@link DocumentoBase}.
 	  **/
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
-		$sql = "SELECT * from documento";
+		$sql = "SELECT * from documento_base";
 		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
 		if( ! is_null ( $pagina ) )
@@ -85,9 +85,9 @@ abstract class DocumentoDAOBase extends DAO
 		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
-			$bar = new Documento($foo);
+			$bar = new DocumentoBase($foo);
     		array_push( $allData, $bar);
-			//id_documento
+			//id_documento_base
 		}
 		return $allData;
 	}
@@ -96,7 +96,7 @@ abstract class DocumentoDAOBase extends DAO
 	/**
 	  *	Buscar registros.
 	  *	
-	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link Documento} de la base de datos. 
+	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link DocumentoBase} de la base de datos. 
 	  * Consiste en buscar todos los objetos que coinciden con las variables permanentes instanciadas de objeto pasado como argumento. 
 	  * Aquellas variables que tienen valores NULL seran excluidos en busca de criterios.
 	  *	
@@ -113,37 +113,47 @@ abstract class DocumentoDAOBase extends DAO
 	  *	  }
 	  * </code>
 	  *	@static
-	  * @param Documento [$documento] El objeto de tipo Documento
+	  * @param DocumentoBase [$documento_base] El objeto de tipo DocumentoBase
 	  * @param $orderBy Debe ser una cadena con el nombre de una columna en la base de datos.
 	  * @param $orden 'ASC' o 'DESC' el default es 'ASC'
 	  **/
-	public static final function search( $documento , $orderBy = null, $orden = 'ASC')
+	public static final function search( $documento_base , $orderBy = null, $orden = 'ASC')
 	{
-		$sql = "SELECT * from documento WHERE ("; 
+		$sql = "SELECT * from documento_base WHERE ("; 
 		$val = array();
-		if( ! is_null( $documento->getIdDocumento() ) ){
-			$sql .= " `id_documento` = ? AND";
-			array_push( $val, $documento->getIdDocumento() );
-		}
-
-		if( ! is_null( $documento->getIdDocumentoBase() ) ){
+		if( ! is_null( $documento_base->getIdDocumentoBase() ) ){
 			$sql .= " `id_documento_base` = ? AND";
-			array_push( $val, $documento->getIdDocumentoBase() );
+			array_push( $val, $documento_base->getIdDocumentoBase() );
 		}
 
-		if( ! is_null( $documento->getFolio() ) ){
-			$sql .= " `folio` = ? AND";
-			array_push( $val, $documento->getFolio() );
+		if( ! is_null( $documento_base->getIdEmpresa() ) ){
+			$sql .= " `id_empresa` = ? AND";
+			array_push( $val, $documento_base->getIdEmpresa() );
 		}
 
-		if( ! is_null( $documento->getFecha() ) ){
-			$sql .= " `fecha` = ? AND";
-			array_push( $val, $documento->getFecha() );
+		if( ! is_null( $documento_base->getIdSucursal() ) ){
+			$sql .= " `id_sucursal` = ? AND";
+			array_push( $val, $documento_base->getIdSucursal() );
 		}
 
-		if( ! is_null( $documento->getIdOperacion() ) ){
-			$sql .= " `id_operacion` = ? AND";
-			array_push( $val, $documento->getIdOperacion() );
+		if( ! is_null( $documento_base->getNombre() ) ){
+			$sql .= " `nombre` = ? AND";
+			array_push( $val, $documento_base->getNombre() );
+		}
+
+		if( ! is_null( $documento_base->getActivo() ) ){
+			$sql .= " `activo` = ? AND";
+			array_push( $val, $documento_base->getActivo() );
+		}
+
+		if( ! is_null( $documento_base->getJsonImpresion() ) ){
+			$sql .= " `json_impresion` = ? AND";
+			array_push( $val, $documento_base->getJsonImpresion() );
+		}
+
+		if( ! is_null( $documento_base->getUltimaModificacion() ) ){
+			$sql .= " `ultima_modificacion` = ? AND";
+			array_push( $val, $documento_base->getUltimaModificacion() );
 		}
 
 		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
@@ -156,7 +166,7 @@ abstract class DocumentoDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-			$bar =  new Documento($foo);
+			$bar =  new DocumentoBase($foo);
     		array_push( $ar,$bar);
 		}
 		return $ar;
@@ -172,17 +182,19 @@ abstract class DocumentoDAOBase extends DAO
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
-	  * @param Documento [$documento] El objeto de tipo Documento a actualizar.
+	  * @param DocumentoBase [$documento_base] El objeto de tipo DocumentoBase a actualizar.
 	  **/
-	private static final function update( $documento )
+	private static final function update( $documento_base )
 	{
-		$sql = "UPDATE documento SET  `id_documento_base` = ?, `folio` = ?, `fecha` = ?, `id_operacion` = ? WHERE  `id_documento` = ?;";
+		$sql = "UPDATE documento_base SET  `id_empresa` = ?, `id_sucursal` = ?, `nombre` = ?, `activo` = ?, `json_impresion` = ?, `ultima_modificacion` = ? WHERE  `id_documento_base` = ?;";
 		$params = array( 
-			$documento->getIdDocumentoBase(), 
-			$documento->getFolio(), 
-			$documento->getFecha(), 
-			$documento->getIdOperacion(), 
-			$documento->getIdDocumento(), );
+			$documento_base->getIdEmpresa(), 
+			$documento_base->getIdSucursal(), 
+			$documento_base->getNombre(), 
+			$documento_base->getActivo(), 
+			$documento_base->getJsonImpresion(), 
+			$documento_base->getUltimaModificacion(), 
+			$documento_base->getIdDocumentoBase(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
@@ -194,31 +206,33 @@ abstract class DocumentoDAOBase extends DAO
 	  *	Crear registros.
 	  *	
 	  * Este metodo creara una nueva fila en la base de datos de acuerdo con los 
-	  * contenidos del objeto Documento suministrado. Asegurese
+	  * contenidos del objeto DocumentoBase suministrado. Asegurese
 	  * de que los valores para todas las columnas NOT NULL se ha especificado 
 	  * correctamente. Despues del comando INSERT, este metodo asignara la clave 
-	  * primaria generada en el objeto Documento dentro de la misma transaccion.
+	  * primaria generada en el objeto DocumentoBase dentro de la misma transaccion.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error
-	  * @param Documento [$documento] El objeto de tipo Documento a crear.
+	  * @param DocumentoBase [$documento_base] El objeto de tipo DocumentoBase a crear.
 	  **/
-	private static final function create( &$documento )
+	private static final function create( &$documento_base )
 	{
-		$sql = "INSERT INTO documento ( `id_documento`, `id_documento_base`, `folio`, `fecha`, `id_operacion` ) VALUES ( ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO documento_base ( `id_documento_base`, `id_empresa`, `id_sucursal`, `nombre`, `activo`, `json_impresion`, `ultima_modificacion` ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
-			$documento->getIdDocumento(), 
-			$documento->getIdDocumentoBase(), 
-			$documento->getFolio(), 
-			$documento->getFecha(), 
-			$documento->getIdOperacion(), 
+			$documento_base->getIdDocumentoBase(), 
+			$documento_base->getIdEmpresa(), 
+			$documento_base->getIdSucursal(), 
+			$documento_base->getNombre(), 
+			$documento_base->getActivo(), 
+			$documento_base->getJsonImpresion(), 
+			$documento_base->getUltimaModificacion(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
 		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
-		/* save autoincremented value on obj */  $documento->setIdDocumento( $conn->Insert_ID() ); /*  */ 
+		/* save autoincremented value on obj */  $documento_base->setIdDocumentoBase( $conn->Insert_ID() ); /*  */ 
 		return $ar;
 	}
 
@@ -226,8 +240,8 @@ abstract class DocumentoDAOBase extends DAO
 	/**
 	  *	Buscar por rango.
 	  *	
-	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link Documento} de la base de datos siempre y cuando 
-	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link Documento}.
+	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link DocumentoBase} de la base de datos siempre y cuando 
+	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link DocumentoBase}.
 	  * 
 	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda (los valores 0 y false no son tomados como NULL) .
 	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.
@@ -251,27 +265,16 @@ abstract class DocumentoDAOBase extends DAO
 	  *	  }
 	  * </code>
 	  *	@static
-	  * @param Documento [$documento] El objeto de tipo Documento
-	  * @param Documento [$documento] El objeto de tipo Documento
+	  * @param DocumentoBase [$documento_base] El objeto de tipo DocumentoBase
+	  * @param DocumentoBase [$documento_base] El objeto de tipo DocumentoBase
 	  * @param $orderBy Debe ser una cadena con el nombre de una columna en la base de datos.
 	  * @param $orden 'ASC' o 'DESC' el default es 'ASC'
 	  **/
-	public static final function byRange( $documentoA , $documentoB , $orderBy = null, $orden = 'ASC')
+	public static final function byRange( $documento_baseA , $documento_baseB , $orderBy = null, $orden = 'ASC')
 	{
-		$sql = "SELECT * from documento WHERE ("; 
+		$sql = "SELECT * from documento_base WHERE ("; 
 		$val = array();
-		if( ( !is_null (($a = $documentoA->getIdDocumento()) ) ) & ( ! is_null ( ($b = $documentoB->getIdDocumento()) ) ) ){
-				$sql .= " `id_documento` >= ? AND `id_documento` <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " `id_documento` = ? AND"; 
-			$a = is_null ( $a ) ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
-		if( ( !is_null (($a = $documentoA->getIdDocumentoBase()) ) ) & ( ! is_null ( ($b = $documentoB->getIdDocumentoBase()) ) ) ){
+		if( ( !is_null (($a = $documento_baseA->getIdDocumentoBase()) ) ) & ( ! is_null ( ($b = $documento_baseB->getIdDocumentoBase()) ) ) ){
 				$sql .= " `id_documento_base` >= ? AND `id_documento_base` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
@@ -282,34 +285,67 @@ abstract class DocumentoDAOBase extends DAO
 			
 		}
 
-		if( ( !is_null (($a = $documentoA->getFolio()) ) ) & ( ! is_null ( ($b = $documentoB->getFolio()) ) ) ){
-				$sql .= " `folio` >= ? AND `folio` <= ? AND";
+		if( ( !is_null (($a = $documento_baseA->getIdEmpresa()) ) ) & ( ! is_null ( ($b = $documento_baseB->getIdEmpresa()) ) ) ){
+				$sql .= " `id_empresa` >= ? AND `id_empresa` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " `folio` = ? AND"; 
+			$sql .= " `id_empresa` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( ( !is_null (($a = $documentoA->getFecha()) ) ) & ( ! is_null ( ($b = $documentoB->getFecha()) ) ) ){
-				$sql .= " `fecha` >= ? AND `fecha` <= ? AND";
+		if( ( !is_null (($a = $documento_baseA->getIdSucursal()) ) ) & ( ! is_null ( ($b = $documento_baseB->getIdSucursal()) ) ) ){
+				$sql .= " `id_sucursal` >= ? AND `id_sucursal` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " `fecha` = ? AND"; 
+			$sql .= " `id_sucursal` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( ( !is_null (($a = $documentoA->getIdOperacion()) ) ) & ( ! is_null ( ($b = $documentoB->getIdOperacion()) ) ) ){
-				$sql .= " `id_operacion` >= ? AND `id_operacion` <= ? AND";
+		if( ( !is_null (($a = $documento_baseA->getNombre()) ) ) & ( ! is_null ( ($b = $documento_baseB->getNombre()) ) ) ){
+				$sql .= " `nombre` >= ? AND `nombre` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " `id_operacion` = ? AND"; 
+			$sql .= " `nombre` = ? AND"; 
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( ( !is_null (($a = $documento_baseA->getActivo()) ) ) & ( ! is_null ( ($b = $documento_baseB->getActivo()) ) ) ){
+				$sql .= " `activo` >= ? AND `activo` <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " `activo` = ? AND"; 
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( ( !is_null (($a = $documento_baseA->getJsonImpresion()) ) ) & ( ! is_null ( ($b = $documento_baseB->getJsonImpresion()) ) ) ){
+				$sql .= " `json_impresion` >= ? AND `json_impresion` <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " `json_impresion` = ? AND"; 
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( ( !is_null (($a = $documento_baseA->getUltimaModificacion()) ) ) & ( ! is_null ( ($b = $documento_baseB->getUltimaModificacion()) ) ) ){
+				$sql .= " `ultima_modificacion` >= ? AND `ultima_modificacion` <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " `ultima_modificacion` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
@@ -324,7 +360,7 @@ abstract class DocumentoDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new Documento($foo));
+    		array_push( $ar, new DocumentoBase($foo));
 		}
 		return $ar;
 	}
@@ -334,20 +370,20 @@ abstract class DocumentoDAOBase extends DAO
 	  *	Eliminar registros.
 	  *	
 	  * Este metodo eliminara la informacion de base de datos identificados por la clave primaria
-	  * en el objeto Documento suministrado. Una vez que se ha suprimido un objeto, este no 
+	  * en el objeto DocumentoBase suministrado. Una vez que se ha suprimido un objeto, este no 
 	  * puede ser restaurado llamando a save(). save() al ver que este es un objeto vacio, creara una nueva fila 
 	  * pero el objeto resultante tendra una clave primaria diferente de la que estaba en el objeto eliminado. 
 	  * Si no puede encontrar eliminar fila coincidente a eliminar, Exception sera lanzada.
 	  *	
 	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
 	  *	@return int El numero de filas afectadas.
-	  * @param Documento [$documento] El objeto de tipo Documento a eliminar
+	  * @param DocumentoBase [$documento_base] El objeto de tipo DocumentoBase a eliminar
 	  **/
-	public static final function delete( &$documento )
+	public static final function delete( &$documento_base )
 	{
-		if( is_null( self::getByPK($documento->getIdDocumento()) ) ) throw new Exception('Campo no encontrado.');
-		$sql = "DELETE FROM documento WHERE  id_documento = ?;";
-		$params = array( $documento->getIdDocumento() );
+		if( is_null( self::getByPK($documento_base->getIdDocumentoBase()) ) ) throw new Exception('Campo no encontrado.');
+		$sql = "DELETE FROM documento_base WHERE  id_documento_base = ?;";
+		$params = array( $documento_base->getIdDocumentoBase() );
 		global $conn;
 
 		$conn->Execute($sql, $params);

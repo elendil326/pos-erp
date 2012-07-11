@@ -76,6 +76,7 @@ class ExtraParamsEstructura extends VO
 	  * 
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
+	  * <b>Auto Incremento</b><br>
 	  * @access public
 	  * @var int(11)
 	  */
@@ -161,6 +162,8 @@ class ExtraParamsEstructura extends VO
 	  * Set the <i>id_extra_params_estructura</i> property for this object. Donde <i>id_extra_params_estructura</i> es  [Campo no documentado].
 	  * Una validacion basica se hara aqui para comprobar que <i>id_extra_params_estructura</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
+	  * <br><br>Esta propiedad se mapea con un campo que es de <b>Auto Incremento</b> !<br>
+	  * No deberias usar setIdExtraParamsEstructura( ) a menos que sepas exactamente lo que estas haciendo.<br>
 	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
 	  * No deberias usar setIdExtraParamsEstructura( ) a menos que sepas exactamente lo que estas haciendo.<br>
 	  * @param int(11)
