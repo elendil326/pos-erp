@@ -36,7 +36,7 @@ require_once("interfaces/Documentos.interface.php");
 		return array(
 			"resultados" => $q,
 			"numero_de_resultados" => sizeof($q));
-		
+
 	}
 
   	
@@ -68,6 +68,48 @@ require_once("interfaces/Documentos.interface.php");
 	){
 
 
+		$nDoc = DocumentoBaseDAO::getByPK($id_documento);
+
+		if( is_null($nDoc) ) throw new InvalidDataException("El documento a editar no existe.");
+
+		if(!is_null($json_impresion)){
+			$nDoc->setJsonImpresion( json_encode($json_impresion));	
+		}
+
+		if(!is_null($nombre)){
+			$nDoc->setNombre($nombre);
+		}
+
+
+		if(!is_null($activo)){
+			$nDoc->setActivo($activo);
+		}
+		
+		
+		if(!is_null($id_empresa)){
+			$nDoc->setIdEmpresa($id_empresa);
+		}
+
+		if(!is_null($id_sucursal)){
+			$nDoc->setIdSucursal($id_sucursal);
+		}
+
+
+		$nDoc->setUltimaModificacion(time());
+
+
+		
+
+		try{
+
+			DocumentoBaseDAO::save( $nDoc );
+
+		}catch(Exception $e){
+			throw new InvalidDatabaseOperationException ($e);
+		}
+
+
+		
 	}
 
   

@@ -205,15 +205,26 @@ class ImpresionesController {
 
 
 
-	public static function Documento($id_documento, $params = NULL){
+	public static function Documento($id_documento, $preview = FALSE , $params = NULL){
 
 
 
+		$dbase = DocumentoBaseDAO::getByPK($id_documento);
+
+		
+		$dbase->setJsonImpresion( str_replace ( "\\n" , "" , $dbase->getJsonImpresion() ) );
+		$dbase->setJsonImpresion( str_replace ( "\\t" , "" , $dbase->getJsonImpresion() ) );
+		$dbase->setJsonImpresion( stripslashes($dbase->getJsonImpresion())  );
+
+		
+		
+		$decoded_json  = json_decode( substr($dbase->getJsonImpresion(), 1 , -1) );
 
 
-		$decoded_json  = json_decode($id_documento);
+		if(is_null($decoded_json)){
+			throw new InvalidDataException("json invalido");
 
-
+		}
 
  		$pdf = new Cezpdf( array(0,0,$decoded_json->width, $decoded_json->height));
 
@@ -233,35 +244,29 @@ class ImpresionesController {
 
 				case "text" :
 
-					//$decoded_json->body[$i]->value
-					while( ($posI = strpos ( $decoded_json->body[$i]->value, "{")) !== FALSE){
-						$posF = strpos ( $decoded_json->body[$i]->value, "}");
+					if(!$preview){
+						while( ($posI = strpos ( $decoded_json->body[$i]->value, "{")) !== FALSE){
+							$posF = strpos ( $decoded_json->body[$i]->value, "}");
 
-						$key = substr ( $decoded_json->body[$i]->value, $posI +1 , $posF - $posI -1 );
+							$key = substr ( $decoded_json->body[$i]->value, $posI +1 , $posF - $posI -1 );
 
-						if(TRUE === array_key_exists($key, $params)){
+							if(TRUE === array_key_exists($key, $params)){
 
-							$decoded_json->body[$i]->value = substr_replace( 
-								$decoded_json->body[$i]->value, 
-								$params[$key], 
-								$posI, 
-								$posF - $posI + 1);
-
-
-
-						}else{
-							$decoded_json->body[$i]->value = substr_replace( 
-								$decoded_json->body[$i]->value, 
-								"", 
-								$posI, 
-								$posF - $posI + 1);
-
-
+								$decoded_json->body[$i]->value = substr_replace( 
+									$decoded_json->body[$i]->value, 
+									$params[$key], 
+									$posI, 
+									$posF - $posI + 1);
+							}else{
+								$decoded_json->body[$i]->value = substr_replace( 
+									$decoded_json->body[$i]->value, 
+									"", 
+									$posI, 
+									$posF - $posI + 1);
+							}
 						}
-
-						
-						
 					}
+
 
 					$pdf->addText( 
 						$decoded_json->body[$i]->x, 

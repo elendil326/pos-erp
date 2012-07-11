@@ -10,16 +10,23 @@
 
 
 		$q = DocumentoBaseDAO::getByPK( $_GET["dbid"] );
-		$q->setUltimaModificacion(FormatTime($q->getUltimaModificacion()));
+		
 
 		$page->addComponent(new TitleComponent( $q->getNombre(),2));
 		$tabla = new DAOFormComponent( $q );
-		$tabla->setEditable(false);
+		$tabla->setEditable(true);
+		$tabla->renameField(array("id_documento_base" => "id_documento"));
+
 		$tabla->hideField(array(
-				"id_documento_base"
+				"id_documento",
+				"ultima_modificacion"
 			));
-		$tabla->setdHidden("id_documento_base");
-		
+		$tabla->sendHidden("id_documento");
+		$tabla->setType("json_impresion", "textarea");
+
+		$tabla->addApiCall("api/documento/editar", "POST");
+		$tabla->onApiCallSuccessRedirect("documentos.ver.php?dbid=" . $_GET["dbid"]);
+
 		$page->addComponent($tabla);
 
 

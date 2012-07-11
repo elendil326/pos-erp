@@ -81,9 +81,9 @@ die;
 				}				
 			]
 		}';
-		ImpresionesController::Documento($json, 
-			array(
-				"nombre" => "Alan gonzalez"
-			));
+
+
+
+		
 
 		$page->render();
