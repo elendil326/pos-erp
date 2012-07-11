@@ -2210,11 +2210,11 @@ class ProductosController extends ValidacionesController implements IProductos
 
                     $nc = self::Nuevo(
                         
-                        $indices["activo"] !== FALSE ?            $data[ ($i * $soh) + $indices["activo"] ] : NULL,
+                        $indices["activo"] !== FALSE ?            $data[ ($i * $soh) + $indices["activo"] ] : 1,
                         $indices["codigo_producto"] !== FALSE ?            $data[ ($i * $soh) + $indices["codigo_producto"] ] : NULL,
-                        $indices["compra_en_mostrador"] !== FALSE ?            $data[ ($i * $soh) + $indices["compra_en_mostrador"] ] : NULL,
-                        $indices["id_unidad_compra"] !== FALSE ?            $data[ ($i * $soh) + $indices["id_unidad_compra"] ] : NULL,
-                        $indices["metodo_costeo"] !== FALSE ?            $data[ ($i * $soh) + $indices["metodo_costeo"] ] : NULL,
+                        $indices["compra_en_mostrador"] !== FALSE ?            $data[ ($i * $soh) + $indices["compra_en_mostrador"] ] : 0,
+                        $indices["id_unidad_compra"] !== FALSE ?            $data[ ($i * $soh) + $indices["id_unidad_compra"] ] : 6,
+                        $indices["metodo_costeo"] !== FALSE ?            $data[ ($i * $soh) + $indices["metodo_costeo"] ] : "precio",
                         $indices["nombre_producto "] !== FALSE ?            $data[ ($i * $soh) + $indices["nombre_producto"] ] : NULL,
                         $indices["codigo_de_barras"] !== FALSE ?            $data[ ($i * $soh) + $indices["codigo_de_barras"] ] : NULL,
                         $indices["control_de_existencia"] !== FALSE ?            $data[ ($i * $soh) + $indices["control_de_existencia"] ] : NULL,
