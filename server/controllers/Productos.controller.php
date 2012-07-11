@@ -2103,15 +2103,183 @@ class ProductosController extends ValidacionesController implements IProductos
     }
 
 
+
+
+
+
+    private static function importarCSV( $raw_contents ){
+        Loggger::log("Importando como CSV");
+
+         $firstLine =   strpos( $raw_contents , "\n");
+
+        $head = str_getcsv( substr ( $raw_contents , 0 , $firstLine), ',' ,'"' );
+
+        $data = str_getcsv( substr ( $raw_contents , $firstLine ), ',' ,'"' );
+
+        $soh = sizeof($head);
+
+        
+        
+
+        $indices_names = array(
+                        "activo",
+                        "codigo_producto",
+                        "compra_en_mostrador",
+                        "id_unidad_compra",
+                        "metodo_costeo" ,
+                        "nombre_producto" ,
+                        "codigo_de_barras",
+                        "control_de_existencia",
+                        "costo_estandar",
+                        "descripcion_producto",
+                        "foto_del_producto",
+                        "garantia",
+                        "id_categoria",
+                        "id_empresas",
+                        "id_unidad",
+                        "impuestos",
+                        "precio_de_venta"
+                );
+
+
+        for ($i=0; $i < sizeof($indices_names); $i++) { 
+            $indices[$indices_names[$i]] = array_search($indices_names[$i], $head);
+
+            /*if( $indices[$indices_names[$i]] !== FALSE ) 
+                    Logger::log("there is NORMAL param at $i => " . $head[ $indices[$indices_names[$i]] ]  );*/
+
+        }
+        
+
+        //indices, del 0 al max_indice
+        //quitar los que esten en $indices[*]
+        $extra_params_indices = array();
+
+        for ($i=0; $i < sizeof($head); $i++) { 
+            
+            if(array_search($i, $indices) !== FALSE )    continue;
+
+            array_push($extra_params_indices, $i);
+
+            /*Logger::log("there is extra param at $i => " . $head[ $i ] );*/
+        }
+
+            
+            
+
+        
+        $iteraciones = sizeof($data) / $soh;
+
+        /*var_dump($indices);
+        var_dump($head);
+        var_dump($data);*/
+
+        Logger::log("soh=" . $soh . " , sod=" . sizeof($data) . " , " . " it=" . $iteraciones);
+        
+
+        $i = 0;
+
+        while( $i < $iteraciones ) { 
+
+                try{
+
+                    /*
+                    for ($h=0; $h < sizeof($indices_names); $h++) { 
+                        //$indices_names[$h]
+                        if($indices[$indices_names[$h]] !== FALSE)
+                        Logger::log($indices_names[$h] . " =   ($i * $soh) + " . $indices[$indices_names[$h]]  . " = " . (($i * $soh) + $indices[$indices_names[$h]] ) . " = " .   ($data[ ($i * $soh) + $indices[$indices_names[$h]] ])    );     
+                    }*/
+                   
+                    /*
+                    if( (($i * $soh) + $indices["razon_social"]) >= $soh ){
+                        //ya no hay campos 
+                        Logger::log("//ya no hay campos ");
+                        break;
+                    }*/
+
+                    //buscar todos los demas parametros que no estan en 
+                    //$indicies, y mandarlos como un arreglo asociativo
+                    //a extra_params
+                    $extra_params = array();
+                    for ($j=0; $j < sizeof($extra_params_indices); $j++) { 
+                        $extra_params[ $head[ $extra_params_indices[ $j ] ] ] = $data[ ($i * $soh) + $extra_params_indices[ $j ] ];
+                    }
+                    
+                    
+
+
+                    $nc = self::Nuevo(
+                        
+                        $indices["activo"] !== FALSE ?            $data[ ($i * $soh) + $indices["activo"] ] : NULL,
+                        $indices["codigo_producto"] !== FALSE ?            $data[ ($i * $soh) + $indices["codigo_producto"] ] : NULL,
+                        $indices["compra_en_mostrador"] !== FALSE ?            $data[ ($i * $soh) + $indices["compra_en_mostrador"] ] : NULL,
+                        $indices["id_unidad_compra"] !== FALSE ?            $data[ ($i * $soh) + $indices["id_unidad_compra"] ] : NULL,
+                        $indices["metodo_costeo"] !== FALSE ?            $data[ ($i * $soh) + $indices["metodo_costeo"] ] : NULL,
+                        $indices["nombre_producto "] !== FALSE ?            $data[ ($i * $soh) + $indices["nombre_producto"] ] : NULL,
+                        $indices["codigo_de_barras"] !== FALSE ?            $data[ ($i * $soh) + $indices["codigo_de_barras"] ] : NULL,
+                        $indices["control_de_existencia"] !== FALSE ?            $data[ ($i * $soh) + $indices["control_de_existencia"] ] : NULL,
+                        $indices["costo_estandar"] !== FALSE ?            $data[ ($i * $soh) + $indices["costo_estandar"] ] : NULL,
+                        $indices["descripcion_producto"] !== FALSE ?            $data[ ($i * $soh) + $indices["descripcion_producto"] ] : NULL,
+                        $indices["foto_del_producto"] !== FALSE ?            $data[ ($i * $soh) + $indices["foto_del_producto"] ] : NULL,
+                        $indices["garantia"] !== FALSE ?            $data[ ($i * $soh) + $indices["garantia"] ] : NULL,
+                        $indices["id_categoria"] !== FALSE ?            $data[ ($i * $soh) + $indices["id_categoria"] ] : NULL,
+                        $indices["id_empresas"] !== FALSE ?            $data[ ($i * $soh) + $indices["id_empresas"] ] : NULL,
+                        $indices["id_unidad"] !== FALSE ?            $data[ ($i * $soh) + $indices["id_unidad"] ] : NULL,
+                        $indices["impuestos"] !== FALSE ?            $data[ ($i * $soh) + $indices["impuestos"] ] : NULL,
+                        $indices["precio_de_venta"] !== FALSE ?            $data[ ($i * $soh) + $indices["precio_de_venta"] ] : NULL
+
+                   );
+                    
+
+                    
+
+                }catch(Exception $e){
+                    Logger::Warn($e);
+                    //continuar
+                }
+
+
+                $i ++;
+
+        }//for
+
+    }
+
+
+
+
+
     public static function Importar($raw_contents){
 
-        Logger::log("Importantdo productos desde adminpaq");        
+        Logger::log("====== Importando productos ========");
+        
+        Logger::log("El tamaño del archivo es de " . strlen( $raw_contents ) . " bytes.");
+
+
+        
+        $lines = explode( "\n", $raw_contents );
+        $nline = 0; 
+
+        //buscar las llaves de cliente
+        while( ( $nline < sizeof($lines) ) && ($lines[$nline] != "MGW10005" ) ) $nline++;
+        
+        if($nline >= sizeof($lines)){
+            //no econtre esa madre de adminpaq, es un SCV
+            return self::ImportarCSV($raw_contents);
+        }
+
+
+
+
+
+
+
+
+
         $productos_importados = 0;
         $productos_no_importados = 0;
         $errores = array();
-
         $lines = explode( "\n", $raw_contents );
-
         $nline = -1; 
 
         //buscar las llaves de cliente

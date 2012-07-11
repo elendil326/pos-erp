@@ -25,11 +25,20 @@
 			Logger::log( "Subiendo archivo ... ");
 
 
-			if($_REQUEST["type"] == "csv"){
-				move_uploaded_file ( $_FILES["logo"]["tmp_name"], "../../../static_content/".IID.".csv" );
-				ClientesController::Importar( file_get_contents( "../../../static_content/".IID.".csv" ) );	
+			if($_REQUEST["type"] == "csv-clientes"){
+				move_uploaded_file ( $_FILES["logo"]["tmp_name"], "../../../static_content/".IID."-clientes.csv" );
+				ClientesController::Importar( file_get_contents( "../../../static_content/".IID."-clientes.csv" ) );	
 
 			}
+
+
+			if($_REQUEST["type"] == "csv-productos"){
+				move_uploaded_file ( $_FILES["logo"]["tmp_name"], "../../../static_content/".IID."-productos.csv" );
+				ProductosController::Importar( file_get_contents( "../../../static_content/".IID."-productos.csv" ) );	
+
+			}
+
+
 
 
 			if($_REQUEST["type"] == "logo"){
@@ -52,36 +61,25 @@
 
 
 		$page->nextTab("Importar");
-		$page->addComponent( new TitleComponent("Importar datos CSV/AdminPAQ/Excel", 2));
-		$page->addComponent(" <div id='csvup'></div>");
+		$page->addComponent( new TitleComponent("Importar clientes de CSV/AdminPAQ/Excel", 2));
+		$page->addComponent(" <div id='clientes-csvup'></div>");
 
 
-		//$page->addComponent("&iquest; Como debo formar el archivo CSV ?");
-/*
-		$importarClientes = new FormComponent();
-		$importarClientes->addField("raw_content", "Contenido de la archivo CSV", "textarea");
-		$importarClientes->addApiCall("api/clientes/importar/", "POST");
-		$page->addComponent( $importarClientes );
-		*/
 		$page->addComponent("<hr>");
 
 
 
-		$page->addComponent( new TitleComponent("Importar datos AdminPAQ mediante archivos TXT", 2));
-/*
-		$page->addComponent( new TitleComponent("Importar clientes", 3));
-		$importarClientes = new FormComponent();
-		$importarClientes->addField("raw_content", "Contenido de la exportacion CSV", "textarea");
-		$importarClientes->addApiCall("api/clientes/importar/", "POST");
-		$page->addComponent( $importarClientes );
-*/
+		$page->addComponent( new TitleComponent("Importar productos de CSV/AdminPAQ/Excel", 2));
+		$page->addComponent(" <div id='productos-csvup'></div>");
 
 
-		$page->addComponent( new TitleComponent("Importar productos", 3));
-		$importarProductos = new FormComponent();
-		$importarProductos->addField("raw_content", "Contenido de la exportacion CSV", "textarea");
-		$importarProductos->addApiCall("api/producto/importar/", "POST");
-		$page->addComponent( $importarProductos );
+
+
+
+
+
+
+
 		
 		
 		
@@ -240,7 +238,7 @@
 
 
 					Ext.create('Ext.form.Panel', {
-				        renderTo: 'csvup',
+				        renderTo: 'clientes-csvup',
 				        width: '100%',
 				        frame: false,
 				        bodyPadding: '10 10 0',
@@ -255,7 +253,7 @@
 				        items: [{
 				            xtype: 'filefield',
 				            id: 'form-filecsv',
-				            emptyText: 'Seleccione una imagen',
+				            emptyText: 'Seleccione un archivo',
 				            fieldLabel: 'Imagen',
 				            name: 'logo',
 				            buttonText: 'Buscar archivo',
@@ -264,7 +262,7 @@
 				            }*/
 				        },{
 				            xtype: 'hiddenfield',
-				           	value : 'csv',
+				           	value : 'csv-clientes',
 				            name: 'type'
 				        },
 				        {
@@ -303,6 +301,74 @@
 
 
 
+
+
+
+
+
+
+
+
+
+					Ext.create('Ext.form.Panel', {
+				        renderTo: 'productos-csvup',
+				        width: '100%',
+				        frame: false,
+				        bodyPadding: '10 10 0',
+
+				        defaults: {
+				            anchor: '100%',
+				            allowBlank: false,
+				            msgTarget: 'side',
+				            labelWidth: 50
+				        },
+
+				        items: [{
+				            xtype: 'filefield',
+				            id: 'form-filecsv',
+				            emptyText: 'Seleccione un archivo',
+				            fieldLabel: 'Imagen',
+				            name: 'logo',
+				            buttonText: 'Buscar archivo',
+				            /*buttonConfig: {
+				                iconCls: 'upload-icon'
+				            }*/
+				        },{
+				            xtype: 'hiddenfield',
+				           	value : 'csv-productos',
+				            name: 'type'
+				        },
+				        {
+				            xtype: 'hiddenfield',
+				            value : Ext.util.Cookies.get('at'),
+				            name: 'auth_token'
+				        }],
+
+				        buttons: [{
+				            text: 'Subir archivo',
+				            handler: function(){
+				                var form = this.up('form').getForm();
+				                if(form.isValid()){
+				                    form.submit({
+				                        url: 'c.php',
+				                        waitMsg: 'Subiendo...',
+				                        timeout : 60 * 10,
+				                        success: function(fp, o) {
+				                          console.log('error', fp, o);
+				                        },
+				                        failure : function(fp,o){
+				                        	console.log('error', fp, o);
+				                        }
+				                    });
+				                }
+				            }
+				        },{
+				            text: 'Cancelar',
+				            handler: function() {
+				                this.up('form').getForm().reset();
+				            }
+				        }]
+				    });
 
 
 
