@@ -9,13 +9,14 @@
 
 
 
-		if( isset($_GET["preview"])
+		if( 
+			isset($_GET["preview"])
 			&& isset($_GET["dbid"])
-			)
+		)
 		{
 
 			ImpresionesController::Documento($_GET["dbid"], true);
-			die;
+			exit;
 		}
 
 
@@ -37,7 +38,8 @@
 		$tabla = new DAOFormComponent( $q );
 		$tabla->setEditable(false);
 		$tabla->hideField(array(
-				"id_documento_base"
+				"id_documento_base",
+				"json_impresion"
 			));
 		$page->addComponent($tabla);
 
@@ -62,14 +64,17 @@
 		$q = DocumentoBaseDAO::getByPK( $_GET["dbid"] );
 		
 
-		$page->addComponent(new TitleComponent( $q->getNombre(),2));
+		
 
 
 		$q->setJsonImpresion( str_replace ( "\\n" , "" , $q->getJsonImpresion() ) );
 		$q->setJsonImpresion( str_replace ( "\\t" , "" , $q->getJsonImpresion() ) );
 		$q->setJsonImpresion( stripslashes($q->getJsonImpresion())  );
-		$q->setJsonImpresion( substr($q->getJsonImpresion(), 1 , -1) );
+		
 
+		if( "\""  == substr ( $q->getJsonImpresion() , 0 , 1 ) ){
+			$q->setJsonImpresion(  substr($q->getJsonImpresion(), 1 , -1) );	
+		}
 
 		$tabla = new DAOFormComponent( $q );
 		$tabla->setEditable(true);
@@ -77,7 +82,8 @@
 
 		$tabla->hideField(array(
 				"id_documento",
-				"ultima_modificacion"
+				"ultima_modificacion",
+
 			));
 		$tabla->sendHidden("id_documento");
 		$tabla->setType("json_impresion", "textarea");

@@ -204,7 +204,6 @@ class ImpresionesController {
 
 
 
-
 	public static function Documento($id_documento, $preview = FALSE , $params = NULL){
 
 
@@ -216,9 +215,9 @@ class ImpresionesController {
 		$dbase->setJsonImpresion( str_replace ( "\\t" , "" , $dbase->getJsonImpresion() ) );
 		$dbase->setJsonImpresion( stripslashes($dbase->getJsonImpresion())  );
 
-		//if(  ){
+		if( "\""  == substr ( $dbase->getJsonImpresion() , 0 , 1 ) ){
 			$dbase->setJsonImpresion(  substr($dbase->getJsonImpresion(), 1 , -1) );	
-		//}
+		}
 
 		
 		
