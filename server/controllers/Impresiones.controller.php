@@ -216,10 +216,15 @@ class ImpresionesController {
 		$dbase->setJsonImpresion( str_replace ( "\\t" , "" , $dbase->getJsonImpresion() ) );
 		$dbase->setJsonImpresion( stripslashes($dbase->getJsonImpresion())  );
 
-		
-		
-		$decoded_json  = json_decode( substr($dbase->getJsonImpresion(), 1 , -1) );
+		//if(  ){
+			$dbase->setJsonImpresion(  substr($dbase->getJsonImpresion(), 1 , -1) );	
+		//}
 
+		
+		
+		
+		$decoded_json  = json_decode($dbase->getJsonImpresion());
+		#echo $dbase->getJsonImpresion(); die;
 
 		if(is_null($decoded_json)){
 			throw new InvalidDataException("json invalido");
@@ -305,7 +310,17 @@ class ImpresionesController {
 
 
 	    //margenes de un centimetro para toda la pagina
-	    $pdf->ezSetMargins(1, 1, 1, 1);
+	    $pdf->ezSetMargins(
+	    			$decoded_json->marginTop, 
+					$decoded_json->marginBottom,
+					$decoded_json->marginLeft,
+					$decoded_json->marginRight
+				);
+
+
+
+
+
 
 	    /**************************
 	     * ENCABEZADO

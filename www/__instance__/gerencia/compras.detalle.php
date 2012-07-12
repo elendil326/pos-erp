@@ -21,9 +21,14 @@
 	// Requerir parametros
 	// 
 	$page->requireParam("cid", "GET", "Esta compra no existe.");
+
 	$esta_compra = CompraDAO::getByPK($_GET["cid"]);
 
-
+	if($esta_compra === null){
+		$page->addComponent("<p>Esta compra no existe</p>");
+		$page->render(0);
+		exit;
+	}
 
 	//
 	// Titulo de la pagina

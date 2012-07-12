@@ -29,18 +29,144 @@
 	
 	$page->nextTab("Panorama");
 
-	$page->addComponent(new TitleComponent("Ultima actividad",3));
+	
 	
 
 	//buscar sus ventas
 	$ventas = VentaDAO::search(new Venta(array( "id_comprador_venta"  => $este_usuario->getIdUsuario() )));
+	$servicios = OrdenDeServicioDAO::search( new OrdenDeServicio( array( "id_usuario_venta" =>  $este_usuario->getIdUsuario() ) ) ) ;
+	$seguimientos = ClienteSeguimientoDAO::search( new ClienteSeguimiento( array( "id_cliente" => $este_usuario->getIdUsuario() )));
+	$seguimientos_a_ordenes = array();
+
+	//seguimientos a ordenes
+	for ($os=0; $os < sizeof($servicios); $os++) { 
+		$r = SeguimientoDeServicioDAO::search( new SeguimientoDeServicio( array( "id_orden_de_servicio" => $servicios[$os]->getIdOrdenDeServicio() ) ));
+		$seguimientos_a_ordenes = array_merge($seguimientos_a_ordenes, $r);
+	}
+
+	$eventos = array_merge( $ventas, $servicios, $seguimientos, $seguimientos_a_ordenes );
+
+	function orderByDate( $eventObjA, $eventObjB ){
 
 
-	$actividad = $ventas;
+		$a = $eventObjA["fecha"];
+		$b = $eventObjB["fecha"];
 
-	$header = array("fecha" => "fecha");
+		if ($a == $b) {
+        	return 0;
+    	}
 
-	$tabla = new TableComponent($header, $actividad);
+    	return ($a < $b) ? 1 : -1;
+
+	}//orderByDate
+
+	
+	//usort($eventos, cmp_function)
+
+
+	function renderRow($unixTime, $fullArray){
+
+		$out = "";
+
+		switch( $fullArray["tipo"] ){
+
+			case "SeguimientoDeServicio":
+				$ods = OrdenDeServicioDAO::getByPK($fullArray["id_orden_de_servicio"]);
+				$s = ServicioDAO::getByPK($ods->getIdServicio());
+
+				$out .= '<strong> Seguimiento De Orden '. $s->getNombreServicio().' ' . $fullArray["id_orden_de_servicio"] .' </strong>';
+				$out .= $fullArray["estado"];
+
+				$u = $fullArray["id_usuario"] ;
+			break;
+
+			case "ClienteSeguimiento":
+				$out .= '<strong> Seguimiento </strong>';
+				$out .= $fullArray["texto"];
+				$u = $fullArray["id_usuario"] ;
+
+			break;
+
+			case "OrdenDeServicio":
+				$ods = OrdenDeServicioDAO::getByPK($fullArray["id_orden_de_servicio"]);
+				$s = ServicioDAO::getByPK($ods->getIdServicio());
+
+				$out .= '<strong>Nueva Orden de Servicio</strong> '. $s->getNombreServicio() . ' ' . $fullArray["id_orden_de_servicio"] .' ';
+				$out .= $fullArray["descripcion"];
+				$u = $fullArray["id_usuario"] ;
+			break;
+
+
+			case "Venta":
+				if($fullArray["cancelada"]){
+					$out .= '<strong><strike>Venta Cancelada '. $fullArray["id_venta"] .'</strike></strong>';
+
+				}else{
+					$out .= '<strong>Venta '. $fullArray["id_venta"] .'</strong>';	
+
+				}
+				
+				$out .=  '&nbsp;' .FormatMoney($fullArray["total"]) . ' ' . $fullArray["tipo_de_venta"] ;
+				$u = $fullArray["id_usuario"] ;
+			break;	
+
+
+			case "Cotizacion":
+				$out .= '<strong>Venta '. $fullArray["id_venta"] .'</strong>';
+				$u = $fullArray["id_usuario"] ;
+			break;			
+		}
+
+		//return json_encode( $fullVo );
+		$u = UsuarioDAO::getByPK($u)->getNombre();
+
+		$out .= '<br><div style="text-align: right; font-size:10px; color:gray">' . FormatTime($fullArray["fecha"]) . ' por ' . $u . "</div>";
+		return $out;
+	}
+
+
+
+	for ($ei=0; $ei < sizeof($eventos); $ei++) { 
+		if($eventos[$ei] instanceof SeguimientoDeServicio){
+			$eventos[$ei] = $eventos[$ei]->asArray();
+			$eventos[$ei]["tipo"] = "SeguimientoDeServicio";
+			$eventos[$ei]["fecha"] = $eventos[$ei]["fecha_seguimiento"];
+			unset($eventos[$ei]["fecha_seguimiento"]);
+
+		} elseif ($eventos[$ei] instanceof ClienteSeguimiento) {
+			$eventos[$ei] = $eventos[$ei]->asArray();
+			$eventos[$ei]["tipo"] = "ClienteSeguimiento";
+
+		} elseif ($eventos[$ei] instanceof OrdenDeServicio){
+			$eventos[$ei] = $eventos[$ei]->asArray();
+			$eventos[$ei]["tipo"] = "OrdenDeServicio";
+			$eventos[$ei]["fecha"] = $eventos[$ei]["fecha_orden"];
+			unset($eventos[$ei]["fecha_orden"]);
+			
+		} elseif ($eventos[$ei] instanceof Venta){
+			$eventos[$ei] = $eventos[$ei]->asArray();
+
+			if($eventos[$ei]["es_cotizacion"]){
+				$eventos[$ei]["tipo"] = "Cotizacion";
+
+			}else{
+				$eventos[$ei]["tipo"] = "Venta";	
+			}
+			
+			
+		}
+
+
+
+
+	}
+
+	usort($eventos, "orderByDate");
+
+	$header = array("fecha" => "Actividad de " . $este_usuario->getNombre());
+
+	$tabla = new TableComponent($header, $eventos);
+	$tabla->addColRender("fecha", "renderRow");
 	$page->addComponent($tabla);
 
 

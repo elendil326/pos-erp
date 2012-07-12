@@ -130,7 +130,7 @@ function FormatTime($timestamp, $type = "FB")
 		}
 	}
  
- 	$text = "<div title='".date("F j, Y \a \l\a\s g:i a", $timestamp)."'> " . $text . "</div>";
+ 	$text = "<span title='".date("F j, Y \a \l\a\s g:i a", $timestamp)."'> " . $text . "</span>";
 
 	return $text;
 }

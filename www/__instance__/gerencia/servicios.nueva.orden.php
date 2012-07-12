@@ -271,33 +271,36 @@ $page->partialRender();
 			ep = null;
 		}
 		
-		console.log(CurrentExtraParams, ep);
+		
 		
 		
 		var faltan = false;
 		
 		//busquemos solo los obligatorios
-		for (var i=0; i < CurrentExtraParams.length; i++) {
-			if(CurrentExtraParams[i].obligatory){
-				//buscarlo en ep, ya que es obligatorio
-				for (var j = ep.length - 1; j >= 0; j--){
-					if(ep[j].desc == CurrentExtraParams[i].desc){
-						if(ep[j].value.length == 0){
-							faltan = true;
+		if(CurrentExtraParams != null){
+			for (var i=0; i < CurrentExtraParams.length; i++) {
+				if(CurrentExtraParams[i].obligatory){
+					//buscarlo en ep, ya que es obligatorio
+					for (var j = ep.length - 1; j >= 0; j--){
+						if(ep[j].desc == CurrentExtraParams[i].desc){
+							if(ep[j].value.length == 0){
+								faltan = true;
+							}
+							break;
 						}
-						break;
-					}
-				};
-			}
-		};
-		
-		
-		
-		
-		if(faltan){
-			alert("te faltan parametros");
-			return;			
+					};
+				}
+			};
+			
+			
+			
+			
+			if(faltan){
+				alert("te faltan parametros");
+				return;			
+			}	
 		}
+		
 
 		if(Ext.get('id_cliente').getValue().length == 0){
 			alert("No haz seleccionado a que cliente deseas ofrecerle el servicio");

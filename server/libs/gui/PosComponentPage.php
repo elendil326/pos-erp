@@ -48,7 +48,9 @@ class PosComponentPage extends StdComponentPage{
 
 				<link rel="stylesheet" type="text/css" href="http://api.caffeina.mx/ext-4.0.0/resources/css/ext-all.css" /> 
 			    <script type="text/javascript" src="http://api.caffeina.mx/ext-4.0.0/ext-all.js"></script>
+			    <!--
 				<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+			-->
 			<!--
 				<script type="text/javascript" charset="utf-8" src="http://cdn.sencha.io/ext-4.1.0-gpl/ext-all.js"></script>
 			-->
