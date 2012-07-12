@@ -1461,13 +1461,92 @@ require_once("interfaces/Sucursales.interface.php");
         
 
  
+        public static function IncrementarDeAlmacenes($d_producto, $id_sucursal){
+
+            //busquemos el primer lote de esa sucursal
+            $l = LoteDAO::getAll();
+            $l = $l[0];
+            
+            //busquemos la unidad que nos mandaron
+            $uResults = UnidadMedidaDAO::getByPK($d_producto["id_unidad"]);
+            
+            if(is_null($uResults) ){
+                throw new InvalidDataException("La unidad de medida `". $d_producto["id_unidad"]  ."` no existe, o no esta activa.");
+            }
+            
+
+            //busequemos si este producto ya existe en este lote
+            $lp = LoteProductoDAO::getByPK($l->getIdLote(), $d_producto["id_producto"] );
+            
+            if(is_null($lp)){
+                //no existe, insertar
+                $loteProducto = new LoteProducto(array(
+                        "id_lote"       => $l->getIdLote(),
+                        "id_producto"   => $d_producto["id_producto"],
+                        "cantidad"      => $d_producto["cantidad"], 
+                        "id_unidad"     => $d_producto["id_unidad"]
+                    ) );
+                    
+                LoteProductoDAO::save ( $loteProducto);
+                                
+            }else{
+                //ya existe, sumar
+                
+                
+                //revisemos si es de la misma unidad
+                if($lp->getIdUnidad() == $d_producto["id_unidad"] ){
+                    //es igual, solo hay que sumar
+                    $lp->setCantidad( $lp->getCantidad() +  $d_producto["cantidad"] );    
+
+                }else{
+                    //no es igual, hay que convertir
+
+                    try{
+                        $r = UnidadMedidaDAO::convertir($d_producto["id_unidad"], $lp->getIdUnidad(), $d_producto["cantidad"] );    
+
+                    }catch(BusinessLogicException $ide){
+                        //no se pudo convertir porque son de 
+                        //diferentes categorias
+                        throw $ide; //mostrar una excpetion mas fresona
+                    }
+                    
+                    $lp->setCantidad( $lp->getCantidad() +  $r  );    
+                }
+
+
+                //$lp->setCantidad( $lp->getCantidad() + $p->cantidad );
+
+
+                LoteProductoDAO::save( $lp );
+            
+        }
+        
+        $s = SesionController::Actual();
+        
+        $loteEntrada = new LoteEntrada(array(
+                "id_lote"       =>$l->getIdLote(), 
+                "id_usuario"    => 1,//$s->getIdUsuario(),
+                "fecha_registro"=>time(),
+                "motivo"        =>"Compra a Proveedor"
+            ) );
+            
+            
+        LoteEntradaDAO::save ( $loteEntrada );                      
+
+        LoteEntradaProductoDAO::save (new LoteEntradaProducto(array(
+                "id_lote_entrada"   => $loteEntrada->getIdLoteEntrada(),
+                "id_producto"       => $d_producto["id_producto"],
+                "id_unidad"         => $d_producto["id_unidad"],
+                "cantidad"          => $d_producto["cantidad"]
+            ) ) );
+
+    }
 
 
 
 
 
-
-        private static function DescontarDeAlmacenes (
+    public static function DescontarDeAlmacenes (
 	        VentaProducto $detalle_producto,
             $id_sucursal	
 		){

@@ -249,11 +249,13 @@ class ImpresionesController {
 				case "text" :
 
 					if(!$preview){
+
 						while( ($posI = strpos ( $decoded_json->body[$i]->value, "{")) !== FALSE){
+							
 							$posF = strpos ( $decoded_json->body[$i]->value, "}");
 
 							$key = substr ( $decoded_json->body[$i]->value, $posI +1 , $posF - $posI -1 );
-
+							
 							if(TRUE === array_key_exists($key, $params)){
 
 								$decoded_json->body[$i]->value = substr_replace( 
@@ -330,7 +332,7 @@ class ImpresionesController {
 		$pdf->ezStream();
 				
 	    
-	    die;
+	    exit;
 
 	}
 

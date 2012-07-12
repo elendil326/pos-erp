@@ -14,6 +14,158 @@ require_once("interfaces/Documentos.interface.php");
   class DocumentosController implements IDocumentos{
   
   
+  	private static function GetUsuarioArray($id_usuario){
+
+
+		$result = UsuarioDAO::getByPK( $id_usuario )->asArray();
+
+		if(!is_null($result["id_direccion"])){
+			$result["direccion"] = DireccionDAO::getByPK($result["id_direccion"])->asArray();
+			unset($result["direccion"]["id_direccion"]);
+
+			if(!is_null($result["direccion"]["id_ciudad"])){
+				$result["direccion"]["ciudad"] = CiudadDAO::getByPK($result["direccion"]["id_ciudad"])->asArray();
+				unset($result["direccion"]["ciudad"]["id_ciudad"]);
+			}
+
+			unset($result["direccion"]["id_ciudad"]);
+		}
+
+		if(!is_null($result["id_direccion_alterna"])){
+			$result["direccion_alterna"] = DireccionDAO::getByPK($result["id_direccion_alterna"])->asArray();
+		}
+
+
+		if(!is_null($result["id_rol"])){
+			if(!is_null($r = RolDAO::getByPK($result["id_rol"]))){
+				$result["rol"] = $r->asArray();	
+			}
+			unset($result["id_rol"]);
+		}
+
+		
+
+		unset($result["password"]);
+		unset($result["id_direccion_alterna"]);
+		unset($result["id_direccion"]);
+		unset($result["id_usuario"]);
+		unset($result["fecha_asignacion_rol"]);
+		unset($result["token_recuperacion_pass"]);
+
+		unset($result["id_clasificacion_proveedor"]);
+		unset($result["id_clasificacion_cliente"]);
+		unset($result["comision_ventas"]);
+		unset($result["last_login"]);
+		unset($result["consignatario"]);
+		unset($result["salario"]);
+		unset($result["saldo_del_ejercicio"]);
+		unset($result["ventas_a_credito"]);
+		unset($result["dia_de_pago"]);
+		unset($result["mensajeria"]);
+		unset($result["dias_de_embarque"]);
+		unset($result["id_tarifa_compra"]);
+		unset($result["tarifa_compra_obtenida"]);
+		unset($result["id_tarifa_venta"]);
+		unset($result["tarifa_venta_obtenida"]);
+		unset($result["facturar_a_terceros"]);
+
+		return $result;
+
+  	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  	private static function GetCerrarVentaParams($id_venta){
+
+  		$ventaVo = VentaDAO::getByPK( $id_venta );
+  		$resultArray = $ventaVo->asArray();
+
+		//buscar su cliente
+		$result["cliente"] = self::GetUsuarioArray( $ventaVo->getIdCompradorVenta() );
+
+		//agente de venta
+		$result["agente"] = self::GetUsuarioArray( $ventaVo->getIdUsuario() );
+
+
+  		//buscar sus productos y ordenes
+		$result["contenido"] = array_merge( 
+					VentaProductoDAO::search(new VentaProducto(array("id_venta" =>  $id_venta))),
+					VentaOrdenDAO::search(new VentaOrden(array("id_venta" => $id_venta )))
+				 );
+  		
+
+  		//direccion
+
+  		//buscar su agente
+
+  		//buscar sucursal
+
+  		//buscar empresa
+
+
+		return $result;
+  	}
+
+
+
+  	private static function flattenArray($multiLevelArray, $parentName = NULL){
+
+  		foreach ($multiLevelArray as $key => $value) {
+
+  			if(is_array( $value ) ){
+
+  				$flatted = self::flattenArray( $value, $key );
+
+  				unset( $multiLevelArray[$key] );
+
+  				$multiLevelArray = array_merge ( $multiLevelArray, $flatted );
+
+  			}else if(!is_null($parentName)){
+
+				$multiLevelArray[ $parentName . "->" . $key ] = $value;
+
+				unset( $multiLevelArray[$key] );
+
+  			}
+  		}
+	
+  		return $multiLevelArray;
+  	}
+
+
+
+
+  	public static function Cerrar($id_documento, $params){
+
+
+//		$params["hola1"] = array("hola2" => array( "hola3" => 333));
+  		
+  		var_dump($params);
+
+
+  		$params = self::flattenArray($params);
+
+		var_dump($params);
+
+  		exit;
+  		$params = self::GetCerrarVentaParams($params["id_venta"]);
+
+  		ImpresionesController::Documento($id_documento, FALSE , $params );
+  	}
+
 	/**
  	 *
  	 *Lista los documentos en el sistema. Se puede filtrar por activos y por la empresa. Se puede ordenar por sus atributos

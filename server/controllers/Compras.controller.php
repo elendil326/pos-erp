@@ -762,7 +762,8 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
                         //revisemos si es de la misma unidad
                         if($lp->getIdUnidad() == $p->id_unidad){
                             //es igual, solo hay que sumar
-                            $lp->setCantidad( $lp->getCantidad() +  $p->id_unidad);    
+                            $lp->setCantidad( $lp->getCantidad() +  $p->cantidad ); 
+
 
                         }else{
                             //no es igual, hay que convertir

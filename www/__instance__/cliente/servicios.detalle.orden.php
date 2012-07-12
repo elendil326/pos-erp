@@ -54,7 +54,7 @@ $menu = new MenuComponent();
 
 
 
-$imp = new MenuItem(" <img src='../../../media/iconos/printer.png'> Imprimir", null);
+$imp = new MenuItem(" <img src='../../media/iconos/printer.png'> Imprimir", null);
 $imp->addOnClick("_p", "function _p(){ window.open('servicios.detalle.orden.impresion.php?oid=". $_GET["oid"] ."'); }");
 $menu->addMenuItem($imp);
 
@@ -79,7 +79,7 @@ $asignado = UsuarioDAO::getByPK($a);
 if(!is_null($asignado)){
 	$esta_orden->setIdUsuarioAsignado($asignado->getNombre());	
 }else{
-	$esta_orden->setIdUsuarioAsignado("<img src='../../../media/iconos/user_delete.png'> Nadie esta asignado");	
+	$esta_orden->setIdUsuarioAsignado("<img src='../../media/iconos/user_delete.png'> Nadie esta asignado");	
 }
 
 
