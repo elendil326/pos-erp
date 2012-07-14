@@ -1,8 +1,21 @@
-<?php /* 6118457 */
+<?php
 
-define("BYPASS_INSTANCE_CHECK", false);
 
-require_once("../../../server/bootstrap.php");
+
+	define("BYPASS_INSTANCE_CHECK", false);
+
+	require_once("../../../server/bootstrap.php");
+
+	$page = new GerenciaTabPage();
+	$page->partialRender();
+
+
+
+
+
+
+
+
 
 
 function e($t){
@@ -27,14 +40,14 @@ $totales_compras = array();
 
 for ($i=0; $i < sizeof($compras); $i++) { 
 	
-	echo "<hr>";
+	//echo "<hr>";
 
 	if($compras[$i]->getCancelada()){
-		echo "<div style='background-color:yellow'>";
-		echo "procesando <strike>compra " . $compras[$i]->getIdCompra() . "</strike> CANCELADA <br>";
+		//echo "<div style='background-color:yellow'>";
+		//echo "procesando <strike>compra " . $compras[$i]->getIdCompra() . "</strike> CANCELADA <br>";
 
 	}else{
-		echo "procesando compra " . $compras[$i]->getIdCompra() . "<br>";
+		//echo "procesando compra " . $compras[$i]->getIdCompra() . "<br>";
 	}
 
 	//buscar sus productos
@@ -47,30 +60,30 @@ for ($i=0; $i < sizeof($compras); $i++) {
 
 		
 		
-		echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;producto=" . $productos[$p]->getIdProducto() . " compradoen=" . $productos[$p]->getIdUnidad() ;
+		//echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;producto=" . $productos[$p]->getIdProducto() . " compradoen=" . $productos[$p]->getIdUnidad() ;
 
-		echo "&nbsp;cantidad=" . $productos[$p]->getCantidad();
+		//echo "&nbsp;cantidad=" . $productos[$p]->getCantidad();
 
 		if(null === $producto_original->getIdUnidadCompra()){
-			w("No hay unidad compra en producto.");
+			//w("No hay unidad compra en producto.");
 
 			//vamos a ver si concide con la otra
 
 
 		} else if($producto_original->getIdUnidadCompra() != $productos[$p]->getIdUnidad()){
-			e("El producto se compra en ".$producto_original->getIdUnidadCompra() .".");
+			//e("El producto se compra en ".$producto_original->getIdUnidadCompra() .".");
 		}
 		
 
 		if( is_null( $producto_original->getIdUnidad() ) ){
-			e("No hay unidad default.");
+			//e("No hay unidad default.");
 
 
 		} else if($producto_original->getIdUnidad() != $productos[$p]->getIdUnidad()){
-			e("La unidad default (".$producto_original->getIdUnidad().") difiere de la comprada.");
+			//e("La unidad default (".$producto_original->getIdUnidad().") difiere de la comprada.");
 		}
 
-		echo "<br>";
+		///echo "<br>";
 		if($compras[$i]->getCancelada()) continue;
 
 
@@ -89,11 +102,11 @@ for ($i=0; $i < sizeof($compras); $i++) {
 
 	}
 
-	echo "</div>";
+	//echo "</div>";
 }
 
 
-echo "<hr><h1>Ventas</h1>";
+//echo "<hr><h1>Ventas</h1>";
 
 
 $ventas = VentaDAO::getAll();
@@ -102,25 +115,25 @@ $totales_ventas = array();
 
 for ($i=0; $i < sizeof($ventas); $i++) { 
 	
-	echo "<hr>";
+	//echo "<hr>";
 
 	if($ventas[$i]->getCancelada()){
-		echo "<div style='background-color:yellow'>";
-		echo "procesando <strike>venta " . $ventas[$i]->getIdVenta() . "</strike> CANCELADA <br>";
+		//echo "<div style='background-color:yellow'>";
+		//echo "procesando <strike>venta " . $ventas[$i]->getIdVenta() . "</strike> CANCELADA <br>";
 
 	}else if($ventas[$i]->getEsCotizacion()){
-		echo "<div style='background-color:yellow'>";
-		echo "procesando <strike>venta " . $ventas[$i]->getIdVenta() . "</strike> COTIZACION <br>";
+		//echo "<div style='background-color:yellow'>";
+		//echo "procesando <strike>venta " . $ventas[$i]->getIdVenta() . "</strike> COTIZACION <br>";
 
 	}else{
 
-		echo "procesando venta " . $ventas[$i]->getIdVenta() . "<br>";
+		//echo "procesando venta " . $ventas[$i]->getIdVenta() . "<br>";
 	}
 
 	//buscar sus productos
 	$productos = VentaProductoDAO::search( new VentaProducto(  array( "id_venta" =>  $ventas[$i]->getIdVenta()  )) );
 
-	if(sizeof($productos) == 0) e ("NO HAY PRODUCTOS, WTF");
+	//if(sizeof($productos) == 0) e ("NO HAY PRODUCTOS, WTF");
 
 
 	for ($p=0; $p < sizeof($productos); $p++) { 
@@ -128,20 +141,20 @@ for ($i=0; $i < sizeof($ventas); $i++) {
 
 		
 		
-		echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;producto=" . $productos[$p]->getIdProducto() . " vendidoen=" . $productos[$p]->getIdUnidad() ;
+		//echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;producto=" . $productos[$p]->getIdProducto() . " vendidoen=" . $productos[$p]->getIdUnidad() ;
 
-		echo "&nbsp;cantidad=" . $productos[$p]->getCantidad();
+		//echo "&nbsp;cantidad=" . $productos[$p]->getCantidad();
 
 
 		if( is_null( $producto_original->getIdUnidad() ) ){
-			e("No hay unidad default.");
+			//e("No hay unidad default.");
 
 		} else if($producto_original->getIdUnidad() != $productos[$p]->getIdUnidad()){
-			e("La unidad default (".$producto_original->getIdUnidad().") difiere de la vendida.");
+			//e("La unidad default (".$producto_original->getIdUnidad().") difiere de la vendida.");
 
 		}
 
-		echo "<br>";
+		//echo "<br>";
 		if($ventas[$i]->getCancelada()) continue;
 		if($ventas[$i]->getEsCotizacion()) continue;
 		
@@ -162,7 +175,7 @@ for ($i=0; $i < sizeof($ventas); $i++) {
 
 	}
 
-	echo "</div>";
+	//echo "</div>";
 }
 
 
@@ -327,3 +340,9 @@ for ($i=0; $i < sizeof($ventas); $i++) {
 		}catch(Exception $e) { echo "e"; }
 	}
 }
+
+
+
+
+
+	$page->renderPage();
