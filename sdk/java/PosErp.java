@@ -1,5 +1,4 @@
 
-
 class PosErp{
 
     private static PosErp $singleton_obj;
