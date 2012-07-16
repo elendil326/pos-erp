@@ -347,6 +347,68 @@ public class AdminPAQProxy extends HttpResponder{
 
     }
 
+    private String loadClientes(){  
+
+        /*String params = "";
+        String numEmpresa = searchInQuery("numEmpresa");
+        String path = searchInQuery("path");
+        String r = "";
+        String reason = "";
+        
+        if(path == null){
+            r = "{\"success\" : false, \"reason\":\"indique el path del programa de conexion\"}";
+            System.out.println(r);
+            return r;
+        }
+        
+        if(numEmpresa == null){
+            r = "{\"success\" : false, \"reason\":\"falta numero de empresa\"}";
+            System.out.println(r);
+            return r;
+        }
+        
+        params = URLDecoder.decode(path) + " " + numEmpresa ;
+        
+        TestRuntime test = new TestRuntime(params);     
+        
+        reason = test.reason;
+
+        //-------------------------
+        if (test.success == true){
+
+            String[] arrayResponse = test.reason.split(" ");
+            try{
+                reason = arrayResponse[1];
+            }catch(Exception e){
+                r = "{\"success\" : false, \"reason\":\"Respuesta inesperada -> " + e.getMessage().replace("\"", "'") + "\"}";
+                System.out.println(r);
+                return r;
+            }
+        }
+        //------------------------   
+        
+        r = "{\"success\" : " + test.success + ", \"code\" : " + test.code + ", \"reason\":\"" + reason + "\"}"; 
+        System.out.println(r);
+        
+        return r;*/
+        
+        /*
+
+        CRAZONSO01
+        CIDCLIEN01
+        CCODIGO01
+        CFECHAALTA
+        CRFC
+        CCURP
+        CDENCOME01
+        CREPLEGAL
+
+        */
+
+        return "{\"total\":4, \"data\":[{\"CRAZONSO01\":\"Juan Manuel Garcia\",\"CIDCLIEN01\":\"CLI0099\",\"CCODIGO01\":\"CLI0099\",\"CFECHAALTA\":\"12/12/2012\",\"CRFC\":\"GACJ121212123\",\"CCURP\":\"\",\"CDENCOME01\":\"PCSYSTEMS\",\"CREPLEGAL\":\"JUAN CARLOS\",}]}";
+
+    }
+
 	public String getResponse(){
 		//dispatch submodules
 
@@ -387,6 +449,18 @@ public class AdminPAQProxy extends HttpResponder{
 			}else{
 				return ping() ;
 
+			}
+
+		}
+
+
+        if(( path.length > 2 )  && path[2].equals("loadClientes")){
+			
+			System.out.println("-- loadClientes --");
+            if(searchInQuery("callback") != null){
+				return (searchInQuery("callback") + "(" + loadClientes() + ");");
+			}else{
+				return loadClientes() ;
 			}
 
 		}
