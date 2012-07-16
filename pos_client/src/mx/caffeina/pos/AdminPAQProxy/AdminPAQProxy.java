@@ -404,7 +404,7 @@ public class AdminPAQProxy extends HttpResponder{
         CREPLEGAL
 
         */
-        String r = "{\"total\":4, \"data\":[{\"CRAZONSO01\":\"Juan Manuel Garcia\",\"CIDCLIEN01\":\"CLI0099\",\"CCODIGO01\":\"CLI0099\",\"CFECHAALTA\":\"12/12/2012\",\"CRFC\":\"GACJ121212123\",\"CCURP\":\"\",\"CDENCOME01\":\"PCSYSTEMS\",\"CREPLEGAL\":\"JUAN CARLOS\",}]}";
+        String r = "{\"total\":4, \"data\":[{\"CRAZONSO01\":\"Juan Manuel Garcia\",\"CIDCLIEN01\":\"CLI0099\",\"CCODIGO01\":\"CLI0099\",\"CFECHAALTA\":\"12/12/2012\",\"CRFC\":\"GACJ121212123\",\"CCURP\":\"\",\"CDENCOME01\":\"PCSYSTEMS\",\"CREPLEGAL\":\"JUAN CARLOS\"}]}";
         System.out.println(r); 
         return r;
 
