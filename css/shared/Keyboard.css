@@ -1,0 +1,57 @@
+.Keyboard{
+	
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#9C9CA5), to(#44444A));
+	height: 100%;
+	padding: 5px;
+
+}
+
+.Keyboard-key{
+		background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgb(238,238,240)), to(rgb(212,212,217)));
+		margin : 3px;
+		padding : 10px;
+		float : left;
+		border-style:solid;
+		border-width:1px;
+		border-color: rgb(29,29,30);
+		width: 85px;
+		height: 40px;
+		-webkit-box-shadow: 2px 2px 3px #000;
+		-webkit-border-radius: 5px;
+		
+}
+
+.Keyboard-key:active{
+		background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgb(188,188,190)), to(rgb(162,162,167)));
+		border-width:2px;
+		border-color: rgb(59,59,60);
+}
+
+
+.Keyboard-key.long{
+		width: 125px;	
+}
+
+
+.Keyboard-key.small{
+		width: 50px;
+}
+
+.Keyboard-key.tiny{
+		padding : 2px;
+		width: 50px;
+		height: 30px;
+}
+
+.Keyboard-key.tinyNormal{
+		padding : 2px;
+		width: 80px;
+		height: 30px;
+}
+
+.Keyboard-key.tinyLong{
+		padding : 2px;
+		width: 150px;
+		height: 30px;
+}
+
