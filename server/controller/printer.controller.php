@@ -608,7 +608,9 @@ function imprimirFacturaXML($id_venta, $venta_especial = null) {
     $e .= $xml->Emisor->RegimenFiscal['Regimen']. "\n\n";
     
     $e .= "<b>Lugar de expedicion</b>\n";
-    $e .= $xml['LugarExpedicion'];
+    //$e .= $xml['LugarExpedicion'];
+    $e .= "Mercado De Abastos B. Juarez BODEGA 49</b>\n";
+    $e .= "Centro Celaya, Guanajuato, Mexico";
     /* if ($sucursal->getIdSucursal() != '0') {
       $e .= formatAddress($sucursal);
       } */
@@ -727,11 +729,13 @@ function imprimirFacturaXML($id_venta, $venta_especial = null) {
     $comprobante = array(
         array("r1" => "Tipo de comprobante",
             "r2" => "Moneda",
-            "r3" => "Tipo de cambio",
+            //"r3" => "Tipo de cambio",
+            "r3" => "Metodo de Pago",
             "r4" => "<b>Version</b>"),
         array("r1" => $xml['tipoDeComprobante'],
             "r2" => $xml['Moneda'],
-            "r3" => $xml['TipoCambio'],
+            //"r3" => $xml['TipoCambio'],
+            "r3" => $xml['metodoDePago'],
             "r4" => $xml['version']),
     );
     $pdf->ezTable($comprobante, "", "", $opciones_tabla);
