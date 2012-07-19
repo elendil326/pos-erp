@@ -530,11 +530,6 @@ function imprimirFacturaXML($id_venta, $venta_especial = null) {
     } else {
         die("Error al acceder al XML de la factura");
     }
-
-    //----
-    var_dump($xml->Emisor);
-    return;
-    //---
     
     $qr_file_name = obternerQRCode($xml->Emisor['rfc'], $xml->Receptor['rfc'], $xml['total'], $xml->Complemento->TimbreFiscalDigital['UUID']);
 
