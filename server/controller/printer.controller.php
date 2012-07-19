@@ -532,6 +532,11 @@ function imprimirFacturaXML($id_venta, $venta_especial = null) {
         die("Error al acceder al XML de la factura");
     }
 
+    //----
+    var_dump($xml->Emisor->RegimenFiscal);
+    return;
+    //---
+    
     $qr_file_name = obternerQRCode($xml->Emisor['rfc'], $xml->Receptor['rfc'], $xml['total'], $xml->Complemento->TimbreFiscalDigital['UUID']);
 
     include_once('librerias/ezpdf/class.pdf.php');
@@ -605,7 +610,7 @@ function imprimirFacturaXML($id_venta, $venta_especial = null) {
     //TODO : Tomar en cuenta la sucursal de emision
 
     $e .= "<b>Regimen Fiscal</b>\n";
-    var_dump($xml->Emisor->RegimenFiscal);
+    
     $e .= $xml->Emisor->RegimenFiscal['Regimen']. "\n\n";
     
     $e .= "<b>Lugar de expedicion</b>\n";
