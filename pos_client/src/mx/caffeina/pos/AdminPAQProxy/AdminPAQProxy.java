@@ -1265,3 +1265,116 @@ class TestRuntime {
     }
     
 }
+
+
+class LoadClientes {
+
+    public String code = "";
+    public Boolean success = false;
+    public String reason = "";
+
+    /**
+     * Creates a new instance of PruebaRuntime
+     */
+    public LoadClientes(String params) {
+
+        
+
+        //System.out.println("Se ejecutara : " + params);
+
+        try {
+            // Se lanza el ejecutable. 
+            Process p = Runtime.getRuntime().exec(params);
+
+            // Se obtiene el stream de salida del programa 
+            InputStream is = p.getInputStream();
+
+            /*
+             * Se prepara un bufferedReader para poder leer la salida más
+             * comodamente.
+             */
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+
+            //System.out.println("--- 6.1 ---");
+
+            // Se lee la primera linea 
+            String aux = br.readLine();
+            System.out.println("EXE : " + aux);
+
+            //System.out.println("--- 6.2 ---");
+
+            // Mientras se haya leido alguna linea 
+            while (aux != null) {
+                // Se escribe la linea en pantalla 
+                System.out.println(aux);
+
+                // y se lee la siguiente. 
+                aux = br.readLine();
+            }
+
+            //System.out.println("--- 6.3 ---");
+
+            StringTokenizer tokens = new StringTokenizer(aux);
+
+            Boolean param = true;
+            String token = "";
+            while(tokens.hasMoreTokens()){
+            
+                token = tokens.nextToken();
+                
+                if(param == true){                                           
+                    
+                    this.code = new String(token);
+
+                    //System.out.println("-->" + token + "<--");
+                    
+                    if(token.equals("100")){   
+                        //System.out.println("-->ENTRO<--");                 
+                        this.success = true;
+                        //this.reason = "Ok";
+                        //break;
+                    }else{
+                        //System.out.println("-->NO ENTRO<--");        
+                        this.success = false;   
+                        token = "Error " + token + ",";;
+                    }                
+                }
+
+                this.reason += (token + " ");
+
+                param = false;         
+                
+            }
+
+            //System.out.println("--- 6.4 ---");            
+
+            //------------------------------------------
+
+            /*File archivo = new File("C:\\sdk_adminpaq\\cteprov");
+            FileReader fr = new FileReader(archivo);
+            br = new BufferedReader(fr);
+            
+            String linea = br.readLine();
+            
+            System.out.println(linea);*/
+
+            //------------------------------------------
+
+
+        } catch (Exception e) {
+            // Excepciones si hay algún problema al arrancar el ejecutable o al leer su salida.*/
+            //e.printStackTrace();
+            this.success = false;
+            this.code = "300";
+            this.reason = "Error : " + e.getMessage().replace("\"", "'");
+        }
+    }
+
+    TestRuntime() {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+    
+}
+
+
+
