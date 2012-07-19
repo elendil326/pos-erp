@@ -884,7 +884,8 @@ class Comprobante {
                                     "location" => str_replace('?wsdl', '', $this->getUrlWS())
                         ));
 
-                $result = $client->RececpcionComprobante(array('comprobante' => $ready_to_send));
+                //$result = $client->RececpcionComprobante(array('comprobante' => $ready_to_send));
+                $result = $client->RecepcionCombrobante(array('comprobante' => $ready_to_send));
             } catch (SoapFault $fault) {
 
                 Logger::log("********** ERROR AL SOLICITAR NUEVO CFDI **********");
