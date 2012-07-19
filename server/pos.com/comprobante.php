@@ -885,7 +885,7 @@ class Comprobante {
                         ));
 
                 //$result = $client->RececpcionComprobante(array('comprobante' => $ready_to_send));
-                $result = $client->RecepcionCombrobante(array('comprobante' => $ready_to_send));
+                $result = $client->RecepcionComprobante(array('comprobante' => $ready_to_send));
             } catch (SoapFault $fault) {
 
                 Logger::log("********** ERROR AL SOLICITAR NUEVO CFDI **********");
@@ -905,7 +905,7 @@ class Comprobante {
             }
 
             //$response = $result->RececpcionComprobanteResult;
-            $response = $result->RecepcionCombrobanteResult;
+            $response = $result->RecepcionComprobanteResult;
         } else {
             $response = $this->getXmlHardCode();
             $ready_to_send = "Esta es solo una prueba de generacion de CFDI.";
