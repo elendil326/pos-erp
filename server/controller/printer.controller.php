@@ -533,7 +533,7 @@ function imprimirFacturaXML($id_venta, $venta_especial = null) {
     }
 
     //----
-    var_dump($xml->Emisor);
+    var_dump($xml->Emisor->DomicilioFiscal);
     return;
     //---
     
