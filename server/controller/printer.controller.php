@@ -605,6 +605,7 @@ function imprimirFacturaXML($id_venta, $venta_especial = null) {
     //TODO : Tomar en cuenta la sucursal de emision
 
     $e .= "<b>Regimen Fiscal</b>\n";
+    var_dump($xml->Emisor->RegimenFiscal);
     $e .= $xml->Emisor->RegimenFiscal['Regimen']. "\n\n";
     
     $e .= "<b>Lugar de expedicion</b>\n";
