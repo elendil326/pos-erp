@@ -519,8 +519,7 @@ function imprimirFacturaXML($id_venta, $venta_especial = null) {
 
     //quitamos toda la mierda que pone hacienda
     //TODO : Verificar si en Comprobante.php se elimina la mierda de Domicilio, creo qeu no.
-    $xml = str_replace(array("cfdi:Comprobante", "cfdi:Emisor", "cfdi:Receptor", "cfdi:Domicilio", "cfdi:Conceptos", "cfdi:Concepto", "cfdi:Impuestos", "cfdi:Complemento", "cfdi:Traslados", "cfdi:Traslado", "tfd:TimbreFiscalDigital"), array("Comprobante", "Emisor", "Receptor", "Domicilio", "Conceptos", "Concepto", "Impuestos", "Complemento", "Traslados", "Traslado", "TimbreFiscalDigital"), $xml);
-    ;
+    $xml = str_replace(array("cfdi:Comprobante", "cfdi:Emisor", "cfdi:Receptor", "cfdi:Domicilio", "cfdi:Conceptos", "cfdi:Concepto", "cfdi:Impuestos", "cfdi:Complemento", "cfdi:Traslados", "cfdi:Traslado", "tfd:TimbreFiscalDigital", "cfdi:RegimenFiscal"), array("Comprobante", "Emisor", "Receptor", "Domicilio", "Conceptos", "Concepto", "Impuestos", "Complemento", "Traslados", "Traslado", "TimbreFiscalDigital", "RegimenFiscal"), $xml);    
 
     $xml = new SimpleXMLElement($xml);
 
@@ -533,7 +532,7 @@ function imprimirFacturaXML($id_venta, $venta_especial = null) {
     }
 
     //----
-    var_dump($xml->Emisor->DomicilioFiscal);
+    var_dump($xml->Emisor);
     return;
     //---
     
