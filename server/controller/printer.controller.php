@@ -641,7 +641,7 @@ function imprimirFacturaXML($id_venta, $venta_especial = null) {
 
     $datos = array(
         array("col" => "<b>Factura</b>"),
-        array("col" => $xml['folio']),
+        array("col" => ($xml['folio'] . " Serie " . $xml['serie'])),
         array("col" => "<b>Fecha y hora de Emision</b>"),
         array("col" => str_replace(array("T"), array(" "), $xml['fecha'])),
         array("col" => "<b>Numero de serie del certificado del contribuyente</b>"),
