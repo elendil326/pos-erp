@@ -1370,7 +1370,7 @@ class LoadClientes {
         }
     }
 
-    TestRuntime() {
+    LoadClientes() {
         throw new UnsupportedOperationException("Not yet implemented");
     }
     
