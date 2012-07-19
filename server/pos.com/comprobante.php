@@ -644,6 +644,8 @@ class Comprobante {
         $comprobante->appendChild($xml->createElement('fecha', $this->getGenerales()->getFecha()));
 
         $comprobante->appendChild($xml->createElement('forma_de_pago', $this->getGenerales()->getFormaDePago()));
+        
+        $comprobante->appendChild($xml->createElement('lugar_expedicion', 'Mercado De Abastos B. Juarez BODEGA 49 Centro Celaya, Guanajuato, Mexico'));
 
         $comprobante->appendChild($xml->createElement('metodo_de_pago', ucfirst(strtolower($this->getGenerales()->getMetodoDePago()))));
 
