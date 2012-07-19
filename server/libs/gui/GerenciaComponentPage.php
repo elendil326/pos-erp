@@ -182,7 +182,7 @@ class GerenciaComponentPage extends PosComponentPage{
 		        },
 		        {
 		            "title": "Inventario",
-		            "url": "inventario.existencias.php",
+		            "url": "inventario.php",
 		            "children": [
 		                {
 		                    "title": "Existencias",
@@ -190,7 +190,7 @@ class GerenciaComponentPage extends PosComponentPage{
 		                },
 		                {
 		                    "title": "Procesar producto",
-		                    "url": "inventario.procesar.producto.php"
+		                    "url": "inventario.fisico.php"
 		                },
 		                {
 		                    "title": "Terminar cargamento de compra",

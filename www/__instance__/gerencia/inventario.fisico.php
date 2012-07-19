@@ -11,11 +11,41 @@
 
 
 
+	?>
+	
+	<table>
+		<tr>
+			<td><div id="fecha_inicio"></div></td>
+			<td><div id="fecha_fin"></div></td>
+			<td><div class="POS Boton">Actualizar</div></td>
+		</tr>
+	</table>
+	
+	
+	
+	
+	
+	<script>
+	store_component.addExtComponent(
+	 Ext.create('Ext.form.field.Date',{
+		name: 'fecha_inicio',
+		id: 'fecha_inicio',
+		value: new Date()                                   
+	 }), 'fecha_inicio');
 
+	store_component.addExtComponent( 
+	 Ext.create('Ext.form.field.Date',{
+		name: 'fecha_fin',
+		id: 'fecha_fin',
+		value: new Date()                                   
+	 }), 'fecha_fin');
+	</script>
 
-
-
-
+	<?php
+	
+	//Ext.getCmp("fecha_fin").getValue();
+	//Ext.getCmp("fecha_inicio").getValue();
+    
 
 
 function e($t){
@@ -29,12 +59,47 @@ function w($t){
 
 
 
-echo "<h1>Compras</h1>";
+
 
 
 
 //listemos las compras
-$compras = CompraDAO::getAll();
+if(isset($_GET ["inicio"]) && isset($_GET ["fin"])){
+	$compras = CompraDAO::byRange(
+							new Compra(array( "fecha" => $_GET ["inicio"])),
+							new Compra(array( "fecha" => $_GET ["fin"])));
+
+	$ventas = VentaDAO::byRange(
+							new Venta(array( "fecha" => $_GET ["inicio"])),
+							new Venta(array( "fecha" => $_GET ["fin"])));	
+
+} else if(isset($_GET ["inicio"])){
+	$compras = CompraDAO::byRange(
+							new Compra(array( "fecha" => $_GET ["inicio"])),
+							new Compra(array( "fecha" => time())));
+
+	$ventas = VentaDAO::byRange(
+							new Venta(array( "fecha" => $_GET ["inicio"])),
+							new Venta(array( "fecha" => time())));	
+
+} else if(isset($_GET ["fin"])){
+	$compras = CompraDAO::byRange(
+							new Compra(array( "fecha" => 0)),
+							new Compra(array( "fecha" => $_GET ["fin"])));	
+
+	$ventas = VentaDAO::byRange(
+							new Venta(array( "fecha" => 0)),
+							new Venta(array( "fecha" => $_GET ["fin"])));	
+
+	
+} else {	
+	$compras = CompraDAO::getAll();	
+	$ventas = VentaDAO::getAll();
+}
+
+
+
+
 $totales_compras = array();
 
 
@@ -109,7 +174,7 @@ for ($i=0; $i < sizeof($compras); $i++) {
 //echo "<hr><h1>Ventas</h1>";
 
 
-$ventas = VentaDAO::getAll();
+
 $totales_ventas = array();
 
 
@@ -137,37 +202,7 @@ for ($i=0; $i < sizeof($ventas); $i++) {
 
 
 	for ($p=0; $p < sizeof($productos); $p++) { 
-		$producto_original = ProductoDAO::getByPK($productos[$p]->getIdProducto());
 
-		
-		
-		//echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;producto=" . $productos[$p]->getIdProducto() . " vendidoen=" . $productos[$p]->getIdUnidad() ;
-
-		//echo "&nbsp;cantidad=" . $productos[$p]->getCantidad();
-
-
-		if( is_null( $producto_original->getIdUnidad() ) ){
-			//e("No hay unidad default.");
-
-		} else if($producto_original->getIdUnidad() != $productos[$p]->getIdUnidad()){
-			//e("La unidad default (".$producto_original->getIdUnidad().") difiere de la vendida.");
-
-		}
-
-		//echo "<br>";
-		if($ventas[$i]->getCancelada()) continue;
-		if($ventas[$i]->getEsCotizacion()) continue;
-		
-
-
-		if(!isset($totales_ventas[ $productos[$p]->getIdProducto() ] ) ) {
-			$totales_ventas[ $productos[$p]->getIdProducto() ]	 = array();
-		}
-
-		if(!isset($totales_ventas[ $productos[$p]->getIdProducto() ][ $productos[$p]->getIdUnidad() ] ) ) {
-			$totales_ventas[ $productos[$p]->getIdProducto() ][ $productos[$p]->getIdUnidad() ] = 0;
-		}		
-		
 		$totales_ventas[ $productos[$p]->getIdProducto() ][ $productos[$p]->getIdUnidad() ] += $productos[$p]->getCantidad();
 
 
@@ -179,12 +214,15 @@ for ($i=0; $i < sizeof($ventas); $i++) {
 }
 
 
-echo "<hr><table border=1>";
+echo "<table border=1>";
 
 
 echo "<tr><td colspan=2>idprod</td><td colspan=3>compras</td><td colspan=3>ventas</td><td >warnings</td><td >total</td></tr>";
 
-foreach ($totales_ventas as $key => $value) {
+
+
+foreach ($totales_ventas as $key => $value ) {
+
 	echo "<tr><td>producto " . $key . "</td>";
 
 	$p = ProductoDAO::getByPK( $key );
@@ -245,6 +283,8 @@ foreach ($totales_ventas as $key => $value) {
 	}else{
 		echo "<td><div style='background-color:green'>".$nexistencias."</div></td>";
 	}
+
+		echo "<td><div ><input type='text'></div></td>";
 	echo "</tr>";
 }
 
@@ -300,49 +340,5 @@ TRUNCATE `lote_salida_producto`;
 
 
 
-if(!isset($_GET["GO"])) exit;
 
-//listemos las compras
-$compras = CompraDAO::getAll();
-for ($i=0; $i < sizeof($compras); $i++) { 
-
-	//buscar sus productos
-	$productos = CompraProductoDAO::search( new CompraProducto(  array( "id_compra" =>  $compras[$i]->getIdCompra()  )) );
-	
-	for ($p=0; $p < sizeof($productos); $p++) { 
-		
-		$d_producto = $productos[$p]->asArray();
-		
-		$id_sucursal = 7;
-		echo ".";
-		try{
-			SucursalesController::IncrementarDeAlmacenes( $d_producto, $id_sucursal );	
-		}catch(Exception $e) { echo "e"; }
-		
-
-	}
-
-}
-
-
-$ventas = VentaDAO::getAll();
-for ($i=0; $i < sizeof($ventas); $i++) { 
-
-	//buscar sus productos
-	$productos = VentaProductoDAO::search( new VentaProducto(  array( "id_venta" =>  $ventas[$i]->getIdVenta()  )) );
-
-	if(sizeof($productos) == 0) e ("NO HAY PRODUCTOS, WTF");
-
-	for ($p=0; $p < sizeof($productos); $p++) { 
-		echo ".";
-		try{
-			SucursalesController::DescontarDeAlmacenes( $productos[$p], $id_sucursal );		
-		}catch(Exception $e) { echo "e"; }
-	}
-}
-
-
-
-
-
-	$page->renderPage();
+	$page->render();
