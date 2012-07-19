@@ -608,8 +608,7 @@ function imprimirFacturaXML($id_venta, $venta_especial = null) {
     $e .= $xml->Emisor->RegimenFiscal['Regimen']. "\n\n";
     
     $e .= "<b>Lugar de expedicion</b>\n";
-    $e .= "Mercado De Abastos B. Juarez BODEGA 49</b>\n";
-    $e .= "Centro Celaya, Guanajuato, Mexico";
+    $e .= $xml['LugarExpedicion'];
     /* if ($sucursal->getIdSucursal() != '0') {
       $e .= formatAddress($sucursal);
       } */
