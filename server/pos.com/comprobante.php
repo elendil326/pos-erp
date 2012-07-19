@@ -904,7 +904,8 @@ class Comprobante {
                 return $this->success;
             }
 
-            $response = $result->RececpcionComprobanteResult;
+            //$response = $result->RececpcionComprobanteResult;
+            $response = $result->RecepcionCombrobanteResult;
         } else {
             $response = $this->getXmlHardCode();
             $ready_to_send = "Esta es solo una prueba de generacion de CFDI.";
