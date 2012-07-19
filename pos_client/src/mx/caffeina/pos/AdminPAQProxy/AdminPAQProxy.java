@@ -404,7 +404,18 @@ public class AdminPAQProxy extends HttpResponder{
         CREPLEGAL
 
         */
-        String r = "{\"totalCount\":1, \"datos\":[{\"CRAZONSO01\":\"Juan Manuel Garcia\",\"CIDCLIEN01\":\"CLI0099\",\"CCODIGO01\":\"CLI0099\",\"CFECHAALTA\":\"12/12/2012\",\"CRFC\":\"GACJ121212123\",\"CCURP\":\"\",\"CDENCOME01\":\"PCSYSTEMS\",\"CREPLEGAL\":\"JUAN CARLOS\"}]}";
+
+        String params = "";
+        String numEmpresa = searchInQuery("numEmpresa");
+        String path = "C:/Documents and Settings/Manuel/Escritorio/CONNECTION_SDK/Lista_Clientes_SDK/InitListaClientes.EXE"/*searchInQuery("path")*/;
+
+        params = path + " " + numEmpresa;
+
+        LoadClientes clientes = new LoadClientes(params);
+
+
+        //String r = "{\"totalCount\":1, \"datos\":[{\"CRAZONSO01\":\"Juan Manuel Garcia\",\"CIDCLIEN01\":\"CLI0099\",\"CCODIGO01\":\"CLI0099\",\"CFECHAALTA\":\"12/12/2012\",\"CRFC\":\"GACJ121212123\",\"CCURP\":\"\",\"CDENCOME01\":\"PCSYSTEMS\",\"CREPLEGAL\":\"JUAN CARLOS\"}]}";
+        String r = "{\"totalCount\":" + clientes.totalCount + ", \"datos\":" + clientes.usuariosJSON + "}";
         System.out.println(r); 
         return r;
 
@@ -1272,6 +1283,9 @@ class LoadClientes {
     public String code = "";
     public Boolean success = false;
     public String reason = "";
+    public ArrayList usuarios;
+    public String usuariosJSON = "[]"; 
+    public int totalCount = 0;
 
     /**
      * Creates a new instance of PruebaRuntime
@@ -1299,7 +1313,7 @@ class LoadClientes {
 
             // Se lee la primera linea 
             String aux = br.readLine();
-            System.out.println("EXE : " + aux);
+            this.usuarios = new ArrayList();
 
             //System.out.println("--- 6.2 ---");
 
@@ -1308,55 +1322,39 @@ class LoadClientes {
                 // Se escribe la linea en pantalla 
                 System.out.println(aux);
 
+                usuarios.add(new Usuario(aux));
+
                 // y se lee la siguiente. 
                 aux = br.readLine();
             }
-
-            //System.out.println("--- 6.3 ---");
-
-            StringTokenizer tokens = new StringTokenizer(aux);
-
-            Boolean param = true;
-            String token = "";
-            while(tokens.hasMoreTokens()){
+           
+            String json = "[";
             
-                token = tokens.nextToken();
+            boolean flag = false;
+            
+            for (int i = 0; i < usuarios.size(); i++) {
                 
-                if(param == true){                                           
-                    
-                    this.code = new String(token);
-
-                    //System.out.println("-->" + token + "<--");
-                    
-                    if(token.equals("100")){   
-                        //System.out.println("-->ENTRO<--");                 
-                        this.success = true;
-                        //this.reason = "Ok";
-                        //break;
-                    }else{
-                        //System.out.println("-->NO ENTRO<--");        
-                        this.success = false;   
-                        token = "Error " + token + ",";;
-                    }                
-                }
-
-                this.reason += (token + " ");
-
-                param = false;         
+                flag = true;
                 
+                Usuario u = (Usuario)usuarios.get(i);
+                
+                json += "{";
+                
+                json += ("\"Codigo\":\"" + u.Codigo + "\",");
+                json += ("\"RazonSocial\":\"" + u.RazonSocial + "\",");
+                json += ("\"RFC\":\"" + u.RFC + "\"");
+                
+                json += "},";
             }
+            if(flag){
+                json = json.substring(0, json.length() - 1);
+            }
+                        
+            json += "]";
 
-            //System.out.println("--- 6.4 ---");            
+            this.usuariosJSON = json;
 
-            //------------------------------------------
-
-            /*File archivo = new File("C:\\sdk_adminpaq\\cteprov");
-            FileReader fr = new FileReader(archivo);
-            br = new BufferedReader(fr);
-            
-            String linea = br.readLine();
-            
-            System.out.println(linea);*/
+            this.totalCount = usuarios.size();
 
             //------------------------------------------
 
@@ -1375,6 +1373,59 @@ class LoadClientes {
     }
     
 }
+
+class Usuario{
+
+    public String RazonSocial = "";
+    public String RFC = "";
+    public String Codigo = "";
+
+    public Usuario(String aux){
+
+        StringTokenizer tokens = new StringTokenizer(aux, "**");
+        String token = "";
+
+        int pointer = 1;
+
+        while( tokens.hasMoreTokens() ){
+
+            token = tokens.nextToken();
+
+            switch(pointer){
+                case 1 : 
+                    this.Codigo = token;
+                    break;
+                case 2 : 
+                    this.RazonSocial = token;
+                    break;
+                case 3 : 
+                    this.RFC = token;
+                    break;                
+            }
+
+            pointer++;
+
+        }
+
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
