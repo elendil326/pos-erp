@@ -192,8 +192,7 @@ require_once("interfaces/Clientes.interface.php");
 	/**
  	 *
  	 *Regresa una lista de clientes. Puede filtrarse por empresa, sucursal, activos, as?omo ordenarse seg?us atributs con el par?tro orden. Es posible que algunos clientes sean dados de alta por un admnistrador que no les asigne algun id_empresa, o id_sucursal.
-
-Update :  �Es correcto que contenga el argumento id_sucursal? Ya que as?omo esta entiendo que solo te regresara los datos de los clientes de una sola sucursal.
+     *Update :  �Es correcto que contenga el argumento id_sucursal? Ya que as?omo esta entiendo que solo te regresara los datos de los clientes de una sola sucursal.
  	 *
  	 * @param orden json Valor que definir la forma de ordenamiento de la lista. 
  	 * @param id_empresa int Filtrara los resultados solo para los clientes que se dieron de alta en la empresa dada.
@@ -293,8 +292,7 @@ Update :  �Es correcto que contenga el argumento id_sucursal? Ya que as?omo es
 	/**
  	 *
  	 *Crear un nuevo cliente. Para los campos de Fecha_alta y Fecha_ultima_modificacion se usar?a fecha actual del servidor. El campo Agente y Usuario_ultima_modificacion ser?tomados de la sesi?ctiva. Para el campo Sucursal se tomar?a sucursal activa donde se est?reando el cliente. 
-
-Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda ver sus facturas y eso, si tiene email. Al crearse se le enviara un correo electronico con el url.
+    * Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda ver sus facturas y eso, si tiene email. Al crearse se le enviara un correo electronico con el url.
  	 *
  	 * @param razon_social string Nombre o razon social del cliente.
  	 * @param password string Password del cliente
@@ -544,8 +542,7 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
 	/**
  	 *
  	 *Edita la informaci?e un cliente. Se diferenc?del m?do editar_perfil en qu?st??do modifica informaci??sensible del cliente. El campo fecha_ultima_modificacion ser?lenado con la fecha actual del servidor. El campo Usuario_ultima_modificacion ser?lenado con la informaci?e la sesi?ctiva.
-
-Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran los datos que ya tiene.
+     * Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran los datos que ya tiene.
  	 *
  	 * @param id_cliente int Id del cliente a modificar.
  	 * @param telefono1 string Telefono del cliente

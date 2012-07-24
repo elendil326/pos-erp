@@ -33,7 +33,7 @@
 				colonia			: o.colonia,
 				id_ciudad		: o.id_ciudad,
 				codigo_postal	: o.codigo_postal,
-				telefono		: o.telefono,
+				telefono1		: o.telefono1,
 				telefono2		: o.telefono2
 			}]);
 			console.log(o);			
@@ -99,9 +99,12 @@
 	    "correo_electronico"    => "email",
 	    "id_clasificacion_cliente" => "clasificacion_cliente",
 	    "id_moneda" 			=> "moneda_del_cliente",
-	    "pagina_web" 			=> "direccion_web"
+	    "pagina_web" 			=> "sitio_web",	    
+	    "telefono_personal1"	=> "telefono_personal1",
+	    "telefono_personal2"	=> "telefono_personal2"
 	));
 
+	
 	$form->makeObligatory("razon_social");
 
 	$page->addComponent($form);

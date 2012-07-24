@@ -40,7 +40,11 @@
 			}
 
 
+			if($_REQUEST["type"] == "csv-proveedores"){
+				move_uploaded_file ( $_FILES["logo"]["tmp_name"], "../../../static_content/".IID."-proveedores.csv" );
+				ProveedoresController::Importar( file_get_contents( "../../../static_content/".IID."-proveedores.csv" ) );	
 
+			}
 
 			if($_REQUEST["type"] == "logo"){
 				move_uploaded_file ( $_FILES["logo"]["tmp_name"], "../static/".IID.".jpg" );
@@ -75,7 +79,7 @@
 		$page->addComponent( new TitleComponent("Importar productos de CSV/AdminPAQ/Excel", 2));
 		$page->addComponent(" <div id='productos-csvup'></div>");
 
-
+		
 
 
 
@@ -374,9 +378,7 @@
 				    });
 
 
-
-
-
+					
 
 
 
