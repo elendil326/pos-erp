@@ -203,6 +203,17 @@ for ($i=0; $i < sizeof($ventas); $i++) {
 
 	for ($p=0; $p < sizeof($productos); $p++) { 
 
+		if(!array_key_exists( $productos[$p]->getIdProducto(), $totales_ventas )){
+			$totales_ventas[ $productos[$p]->getIdProducto() ]	= array();
+		}
+
+
+		if(!array_key_exists( $productos[$p]->getIdUnidad(), $totales_ventas[ $productos[$p]->getIdProducto() ])){
+			$totales_ventas[ $productos[$p]->getIdProducto() ][ $productos[$p]->getIdUnidad() ]	= 0;
+		}
+
+
+
 		$totales_ventas[ $productos[$p]->getIdProducto() ][ $productos[$p]->getIdUnidad() ] += $productos[$p]->getCantidad();
 
 
@@ -325,18 +336,18 @@ echo "</table>";
 
 
 
-/*
-SucursalesController::DescontarDeAlmacenes( $d_producto, $id_sucursal );
-SucursalesController::IncrementarDeAlmacenes( $d_producto, $id_sucursal );
-*/
+	/*
+	SucursalesController::DescontarDeAlmacenes( $d_producto, $id_sucursal );
+	SucursalesController::IncrementarDeAlmacenes( $d_producto, $id_sucursal );
+	*/
 
-/*
-TRUNCATE `lote_entrada`;
-TRUNCATE `lote_entrada_producto`;
-TRUNCATE `lote_producto`;
-TRUNCATE `lote_salida`;
-TRUNCATE `lote_salida_producto`;
-*/
+	/*
+	TRUNCATE `lote_entrada`;
+	TRUNCATE `lote_entrada_producto`;
+	TRUNCATE `lote_producto`;
+	TRUNCATE `lote_salida`;
+	TRUNCATE `lote_salida_producto`;
+	*/
 
 
 

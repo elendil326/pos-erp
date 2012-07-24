@@ -295,9 +295,12 @@ class LoginComponent implements GuiComponent
 					</td>
 				</tr>
 				<tr>
+
 					<td align=center style="text-align:center">
+						<!--
 						<a href="s/v1/"><img src="../media/1334968530_iPad.png"></a><br>
 						iPad
+					-->
 					</td>
 				</tr>				
 			</table>
