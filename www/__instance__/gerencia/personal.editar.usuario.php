@@ -81,7 +81,10 @@
 	
 	$form->onApiCallSuccessRedirect("personal.usuario.ver.php?uid=" . $_GET["uid"] );
 	
-	$form->renameField(array( "telefono_personal1" => "telefono_personal_1","telefono_personal2" => "telefono_pesrsonal_2"));
+	$form->renameField(array( 
+            "telefono_personal1" => "telefono_personal_1",
+            "telefono_personal2" => "telefono_personal_2")
+        );
 
 	$form->createComboBoxJoin( "id_rol", "nombre", RolDAO::getAll(), $este_usuario->getIdRol() );
 
