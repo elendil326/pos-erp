@@ -5,6 +5,7 @@ require_once("../../../server/bootstrap.php");
 
 $page = new GerenciaComponentPage();
 
+
 $version = VersionDAO::getByPK($_REQUEST['vid']);
 
 $page->addComponent(new TitleComponent("Versi&oacute;n Tarifa"));
@@ -13,12 +14,16 @@ $page->addComponent(new TitleComponent($version->getNombre(), 2));
 $page->addComponent(new TitleComponent("Nueva Regla", 2));
 $page->addComponent(new MessageComponent("Ingrese los valores para crer una nuava regla"));
 
+#$page->addComponent(new TitleComponent("Concordancia", 2));
 $page->partialRender();
-?>
 
+?>
 
 <form name ="form_nueva_regla" id ="form_nueva_regla">
     <table style ="width:100%;">
+        <tr>
+            <td><b>CONCORDANCIA</b></td>
+        </tr>
         <tr>
             <td>
                 Nombre :    
@@ -27,6 +32,41 @@ $page->partialRender();
                 <input type = "text" name = "nombre_regla" id = "nombre_regla" value = "" style ="width:100%;"/>
             </td>
 
+        </tr>
+         <tr>
+            <td>
+                Producto:    
+            </td>
+            <td>
+                 <select name = "id_producto" id = "id_producto" onChange = "formatForm()" >
+                    <?php
+                    $options = "<option value = null>-------</option>";
+
+                    foreach (ProductoDAO::getAll() as $producto) {
+                        $options .= "<option value = \"{$producto->getIdProducto()}\">{$producto->getNombreProducto()}</option>";
+                    }
+
+                    echo $options;
+                    ?>
+                </select>
+            </td>
+            <td>
+                Categoria de Producto :    
+            </td>
+            <td>
+                 <select name = "catproducto" id = "catproducto" onChange = "formatForm()" >
+                   <?php
+                   $options = "<option value = null>-------</option>";
+
+                    foreach (ClasificacionProductoDAO::getAll() as $clasifProd) {
+                        $options .= "<option value = \"{$clasiProd->getIdClasificacionProducto()}\">{$clasifProd->getNombre()}</option>";
+                    }
+
+                    echo $options;
+
+                    ?>
+                </select> 
+            </td>
         </tr>
         <tr>
             <td>
@@ -41,7 +81,64 @@ $page->partialRender();
             <td>
                 <input type = "text" name = "cantidad_minima_regla" id = "cantidad_minima_regla" value = "" style ="width:100%;"/>
             </td>
-        </tr>  
+        </tr>
+        <tr>
+            <td>
+               Servicio:    
+            </td>
+            <td colspan ="3">
+                 <select name = "id_servicio" id = "id_servicio" onChange = "formatForm()" >
+                    <?php
+                    $options = "<option value = null>-------</option>";
+
+                    foreach (ServicioDAO::getAll() as $servicio) {
+                        $options .= "<option value = \"{$servicio->getIdServicio()}-{$servicio->getMetodoCosteo()}-{$servicio->getCostoEstandar()}-{$servicio->getPrecio()}\">{$servicio->getNombreServicio()}</option>";
+                    }
+
+                    echo $options;
+                    ?>
+                </select> 
+            </td>
+
+        </tr>
+        <tr>
+            <td><b>CALCULO DEL PRECIO</b></td>
+        </tr> 
+        <tr>
+            <td>Basado en:</td>
+            <td>
+                 <select name = "id_tarifa" id = "id_tarifa" onChange = "formatForm()" >
+                    <?php
+                    $options = "<option value = null>-------</option>";
+
+                    foreach (TarifaDAO::getAll() as $tarifa) {
+                        $options .= "<option value = \"{$tarifa->getIdTarifa()}\">{$tarifa->getNombre()}</option>";
+                    }
+
+                    echo $options;
+                    ?>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                Nuevo precio = Precio base * ( 1 + <input type = "text" name = "c1" id = "c1" value = "" style ="width:90px;"/> ) + <input type = "text" name = "c2" id = "c2" value = "" style ="width:90px;"/>
+            </td>
+        </tr> 
+        <tr>
+            <td>
+                Margen min: 
+            </td>
+            <td>
+                <input type = "text" name = "margen_min" id = "margen_min" value = "" style ="width:100%;"/>
+            </td>
+            <td>
+                Margen max: 
+            </td>
+            <td>
+                <input type = "text" name = "margen_max" id = "margen_max" value = "" style ="width:100%;"/>
+            </td>
+        </tr>
         <tr>
             <td colspan = "4"  align="right" style = "border-width:0px;">
                 <input id ="btn_nueva_regla" class="POS Boton OK" style = "position:relative; float:right;" type = "button" value = "Aceptar" /> <input  id ="btn_cancelar_regla" class="POS Boton" style = "position:relative; float:right;" type = "reset" value = "Cancelar" />
@@ -131,8 +228,18 @@ $page->partialRender();
     btn_nueva_regla.on('click',function(){                          
         
         var nombre = Ext.get('nombre_regla').getValue().replace(/^\s+|\s+$/g,"");
+        var producto = Ext.get('id_producto').getValue().replace(/^\s+|\s+$/g,"");
+        var catproducto = Ext.get('catproducto').getValue().replace(/^\s+|\s+$/g,"");
         var secuencia = Ext.get('secuencia_regla').getValue().replace(/^\s+|\s+$/g,""); 
         var cantidad_minima = Ext.get('cantidad_minima_regla').getValue().replace(/^\s+|\s+$/g,"");
+        var servicio = Ext.get('id_servicio').getValue().replace(/^\s+|\s+$/g,"");
+        var tarifa = Ext.get('id_tarifa').getValue().replace(/^\s+|\s+$/g,"");
+        var c1 = Ext.get('c1').getValue().replace(/^\s+|\s+$/g,"");
+        var c2 = Ext.get('c2').getValue().replace(/^\s+|\s+$/g,"");
+        var margen_min = Ext.get('margen_min').getValue().replace(/^\s+|\s+$/g,"");
+        var margen_max = Ext.get('margen_min').getValue().replace(/^\s+|\s+$/g,"");
+       
+       
         
         var error = "";
         
@@ -166,8 +273,16 @@ $page->partialRender();
         
         r.addRegla(Ext.get('content_table_rules'), new regla({
             nombre:nombre,
+            producto:producto,
+            catproducto:catproducto,
             secuencia:secuencia,
-            cantidad_minima:cantidad_minima
+            cantidad_minima:cantidad_minima,
+            tarifa:tarifa,
+            c1:c1,
+            c2:c2,
+            margen_min:margen_min,
+            margen_max:margen_max
+
         }));                
         
     });
