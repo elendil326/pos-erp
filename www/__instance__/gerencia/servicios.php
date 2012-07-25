@@ -16,7 +16,7 @@
 		function funcion_usuario_venta($usuario_venta)
 		{
 			return UsuarioDAO::getByPK($usuario_venta) ? UsuarioDAO::getByPK($usuario_venta)->getNombre() : "
-	<img src='../../../media/iconos/user_delete.png'> Nadie esta asignado";
+	<img src='../../media/iconos/user_delete.png'> Nadie esta asignado";
 		}
 
 		function funcion_activa($activa)
@@ -45,9 +45,9 @@
 		$ordenes = ServiciosController::ListaOrden(true); 
 		
 		if(  $ordenes["numero_de_resultados"] == 1){
-			$msg = "Hay <b style='color:#325C99'>" . $ordenes["numero_de_resultados"] . "</b> orden en espera. <div onclick='window.location=\"servicios.nueva.orden.php\";' class='POS Boton'><img src='../../../media/iconos/table_add.png'> Nueva orden</div>";	
+			$msg = "Hay <b style='color:#325C99'>" . $ordenes["numero_de_resultados"] . "</b> orden en espera. <div onclick='window.location=\"servicios.nueva.orden.php\";' class='POS Boton'><img src='../../media/iconos/table_add.png'> Nueva orden</div>";	
 		}else{
-			$msg = "Hay <b style='color:#325C99'>" . $ordenes["numero_de_resultados"] . "</b> ordenes en espera. <div onclick='window.location=\"servicios.nueva.orden.php\";' class='POS Boton'><img src='../../../media/iconos/table_add.png'> Nueva orden</div>";	
+			$msg = "Hay <b style='color:#325C99'>" . $ordenes["numero_de_resultados"] . "</b> ordenes en espera. <div onclick='window.location=\"servicios.nueva.orden.php\";' class='POS Boton'><img src='../../media/iconos/table_add.png'> Nueva orden</div>";	
 		}
 		
 

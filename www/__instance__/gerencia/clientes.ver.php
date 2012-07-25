@@ -420,13 +420,22 @@
 		return FormatTime(($a));
 	}
 	
+
+
 	$lseguimientos = new TableComponent($header, $segs);
 	$lseguimientos->addColRender("id_usuario", "nagente");
 	$lseguimientos->addColRender("fecha", "funcion_transcurrido");	
 	$page->addComponent($lseguimientos);
 	
+
+	$page->addComponent("<script>
+			function newcommentDone(a,b,c){
+				console.log(a,b,c)
+			}
+		</script>");
 	
 	$nseguimiento = new DAOFormComponent( new ClienteSeguimiento( array( "id_cliente" => $este_usuario->getIdUsuario() ) ) );
+	$nseguimiento->onApiCallSuccess("newcommentDone");
 	$nseguimiento->addApiCall("api/cliente/seguimiento/nuevo");
 	$nseguimiento->settype("texto", "textarea");
 	$nseguimiento->hideField( array(

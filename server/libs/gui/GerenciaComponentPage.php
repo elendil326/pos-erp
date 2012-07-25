@@ -185,16 +185,12 @@ class GerenciaComponentPage extends PosComponentPage{
 		            "url": "inventario.php",
 		            "children": [
 		                {
-		                    "title": "Existencias",
+		                    "title": "Mapa Existencias",
 		                    "url": "inventario.existencias.php"
 		                },
 		                {
-		                    "title": "Procesar producto",
+		                    "title": "Inventario fisico",
 		                    "url": "inventario.fisico.php"
-		                },
-		                {
-		                    "title": "Terminar cargamento de compra",
-		                    "url": "inventario.terminar.cargamento.compra.php"
 		                }
 		            ]
 		        },

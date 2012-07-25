@@ -102,13 +102,14 @@ class ImpresionesController {
 
 	private static function createPdf( $title = "", $subtitle = "", $qr_string = ""){
 
-	    $pdf = new Cezpdf( $paper = 'letter');
+	    $pdf = new Cezpdf( $paper = 'letter')	;
 
-		if (is_file(POS_PATH_TO_SERVER_ROOT . "libs/ezpdf/fonts/Helvetica.afm")){
-			$pdf->selectFont(POS_PATH_TO_SERVER_ROOT . "libs/ezpdf/fonts/Helvetica.afm");
+		if (is_file(POS_PATH_TO_SERVER_ROOT . "/libs/ezpdf/fonts/Helvetica.afm")){
+			$pdf->selectFont(POS_PATH_TO_SERVER_ROOT . "/libs/ezpdf/fonts/Helvetica.afm");
 			
 		}else{
-			throw new Exception();
+			Logger::log("No encontre la fuente de PDF");
+			throw new Exception("No encontre la fuente de PDF en ");
 			
 		}
 

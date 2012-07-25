@@ -7,9 +7,13 @@
 	require_once("../../../server/bootstrap.php");
 
 	$page = new GerenciaTabPage();
+	
+	$page->addComponent(new TitleComponent("Inventario fisico"));
+	$page->addComponent("<p>El inentariado fisico se utiliza para actualizar las existencias del sistema con existencias reales.</p>");
 	$page->partialRender();
 
 
+	
 
 	?>
 	
@@ -228,17 +232,25 @@ for ($i=0; $i < sizeof($ventas); $i++) {
 echo "<table border=1>";
 
 
-echo "<tr><td colspan=2>idprod</td><td colspan=3>compras</td><td colspan=3>ventas</td><td >warnings</td><td >total</td></tr>";
+echo "<tr>
+	<td colspan=1>Producto</td>
+	<td colspan=3>Compras</td>
+	<td colspan=3>Ventas</td>
+	<td ></td>
+	<td >Calculado</td>
+	<td >Sistema</td>
+	<td >Real</td>
+</tr>";
 
 
 
 foreach ($totales_ventas as $key => $value ) {
 
-	echo "<tr><td>producto " . $key . "</td>";
+	echo "<tr><td><b>" . $key . "</b>";
 
 	$p = ProductoDAO::getByPK( $key );
 
-	echo "<td>". $p->getNombreProducto() ."</td>";
+	echo "&nbsp;". $p->getNombreProducto() ."</td>";
 	
 	$total = 0;
 	if(isset($totales_compras[$key])){
@@ -275,7 +287,7 @@ foreach ($totales_ventas as $key => $value ) {
 	}
 
 	if(($foo > 1) ||($bar > 1) ){
-		echo "<td><div style='color:red'> <---- distintas unidades</div></td>";
+		echo "<td><div style='color:red'> <-- distintas getIdUnidades</div></td>";
 
 	}else{
 		echo "<td></td>";
@@ -295,7 +307,7 @@ foreach ($totales_ventas as $key => $value ) {
 		echo "<td><div style='background-color:green'>".$nexistencias."</div></td>";
 	}
 
-		echo "<td><div ><input type='text'></div></td>";
+		echo "<td><div ><input type='text' placeholder='$total'></div></td>";
 	echo "</tr>";
 }
 

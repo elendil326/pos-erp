@@ -14,8 +14,8 @@
 			Logger::log("======== NUEVA INSTANCIA =============");
 			
 			if( is_null($instance_token) ){
-				return self::Nueva( md5( time() ) , $descripcion );
-			}
+				return self::Nueva( dechex( time() ) , $descripcion );
+			} 
 			
 			//primero busquemos ese token
 			if( !is_null(self::BuscarPorToken( $instance_token ) ) ){
