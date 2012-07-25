@@ -59,17 +59,66 @@ class ProductoDAO extends ProductoDAOBase
 	}
   
 
-	public static function ExistenciasTotales($id_producto){
+	public static function ExistenciasTotales($id_producto, $id_lote = null, $id_sucursal = null){
+            
+            $total = 0;
+            
+            //calcula las existencias de todos los productos de todos los lotes y todas las sucursales
+            if( is_null($id_sucursal) && is_null($id_lote)){                
+                
+                $lotes = LoteProductoDAO::search( new LoteProducto( array( "id_producto" => $id_producto ) ) );
 
-		$lotes = LoteProductoDAO::search( new LoteProducto( array( "id_producto" => $id_producto ) ) );
-		
-		$total = 0;
+                foreach($lotes as $l ){
+                    $total += $l->getCantidad();
+                }		
+                
+                return $total;
+                
+            }                                   
+            
+            //calcula las existencias de un lote en especifico
+            if(is_null($id_sucursal) && !is_null($id_lote) ){                                   
+                
+                $lotes = LoteProductoDAO::search( new LoteProducto( array( "id_producto" => $id_producto, "id_lote" => $id_lote ) ) );
 
-		foreach($lotes as $l ){
-			$total += $l->getCantidad();
-		}
+                foreach($lotes as $l ){
+                    $total += $l->getCantidad();
+                }
+                
+                return $total;
+                
+            }                       
+            
+            //calcula las existencias de un producto de todos los lotes de una sucursal en especifico
+            if(!is_null($id_sucursal) && is_null($id_lote) ){   
+                
+                //obtenemos los lotes de una sucursal
+                $almacenes = AlmacenDAO::search(new Almacen(array("id_sucursal" => $id_sucursal)));
+                
+                //iteramos los almacenes para sacar sus lotes
+                foreach($almacenes as $almacen){
+                    
+                    $lotes = LoteDAO::search(new Lote(array("id_almacen"=>$almacen->getIdAlacen())));
+                    
+                    //iteramos los lotes para conocer las existencias del producto en ese lote especifico
+                    foreach($lotes as $lote){                                                
+                        
+                        $loteProducto = LoteProductoDAO::search( new LoteProducto( array( "id_producto" => $id_producto, "id_lote" => $lote->getIdLote() ) ) );
 
-		return $total;
+                        foreach($loteProducto as $l ){
+                            $total += $l->getCantidad();
+                        }
+                                                                                               
+                    }
+                    
+                }                                
+                
+                return $total;
+                
+            }
+                
+            return $total;
+                
 	}
 
 

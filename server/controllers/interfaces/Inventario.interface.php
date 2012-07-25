@@ -31,6 +31,22 @@
   
 	/**
  	 *
+ 	 *Permite dar conocer al sistema las verdaderas existencias en un almacen, o sucursal.
+ 	 *
+ 	 * @param inventario json [{id_producto: 1,id_unidad: 2,cantidad: 0,id_lote : 2}]
+ 	 * @param id_sucursal int 
+ 	 **/
+  static function Fisico
+	(
+		$inventario, 
+		$id_sucursal = ""
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
  	 *Procesar producto no es mas que moverlo de lote.
  	 *
  	 * @param cantidad_nueva float La cantidad de producto nuevo que se procesara

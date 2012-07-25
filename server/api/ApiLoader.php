@@ -1,7 +1,5 @@
 <?php 
 
-
-
   class ApiSesionIniciar extends ApiHandler {
   
 
@@ -1104,6 +1102,36 @@
  		$this->response = InventarioController::CompraDeCargamentoTerminar( 
  			
 		
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiInventarioFisico extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"inventario" => new ApiExposedProperty("inventario", true, POST, array( "json" )),
+			"id_sucursal" => new ApiExposedProperty("id_sucursal", false, POST, array( "int" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = InventarioController::Fisico( 
+ 			
+			
+			isset($_POST['inventario'] ) ? json_decode($_POST['inventario']) : null,
+			isset($_POST['id_sucursal'] ) ? $_POST['id_sucursal'] :  ""
 			
 			);
 		}catch(Exception $e){
