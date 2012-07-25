@@ -923,21 +923,26 @@ require_once("interfaces/Sucursales.interface.php");
   
 	/**
  	 *
- 	 *Vender productos desde el mostrador de una sucursal. Cualquier producto vendido aqui sera descontado del inventario de esta sucursal. La fecha ser?omada del servidor, el usuario y la sucursal ser?tomados del servidor. La ip ser?omada de la m?ina que manda a llamar al m?do. El valor del campo liquidada depender?e los campos total y pagado. La empresa se tomara del alamcen de donde salieron los productos
+ 	 *Vender productos desde el mostrador de una sucursal. Cualquier producto vendido aqui sera descontado del inventario de esta sucursal. La fecha ser? tomada del servidor, el usuario y la sucursal ser?n tomados del servidor. La ip ser? tomada de la m?quina que manda a llamar al m?todo. El valor del campo liquidada depender? de los campos total y pagado. La empresa se tomara del alamcen de donde salieron los productos
  	 *
- 	 * @param detalle json Objeto que contendr los id de los productos, sus cantidades, su precio y su descuento.
- 	 * @param retencion float Cantidad sumada por retenciones
- 	 * @param id_comprador int Id del cliente al que se le vende.
- 	 * @param subtotal float El total de la venta antes de cargarle impuestos
- 	 * @param impuesto float Cantidad sumada por impuestos
- 	 * @param total float El total de la venta
  	 * @param descuento float La cantidad que ser descontada a la compra
+ 	 * @param id_comprador int Id del cliente al que se le vende.
+ 	 * @param impuesto float Cantidad sumada por impuestos
+ 	 * @param retencion float Cantidad sumada por retenciones
+ 	 * @param subtotal float El total de la venta antes de cargarle impuestos
  	 * @param tipo_venta string Si la venta es a credito o a contado
- 	 * @param saldo float La cantidad que ha sido abonada hasta el momento de la venta
- 	 * @param cheques json Si el tipo de pago es con cheque, se almacena el nombre del banco, el monto y los ultimos 4 numeros del o de los cheques
- 	 * @param tipo_pago string Si el pago ser efectivo, cheque o tarjeta.
- 	 * @param billetes_pago json Ids de los billetes que se recibieron 
+ 	 * @param total float El total de la venta
  	 * @param billetes_cambio json Ids de billetes que se entregaron como cambio
+ 	 * @param billetes_pago json Ids de los billetes que se recibieron 
+ 	 * @param cheques json Si el tipo de pago es con cheque, se almacena el nombre del banco, el monto y los ultimos 4 numeros del o de los cheques
+ 	 * @param detalle_orden json Objeto que contendr los id de los servicios, sus cantidades, su precio y su descuento.
+ 	 * @param detalle_paquete json Objeto que contendr los id de los paquetes, sus cantidades, su precio y su descuento.
+ 	 * @param detalle_producto json Objeto que contendr los id de los productos, sus cantidades, su precio y su descuento.
+ 	 * @param id_caja int Id de la caja desde la que se vende, en caso de que se venda desde otra caja
+ 	 * @param id_sucursal int Id de la sucursal de donde saldran los productos en caso de que se venda desde otra sucursal
+ 	 * @param id_venta_caja int Id de la venta de esta caja, utilizado cuando se va el internet
+ 	 * @param saldo float La cantidad que ha sido abonada hasta el momento de la venta
+ 	 * @param tipo_pago string Si el pago ser efectivo, cheque o tarjeta.
  	 * @return id_venta int Id autogenerado de la inserci�n de la venta.
  	 **/
 	public static function VenderCaja
