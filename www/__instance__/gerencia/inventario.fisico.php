@@ -166,16 +166,8 @@ for ($i=0; $i < sizeof($compras); $i++) {
 		
 		$totales_compras[ $productos[$p]->getIdProducto() ][ $productos[$p]->getIdUnidad() ] += $productos[$p]->getCantidad();
 
- 	
-		
-
 	}
-
-	//echo "</div>";
 }
-
-
-//echo "<hr><h1>Ventas</h1>";
 
 
 
@@ -189,10 +181,12 @@ for ($i=0; $i < sizeof($ventas); $i++) {
 	if($ventas[$i]->getCancelada()){
 		//echo "<div style='background-color:yellow'>";
 		//echo "procesando <strike>venta " . $ventas[$i]->getIdVenta() . "</strike> CANCELADA <br>";
+		continue;
 
 	}else if($ventas[$i]->getEsCotizacion()){
 		//echo "<div style='background-color:yellow'>";
 		//echo "procesando <strike>venta " . $ventas[$i]->getIdVenta() . "</strike> COTIZACION <br>";
+		continue;
 
 	}else{
 
@@ -220,12 +214,8 @@ for ($i=0; $i < sizeof($ventas); $i++) {
 
 		$totales_ventas[ $productos[$p]->getIdProducto() ][ $productos[$p]->getIdUnidad() ] += $productos[$p]->getCantidad();
 
-
-		
-
 	}
 
-	//echo "</div>";
 }
 
 
@@ -243,6 +233,7 @@ echo "<tr>
 </tr>";
 
 
+$json_c = "var prods = [";
 
 foreach ($totales_ventas as $key => $value ) {
 
@@ -251,6 +242,9 @@ foreach ($totales_ventas as $key => $value ) {
 	$p = ProductoDAO::getByPK( $key );
 
 	echo "&nbsp;". $p->getNombreProducto() ."</td>";
+
+	$json_c .= " { id_producto : ". $key .", id_unidad : ". $p->getIdUnidad() ." }, ";
+
 	
 	$total = 0;
 	if(isset($totales_compras[$key])){
@@ -307,17 +301,53 @@ foreach ($totales_ventas as $key => $value ) {
 		echo "<td><div style='background-color:green'>".$nexistencias."</div></td>";
 	}
 
-		echo "<td><div ><input type='text' placeholder='$total'></div></td>";
+	echo "<td>
+		<div ><input type='text' id='$key'  placeholder='$total'></div></td>";
+
 	echo "</tr>";
 }
 
+$json_c .= "];";
 
 echo "</table>";
 
+?>
+<script type="text/javascript">
+	function doEnviarInv(){
+		
+		<?php echo $json_c; ?>
+		
+		var json = [];
+
+		for (var i = foo.length - 1; i >= 0; i--) {
+
+			json.push({
+				id_producto	: 1,
+				id_unidad	: 2,
+				cantidad 	: 0,
+				id_lote 	: 2
+			});
+		
+
+		}
+
+		var out = {
+			inventario : Ext.JSON.encode( json )
+		};
+
+		POS.API.POST("api/inventario/fisico", out, {
+			callback: function(r){
+
+			}
+		} );
+	}
+</script>
 
 
+<div class="POS Boton Ok" onClick=\"doEnviarInv()\">Aceptar</div>
 
 
+<?php
 
 
 
