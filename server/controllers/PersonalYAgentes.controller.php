@@ -1118,7 +1118,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	)
 	{  
             Logger::log("Editando usuario: ".$id_usuario);
-						
+            
             //valida los parametros de la tabla usuario
             
 			/*$validar=self::validarParametrosUsuario($id_usuario, null, $id_sucursal, $id_rol,
