@@ -728,14 +728,15 @@ function imprimirFacturaXML($id_venta, $venta_especial = null) {
     $opciones_tabla['width'] = puntos_cm(16.2);
     $comprobante = array(
         array("r1" => "<b>Tipo de comprobante</b>",
-            "r2" => "<b>Moneda</b>",
+            "r2" => utf8_decode("<b>Método de Pago</b>"),
+            "r3" => "<b>Cuenta</b>",
             //"r3" => "Tipo de cambio",
-            "r3" => "<b>Metodo de Pago</b>",
+            
             "r4" => "<b>Version</b>"),
         array("r1" => $xml['tipoDeComprobante'],
-            "r2" => $xml['Moneda'],
-            //"r3" => $xml['TipoCambio'],
-            "r3" => $xml['metodoDePago'],
+            "r2" => $xml['metodoDePago'],
+            "r3" => $xml['NumCtaPago'],
+            //"r3" => $xml['TipoCambio'],            
             "r4" => $xml['version']),
     );
     $pdf->ezTable($comprobante, "", "", $opciones_tabla);

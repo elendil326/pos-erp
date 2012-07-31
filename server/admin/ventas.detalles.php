@@ -361,6 +361,7 @@ if ($venta->getIdCliente() < 0) {
                             action : 1200,
                             factura_generica : jQuery.JSON.encode(factura_generica),
                             id_venta : <?php echo $_REQUEST["id"]; ?>
+                            <?php echo $venta->getTipoPago() == "cheque"? ", numero_cuenta : jQuery(\"#factura-numero-cuenta\").val()" : "";?>
                         },
                         cache: false,
                         success: function(data){
@@ -498,10 +499,32 @@ if ($venta->getIdCliente() < 0) {
                 </div>
             </td>
         </tr>
+    </table>	
+    <?php 
+    
+        if($venta->getTipoPago() == "cheque"){
+            ?>
+                <h2>Metodo de Pago y Cuenta</h2>
+                <br/>        
+                <table width ="100%" align="center">
+                    <tr>
+                        <td>
+                            <div align=center style="display:block">
+                                <b>Numero de Cuenta</b> <input id ="factura-numero-cuenta" style ="height:25px; width: 250px; font-size:120% "type ="text" placeholder="Ingrese el numero de la cuenta">               
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+    
+            <?php
+        }
+    	
+    ?>
+    <table width ="100%" align="center">  
         <tr>
             <td colspan ="2" align="center">
                 <h4><input type ="button" value ="Cancelar" onClick='hideModoFactura()'><input type ="button" value ="Facturar" onClick='facturar()'></h4>
             </td>
         </tr>
-    </table>		
+    </table>
 </div>

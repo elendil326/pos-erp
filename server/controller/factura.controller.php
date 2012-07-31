@@ -155,11 +155,13 @@ function verificarDatosVenta($id_venta = null) {
  * 
  * http://localhost/pos/trunk/www/proxy.php?action=1200?&id_venta=120&factura_generica={%22id_producto%22:%22xxl%22,%20%22descripcion%22:%22varios%20verduras%22,%22unidad%22:%22unidad%22,%22cantidad%22:1,%22valor%22:1350.50}
  */
-function generaFactura($id_venta, $factura_generica = null) {
+function generaFactura($id_venta, $factura_generica = null, $numero_cuenta = null) {
 
 
 
     Logger::log("Entrando a la funcion generaFactura");
+            
+    Logger::log("numero_cuenta : {$numero_cuenta}");
     
     if (isset($factura_generica)) {
 
@@ -208,7 +210,7 @@ function generaFactura($id_venta, $factura_generica = null) {
 
     DAO::transBegin();
 
-    $data = getDatosGenerales($id_venta);
+    $data = getDatosGenerales($id_venta, $numero_cuenta);
 
     /* Termino aqui la transaccion por que si ocurre un error, al momento de la lectura de los XML quiero que se guarde
      * el registro de factura_venta.     
@@ -622,7 +624,7 @@ function getExpedidoPor() {
  * @param type $args
  * @return stdClass Regresa un objeto de tipo Generales generales y un objto Factura factura
  */
-function getDatosGenerales($id_venta) {
+function getDatosGenerales($id_venta, $numero_cuenta = null) {
 
     Logger::log("Iniciando creacion de objeto con los datos generales.");
     
@@ -656,6 +658,13 @@ function getDatosGenerales($id_venta) {
     } else {
 
         $generales->setMetodoDePago($venta->getTipoPago());
+        
+        if($venta->getTipoPago() == "cheque"){
+        
+            $generales->setNumeroCuenta($numero_cuenta);
+            
+        }
+        
     }
 
     //significa que tomara la serie de la         
@@ -861,9 +870,13 @@ if (isset($args['action'])) {
                 $factura_generica = $args['factura_generica'];
             }
 
+            $numero_cuenta = null;
+            
+            if(isset( $args['numero_cuenta'] )){
+                $numero_cuenta = $args['numero_cuenta'];
+            }
 
-
-            generaFactura($args['id_venta'], $factura_generica);
+            generaFactura($args['id_venta'], $factura_generica, $numero_cuenta);
 
             break;
 

@@ -246,6 +246,28 @@ class Generales {
     public function setError($param) {
         $this->error = $param;
     }
+    
+    /**
+     * Contiene información acerca del numero de cuenta del cheque o targeta con la que se realizo el pago
+     * @var String
+     */
+    private $numero_cuenta = "";
+
+    /**
+     * Obtiene información acerca del  numero de cuenta del cheque o targeta con la que se realizo el pago
+     * @return <type>
+     */
+    public function getNumeroCuenta() {
+        return $this->numero_cuenta;
+    }
+
+    /**
+     * Establece información acerca del  numero de cuenta del cheque o targeta con la que se realizo el pago
+     * @param <type> $param
+     */
+    public function setNumeroCuenta($param) {
+        $this->numero_cuenta = $param;
+    }
 
     /**
      * 
@@ -300,7 +322,16 @@ class Generales {
         if (!($this->getTotal() != null && $this->getTotal() != "")) {
             $this->setError("No se ha definido el total.");
         }
-
+                               
+        //verificamos si se especifico el numero de cuenta en caso de realizar el pago con cheque
+        if (!($this->getMetodoDePago() != null &&  $this->getMetodoDePago() != "" ) &&  $this->getMetodoDePago() == "cheque" ) {                                
+            
+            if( $this->getNumeroCuenta() == "" || $this->getNumeroCuenta() == null ){
+                $this->setError("No se ha definido el numero de cuenta.");
+            }
+            
+        }
+                
         $this->success = new Success($this->error);
         return $this->success;
     }

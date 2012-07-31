@@ -881,8 +881,8 @@ function venderAdmin($args) {
         if (!isset($data->tipo_pago)) {
             Logger::log("Error en venta a contado : No se ha especificado el tipo de pago.");
             die('{"success": false, "reason": "Error en venta a contado : No se ha especificado el tipo de pago." }');
-        }
-
+        }        
+        
         switch ($data->tipo_pago) {
             case 'efectivo' :
                 //validamos que envie el efectivo con el cual pago
@@ -902,10 +902,10 @@ function venderAdmin($args) {
                     die('{"success": false, "reason": "Pago con cheque, Error : No se ha especificado la cantidad de efectivo con la que pago." }');
                 }
 
-                if ($data->efectivo <= 0) {
+                /*if ($data->efectivo <= 0) {
                     Logger::log("Pago con cheque, Error : La cantidad con la cual intenta pagar debe de ser mayor que cero.");
                     die('{"success": false, "reason": "Pago con cheque, Error : La cantidad con la cual intenta pagar debe ser mayor o igual que cero." }');
-                }
+                }*/
                 break;
             case 'tarjeta' :
                 if (!isset($data->efectivo)) {
@@ -1225,6 +1225,12 @@ function venderAdmin($args) {
 
     $venta_actual->setTotal($venta_actual->getSubTotal() - $descuento_en_venta);
 
+    //si el pago es con cheque, hacemos el cheque 
+    if( $data->tipo_pago == "cheque" ){        
+        $data->efectivo = $venta_actual->getTotal();
+    }
+    
+    
     if ($data->efectivo >= $venta_actual->getTotal()) {
         //se pago todo
         $venta_actual->setPagado($venta_actual->getTotal());
