@@ -1,0 +1,3 @@
+#!/bin/bash
+clear && g++ -I /usr/local/include/mysql++/ -I /usr/include/mysql/ -L/usr/lib/mysql -lmysqlclient -lmysqlpp -o chat.bin src/chat.cpp
+	
