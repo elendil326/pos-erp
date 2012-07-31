@@ -54,7 +54,7 @@ $page->partialRender();
                 Categoria de Producto :    
             </td>
             <td>
-                 <select name = "catproducto" id = "catproducto" onChange = "formatForm()" >
+                 <select name = "categoria_producto" id = "categoria_producto" onChange = "formatForm()" >
                    <?php
                    $options = "<option value = null>-------</option>";
 
@@ -107,7 +107,7 @@ $page->partialRender();
         <tr>
             <td>Basado en:</td>
             <td>
-                 <select name = "id_tarifa" id = "id_tarifa" onChange = "formatForm()" >
+                 <select name = "basado_en_tarifa" id = "basado_en_tarifa" onChange = "formatForm()" >
                     <?php
                     $options = "<option value = null>-------</option>";
 
@@ -122,7 +122,7 @@ $page->partialRender();
         </tr>
         <tr>
             <td colspan="4">
-                Nuevo precio = Precio base * ( 1 + <input type = "text" name = "c1" id = "c1" value = "" style ="width:90px;"/> ) + <input type = "text" name = "c2" id = "c2" value = "" style ="width:90px;"/>
+                Nuevo precio = Precio base * ( 1 + <input type = "text" name = "porcentaje_utilidad" id = "porcentaje_utilidad" value = "" style ="width:80px;"/> ) + <input type = "text" name = "utilidad_neta" id = "utilidad_neta" value = "" style ="width:80px;"/>
             </td>
         </tr> 
         <tr>
@@ -163,6 +163,11 @@ $page->partialRender();
             <th> Categor&iacute;a </th>
             <th> Servicio </th>
             <th> Cant Min </th>
+            <th> Basado en</th>
+            <th> Porcentaje de utilidad</th>
+            <th> Utilidad Neta</th>
+            <th> Margen min</th>
+            <th> Margen max</th>
         </tr>
         
         <?php
@@ -209,7 +214,25 @@ $page->partialRender();
                 $html.= "   <td>";                
                 $html.= "       {$regla->getCantidadMinima()}";                             
                 $html.= "   </td>";
-                
+                 $html.= "   <td>";                
+                if($producto = TarifaDAO::getByPK( $regla->getIdTarifa() )){
+                    $html.= "       " . $tarifa->getNombre();    
+                }else{
+                    $html.= "-";
+                }                                               
+                $html.= "   </td>";
+                $html.= "   <td>";                
+                $html.= "       {$regla->getProcentajeUtilidad()}";                             
+                $html.= "   </td>";
+                $html.= "   <td>";                
+                $html.= "       {$regla->getUtilidadNeta()}";                             
+                $html.= "   </td>";
+                $html.= "   <td>";                
+                $html.= "       {$regla->getMargenMin()}";                             
+                $html.= "   </td>";
+                $html.= "   <td>";                
+                $html.= "       {$regla->getMargenMax()}";                             
+                $html.= "   </td>";
                 $html.= "</tr>";
                 
             }
@@ -229,15 +252,15 @@ $page->partialRender();
         
         var nombre = Ext.get('nombre_regla').getValue().replace(/^\s+|\s+$/g,"");
         var producto = Ext.get('id_producto').getValue().replace(/^\s+|\s+$/g,"");
-        var catproducto = Ext.get('catproducto').getValue().replace(/^\s+|\s+$/g,"");
+        var catproducto = Ext.get('categoria_producto').getValue().replace(/^\s+|\s+$/g,"");
         var secuencia = Ext.get('secuencia_regla').getValue().replace(/^\s+|\s+$/g,""); 
         var cantidad_minima = Ext.get('cantidad_minima_regla').getValue().replace(/^\s+|\s+$/g,"");
         var servicio = Ext.get('id_servicio').getValue().replace(/^\s+|\s+$/g,"");
-        var tarifa = Ext.get('id_tarifa').getValue().replace(/^\s+|\s+$/g,"");
-        var c1 = Ext.get('c1').getValue().replace(/^\s+|\s+$/g,"");
-        var c2 = Ext.get('c2').getValue().replace(/^\s+|\s+$/g,"");
+        var tarifa = Ext.get('basado_en_tarifa').getValue().replace(/^\s+|\s+$/g,"");
+        var c1 = Ext.get('porcentaje_utilidad').getValue().replace(/^\s+|\s+$/g,"");
+        var c2 = Ext.get('utilidad_neta').getValue().replace(/^\s+|\s+$/g,"");
         var margen_min = Ext.get('margen_min').getValue().replace(/^\s+|\s+$/g,"");
-        var margen_max = Ext.get('margen_min').getValue().replace(/^\s+|\s+$/g,"");
+        var margen_max = Ext.get('margen_max').getValue().replace(/^\s+|\s+$/g,"");
        
        
         
@@ -274,12 +297,13 @@ $page->partialRender();
         r.addRegla(Ext.get('content_table_rules'), new regla({
             nombre:nombre,
             producto:producto,
-            catproducto:catproducto,
+            categoria_producto:categoria_producto,
             secuencia:secuencia,
             cantidad_minima:cantidad_minima,
-            tarifa:tarifa,
-            c1:c1,
-            c2:c2,
+            servicio:servicio,
+            basado_en_tarifa:basado_en_tarifa,
+            porcentaje_utilidad:porcentaje_utilidad,
+            utilidad_neta:utilidad_neta,
             margen_min:margen_min,
             margen_max:margen_max
 
@@ -349,6 +373,11 @@ $page->partialRender();
             html += "        <th> Categor&iacute;a </th>";
             html += "        <th> Servicio </th>";
             html += "        <th> Cant Min </th>";
+            html += "        <th> Badado en </th>";
+            html += "        <th> Porcentaje Utilidad </th>";
+            html += "        <th> Utilidad Neta</th>";
+            html += "        <th> Margen Min </th>";
+            html += "        <th> Margen Max </th>";
             html += "    </tr>";                        
             
             Ext.Array.forEach( this.store, function(c){
@@ -359,6 +388,11 @@ $page->partialRender();
                 html += "        <td> " + (c.id_clasificacion_producto == null? "-":c.id_clasificacion_producto) + " </td>";
                 html += "        <td> " + (c.id_clasificacion_servicio == null? "-":c.id_clasificacion_servicio) + " </td>";
                 html += "        <td> " + c.cantidad_minima + " </td>";
+                html += "        <td> " + c.basado_en_tarifa ==null? "-": c.id_tarifa) + " </td>";
+                html += "        <td> " + c.porcentaje_utilidad + "</td>";
+                html += "        <td> " + c.utilidad_neta + " </td>";
+                html += "        <td> " + c.margen_min + " </td> ";
+                html += "        <td> " + c.margen_max + " </td>";
                 html += "    </tr>";
             });
             
