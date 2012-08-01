@@ -169,6 +169,35 @@
     
 	$page->partialRender();
 	
+	#inicia lo de la dir
+	$direccion = $este_usuario->getIdDireccion();
+	$direccionObj = DireccionDAO::getByPK( $direccion );
+
+	if(is_null($direccionObj)){
+		
+		
+		
+	}else{
+
+		$ciudad = CiudadDAO::getByPK( $direccionObj->getIdCiudad() );
+
+		if(null === $ciudad){
+			$ciudad = new Ciudad();
+		}
+
+
+		$page->addComponent(new FreeHtmlComponent("<div id=\"map_canvas\"></div>"));
+		$page->addComponent(new FreeHtmlComponent("<script>startMap(\""
+																. $direccionObj->getCalle() 
+																. " "
+																. $direccionObj->getNumeroExterior() 
+																. ", "																
+																. $direccionObj->getColonia() 
+																. ", "
+																. $ciudad->getNombre() 
+																. "\");</Script>"));
+	}
+	#fin
 	if(	isset($_GET["just_created"]) 
 		&& ($_GET["just_created"] == 1)
 		&& ($este_usuario->getCorreoElectronico() !== null ) 

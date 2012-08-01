@@ -19,6 +19,32 @@
 	    new Direccion()
 	));
 
+	$form->beforeSend("atach_address");
+	
+	$page->partialRender();
+	?>
+	
+	<script type="text/javascript" charset="utf-8">
+		function atach_address(o){
+
+			o.direcciones = Ext.JSON.encode([{
+				calle 			: o.calle,
+				numero_exterior	: o.numero_exterior,
+				numero_interior	: o.numero_interior,
+				referencia		: o.referencia,
+				colonia			: o.colonia,
+				id_ciudad		: o.id_ciudad,
+				codigo_postal	: o.codigo_postal,
+				telefono1		: o.telefono1,
+				telefono2		: o.telefono2
+			}]);
+			console.log(o);			
+			return o;
+		}
+	</script>
+	
+	<?php
+
 	$form->hideField(array(
 	    "id_usuario",
 	    "id_direccion",
