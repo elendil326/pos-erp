@@ -20,7 +20,7 @@ $page->partialRender();
 ?>
 
 <form name ="form_nueva_regla" id ="form_nueva_regla">
-    <table style ="width:100%;">
+    <table style ="width:90%;">
         <tr>
             <td><b>CONCORDANCIA</b></td>
         </tr>
@@ -29,7 +29,7 @@ $page->partialRender();
                 Nombre :    
             </td>
             <td colspan ="3">
-                <input type = "text" name = "nombre_regla" id = "nombre_regla" value = "" style ="width:100%;"/>
+                <input type = "text" name = "nombre_regla" id = "nombre_regla" value = "" style ="width:80%;"/>
             </td>
 
         </tr>
@@ -38,7 +38,7 @@ $page->partialRender();
                 Producto:    
             </td>
             <td>
-                 <select name = "id_producto" id = "id_producto" onChange = "formatForm()" >
+                 <select style="width:50%;" name = "id_producto" id = "id_producto" onChange = "formatForm()" >
                     <?php
                     $options = "<option value = null>-------</option>";
 
@@ -51,10 +51,10 @@ $page->partialRender();
                 </select>
             </td>
             <td>
-                Categoria de Producto :    
+                Categoria de Producto:    
             </td>
             <td>
-                 <select name = "categoria_producto" id = "categoria_producto" onChange = "formatForm()" >
+                 <select style="width:50%;" name = "categoria_producto" id = "categoria_producto" onChange = "formatForm()" >
                    <?php
                    $options = "<option value = null>-------</option>";
 
@@ -70,16 +70,16 @@ $page->partialRender();
         </tr>
         <tr>
             <td>
-                Secuencia :    
+                Secuencia:    
             </td>
             <td>
-                <input type = "text" name = "secuencia_regla" id = "secuencia_regla" value = "" style ="width:100%;"/>
+                <input type = "text" name = "secuencia_regla" id = "secuencia_regla" value = "" style ="width:80%;"/>
             </td>
             <td>
-                Cantidad Min :    
+                Cantidad Min:    
             </td>
             <td>
-                <input type = "text" name = "cantidad_minima_regla" id = "cantidad_minima_regla" value = "" style ="width:100%;"/>
+                <input type = "text" name = "cantidad_minima_regla" id = "cantidad_minima_regla" value = "" style ="width:80%;"/>
             </td>
         </tr>
         <tr>
@@ -104,22 +104,22 @@ $page->partialRender();
         <tr>
             <td><b>CALCULO DEL PRECIO</b></td>
         </tr> 
-        <tr>
+        <!--<tr>
             <td>Basado en:</td>
             <td>
                  <select name = "basado_en_tarifa" id = "basado_en_tarifa" onChange = "formatForm()" >
                     <?php
-                    $options = "<option value = null>-------</option>";
+                    #$options = "<option value = null>-------</option>";
 
-                    foreach (TarifaDAO::getAll() as $tarifa) {
-                        $options .= "<option value = \"{$tarifa->getIdTarifa()}\">{$tarifa->getNombre()}</option>";
-                    }
+                    #foreach (TarifaDAO::getAll() as $tarifa) {
+                      # $options .= "<option value = \"{$tarifa->getIdTarifa()}\">{$tarifa->getNombre()}</option>";
+                  #  }
 
-                    echo $options;
+                  #  echo $options;
                     ?>
                 </select>
             </td>
-        </tr>
+        </tr>-->
         <tr>
             <td colspan="4">
                 Nuevo precio = Precio base * ( 1 + <input type = "text" name = "porcentaje_utilidad" id = "porcentaje_utilidad" value = "" style ="width:80px;"/> ) + <input type = "text" name = "utilidad_neta" id = "utilidad_neta" value = "" style ="width:80px;"/>
@@ -163,7 +163,7 @@ $page->partialRender();
             <th> Categor&iacute;a </th>
             <th> Servicio </th>
             <th> Cant Min </th>
-            <th> Basado en</th>
+            <!--<th> Basado en</th>-->
             <th> Porcentaje de utilidad</th>
             <th> Utilidad Neta</th>
             <th> Margen min</th>
@@ -214,13 +214,13 @@ $page->partialRender();
                 $html.= "   <td>";                
                 $html.= "       {$regla->getCantidadMinima()}";                             
                 $html.= "   </td>";
-                 $html.= "   <td>";                
+               /*  $html.= "   <td>";                
                 if($producto = TarifaDAO::getByPK( $regla->getIdTarifa() )){
                     $html.= "       " . $tarifa->getNombre();    
                 }else{
                     $html.= "-";
                 }                                               
-                $html.= "   </td>";
+                $html.= "   </td>";*/
                 $html.= "   <td>";                
                 $html.= "       {$regla->getProcentajeUtilidad()}";                             
                 $html.= "   </td>";
@@ -256,9 +256,9 @@ $page->partialRender();
         var secuencia = Ext.get('secuencia_regla').getValue().replace(/^\s+|\s+$/g,""); 
         var cantidad_minima = Ext.get('cantidad_minima_regla').getValue().replace(/^\s+|\s+$/g,"");
         var servicio = Ext.get('id_servicio').getValue().replace(/^\s+|\s+$/g,"");
-        var tarifa = Ext.get('basado_en_tarifa').getValue().replace(/^\s+|\s+$/g,"");
-        var c1 = Ext.get('porcentaje_utilidad').getValue().replace(/^\s+|\s+$/g,"");
-        var c2 = Ext.get('utilidad_neta').getValue().replace(/^\s+|\s+$/g,"");
+        /*var tarifa = Ext.get('basado_en_tarifa').getValue().replace(/^\s+|\s+$/g,"");*/
+        var porcentaje_utilidad = Ext.get('porcentaje_utilidad').getValue().replace(/^\s+|\s+$/g,"");
+        var utilidad_neta = Ext.get('utilidad_neta').getValue().replace(/^\s+|\s+$/g,"");
         var margen_min = Ext.get('margen_min').getValue().replace(/^\s+|\s+$/g,"");
         var margen_max = Ext.get('margen_max').getValue().replace(/^\s+|\s+$/g,"");
        
@@ -293,7 +293,7 @@ $page->partialRender();
             
             return;
         }             
-        
+        r = new reglas();
         r.addRegla(Ext.get('content_table_rules'), new regla({
             nombre:nombre,
             producto:producto,
@@ -301,7 +301,6 @@ $page->partialRender();
             secuencia:secuencia,
             cantidad_minima:cantidad_minima,
             servicio:servicio,
-            basado_en_tarifa:basado_en_tarifa,
             porcentaje_utilidad:porcentaje_utilidad,
             utilidad_neta:utilidad_neta,
             margen_min:margen_min,
@@ -373,7 +372,7 @@ $page->partialRender();
             html += "        <th> Categor&iacute;a </th>";
             html += "        <th> Servicio </th>";
             html += "        <th> Cant Min </th>";
-            html += "        <th> Badado en </th>";
+            //html += "        <th> Badado en </th>";
             html += "        <th> Porcentaje Utilidad </th>";
             html += "        <th> Utilidad Neta</th>";
             html += "        <th> Margen Min </th>";
@@ -388,7 +387,7 @@ $page->partialRender();
                 html += "        <td> " + (c.id_clasificacion_producto == null? "-":c.id_clasificacion_producto) + " </td>";
                 html += "        <td> " + (c.id_clasificacion_servicio == null? "-":c.id_clasificacion_servicio) + " </td>";
                 html += "        <td> " + c.cantidad_minima + " </td>";
-                html += "        <td> " + c.basado_en_tarifa ==null? "-": c.id_tarifa) + " </td>";
+                //html += "        <td> " + c.basado_en_tarifa ==null? "-": c.id_tarifa) + " </td>";
                 html += "        <td> " + c.porcentaje_utilidad + "</td>";
                 html += "        <td> " + c.utilidad_neta + " </td>";
                 html += "        <td> " + c.margen_min + " </td> ";
