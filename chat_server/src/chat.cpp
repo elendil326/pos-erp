@@ -1,7 +1,7 @@
 #include <cstdio>
 #include <mysql++.h>
 #include <hiredis.h>
-
+#include <ctime>
 
 
 using namespace std;
@@ -14,6 +14,19 @@ using namespace mysqlpp;
 #define WRONG_INSTANCE 		2
 #define MISSING_AUTHTOKEN 	3
 #define WRONG_AUTHTOKEN 	4
+#define MISSING_ARGUMENT 	5
+#define NOT_FOUND			6
+
+
+#include <sstream>
+
+template <class T>
+inline std::string to_string (const T& t)
+{
+std::stringstream ss;
+ss << t;
+return ss.str();
+}
 
 
 
@@ -206,6 +219,23 @@ class DB{
 	static Connection getInstanceConn(){
 		return instanceConn;
 	}	
+
+
+
+	static redisContext* getRedisConnection(){
+
+		redisContext *redis = redisConnect("127.0.0.1", 6379);
+
+		if (redis->err) {
+		    printf("Error: %s\n", redis->errstr);
+		}
+		
+		return redis;
+	}
+
+
+	
+
 };
 
 
@@ -237,6 +267,46 @@ public:
 			
 			
 			return ( bres.num_rows() == 1 );
+			
+			/*for(size_t i = 0 ; i < bres.num_rows(); i++){
+				//cout << bres[i]["id_usuario"] << "<br>";
+				cout << bres[i]["id_usuario"] << " ";
+			}*/
+			
+		}catch(BadQuery er){
+			cout << "Error:" << er.what() << endl ;
+			return 0;
+
+		}catch(const BadConversion& er){
+			cout << "Conversion error " << er.what() << endl;
+			return 0; 
+
+		}catch(const Exception& er){
+			cout << "Error" << er.what() << endl;
+			return 0;		
+
+		}
+
+	}
+
+
+
+
+	static int getInstanceId(string token){
+
+		try{
+
+			Connection conn = DB::getCoreConn();
+
+			Query query = conn.query();
+
+			query << "select instance_id from instances where instance_token = \"" + token + "\";";
+			
+			StoreQueryResult bres = query.store();
+			
+			return bres[0]["instance_id"];
+
+			//return ( bres.num_rows() == 1 );
 			
 			/*for(size_t i = 0 ; i < bres.num_rows(); i++){
 				//cout << bres[i]["id_usuario"] << "<br>";
@@ -301,6 +371,49 @@ public:
 		}		
 		return 1;
 	}
+
+
+
+	static int getUserIdFromAuthToken(string at){
+
+		try{
+
+			Connection conn = DB::getInstanceConn("laskdfj");
+
+			Query query = conn.query();
+
+			query << "select id_usuario from sesion where auth_token  = \"" + at + "\" limit 1;";
+			
+			StoreQueryResult bres = query.store();
+			
+			if( bres.num_rows() != 1 ){
+				//do smething
+			}
+			
+			return bres[0]["id_usuario"];
+
+			/*for(size_t i = 0 ; i < bres.num_rows(); i++){
+				//cout <<  << "<br>";
+				cout << bres[i]["id_usuario"] << " ";
+			}*/
+			
+		}catch(BadQuery er){
+			cout << "Error:" << er.what() << endl ;
+			return 0;
+
+		}catch(const BadConversion& er){
+			cout << "Conversion error " << er.what() << endl;
+			return 0; 
+
+		}catch(const Exception& er){
+			cout << "Error" << er.what() << endl;
+			return 0;		
+
+		}		
+		return 1;	
+	}
+
+
 };
 
 
@@ -308,6 +421,105 @@ public:
 
 class ChatController{
 
+public:
+	static void postMessage(){
+		
+		//reciever
+		string to_user_id = _get("to");
+
+		//instance id
+		int instance_id = InstanceController::getInstanceId( _get("instance") );
+
+		//from
+		int from_user_id = SesionController::getUserIdFromAuthToken(_get("auth_token"));
+
+		//content
+		string content = _get("content");
+
+		//date
+		
+
+		
+		string key("");
+
+		key.append( to_string(instance_id));
+		key.append("-");
+		key.append( to_string(to_user_id));
+		key.append("-unread");
+
+		string json("{\"from\":"); json.append( to_string(from_user_id) );
+		json.append( ",\"date\":" );	json.append( to_string(time(0)));
+		json.append( ",\"content\":\""); json.append( content );
+		json.append( "\"}");
+
+
+
+		//post to them
+		string redisCmd ("lpush ");
+		redisCmd.append( key );
+		redisCmd.append( " " );
+		redisCmd.append( json );
+
+		
+		redisContext* redis = DB::getRedisConnection();
+		redisCommand(redis, redisCmd.c_str());
+
+		cout << redisCmd;
+
+		cout << "{ \"status\" : \"ok\" }";
+	}
+
+
+
+	static void getMessages(){
+
+		redisContext* redis = DB::getRedisConnection();
+
+		//get curret user
+		string at = _get("auth_token");
+
+		int user_id = SesionController::getUserIdFromAuthToken(at);
+		int instance_id = InstanceController::getInstanceId( _get("instance") );
+
+		string rCmd ("llen ");
+		rCmd.append( to_string(instance_id) );
+		rCmd.append("-");
+		rCmd.append( to_string(user_id) );
+		rCmd.append("-unread");
+
+
+
+		redisReply *res ;
+
+		res = (redisReply*)redisCommand(redis, rCmd.c_str());
+		
+		
+		int results = res->integer;
+
+		
+
+		cout << "{ \"number_of_results\" : "<< results << ",\"results\" : [";
+		rCmd.clear();
+		rCmd.append( "lpop " );
+		rCmd.append( to_string(instance_id) );
+		rCmd.append("-");
+		rCmd.append( to_string(user_id) );
+		rCmd.append("-unread");
+
+		for (int i = 0; i < results; ++i)
+		{
+
+			res = (redisReply*)redisCommand(redis, rCmd.c_str());
+
+			cout << res->str ;
+
+			if(i < (results - 1))
+				cout << ", ";
+		}
+
+		cout << "]}";
+
+	}
 };
 
 
@@ -414,6 +626,16 @@ class HttpResponse{
 				case WRONG_AUTHTOKEN :
 					cout << "{ \"status\" : \"false\", \"reason\" : \"The auth token you provided is invalid.\" }";
 				break;
+
+				case MISSING_ARGUMENT :
+					cout << "{ \"status\" : \"false\", \"reason\" : \"You are missing arguments to make this call.\" }";
+				break;
+
+				
+				case NOT_FOUND :
+					cout << "{ \"status\" : \"false\", \"reason\" : \"This method does not exist.\" }";
+				break;				
+
 			}
 			
 
@@ -473,13 +695,28 @@ class ApiHandler{
 		//look for global necesary params
 		testInstance();
 
+		
 
 		string * spath = split( path, '/' );
 		int spath_size = split_ocurrences(path, '/');
 
-		if(spath[0] == "contacts"){
+		if(spath[0] == "getOnlineContacts"){
 			ContactsController::getOnlineContacts();
+			return;
+
+		}else if(spath[0] == "postMessage"){
+			ChatController::postMessage();
+			return;
+
+		}else if(spath[0] == "getMessages"){
+			ChatController::getMessages();
+			return;
 		}
+
+		
+
+		HttpResponse::error(NOT_FOUND);
+
 
 	}
 
@@ -508,62 +745,21 @@ int main( int nargs, char **args ){
 	HttpResponse::bootstrap();
 	
 
-	redisContext *c = redisConnect("127.0.0.1", 6379);
 
-	if (c->err) {
-	    printf("Error: %s\n", c->errstr);
+	redisContext *redis = redisConnect("127.0.0.1", 6379);
+
+	if (redis->err) {
+	    printf("Error: %s\n", redis->errstr);
 		
 	}
 
 
-	redisCommand(c, "SET foo bar");
-
-
-
-	//string h = _get("_instance_");
-	
-	/*cout <<  _get("_instance_");
-	cout <<  _get("_path_");
-
-	*/
+	redisCommand(redis, "SET foo bar");
 
 
 	ApiHandler ah ;
+
 	ah.dispatch( header("PATH_INFO")  );
-
-
-
-
-/*		cout << findInRequest("param0") << "<br>";
-	
-	if(getParam("param1"))
-		cout << findInRequest("param1") << "<br>";
-*/
-
-
-	
-		
-
-
-		//char *entrada;
-		//cin >> entrada;
-		//cout << entrada << endl;
-		//cout << nargs << "<br>" << endl;
-
-		//$.ajax({ url : "http://127.0.0.1/c/hola.bin", "type" : "POST", data : { data1 : 24 } })
-		
-		for( int j = 0 ; j < 35 ; j++){
-			if(!args[j]) continue;
-			if(j == 32) continue;
-			if(j == 33) continue;
-			if(j == 34) continue;
-			//cout << j << " : " << args[j] << "<br>" <<  endl;	
-		}
-		
-		//int j = 28;
-		//cout << "--" <<  j << " : " << args[j] << "<br>" <<  endl;
-		
-	
 
 
 	return EXIT_SUCCESS;
