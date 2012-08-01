@@ -1,9 +1,23 @@
 #include <cstdio>
 #include <mysql++.h>
+#include <hiredis.h>
+
 
 
 using namespace std;
 using namespace mysqlpp;
+
+
+
+
+#define MISSING_INSTANCE 	1
+#define WRONG_INSTANCE 		2
+#define MISSING_AUTHTOKEN 	3
+#define WRONG_AUTHTOKEN 	4
+
+
+
+
 
 char **argss;
 
@@ -243,15 +257,10 @@ public:
 
 		}
 
-
-
 	}
-
-
-
-
-
 };
+
+
 
 
 
@@ -376,10 +385,11 @@ class ContactsController{
 };
 
 
-#define MISSING_INSTANCE 	1
-#define WRONG_INSTANCE 		2
-#define MISSING_AUTHTOKEN 	3
-#define WRONG_AUTHTOKEN 	4
+
+
+
+
+
 
 
 class HttpResponse{
@@ -497,6 +507,18 @@ int main( int nargs, char **args ){
 
 	HttpResponse::bootstrap();
 	
+
+	redisContext *c = redisConnect("127.0.0.1", 6379);
+
+	if (c->err) {
+	    printf("Error: %s\n", c->errstr);
+		
+	}
+
+
+	redisCommand(c, "SET foo bar");
+
+
 
 	//string h = _get("_instance_");
 	
