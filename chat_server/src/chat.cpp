@@ -7,7 +7,6 @@ using namespace mysqlpp;
 
 char **argss;
 
-
 int split_ocurrences ( string s , char c)
 {
 	int found = 0;
@@ -19,7 +18,7 @@ int split_ocurrences ( string s , char c)
 		}
 	}
 	return found + 1;
-} 
+}
 
 
 
@@ -170,8 +169,7 @@ class DB{
 
 	public:
 	void bootstrap(){
-		instanceConn.connect("pos_instance_85", "127.0.0.1", "root", "anti4581549");
-		coreConn.connect("pos", "127.0.0.1", "root", "anti4581549");
+		
 	}
 
 	static Connection getCoreConn(){
@@ -180,14 +178,28 @@ class DB{
 		return coreConn;
 	}
 
+
+
+
+
 	static Connection getInstanceConn(string token){
+		Connection instanceConn(false);
+		instanceConn.connect("pos_instance_85", "127.0.0.1", "root", "anti4581549");
 		return instanceConn;
 	}	
+
 
 	static Connection getInstanceConn(){
 		return instanceConn;
 	}	
 };
+
+
+
+
+
+
+
 
 
 
@@ -244,7 +256,42 @@ public:
 
 
 class SesionController{
+public:
+	static int isValidSesion(string at){
 
+		
+		try{
+
+			Connection conn = DB::getInstanceConn("laskdfj");
+
+			Query query = conn.query();
+
+			query << "select id_usuario from sesion where auth_token  = \"" + at + "\" limit 1;";
+			
+			StoreQueryResult bres = query.store();
+			
+			return ( bres.num_rows() == 1 );
+			
+			/*for(size_t i = 0 ; i < bres.num_rows(); i++){
+				//cout << bres[i]["id_usuario"] << "<br>";
+				cout << bres[i]["id_usuario"] << " ";
+			}*/
+			
+		}catch(BadQuery er){
+			cout << "Error:" << er.what() << endl ;
+			return 0;
+
+		}catch(const BadConversion& er){
+			cout << "Conversion error " << er.what() << endl;
+			return 0; 
+
+		}catch(const Exception& er){
+			cout << "Error" << er.what() << endl;
+			return 0;		
+
+		}		
+		return 1;
+	}
 };
 
 
@@ -266,16 +313,74 @@ class ContactsController{
 
 
 	public:
-		static void get(){
-			cout << "getting contacts";
+		static void getOnlineContacts(){
+			try{
+
+				Connection conn = DB::getInstanceConn("laskdfj");
+
+				Query query = conn.query();
+
+				query << "	select \
+								usuario.id_usuario,\
+								usuario.id_rol,\
+								usuario.nombre,\
+								usuario.correo_electronico,\
+								sesion.ip\
+							from \
+								usuario,\
+								sesion\
+							where\
+								sesion.id_usuario = usuario.id_usuario\
+								and sesion.fecha_de_vencimiento < NOW()\
+								and usuario.activo = 1;";
+				
+				StoreQueryResult bres = query.store();
+				
+
+				
+				cout << "{ \"status\" : \"ok\" , \"number_of_results\" : " << bres.num_rows() << ", \"results\" : [ ";
+
+				for(size_t i = 0 ; i < bres.num_rows(); i++){
+					
+					cout << "{" ;
+					cout << "\"id_usuario\" : " 		<< bres[i]["id_usuario"] << ",";
+					cout << "\"id_rol\" : " 			<< bres[i]["id_rol"] << ",";
+					cout << "\"nombre\" : \"" 			<< bres[i]["nombre"] << "\",";
+					cout << "\"correo_electronico\" : \"" << bres[i]["correo_electronico"] << "\",";
+					cout << "\"ip\" : \"" 				<< bres[i]["ip"] << "\"";
+					cout << "}";
+
+					if(i < bres.num_rows() - 1)
+						cout << ",";
+				}
+
+				cout << "]}";
+				
+			}catch(BadQuery er){
+				cout << "Error:" << er.what() << endl ;
+				//return 0;
+
+			}catch(const BadConversion& er){
+				cout << "Conversion error " << er.what() << endl;
+				//return 0; 
+
+			}catch(const Exception& er){
+				cout << "Error" << er.what() << endl;
+				//return 0;		
+
+			}		
+			
 		}
 
 
 };
 
 
-#define MISSING_INSTANCE 1
-#define WRONG_INSTANCE 2
+#define MISSING_INSTANCE 	1
+#define WRONG_INSTANCE 		2
+#define MISSING_AUTHTOKEN 	3
+#define WRONG_AUTHTOKEN 	4
+
 
 class HttpResponse{
 
@@ -290,6 +395,14 @@ class HttpResponse{
 
 				case WRONG_INSTANCE :
 					cout << "{ \"status\" : \"false\", \"reason\" : \"This instance token is invalid.\" }";
+				break;
+
+				case MISSING_AUTHTOKEN :
+					cout << "{ \"status\" : \"false\", \"reason\" : \"You must provide an auth token.\" }";
+				break;
+
+				case WRONG_AUTHTOKEN :
+					cout << "{ \"status\" : \"false\", \"reason\" : \"The auth token you provided is invalid.\" }";
 				break;
 			}
 			
@@ -327,6 +440,19 @@ class ApiHandler{
 			HttpResponse::error(WRONG_INSTANCE);	
 		}
 		
+		//test auth token
+		string auth_token = _get("auth_token");
+
+		if(auth_token == "__________NULL"){
+			HttpResponse::error(MISSING_AUTHTOKEN);
+		}
+
+		if(!SesionController::isValidSesion(auth_token)){
+			HttpResponse::error(WRONG_AUTHTOKEN);
+		}
+
+
+
 
 	}
 
@@ -341,10 +467,8 @@ class ApiHandler{
 		string * spath = split( path, '/' );
 		int spath_size = split_ocurrences(path, '/');
 
-		cout << spath[0];
-
 		if(spath[0] == "contacts"){
-			ContactsController::get();
+			ContactsController::getOnlineContacts();
 		}
 
 	}
