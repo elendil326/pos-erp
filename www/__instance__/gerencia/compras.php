@@ -11,7 +11,7 @@
 	$page->nextTab("Activas");
 	$page->addComponent(new MessageComponent("Lista de compras"));
 
-	$compras_activas = CompraDAO::search(new Compra(array("cancelada" => 0)));
+	$compras_activas = CompraDAO::search(new Compra(array("cancelada" => 0)), "fecha", "desc");
 
 	$tabla = new TableComponent(array(
 	    "id_vendedor_compra" => "Proveedor",
@@ -34,7 +34,7 @@
 	$tabla->addColRender("impuesto", "FormatMoney");
 	$tabla->addColRender("total", "FormatMoney");
 	$tabla->addColRender("saldo", "FormatMoney");
-	$tabla->convertToExtJs(true);
+	$tabla->convertToExtJs(false);
 	$tabla->addOnClick("id_compra", "(function(a){ window.location = 'compras.detalle.php?cid=' + a; })");
 
 	$page->addComponent($tabla);
@@ -52,7 +52,7 @@
 
 	$page->addComponent(new MessageComponent("Lista de compras canceladas"));
 
-	$compras_no_activas = CompraDAO::search(new Compra(array("cancelada" => 1)));
+	$compras_no_activas = CompraDAO::search(new Compra(array("cancelada" => 1)), "fecha", "desc");
 
 
 	$tabla2 = new TableComponent(array(

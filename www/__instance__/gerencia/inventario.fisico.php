@@ -18,16 +18,38 @@
 	?>
 	
 	<table>
+		<!--
 		<tr>
 			<td><div id="fecha_inicio"></div></td>
 			<td><div id="fecha_fin"></div></td>
 			<td><div class="POS Boton">Actualizar</div></td>
 		</tr>
+		-->
+		<tr>
+			<td>
+				<select id="lote_select">
+					<?php
+					$ls = LoteDAO::getAll();
+					for ($i=0; $i < sizeof($ls); $i++) { 
+						echo "<option value=\"" . $ls[$i]->getIdLote() . "\">" . $ls[$i]->getFolio() . "</option>";
+					}
+					?>
+				</select>
+			</td>
+			<td><div class="POS Boton" onClick="window.location = 'inventario.fisico.php?lote=' + Ext.get('lote_select').getValue();">Actualizar</div></td>
+		</tr>
+		<tr>
+		</tr>
 	</table>
 	
 	
 	
-	
+	<?php
+		if(!isset($_GET["lote"])){
+			$page->render();
+			exit;
+		}
+	?>
 	
 	<script>
 	store_component.addExtComponent(
@@ -302,7 +324,7 @@ foreach ($totales_ventas as $key => $value ) {
 	}
 
 	echo "<td>
-		<div ><input type='text' id='$key'  placeholder='$total'></div></td>";
+		<div ><input type='text' id='prod{$key}-qty'  placeholder='$total'></div></td>";
 
 	echo "</tr>";
 }
@@ -319,13 +341,15 @@ echo "</table>";
 		
 		var json = [];
 
-		for (var i = foo.length - 1; i >= 0; i--) {
+		for (var i = prods.length - 1; i >= 0; i--) {
+
+			
 
 			json.push({
-				id_producto	: 1,
-				id_unidad	: 2,
-				cantidad 	: 0,
-				id_lote 	: 2
+				id_producto	: prods[i].id_producto,
+				id_unidad	: prods[i].id_unidad,
+				cantidad 	: Ext.get("prod"+prods[i].id_producto+"-qty").getValue(),
+				id_lote 	: <?php echo $_GET["lote"]; ?>
 			});
 		
 
@@ -344,37 +368,10 @@ echo "</table>";
 </script>
 
 
-<div class="POS Boton Ok" onClick=\"doEnviarInv()\">Aceptar</div>
+<div class="POS Boton OK" onClick="doEnviarInv()">Aceptar</div>
 
 
 <?php
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -2,12 +2,11 @@
 #include <mysql++.h>
 #include <hiredis.h>
 #include <ctime>
+#include <sstream>
 
 
 using namespace std;
 using namespace mysqlpp;
-
-
 
 
 #define MISSING_INSTANCE 	1
@@ -18,14 +17,14 @@ using namespace mysqlpp;
 #define NOT_FOUND			6
 
 
-#include <sstream>
+
 
 template <class T>
 inline std::string to_string (const T& t)
 {
-std::stringstream ss;
-ss << t;
-return ss.str();
+	std::stringstream ss;
+	ss << t;
+	return ss.str();
 }
 
 
@@ -144,17 +143,15 @@ string header( string headerName ){
 
 
 
-string _get(string p){
+string _get(const string &p){
 	
 	string h = header( "QUERY_STRING" );
-
-	
 
 	string * parts = split( h , '&' );
 
 	int oc = split_ocurrences( h, '&' );
 
-	p.append("=");
+	
 
 	for (int j = 0; j < oc; ++j)
 	{
@@ -171,7 +168,8 @@ string _get(string p){
 	
 
 	
-	
+	// string("")
+	// 
 	return string("__________NULL");
 }
 
@@ -464,7 +462,7 @@ public:
 		redisContext* redis = DB::getRedisConnection();
 		redisCommand(redis, redisCmd.c_str());
 
-		cout << redisCmd;
+
 
 		cout << "{ \"status\" : \"ok\" }";
 	}
