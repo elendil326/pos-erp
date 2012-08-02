@@ -6,7 +6,8 @@
 
     require_once("../../../server/bootstrap.php");
 
-    $page = new GerenciaComponentPage();
+	$page = new GerenciaTabPage(  );
+   #$page = new GerenciaComponentPage();
 
 
     //
@@ -24,17 +25,20 @@
 
     $este_usuario   = UsuarioDAO::getByPK($_GET["uid"]);
     $esta_direccion = DireccionDAO::getByPK($este_usuario->getIdDireccion());
-    if (is_null($esta_direccion))
+   
+    if (is_null($esta_direccion)){
         $esta_direccion = new Direccion();
-
+}
 
 
     //
     // Titulo de la pagina
     // 
+
+
     $page->addComponent(new TitleComponent("Detalles de " . $este_usuario->getNombre(), 2));
 
-
+	$page->nextTab("General");
     //
     // Menu de opciones
     // 
@@ -129,16 +133,84 @@
     //              "activo"
     //          ));
     //      $form->createComboBoxJoin("id_unidad", "nombre", UnidadDAO::getAll(), $este_producto->getIdUnidad() );
+    
     $page->addComponent($form);
 
-    if (!is_null($este_usuario->getIdDireccion())) {
+
+
+/* ********************************************************
+	 *	Direccion
+	 *
+* ******************************************************** */
+
+    $page -> nextTab("Direccion");
+
+    $menu = new MenuComponent();
+	$menu->addItem("Editar Direccion","personal.editar.direccion.php?uid=".$este_usuario->getIdUsuario()."&did=".$este_usuario->getIdDireccion() );
+	$page->addComponent($menu);
+
+
+
+	$direccion = $este_usuario->getIdDireccion();
+	$direccionObj = DireccionDAO::getByPK( $direccion );
+
+	if(is_null($direccionObj)){
+		
+		
+		
+	}else{
+
+		$ciudad = CiudadDAO::getByPK( $direccionObj->getIdCiudad() );
+
+		if(null === $ciudad){
+			$ciudad = new Ciudad();
+		}
+
+
+		$page->addComponent(new FreeHtmlComponent("<div id=\"map_canvas\"></div>"));
+		$page->addComponent(new FreeHtmlComponent("<script>startMap(\""
+																. $direccionObj->getCalle() 
+																. " "
+																. $direccionObj->getNumeroExterior() 
+																. ", "																
+																. $direccionObj->getColonia() 
+																. ", "
+																. $ciudad->getNombre() 
+																. "\");</Script>"));
+	}
+
+	
+
+	
+	
+	if(!is_null($direccionObj)){
+		$usr_ultima = UsuarioDAO::getByPK($direccionObj->getIdUsuarioUltimaModificacion());	
+		
+		if(!is_null($usr_ultima))	
+			$direccionObj->setIdUsuarioUltimaModificacion( $usr_ultima->getNombre() );
+
+		$dform = new DAOFormComponent( $direccionObj );
+		$dform->setEditable(false);		
+		$dform->hideField( array( 
+				"id_direccion",
+				"id_usuario_ultima_modificacion",
+				"ultima_modificacion"
+			 ));		
+		$dform->createComboBoxJoin("id_ciudad","nombre",CiudadDAO::getAll(), $direccionObj->getIdCiudad());
+		$page->addComponent( $dform );
+	}
+
+	
+
+   /*     if (!is_null($este_usuario->getIdDireccion())) {
         $page->addComponent(new TitleComponent("Direccion"));
         
         $form = new DAOFormComponent($esta_direccion);
         
         $form->hideField(array(
             "id_direccion",
-            "id_usuario_ultima_modificacion"
+            "id_usuario_ultima_modificacion",
+            "ultima_modificacion"
         ));
         
         $form->setEditable(false);
@@ -195,9 +267,17 @@
 																. $direccionObj->getColonia() 
 																. ", "
 																. $ciudad->getNombre() 
-																. "\");</Script>"));
+																. "\");</script>"));
 	}
+
+
+
+
 	#fin
+
+*/
+	#mail...
+
 	if(	isset($_GET["just_created"]) 
 		&& ($_GET["just_created"] == 1)
 		&& ($este_usuario->getCorreoElectronico() !== null ) 
