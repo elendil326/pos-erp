@@ -52,6 +52,7 @@
 	?>
 	
 	<script>
+	/*
 	store_component.addExtComponent(
 	 Ext.create('Ext.form.field.Date',{
 		name: 'fecha_inicio',
@@ -65,6 +66,7 @@
 		id: 'fecha_fin',
 		value: new Date()                                   
 	 }), 'fecha_fin');
+	*/
 	</script>
 
 	<?php
@@ -341,14 +343,20 @@ echo "</table>";
 		
 		var json = [];
 
-		for (var i = prods.length - 1; i >= 0; i--) {
+		for (var i = 0 ; i < prods.length; i++) {
 
-			
+			var qty = Ext.get("prod"+prods[i].id_producto+"-qty").getValue();
+
+			if(qty.length == 0){
+				window.scroll(0,Ext.get("prod"+prods[i].id_producto+"-qty").getY() - 50);
+				Ext.get("prod"+prods[i].id_producto+"-qty").highlight()
+				return;
+			}
 
 			json.push({
 				id_producto	: prods[i].id_producto,
 				id_unidad	: prods[i].id_unidad,
-				cantidad 	: Ext.get("prod"+prods[i].id_producto+"-qty").getValue(),
+				cantidad 	: qty,
 				id_lote 	: <?php echo $_GET["lote"]; ?>
 			});
 		
