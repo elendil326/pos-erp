@@ -15,32 +15,20 @@ class InventarioController implements IInventario {
      * @param type $id_producto
      * @return \stdClass 
      */
-    private static function ajustarLoteProducto($id_lote, $id_producto, $id_unidad = null) {
+    private static function ajustarLoteProducto($id_lote, $id_producto, $id_unidad) {
 
-        $response = new stdClass();
-        $response->error = "";
-        $response->success = true;
+        Logger::log("ENTRANDO A AJUSTAR LOTE PRODUCTO");
 
         //verificamos si el producto existe
         if (!$producto = ProductoDAO::getByPK($id_producto)) {
-            $response->error = "No se tiene registro del producto {$id_producto}";
-            return $response;
+            Logger::error("No se tiene registro del producto {$id_producto}");
         }
 
         //verificamos si se envia el lote        
         if (!$lote = LoteDAO::getByPK($id_lote)) {
-            $response->error = "No se tiene registro del lote {$id_lote}";
-            return $response;
+            Logger::error("No se tiene registro del lote {$id_lote}");
         }
 
-        if (!is_null($id_producto) && !is_null($id_unidad)) {
-            $response->error = "No se especifico el producto o unidad";
-            return $response;
-        }
-
-        if (is_null($id_unidad)) {
-            $id_unidad = $producto->getIdUnidad();
-        }
 
         //esta cantidad esta basada en la unidad indicada en los parametros
         $cantidad = 0;
@@ -84,8 +72,7 @@ class InventarioController implements IInventario {
 
             $array = array(
                 "id_lote_salida" => $lote_salida->getIdLoteSalida(),
-                "id_producto" => $id_producto,
-                "id_unidad" => $id_unidad
+                "id_producto" => $id_producto
             );
 
             $lotes_salida_producto = LoteSalidaProductoDAO::search(new LoteSalidaProducto($array));
@@ -104,12 +91,25 @@ class InventarioController implements IInventario {
             }
         }
 
-        //actualizamos la cantidad de producto en lote_producto
-        $lote_producto = LoteProductoDAO::getByPK($id_lote, $id_producto);
+        Logger::log("-------------->   {$cantidad}   <----------------");
 
-        $lote_producto->setCantidad(UnidadMedidaDAO::convertir($id_unidad, $lote_producto->getIdUnidad(), $cantidad));
 
-        return $response;
+
+        try {
+
+            //actualizamos la cantidad de producto en lote_producto
+            $lote_producto = LoteProductoDAO::getByPK($id_lote, $id_producto);
+
+            $lote_producto->setCantidad(UnidadMedidaDAO::convertir($id_unidad, $lote_producto->getIdUnidad(), $cantidad));
+
+            LoteProductoDAO::save($lote_producto);
+        } catch (Exception $e) {
+
+            Logger::error("Error al hacer el ajuste del lote : " . $e->getMessage());
+        }
+
+
+        Logger::log("-------------->   SE TERMINO DE HACER EL AJUSTE   <----------------");
         /* global $conn;
 
           $query = "";
@@ -475,6 +475,8 @@ class InventarioController implements IInventario {
 
         foreach ($inventario as $producto) {
 
+            self::ajustarLoteProducto($producto->id_lote, $producto->id_producto, $producto->id_unidad);
+
             //[{id_producto: 1,id_unidad: 2,cantidad: 0,id_lote : 2}]
 
             $producto->nombre = ProductoDAO::getByPK($producto->id_producto)->getNombreProducto();
@@ -643,13 +645,14 @@ class InventarioController implements IInventario {
                                 )), "Entrada de producto por ajuste de inventario (sobrante)");
                     }
 
+                    //TODO:HAY QUE AHCER PRUEBAS EXHAUSTIVAS PARA VER SI ESTE ULTIMO BLOQUE DE CODIGO SE DEBERIA DE ELIMINAR
                     //actualizamos las existencias de lote producto
                     if ($diff != 0) {
                         Logger::log("Se procede a hacer el ajuste del lote producto");
-                        self::ajustarLoteProducto($producto->id_lote, $producto->id_producto);
+                        self::ajustarLoteProducto($producto->id_lote, $producto->id_producto, $producto->id_unidad);
                     } else {
                         Logger::log("Se detecto que la cantidad en tote producto concuerda con la cantidad inventariada, pero aun asi se llamara al metodo de ajuste de prodcuto");
-                        self::ajustarLoteProducto($producto->id_lote, $producto->id_producto);
+                        self::ajustarLoteProducto($producto->id_lote, $producto->id_producto, $producto->id_unidad);
                     }
                 }
             } catch (InvalidDataException $e) {

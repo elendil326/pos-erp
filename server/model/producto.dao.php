@@ -137,11 +137,7 @@ class ProductoDAO extends ProductoDAOBase {
         //verificamos si se envia el lote        
         if (!$lote = LoteDAO::getByPK($id_lote)) {
             $error .= "No se tiene registro del lote {$id_lote}. \n";
-        }
-
-        if (!is_null($id_producto) && !is_null($id_unidad)) {
-            $error .= "No se especifico el producto o unidad. \n";
-        }
+        }   
 
 
         //obtenemos los lotes de entrada        
@@ -205,8 +201,7 @@ class ProductoDAO extends ProductoDAOBase {
 
             $array = array(
                 "id_lote_salida" => $lote_salida->getIdLoteSalida(),
-                "id_producto" => $id_producto,
-                "id_unidad" => $id_unidad
+                "id_producto" => $id_producto                
             );
 
             $lotes_salida_producto = LoteSalidaProductoDAO::search(new LoteSalidaProducto($array));
