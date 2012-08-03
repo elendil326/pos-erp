@@ -23,12 +23,14 @@ class UnidadMedidaDAO extends UnidadMedidaDAOBase
 public static function convertir( $id_unidad_desde,  $id_unidad_destino,  $cantidad_desde )
   {
 
+     Logger::log("<<<<<<<<<<se convertira ( {$id_unidad_desde}, {$id_unidad_destino}, {$cantidad_desde} )>>>>>>>>>>>>>");
+    
       //buscar esas unidades
       $uFrom = self::getByPK( $id_unidad_desde );
       $uTo = self::getByPK( $id_unidad_destino );
 
-      if(is_null( $uFrom)) throw new InvalidDataException("La unidad no existe");
-      if(is_null( $uTo)) throw new InvalidDataException("La unidad no existe");
+      if(is_null( $uFrom)) throw new InvalidDataException("La unidad no existe (desde)");
+      if(is_null( $uTo)) throw new InvalidDataException("La unidad no existe (destino)");
 
 
       //verifiquemos que las dos unidades sean de la misma categoria

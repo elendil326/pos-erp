@@ -9,6 +9,118 @@ require_once("interfaces/Inventario.interface.php");
  * */
 class InventarioController implements IInventario {
 
+    /**
+     * Actualiza las cantidades de productos en la tabla de LoteProducto
+     * @param type $id_lote
+     * @param type $id_producto
+     * @return \stdClass 
+     */
+    private static function ajustarLoteProducto($id_lote, $id_producto, $id_unidad = null) {
+
+        $response = new stdClass();
+        $response->error = "";
+        $response->success = true;
+
+        //verificamos si el producto existe
+        if (!$producto = ProductoDAO::getByPK($id_producto)) {
+            $response->error = "No se tiene registro del producto {$id_producto}";
+            return $response;
+        }
+
+        //verificamos si se envia el lote        
+        if (!$lote = LoteDAO::getByPK($id_lote)) {
+            $response->error = "No se tiene registro del lote {$id_lote}";
+            return $response;
+        }
+
+        if (!is_null($id_producto) && !is_null($id_unidad)) {
+            $response->error = "No se especifico el producto o unidad";
+            return $response;
+        }
+
+        if (is_null($id_unidad)) {
+            $id_unidad = $producto->getIdUnidadCompra();
+        }
+
+        //esta cantidad esta basada en la unidad indicada en los parametros
+        $cantidad = 0;
+
+        //obtenemos los lotes de entrada        
+        $lotes_entrada = LoteEntradaDAO::search(new LoteEntrada(array(
+                            "id_lote" => $id_lote
+                        )));
+
+        //iteramos sobre los lote de entrada
+        foreach ($lotes_entrada as $lote_entrada) {
+
+            $array = array(
+                "id_lote_entrada" => $lote_entrada->getIdLoteEntrada(),
+                "id_producto" => $id_producto
+            );
+
+            $lotes_entrada_producto = LoteEntradaProductoDAO::search(new LoteEntradaProducto($array));
+
+            foreach ($lotes_entrada_producto as $lote_entrada_producto) {
+
+                //revisemos si es de la misma unidad
+                if ($lote_entrada_producto->getIdUnidad() == $id_unidad) {
+                    //es igual, solo hay que sumar
+                    $cantidad += $lote_entrada_producto->getCantidad();
+                } else {
+                    //no es igual, hay que convertir
+                    $equivalencia = UnidadMedidaDAO::convertir($id_unidad, $lote_entrada_producto->getIdUnidad(), $lote_entrada_producto->getCantidad());
+                    $cantidad += $equivalencia;
+                }
+            }
+        }
+
+
+        //iteramos sobre los lote de salida
+        foreach ($lotes_salida as $lote_salida) {
+
+            $array = array(
+                "id_lote_salida" => $lote_salida->getIdLoteEntrada(),
+                "id_producto" => $id_producto,
+                "id_unidad" => $id_unidad
+            );
+
+            $lotes_salida_producto = LoteSalidaProductoDAO::search(new LoteEntradaSalida($array));
+
+            foreach ($lotes_salida_producto as $lote_salida_producto) {
+
+                //revisemos si es de la misma unidad
+                if ($lote_salida_producto->getIdUnidad() == $id_unidad) {
+                    //es igual, solo hay que sumar
+                    $cantidad -= $lote_salida_producto->getCantidad();
+                } else {
+                    //no es igual, hay que convertir
+                    $equivalencia = UnidadMedidaDAO::convertir($id_unidad, $lote_salida_producto->getIdUnidad(), $lote_salida_producto->getCantidad());
+                    $cantidad -= $equivalencia;
+                }
+            }
+        }
+
+        //actualizamos la cantidad de producto en lote_producto
+        $lote_producto = LoteProductoDAO::getByPK($id_lote, $id_producto);
+
+        $lote_producto->setCantidad(UnidadMedidaDAO::convertir($id_unidad, $lote_producto->getIdUnidad(), $cantidad));
+
+        return $response;
+        /* global $conn;
+
+          $query = "";
+
+          $rs = $conn->Execute($query, $data);
+
+          $res = array();
+
+          foreach ($rs as $foo) {
+          array_push($res, $foo);
+          }
+
+          return $res; */
+    }
+
     public static function ProductoProcesar($cantidad_nueva, $cantidad_vieja, $id_almacen_nuevo, $id_almacen_viejo, $id_producto_nuevo, $id_producto_viejo, $id_unidad_nueva, $id_unidad_vieja) {
         
     }
@@ -169,7 +281,7 @@ class InventarioController implements IInventario {
                                         array(
                                             "id_almacen" => $almacen->getIdAlmacen(),
                                             "id_producto" => $id_producto
-                                        )));
+                                )));
 
                 //Se vacía el arreglo en uno general
                 foreach ($productos_a as $p_a)
@@ -349,139 +461,177 @@ class InventarioController implements IInventario {
     (
     $inventario, $id_sucursal = ""
     ) {
+        
+        
+        //POS.API.POST("api/inventario/fisico", {inventario : Ext.JSON.encode([{id_producto:8, id_unidad:1, cantidad:7, id_lote:1}]) } , {callback:function(){}})
+        $s = SesionController::Actual();
 
-
-
-        foreach ($inventario as $producto) {
-
-
-            //por cada producto
-            //	--- procesos ---            
-            //	-insertar en loteproducto
-            //	-insertar en entradalote
-            //	-si el tipo de precio de venta es costo, actualizar
-            //	-insertar compra producto            
+        
+        Logger::log("---------- INVENTARIO FISICO SE ENCONTRARON " . count($inventario) . " AJUSTES ----------");
+        
+        foreach ($inventario as $producto) {                      
 
             //[{id_producto: 1,id_unidad: 2,cantidad: 0,id_lote : 2}]
+
+            $producto->nombre = ProductoDAO::getByPK($producto->id_producto)->getNombreProducto();     
+            Logger::log(" Estamos en {$producto->nombre}, id_unidad {$producto->id_unidad}, {$producto->cantidad} " . UnidadMedidaDAO::getByPK($producto->id_unidad)->getAbreviacion() . ", lote {$producto->id_lote}");
             
             try {
 
-                if (is_null($producto->id_lote)) {
-                    throw new InvalidDataException("No selecciono a que lote ira el producto " . $producto->id_producto);
-                }
-
-
-                if (strlen($producto->id_lote) == 0) {
-                    throw new InvalidDataException("No selecciono a que lote ira el producto " . $producto->id_producto);
+                //verificamos si el lote indicado existe
+                if (is_null($producto->id_lote) || strlen($producto->id_lote) == 0) {
+                    throw new InvalidDataException("No selecciono a que lote ira el producto {$producto->id_producto}");
                 }
 
                 //busquemos el id del lote
-                if(!$l = LoteDAO::getByPK($producto->id_lote)){
+                if (!$lote = LoteDAO::getByPK($producto->id_lote)) {
                     throw new InvalidDataException("No se tiene registro del lote {$producto->id_lote}");
                 }
-                
-                //busquemos la unidad que nos mandaron
-                $uAbreviacion = $producto->id_unidad;
-                $uResults = UnidadMedidaDAO::search(new UnidadMedida(array("abreviacion" => $uAbreviacion, "activa" => 1)));
 
-                if (sizeof($uResults) != 1) {
-                    throw new InvalidDataException("La unidad de medida `" . $producto->id_unidad . "` no existe, o no esta activa.");
-                } else {
-                    $producto->id_unidad = $uResults[0]->getIdUnidadMedida();
+                //verificamos que exista la unidad de medida y este activa
+                if (!UnidadMedidaDAO::getByPK($producto->id_unidad)) {
+                    throw new InvalidDataException("La unidad de medida {$producto->id_unidad} no existe, o no esta activa.");
                 }
 
-                //busequemos si este producto ya existe en este lote
-                $lp = LoteProductoDAO::getByPK($l->getIdLote(), $producto->id_producto);
+                //busquemos si este producto ya existe en este lote
+                $lote_producto = LoteProductoDAO::getByPK($lote->getIdLote(), $producto->id_producto);
 
-                if (is_null($lp)) {
+                if (is_null($lote_producto)) {
+
+                    Logger::log("El producto no estaba en el lote, se insertara");
+                    
                     //no existe, insertar
                     $loteProducto = new LoteProducto(array(
-                                "id_lote" => $l->getIdLote(),
+                                "id_lote" => $lote->getIdLote(),
                                 "id_producto" => $producto->id_producto,
                                 "cantidad" => $producto->cantidad,
                                 "id_unidad" => $producto->id_unidad
-                                    ));
+                            ));
 
                     LoteProductoDAO::save($loteProducto);
+                    Logger::log("Se guardo el LoteProducto : id_lote {$lote->getIdLote()}, id_producto {$producto->id_producto}, cantidad {$producto->cantidad} id_unidad {$producto->id_unidad}");
+
+                    $loteEntrada = new LoteEntrada(array(
+                                "id_lote" => $lote->getIdLote(),
+                                "id_usuario" => $s['id_usuario'],
+                                "fecha_registro" => time(),
+                                "motivo" => "Entrada por ajuste de inventario"
+                            ));
+
+                    LoteEntradaDAO::save($loteEntrada);
+                    Logger::log("Se guardo el LoteEntrada: id_lote {$lote->getIdLote()}, id_usuario {$s['id_usuario']}, motivo {Entrada por ajuste de inventario}");
+                    
                 } else {
-                    //ya existe, sumar
+
+                    Logger::log("El producto so estaba en el lote, verificaremos las cantidades");
+                    
                     //revisemos si es de la misma unidad
-                    if ($lp->getIdUnidad() == $producto->id_unidad) {
+                    if ($lote_producto->getIdUnidad() == $producto->id_unidad) {
+                        Logger::log("Se encontro que la unidad enviada es igual a la unidad del lote producto");
                         
-                        //hacemos el ajuste
-
-                        $existencias_lote = ProductoDAO::ExistenciasTotales($producto->id_producto, $l->getIdLote());
+                        Logger::log("Se detecto una merma de {$producto->cantidad} " . UnidadMedidaDAO::getByPK($producto->id_unidad)->getAbreviacion() . " de {$producto->nombre}");
                         
-                        $diff = $existencias_lote - $producto->cantidad;
+                        $existencias_lote = ProductoDAO::ExistenciasTotales($producto->id_producto, $lote->getIdLote());
                         
-                        if( $diff > 0 ){                            
-                            //entonces hay una merma y se reporta una salida al lote igual a $diff, especificando en motivo el id del movimiento realizado
-                            //se actualiza la cantidad de producto en lote producto                            
-                            //AlmacenesController::Salida($l->getIdAlmacen(), $producto, "100");      
-                            
-                            
-                            
-                        }
+                        Logger::log("Se encontraron {$existencias_lote} existencias en el lote {$lote->getIdLote()} para el producto {$producto->id_producto}");
                         
-                        if( $diff < 0 ){                            
-                            //entonces hay un sobrante y se reporta una entrada al lote igual a $diff, especificando en motivo el id del movimiento realizado
-                            //se actualiza la cantidad de producto en lote producto
-                            //AlmacenesController::Entrada($l->getIdAlmacen(), $producto, "101");
-                        }                                                                                                                                                                           
+                    }else{
                         
+                        Logger::log("Se encontro que la unidad enviada es diferente a la unidad del lote producto, se procede a transformar");
+                                                
+                        $existencias_lote = ProductoDAO::ExistenciasTotales($producto->id_producto, $lote->getIdLote());                                                                  
                         
-                    } else {
-                        //no es igual, hay que convertir
-
-                        try {
-                            $r = UnidadMedidaDAO::convertir($p->id_unidad, $lp->getIdUnidad(), $p->cantidad);
+                        Logger::log("Se encontraron {$existencias_lote} existencias en el lote {$lote->getIdLote()} para el producto {$producto->id_producto}, pero con la unidad {$lote_producto->getIdUnidad()}, nosotros necesitamos que s e transforme en {$producto->id_unidad}");
+                        
+                        //var_dump($producto->id_unidad, $lote_producto->getIdUnidad(), $existencias_lote);                            
+                        
+                        try {                            
+                            Logger::log("Enviara a transformar unidad base : {$producto->id_unidad}, unidad a transformar : {$lote_producto->getIdUnidad()}, cantidad a transformar : {$existencias_lote}");
+                            $existencias_lote = UnidadMedidaDAO::convertir("{$producto->id_unidad}", $lote_producto->getIdUnidad(), $existencias_lote);                                                        
+                            Logger::log("Como producto de la transformacion se obtuvo $existencias_lote ");
                         } catch (BusinessLogicException $ide) {
                             //no se pudo convertir porque son de 
                             //diferentes categorias
                             throw $ide; //mostrar una excpetion mas fresona
                         }
+                        
+                    }
+                    
+                    Logger::log("se evaluara {$existencias_lote} - {$producto->cantidad}");
+                    
+                    //hacemos el ajuste
+                    $diff = $existencias_lote - $producto->cantidad;
+                                        
 
-                        $lp->setCantidad($lp->getCantidad() + $r);
+                    if ($diff > 0) {
+                        //entonces hay una merma y se reporta una salida al lote igual a $diff, especificando en motivo el id del movimiento realizado
+                        //se actualiza la cantidad de producto en lote producto                            
+                        //AlmacenesController::Salida($l->getIdAlmacen(), $producto, "100");
+                        
+                        Logger::log("Se detecto una merma de {$producto->cantidad} " . UnidadMedidaDAO::getByPK($producto->id_unidad)->getAbreviacion() . " de {$producto->nombre}");
+
+                        $lote_salida = new LoteSalida(array(
+                                    "id_lote" => $lote->getIdLote(),
+                                    "id_usuario" => $s['id_usuario'],
+                                    "fecha_registro" => time(),
+                                    "motivo" => "Salida de producto por ajuste de inventario (merma)"
+                                ));
+
+                        LoteSalidaDAO::save($lote_salida);
+                        
+                        Logger::log("Se creo un lote salida id_lote {$lote->getIdLote()}, id_usuario {$s['id_usuario']}, motivo Salida de producto por ajuste de inventario (merma)");
+
+                        $lote_salida_producto = new LoteSalidaProducto(array(
+                                    "id_lote_salida" => $lote_salida->getIdLoteSalida(),
+                                    "id_producto" => $producto->id_producto,
+                                    "id_unidad" => $producto->id_unidad,
+                                    "cantidad" => $producto->cantidad
+                                ));
+                        
+                        LoteSalidaProductoDAO::save($lote_salida_producto);
+                        
+                        Logger::log("Se creo un lote salida producto con id_lote_salida {$lote_salida->getIdLoteSalida()}, id_producto {$producto->id_producto}, id_unidad {$producto->id_unidad}, cantidad {$producto->cantidad}");
+
                     }
 
+                    if ($diff < 0) {
+                        //entonces hay un sobrante y se reporta una entrada al lote igual a $diff, especificando en motivo el id del movimiento realizado
+                        //se actualiza la cantidad de producto en lote producto
+                        //AlmacenesController::Entrada($l->getIdAlmacen(), $producto, "101");
 
-                    //$lp->setCantidad( $lp->getCantidad() + $p->cantidad );
+                        Logger::log("Se detecto una sobrante de {$producto->cantidad} " . UnidadMedidaDAO::getByPK($producto->id_unidad)->getAbreviacion());
+                        
+                        $lote_entrada = new LoteEntrada(array(
+                                    "id_lote" => $lote->getIdLote(),
+                                    "id_usuario" => $s['id_usuario'],
+                                    "fecha_registro" => time(),
+                                    "motivo" => "Entrada de producto por ajuste de inventario (sobrante)"
+                                ));
 
+                        LoteEntradaDAO::save($lote_entrada);
+                        
+                        Logger::log("Se creo un lote entrada id_lote {$lote->getIdLote()}, id_usuario {$s['id_usuario']}, motivo Entrada de producto por ajuste de inventario (sobrante)");
 
-                    LoteProductoDAO::save($lp);
+                        $lote_entrada_producto = new LoteEntradaProducto(array(
+                                    "id_lote_entrada" => $lote_entrada->getIdLote(),
+                                    "id_producto" => $producto->id_producto,
+                                    "id_unidad" => $producto->id_unidad,
+                                    "cantidad" => $producto->cantidad
+                                ));
+                        
+                        LoteEntradaProductoDAO::save($lote_entrada_producto);
+                        
+                        Logger::log("Se creo un lote entrada producto con id_lote_entrada {$lote_entrada->getIdLoteEntrada()}, id_producto {$producto->id_producto}, id_unidad {$producto->id_unidad}, cantidad {$producto->cantidad}");
+                        
+                    }
+                    
+                    //actualizamos las existencias de lote producto
+                    Logger::log("Se procede a ahcer el ajuste del lote producto");
+                    self::ajustarLoteProducto($producto->id_lote, $producto->id_producto);
+                    
                 }
+                
 
-
-
-                $loteEntrada = new LoteEntrada(array(
-                            "id_lote" => $l->getIdLote(),
-                            "id_usuario" => $s->getIdUsuario(),
-                            "fecha_registro" => time(),
-                            "motivo" => "Compra a Proveedor"
-                                ));
-
-
-                LoteEntradaDAO::save($loteEntrada);
-
-                LoteEntradaProductoDAO::save(new LoteEntradaProducto(array(
-                            "id_lote_entrada" => $loteEntrada->getIdLoteEntrada(),
-                            "id_producto" => $p->id_producto,
-                            "id_unidad" => $p->id_unidad,
-                            "cantidad" => $p->cantidad
-                                )));
-
-                $compraProducto = new CompraProducto(array(
-                            "id_compra" => $compra->getIdCompra(),
-                            "id_producto" => $p->id_producto,
-                            "cantidad" => $p->cantidad,
-                            "precio" => $p->precio,
-                            "descuento" => 0,
-                            "impuesto" => 0,
-                            "id_unidad" => $p->id_unidad,
-                            "retencion" => 0
-                                ));
-
-                CompraProductoDAO::save($compraProducto);
             } catch (InvalidDataException $e) {
                 Logger::error($e);
                 DAO::transRollback();

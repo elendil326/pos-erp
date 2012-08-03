@@ -20,5 +20,23 @@ require_once("base/lote_producto.vo.base.php");
   */
 class LoteProductoDAO extends LoteProductoDAOBase
 {
+    
+    /*public static function ajustarLoteProducto($id_lote, $id_producto){
+        
+        
+        global $conn;
+        
+        $query = "";
+        
+        $rs = $conn->Execute($query, $data);
 
+        $res = array();
+
+        foreach ($rs as $foo) {
+            array_push($res, $foo);
+        }
+        
+        return $res;	
+        
+    }*/
 }
