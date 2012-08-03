@@ -1209,9 +1209,23 @@ Creo que este metodo tiene que estar bajo sucursal.
                 throw new InvalidDataException("El lote $id_lote no tiene el producto " . $productos[$i]["id_producto"]);
             }
 
-            if($productos[$i]["cantidad"] > $lp->getCantidad()){
+            //TODO : ALAN falto considerar unas cosas al hacer esta comparacion
+            /*if($productos[$i]["cantidad"] > $lp->getCantidad()){
+                throw new InvalidDataException("Estas intentando sacar mas de lo que hay en el lote.");
+            }*/
+            
+            //------- CODIGO DE MANUEL -------
+            
+            $equivalencia = UnidadMedidaDAO::convertir($productos[$i]["id_unidad"], $lp->getIdUnidad(), $productos[$i]["cantidad"]);
+            
+            if($equivalencia > $lp->getCantidad()){
+                
+                Logger::log("Se Comparara {$equivalencia} > {$lp->getCantidad()}");
+                
                 throw new InvalidDataException("Estas intentando sacar mas de lo que hay en el lote.");
             }
+            
+            //---------------
 
             $lp->setCantidad( $lp->getCantidad() - $productos[$i]["cantidad"]);
 

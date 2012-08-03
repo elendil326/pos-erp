@@ -20,7 +20,7 @@ require_once("base/lote_entrada_producto.vo.base.php");
   */
 class LoteEntradaProductoDAO extends LoteEntradaProductoDAOBase
 {
-	public static function obtenerEntradaPorProducto($id_producto, $dias = 60){
+	public static function obtenerEntradaPorProducto($id_producto, $dias = 1000){
 
 		$sql = "SELECT 
 					le.id_lote_entrada,
