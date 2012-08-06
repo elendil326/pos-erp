@@ -2479,8 +2479,8 @@ class ProductosController extends ValidacionesController implements IProductos
                         $lp->cantidad = $lote_producto->getCantidad();
                         $lp->id_unidad = $lote_producto->getIdUnidad();
                         $lp->unidad = UnidadMedidaDAO::getByPK($lp->id_unidad)->getAbreviacion();
-                        $lp->recalculo = ProductoDAO::ExistenciasTotales($lp->id_producto);
-                        //$lp->recalculo = ProductoDAO::ExistenciasLote($lp->id_producto, $lp->id_lote, $lp->id_unidad);
+                        //$lp->recalculo = ProductoDAO::ExistenciasTotales($lp->id_producto);
+                        $lp->recalculo = ProductoDAO::ExistenciasLote($lp->id_producto, $lp->id_lote, $lp->id_unidad);
                         $lp->nombre = $producto->getNombreProducto();
                         $lp->codigo = $producto->getCodigoProducto();
                         array_push($l->lotes_producto, $lp);

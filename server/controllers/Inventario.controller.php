@@ -20,86 +20,10 @@ class InventarioController implements IInventario {
         //TODO : ESTE CODIGO SE PODRIA ELIMINAR SOLO LLAMANDO A LA FUNCION ProductoDAO::ExistenciasLote($id_producto, $id_lote, $id_unidad); PERO SERA HASTA QEU TODO JALE AL 100%
 
         Logger::log("ENTRANDO A AJUSTAR LOTE PRODUCTO");
-
-        /*//verificamos si el producto existe
-        if (!$producto = ProductoDAO::getByPK($id_producto)) {
-            Logger::error("No se tiene registro del producto {$id_producto}");
-        }
-
-        //verificamos si se envia el lote        
-        if (!$lote = LoteDAO::getByPK($id_lote)) {
-            Logger::error("No se tiene registro del lote {$id_lote}");
-        }
-
-
-        //esta cantidad esta basada en la unidad indicada en los parametros
-        $cantidad = 0;
-
-        //obtenemos los lotes de entrada        
-        $lotes_entrada = LoteEntradaDAO::search(new LoteEntrada(array(
-                            "id_lote" => $id_lote
-                        )));
-
-        //iteramos sobre los lote de entrada
-        foreach ($lotes_entrada as $lote_entrada) {
-
-            $array = array(
-                "id_lote_entrada" => $lote_entrada->getIdLoteEntrada(),
-                "id_producto" => $id_producto
-            );
-
-            $lotes_entrada_producto = LoteEntradaProductoDAO::search(new LoteEntradaProducto($array));
-
-            foreach ($lotes_entrada_producto as $lote_entrada_producto) {
-
-                //revisemos si es de la misma unidad
-                if ($lote_entrada_producto->getIdUnidad() == $id_unidad) {
-                    //es igual, solo hay que sumar
-                    $cantidad += $lote_entrada_producto->getCantidad();
-                } else {
-                    //no es igual, hay que convertir
-                    $equivalencia = UnidadMedidaDAO::convertir($lote_entrada_producto->getIdUnidad(), $id_unidad, $lote_entrada_producto->getCantidad());
-                    $cantidad += $equivalencia;
-                }
-            }
-        }
-
-        //obtenemos los lotes de salida     
-        $lotes_salida = LoteSalidaDAO::search(new LoteSalida(array(
-                            "id_lote" => $id_lote
-                        )));
-
-        //iteramos sobre los lote de salida
-        foreach ($lotes_salida as $lote_salida) {
-
-            $array = array(
-                "id_lote_salida" => $lote_salida->getIdLoteSalida(),
-                "id_producto" => $id_producto
-            );
-
-            $lotes_salida_producto = LoteSalidaProductoDAO::search(new LoteSalidaProducto($array));
-
-            foreach ($lotes_salida_producto as $lote_salida_producto) {
-
-                //revisemos si es de la misma unidad
-                if ($lote_salida_producto->getIdUnidad() == $id_unidad) {
-                    //es igual, solo hay que sumar
-                    $cantidad -= $lote_salida_producto->getCantidad();
-                } else {
-                    //no es igual, hay que convertir
-                    $equivalencia = UnidadMedidaDAO::convertir($lote_salida_producto->getIdUnidad(), $id_unidad, $lote_salida_producto->getCantidad());
-                    $cantidad -= $equivalencia;
-                }
-            }
-        }
-
-        Logger::log("-------------->   {$cantidad}   <----------------");*/
-        
-        //$cantidad = ProductoDAO::ExistenciasLote($id_producto, $id_lote, $id_unidad);
-        $cantidad = ProductoDAO::ExistenciasTotales($id_producto);
         
         
-        Logger::log("-------------->   {$cantidad}   <----------------");
+        $cantidad = ProductoDAO::ExistenciasLote($id_producto, $id_lote, $id_unidad);
+        //$cantidad = ProductoDAO::ExistenciasTotales($id_producto);                        
 
         try {
 
@@ -690,6 +614,8 @@ class InventarioController implements IInventario {
      * @param type $id_sucursal 
      */
     static function ExistenciasRecalcular($productos, $id_sucursal = "") {
+        
+        Logger::log("Entrando a Existencias Recalcular");
         
         $response = array();
         
