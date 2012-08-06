@@ -74,10 +74,9 @@
   
 	/**
  	 *
- 	 *Metodo que surte una sucursal por parte de un proveedor. La sucursal sera tomada de la sesion actual.
-
+ 	 *Registra entradas de producto dentro del almacen. Ya sea que sea un traspaso de un alamcen, una compra o por motivos de inventarios fisicos.  
  	 *
- 	 * @param id_lote int Id del lote que se generó previamente y es el que recibe los productos
+ 	 * @param id_lote int Id del lote que se gener previamente y es el que recibe los productos
  	 * @param productos json Objeto que contendra los ids de los productos, sus unidades y sus cantidades
  	 * @param motivo string Motivo del movimiento
  	 * @return id_entrada_lote string Id generado por el registro de surtir

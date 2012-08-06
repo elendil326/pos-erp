@@ -191,7 +191,11 @@ class GerenciaComponentPage extends PosComponentPage{
 		                {
 		                    "title": "Inventario fisico",
 		                    "url": "inventario.fisico.php"
-		                }
+		                },
+                                {
+                                    "title": "Recalcular Existencias",
+		                    "url": "inventario.recalcular.php"
+                                }
 		            ]
 		        },
 		        {

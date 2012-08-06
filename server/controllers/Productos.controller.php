@@ -2414,4 +2414,92 @@ class ProductosController extends ValidacionesController implements IProductos
             );
 
     }//importar productos
+    
+    /**
+     *Lista los productos por empresa, almacen y lote
+     */
+    public static function listarProductosLote($activo = null,         
+        $id_almacen = null, 
+        $id_empresa = null        
+    )
+    {
+        
+        //objeto que se regresara
+        $company = new stdClass();
+        //contiene todas las empresas
+        $company->empresas = array();
+        
+        //obtenemos todas las empresas
+        $empresas = EmpresaDAO::getAll();
+        
+        //iteramos las empresas para obtener sus almacenes
+        foreach( $empresas as $empresa ){                        
+            
+            //insertamos la empresa a la compañia
+            $e = new stdClass();       
+            $e->id_empresa = $empresa->getIdEmpresa();
+            $e->nombre = $empresa->getRazonSocial();
+            $e->almacenes = array();
+            
+            $almacenes = AlmacenDAO::search( new Almacen( array( "id_empresa" => $empresa->getIdEmpresa() ) ) );
+            
+            //iteramos todos los almacenes de la empresa
+            foreach( $almacenes as $almacen ){
+                
+                $a = new stdClass();
+                $a->id_almacen = $almacen->getIdAlmacen();
+                $a->nombre = $almacen->getNombre();
+                $a->id_sucursal = $almacen->getIdSucursal();
+                $a->sucursal = SucursalDAO::getByPK($a->id_sucursal)->getRazonSocial();
+                $a->lotes = array();
+                
+                //obtenemos todos los lotes del almacen
+                $lotes =  LoteDAO::search( new Lote( array( "id_almacen" => $almacen->getIdAlmacen() ) ) );
+                
+                //iteramos todos los lotes del almacen
+                foreach($lotes as $lote){
+                    
+                    $l = new StdClass();
+                    $l->id_lote = $lote->getIdLote();
+                    $l->id_almacen = $lote->getIdAlmacen();
+                    $l->folio = $lote->getFolio();
+                    $l->lotes_producto = array();
+                                         
+                    //obtenemos todos los productos de un lote
+                    $lotes_producto = LoteProductoDAO::search( new LoteProducto( array( "id_lote" => $lote->getIdLote() ) ) );
+                    
+                    //iteramos lodos los lotes con producto que perteneces al lote
+                    foreach($lotes_producto as $lote_producto ){
+                        
+                        $producto = ProductoDAO::getByPK( $lote_producto->getIdProducto() );
+                        
+                        $lp = new StdClass();
+                        $lp->id_lote = $lote_producto->getIdLote();
+                        $lp->id_producto = $lote_producto->getIdProducto();
+                        $lp->cantidad = $lote_producto->getCantidad();
+                        $lp->id_unidad = $lote_producto->getIdUnidad();
+                        $lp->unidad = UnidadMedidaDAO::getByPK($lp->id_unidad)->getAbreviacion();
+                        $lp->recalculo = ProductoDAO::ExistenciasLote($lp->id_producto, $lp->id_lote, $lp->id_unidad);
+                        $lp->nombre = $producto->getNombreProducto();
+                        $lp->codigo = $producto->getCodigoProducto();
+                        array_push($l->lotes_producto, $lp);
+                        
+                    }
+                    
+                    array_push($a->lotes, $l);
+                    
+                }
+                
+                array_push($e->almacenes, $a);
+                
+            }
+                             
+            array_push($company->empresas, $e);
+            
+        }
+        
+        return $company;
+        
+    }
+    
 }

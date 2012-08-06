@@ -69,7 +69,8 @@ Si request_token se envia verdadero no se asociara una cookie a esta peticion, s
  	 *Obtener las sesiones activas.
  	 *
  	 * @param id_grupo int Obtener la lista de sesiones activas para un grupo de usuarios especifico.
- 	 * @return en_linea json Arreglo de objetos que contendrán la información de las sesiones activas
+ 	 * @return resultados json Arreglo de objetos que contendrn la informacin de las sesiones activas
+ 	 * @return numero_de_resultaos int 
  	 **/
   static function Lista
 	(

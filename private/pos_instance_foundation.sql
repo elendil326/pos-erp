@@ -81,4 +81,17 @@ INSERT INTO `unidad_medida` (`id_unidad_medida`, `id_categoria_unidad_medida`, `
 (6, 4, 'UNIDAD', 'U', '', 1, 1),
 (7, 4, 'MILLAR', 'MIL', '', 0.001, 1);
 
+INSERT INTO `documento_base` (`id_documento_base`, `id_empresa`, `id_sucursal`, `nombre`, `activo`, `json_impresion`, `ultima_modificacion`) VALUES
+(1, NULL, NULL, 'Inventario Fisico', 1, '', 1344036739),
+(3, NULL, NULL, 'Cotización', 1, '', 1344037703),
+(4, NULL, NULL, 'Factura', 1, '', 1344037703),
+(5, NULL, NULL, 'Devolución sobre Venta', 1, '', 1344037703),
+(6, NULL, NULL, 'Pago del Cliente', 1, '', 1344037703),
+(7, NULL, NULL, 'Compra', 1, '', 1344037703),
+(8, NULL, NULL, 'Abono del Cliente', 1, '', 1344037703),
+(9, NULL, NULL, 'Entrada Almacén', 1, '', 1344037703),
+(10, NULL, NULL, 'Salida Almacén', 1, '', 1344037703),
+(11, NULL, NULL, 'Nota de Venta', 1, '', 1344037703),
+(12, NULL, NULL, 'Devolución sobre Compra', 1, '', 1344037703);
+
 

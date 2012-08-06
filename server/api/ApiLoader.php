@@ -1,5 +1,32 @@
 <?php 
 
+    /*require_once("ApiHandler.php");
+
+	require_once("ApiHttpErrors.php");
+
+	require_once("ApiLoader.php");
+
+	require_once("ApiOutputFormatter.php");
+
+	require_once("CustomValidator.php");
+
+	require_once("DateRangeValidator.php");
+
+	require_once("DateValidator.php");
+
+	require_once("EnumValidator.php");
+
+	require_once("HtmlValidator.php");
+
+	require_once("NumericRangeValidator.php");
+
+	require_once("NumericValidator.php");
+
+	require_once("StringValidator.php");
+
+	require_once("Validator.php");*/
+
+
   class ApiSesionIniciar extends ApiHandler {
   
 
@@ -1131,6 +1158,36 @@
  			
 			
 			isset($_POST['inventario'] ) ? json_decode($_POST['inventario']) : null,
+			isset($_POST['id_sucursal'] ) ? $_POST['id_sucursal'] :  ""
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiInventarioRecalcularExistencias extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"productos" => new ApiExposedProperty("productos", true, POST, array( "json" )),
+			"id_sucursal" => new ApiExposedProperty("id_sucursal", false, POST, array( "int" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = InventarioController::ExistenciasRecalcular( 
+ 			
+			
+			isset($_POST['productos'] ) ? json_decode($_POST['productos']) : null,
 			isset($_POST['id_sucursal'] ) ? $_POST['id_sucursal'] :  ""
 			
 			);

@@ -17,9 +17,11 @@ class InventarioController implements IInventario {
      */
     private static function ajustarLoteProducto($id_lote, $id_producto, $id_unidad) {
 
+        //TODO : ESTE CODIGO SE PODRIA ELIMINAR SOLO LLAMANDO A LA FUNCION ProductoDAO::ExistenciasLote($id_producto, $id_lote, $id_unidad); PERO SERA HASTA QEU TODO JALE AL 100%
+
         Logger::log("ENTRANDO A AJUSTAR LOTE PRODUCTO");
 
-        //verificamos si el producto existe
+        /*//verificamos si el producto existe
         if (!$producto = ProductoDAO::getByPK($id_producto)) {
             Logger::error("No se tiene registro del producto {$id_producto}");
         }
@@ -91,9 +93,11 @@ class InventarioController implements IInventario {
             }
         }
 
+        Logger::log("-------------->   {$cantidad}   <----------------");*/
+        
+        $cantidad = ProductoDAO::ExistenciasLote($id_producto, $id_lote, $id_unidad);
+        
         Logger::log("-------------->   {$cantidad}   <----------------");
-
-
 
         try {
 
@@ -102,7 +106,8 @@ class InventarioController implements IInventario {
 
             $lote_producto->setCantidad(UnidadMedidaDAO::convertir($id_unidad, $lote_producto->getIdUnidad(), $cantidad));
 
-            LoteProductoDAO::save($lote_producto);
+            LoteProductoDAO::save($lote_producto);                    
+            
         } catch (Exception $e) {
 
             Logger::error("Error al hacer el ajuste del lote : " . $e->getMessage());
@@ -110,6 +115,9 @@ class InventarioController implements IInventario {
 
 
         Logger::log("-------------->   SE TERMINO DE HACER EL AJUSTE   <----------------");
+                
+        return $cantidad;
+        
         /* global $conn;
 
           $query = "";
@@ -575,6 +583,8 @@ class InventarioController implements IInventario {
                         //se actualiza la cantidad de producto en lote producto                            
                         //AlmacenesController::Salida($l->getIdAlmacen(), $producto, "100");
 
+                        $diff = abs($diff);
+
                         Logger::log("Se detecto una merma de {$diff} " . UnidadMedidaDAO::getByPK($producto->id_unidad)->getAbreviacion() . " de {$producto->nombre}");
                         /*
                           $lote_salida = new LoteSalida(array(
@@ -607,6 +617,9 @@ class InventarioController implements IInventario {
                     }
 
                     if ($diff < 0) {
+
+                        $diff = abs($diff);
+
                         //entonces hay un sobrante y se reporta una entrada al lote igual a $diff, especificando en motivo el id del movimiento realizado
                         //se actualiza la cantidad de producto en lote producto
                         //AlmacenesController::Entrada($l->getIdAlmacen(), $producto, "101");
@@ -665,6 +678,27 @@ class InventarioController implements IInventario {
                 throw new InvalidDatabaseOperationException($e);
             }
         }
+    }
+
+    /**
+     *
+     * @param type $productos
+     * @param type $id_sucursal 
+     */
+    static function ExistenciasRecalcular($productos, $id_sucursal = "") {
+        
+        $response = array();
+        
+        foreach ($productos as $producto) {
+            
+            $producto->cantidad = self::ajustarLoteProducto($producto->id_lote, $producto->id_producto, $producto->id_unidad);
+            
+        }
+        
+        return array( "productos" => json_encode($productos));
+        
+        //printf("{success:true, productos:" . json_encode($productos) . "}");
+        
     }
 
 }

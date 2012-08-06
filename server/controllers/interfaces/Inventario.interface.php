@@ -75,6 +75,23 @@
   
 	/**
  	 *
+ 	 *Recalcula las existencias de uno mas productos, corrigiendo as? posibles errores en la cantidad de existencias de los productos indicados
+ 	 *
+ 	 * @param productos json [{id_producto:1, lote:1, id_unidad:1}]
+ 	 * @param id_sucursal int 1
+ 	 * @return productos json [{id_producto:1, lote:1, id_unidad:1, cantidad:120.5}]
+ 	 **/
+  static function ExistenciasRecalcular
+	(
+		$productos, 
+		$id_sucursal = ""
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
  	 *ver transporte y fletes...
  	 *
  	 **/
