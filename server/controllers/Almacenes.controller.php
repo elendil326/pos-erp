@@ -1004,6 +1004,7 @@ Creo que este metodo tiene que estar bajo sucursal.
         $_lote->setIdLote( $id_lote );
         $_lote->setIdUsuario( $sesion["id_usuario"] );
         $_lote->setFechaRegistro( time() );
+        $_lote->setMotivo($motivo);
 
         try {
             LoteEntradaDAO::save( $_lote );

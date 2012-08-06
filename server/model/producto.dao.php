@@ -115,6 +115,10 @@ class ProductoDAO extends ProductoDAOBase {
 
     /**
      * Regresa la cantidad total de producto en un lote especifico
+     * 
+     * ESTE METODO SIRVE PARA CUANDO EN LOTE PRODUCTO HAY REGISTROS CON UNIDADES DIFERENTES, YA QUE EN EL CASO DE ExistenciasTotales NO 
+     * TRABAJARIA DE MANERA CORRECTA YA QUE SE INFIERE QUE TODOS LOS TEGISTROS EN LOTE PRODUCTO TIENEN LA MISMA UNIDAD
+     * 
      * @param type $id_producto
      * @param type $id_lote
      * @param type $id_unidad

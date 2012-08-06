@@ -95,7 +95,9 @@ class InventarioController implements IInventario {
 
         Logger::log("-------------->   {$cantidad}   <----------------");*/
         
-        $cantidad = ProductoDAO::ExistenciasLote($id_producto, $id_lote, $id_unidad);
+        //$cantidad = ProductoDAO::ExistenciasLote($id_producto, $id_lote, $id_unidad);
+        $cantidad = ProductoDAO::ExistenciasTotales($id_producto);
+        
         
         Logger::log("-------------->   {$cantidad}   <----------------");
 
@@ -483,7 +485,7 @@ class InventarioController implements IInventario {
 
         foreach ($inventario as $producto) {
 
-            self::ajustarLoteProducto($producto->id_lote, $producto->id_producto, $producto->id_unidad);
+            //self::ajustarLoteProducto($producto->id_lote, $producto->id_producto, $producto->id_unidad);
 
             //[{id_producto: 1,id_unidad: 2,cantidad: 0,id_lote : 2}]
 
@@ -548,14 +550,16 @@ class InventarioController implements IInventario {
 
                         Logger::log("Se detecto una merma de {$producto->cantidad} " . UnidadMedidaDAO::getByPK($producto->id_unidad)->getAbreviacion() . " de {$producto->nombre}");
 
-                        $existencias_lote = ProductoDAO::ExistenciasLote($producto->id_producto, $lote->getIdLote(), $lote_producto->getIdUnidad());
+                        //$existencias_lote = ProductoDAO::ExistenciasLote($producto->id_producto, $lote->getIdLote(), $lote_producto->getIdUnidad());
+                        $existencias_lote = ProductoDAO::ExistenciasTotales($producto->id_producto);
 
                         Logger::log("Se encontraron {$existencias_lote} existencias en el lote {$lote->getIdLote()} para el producto {$producto->id_producto}");
                     } else {
 
                         Logger::log("Se encontro que la unidad enviada es diferente a la unidad del lote producto, se procede a transformar");
 
-                        $existencias_lote = ProductoDAO::ExistenciasLote($producto->id_producto, $lote->getIdLote(), $lote_producto->getIdUnidad());
+                        //$existencias_lote = ProductoDAO::ExistenciasLote($producto->id_producto, $lote->getIdLote(), $lote_producto->getIdUnidad());
+                        $existencias_lote = ProductoDAO::ExistenciasTotales($producto->id_producto);
 
                         Logger::log("Se encontraron {$existencias_lote} " . UnidadMedidaDAO::getByPK($lote_producto->getIdUnidad())->getAbreviacion() . " en el lote {$lote->getIdLote()} para el producto " . ProductoDAO::getByPK($producto->id_producto)->getNombreProducto() . " , nosotros necesitamos que se transforme en " . UnidadMedidaDAO::getByPK($producto->id_unidad)->getAbreviacion());
 
