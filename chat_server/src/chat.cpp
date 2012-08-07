@@ -15,6 +15,61 @@ using namespace mysqlpp;
 #define WRONG_AUTHTOKEN 	4
 #define MISSING_ARGUMENT 	5
 #define NOT_FOUND			6
+#define NO_REDIS			7
+
+
+
+
+
+class HttpResponse{
+
+	public:
+		
+
+		static void error(int err_code){
+			switch(err_code){
+				case MISSING_INSTANCE :
+					cout << "{ \"status\" : \"false\", \"reason\" : \"You must provide an instance token.\" }";
+				break;
+
+				case WRONG_INSTANCE :
+					cout << "{ \"status\" : \"false\", \"reason\" : \"This instance token is invalid.\" }";
+				break;
+
+				case MISSING_AUTHTOKEN :
+					cout << "{ \"status\" : \"false\", \"reason\" : \"You must provide an auth token.\" }";
+				break;
+
+				case WRONG_AUTHTOKEN :
+					cout << "{ \"status\" : \"false\", \"reason\" : \"The auth token you provided is invalid.\" }";
+				break;
+
+				case MISSING_ARGUMENT :
+					cout << "{ \"status\" : \"false\", \"reason\" : \"You are missing arguments to make this call.\" }";
+				break;
+
+				
+				case NOT_FOUND :
+					cout << "{ \"status\" : \"false\", \"reason\" : \"This method does not exist.\" }";
+				break;
+
+				case NO_REDIS:
+					cout << "{ \"status\" : \"false\", \"reason\" : \"Could not connect to redis server.\" }";
+				break;		
+
+			}
+			
+
+			exit(EXIT_SUCCESS);
+		}
+
+		static void bootstrap(){
+			printf("Content-type: application/json\n\n");
+		}
+
+};
+
+
 
 
 
@@ -32,6 +87,9 @@ inline std::string to_string (const T& t)
 
 
 char **argss;
+int nargss;
+
+
 
 int split_ocurrences ( string s , char c)
 {
@@ -106,19 +164,34 @@ bool startsWith(string s, string test){
 
 
 
-string header( string headerName ){
+string header( const string &headerName ){
+	nargss = 30;
+	
+	for(int i = 0 ; i < nargss; i++){
 
-	for(int i = 0 ; i < 30; i++){
-
-		if(!argss[i]) continue;
+		if(!argss[i]){
+	
+			continue;	
+		} 
+		
+		///cout << argss[i] << "\n";
 
 		if(startsWith(argss[i], headerName )) {
 
 			string s (argss[i]);
 
-			size_t foo = s.find( "=" ) + 1;
+			int j, found = 0;
+			for (j = 0; argss[i][j] != '\0'; ++j)
+			{
 
-			return s.substr( foo );			
+				if(argss[i][j] == '='){
+					found = 1;
+					break;
+				}
+			}
+
+			return found ? & argss[i][j+1] : string();
+			
 		}
 	}
 
@@ -225,7 +298,9 @@ class DB{
 		redisContext *redis = redisConnect("127.0.0.1", 6379);
 
 		if (redis->err) {
-		    printf("Error: %s\n", redis->errstr);
+		    //printf("Error: %s\n", redis->errstr);
+			HttpResponse::error(NO_REDIS);
+		    
 		}
 		
 		return redis;
@@ -523,6 +598,9 @@ public:
 
 
 
+
+
+
 class ContactsController{
 
 	private:
@@ -602,49 +680,6 @@ class ContactsController{
 
 
 
-class HttpResponse{
-
-	public:
-		
-
-		static void error(int err_code){
-			switch(err_code){
-				case MISSING_INSTANCE :
-					cout << "{ \"status\" : \"false\", \"reason\" : \"You must provide an instance token.\" }";
-				break;
-
-				case WRONG_INSTANCE :
-					cout << "{ \"status\" : \"false\", \"reason\" : \"This instance token is invalid.\" }";
-				break;
-
-				case MISSING_AUTHTOKEN :
-					cout << "{ \"status\" : \"false\", \"reason\" : \"You must provide an auth token.\" }";
-				break;
-
-				case WRONG_AUTHTOKEN :
-					cout << "{ \"status\" : \"false\", \"reason\" : \"The auth token you provided is invalid.\" }";
-				break;
-
-				case MISSING_ARGUMENT :
-					cout << "{ \"status\" : \"false\", \"reason\" : \"You are missing arguments to make this call.\" }";
-				break;
-
-				
-				case NOT_FOUND :
-					cout << "{ \"status\" : \"false\", \"reason\" : \"This method does not exist.\" }";
-				break;				
-
-			}
-			
-
-			exit(EXIT_SUCCESS);
-		}
-
-		static void bootstrap(){
-			printf("Content-type: application/json\n\n");
-		}
-
-};
 
 
 
@@ -738,12 +773,13 @@ class ApiHandler{
 int main( int nargs, char **args ){
 
 	argss = args;
+	nargss = nargs;
 
 
 	HttpResponse::bootstrap();
 	
 
-
+	/*
 	redisContext *redis = redisConnect("127.0.0.1", 6379);
 
 	if (redis->err) {
@@ -751,14 +787,17 @@ int main( int nargs, char **args ){
 		
 	}
 
-
-	redisCommand(redis, "SET foo bar");
+	redisFree(redisContext *c);
+	*/
+	
 
 
 	ApiHandler ah ;
 
 	ah.dispatch( header("PATH_INFO")  );
 
+
+	
 
 	return EXIT_SUCCESS;
 

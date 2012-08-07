@@ -265,6 +265,18 @@ POS.API =
 
 
 
+
+ChatClient = {
+
+
+
+	
+};
+
+
+
+
+
 Ext.define('MGW10005', {
     extend: 'Ext.data.Model',
     fields: [
