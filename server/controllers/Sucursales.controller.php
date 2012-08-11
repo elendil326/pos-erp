@@ -933,7 +933,7 @@ require_once("interfaces/Sucursales.interface.php");
  	 * @param total float El total de la venta
  	 * @param descuento float La cantidad que ser descontada a la compra
  	 * @param tipo_venta string Si la venta es a credito o a contado
- 	 * @param saldo float La cantidad que ha sido abonada hasta el momento de la venta
+ 	 * @param pago float La cantidad que ha sido abonada hasta el momento de la venta
  	 * @param cheques json Si el tipo de pago es con cheque, se almacena el nombre del banco, el monto y los ultimos 4 numeros del o de los cheques
  	 * @param tipo_pago string Si el pago ser efectivo, cheque o tarjeta.
  	 * @param billetes_pago json Ids de los billetes que se recibieron 
@@ -958,7 +958,7 @@ require_once("interfaces/Sucursales.interface.php");
 		$id_caja = null, 
 		$id_sucursal = null, 
 		$id_venta_caja = null, 
-		$saldo = 0, 
+		$pago = 0, 
 		$tipo_pago = null
 	)
 	{
@@ -975,7 +975,7 @@ require_once("interfaces/Sucursales.interface.php");
             }
             
             //Se validan los parametros de la venta
-            $validar = self::validarParametrosVenta(null,$id_venta_caja,$id_comprador,$tipo_venta,$subtotal,$impuesto,$descuento,$total,$saldo,null,$tipo_pago,$retencion);
+            $validar = self::validarParametrosVenta(null,$id_venta_caja,$id_comprador,$tipo_venta,$subtotal,$impuesto,$descuento,$total,$pago,null,$tipo_pago,$retencion);
             if(is_string($validar))
             {
                 Logger::error($validar);
@@ -1059,14 +1059,15 @@ require_once("interfaces/Sucursales.interface.php");
                 if($tipo_venta==="contado")
                 {   
                     //Si se recibe un saldo registra una advertencia
-                    if(!is_null($saldo))
+                    if(!is_null($pago))
                     {
                         Logger::warn("Se recibio un saldo cuando la venta es de contado, el saldo se tomara del total");
                     }
                     
                     //El saldo de la venta se toma del total, pues siendo de contado, se tiene que pagar todo al momento de la venta;
                     //y se guarda la venta
-                    $venta->setSaldo($total);
+                    //$venta->setSaldo($total);
+                    $venta->setSaldo(0);
                     VentaDAO::save($venta);
                     
                     //Si el tipo de pago es con cheque se realizan movimientos extras con los cheques
@@ -1136,18 +1137,19 @@ require_once("interfaces/Sucursales.interface.php");
                         throw new Exception("Esta venta no se puede realizar a credito pues supera el limite de credito del usuario",901);
                     }
                     
-                    if(is_null($saldo))
+                    if(is_null($pago))
                     {
-                        Logger::warn("No se recibio un saldo, se tomara 0 como saldo");
-                        $saldo=0;
+                        Logger::warn("No se recibio un pago, se tomara 0 como pago");
+                        $pago=0;
                     }
-                    else if($saldo>$total)
+                    else if($pago>$total)
                     {
-                        throw new Exception("El saldo es mayor al total, no se puede pagar más por una venta que su total.",901);
+                        throw new Exception("El pago es mayor al total, no se puede pagar más por una venta que su total.",901);
                     }
-                    $venta->setSaldo($saldo);
+                    //$venta->setSaldo($pago);
+                    $venta->setSaldo($total);
                     VentaDAO::save($venta);
-                    $usuario->setSaldoDelEjercicio($usuario->getSaldoDelEjercicio()-$total+$saldo);
+                    $usuario->setSaldoDelEjercicio($usuario->getSaldoDelEjercicio()-$total+$pago);
                     $usuario->setVentasACredito($usuario->getVentasACredito()+1);
                     UsuarioDAO::save($usuario);
                 }

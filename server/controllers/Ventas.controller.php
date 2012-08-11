@@ -347,7 +347,7 @@ require_once("interfaces/Ventas.interface.php");
  	 * @param liquidados bool Si este valor no es obtenido, se listaran tanto las ventas liquidadas, como las no liquidadas, si es true, se listaran solo las ventas liquidadas, si es false, se listaran las ventas no liquidadas solamente.
  	 * @return ventas json Objeto que contendra la lista de ventas
  	 **/
-	public static function Lista
+	/*public static function Lista
 	(
 		$canceladas = null, 
 		$id_sucursal = null, 
@@ -455,7 +455,54 @@ require_once("interfaces/Ventas.interface.php");
 			}
 			
             return $output;
-	}
+	}*/
+        
+        /**
+ 	 *
+ 	 *Lista las ventas, puede filtrarse por empresa, sucursal, por el total, si estan liquidadas o no, por canceladas, y puede ordenarse por sus atributos.
+ 	 *
+ 	 * @param canceladas bool Si no se obtiene este valor, se listaran las ventas tanto canceladas como las que no, si es true, se listaran solo las ventas que estan canceladas, si es false, se listaran las ventas que no estan canceladas solamente.
+ 	 * @param id_cliente int Ver las ventas de este cliente
+ 	 * @param id_sucursal int Id de la sucursal de la cuals e listaran sus ventas
+ 	 * @param liquidados bool Si este valor no es obtenido, se listaran tanto las ventas liquidadas, como las no liquidadas, si es true, se listaran solo las ventas liquidadas, si es false, se listaran las ventas no liquidadas solamente.
+ 	 * @param ordenar string Nombre de la columan por el cual se ordenara la lista
+ 	 * @return numero_de_resultados int Numero de resultados
+ 	 * @return resultados json Resultados
+ 	 **/
+        static function Lista
+	(
+		$canceladas = null, 
+		$id_cliente = null, 
+		$id_sucursal = null, 
+		$liquidados = null, 
+		$ordenar = null
+	){
+            
+            Logger::log("Listando ventas");
+            
+            $config = array();                        
+            
+            if( !is_null( $canceladas ) && is_bool( $canceladas ) && $canceladas == 1 ){                              
+                $config["cancelada"] = 1;                
+            }
+            
+            if( !is_null($id_cliente) && $cliente = UsuarioDAO::getByPK($id_cliente) ){
+                $config["id_comprador_venta"] = $cliente->getIdUsuario();
+            }
+            
+            if( $sucursal = SucursalDAO::getByPK($id_sucursal) ){                
+                $config["id_sucursal"] = $sucursal->getIdSucursal();
+            }
+            
+            if( !is_null( $liquidados ) && is_bool( $liquidados ) && $liquidados == 0 ){                              
+                $config["saldo"] = 0;                
+            }
+            
+            $ordenar = is_null($ordenar)? "id_venta" : $ordenar;                                                                                                
+            
+            return array( "ventas" => json_encode( VentaDAO::search(new Venta( $config ), $ordenar, 'ASC') ));
+            
+        }
   
 
 

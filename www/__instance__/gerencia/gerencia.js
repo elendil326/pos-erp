@@ -242,6 +242,7 @@ POS.API =
 		params.auth_token = Ext.util.Cookies.get("at");
 		
 		Ext.Ajax.request({
+                        timeout: 160000,
 			method 	: method,
 			url 	: "../" + url,
 			success : function(a,b,c){ POS.API.ajaxCallBack( callback, a, b, c ); },

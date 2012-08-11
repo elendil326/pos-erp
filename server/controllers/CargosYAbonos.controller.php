@@ -2150,7 +2150,8 @@ class CargosYAbonosController extends ValidacionesController implements ICargosY
             $abono->setIdDeudor($id_deudor);
             //(OLD) $usuario->setSaldoDelEjercicio($usuario->getSaldoDelEjercicio() + $monto); 
 			//Figu: se establece el saldo del cliente restandole la venta y a su vez si tiene adelanto se le incrementa su saldo
-			$usuario->setSaldoDelEjercicio(  ( $usuario->getSaldoDelEjercicio() - $operacion->getTotal()  )+ $monto );
+			//$usuario->setSaldoDelEjercicio(  ( $usuario->getSaldoDelEjercicio() - $operacion->getTotal()  ) + $monto );
+            $usuario->setSaldoDelEjercicio( $usuario->getSaldoDelEjercicio() + $monto );
 
             $from = 3;
         } else {
