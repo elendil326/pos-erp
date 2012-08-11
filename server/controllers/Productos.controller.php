@@ -95,7 +95,7 @@ class ProductosController extends ValidacionesController implements IProductos
                 return "La categoria unidad de medida con id " . $id_categoria_unidad_medida . " no existe";
             
             if (!$categoria_udm->getActiva())
-                return "La categoria unidad de mediad esta desactivada";
+                return "La categoria '{$categoria_udm->getDescripcion()}' esta desactivada";
         } //!is_null
         
         //valida que la abreviatura este en el rango y que no se repita
@@ -1973,7 +1973,8 @@ class ProductosController extends ValidacionesController implements IProductos
         } //is_string($validar)
         
         //Los parametros que no sean nulos se tomaran como actualizacion
-        $unidad = UnidadMedidaDAO::getByPK($id_unidad_medida);
+        $unidad = UnidadMedidaDAO::getByPK($id_unidad_medida);		
+
         if (!is_null($descripcion)) {
             $unidad->setDescripcion($descripcion);
         } //!is_null($descripcion)
@@ -1990,6 +1991,20 @@ class ProductosController extends ValidacionesController implements IProductos
             $unidad->setTipoUnidadMedida($tipo_unidad_medida);
         } //!is_null($factor_conversion)
         
+		if($tipo_unidad_medida == "Referencia UdM para esta categoria"){
+			$unidad_ref = UnidadMedidaDAO::search(new UnidadMedida(array("tipo_unidad_medida"=>"Referencia UdM para esta categoria","id_categoria_unidad_medida"=>$unidad_medida->getCategoriaUnidadMedida())) );
+			foreach($unidad_ref as $udm_r){//Las udm q esten como ref pasan a ser Mayor q UdM
+				$udm_r->setTipoUnidadMedida('Mayor que la UdM de referencia');
+				try {
+		        	UnidadMedidaDAO::save($udm_r);
+				}
+				catch (Exception $e) {		        
+				    Logger::error("No se pudo crear la unidad de medida: " . $e);
+				    throw new Exception("No se pudo crear la unidad de medida, error al modificar UdM Referencia");
+				}	
+			}
+			$unidad->setFactorConversion(1);
+		}
         //se guardan los cambios
         DAO::transBegin();
         try {
@@ -2025,14 +2040,35 @@ class ProductosController extends ValidacionesController implements IProductos
 		Logger::log("Creando una nueva unidad de medida");
         
         //valida los parametros recibidos
-        /*$validar = self::validarParametrosUdM(null, $abreviatura, $descripcion, $factor_conversion, $id_categoria_unidad_medida, $tipo_unidad_medida, $activa = "");
+        $validar = self::validarParametrosUdM(null, $abreviatura, $descripcion, $factor_conversion, $id_categoria_unidad_medida, $tipo_unidad_medida, $activa = "");
         if (is_string($validar)) {
             Logger::error($validar);
             throw new BusinessLogicException($validar);
-        } //is_string($validar)*/
+        } //is_string($validar)
         
-		if($tipo_unidad_medida == "Referencia UdM para esta categoria")
+		
+		if($tipo_unidad_medida == "Referencia UdM para esta categoria"){
 			$factor_conversion = 1;
+			$unidad_ref = UnidadMedidaDAO::search(new UnidadMedida(array("tipo_unidad_medida"=>"Referencia UdM para esta categoria","id_categoria_unidad_medida"=>$id_categoria_unidad_medida)) );
+
+			foreach($unidad_ref as $udm_r){//Las udm q esten como ref pasan a ser Mayor q UdM
+				$udm_r->setTipoUnidadMedida('Mayor que la UdM de referencia');
+				try {
+		        	UnidadMedidaDAO::save($udm_r);
+				}
+				catch (Exception $e) {		        
+				    Logger::error("No se pudo crear la unidad de medida: " . $e);
+				    throw new Exception("No se pudo crear la unidad de medida, error al modificar UdM Referencia");
+				}	
+			}
+		}
+
+		if($tipo_unidad_medida == "Mayor que la UdM de referencia" && $factor_conversion <= 1)
+			throw new Exception("El Factor de Conversion debe rebasar el valor de 1 ya que seleccionó 'Mayor que UdM'");
+			
+		if($tipo_unidad_medida == "Menor que la UdM de referencia" && $factor_conversion >= 1)
+			throw new Exception("El Factor de Conversion NO debe rebasar el valor de 1 ya que seleccionó 'Menor que UdM'");
+
 
         $udm = new UnidadMedida(array(
             "abreviacion" => trim($abreviatura),            

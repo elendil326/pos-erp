@@ -136,13 +136,13 @@
 		}
 
 		function uFactorConversion($fConversion, $obj){
-			if($fConversion == 1) return "-";
+			//if($fConversion == 1) return "-";
 
 			//de lo contrario, buscar a que categoria pertenece
 			//y poner $fConversion . unidad_referencia
 			$ref = UnidadMedidaDAO::search( new UnidadMedida( array(
 					"id_categoria_unidad_medida" => $obj["id_categoria_unidad_medida"],
-					"factor_conversion" => 1
+					"tipo_unidad_medida" => "Referencia UdM para esta categoria"
 				)) );
 
 			if(sizeof($ref) == 0){
@@ -178,7 +178,7 @@
 		$nudmf->hideField(array("id_unidad_medida"));
 		$nudmf->addApiCall("api/producto/udm/unidad/nueva", "POST");
 		$nudmf->createComboBoxJoin("id_categoria_unidad_medida", "descripcion", CategoriaUnidadMedidaDAO::getAll());
-		$nudmf->createComboBoxJoin(	"tipo_unidad_medida", "desc", array( "desc" => "No Referencia" ) );
+		$nudmf->createComboBoxJoin(	"tipo_unidad_medida", "desc", array( "desc" => "Referencia UdM para esta categoria","Mayor que la UdM de referencia","Menor que la UdM de referencia" ) );
 		$nudmf->createComboBoxJoin(	"activa", null,  array( "Si", "No" ) );
 		$nudmf->setCaption("id_categoria_unidad_medida", "Categoria");
 		$nudmf->makeObligatory(array("abreviacion", "descripcion", "factor_conversion", "id_categoria_unidad_medida", "tipo_unidad_medida"));
