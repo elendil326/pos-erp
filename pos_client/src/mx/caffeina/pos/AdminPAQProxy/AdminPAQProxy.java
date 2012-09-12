@@ -421,6 +421,80 @@ public class AdminPAQProxy extends HttpResponder{
 
     }
 
+    private String loadProveedores(){  
+
+        /*String params = "";
+        String numEmpresa = searchInQuery("numEmpresa");
+        String path = searchInQuery("path");
+        String r = "";
+        String reason = "";
+        
+        if(path == null){
+            r = "{\"success\" : false, \"reason\":\"indique el path del programa de conexion\"}";
+            System.out.println(r);
+            return r;
+        }
+        
+        if(numEmpresa == null){
+            r = "{\"success\" : false, \"reason\":\"falta numero de empresa\"}";
+            System.out.println(r);
+            return r;
+        }
+        
+        params = URLDecoder.decode(path) + " " + numEmpresa ;
+        
+        TestRuntime test = new TestRuntime(params);     
+        
+        reason = test.reason;
+
+        //-------------------------
+        if (test.success == true){
+
+            String[] arrayResponse = test.reason.split(" ");
+            try{
+                reason = arrayResponse[1];
+            }catch(Exception e){
+                r = "{\"success\" : false, \"reason\":\"Respuesta inesperada -> " + e.getMessage().replace("\"", "'") + "\"}";
+                System.out.println(r);
+                return r;
+            }
+        }
+        //------------------------   
+        
+        r = "{\"success\" : " + test.success + ", \"code\" : " + test.code + ", \"reason\":\"" + reason + "\"}"; 
+        System.out.println(r);
+        
+        return r;*/
+        
+        /*
+
+        CRAZONSO01
+        CIDCLIEN01
+        CCODIGO01
+        CFECHAALTA
+        CRFC
+        CCURP
+        CDENCOME01
+        CREPLEGAL
+
+        */
+
+        String params = "";
+        String numEmpresa = searchInQuery("numEmpresa");
+        String path = "C:/Documents and Settings/Manuel/Escritorio/CONNECTION_SDK/Lista_Proveedores_SDK/InitListaClientes.EXE"/*searchInQuery("path")*/;
+
+        params = path + " " + numEmpresa;
+
+        LoadProveedores proveedores = new LoadProveedores(params);
+
+
+        //String r = "{\"totalCount\":1, \"datos\":[{\"CRAZONSO01\":\"Juan Manuel Garcia\",\"CIDCLIEN01\":\"CLI0099\",\"CCODIGO01\":\"CLI0099\",\"CFECHAALTA\":\"12/12/2012\",\"CRFC\":\"GACJ121212123\",\"CCURP\":\"\",\"CDENCOME01\":\"PCSYSTEMS\",\"CREPLEGAL\":\"JUAN CARLOS\"}]}";
+        String r = "{\"totalCount\":" + proveedores.totalCount + ", \"datos\":" + proveedores.usuariosJSON + "}";
+        System.out.println(r); 
+        return r;
+
+    }
+
 	public String getResponse(){
 		//dispatch submodules
 
@@ -477,6 +551,17 @@ public class AdminPAQProxy extends HttpResponder{
 
 		}
 
+
+        if(( path.length > 2 )  && path[2].equals("loadProveedores")){
+            
+            System.out.println("-- loadProveedores --");
+            if(searchInQuery("callback") != null){
+                return (searchInQuery("callback") + "(" + loadProveedores() + ");");
+            }else{
+                return loadProveedores() ;
+            }
+
+        }
 
 
 		if(dataType.equals("json")) {
@@ -1374,11 +1459,109 @@ class LoadClientes {
     
 }
 
+class LoadProveedores {
+
+    public String code = "";
+    public Boolean success = false;
+    public String reason = "";
+    public ArrayList usuarios;
+    public String usuariosJSON = "[]"; 
+    public int totalCount = 0;
+
+    /**
+     * Creates a new instance of PruebaRuntime
+     */
+    public LoadProveedores(String params) {
+
+        
+
+        //System.out.println("Se ejecutara : " + params);
+
+        try {
+            // Se lanza el ejecutable. 
+            Process p = Runtime.getRuntime().exec(params);
+
+            // Se obtiene el stream de salida del programa 
+            InputStream is = p.getInputStream();
+
+            /*
+             * Se prepara un bufferedReader para poder leer la salida más
+             * comodamente.
+             */
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+
+            //System.out.println("--- 6.1 ---");
+
+            // Se lee la primera linea 
+            String aux = br.readLine();
+            this.usuarios = new ArrayList();
+
+            //System.out.println("--- 6.2 ---");
+
+            // Mientras se haya leido alguna linea 
+            while (aux != null) {
+                // Se escribe la linea en pantalla 
+                System.out.println(aux);
+
+                usuarios.add(new Usuario(aux));
+
+                // y se lee la siguiente. 
+                aux = br.readLine();
+            }
+           
+            String json = "[";
+            
+            boolean flag = false;
+            
+            for (int i = 0; i < usuarios.size(); i++) {
+                
+                flag = true;
+                
+                Usuario u = (Usuario)usuarios.get(i);
+                
+                json += "{";
+                
+                json += ("\"Codigo\":\"" + u.Codigo + "\",");
+                json += ("\"RazonSocial\":\"" + u.RazonSocial + "\",");
+                json += ("\"Tipo\":\"" + u.Tipo + "\",");
+                json += ("\"RFC\":\"" + u.RFC + "\"");
+                
+                json += "},";
+            }
+            if(flag){
+                json = json.substring(0, json.length() - 1);
+            }
+                        
+            json += "]";
+
+            this.usuariosJSON = json;
+
+            this.totalCount = usuarios.size();
+
+            //------------------------------------------
+
+
+        } catch (Exception e) {
+            // Excepciones si hay algún problema al arrancar el ejecutable o al leer su salida.*/
+            //e.printStackTrace();
+            this.success = false;
+            this.code = "300";
+            this.reason = "Error : " + e.getMessage().replace("\"", "'");
+        }
+    }
+
+    LoadProveedores() {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+    
+}
+
 class Usuario{
 
     public String RazonSocial = "";
     public String RFC = "";
     public String Codigo = "";
+    public String Tipo = "";
 
     public Usuario(String aux){
 
@@ -1400,6 +1583,9 @@ class Usuario{
                     break;
                 case 3 : 
                     this.RFC = token;
+                    break; 
+                case 4 : 
+                    this.Tipo = token;
                     break;                
             }
 
