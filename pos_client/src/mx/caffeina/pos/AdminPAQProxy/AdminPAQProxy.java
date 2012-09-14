@@ -407,8 +407,8 @@ public class AdminPAQProxy extends HttpResponder{
 
         String params = "";
         String numEmpresa = searchInQuery("numEmpresa");
-        String path = "C:/Documents and Settings/Manuel/Escritorio/CONNECTION_SDK/Lista_Clientes_SDK/InitListaClientes.EXE"/*searchInQuery("path")*/;
-
+        //String path = "C:/Documents and Settings/Manuel/Escritorio/CONNECTION_SDK/Lista_Clientes_SDK/InitListaClientes.EXE"/*searchInQuery("path")*/;
+        String path = searchInQuery("path");
         params = path + " " + numEmpresa;
 
         LoadClientes clientes = new LoadClientes(params);
@@ -481,7 +481,8 @@ public class AdminPAQProxy extends HttpResponder{
 
         String params = "";
         String numEmpresa = searchInQuery("numEmpresa");
-        String path = "C:/Documents and Settings/Manuel/Escritorio/CONNECTION_SDK/Lista_Proveedores_SDK/InitListaClientes.EXE"/*searchInQuery("path")*/;
+        //String path = "C:/Documents and Settings/Manuel/Escritorio/CONNECTION_SDK/Lista_Proveedores_SDK/InitListaClientes.EXE"/*searchInQuery("path")*/;
+        String path = searchInQuery("path");
 
         params = path + " " + numEmpresa;
 
