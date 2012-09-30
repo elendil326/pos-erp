@@ -21,4 +21,41 @@ require_once("base/venta.vo.base.php");
 class VentaDAO extends VentaDAOBase
 {
 
+
+
+	public static function TotalVentasNoCanceladasAContadoDesdeHasta($desde, $hasta){
+
+		$sql = "SELECT 
+				sum(total) as total,
+				sum(subtotal) as subtotal,
+				sum(impuesto) as impuesto
+			FROM `venta` WHERE 
+				es_cotizacion = 0
+				and tipo_de_venta = \"contado\"
+				and fecha >= ?
+				and fecha <= ?
+				-- and id_sucursal  = ?
+				-- and id_caja = ?
+				and cancelada  = 0";
+
+
+		
+		  $params = array( $desde, $hasta, 0, 0 );
+
+
+		  $rs = $conn->GetRow($sql, $params);
+
+		
+		  if(count($rs) === 0)
+		  {
+
+			return NULL;
+		  
+		  }
+
+
+    		  return $rs;
+
+
+	}
 }

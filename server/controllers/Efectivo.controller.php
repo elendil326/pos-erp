@@ -613,8 +613,8 @@ require_once("interfaces/Efectivo.interface.php");
 
 
 
-	/*
-	 *
+	
+	 
 	private static function UltimoCorteCaja(VO $caja){
 
 		//if($caja == NULL)
@@ -692,11 +692,15 @@ require_once("interfaces/Efectivo.interface.php");
 			"CAJA" => 0.0
 		);
 
-		$ventas = VentasController::getAContadoYNoCanceladas( $start_date, $end_date == 0){
-			//need a start date
-			throw new BusinesLogicException();
-		}
+		$ventas = VentasController::Lista($start_date, $end_date);
 
+
+		//esto regresa, total, subtotal, impuesto
+		$ventasTotal = VentasDAO::TotalVentasNoCanceladasAContadoDesdeHasta( $start_date, $end_date );
+					  
+		//$abonosTotal = AbonoVenta::TotalAbonosNoCanceladosDesdeHasta( $start_date, $end_date );
+
+		/*
 		foreach( $ventas as $v ){
 
 			switch( $v->tipo_de_pago ){
@@ -707,28 +711,8 @@ require_once("interfaces/Efectivo.interface.php");
 
 			}
 		}
+		*/
 
-
-		$pagos = VentasController::getPagosAVentasACreditoYNoCanceladas($start_date, $end_date);
-
-		// lo mismo
-		
-
-
-		
-	
-		
-
-		//buscar egresos
-		//
-		double $egresos;
-
-
-
-
-
-		//si existio un corte anterior, tomar su saldo pasado
-		
 
 
 		
@@ -737,7 +721,7 @@ require_once("interfaces/Efectivo.interface.php");
 	}
 
 
-	*/
+	
 
 
 	

@@ -478,7 +478,8 @@ require_once("interfaces/Ventas.interface.php");
 		$ordenar = null
 	){
             
-            Logger::log("Listando ventas");
+		//there must be an upper limit in how many
+		//object may the array return
             
             $config = array();                        
             
@@ -503,7 +504,38 @@ require_once("interfaces/Ventas.interface.php");
             return array( "ventas" => json_encode( VentaDAO::search(new Venta( $config ), $ordenar, 'ASC') ));
             
         }
-  
+
+
+
+	/**
+	 *
+	 * $desde unixtime
+	 * $hasta unixtime
+	 *
+	 * */
+	public static function ListaDesdeHasta($desde, $hasta){
+
+
+		$configA = array(
+			"es_cotizacion" => 0,
+			"fecha"		=> $desde
+		);
+
+
+		$configB = array(
+			"fecha"		=> $hasta
+		);
+
+
+		return array( "ventas" => json_encode( 
+				VentaDAO::byRange(
+					new Venta( $configA ), 
+					new Venta( $configB )
+				)
+			));
+	
+	}
+	
 
 
 
