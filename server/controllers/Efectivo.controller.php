@@ -613,7 +613,8 @@ require_once("interfaces/Efectivo.interface.php");
 
 
 
-
+	/*
+	 *
 	private static function UltimoCorteCaja(VO $caja){
 
 		//if($caja == NULL)
@@ -652,19 +653,7 @@ require_once("interfaces/Efectivo.interface.php");
 	}
 
 
-	/*
-	 * Realizar un corte de caja. 
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
- 	 **/
+
 	public static function NuevoCorte($start_date = 0, $end_date = 0, $obj ){
 		
 
@@ -748,7 +737,7 @@ require_once("interfaces/Efectivo.interface.php");
 	}
 
 
-
+	*/
 
 
 	
