@@ -62,8 +62,8 @@ function orderByDate($eventObjA, $eventObjB) {
 //usort($eventos, cmp_function)
 
 
-function renderRow($unixTime, $fullArray) {
-
+function renderRow($unixTime, $fullArray) {   
+    
     $out = "";
 
     switch ($fullArray["tipo"]) {
