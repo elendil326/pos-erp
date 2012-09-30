@@ -1,10 +1,16 @@
 
 RewriteEngine on
 
+#Production url is http://www.caffeina.mx/pos/
 RewriteBase /pos/
+
+
 
 Options +FollowSymlinks 
 #-Indexes
+
+
+
 
 #RewriteRule ^([0-9]*)/ingenieria/(.*\.php)?(.*)$		__instance__/ingenieria/$2?_instance_=$1&%{QUERY_STRING} [L]
 
