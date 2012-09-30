@@ -610,6 +610,48 @@ require_once("interfaces/Efectivo.interface.php");
 
 
 
+
+
+
+
+	private static function UltimoCorteCaja(VO $caja){
+
+		//if($caja == NULL)
+		//if($caja->id_caja == NULL)
+		//
+		
+		$c = CorteDeCajaDAO::search( new CorteDeCaja( array (		
+			"id_caja" => $caja->getIdCaja()
+		)));
+
+
+		return sizeof($c) == 0 ? NULL : $c[0];
+		
+	}
+
+
+
+	private static function UltimoCorte( VO $empresa_sucursal_caja  ){
+
+		if( $empresa_sucursal_caja instanceof Caja ){
+		
+			return UltimoCorteCaja( $empresa_sucursal_caja );
+
+		}else if( $empresa_sucursal_caja instanceof Sucursal){
+			return UltimoCorteSucursal( $empresa_sucursal_caja );
+
+		}else if( $empresa_sucursal_caja instanceof Empresa ){
+			return ;
+		
+		}
+
+		throw new InvalidDataException();
+
+		
+	
+	}
+
+
 	/*
 	 * Realizar un corte de caja. 
 	 *
@@ -623,27 +665,27 @@ require_once("interfaces/Efectivo.interface.php");
 	 *
 	 *
  	 **/
-	public static function NuevoCorte($arg_start_date = NULL, $arg_end_date){
-		
-		
-		int $start_date;
-		int $end_date;
-
-
+	public static function NuevoCorte($start_date = 0, $end_date = 0, $obj ){
 		
 
-		if(is_null($arg_start_date)  && is_null( CorteDAO::getlastCorte() )){
+		//timepos unix
+		if( ($start_date == 0)  && is_null( UltimoCorte( $obj ) )){
 
 			//si no se envia una hora de inicio
 			//y no hay corte previo
 			//el inicio y fin de corte seria
 			//el mismo
 			throw new BusinessLogicErrorException();
-		
 		}
 
 
-		if(!is_null( $arg_end_date)){
+		if($end_date > time()){
+			//no puedes hacer un corte que termine en el futuro			
+			throw new BusinessLogicException();
+		}
+
+
+		if($end_date == 0){
 			$end_date = time();
 		}
 
@@ -656,9 +698,15 @@ require_once("interfaces/Efectivo.interface.php");
 
 		
 
-		double $ingresos_by_account;
+		$ingresos_por_tipo = array(
+			"BANCO" => 0.0,
+			"CAJA" => 0.0
+		);
 
-		$ventas = VentasController::getAContadoYNoCanceladas( $start_date, $end_date );
+		$ventas = VentasController::getAContadoYNoCanceladas( $start_date, $end_date == 0){
+			//need a start date
+			throw new BusinesLogicException();
+		}
 
 		foreach( $ventas as $v ){
 
