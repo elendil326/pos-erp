@@ -42,6 +42,9 @@ class VentaDAO extends VentaDAOBase
 		
 		  $params = array( $desde, $hasta, 0, 0 );
 
+		  global $conn;
+
+		  $conn->SetFetchMode(ADODB_FETCH_ASSOC);
 
 		  $rs = $conn->GetRow($sql, $params);
 
@@ -52,8 +55,7 @@ class VentaDAO extends VentaDAOBase
 			return NULL;
 		  
 		  }
-
-
+		 
     		  return $rs;
 
 

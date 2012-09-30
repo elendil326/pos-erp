@@ -611,7 +611,11 @@ require_once("interfaces/Efectivo.interface.php");
 
 
 
-
+	private static function UltimoCorteSucursal( VO $sucursal ){
+	
+		return null;
+	
+	}
 
 	
 	 
@@ -636,10 +640,10 @@ require_once("interfaces/Efectivo.interface.php");
 
 		if( $empresa_sucursal_caja instanceof Caja ){
 		
-			return UltimoCorteCaja( $empresa_sucursal_caja );
+			return self::UltimoCorteCaja( $empresa_sucursal_caja );
 
 		}else if( $empresa_sucursal_caja instanceof Sucursal){
-			return UltimoCorteSucursal( $empresa_sucursal_caja );
+			return self::UltimoCorteSucursal( $empresa_sucursal_caja );
 
 		}else if( $empresa_sucursal_caja instanceof Empresa ){
 			return ;
@@ -654,18 +658,13 @@ require_once("interfaces/Efectivo.interface.php");
 
 
 
-	public static function NuevoCorte($start_date = 0, $end_date = 0, $obj ){
+
+
+
+
+	public static function NuevoCorte( $end_date = 0 ){
 		
 
-		//timepos unix
-		if( ($start_date == 0)  && is_null( UltimoCorte( $obj ) )){
-
-			//si no se envia una hora de inicio
-			//y no hay corte previo
-			//el inicio y fin de corte seria
-			//el mismo
-			throw new BusinessLogicErrorException();
-		}
 
 
 		if($end_date > time()){
@@ -679,7 +678,25 @@ require_once("interfaces/Efectivo.interface.php");
 		}
 
 
-		if($end_date > $start_date){
+		
+
+			
+		$start_date = self::UltimoCorte( $suc = SucursalDAO::getByPK( 7  ) );
+		
+
+		if(is_null( $start_date ) ){
+			//este es el primer corte, busquemos la fecha de apertura
+			//de esa sucursal
+			//
+
+			//not null
+			//
+
+			$start_date = $suc->getFechaApertura();
+
+		}
+
+		if($end_date < $start_date){
 			throw new InvalidDataException();
 		}
 
@@ -696,7 +713,7 @@ require_once("interfaces/Efectivo.interface.php");
 
 
 		//esto regresa, total, subtotal, impuesto
-		$ventasTotal = VentasDAO::TotalVentasNoCanceladasAContadoDesdeHasta( $start_date, $end_date );
+		$ventasTotal = VentaDAO::TotalVentasNoCanceladasAContadoDesdeHasta( $start_date, $end_date );
 					  
 		//$abonosTotal = AbonoVenta::TotalAbonosNoCanceladosDesdeHasta( $start_date, $end_date );
 
