@@ -607,4 +607,101 @@ require_once("interfaces/Efectivo.interface.php");
             return $monedas;
             
 	}
+
+
+
+	/*
+	 * Realizar un corte de caja. 
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
+ 	 **/
+	public static function NuevoCorte($arg_start_date = NULL, $arg_end_date){
+		
+		
+		int $start_date;
+		int $end_date;
+
+
+		
+
+		if(is_null($arg_start_date)  && is_null( CorteDAO::getlastCorte() )){
+
+			//si no se envia una hora de inicio
+			//y no hay corte previo
+			//el inicio y fin de corte seria
+			//el mismo
+			throw new BusinessLogicErrorException();
+		
+		}
+
+
+		if(!is_null( $arg_end_date)){
+			$end_date = time();
+		}
+
+
+		if($end_date > $start_date){
+			throw new InvalidDataException();
+		}
+
+
+
+		
+
+		double $ingresos_by_account;
+
+		$ventas = VentasController::getAContadoYNoCanceladas( $start_date, $end_date );
+
+		foreach( $ventas as $v ){
+
+			switch( $v->tipo_de_pago ){
+				cash : 		$ingresos[ cash ] += $v->getTotal();
+				banco :		$ingresos[ banco ] += $v->getTotal()
+				cheque :
+				default: throw new Exception();
+
+			}
+		}
+
+
+		$pagos = VentasController::getPagosAVentasACreditoYNoCanceladas($start_date, $end_date);
+
+		// lo mismo
+		
+
+
+		
+	
+		
+
+		//buscar egresos
+		//
+		double $egresos;
+
+
+
+
+
+		//si existio un corte anterior, tomar su saldo pasado
+		
+
+
+		
+	
+	
+	}
+
+
+
+
+
+	
   }
