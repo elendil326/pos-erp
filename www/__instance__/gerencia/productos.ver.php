@@ -40,7 +40,8 @@
 
 	$um = UnidadMedidaDAO::getByPK( $este_producto->getIdUnidad() );
 	if(!is_null($um)){
-		$html .= "<tr><td colspan=2><h3>Existencias</h3></td></tr><tr><td> ". $nexistencias." " . $um->getDescripcion() ."</td></tr></tr>";	
+		$html .= sprintf( "<tr><td colspan=2><h3>Existencias</h3></td></tr><tr><td> %.3f " . $um->getDescripcion() ."</td></tr></tr>", $nexistencias );	
+	
 	}else{
 		$html .= "<tr><td colspan=2><h3>Existencias</h3></td></tr><tr><td> </td></tr></tr>";	
 	}

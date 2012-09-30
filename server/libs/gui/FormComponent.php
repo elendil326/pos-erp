@@ -275,7 +275,9 @@ class FormComponent implements GuiComponent
 				
 				///*(Ext.get('" . $f->id . "').getValue().length > 0 ) ||*/
 
-				$html .= "\n\tif(  (Ext.get('" . $this->guiComponentId . $f->id . "').getValue() != '". $f->value ."') ){";
+				if(!is_array( $f->value)) 
+					$html .= "\n\tif(  (Ext.get('" . $this->guiComponentId . $f->id . "').getValue() != '". $f->value ."') ){";
+
 				if($f->type == "date"){
 					$html .= "\n\t\t". $this->guiComponentId ."p." . $f->id . " = ( Ext.getCmp('". $this->guiComponentId . $f->id . "').getValue() ); \n\t} else{\n ";
 					

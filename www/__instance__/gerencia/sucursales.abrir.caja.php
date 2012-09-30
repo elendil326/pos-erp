@@ -6,8 +6,73 @@
 
 		require_once("../../../server/bootstrap.php");
 
+
 		$page = new GerenciaComponentPage();
-                
+
+
+
+		//ux para sacar la fecha del ultimo corte
+		//necesitamos la fecha de hoy, o de cuanto queremos hace el corte
+		//
+		//
+		//buscar todas las operaciones hechas en ese periodo
+		//-ventas
+		//-compras
+		//-pagos
+		//-sueldos de empleados
+		//
+		//
+		//
+		//
+		//calcular totales
+		//
+		//
+		//
+		//
+		//llamar al api con la fecha
+		//
+		//
+		//
+		//
+		//esto que se calculo aqui debe calcularse en el controller
+		//otra vez y si coinciden, entonces se hace la operacion
+		//
+		//
+		//
+		//la operacion consiste en insertar en bd 
+		//	-insertar 
+		//	-insertar documento
+		//
+		//
+		//
+		//se debe redireccionar a un documentos
+		//para imprimir que esto fue lo que paso
+
+
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		$page->render();
+		exit();
+
+
+
+
+
+
+
                 //
 		// Parametros necesarios
 		// 
