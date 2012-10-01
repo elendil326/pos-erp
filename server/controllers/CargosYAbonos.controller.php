@@ -2039,7 +2039,7 @@ class CargosYAbonosController extends ValidacionesController implements ICargosY
         $usuario     = UsuarioDAO::getByPK($id_deudor);
         $id_sucursal = self::getSucursal();
         $id_caja     = self::getCaja();
-        $fecha       = date("Y-m-d H:i:s", time());
+        $fecha       = time();
         $cancelado   = 0;
         $abono       = null; //Nuevo regitro del abono
         $from        = 0; //Bandera que indica a que operacion pertenece el abono

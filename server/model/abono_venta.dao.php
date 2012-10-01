@@ -20,5 +20,14 @@ require_once("base/abono_venta.vo.base.php");
   */
 class AbonoVentaDAO extends AbonoVentaDAOBase
 {
-
+	public static function TotalAbonadoAVentasDesdeHasta($desde, $hasta){
+	
+		$sql = "SELECT 
+				sum(monto) from abono_venta 
+			where 
+				cancelado = 0
+				";
+					
+	
+	}
 }
