@@ -57,7 +57,7 @@
         
         #------------------------------------
         
-        $fondo_inicial = 0;
+        $fondo_inicial = $_REQUEST['fondo_inicial'];
         
         $table .= "  <tr>";       
         $table .= "    <td></td>";
@@ -416,7 +416,7 @@
         
         #------------------------------------
         
-        $total_efectivo_real = 0;
+        $total_efectivo_real = $_REQUEST['efectivo'];
         
         $table .= "  <tr>";        
         $table .= "    <td>Efectivo Disponible Real</td>";
@@ -466,8 +466,8 @@
         /* ********************************************************************* 
          * Sucursales
          * ********************************************************************* */
-        //$page->nextTab("<a href=\"ventas.php#Corte\">Sucurlsales</a>");         
-        $page->nextTab("Sucurlsales");                                         
+        $page->nextTab("<a href=\"ventas.php#Corte\">Sucurlsales</a>");         
+        //$page->nextTab("Sucurlsales");                                         
         
         $sucursales = SucursalDAO::getAll();
         
@@ -499,6 +499,17 @@
         $html .= "      </SELECT>";        
         $html .= "    </td>";        
         $html .= "  </tr>";        
+        
+        $html .= "  <tr>";        
+        $html .= "    <td>Fondo Inicial</td>";        
+        $html .= "    <td><input type=\"text\" value=20/></td>";        
+        $html .= "  </tr>";        
+        
+        $html .= "  <tr>";        
+        $html .= "    <td>Efectivo en Caja</td>";        
+        $html .= "    <td></td>";        
+        $html .= "  </tr>";        
+        
         $html .= "</table>";                
         
         $page->addComponent($html);
