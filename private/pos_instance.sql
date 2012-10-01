@@ -33,6 +33,19 @@ CREATE TABLE IF NOT EXISTS `abasto_proveedor` (
   KEY `abasto_proveedor_ibfk_2` (`id_almacen`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Registro de abastesimientos de un proveedor' AUTO_INCREMENT=1 ;
 
+
+
+CREATE TABLE IF NOT EXISTS `corte_de_sucursal` (
+	  `id_corte_sucursal` int(11) NOT NULL AUTO_INCREMENT,
+	  `id_sucursal` int(11) NOT NULL,
+	  `id_usuario` int(11) NOT NULL,
+	  `inicio` int(11) NOT NULL,
+	  `fin` int(11) NOT NULL,
+	  `fecha_corte` int(11) NOT NULL,
+	  PRIMARY KEY (`id_corte_sucursal`)
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=1 ;
+
+
 -- --------------------------------------------------------
 
 --

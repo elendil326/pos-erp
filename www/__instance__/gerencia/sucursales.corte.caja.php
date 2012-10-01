@@ -7,8 +7,18 @@
 		require_once("../../../server/bootstrap.php");
 
 		$page = new GerenciaComponentPage();
-                
-                 //
+
+
+
+		EfectivoController::NuevoCorte(  );
+
+
+		$page->render();
+
+
+		return;
+
+                //
 		// Parametros necesarios
 		// 
 		$page->requireParam(  "cid", "GET", "Esta caja no existe." );

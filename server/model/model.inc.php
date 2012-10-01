@@ -2,6 +2,7 @@
 /* Todos los includes de este sitema */
 
 require_once ('Estructura.php');
+require_once ('corte_de_sucursal.dao.php');
 require_once ('abasto_proveedor.dao.php');
 require_once ('abono_compra.dao.php');
 require_once ('abono_prestamo.dao.php');
