@@ -21,34 +21,48 @@
 
         $page = new GerenciaTabPage();
                                 
-        
+
+
+	function td($inner, $repeat = 0){
+		$out = "";
+		while( $repeat -- >= 0) $out .= "<td>" . $inner .  "</td>";
+		return $out;
+	}
+
         
         /* ********************************************************************* 
          * Corte
          * ********************************************************************* */
         $page->nextTab("Corte");               
-        
-        $page->addComponent(new TitleComponent("Sucursal " . SucursalDAO::getByPK($_REQUEST['s'])->getRazonSocial(),1));               
+
+	$sucursal = SucursalDAO::getByPK( $_REQUEST['s'] );
+
+        $page->addComponent(new TitleComponent("Sucursal " . $sucursal->getRazonSocial(),1));               
                 
         $table = "";
                 
         $table .= "<table>";        
         
         #------------------------------------
-        
-        $cortes = CorteDeCajaDAO::getAll(1, 1, "id_corte_de_caja	", "DESC");                
-        
-        if(count($cortes) > 0){
-            $cortes[0]->getFecha();
+       
+
+	$cortes  = EfectivoController::UltimoCorte( $sucursal );
+
+        if(!is_null($cortes)){
+	    $fecha_inicial = $cortes->getFechaCorte(); //$cortes[0]->getFecha();
+
         }else{
-            $fecha_inicial = SucursalDAO::getByPK($_REQUEST['s'])->getFechaApertura();
+            $fecha_inicial = $sucursal->getFechaApertura();
         }                        
         
-        $fecha_final = time();        
-        
-        $table .= "  <tr>";       
-        $table .= "    <td><b>Corte</b></td>";
-        $table .= "    <td><b>Del</b></td>";                               
+        $fecha_final = time();
+
+
+	
+
+        $table .= "  <tr>";
+        $table .= td("<b>Corte</b>");
+        $table .= td("<b>Del</b>");
         $table .= "    <td colspan= \"2\">" . date("d/m/Y g:i:s A", $fecha_inicial) . "</td>";        
         $table .= "    <td><b>Al</b></td>";        
         $table .= "    <td colspan= \"2\">" . date("d/m/Y g:i:s A", $fecha_final) . "</td>";        
@@ -74,24 +88,21 @@
         
         $table .= "  <tr>";       
         $table .= "    <td></td>";
-        $table .= "    <td>Ventas</td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";
-        $table .= "    <td></td>";
+	$table .= "    <td>Ventas</td>";        
+
+        $table .= 	td("", 5);                
         $table .= "  </tr>";
         
         #------------------------------------
         
-        $ventas_efectivo = 0;
-        
+        $ventas_efectivo = VentaDAO::TotalVentasNoCanceladasAContadoDesdeHasta( $fecha_inicial, $fecha_final );
+        $ventas_efectivo = $ventas_efectivo["total"];
+
         $table .= "  <tr>";       
         $table .= "    <td></td>";
         $table .= "    <td></td>";        
         $table .= "    <td>Efectivo</td>";        
-        $table .= "    <td>" . FormatMoney(0) . "</td>";        
+        $table .= "    <td>" . FormatMoney($ventas_efectivo) . "</td>";        
         $table .= "    <td></td>";        
         $table .= "    <td></td>";        
         $table .= "    <td></td>";
@@ -115,8 +126,9 @@
         
         #------------------------------------
         
-        $ventas_credito = 0;
-        
+        $ventas_credito = VentaDAO::TotalVentasNoCanceladasACreditoDesdeHasta($fecha_inicial, $fecha_final);
+	$ventas_credito = $ventas_credito["total"];
+
         $table .= "  <tr>";       
         $table .= "    <td></td>";
         $table .= "    <td></td>";        

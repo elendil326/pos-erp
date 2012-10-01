@@ -611,9 +611,24 @@ require_once("interfaces/Efectivo.interface.php");
 
 
 
-	private static function UltimoCorteSucursal( VO $sucursal ){
-	
-		return null;
+	private static function UltimoCorteSucursal( $sucursal ){
+		
+		if( $sucursal instanceof Sucursal ){
+			
+		}else{
+
+			$sucursal = SucursalDAO::getByPK( $sucursal );
+		}
+
+
+		if(is_null($sucursal)) return null;
+
+
+		$cortes  = CorteDeSucursalDAO::search( new CorteDeSucursal( $sucursal->AsArray() ), "fin", "desc"  );
+
+		if(sizeof($cortes) == 0) return null;
+
+		return $cortes[0];
 	
 	}
 
@@ -636,7 +651,7 @@ require_once("interfaces/Efectivo.interface.php");
 
 
 
-	private static function UltimoCorte( VO $empresa_sucursal_caja  ){
+	public	static function UltimoCorte( VO $empresa_sucursal_caja  ){
 
 		if( $empresa_sucursal_caja instanceof Caja ){
 		
