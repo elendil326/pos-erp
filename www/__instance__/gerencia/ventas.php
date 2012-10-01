@@ -126,12 +126,8 @@
         
         $html .= "<script>";
         
-        $html .= "  var corteSucursal = function(combo){";                
-        
-        $html .= "      var indice = combo.selectedIndex;";
-        $html .= "      var valor = combo.options[combo.selectedIndex].value;";                        
-        $html .= "      location.href = 'ventas.corte.php?s=' + valor; ";
-                
+        $html .= "  var corteSucursal = function(combo){";                                        
+        $html .= "      location.href = 'ventas.corte.php?s=' + combo.options[combo.selectedIndex].value; ";                
         $html .= "  }";
         
         $html .= "</script>";
