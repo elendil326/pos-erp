@@ -157,8 +157,9 @@
         
         #------------------------------------
         
-        $abonos_venta = 0;
-        
+	$abonos_venta = AbonoVentaDAO::TotalAbonadoAVentasDesdeHasta( $fecha_inicial, $fecha_final	);
+	$abonos_venta = $abonos_venta["sum(monto)"];
+
         $table .= "  <tr>";       
         $table .= "    <td></td>";
         $table .= "    <td>Cuentas por cobrar recolectado</td>";        

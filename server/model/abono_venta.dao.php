@@ -26,8 +26,17 @@ class AbonoVentaDAO extends AbonoVentaDAOBase
 				sum(monto) from abono_venta 
 			where 
 				cancelado = 0
-				";
-					
+				and fecha > ?
+				and fecha < ?
+			";
+
+		global $conn;
+
+		$params = array( $desde, $hasta );
+
+		$rs = $conn->GetRow( $sql, $params );
+
+		return $rs;		
 	
 	}
 }
