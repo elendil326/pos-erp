@@ -120,336 +120,39 @@
          * ********************************************************************* */
         $page->nextTab("Corte");                
         
-        $menu = new MenuComponent();
-        //VALIDAR SI SE HA ECHO CORTE O NO        
-        $menu->addItem("Realizar Corte", "ventas.corte.php");
-        $page->addComponent( $menu);
+        $sucursales = SucursalDAO::getAll();
+        
+        $html = "";
+        
+        $html .= "<script>";
+        
+        $html .= "  var corteSucursal = function(combo){";                
+        
+        $html .= "      var indice = combo.selectedIndex;";
+        $html .= "      var valor = combo.options[combo.selectedIndex].value;";                        
+        $html .= "      location.href = 'ventas.corte.php?s=' + valor; ";
                 
-        $table = "";
-                
-        $table .= "<table>";        
-        $table .= "  <tr>";       
-        $table .= "    <td></td>";
-        $table .= "    <td><b>Del</b></td>";        
-        $table .= "    <td colspan= \"2\">14/SEP/2012</td>";        
-        $table .= "    <td><b>Al</b></td>";        
-        $table .= "    <td colspan= \"2\">14/SEP/2012</td>";        
-        $table .= "    <td></td>";
-        $table .= "  </tr>";        
+        $html .= "  }";
         
-        $table .= "  <tr>";       
-        $table .= "    <td></td>";
-        $table .= "    <td>Efectivo Inicial</td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td>$0.00</td>";        
-        $table .= "    <td></td>"; 
-        $table .= "    <td></td>";
-        $table .= "    <td></td>";
-        $table .= "  </tr>";        
+        $html .= "</script>";
         
-        $table .= "  <tr>";       
-        $table .= "    <td></td>";
-        $table .= "    <td>Ventas</td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";
-        $table .= "    <td></td>";
-        $table .= "  </tr>";
+        $html .= "<table>";        
+        $html .= "  <tr>";        
+        $html .= "    <td>Sucursal:</td>";        
+        $html .= "    <td>";        
+        $html .= "      <SELECT onChange=\"corteSucursal(this);\">";
+        $html .= "       <OPTION VALUE=\"#\">Seleccione una Sucursal</OPTION>";
         
-        $table .= "  <tr>";       
-        $table .= "    <td></td>";
-        $table .= "    <td></td>";        
-        $table .= "    <td>Efectivo</td>";        
-        $table .= "    <td>$0.00</td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";
-        $table .= "    <td></td>";
-        $table .= "  </tr>";
+        foreach($sucursales as $sucursal){
+            $html .= "       <OPTION value=\"". $sucursal->getIdSucursal() . "\">" . $sucursal->getRazonSocial() . "</OPTION>";
+        }
         
-        $table .= "  <tr>";       
-        $table .= "    <td></td>";
-        $table .= "    <td></td>";        
-        $table .= "    <td>Cheques</td>";        
-        $table .= "    <td>$0.00</td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";
-        $table .= "    <td></td>";
-        $table .= "  </tr>";
+        $html .= "      </SELECT>";        
+        $html .= "    </td>";        
+        $html .= "  </tr>";        
+        $html .= "</table>";                
         
-        $table .= "  <tr>";       
-        $table .= "    <td></td>";
-        $table .= "    <td></td>";        
-        $table .= "    <td>Credito</td>";        
-        $table .= "    <td style=\"border-bottom: 1px;border-bottom-color: black;border-style: solid;\">$0.00</td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";
-        $table .= "    <td></td>";
-        $table .= "  </tr>";
-        
-        $table .= "  <tr>";       
-        $table .= "    <td></td>";
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td>$0.00</td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";
-        $table .= "    <td></td>";
-        $table .= "  </tr>";
-        
-        $table .= "  <tr>";       
-        $table .= "    <td></td>";
-        $table .= "    <td>Cuentas por cobrar recolectado</td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td>$0.00</td>";        
-        $table .= "    <td></td>"; 
-        $table .= "    <td></td>";
-        $table .= "    <td></td>";
-        $table .= "  </tr>"; 
-        
-        $table .= "  <tr>";       
-        $table .= "    <td></td>";
-        $table .= "    <td>Otros Ingresos</td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td style=\"border-bottom: 1px;border-bottom-color: black;border-style: solid;\">$0.00</td>";
-        $table .= "    <td></td>"; 
-        $table .= "    <td></td>";
-        $table .= "    <td></td>";
-        $table .= "  </tr>";    
-               
-        
-        $table .= "  <tr>";       
-        $table .= "    <td><b>Subtotal</b></td>";
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td><b>$0.00</b></td>";        
-        $table .= "    <td></td>";
-        $table .= "    <td></td>";
-        $table .= "  </tr>";
-        
-        $table .= "  <tr>";       
-        $table .= "    <td></td>";
-        $table .= "    <td>Ventas a Credito</td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td style=\"border-bottom: 1px;border-bottom-color: black;border-style: solid;\">$0.00</td>";
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";
-        $table .= "    <td></td>";
-        $table .= "  </tr>";
-        
-        $table .= "  <tr style = \"background:#C4E8F8;\">";       
-        $table .= "    <td><b>Total en Efectivo</b></td>";
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td><b>$0.00</b></td>";        
-        $table .= "    <td></td>";
-        $table .= "    <td></td>";
-        $table .= "  </tr>";
-        
-        $table .= "  <tr>";        
-        $table .= "    <td></td>";
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";
-        $table .= "    <td></td>";
-        $table .= "  </tr>";
-        
-        $table .= "  <tr>";        
-        $table .= "    <td></td>";
-        $table .= "    <td>Efectivo Pagado a Clientes</td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";
-        $table .= "    <td></td>";
-        $table .= "  </tr>";
-        
-        $table .= "  <tr>";        
-        $table .= "    <td></td>";
-        $table .= "    <td></td>";        
-        $table .= "    <td>Reintegro de Efectivo</td>";        
-        $table .= "    <td>$0.00</td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";
-        $table .= "    <td></td>";
-        $table .= "  </tr>";
-        
-        $table .= "  <tr>";        
-        $table .= "    <td></td>";
-        $table .= "    <td></td>";        
-        $table .= "    <td>Deposito en Bancos</td>";        
-        $table .= "    <td>$0.00</td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";
-        $table .= "    <td></td>";
-        $table .= "  </tr>";
-        
-        $table .= "  <tr>";        
-        $table .= "    <td></td>";
-        $table .= "    <td>Subtotal</td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td style=\"border-bottom: 1px;border-bottom-color: black;border-style: solid;\">$0.00</td>";
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";
-        $table .= "    <td></td>";
-        $table .= "  </tr>";
-        
-        
-        $table .= "  <tr>";        
-        $table .= "    <td></td>";
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";
-        $table .= "    <td></td>";
-        $table .= "  </tr>";
-        
-        
-        $table .= "  <tr>";        
-        $table .= "    <td></td>";
-        $table .= "    <td>Efectivo Pagado al Negocio</td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";
-        $table .= "    <td></td>";
-        $table .= "  </tr>";
-        
-        $table .= "  <tr>";        
-        $table .= "    <td></td>";
-        $table .= "    <td></td>";        
-        $table .= "    <td>Due&ntildeo, Socio</td>";        
-        $table .= "    <td>$0.00</td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";
-        $table .= "    <td></td>";
-        $table .= "  </tr>";
-        
-        $table .= "  <tr>";        
-        $table .= "    <td></td>";
-        $table .= "    <td></td>";        
-        $table .= "    <td>Gastos micelaneos</td>";        
-        $table .= "    <td style=\"border-bottom: 1px;border-bottom-color: black;border-style: solid;\">$0.00</td>";
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";
-        $table .= "    <td></td>";
-        $table .= "  </tr>";
-        
-        $table .= "  <tr>";        
-        $table .= "    <td></td>";
-        $table .= "    <td>Subtotal</td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td style=\"border-bottom: 1px;border-bottom-color: black;border-style: solid;\">$0.00</td>";     
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";
-        $table .= "    <td></td>";
-        $table .= "  </tr>";
-        
-        
-        $table .= "  <tr style = \"background:#C4E8F8;\">";       
-        $table .= "    <td><b>Total en Efectivo Pagado</b></td>";
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td style=\"border-bottom: 1px;border-bottom-color: black;border-style: solid;\"><b>$0.00</b></td>";     
-        $table .= "    <td></td>";
-        $table .= "    <td></td>";
-        $table .= "  </tr>";
-                                        
-        
-        
-        $table .= "  <tr>";        
-        $table .= "    <td></td>";
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";
-        $table .= "    <td></td>";
-        $table .= "  </tr>";
-        
-        
-        $table .= "  <tr style = \"background:#C4E8F8;\">";       
-        $table .= "    <td><b>Efectivo Disponible Recibido</b></td>";
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td><b>$0.00</b></td>";                
-        $table .= "    <td></td>";
-        $table .= "  </tr>";
-        
-        
-        $table .= "  <tr>";        
-        $table .= "    <td></td>";
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";
-        $table .= "    <td></td>";
-        $table .= "  </tr>";
-        
-        $table .= "  <tr>";        
-        $table .= "    <td>Efectivo Disponible Real</td>";
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";                     
-        $table .= "    <td></td>";        
-        $table .= "    <td style=\"border-bottom: 1px;border-bottom-color: black;border-style: solid;\">$0.00</td>";
-        $table .= "    <td></td>";
-        $table .= "  </tr>";
-        
-        $table .= "  <tr>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";        
-        $table .= "    <td></td>";      
-        $table .= "    <td></td>";
-        $table .= "  </tr>";
-        
-        $table .= "  <tr style = \"background:#C4E8F8;\">";        
-        $table .= "    <td colspan = \"7\"><b>Flujo de efectivo:</b></td>";
-        $table .= "    <td><b>$0.00</b></td>";                     
-        $table .= "  </tr>";
-        
-        $table .= "</table>";
-        
-        $page->addComponent($table);
+        $page->addComponent($html);
        
         
         /* ********************************************************************* 
@@ -458,7 +161,6 @@
         $page->nextTab("Configuracion");
 
         $page->addComponent( new TitleComponent( "Ventas" ) );
-
 
         
                                         
