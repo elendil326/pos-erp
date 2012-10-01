@@ -132,38 +132,37 @@
         
         $html .= "</script>";
         
-        $html .= "<form method = \"get\" action=\"ventas.corte.php\">";                
+        $html .= "<form method = \"post\" action=\"ventas.corte.php\">";                
         
-        $html .= "<table>";        
-        $html .= "  <tr>";        
-        $html .= "    <td>Sucursal:</td>";        
-        $html .= "    <td>";        
-        $html .= "      <SELECT name=\"s\">";
-        //$html .= "       <OPTION VALUE=\"#\">Seleccione una Sucursal</OPTION>";
+        $html .= "  <table>";        
+        $html .= "    <tr>";        
+        $html .= "      <td>Sucursal:</td>";        
+        $html .= "      <td>";        
+        $html .= "        <SELECT name=\"s\">";        
         
         foreach($sucursales as $sucursal){
-            $html .= "       <OPTION value=\"". $sucursal->getIdSucursal() . "\">" . $sucursal->getRazonSocial() . "</OPTION>";
+            $html .= "         <OPTION value=\"". $sucursal->getIdSucursal() . "\">" . $sucursal->getRazonSocial() . "</OPTION>";
         }
         
-        $html .= "      </SELECT>";        
-        $html .= "    </td>";        
-        $html .= "  </tr>";        
+        $html .= "        </SELECT>";        
+        $html .= "      </td>";        
+        $html .= "    </tr>";        
         
-        $html .= "  <tr>";        
-        $html .= "    <td>Fondo Inicial</td>";        
-        $html .= "    <td><input type=\"text\" name=\"fondo_inicial\"></td>";        
-        $html .= "  </tr>";        
+        $html .= "    <tr>";        
+        $html .= "      <td>Fondo Inicial</td>";        
+        $html .= "      <td><input type=\"text\" name=\"fondo_inicial\"></td>";        
+        $html .= "    </tr>";        
         
-        $html .= "  <tr>";        
-        $html .= "    <td>Efectivo en Caja</td>";        
-        $html .= "    <td><input type=\"text\" name=\"efectivo\"></td>";        
-        $html .= "  </tr>"; 
+        $html .= "    <tr>";        
+        $html .= "      <td>Efectivo en Caja</td>";        
+        $html .= "      <td><input type=\"text\" name=\"efectivo\"></td>";        
+        $html .= "    </tr>"; 
         
-        $html .= "  <tr>";        
-        $html .= "    <td colspan=\"2\"><input type=\"submit\" value=\"Realizar Corte\" /></td>";                
-        $html .= "  </tr>"; 
+        $html .= "    <tr>";        
+        $html .= "      <td colspan=\"2\"><input type=\"submit\" value=\"Realizar Corte\" /></td>";                
+        $html .= "    </tr>"; 
         
-        $html .= "</table>";                
+        $html .= "  </table>";                
         
         $html .= "</form>";                
         
