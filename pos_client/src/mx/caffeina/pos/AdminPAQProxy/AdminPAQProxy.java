@@ -323,7 +323,7 @@ public class AdminPAQProxy extends HttpResponder{
         //System.out.println("SOLOOOOOOOOOOOOO : " + path);       
         //System.out.println("SOLIIIIIIIIIIIII : " + URLDecoder.decode(path));       
 
-        params = URLDecoder.decode(path) + " " + numEmpresa ;
+        params = URLDecoder.decode(path) + "/Test_Conexion_SDK/InitTestConnnectionSDK.exe " + numEmpresa ;
         //path = "C:/Documents and Settings/Manuel/Desktop/Compartida/CONNECTION_SDK/Test_Conexion_SDK/InitTestConnnectionSDK.exe";        
 
         //params = path + " " + numEmpresa ;
@@ -414,10 +414,11 @@ public class AdminPAQProxy extends HttpResponder{
         */
 
         String params = "";
-        //String numEmpresa = searchInQuery("numEmpresa");
-        String numEmpresa = "1";
-        String path = "C:/Documents and Settings/Manuel/Desktop/Compartida/CONNECTION_SDK/Lista_Clientes_SDK/InitListaClientes.EXE"/*searchInQuery("path")*/;
-        //String path = searchInQuery("path");
+        String numEmpresa = searchInQuery("numEmpresa");
+        //String numEmpresa = "1";
+        //String path = "C:/Documents and Settings/Manuel/Desktop/Compartida/CONNECTION_SDK/Lista_Clientes_SDK/InitListaClientes.EXE"/*searchInQuery("path")*/;
+
+        String path = searchInQuery("path") + "/Lista_Clientes_SDK/InitListaClientes.EXE";
         params = path + " " + numEmpresa;
 
         LoadClientes clientes = new LoadClientes(params);
@@ -490,8 +491,8 @@ public class AdminPAQProxy extends HttpResponder{
 
         String params = "";
         String numEmpresa = searchInQuery("numEmpresa");
-        String path = "C:/Documents and Settings/Administrador/Escritorio/CONNECTION_SDK/Lista_Proveedores_SDK/InitListaClientes.EXE"/*searchInQuery("path")*/;
-        //String path = searchInQuery("path");
+        //String path = "C:/Documents and Settings/Administrador/Escritorio/CONNECTION_SDK/Lista_Proveedores_SDK/InitListaClientes.EXE"/*searchInQuery("path")*/;
+        String path = searchInQuery("path") + "/Lista_Clientes_SDK/InitListaClientes.EXE";
 
         params = path + " " + numEmpresa;
 
