@@ -320,13 +320,13 @@ public class AdminPAQProxy extends HttpResponder{
             return r;
         }
 
-        System.out.println("SOLOOOOOOOOOOOOO : " + path);       
-        System.out.println("SOLIIIIIIIIIIIII : " + URLDecoder.decode(path));       
+        //System.out.println("SOLOOOOOOOOOOOOO : " + path);       
+        //System.out.println("SOLIIIIIIIIIIIII : " + URLDecoder.decode(path));       
 
-        //params = URLDecoder.decode(path) + " " + numEmpresa ;
-        path = "C:/Documents and Settings/Manuel/Desktop/Compartida/CONNECTION_SDK/Test_Conexion_SDK/InitTestConnnectionSDK.exe";        
+        params = URLDecoder.decode(path) + " " + numEmpresa ;
+        //path = "C:/Documents and Settings/Manuel/Desktop/Compartida/CONNECTION_SDK/Test_Conexion_SDK/InitTestConnnectionSDK.exe";        
 
-        params = path + " " + numEmpresa ;
+        //params = path + " " + numEmpresa ;
         
         //C:\Documents and Settings\Manuel\Desktop\Compartida\CONNECTION_SDK\Test_Conexion_SDK\InitTestConnnectionSDK.exe
 
