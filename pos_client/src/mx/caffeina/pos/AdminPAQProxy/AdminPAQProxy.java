@@ -513,7 +513,7 @@ public class AdminPAQProxy extends HttpResponder{
         String params = "";
         String numEmpresa = searchInQuery("numEmpresa");
         //String path = "C:/Documents and Settings/Administrador/Escritorio/CONNECTION_SDK/Lista_Proveedores_SDK/InitListaClientes.EXE"/*searchInQuery("path")*/;
-        String path = searchInQuery("path") + "/Lista_Productos_SDK/InitListaProductos.EXE";
+        String path = searchInQuery("path") + "/Lista_Productos_SDK/InitListaProductosSDK.EXE";
 
         params = path + " " + numEmpresa;
 
