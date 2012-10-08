@@ -506,6 +506,27 @@ public class AdminPAQProxy extends HttpResponder{
 
     }
 
+
+    private String loadProductos(){  
+        
+
+        String params = "";
+        String numEmpresa = searchInQuery("numEmpresa");
+        //String path = "C:/Documents and Settings/Administrador/Escritorio/CONNECTION_SDK/Lista_Proveedores_SDK/InitListaClientes.EXE"/*searchInQuery("path")*/;
+        String path = searchInQuery("path") + "/Lista_Productos_SDK/InitListaProductos.EXE";
+
+        params = path + " " + numEmpresa;
+
+        LoadProductos productos = new LoadProductos(params);
+
+
+        //String r = "{\"totalCount\":1, \"datos\":[{\"CRAZONSO01\":\"Juan Manuel Garcia\",\"CIDCLIEN01\":\"CLI0099\",\"CCODIGO01\":\"CLI0099\",\"CFECHAALTA\":\"12/12/2012\",\"CRFC\":\"GACJ121212123\",\"CCURP\":\"\",\"CDENCOME01\":\"PCSYSTEMS\",\"CREPLEGAL\":\"JUAN CARLOS\"}]}";
+        String r = "{\"totalCount\":" + productos.totalCount + ", \"datos\":" + productos.productosJSON + "}";
+        System.out.println(r); 
+        return r;
+
+    }
+
 	public String getResponse(){
 		//dispatch submodules
 
@@ -570,6 +591,18 @@ public class AdminPAQProxy extends HttpResponder{
                 return (searchInQuery("callback") + "(" + loadProveedores() + ");");
             }else{
                 return loadProveedores() ;
+            }
+
+        }
+
+
+        if(( path.length > 2 )  && path[2].equals("loadProductos")){
+            
+            System.out.println("-- loadProductos --");
+            if(searchInQuery("callback") != null){
+                return (searchInQuery("callback") + "(" + loadProductos() + ");");
+            }else{
+                return loadProductos() ;
             }
 
         }
@@ -1610,9 +1643,139 @@ class Usuario{
 
 
 
+class LoadProductos{
+
+    public String code = "";
+    public Boolean success = false;
+    public String reason = "";
+    public ArrayList productos;
+    public String productosJSON = "[]"; 
+    public int totalCount = 0;
+
+    /**
+     * Creates a new instance of PruebaRuntime
+     */
+    public LoadProductos(String params) {
+
+        
+
+        //System.out.println("Se ejecutara : " + params);
+
+        try {
+            // Se lanza el ejecutable. 
+            Process p = Runtime.getRuntime().exec(params);
+
+            // Se obtiene el stream de salida del programa 
+            InputStream is = p.getInputStream();
+
+            /*
+             * Se prepara un bufferedReader para poder leer la salida más
+             * comodamente.
+             */
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+
+            //System.out.println("--- 6.1 ---");
+
+            // Se lee la primera linea 
+            String aux = br.readLine();
+            this.productos = new ArrayList();
+
+            //System.out.println("--- 6.2 ---");
+
+            // Mientras se haya leido alguna linea 
+            while (aux != null) {
+                // Se escribe la linea en pantalla 
+                System.out.println(aux);
+
+                productos.add(new Producto(aux));
+
+                // y se lee la siguiente. 
+                aux = br.readLine();
+            }
+           
+            String json = "[";
+            
+            boolean flag = false;
+            
+            for (int i = 0; i < productos.size(); i++) {
+                
+                flag = true;
+                
+                Producto pr = (Producto)productos.get(i);
+                
+                json += "{";
+                
+                json += ("\"Codigo\":\"" + pr.Codigo + "\",");
+                json += ("\"Nombre\":\"" + pr.Nombre + "\",");                
+                json += ("\"Precio1\":\"" + pr.Precio1 + "\"");
+                
+                json += "},";
+            }
+            if(flag){
+                json = json.substring(0, json.length() - 1);
+            }
+                        
+            json += "]";
+
+            this.productosJSON = json;
+
+            this.totalCount = productos.size();
+
+            //------------------------------------------
 
 
+        } catch (Exception e) {
+            // Excepciones si hay algún problema al arrancar el ejecutable o al leer su salida.*/
+            //e.printStackTrace();
+            this.success = false;
+            this.code = "300";
+            this.reason = "Error : " + e.getMessage().replace("\"", "'");
+        }
+    }
 
+    LoadProductos() {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+    
+}
+
+
+class Producto{
+
+    public String Nombre = "";
+    public String Precio1 = "";
+    public String Codigo = "";
+
+    public Producto(String aux){
+
+        StringTokenizer tokens = new StringTokenizer(aux, "**");
+        String token = "";
+
+        int pointer = 1;
+
+        while( tokens.hasMoreTokens() ){
+
+            token = tokens.nextToken();
+
+            switch(pointer){
+                case 1 : 
+                    this.Codigo = token;
+                    break;
+                case 2 : 
+                    this.Nombre = token;
+                    break;
+                case 3 : 
+                    this.Precio1 = token;
+                    break;               
+            }
+
+            pointer++;
+
+        }
+
+    }
+
+}
 
 
 
