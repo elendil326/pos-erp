@@ -322,6 +322,8 @@ public class AdminPAQProxy extends HttpResponder{
         
         params = URLDecoder.decode(path) + " " + numEmpresa ;
         
+        System.out.println("LOS PARAMETROS SON : " + params);
+
         TestRuntime test = new TestRuntime(params);     
         
         reason = test.reason;
