@@ -517,6 +517,8 @@ public class AdminPAQProxy extends HttpResponder{
 
         params = path + " " + numEmpresa;
 
+        System.out.println("ENVIANDO : " + params);
+
         LoadProductos productos = new LoadProductos(params);
 
 
