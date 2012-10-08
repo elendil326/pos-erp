@@ -320,8 +320,15 @@ public class AdminPAQProxy extends HttpResponder{
             return r;
         }
         
-        params = URLDecoder.decode(path) + " " + numEmpresa ;
+
+        //params = URLDecoder.decode(path) + " " + numEmpresa ;
+        path = "C:/Documents and Settings/Manuel/Desktop/Compartida/CONNECTION_SDK/Test_Conexion_SDK/InitTestConnnectionSDK.exe";
+        numEmpresa = "1";
+
+        params = path + " " + numEmpresa ;
         
+        //C:\Documents and Settings\Manuel\Desktop\Compartida\CONNECTION_SDK\Test_Conexion_SDK\InitTestConnnectionSDK.exe
+
         TestRuntime test = new TestRuntime(params);     
         
         reason = test.reason;
