@@ -613,6 +613,12 @@ class TestRuntime {
                 aux = br.readLine();
             }*/
 
+            if(aux == null){
+                this.success = false;
+                this.reason = "Error Fatal en la ejecución del programa";
+                this.code = "200";
+            }
+
             //System.out.println("--- 6.3 ---");
 
             StringTokenizer tokens = new StringTokenizer(aux);
