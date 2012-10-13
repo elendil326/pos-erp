@@ -550,7 +550,7 @@ public class AdminPAQProxy extends HttpResponder{
         //String path = "C:/Documents and Settings/Administrador/Escritorio/CONNECTION_SDK/Lista_Proveedores_SDK/InitListaClientes.EXE"/*searchInQuery("path")*/;
         String path = searchInQuery("path") + "/Nuevo_Cliente_Proveedor_SDK/InitNuevoClienteProveedor.EXE";
 
-        params = path + " " + numEmpresa + " " + searchInQuery("codigo_cliente") + " \"" + searchInQuery("razon_social") + "\"";
+        params = path + " " + numEmpresa + " " + searchInQuery("codigo_cliente") + " \"" + searchInQuery("razon_social") + "\" " + searchInQuery("rfc");
 
         System.out.println("ENVIANDO : " + params);
 
