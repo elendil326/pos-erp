@@ -747,7 +747,8 @@ class LoadClientes {
                 
                 json += ("\"Codigo\":\"" + u.Codigo + "\",");
                 json += ("\"RazonSocial\":\"" + u.RazonSocial + "\",");
-                json += ("\"RFC\":\"" + u.RFC + "\"");
+                json += ("\"RFC\":\"" + u.RFC + "\",");
+                json += ("\"Direccion\":\"" + u.Direccion + "\"");
                 
                 json += "},";
             }
@@ -882,6 +883,7 @@ class Usuario{
     public String RFC = "";
     public String Codigo = "";
     public String Tipo = "";
+    public String Direccion = "";
 
     public Usuario(String aux){
 
@@ -905,7 +907,7 @@ class Usuario{
                     this.RFC = token;
                     break; 
                 case 4 : 
-                    this.Tipo = token;
+                    this.Direccion = token;
                     break;                
             }
 
