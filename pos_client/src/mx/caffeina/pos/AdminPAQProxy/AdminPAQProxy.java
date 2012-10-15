@@ -534,7 +534,7 @@ public class AdminPAQProxy extends HttpResponder{
 
         LoadProductos productos = new LoadProductos(params);
 
-        String r = "{\"totalCount\":2, \"datos\":[{\"Codigo\":\"Prod001\",\"Nombre\":\"Pagina Web\",\"1200\"}, {\"Codigo\":\"Prod002\",\"Nombre\":\"Software a la medida\",\"5000\"}]}";
+        String r = "{\"totalCount\":2, \"datos\":[{\"Codigo\":\"Prod001\",\"Nombre\":\"Pagina Web\", \"Precio1\": \"1200\"}, {\"Codigo\":\"Prod002\",\"Nombre\":\"Software a la medida\", \"Precio1\": \"5000\"}]}";
         //String r = "{\"totalCount\":" + productos.totalCount + ", \"datos\":" + productos.productosJSON + "}";
         System.out.println(r); 
         return r;
