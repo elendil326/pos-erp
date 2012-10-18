@@ -125,7 +125,7 @@ public class AdminPAQProxy extends HttpResponder{
 
         if(( path.length > 2 )  && path[2].equals("nuevaCompraVenta")){
             
-            System.out.println("-- nuevo CteProv --");
+            System.out.println("-- nueva Compra Venta --");
             if(searchInQuery("callback") != null){
                 return (searchInQuery("callback") + "(" + nuevaCompraVenta() + ");");
             }else{
