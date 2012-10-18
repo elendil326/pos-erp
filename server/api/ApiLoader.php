@@ -1,6 +1,6 @@
 <?php 
 
-require_once("ApiHandler.php");
+/*require_once("ApiHandler.php");
 
 	require_once("ApiHttpErrors.php");
 
@@ -24,7 +24,7 @@ require_once("ApiHandler.php");
 
 	require_once("StringValidator.php");
 
-	require_once("Validator.php");
+	require_once("Validator.php");*/
 
 
   class ApiSesionIniciar extends ApiHandler {
