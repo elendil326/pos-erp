@@ -641,7 +641,7 @@ class EfectivoController implements IEfectivo{
 
 		if ( is_null( $sucursal ) )
         {
-            return null;
+            throw new InvalidDataException( "Sucursal does not exist" );
         }
 
 		$cortes  = CorteDeSucursalDAO::search( new CorteDeSucursal( $sucursal->AsArray( ) ), "fin", "desc"  );
@@ -663,7 +663,8 @@ class EfectivoController implements IEfectivo{
 
 
 
-	public static function UltimoCorte( VO $empresa_sucursal_caja  ){
+	public static function UltimoCorte( VO $empresa_sucursal_caja  )
+    {
 
 		if( $empresa_sucursal_caja instanceof Caja )
         {
@@ -675,7 +676,7 @@ class EfectivoController implements IEfectivo{
 		}
         else if( $empresa_sucursal_caja instanceof Empresa )
         {
-            return ;
+
 		}
 
 		throw new InvalidDataException();
@@ -704,7 +705,7 @@ class EfectivoController implements IEfectivo{
 
 		if ( $end_date > time( ) )
         {
-            throw new BusinessLogicException("You must give a time in the past.");
+            throw new BusinessLogicException( "You must give a time in the past." );
         }
 
 		if ( $end_date == 0 )
@@ -755,16 +756,24 @@ class EfectivoController implements IEfectivo{
 		}
 		*/
 
+        $corte = new CorteDeSucursal();
+        $corte->setIdSucursal(   );
+        $corte->setIdUsuario(   );
+        $corte->setInicio(   );
+        $corte->setFin(   );
+        $corte->setFechaCorte(   );
 
-
-		
-	
-	
+        try
+        {
+            CorteDeSucursalDAO::save( $corte );
+        }
+        catch(Exception $e)
+        {
+            throw new InvalidDatabaseException($e);
+        }
 	}
 
 
-	
 
+}
 
-	
-  }

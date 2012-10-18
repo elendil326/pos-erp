@@ -1,13 +1,28 @@
 <?php
 
+    /**
+      * Description:
+      *
+      *
+      * TODO:
+      *     Need to test 'NuevaSucursal' with missing 'Direccion' indexes.
+      *
+      *
+      * Author:
+      *
+      *
+      ***/
+
 
 
 require_once("../../server/bootstrap.php");
 
 
-class SucursalesControllerTest extends PHPUnit_Framework_TestCase {
+class SucursalesControllerTest extends PHPUnit_Framework_TestCase
+{
 	
-	protected function setUp(){
+	protected function setUp( )
+    {
 		Logger::log("-----------------------------");
 
 		$r = SesionController::Iniciar(123, 1, true);
@@ -24,8 +39,8 @@ class SucursalesControllerTest extends PHPUnit_Framework_TestCase {
 	}
 
 
-    public function testNuevaSucursal(){
-            
+    public function testNuevaSucursal( )
+    {
 		$sucursal = SucursalesController::Nueva(array(
             "calle"                 => "Monte Balcanes",
         	"numero_exterior"       => "107",
@@ -36,18 +51,16 @@ class SucursalesControllerTest extends PHPUnit_Framework_TestCase {
             "referencia"            => "Calle cerrada",
        	    "telefono1"             => "4616149974",
             "telefono2"             => "45*451*454"
-        ), "Sucursal_" . time());
+        ), "Sucursal_" . time() );
 
-        $this->assertInternalType("int" , $sucursal["id_sucursal"]);
-
+        $this->assertInternalType( "int" , $sucursal["id_sucursal"] );
     }
-    
 
     /**
      * @expectedException BusinessLogicException
      */
-    public function testNuevaSucursalRepetida(){
-
+    public function testNuevaSucursalRepetida( )
+    {
         $direccion = Array(
             "calle"                 => "Monte Balcanes",
         	"numero_exterior"       => "107",
@@ -60,21 +73,23 @@ class SucursalesControllerTest extends PHPUnit_Framework_TestCase {
             "telefono2"             => "45*451*454"
         );
 
-        try{
-            SucursalesController::Nueva($direccion, "Sucursal_Repetida");
-        }catch(Exception $e){
+        try
+        {
+            SucursalesController::Nueva( $direccion, "Sucursal_Repetida" );
+        }
+        catch(Exception $e)
+        {
 
         }
 
-        SucursalesController::Nueva($direccion, "Sucursal_Repetida");
+        SucursalesController::Nueva( $direccion, "Sucursal_Repetida" );
 
     }
 
-    public function testBuscar(){
-        
+    public function testBuscar()
+    {
         //creamos una sucursal para fines del experimento
-
-        $sucursal = SucursalesController::Nueva(array(
+        $sucursal = SucursalesController::Nueva( array(
             "calle"                 => "Monte Balcanes",
         	"numero_exterior"       => "107",
             "colonia"               => "Arboledas",
@@ -84,7 +99,7 @@ class SucursalesControllerTest extends PHPUnit_Framework_TestCase {
             "referencia"            => "Calle cerrada",
        	    "telefono1"             => "4616149974",
             "telefono2"             => "45*451*454"
-        ), "Sucursal" . time());
+        ), "Sucursal" . time( ) );
 
         
         //realizamos una busqueda general y verificamso que contenga los parametros de respuesta

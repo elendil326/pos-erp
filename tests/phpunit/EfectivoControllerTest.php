@@ -21,11 +21,33 @@ class ClientesControllerTests extends PHPUnit_Framework_TestCase
     }
 
 
-    public function testAlgo( )
+    /**
+     * @expectedException InvalidDataException
+     */
+    public function testUltimoCorte( )
     {
-        $this->assertNotEquals(1,1);
+        $testSucursal = new Sucursal();
+        EfectivoController::UltimoCorte( $testSucursal );
     }
 
+    /**
+     * @expectedException InvalidDataException
+     */
+    public function testUltimoCorte2( )
+    {
+        $testSucursal = new Sucursal( array( "id_sucursal" => 99 ) );
+        EfectivoController::UltimoCorte( $testSucursal );
+    }
+
+
+
+    public function testUltimoCorte3( )
+    {
+
+        $id = ScenarioMaker::CreateSucursalAndReturnID( );
+
+        $this->assertNull( EfectivoController::UltimoCorte( SucursalDAO::getByPK($id) ) );
+    }
 
 }
 
@@ -47,5 +69,30 @@ class ScenarioMaker
             
             $r = SesionController::Iniciar( 123, 1, true );
         }
+    }
+
+    public static function CreateSucursalAndReturnID( )
+    {
+        $address = array(
+                "calle" => "Arboledas"
+            );
+
+        $r = SucursalesController::Nueva( $address, "FOOBAR" );
+
+        return $r["id_sucursal"];
+
+    }
+
+    /**
+      * This functions inserts database as used in Papelin
+      *
+      *
+      *
+      *
+      *
+      **/
+    public static function Papelin( )
+    {
+
     }
 }

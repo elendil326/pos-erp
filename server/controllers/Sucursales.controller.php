@@ -2294,105 +2294,91 @@ require_once("interfaces/Sucursales.interface.php");
             Logger::log("Caja abierta exitosamente");
             return array( "detalles_sucursal" => $apertura_caja->getIdAperturaCaja());
 	}
-  
+
+
+
+
+
 	/**
  	 *
  	 *Metodo que crea una nueva sucursal
  	 *
- 	 * @param codigo_postal string Codigo postal de la empresa
- 	 * @param rfc string RFC de la sucursal
- 	 * @param activo bool Si esta sucursal estara activa inmediatamente despues de ser creada
- 	 * @param colonia string Colonia de la sucursal
- 	 * @param razon_social string Razon social de la sucursal
- 	 * @param calle string Calle de la sucursal
- 	 * @param empresas json Objeto que contendra los ids de las empresas a las que esta sucursal pertenece, por lo menos tiene que haber una empresa. En este JSON, opcionalmente junto con el id de la empresa, aapreceran dos campos que seran margen_utilidad y descuento, que indicaran que todos los productos de esa empresa ofrecidos en esta sucursal tendran un margen de utilidad y/o un descuento con los valores en esos campos
- 	 * @param numero_exterior string Numero exterior de la sucursal
- 	 * @param id_ciudad int Id de la ciudad donde se encuentra la sucursal
- 	 * @param saldo_a_favor float Saldo a favor de la sucursal.
- 	 * @param id_gerente int ID del usuario que sera gerente de esta sucursal. Para que sea valido este usuario debe tener el nivel de acceso apropiado.
- 	 * @param margen_utilidad float Margen de utilidad que se le ganara a todos los productos ofrecidos por esta sucursal
- 	 * @param numero_interior string numero interior
- 	 * @param telefono2 string Telefono2 de la sucursal
- 	 * @param telefono1 string Telefono1 de la sucursal
- 	 * @param descripcion string Descripcion de la sucursal
- 	 * @param impuestos json Objeto que contendra el arreglo de impuestos que afectan a esta sucursal
- 	 * @param descuento float Descuento que tendran todos los productos ofrecidos por esta sucursal
- 	 * @return id_sucursal int Id autogenerado de la sucursal que se creo.
  	 **/
-	public static function Nueva
-	(
-		$direccion, 
-		$razon_social, 
-		$activo =  1 , 
-		$descripcion = null, 
-		$empresas = null, 
-		$id_gerente = null, 
-		$saldo_a_favor = null
-	)
-	{
+	public static function Nueva(
+        $direccion, 
+        $razon_social, 
+        $activo =  1 , 
+        $descripcion = null, 
+        $empresas = null, 
+        $id_gerente = null, 
+        $saldo_a_favor = null
+        )
+    {
 
-            Logger::log("Creando nueva sucursal `$razon_social` ...");
+        Logger::log("Creando nueva sucursal `$razon_social` ...");
+
+        //buscamos si una sucursal ya existe
+        if ( count( SucursalDAO::search( new Sucursal( array( "razon_social" => $razon_social ) ) ) ) > 0 )
+        {
+            Logger::log( "Ya existe una sucursal con el mismo nombre" );
+            throw new BusinessLogicException("Ya existe una sucursal con el mismo nombre");
+        }
+
+        if ( is_null( $saldo_a_favor ) )
+        {
+            $saldo_a_favor = 0;
+        }
+
+        //Se inicializa el objeto sucursal con los parametros obtenidos
+        $sucursal=new Sucursal( );
+        $sucursal->setActiva( $activo );
+        $sucursal->setRazonSocial( trim( $razon_social ) );
+        $sucursal->setSaldoAFavor( $saldo_a_favor );
+        $sucursal->setIdGerente( $id_gerente );
+        $sucursal->setDescripcion( $descripcion );
+        $sucursal->setFechaApertura	( time( ) );
+
+        DAO::transBegin();
 
 
-            //buscamos si una sucursal ya existe
-            if( count( SucursalDAO::search( new Sucursal( array( "razon_social" => $razon_social ) ) ) ) > 0 ){
-				Logger::log( "Ya existe una sucursal con el mismo nombre" );
-                throw new BusinessLogicException("Ya existe una sucursal con el mismo nombre");
-            }            
-           
-            if(is_null($saldo_a_favor)){
-                $saldo_a_favor = 0;
-            }
+        //Se crea la nueva direccion y se le asigna a la nueva sucursal
+        if ( !is_null( $direccion ) )
+        {
 
-            //Se inicializa el objeto sucursal con los parametros obtenidos
-            $sucursal=new Sucursal();
-            $sucursal->setActiva		($activo);
-            $sucursal->setRazonSocial	(trim($razon_social));
-            $sucursal->setSaldoAFavor	($saldo_a_favor);
-            $sucursal->setIdGerente		($id_gerente);
-            $sucursal->setDescripcion	($descripcion);
-			
-            $sucursal->setFechaApertura	( time() );
+            $direccion = object_to_array($direccion);
 
-            DAO::transBegin();
+            //test missing params inside $direccion
 
-            try{
-                //Se crea la nueva direccion y se le asigna a la nueva sucursal
-				if(!is_null($direccion)){
-					
-					$direccion = object_to_array($direccion);
-					
-	                $id_direccion = DireccionController::NuevaDireccion(
-							$direccion["calle"],
-							$direccion["numero_exterior"],
-							$direccion["colonia"],
-							$direccion["id_ciudad"],
-							$direccion["codigo_postal"],
-							$direccion["numero_interior"],
-							$direccion["referencia"],
-							$direccion["telefono1"],
-							$direccion["telefono2"] );
-							
-					$sucursal->setIdDireccion( $id_direccion );
-					
-				}
+            $id_direccion = DireccionController::NuevaDireccion(
+                                $direccion["calle"],
+                                $direccion["numero_exterior"],
+                                $direccion["colonia"],
+                                $direccion["id_ciudad"],
+                                $direccion["codigo_postal"],
+                                $direccion["numero_interior"],
+                                $direccion["referencia"],
+                                $direccion["telefono1"],
+                                $direccion["telefono2"] 
+                                );
+            $sucursal->setIdDireccion( $id_direccion );
+        }
 
-                SucursalDAO::save($sucursal);
-				
-            }catch(Exception $e){
-	
-                DAO::transRollback();
+        try
+        {
+            SucursalDAO::save( $sucursal );
+        }
+        catch(Exception $e)
+        {
 
-                throw new InvalidDatabaseOperationException($e);
-            }
+            DAO::transRollback( );
+            throw new InvalidDatabaseOperationException( $e );
+        }
 
-            DAO::transEnd();
+        DAO::transEnd( );
+        Logger::log( "Sucursal {$sucursal->getIdSucursal()} creada." );
+        return array( "id_sucursal" => (int)$sucursal->getIdSucursal( ) );
+    }
 
-            Logger::log("Sucursal {$sucursal->getIdSucursal()} creada exitosamente !");
-
-            return array( "id_sucursal" => (int)$sucursal->getIdSucursal() );
-	}
-  
 	/**
  	 *
  	 *Edita los datos de una sucursal
