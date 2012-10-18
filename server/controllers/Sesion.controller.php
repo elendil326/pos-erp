@@ -1,17 +1,15 @@
 <?php
+
 require_once("interfaces/Sesion.interface.php");
-/**
-  *
-  *
-  *
-  **/
-	
-class SesionController implements ISesion{
+
+
+class SesionController implements ISesion
+{
 
   	private static $_is_logged_in;
 	private static $_current_user;
-  	
-    
+
+
 	/**
  	 *
  	 *Regresa informacion sobre la sesion actual.
@@ -20,25 +18,26 @@ class SesionController implements ISesion{
  	 * @return id_sucursal int El id_sucursal de la sucursal donde este usuario inico sesion en caso de haberlo hecho desde un mostraodr. Un gerente no tendra id_sucursal asociada a el dado que puede iniciar sesion desde cualquier lugar.
  	 * @return id_usuario int 
  	 **/
-        public static function Actual(){
+	public static function Actual( )
+	{
 
-			if( !is_null(self::$_is_logged_in) && self::$_is_logged_in ){
-							
-				if(!is_null(self::$_current_user)){
-	            	return array( "id_caja" => null, "id_sucursal" => null, "id_usuario" => self::$_current_user->getIdUsuario() );
-				}
-				$foo = self::getCurrentUser() ;
-
-	            return array( "id_caja" => null, "id_sucursal" => null, "id_usuario" => $foo->getIdUsuario());
-	
-	
-			}else{
-            	return array( "id_caja" => null, "id_sucursal" => null, "id_usuario" => null);				
+		if ( !is_null(self::$_is_logged_in) && self::$_is_logged_in )
+		{
+			if ( !is_null( self::$_current_user ) )
+			{
+				return array( "id_caja" => null, "id_sucursal" => null, "id_usuario" => self::$_current_user->getIdUsuario( ) );
 			}
+		
+			$foo = self::getCurrentUser( );
 
+			return array( "id_caja" => null, "id_sucursal" => null, "id_usuario" => $foo->getIdUsuario());
+		}
+		else
+		{
+			return array( "id_caja" => null, "id_sucursal" => null, "id_usuario" => null);
+		}
 	}
-    
-	
+
 
 	/**
  	 *

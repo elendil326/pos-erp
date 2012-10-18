@@ -2301,7 +2301,7 @@ require_once("interfaces/Sucursales.interface.php");
 
 	/**
  	 *
- 	 *Metodo que crea una nueva sucursal
+ 	 * Metodo que crea una nueva sucursal
  	 *
  	 **/
 	public static function Nueva(
@@ -2340,11 +2340,9 @@ require_once("interfaces/Sucursales.interface.php");
 
         DAO::transBegin();
 
-
         //Se crea la nueva direccion y se le asigna a la nueva sucursal
         if ( !is_null( $direccion ) )
         {
-
             $direccion = object_to_array($direccion);
 
             //test missing params inside $direccion

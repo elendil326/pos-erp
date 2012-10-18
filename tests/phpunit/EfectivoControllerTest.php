@@ -20,7 +20,6 @@ class ClientesControllerTests extends PHPUnit_Framework_TestCase
         ScenarioMaker::createUserAndLogin();
     }
 
-
     /**
      * @expectedException InvalidDataException
      */
@@ -35,20 +34,23 @@ class ClientesControllerTests extends PHPUnit_Framework_TestCase
      */
     public function testUltimoCorte2( )
     {
-        $testSucursal = new Sucursal( array( "id_sucursal" => 99 ) );
+        $testSucursal = new Sucursal( array( "id_sucursal" => -99 ) );
         EfectivoController::UltimoCorte( $testSucursal );
     }
 
-
-
     public function testUltimoCorte3( )
     {
-
         $id = ScenarioMaker::CreateSucursalAndReturnID( );
-
-        $this->assertNull( EfectivoController::UltimoCorte( SucursalDAO::getByPK($id) ) );
+        $this->assertNull( EfectivoController::UltimoCorte( SucursalDAO::getByPK( $id ) ) );
     }
 
+
+    public function testNuevoCorteSucursal( )
+    {
+        $id = ScenarioMaker::CreateSucursalAndReturnID( "N" );
+        EfectivoController::NuevoCorteSucursal( 0, $id );
+        
+    }
 }
 
 
@@ -56,6 +58,9 @@ class ClientesControllerTests extends PHPUnit_Framework_TestCase
 
 class ScenarioMaker
 {
+
+    
+
     public static function createUserAndLogin( )
     {
         $r = SesionController::Iniciar( 123, 1, true );
@@ -71,13 +76,29 @@ class ScenarioMaker
         }
     }
 
-    public static function CreateSucursalAndReturnID( )
+    public static function CreateSucursalAndReturnID( $appendToName = null )
     {
         $address = array(
-                "calle" => "Arboledas"
+               "calle" => "Arboledas",
+               "numero_exterior" => "Arboledas",
+               "colonia" => "Arboledas",
+               "id_ciudad" => "Arboledas",
+               "codigo_postal" => "Arboledas",
+               "numero_interior" => "Arboledas",
+               "referencia" => "Arboledas",
+               "telefono1" => "Arboledas",
+               "telefono2" => "Arboledas"
             );
 
-        $r = SucursalesController::Nueva( $address, "FOOBAR" );
+        if ( is_null( $appendToName ) )
+        {
+            $r = SucursalesController::Nueva( $address, time( ) );
+        }
+        else
+        {
+            $r = SucursalesController::Nueva( $address, time( ) . $appendToName );
+        }
+        
 
         return $r["id_sucursal"];
 

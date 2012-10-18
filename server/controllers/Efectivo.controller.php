@@ -636,15 +636,15 @@ class EfectivoController implements IEfectivo{
         }
         else
         {
-            $sucursal = SucursalDAO::getByPK( $sucursal );
+            $v_sucursal = SucursalDAO::getByPK( $sucursal->getIdSucursal( ) );
         }
 
-		if ( is_null( $sucursal ) )
+		if ( is_null( $v_sucursal ) )
         {
             throw new InvalidDataException( "Sucursal does not exist" );
         }
 
-		$cortes  = CorteDeSucursalDAO::search( new CorteDeSucursal( $sucursal->AsArray( ) ), "fin", "desc"  );
+		$cortes  = CorteDeSucursalDAO::search( new CorteDeSucursal( $v_sucursal->AsArray( ) ), "fin", "desc"  );
 
 		if( sizeof( $cortes ) == 0 ) return null;
 
@@ -729,7 +729,7 @@ class EfectivoController implements IEfectivo{
 			$start_date = $suc->getFechaApertura( );
 		}
 
-        ASSERT( $end_date < $start_date );
+        ASSERT( $end_date <= $start_date );
 
 		$ingresos_por_tipo = array(
                                 "BANCO" => 0.0,
@@ -755,13 +755,14 @@ class EfectivoController implements IEfectivo{
 			}
 		}
 		*/
+        $cu = SesionController::Actual( );
 
         $corte = new CorteDeSucursal();
-        $corte->setIdSucursal(   );
-        $corte->setIdUsuario(   );
-        $corte->setInicio(   );
-        $corte->setFin(   );
-        $corte->setFechaCorte(   );
+        $corte->setIdSucursal( $id_sucursal );
+        $corte->setIdUsuario( $cu["id_usuario"] );
+        $corte->setInicio( $start_date );
+        $corte->setFin( $end_date );
+        $corte->setFechaCorte( time( ) );
 
         try
         {
