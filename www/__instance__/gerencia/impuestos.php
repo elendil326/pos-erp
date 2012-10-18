@@ -13,9 +13,14 @@
 		$i = ImpuestosController::Lista();
 		
 		$table = new TableComponent( array(
-				"nombre" => "nombre",
-				"descripcion" => "descripcion",
-				"monto_porcentaje" => "porcentaje"
+				"nombre" => "Nombre",
+				"descripcion" => "Descripcion",
+                                "codigo" => "Codigo",
+				"importe" => "Importe",
+                                "tipo"=>"Tipo",
+                                "aplica"=>"Aplica",
+                                "incluido"=>"Incluido",
+                                "activo"=>"Activo"
 			), $i["resultados"] );
 
 		$page->addComponent($table);

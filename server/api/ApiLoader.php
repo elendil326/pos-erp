@@ -6220,6 +6220,7 @@
 			"importe" => new ApiExposedProperty("importe", true, POST, array( "float" )),
 			"incluido_precio" => new ApiExposedProperty("incluido_precio", true, POST, array( "bool" )),
 			"nombre" => new ApiExposedProperty("nombre", true, POST, array( "string" )),
+			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "string" )),
 			"tipo" => new ApiExposedProperty("tipo", false, POST, array( "int" )),
 		);
 	}
@@ -6235,6 +6236,7 @@
 			isset($_POST['importe'] ) ? $_POST['importe'] : null,
 			isset($_POST['incluido_precio'] ) ? $_POST['incluido_precio'] : null,
 			isset($_POST['nombre'] ) ? $_POST['nombre'] : null,
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null,
 			isset($_POST['tipo'] ) ? $_POST['tipo'] :  ""
 			
 			);

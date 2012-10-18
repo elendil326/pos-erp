@@ -126,14 +126,29 @@ abstract class ImpuestoDAOBase extends DAO
 			array_push( $val, $impuesto->getIdImpuesto() );
 		}
 
-		if( ! is_null( $impuesto->getMontoPorcentaje() ) ){
-			$sql .= " `monto_porcentaje` = ? AND";
-			array_push( $val, $impuesto->getMontoPorcentaje() );
+		if( ! is_null( $impuesto->getCodigo() ) ){
+			$sql .= " `codigo` = ? AND";
+			array_push( $val, $impuesto->getCodigo() );
 		}
 
-		if( ! is_null( $impuesto->getEsMonto() ) ){
-			$sql .= " `es_monto` = ? AND";
-			array_push( $val, $impuesto->getEsMonto() );
+		if( ! is_null( $impuesto->getImporte() ) ){
+			$sql .= " `importe` = ? AND";
+			array_push( $val, $impuesto->getImporte() );
+		}
+
+		if( ! is_null( $impuesto->getIncluido() ) ){
+			$sql .= " `incluido` = ? AND";
+			array_push( $val, $impuesto->getIncluido() );
+		}
+
+		if( ! is_null( $impuesto->getAplica() ) ){
+			$sql .= " `aplica` = ? AND";
+			array_push( $val, $impuesto->getAplica() );
+		}
+
+		if( ! is_null( $impuesto->getTipo() ) ){
+			$sql .= " `tipo` = ? AND";
+			array_push( $val, $impuesto->getTipo() );
 		}
 
 		if( ! is_null( $impuesto->getNombre() ) ){
@@ -144,6 +159,11 @@ abstract class ImpuestoDAOBase extends DAO
 		if( ! is_null( $impuesto->getDescripcion() ) ){
 			$sql .= " `descripcion` = ? AND";
 			array_push( $val, $impuesto->getDescripcion() );
+		}
+
+		if( ! is_null( $impuesto->getActivo() ) ){
+			$sql .= " `activo` = ? AND";
+			array_push( $val, $impuesto->getActivo() );
 		}
 
 		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
@@ -168,7 +188,7 @@ abstract class ImpuestoDAOBase extends DAO
 	  *	
 	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
 	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
-	  * aqui, sin embargo. El valor de retorno indica cuÃ¡ntas filas se vieron afectadas.
+	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
@@ -176,12 +196,16 @@ abstract class ImpuestoDAOBase extends DAO
 	  **/
 	private static final function update( $impuesto )
 	{
-		$sql = "UPDATE impuesto SET  `monto_porcentaje` = ?, `es_monto` = ?, `nombre` = ?, `descripcion` = ? WHERE  `id_impuesto` = ?;";
+		$sql = "UPDATE impuesto SET  `codigo` = ?, `importe` = ?, `incluido` = ?, `aplica` = ?, `tipo` = ?, `nombre` = ?, `descripcion` = ?, `activo` = ? WHERE  `id_impuesto` = ?;";
 		$params = array( 
-			$impuesto->getMontoPorcentaje(), 
-			$impuesto->getEsMonto(), 
+			$impuesto->getCodigo(), 
+			$impuesto->getImporte(), 
+			$impuesto->getIncluido(), 
+			$impuesto->getAplica(), 
+			$impuesto->getTipo(), 
 			$impuesto->getNombre(), 
 			$impuesto->getDescripcion(), 
+			$impuesto->getActivo(), 
 			$impuesto->getIdImpuesto(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -205,13 +229,17 @@ abstract class ImpuestoDAOBase extends DAO
 	  **/
 	private static final function create( &$impuesto )
 	{
-		$sql = "INSERT INTO impuesto ( `id_impuesto`, `monto_porcentaje`, `es_monto`, `nombre`, `descripcion` ) VALUES ( ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO impuesto ( `id_impuesto`, `codigo`, `importe`, `incluido`, `aplica`, `tipo`, `nombre`, `descripcion`, `activo` ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$impuesto->getIdImpuesto(), 
-			$impuesto->getMontoPorcentaje(), 
-			$impuesto->getEsMonto(), 
+			$impuesto->getCodigo(), 
+			$impuesto->getImporte(), 
+			$impuesto->getIncluido(), 
+			$impuesto->getAplica(), 
+			$impuesto->getTipo(), 
 			$impuesto->getNombre(), 
 			$impuesto->getDescripcion(), 
+			$impuesto->getActivo(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -271,23 +299,56 @@ abstract class ImpuestoDAOBase extends DAO
 			
 		}
 
-		if( ( !is_null (($a = $impuestoA->getMontoPorcentaje()) ) ) & ( ! is_null ( ($b = $impuestoB->getMontoPorcentaje()) ) ) ){
-				$sql .= " `monto_porcentaje` >= ? AND `monto_porcentaje` <= ? AND";
+		if( ( !is_null (($a = $impuestoA->getCodigo()) ) ) & ( ! is_null ( ($b = $impuestoB->getCodigo()) ) ) ){
+				$sql .= " `codigo` >= ? AND `codigo` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " `monto_porcentaje` = ? AND"; 
+			$sql .= " `codigo` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( ( !is_null (($a = $impuestoA->getEsMonto()) ) ) & ( ! is_null ( ($b = $impuestoB->getEsMonto()) ) ) ){
-				$sql .= " `es_monto` >= ? AND `es_monto` <= ? AND";
+		if( ( !is_null (($a = $impuestoA->getImporte()) ) ) & ( ! is_null ( ($b = $impuestoB->getImporte()) ) ) ){
+				$sql .= " `importe` >= ? AND `importe` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " `es_monto` = ? AND"; 
+			$sql .= " `importe` = ? AND"; 
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( ( !is_null (($a = $impuestoA->getIncluido()) ) ) & ( ! is_null ( ($b = $impuestoB->getIncluido()) ) ) ){
+				$sql .= " `incluido` >= ? AND `incluido` <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " `incluido` = ? AND"; 
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( ( !is_null (($a = $impuestoA->getAplica()) ) ) & ( ! is_null ( ($b = $impuestoB->getAplica()) ) ) ){
+				$sql .= " `aplica` >= ? AND `aplica` <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " `aplica` = ? AND"; 
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( ( !is_null (($a = $impuestoA->getTipo()) ) ) & ( ! is_null ( ($b = $impuestoB->getTipo()) ) ) ){
+				$sql .= " `tipo` >= ? AND `tipo` <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " `tipo` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
@@ -310,6 +371,17 @@ abstract class ImpuestoDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " `descripcion` = ? AND"; 
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( ( !is_null (($a = $impuestoA->getActivo()) ) ) & ( ! is_null ( ($b = $impuestoB->getActivo()) ) ) ){
+				$sql .= " `activo` >= ? AND `activo` <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " `activo` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
