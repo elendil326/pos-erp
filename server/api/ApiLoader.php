@@ -1,6 +1,6 @@
 <?php 
 
-    /*require_once("ApiHandler.php");
+require_once("ApiHandler.php");
 
 	require_once("ApiHttpErrors.php");
 
@@ -24,7 +24,7 @@
 
 	require_once("StringValidator.php");
 
-	require_once("Validator.php");*/
+	require_once("Validator.php");
 
 
   class ApiSesionIniciar extends ApiHandler {
@@ -3114,6 +3114,46 @@
   
   
 
+  class ApiSucursalCorte extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"fecha_corte" => new ApiExposedProperty("fecha_corte", true, POST, array( "int" )),
+			"fecha_final" => new ApiExposedProperty("fecha_final", true, POST, array( "int" )),
+			"fecha_inicial" => new ApiExposedProperty("fecha_inicial", true, POST, array( "int" )),
+			"fondo_inicial" => new ApiExposedProperty("fondo_inicial", true, POST, array( "float" )),
+			"id_sucursal" => new ApiExposedProperty("id_sucursal", true, POST, array( "int" )),
+			"id_usuario" => new ApiExposedProperty("id_usuario", true, POST, array( "int" )),
+			"total_efectivo" => new ApiExposedProperty("total_efectivo", true, POST, array( "float" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = SucursalesController::Corte( 
+ 			
+			
+			isset($_POST['fecha_corte'] ) ? $_POST['fecha_corte'] : null,
+			isset($_POST['fecha_final'] ) ? $_POST['fecha_final'] : null,
+			isset($_POST['fecha_inicial'] ) ? $_POST['fecha_inicial'] : null,
+			isset($_POST['fondo_inicial'] ) ? $_POST['fondo_inicial'] : null,
+			isset($_POST['id_sucursal'] ) ? $_POST['id_sucursal'] : null,
+			isset($_POST['id_usuario'] ) ? $_POST['id_usuario'] : null,
+			isset($_POST['total_efectivo'] ) ? $_POST['total_efectivo'] : null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
   class ApiVentasDetalle extends ApiHandler {
   
 
@@ -6174,7 +6214,11 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"monto_porcentaje" => new ApiExposedProperty("monto_porcentaje", true, POST, array( "float" )),
+			"activo" => new ApiExposedProperty("activo", true, POST, array( "bool" )),
+			"aplica" => new ApiExposedProperty("aplica", true, POST, array( "string" )),
+			"codigo" => new ApiExposedProperty("codigo", true, POST, array( "string" )),
+			"importe" => new ApiExposedProperty("importe", true, POST, array( "float" )),
+			"incluido_precio" => new ApiExposedProperty("incluido_precio", true, POST, array( "bool" )),
 			"nombre" => new ApiExposedProperty("nombre", true, POST, array( "string" )),
 			"tipo" => new ApiExposedProperty("tipo", false, POST, array( "int" )),
 		);
@@ -6185,7 +6229,11 @@
  		$this->response = ImpuestosController::Nuevo( 
  			
 			
-			isset($_POST['monto_porcentaje'] ) ? $_POST['monto_porcentaje'] : null,
+			isset($_POST['activo'] ) ? $_POST['activo'] : null,
+			isset($_POST['aplica'] ) ? $_POST['aplica'] : null,
+			isset($_POST['codigo'] ) ? $_POST['codigo'] : null,
+			isset($_POST['importe'] ) ? $_POST['importe'] : null,
+			isset($_POST['incluido_precio'] ) ? $_POST['incluido_precio'] : null,
 			isset($_POST['nombre'] ) ? $_POST['nombre'] : null,
 			isset($_POST['tipo'] ) ? $_POST['tipo'] :  ""
 			

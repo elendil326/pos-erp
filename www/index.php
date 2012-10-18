@@ -1,5 +1,5 @@
 <?php
- 
+
 	if(!class_exists("PHPUnit_Runner_Version")){
 		define("BYPASS_INSTANCE_CHECK", true);
 		require_once("../server/bootstrap.php");
@@ -49,7 +49,6 @@
 	          </div>
 	        </div>
 	      </div>
-		  
 	    </div>
 
 

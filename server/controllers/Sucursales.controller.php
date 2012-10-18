@@ -3950,7 +3950,18 @@ require_once("interfaces/Sucursales.interface.php");
 	}
         
 
-  
+        public static function Corte
+	(
+		$fecha_corte, 
+		$fecha_final, 
+		$fecha_inicial, 
+		$fondo_inicial, 
+		$id_sucursal, 
+		$id_usuario, 
+		$total_efectivo
+	){
+            
+        }
 	
 	
 
