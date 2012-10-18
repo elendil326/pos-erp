@@ -193,9 +193,9 @@
 	require_once("controllers/Clientes.controller.php");
 	require_once("controllers/Sesion.controller.php");
 	require_once("controllers/PersonalYAgentes.controller.php");
-
+	require_once("controllers/ImpuestosYRetenciones.controller.php");
 	require_once("controllers/Empresas.controller.php");
-	require_once("controllers/Direcciones.controller.php");	
+	require_once("controllers/Direcciones.controller.php");	//Agregado 18 10 2012
 	require_once("controllers/Sucursales.controller.php");		
 	require_once("controllers/Productos.controller.php");
 	require_once("controllers/Tarifas.controller.php");
