@@ -17,7 +17,8 @@
 				"es_monto"  => "Es monto",
 				"descripcion" => "Descripcion"
 			),
-                         ImpuestosYRetencionesController::ListaRetencion()
+                         //ImpuestosYRetencionesController::ListaRetencion()
+                        ImpuestoDAO::getAll()
 		);
 		
                 function funcion_es_monto($es_monto)

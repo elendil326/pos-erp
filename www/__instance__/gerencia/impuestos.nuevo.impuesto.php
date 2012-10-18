@@ -23,11 +23,9 @@
 		$form->makeObligatory( array(
 			"nombre",
 			"codigo",
-			"monto_porcentaje",
+			"importe",
 			"es_monto"			
 		));
                 
         $form->createComboBoxJoin("es_monto", "es_monto", array( array( "id" => 1, "caption" => "Si" ), array( "id" => 0, "caption" => "No" ) ));
-
-		$page->addComponent( $form );
-		$page->render();
+        $form->createComboBoxJoin("aplica","aplica",array(array("id" => 0, "caption" => "Compra"),array("id" => 1, "caption" => "Venta"), array("id" => 2, "caption" => "Todas")));
