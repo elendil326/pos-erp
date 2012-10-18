@@ -123,6 +123,17 @@ public class AdminPAQProxy extends HttpResponder{
 
         }
 
+        if(( path.length > 2 )  && path[2].equals("nuevaCompraVenta")){
+            
+            System.out.println("-- nuevo CteProv --");
+            if(searchInQuery("callback") != null){
+                return (searchInQuery("callback") + "(" + nuevaCompraVenta() + ");");
+            }else{
+                return nuevaCompraVenta() ;
+            }
+
+        }
+
 
         if(dataType.equals("json")) {
 
@@ -558,6 +569,30 @@ public class AdminPAQProxy extends HttpResponder{
 
         //String r = "{\"totalCount\":1, \"datos\":[{\"CRAZONSO01\":\"Juan Manuel Garcia\",\"CIDCLIEN01\":\"CLI0099\",\"CCODIGO01\":\"CLI0099\",\"CFECHAALTA\":\"12/12/2012\",\"CRFC\":\"GACJ121212123\",\"CCURP\":\"\",\"CDENCOME01\":\"PCSYSTEMS\",\"CREPLEGAL\":\"JUAN CARLOS\"}]}";
         String r = "{\"success\" : " + CteProv.success + ", \"code\" : " + CteProv.code + ", \"reason\":\"" + CteProv.reason + "\"}"; 
+        System.out.println(r);
+
+        return r;
+
+    }
+
+    private String nuevaCompraVenta(){
+
+        Calendar c = new GregorianCalendar();
+        String fechaActual = (c.get(Calendar.MONTH) >= 9 ? "" + (c.get(Calendar.MONTH) + 1) : "0" + (c.get(Calendar.MONTH) + 1)) + "/" + (c.get(Calendar.DATE) >= 10 ? "" + c.get(Calendar.DATE) : "0" + c.get(Calendar.DATE)) + "/" + Integer.toString(c.get(Calendar.YEAR));
+
+        String params = "";        
+        //String path = "C:/Documents and Settings/Administrador/Escritorio/CONNECTION_SDK/Lista_Proveedores_SDK/InitListaClientes.EXE"/*searchInQuery("path")*/;
+        String path = searchInQuery("path") + "/Nueva_Compra_Venta/InitCompraVenta.EXE";
+
+        params = path + " " + searchInQuery("numEmpresa") + " " + searchInQuery("serie_documento") + " " + fechaActual + " " + searchInQuery("codigo_cliente_proveedor") + " " + searchInQuery("codigo_producto_servicio") + " " + searchInQuery("codigo_almacen") + " " + searchInQuery("numero_unidades") + " " + searchInQuery("precio_unitario") + " " + searchInQuery("codigo_concepto");
+
+        System.out.println("ENVIANDO : " + params);
+
+        TestRuntime CompraVenta = new TestRuntime(params);
+
+
+        //String r = "{\"totalCount\":1, \"datos\":[{\"CRAZONSO01\":\"Juan Manuel Garcia\",\"CIDCLIEN01\":\"CLI0099\",\"CCODIGO01\":\"CLI0099\",\"CFECHAALTA\":\"12/12/2012\",\"CRFC\":\"GACJ121212123\",\"CCURP\":\"\",\"CDENCOME01\":\"PCSYSTEMS\",\"CREPLEGAL\":\"JUAN CARLOS\"}]}";
+        String r = "{\"success\" : " + CompraVenta.success + ", \"code\" : " + CompraVenta.code + ", \"reason\":\"" + CompraVenta.reason + "\"}"; 
         System.out.println(r);
 
         return r;
