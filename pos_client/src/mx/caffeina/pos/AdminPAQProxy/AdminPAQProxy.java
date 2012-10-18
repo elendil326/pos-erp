@@ -615,7 +615,7 @@ class TestRuntime {
 
         
 
-        //System.out.println("Se ejecutara : " + params);
+        System.out.println("Se ejecutara : " + params);
 
         try {
             // Se lanza el ejecutable. 
