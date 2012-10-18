@@ -26,7 +26,7 @@
 
     $page = new GerenciaTabPage( );
 
-    $page->addComponent( new TitleComponent( "Ventas y cotizaciones",1 ) );
+    $page->addComponent( new TitleComponent( "Ventas y cotizaciones", 1 ) );
 
     /* ********************************************************************* 
      * Ventas

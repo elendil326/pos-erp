@@ -1,41 +1,33 @@
 <?php
 
-
-
 	define("BYPASS_INSTANCE_CHECK", false);
 
 	require_once("../../../server/bootstrap.php");
 
 	$page = new GerenciaTabPage();
 
-	//
 	// Parametros necesarios
-	// 
 	$page->requireParam("pid", "GET", "Este producto no existe.");
-
-
 
 	$este_producto = ProductoDAO::getByPK($_GET["pid"]);
 
 
 
-	if(is_null($este_producto)){
-		$page->render();
+	if ( is_null( $este_producto ) )
+	{
+		$page->render( );
 		exit;
 	}
 
 
-
-
-
-
-	$nexistencias = ProductoDAO::ExistenciasTotales( $este_producto->getIdProducto() );
+	$nexistencias = ProductoDAO::ExistenciasTotales( $este_producto->getIdProducto( ) );
 	$precios = TarifasController::_CalcularTarifa( $este_producto, "venta" );
 
 	$html = "<table><tr><td colspan=2><h3>Tarifas</h3></td></tr>	";
 
-	for ($i=0; $i < sizeof($precios); $i++) { 
-		$html .= "<tr><td>".$precios[$i]["descripcion"] . "</td><td>" . FormatMoney($precios[$i]["precio"]) . "</td>";
+	for ( $i=0; $i < sizeof($precios); $i++ )
+	{
+		$html .= "<tr><td>".$precios[$i]["descripcion"] . "</td><td>" . FormatMoney( $precios[$i]["precio"] ) . "</td>";
 	}
 
 	$um = UnidadMedidaDAO::getByPK( $este_producto->getIdUnidad() );
@@ -55,12 +47,11 @@
 
 
 	
-	if(is_null($este_producto->getFotoDelProducto())){
+	if ( is_null( $este_producto->getFotoDelProducto( ) ) )
+	{
 		//$page->addComponent(" &iquest; Es esta una imagen descriptiva de su producto?");
 	}
 	
-
-
 	$page->addComponent("
 	<table  class=\"\">
 
@@ -102,7 +93,9 @@
 	$este_producto->setCostoEstandar(FormatMoney($este_producto->getCostoEstandar()));
 
 	$um = UnidadMedidaDAO::getByPK($este_producto->getIdUnidadCompra(  ) );
-	if(!is_null($um)){
+	
+	if(!is_null($um))
+	{
 		$este_producto->setIdUnidadCompra( $um->getDescripcion() ) ;	
 	}
 	

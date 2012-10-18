@@ -1,14 +1,23 @@
 <?php
+
+    /**
+      * Description:
+      *
+      *
+      * Author:
+      *     Manuel Garcia (manuel)
+      *     Alan Gonzalez (alan)
+      *     Andres Zendejas
+      *
+      ***/
+
 require_once("interfaces/Efectivo.interface.php");
-/**
-  *
-  *
-  *
-  **/
-	
-  class EfectivoController implements IEfectivo{
-  
-        
+
+
+
+
+class EfectivoController implements IEfectivo{
+
         /*
          *Se valida que un string tenga longitud en un rango de un maximo inclusivo y un minimo exclusvio.
          *Regresa true cuando es valido, y un string cuando no lo es.
@@ -611,64 +620,65 @@ require_once("interfaces/Efectivo.interface.php");
 
 
 
-	private static function UltimoCorteSucursal( $sucursal ){
-		
-		if( $sucursal instanceof Sucursal ){
-			
-		}else{
+    /**
+      *
+      *
+      * Returns:
+      *     Object of type CorteDeSucursal which is the last time this happened.
+      *     May return null otherwise.
+      *
+      ***/
+    private static function UltimoCorteSucursal( $sucursal )
+    {
+        if( !$sucursal instanceof Sucursal )
+        {
+            throw new InvalidDataException( "Argument must be instance of Sucursal" );
+        }
+        else
+        {
+            $sucursal = SucursalDAO::getByPK( $sucursal );
+        }
 
-			$sucursal = SucursalDAO::getByPK( $sucursal );
-		}
+		if ( is_null( $sucursal ) )
+        {
+            return null;
+        }
 
+		$cortes  = CorteDeSucursalDAO::search( new CorteDeSucursal( $sucursal->AsArray( ) ), "fin", "desc"  );
 
-		if(is_null($sucursal)) return null;
-
-
-		$cortes  = CorteDeSucursalDAO::search( new CorteDeSucursal( $sucursal->AsArray() ), "fin", "desc"  );
-
-		if(sizeof($cortes) == 0) return null;
+		if( sizeof( $cortes ) == 0 ) return null;
 
 		return $cortes[0];
-	
 	}
 
-	
-	 
-	private static function UltimoCorteCaja(VO $caja){
 
-		//if($caja == NULL)
-		//if($caja->id_caja == NULL)
-		//
-		
-		$c = CorteDeCajaDAO::search( new CorteDeCaja( array (		
+	private static function UltimoCorteCaja(VO $caja)
+    {
+		$c = CorteDeCajaDAO::search( new CorteDeCaja( array (
 			"id_caja" => $caja->getIdCaja()
 		)));
 
-
 		return sizeof($c) == 0 ? NULL : $c[0];
-		
 	}
 
 
 
-	public	static function UltimoCorte( VO $empresa_sucursal_caja  ){
+	public static function UltimoCorte( VO $empresa_sucursal_caja  ){
 
-		if( $empresa_sucursal_caja instanceof Caja ){
-		
+		if( $empresa_sucursal_caja instanceof Caja )
+        {
 			return self::UltimoCorteCaja( $empresa_sucursal_caja );
-
-		}else if( $empresa_sucursal_caja instanceof Sucursal){
-			return self::UltimoCorteSucursal( $empresa_sucursal_caja );
-
-		}else if( $empresa_sucursal_caja instanceof Empresa ){
-			return ;
-		
+		}
+        else if ( $empresa_sucursal_caja instanceof Sucursal)
+        {
+            return self::UltimoCorteSucursal( $empresa_sucursal_caja );
+		}
+        else if( $empresa_sucursal_caja instanceof Empresa )
+        {
+            return ;
 		}
 
 		throw new InvalidDataException();
-
-		
-	
 	}
 
 
@@ -676,60 +686,60 @@ require_once("interfaces/Efectivo.interface.php");
 
 
 
+    /**
+      *
+      *
+      * Description:
+      *     Logic to create a new 'CorteDeSucursal'.
+      *     The start date is always the last CordeDeSucursal,
+      *     or if this has never happened, then time() is used.
+      *     One might create a 'CorteDeSucursal' to any given time
+      *     as long as 'UltimoCordeDeSucursal()' < time() < TIME
+      *
+      * Returns:
+      *
+      ***/
+	public static function NuevoCorteSucursal( $end_date = 0, $id_sucursal )
+    {
 
-	public static function NuevoCorte( $end_date = 0 ){
-		
+		if ( $end_date > time( ) )
+        {
+            throw new BusinessLogicException("You must give a time in the past.");
+        }
 
-
-
-		if($end_date > time()){
-			//no puedes hacer un corte que termine en el futuro			
-			throw new BusinessLogicException();
+		if ( $end_date == 0 )
+        {
+			$end_date = time( );
 		}
 
+        $suc = SucursalDAO::getByPK( $id_sucursal );
 
-		if($end_date == 0){
-			$end_date = time();
+        if ( is_null( $suc ) )
+        {
+            throw new InvalidDataException( "'Sucursal' does not exist" );
+        }
+
+		$start_date = self::UltimoCorte( $suc );
+
+		if ( is_null( $start_date ) )
+        {
+            //'CordeDeSucursal' has never happende, 
+            //use the opening date.
+			$start_date = $suc->getFechaApertura( );
 		}
 
-
-		
-
-			
-		$start_date = self::UltimoCorte( $suc = SucursalDAO::getByPK( 7  ) );
-		
-
-		if(is_null( $start_date ) ){
-			//este es el primer corte, busquemos la fecha de apertura
-			//de esa sucursal
-			//
-
-			//not null
-			//
-
-			$start_date = $suc->getFechaApertura();
-
-		}
-
-		if($end_date < $start_date){
-			throw new InvalidDataException();
-		}
-
-
-
-		
+        ASSERT( $end_date < $start_date );
 
 		$ingresos_por_tipo = array(
-			"BANCO" => 0.0,
-			"CAJA" => 0.0
-		);
+                                "BANCO" => 0.0,
+                                "CAJA" => 0.0
+                            );
 
-		$ventas = VentasController::Lista($start_date, $end_date);
-
+		$ventas = VentasController::Lista( $start_date, $end_date );
 
 		//esto regresa, total, subtotal, impuesto
 		$ventasTotal = VentaDAO::TotalVentasNoCanceladasAContadoDesdeHasta( $start_date, $end_date );
-					  
+
 		//$abonosTotal = AbonoVenta::TotalAbonosNoCanceladosDesdeHasta( $start_date, $end_date );
 
 		/*

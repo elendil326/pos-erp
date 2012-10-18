@@ -52,7 +52,13 @@
 
     $sucursal = SucursalDAO::getByPK( $_REQUEST['s'] );
 
-    $page->addComponent( new TitleComponent( "Sucursal " . $sucursal->getRazonSocial( ),1 ) );
+    if ( is_null( $sucursal ) )
+    {
+        $page->render( );
+        exit;
+    }
+
+    $page->addComponent( new TitleComponent( "Sucursal " . $sucursal->getRazonSocial( ), 1 ) );
 
     $table = "";
     $table .= "<table>";
