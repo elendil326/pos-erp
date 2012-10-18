@@ -1,7 +1,4 @@
 <?php 
-
-
-
 		define("BYPASS_INSTANCE_CHECK", false);
 
 		require_once("../../../server/bootstrap.php");
@@ -12,10 +9,15 @@
 
 		$tabla = new TableComponent( 
 			array(
-                                "nombre"=> "Nombre",
-				"monto_porcentaje"  => "Monto/Porcentaje",
-				"es_monto"  => "Es monto",
-				"descripcion" => "Descripcion"
+                                "id_impuesto"=>"ID",
+                                "nombre" => "Nombre",
+				"descripcion" => "Descripcion",
+                                "codigo" => "Codigo",
+				"importe" => "Importe",
+                                "tipo"=>"Tipo",
+                                "aplica"=>"Aplica",
+                                "incluido"=>"Incluido",
+                                "activo"=>"Activo"
 			),
                         //ImpuestosYRetencionesController::ListaImpuesto()
                         ImpuestoDAO::getAll()

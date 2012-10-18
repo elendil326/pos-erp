@@ -1,7 +1,4 @@
 <?php 
-
-
-
 		define("BYPASS_INSTANCE_CHECK", false);
 
 		require_once("../../../server/bootstrap.php");
@@ -19,7 +16,7 @@
 				"importe" => "Importe",
                                 "tipo"=>"Tipo",
                                 "aplica"=>"Aplica",
-                                "incluido"=>"Incluido",
+                                "incluido"=>"Incluido en el precio",
                                 "activo"=>"Activo"
 			), $i["resultados"] );
 
