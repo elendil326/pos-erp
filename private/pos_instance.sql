@@ -853,15 +853,18 @@ CREATE TABLE IF NOT EXISTS `impresora_caja` (
 --
 -- Table structure for table `impuesto`
 --
-
 CREATE TABLE IF NOT EXISTS `impuesto` (
   `id_impuesto` int(11) NOT NULL AUTO_INCREMENT,
-  `monto_porcentaje` float NOT NULL COMMENT 'El monto o e lporcentaje correspondiente del impuesto',
-  `es_monto` tinyint(1) NOT NULL COMMENT 'True si el valor del campo monto_porcentaje es un monto, false si es un porcentaje',
+  `codigo` varchar(64) CHARACTER SET utf8 NOT NULL COMMENT 'Determina el código para identificar el impuesto',
+  `importe` float NOT NULL COMMENT 'El monto o el porcentaje correspondiente del impuesto',
+  `incluido_precio` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Determina si el importe está incluido en el precio',
+  `aplica` varchar(64) CHARACTER SET utf8 NOT NULL DEFAULT 'ambos' COMMENT 'Determina el ámbito al que aplica el impuesto (compra, venta, ambos)',
+  `tipo` varchar(64) CHARACTER SET utf8 NOT NULL DEFAULT 'porcentaje' COMMENT 'Determina el tipo de impuesto: porcentaje, importe_fijo, ninguno, saldo_pendiente.',
   `nombre` varchar(100) NOT NULL COMMENT 'Nombre del impuesto',
   `descripcion` varchar(255) DEFAULT NULL COMMENT 'Descripcion larga del impuesto',
+  `activo` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Determina si está activo el impuesto',
   PRIMARY KEY (`id_impuesto`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
