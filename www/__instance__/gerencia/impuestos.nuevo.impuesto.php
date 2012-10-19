@@ -25,4 +25,4 @@
                 $form->createComboBoxJoin("tipo", "tipo", array( array( "id" => 0, "caption" => "Porcentaje" ), array( "id" => 1, "caption" => "Importe fijo" ), array( "id" => 2, "caption" => "Ninguno" ), array( "id" => 3, "caption" => "Saldo pendiente" ) ));
                 $form->createComboBoxJoin("aplica","aplica",array(array("id" => 0, "caption" => "Compra"),array("id" => 1, "caption" => "Venta"), array("id" => 2, "caption" => "Ambos")));
                 $page->addComponent($form);//Agrega los componentes al formulario
-                $page->render();
+                $page->render();//Renderiza la página
