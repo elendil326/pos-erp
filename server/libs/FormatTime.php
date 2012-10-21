@@ -1,4 +1,57 @@
 <?php
+class R
+{
+
+	private static function NonExistent()
+	{
+		return "<font style='color:gray'>NaN</font>";
+	}
+
+	static function UserFullNameFromId( $user_id )
+	{
+		if ( is_null( $u = UsuarioDAO::getByPK( $user_id ) ) )
+		{
+			return self::NonExistent();
+		}
+		else
+		{
+			return $u->getNombre( );
+		}
+
+	}
+
+	static function UserFirstNameFromId( $user_id )
+	{
+
+	}
+
+	static function FriendlyDateFromUnixTime( $unixtime )
+	{
+		return FormatTime( $unixtime );
+	}
+
+	static function MoneyFromDouble( $foo )
+	{
+		return FormatMoney( $foo );
+	}
+
+
+	static function RazonSocialFromIdEmpresa( $id_empresa )
+	{
+		if ( is_null( $u = EmpresaDAO::getByPK( $id_empresa ) ) )
+		{
+			return self::NonExistent();
+		}
+		else
+		{
+			return $u->getRazonSocial( );
+		}
+	}
+
+}
+
+
+
 
 function FormatMoney($float){
 	

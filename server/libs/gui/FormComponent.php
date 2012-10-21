@@ -21,7 +21,7 @@ class FormComponent implements GuiComponent
 	 *
 	 *
 	 * */
-	public function __construct()
+	public function __construct( )
 	{
 		$this->send_to_api          = null;
 		$this->on_click             = null;

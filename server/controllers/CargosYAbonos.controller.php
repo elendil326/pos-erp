@@ -1775,32 +1775,44 @@ class CargosYAbonosController extends ValidacionesController implements ICargosY
     
     /**
      *
-     *Registrar un gasto. El usuario y la sucursal que lo registran ser?tomados de la sesi?ctual.
-     
-     <br/><br/><b>Update :</b>Ademas deber?tambi?de tomar la fecha de ingreso del gasto del servidor y agregar tambi?como par?tro una fecha a la cual se deber?de aplicar el gasto. Por ejemplo si el d?09/09/11 (viernes) se tomo dinero para pagar la luz, pero resulta que ese d?se olvidaron de registrar el gasto y lo registran el 12/09/11 (lunes). Entonces tambien se deberia de tomar como parametro una <b>fecha</b> a la cual aplicar el gasto, tambien se deberia de enviar como parametro una <b>nota</b>
+     * Registrar un gasto. El usuario y la sucursal que lo registran ser?tomados de la sesi?ctual.
+     * 
+     * <br/><br/><b>Update :</b>Ademas deber?tambi?de tomar la fecha de ingreso del gasto del servidor y agregar tambi?como par?tro una fecha a la cual se deber?de aplicar el gasto. Por ejemplo si el d?09/09/11 (viernes) se tomo dinero para pagar la luz, pero resulta que ese d?se olvidaron de registrar el gasto y lo registran el 12/09/11 (lunes). Entonces tambien se deberia de tomar como parametro una <b>fecha</b> a la cual aplicar el gasto, tambien se deberia de enviar como parametro una <b>nota</b>
      *
      * @param fecha_gasto string Fecha del gasto
      * @param id_empresa int Id de la empresa a la que pertenece este gasto
-     * @param monto float Monto del gasto en caso de que no este contemplado por el concepto de gasto o sea diferente a este
-     * @param id_sucursal int Id de la sucursal a la que pertenece este gasto
-     * @param id_caja int Id de la caja de la que se sustrae el dinero para pagar el gasto
-     * @param id_orden_de_servicio int Id de la orden del servicio que genero este gasto
-     * @param id_concepto_gasto int Id del concepto al que  hace referencia el gasto
+     * @param billetes json Los billetes que se retiran de la caja por pagar este gasto
      * @param descripcion string Descripcion del gasto en caso de que no este contemplado en la lista de concpetos de gasto
      * @param folio string Folio de la factura del gasto
+     * @param id_caja int Id de la caja de la que se sustrae el dinero para pagar el gasto
+     * @param id_concepto_gasto int Id del concepto al que  hace referencia el gasto
+     * @param id_orden_de_servicio int Id de la orden del servicio que genero este gasto
+     * @param id_sucursal int Id de la sucursal a la que pertenece este gasto
+     * @param monto float Monto del gasto en caso de que no este contemplado por el concepto de gasto o sea diferente a este
      * @param nota string Nota del gasto
-     * @return id_gasto int Id generado por la inserci�n del nuevo gasto
+     * @return id_gasto int Id generado por la insercin del nuevo gasto
      **/
-    public static function NuevoGasto($fecha_gasto, $id_empresa, $billetes = null, $descripcion = null, $folio = null, $id_caja = null, $id_concepto_gasto = null, $id_orden_de_servicio = null, $id_sucursal = null, $monto = null, $nota = null)
+    public static function NuevoGasto(
+                $fecha_gasto,
+                $id_empresa,
+                $billetes = null,
+                $descripcion = null,
+                $folio = null,
+                $id_caja = null,
+                $id_concepto_gasto = null,
+                $id_orden_de_servicio = null,
+                $id_sucursal = null,
+                $monto = null,
+                $nota = null
+            )
     {
-        Logger::log("Creando nuevo gasto");
-        
+
         //obtiene al usuario de la sesion actual
-        $id_usuario = SesionController::Actual();
+        $id_usuario = SesionController::Actual( );
         $id_usuario = $id_usuario["id_usuario"];
         
-        if (is_null($id_usuario)) {
-            Logger::error("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
+        if ( is_null( $id_usuario ) )
+        {
             throw new Exception("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
         }
         
@@ -1809,76 +1821,110 @@ class CargosYAbonosController extends ValidacionesController implements ICargosY
         
         //Si no se recibio monto, se toma del concepto de gasto.
         //Si no se recibio concepto de gasto o este no cuenta con un monto se manda una excepcion
-        if (is_null($monto)) {
-            Logger::log("No se recibio monto, se procede a buscar en el concepto de ingreso");
-            if (is_null($id_concepto_gasto)) {
-                Logger::error("No se recibio un concepto de gasto");
+        if ( is_null( $monto ) )
+        {
+            if ( is_null( $id_concepto_gasto ) )
+            {
                 throw new Exception("No se recibio un concepto de gasto ni un monto");
             }
-            $concepto_gasto = ConceptoGastoDAO::getByPK($id_concepto_gasto);
-            $monto          = $concepto_gasto->getMonto();
-            if (is_null($monto)) {
-                Logger::error("El concepto de gasto recibido no cuenta con un monto");
+
+            $concepto_gasto = ConceptoGastoDAO::getByPK( $id_concepto_gasto );
+
+            if ( is_null( $concepto_gasto ) )
+            {
+                throw new Exception("El concepto de gasto recibido no existe.");
+            }
+
+            $monto = $concepto_gasto->getMonto( );
+
+            if ( is_null( $monto ) )
+            {
                 throw new Exception("El concepto de gasto recibido no cuenta con un monto ni se recibio un monto");
             }
         }
         
         //Si no se recibe sucursal ni caja se intenta tomar las actuales
-        if (!$id_sucursal)
-            $id_sucursal = self::getSucursal();
-        if (!$id_caja)
-            $id_caja = self::getCaja();
-        if (!is_null($id_caja)) {
-            try {
-                CajasController::modificarCaja($id_caja, 0, $billetes, $monto);
+        if ( !$id_sucursal )
+        {
+            $id_sucursal = self::getSucursal( );
+        }
+
+        if ( !$id_caja )
+        {
+            $id_caja = self::getCaja( );
+        }
+            
+        if ( !is_null( $id_caja ) )
+        {
+            try
+            {
+                CajasController::modificarCaja( $id_caja, 0, $billetes, $monto );
             }
-            catch (Exception $e) {
+            catch (Exception $e)
+            {
                 throw $e;
             }
         }
         
         //Se inicializa el registro de gasto
-        $gasto = new Gasto();
-        $gasto->setFechaDelGasto($fecha_gasto);
-        $gasto->setIdEmpresa($id_empresa);
-        $gasto->setMonto($monto);
-        $gasto->setIdSucursal($id_sucursal);
-        $gasto->setIdCaja($id_caja);
-        $gasto->setIdOrdenDeServicio($id_orden_de_servicio);
-        $gasto->setIdConceptoGasto($id_concepto_gasto);
-        $gasto->setDescripcion($descripcion);
-        $gasto->setFolio($folio);
-        $gasto->setNota($nota);
-        $gasto->setFechaDeRegistro(date("Y-m-d H:i:s", time()));
-        $gasto->setIdUsuario($id_usuario);
-        $gasto->setCancelado(0);
+        $gasto = new Gasto( );
+
+        // fecha_gasto might be in the format : 2012-10-21T00:00:00
+        // if this is the case then act acordingly
+        if ( $fecha_gasto )
+        {
+            $gasto->setFechaDelGasto( strtotime( $fecha_gasto ) );
+        }
+        else
+        {
+            $gasto->setFechaDelGasto( $fecha_gasto );
+        }
+        
+        $gasto->setIdEmpresa( $id_empresa );
+        $gasto->setMonto( $monto );
+        $gasto->setIdSucursal( $id_sucursal );
+        $gasto->setIdCaja( $id_caja );
+        $gasto->setIdOrdenDeServicio( $id_orden_de_servicio );
+        $gasto->setIdConceptoGasto( $id_concepto_gasto );
+        $gasto->setDescripcion( $descripcion );
+        $gasto->setFolio( $folio );
+        $gasto->setNota( $nota );
+        $gasto->setFechaDeRegistro( time( ) );
+        $gasto->setIdUsuario( $id_usuario );
+        $gasto->setCancelado( 0 );
         
         //Se incrementa el costo de la orden de servicio si este gasto se le asigna a alguna
         $orden_de_servicio = null;
-        if (!is_null($id_orden_de_servicio)) {
-            $orden_de_servicio = OrdenDeServicioDAO::getByPK($id_orden_de_servicio);
-            $orden_de_servicio->setPrecio($monto + $orden_de_servicio->getPrecio());
+        if ( !is_null( $id_orden_de_servicio ) )
+        {
+            $orden_de_servicio = OrdenDeServicioDAO::getByPK( $id_orden_de_servicio );
+            $orden_de_servicio->setPrecio( $monto + $orden_de_servicio->getPrecio( ) );
         }
         
-        DAO::transBegin();
-        try {
-            GastoDAO::save($gasto);
-            if (!is_null($orden_de_servicio)) {
+        DAO::transBegin( );
+        try 
+        {
+            GastoDAO::save( $gasto );
+
+            if ( !is_null( $orden_de_servicio ) )
+            {
                 OrdenDeServicioDAO::save($orden_de_servicio);
             }
         }
-        catch (Exception $e) {
+        catch( Exception $e )
+        {
             DAO::transRollback();
             Logger::error("No se pudo crear el gasto: " . $e);
             throw new Exception("No se pudo crear el gasto");
         }
+
         DAO::transEnd();
         Logger::log("Gasto creado exitosamente");
-        return array(
-            "id_gasto" => $gasto->getIdGasto()
-        );
+
+        return array( "id_gasto" => $gasto->getIdGasto( ) );
     }
-    
+
+
     /**
      *
      *Editar los detalles de un gasto.
