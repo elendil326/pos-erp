@@ -3948,22 +3948,24 @@ require_once("interfaces/Sucursales.interface.php");
             Logger::log("Se encontraron ".count($cajas)." de cajas");
             return $cajas;
 	}
-        
 
-        public static function Corte
-	(
-		$fecha_corte, 
-		$fecha_final, 
-		$fecha_inicial, 
-		$fondo_inicial, 
-		$id_sucursal, 
-		$id_usuario, 
-		$total_efectivo
-	){
-            
-        }
-	
-	
 
-        
-  }
+
+
+
+
+    public static function Corte(
+        $fecha_corte,
+        $fecha_final,
+        $fecha_inicial,
+        $fondo_inicial,
+        $id_sucursal,
+        $id_usuario,
+        $total_efectivo
+        )
+    {
+
+    }
+
+
+}//clase

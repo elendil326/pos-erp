@@ -703,7 +703,7 @@ class EfectivoController implements IEfectivo{
 	public static function NuevoCorteSucursal( $end_date = 0, $id_sucursal )
     {
 
-		if ( $end_date > time( ) )
+        if ( $end_date > time( ) )
         {
             throw new BusinessLogicException( "You must give a time in the past." );
         }
@@ -772,6 +772,8 @@ class EfectivoController implements IEfectivo{
         {
             throw new InvalidDatabaseException($e);
         }
+
+        return array ( "id_corte_sucursal" => $corte->getIdCorteSucursal( ) );
 	}
 
 

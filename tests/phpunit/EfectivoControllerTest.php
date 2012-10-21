@@ -49,8 +49,13 @@ class ClientesControllerTests extends PHPUnit_Framework_TestCase
     {
         $id = ScenarioMaker::CreateSucursalAndReturnID( "N" );
         EfectivoController::NuevoCorteSucursal( 0, $id );
-        
+
+        //now, 'UltimoCorte' should not return null
+        $this->assertNotNull( EfectivoController::UltimoCorte( SucursalDAO::getByPK( $id ) ) );
     }
+
+
+
 }
 
 
