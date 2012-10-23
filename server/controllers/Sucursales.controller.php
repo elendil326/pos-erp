@@ -13,10 +13,10 @@ class SucursalesController extends ValidacionesController implements ISucursales
 
 
 
-        /*
-         * Valida los parametros de la tabla sucursal. Cuando algun parametro es incorrecto regresa
-         * un string, cuando no hay error regresa true
-         */
+    /*
+     * Valida los parametros de la tabla sucursal. Cuando algun parametro es incorrecto regresa
+     * un string, cuando no hay error regresa true
+     */
     private static function validarParametrosSucursal
         (
                 $id_sucursal = null,
@@ -3982,13 +3982,17 @@ class SucursalesController extends ValidacionesController implements ISucursales
             throw new InvalidDataException( "'Sucursal' does not exist" );
         }
 
-        $start_date = EfectivoController::UltimoCorte( $suc )->getFin( );
+        $corte = EfectivoController::UltimoCorte( $suc );
 
-        if ( is_null( $start_date ) )
+        if ( is_null( $corte ) )
         {
             //'CordeDeSucursal' has never happende, 
             //use the opening date.
             $start_date = $suc->getFechaApertura( );
+        }
+        else
+        {
+            $start_date = $corte->getFin( );
         }
 
         //ASSERT( $fecha_final . "<=" . $start_date );

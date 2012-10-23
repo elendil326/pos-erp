@@ -124,44 +124,47 @@ return $e->getRazonSocial();
 
 
 
-function funcion_empresa( $id_empresa ){
-return EmpresaDAO::getByPK($id_empresa) ? EmpresaDAO::getByPK($id_empresa)->getRazonSocial() : "------";
+function funcion_empresa( $id_empresa )
+{
+	return EmpresaDAO::getByPK($id_empresa) ? EmpresaDAO::getByPK($id_empresa)->getRazonSocial() : "------";
 }
 
-function funcion_tipo_almacen( $id_tipo_almacen ){
-return TipoAlmacenDAO::getByPK($id_tipo_almacen) ? TipoAlmacenDAO::getByPK($id_tipo_almacen)->getDescripcion() : "------";
+function funcion_tipo_almacen( $id_tipo_almacen )
+{
+	return TipoAlmacenDAO::getByPK($id_tipo_almacen) ? TipoAlmacenDAO::getByPK($id_tipo_almacen)->getDescripcion() : "------";
 }
-
-
 
 function getUserName($id_usuario)
 {
-if ( is_null( $u = UsuarioDAO::getByPK( $id_usuario ) ) )
-{
-return "ERROR";
-}
-return $u->getNombre( );
+	if ( is_null( $u = UsuarioDAO::getByPK( $id_usuario ) ) )
+	{
+		return "ERROR";
+	}
+	return $u->getNombre( );
 }
 
 function td( $inner, $repeat = 0 )
 {
-$out = "";
-while ( $repeat -- >= 0)
-{
-$out .= "<td>" . $inner . "</td>";
-}
-return $out;
+	$out = "";
+
+	while ( $repeat -- >= 0)
+	{
+		$out .= "<td>" . $inner . "</td>";
+	}
+	return $out;
 }
 
-function funcion_clasificacion_cliente($id_clasifiacion){
-if(is_null($id_clasifiacion)) return "";
-$c = ClasificacionClienteDAO::getByPK($id_clasifiacion);
-if(is_null($c)) return "";			
-return $c->getNombre();
+function funcion_clasificacion_cliente($id_clasifiacion)
+{
+	if(is_null($id_clasifiacion)) return "";
+	$c = ClasificacionClienteDAO::getByPK($id_clasifiacion);
+	if(is_null($c)) return "";
+	return $c->getNombre();
 }
+
 function funcion_gerente( $id_gerente )
 {
-return UsuarioDAO::getByPK($id_gerente) ? UsuarioDAO::getByPK($id_gerente)->getNombre() : "------";
+	return UsuarioDAO::getByPK($id_gerente) ? UsuarioDAO::getByPK($id_gerente)->getNombre() : "------";
 }
 
 function funcion_sucursal( $id_sucursal )
@@ -227,20 +230,18 @@ return ($cancelada) ? "Cancelada" : "No Cancelada";
 
 
 
-function FormatMoney($float){
-	
-	//return "$" . $float;
-	return sprintf ( "<b>$</b>%.2f" , $float);
-	
+function FormatMoney($float)
+{
+	//return sprintf ( "<b>$</b>%.2f" , $float);
+	return "$" . number_format( $float, 2, '.', ',');
+	//return money_format('%=*(#10.2n', $float);
 }
+
 
 function FormatTime($timestamp, $type = "FB")
 {
-
-
-
-
-	if(!is_numeric($timestamp)){
+	if(!is_numeric($timestamp))
+	{
 		$timestamp = strtotime($timestamp);
 	}
 

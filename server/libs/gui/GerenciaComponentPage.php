@@ -309,10 +309,10 @@ class GerenciaComponentPage extends PosComponentPage{
 		            "title": "Sucursales",
 		            "url": "sucursales.lista.php",
 		            "children": [
-			            {
-			                "title": "Lista de sucursales",
-			                "url": "sucursales.lista.php"
-			            },
+                        {
+                            "title": "Cortes",
+                            "url": "corte.lista.php"
+                        },
 			            {
 			                "title": "Nueva sucursal",
 			                "url": "sucursales.nueva.php"
