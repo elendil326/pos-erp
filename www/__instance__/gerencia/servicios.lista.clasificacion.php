@@ -2,35 +2,30 @@
 
 
 
-		define("BYPASS_INSTANCE_CHECK", false);
+    define("BYPASS_INSTANCE_CHECK", false);
 
-		require_once("../../../server/bootstrap.php");
+    require_once("../../../server/bootstrap.php");
 
-		$page = new GerenciaComponentPage();
+    $page = new GerenciaComponentPage();
 
-		$page->addComponent( new TitleComponent( "Clasificaciones de Servicio" ) );
-		$page->addComponent( new MessageComponent( "Lista de clasificaciones de servicio" ) );
-		
-		$tabla = new TableComponent( 
-			array(
-				"nombre" => "Nombre",
-				"garantia"	=> "Garantia",
-				"descripcion" 		=> "Descripcion",
-				"activa" 			=> "Activa"
-			),
-                         ClasificacionServicioDAO::getAll()
-		);
-		
-                function funcion_activa( $activa )
-                {
-                    return $activa ? "Activa" : "Inactiva";
-                }
-                
-                $tabla->addColRender("activa", "funcion_activa");
-                
-		$tabla->addOnClick( "id_clasificacion_servicio", "(function(a){ window.location = 'servicios.clasificacion.ver.php?cid=' + a; })" );
-		
-			
-		$page->addComponent( $tabla );
+    $page->addComponent( new TitleComponent( "Clasificaciones de Servicio" ) );
+    $page->addComponent( new MessageComponent( "Lista de clasificaciones de servicio" ) );
 
-		$page->render();
+    $tabla = new TableComponent( 
+        array(
+            "nombre" => "Nombre",
+            "garantia" => "Garantia",
+            "descripcion" => "Descripcion",
+            "activa" => "Activa"
+        ),
+        ClasificacionServicioDAO::getAll( )
+    );
+
+
+
+    $tabla->addColRender("activa", "funcion_activa");
+    $tabla->addOnClick( "id_clasificacion_servicio", "(function(a){ window.location = 'servicios.clasificacion.ver.php?cid=' + a; })" );
+
+    $page->addComponent( $tabla );
+
+    $page->render();

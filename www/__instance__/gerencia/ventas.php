@@ -14,16 +14,6 @@
 	require_once("../../../server/bootstrap.php");
 
 
-    function getUserName($id_usuario)
-    {
-        if ( is_null( $u = UsuarioDAO::getByPK( $id_usuario ) ) )
-        {
-            return "ERROR";
-        }
-        return $u->getNombre( );
-    }
-
-
     $page = new GerenciaTabPage( );
 
     $page->addComponent( new TitleComponent( "Ventas y cotizaciones", 1 ) );

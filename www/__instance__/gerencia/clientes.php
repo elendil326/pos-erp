@@ -36,21 +36,13 @@
 
 		$tabla->convertToExtJs(false);
  		$tabla->addColRender("saldo_del_ejercicio", "FormatMoney");
-        
-        function funcion_activo($activo){
-            return ($activo ? "Activo" : "Inactivo" );
-        }
+
         
         function funcion_consignatario($consignatario){
             return ($consignatario ? "Consignatario" : "----" );
         }
 
-        function funcion_clasificacion_cliente($id_clasifiacion){
-			if(is_null($id_clasifiacion)) return "";
-			$c = ClasificacionClienteDAO::getByPK($id_clasifiacion);
-			if(is_null($c)) return "";			
-			return $c->getNombre();
-		}
+
 
         $tabla->addColRender("id_clasificacion_cliente", "funcion_clasificacion_cliente");
         $tabla->addColRender("activo", "funcion_activo");

@@ -19,16 +19,16 @@ $esta_orden = OrdenDeServicioDAO::getByPK($_GET["oid"]);
 //
 // Titulo de la pagina
 // 
+$customer = UsuarioDAO::getByPK( $esta_orden->getIdUsuarioVenta( ) );
 
-
-
-$customer         = UsuarioDAO::getByPK($esta_orden->getIdUsuarioVenta());
-
-if(!is_null($customer)){
+if( !is_null( $customer ) )
+{
 	$link_to_customer = "<a href='clientes.ver.php?cid=" . $esta_orden->getIdUsuarioVenta() . "'>";
 	$link_to_customer .= $customer->getNombre();
 	$link_to_customer .= "</a>";
-}else{
+}
+else
+{
 	$link_to_customer = "<span style='color:gray'>este cliente ya no existe</span>.";
 }
 
@@ -42,12 +42,11 @@ $page->addComponent(new TitleComponent("Orden de servicio " . $_GET["oid"] . " p
 // Menu de opciones
 // 
 
-$menu = new MenuComponent();
+$menu = new MenuComponent( );
 
 
-if ( $esta_orden->getActiva() ){
-	
-	
+if ( $esta_orden->getActiva( ) )
+{
 	$btn_eliminar = new MenuItem("Cancelar orden", null);
 	$btn_eliminar->addApiCall("api/servicios/orden/cancelar", "GET");
 	$btn_eliminar->onApiCallSuccessRedirect("servicios.lista.orden.php");
@@ -185,19 +184,6 @@ $header = array(
 $table = new TableComponent($header, $seguimientos);
 $table->renderRowId("comments");
 $table->addNoData("");
-function funcion_sucursal($id_sucursal){
-	return (SucursalDAO::getByPK($id_sucursal) ? SucursalDAO::getByPK($id_sucursal)->getRazonSocial() : "---------");
-}
-
-function funcion_usuario($id_usuario){
-	if( is_null( $u = UsuarioDAO::getByPK($id_usuario) ) ){
-		return "ERROR";
-	}
-	
-	return $u->getNombre();
-}
-
-
 
 $table->addColRender("id_localizacion", "funcion_sucursal");
 $table->addColRender("id_usuario", "funcion_usuario");

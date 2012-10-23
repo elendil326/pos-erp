@@ -2,6 +2,7 @@
 
 
 
+
 define("BYPASS_INSTANCE_CHECK", false);
 
 require_once("../../../server/bootstrap.php");
@@ -24,16 +25,16 @@ if(is_null($esta_orden)){
 //
 // Titulo de la pagina
 // 
+$customer = UsuarioDAO::getByPK( $esta_orden->getIdUsuarioVenta() );
 
-
-
-$customer         = UsuarioDAO::getByPK( $esta_orden->getIdUsuarioVenta() );
-
-if(!is_null($customer)){
+if( !is_null( $customer ) )
+{
 	$link_to_customer = "<a href='clientes.ver.php?cid=" . $esta_orden->getIdUsuarioVenta() . "'>";
-	$link_to_customer .= $customer->getNombre();
+	$link_to_customer .= $customer->getNombre( );
 	$link_to_customer .= "</a>";
-}else{
+}
+else
+{
 	$link_to_customer = "<span style='color:gray'>este cliente ya no existe</span>.";
 }
 
@@ -164,6 +165,7 @@ $header = array(
 $table = new TableComponent($header, $seguimientos);
 $table->renderRowId("comments");
 $table->addNoData("");
+
 function funcion_sucursal($id_sucursal){
 	return (SucursalDAO::getByPK($id_sucursal) ? SucursalDAO::getByPK($id_sucursal)->getRazonSocial() : "---------");
 }

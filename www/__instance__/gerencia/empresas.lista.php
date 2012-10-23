@@ -23,9 +23,7 @@
 			$results["resultados"]
 		);
 		
-		function funcion_activa($activa){
-			return $activa ? "Activa" : "Inactiva";
-		}
+
 		
 		
 

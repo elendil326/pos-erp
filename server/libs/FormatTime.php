@@ -61,29 +61,170 @@ class R
 
 }
 
-	function getEmpresaNombre($eid){
-		$e = EmpresaDAO::getByPK($eid);
-		return $e->getRazonSocial();
-	}
-	
-	function funcion_abierta( $abierta ){
-		return $abierta ? "Abierta" : "Cerrada";
-	}
 
-	function funcion_activa( $activa ){
-		return $activa ? "Activa" : "Inactiva";
-	}
-	function funcion_empresa( $id_empresa ){
-		return EmpresaDAO::getByPK($id_empresa) ? EmpresaDAO::getByPK($id_empresa)->getRazonSocial() : "------";
-	}
 
-	function funcion_tipo_almacen( $id_tipo_almacen ){
-		return TipoAlmacenDAO::getByPK($id_tipo_almacen) ? TipoAlmacenDAO::getByPK($id_tipo_almacen)->getDescripcion() : "------";
-	}
 
-	function funcion_activo( $activo ){
-		return ($activo) ? "Activo" : "Inactivo";
-	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function funcion_id_categoria_padre( $id_categoria_padre )
+{
+if( ! is_numeric($id_categoria_padre) )
+return "";
+
+$cat = ClasificacionProductoDAO::getByPk($id_categoria_padre);
+return ($cat ==null)?"":$cat->getNombre();
+}
+
+
+
+function funcion_categoria_unidad_medida($id_categoria_unidad_medida)
+{
+$cat = CategoriaUnidadMedidaDAO::getByPK($id_categoria_unidad_medida);
+return $cat->getDescripcion();
+}    
+
+
+
+
+
+function funcion_cat_padre_desc( $id_categoria_padre )
+{
+$aux = ClasificacionProductoDAO::getByPK($id_categoria_padre);
+return ($aux == null)? "Sin Cat Padre" : $aux->getNombre() ;
+
+}
+
+
+
+function getEmpresaNombre($eid){
+$e = EmpresaDAO::getByPK($eid);
+return $e->getRazonSocial();
+}
+
+
+
+
+
+
+
+
+
+
+
+function funcion_empresa( $id_empresa ){
+return EmpresaDAO::getByPK($id_empresa) ? EmpresaDAO::getByPK($id_empresa)->getRazonSocial() : "------";
+}
+
+function funcion_tipo_almacen( $id_tipo_almacen ){
+return TipoAlmacenDAO::getByPK($id_tipo_almacen) ? TipoAlmacenDAO::getByPK($id_tipo_almacen)->getDescripcion() : "------";
+}
+
+
+
+function getUserName($id_usuario)
+{
+if ( is_null( $u = UsuarioDAO::getByPK( $id_usuario ) ) )
+{
+return "ERROR";
+}
+return $u->getNombre( );
+}
+
+function td( $inner, $repeat = 0 )
+{
+$out = "";
+while ( $repeat -- >= 0)
+{
+$out .= "<td>" . $inner . "</td>";
+}
+return $out;
+}
+
+function funcion_clasificacion_cliente($id_clasifiacion){
+if(is_null($id_clasifiacion)) return "";
+$c = ClasificacionClienteDAO::getByPK($id_clasifiacion);
+if(is_null($c)) return "";			
+return $c->getNombre();
+}
+function funcion_gerente( $id_gerente )
+{
+return UsuarioDAO::getByPK($id_gerente) ? UsuarioDAO::getByPK($id_gerente)->getNombre() : "------";
+}
+
+function funcion_sucursal( $id_sucursal )
+{
+return SucursalDAO::getByPK($id_sucursal) ? SucursalDAO::getByPK($id_sucursal)->getRazonSocial() : "------";
+}
+
+function funcion_control_billetes( $control_billetes )
+{
+return $control_billetes ? "Con control" : "Sin control";
+}
+
+function funcion_abierta( $abierta )
+{
+return $abierta ? "Abierta" : "Cerrada";
+}
+
+function funcion_activo( $activo )
+{
+return ($activo) ? "Activo" : "Inactivo";
+}
+function funcion_servicio($servicio)
+{
+return ServicioDAO::getByPK($servicio) ? ServicioDAO::getByPK($servicio)->getNombreServicio() : "????";
+}
+
+function funcion_usuario_venta($usuario_venta)
+{
+return UsuarioDAO::getByPK($usuario_venta) ? UsuarioDAO::getByPK($usuario_venta)->getNombre() : "
+<img src='../../media/iconos/user_delete.png'> Nadie esta asignado";
+}
+
+function funcion_activa($activa)
+{
+return ($activa) ? "Activa" : "Inactiva";
+}
+
+function funcion_cancelada($cancelada)
+{
+return ($cancelada) ? "Cancelada" : "No Cancelada";
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 function FormatMoney($float){
@@ -92,26 +233,6 @@ function FormatMoney($float){
 	return sprintf ( "<b>$</b>%.2f" , $float);
 	
 }
-
-function getUserName($id_usuario)
-{
-    if ( is_null( $u = UsuarioDAO::getByPK( $id_usuario ) ) )
-    {
-        return "ERROR";
-    }
-    return $u->getNombre( );
-}
-
-function td( $inner, $repeat = 0 )
-{
-	$out = "";
-	while ( $repeat -- >= 0)
-    {
-        $out .= "<td>" . $inner . "</td>";
-    }
-	return $out;
-}
-
 
 function FormatTime($timestamp, $type = "FB")
 {
