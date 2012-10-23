@@ -281,22 +281,14 @@
  	 *
  	 *Realiza un corte general para la sucrusal, ya que aun no se implementan cajas
  	 *
- 	 * @param fecha_corte int Fecha en la cual se realizo el corte (formato de tiempo Unix)
- 	 * @param fecha_final int Fecha que acota el fint del periodo del corte (formato de tiempo Unix)
- 	 * @param fecha_inicial int Fecha que acota el inicio del periodo del corte (formato de tiempo Unix)
- 	 * @param fondo_inicial float Fondo inicial (efectivo) con el cual inicio este nuevo periodo de corte
+ 	 * @param fecha_final int Fecha que acota el fin del periodo del corte.(formato de tiempo Unix)
  	 * @param id_sucursal int Id de la sucursal a la cual se realizara el corte
- 	 * @param id_usuario int Id del usuario que realizo el corte
  	 * @param total_efectivo float Total de efectivo con el cual se cuenta en la caja al momento de realizar el corte.
  	 **/
   static function Corte
 	(
-		$fecha_corte, 
 		$fecha_final, 
-		$fecha_inicial, 
-		$fondo_inicial, 
 		$id_sucursal, 
-		$id_usuario, 
 		$total_efectivo
 	);  
   

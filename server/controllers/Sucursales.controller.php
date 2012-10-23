@@ -7,16 +7,17 @@ require_once("interfaces/Sucursales.interface.php");
   **/
 
 
-	
-  class SucursalesController extends ValidacionesController implements ISucursales{
+
+class SucursalesController extends ValidacionesController implements ISucursales
+{
 
 
-        
+
         /*
          * Valida los parametros de la tabla sucursal. Cuando algun parametro es incorrecto regresa
          * un string, cuando no hay error regresa true
          */
-	private static function validarParametrosSucursal
+    private static function validarParametrosSucursal
         (
                 $id_sucursal = null,
                 $id_direccion = null,
@@ -3918,36 +3919,40 @@ require_once("interfaces/Sucursales.interface.php");
             Logger::log("Traspaso editado correctamente");
 	}
   
-	/**
- 	 *
- 	 *Lista las cajas. Se puede filtrar por la sucursal a la que pertenecen.
- 	 *
- 	 * @param id_sucursal int Sucursal de la cual se listaran sus cajas
- 	 * @param activa bool Valor de activa de las cajas que se listaran
- 	 * @return cajas json Objeto que contendra la lista de cajas
- 	 **/
-	public static function ListaCaja
-	(
-		$activa = null,		
-		$id_sucursal = null
-	)
-	{  
-            Logger::log("Listando cajas");
-            //Se validan los parametros
-            $validar = self::validarParametrosCaja(null,$id_sucursal,null,null,null,null,null,$activa);
-            if(is_string($validar))
-            {
-                Logger::error($validar);
-                throw new Exception($validar);
-            }
-            //Si no se reciben parametros, se llama a todas las cajas
-            if(is_null($id_sucursal) && is_null($activa) )
-                $cajas = CajaDAO::getAll ();
-            else
-                $cajas = CajaDAO::search(new Caja( array("id_sucursal" => $id_sucursal, "activa" => $activa) ));
-            Logger::log("Se encontraron ".count($cajas)." de cajas");
-            return $cajas;
-	}
+    /**
+    	 *
+    	 *Lista las cajas. Se puede filtrar por la sucursal a la que pertenecen.
+    	 *
+    	 * @param id_sucursal int Sucursal de la cual se listaran sus cajas
+    	 * @param activa bool Valor de activa de las cajas que se listaran
+    	 * @return cajas json Objeto que contendra la lista de cajas
+    	 **/
+    public static function ListaCaja(
+        $activa = null,
+        $id_sucursal = null
+        )
+    {
+
+        //Se validan los parametros
+        $validar = self::validarParametrosCaja( null,$id_sucursal,null,null,null,null,null,$activa );
+
+        if ( is_string( $validar ) )
+        {
+            throw new Exception($validar);
+        }
+
+        //Si no se reciben parametros, se llama a todas las cajas
+        if ( is_null( $id_sucursal ) && is_null( $activa ) )
+        {
+            $cajas = CajaDAO::getAll ();
+        }else
+        {
+            $cajas = CajaDAO::search( new Caja( array( "id_sucursal" => $id_sucursal, "activa" => $activa ) ) );
+        }
+
+        //this should return an array
+        return $cajas;
+    }
 
 
 
@@ -3955,17 +3960,15 @@ require_once("interfaces/Sucursales.interface.php");
 
 
     public static function Corte(
-        $fecha_corte,
-        $fecha_final,
-        $fecha_inicial,
-        $fondo_inicial,
-        $id_sucursal,
-        $id_usuario,
-        $total_efectivo
+            $fecha_final,
+            $id_sucursal,
+            $total_efectivo
         )
     {
-
+        
     }
+
+
 
 
 }//clase

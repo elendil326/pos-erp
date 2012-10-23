@@ -52,6 +52,7 @@ Para impuestos de tipo porcentaje, introduzca valor % entre 0-1
 		$importe, 
 		$incluido_precio, 
 		$nombre, 
+		$descripcion = null, 
 		$tipo = ""
 	)
 	{  

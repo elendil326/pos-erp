@@ -1,6 +1,6 @@
 <?php 
 
-/*require_once("ApiHandler.php");
+require_once("ApiHandler.php");
 
 	require_once("ApiHttpErrors.php");
 
@@ -24,7 +24,7 @@
 
 	require_once("StringValidator.php");
 
-	require_once("Validator.php");*/
+	require_once("Validator.php");
 
 
   class ApiSesionIniciar extends ApiHandler {
@@ -3121,12 +3121,8 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"fecha_corte" => new ApiExposedProperty("fecha_corte", true, POST, array( "int" )),
 			"fecha_final" => new ApiExposedProperty("fecha_final", true, POST, array( "int" )),
-			"fecha_inicial" => new ApiExposedProperty("fecha_inicial", true, POST, array( "int" )),
-			"fondo_inicial" => new ApiExposedProperty("fondo_inicial", true, POST, array( "float" )),
 			"id_sucursal" => new ApiExposedProperty("id_sucursal", true, POST, array( "int" )),
-			"id_usuario" => new ApiExposedProperty("id_usuario", true, POST, array( "int" )),
 			"total_efectivo" => new ApiExposedProperty("total_efectivo", true, POST, array( "float" )),
 		);
 	}
@@ -3136,12 +3132,8 @@
  		$this->response = SucursalesController::Corte( 
  			
 			
-			isset($_POST['fecha_corte'] ) ? $_POST['fecha_corte'] : null,
 			isset($_POST['fecha_final'] ) ? $_POST['fecha_final'] : null,
-			isset($_POST['fecha_inicial'] ) ? $_POST['fecha_inicial'] : null,
-			isset($_POST['fondo_inicial'] ) ? $_POST['fondo_inicial'] : null,
 			isset($_POST['id_sucursal'] ) ? $_POST['id_sucursal'] : null,
-			isset($_POST['id_usuario'] ) ? $_POST['id_usuario'] : null,
 			isset($_POST['total_efectivo'] ) ? $_POST['total_efectivo'] : null
 			
 			);
