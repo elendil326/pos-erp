@@ -24,7 +24,9 @@
     }
 
 
-    $page = new GerenciaTabPage();
+    $page = new GerenciaComponentPage();
+
+    $page->requireParam(  "sid", "GET", "Esta sucursal no existe." );
 
 
 	function td( $inner, $repeat = 0 )
@@ -41,16 +43,7 @@
     /* ********************************************************************* 
      * Corte
      * ********************************************************************* */
-    $page->nextTab( "Corte" );
-
-    if ( !isset( $_REQUEST['s'] ) )
-    {
-
-        $page->render( );
-        exit;
-    }
-
-    $sucursal = SucursalDAO::getByPK( $_REQUEST['s'] );
+    $sucursal = SucursalDAO::getByPK( $_GET['sid'] );
 
     if ( is_null( $sucursal ) )
     {
@@ -88,7 +81,7 @@
 
     #------------------------------------
 
-    $fondo_inicial = $_REQUEST['fondo_inicial'];
+    $fondo_inicial = 123;
 
     $table .= "  <tr>";       
     $table .= "    <td></td>";
@@ -446,7 +439,7 @@
 
     #------------------------------------
 
-    $total_efectivo_real = $_REQUEST['efectivo'];
+    $total_efectivo_real = 123;
 
     $table .= "  <tr>";
     $table .= "    <td>Efectivo Disponible Real</td>";
@@ -497,7 +490,7 @@
     /* ********************************************************************* 
      * Sucursales
      * ********************************************************************* */
-    $page->nextTab("<a href=\"ventas.php#Corte\">Sucurlsales</a>"); 
+    /*
 
 
     $sucursales = SucursalDAO::getAll();
@@ -540,5 +533,5 @@
     $html .= "</table>";
 
     $page->addComponent($html);
-
+    */
     $page->render();

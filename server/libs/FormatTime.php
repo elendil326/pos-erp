@@ -1,4 +1,15 @@
 <?php
+
+/**
+  * (C) 2012 Caffeina Software
+  *
+  * Description:
+  *
+  *
+  * Author:
+  *     Alan Gonzalez (alan)
+  *
+  ***/
 class R
 {
 
@@ -50,7 +61,29 @@ class R
 
 }
 
+	function getEmpresaNombre($eid){
+		$e = EmpresaDAO::getByPK($eid);
+		return $e->getRazonSocial();
+	}
+	
+	function funcion_abierta( $abierta ){
+		return $abierta ? "Abierta" : "Cerrada";
+	}
 
+	function funcion_activa( $activa ){
+		return $activa ? "Activa" : "Inactiva";
+	}
+	function funcion_empresa( $id_empresa ){
+		return EmpresaDAO::getByPK($id_empresa) ? EmpresaDAO::getByPK($id_empresa)->getRazonSocial() : "------";
+	}
+
+	function funcion_tipo_almacen( $id_tipo_almacen ){
+		return TipoAlmacenDAO::getByPK($id_tipo_almacen) ? TipoAlmacenDAO::getByPK($id_tipo_almacen)->getDescripcion() : "------";
+	}
+
+	function funcion_activo( $activo ){
+		return ($activo) ? "Activo" : "Inactivo";
+	}
 
 
 function FormatMoney($float){
