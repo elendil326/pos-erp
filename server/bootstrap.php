@@ -62,7 +62,6 @@
 	# *******************************
 	# 
 	# *******************************
-
 	define("POS_CONFIG_LOG_TO_FILE", 			$POS_CONFIG["LOG_TO_FILE"]);
 	define("POS_CONFIG_LOG_ACCESS_FILE", 		$POS_CONFIG["LOG_ACCESS_FILE"]);
 	define("POS_CONFIG_LOG_ERROR_FILE", 		$POS_CONFIG["LOG_ERROR_FILE"]);
@@ -138,7 +137,6 @@
 	require_once("libs/gui/StdPage.php");
 	require_once("libs/gui/StdComponentPage.php");
 
-	
 	require_once("libs/gui/GuiComponent.php");
 	require_once("libs/gui/LoginComponent.php");
 	require_once("libs/gui/FormComponent.php");
@@ -147,26 +145,27 @@
 	require_once("libs/gui/MenuComponent.php");
 	require_once("libs/gui/TitleComponent.php");
 	require_once("libs/gui/TableComponent.php");
-	require_once("libs/gui/PosComponentPage.php");	
-		
-	require_once("libs/gui/ClienteComponentPage.php");		
+	require_once("libs/gui/PosComponentPage.php");
+
+	require_once("libs/gui/ClienteComponentPage.php");
 	require_once("libs/gui/GerenciaComponentPage.php");
 	require_once("libs/gui/GerenciaTabPage.php");
 	
 	require_once("libs/gui/JediComponentPage.php");
 	require_once("libs/gui/FreeHtmlComponent.php");
 
-	require_once("libs/gui/SearchProductComponent.php");		
+	require_once("libs/gui/ApiActionComponent.php");
+	require_once("libs/gui/SearchProductComponent.php");
 	require_once("libs/gui/SucursalSelectorComponent.php");
 	require_once("libs/gui/EmpresaSelectorComponent.php");
-	require_once("libs/gui/ReporteComponent.php");	
+	require_once("libs/gui/ReporteComponent.php");
 	require_once("libs/gui/CartComponent.php");
-	require_once("libs/gui/BuyingCartComponent.php");		
-	require_once("libs/gui/ShoppingCartComponent.php");	
+	require_once("libs/gui/BuyingCartComponent.php");
+	require_once("libs/gui/ShoppingCartComponent.php");
 	
-	require_once("libs/gui/BannerComponent.php");		
-	require_once("libs/gui/ClienteSelectorComponent.php");	
-	require_once("libs/gui/ClienteTabPage.php");	
+	require_once("libs/gui/BannerComponent.php");
+	require_once("libs/gui/ClienteSelectorComponent.php");
+	require_once("libs/gui/ClienteTabPage.php");
 
 
 

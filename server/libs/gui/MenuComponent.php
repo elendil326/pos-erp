@@ -1,60 +1,84 @@
 <?php
 
+/**
+  * (C) 2011 Caffeina Software
+  *
+  *
+  * Description:
+  *
+  *
+  * Author:
+  *     Alan Gonzalez (alan)
+  *
+  ***/
 class MenuComponent implements GuiComponent
 {
     private $items;
     
-    function __construct()
+    function __construct( )
     {
-        $this->items = array();
+        $this->items = array( );
     }
-    
-    
-    function addItem($caption, $url)
+
+
+    function addItem( $caption, $url )
     {
-        array_push($this->items, new MenuItem($caption, $url));
+        array_push( $this->items, new MenuItem( $caption, $url ) );
     }
-    
-    function addMenuItem($menu_item)
+
+
+    function addMenuItem( $menu_item )
     {
-        if($menu_item instanceof MenuItem){
-            array_push($this->items, $menu_item);    
-        }else{
-            throw new Exception("arg is not instance of MenuItem");
+        if( $menu_item instanceof MenuItem )
+        {
+            array_push( $this->items, $menu_item );
         }
-        
+        else
+        {
+            throw new Exception( "arg is not instance of MenuItem" );
+        }
     }
-    
-    
+
+
     function renderCmp()
     {
-
-
         $out = "<div style='margin-bottom: 5px'>";
         
-        foreach ($this->items as $item) {
-        
-        	if($item->css_classes === null) $item->css_classes = "";
+        foreach ( $this->items as $item )
+        {
+            if($item->css_classes === null)
+            {
+                $item->css_classes = "";
+            }
 
-            if (is_null($item->url)) {
+            if ( is_null( $item->url ) )
+            {
                 $out .= "<div class='POS Boton ". $item->css_classes ."' ";
+
                 if (!is_null($item->on_click))
+                {
                     $out .= "onclick='" . $item->on_click["caption"] . "();'";
+                }
+
                 $out .= ">" . $item->caption . "</div>";
 
-            }else{
+            }
+            else
+            {
             	$out .= "<a href=" . $item->url . "><div class='POS Boton ".$item->css_classes."' >" . $item->caption . "</div></a>";
 
             }
-                
+
             $out .= "<script>";
-            
-            if (!is_null($item->on_click)) {
+
+            if ( !is_null( $item->on_click ) )
+            {
                 $out .= $item->on_click["function"];
             }
 
 
-            if (!is_null($item->send_to_api)) {
+            if ( !is_null( $item->send_to_api ) )
+            {
                 $out .= "function sendToApi_" . $item->name . "( params ){";
                 $out .= "	POS.API." . $item->send_to_api_http_method . "(\"" . $item->send_to_api . "\", params, ";
                 $out .= "	{";
@@ -65,13 +89,15 @@ class MenuComponent implements GuiComponent
                 $out .= "				/* console.log('OKAY'); */ ";
                 
                 if (!is_null($item->send_to_api_callback))
-                    $out .= "			" . $item->send_to_api_callback . "( a );";
-                
+                {
+                    $out .= "           " . $item->send_to_api_callback . "( a );";
+                }
+
                 if (!is_null($item->send_to_api_redirect))
-                    $out .= "			window.location = '" . $item->send_to_api_redirect . "';";
-                
-                $out .= "			";
-                $out .= "			";
+                {
+                    $out .= "           window.location = '" . $item->send_to_api_redirect . "';";
+                }
+
                 $out .= "	 	}";
                 $out .= "	});";
                 $out .= "}";

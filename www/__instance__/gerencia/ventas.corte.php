@@ -14,14 +14,7 @@
 
 	require_once("../../../server/bootstrap.php");
 
-    function getUserName($id_usuario)
-    {
-        if ( is_null( $u = UsuarioDAO::getByPK( $id_usuario ) ) )
-        {
-            return "ERROR";
-        }
-        return $u->getNombre( );
-    }
+
 
 
     $page = new GerenciaComponentPage();
@@ -29,15 +22,6 @@
     $page->requireParam(  "sid", "GET", "Esta sucursal no existe." );
 
 
-	function td( $inner, $repeat = 0 )
-    {
-		$out = "";
-		while ( $repeat -- >= 0)
-        {
-            $out .= "<td>" . $inner . "</td>";
-        }
-		return $out;
-	}
 
 
     /* ********************************************************************* 
@@ -53,21 +37,20 @@
 
     $page->addComponent( new TitleComponent( "Sucursal " . $sucursal->getRazonSocial( ), 1 ) );
 
-    $table = "";
-    $table .= "<table>";
+    $table = "<table>";
 
     $cortes  = EfectivoController::UltimoCorte( $sucursal );
 
     if ( !is_null( $cortes ) )
     {
-       $fecha_inicial = $cortes->getFechaCorte( );
+       $fecha_inicial = $cortes->getFin( );
     }
     else
     {
         $fecha_inicial = $sucursal->getFechaApertura( );
     }
     
-    $fecha_final = time();
+    $fecha_final = time( );
 
 
     $table .= "  <tr>";
@@ -482,56 +465,17 @@
 
     $page->addComponent($table);
 
-    $menu = new MenuComponent();
-    $menu->addItem("Realizar Corte", "ventas.corte.php");
-    $page->addComponent( $menu);
 
+    $submit = new ApiActionComponent( "api/sucursal/corte" );
+    $submit->SetCaption("Realizar corte");
+    $submit->setSuccessRedirection("corte.ver.php");
 
-    /* ********************************************************************* 
-     * Sucursales
-     * ********************************************************************* */
-    /*
+    $submit->setArguments( array( 
+        "fecha_final" => time( ),
+        "id_sucursal" => $_GET["sid"],
+        "total_efectivo" => 99
+        ) );
 
+    $page->addcomponent( $submit );
 
-    $sucursales = SucursalDAO::getAll();
-
-    $html = "";
-    $html .= "<script>";
-    $html .= "  var corteSucursal = function(combo){";
-    $html .= "      var indice = combo.selectedIndex;";
-    $html .= "      var valor = combo.options[combo.selectedIndex].text;";
-    $html .= "      location.href = 'ventas.corte.php?s=' + indice; ";
-    $html .= "  }";
-    $html .= "</script>";
-
-    $html .= "<table>";
-    $html .= "  <tr>";
-    $html .= "    <td>Sucursal:</td>";
-    $html .= "    <td>";
-    $html .= "      <SELECT onChange=\"corteSucursal(this);\">";
-    $html .= "       <OPTION VALUE=\"#\">Seleccione una Sucursal</OPTION>";
-
-    foreach ( $sucursales as $sucursal )
-    {
-        $html .= "       <OPTION value=\"". $sucursal->getIdSucursal() . "\">" . $sucursal->getRazonSocial() . "</OPTION>";
-    }
-
-    $html .= "      </SELECT>";
-    $html .= "    </td>";
-    $html .= "  </tr>";
-
-    $html .= "  <tr>";
-    $html .= "    <td>Fondo Inicial</td>";
-    $html .= "    <td><input type=\"text\" value=20/></td>";
-    $html .= "  </tr>";
-
-    $html .= "  <tr>";
-    $html .= "    <td>Efectivo en Caja</td>";
-    $html .= "    <td></td>";
-    $html .= "  </tr>";
-
-    $html .= "</table>";
-
-    $page->addComponent($html);
-    */
-    $page->render();
+    $page->render( );

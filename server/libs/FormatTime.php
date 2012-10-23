@@ -93,6 +93,25 @@ function FormatMoney($float){
 	
 }
 
+function getUserName($id_usuario)
+{
+    if ( is_null( $u = UsuarioDAO::getByPK( $id_usuario ) ) )
+    {
+        return "ERROR";
+    }
+    return $u->getNombre( );
+}
+
+function td( $inner, $repeat = 0 )
+{
+	$out = "";
+	while ( $repeat -- >= 0)
+    {
+        $out .= "<td>" . $inner . "</td>";
+    }
+	return $out;
+}
+
 
 function FormatTime($timestamp, $type = "FB")
 {

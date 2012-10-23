@@ -3965,7 +3965,77 @@ class SucursalesController extends ValidacionesController implements ISucursales
             $total_efectivo
         )
     {
-        
+        if ( $fecha_final > time( ) )
+        {
+            throw new BusinessLogicException( "You must give a time in the past." );
+        }
+
+        if ( $fecha_final == 0 )
+        {
+            $fecha_final = time( );
+        }
+
+        $suc = SucursalDAO::getByPK( $id_sucursal );
+
+        if ( is_null( $suc ) )
+        {
+            throw new InvalidDataException( "'Sucursal' does not exist" );
+        }
+
+        $start_date = EfectivoController::UltimoCorte( $suc )->getFin( );
+
+        if ( is_null( $start_date ) )
+        {
+            //'CordeDeSucursal' has never happende, 
+            //use the opening date.
+            $start_date = $suc->getFechaApertura( );
+        }
+
+        //ASSERT( $fecha_final . "<=" . $start_date );
+
+        $ingresos_por_tipo = array(
+                                "BANCO" => 0.0,
+                                "CAJA" => 0.0
+                            );
+
+        $ventas = VentasController::Lista( $start_date, $fecha_final );
+
+        //esto regresa, total, subtotal, impuesto
+        $ventasTotal = VentaDAO::TotalVentasNoCanceladasAContadoDesdeHasta( $start_date, $fecha_final );
+
+        //$abonosTotal = AbonoVenta::TotalAbonosNoCanceladosDesdeHasta( $start_date, $fecha_final );
+
+        /*
+        foreach( $ventas as $v ){
+
+            switch( $v->tipo_de_pago ){
+                cash :      $ingresos[ cash ] += $v->getTotal();
+                banco :     $ingresos[ banco ] += $v->getTotal()
+                cheque :
+                default: throw new Exception();
+
+            }
+        }
+        */
+        $cu = SesionController::Actual( );
+
+        $corte = new CorteDeSucursal();
+        $corte->setIdSucursal( $id_sucursal );
+        $corte->setIdUsuario( $cu["id_usuario"] );
+        $corte->setInicio( $start_date );
+        $corte->setFin( $fecha_final );
+        $corte->setFechaCorte( time( ) );
+
+        try
+        {
+            CorteDeSucursalDAO::save( $corte );
+        }
+        catch(Exception $e)
+        {
+            throw new InvalidDatabaseException($e);
+        }
+
+        return array ( "id_corte_sucursal" => $corte->getIdCorteSucursal( ) );
     }
 
 

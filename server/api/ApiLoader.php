@@ -1,30 +1,5 @@
 <?php 
 
-require_once("ApiHandler.php");
-
-	require_once("ApiHttpErrors.php");
-
-	require_once("ApiLoader.php");
-
-	require_once("ApiOutputFormatter.php");
-
-	require_once("CustomValidator.php");
-
-	require_once("DateRangeValidator.php");
-
-	require_once("DateValidator.php");
-
-	require_once("EnumValidator.php");
-
-	require_once("HtmlValidator.php");
-
-	require_once("NumericRangeValidator.php");
-
-	require_once("NumericValidator.php");
-
-	require_once("StringValidator.php");
-
-	require_once("Validator.php");
 
 
   class ApiSesionIniciar extends ApiHandler {
