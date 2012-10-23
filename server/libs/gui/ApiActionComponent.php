@@ -97,7 +97,7 @@ class ApiActionComponent implements GuiComponent
                     callback : function(a)
                     {
                         <?php if ( $this->redirection ) { ?>
-                        //window.location = "<?php echo $this->redirection; ?>";
+                        window.location = "<?php echo $this->redirection; ?>";
                         <?php } ?>
                     }
                 }

@@ -64,7 +64,7 @@
 
     #------------------------------------
 
-    $fondo_inicial = 123;
+    $fondo_inicial = 0;
 
     $table .= "  <tr>";       
     $table .= "    <td></td>";
@@ -422,7 +422,7 @@
 
     #------------------------------------
 
-    $total_efectivo_real = 123;
+    $total_efectivo_real = 0;
 
     $table .= "  <tr>";
     $table .= "    <td>Efectivo Disponible Real</td>";
@@ -468,7 +468,7 @@
 
     $submit = new ApiActionComponent( "api/sucursal/corte" );
     $submit->SetCaption("Realizar corte");
-    $submit->setSuccessRedirection("corte.ver.php");
+    $submit->setSuccessRedirection("corte.lista.php");
 
     $submit->setArguments( array( 
         "fecha_final" => time( ),
