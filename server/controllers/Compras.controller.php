@@ -376,83 +376,92 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
 		$id_caja = null
 	)
 	{
-            Logger::log("Cancenlando compra ".$id_compra);
-            
-            //valida que la compra exista y que este activa
-            $compra=CompraDAO::getByPK($id_compra);
-            if($compra==null)
+        Logger::log("Cancenlando compra ".$id_compra);
+
+        //valida que la compra exista y que este activa
+        $compra = CompraDAO::getByPK( $id_compra );
+
+        if ( $compra == null )
+        {
+            throw new Exception("La compra con id: ".$id_compra." no existe",901);
+        }
+
+        if ( $compra->getCancelada( ) )
+        {
+            Logger::warn("La compra ya ha sido cancelada");
+            return;
+        }
+
+        //Obtiene al usuario al que se le compro
+        $usuario = UsuarioDAO::getByPK( $compra->getIdVendedorCompra( ) );
+
+        if( $usuario == null )
+        {
+            throw new Exception("FATAL!!! Esta compra apunta a un usuario que no existe",901);
+        }
+
+        //Deja la compra como cancelada y la guarda. 
+        $compra->setCancelada(1);
+        DAO::transBegin( );
+
+        try
+        {
+            $com_prod = new CompraProducto( );
+            $com_prod->setIdCompra( $id_compra );
+
+            $prods_compra = CompraProductoDAO::search( $com_prod );
+            foreach ( $prods_compra as $p )
             {
-                Logger::error("La compra con id: ".$id_compra." no existe");
-                throw new Exception("La compra con id: ".$id_compra." no existe",901);
+                //De que almacen/inventario lo descuento? , del almacen de la empresa? como identifico el lote de entrada prod?
+                continue;
+                $ven_prod = new VentaProducto();
+                $ven_prod->setIdProducto( );
+                $ven_prod->setCantidad( $p->getCantidad( ) );
+                $ven_prod->setPrecio( $p->getPrecio( ) );
+                $ven_prod->setDescuento( $p->getDescuento( ) );
+                SucursalesController::DescontarDeAlmacenes($ven_prod, $compra->getIdSucursal( ) );
             }
-            if($compra->getCancelada())
+
+            CompraDAO::save($compra);
+
+            //Si la compra fue a credito, se cancelan todos los abonos hechos al mismo y el dinero se queda a cuenta del usuario.
+            if($compra->getTipoDeCompra()=="credito")
             {
-                Logger::warn("La compra ya ha sido cancelada");
-                return;
-            }
-            
-            //Obtiene al usuario al que se le compro
-            $usuario=UsuarioDAO::getByPK($compra->getIdVendedorCompra());
-            if($usuario==null)
-            {
-                Logger::error("FATAL!!! Esta compra apunta a un usuario que no existe");
-                throw new Exception("FATAL!!! Esta compra apunta a un usuario que no existe",901);
-            }
-            
-            //Deja la compra como cancelada y la guarda. 
-            $compra->setCancelada(1);
-            DAO::transBegin();
-            try
-            {
-				$com_prod = new CompraProducto();
-				$com_prod->setIdCompra($id_compra);
-				
-				$prods_compra = CompraProductoDAO::search($com_prod);
-				foreach($prods_compra as $p){
-					$ven_prod = new VentaProducto();//De que almacen/inventario lo descuento? , del almacen de la empresa? como identifico el lote de entrada prod?
-					$ven_prod->setIdProducto();
-					$ven_prod->setCantidad( $p->getCantidad() );
-					$ven_prod->setPrecio( $p->getPrecio() );
-					$ven_prod->setDescuento( $p->getDescuento() );
-					
-					SucursalesController::DescontarDeAlmacenes($ven_prod, $compra->getIdSucursal() );
-				}
-				
-                CompraDAO::save($compra);
-                
-                //Si la compra fue a credito, se cancelan todos los abonos hechos al mismo y el dinero se queda a cuenta del usuario.
-                if($compra->getTipoDeCompra()=="credito")
+                $abono_compra=new AbonoCompra( );
+                $abono_compra->setIdCompra( $id_compra );
+                $abonos=AbonoCompraDAO::search( $abono_compra );
+                foreach( $abonos as $abono )
                 {
-                    $abono_compra=new AbonoCompra();
-                    $abono_compra->setIdCompra($id_compra);
-                    $abonos=AbonoCompraDAO::search($abono_compra);
-                    foreach($abonos as $abono)
+                    if( !$abono->getCancelado( ) )
                     {
-                        if(!$abono->getCancelado())
-                            CargosYAbonosController::EliminarAbono($abono->getIdAbonoCompra(),"Compra cancelada",1,0,0,null,null);
+                        CargosYAbonosController::EliminarAbono( $abono->getIdAbonoCompra(),"Compra cancelada",1,0,0,null,null );
                     }
-                    $usuario->setSaldoDelEjercicio($usuario->getSaldoDelEjercicio()-$compra->getTotal());
-                    UsuarioDAO::save($usuario);
                 }
-                
-                //Si la compra fue de contado y se tiene la caja a la que regresera el dinero, se modifica dicha caja.
-                else if($compra->getTipoDeCompra()=="contado" && !is_null($id_caja))
-                {
-                    CajasController::modificarCaja($id_caja, 1, $billetes, $compra->getTotal());
-                }
+                $usuario->setSaldoDelEjercicio( $usuario->getSaldoDelEjercicio( )-$compra->getTotal( ) );
+                UsuarioDAO::save( $usuario );
             }
-            catch(Exception $e)
+
+            //Si la compra fue de contado y se tiene la caja a la que regresera el dinero, se modifica dicha caja.
+            else if($compra->getTipoDeCompra()=="contado" && !is_null($id_caja))
             {
-                DAO::transRollback();
-                Logger::error("No se pudo cancelar la compra: ".$e);
-                if($e->getCode()==901)
-                    throw new Exception("No se pudo cancelar la compra: ".$e->getMessage(),901);
-                throw new Exception("No se pudo cancelar la compra, consulte a su administrador de sistema",901);
+                CajasController::modificarCaja($id_caja, 1, $billetes, $compra->getTotal());
             }
-            DAO::transEnd();
-            Logger::log("Compra cancelada exitosamente");
-	}
-  
+        }
+        catch(Exception $e)
+        {
+            DAO::transRollback();
+            Logger::error("No se pudo cancelar la compra: ".$e);
+            throw new Exception("No se pudo cancelar la compra, consulte a su administrador de sistema",901);
+        }
+
+        DAO::transEnd();
+
+        Logger::log("Compra cancelada exitosamente");
+    }
+
+
+
+
 	/**
  	 *
  	 *Muestra el detalle de una compra
