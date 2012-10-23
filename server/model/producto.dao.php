@@ -126,7 +126,7 @@ class ProductoDAO extends ProductoDAOBase {
      */
     public static function ExistenciasLote($id_producto, $id_lote, $id_unidad) {
 
-        Logger::log("EXISTENCIAS LOTE PARA RECIBE " . ProductoDAO::getByPK($id_producto)->getNombreProducto() . ", LOTE {$id_lote}, todas las operaciones para el calculo deberan hacerse en {$id_unidad} (" . UnidadMedidaDAO::getByPK($id_unidad)->getAbreviacion() . ")");
+        //Logger::log("EXISTENCIAS LOTE PARA RECIBE " . ProductoDAO::getByPK($id_producto)->getNombreProducto() . ", LOTE {$id_lote}, todas las operaciones para el calculo deberan hacerse en {$id_unidad} (" . UnidadMedidaDAO::getByPK($id_unidad)->getAbreviacion() . ")");
 
         $error = "";
         $cantidad = 0;
@@ -149,7 +149,7 @@ class ProductoDAO extends ProductoDAOBase {
                             "id_lote" => $id_lote
                         )));
 
-        Logger::log("Iteramos sobre los lote entrada, se encontraron " . count($lotes_entrada) . " lotes entrada.");
+        //Logger::log("Iteramos sobre los lote entrada, se encontraron " . count($lotes_entrada) . " lotes entrada.");
 
         //iteramos sobre los lote de entrada
         foreach ($lotes_entrada as $lote_entrada) {
@@ -169,35 +169,35 @@ class ProductoDAO extends ProductoDAOBase {
 
             foreach ($lotes_entrada_producto as $lote_entrada_producto) {
 
-                Logger::log("--- Revisando el lote entrada producto tiene como unidad " . UnidadMedidaDAO::getByPK($lote_entrada_producto->getIdUnidad())->getAbreviacion() . " se comparara contra " . UnidadMedidaDAO::getByPK($id_unidad)->getAbreviacion() . ".");
+                //Logger::log("--- Revisando el lote entrada producto tiene como unidad " . UnidadMedidaDAO::getByPK($lote_entrada_producto->getIdUnidad())->getAbreviacion() . " se comparara contra " . UnidadMedidaDAO::getByPK($id_unidad)->getAbreviacion() . ".");
 
                 if ($lote_entrada_producto->getIdProducto() != $id_producto) {
-                    Logger::error("El search fallo!! el lote entrada producto trajo al producto {$lote_entrada_producto->getIdProducto()} y lo compara con {$id_producto}");
+                    //Logger::error("El search fallo!! el lote entrada producto trajo al producto {$lote_entrada_producto->getIdProducto()} y lo compara con {$id_producto}");
                     continue;
                 } else {
 
                     //revisemos si es de la misma unidad
                     if ($lote_entrada_producto->getIdUnidad() == $id_unidad) {
-                        Logger::log("Se detectaron que las unidades son iguales, el conteo se encuentra en {$cantidad}, se agregaran {$lote_entrada_producto->getCantidad()}");
+                        //Logger::log("Se detectaron que las unidades son iguales, el conteo se encuentra en {$cantidad}, se agregaran {$lote_entrada_producto->getCantidad()}");
                         //es igual, solo hay que sumar
                         $cantidad += $lote_entrada_producto->getCantidad();
                         $nentradas += $lote_entrada_producto->getCantidad();
 
-                      Logger::log("Des pues de la operacion el conteo se encuentra en {$cantidad}");
+                     // Logger::log("Des pues de la operacion el conteo se encuentra en {$cantidad}");
                     } else {
                         //no es igual, hay que convertir
 
-                        Logger::log("Se detecto que las unidades son diferentes, se procede a transformar {$lote_entrada_producto->getCantidad()} " . UnidadMedidaDAO::getByPK($lote_entrada_producto->getIdUnidad())->getDescripcion() . " a " . UnidadMedidaDAO::getByPK($id_unidad)->getDescripcion());
-                        Logger::log("**** INFO DEL LOTE : " . $lote_entrada_producto . " ***");
+                        //Logger::log("Se detecto que las unidades son diferentes, se procede a transformar {$lote_entrada_producto->getCantidad()} " . UnidadMedidaDAO::getByPK($lote_entrada_producto->getIdUnidad())->getDescripcion() . " a " . UnidadMedidaDAO::getByPK($id_unidad)->getDescripcion());
+                        //Logger::log("**** INFO DEL LOTE : " . $lote_entrada_producto . " ***");
 
                         $equivalencia = UnidadMedidaDAO::convertir($lote_entrada_producto->getIdUnidad(), $id_unidad, $lote_entrada_producto->getCantidad());
 
-                        Logger::log("El conteo se encuentra en {$cantidad}, se agregaran {$equivalencia} " . UnidadMedidaDAO::getByPK($id_unidad)->getDescripcion());
+                       // Logger::log("El conteo se encuentra en {$cantidad}, se agregaran {$equivalencia} " . UnidadMedidaDAO::getByPK($id_unidad)->getDescripcion());
 
                         $cantidad += $equivalencia;
                         $nentradas += $equivalencia;
 
-                        Logger::log("Des pues de la operacion el conteo se encuentra en {$cantidad}");
+                       // Logger::log("Des pues de la operacion el conteo se encuentra en {$cantidad}");
                     }
                 }
             }
@@ -208,7 +208,7 @@ class ProductoDAO extends ProductoDAOBase {
                             "id_lote" => $id_lote
                         )));
 
-        Logger::log("Iteramos sobre los lote salida, se encontraron " . count($lotes_entrada) . " lotes salida.");
+        //Logger::log("Iteramos sobre los lote salida, se encontraron " . count($lotes_entrada) . " lotes salida.");
 
         //iteramos sobre los lote de salida
         foreach ($lotes_salida as $lote_salida) {
@@ -224,38 +224,38 @@ class ProductoDAO extends ProductoDAOBase {
 
             foreach ($lotes_salida_producto as $lote_salida_producto) {
 
-                Logger::log("--- Revisando el lote salida producto tiene como unidad " . UnidadMedidaDAO::getByPK($lote_salida_producto->getIdUnidad())->getAbreviacion() . " se comparara contra " . UnidadMedidaDAO::getByPK($id_unidad)->getAbreviacion() . ".");
+                //Logger::log("--- Revisando el lote salida producto tiene como unidad " . UnidadMedidaDAO::getByPK($lote_salida_producto->getIdUnidad())->getAbreviacion() . " se comparara contra " . UnidadMedidaDAO::getByPK($id_unidad)->getAbreviacion() . ".");
 
                 if ($lote_salida_producto->getIdProducto() != $id_producto) {
-                    Logger::error("El search fallo!! el lote salida producto trajo al producto {$lote_salida_producto->getIdProducto()} y lo compara con {$id_producto}");
+                    //Logger::error("El search fallo!! el lote salida producto trajo al producto {$lote_salida_producto->getIdProducto()} y lo compara con {$id_producto}");
                     continue;
                 } else {
 
                     //revisemos si es de la misma unidad
                     if ($lote_salida_producto->getIdUnidad() == $id_unidad) {
 
-                       Logger::log("Se detectaron que las unidades son iguales, el conteo se encuentra en {$cantidad}, se restaran {$lote_salida_producto->getCantidad()}");
+                       //Logger::log("Se detectaron que las unidades son iguales, el conteo se encuentra en {$cantidad}, se restaran {$lote_salida_producto->getCantidad()}");
 
                         //es igual, solo hay que restar
                         $cantidad -= $lote_salida_producto->getCantidad();
                         $nsalidas += $lote_salida_producto->getCantidad();
 
-                        Logger::log("Des pues de la operacion el conteo se encuentra en {$cantidad}");
+                        //Logger::log("Des pues de la operacion el conteo se encuentra en {$cantidad}");
                     } else {
 
-                        Logger::log("Se detecto que las unidades son diferentes, se procede a transformar {$lote_salida_producto->getCantidad()} " . UnidadMedidaDAO::getByPK($lote_salida_producto->getIdUnidad())->getDescripcion() . " a " . UnidadMedidaDAO::getByPK($id_unidad)->getDescripcion());
+                        //Logger::log("Se detecto que las unidades son diferentes, se procede a transformar {$lote_salida_producto->getCantidad()} " . UnidadMedidaDAO::getByPK($lote_salida_producto->getIdUnidad())->getDescripcion() . " a " . UnidadMedidaDAO::getByPK($id_unidad)->getDescripcion());
 
-                        Logger::log("**** INFO DEL LOTE : " . $lote_salida_producto . " ***");
+                       // Logger::log("**** INFO DEL LOTE : " . $lote_salida_producto . " ***");
 
                         //no es igual, hay que convertir
                         $equivalencia = UnidadMedidaDAO::convertir($lote_salida_producto->getIdUnidad(), $id_unidad, $lote_salida_producto->getCantidad());
 
-                        Logger::log("El conteo se encuentra en {$cantidad}, se restaran {$equivalencia} " . UnidadMedidaDAO::getByPK($id_unidad)->getDescripcion());
+                     //   Logger::log("El conteo se encuentra en {$cantidad}, se restaran {$equivalencia} " . UnidadMedidaDAO::getByPK($id_unidad)->getDescripcion());
 
                         $cantidad -= $equivalencia;
                         $nsalidas += $equivalencia;
 
-                        Logger::log("Des pues de la operacion el conteo se encuentra en {$cantidad}");
+                       // Logger::log("Des pues de la operacion el conteo se encuentra en {$cantidad}");
                     }
                 }
             }
@@ -265,7 +265,7 @@ class ProductoDAO extends ProductoDAOBase {
             Logger::error($error);
         }
 
-        Logger::log("########### Se encontro que para el producto " . ProductoDAO::getByPK($id_producto)->getNombreProducto() . " existen {$cantidad} " . UnidadMedidaDAO::getByPK($id_unidad)->getAbreviacion() . ". Hubo {$nentradas} entradas y {$nsalidas} salidas ###############");
+       // Logger::log("########### Se encontro que para el producto " . ProductoDAO::getByPK($id_producto)->getNombreProducto() . " existen {$cantidad} " . UnidadMedidaDAO::getByPK($id_unidad)->getAbreviacion() . ". Hubo {$nentradas} entradas y {$nsalidas} salidas ###############");
 
         return $cantidad;
     }
