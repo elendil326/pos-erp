@@ -2156,38 +2156,32 @@ class SucursalesController extends ValidacionesController implements ISucursales
 		$start = null
 	)
 	{
-            Logger::log("Listando sucursales");
-            
+        //obejtos que almacenaran las comparaciones
+        $sucursales=array();
+        $sucursales1=array();
 
-            
-            //obejtos que almacenaran las comparaciones
-            $sucursales=array();
-            $sucursales1=array();
-            
-            //Si se recibieron parametros, se almacenan los distintos parametros en los objetos.
-            //Los parametros de comparacion como saldo inferior que o superior que proponen limites
-            //y cuando solo es pasado alguno de ellos, el otro objeto almacena el mayor o menor posible
-            //para conseguir la mejor comparacion.
-            
+        //Si se recibieron parametros, se almacenan los distintos parametros en los objetos.
+        //Los parametros de comparacion como saldo inferior que o superior que proponen limites
+        //y cuando solo es pasado alguno de ellos, el otro objeto almacena el mayor o menor posible
+        //para conseguir la mejor comparacion.
 
-                Logger::log("No se recibieron parametros, se listan todas las sucursales");
-                if(!is_null($id_empresa))
-                {
-                    $sucursales_empresa = SucursalEmpresaDAO::search( new SucursalEmpresa( array( "id_empresa" => $id_empresa ) ) );
-                    foreach($sucursales_empresa as $sucursal_empresa)
-                    {
-                        array_push($sucursales, SucursalDAO::getByPK($sucursal_empresa->getIdSucursal()));
-                    }
-                }
-                else
-                    $sucursales=SucursalDAO::getAll();
-            
-            Logger::log("Sucursales obtenidas con exito");
+        if(!is_null($id_empresa))
+        {
+            $sucursales_empresa = SucursalEmpresaDAO::search( new SucursalEmpresa( array( "id_empresa" => $id_empresa ) ) );
+            foreach ( $sucursales_empresa as $sucursal_empresa )
+            {
+                array_push($sucursales, SucursalDAO::getByPK( $sucursal_empresa->getIdSucursal( ) );
+            }
+        }
+        else
+        {
+            $sucursales=SucursalDAO::getAll( );
+        }
 
-            return array(
-            	"resultados" => $sucursales,
-				"numero_de_resultados" => sizeof($sucursales)
-            );
+        return array(
+            "resultados" => $sucursales,
+            "numero_de_resultados" => sizeof($sucursales)
+        );
 	}
   
 	/**

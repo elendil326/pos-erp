@@ -23,7 +23,7 @@ class AlmacenesController extends ValidacionesController implements IAlmacenes{
 		$id_sucursal = null, 
 		$id_tipo_almacen = null
 	){
-		Logger::log("Listando Almacenes...");
+		
 
 
 		if(!is_null($id_sucursal)){
