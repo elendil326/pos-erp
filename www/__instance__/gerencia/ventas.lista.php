@@ -30,10 +30,6 @@
 		return (UsuarioDAO::getByPK($id_comprador) ? UsuarioDAO::getByPK($id_comprador)->getNombre() : "-----");
 	}
 
-	function funcion_cancelada($cancelada)
-	{
-		return (($cancelada) ? "Cancelada" : "Activa");
-	}
 
 	$tabla->addColRender("id_comprador_venta", "funcion_comprador");
 	$tabla->addColRender("cancelada", "funcion_cancelada");
