@@ -2170,7 +2170,7 @@ class SucursalesController extends ValidacionesController implements ISucursales
             $sucursales_empresa = SucursalEmpresaDAO::search( new SucursalEmpresa( array( "id_empresa" => $id_empresa ) ) );
             foreach ( $sucursales_empresa as $sucursal_empresa )
             {
-                array_push($sucursales, SucursalDAO::getByPK( $sucursal_empresa->getIdSucursal( ) );
+                array_push($sucursales, SucursalDAO::getByPK( $sucursal_empresa->getIdSucursal( ) ) );
             }
         }
         else

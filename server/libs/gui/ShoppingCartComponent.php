@@ -379,7 +379,9 @@ class ShoppingCartComponent extends CartComponent implements GuiComponent
 					$iLista = $i["resultados"];
 					$impuestos_to = 0;
 					//carrito_impuesto
-					foreach ($iLista as $imp) {
+					foreach ($iLista as $imp)
+					{
+						//var_dump($imp);
 						$impuestos_to = $imp->getMontoPorcentaje();
 					}
 

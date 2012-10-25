@@ -12,7 +12,7 @@
 require_once("../../server/bootstrap.php");
 
 
-class ClientesControllerTests extends PHPUnit_Framework_TestCase 
+class EfectivoControllerTests extends PHPUnit_Framework_TestCase 
 {
 
     protected function setUp( )

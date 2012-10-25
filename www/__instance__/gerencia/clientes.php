@@ -37,13 +37,6 @@
 		$tabla->convertToExtJs(false);
  		$tabla->addColRender("saldo_del_ejercicio", "FormatMoney");
 
-        
-        function funcion_consignatario($consignatario){
-            return ($consignatario ? "Consignatario" : "----" );
-        }
-
-
-
         $tabla->addColRender("id_clasificacion_cliente", "funcion_clasificacion_cliente");
         $tabla->addColRender("activo", "funcion_activo");
         $tabla->addColRender("consignatario", "funcion_consignatario");
