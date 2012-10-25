@@ -1992,7 +1992,8 @@ class ProductosController extends ValidacionesController implements IProductos
         } //!is_null($factor_conversion)
         
 		if($tipo_unidad_medida == "Referencia UdM para esta categoria"){
-			$unidad_ref = UnidadMedidaDAO::search(new UnidadMedida(array("tipo_unidad_medida"=>"Referencia UdM para esta categoria","id_categoria_unidad_medida"=>$unidad_medida->getCategoriaUnidadMedida())) );
+			//$unidad_ref = UnidadMedidaDAO::search(new UnidadMedida(array("tipo_unidad_medida"=>"Referencia UdM para esta categoria","id_categoria_unidad_medida"=>$unidad_medida->getCategoriaUnidadMedida())) );
+            $unidad_ref = array();
 			foreach($unidad_ref as $udm_r){//Las udm q esten como ref pasan a ser Mayor q UdM
 				$udm_r->setTipoUnidadMedida('Mayor que la UdM de referencia');
 				try {
