@@ -25,29 +25,17 @@ class Impuesto extends VO
 			if( isset($data['id_impuesto']) ){
 				$this->id_impuesto = $data['id_impuesto'];
 			}
-			if( isset($data['codigo']) ){
-				$this->codigo = $data['codigo'];
+			if( isset($data['monto_porcentaje']) ){
+				$this->monto_porcentaje = $data['monto_porcentaje'];
 			}
-			if( isset($data['importe']) ){
-				$this->importe = $data['importe'];
-			}
-			if( isset($data['incluido']) ){
-				$this->incluido = $data['incluido'];
-			}
-			if( isset($data['aplica']) ){
-				$this->aplica = $data['aplica'];
-			}
-			if( isset($data['tipo']) ){
-				$this->tipo = $data['tipo'];
+			if( isset($data['es_monto']) ){
+				$this->es_monto = $data['es_monto'];
 			}
 			if( isset($data['nombre']) ){
 				$this->nombre = $data['nombre'];
 			}
 			if( isset($data['descripcion']) ){
 				$this->descripcion = $data['descripcion'];
-			}
-			if( isset($data['activo']) ){
-				$this->activo = $data['activo'];
 			}
 		}
 	}
@@ -63,14 +51,10 @@ class Impuesto extends VO
 	{ 
 		$vec = array( 
 			"id_impuesto" => $this->id_impuesto,
-			"codigo" => $this->codigo,
-			"importe" => $this->importe,
-			"incluido" => $this->incluido,
-			"aplica" => $this->aplica,
-			"tipo" => $this->tipo,
+			"monto_porcentaje" => $this->monto_porcentaje,
+			"es_monto" => $this->es_monto,
 			"nombre" => $this->nombre,
-			"descripcion" => $this->descripcion,
-			"activo" => $this->activo
+			"descripcion" => $this->descripcion
 		); 
 	return json_encode($vec); 
 	}
@@ -87,49 +71,22 @@ class Impuesto extends VO
 	public $id_impuesto;
 
 	/**
-	  * codigo
+	  * monto_porcentaje
 	  * 
-	  * Determina el código para identificar el impuesto<br>
-	  * @access public
-	  * @var varchar(64)
-	  */
-	public $codigo;
-
-	/**
-	  * importe
-	  * 
-	  * El monto o el porcentaje correspondiente del impuesto<br>
+	  * El monto o e lporcentaje correspondiente del impuesto<br>
 	  * @access public
 	  * @var float
 	  */
-	public $importe;
+	public $monto_porcentaje;
 
 	/**
-	  * incluido
+	  * es_monto
 	  * 
-	  * Determina si el importe está incluido en el precio<br>
+	  * True si el valor del campo monto_porcentaje es un monto, false si es un porcentaje<br>
 	  * @access public
 	  * @var tinyint(1)
 	  */
-	public $incluido;
-
-	/**
-	  * aplica
-	  * 
-	  * Determina el ámbito al que aplica el impuesto (compra, venta, ambos)<br>
-	  * @access public
-	  * @var varchar(64)
-	  */
-	public $aplica;
-
-	/**
-	  * tipo
-	  * 
-	  * Determina el tipo de impuesto: porcentaje, importe_fijo, ninguno, saldo_pendiente.<br>
-	  * @access public
-	  * @var varchar(64)
-	  */
-	public $tipo;
+	public $es_monto;
 
 	/**
 	  * nombre
@@ -148,15 +105,6 @@ class Impuesto extends VO
 	  * @var varchar(255)
 	  */
 	public $descripcion;
-
-	/**
-	  * activo
-	  * 
-	  * Determina si está activo el impuesto<br>
-	  * @access public
-	  * @var tinyint(1)
-	  */
-	public $activo;
 
 	/**
 	  * getIdImpuesto
@@ -187,123 +135,51 @@ class Impuesto extends VO
 	}
 
 	/**
-	  * getCodigo
+	  * getMontoPorcentaje
 	  * 
-	  * Get the <i>codigo</i> property for this object. Donde <i>codigo</i> es Determina el código para identificar el impuesto
-	  * @return varchar(64)
-	  */
-	final public function getCodigo()
-	{
-		return $this->codigo;
-	}
-
-	/**
-	  * setCodigo( $codigo )
-	  * 
-	  * Set the <i>codigo</i> property for this object. Donde <i>codigo</i> es Determina el código para identificar el impuesto.
-	  * Una validacion basica se hara aqui para comprobar que <i>codigo</i> es de tipo <i>varchar(64)</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param varchar(64)
-	  */
-	final public function setCodigo( $codigo )
-	{
-		$this->codigo = $codigo;
-	}
-
-	/**
-	  * getImporte
-	  * 
-	  * Get the <i>importe</i> property for this object. Donde <i>importe</i> es El monto o el porcentaje correspondiente del impuesto
+	  * Get the <i>monto_porcentaje</i> property for this object. Donde <i>monto_porcentaje</i> es El monto o e lporcentaje correspondiente del impuesto
 	  * @return float
 	  */
-	final public function getImporte()
+	final public function getMontoPorcentaje()
 	{
-		return $this->importe;
+		return $this->monto_porcentaje;
 	}
 
 	/**
-	  * setImporte( $importe )
+	  * setMontoPorcentaje( $monto_porcentaje )
 	  * 
-	  * Set the <i>importe</i> property for this object. Donde <i>importe</i> es El monto o el porcentaje correspondiente del impuesto.
-	  * Una validacion basica se hara aqui para comprobar que <i>importe</i> es de tipo <i>float</i>. 
+	  * Set the <i>monto_porcentaje</i> property for this object. Donde <i>monto_porcentaje</i> es El monto o e lporcentaje correspondiente del impuesto.
+	  * Una validacion basica se hara aqui para comprobar que <i>monto_porcentaje</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
 	  */
-	final public function setImporte( $importe )
+	final public function setMontoPorcentaje( $monto_porcentaje )
 	{
-		$this->importe = $importe;
+		$this->monto_porcentaje = $monto_porcentaje;
 	}
 
 	/**
-	  * getIncluido
+	  * getEsMonto
 	  * 
-	  * Get the <i>incluido</i> property for this object. Donde <i>incluido</i> es Determina si el importe está incluido en el precio
+	  * Get the <i>es_monto</i> property for this object. Donde <i>es_monto</i> es True si el valor del campo monto_porcentaje es un monto, false si es un porcentaje
 	  * @return tinyint(1)
 	  */
-	final public function getIncluido()
+	final public function getEsMonto()
 	{
-		return $this->incluido;
+		return $this->es_monto;
 	}
 
 	/**
-	  * setIncluido( $incluido )
+	  * setEsMonto( $es_monto )
 	  * 
-	  * Set the <i>incluido</i> property for this object. Donde <i>incluido</i> es Determina si el importe está incluido en el precio.
-	  * Una validacion basica se hara aqui para comprobar que <i>incluido</i> es de tipo <i>tinyint(1)</i>. 
+	  * Set the <i>es_monto</i> property for this object. Donde <i>es_monto</i> es True si el valor del campo monto_porcentaje es un monto, false si es un porcentaje.
+	  * Una validacion basica se hara aqui para comprobar que <i>es_monto</i> es de tipo <i>tinyint(1)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param tinyint(1)
 	  */
-	final public function setIncluido( $incluido )
+	final public function setEsMonto( $es_monto )
 	{
-		$this->incluido = $incluido;
-	}
-
-	/**
-	  * getAplica
-	  * 
-	  * Get the <i>aplica</i> property for this object. Donde <i>aplica</i> es Determina el ámbito al que aplica el impuesto (compra, venta, ambos)
-	  * @return varchar(64)
-	  */
-	final public function getAplica()
-	{
-		return $this->aplica;
-	}
-
-	/**
-	  * setAplica( $aplica )
-	  * 
-	  * Set the <i>aplica</i> property for this object. Donde <i>aplica</i> es Determina el ámbito al que aplica el impuesto (compra, venta, ambos).
-	  * Una validacion basica se hara aqui para comprobar que <i>aplica</i> es de tipo <i>varchar(64)</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param varchar(64)
-	  */
-	final public function setAplica( $aplica )
-	{
-		$this->aplica = $aplica;
-	}
-
-	/**
-	  * getTipo
-	  * 
-	  * Get the <i>tipo</i> property for this object. Donde <i>tipo</i> es Determina el tipo de impuesto: porcentaje, importe_fijo, ninguno, saldo_pendiente.
-	  * @return varchar(64)
-	  */
-	final public function getTipo()
-	{
-		return $this->tipo;
-	}
-
-	/**
-	  * setTipo( $tipo )
-	  * 
-	  * Set the <i>tipo</i> property for this object. Donde <i>tipo</i> es Determina el tipo de impuesto: porcentaje, importe_fijo, ninguno, saldo_pendiente..
-	  * Una validacion basica se hara aqui para comprobar que <i>tipo</i> es de tipo <i>varchar(64)</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param varchar(64)
-	  */
-	final public function setTipo( $tipo )
-	{
-		$this->tipo = $tipo;
+		$this->es_monto = $es_monto;
 	}
 
 	/**
@@ -352,30 +228,6 @@ class Impuesto extends VO
 	final public function setDescripcion( $descripcion )
 	{
 		$this->descripcion = $descripcion;
-	}
-
-	/**
-	  * getActivo
-	  * 
-	  * Get the <i>activo</i> property for this object. Donde <i>activo</i> es Determina si está activo el impuesto
-	  * @return tinyint(1)
-	  */
-	final public function getActivo()
-	{
-		return $this->activo;
-	}
-
-	/**
-	  * setActivo( $activo )
-	  * 
-	  * Set the <i>activo</i> property for this object. Donde <i>activo</i> es Determina si está activo el impuesto.
-	  * Una validacion basica se hara aqui para comprobar que <i>activo</i> es de tipo <i>tinyint(1)</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param tinyint(1)
-	  */
-	final public function setActivo( $activo )
-	{
-		$this->activo = $activo;
 	}
 
 }
