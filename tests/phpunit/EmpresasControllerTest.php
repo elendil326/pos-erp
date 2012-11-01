@@ -1,5 +1,5 @@
 <?php
-
+	//ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . __DIR__ );
 	require_once("../../server/bootstrap.php");
 	
 class EmpresasControllerTest extends PHPUnit_Framework_TestCase {

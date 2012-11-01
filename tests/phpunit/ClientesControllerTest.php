@@ -315,7 +315,7 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 	}
 	
 	
-	public function testNuevoClienteDesdeAdminPAQ(){
+	/*public function testNuevoClienteDesdeAdminPAQ(){
 		
 		POSController::DropBd();
 		
@@ -323,6 +323,6 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 
 		ClientesController::Importar( $raw_exportation );
 		
-	}
+	}*/
 }
 
