@@ -2464,10 +2464,9 @@ class SucursalesController extends ValidacionesController implements ISucursales
                 	if( isset( $d->numero_interior ) ){
                     	$cambio_direccion = true;
                         $_direccion->setNumeroInterior( $direccion['numero_interior'] );
-                	}
-                            
+                	}                        
                 	//referencia
-                    if( isset( $d->referencia ) ){
+                    if( isset($direccion['referencia'] )){                        
                     	$cambio_direccion = true;
                         $_direccion->setReferencia( $direccion['referencia'] );
                  	}
