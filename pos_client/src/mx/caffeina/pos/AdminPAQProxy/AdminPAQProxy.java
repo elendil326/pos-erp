@@ -868,7 +868,7 @@ class WriteClientes {
             PrintWriter pw = null;
             try
             {
-                fichero = new FileWriter("C:/Caffeina/CteProv.txt");
+                fichero = new FileWriter("C:/Caffeina/Files/CteProv.txt");
                 pw = new PrintWriter(fichero);
 
                 while (aux != null) {
