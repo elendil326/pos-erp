@@ -862,13 +862,13 @@ class WriteClientes {
 
             // Mientras se haya leido alguna linea 
             
-                
+            System.out.println("VOY A IMPORIMIR ----->>");
 
             FileWriter fichero = null;
             PrintWriter pw = null;
             try
             {
-                fichero = new FileWriter("C:/Caffeina/Files/CteProv.txt");
+                fichero = new FileWriter("C:\\Caffeina\\Files\\CteProv.txt");
                 pw = new PrintWriter(fichero);
 
                 for(int ii = 0; ii < 10; ii++){
