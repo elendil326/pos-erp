@@ -481,9 +481,8 @@ public class AdminPAQProxy extends HttpResponder{
         
         //-----------------
         
-        params = URLDecoder.decode(path) + "\\Lista_Clientes_SDK\\InitListaClientes.EXE " + numEmpresa + " " + "1500";        params = path + " " + numEmpresa + " " + "1500";
-
-        System.out.println("VOY A MANDAR ===>" + params);
+        params = URLDecoder.decode(path) + "\\Lista_Clientes_SDK\\InitListaClientes.EXE " + numEmpresa + " " + "1500"; 
+        
 
         WriteClientes clientes = new WriteClientes(params);
         
