@@ -501,8 +501,9 @@ public class AdminPAQProxy extends HttpResponder{
 
 
         //String r = "{\"totalCount\":1, \"datos\":[{\"CRAZONSO01\":\"Juan Manuel Garcia\",\"CIDCLIEN01\":\"CLI0099\",\"CCODIGO01\":\"CLI0099\",\"CFECHAALTA\":\"12/12/2012\",\"CRFC\":\"GACJ121212123\",\"CCURP\":\"\",\"CDENCOME01\":\"PCSYSTEMS\",\"CREPLEGAL\":\"JUAN CARLOS\"}]}";
-        String r = "{\"totalCount\":" + clientes.totalCount + ", \"datos\":" + clientes.usuariosJSON + "}";
-        System.out.println(r); 
+        //String r = "{\"totalCount\":" + clientes.totalCount + ", \"datos\":" + clientes.usuariosJSON + "}";
+        String r = "{\"totalCount\":2500, \"datos\":" + clientes.usuariosJSON + "}";
+        //System.out.println(r); 
         return r;
 
     }
@@ -547,7 +548,7 @@ public class AdminPAQProxy extends HttpResponder{
 
         //String r = "{\"totalCount\":2, \"datos\":[{\"Codigo\":\"Prod001\",\"Nombre\":\"Pagina Web\", \"Precio1\": \"1200\"}, {\"Codigo\":\"Prod002\",\"Nombre\":\"Software a la medida\", \"Precio1\": \"5000\"}]}";
         String r = "{\"totalCount\":" + productos.totalCount + ", \"datos\":" + productos.productosJSON + "}";
-        System.out.println(r); 
+        //System.out.println(r); 
         return r;
 
     }
@@ -753,7 +754,7 @@ class LoadClientes {
 
             // Se lee la primera linea 
             String aux = br.readLine();
-            this.usuarios = new ArrayList();
+            /*this.usuarios = new ArrayList();
 
             //System.out.println("--- 6.2 ---");
 
@@ -791,11 +792,11 @@ class LoadClientes {
                 json = json.substring(0, json.length() - 1);
             }
                         
-            json += "]";
+            json += "]";*/                    
 
-            this.usuariosJSON = json;
+            this.usuariosJSON = "[" + aux.substring(0, (aux.length() - 1) ) + "]";
 
-            this.totalCount = usuarios.size();
+            this.totalCount = 1;
 
             //------------------------------------------
 
@@ -998,7 +999,7 @@ class LoadProductos{
             // Mientras se haya leido alguna linea 
             while (aux != null) {
                 // Se escribe la linea en pantalla 
-                System.out.println(aux);
+                //System.out.println(aux);
 
                 productos.add(new Producto(aux));
 
