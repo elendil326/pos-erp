@@ -514,7 +514,7 @@ public class AdminPAQProxy extends HttpResponder{
 
         //String r = "{\"totalCount\":1, \"datos\":[{\"CRAZONSO01\":\"Juan Manuel Garcia\",\"CIDCLIEN01\":\"CLI0099\",\"CCODIGO01\":\"CLI0099\",\"CFECHAALTA\":\"12/12/2012\",\"CRFC\":\"GACJ121212123\",\"CCURP\":\"\",\"CDENCOME01\":\"PCSYSTEMS\",\"CREPLEGAL\":\"JUAN CARLOS\"}]}";
         //String r = "{\"totalCount\":" + clientes.totalCount + ", \"datos\":" + clientes.usuariosJSON + "}";
-        String r = "{\"totalCount\":" + clientes.totalCount + ", \"datos\":" + clientes.usuariosJSON + "}";
+        String r = "{\"totalCount\":" + clientes.totalCount + ", \"finish\" : " + clientes.finish + ", \"datos\":" + clientes.usuariosJSON + "}";
         //System.out.println(r); 
         return r;
 
@@ -739,6 +739,7 @@ class LoadClientes {
     public ArrayList usuarios;
     public String usuariosJSON = "[]"; 
     public int totalCount = 0;
+    public Boolean finish = false;
 
     /**
      * Creates a new instance of PruebaRuntime
@@ -780,6 +781,10 @@ class LoadClientes {
 
                 pointer++;
 
+             }
+
+             if( linea == null ){
+                this.finish = true;
              }
 
              this.usuariosJSON = "[" + buffer.substring(0, (buffer.length() - 2) ) + "]";
