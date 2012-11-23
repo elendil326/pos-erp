@@ -782,7 +782,7 @@ class LoadClientes {
 
              }
 
-             this.usuariosJSON = "[" + buffer.substring(0, (buffer.length() - 1) ) + "]}";
+             this.usuariosJSON = "[" + buffer.substring(0, (buffer.length() - 2) ) + "]";
 
              this.totalCount = cont;
                 
