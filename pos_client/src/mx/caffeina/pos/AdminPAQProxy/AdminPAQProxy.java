@@ -491,14 +491,14 @@ public class AdminPAQProxy extends HttpResponder{
             //ESCRITURA
 
             //String numEmpresa = "1";
-            //String path = "C:/Documents and Settings/Manuel/Desktop/Compartida/CONNECTION_SDK/Lista_Clientes_SDK/InitListaClientes.EXE"/*searchInQuery("path")*/;
+            //String path = "C:/Documents and Settings/Manuel/Desktop/Compartida/CONNECTION_SDK/Lista_Clientes_SDK/InitListaClientes.EXE"/*searchInQuery("path")*/;            
 
-            path = searchInQuery("path") + "/Lista_Clientes_SDK/InitListaClientes.EXE";
-            params = path + " " + numEmpresa + " " + "1500";
+            params = URLDecoder.decode(path) + "\\Lista_Clientes_SDK\\InitListaClientes.EXE " + numEmpresa + " " + "1500" ;
+
             System.out.println("---> params : " + params);
             LoadClientes clientes = new LoadClientes(params);
 
-            System.out.println("---> Escribienfo : " + clientes.usuariosJSON);
+            System.out.println("---> Escribiendo : " + params);
 
             pw.println(clientes.usuariosJSON);
 
