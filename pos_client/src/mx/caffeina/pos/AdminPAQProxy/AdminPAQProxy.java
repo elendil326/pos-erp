@@ -857,7 +857,7 @@ class WriteClientes {
                 pw = new PrintWriter(fichero);
 
                 while (aux != null) {
-                    pw.println(aux.replace("\"", "'"));
+                    pw.println(aux);
                     aux = br.readLine();
                 }                    
                         
