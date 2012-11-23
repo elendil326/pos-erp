@@ -488,8 +488,19 @@ public class AdminPAQProxy extends HttpResponder{
             fichero = new FileWriter("C:\\Caffeina\\Files\\productos.txt");
             pw = new PrintWriter(fichero);
 
-            for (int i = 0; i < 10; i++)
-                pw.println("Linea " + i);
+            //ESCRITURA
+
+            //String numEmpresa = "1";
+            //String path = "C:/Documents and Settings/Manuel/Desktop/Compartida/CONNECTION_SDK/Lista_Clientes_SDK/InitListaClientes.EXE"/*searchInQuery("path")*/;
+
+            path = searchInQuery("path") + "/Lista_Clientes_SDK/InitListaClientes.EXE";
+            params = path + " " + numEmpresa + " " + "1500";
+
+            LoadClientes clientes = new LoadClientes(params);
+
+            pw.println(clientes.usuariosJSON);
+
+            //===========
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -523,7 +534,7 @@ public class AdminPAQProxy extends HttpResponder{
         //String path = "C:/Documents and Settings/Manuel/Desktop/Compartida/CONNECTION_SDK/Lista_Clientes_SDK/InitListaClientes.EXE"/*searchInQuery("path")*/;
 
         String path = searchInQuery("path") + "/Lista_Clientes_SDK/InitListaClientes.EXE";
-        params = path + " " + numEmpresa;
+        params = path + " " + numEmpresa + " " + "1500";
 
         LoadClientes clientes = new LoadClientes(params);
 
