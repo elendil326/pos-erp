@@ -480,43 +480,11 @@ public class AdminPAQProxy extends HttpResponder{
         System.out.println(r);
         
         //-----------------
+        
+        params = URLDecoder.decode(path) + "\\Lista_Clientes_SDK\\InitListaClientes.EXE " + numEmpresa + " " + "1500";        params = path + " " + numEmpresa + " " + "1500";
 
-        FileWriter fichero = null;
-        PrintWriter pw = null;
-        try
-        {
-            fichero = new FileWriter("C:\\Caffeina\\Files\\productos.txt");
-            pw = new PrintWriter(fichero);
-
-            //ESCRITURA
-
-            //String numEmpresa = "1";
-            //String path = "C:/Documents and Settings/Manuel/Desktop/Compartida/CONNECTION_SDK/Lista_Clientes_SDK/InitListaClientes.EXE"/*searchInQuery("path")*/;            
-
-            params = URLDecoder.decode(path) + "\\Lista_Clientes_SDK\\InitListaClientes.EXE " + numEmpresa + " " + "1500" ;
-
-            System.out.println("---> params : " + params);
-            LoadClientes clientes = new LoadClientes(params);
-
-            System.out.println("---> Escribiendo : " + params);
-
-            pw.println(clientes.usuariosJSON);
-
-            //===========
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-           try {
-           // Nuevamente aprovechamos el finally para 
-           // asegurarnos que se cierra el fichero.
-           if (null != fichero)
-              fichero.close();
-           } catch (Exception e2) {
-              e2.printStackTrace();
-           }
-        }
-
+        WriteClientes clientes = new WriteClientes(params);
+        
         //----------------
 
 
@@ -852,6 +820,89 @@ class LoadClientes {
     }
 
     LoadClientes() {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+    
+}
+
+class WriteClientes {   
+
+    public String code = "";
+    public Boolean success = false;
+    public String reason = "";
+
+    /**
+     * Creates a new instance of PruebaRuntime
+     */
+    public WriteClientes(String params) {
+
+        
+
+        //System.out.println("Se ejecutara : " + params);
+
+        try {
+            // Se lanza el ejecutable. 
+            Process p = Runtime.getRuntime().exec(params);
+
+            // Se obtiene el stream de salida del programa 
+            InputStream is = p.getInputStream();
+
+            /*
+             * Se prepara un bufferedReader para poder leer la salida más
+             * comodamente.
+             */
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+
+            //System.out.println("--- 6.1 ---");
+
+            // Se lee la primera linea 
+            String aux = br.readLine();
+
+            //System.out.println("--- 6.2 ---");
+
+            // Mientras se haya leido alguna linea 
+            
+                
+
+            FileWriter fichero = null;
+            PrintWriter pw = null;
+            try
+            {
+                fichero = new FileWriter("c:/prueba.txt");
+                pw = new PrintWriter(fichero);
+
+                while (aux != null) {
+                    pw.println(aux);
+                    aux = br.readLine();
+                }                    
+                        
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                // Nuevamente aprovechamos el finally para 
+                // asegurarnos que se cierra el fichero.
+                if (null != fichero)
+                    fichero.close();
+                } catch (Exception e2) {
+                   e2.printStackTrace();
+                }
+            }                            
+
+            //------------------------------------------
+
+
+        } catch (Exception e) {
+            // Excepciones si hay algún problema al arrancar el ejecutable o al leer su salida.*/
+            //e.printStackTrace();
+            this.success = false;
+            this.code = "300";
+            this.reason = "Error : " + e.getMessage().replace("\"", "'");
+        }
+    }
+
+    WriteClientes() {
         throw new UnsupportedOperationException("Not yet implemented");
     }
     
