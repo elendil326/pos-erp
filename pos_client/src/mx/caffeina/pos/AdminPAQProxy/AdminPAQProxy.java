@@ -838,10 +838,7 @@ class WriteClientes {
      * Creates a new instance of PruebaRuntime
      */
     public WriteClientes(String params) {
-
         
-
-        System.out.println("WRITE -> Se ejecutara : " + params);
 
         try {
             // Se lanza el ejecutable. 
@@ -864,8 +861,6 @@ class WriteClientes {
             //System.out.println("--- 6.2 ---");
 
             // Mientras se haya leido alguna linea 
-            
-            System.out.println("VOY A IMPORIMIR ----->>");
 
             FileWriter fichero = null;
             PrintWriter pw = null;
@@ -873,10 +868,6 @@ class WriteClientes {
             {
                 fichero = new FileWriter("C:\\Caffeina\\Files\\CteProv.txt");
                 pw = new PrintWriter(fichero);
-
-                for(int ii = 0; ii < 10; ii++){
-                     pw.println(ii);
-                }
 
                 while (aux != null) {
                     pw.println(aux);
