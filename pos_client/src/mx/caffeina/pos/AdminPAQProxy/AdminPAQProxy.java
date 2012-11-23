@@ -514,7 +514,7 @@ public class AdminPAQProxy extends HttpResponder{
 
         //String r = "{\"totalCount\":1, \"datos\":[{\"CRAZONSO01\":\"Juan Manuel Garcia\",\"CIDCLIEN01\":\"CLI0099\",\"CCODIGO01\":\"CLI0099\",\"CFECHAALTA\":\"12/12/2012\",\"CRFC\":\"GACJ121212123\",\"CCURP\":\"\",\"CDENCOME01\":\"PCSYSTEMS\",\"CREPLEGAL\":\"JUAN CARLOS\"}]}";
         //String r = "{\"totalCount\":" + clientes.totalCount + ", \"datos\":" + clientes.usuariosJSON + "}";
-        String r = "{\"totalCount\":2500, \"datos\":" + clientes.usuariosJSON + "}";
+        String r = "{\"totalCount\":" + clientes.totalCount + ", \"datos\":" + clientes.usuariosJSON + "}";
         //System.out.println(r); 
         return r;
 
@@ -745,81 +745,63 @@ class LoadClientes {
      */
     public LoadClientes(String params) {
 
+        int start = Integer.parseInt(searchInQuery("start"));
+        int limit = Integer.parseInt(searchInQuery("limit"));
+
+          File archivo = null;
+          FileReader fr = null;
+          BufferedReader br = null;
+
+          try {
+             // Apertura del fichero y creacion de BufferedReader para poder
+             // hacer una lectura comoda (disponer del metodo readLine()).
+             archivo = new File ("C:\\Caffeina\\Files\\CteProv.txt");
+             fr = new FileReader (archivo);
+             br = new BufferedReader(fr);
+
+             // Lectura del fichero
+             String linea = "";
+
+             String buffer = "";
+
+             int pointer = 0;
+             int cont = 0;
+
+             while((linea=br.readLine())!=null){
+
+                if(pointer > limit){
+                    break;
+                }
+
+                if( pointer >= start && pointer <= limit){
+                    buffer += (linea + ", ");
+                    cont++;
+                }
+
+                pointer++;
+
+             }
+
+             this.usuariosJSON = "[" + buffer.substring(0, (buffer.length() - 1) ) + "]}";
+
+             this.totalCount = cont;
+                
+          }
+          catch(Exception e){
+             e.printStackTrace();
+          }finally{
+             // En el finally cerramos el fichero, para asegurarnos
+             // que se cierra tanto si todo va bien como si salta 
+             // una excepcion.
+             try{                    
+                if( null != fr ){   
+                   fr.close();     
+                }                  
+             }catch (Exception e2){ 
+                e2.printStackTrace();
+             }
+          }
         
-
-        //System.out.println("Se ejecutara : " + params);
-
-        try {
-            // Se lanza el ejecutable. 
-            Process p = Runtime.getRuntime().exec(params);
-
-            // Se obtiene el stream de salida del programa 
-            InputStream is = p.getInputStream();
-
-            /*
-             * Se prepara un bufferedReader para poder leer la salida más
-             * comodamente.
-             */
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-
-            //System.out.println("--- 6.1 ---");
-
-            // Se lee la primera linea 
-            String aux = br.readLine();
-            /*this.usuarios = new ArrayList();
-
-            //System.out.println("--- 6.2 ---");
-
-            // Mientras se haya leido alguna linea 
-            while (aux != null) {
-                // Se escribe la linea en pantalla 
-                System.out.println(aux);
-
-                usuarios.add(new Usuario(aux));
-
-                // y se lee la siguiente. 
-                aux = br.readLine();
-            }
-           
-            String json = "[";
-            
-            boolean flag = false;
-            
-            for (int i = 0; i < usuarios.size(); i++) {
-                
-                flag = true;
-                
-                Usuario u = (Usuario)usuarios.get(i);
-                
-                json += "{";
-                
-                json += ("\"Codigo\":\"" + u.Codigo + "\",");
-                json += ("\"RazonSocial\":\"" + u.RazonSocial + "\",");
-                json += ("\"RFC\":\"" + u.RFC + "\",");
-                json += ("\"Direccion\":\"" + u.Direccion + "\"");
-                
-                json += "},";
-            }
-            if(flag){
-                json = json.substring(0, json.length() - 1);
-            }
-                        
-            json += "]";*/                    
-
-            this.usuariosJSON = "[" + aux.substring(0, (aux.length() - 1) ) + "]";
-
-            this.totalCount = 1;
-
-            //------------------------------------------
-
-
-        } catch (Exception e) {
-            // Excepciones si hay algún problema al arrancar el ejecutable o al leer su salida.*/
-            //e.printStackTrace();
-            this.success = false;
-            this.code = "300";
-            this.reason = "Error : " + e.getMessage().replace("\"", "'");
-        }
     }
 
     LoadClientes() {
