@@ -495,8 +495,10 @@ public class AdminPAQProxy extends HttpResponder{
 
             path = searchInQuery("path") + "/Lista_Clientes_SDK/InitListaClientes.EXE";
             params = path + " " + numEmpresa + " " + "1500";
-
+            System.out.println("---> params : " + params);
             LoadClientes clientes = new LoadClientes(params);
+
+            System.out.println("---> Escribienfo : " + clientes.usuariosJSON);
 
             pw.println(clientes.usuariosJSON);
 
