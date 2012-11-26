@@ -338,11 +338,181 @@
 
 
 
+		public static function Respaldar_Instancias($instance_ids){
+
+			$ids_string =" WHERE instance_id = ";
+
+			$ids =json_decode($instance_ids);
+			
+			for($i=0; $i< count($ids); $i++){
+			
+				if($i == 0)
+					$ids_string .= "".$ids[$i];
+				else
+					$ids_string .= " OR instance_id = ".$ids[$i];
+			}
+			
+			Logger::log("Backing up Instances.....");
+
+			$result = "";
+			$out = "";			
+			$destiny_file = '../../static_content/db_backups';
+
+			global $POS_CONFIG;
+
+			$sql = "SELECT * FROM instances $ids_string;";
+			
+			
+			$rs =  $POS_CONFIG["CORE_CONN"]->Execute($sql);
+			$instancias = $rs->GetArray();
+			
+			foreach($instancias as $ins){
+				$file_name = time().'_pos_instance_'.$ins['instance_id'].'.sql';
+				$db_user = $ins['db_user'];
+				$usr_pass = $ins['db_password'];
+				$db_host = $ins['db_host'];
+				$db_name = $ins['db_name'];
+				$out = self::backup_pos_instance($ins['instance_id'],$db_host,$db_user,$db_name,$usr_pass,$destiny_file,$file_name);
+				
+				if(!is_null($out))
+					$result.= $out."\n";
+			}
+			
+			if(strlen($result)>0)
+				return $result;
+			else 
+				return null;
+		}
 
 
 
 
+		public static function Restaurar_Instancias($instance_ids){
 
+			$ids_string =" WHERE instance_id = ";
+
+			$ids =json_decode($instance_ids);
+			
+			for($i=0; $i< count($ids); $i++){
+			
+				if($i == 0)
+					$ids_string .= "".$ids[$i];
+				else
+					$ids_string .= " OR instance_id = ".$ids[$i];
+			}
+			
+			Logger::log("Restoring up Instances.....");
+
+			$result = "";
+			$out = "";			
+			$destiny_file = '../../static_content/db_backups';
+
+			global $POS_CONFIG;
+
+			$sql = "SELECT * FROM instances $ids_string;";
+			
+			
+			$rs =  $POS_CONFIG["CORE_CONN"]->Execute($sql);
+			$instancias = $rs->GetArray();			
+			
+			foreach($instancias as $ins){
+				$file_name = 'pos_instance_'.$ins['instance_id'].'_'.date("d-m-Y H:i:s").'.sql';
+				$db_user = $ins['db_user'];
+				$usr_pass = $ins['db_password'];
+				$db_host = $ins['db_host'];
+				$db_name = $ins['db_name'];
+				
+				$path = split("/",$destiny_file);
+				$actual = shell_exec("pwd");
+				$actual = split("/", $actual);
+				$final_path="";
+
+				Logger::log("Iniciando en: ".shell_exec("pwd"));
+				foreach ($path as $rut) {
+					if($rut=="..")
+						array_pop($actual); 
+					else
+						array_push($actual, $rut);	
+				}
+
+				foreach ($actual as $rut) {
+					$final_path .= "/".$rut;
+				}
+				$final_path = substr($final_path, 1);
+
+				$dbs_instance = trim(shell_exec("ls -lat -m1 ".$final_path."| grep ".$ins['instance_id'].".sql"));				
+				Logger::log("Respaldos encontrados: ".$dbs_instance);
+
+				/*dbs_instance almacena una cadena con un listado donde se encuentran archivos que tengan la teminacion
+				con el id de la instancia y .sql, ademas de que la lista viene ordenada de mas reciente a antiguo
+				la lista seria como lo siguiente:
+				1353617611_pos_instance_82.sql 1353608687_pos_instance_82.sql 1353608206_pos_instance_82.sql 1353608191_pos_instance_82.sql
+				en found se coloca un array y en cada posicion el nombre de cada respaldo
+				*/
+				$found = preg_split("/[\s,]+/", $dbs_instance,-1,PREG_SPLIT_NO_EMPTY);
+				//Logger::log("No archivos: ".count($found));
+				if(count($found) < 1){
+					Logger::log("Error al restaurar la instancia ".$ins['instance_id'].", no hay un respaldo existente");
+					$result .= "Error al restaurar la instancia ".$ins['instance_id'].", no hay un respaldo existente";
+					continue;
+				}
+				
+				//se genera una nueva conexion a la bd schema para sacar el no_registros de cada bd
+				$instance_con["INSTANCE_CONN"] = null;
+				
+				try{
+
+					$instance_con["INSTANCE_CONN"] = ADONewConnection($ins["db_driver"]);
+					$instance_con["INSTANCE_CONN"]->debug = $ins["db_debug"];
+					$instance_con["INSTANCE_CONN"]->PConnect($db_host, $db_user, $usr_pass, "information_schema");
+					
+					if(!$instance_con["INSTANCE_CONN"])
+					{
+						Logger::error( "Imposible conectarme a la base de datos information_schema" );
+						die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));    
+					}
+
+				} catch (ADODB_Exception $ado_e) {
+		
+					Logger::error( $ado_e );
+					die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));
+
+				}catch ( Exception $e ){
+					Logger::error( $e );
+					die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));
+				}
+
+				if($instance_con["INSTANCE_CONN"] === NULL){
+					Logger::error("Imposible conectarse con la base de datos information_schema");
+					die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));
+				}
+		
+				$instance_db_con = $instance_con["INSTANCE_CONN"];
+
+				//fin con
+				//antes de eliminar las tablas y restaurar se revisa cuantos registros hay en toda la BD
+				$num_regs_db =0;				
+
+				$no_rows = $instance_db_con->Execute('SELECT SUM( TABLE_ROWS ) FROM  `TABLES` WHERE TABLE_SCHEMA = "'.$db_name.'"');
+				while($row = $no_rows->FetchRow()){//row = nombre de la tabla
+					$num_regs_db += $row[0];											
+				}
+				
+
+				//se eliminan las tablas				
+				self::Eliminar_Tablas_BD($ins['instance_id'],$db_host, $db_user, $usr_pass, $db_name);
+				//se restaura el ultimo respaldo
+				$out2 = self::restore_pos_instance($ins['instance_id'],$db_host,$db_user, $db_name,$usr_pass,$final_path."/".$found[0],$ins['db_driver'],$ins['db_debug']);				
+				Logger::log("No registros en la BD ANTES de eliminar tablas: ".$num_regs_db);
+				if(!is_null($out2))
+					$result.= $out2."\n";
+			}//fin foreach que recorre las instancias
+			
+			if(strlen($result)>0)
+				return $result;
+			else 
+				return null;
+		}
 
 
 
@@ -367,7 +537,7 @@
 			$result = "";
 			$out = "";
 			$file_name_cons = 'db-backup-'.time().'.sql';
-			$destiny_file = '../../../static_content/db_backups/';
+			$destiny_file = '../../static_content/db_backups';
 
 			global $POS_CONFIG;
 
@@ -692,10 +862,85 @@
 
 
 
+		public static function backup_pos_instance($instance_id,$db_host,$db_user,$db_name,$usr_pass,$destiny_file,$file_name){
+			Logger::log("Backing up Instance $instance_id");
+			$path = split("/",$destiny_file);
+			$actual = shell_exec("pwd");
+			$actual = split("/", $actual);
+			$final_path="";
+
+			Logger::log("Iniciando en: ".shell_exec("pwd"));
+			foreach ($path as $rut) {
+				if($rut=="..")
+					array_pop($actual); 
+				else
+					array_push($actual, $rut);	
+			}
+
+			foreach ($actual as $rut) {
+				$final_path .= "/".$rut;
+			}
+			$final_path = substr($final_path, 1);
+			
+			Logger::log("Terminado en: ".$final_path);
+			$cmd = "mysqldump --opt --host=".$db_host." --user=".$db_user." --password=".$usr_pass." ".$db_name." > ".$final_path."/".$file_name;
+			$res= shell_exec($cmd);
+			
+			return ( !file_exists($final_path."/".$file_name) )?"Error al respaldar la instancia ".$instance_id." comando ejecutado: ".$cmd : NULL;
+		}
 
 
 
+		public static function restore_pos_instance($instance_id,$db_host,$db_user,$db_name,$usr_pass,$full_path,$driver,$debug){
+			Logger::log("Restoring up Instance $instance_id");			
+			$cmd = "mysql --host=".$db_host." --user=".$db_user." --password=".$usr_pass." ".$db_name." < ".$full_path;
+			Logger::log("Ejecutando comando: ".$cmd);
+			$res = shell_exec($cmd);
+			Logger::log("Resuldado del comando: ".$res);
 
+			//se redefinie la conexion ¬¬
+				$instance_con["INSTANCE_CONN"] = null;
+				
+				try{
+
+					$instance_con["INSTANCE_CONN"] = ADONewConnection($driver);
+					$instance_con["INSTANCE_CONN"]->debug = $debug;
+					$instance_con["INSTANCE_CONN"]->PConnect($db_host, $db_user, $usr_pass, "information_schema");
+					
+					if(!$instance_con["INSTANCE_CONN"])
+					{
+						Logger::error( "Imposible conectarme a la base de datos information_schema" );
+						die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));    
+					}
+
+				} catch (ADODB_Exception $ado_e) {
+		
+					Logger::error( $ado_e );
+					die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));
+
+				}catch ( Exception $e ){
+					Logger::error( $e );
+					die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));
+				}
+
+				if($instance_con["INSTANCE_CONN"] === NULL){
+					Logger::error("Imposible conectarse con la base de datos information_schema");
+					die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));
+				}
+		
+				$instance_db_con = $instance_con["INSTANCE_CONN"];
+				$num_regs_db_despues=0;
+				//fin redefine conexion
+				$no_rows = $instance_db_con->Execute('SELECT SUM( TABLE_ROWS ) FROM  `TABLES` WHERE TABLE_SCHEMA = "'.$db_name.'"');
+				while($row = $no_rows->FetchRow()){//row = nombre de la tabla
+					$num_regs_db_despues += $row[0];											
+				}
+
+				Logger::log("No registros en la BD despues de restaurar tablas: ".$num_regs_db_despues);				
+
+
+			return ( $num_regs_db_despues == 0)?"Error al restaurar la instancia ".$instance_id : NULL;
+		}
 
 
 
