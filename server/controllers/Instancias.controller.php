@@ -339,7 +339,7 @@
 
 
 		public static function Respaldar_Instancias($instance_ids){
-
+			
 			$ids_string =" WHERE instance_id = ";
 
 			$ids =json_decode($instance_ids);
@@ -356,7 +356,7 @@
 
 			$result = "";
 			$out = "";			
-			$destiny_file = '../../static_content/db_backups';
+			$destiny_file = str_replace("server","static_content/db_backups",POS_PATH_TO_SERVER_ROOT);
 
 			global $POS_CONFIG;
 
@@ -405,7 +405,7 @@
 
 			$result = "";
 			$out = "";			
-			$destiny_file = '../../static_content/db_backups';
+			$final_path = str_replace("server","static_content/db_backups",POS_PATH_TO_SERVER_ROOT);
 
 			global $POS_CONFIG;
 
@@ -420,25 +420,7 @@
 				$db_user = $ins['db_user'];
 				$usr_pass = $ins['db_password'];
 				$db_host = $ins['db_host'];
-				$db_name = $ins['db_name'];
-				
-				$path = split("/",$destiny_file);
-				$actual = shell_exec("pwd");
-				$actual = split("/", $actual);
-				$final_path="";
-
-				Logger::log("Iniciando en: ".shell_exec("pwd"));
-				foreach ($path as $rut) {
-					if($rut=="..")
-						array_pop($actual); 
-					else
-						array_push($actual, $rut);	
-				}
-
-				foreach ($actual as $rut) {
-					$final_path .= "/".$rut;
-				}
-				$final_path = substr($final_path, 1);
+				$db_name = $ins['db_name'];				
 
 				$dbs_instance = trim(shell_exec("ls -lat -m1 ".$final_path."| grep ".$ins['instance_id'].".sql"));				
 				Logger::log("Respaldos encontrados: ".$dbs_instance);
@@ -537,7 +519,7 @@
 			$result = "";
 			$out = "";
 			$file_name_cons = 'db-backup-'.time().'.sql';
-			$destiny_file = '../../static_content/db_backups';
+			$destiny_file = str_replace("server","static_content/db_backups",POS_PATH_TO_SERVER_ROOT);
 
 			global $POS_CONFIG;
 
@@ -864,29 +846,10 @@
 
 		public static function backup_pos_instance($instance_id,$db_host,$db_user,$db_name,$usr_pass,$destiny_file,$file_name){
 			Logger::log("Backing up Instance $instance_id");
-			$path = split("/",$destiny_file);
-			$actual = shell_exec("pwd");
-			$actual = split("/", $actual);
-			$final_path="";
-
-			Logger::log("Iniciando en: ".shell_exec("pwd"));
-			foreach ($path as $rut) {
-				if($rut=="..")
-					array_pop($actual); 
-				else
-					array_push($actual, $rut);	
-			}
-
-			foreach ($actual as $rut) {
-				$final_path .= "/".$rut;
-			}
-			$final_path = substr($final_path, 1);
-			
-			Logger::log("Terminado en: ".$final_path);
-			$cmd = "mysqldump --opt --host=".$db_host." --user=".$db_user." --password=".$usr_pass." ".$db_name." > ".$final_path."/".$file_name;
+			$cmd = "mysqldump --opt --host=".$db_host." --user=".$db_user." --password=".$usr_pass." ".$db_name." > ".$destiny_file."/".$file_name;
 			$res= shell_exec($cmd);
 			
-			return ( !file_exists($final_path."/".$file_name) )?"Error al respaldar la instancia ".$instance_id." comando ejecutado: ".$cmd : NULL;
+			return ( !file_exists($destiny_file."/".$file_name) )?"Error al respaldar la instancia ".$instance_id." comando ejecutado: ".$cmd : NULL;
 		}
 
 
