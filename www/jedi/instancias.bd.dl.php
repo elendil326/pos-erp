@@ -150,7 +150,7 @@ for($i = 0; $i < sizeof($ids); $i++){
 }
 
 
-for($i = 0; $i < sizeof($ids); $i++){
+//for($i = 0; $i < sizeof($ids); $i++){
 
 	//validar que existan
 	$r = InstanciasController::BuscarPorId( $ids[$i] );
@@ -160,17 +160,36 @@ for($i = 0; $i < sizeof($ids); $i++){
 
 	array_push($files, $destiny_file . $file_name );
 	array_push($file_id, $ids[$i]  );
-
-	InstanciasController::backup_only_data(  $ids[$i], $r["db_host"], $r["db_user"], $r["db_password"], $r["db_name"], '*', true, false, $destiny_file, $file_name);
-}
+	InstanciasController::Respaldar_Instancias($_GET["instance_ids"]);
+	//InstanciasController::backup_only_data(  $ids[$i], $r["db_host"], $r["db_user"], $r["db_password"], $r["db_name"], '*', true, false, $destiny_file, $file_name);
+//}
 
 
 $f = new zipfile;
 
 
-for ($i=0; $i < sizeof($files); $i++) { 
-	$f->add_file(file_get_contents($files[$i]), $file_id[$i] . ".sql");
-	
+//for ($i=0; $i < sizeof($files); $i++) {
+for ($i=0; $i < sizeof($ids); $i++) { 
+	//$f->add_file(file_get_contents($files[$i]), $file_id[$i] . ".sql");
+	$final_path = str_replace("server","static_content/db_backups",POS_PATH_TO_SERVER_ROOT);
+	$dbs_instance = trim(shell_exec("ls -lat -m1 ".$final_path."| grep ".$ids[$i].".sql"));				
+	Logger::log("Respaldos encontrados: ".$dbs_instance);
+
+	/*dbs_instance almacena una cadena con un listado donde se encuentran archivos que tengan la teminacion
+	con el id de la instancia y .sql, ademas de que la lista viene ordenada de mas reciente a antiguo
+	la lista seria como lo siguiente:
+	1353617611_pos_instance_82.sql 1353608687_pos_instance_82.sql 1353608206_pos_instance_82.sql 1353608191_pos_instance_82.sql
+	en found se coloca un array y en cada posicion el nombre de cada respaldo
+	*/
+	$found = preg_split("/[\s,]+/", $dbs_instance,-1,PREG_SPLIT_NO_EMPTY);
+	//Logger::log("No archivos: ".count($found));
+	if(count($found) < 1){
+		Logger::log("Error al restaurar la instancia ".$ins['instance_id'].", no hay un respaldo existente");
+		$result .= "Error al restaurar la instancia ".$ins['instance_id'].", no hay un respaldo existente";
+		continue;
+	}
+	$contenido = file_get_contents($final_path."/".$found[0]);
+	$f->add_file($contenido,$found[0]);
 }
 
 header("Content-type: application/octet-stream");

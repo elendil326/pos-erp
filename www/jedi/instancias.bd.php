@@ -156,6 +156,9 @@ define("BYPASS_INSTANCE_CHECK", true);
 				alert('No ha seleccionado ninguna instancia para descargar');
 				return;
 			}
+			if (!confirm('¿Descargar BD de instancias seleccionadas?. (Se generarán respaldos y esos se descargarán)')) {
+			    return;
+			}
 			console.log("Encodeado:",Ext.JSON.encode(ids));
 
 			window.location='instancias.bd.dl.php?&instance_ids='+Ext.JSON.encode(ids);
