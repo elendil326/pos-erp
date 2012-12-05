@@ -467,16 +467,15 @@ require_once("interfaces/POS.interface.php");
  	 *
  	 *Restaurar una BD especifica, a partir de un listado de archivos.
  	 *
- 	 * @param id_instacia int Id de la instancia que se requiere restaurar
- 	 * @param time int Fecha de creaci�n del archivo
+ 	 * @param id_instancia int Id de la instancia que se requiere restaurar
+ 	 * @param time int Fecha de creacin del archivo
  	 * @return status string Estado de la respuesta
  	 **/
-   public static function EspecificaBdRestaurarBd
+  public static function EspecificaBdRestaurarBd
 	(
-		$id_instacia, 
+		$id_instancia, 
 		$time
-	){
-                Logger::log("pppasmdlkamsldkmalskdmalskmdlaksmdlaksmdlaksmdlaskmd");
+	){                
                        return array("status" => "ok");
           }  
 

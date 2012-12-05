@@ -4,7 +4,7 @@
 
 		
 
-		require_once("../../../server//bootstrap.php");
+		require_once("../../../server/bootstrap.php");
 		//
 		// 
 		// 
@@ -126,12 +126,12 @@
                 
                 
                 
-		$page->nextTab("Respaldar");
-		$page->addComponent("<a href=''><div class='POS Boton'>Respaldar BD</div></a>");//Boton de respaldo
-                                               $page->addComponent("<hr>");//Separador
+		$page->nextTab("Restaurar");
+		//$page->addComponent("<a href=''><div class='POS Boton'>Respaldar BD</div></a>");//Boton de respaldo
+                $page->addComponent("<hr>");//Separador
 		$page->addComponent(new TitleComponent("Respaldos disponibles", 2));
-                                               $page->addComponent(InstanciasController::BuscarRespaldosComponents(84));
-                                               $page->addComponent("<br>");
+                $page->addComponent(InstanciasController::BuscarRespaldosComponents(80));
+                $page->addComponent("<br>");
                   /*
                                     $Tabla = array(
                                         "fecha" => "Fecha de Respaldo"

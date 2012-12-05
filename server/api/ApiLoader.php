@@ -1,31 +1,6 @@
 <?php 
-/*
-require_once("ApiHandler.php");
 
-	require_once("ApiHttpErrors.php");
 
-	require_once("ApiLoader.php");
-
-	require_once("ApiOutputFormatter.php");
-
-	require_once("CustomValidator.php");
-
-	require_once("DateRangeValidator.php");
-
-	require_once("DateValidator.php");
-
-	require_once("EnumValidator.php");
-
-	require_once("HtmlValidator.php");
-
-	require_once("NumericRangeValidator.php");
-
-	require_once("NumericValidator.php");
-
-	require_once("StringValidator.php");
-
-	require_once("Validator.php");
-*/
 
   class ApiSesionIniciar extends ApiHandler {
   
@@ -5794,7 +5769,7 @@ require_once("ApiHandler.php");
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"id_instacia" => new ApiExposedProperty("id_instacia", true, POST, array( "int" )),
+			"id_instancia" => new ApiExposedProperty("id_instancia", true, POST, array( "int" )),
 			"time" => new ApiExposedProperty("time", true, POST, array( "int" )),
 		);
 	}
@@ -5804,7 +5779,7 @@ require_once("ApiHandler.php");
  		$this->response = POSController::EspecificaBdRestaurarBd( 
  			
 			
-			isset($_POST['id_instacia'] ) ? $_POST['id_instacia'] : null,
+			isset($_POST['id_instancia'] ) ? $_POST['id_instancia'] : null,
 			isset($_POST['time'] ) ? $_POST['time'] : null
 			
 			);
