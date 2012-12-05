@@ -245,7 +245,7 @@
 */
 
 		
-		public static function Buscar(  ){
+		public static function Buscar( ){
 			
 			global $POS_CONFIG;
 			
@@ -254,7 +254,7 @@
 			//($sql,$inputarr=false,$force_array=false,$first2cols=false)
 			
 			$res = $POS_CONFIG["CORE_CONN"]->GetAssoc( $sql, false, false, false );
-			
+
 			if(empty($res)) return NULL;
 			
 			$a = array();
@@ -267,20 +267,104 @@
 
 		}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                    public static function BuscarRespaldos($IDinstancia = null)
+                                            {
+                                        //Función que regresa en forma de arreglo todos los elementos en la carpeta de respaldo con un ID de instancia determinado (opcional)  CON SU FECHA COMO INDICE
+                                            $CarpetaRespaldos=(POS_PATH_TO_SERVER_ROOT . "/../static_content/db_backups/");
+                                            $Directorio=dir($CarpetaRespaldos);
+                                           $Retorno=array();
+                                            $Contador=0;//Cuenta cuantos elementos válidos ha encontrado
+                                            while ($Archivo=$Directorio->read())
+                                            {
+                                                if (strlen($Archivo)>2&&(substr($Archivo, strlen($Archivo)-4,4)==".sql"))
+                                                {
+                                                    if(is_null($IDinstancia))//Si no se especifico el indice de la instancia
+                                                    {
+                                                         array_push($Retorno, array("fecha"=>fileatime($CarpetaRespaldos.$Archivo)));//Se manda un arreglo al arreglo de retorno
+                                                        $Contador++;
+                                                    }
+                                                    else //Si se especifico el indice de la instancia
+                                                    {
+                                                        if (substr($Archivo,24, 2)==$IDinstancia)
+                                                        {
+                                                            array_push($Retorno, array("fecha"=> fileatime($CarpetaRespaldos.$Archivo)));//Se manda un arreglo al arreglo de retorno
+                                                            $Contador++;
+                                                        }
+                                                    }   
+                                                 }
+                                            }
+                                            if ($Contador>0)//Si encuentra más de un archivo válido en la caperta de respaldos
+                                            {
+                                                return $Retorno;
+                                            }
+                                          }
+                                          
+                                          public static function BuscarRespaldosComponents($IDinstancia=null)
+                                          {//Función que devuelve el componente necesario en HTML para crear el formulario con las opciones de respaldos en base a los archivos
+                                                $CarpetaRespaldos=(POS_PATH_TO_SERVER_ROOT . "/../static_content/db_backups/");
+                                            $Directorio=dir($CarpetaRespaldos);
+                                            
+                                            $Retorno = "<script>";                                            
+                                            $Retorno .= "     var valor = null;";                                            
+                                            $Retorno .= "     var fn = function(){";                                            
+                                            $Retorno .= "         for(var i = 0; i < document.frmRes.GRespaldo.length; i++){";                                            
+                                            $Retorno .= "             if( document.frmRes.GRespaldo[i].checked == true ){";                                            
+                                            $Retorno .= "                 valor = document.frmRes.GRespaldo[i].value;";                                            
+                                            $Retorno .= "             }";                                            
+                                            $Retorno .= "         }";                                        
+                                            $Retorno .= "         alert(\"El valor es \" + valor);";    
+                                            
+                                            $Retorno .= "         POS.API.POST( ";
+                                            $Retorno .= "             \"api/pos/bd/restaurar_bd_especifica/\", ";
+                                            $Retorno .= "             {";
+                                            $Retorno .= "                  \"id_instancia\" 	: 1,";
+                                            $Retorno .= "                  \"time\" 	: 123456";
+                                            $Retorno .= "            },";
+                                            $Retorno .= "            {";
+                                           $Retorno .= "                callback : function(a){";
+                                           //$Retorno .= "                    window.onbeforeunload = function(){}";
+                                           $Retorno .= "                    alert( 'ok' ); ";   
+                                            $Retorno .= "                    window.location = \"c.php#Respaldar\"; ";
+                                            $Retorno .= "                }";
+                                            $Retorno .= "            }";
+                                            $Retorno .= "         ); ";
+                                            
+                                            $Retorno .= "     }";                                                                                                                                                                           
+                                            $Retorno .= "</script>";                                            
+                                            
+                                           $Retorno .= "<div align=\"left\"><form name=\"frmRes\">";
+                                           
+                                           /*
+<div align="center"><br>
+</form>*/
+                                            $Contador=0;//Cuenta cuantos elementos válidos ha encontrado
+                                            while ($Archivo=$Directorio->read())
+                                            {
+                                                if (strlen($Archivo)>2&&(substr($Archivo, strlen($Archivo)-4,4)==".sql"))
+                                                {
+                                                      $TArchivo=filemtime($CarpetaRespaldos.$Archivo);
+                                                    if(is_null($IDinstancia))//Si no se especifico el indice de la instancia
+                                                    {
+                                                         $Retorno.="<br><input type=\"radio\" name=\"GRespaldo\" value=\"{$TArchivo }\"> Respaldo no {$Contador}, creado ". date("D d/m/Y g:i a",$TArchivo) . "<br>";
+                                                        $Contador++;
+                                                    }
+                                                    else //Si se especifico el indice de la instancia
+                                                    {
+                                                        if (substr($Archivo,24, 2)==$IDinstancia)
+                                                        {
+                                                             $Retorno.="<br><input type=\"radio\" name=\"GRespaldo\" value=\"'{$TArchivo}\"> Respaldo no {$Contador}, creado ". date("D d/m/Y g:i a",$TArchivo) . "<br>";
+                                                            $Contador++;
+                                                        }
+                                                    }
+                                                 }
+                                            }
+                                            $Retorno.="</form></div><br/><div class=\"POS Boton\" onclick=\"fn();\">Restaurar</div>";
+                                            if ($Contador>0)//Si encuentra más de un archivo válido en la caperta de respaldos
+                                            {
+                                                return $Retorno;
+                                            }
+                                          }
+                                          
 		
 		
 		public static function BuscarRequests( $id = null ){
@@ -363,9 +447,9 @@
 			$sql = "SELECT * FROM instances $ids_string;";
 			
 			
-			$rs =  $POS_CONFIG["CORE_CONN"]->Execute($sql);
+			$rs =  $POS_CONFIG["CORE_CONN"]->Execute($sql);echo(":::::::::::::::::::::::::: Resultado: ".print_r($rs->fields));
 			$instancias = $rs->GetArray();
-			
+
 			foreach($instancias as $ins){
 				$file_name = time().'_pos_instance_'.$ins['instance_id'].'.sql';
 				$db_user = $ins['db_user'];

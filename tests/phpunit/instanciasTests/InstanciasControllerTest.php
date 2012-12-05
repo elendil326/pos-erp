@@ -74,7 +74,7 @@ if(!defined("BYPASS_INSTANCE_CHECK")){
                 public function testRespaldarBD()
                 {
                     echo " >> Intentando respaldar la base de datos\n";
-                    if ((InstanciasController::Respaldar_Instancias(json_encode(array(self::$instance_id))))!=null)
+                    if (is_null(InstanciasController::Respaldar_Instancias(json_encode(array(self::$instance_id)))))
                     {
                         echo "\tRespaldo exitoso\n";
                     }
@@ -88,7 +88,7 @@ if(!defined("BYPASS_INSTANCE_CHECK")){
                 public function testRestarurarBD()
                 {
                     echo " >> Intentando restaurar la base de datos\n";
-                    if ((!is_null(InstanciasController::Restaurar_Instancias(json_encode(array(self::$instance_id)))))!=null)
+                    if (!is_null(InstanciasController::Restaurar_Instancias(json_encode(array(self::$instance_id)))))
                     {
                         echo "\tRestauración exitosa\n";
                     }
@@ -119,9 +119,9 @@ if(!defined("BYPASS_INSTANCE_CHECK")){
                         $CarpetaRespaldos=(POS_PATH_TO_SERVER_ROOT . "/../static_content/db_backups/");
                         $nArchivos=0;
                         $directorio=dir($CarpetaRespaldos);
-                        $d1=date("d",time());$d2;
-                        $m1=date("m",time());$m2;
-                        $a1=date("y",time());$a2;
+                        $d1=date("d",time());$d2;//Dia Actual
+                        $m1=date("m",time());$m2;//Mes actual
+                        $a1=date("y",time());$a2;//Año actual
                         echo " >> Comprobando archivos:\n";
                         while ($archivo = $directorio->read())
                         {
@@ -130,7 +130,7 @@ if(!defined("BYPASS_INSTANCE_CHECK")){
                                 $d2=date("d",fileatime($CarpetaRespaldos.$archivo));
                                 $m2=date("m",fileatime($CarpetaRespaldos.$archivo));
                                 $a2=date("y",fileatime($CarpetaRespaldos.$archivo));
-                                if((substr($archivo, 10,14)=="_pos_instance_")&&(substr($archivo, strlen($archivo)-3,3)=="sql")){echo "\tOk >> Archivo encontrado: ".$archivo." (" . date("d/m/y",fileatime($CarpetaRespaldos.$archivo)) . ")\n"; $nArchivos++;;};
+                                if((substr($archivo, 10,14)=="_pos_instance_")&&(substr($archivo, strlen($archivo)-4,4)==".sql")){echo "\tOk >> Archivo encontrado: ".$archivo." (" . date("d/m/y",fileatime($CarpetaRespaldos.$archivo)) . ")\n"; $nArchivos++;;};
                                 if ($d1>($d2+7)||$m1>$m2||$a1>$a2&&((substr($archivo, 10,14)=="_pos_instance_")&&(substr($archivo, strlen($archivo)-3,3)=="sql")))
                                 {
                                     echo "\tBorrando respaldo archivo Antiguo: ' " . $archivo . " ' \n";
@@ -149,7 +149,7 @@ if(!defined("BYPASS_INSTANCE_CHECK")){
                         }
                         $directorio->close();
                         echo "\tComprobando si existen al menos 7 respaldos\n";
-                        if ($nArchivos==7)
+                        if ($nArchivos>6)
                         {
                             echo "\tOk: Hay al menos 7 respaldos válidos\n";
                         }

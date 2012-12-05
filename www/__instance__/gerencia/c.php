@@ -78,23 +78,8 @@
 
 		$page->addComponent( new TitleComponent("Importar productos de CSV/AdminPAQ/Excel", 2));
 		$page->addComponent(" <div id='productos-csvup'></div>");
+                
 
-		
-
-
-
-
-
-
-
-		
-		
-		
-		
-		
-		
-		
-		
 		//
 		// Importar usando PosClient
 		// 
@@ -108,12 +93,6 @@
 		$adminPF->addOnClick("Importar" , "(function(){ new AdminPAQExplorer( \"". $adminPF->getGuiComponentId() ."\" ); })");
 		$page->addComponent($adminPF);
 
-		
-		
-		
-		
-		
-		
 		
 
 		$page->nextTab("Sesiones");
@@ -144,29 +123,31 @@
 		$tabla->addOnClick("id_usuario", "detallesUsuario");
 		
 		$page->addComponent( $tabla );
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+                
+                
+                
 		$page->nextTab("Respaldar");
-		
-		
-		
-		
-		
-		
-		
-		
+		$page->addComponent("<a href=''><div class='POS Boton'>Respaldar BD</div></a>");//Boton de respaldo
+                                               $page->addComponent("<hr>");//Separador
+		$page->addComponent(new TitleComponent("Respaldos disponibles", 2));
+                                               $page->addComponent(InstanciasController::BuscarRespaldosComponents(84));
+                                               $page->addComponent("<br>");
+                  /*
+                                    $Tabla = array(
+                                        "fecha" => "Fecha de Respaldo"
+                                    );//array("fecha" => "Fecha" );
+                                    $t = new TableComponent( $Tabla , InstanciasController::BuscarRespaldos(84));
+                                    $t->addColRender("fecha", "FormatTime");
+                                    
+                                    
+                                    //$t->addColRender( "fecha_creacion", "FormatTime" );	
+                                      
+                                    
+
+                                    $page->addComponent( $t);
+                                    <input type="submit" value="enviar" name="enviar">
+                                     */
+                                    // $page->addComponent("<a href=''><div class='POS Boton'>Restaurar</div></a>");
 		
 		
 		$page->nextTab( "Personalizar" );

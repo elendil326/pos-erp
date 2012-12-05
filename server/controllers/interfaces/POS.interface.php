@@ -103,6 +103,23 @@
   
 	/**
  	 *
+ 	 *Restaurar una BD especifica, a partir de un listado de archivos.
+ 	 *
+ 	 * @param id_instacia int Id de la instancia que se requiere restaurar
+ 	 * @param time int Fecha de creación del archivo
+ 	 * @return status string Estado de la respuesta
+ 	 **/
+  static function EspecificaBdRestaurarBd
+	(
+		$id_instacia, 
+		$time
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
  	 *Busca en el erp
  	 *
  	 * @param query string 
