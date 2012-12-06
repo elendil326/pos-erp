@@ -136,6 +136,22 @@
   
 	/**
  	 *
+ 	 *Restaura las instancias seleccionadas de acuerdo a los scripts .sql mas recientes que haya en el servidor para cada instancia. La restauracion es un reemplazo total tanto de datos como esquema con respecto a los scripts encontrados.
+ 	 *
+ 	 * @param instance_ids json Lista de los id de las instancias a respaldar
+ 	 * @return status string Respuesta enviada del servidor
+ 	 * @return mensaje string Mensaje de respuesta del servidor
+ 	 **/
+  static function BdInstanciasRestaurarBd
+	(
+		$instance_ids
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
  	 *Busca en el erp
  	 *
  	 * @param query string 

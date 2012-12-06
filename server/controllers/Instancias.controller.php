@@ -354,8 +354,8 @@ class InstanciasController {
 
         $ids_string = " WHERE instance_id = ";
 
-        $ids = json_decode($instance_ids);
-
+        //$ids = json_decode($instance_ids);
+        $ids = $instance_ids;
         for ($i = 0; $i < count($ids); $i++) {
 
             if ($i == 0)
@@ -401,7 +401,8 @@ class InstanciasController {
 
         $ids_string = " WHERE instance_id = ";
 
-        $ids = json_decode($instance_ids);
+        //$ids = json_decode($instance_ids);
+        $ids = $instance_ids;
 
         for ($i = 0; $i < count($ids); $i++) {
 
@@ -507,7 +508,8 @@ class InstanciasController {
 
         $ids_string = " WHERE instance_id = ";
 
-        $ids = json_decode($instance_ids);
+        //$ids = json_decode($instance_ids);
+        $ids = $instance_ids;
 
         for ($i = 0; $i < count($ids); $i++) {
 

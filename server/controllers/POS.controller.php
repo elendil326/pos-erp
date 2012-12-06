@@ -489,9 +489,35 @@ require_once("interfaces/POS.interface.php");
  	 * @return mensaje string Mensaje de respuesta del servidor
  	 **/
   public static function BdInstanciasRespaldarBd($instance_ids){
-  		$c = prin_r($instance_ids,true);
-  		//$res = InstanciasController::Respaldar_Instancias($instance_ids);
-  		return array("status" => "ok", "mensaje"=>"entrada en server: {$c}");
+  		
+  		$x = json_decode($instance_ids);  		
+  		
+  		$res = InstanciasController::Respaldar_Instancias($x->instance_ids);
+  		if(!is_null($res)){
+  			return array("status" => "failure", "mensaje"=>"{$res}");
+  		}
+  		return array("status" => "ok", "mensaje"=>"");
+  }
+
+
+  /**
+ 	 *
+ 	 *Restaura las instancias seleccionadas de acuerdo a los scripts .sql mas recientes que haya en el servidor para cada instancia. La restauracion es un reemplazo total tanto de datos como esquema con respecto a los scripts encontrados.
+ 	 *
+ 	 * @param instance_ids json Lista de los id de las instancias a respaldar
+ 	 * @return status string Respuesta enviada del servidor
+ 	 * @return mensaje string Mensaje de respuesta del servidor
+ 	 **/
+  public static function BdInstanciasRestaurarBd($instance_ids){
+
+  		$x = json_decode($instance_ids);  		
+  		
+  		$res = InstanciasController::Restaurar_Instancias($x->instance_ids);
+  		if(!is_null($res)){
+  			return array("status" => "failure", "mensaje"=>"{$res}");
+  		}
+  		return array("status" => "ok", "mensaje"=>"");
+
   }
 
 	

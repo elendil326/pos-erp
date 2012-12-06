@@ -29,14 +29,15 @@ define("BYPASS_INSTANCE_CHECK", true);
 				
 				Logger::log("Jedi requested respaldar instances");
 				
-				
-				$result = InstanciasController::Respaldar_Instancias($_GET['instance_ids']);
-				
-				if(!is_null($result)){//algo salio mal
-					Logger::log("Algo salió mal al respaldar: ".$result);
+				$json = "{ \"instance_ids\" : {$_GET['instance_ids']} }";
+				//$result = InstanciasController::Respaldar_Instancias($_GET['instance_ids']);
+				$result = POSController::BdInstanciasRespaldarBd($json);
+
+				if($result['status'] != "ok" ){//algo salio mal
+					Logger::log("Algo salió mal al respaldar: ".$result['mensaje']);
 					?>
 						<script>
-						 (function(){alert(<?php echo "'".$result."'" ?>); location.href="instancias.bd.php" })();
+						 (function(){alert(<?php echo "'".$result['mensaje']."'" ?>); location.href="instancias.bd.php" })();
 						</script>
 					<?php							
 					break;
@@ -51,14 +52,16 @@ define("BYPASS_INSTANCE_CHECK", true);
 				
 				Logger::log("Jedi requested restaurar instances");				
 				
-				$result = InstanciasController::Restaurar_Instancias($_GET['instance_ids']);
-				
-				if(!is_null($result)){//algo salio mal
-					Logger::log("Algo salió mal al restaurar: ".$result);	
+				$json = "{ \"instance_ids\" : {$_GET['instance_ids']} }";
+				//$result = InstanciasController::Restaurar_Instancias($_GET['instance_ids']);
+				$result = POSController::BdInstanciasRestaurarBd($json);
+
+				if($result['status'] != "ok"){//algo salio mal
+					Logger::log("Algo salió mal al restaurar: ".$result['mensaje']);	
 					//header("Location: instancias.bd.php");
 					?>
 						<script>
-						 (function(){alert(<?php echo "'".$result."'" ?>); location.href="instancias.bd.php" })();
+						 (function(){alert(<?php echo "'".$result['mensaje']."'" ?>); location.href="instancias.bd.php" })();
 						</script>
 					<?php					
 					break;
@@ -134,21 +137,7 @@ define("BYPASS_INSTANCE_CHECK", true);
 			console.log("Encodeado:",Ext.JSON.encode(ids));
 			var tmpMask = new Ext.LoadMask(Ext.getBody(), { msg: "NO HAGA NADA, respaldando BD de instancia(s)" });
 			tmpMask.show();
-        	POS.API.POST("api/pos/bd/respaldar_instancias_bd", //
-        	{
-        		"instance_ids" 	:  ids        		
-        	},
-        	{
-        		callback : function(a){
-        			console.log("---RESPUESTA DEL SERVER: ",a);
-                	alert( 'Regrese algo' ); 
-            		//window.location = "c.php";
-        		}
-        	}
-        	);
-			
-			
-			//window.location='instancias.bd.php?do=respaldar_instancias&instance_ids='+Ext.JSON.encode(ids);
+        	window.location='instancias.bd.php?do=respaldar_instancias&instance_ids='+Ext.JSON.encode(ids);
 		}
 
 		function restaurarInstancias(){
