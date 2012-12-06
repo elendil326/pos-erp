@@ -142,20 +142,19 @@
                   $CadenaJSForm .= "         POS.API.POST( ";
                   $CadenaJSForm .= "             \"api/pos/bd/restaurar_bd_especifica\", ";
                   $CadenaJSForm .= "             {";
-                  $CadenaJSForm .= "                  \"id_instancia\" 	:  {". INSTANCE_ID . "},";
+                  $CadenaJSForm .= "                  \"id_instancia\" 	:  ". INSTANCE_ID . ",";
                   $CadenaJSForm .= "                  \"time\" 	: valor";
-                  $CadenaJSForm .= "            },";
+                  $CadenaJSForm .= "             },";
                   $CadenaJSForm .= "            {";
                   $CadenaJSForm .= "                callback : function(a){";
-                  $CadenaJSForm .= "                    window.onbeforeunload = function(){";
-                  $CadenaJSForm.= "                                                                                         ";
+                  $CadenaJSForm .= "                    window.onbeforeunload = function(){}";                  
                   //$CadenaJSForm .= "                    window.location = \"c.php\"; ";
                   $CadenaJSForm .= "                }";
                   $CadenaJSForm .= "            }";
-                  $CadenaJSForm .= "         ); ";
+                  $CadenaJSForm .= "         );";
                   $CadenaJSForm .= "     }";
                   $CadenaJSForm .= "</script>";
-                  $CadenaJSForm .= "<div align=\"left\"><form name=\"frmRes\">";
+                  $CadenaJSForm .= "<div align=\"left\"><form name=\"frmRes\"";
                   $Contador=0;
                   foreach (InstanciasController::BuscarRespaldosComponents(INSTANCE_ID) as $Cadena)
                   {
@@ -167,6 +166,9 @@
                   $CadenaJSForm.="<br>";
                   $CadenaJSForm.="</form></div><br/><div class=\"POS Boton\" onclick=\"fn();\">Restaurar</div>";
                   $page->addComponent($CadenaJSForm);
+                                    
+                  //--------------------------------------------------------------------------------
+                  
                   $page->nextTab( "Personalizar" );
                   $page->addComponent(" <div id='logo256up'></div>
 			<script type='text/javascript' charset='utf-8'>
