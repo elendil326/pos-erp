@@ -86,6 +86,7 @@ define("BYPASS_INSTANCE_CHECK", true);
 	?>
 	
 	<script>
+
 		var ids= new Array();
 		
 		function addId(instance_id){
@@ -133,7 +134,21 @@ define("BYPASS_INSTANCE_CHECK", true);
 			console.log("Encodeado:",Ext.JSON.encode(ids));
 			var tmpMask = new Ext.LoadMask(Ext.getBody(), { msg: "NO HAGA NADA, respaldando BD de instancia(s)" });
 			tmpMask.show();
-			window.location='instancias.bd.php?do=respaldar_instancias&instance_ids='+Ext.JSON.encode(ids);
+        	POS.API.POST("api/pos/bd/respaldar_instancias_bd", //
+        	{
+        		"instance_ids" 	:  ids        		
+        	},
+        	{
+        		callback : function(a){
+        			console.log("---RESPUESTA DEL SERVER: ",a);
+                	alert( 'Regrese algo' ); 
+            		//window.location = "c.php";
+        		}
+        	}
+        	);
+			
+			
+			//window.location='instancias.bd.php?do=respaldar_instancias&instance_ids='+Ext.JSON.encode(ids);
 		}
 
 		function restaurarInstancias(){

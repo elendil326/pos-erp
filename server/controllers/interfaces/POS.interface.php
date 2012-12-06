@@ -103,6 +103,22 @@
   
 	/**
  	 *
+ 	 *Genera un scrip .sql en el servirdor de los id de instancia que reciba este metodo
+ 	 *
+ 	 * @param instance_ids json Lista de los id de las instancias a respaldar
+ 	 * @return status string Respuesta enviada del servidor
+ 	 * @return mensaje string Mensaje de respuesta del servidor
+ 	 **/
+  static function BdInstanciasRespaldarBd
+	(
+		$instance_ids
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
  	 *Restaurar una BD especifica, a partir de un listado de archivos.
  	 *
  	 * @param id_instancia int Id de la instancia que se requiere restaurar

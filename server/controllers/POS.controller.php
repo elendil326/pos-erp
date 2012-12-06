@@ -477,7 +477,22 @@ require_once("interfaces/POS.interface.php");
 		$time
 	){                
                        return array("status" => "ok");
-          }  
+          }
+
+
+	/**
+ 	 *
+ 	 *Genera un scrip .sql en el servirdor de los id de instancia que reciba este metodo
+ 	 *
+ 	 * @param instance_ids json Lista de los id de las instancias a respaldar
+ 	 * @return status string Respuesta enviada del servidor
+ 	 * @return mensaje string Mensaje de respuesta del servidor
+ 	 **/
+  public static function BdInstanciasRespaldarBd($instance_ids){
+  		$c = prin_r($instance_ids,true);
+  		//$res = InstanciasController::Respaldar_Instancias($instance_ids);
+  		return array("status" => "ok", "mensaje"=>"entrada en server: {$c}");
+  }
 
 	
   }
