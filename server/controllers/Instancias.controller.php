@@ -254,65 +254,30 @@ class InstanciasController {
 
     
     
-    public static function BuscarRespaldosComponents($IDinstancia = null) {//Función que devuelve el componente necesario en HTML para crear el formulario con las opciones de respaldos en base a los archivos
+    public static function BuscarRespaldosComponents($IDinstancia) {//Función que devuelve el componente necesario en HTML para crear el formulario con las opciones de respaldos en base a los archivos
     
         //TODO:Este metodo debera de recibir por fuerza un Id de una instancia                
         
         $CarpetaRespaldos = (POS_PATH_TO_SERVER_ROOT . "/../static_content/db_backups/");
         $Directorio = dir($CarpetaRespaldos);
-
-        //var_dump($Directorio);                
-        
-        $Retorno = "<script>";
-        $Retorno .= "     var valor = null;";
-        $Retorno .= "     var fn = function(){";
-        $Retorno .= "         for(var i = 0; i < document.frmRes.GRespaldo.length; i++){";
-        $Retorno .= "             if( document.frmRes.GRespaldo[i].checked == true ){";
-        $Retorno .= "                 valor = document.frmRes.GRespaldo[i].value;";
-        $Retorno .= "             }";
-        $Retorno .= "         }";        
-
-        $Retorno .= "         POS.API.POST( ";
-        $Retorno .= "             \"api/pos/bd/restaurar_bd_especifica\", ";
-        $Retorno .= "             {";
-        $Retorno .= "                  \"id_instancia\" 	:  {$IDinstancia},";
-        $Retorno .= "                  \"time\" 	: valor";
-        $Retorno .= "            },";
-        $Retorno .= "            {";
-        $Retorno .= "                callback : function(a){";
-        //$Retorno .= "                    window.onbeforeunload = function(){}";
-        $Retorno .= "                    alert( 'ok' ); ";
-        $Retorno .= "                    window.location = \"c.php\"; ";
-        $Retorno .= "                }";
-        $Retorno .= "            }";
-        $Retorno .= "         ); ";
-
-        $Retorno .= "     }";
-        $Retorno .= "</script>";
-
-        $Retorno .= "<div align=\"left\"><form name=\"frmRes\">";
-
-        
-        
-        /*
-          <div align="center"><br>
-          </form> */
+        $Retorno=array();
         $Contador = 1; //Cuenta cuantos elementos válidos ha encontrado
         while ($Archivo = $Directorio->read()) {
             if (strlen($Archivo) > 2 && (substr($Archivo, strlen($Archivo) - 4, 4) == ".sql")) {
                 $TArchivo = filemtime($CarpetaRespaldos . $Archivo);
-                if (is_null($IDinstancia)) {//Si no se especifico el indice de la instancia
-                    $Retorno.="<br><input type=\"radio\" name=\"GRespaldo\" value=\"{$TArchivo}\" " . ($Contador == 1? " checked " : "") . " > Respaldo no {$Contador}, creado " . date("D d/m/Y g:i a", $TArchivo) . "<br>";
-                    $Contador++;
-                } else { //Si se especifico el indice de la instancia
-                    if (substr($Archivo, 24, 2) == $IDinstancia) {
-                        $Retorno.="<br><input type=\"radio\" name=\"GRespaldo\" value=\"{$TArchivo}\"" . ($Contador == 1? " checked " : "") . "> Respaldo no {$Contador}, creado " . date("D d/m/Y g:i a", $TArchivo) . "<br>";
-                        $Contador++;
-                    }
+                if (!is_null($IDinstancia)) {
+                    if (substr($Archivo, 24, 2) == $IDinstancia) 
+                        {
+                          array_push($Retorno, $TArchivo); //Ingresa los elementos en el array                      
+                        }
+                }
+                else
+                {
+                      return null;//Si no se especifica el ID de la instancia, Regresa NULL
                 }
             }
         }
-        $Retorno.="</form></div><br/><div class=\"POS Boton\" onclick=\"fn();\">Restaurar</div>";
+
         if ($Contador > 0) {//Si encuentra más de un archivo válido en la caperta de respaldos
             return $Retorno;
         }
@@ -425,7 +390,7 @@ class InstanciasController {
 
         $rs = $POS_CONFIG["CORE_CONN"]->Execute($sql);
         $instancias = $rs->GetArray();
-
+        var_dump($instancias);//hace var dump de los registros obtenidos
         foreach ($instancias as $ins) {
             $file_name = 'pos_instance_' . $ins['instance_id'] . '_' . date("d-m-Y H:i:s") . '.sql';
             $db_user = $ins['db_user'];

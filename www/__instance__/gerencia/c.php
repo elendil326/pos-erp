@@ -130,35 +130,52 @@
 		//$page->addComponent("<a href=''><div class='POS Boton'>Respaldar BD</div></a>");//Boton de respaldo
                 $page->addComponent("<hr>");//Separador
 		$page->addComponent(new TitleComponent("Respaldos disponibles", 2));
-                $page->addComponent(InstanciasController::BuscarRespaldosComponents(80));
-                $page->addComponent("<br>");
-                  /*
-                                    $Tabla = array(
-                                        "fecha" => "Fecha de Respaldo"
-                                    );//array("fecha" => "Fecha" );
-                                    $t = new TableComponent( $Tabla , InstanciasController::BuscarRespaldos(84));
-                                    $t->addColRender("fecha", "FormatTime");
-                                    
-                                    
-                                    //$t->addColRender( "fecha_creacion", "FormatTime" );	
-                                      
-                                    
-
-                                    $page->addComponent( $t);
-                                    <input type="submit" value="enviar" name="enviar">
-                                     */
-                                    // $page->addComponent("<a href=''><div class='POS Boton'>Restaurar</div></a>");
-		
-		
-		$page->nextTab( "Personalizar" );
-		$page->addComponent(" <div id='logo256up'></div>
+                    //Dibuja los elementos del la lista de archivos de respaldo encontrados          
+                  $CadenaJSForm = "<script>";
+                  $CadenaJSForm .= "     var valor = null;";
+                  $CadenaJSForm .= "     var fn = function(){";
+                  $CadenaJSForm .= "         for(var i = 0; i < document.frmRes.GRespaldo.length; i++){";
+                  $CadenaJSForm .= "             if( document.frmRes.GRespaldo[i].checked == true ){";
+                  $CadenaJSForm .= "                 valor = document.frmRes.GRespaldo[i].value;";
+                  $CadenaJSForm .= "             }";
+                  $CadenaJSForm .= "         }";        
+                  $CadenaJSForm .= "         POS.API.POST( ";
+                  $CadenaJSForm .= "             \"api/pos/bd/restaurar_bd_especifica\", ";
+                  $CadenaJSForm .= "             {";
+                  $CadenaJSForm .= "                  \"id_instancia\" 	:  {". INSTANCE_ID . "},";
+                  $CadenaJSForm .= "                  \"time\" 	: valor";
+                  $CadenaJSForm .= "            },";
+                  $CadenaJSForm .= "            {";
+                  $CadenaJSForm .= "                callback : function(a){";
+                  $CadenaJSForm .= "                    window.onbeforeunload = function(){";
+                  $CadenaJSForm.= "                                                                                         ";
+                  //$CadenaJSForm .= "                    window.location = \"c.php\"; ";
+                  $CadenaJSForm .= "                }";
+                  $CadenaJSForm .= "            }";
+                  $CadenaJSForm .= "         ); ";
+                  $CadenaJSForm .= "     }";
+                  $CadenaJSForm .= "</script>";
+                  $CadenaJSForm .= "<div align=\"left\"><form name=\"frmRes\">";
+                  $Contador=0;
+                  foreach (InstanciasController::BuscarRespaldosComponents(INSTANCE_ID) as $Cadena)
+                  {
+                        $Contador++;
+                        $CadenaJSForm.="               <br><input type=\"radio\" name=\"GRespaldo\" value=\"{$Cadena}\"" . ($Contador == 1? " checked " : "") . "> Respaldo no {$Contador}, creado " . date("D d/m/Y g:i a", $Cadena) . "<br>";
+                  }
+                  unset($Cadena);//Elimina la referencia usada en FOREACH  
+                  //$Retorno.="<br><input type=\"radio\" name=\"GRespaldo\" value=\"{$TArchivo}\"" . ($Contador == 1? " checked " : "") . "> Respaldo no {$Contador}, creado " . date("D d/m/Y g:i a", $TArchivo) . "<br>";
+                  $CadenaJSForm.="<br>";
+                  $CadenaJSForm.="</form></div><br/><div class=\"POS Boton\" onclick=\"fn();\">Restaurar</div>";
+                  $page->addComponent($CadenaJSForm);
+                  $page->nextTab( "Personalizar" );
+                  $page->addComponent(" <div id='logo256up'></div>
 			<script type='text/javascript' charset='utf-8'>
 			Ext.onReady(function(){
 
 
 
 
-
+  
 				    Ext.create('Ext.form.Panel', {
 				        renderTo: 'logo256up',
 				        width: '100%',

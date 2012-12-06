@@ -476,6 +476,7 @@ require_once("interfaces/POS.interface.php");
 		$id_instancia, 
 		$time
 	){                
+                             InstanciasController::Respaldar_Instancias(json_encode($id_instancia));
                        return array("status" => "ok");
           }
 
