@@ -1978,3 +1978,16 @@ CREATE TABLE IF NOT EXISTS `version` (
   PRIMARY KEY (`id_version`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
+--
+-- Estructura de tabla para la tabla `configuracion`
+--
+
+CREATE TABLE IF NOT EXISTS `configuracion` (
+  `id_configuracion` int(11) NOT NULL AUTO_INCREMENT,
+  `descripcion` varchar(128) NOT NULL,
+  `valor` varchar(2048) NOT NULL COMMENT 'Cadena en formato de JSON que describe una configuracion',
+  `id_usuario` int(11) NOT NULL COMMENT 'id_usuario que realizo la ultima modificación ',
+  `fecha` int(11) NOT NULL COMMENT 'fecha de la ultima modificación, descrita en formato UNIX ',
+  PRIMARY KEY (`id_configuracion`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Almacena las configuraciones básicas del sistema' AUTO_INCREMENT=2 ;
+

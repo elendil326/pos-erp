@@ -94,4 +94,9 @@ INSERT INTO `documento_base` (`id_documento_base`, `id_empresa`, `id_sucursal`, 
 (11, NULL, NULL, 'Nota de Venta', 1, '', 1344037703),
 (12, NULL, NULL, 'Devolución sobre Compra', 1, '', 1344037703);
 
+--
+-- Volcado de datos para la tabla `configuracion`
+--
 
+INSERT INTO `configuracion` (`id_configuracion`, `descripcion`, `valor`, `id_usuario`, `fecha`) VALUES
+(1, 'decimales', '{"cantidades" : 2, "cambio" : 4, "costos" : 2, "ventas" : 2}', 1, 1354911045);

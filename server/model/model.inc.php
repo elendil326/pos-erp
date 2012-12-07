@@ -144,3 +144,5 @@ require_once ('cliente_seguimiento.dao.php');
 
 require_once ('extra_params_estructura.dao.php');
 require_once ('extra_params_valores.dao.php');
+
+require_once ('configuracion.dao.php');

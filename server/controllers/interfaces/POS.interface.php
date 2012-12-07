@@ -79,6 +79,22 @@
   
 	/**
  	 *
+ 	 *Descarga un archivo .zip con los ultimos respaldos que se encuentren en el servidor de las instancias seleccionadas
+ 	 *
+ 	 * @param instance_ids json Lista de los id de las instancias a respaldar
+ 	 * @return status string Respuesta enviada del servidor
+ 	 * @return mensaje string Mensaje de respuesta del servidor
+ 	 **/
+  static function BdInstanciasDescargarBd
+	(
+		$instance_ids
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
  	 *Metodo que elimina todos los registros en la base de datos, especialmente util para hacer pruebas unitarias. Este metodo NO estara disponible al publico.
  	 *
  	 **/
@@ -185,6 +201,27 @@
  	 **/
   static function DownloadClient
 	(
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Configura el numero de decimales que se usaran para ciertas operaciones del sistema, como precios de venta, costos, tipos de cambio, entre otros
+ 	 *
+ 	 * @param cambio int Tipos de Cambio
+ 	 * @param cantidades int Cantidades
+ 	 * @param costos int Costos y Precio de Compra
+ 	 * @param ventas int Precio de Venta
+ 	 * @return status string ok
+ 	 **/
+  static function DecimalesConfiguracion
+	(
+		$cambio, 
+		$cantidades, 
+		$costos, 
+		$ventas
 	);  
   
   

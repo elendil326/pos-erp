@@ -448,4 +448,30 @@ class POSController implements IPOS {
         );
     }
 
+    /**
+     *
+     * Configura el numero de decimales que se usaran para ciertas operaciones del sistema, como precios de venta, costos, tipos de cambio, entre otros
+     *
+     * @param cambio int Tipos de Cambio
+     * @param cantidades int Cantidades
+     * @param costos int Costos y Precio de Compra
+     * @param ventas int Precio de Venta
+     * @return status string ok
+     **/
+    public static function DecimalesConfiguracion($cambio, $cantidades, $costos, $ventas) {
+        
+    }
+    
+    /**
+     *
+     *Descarga un archivo .zip con los ultimos respaldos que se encuentren en el servidor de las instancias seleccionadas
+     *
+     * @param instance_ids json Lista de los id de las instancias a respaldar
+     * @return status string Respuesta enviada del servidor
+     * @return mensaje string Mensaje de respuesta del servidor
+     **/
+    public static function BdInstanciasDescargarBd($instance_ids){
+        
+    }
+
 }
