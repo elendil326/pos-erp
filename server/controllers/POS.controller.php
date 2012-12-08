@@ -460,6 +460,100 @@ class POSController implements IPOS {
      **/
     public static function DecimalesConfiguracion($cambio, $cantidades, $costos, $ventas) {
         
+        $error = "";
+        
+        //validamos que los valores enviados sean numericos       
+        if( !ctype_digit($cambio) || !ctype_digit($cantidades) || !ctype_digit($costos) || !ctype_digit($ventas) ){
+            Logger::error("Los valores ingresados deben de ser Numeros Enteros");
+            return array( "status" => "failure", "message" => "Los valores ingresados deben de ser Numeros Enteros");
+        }
+        
+        //buscamos la configuracion de decimales
+        $configuraciones = ConfiguracionDAO::search( new Configuracion( array("descripcion" => "decimales") ) );
+        
+        if( empty($configuraciones) ){
+            Logger::error("No se tiene registro de la configuracion 'decimales' en la tabla de configuraciones");
+            return array( "status" => "failure", "message" => "No se tiene registro de la configuracion 'decimales' en la tabla de configuraciones");            
+        }else{
+            $decimales = $configuraciones[0];
+            $config = json_decode($decimales->getValor());
+        }                              
+        
+        //verificamos que la configuracion contenga todos los parametros 
+        
+        if( !isset( $config->cambio ) ){
+            Logger::error( "No se encontro la configuracion de \"cambio\" en el JSON" );
+            return array( "status" => "failure", "message" => "No se encontro la configuracion de \"cambio\" en el JSON" );
+        }
+        
+        if( !isset( $config->cantidades ) ){
+            Logger::error( "No se encontro la configuracion de \"cantidades\" en el JSON" );
+            return array( "status" => "failure", "message" => "No se encontro la configuracion de \"cantidades\" en el JSON" );
+        }
+        
+        if( !isset( $config->costos ) ){
+            Logger::error( "No se encontro la configuracion de \"costos\" en el JSON" );
+            return array( "status" => "failure", "message" => "No se encontro la configuracion de \"costos\" en el JSON" );
+        }
+        
+        if( !isset( $config->ventas ) ){
+            Logger::error( "No se encontro la configuracion de \"ventas\" en el JSON" );
+            return array( "status" => "failure", "message" => "No se encontro la configuracion de \"ventas\" en el JSON" );
+        }
+        
+        //en caso de haber registrado compras de producto ya no se puede bajar el numero de decimales en "costo" y "cantidades" 
+        if( count( CompraDAO::getAll() ) > 0 ){
+            
+            if( $config->costos > $costos ){
+                Logger::error( "El valor de \"costos\" no puede ser menor que el valor actual, debido a que ya se cuenta con movimientos." );
+                return array( "status" => "failure", "message" => "El valor de \"costos\" no puede ser menor que el valor actual, debido a que ya se cuenta con movimientos." );
+            }else{
+                $config->costos = $costos;
+            }
+            
+            if( $config->cantidades > $cantidades ){
+                Logger::error( "El valor de \"cantidades\" no puede ser menor que el valor actual, debido a que ya se cuenta con movimientos." );
+                return array( "status" => "failure", "message" => "El valor de \"cantidades\" no puede ser menor que el valor actual, debido a que ya se cuenta con movimientos." );
+            }else{
+                $config->cantidades = $cantidades;
+            }
+            
+        }else{
+            $config->costos = $costos;
+            $config->cantidades = $cantidades;
+        }
+        
+        //en caso de que haya ventas el valor de "ventas" no puede ser menor que el actual
+        if( conut( VentaDAO::getAll() ) > 0 ){
+            
+            if( $config->ventas > $ventas ){
+                Logger::error( "El valor de \"ventas\" no puede ser menor que el valor actual, debido a que ya se cuenta con movimientos." );
+                return array( "status" => "failure", "message" => "El valor de \"ventas\" no puede ser menor que el valor actual, debido a que ya se cuenta con movimientos." );
+            }else{
+                $config->ventas = $ventas;
+            }
+            
+        }else{
+            $config->ventas = $ventas;
+        }
+        
+        //TODO : En el caso de la configuracion de cambio aun esta por definir las reglas de negocio
+        $config->cambio = $cambio;
+        
+        //modificamos el valor de la configuracion de decimales        
+        $decimales->setValor( json_encode( $config ) );
+        
+        //intentamos guardar los cambios        
+        try{
+            ConfiguracionDAO::save($decimales);
+        }catch(Exception $e){
+            Logger::error("Error {$e}");
+            return array( "status" => "failure", "message" => $e->getMessage());
+        }
+    
+        //termino con exito
+        return array( "status" => "ok");
+        
     }
     
     /**
