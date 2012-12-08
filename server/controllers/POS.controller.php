@@ -458,9 +458,7 @@ class POSController implements IPOS {
      * @param ventas int Precio de Venta
      * @return status string ok
      **/
-    public static function DecimalesConfiguracion($cambio, $cantidades, $costos, $ventas) {
-        
-        $error = "";
+    public static function DecimalesConfiguracion($cambio, $cantidades, $costos, $ventas) {                
         
         //validamos que los valores enviados sean numericos       
         if( !ctype_digit($cambio) || !ctype_digit($cantidades) || !ctype_digit($costos) || !ctype_digit($ventas) ){
@@ -524,7 +522,7 @@ class POSController implements IPOS {
         }
         
         //en caso de que haya ventas el valor de "ventas" no puede ser menor que el actual
-        if( conut( VentaDAO::getAll() ) > 0 ){
+        if( count( VentaDAO::getAll() ) > 0 ){
             
             if( $config->ventas > $ventas ){
                 Logger::error( "El valor de \"ventas\" no puede ser menor que el valor actual, debido a que ya se cuenta con movimientos." );
@@ -552,7 +550,7 @@ class POSController implements IPOS {
         }
     
         //termino con exito
-        return array( "status" => "ok");
+        return array( "status" => "okay");
         
     }
     

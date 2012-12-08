@@ -74,7 +74,14 @@ $page->addComponent(new TitleComponent("Importar datos AdminPAQ automaticamente"
 $adminPF = new FormComponent();
 $adminPF->addField("url", "URL de AdminPAQ", "text", "https://192.168.0.14:16001/json/AdminPAQProxy/");
 $adminPF->addField("path", "Path de la emprsa", "text", "");
-$adminPF->addOnClick("Importar", "(function(){ new AdminPAQExplorer( \"" . $adminPF->getGuiComponentId() . "\" ); })");
+
+$html = "";
+
+$html .= "(function(){";
+$html .= "  AdminPAQExplorer( \"" . $adminPF->getGuiComponentId() . "\" );";
+$html .= "})";
+
+$adminPF->addOnClick("Importar", $html);
 $page->addComponent($adminPF);
 
 
@@ -102,7 +109,15 @@ function ft($time)
     return FormatTime(strtotime($time));
 }
 
-$page->addComponent("<script type=\"text/javascript\" charset=\"utf-8\"> function detallesUsuario(id){ window.location = 'personal.usuario.ver.php?uid='+id; } </script>");
+$html = "";
+
+$html .= "<script type=\"text/javascript\" charset=\"utf-8\">";
+$html .= "  function detallesUsuario(id){";
+$html .= "      window.location = 'personal.usuario.ver.php?uid='+id;";
+$html .= "  }";
+$html .= "</script>";
+
+$page->addComponent($html);
 
 $tabla->addColRender("id_usuario", "username");
 $tabla->addColRender("fecha_de_vencimiento", "ft");
@@ -154,178 +169,178 @@ $page->addComponent($CadenaJSForm);
 
 $page->nextTab("Personalizar");
 
-$code = "";
+$html = "";
 
-$code .= "<div id='logo256up'></div>";
-$code .= "<script type='text/javascript' charset='utf-8'>";
-$code .= "   Ext.onReady(function(){";
-$code .= "	Ext.create('Ext.form.Panel', {";
-$code .= "           renderTo: 'logo256up',";
-$code .= "	    width: '100%',";
-$code .= "           frame: false,";
-$code .= "           bodyPadding: '10 10 0',";
-$code .= "           defaults: {";
-$code .= "               anchor: '100%',";
-$code .= "               allowBlank: false,";
-$code .= "               msgTarget: 'side',";
-$code .= "               labelWidth: 50";
-$code .= "           },";
-$code .= "           items: [{";
-$code .= "               xtype: 'filefield',";
-$code .= "               id: 'form-file',";
-$code .= "               emptyText: 'Seleccione una imagen',";
-$code .= "               fieldLabel: 'Imagen',";
-$code .= "               name: 'logo',";
-$code .= "               buttonText: 'Buscar archivo',";
-$code .= "   	        },{";
-$code .= "               xtype: 'hiddenfield',";
-$code .= "               value : 'logo',";
-$code .= "               name: 'type'";
-$code .= "           },";
-$code .= "           {";
-$code .= "               xtype: 'hiddenfield',";
-$code .= "               value : Ext.util.Cookies.get('at'),";
-$code .= "               name: 'auth_token'";
-$code .= "           }],";
-$code .= "           buttons: [{";
-$code .= "               text: 'Subir logotipo',";
-$code .= "               handler: function(){";
-$code .= "                   var form = this.up('form').getForm();";
-$code .= "                   if(form.isValid()){";
-$code .= "                       form.submit({";
-$code .= "                           url: 'c.php',";
-$code .= "                           waitMsg: 'Subiendo...',";
-$code .= "                           timeout : 60 * 10,";
-$code .= "                           success: function(fp, o) {";
-$code .= "                               console.log('ok', fp, o);";
-$code .= "                           },";
-$code .= "                           failure : function(fp,o){";
-$code .= "                               console.log('error', fp, o);";
-$code .= "                           }";
-$code .= "                       });";
-$code .= "                   }";
-$code .= "               }";
-$code .= "           },{";
-$code .= "               text: 'Cancelar',";
-$code .= "               handler: function() {";
-$code .= "                   this.up('form').getForm().reset();";
-$code .= "               }";
-$code .= "           }]";
-$code .= "       });";
+$html .= "<div id='logo256up'></div>";
+$html .= "<script type='text/javascript' charset='utf-8'>";
+$html .= "   Ext.onReady(function(){";
+$html .= "	Ext.create('Ext.form.Panel', {";
+$html .= "           renderTo: 'logo256up',";
+$html .= "	    width: '100%',";
+$html .= "           frame: false,";
+$html .= "           bodyPadding: '10 10 0',";
+$html .= "           defaults: {";
+$html .= "               anchor: '100%',";
+$html .= "               allowBlank: false,";
+$html .= "               msgTarget: 'side',";
+$html .= "               labelWidth: 50";
+$html .= "           },";
+$html .= "           items: [{";
+$html .= "               xtype: 'filefield',";
+$html .= "               id: 'form-file',";
+$html .= "               emptyText: 'Seleccione una imagen',";
+$html .= "               fieldLabel: 'Imagen',";
+$html .= "               name: 'logo',";
+$html .= "               buttonText: 'Buscar archivo',";
+$html .= "   	        },{";
+$html .= "               xtype: 'hiddenfield',";
+$html .= "               value : 'logo',";
+$html .= "               name: 'type'";
+$html .= "           },";
+$html .= "           {";
+$html .= "               xtype: 'hiddenfield',";
+$html .= "               value : Ext.util.Cookies.get('at'),";
+$html .= "               name: 'auth_token'";
+$html .= "           }],";
+$html .= "           buttons: [{";
+$html .= "               text: 'Subir logotipo',";
+$html .= "               handler: function(){";
+$html .= "                   var form = this.up('form').getForm();";
+$html .= "                   if(form.isValid()){";
+$html .= "                       form.submit({";
+$html .= "                           url: 'c.php',";
+$html .= "                           waitMsg: 'Subiendo...',";
+$html .= "                           timeout : 60 * 10,";
+$html .= "                           success: function(fp, o) {";
+$html .= "                               console.log('ok', fp, o);";
+$html .= "                           },";
+$html .= "                           failure : function(fp,o){";
+$html .= "                               console.log('error', fp, o);";
+$html .= "                           }";
+$html .= "                       });";
+$html .= "                   }";
+$html .= "               }";
+$html .= "           },{";
+$html .= "               text: 'Cancelar',";
+$html .= "               handler: function() {";
+$html .= "                   this.up('form').getForm().reset();";
+$html .= "               }";
+$html .= "           }]";
+$html .= "       });";
 
-$code .= "       Ext.create('Ext.form.Panel', {";
-$code .= "           renderTo: 'clientes-csvup',";
-$code .= "           width: '100%',";
-$code .= "           frame: false,";
-$code .= "	    bodyPadding: '10 10 0',";
-$code .= "	    defaults: {";
-$code .= "               anchor: '100%',";
-$code .= "	        allowBlank: false,";
-$code .= "	        msgTarget: 'side',";
-$code .= "	        labelWidth: 50";
-$code .= "	    },";
-$code .= "	    items: [{";
-$code .= "	        xtype: 'filefield',";
-$code .= "	        id: 'form-filecsv',";
-$code .= "	        emptyText: 'Seleccione un archivo',";
-$code .= "	        fieldLabel: 'Imagen',";
-$code .= "	        name: 'logo',";
-$code .= "	        buttonText: 'Buscar archivo',";
-$code .= "	    },{";
-$code .= "               xtype: 'hiddenfield',";
-$code .= "               value : 'csv-clientes',";
-$code .= "               name: 'type'";
-$code .= "           },";
-$code .= "           {";
-$code .= "               xtype: 'hiddenfield',";
-$code .= "		value : Ext.util.Cookies.get('at'),";
-$code .= "		name: 'auth_token'";
-$code .= "           }],";
-$code .= "           buttons: [{";
-$code .= "               text: 'Subir archivo',";
-$code .= "		handler: function(){";
-$code .= "                   var form = this.up('form').getForm();";
-$code .= "                   if(form.isValid()){";
-$code .= "                       form.submit({";
-$code .= "                           url: 'c.php',";
-$code .= "                           waitMsg: 'Subiendo...',";
-$code .= "                           timeout : 60 * 10,";
-$code .= "                           success: function(fp, o) {";
-$code .= "                              console.log('error', fp, o);";
-$code .= "               	    },";
-$code .= "       		    failure : function(fp,o){";
-$code .= "                               console.log('error', fp, o);";
-$code .= "                           }";
-$code .= "		        });";
-$code .= "		    }";
-$code .= "               }";
-$code .= "           },{";
-$code .= "               text: 'Cancelar',";
-$code .= "		handler: function() {";
-$code .= "                  this.up('form').getForm().reset();";
-$code .= "		}";
-$code .= "           }]";
-$code .= "       });";
+$html .= "       Ext.create('Ext.form.Panel', {";
+$html .= "           renderTo: 'clientes-csvup',";
+$html .= "           width: '100%',";
+$html .= "           frame: false,";
+$html .= "	    bodyPadding: '10 10 0',";
+$html .= "	    defaults: {";
+$html .= "               anchor: '100%',";
+$html .= "	        allowBlank: false,";
+$html .= "	        msgTarget: 'side',";
+$html .= "	        labelWidth: 50";
+$html .= "	    },";
+$html .= "	    items: [{";
+$html .= "	        xtype: 'filefield',";
+$html .= "	        id: 'form-filecsv',";
+$html .= "	        emptyText: 'Seleccione un archivo',";
+$html .= "	        fieldLabel: 'Imagen',";
+$html .= "	        name: 'logo',";
+$html .= "	        buttonText: 'Buscar archivo',";
+$html .= "	    },{";
+$html .= "               xtype: 'hiddenfield',";
+$html .= "               value : 'csv-clientes',";
+$html .= "               name: 'type'";
+$html .= "           },";
+$html .= "           {";
+$html .= "               xtype: 'hiddenfield',";
+$html .= "		value : Ext.util.Cookies.get('at'),";
+$html .= "		name: 'auth_token'";
+$html .= "           }],";
+$html .= "           buttons: [{";
+$html .= "               text: 'Subir archivo',";
+$html .= "		handler: function(){";
+$html .= "                   var form = this.up('form').getForm();";
+$html .= "                   if(form.isValid()){";
+$html .= "                       form.submit({";
+$html .= "                           url: 'c.php',";
+$html .= "                           waitMsg: 'Subiendo...',";
+$html .= "                           timeout : 60 * 10,";
+$html .= "                           success: function(fp, o) {";
+$html .= "                              console.log('error', fp, o);";
+$html .= "               	    },";
+$html .= "       		    failure : function(fp,o){";
+$html .= "                               console.log('error', fp, o);";
+$html .= "                           }";
+$html .= "		        });";
+$html .= "		    }";
+$html .= "               }";
+$html .= "           },{";
+$html .= "               text: 'Cancelar',";
+$html .= "		handler: function() {";
+$html .= "                  this.up('form').getForm().reset();";
+$html .= "		}";
+$html .= "           }]";
+$html .= "       });";
 
-$code .= "	Ext.create('Ext.form.Panel', {";
-$code .= "           renderTo: 'productos-csvup',";
-$code .= "	    width: '100%',";
-$code .= "	    frame: false,";
-$code .= "           bodyPadding: '10 10 0',";
-$code .= "	    defaults: {";
-$code .= "               anchor: '100%',";
-$code .= "		allowBlank: false,";
-$code .= "		msgTarget: 'side',";
-$code .= "		labelWidth: 50";
-$code .= "           },";
-$code .= "	    items: [{";
-$code .= "               xtype: 'filefield',";
-$code .= "               id: 'form-filecsv',";
-$code .= "	        emptyText: 'Seleccione un archivo',";
-$code .= "	        fieldLabel: 'Imagen',";
-$code .= "	        name: 'logo',";
-$code .= "	        buttonText: 'Buscar archivo',";
-$code .= "	    },{";
-$code .= "               xtype: 'hiddenfield',";
-$code .= "		value : 'csv-productos',";
-$code .= "		name: 'type'";
-$code .= "           },";
-$code .= "           {";
-$code .= "               xtype: 'hiddenfield',";
-$code .= "	        value : Ext.util.Cookies.get('at'),";
-$code .= "	        name: 'auth_token'";
-$code .= "	    }],";
-$code .= "	    buttons: [{";
-$code .= "               text: 'Subir archivo',";
-$code .= "	        handler: function(){";
-$code .= "                   var form = this.up('form').getForm();";
-$code .= "		    if(form.isValid()){";
-$code .= "                       form.submit({";
-$code .= "                           url: 'c.php',";
-$code .= "		            waitMsg: 'Subiendo...',";
-$code .= "		            timeout : 60 * 10,";
-$code .= "		            success: function(fp, o) {";
-$code .= "                               console.log('error', fp, o);";
-$code .= "		            },";
-$code .= "		            failure : function(fp,o){";
-$code .= "                               console.log('error', fp, o);";
-$code .= "		            }";
-$code .= "		        });";
-$code .= "		    }";
-$code .= "               }";
-$code .= "           },{";
-$code .= "               text: 'Cancelar',";
-$code .= "		handler: function() {";
-$code .= "                   this.up('form').getForm().reset();";
-$code .= "		}";
-$code .= "           }]";
-$code .= "       });";
+$html .= "	Ext.create('Ext.form.Panel', {";
+$html .= "           renderTo: 'productos-csvup',";
+$html .= "	    width: '100%',";
+$html .= "	    frame: false,";
+$html .= "           bodyPadding: '10 10 0',";
+$html .= "	    defaults: {";
+$html .= "               anchor: '100%',";
+$html .= "		allowBlank: false,";
+$html .= "		msgTarget: 'side',";
+$html .= "		labelWidth: 50";
+$html .= "           },";
+$html .= "	    items: [{";
+$html .= "               xtype: 'filefield',";
+$html .= "               id: 'form-filecsv',";
+$html .= "	        emptyText: 'Seleccione un archivo',";
+$html .= "	        fieldLabel: 'Imagen',";
+$html .= "	        name: 'logo',";
+$html .= "	        buttonText: 'Buscar archivo',";
+$html .= "	    },{";
+$html .= "               xtype: 'hiddenfield',";
+$html .= "		value : 'csv-productos',";
+$html .= "		name: 'type'";
+$html .= "           },";
+$html .= "           {";
+$html .= "               xtype: 'hiddenfield',";
+$html .= "	        value : Ext.util.Cookies.get('at'),";
+$html .= "	        name: 'auth_token'";
+$html .= "	    }],";
+$html .= "	    buttons: [{";
+$html .= "               text: 'Subir archivo',";
+$html .= "	        handler: function(){";
+$html .= "                   var form = this.up('form').getForm();";
+$html .= "		    if(form.isValid()){";
+$html .= "                       form.submit({";
+$html .= "                           url: 'c.php',";
+$html .= "		            waitMsg: 'Subiendo...',";
+$html .= "		            timeout : 60 * 10,";
+$html .= "		            success: function(fp, o) {";
+$html .= "                               console.log('error', fp, o);";
+$html .= "		            },";
+$html .= "		            failure : function(fp,o){";
+$html .= "                               console.log('error', fp, o);";
+$html .= "		            }";
+$html .= "		        });";
+$html .= "		    }";
+$html .= "               }";
+$html .= "           },{";
+$html .= "               text: 'Cancelar',";
+$html .= "		handler: function() {";
+$html .= "                   this.up('form').getForm().reset();";
+$html .= "		}";
+$html .= "           }]";
+$html .= "       });";
 
-$code .= "   });";
+$html .= "   });";
 
-$code .= "</script>";
+$html .= "</script>";
 
-$page->addComponent($code);
+$page->addComponent($html);
 
 //---------------------------------------------------------
 
@@ -337,12 +352,113 @@ $cuerpo = "cuerpo" ,
 $destinatario = "alan.gohe@gmail.com",
 $titulo	= "titulo"
 );
-* */
+*/
 
 //---------------------------------------------------------
 
+$page->nextTab("Decimales");
+
+$page->addComponent(new TitleComponent("Numero de decimales", 2));
+
+$html = "";
+
+$html .= "<script>";
+$html .= "  var fn_editar_decimales = function(){";
+$html .= "      POS.API.POST( ";
+$html .= "          \"api/pos/configuracion/decimales\", ";
+$html .= "          {";
+$html .= "              \"cantidades\" : Ext.get(\"dcantidades\").getValue().replace(/^\s+|\s+$/g,\"\"),";
+$html .= "              \"cambio\"     : Ext.get(\"dcambio\").getValue().replace(/^\s+|\s+$/g,\"\"),";
+$html .= "              \"costos\"     : Ext.get(\"dcostos\").getValue().replace(/^\s+|\s+$/g,\"\"),";
+$html .= "              \"ventas\"     : Ext.get(\"dventas\").getValue().replace(/^\s+|\s+$/g,\"\")";
+$html .= "          },";
+$html .= "          {";
+$html .= "              callback : function(a){";
+$html .= "                  if(a.message){";
+$html .= "                      Ext.MessageBox.show({";
+$html .= "                          title : \"Error\",";
+$html .= "                          msg : a.message,";
+$html .= "                          buttons : Ext.MessageBox.OK,";
+$html .= "                          icon :  \"error\"";
+$html .= "                      });";
+$html .= "                  }else{";
+$html .= "                      Ext.MessageBox.show({";
+$html .= "                          title : \"Decimales\",";
+$html .= "                          msg : 'Se modifico correctamente la configuraci&oacute;n',";
+$html .= "                          buttons : Ext.MessageBox.OK,";
+$html .= "                          fn :  function(){window.location = \"c.php#Decimales\";}";
+$html .= "                      });";
+//$html .= "                      window.location = \"c.php\"; ";
+$html .= "                  }";
+$html .= "                  window.onbeforeunload = function(){}";
+//$html .= "                  window.location = \"c.php\"; ";
+$html .= "              }";
+$html .= "          }";
+$html .= "      );";
+$html .= "  }";
+$html .= "</script>";
+
+$page->addComponent($html);
+
+
+//buscamos la configuracion de decimales
+$configuraciones = ConfiguracionDAO::search( new Configuracion( array("descripcion" => "decimales") ) );
+        
+if( empty($configuraciones) ){
+    
+    Logger::error("No se tiene registro de la configuracion 'decimales' en la tabla de configuraciones");
+    
+    $page->addComponent("No se tiene registro de la configuracion 'decimales' en la tabla de configuraciones");
+    
+    $dcantidades = "";
+    $dcambio = "";
+    $dventas = "";
+    $dcostos = "";
+    
+}else{
+    
+    $decimales = $configuraciones[0];
+    $config = json_decode($decimales->getValor());
+    
+    $dcantidades = $config->cantidades;
+    $dcambio = $config->cambio;
+    $dventas = $config->ventas;
+    $dcostos = $config->costos;
+    
+}    
+
+$html = "";
+
+$html .= "<table style = \"width:100%;\">";
+$html .= "  <tr>";
+$html .= "      <td>1.- Cantidades</td>";
+$html .= "      <td><input type = \"text\" name = \"\" value = \"{$dcantidades}\" id = \"dcantidades\" /></td>";
+$html .= "  </tr>";
+$html .= "  <tr>";
+$html .= "      <td>2.- Tipos de Cambio</td>";
+$html .= "      <td><input type = \"text\" name = \"\" value = \"{$dcambio}\" id = \"dcambio\" /></td>";
+$html .= "  </tr>";
+$html .= "  <tr>";
+$html .= "      <td>3.- Precio de Venta</td>";
+$html .= "      <td><input type = \"text\" name = \"\" value = \"{$dventas}\" id = \"dventas\" /></td>";
+$html .= "  </tr>";
+$html .= "  <tr>";
+$html .= "      <td>4.- Costos y Precio de Compra</td>";
+$html .= "      <td><input type = \"text\" name = \"\" value = \"{$dcostos}\" id = \"dcostos\" /></td>";
+$html .= "  </tr>";
+$html .= "  <tr>";
+$html .= "      <td colspan =  \"2\"><input id = \"btn_modificar_decimales\" class = \"POS Boton OK\" style = \"position:relative; float:right;\" type = \"button\" value = \"Aceptar\" onClick = \"fn_editar_decimales();\" /></td>";
+$html .= "  </tr>";
+$html .= "";
+$html .= "</table>";
+
+$page->addComponent($html);
+
+//---------------------------------------------------------
 $page->nextTab("POS_CLIENT");
 
 $page->addComponent("<a href='../dl.php?file=client'><div class='POS Boton' >Descargar POS Client</div></a>");
+
+//---------------------------------------------------------
 
 $page->render();
