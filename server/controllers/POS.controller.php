@@ -384,19 +384,76 @@ class POSController implements IPOS {
      * @return status string Estado de la respuesta
      * */
     public static function EspecificaBdRestaurarBd($id_instancia, $time) {
-        $s = "[{$id_instancia}]";
+          //Codigo nuevo de restaurar bases de datos_________________________________________________________________________________________
+          $CadenaSQL="SELECT * FROM instances WHERE instance_id = $id_instancia";
+          $RutaBD=POS_PATH_TO_SERVER_ROOT."/../static_content/db_backups/";
+          Logger::log("Restaurando instancia...");
+          //$res = InstanciasController::Respaldar_Instancias(json_decode($s));
+          global $POS_CONFIG;
+          $rs = $POS_CONFIG["CORE_CONN"]->Execute($CadenaSQL);
+          $instancia = $rs->GetArray();
+          $instancia=$instancia['0'];//Saca el array a un nivel superior
+          
+            //var_dump($instancias);//hace var dump de los registros obtenidos
+          $Nombre_Archivo=$time."_pos_instance_".$id_instancia;//Nombre del archivo a restaurar
+            $db_user=$instancia['db_user'];
+            $usr_pass = $instancia['db_password'];
+            $db_host = $instancia['db_host'];
+            $db_name = $instancia['db_name'];
+             
+            
+            
+//se genera una nueva conexion a la bd schema para sacar el no_registros de cada bd
+            $instance_con["INSTANCE_CONN"] = null;
 
-        $res = InstanciasController::Respaldar_Instancias(json_decode($s));
+            try {
 
-        if (!is_null($res)) {
-            return array(
-                "status" => "failure",
-                "mensaje" => "{$res}"
-            );
-        }
+                $instance_con["INSTANCE_CONN"] = ADONewConnection($instancia["db_driver"]);
+                $instance_con["INSTANCE_CONN"]->debug = $instancia["db_debug"];
+                $instance_con["INSTANCE_CONN"]->PConnect($db_host, $db_user, $usr_pass, "information_schema");
+
+                if (!$instance_con["INSTANCE_CONN"]) {
+                    Logger::error("Imposible conectarme a la base de datos information_schema");
+                    die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));
+                }
+            } catch (ADODB_Exception $ado_e) {
+
+                Logger::error($ado_e);
+                die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));
+            } catch (Exception $e) {
+                Logger::error($e);
+                die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));
+            }
+
+            if ($instance_con["INSTANCE_CONN"] === NULL) {
+                Logger::error("Imposible conectarse con la base de datos information_schema");
+                die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));
+            }
+
+            $instance_db_con = $instance_con["INSTANCE_CONN"];
+
+          //antes de eliminar las tablas y restaurar se revisa cuantos registros hay en toda la BD
+            $num_regs_db = 0;
+
+            $no_rows = $instance_db_con->Execute('SELECT SUM( TABLE_ROWS ) FROM  `TABLES` WHERE TABLE_SCHEMA = "' . $db_name . '"');
+            while ($row = $no_rows->FetchRow()) {//row = nombre de la tabla
+                $num_regs_db += $row[0];
+            }
+
+
+            //se eliminan las tablas				
+            InstanciasController::Eliminar_Tablas_BD($instancia['instance_id'], $db_host, $db_user, $usr_pass, $db_name);
+            $out2 = InstanciasController::restore_pos_instance($instancia['instance_id'], $db_host, $db_user, $db_name, $usr_pass, $Nombre_Archivo . "/" . $found[0], $instancia['db_driver'], $instancia['db_debug']);
+            Logger::log("No registros en la BD ANTES de eliminar tablas: " . $num_regs_db);
+          
+            if (!is_null($out2)) {
+                return array(
+                    "status" => "failure",
+                    "mensaje" => "{$res}"
+                );
+            }
         return array(
             "status" => "ok",
-            "mensaje" => "perron"
         );
     }
 

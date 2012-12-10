@@ -253,11 +253,8 @@ class InstanciasController {
     }
 
     
-    
     public static function BuscarRespaldosComponents($IDinstancia) {//Función que devuelve el componente necesario en HTML para crear el formulario con las opciones de respaldos en base a los archivos
-    
         //TODO:Este metodo debera de recibir por fuerza un Id de una instancia                
-        
         $CarpetaRespaldos = (POS_PATH_TO_SERVER_ROOT . "/../static_content/db_backups/");
         $Directorio = dir($CarpetaRespaldos);
         $Retorno=array();
@@ -280,6 +277,10 @@ class InstanciasController {
 
         if ($Contador > 0) {//Si encuentra más de un archivo válido en la caperta de respaldos
             return $Retorno;
+        }
+        else
+        {
+              return array(null);//No se encontraron ficheros validos
         }
     }
 
