@@ -395,7 +395,7 @@ class POSController implements IPOS {
           $instancia=$instancia['0'];//Saca el array a un nivel superior
           
             //var_dump($instancias);//hace var dump de los registros obtenidos
-          $Nombre_Archivo=$time."_pos_instance_".$id_instancia;//Nombre del archivo a restaurar
+          $Nombre_Archivo=$time."_pos_instance_".$id_instancia.".sql";//Nombre del archivo a restaurar
             $db_user=$instancia['db_user'];
             $usr_pass = $instancia['db_password'];
             $db_host = $instancia['db_host'];
@@ -443,7 +443,7 @@ class POSController implements IPOS {
 
             //se eliminan las tablas				
             InstanciasController::Eliminar_Tablas_BD($instancia['instance_id'], $db_host, $db_user, $usr_pass, $db_name);
-            $out2 = InstanciasController::restore_pos_instance($instancia['instance_id'], $db_host, $db_user, $db_name, $usr_pass, $Nombre_Archivo . "/" . $found[0], $instancia['db_driver'], $instancia['db_debug']);
+            $out2 = InstanciasController::restore_pos_instance($instancia['instance_id'], $db_host, $db_user, $db_name, $usr_pass, $RutaBD.$Nombre_Archivo, $instancia['db_driver'], $instancia['db_debug']);
             Logger::log("No registros en la BD ANTES de eliminar tablas: " . $num_regs_db);
           
             if (!is_null($out2)) {

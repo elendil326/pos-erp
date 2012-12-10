@@ -739,7 +739,7 @@ class InstanciasController {
     public static function restore_pos_instance($instance_id, $db_host, $db_user, $db_name, $usr_pass, $full_path, $driver, $debug) {
         Logger::log("Restoring up Instance $instance_id");
         $cmd = "mysql --host=" . $db_host . " --user=" . $db_user . " --password=" . $usr_pass . " " . $db_name . " < " . $full_path;
-        Logger::log("Ejecutando comando: " . $cmd);
+        Logger::error("Ejecutando comando: " . $cmd);
         $res = shell_exec($cmd);
         Logger::log("Resuldado del comando: " . $res);
 
