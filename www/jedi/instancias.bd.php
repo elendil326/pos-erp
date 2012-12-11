@@ -164,8 +164,9 @@ define("BYPASS_INSTANCE_CHECK", true);
 			    return;
 			}
 			console.log("Encodeado:",Ext.JSON.encode(ids));
-
-			window.location='instancias.bd.dl.php?&instance_ids='+Ext.JSON.encode(ids);
+//$json = "{ \"instance_ids\" : {$_GET['instance_ids']} }";
+			var jsoon = "{ \"instance_ids\" : "+Ext.JSON.encode(ids)+" }";
+			window.location='instancias.bd.dl.php?&instance_ids='+jsoon;
 		}
 		
 	</script>

@@ -5875,40 +5875,6 @@
   
   
 
-  class ApiPosConfiguracionDecimales extends ApiHandler {
-  
-
-	protected function DeclareAllowedRoles(){  return BYPASS;  }
-	protected function GetRequest()
-	{
-		$this->request = array(	
-			"cambio" => new ApiExposedProperty("cambio", true, POST, array( "int" )),
-			"cantidades" => new ApiExposedProperty("cantidades", true, POST, array( "int" )),
-			"costos" => new ApiExposedProperty("costos", true, POST, array( "int" )),
-			"ventas" => new ApiExposedProperty("ventas", true, POST, array( "int" )),
-		);
-	}
-
-	protected function GenerateResponse() {		
-		try{
- 		$this->response = POSController::DecimalesConfiguracion( 
- 			
-			
-			isset($_POST['cambio'] ) ? $_POST['cambio'] : null,
-			isset($_POST['cantidades'] ) ? $_POST['cantidades'] : null,
-			isset($_POST['costos'] ) ? $_POST['costos'] : null,
-			isset($_POST['ventas'] ) ? $_POST['ventas'] : null
-			
-			);
-		}catch(Exception $e){
- 			//Logger::error($e);
-			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
-		}
- 	}
-  }
-  
-  
-
   class ApiDocumentoBuscar extends ApiHandler {
   
 

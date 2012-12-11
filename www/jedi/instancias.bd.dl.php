@@ -130,9 +130,9 @@ set_time_limit(0);
 //
 
 
-$ids = json_decode($_GET["instance_ids"]);
+$ids = json_decode($_GET["instance_ids"]); $ids = $ids->instance_ids;
 //$ids = explode(",", $_GET["ids"]);
-
+//echo".............nada: "; var_dump($ids); echo":::::: sizeof: ".sizeof($ids);
 $prefix = time() . rand();
 $files = array();
 $file_id = array();
@@ -151,16 +151,16 @@ for($i = 0; $i < sizeof($ids); $i++){
 
 
 //for($i = 0; $i < sizeof($ids); $i++){
-
+//echo(" ------- Dentro de for id = ".$ids[$i]);
 	//validar que existan
-	$r = InstanciasController::BuscarPorId( $ids[$i] );
+//	$r = InstanciasController::BuscarPorId( $ids[$i] );
 
 	$file_name = $prefix . 'ibddl'.$ids[$i] . ".sql";
 	$destiny_file = '../../static_content/db_backups/'; 
 
 	array_push($files, $destiny_file . $file_name );
 	array_push($file_id, $ids[$i]  );
-	InstanciasController::Respaldar_Instancias($_GET["instance_ids"]);
+	InstanciasController::Respaldar_Instancias($ids);//Respaldar_Instancias recibe como params un array
 	//InstanciasController::backup_only_data(  $ids[$i], $r["db_host"], $r["db_user"], $r["db_password"], $r["db_name"], '*', true, false, $destiny_file, $file_name);
 //}
 
@@ -192,8 +192,11 @@ for ($i=0; $i < sizeof($ids); $i++) {
 	$f->add_file($contenido,$found[0]);
 }
 
+$folder_name = ( sizeof($ids) > 1 )? "instances_backup_".date("d-m-Y H:i:s") : "instance_".$ids[0]."_backup_".date("d-m-Y H:i:s");
+Logger::log(":::::::ENVIANDO ARCHIVO A DESCARGAR");
+
 header("Content-type: application/octet-stream");
-header("Content-disposition: attachment; filename=zipfile.zip");
+header("Content-disposition: attachment; filename=$folder_name.zip");
 echo $f->file();
 
 
