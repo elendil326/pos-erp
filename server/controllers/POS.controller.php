@@ -471,7 +471,7 @@ class POSController implements IPOS {
      * @return mensaje string Mensaje de respuesta del servidor
      * */
     public static function BdInstanciasRespaldarBd($instance_ids) {
-        /*$x = json_decode($instance_ids);
+        $x = json_decode($instance_ids);
 
         $res = InstanciasController::Respaldar_Instancias($x->instance_ids);
         if (!is_null($res)) {
@@ -479,7 +479,7 @@ class POSController implements IPOS {
                 "status" => "failure",
                 "mensaje" => "{$res}"
             );
-        }*/
+        }
         return array(
             "status" => "ok",
             "mensaje" => "Funcion vacia"
@@ -495,7 +495,7 @@ class POSController implements IPOS {
      * @return mensaje string Mensaje de respuesta del servidor
      * */
     public static function BdInstanciasRestaurarBd($instance_ids) {
-       /* $x = json_decode($instance_ids);
+        $x = json_decode($instance_ids);
 
         $res = InstanciasController::Restaurar_Instancias($x->instance_ids);
         if (!is_null($res)) {
@@ -503,7 +503,7 @@ class POSController implements IPOS {
                 "status" => "failure",
                 "mensaje" => "{$res}"
             );
-        }*/
+        }
         return array(
             "status" => "ok",
             "mensaje" => "Funcion vacia"
