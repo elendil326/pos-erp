@@ -151,7 +151,16 @@ $CadenaJSForm .= "                    window.onbeforeunload = function(){}";
 $CadenaJSForm .= "                }";
 $CadenaJSForm .= "            }";
 $CadenaJSForm .= "         );";
-$CadenaJSForm .= "     }";
+$CadenaJSForm .= "     }";/*
+$CadenaJSForm.="var fnB(){";//Funcion para borrar respaldo
+$CadenaJSForm .= "";
+$CadenaJSForm .= "";
+$CadenaJSForm .= "";
+$CadenaJSForm .= "";
+$CadenaJSForm .= "";
+$CadenaJSForm .= "";
+$CadenaJSForm .= "";
+$CadenaJSForm.="}";*/
 $CadenaJSForm .= "</script>";
 $CadenaJSForm .= "<div align=\"left\"><form name=\"frmRes\">";
 $Contador = 0;
@@ -162,8 +171,16 @@ foreach (InstanciasController::BuscarRespaldosComponents(INSTANCE_ID) as $Cadena
 unset($Cadena); //Elimina la referencia usada en FOREACH  
 //$Retorno.="<br><input type=\"radio\" name=\"GRespaldo\" value=\"{$TArchivo}\"" . ($Contador == 1? " checked " : "") . "> Respaldo no {$Contador}, creado " . date("D d/m/Y g:i a", $TArchivo) . "<br>";
 $CadenaJSForm .= "<br>";
-$CadenaJSForm .= "</form></div><br/><div class=\"POS Boton\" onclick=\"fn();\">Restaurar</div>";
-$page->addComponent($CadenaJSForm);
+if ($Contador>0)//Si hay respaldos agrega el boton
+{
+      $CadenaJSForm .= "</form></div><br/><div class=\"POS Boton\" onclick=\"fn();\">Restaurar</div>";
+      $CadenaJSForm .= "</form></div><br/><div class=\"POS Boton\" onclick=\"fnB();\">Borrar</div>";
+      $page->addComponent($CadenaJSForm);
+}
+else
+{
+      $page->addComponent(new TitleComponent("--- No hay respaldos disponibles ---", 3));
+}
 
 //--------------------------------------------------------------------------------
 

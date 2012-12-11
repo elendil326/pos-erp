@@ -449,11 +449,12 @@ class POSController implements IPOS {
             if (!is_null($out2)) {
                 return array(
                     "status" => "failure",
-                    "mensaje" => "{$res}"
+                    "mensaje" => "Error al restaurar la instancia"
                 );
             }
         return array(
             "status" => "ok",
+            "Mensaje:" => "Restauracion completa"
         );
     }
 
