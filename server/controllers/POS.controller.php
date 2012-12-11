@@ -395,7 +395,7 @@ class POSController implements IPOS {
           $instancia=$instancia['0'];//Saca el array a un nivel superior
           
             //var_dump($instancias);//hace var dump de los registros obtenidos
-          $Nombre_Archivo=$time."_pos_instance_".$id_instancia.".sql";//Nombre del archivo a restaurar
+            $Nombre_Archivo=$time."_pos_instance_".$id_instancia.".sql";//Nombre del archivo a restaurar
             $db_user=$instancia['db_user'];
             $usr_pass = $instancia['db_password'];
             $db_host = $instancia['db_host'];
@@ -439,23 +439,27 @@ class POSController implements IPOS {
             while ($row = $no_rows->FetchRow()) {//row = nombre de la tabla
                 $num_regs_db += $row[0];
             }
-
-
+            $file=$RutaBD.$Nombre_Archivo;
+            
             //se eliminan las tablas				
             InstanciasController::Eliminar_Tablas_BD($instancia['instance_id'], $db_host, $db_user, $usr_pass, $db_name);
-            $out2 = InstanciasController::restore_pos_instance($instancia['instance_id'], $db_host, $db_user, $db_name, $usr_pass, $RutaBD.$Nombre_Archivo, $instancia['db_driver'], $instancia['db_debug']);
+            $out2 = InstanciasController::restore_pos_instance($instancia['instance_id'], $db_host, $db_user, $db_name, $usr_pass, $file, $instancia['db_driver'], $instancia['db_debug']);
             Logger::log("No registros en la BD ANTES de eliminar tablas: " . $num_regs_db);
           
-            if (!is_null($out2)) {
-                return array(
-                    "status" => "failure",
-                    "mensaje" => "Error al restaurar la instancia"
-                );
+            if (!is_null($out2)) 
+             {
+             return array(
+                                    "status" => "failure",
+                                    "mensaje" =>$out2
+                                  );
             }
-        return array(
-            "status" => "ok",
-            "Mensaje:" => "Restauracion completa"
-        );
+            else
+            {
+            return array(
+                                   "status" => "ok",
+                                    "Mensaje:" => "archivo: " .$file//"Restauracion completa"
+                                 );
+            }
     }
 
     /**
@@ -467,7 +471,7 @@ class POSController implements IPOS {
      * @return mensaje string Mensaje de respuesta del servidor
      * */
     public static function BdInstanciasRespaldarBd($instance_ids) {
-        $x = json_decode($instance_ids);
+        /*$x = json_decode($instance_ids);
 
         $res = InstanciasController::Respaldar_Instancias($x->instance_ids);
         if (!is_null($res)) {
@@ -475,10 +479,10 @@ class POSController implements IPOS {
                 "status" => "failure",
                 "mensaje" => "{$res}"
             );
-        }
+        }*/
         return array(
             "status" => "ok",
-            "mensaje" => ""
+            "mensaje" => "Funcion vacia"
         );
     }
 
@@ -491,7 +495,7 @@ class POSController implements IPOS {
      * @return mensaje string Mensaje de respuesta del servidor
      * */
     public static function BdInstanciasRestaurarBd($instance_ids) {
-        $x = json_decode($instance_ids);
+       /* $x = json_decode($instance_ids);
 
         $res = InstanciasController::Restaurar_Instancias($x->instance_ids);
         if (!is_null($res)) {
@@ -499,10 +503,10 @@ class POSController implements IPOS {
                 "status" => "failure",
                 "mensaje" => "{$res}"
             );
-        }
+        }*/
         return array(
             "status" => "ok",
-            "mensaje" => ""
+            "mensaje" => "Funcion vacia"
         );
     }
 

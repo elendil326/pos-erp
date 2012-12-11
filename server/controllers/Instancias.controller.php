@@ -781,9 +781,9 @@ class InstanciasController {
         Logger::log("No registros en la BD despues de restaurar tablas: " . $num_regs_db_despues);
 
 
-        return ( $num_regs_db_despues == 0) ? "Error al restaurar la instancia " . $instance_id : NULL;
+        return ( $num_regs_db_despues == 0) ? "Error al restaurar la instancia " . $instance_id . "Archivo: " . $full_path: NULL;
     }
-
+  
     public static function backup_only_data($instance_id, $host, $user, $pass, $name, $tables = '*', $backup_values = true, $return_as_string = false, $destiny_file, $file_name) {
 
         Logger::log("Backup  Instance {$instance_id}");
