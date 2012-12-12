@@ -13,7 +13,7 @@ if(!defined("BYPASS_INSTANCE_CHECK")){
 	//50b3e297
 	private static $instance_id=84;
                    private static $TokenInstancia;
-	public function tNuevaInstancia( ){
+	public function testNuevaInstancia( ){
                                       self::$instance_id=InstanciasController::Nueva(null, "Instacia para unit testing" );
                                       echo " >> Creando nueva instancia para pruebas\n";
                                       if (is_null(self::$instance_id))//Si no se creo una nueva instancia

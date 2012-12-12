@@ -261,7 +261,7 @@ class InstanciasController {
         $Contador = 1; //Cuenta cuantos elementos válidos ha encontrado
         while ($Archivo = $Directorio->read()) {
             if (strlen($Archivo) > 2 && (substr($Archivo, strlen($Archivo) - 4, 4) == ".sql")) {
-                $TArchivo = filemtime($CarpetaRespaldos . $Archivo);
+                $TArchivo = substr($Archivo, 0,10);//filemtime($CarpetaRespaldos . $Archivo);
                 if (!is_null($IDinstancia)) {
                     if (substr($Archivo, 24, 2) == $IDinstancia) 
                         {

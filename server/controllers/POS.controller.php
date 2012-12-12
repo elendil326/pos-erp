@@ -471,9 +471,10 @@ class POSController implements IPOS {
      * @return mensaje string Mensaje de respuesta del servidor
      * */
     public static function BdInstanciasRespaldarBd($instance_ids) {
-        $x = json_decode($instance_ids);
-
-        $res = InstanciasController::Respaldar_Instancias($x->instance_ids);
+          //var_dump($instance_ids);
+          //$x = json_decode($instance_ids);
+        
+        $res = InstanciasController::Respaldar_Instancias($instance_ids);
         if (!is_null($res)) {
             return array(
                 "status" => "failure",

@@ -125,12 +125,42 @@ $tabla->addOnClick("id_usuario", "detallesUsuario");
 
 $page->addComponent($tabla);
 
-$page->nextTab("Restaurar");
-//$page->addComponent("<a href=''><div class='POS Boton'>Respaldar BD</div></a>");//Boton de respaldo
-$page->addComponent("<hr>"); //Separador
-$page->addComponent(new TitleComponent("Respaldos disponibles", 2));
+$page->nextTab("Respaldos");
+$page->addComponent(new TitleComponent("Crear nuevo respaldo", 2));
+
 //Dibuja los elementos del la lista de archivos de respaldo encontrados          
-$CadenaJSForm = "<script>";
+$CadenaJSForm = "<script>\n";
+
+$CadenaJSForm .= "var array_instances = [ " . INSTANCE_ID .  " ];";
+
+$CadenaJSForm .= " var fnR = function()\n";
+$CadenaJSForm .= "      {\n";
+//$CadenaJSForm .= "      alert(" . json_encode(INSTANCE_ID)  . ");";
+$CadenaJSForm .= "            POS.API.POST(\n";
+$CadenaJSForm .= "                                          \"api/pos/bd/respaldar_instancias_bd\", \n";
+$CadenaJSForm .= "                                          {\n";
+$CadenaJSForm .= "                                                \"instance_ids\" : Ext.JSON.encode(array_instances)";
+$CadenaJSForm .= "                                          },\n";
+$CadenaJSForm .= "                                          {\n";
+$CadenaJSForm .= "                                                callback :function(b)\n";
+$CadenaJSForm .= "                                                      {\n";
+$CadenaJSForm .= "                                                            Ext.MessageBox.show\n";
+$CadenaJSForm .= "                                                                ({\n";
+$CadenaJSForm .= "                                                                        title:\"Respaldo\",\n";
+$CadenaJSForm .= "                                                                        msg:\"Respaldo terminado\",\n";
+$CadenaJSForm .= "                                                                        buttons : Ext.MessageBox.OK\n";
+$CadenaJSForm .= "                                                                });";
+$CadenaJSForm .= "                                                            document.location.reload();\n";//Actualiza la pagina
+$CadenaJSForm .= "                                                      }\n";
+$CadenaJSForm .= "                                          }\n";
+$CadenaJSForm .= "                                    )\n";
+$CadenaJSForm .= "      }\n";
+$CadenaJSForm .= "</script>\n";
+$page->addComponent($CadenaJSForm);
+$page->addComponent("<br><div class=\"POS Boton\" onclick=\"fnR();\">Respaldar BD</div><hr>");//Agrega el boton de respaldar la BD
+$page->addComponent(new TitleComponent("Respaldos disponibles", 2));
+$CadenaJSForm = "";//Vacia la cadena de comandos js
+$CadenaJSForm .= "<script>";
 $CadenaJSForm .= "     var valor = null;\n";
 $CadenaJSForm .= "     var fn = function()\n";
 $CadenaJSForm .= " {";
@@ -153,39 +183,53 @@ $CadenaJSForm .= "                                                 {\n";
 $CadenaJSForm .= "                                                 callback : function(a)\n";
 $CadenaJSForm .= "                                                       {\n";
 $CadenaJSForm .= "                                                             window.onbeforeunload = function(){}\n";
-//$CadenaJSForm .= "                                                           window.location = \"c.php\"; ";
+$CadenaJSForm .= "                                                           window.location.reload();";
 $CadenaJSForm .= "                                                      }\n";
 $CadenaJSForm .= "                                                 }\n";
 $CadenaJSForm .= "                                     );\n";
 $CadenaJSForm .= "     }\n";
 $CadenaJSForm .= "      else\n";
 $CadenaJSForm .= "     {\n";
-$CadenaJSForm.=  "             alert( document.frmRes.GRespaldo.value); \n";
-$CadenaJSForm.=  "            valor = document.frmRes.GRespaldo.value;";
-$CadenaJSForm.=  "            POS.API.POST(";
-$CadenaJSForm.=  "                                         \"api/pos/bd/restaurar_bd_especifica\", ";
-$CadenaJSForm.=  "                                          {";
-$CadenaJSForm.=  "                                                \"id_instancia\"  :     " . INSTANCE_ID . ",";
-$CadenaJSForm.=  "                                                \"time\"    :     valor";
-$CadenaJSForm.=  "                                          },";
-$CadenaJSForm.=  "                                          {";
-$CadenaJSForm.=  "                                          callback:function(a)";
-$CadenaJSForm.=  "                                                {";
-$CadenaJSForm.=  "                                                      window.onbeforeunload = function(){}";
-//$CadenaJSForm.=  "                                                      window.locatio = \"c.php\";";
-$CadenaJSForm.=  "                                                }";
-$CadenaJSForm.=  "                                          }";
-$CadenaJSForm.=  "                                    )";
+$CadenaJSForm.=  "            valor = (document.frmRes.GRespaldo.value);\n";
+$CadenaJSForm.=  "            POS.API.POST(\n";
+$CadenaJSForm.=  "                                         \"api/pos/bd/restaurar_bd_especifica\", \n";
+$CadenaJSForm.=  "                                          {\n";
+$CadenaJSForm.=  "                                                \"id_instancia\"  :     " . INSTANCE_ID . ",\n";
+$CadenaJSForm.=  "                                                \"time\"    :     valor\n";
+$CadenaJSForm.=  "                                          },\n";
+$CadenaJSForm.=  "                                          {\n";
+$CadenaJSForm.=  "                                          callback:function(a)\n";
+$CadenaJSForm.=  "                                                {\n";
+//$CadenaJSForm.=  "                                                      window.onbeforeunload = function(){}\n";
+$CadenaJSForm.=  "                                                      window.location.reload();\n";
+$CadenaJSForm.=  "                                                }\n";
+$CadenaJSForm.=  "                                          }\n";
+$CadenaJSForm.=  "                                    )\n";
 $CadenaJSForm .= "     }\n";
- $CadenaJSForm .= "}\n";/*
-$CadenaJSForm.="var fnB(){";//Funcion para borrar respaldo
-$CadenaJSForm .= "";
-$CadenaJSForm .= "";
-$CadenaJSForm .= "";
-$CadenaJSForm .= "";
-$CadenaJSForm .= "";
-$CadenaJSForm .= "";
-$CadenaJSForm .= "";
+$CadenaJSForm .= "}\n";
+/*
+$CadenaJSForm .= "\n";
+$CadenaJSForm .= "\n";
+$CadenaJSForm .= "\n";
+$CadenaJSForm .= "\n";
+$CadenaJSForm .= "\n";
+$CadenaJSForm .= "\n";
+$CadenaJSForm .= "\n";
+$CadenaJSForm .= "\n";
+$CadenaJSForm .= "\n";
+$CadenaJSForm .= "\n";
+$CadenaJSForm .= "\n";
+$CadenaJSForm .= "\n";
+$CadenaJSForm .= "\n";
+$CadenaJSForm .= "\n";
+$CadenaJSForm .= "\n";
+$CadenaJSForm .= "\n";
+$CadenaJSForm .= "\n";
+$CadenaJSForm .= "\n";
+$CadenaJSForm .= "\n";
+$CadenaJSForm .= "\n";
+$CadenaJSForm .= "\n";
+$CadenaJSForm .= "\n";
 $CadenaJSForm.="}";*/
 $CadenaJSForm .= "</script>";
 $CadenaJSForm .= "<div align=\"left\"><form name=\"frmRes\">";
@@ -195,12 +239,11 @@ foreach (InstanciasController::BuscarRespaldosComponents(INSTANCE_ID) as $Cadena
     $CadenaJSForm .= "  <br><input type=\"radio\" name=\"GRespaldo\" value=\"{$Cadena}\"" . ($Contador == 1 ? " checked " : "") . "> Respaldo no {$Contador}, creado " . date("D d/m/Y g:i a", $Cadena) . "<br>";
 }
 unset($Cadena); //Elimina la referencia usada en FOREACH  
-//$Retorno.="<br><input type=\"radio\" name=\"GRespaldo\" value=\"{$TArchivo}\"" . ($Contador == 1? " checked " : "") . "> Respaldo no {$Contador}, creado " . date("D d/m/Y g:i a", $TArchivo) . "<br>";
 $CadenaJSForm .= "<br>";
 if ($Contador>0)//Si hay respaldos agrega el boton
 {
       $CadenaJSForm .= "</form></div><br/><div class=\"POS Boton\" onclick=\"fn();\">Restaurar</div>";
-      $CadenaJSForm .= "</form></div><br/><div class=\"POS Boton\" onclick=\"fnB();\">Borrar</div>";
+      $CadenaJSForm .= "<div class=\"POS Boton\" onclick=\"fnB();\">Borrar</div>";
       $page->addComponent($CadenaJSForm);
 }
 else
@@ -211,8 +254,6 @@ else
 //--------------------------------------------------------------------------------
 
 $page->nextTab("Personalizar");
-
-$html = "";
 
 $html .= "<div id='logo256up'></div>";
 $html .= "<script type='text/javascript' charset='utf-8'>";
