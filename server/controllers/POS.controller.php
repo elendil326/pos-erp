@@ -628,5 +628,20 @@ class POSController implements IPOS {
     public static function BdInstanciasDescargarBd($instance_ids){
         
     }
+    /**
+     *
+     *Borra en archivo especificado en el argumento a partir del id de instancia y del tiempo establecido
+
+     *
+     * @param id_instacia int Id de la instancia del archivo que se va a borrar
+     * @param time int Tiempo del archivo que se va a borrar, en formato UNIX
+     * @return status string Estado del proceso
+     **/
+  public static function RespaldoBorrarBd
+    (
+        $id_instacia, 
+        $time
+    ){}  
 
 }
+

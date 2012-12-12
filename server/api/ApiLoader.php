@@ -1,5 +1,31 @@
 <?php 
+/*
+require_once("ApiHandler.php");
 
+	require_once("ApiHttpErrors.php");
+
+	require_once("ApiLoader.php");
+
+	require_once("ApiOutputFormatter.php");
+
+	require_once("CustomValidator.php");
+
+	require_once("DateRangeValidator.php");
+
+	require_once("DateValidator.php");
+
+	require_once("EnumValidator.php");
+
+	require_once("HtmlValidator.php");
+
+	require_once("NumericRangeValidator.php");
+
+	require_once("NumericValidator.php");
+
+	require_once("StringValidator.php");
+
+	require_once("Validator.php");
+*/
 
   class ApiSesionIniciar extends ApiHandler {
   
@@ -5898,6 +5924,36 @@
 			isset($_POST['cantidades'] ) ? $_POST['cantidades'] : null,
 			isset($_POST['costos'] ) ? $_POST['costos'] : null,
 			isset($_POST['ventas'] ) ? $_POST['ventas'] : null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiPosBdBorrarRespaldo extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"id_instacia" => new ApiExposedProperty("id_instacia", true, POST, array( "int" )),
+			"time" => new ApiExposedProperty("time", true, POST, array( "int" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = POSController::RespaldoBorrarBd( 
+ 			
+			
+			isset($_POST['id_instacia'] ) ? $_POST['id_instacia'] : null,
+			isset($_POST['time'] ) ? $_POST['time'] : null
 			
 			);
 		}catch(Exception $e){
