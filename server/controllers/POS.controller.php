@@ -626,7 +626,7 @@ class POSController implements IPOS {
      * @return mensaje string Mensaje de respuesta del servidor
      **/
     public static function BdInstanciasDescargarBd($instance_ids){
-        
+        //------------EMPEZAR AQUI HACER AJAXSAZO
     }
     /**
      *

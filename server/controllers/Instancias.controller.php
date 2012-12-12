@@ -391,7 +391,7 @@ class InstanciasController {
 
         $rs = $POS_CONFIG["CORE_CONN"]->Execute($sql);
         $instancias = $rs->GetArray();
-        var_dump($instancias);//hace var dump de los registros obtenidos
+        //var_dump($instancias);//hace var dump de los registros obtenidos
         foreach ($instancias as $ins) {
             $file_name = 'pos_instance_' . $ins['instance_id'] . '_' . date("d-m-Y H:i:s") . '.sql';
             $db_user = $ins['db_user'];
