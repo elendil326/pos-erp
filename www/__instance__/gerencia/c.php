@@ -268,7 +268,7 @@ $CadenaJS .= "</script>";
 
 $page->addComponent($CadenaJS);
 
-$CadenaJSForm .= "<div align=\"left\"><form name=\"frmRes\">";
+$CadenaJSForm = "<div align=\"left\"><form name=\"frmRes\">";
 $Contador = 0;
 foreach (InstanciasController::BuscarRespaldosComponents(INSTANCE_ID) as $Cadena) {
     $Contador++;
