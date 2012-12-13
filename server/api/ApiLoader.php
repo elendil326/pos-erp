@@ -5940,14 +5940,14 @@ require_once("ApiHandler.php");
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
 	protected function GetRequest()
-	{
+	{                                                                  
 		$this->request = array(	
 			"id_instacia" => new ApiExposedProperty("id_instacia", true, POST, array( "int" )),
 			"time" => new ApiExposedProperty("time", true, POST, array( "int" )),
 		);
 	}
 
-	protected function GenerateResponse() {		
+	protected function GenerateResponse() {
 		try{
  		$this->response = POSController::RespaldoBorrarBd( 
  			

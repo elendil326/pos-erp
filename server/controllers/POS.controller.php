@@ -637,11 +637,21 @@ class POSController implements IPOS {
      * @param time int Tiempo del archivo que se va a borrar, en formato UNIX
      * @return status string Estado del proceso
      **/
-  public static function RespaldoBorrarBd
-    (
-        $id_instacia, 
-        $time
-    ){}  
+  public static function RespaldoBorrarBd($id_instacia, $time)
+        {
+            $CarpetaRespaldos=(POS_PATH_TO_SERVER_ROOT . "/../static_content/db_backups/");
+            $Arcihvo=$CarpetaRespaldos. $time . "_pos_instance_" . $id_instacia . ".sql";
+            unlink($Arcihvo);//Borra el archivo
+            if (!file_exists($Arcihvo))//Si ya no existe el archivo
+            {
+                $res=array("Status"=>"Ok");    
+            }
+            else
+            {
+                  $res=array("Status"=>"Ok"); 
+            }
+            return $res;
+        }  
 
 }
 

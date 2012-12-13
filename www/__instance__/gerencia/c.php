@@ -159,6 +159,8 @@ $CadenaJSForm .= "</script>\n";
 $page->addComponent($CadenaJSForm);
 $page->addComponent("<br><div class=\"POS Boton\" onclick=\"fnR();\">Respaldar BD</div><hr>");//Agrega el boton de respaldar la BD
 $page->addComponent(new TitleComponent("Respaldos disponibles", 2));
+
+
 $CadenaJSForm = "";//Vacia la cadena de comandos js
 $CadenaJSForm .= "<script>";
 $CadenaJSForm .= "     var valor = null;\n";
@@ -207,30 +209,38 @@ $CadenaJSForm.=  "                                          }\n";
 $CadenaJSForm.=  "                                    )\n";
 $CadenaJSForm .= "     }\n";
 $CadenaJSForm .= "}\n";
-/*
-$CadenaJSForm .= "\n";
-$CadenaJSForm .= "\n";
-$CadenaJSForm .= "\n";
-$CadenaJSForm .= "\n";
-$CadenaJSForm .= "\n";
-$CadenaJSForm .= "\n";
-$CadenaJSForm .= "\n";
-$CadenaJSForm .= "\n";
-$CadenaJSForm .= "\n";
-$CadenaJSForm .= "\n";
-$CadenaJSForm .= "\n";
-$CadenaJSForm .= "\n";
-$CadenaJSForm .= "\n";
-$CadenaJSForm .= "\n";
-$CadenaJSForm .= "\n";
-$CadenaJSForm .= "\n";
-$CadenaJSForm .= "\n";
-$CadenaJSForm .= "\n";
-$CadenaJSForm .= "\n";
-$CadenaJSForm .= "\n";
-$CadenaJSForm .= "\n";
-$CadenaJSForm .= "\n";
-$CadenaJSForm.="}";*/
+
+$CadenaJSForm .= "     var fnB = function()\n";
+$CadenaJSForm .= " {";
+$CadenaJSForm .= "      if(document.frmRes.GRespaldo.length>1)\n";
+$CadenaJSForm .= "      {\n";
+$CadenaJSForm .= "             for(var i = 0; i < document.frmRes.GRespaldo.length; i++)\n";
+$CadenaJSForm .= "              {\n";
+$CadenaJSForm .= "                        if( document.frmRes.GRespaldo[i].checked == true )\n";
+$CadenaJSForm .= "                           {\n";
+$CadenaJSForm .= "                                 valor = document.frmRes.GRespaldo[i].value;\n";
+$CadenaJSForm .= "                           }\n";
+$CadenaJSForm .= "              }\n";
+$CadenaJSForm .= "      }\n";
+$CadenaJSForm .= "       else\n";
+$CadenaJSForm .= "      {\n";
+$CadenaJSForm.=  "            valor = (document.frmRes.GRespaldo.value);\n";
+$CadenaJSForm.= "        }";
+$CadenaJSForm .= "             POS.API.POST( \n";
+$CadenaJSForm .= "                                           \"api/pos/bd/borrar_respaldo\", \n";
+$CadenaJSForm .= "                                                {\n";
+$CadenaJSForm .= "                                                       \"id_instacia\"  :     " . INSTANCE_ID . ",\n";
+$CadenaJSForm .= "                                                       \"time\"               	: valor\n";
+$CadenaJSForm .= "                                                 },\n";
+$CadenaJSForm .= "                                                 {\n";
+$CadenaJSForm .= "                                                 callback : function(a)\n";
+$CadenaJSForm .= "                                                       {\n";
+//$CadenaJSForm .= "                                                             window.onbeforeunload = function(){}\n";
+$CadenaJSForm .= "                                                           window.location.reload();";
+$CadenaJSForm .= "                                                      }\n";
+$CadenaJSForm .= "                                                 }\n";
+$CadenaJSForm .= "                                     );\n";
+$CadenaJSForm .= "      }\n";
 $CadenaJSForm .= "</script>";
 $CadenaJSForm .= "<div align=\"left\"><form name=\"frmRes\">";
 $Contador = 0;
