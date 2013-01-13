@@ -260,9 +260,18 @@ class LoginComponent implements GuiComponent
 				</tr>
 				<tr>
 					<td></td>
-					<td style="text-align:right" align="right">Usuario</td>
+					<td style="text-align:right" align="right">Usuario&nbsp;&nbsp;</td>
 					<td>
-						<input 
+						<input
+							style="	border-color: #1D2A5B;
+									margin: 0;
+									width: 142px;
+									border: 1px solid #BDC7D8;
+									font-size: 11px;
+									margin: 0;
+									padding: 3px;
+										-webkit-appearance: none;
+									-webkit-border-radius: 0;"
 							type="text" 
 							name="user" 
 							id="user" 
@@ -271,7 +280,17 @@ class LoginComponent implements GuiComponent
 				</tr><tr>
 					<td></td>
 					<td align="right" style="text-align:right">Contrase&ntilde;a&nbsp;</td><td>
-						<input 
+						<input
+							style="	border-color: #1D2A5B;
+	margin: 0;
+	width: 142px;
+	border: 1px solid #BDC7D8;
+	font-family: 'lucida grande',tahoma,verdana,arial,sans-serif;
+	font-size: 11px;
+	margin: 0;
+	padding: 3px;
+	-webkit-appearance: none;
+	-webkit-border-radius: 0;" 
 							type="password" 
 							id="password" 
 							name="password" 
