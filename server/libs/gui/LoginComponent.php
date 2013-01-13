@@ -3,18 +3,18 @@
 class LoginComponent implements GuiComponent
 {
 
-
-
-
 	private $next_hop;
 	private $api_login_method;
-
-
+	private $extern_login;
 
 	function __construct(){
 		$this->next_hop = ".";
 	}
 
+
+	public function setExternLoginUrl( $url ){
+		$this->extern_login = $url;
+	}
 
 	private function printAPICall( ){
 		?>
@@ -107,8 +107,6 @@ class LoginComponent implements GuiComponent
 			}
 
 
-
-			
 			var snd_to_api = function (   ){
 				Ext.Ajax.request({
 					method 	: "POST",
@@ -143,9 +141,14 @@ class LoginComponent implements GuiComponent
 						if(o.login_succesful === true){
 							//the cookie should be arleady set
 							//Ext.util.Cookies.set( "a_t", o.auth_token );
-							 
-							if(o.status == "ok") window.location = o.siguiente_url  + getParameterByName("next_url");
 							
+							<?php
+								if(is_null($this->extern_login)){
+									?>if(o.status == "ok") window.location = o.siguiente_url  + getParameterByName("next_url"); <?php
+								}else{
+									?>if(o.status == "ok") window.location = getParameterByName("extern_login") + "?au=" +  o.auth_token; <?php
+								}
+							?>	
 						}
 
 					},
@@ -242,7 +245,7 @@ class LoginComponent implements GuiComponent
 					</td>
 					<td colspan=2>
 						<div style="padding: 5px">
-						<h2>Iniciar sesion</h2>							
+						<h2>Iniciar sesion</h2>
 						</div>
 					</td>
 				</tr>
@@ -278,10 +281,18 @@ class LoginComponent implements GuiComponent
 				</tr><tr valign="top">
 					<td colspan=3 style="text-align:center">
 						<?php
-						if(!is_null($this->api_login_method)){
+						if( !is_null($this->api_login_method) ){
+		
+							if(is_null($this->extern_login)){
+								 ?><div class='POS Boton OK' onClick="snd_to_api()" style='width:150px' >Iniciar sesion</div><?php
+							}else{
+								 ?><div class='POS Boton OK' 
+									onClick="snd_to_api()" 
+									style='width:150px; height: 55px;' >Iniciar sesion y otorgar permiso</div><?php
+							}
 							?>
-								<div class='POS Boton OK' onClick="snd_to_api()" style='width:150px' >&nbsp;Iniciar sesion</div>
-								<div class='POS Boton' onClick="lostpass()"  style='width:150px' >Olvide mi constrase&ntilde;a</div>
+							</div>
+							<div class='POS Boton' onClick="lostpass()"  style='width:150px' >Olvide mi constrase&ntilde;a</div>
 							<?php
 						}else{
 							?><input type="submit" value="Ingresar" onkeypress=""/><?php
