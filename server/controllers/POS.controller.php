@@ -98,6 +98,7 @@ require_once("interfaces/POS.interface.php");
 		$s = ServiciosController::Buscar($query);
 		
 		foreach($s["resultados"] as $cliente){
+			if(!is_array($cliente)) $cliente = $cliente->asArray();
 			array_push( $out, array(
 				"texto" => $cliente["nombre_servicio"],
 				"id" => $cliente["id_servicio"],
