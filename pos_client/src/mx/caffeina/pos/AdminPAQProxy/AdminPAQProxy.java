@@ -748,6 +748,8 @@ class LoadClientes {
      */
     public LoadClientes(String params) {
 
+        System.out.println("Estoy en LoadClientes");
+
         int start = Integer.parseInt(searchInQuery("start"));
         int limit = Integer.parseInt(searchInQuery("limit"));
 
@@ -758,6 +760,9 @@ class LoadClientes {
           try {
              // Apertura del fichero y creacion de BufferedReader para poder
              // hacer una lectura comoda (disponer del metodo readLine()).
+
+            System.out.println("Abriendo archivo : C:\\Caffeina\\Files\\CteProv.txt");
+
              archivo = new File ("C:\\Caffeina\\Files\\CteProv.txt");
              fr = new FileReader (archivo);
              br = new BufferedReader(fr);
@@ -860,7 +865,10 @@ class WriteClientes {
                 fichero = new FileWriter("C:\\Caffeina\\Files\\CteProv.txt");
                 pw = new PrintWriter(fichero);
 
+                System.out.println("aux = " + aux);
+
                 while (aux != null) {
+                    System.out.println("aux = " + aux);
                     pw.println(aux);
                     aux = br.readLine();
                 }                    
