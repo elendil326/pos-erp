@@ -1,28 +1,24 @@
 <?php
 
-
 class GerenciaComponentPage extends PosComponentPage{
 
 	private $main_menu_json;
 
 	function __construct( $title = "Gerencia"){
 		
-
-		
 		parent::__construct( $title );
 
 		//check for user login status
 		if(SesionController::isLoggedIn() === FALSE){
-			
+
 			$a = explode("/", $_SERVER["SCRIPT_NAME"]);
-			
+
 			die(header("Location: ../?next_url=" . $a[sizeof($a)-1]));
 		}
-		
+
 		$this->createMainMenu();
-		
+
 		return;
-		
 	}
 
 	private function createMainMenu()	{
@@ -113,12 +109,12 @@ class GerenciaComponentPage extends PosComponentPage{
 		            "url": "documentos.php",
 		            "children": [
 		                {
-		                        "title" : "Lista",
-		                        "url"   : "documentos.php"
+		                        "title" : "Nuevo documento",
+		                        "url"   : "documentos.nuevo.php"
 		                },
 		                {
-		                        "title" : "Nuevo",
-		                        "url"   : "documentos.nuevo.php"
+		                        "title" : "Buscar",
+		                        "url"   : "documentos.lista.php"
 		                }
 		            ]
 		        },
@@ -1015,13 +1011,10 @@ class GerenciaComponentPage extends PosComponentPage{
 
 		$u = UsuarioDAO::getByPK($s["id_usuario"]);
 
-
 		?>
-
 			<a class="l" href="./c.php">Configuracion</a>
 			<a class="l" href="./helper.php">Ayuda</a>
 			<a class="l">(<?php echo $u->getNombre(); ?>)</a>
-
 			<a class="l" href="./../?cs=1"> Salir</a>
 		<?php
 	}
@@ -1063,13 +1056,11 @@ class GerenciaComponentPage extends PosComponentPage{
 							echo "</li>";
 							echo "</ul>";
 						}
-
-					}										
+					}
 				}
 
 
 				echo "</li>";
-
 			}
 			return 1;
 			################ Main Menu ################
@@ -1090,10 +1081,6 @@ class GerenciaComponentPage extends PosComponentPage{
 	}
 	*/
 }
-
-
-
-
 
 
 

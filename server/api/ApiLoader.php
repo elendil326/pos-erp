@@ -1,7 +1,5 @@
 <?php 
 
-
-
   class ApiSesionIniciar extends ApiHandler {
   
 
@@ -5762,6 +5760,184 @@
   
   
 
+  class ApiPosBdRestaurarBdEspecifica extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"id_instancia" => new ApiExposedProperty("id_instancia", true, POST, array( "int" )),
+			"time" => new ApiExposedProperty("time", true, POST, array( "int" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = POSController::EspecificaBdRestaurarBd( 
+ 			
+			
+			isset($_POST['id_instancia'] ) ? $_POST['id_instancia'] : null,
+			isset($_POST['time'] ) ? $_POST['time'] : null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiPosBdRespaldarInstanciasBd extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"instance_ids" => new ApiExposedProperty("instance_ids", true, POST, array( "json" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = POSController::BdInstanciasRespaldarBd( 
+ 			
+			
+			isset($_POST['instance_ids'] ) ? json_decode($_POST['instance_ids']) : null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiPosBdRestaurarInstanciasBd extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"instance_ids" => new ApiExposedProperty("instance_ids", true, POST, array( "json" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = POSController::BdInstanciasRestaurarBd( 
+ 			
+			
+			isset($_POST['instance_ids'] ) ? json_decode($_POST['instance_ids']) : null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiPosBdDescargarInstanciasBd extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"instance_ids" => new ApiExposedProperty("instance_ids", true, POST, array( "json" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = POSController::BdInstanciasDescargarBd( 
+ 			
+			
+			isset($_POST['instance_ids'] ) ? json_decode($_POST['instance_ids']) : null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiPosConfiguracionDecimales extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"cambio" => new ApiExposedProperty("cambio", true, POST, array( "int" )),
+			"cantidades" => new ApiExposedProperty("cantidades", true, POST, array( "int" )),
+			"costos" => new ApiExposedProperty("costos", true, POST, array( "int" )),
+			"ventas" => new ApiExposedProperty("ventas", true, POST, array( "int" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = POSController::DecimalesConfiguracion( 
+ 			
+			
+			isset($_POST['cambio'] ) ? $_POST['cambio'] : null,
+			isset($_POST['cantidades'] ) ? $_POST['cantidades'] : null,
+			isset($_POST['costos'] ) ? $_POST['costos'] : null,
+			isset($_POST['ventas'] ) ? $_POST['ventas'] : null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiPosBdBorrarRespaldo extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"id_instacia" => new ApiExposedProperty("id_instacia", true, POST, array( "int" )),
+			"time" => new ApiExposedProperty("time", true, POST, array( "int" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = POSController::RespaldoBorrarBd( 
+ 			
+			
+			isset($_POST['id_instacia'] ) ? $_POST['id_instacia'] : null,
+			isset($_POST['time'] ) ? $_POST['time'] : null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
   class ApiDocumentoBuscar extends ApiHandler {
   
 
@@ -5804,6 +5980,7 @@
 			"json_impresion" => new ApiExposedProperty("json_impresion", true, POST, array( "json" )),
 			"nombre" => new ApiExposedProperty("nombre", true, POST, array( "string" )),
 			"activo" => new ApiExposedProperty("activo", false, POST, array( "bool" )),
+			"extra_params" => new ApiExposedProperty("extra_params", false, POST, array( "json" )),
 			"foliado" => new ApiExposedProperty("foliado", false, POST, array( "json" )),
 			"id_empresa" => new ApiExposedProperty("id_empresa", false, POST, array( "int" )),
 			"id_sucursal" => new ApiExposedProperty("id_sucursal", false, POST, array( "int" )),
@@ -5818,6 +5995,7 @@
 			isset($_POST['json_impresion'] ) ? json_decode($_POST['json_impresion']) : null,
 			isset($_POST['nombre'] ) ? $_POST['nombre'] : null,
 			isset($_POST['activo'] ) ? $_POST['activo'] :  1 ,
+			isset($_POST['extra_params'] ) ? json_decode($_POST['extra_params']) : null,
 			isset($_POST['foliado'] ) ? json_decode($_POST['foliado']) : null,
 			isset($_POST['id_empresa'] ) ? $_POST['id_empresa'] :  null,
 			isset($_POST['id_sucursal'] ) ? $_POST['id_sucursal'] :  null
@@ -8095,6 +8273,34 @@
  		$this->response = AlmacenesController::BuscarLote( 
  			
 		
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiFormasPdfGenerico extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"formato" => new ApiExposedProperty("formato", true, POST, array( "json" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = FormasPreimpresasController::GenericoPdf( 
+ 			
+			
+			isset($_POST['formato'] ) ? json_decode($_POST['formato']) : null
 			
 			);
 		}catch(Exception $e){

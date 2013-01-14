@@ -1,9 +1,6 @@
 <?php
+
 require_once("interfaces/Documentos.interface.php");
-
-
-
-
 
 /**
   *
@@ -12,10 +9,8 @@ require_once("interfaces/Documentos.interface.php");
   **/
 	
   class DocumentosController implements IDocumentos{
-  
-  
-  	private static function GetUsuarioArray($id_usuario){
 
+  	private static function GetUsuarioArray($id_usuario){
 
 		$result = UsuarioDAO::getByPK( $id_usuario )->asArray();
 
@@ -304,17 +299,13 @@ Update : Falta especificar si seria una factura detallada (cuando en los concept
 		$id_venta
 	){
 
-
 	}
 
-  
-  
-  
-	
-  
+
+
 	/**
- 	 *
- 	 *Imprime una factura
+	 *
+	 *Imprime una factura
 Update : La respuesta solo deber?a de contener success :true | false, y en caso de error, su descripcion, no se necesita apra anda en el JSON de respuesta una propiedad factura.
  	 *
  	 * @param id_folio int Id de la factura que se desea imprimir.
@@ -328,11 +319,19 @@ Update : La respuesta solo deber?a de contener success :true | false, y en caso 
 
 	}
 
-  
-  
-  
-	
-  
+
+
+	/**
+	  * crear una nuva instancia de un documento base
+	  */
+	public static function NuevaInstancia(){
+
+
+
+	}
+
+
+
 	/**
  	 *
  	 *Crea un nuevo documento.
@@ -350,7 +349,8 @@ Update : La respuesta solo deber?a de contener success :true | false, y en caso 
 	(
 		$json_impresion, 
 		$nombre, 
-		$activo =  1 , 
+		$activo =  1 ,
+		$extra_params = null, 
 		$foliado = null, 
 		$id_empresa = null, 
 		$id_sucursal = null
@@ -360,8 +360,6 @@ Update : La respuesta solo deber?a de contener success :true | false, y en caso 
 			throw new InvalidDataException("El json de impresion no es valido.");
 		}
 
-
-
 		$q = DocumentoBaseDAO::search( new DocumentoBase( array( "nombre" => $nombre ) ) );
 
 		if(sizeof($q) > 0 ) throw new InvalidDataException("Ya existe un documento con este nombre.");
@@ -370,26 +368,54 @@ Update : La respuesta solo deber?a de contener success :true | false, y en caso 
 		$nDoc->setJsonImpresion( json_encode($json_impresion));
 		$nDoc->setNombre($nombre);
 		$nDoc->setActivo($activo);
-		/* @TODO $nDoc->setFoliado($foliado); */
 		$nDoc->setIdEmpresa($id_empresa);
 		$nDoc->setIdSucursal($id_sucursal);
 		$nDoc->setUltimaModificacion(time());
 
-
-		
-
 		try{
-
 			DocumentoBaseDAO::save( $nDoc );
 
 		}catch(Exception $e){
 			throw new InvalidDatabaseOperationException ($e);
+
+		}
+
+		if ( !is_null($extra_params) ) {
+			for ( $i = 0; $i < sizeof($extra_params); $i++ ){
+
+				//test
+				if( !isset( $extra_params[$i]->obligatory ) ){
+					 $extra_params[$i]->obligatory = FALSE;
+				}
+
+				if( is_null( $extra_params[$i]->obligatory ) ){
+					 $extra_params[$i]->obligatory = FALSE;
+				}
+
+				$paramStruct = new ExtraParamsEstructura();
+				$paramStruct->setTabla("documento_base");
+				$paramStruct->setCampo( $nDoc->getIdDocumentoBase( ) );
+				$paramStruct->setTipo( $extra_params[$i]->type );
+				$paramStruct->setLongitud( 256 );
+				$paramStruct->setObligatorio($extra_params[$i]->obligatory );
+				$paramStruct->setCaption( $extra_params[$i]->desc );
+				$paramStruct->setDescripcion( $extra_params[$i]->desc  );
+
+				try{
+					ExtraParamsEstructuraDAO::save( $paramStruct  );
+
+				}catch(Exception $e){
+					Logger::error($e);
+					//DAO::transEnd();
+					throw new Exception( $e );
+
+				}
+			}
 		}
 
 
-		return array("id_documento_base" => $nDoc->getIdDocumentoBase() );
 
+		return array("id_documento_base" => $nDoc->getIdDocumentoBase() );
 	}
 
- 
-  }
+}

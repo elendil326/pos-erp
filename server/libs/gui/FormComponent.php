@@ -1,7 +1,6 @@
 <?php
 
-class FormComponent implements GuiComponent
-{
+class FormComponent implements GuiComponent {
 	protected $form_fields;
 	protected $submit_form;
 	protected $on_click;
@@ -14,21 +13,18 @@ class FormComponent implements GuiComponent
 	private $guiComponentId;
 	private $special_sort;
 	private $js_function;
-	
-	
-	
+
 	/**
 	 *
 	 *
 	 * */
-	public function __construct( )
-	{
+	public function __construct( ){
 		$this->send_to_api          = null;
 		$this->on_click             = null;
 		$this->submit_form          = null;
 		$this->send_to_api_callback = null;
 		$this->send_to_api_redirect = null;
-		
+
 		//defaults
 		$this->is_editable         = true;
 		$this->form_fields         = array();
@@ -39,8 +35,7 @@ class FormComponent implements GuiComponent
 
 		$this->guiComponentId = "_"  . (rand() + rand());
 	}
-	
-	
+
 	/**
 	 *
 	 *
@@ -110,13 +105,12 @@ class FormComponent implements GuiComponent
 	 * 
 	 * 
 	 * */
-	public function addField($id, $caption, $type, $value = "", $name = null)
-	{
-
+	public function addField($id, $caption, $type, $value = "", $name = null){
+		Logger::error("adding field " . $id);
 		array_push($this->form_fields, new FormComponentField($id, $caption, $type, $value, $name));
 		return true;
 	}
-	
+
 	/**
 	 * 
 	 * 
@@ -229,45 +223,35 @@ class FormComponent implements GuiComponent
 	 * 
 	 * 
 	 * */
-	function renderCmp()
-	{
-		
+	function renderCmp(){
+Logger::error("about to render");
 		$this->sortFields();
 
-		
-		$html = "";
-                
+Logger::error("after sortingr");
 
-		
-		if (!is_null($this->send_to_api) || !is_null($this->on_click))
-		{
+		$html = "";
+
+		if (!is_null($this->send_to_api) || !is_null($this->on_click)){
 			$html .= "<script>";
 			$html .= 'if(HtmlEncode===undefined){var HtmlEncode=function(a){var b=a.length,c=[];while(b--){var d=a[b].charCodeAt();if(d>127||d>90&&d<97){c[b]="&#"+d+";"}else{c[b]=a[b]}}return c.join("")}} ';
 			
-			
 			$html .= "\n\nvar ".$this->guiComponentId."obligatory = [];\n";
 
-			foreach ($this->form_fields as $f)
-			{
+			foreach ($this->form_fields as $f){
 				if ($f->obligatory){
 					$html .= $this->guiComponentId . "obligatory.push( '" . $this->guiComponentId . $f->id . "' );\n";
 				}
-					
 			}
-			
+
 			$html .= "\nfunction ". $this->guiComponentId ."getParams(){\n";
 			$html .= "\tvar ". $this->guiComponentId ."p = {};\n";
 			$html .= "\tvar ". $this->guiComponentId ."found = false;\n";
 
-			for ($i = 0; $i < sizeof($this->form_fields); $i++)
-			{
+			for ($i = 0; $i < sizeof($this->form_fields); $i++){
 				$f = $this->form_fields[$i];
-				
-				if ($f->hidden === true)
-				{
 
-					if ($f->send_as_hidden === true)
-					{
+				if ($f->hidden === true){
+					if ($f->send_as_hidden === true){
 						$html .= "\t". $this->guiComponentId ."p." . $f->id . " = " . $f->value . ";\n";
 					}
 					continue;
@@ -280,7 +264,7 @@ class FormComponent implements GuiComponent
 
 				if($f->type == "date"){
 					$html .= "\n\t\t". $this->guiComponentId ."p." . $f->id . " = ( Ext.getCmp('". $this->guiComponentId . $f->id . "').getValue() ); \n\t} else{\n ";
-					
+
 				}else{
 					$html .= "\n\t\t". $this->guiComponentId ."p." . $f->id . " = HtmlEncode( Ext.get('". $this->guiComponentId . $f->id . "').getValue() ); \n\t} else{\n ";
 
@@ -297,33 +281,23 @@ class FormComponent implements GuiComponent
 				$html .= "\t}\n";
 				
 			}
-			
-			
-			
-			if(is_null($this->js_function)){
 
+			if(is_null($this->js_function)){
 				if(is_null($this->on_click)){
 					$html .= "	if(!".$this->guiComponentId."found){ ". $this->guiComponentId ."sendToApi( ". $this->js_function . "(" . $this->guiComponentId."p ) ); }else{console.log('you have missing data');}\n";					
 				}else{
 					//$html .= "	if(!".$this->guiComponentId."found){ ". $this->on_click["function"] ."(" . $this->guiComponentId."p  ); }else{console.log('you have missing data');}\n";
 					$html .= "return {}";
 				}
-				
-				
-				
+
 			}else{
 				$html .= "	if(!".$this->guiComponentId."found){ ". $this->guiComponentId ."sendToApi( ". $this->js_function . "(" . $this->guiComponentId."p ) ); }else{console.log('you have missing data');}\n";
+
 			}
 
-
-			
 			$html .= "}\n\n";
-			
-			
-			
+
 			if(!is_null($this->send_to_api) ){
-				
-			
 				$html .= "function ". $this->guiComponentId ."sendToApi( params ){\n";
 				$html .= "	POS.API." . $this->send_to_api_http_method . "(\"" . $this->send_to_api . "\", params, \n";
 				$html .= "	{\n";
@@ -332,12 +306,8 @@ class FormComponent implements GuiComponent
 				$html .= "			/* remove unload event */\n";
 				$html .= "			window.onbeforeunload = function(){ return;	};\n";
 			
-			
-			
 				if (!is_null($this->send_to_api_callback))
 					$html .= "			" . $this->send_to_api_callback . "( a );";
-			
-			
 			
 				if (!is_null($this->send_to_api_redirect)){
 					$html .= "var extra_params= '' ; ";
@@ -374,78 +344,58 @@ class FormComponent implements GuiComponent
 		}
 		
 		$html .= "<table width=100%>";
-		
-		if (!is_null($this->submit_form))
-		{
+
+		if (!is_null($this->submit_form)){
 			$html .= "<form method='" . $this->submit_form["method"] . "' action='" . $this->submit_form["submit_form_url"] . "'>";
-			
-		}
-		else
-		{
+
+		}else{
 			$html .= "<form >";
-			
+
 		}
 		
 		$new_row = 0;
 		$html .= "<tr>";
 		$n_fields = 0;
-		
-		foreach ($this->form_fields as $f)
-		{
+
+		foreach ($this->form_fields as $f){
+			Logger::error($f->type);
 			if ($f->hidden)
 				continue;
 
 			$n_fields ++;
+
 			//incrementar el calculo de la fila actual
 			$new_row++;
-			
-			
-			if ($f->type !== "hidden")
-			{
 
-				if (($f->obligatory === false) && ($this->hide_not_obligatory))
-				{
+			if ($f->type !== "hidden"){
+				if (($f->obligatory === false) && ($this->hide_not_obligatory)){
 					$html .= "<td style='display:none' class='hideable'>";
-				}
-				else
-				{
+				}else{
 					$html .= "<td>";
 				}
 				
 				//if(($f->obligatory === false) && ($this->hide_not_obligatory)) {
-				if ($f->obligatory)
-				{
+				if ($f->obligatory){
 					$html .= "<b>";
-					
-				}
-				else
-				{
+
+				}else{
 					//$html .= "<div style='display:block' class='hideable'>";
-					
+
 				}
-				
+
 				$html .= $f->caption;
 
-				
-				
-				if ($f->obligatory === true)
-				{
+				if ($f->obligatory === true){
 					$html .= "</b>";
-				}
-				else
-				{
+				}else{
 					//$html .= "</div>";
 				}
-				
+
 				$html .= "<div style='color:gray;font-size:-2px'>" . $f->help . "</div>";
-								
-				if (($f->obligatory === false) && ($this->hide_not_obligatory))
-				{
+
+				if (($f->obligatory === false) && ($this->hide_not_obligatory)){
 					$html .= "</td><td style='display:none' class='hideable'>";
-				}
-				else
-				{
-					
+				}else{
 					$t = 0;
 					for ( $i=0 ; $i < sizeof($this->form_fields); $i++) { 
 						if( $this->form_fields[$i]->hidden ) continue;
@@ -455,30 +405,19 @@ class FormComponent implements GuiComponent
 						$html .= "</td><td colspan=4>";
 						
 					}else{
-						$html .= "</td><td >";						
+						$html .= "</td><td >";
 					}
-
 				}
-			}
-			
-			
-			
-			switch ($f->type)
-			{
-				//
+			}//hidden
+
+			switch ($f->type){
 				// Combo boxes
-				// 
 				case "combo":
 					$html .= "<select id='" . $this->guiComponentId  . $f->id . "'";
 
 					if ($this->is_editable === false){
-						
 						$html .= " disabled='disabled' ";
-						//break;
 					}
-
-					
-					
 
 					$html .= ">";
 					$html .= "<option value=''>------------</option>";
@@ -496,18 +435,12 @@ class FormComponent implements GuiComponent
 					$html .= "</select>";
 					
 					break;
-				
-				//
 				// List boxes
-				//             
 				case "listbox":
 					$html .= "<select multiple='true' id='" . $this->guiComponentId . $f->id . "' name='" . $f->name . "'>";
-					
-					foreach ($f->value as $o)
-					{
+					foreach ($f->value as $o){
 						$html .= "<option value='" . $o["id"] . "'>" . $o["caption"] . "</option>";
 					}
-					
 					
 					$html .= "</select>";
 				break;
@@ -533,42 +466,34 @@ class FormComponent implements GuiComponent
 						}
 						$html .= "<textarea placeholder='$ph' style='width:100%' id='" . $this->guiComponentId  . $f->id . "' name='" . $f->name . "' rows=5 cols=auto>".$f->value."</textarea>";
 					}
-					break;
-
-                 case "date":                                                                            
-                     
-                         $id_datefield = $this->guiComponentId . $f->id ; //"date_" . (rand() + rand());
-                     
-                         $html .= "<div id = \"{$id_datefield}\"></div>";            
-                         $html .= "<script>";
-                         $html .= "store_component.addExtComponent(";
-                         $html .= "  Ext.create('Ext.form.field.Date',{  \n";       
-                         $html .= "      anchor: '100%',  \n";
-                         $html .= "      name: '" . $id_datefield . "',  \n";
-                         $html .= "      id: '" . $id_datefield . "',  \n";
-                         $html .= "      value: new Date()  \n";                                        
-                         $html .= "  }), '{$id_datefield}' \n";
-                         $html .= ");";
-                         
-                         $html .= "</script>";
-                     
-                break;
-				case "password":
-				
-					$html .= "<input placeholder='Contrasena' id='" . $this->guiComponentId . $f->id . "' name='" . $f->name . "' value='" . $f->value . "' type='password' >";
-					
 				break;
-				//
-				// Everything else
-				// 
-				default:
-					if ($this->is_editable === false)
-					{
+
+				case "date":
+					$id_datefield = $this->guiComponentId . $f->id ; //"date_" . (rand() + rand());
+					$html .= "<div id = \"{$id_datefield}\"></div>";
+					$html .= "<script>";
+          $html .= "store_component.addExtComponent(";
+					$html .= "  Ext.create('Ext.form.field.Date',{  \n";
+					$html .= "      anchor: '100%',  \n";
+					$html .= "      name: '" . $id_datefield . "',  \n";
+					$html .= "      id: '" . $id_datefield . "',  \n";
+					$html .= "      value: new Date()  \n";
+					$html .= "  }), '{$id_datefield}' \n";
+					$html .= ");";
+					$html .= "</script>";
+				break;
+
+				case "password": Logger::error("pas");
+					$html .= "<input placeholder='Contrasena' id='" . $this->guiComponentId . $f->id . "' name='" . $f->name . "' value='" . $f->value . "' type='password' >";
+
+				break;
+
+				case 'text':
+				case 'string':
+					if ($this->is_editable === false){
 						//$html .= "<input id='" . $f->id .  "' name='" . $f->name .  "' value='" . $f->value .  "' type='". $f->type ."' >";
 						$html .= $f->value;
-					}
-					else
-					{	
+					}else{
 						if(is_null($f->placeholder)){
 							$ph = "";
 						}else{
@@ -576,41 +501,38 @@ class FormComponent implements GuiComponent
 						}
 						$html .= "<input placeholder='$ph' id='" . $this->guiComponentId . $f->id . "' name='" . $f->name . "' value='" . $f->value . "' type='" . $f->type . "' >";
 					}
-			}
-			
-			
-			
-			
-			if ($f->type !== "hidden")
-			{
+				break;
+
+				default:
+					Logger::error("type not found");
+					throw new Exception($f->type . " is not recognized by the form creator" );
+			}//switch
+
+			if ($f->type !== "hidden"){
 				$html .= "</td>";
 			}
-			
-			if ($new_row == 2)
-			{
+
+			if ($new_row == 2){
 				//esta por terminarse
-				
 				$html .= "</tr><tr>";
 				$new_row = 0;
 			}
-		}
-		
+
+		}//foreach
+
 		$html .= "</tr><tr>";
-		
+
 		//action buttons
 		$html .= "<td></td><td></td>";
-		
-		
-		
-		if (!is_null($this->submit_form))
-		{
+
+		if (!is_null($this->submit_form)){
 			$html .= "<td align=right style='background-color: #EDEFF4;-webkit-border-radius: 5px;'>";
 			$html .= "<input value='" . $this->submit_form["caption"] . "' type='submit'  >";
 			$html .= "</td></tr>";
 		}
 		
 		if (!is_null($this->on_click))
-		{
+{
 			$html .= "<td align=right colspan=2 style='background-color: #EDEFF4;-webkit-border-radius: 5px;'>";
 			if (($this->hide_not_obligatory))
 			{
@@ -881,10 +803,6 @@ class FormComponent implements GuiComponent
 							));
 						}
 					}
-					
-					
-					
-					
 				}
 				
 				$this->form_fields[$i]->value = $end_values;

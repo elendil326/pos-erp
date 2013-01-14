@@ -9,11 +9,6 @@
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
-
---
--- Database: `pos_instance_80`
---
-
 -- --------------------------------------------------------
 
 --
@@ -776,7 +771,7 @@ CREATE TABLE IF NOT EXISTS `extra_params_estructura` (
   `id_extra_params_estructura` int(11) NOT NULL AUTO_INCREMENT,
   `tabla` varchar(16) COLLATE utf8_spanish_ci NOT NULL,
   `campo` varchar(16) COLLATE utf8_spanish_ci NOT NULL,
-  `tipo` enum('string','int','float','bool','date') COLLATE utf8_spanish_ci NOT NULL,
+  `tipo` enum('text','textarea', 'combo', 'password', 'string','int','float','bool','date') COLLATE utf8_spanish_ci NOT NULL,
   `longitud` int(11) NOT NULL,
   `obligatorio` tinyint(1) NOT NULL,
   `caption` varchar(32) COLLATE utf8_spanish_ci NOT NULL,
