@@ -483,7 +483,7 @@ public class AdminPAQProxy extends HttpResponder{
         
         params = URLDecoder.decode(path) + "\\Lista_Clientes_SDK\\InitListaClientes.EXE " + numEmpresa + " " + "1500"; 
         
-        System.out.println("Llamando a WriteClientes");
+        System.out.println("Llamando a WriteClientes con los parametros : " + params);
         WriteClientes clientes = new WriteClientes(params);
         
         
