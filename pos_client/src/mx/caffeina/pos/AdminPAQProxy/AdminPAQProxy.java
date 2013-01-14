@@ -509,6 +509,8 @@ public class AdminPAQProxy extends HttpResponder{
         String path = searchInQuery("path") + "/Lista_Clientes_SDK/InitListaClientes.EXE";
         params = path + " " + numEmpresa + " " + "1500";
 
+        System.out.println("Estoy en loadCteProv : se enviara como parametros : " + params);
+
         LoadClientes clientes = new LoadClientes(params);
 
 
