@@ -483,7 +483,7 @@ public class AdminPAQProxy extends HttpResponder{
         
         params = URLDecoder.decode(path) + "\\Lista_Clientes_SDK\\InitListaClientes.EXE " + numEmpresa + " " + "1500"; 
         
-
+        System.out.println("Llamando a WriteClientes");
         WriteClientes clientes = new WriteClientes(params);
         
         
@@ -825,7 +825,8 @@ class WriteClientes {
      * Creates a new instance of PruebaRuntime
      */
     public WriteClientes(String params) {
-        
+
+        System.out.println("En constructor de WriteClientes");        
 
         try {
             // Se lanza el ejecutable. 
@@ -840,12 +841,12 @@ class WriteClientes {
              */
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
-            //System.out.println("--- 6.1 ---");
+            System.out.println("--- 6.1 ---");
 
             // Se lee la primera linea 
             String aux = br.readLine();
 
-            //System.out.println("--- 6.2 ---");
+            System.out.println("--- 6.2 ---");
 
             // Mientras se haya leido alguna linea 
 
@@ -853,6 +854,7 @@ class WriteClientes {
             PrintWriter pw = null;
             try
             {
+                System.out.println("Creando nuevo fichero C:\\Caffeina\\Files\\CteProv.txt");                
                 fichero = new FileWriter("C:\\Caffeina\\Files\\CteProv.txt");
                 pw = new PrintWriter(fichero);
 
