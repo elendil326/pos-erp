@@ -4,7 +4,6 @@
 #include <ctime>
 #include <sstream>
 
-
 using namespace std;
 using namespace mysqlpp;
 
@@ -16,10 +15,6 @@ using namespace mysqlpp;
 #define MISSING_ARGUMENT 	5
 #define NOT_FOUND			6
 #define NO_REDIS			7
-
-
-
-
 
 class HttpResponse{
 
@@ -70,10 +65,6 @@ class HttpResponse{
 };
 
 
-
-
-
-
 template <class T>
 inline std::string to_string (const T& t)
 {
@@ -83,46 +74,32 @@ inline std::string to_string (const T& t)
 }
 
 
-
-
-
 char **argss;
 int nargss;
 
-
-
-int split_ocurrences ( string s , char c)
-{
+int split_ocurrences ( string s , char c){
 	int found = 0;
 	for (int i = 0; i < s.length(); ++i)
-	{
-		if(s[i] == c)
-		{
+		if(s[i] == c){
 			found++;
 		}
 	}
 	return found + 1;
 }
 
-
-
-string *  split (string s, char c){
-
+string *  split ( string s, char c ) {
 	int found = split_ocurrences(s, c);
-
 	string * res  = new string[found];
 	int start = 0;
 	int current = 0;
 	int i;
 
-	for ( i = 0; i < s.length() ; ++i)
-	{
-		
-		if( s[i] == c )
-		{
-			if(i == 0) {
+	for ( i = 0; i < s.length() ; ++i){
+		if( s[i] == c ){
+
+			if(i == 0){
 				start++;
-				continue;	
+				continue;
 			}
 
 			res[current] = s.substr( start, i - start );
@@ -596,23 +573,16 @@ public:
 };
 
 
-
-
-
-
-
 class ContactsController{
 
-	private:
+private:
 		ContactsController(){
 
 		};
 
-
-	public:
-		static void getOnlineContacts(){
+public:
+		static void getOnlineContacts( ){
 			try{
-
 				Connection conn = DB::getInstanceConn("laskdfj");
 
 				Query query = conn.query();
@@ -665,36 +635,16 @@ class ContactsController{
 				cout << "Error" << er.what() << endl;
 				//return 0;		
 
-			}		
+			}
 			
 		}
-
-
 };
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class ApiHandler{
-
-	private:
+private:
 	int testInstance(){
-
-		
-
 		string instance = _get("instance");
 
 		if(instance == "__________NULL"){
@@ -704,7 +654,7 @@ class ApiHandler{
 		if(!InstanceController::instanceExists(instance)){
 			HttpResponse::error(WRONG_INSTANCE);	
 		}
-		
+
 		//test auth token
 		string auth_token = _get("auth_token");
 
@@ -715,20 +665,12 @@ class ApiHandler{
 		if(!SesionController::isValidSesion(auth_token)){
 			HttpResponse::error(WRONG_AUTHTOKEN);
 		}
-
-
-
-
 	}
 
-	public:
-
+public:
 	void dispatch( string path ){
-
 		//look for global necesary params
 		testInstance();
-
-		
 
 		string * spath = split( path, '/' );
 		int spath_size = split_ocurrences(path, '/');
@@ -746,38 +688,16 @@ class ApiHandler{
 			return;
 		}
 
-		
-
 		HttpResponse::error(NOT_FOUND);
-
-
 	}
-
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 int main( int nargs, char **args ){
-
 	argss = args;
 	nargss = nargs;
 
-
 	HttpResponse::bootstrap();
-	
+
 
 	/*
 	redisContext *redis = redisConnect("127.0.0.1", 6379);
@@ -793,12 +713,7 @@ int main( int nargs, char **args ){
 
 
 	ApiHandler ah ;
-
 	ah.dispatch( header("PATH_INFO")  );
 
-
-	
-
 	return EXIT_SUCCESS;
-
 }

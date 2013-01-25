@@ -49,18 +49,25 @@ class SesionController implements ISesion
 	public static function Cerrar
 	(
 		$auth_token = null
-	)
-	{  
-		
-  		//Logger::log("Cerrando sesion para toek {$auth_token}...");
-		//Logger::warn("Falta borrar el token de la bd");
-	  	self::$_is_logged_in = null;
+	){
+		$s = SesionDAO::search( new Sesion( array( "auth_token" => $auth_token  )  ) );
+
+		if(sizeof($s) != 1){
+			//no existe este auth token
+		}
+	
+		try{
+			SesionDAO::delete( $s[0]  );
+		}catch(Exception $e){
+
+		}
+
+	
+		self::$_is_logged_in = null;
 		self::$_current_user = null;
 		$sm = SessionManager::getInstance();
 		$sm->SetCookie( 'at', 'deleted', 1, '/' );
-  		
 	}
-  
 
 	/**
 	 * Cerrar las sesiones que ya caducaron

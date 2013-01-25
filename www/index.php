@@ -5,20 +5,16 @@
 		require_once("../server/bootstrap.php");
 	}
 
-
-
 	if(isset($_POST["t"]) && ($_POST["t"] == "ajax_validation")){
-
 			$r = InstanciasController::validateDemo( $_POST["key"] );
 
 			echo json_encode($r);
-			
 			exit;
 	}
 
 ?><html>
 	<head>
-		<title>POS ERP</title>
+		<title>Caffeina POS ERP</title>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 		<link rel="stylesheet" type="text/css" href="media/main_site/s.css">
 	</head>
@@ -35,9 +31,9 @@
 	              <li class="home">
 					<img class="" style="width: 40px; float:left" src="media/main_site/caffeina-logo.png">
 	                <a href="http://caffeina.mx">
-	                  <span><i class="nav-home-logged-out"></i></span>
-	                </a>
-	              </li>
+					<span><i class="nav-home-logged-out"></i></span>
+					</a>
+	         	 </li>
 	            </ul>
 	            <div class="pull-right">
 	              <ul class="nav secondary-nav">
@@ -62,7 +58,7 @@
 			 	if(isset($_GET["t"])){
 					$t = $_GET["t"];
 				}else{
-					$t = "start";
+					$t = "signup";
 				}
 				
 				switch($t){ 
@@ -198,7 +194,7 @@
 				</tr>
 				</table>
 				<div style="margin-left: 130px; margin-bottom: 100px; margin-top:50px">
-					<h2><strong>Solicitar una instancia de 30 dias</strong></h2>
+					<h2><strong>Solicitar una instancia de prueba</strong></h2>
 					<form action="?t=thanks" class="signup" method="post">
 						<div class="placeholding-input">
 							<input type="text" class="text-input" autocomplete="off" name="email" maxlength="50" placeholder="Correo electronico">
@@ -242,14 +238,16 @@
 				<?php break; ?><!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 				<?php }?>
 
-
-
-
-
-
-
 	        <div class="footer" style="margin-top:0px;">
 
+<div align=center style="font-size: 19px">
+	<ul class="links">
+		<li><a href="sdk.php">SDK's</a> | </li>
+		<li><a href="sdk.php?l=java">Java</a> </li>
+		<li><a href="sdk.php?l=php">PHP</a> </li>
+		<li><a href='http://labs.caffeina.mx/public/apis/?repname=pos'>HTTP Rest API</a></li>
+	</ul>
+</div>
 	          <ul class="links">
 	            <li class="first">&copy; 2012 Caffeina Software |</li>
 	            <li><a href="http://www.caffeina.mx/">Acerca de caffeina</a></li>

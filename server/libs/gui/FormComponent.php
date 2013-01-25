@@ -259,7 +259,7 @@ Logger::error("after sortingr");
 				
 				///*(Ext.get('" . $f->id . "').getValue().length > 0 ) ||*/
 
-				//if(!is_array( $f->value)) 
+				if(!is_array( $f->value))
 					$html .= "\n\tif(  (Ext.get('" . $this->guiComponentId . $f->id . "').getValue() != '". $f->value ."') ){";
 
 				if($f->type == "date"){

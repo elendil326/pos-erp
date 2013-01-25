@@ -4,8 +4,7 @@
 
 	require_once("../../../server//bootstrap.php");
 
-	function funcion_cancelado( $cancelado )
-	{
+	function funcion_cancelado( $cancelado ){
 		return $cancelado ? "Cancelado" : "Activo" ;
 	}
 
@@ -78,18 +77,18 @@
 	$lista = CargosYAbonosController::ListaIngreso( );
 
 	$tabla = new TableComponent( array(
-				"id_ingreso"			=> "id_ingreso",
-				"id_empresa"	 		=> "id_empresa",
-				"id_usuario"			=> "id_usuario",
-				"id_concepto_ingreso"	=> "concpto",
-				"fecha_del_ingreso"		=> "fecha",
-				"monto"					=> "monto"
+//				"id_ingreso"			=> "Ingreso",
+				"id_empresa"	 		=> "Empresa",
+				"id_usuario"			=> "Usuario",
+				"id_concepto_ingreso"	=> "Concepto",
+				"fecha_del_ingreso"		=> "Fecha",
+				"monto"					=> "Monto"
 			),
 			$lista["resultados"]
 		);
-		
-		$tabla->addColRender( "cancelado", "funcion_cancelado" );
-		$page->addComponent( $tabla );
+
+	$tabla->addColRender( "cancelado", "funcion_cancelado" );
+	$page->addComponent( $tabla );
 
 	$page->addComponent( new TitleComponent( "Nuevo Ingreso" , 3 ) );
 
@@ -115,5 +114,17 @@
 	$form->addApiCall( "api/cargosyabonos/ingreso/nuevo", "POST" );
 	$form->renameField( array("fecha_del_ingreso" => "fecha_ingreso") );
 	$page->addComponent( $form );
+
+
+
+
+
+	$page->nextTab( "Conceptos" );
+
+		$form = new DAOFormComponent( new ConceptoIngreso() );
+		$form->addApiCall("api/cargosyabonos/ingreso/concepto/nuevo", "POST");
+		$form->hideField(array("id_concepto_ingreso"));
+		$form->makeObligatory( array( "nombre" ));
+		$page->addComponent( $form );
 
 	$page->render( );

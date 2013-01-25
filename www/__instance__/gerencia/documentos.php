@@ -1,24 +1,22 @@
 <?php 
 
+	define("BYPASS_INSTANCE_CHECK", false);
 
+	require_once("../../../server/bootstrap.php");
 
-		define("BYPASS_INSTANCE_CHECK", false);
+	$page = new GerenciaComponentPage();
 
-		require_once("../../../server/bootstrap.php");
+	$q = DocumentoBaseDAO::getAll();
 
-		$page = new GerenciaComponentPage();
-		
+	$tDocs = new  TableComponent(array(
+						"nombre" => "Nombre",
+						"activo" => "Activo",
+						"ultima_modificacion" => "ultima modificacion"
+					), $q);
 
-		$q = DocumentoBaseDAO::getAll();
+	$tDocs->addOnClick( "id_documento_base", "(function(a){ window.location = 'documentos.ver.php?dbid=' + a; })" );
+	$tDocs->addColRender( "ultima_modificacion", "FormatTime"  );
 
-		$tDocs = new  TableComponent(array(
-	  			"nombre" => "Nombre",
-	  			"activo" => "Activo",
-	  			"ultima_modificacion" => "ultima modificacion"
-			), $q);
+	$page->addComponent($tDocs);
 
-		$tDocs->addOnClick( "id_documento_base", "(function(a){ window.location = 'documentos.ver.php?dbid=' + a; })" );
-
-		$page->addComponent($tDocs);
-
-		$page->render();
+	$page->render();
