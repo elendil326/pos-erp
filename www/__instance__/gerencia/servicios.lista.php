@@ -1,40 +1,31 @@
-<?php 
+<?php
 
+	define("BYPASS_INSTANCE_CHECK", false);
 
+	require_once("../../../server/bootstrap.php");
 
-		define("BYPASS_INSTANCE_CHECK", false);
+	$page = new GerenciaComponentPage();
 
-		require_once("../../../server/bootstrap.php");
+	$page->addComponent( new TitleComponent( "Servicios" ) );
+	$page->addComponent( new MessageComponent( "Lista de servicios" ) );
+	
+	$r = ServiciosController::Buscar();
+	
+	$tabla = new TableComponent( 
+		array(
+			"codigo_servicio" => "Codigo de servicio",
+			"nombre_servicio" => "Nombre",
+			"metodo_costeo" => "Metodo de costeo",
+			"precio" => "Precio",
+			"activo" => "Activo"
+		),
+		$r["resultados"]
+	);
 
-		$page = new GerenciaComponentPage();
+	$tabla->addColRender("activo", "funcion_activo");
 
-		$page->addComponent( new TitleComponent( "Servicios" ) );
-		$page->addComponent( new MessageComponent( "Lista de servicios" ) );
-		
-		$r = ServiciosController::Buscar();
-		
-		$tabla = new TableComponent( 
-			array(
-				"codigo_servicio" => "Codigo de servicio",
-				"nombre_servicio" => "Nombre",
-				"metodo_costeo" => "Metodo de costeo",
-				"precio" => "Precio",
-				
-				"activo" => "Activo"
-			),
-			$r["resultados"]
-		);
-		
-                function funcion_activo( $activo )
-                {
-                    return ($activo) ? "Activo" : "Inactivo";
-                }
-                
-                $tabla->addColRender("activo", "funcion_activo");
-                
-		$tabla->addOnClick( "id_servicio", "(function(a){ window.location = 'servicios.ver.php?sid=' + a; })" );
-		
-			
-		$page->addComponent( $tabla );
-                
-		$page->render();
+	$tabla->addOnClick( "id_servicio", "(function(a){ window.location = 'servicios.ver.php?sid=' + a; })" );
+
+	$page->addComponent( $tabla );
+
+	$page->render();

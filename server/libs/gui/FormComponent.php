@@ -240,7 +240,11 @@ class FormComponent implements GuiComponent {
 				//if this  component is invisible, continue
 				if ($f->hidden === true){
 					if ($f->send_as_hidden === true) {
-						$html .= "\t". $this->guiComponentId ."p." . $f->id . " = " . $f->value . ";\n";
+						if(is_array($f->value)){
+							$html .= "\t". $this->guiComponentId ."p." . $f->id . " = null;\n";
+						}else{
+							$html .= "\t". $this->guiComponentId ."p." . $f->id . " = " . $f->value . ";\n";
+						}
 					}
 					continue;
 				}

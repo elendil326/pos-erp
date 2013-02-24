@@ -1300,20 +1300,20 @@ class ProductosController extends ValidacionesController implements IProductos
      * @param retenciones json Ids de retenciones que afectan esta clasificacion de productos
      * @return id_categoria int Id atogenerado por la insercion de la categoria
      **/
-    public static function NuevaCategoria($nombre, $descripcion = null, $id_categoria_padre = null)
-    {
-        Logger::log("Creando nueva categoria `$nombre`");
+    public static function NuevaCategoria($nombre, $descripcion = null, $id_categoria_padre = null) {
 
 		if( sizeof( $r = ClasificacionProductoDAO::search(new ClasificacionProducto(array( "nombre" => $nombre )))) > 0){
-
 			throw new BusinessLogicException("El nombre $nombre esta repetido");
 		}
-        
-		if(!is_null($id_categoria_padre))
-		{	
-			$clasificacion_producto = ClasificacionProductoDAO::getByPK($id_categoria_padre);
-		   	if (is_null($clasificacion_producto))
-		   		return "La clasificacion de producto (categoria padre) con id " . $id_categoria_padre . " no existe";
+
+		$clasificacion_padre_producto = NULL;
+
+		if( !is_null( $id_categoria_padre ) && ( strlen( $id_categoria_padre ) > 0 ) ) {
+			$clasificacion_padre_producto = ClasificacionProductoDAO::getByPK( $id_categoria_padre );
+			if(is_null($clasificacion_padre_producto)) {
+				throw new Exception("La clasificacion de producto (categoria padre) con id " . $id_categoria_padre . " no existe", 1);
+			}
+
 		}
 
         //se validan los parametros obtenidos
@@ -1323,21 +1323,21 @@ class ProductosController extends ValidacionesController implements IProductos
             throw new Exception($validar);
         } //is_string($validar)
         */
+
         //Se inicializa el registro
         $clasificacion_producto = new ClasificacionProducto(array(
             "nombre" => trim($nombre),
             "descripcion" => $descripcion,
-            "id_categoria_padre" => $id_categoria_padre,
+            "id_categoria_padre" => $clasificacion_padre_producto,
             "activa" => 1
         ));
+
         //Se guarda la nueva clasificacion. Si se reciben impuesto y/o retenciones, se crean los registros correspondientes
         DAO::transBegin();
         try {
             ClasificacionProductoDAO::save($clasificacion_producto);
 
-        }
-        /* Fin try */
-        catch (Exception $e) {
+        }catch (Exception $e) {
             DAO::transRollback();
             Logger::error("No se ha podido guardar la nueva clasificacion: " . $e);
             if ($e->getCode() == 901)
@@ -2201,18 +2201,9 @@ class ProductosController extends ValidacionesController implements IProductos
             /*Logger::log("there is extra param at $i => " . $head[ $i ] );*/
         }
 
-            
-            
-
-        
         $iteraciones = sizeof($data) / $soh;
 
-        /*var_dump($indices);
-        var_dump($head);
-        var_dump($data);*/
-
-        Logger::log("soh=" . $soh . " , sod=" . sizeof($data) . " , " . " it=" . $iteraciones);
-        
+        //Logger::log("soh=" . $soh . " , sod=" . sizeof($data) . " , " . " it=" . $iteraciones);
 
         $i = 0;
 
