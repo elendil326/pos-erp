@@ -8,13 +8,13 @@ class ReporteComponent implements GuiComponent{
 	private $indexes;
 	private $missingDays;
 	private $fechas;
-	
 	private $dateStart;
 	private $acumulado;
 	private $random_id;
 	private $yFormater;
+	private $debug;
 	
-	function __construct(){
+	function __construct( ) {
 		$this->timelines = array();
 		$this->timelines_draw_acumulable = array();
 		$this->titles = array();
@@ -25,11 +25,17 @@ class ReporteComponent implements GuiComponent{
 		$this->acumulado = array();
 		$this->random_id = rand();
 		$this->yFormater = "";
+
+		$this->debug = false;
 	}
-	
-	
-	
-	public function agregarMuestra( $title, $data, $acumulable = false ){
+
+	/**
+	  *
+	  * @param title
+	  * @param data 
+	  * @param acumulable
+	  **/
+	public function agregarMuestra( $title, $data, $acumulable = false ) {
 		array_push( $this->indexes, 0 );
 		array_push( $this->missingDays, 0 );
 		array_push( $this->titles, $title );
@@ -37,7 +43,7 @@ class ReporteComponent implements GuiComponent{
 		array_push( $this->timelines_draw_acumulable, $acumulable );
 	}
 	
-	public function setEscalaEnY($e){
+	public function setEscalaEnY($e) {
 		$this->yFormater = $e;
 	}
 	
@@ -47,49 +53,55 @@ class ReporteComponent implements GuiComponent{
 	
 	private function logData(){
 		$foo = "";
-		for ($i=0; $i < sizeof($this->timelines[0]); $i++) { 
+		for ($i=0; $i < sizeof($this->timelines[0]); $i++) {
 			$foo .= $this->timelines[0][$i]["fecha"] . " ( ". $this->timelines[0][$i]["value"] ." ) | ";
 		}
-		//Logger::log($foo);
-		
 	}
 	
 	public function renderCmp(  ){
-		$title = "ASDF";
+		$title = "Grafica";
 		$this->logData();
 		$this->fillEmptySpaces();
-		$this->writeJavascriptAndHTML($title);		
+		$this->writeJavascriptAndHTML($title);
 	}
 	
 	private function sortByDates(){
 		
 	}
-	private function buscar($timelineNumber, $day){
+
+	/**
+	  * Buscar el numero de dias en un timeline
+	  *
+	  * @param timelineNumber
+	  * @param day
+	  **/
+	private function buscar( $timelineNumber, $day ) {
 		$out = array();
-		for ($st=0; $st < sizeof( $this->timelines[$timelineNumber] ); $st++) { 
-			//Logger::log($day . "|" . date("Y-m-d", strtotime($this->timelines[$timelineNumber][$st]["fecha"])));
-			if( date("Y-m-d", strtotime($this->timelines[$timelineNumber][$st]["fecha"]))  == $day){
+		for( $st=0; $st < sizeof( $this->timelines[$timelineNumber] ); $st++ ) {
+			if ($this->timelines[$timelineNumber][$st]["fecha"] == "missing_day" ) continue;
+			if( date("Y-m-d", strtotime( $this->timelines[$timelineNumber][$st]["fecha"])) == $day){
 				array_push($out, $this->timelines[$timelineNumber][$st]);
 			}
 		}
 		return $out;
 	}
+
 	private function writeJavascriptAndHTML( $title ){
 
 		$id = str_replace(" ", "_", $title);
-		
+
 		?>
 		<script type="text/javascript" charset="utf-8">
 			function meses(m){m=parseFloat(m);switch(m){case 1:return"enero";case 2:return"febrero";case 3:return"marzo";case 4:return"abril";case 5:return"mayo";case 6:return"junio";case 7:return"julio";case 8:return"agosto";case 9:return"septiembre";case 10:return"octubre";case 11:return"noviembre";case 12:return"diciembre";}}
 		</script>
 		<script type="text/javascript" charset="utf-8" src="http://api.caffeina.mx/prototype/prototype.js"></script>
-		<script src="../../../frameworks/humblefinance/flotr/flotr.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../../../frameworks/humblefinance/flotr/excanvas.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../../../frameworks/humblefinance/flotr/canvastext.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../../../frameworks/humblefinance/flotr/canvas2image.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../../../frameworks/humblefinance/flotr/base64.js" type="text/javascript" charset="utf-8"></script>
-		<script type="text/javascript" charset="utf-8" src="../../../frameworks/humblefinance/humble/HumbleFinance.js"></script>
-		<link rel="stylesheet" href="../../../frameworks/humblefinance/humble/finance.css" type="text/css" media="screen" title="no title" charset="utf-8">
+		<script src="http://pos.caffeina.mx/frameworks/humblefinance/flotr/flotr.js" type="text/javascript" charset="utf-8"></script>
+		<script src="http://pos.caffeina.mx/frameworks/humblefinance/flotr/excanvas.js" type="text/javascript" charset="utf-8"></script>
+		<script src="http://pos.caffeina.mx/frameworks/humblefinance/flotr/canvastext.js" type="text/javascript" charset="utf-8"></script>
+		<script src="http://pos.caffeina.mx/frameworks/humblefinance/flotr/canvas2image.js" type="text/javascript" charset="utf-8"></script>
+		<script src="http://pos.caffeina.mx/frameworks/humblefinance/flotr/base64.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8" src="http://pos.caffeina.mx/frameworks/humblefinance/humble/HumbleFinance.js"></script>
+		<link rel="stylesheet" href="http://pos.caffeina.mx/frameworks/humblefinance/humble/finance.css" type="text/css" media="screen" title="no title" charset="utf-8">
 		
 		<h2><?php echo $title; ?></h2>
 		
@@ -99,10 +111,6 @@ class ReporteComponent implements GuiComponent{
 
 		    <?php
 			$GRAFICAS_ACUMULATIVAS = false;
-			Logger::log("rendering...");
-
-
-
 
 			echo "var fechas".$this->random_id . " = [";
 			for($i = 0; $i < sizeof($this->fechas); $i++ ){
@@ -113,22 +121,20 @@ class ReporteComponent implements GuiComponent{
 			}
 			echo "];\n";
 			
-			
-
-
 			$this->acumulado = array();
 			
 			for ($s=0; $s < sizeof($this->timelines); $s++) { 
-
+				
 				$GRAFICAS_ACUMULATIVAS = $this->timelines_draw_acumulable[$s];
 				
 				$acc = 0;
 						
 				echo "var g". $this->random_id . $s ." = [";
-
+				
 				for($i = 0; $i < sizeof($this->fechas); $i++ ){
 					
-					$today = $this->buscar($s, $this->fechas[$i]);
+					//buscar la fecha actual en el timeline
+					$today = $this->buscar( $s, $this->fechas[$i] );
 					
 					$tot = 0;
 					
@@ -138,7 +144,7 @@ class ReporteComponent implements GuiComponent{
 						}
 					}
 
-					$acc += $tot;					
+					$acc += $tot;
 					$this->acumulado[$i] = $acc;
 					
 					if($GRAFICAS_ACUMULATIVAS){
@@ -151,26 +157,22 @@ class ReporteComponent implements GuiComponent{
 
 					//ok estoy en el dia que comenzo, vamos a buscar ese valor 
 					//en este timeline
-
-					
-
-
 					if($i < sizeof($this->fechas) - 1){
-							echo ",";		
+							echo ",";
 					}
 				}
 				echo "];\n\n";
 				
 				
 				echo "var todos".$this->random_id . " = [";
-
+				/*
 				for($i = 0; $i < sizeof($this->acumulado); $i++ ){
 					echo  "[" . $i . "," . $this->acumulado[$i] . "]";
 
 					if($i < sizeof($this->acumulado) - 1){
-							echo ",";		
+							echo ",";
 					}
-				}
+				}*/
 				echo "];\n\n";
 				
 				
@@ -198,7 +200,8 @@ class ReporteComponent implements GuiComponent{
 				}
 				echo "];\n\n";
 			}*/
-		    ?>
+
+			?>
 
 			Event.observe(document, 'dom:loaded', function() {
 				
@@ -261,8 +264,8 @@ class ReporteComponent implements GuiComponent{
 					}
 
 				?>
-			    g.addSummaryGraph( todos<?php echo $this->random_id; ?> );
-			    g.render("<?php echo $id; ?>");
+				g.addSummaryGraph( todos<?php echo $this->random_id; ?> );
+				g.render("<?php echo $id; ?>");
 			});
 
 

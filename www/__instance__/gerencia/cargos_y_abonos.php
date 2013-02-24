@@ -6,10 +6,66 @@
 
 
 	$page = new GerenciaTabPage( );
-
+	
 	$page->nextTab( "Overview" );
 
+	$rep = new ReporteComponent( );
 
+
+	$dataForReportTotal = array();
+
+	$ingresos = CargosYAbonosController::ListaIngreso( );
+	$listaIngresos = $ingresos["resultados"];
+
+	$dataForReportIngresos = array();
+	foreach($listaIngresos as $d) {
+		array_push($dataForReportIngresos, array(
+				"fecha" => date( "Y-m-d" ,$d->fecha_del_ingreso),
+				"value" => $d->monto
+			));
+
+	}
+
+
+	$gastos = CargosYAbonosController::ListaGasto( );
+	$listaGastos = $gastos["resultados"];
+	$dataForReportGastos = array();
+	foreach($listaGastos as $d) {
+		array_push($dataForReportGastos, array(
+				"fecha" => date( "Y-m-d" ,$d->fecha_del_gasto),
+				"value" => $d->monto
+			));
+	}
+
+
+	$rep->agregarMuestra	( "uno", $dataForReportGastos, false );
+	$rep->agregarMuestra	( "dos", $dataForReportIngresos, false );
+	$rep->fechaDeInicio( strtotime( "2012-01-01"));
+	$page->addComponent($rep);
+
+	/*
+	$r = new ReporteComponent();
+	$data = array(
+		array(
+			"fecha" => "2012-01-01",
+			"value" => "15"
+		),
+		array(
+			"fecha" => "2012-01-02",
+			"value" => "20"
+		),		
+		array(
+			"fecha" => "2012-01-03",
+			"value" => "25"
+		)		
+	);
+	
+	$data = EmpresasController::flujoEfectivo( (int)$_GET["eid"] );
+
+	$r->agregarMuestra	( "uno", $data, true );
+	$r->fechaDeInicio( strtotime( "2012-03-01"));
+	$page->addComponent($r);
+	*/
 
 
 	$page->nextTab( "Gastos" );
@@ -61,7 +117,7 @@
 	$lista = CargosYAbonosController::ListaGasto( );
 	$tabla = new TableComponent(
 		array(
-			"id_empresa"	 		=> "Empresa",
+			"id_empresa"			=> "Empresa",
 			"id_concepto_gasto"		=> "Concepto",
 			"id_usuario"			=> "Usuario",
 			"descripcion"			=> "Descripcion",
