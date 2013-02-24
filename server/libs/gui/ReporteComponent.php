@@ -16,12 +16,12 @@ class ReporteComponent implements GuiComponent{
 	
 	function __construct(){
 		$this->timelines = array();
-		$this->timelines_draw_acumulable = array();		
+		$this->timelines_draw_acumulable = array();
 		$this->titles = array();
 		$this->indexes = array();
 		$this->missingDays = array();
-		$this->fechas = array();		
-		$this->dateStart = null;	
+		$this->fechas = array();
+		$this->dateStart = null;
 		$this->acumulado = array();
 		$this->random_id = rand();
 		$this->yFormater = "";
@@ -34,7 +34,7 @@ class ReporteComponent implements GuiComponent{
 		array_push( $this->missingDays, 0 );
 		array_push( $this->titles, $title );
 		array_push( $this->timelines, $data );
-		array_push( $this->timelines_draw_acumulable, $acumulable );		
+		array_push( $this->timelines_draw_acumulable, $acumulable );
 	}
 	
 	public function setEscalaEnY($e){
@@ -99,7 +99,7 @@ class ReporteComponent implements GuiComponent{
 
 		    <?php
 			$GRAFICAS_ACUMULATIVAS = false;
-			Logger::log("rendering...");			
+			Logger::log("rendering...");
 
 
 

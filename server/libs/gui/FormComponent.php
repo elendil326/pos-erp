@@ -94,7 +94,7 @@ class FormComponent implements GuiComponent {
 	public function hideNotObligatory( ) {
 		$this->hide_not_obligatory = true;
 	}
-	
+
 	/**
 	 * 
 	 * 
@@ -102,7 +102,7 @@ class FormComponent implements GuiComponent {
 	public function setEditable($editable) {
 		$this->is_editable = $editable;
 	}
-	
+
 	/**
 	 * 
 	 * 
@@ -524,8 +524,7 @@ class FormComponent implements GuiComponent {
 			$html .= "</td></tr>";
 		}
 		
-		if (!is_null($this->on_click))
-{
+		if (!is_null($this->on_click)) {
 			$html .= "<td align=right colspan=2 style='background-color: #EDEFF4;-webkit-border-radius: 5px;'>";
 			if (($this->hide_not_obligatory))
 			{
@@ -565,27 +564,20 @@ class FormComponent implements GuiComponent {
 		
 		$html .= "</form></table>";
 		return $html;
-		
 	}
-	
-	
-	
+
 	/**
 	 *
 	 *
 	 * */
-	public function addSubmit($caption, $submit_form_url = "", $method = "POST")
-	{
+	public function addSubmit($caption, $submit_form_url = "", $method = "POST") {
 		$this->submit_form = array(
 			"caption" => $caption,
 			"submit_form_url" => $submit_form_url,
 			"method" => $method
 		);
 	}
-	
-	
-	
-	
+
 	/**
 	 *
 	 *
@@ -597,58 +589,43 @@ class FormComponent implements GuiComponent {
 			"function" => $js_function
 		);
 	}
-	
-	
-	
+
 	/**
 	 *
 	 *
 	 * */
-	public function addApiCall($method_name, $http_method = "POST")
-	{
-		if (!($http_method === "POST" || $http_method === "GET"))
-		{
+	public function addApiCall($method_name, $http_method = "POST") {
+		if (!($http_method === "POST" || $http_method === "GET")) {
 			throw new Exception("Http method must be POST or GET");
 		}
-		
+
 		$this->send_to_api             = $method_name;
 		$this->send_to_api_http_method = $http_method;
-		
 	}
-	
-	
-	
+
 	/**
 	 * Esta es una funcion en js que se llamara 
 	 * cuando la llamada al api sea exitosa.
 	 *
 	 * */
-	public function onApiCallSuccess($jscallback)
-	{
+	public function onApiCallSuccess($jscallback) {
 		$this->send_to_api_callback = $jscallback;
 	}
-	
-	
-	
-	
+
 	/**
 	 * 
 	 * Redirect to a new page on apicall sucess
 	 * 
 	 * */
-	public function onApiCallSuccessRedirect($url, $send_param = null)
-	{
+	public function onApiCallSuccessRedirect($url, $send_param = null) {
 		$this->send_to_api_redirect = $url;
 	}
-	
-	
-	
+
 	/**
 	 *
 	 *
 	 * */
-	public function renameField($field_array)
-	{
+	public function renameField($field_array) {
 		$found = false;
 		foreach ($field_array as $old_name => $new_name)
 		{
@@ -672,16 +649,13 @@ class FormComponent implements GuiComponent {
 			
 		} //foreach field in the array
 	}
-	
-	
-	
+
 	/**
 	 *
 	 * @param array or string
 	 *
 	 **/
-	public function makeObligatory($field_array)
-	{
+	public function makeObligatory($field_array) {
 		if (!is_array($field_array))
 		{
 			$field_array = array(
@@ -703,19 +677,15 @@ class FormComponent implements GuiComponent {
 			} //for
 		}
 	}
-	
-	
-	
+
 	/**
 	 *
 	 *
 	 * */
 	public function createRelation( $fkColumn, $pkOtherTable ){
-		
 	}
-	
-	public function createComboBoxJoin($field_name, $field_name_in_values, $values_array, $selected_value = null)
-	{
+
+	public function createComboBoxJoin($field_name, $field_name_in_values, $values_array, $selected_value = null) {
 		if (sizeof($values_array) == 0)
 		{
 			//do something
@@ -812,8 +782,7 @@ class FormComponent implements GuiComponent {
 	 *
 	 *
 	 * */
-	public function createComboBoxJoinDistintName($field_name, $table_name, $field_name_in_values, $values_array, $selected_value = null)
-	{
+	public function createComboBoxJoinDistintName($field_name, $table_name, $field_name_in_values, $values_array, $selected_value = null) {
 		if (sizeof($values_array) == 0)
 		{
 			//do something
@@ -860,8 +829,7 @@ class FormComponent implements GuiComponent {
 	 *
 	 *
 	 * */
-	public function createListBoxJoin($field_name, $field_name_in_values, $values_array)
-	{
+	public function createListBoxJoin($field_name, $field_name_in_values, $values_array) {
 		if (sizeof($values_array) == 0)
 		{
 			//do something
@@ -903,15 +871,11 @@ class FormComponent implements GuiComponent {
 	public function createComboBox($field_name, $values) {
 	}
 
-
-
-
 	/**
 	 *
 	 *
 	 * */
-	public function setValueField($field_name, $value)
-	{
+	public function setValueField($field_name, $value) {
 		$sof = sizeof($this->form_fields);
 		
 		for ($i = 0; $i < $sof; $i++)

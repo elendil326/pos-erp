@@ -7,6 +7,11 @@
 
 	$page = new GerenciaTabPage( );
 
+	$page->nextTab( "Overview" );
+
+
+
+
 	$page->nextTab( "Gastos" );
 
 	/*
@@ -38,14 +43,13 @@
 
 	//this should be post
 	$form->addApiCall("api/cargosyabonos/gasto/nuevo", "GET");
+	$form->onApiCallSuccess("window.location.reload");
+
 	$form->setCaption("id_empresa", "Empresa");
 	$form->setCaption("id_concepto_gasto", "Concepto");
 	$form->renameField( array(
 		"fecha_del_gasto" => "fecha_gasto", 
 	) );
-
-
-
 	$form->setType( "fecha_gasto", "date" );
 
 	$page->addComponent( $form );
@@ -58,19 +62,21 @@
 	$tabla = new TableComponent(
 		array(
 			"id_empresa"	 		=> "Empresa",
+			"id_concepto_gasto"		=> "Concepto",
 			"id_usuario"			=> "Usuario",
-			"descripcion"			=> "Concepto",
+			"descripcion"			=> "Descripcion",
 			"fecha_del_gasto"		=> "Fecha",
 			"monto"					=> "Monto"
 		),
 		$lista["resultados"]
 	);
 
-	$tabla->addColRender( "id_empresa", "R::RazonSocialFromIdEmpresa");
-	$tabla->addColRender( "monto", "R::MoneyFromDouble");
-	$tabla->addColRender( "fecha_del_gasto", "R::FriendlyDateFromUnixTime");
-	$tabla->addColRender( "id_usuario", "R::UserFullNameFromId");
-	$tabla->addColRender( "cancelado", "funcion_cancelado" );
+	$tabla->addColRender( "id_empresa", 		"R::RazonSocialFromIdEmpresa");
+	$tabla->addColRender( "monto", 				"R::MoneyFromDouble");
+	$tabla->addColRender( "id_concepto_gasto", 	"R::ConceptoGastoFromId" );
+	$tabla->addColRender( "fecha_del_gasto", 	"R::FriendlyDateFromUnixTime");
+	$tabla->addColRender( "id_usuario", 		"R::UserFullNameFromId");
+	$tabla->addColRender( "cancelado", 			"funcion_cancelado" );
 	$page->addComponent( $tabla );
 
 
@@ -108,6 +114,7 @@
 	$form->renameField( array(
 		"fecha_del_ingreso" => "fecha_ingreso", 
 	) );
+	$form->onApiCallSuccess("window.location.reload");
 	$form->setCaption("id_empresa", "Empresa");
 	$form->setCaption("id_concepto_ingreso", "Concepto");
 	$form->setType( "fecha_ingreso", "date" );
@@ -125,20 +132,22 @@
 
 	$tabla = new TableComponent( array(
 				"id_empresa"	 		=> "Empresa",
+				"id_concepto_ingreso"	=> "Concepto",
 				"id_usuario"			=> "Usuario",
-				"descripcion"			=> "Concepto",
+				"descripcion"			=> "Descripcion",
 				"fecha_del_ingreso"		=> "Fecha",
 				"monto"					=> "Monto"
 			),
 			$lista["resultados"]
 		);
 
-	$tabla->addColRender( "cancelado", "funcion_cancelado" );
-	$tabla->addColRender( "id_empresa", "R::RazonSocialFromIdEmpresa");
-	$tabla->addColRender( "monto", "R::MoneyFromDouble");
-	$tabla->addColRender( "fecha_del_ingreso", "R::FriendlyDateFromUnixTime");
-	$tabla->addColRender( "id_usuario", "R::UserFullNameFromId");
-	$tabla->addColRender( "cancelado", "funcion_cancelado" );
+	$tabla->addColRender( "cancelado", 				"funcion_cancelado" );
+	$tabla->addColRender( "id_empresa", 			"R::RazonSocialFromIdEmpresa");
+	$tabla->addColRender( "monto",					"R::MoneyFromDouble");
+	$tabla->addColRender( "id_concepto_ingreso",	"R::ConceptoIngresoFromId" );
+	$tabla->addColRender( "fecha_del_ingreso",		"R::FriendlyDateFromUnixTime");
+	$tabla->addColRender( "id_usuario",				"R::UserFullNameFromId");
+	$tabla->addColRender( "cancelado",				"funcion_cancelado" );
 	$page->addComponent( $tabla );
 
 

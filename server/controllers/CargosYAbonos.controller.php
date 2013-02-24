@@ -1736,9 +1736,7 @@ class CargosYAbonosController extends ValidacionesController implements ICargosY
      * @param ordenar json Valor que contendr la manera en que se ordenar la lista.
      * @return conceptos_gasto json Arreglo que contendr� la informaci�n de conceptos de gasto.
      **/
-    public static function ListaConceptoGasto($activo = null, $orden = null)
-    {
-        Logger::log("Listando conceptos de gasto");
+    public static function ListaConceptoGasto($activo = null, $orden = null) {
         $conceptos_gasto         = null;
         $concepto_gasto_criterio = new ConceptoGasto();
         

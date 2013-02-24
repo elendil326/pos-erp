@@ -13,22 +13,28 @@
 class R
 {
 
-	private static function NonExistent()
-	{
-		return "<font style='color:gray'>NaN</font>";
+	private static function NonExistent( ) {
+		return "<font style='color:gray'>No existe</font>";
 	}
 
-	static function UserFullNameFromId( $user_id )
-	{
-		if ( is_null( $u = UsuarioDAO::getByPK( $user_id ) ) )
-		{
+	static function UserFullNameFromId( $user_id ) {
+		if ( is_null( $u = UsuarioDAO::getByPK( $user_id ) ) ) {
 			return self::NonExistent();
-		}
-		else
-		{
+		}else{
 			return $u->getNombre( );
 		}
+	}
 
+	public static function ConceptoGastoFromId($id){
+		$v = ConceptoGastoDAO::getByPK($id);
+		if(is_null($v)) return R::NonExistent();
+		return $v->getNombre();
+	}
+
+	public static function ConceptoIngresoFromId($id){
+		$v = ConceptoIngresoDAO::getByPK($id);
+		if(is_null($v)) return R::NonExistent();
+		return $v->getNombre();
 	}
 
 	static function UserFirstNameFromId( $user_id )
