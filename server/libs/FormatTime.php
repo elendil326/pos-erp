@@ -234,7 +234,9 @@ return ($cancelada) ? "Cancelada" : "No Cancelada";
 
 
 
-
+	function funcion_cancelado( $cancelado ){
+		return $cancelado ? "Cancelado" : "Activo" ;
+	}
 
 
 

@@ -1,4 +1,10 @@
 <?php
+/**
+  * 
+  * @author Alan Gonzalez
+  *
+  *
+  **/
 
 class FormComponent implements GuiComponent {
 	protected $form_fields;
@@ -31,8 +37,8 @@ class FormComponent implements GuiComponent {
 		$this->hide_not_obligatory = false;
 		$this->special_sort		 	= null;
 		$this->js_function 			= NULL;
-		//para eviar id's repetidos
 
+		//para eviar id's repetidos //@todo esto esta de la verga, hacer una variable estatica con conteo
 		$this->guiComponentId = "_"  . (rand() + rand());
 	}
 
@@ -40,55 +46,52 @@ class FormComponent implements GuiComponent {
 	 *
 	 *
 	 * */
-	public function sortOrder(Array $order){
+	public function sortOrder(Array $order) {
 		
 		$this->removeDuplicates();
 
 		$found_needed = $fn = sizeof( $this->form_fields );
 		$error = "";
 		$out = array();
-		
-		for ($i=0; $i < $fn; $i++){ 
+
+		for ($i=0; $i < $fn; $i++) {
 			
-			if($i >= sizeof($order)){
+			if( $i >= sizeof( $order ) ) {
 				throw new Exception("te faltan parametros ");
 			}
 			
-			if($this->form_fields[$i]->hidden) continue;
+			if( $this->form_fields[$i]->hidden ) continue;
 			
-			if(!in_array( $this->form_fields[$i]->id , $order )){
-				
+			if( !in_array( $this->form_fields[$i]->id , $order ) ) {
 				$error .= "`".$this->form_fields[$i]->id."`, ";
+
 			}else{
 				$out[array_search( $this->form_fields[$i]->id, $order )] = $this->form_fields[$i];
+
 			}
 		}
 		
-		if(strlen($error) > 0){
+		if(strlen($error) > 0) {
 			throw new Exception("fields: $error not found in your ordered array."); 
 		}
+
 		$this->special_sort = $order;
-		
 		$this->form_fields = $out;
-		
 	}
-	
-	
-	public function beforeSend( $jsFunction){
+
+	public function beforeSend( $jsFunction) {
 		$this->js_function = $jsFunction;
 	}
-	
-	
-	public function getGuiComponentId(){
+
+	public function getGuiComponentId() {
 		return $this->guiComponentId;
 	}
-	
+
 	/**
 	 *
 	 *
 	 * */
-	public function hideNotObligatory()
-	{
+	public function hideNotObligatory( ) {
 		$this->hide_not_obligatory = true;
 	}
 	
@@ -96,8 +99,7 @@ class FormComponent implements GuiComponent {
 	 * 
 	 * 
 	 * */
-	public function setEditable($editable)
-	{
+	public function setEditable($editable) {
 		$this->is_editable = $editable;
 	}
 	
@@ -105,7 +107,7 @@ class FormComponent implements GuiComponent {
 	 * 
 	 * 
 	 * */
-	public function addField($id, $caption, $type, $value = "", $name = null){
+	public function addField($id, $caption, $type, $value = "", $name = null) {
 		Logger::error("adding field " . $id);
 		array_push($this->form_fields, new FormComponentField($id, $caption, $type, $value, $name));
 		return true;
@@ -115,8 +117,7 @@ class FormComponent implements GuiComponent {
 	 * 
 	 * 
 	 * */
-	protected function removeDuplicates()
-	{
+	protected function removeDuplicates() {
 		usort($this->form_fields, array( "FormComponentField","idSort" ));
 		
 		$top_i = 0;
@@ -131,12 +132,8 @@ class FormComponent implements GuiComponent {
 		}
 		
 		$this->form_fields = array_slice($this->form_fields, 0, $top_i + 1, true);
-		
 	}
-	
-	
-	
-	
+
 	private function sortFields(){
 		//remove fields with the same id
 		$this->removeDuplicates();
@@ -154,14 +151,8 @@ class FormComponent implements GuiComponent {
 			));
 			
 		}
-		
-		
-		
 	}
-	
-	
-	
-	
+
 	public function sendHidden( $field_name ){
 		if( is_array( $field_name ) ){
 			foreach ($field_name as $field ) {
@@ -187,10 +178,6 @@ class FormComponent implements GuiComponent {
 		throw new Exception("Field `".$field_name."` not found in the VO object.");
 	}
 
-
-
-
-
 	public function hideField( $field_name ){
 		$this->removeDuplicates();
 		
@@ -204,12 +191,11 @@ class FormComponent implements GuiComponent {
 		
 		$sof = sizeof($this->form_fields);
 
-		for ($i=0; $i < $sof; $i++) { 
+		for ($i=0; $i < $sof; $i++) {
 
-			if( $this->form_fields[$i]->id == $field_name )
-			{
+			if( $this->form_fields[$i]->id == $field_name ) {
 				$this->form_fields[$i]->type = "hidden";
-				$this->form_fields[$i]->send_as_hidden = false;				
+				$this->form_fields[$i]->send_as_hidden = false;
 				$this->form_fields[$i]->hidden = true;
 				return true;			
 			}
@@ -218,40 +204,42 @@ class FormComponent implements GuiComponent {
 		throw new Exception("Field `".$field_name."` not found in the VO object.");
 	}
 
-
 	/**
 	 * 
 	 * 
 	 * */
 	function renderCmp(){
-Logger::error("about to render");
-		$this->sortFields();
 
-Logger::error("after sortingr");
+		$this->sortFields();
 
 		$html = "";
 
-		if (!is_null($this->send_to_api) || !is_null($this->on_click)){
-			$html .= "<script>";
-			$html .= 'if(HtmlEncode===undefined){var HtmlEncode=function(a){var b=a.length,c=[];while(b--){var d=a[b].charCodeAt();if(d>127||d>90&&d<97){c[b]="&#"+d+";"}else{c[b]=a[b]}}return c.join("")}} ';
-			
+		// enviaremos al api o hay onclick
+		if( !is_null( $this->send_to_api ) || !is_null( $this->on_click ) ) {
+
+			$html = "\n<script>";
+			$html .= 'if(HtmlEncode===undefined){ var HtmlEncode=function(a){var b=a.length,c=[];while(b--){var d=a[b].charCodeAt();if(d>127||d>90&&d<97){c[b]="&#"+d+";"}else{c[b]=a[b]}}return c.join("")}} ';
 			$html .= "\n\nvar ".$this->guiComponentId."obligatory = [];\n";
 
-			foreach ($this->form_fields as $f){
-				if ($f->obligatory){
+			foreach ( $this->form_fields as $f ){
+				if ( $f->obligatory ) {
 					$html .= $this->guiComponentId . "obligatory.push( '" . $this->guiComponentId . $f->id . "' );\n";
 				}
 			}
 
+			//javascript: getparams()
 			$html .= "\nfunction ". $this->guiComponentId ."getParams(){\n";
 			$html .= "\tvar ". $this->guiComponentId ."p = {};\n";
 			$html .= "\tvar ". $this->guiComponentId ."found = false;\n";
 
-			for ($i = 0; $i < sizeof($this->form_fields); $i++){
+			//cicle fields
+			for( $i = 0; $i < sizeof($this->form_fields); $i++ ) {
+
 				$f = $this->form_fields[$i];
 
+				//if this  component is invisible, continue
 				if ($f->hidden === true){
-					if ($f->send_as_hidden === true){
+					if ($f->send_as_hidden === true) {
 						$html .= "\t". $this->guiComponentId ."p." . $f->id . " = " . $f->value . ";\n";
 					}
 					continue;
@@ -259,8 +247,13 @@ Logger::error("after sortingr");
 				
 				///*(Ext.get('" . $f->id . "').getValue().length > 0 ) ||*/
 
-				if(!is_array( $f->value))
+				if( !is_array( $f->value ) ){
 					$html .= "\n\tif(  (Ext.get('" . $this->guiComponentId . $f->id . "').getValue() != '". $f->value ."') ){";
+
+				}else{
+					//combo boxes are arrays
+					$html .= "if(true){ ";
+				}
 
 				if($f->type == "date"){
 					$html .= "\n\t\t". $this->guiComponentId ."p." . $f->id . " = ( Ext.getCmp('". $this->guiComponentId . $f->id . "').getValue() ); \n\t} else{\n ";
@@ -907,8 +900,7 @@ Logger::error("after sortingr");
 	 *
 	 *
 	 * */
-	public function createComboBox($field_name, $values)
-	{
+	public function createComboBox($field_name, $values) {
 	}
 
 
@@ -936,18 +928,16 @@ Logger::error("after sortingr");
 		{
 			throw new Exception("Nombre " . $field_name . " no encontrado en los elementos");
 		}
-	}        
-
-
+	}
 
     /**
      *
      *  
      */
-    public function setType($id, $type){            
+    public function setType($id, $type) {
 
-        foreach($this->form_fields as $field ){
-            if($field->id == $id){                    
+        foreach($this->form_fields as $field ) {
+            if($field->id == $id) {
                 $field->type = $type;
 				return;
             }
@@ -955,15 +945,15 @@ Logger::error("after sortingr");
            
 		throw new Exception("$id not found in form");
 	}
-	
+
 	/**
      *
      *  
      */
-    public function setPlaceholder($id, $phText){            
+    public function setPlaceholder($id, $phText) {
 
         foreach($this->form_fields as $field ){
-            if($field->id == $id){                    
+            if($field->id == $id) {
                 $field->placeholder = $phText;
 				return;
             }
@@ -971,17 +961,15 @@ Logger::error("after sortingr");
            
 		throw new Exception("$id not found in form");
 	}
-	
-	
-	
+
 	/**
      *
      *  
      */
-    public function setCaption($id, $phText){            
+    public function setCaption( $id, $phText ) {
 
         foreach($this->form_fields as $field ){
-            if($field->id == $id){                    
+            if($field->id == $id) {
                 $field->caption = $phText;
 				return;
             }
@@ -989,18 +977,15 @@ Logger::error("after sortingr");
            
 		throw new Exception("$id not found in form");
 	}
-	
-	
-	
-	public function setHelp($id, $phText){            
 
-        foreach($this->form_fields as $field ){
-            if($field->id == $id){                    
+	public function setHelp($id, $phText) {
+
+        foreach($this->form_fields as $field ) {
+            if($field->id == $id) {
                 $field->help = $phText;
 				return;
             }
         }
-           
 		throw new Exception("$id not found in form");
 	}
 }
@@ -1019,9 +1004,8 @@ class FormComponentField
 	public $send_as_hidden;
 	public $hidden;
 	public $placeholder;
-	public $help;	
+	public $help;
 
-	
 	public function __construct
 	(
 		$id, 
@@ -1043,7 +1027,7 @@ class FormComponentField
 		$this->obligatory     = $obligatory;
 		$this->hidden         = $hidden;
 		$this->send_as_hidden = $send_as_hidden;
-		$this->placeholder	  = $planceholder;		
+		$this->placeholder	  = $planceholder;
 		$this->help	 	 		= "";
 	}
 	
