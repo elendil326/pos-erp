@@ -95,7 +95,20 @@ html body{background:#e7e7e7}
 .devsitePage .body dl,.devsitePage .body table,.devsitePage .body pre,.devsitePage .body ul,.devsitePage .body ol,.devsitePage .body p{margin:0;margin-bottom:1em}
 .devsitePage .body pre,.devsitePage .body code,.devsitePage .body table.params td.name{font-family:monospace;color:#006000;font-size: 13px}
 .devsitePage .body h2 code{font-size:inherit}
-.devsitePage .body pre,.devsitePage .body .pre{background:#f2f2f2;border:1px solid #d8dfea;border-left-width:3px;margin:18px;padding-top:7px;padding-bottom:7px;padding-left:10px;overflow:auto}
+
+
+.devsitePage .body pre,.devsitePage .body .pre{
+	/*background:#f2f2f2;
+	border:1px solid #d8dfea;
+	border-left-width:3px;
+	margin:18px;
+	padding-top:7px;
+	padding-bottom:7px;
+	padding-left:10px;
+	overflow:auto*/
+	font-family: 'Lucida Grande', Tahoma, Verdana, Arial, sans-serif;
+}
+
 .devsitePage .body img.externalLink{left:5px;position:relative;top:-5px;width:10px}
 .devsitePage .body table{margin-bottom:1em}
 

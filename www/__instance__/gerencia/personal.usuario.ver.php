@@ -172,7 +172,7 @@
 																. $direccionObj->getCalle() 
 																. " "
 																. $direccionObj->getNumeroExterior() 
-																. ", "																
+																. ", "
 																. $direccionObj->getColonia() 
 																. ", "
 																. $ciudad->getNombre() 

@@ -186,8 +186,8 @@ $table->renderRowId("comments");
 $table->addNoData("");
 
 $table->addColRender("id_localizacion", "funcion_sucursal");
-$table->addColRender("id_usuario", "funcion_usuario");
-$table->addColRender("id_usuario_venta", "funcion_usuario");
+$table->addColRender("id_usuario", "R::UserFullNameFromId");
+$table->addColRender("id_usuario_venta", "R::UserFullNameFromId");
 $table->addColRender("fecha_seguimiento", "FormatTime");
 
 
