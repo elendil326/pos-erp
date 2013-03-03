@@ -10,6 +10,35 @@
   
 	/**
  	 *
+ 	 *El documento base es de donde se crean instancias de documentos.
+ 	 *
+ 	 * @param json_impresion json El json que se utilizara para imprimir este documento.
+ 	 * @param nombre string Nombre del documento base
+ 	 * @param activo bool Si esta activo o si no se puede realizar documentos de este tipo.
+ 	 * @param extra_params json 
+ 	 * @param foliado json El json que describe como sera el foliado de este documento. Incluye en que folio va.
+ 	 * @param foliado json 
+ 	 * @param id_empresa int Si pertence a una empresa en especifico, o puede realizarse en cualquier empresa.
+ 	 * @param id_sucursal int Si pertenece a una sucursal en especifico o puede realizarse en cualquier sucursal.
+ 	 * @return id_documento_base int Id del nuevo documento
+ 	 **/
+  static function NuevoBase
+	(
+		$json_impresion, 
+		$nombre, 
+		$activo =  1 , 
+		$extra_params = null, 
+		$foliado = "", 
+		$foliado = "", 
+		$id_empresa = null, 
+		$id_sucursal = null
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
  	 *Lista los documentos en el sistema. Se puede filtrar por activos y por la empresa. Se puede ordenar por sus atributos
  	 *
  	 * @param activos bool Si no se obtiene este valor, se listaran los documentos activos e inactivos. Si su valor es true, mostrara solo los documentos activos, si es false, mostrara solo los documentos inactivos.
@@ -108,22 +137,14 @@ Update : La respuesta solo deber?a de contener success :true | false, y en caso 
  	 *Crea un nuevo documento.
 
  	 *
- 	 * @param json_impresion json El json que se utilizara para imprimir este documento.
- 	 * @param nombre string Nombre del documento
- 	 * @param activo bool Si esta activo o si no se puede realizar documentos de este tipo.
  	 * @param extra_params json 
- 	 * @param foliado json El json que describe como sera el foliado de este documento. Incluye en que folio va.
  	 * @param id_empresa int Si pertence a una empresa en especifico, o puede realizarse en cualquier empresa.
  	 * @param id_sucursal int Si pertenece a una sucursal en especifico o puede realizarse en cualquier sucursal.
  	 * @return id_documento int Id del nuevo documento
  	 **/
   static function Nuevo
 	(
-		$json_impresion, 
-		$nombre, 
-		$activo =  1 , 
 		$extra_params = null, 
-		$foliado = null, 
 		$id_empresa = null, 
 		$id_sucursal = null
 	);  

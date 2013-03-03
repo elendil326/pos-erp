@@ -109,12 +109,24 @@ class GerenciaComponentPage extends PosComponentPage{
 		            "url": "documentos.php",
 		            "children": [
 		                {
-		                        "title" : "Nuevo documento",
+		                        "title" : "documentos.lista.php",
+		                        "url"   : "documentos.lista.php"
+		                },
+		                {
+		                        "title" : "documentos.nuevo.instancia.php",
+		                        "url"   : "documentos.nuevo.instancia.php"
+		                },
+		                {
+		                        "title" : "documentos.nuevo.php",
 		                        "url"   : "documentos.nuevo.php"
 		                },
 		                {
-		                        "title" : "Buscar",
-		                        "url"   : "documentos.lista.php"
+		                        "title" : "documentos.php",
+		                        "url"   : "documentos.php"
+		                },
+		                {
+		                        "title" : "documentos.ver.php",
+		                        "url"   : "documentos.ver.php"
 		                }
 		            ]
 		        },

@@ -330,31 +330,32 @@ Update : La respuesta solo deber?a de contener success :true | false, y en caso 
 
 	}
 
-
-
 	/**
  	 *
- 	 *Crea un nuevo documento.
-
+ 	 *El documento base es de donde se crean instancias de documentos.
  	 *
  	 * @param json_impresion json El json que se utilizara para imprimir este documento.
- 	 * @param nombre string Nombre del documento
+ 	 * @param nombre string Nombre del documento base
  	 * @param activo bool Si esta activo o si no se puede realizar documentos de este tipo.
  	 * @param foliado json El json que describe como sera el foliado de este documento. Incluye en que folio va.
+ 	 * @param foliado json 
  	 * @param id_empresa int Si pertence a una empresa en especifico, o puede realizarse en cualquier empresa.
  	 * @param id_sucursal int Si pertenece a una sucursal en especifico o puede realizarse en cualquier sucursal.
- 	 * @return id_documento int Id del nuevo documento
+ 	 * @return id_documento_base int Id del nuevo documento
  	 **/
-  public static function Nuevo
+  static function NuevoBase
 	(
 		$json_impresion, 
 		$nombre, 
-		$activo =  1 ,
+		$activo =  1 , 
 		$extra_params = null, 
-		$foliado = null, 
+		$foliado = "", 
+		$foliado = "", 
 		$id_empresa = null, 
 		$id_sucursal = null
 	){
+
+		DAO::transBegin();
 
 		if(is_null($json_impresion)){
 			throw new InvalidDataException("El json de impresion no es valido.");
@@ -376,6 +377,7 @@ Update : La respuesta solo deber?a de contener success :true | false, y en caso 
 			DocumentoBaseDAO::save( $nDoc );
 
 		}catch(Exception $e){
+			DAO::transRollback();
 			throw new InvalidDatabaseOperationException ($e);
 
 		}
@@ -393,8 +395,8 @@ Update : La respuesta solo deber?a de contener success :true | false, y en caso 
 				}
 
 				$paramStruct = new ExtraParamsEstructura();
-				$paramStruct->setTabla("documento_base");
-				$paramStruct->setCampo( $nDoc->getIdDocumentoBase( ) );
+				$paramStruct->setTabla("documento_base-" . $nDoc->getIdDocumentoBase( ) );
+				$paramStruct->setCampo( $extra_params[$i]->desc );
 				$paramStruct->setTipo( $extra_params[$i]->type );
 				$paramStruct->setLongitud( 256 );
 				$paramStruct->setObligatorio($extra_params[$i]->obligatory );
@@ -406,16 +408,38 @@ Update : La respuesta solo deber?a de contener success :true | false, y en caso 
 
 				}catch(Exception $e){
 					Logger::error($e);
-					//DAO::transEnd();
+					DAO::transRollback();
 					throw new Exception( $e );
 
 				}
 			}
 		}
 
-
+		DAO::transEnd();
 
 		return array("id_documento_base" => $nDoc->getIdDocumentoBase() );
+	}
+
+	/**
+ 	 *
+ 	 *Crea un nuevo documento.
+
+ 	 *
+ 	 * @param json_impresion json El json que se utilizara para imprimir este documento.
+ 	 * @param nombre string Nombre del documento
+ 	 * @param activo bool Si esta activo o si no se puede realizar documentos de este tipo.
+ 	 * @param foliado json El json que describe como sera el foliado de este documento. Incluye en que folio va.
+ 	 * @param id_empresa int Si pertence a una empresa en especifico, o puede realizarse en cualquier empresa.
+ 	 * @param id_sucursal int Si pertenece a una sucursal en especifico o puede realizarse en cualquier sucursal.
+ 	 * @return id_documento int Id del nuevo documento
+ 	 **/
+  public static function Nuevo
+	(
+		$activos = "", 
+		$id_empresa = null, 
+		$nombre = null
+	){
+
 	}
 
 }
