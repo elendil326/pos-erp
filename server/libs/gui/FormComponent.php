@@ -108,7 +108,7 @@ class FormComponent implements GuiComponent {
 	 * 
 	 * */
 	public function addField($id, $caption, $type, $value = "", $name = null) {
-		Logger::error("adding field " . $id);
+		//Logger::error("adding field " . $id);
 		array_push($this->form_fields, new FormComponentField($id, $caption, $type, $value, $name));
 		return true;
 	}
@@ -355,7 +355,7 @@ class FormComponent implements GuiComponent {
 		$n_fields = 0;
 
 		foreach ($this->form_fields as $f){
-			Logger::error($f->type);
+			//Logger::error($f->type);
 			if ($f->hidden)
 				continue;
 
@@ -480,7 +480,8 @@ class FormComponent implements GuiComponent {
 					$html .= "</script>";
 				break;
 
-				case "password": Logger::error("pas");
+				case "password": 
+					//Logger::error("pas");
 					$html .= "<input placeholder='Contrasena' id='" . $this->guiComponentId . $f->id . "' name='" . $f->name . "' value='" . $f->value . "' type='password' >";
 
 				break;

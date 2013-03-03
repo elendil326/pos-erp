@@ -50,7 +50,7 @@
 	$f->setType("json_impresion", "textarea");
 	$page->addComponent($f);
 
-   $page->addComponent(new TitleComponent("&iquest; Necesita mas parametros para su servicio ?", 2));
+   $page->addComponent(new TitleComponent("&iquest; Parametros de docu ?", 2));
    $page->addComponent("Si necesita mas datos para levantar ordenes de servicio, agregue sus parametros extra aqui.");
 
 	$html = "<div id='editor-grid' style='margin-top: 5px'></div>

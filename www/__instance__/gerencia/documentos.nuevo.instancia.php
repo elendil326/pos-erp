@@ -5,7 +5,7 @@
 	require_once("../../../server/bootstrap.php");
 
 	$page = new GerenciaComponentPage();
-	
+
 
 	// Validar parametro de base
 	$DocumentoBase = DocumentoBaseDAO::getByPK( $_GET["base"] );
@@ -37,7 +37,7 @@
 		switch( $ExtraParamsStructs[$i]->tipo ){
 
 		}
-		Logger::log( "tipo->" .  $ExtraParamsStructs[$i]->tipo );
+		//Logger::log( "tipo->" .  $ExtraParamsStructs[$i]->tipo );
 		$f->addField( $ExtraParamsStructs[$i]->tabla . $ExtraParamsStructs[$i]->campo . $i, $ExtraParamsStructs[$i]->caption,  $ExtraParamsStructs[$i]->tipo  );
 	}
 	$page->addComponent( $f );
