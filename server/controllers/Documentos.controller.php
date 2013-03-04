@@ -320,16 +320,6 @@ Update : La respuesta solo deber?a de contener success :true | false, y en caso 
 	}
 
 
-
-	/**
-	  * crear una nuva instancia de un documento base
-	  */
-	public static function NuevaInstancia(){
-
-
-
-	}
-
 	/**
  	 *
  	 *El documento base es de donde se crean instancias de documentos.
@@ -383,20 +373,16 @@ Update : La respuesta solo deber?a de contener success :true | false, y en caso 
 		}
 
 		if ( !is_null($extra_params) ) {
-			for ( $i = 0; $i < sizeof($extra_params); $i++ ){
+			for ( $i = 0; $i < sizeof($extra_params); $i++ ) {
 
 				//test
-				if( !isset( $extra_params[$i]->obligatory ) ){
-					 $extra_params[$i]->obligatory = FALSE;
-				}
-
-				if( is_null( $extra_params[$i]->obligatory ) ){
+				if( !isset( $extra_params[$i]->obligatory ) ) {
 					 $extra_params[$i]->obligatory = FALSE;
 				}
 
 				$paramStruct = new ExtraParamsEstructura();
 				$paramStruct->setTabla("documento_base-" . $nDoc->getIdDocumentoBase( ) );
-				$paramStruct->setCampo( $extra_params[$i]->desc );
+				$paramStruct->setCampo( str_replace( " ", "_", $extra_params[$i]->desc ) );
 				$paramStruct->setTipo( $extra_params[$i]->type );
 				$paramStruct->setLongitud( 256 );
 				$paramStruct->setObligatorio($extra_params[$i]->obligatory );
@@ -425,20 +411,80 @@ Update : La respuesta solo deber?a de contener success :true | false, y en caso 
  	 *Crea un nuevo documento.
 
  	 *
- 	 * @param json_impresion json El json que se utilizara para imprimir este documento.
- 	 * @param nombre string Nombre del documento
- 	 * @param activo bool Si esta activo o si no se puede realizar documentos de este tipo.
- 	 * @param foliado json El json que describe como sera el foliado de este documento. Incluye en que folio va.
+ 	 * @param id_documento_base int el documento base del cual este documento es instancia
+ 	 * @param extra_params json 
  	 * @param id_empresa int Si pertence a una empresa en especifico, o puede realizarse en cualquier empresa.
  	 * @param id_sucursal int Si pertenece a una sucursal en especifico o puede realizarse en cualquier sucursal.
  	 * @return id_documento int Id del nuevo documento
  	 **/
   public static function Nuevo
 	(
-		$activos = "", 
+		$id_documento_base, 
+		$extra_params = null, 
 		$id_empresa = null, 
-		$nombre = null
+		$id_sucursal = null
 	){
+		$dbase = DocumentoBaseDAO::getByPK( $id_documento_base );
+
+		if( is_null( $dbase ) ) {
+			throw new InvalidDataException( "This base doc does not exist" );
+		}
+
+		$nDoc = new Documento();
+
+		$nDoc->setIdDocumentoBase( $id_documento_base );
+		$nDoc->setFolio( 0 );
+		$nDoc->setFecha(  time() );
+		$nDoc->setIdOperacion( 0 );
+
+		DAO::transBegin();
+
+		try{
+			DocumentoDAO::save($nDoc);
+
+		}catch(Exception $e){
+			DAO::transRollback();
+			throw InvalidDatabaseOperationException($e);
+
+		}
+
+		//test all extra params in base doc are present in $extra_params
+		$pindb = ExtraParamsEstructuraDao::search( new ExtraParamsEstructura(
+					array(
+						"tabla" => "documento_base-" . $id_documento_base
+					) ) );
+
+		foreach ( $pindb as $campo ) {
+			if( !array_key_exists( $campo->getCampo(), $extra_params)) {
+				//no existe en extra params
+				//salir si este parametro es
+				//obligatorio
+				if($campo->getObligatorio()){
+					throw new InvalidDataException("El campo " . $campo->getObligatorio() . " es obligatorio");
+				}
+			}else{
+				$valueToStore = $extra_params->{$campo->getCampo()};
+
+				$valueToStore = is_null($valueToStore) ? "" : $valueToStore ;
+
+				$val = new ExtraParamsValores(array(
+						"id_extra_params_estructura"	=>  $campo->getIdExtraParamsEstructura(),// id_extra_params
+						"id_pk_tabla"					=>  $nDoc->getIdDocumento(),// id_documento
+						"val"							=>  $valueToStore
+					));
+				try{
+					ExtraParamsValoresDAO::save( $val );
+
+				}catch(Exception $e){
+					DAO::transRollback();
+					throw new InvalidDatabaseOperationException($e);
+
+				}
+			}
+		}//foreach
+
+
+		DAO::transEnd();
 
 	}
 

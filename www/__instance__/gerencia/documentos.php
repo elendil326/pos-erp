@@ -4,14 +4,35 @@
 
 	$page = new GerenciaTabPage();
 
+	$page->addComponent(new TitleComponent("Documentos"));
+
+	$page->nextTab("Documentos");
+	$page->addComponent(new TitleComponent("Documentos", 3));
+	//buscar un documento
+	$documentos_base = DocumentoDAO::getAll();
+
+	$header = array(
+			"id_documento"			=> "id_documento",
+			"id_documento_base" 	=> "id_documento_base",
+			"fecha"					=> "fecha"
+		);
+	
+	$tableDb = new TableComponent( $header, $documentos_base  );
+	$tableDb->addColRender("fecha", "R::FriendlyDateFromUnixTime");
+	$tableDb->addColRender("id_documento_base", "R::NombreDocumentoBaseFromId");
+	$tableDb->addOnClick( "id_documento", "(function(a){ window.location  = 'documentos.ver.php?d=' + a;  })"  );
+	$page->addComponent( $tableDb );
+
+
+
 	/**
 	  *
 	  *
 	  *
 	  **/
-	$page->nextTab("Instancia");
+	$page->nextTab("Nuevo");
 
-	$page->addComponent(new TitleComponent("Nueva instancia de documento"));
+	$page->addComponent(new TitleComponent("Nueva instancia de documento", 3));
 
 	//buscar un documento
 	$documentos_base = DocumentoBaseDAO::getAll();
@@ -27,14 +48,13 @@
 	$page->addComponent( $tableDb );
 
 
-
 	/**
 	  *
 	  *
 	  *
 	  **/
 	$page->nextTab("Base");
-	$page->addComponent(new TitleComponent( "Nuevo documento base", 1));
+	$page->addComponent(new TitleComponent( "Nuevo documento base", 3));
 
 	$f = new DAOFormComponent(  new DocumentoBase( ) );
 	$f->addApiCall("api/documento/base/nuevo", "POST");
@@ -50,8 +70,7 @@
 	$f->setType("json_impresion", "textarea");
 	$page->addComponent($f);
 
-   $page->addComponent(new TitleComponent("&iquest; Parametros de docu ?", 2));
-   $page->addComponent("Si necesita mas datos para levantar ordenes de servicio, agregue sus parametros extra aqui.");
+   $page->addComponent(new TitleComponent("Campos para el documento", 3));
 
 	$html = "<div id='editor-grid' style='margin-top: 5px'></div>
     	<script type='text/javascript' charset='utf-8'>

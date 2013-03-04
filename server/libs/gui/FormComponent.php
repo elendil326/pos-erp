@@ -19,6 +19,7 @@ class FormComponent implements GuiComponent {
 	private $guiComponentId;
 	private $special_sort;
 	private $js_function;
+	private $style;
 
 	/**
 	 *
@@ -32,13 +33,15 @@ class FormComponent implements GuiComponent {
 		$this->send_to_api_redirect = null;
 
 		//defaults
-		$this->is_editable         = true;
-		$this->form_fields         = array();
-		$this->hide_not_obligatory = false;
+		$this->is_editable			= true;
+		$this->form_fields			= array();
+		$this->hide_not_obligatory	= false;
 		$this->special_sort		 	= null;
 		$this->js_function 			= NULL;
+		$this->style 				= "compact";
 
-		//para eviar id's repetidos //@todo esto esta de la verga, hacer una variable estatica con conteo
+		//para eviar id's repetidos 
+		//@todo esto esta de la verga, hacer una variable estatica con conteo
 		$this->guiComponentId = "_"  . (rand() + rand());
 	}
 
@@ -47,9 +50,7 @@ class FormComponent implements GuiComponent {
 	 *
 	 * */
 	public function sortOrder(Array $order) {
-		
 		$this->removeDuplicates();
-
 		$found_needed = $fn = sizeof( $this->form_fields );
 		$error = "";
 		$out = array();
@@ -87,6 +88,20 @@ class FormComponent implements GuiComponent {
 		return $this->guiComponentId;
 	}
 
+	public function setStyle($style) {
+		switch($style) {
+			case "compact" :
+			case "big" :
+				$this->style = $style;
+			break;
+
+			default:
+				throw new Exception("Este estilo no existe");
+
+		}
+		
+	}
+
 	/**
 	 *
 	 *
@@ -108,7 +123,6 @@ class FormComponent implements GuiComponent {
 	 * 
 	 * */
 	public function addField($id, $caption, $type, $value = "", $name = null) {
-		//Logger::error("adding field " . $id);
 		array_push($this->form_fields, new FormComponentField($id, $caption, $type, $value, $name));
 		return true;
 	}
@@ -171,7 +185,7 @@ class FormComponent implements GuiComponent {
 				$this->form_fields[$i]->send_as_hidden = true;
 				$this->form_fields[$i]->hidden = true;
 				$this->form_fields[$i]->type = "hidden";
-				return true;			
+				return true;
 			}
 		}
 		
@@ -187,17 +201,15 @@ class FormComponent implements GuiComponent {
 			}
 			return;
 		}
-		
-		
+
 		$sof = sizeof($this->form_fields);
 
 		for ($i=0; $i < $sof; $i++) {
-
 			if( $this->form_fields[$i]->id == $field_name ) {
 				$this->form_fields[$i]->type = "hidden";
 				$this->form_fields[$i]->send_as_hidden = false;
 				$this->form_fields[$i]->hidden = true;
-				return true;			
+				return true;
 			}
 		}
 		
@@ -208,8 +220,7 @@ class FormComponent implements GuiComponent {
 	 * 
 	 * 
 	 * */
-	function renderCmp(){
-
+	function renderCmp( ) {
 		$this->sortFields();
 
 		$html = "";
@@ -221,7 +232,7 @@ class FormComponent implements GuiComponent {
 			$html .= 'if(HtmlEncode===undefined){ var HtmlEncode=function(a){var b=a.length,c=[];while(b--){var d=a[b].charCodeAt();if(d>127||d>90&&d<97){c[b]="&#"+d+";"}else{c[b]=a[b]}}return c.join("")}} ';
 			$html .= "\n\nvar ".$this->guiComponentId."obligatory = [];\n";
 
-			foreach ( $this->form_fields as $f ){
+			foreach ( $this->form_fields as $f ) {
 				if ( $f->obligatory ) {
 					$html .= $this->guiComponentId . "obligatory.push( '" . $this->guiComponentId . $f->id . "' );\n";
 				}
@@ -234,9 +245,7 @@ class FormComponent implements GuiComponent {
 
 			//cicle fields
 			for( $i = 0; $i < sizeof($this->form_fields); $i++ ) {
-
 				$f = $this->form_fields[$i];
-
 				//if this  component is invisible, continue
 				if ($f->hidden === true){
 					if ($f->send_as_hidden === true) {
@@ -329,7 +338,6 @@ class FormComponent implements GuiComponent {
 					
 				}
 
-			
 				$html .= "			\n";
 				$html .= "			\n";
 				$html .= "	 	}\n";
@@ -354,10 +362,12 @@ class FormComponent implements GuiComponent {
 		$html .= "<tr>";
 		$n_fields = 0;
 
-		foreach ($this->form_fields as $f){
-			//Logger::error($f->type);
-			if ($f->hidden)
+		// Create html for the fields
+		// posible styles are big and compact
+		foreach ( $this->form_fields as $f ) {
+			if ( $f->hidden ){
 				continue;
+			}
 
 			$n_fields ++;
 
@@ -372,7 +382,7 @@ class FormComponent implements GuiComponent {
 				}
 				
 				//if(($f->obligatory === false) && ($this->hide_not_obligatory)) {
-				if ($f->obligatory){
+				if ( $f->obligatory ){
 					$html .= "<b>";
 
 				}else{
@@ -380,31 +390,44 @@ class FormComponent implements GuiComponent {
 
 				}
 
-				$html .= $f->caption;
+				if($this->style == "big") {
+					$html .= "<h3>" . $f->caption . "</h3>";
+				}else{
+					$html .= $f->caption ;
+				}
+				
 
 				if ($f->obligatory === true){
-					$html .= "</b>";
+					$html .= "*</b>";
 				}else{
 					//$html .= "</div>";
 				}
 
 				$html .= "<div style='color:gray;font-size:-2px'>" . $f->help . "</div>";
 
-				if (($f->obligatory === false) && ($this->hide_not_obligatory)){
-					$html .= "</td><td style='display:none' class='hideable'>";
+				if( $this->style == "big") {
+
 				}else{
-					$t = 0;
-					for ( $i=0 ; $i < sizeof($this->form_fields); $i++) { 
-						if( $this->form_fields[$i]->hidden ) continue;
-						$t++;
-					}
-					if($t == 1){
-						$html .= "</td><td colspan=4>";
-						
+					if (($f->obligatory === false) && ($this->hide_not_obligatory)){
+						$html .= "</td><td style='display:none' class='hideable'>";
+
 					}else{
-						$html .= "</td><td >";
+						$t = 0;
+						for ( $i=0 ; $i < sizeof($this->form_fields); $i++) { 
+							if( $this->form_fields[$i]->hidden ) continue;
+							$t++;
+						}
+						if($t == 1){
+							$html .= "</td><td colspan=4>";
+							
+						}else{
+							$html .= "</td><td >";
+						}
 					}
 				}
+
+
+
 			}//hidden
 
 			switch ($f->type){
@@ -461,7 +484,20 @@ class FormComponent implements GuiComponent {
 						}else{
 							$ph = $f->placeholder;
 						}
-						$html .= "<textarea placeholder='$ph' style='width:100%' id='" . $this->guiComponentId  . $f->id . "' name='" . $f->name . "' rows=5 cols=auto>".$f->value."</textarea>";
+
+						$html .= "<textarea " ;
+						$html .= "		placeholder	=	'$ph' ";
+						$html .= "		style='width:100%' ";
+						$html .= "		id='" . $this->guiComponentId  . $f->id . "' ";
+						$html .= "		name='" . $f->name . "' ";
+						if($this->style == "compact"){
+							$html .= "		rows=5 ";
+						}else if($this->style == "big"){
+							$html .= "		rows=15 ";
+						}
+						
+						$html .= "		cols=auto ";
+						$html .= "	>".$f->value."</textarea>";
 					}
 				break;
 
@@ -469,7 +505,7 @@ class FormComponent implements GuiComponent {
 					$id_datefield = $this->guiComponentId . $f->id ; //"date_" . (rand() + rand());
 					$html .= "<div id = \"{$id_datefield}\"></div>";
 					$html .= "<script>";
-          $html .= "store_component.addExtComponent(";
+					$html .= "store_component.addExtComponent(";
 					$html .= "  Ext.create('Ext.form.field.Date',{  \n";
 					$html .= "      anchor: '100%',  \n";
 					$html .= "      name: '" . $id_datefield . "',  \n";
@@ -481,11 +517,11 @@ class FormComponent implements GuiComponent {
 				break;
 
 				case "password": 
-					//Logger::error("pas");
 					$html .= "<input placeholder='Contrasena' id='" . $this->guiComponentId . $f->id . "' name='" . $f->name . "' value='" . $f->value . "' type='password' >";
-
 				break;
 
+				case "markdown":
+				case "hidden": 
 				case 'text':
 				case 'string':
 					if ($this->is_editable === false){
@@ -502,26 +538,34 @@ class FormComponent implements GuiComponent {
 				break;
 
 				default:
-					Logger::error("type not found");
-					throw new Exception($f->type . " is not recognized by the form creator" );
+					throw new Exception($f->type . " is not recognized by the form creator." );
 			}//switch
 
 			if ($f->type !== "hidden"){
 				$html .= "</td>";
 			}
 
-			if ($new_row == 2){
-				//esta por terminarse
+
+			if( ($this->style == "compact") && ($new_row == 2)) {
 				$html .= "</tr><tr>";
 				$new_row = 0;
+
+			} else if( ($this->style == "big") && ($new_row == 1)){
+				$html .= "</tr><tr>";
+				$new_row = 0;
+
 			}
+
+			
 
 		}//foreach
 
 		$html .= "</tr><tr>";
 
 		//action buttons
-		$html .= "<td></td><td></td>";
+		if($this->style == "compact") {
+			$html .= "<td></td><td></td>";
+		}
 
 		if (!is_null($this->submit_form)){
 			$html .= "<td align=right style='background-color: #EDEFF4;-webkit-border-radius: 5px;'>";
@@ -989,6 +1033,8 @@ class FormComponentField
 	)
 	{
 		$this->id             = $id;
+		$this->id = str_replace ( "-" , "_" , $this->id );
+		
 		$this->caption        = $caption;
 		$this->type           = $type;
 		$this->value          = $value;

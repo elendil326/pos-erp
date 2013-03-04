@@ -37,6 +37,14 @@ class R
 		return $v->getNombre();
 	}
 
+
+	public static function NombreDocumentoBaseFromId($id){
+		$v = DocumentoBaseDAO::getByPK($id);
+		if(is_null($v)) return R::NonExistent();
+		return $v->getNombre();
+	}
+
+
 	static function UserFirstNameFromId( $user_id )
 	{
 

@@ -1,39 +1,28 @@
-<?php 
-
-
+<?php
 
 	define("BYPASS_INSTANCE_CHECK", false);
 
 	require_once("../../../server/bootstrap.php");
 
-
-
-
-	if( 
-		isset($_GET["preview"])
-		&& isset($_GET["dbid"])
-	)
-	{
-
-		ImpresionesController::Documento($_GET["dbid"], true);
+	if( isset($_GET["preview"]) && isset($_GET["d"]) ) {
+		ImpresionesController::Documento($_GET["d"], true);
 		exit;
 	}
 
 
 	$page = new GerenciaComponentPage();
-		
 
 
-	$q = DocumentoBaseDAO::getByPK( $_GET["dbid"] );
+	$q = DocumentoBaseDAO::getByPK( $_GET["d"] );
 
-	$q->setUltimaModificacion(FormatTime($q->getUltimaModificacion()));
+	//$q->setUltimaModificacion(FormatTime($q->getUltimaModificacion()));
 
 	$page->addComponent(new TitleComponent( $q->getNombre(),2));
 
 
 
-	$page->addComponent( "<div class='POS Boton' onClick='window.location=\"documentos.editar.php?dbid=". $_GET["dbid"] ."\"'>Editar</div> " );
-	$page->addComponent( "<div class='POS Boton' onClick='window.location=\"documentos.ver.php?preview=1&dbid=". $_GET["dbid"] ."\"'>Vista previa</div> " );
+	$page->addComponent( "<div class='POS Boton' onClick='window.location=\"documentos.editar.php?d=". $_GET["d"] ."\"'>Editar</div> " );
+	$page->addComponent( "<div class='POS Boton' onClick='window.location=\"documentos.ver.php?preview=1&d=". $_GET["d"] ."\"'>Vista previa</div> " );
 
 	$tabla = new DAOFormComponent( $q );
 	$tabla->setEditable(false);
@@ -49,23 +38,10 @@
 
 
 
-
-
-
-
-
-
-
-
-
 	$page->addComponent(new TitleComponent("Editar", 3));
 
 
-	$q = DocumentoBaseDAO::getByPK( $_GET["dbid"] );
-	
-
-	
-
+	$q = DocumentoBaseDAO::getByPK( $_GET["d"] );
 
 	$q->setJsonImpresion( str_replace ( "\\n" , "" , $q->getJsonImpresion() ) );
 	$q->setJsonImpresion( str_replace ( "\\t" , "" , $q->getJsonImpresion() ) );
@@ -89,7 +65,7 @@
 	$tabla->setType("json_impresion", "textarea");
 
 	$tabla->addApiCall("api/documento/editar", "POST");
-	$tabla->onApiCallSuccessRedirect("documentos.ver.php?dbid=" . $_GET["dbid"]);
+	$tabla->onApiCallSuccessRedirect("documentos.ver.php?d=" . $_GET["d"]);
 
 	$page->addComponent($tabla);
 

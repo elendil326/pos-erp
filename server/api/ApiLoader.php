@@ -5978,6 +5978,7 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
+			"id_documento_base" => new ApiExposedProperty("id_documento_base", true, POST, array( "int" )),
 			"extra_params" => new ApiExposedProperty("extra_params", false, POST, array( "json" )),
 			"id_empresa" => new ApiExposedProperty("id_empresa", false, POST, array( "int" )),
 			"id_sucursal" => new ApiExposedProperty("id_sucursal", false, POST, array( "int" )),
@@ -5989,6 +5990,7 @@
  		$this->response = DocumentosController::Nuevo( 
  			
 			
+			isset($_POST['id_documento_base'] ) ? $_POST['id_documento_base'] : null,
 			isset($_POST['extra_params'] ) ? json_decode($_POST['extra_params']) : null,
 			isset($_POST['id_empresa'] ) ? $_POST['id_empresa'] :  null,
 			isset($_POST['id_sucursal'] ) ? $_POST['id_sucursal'] :  null

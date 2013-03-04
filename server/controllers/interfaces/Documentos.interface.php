@@ -137,6 +137,7 @@ Update : La respuesta solo deber?a de contener success :true | false, y en caso 
  	 *Crea un nuevo documento.
 
  	 *
+ 	 * @param id_documento_base int el documento base del cual este documento es instancia
  	 * @param extra_params json 
  	 * @param id_empresa int Si pertence a una empresa en especifico, o puede realizarse en cualquier empresa.
  	 * @param id_sucursal int Si pertenece a una sucursal en especifico o puede realizarse en cualquier sucursal.
@@ -144,6 +145,7 @@ Update : La respuesta solo deber?a de contener success :true | false, y en caso 
  	 **/
   static function Nuevo
 	(
+		$id_documento_base, 
 		$extra_params = null, 
 		$id_empresa = null, 
 		$id_sucursal = null
