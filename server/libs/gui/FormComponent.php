@@ -261,7 +261,12 @@ class FormComponent implements GuiComponent {
 				///*(Ext.get('" . $f->id . "').getValue().length > 0 ) ||*/
 
 				if( !is_array( $f->value ) ){
-					$html .= "\n\tif(  (Ext.get('" . $this->guiComponentId . $f->id . "').getValue() != '". $f->value ."') ){";
+
+					if($f->type == "textarea"){
+						$html .= "if(true){ ";
+					}else{
+						$html .= "\n\tif(  (Ext.get('" . $this->guiComponentId . $f->id . "').getValue() != '". $f->value ."') ){";
+					}
 
 				}else{
 					//combo boxes are arrays

@@ -16,6 +16,12 @@
 
 	$page = new GerenciaTabPage();
 
+
+	$page->addComponent('<link rel="stylesheet" type="text/css" href="/pos/css/markdown.css" />
+        <script type="text/javascript" src="/pos/js/Markdown.Converter.js"></script>
+        <script type="text/javascript" src="/pos/js/Markdown.Sanitizer.js"></script>
+        <script type="text/javascript" src="/pos/js/Markdown.Editor.js"></script>');
+
 	$page->addComponent(new TitleComponent( $documentoBase->getNombre( ) , 3 ) );
 	$page->addComponent(new TitleComponent( R::NombreDocumentoFromId( $_GET["d"] ) ) );
 
@@ -28,10 +34,21 @@
 	$page->addComponent( "<div class='POS Boton' onClick='window.location=\"documentos.ver.php?preview=1&d=". $_GET["d"] ."\"'>Vista previa</div> " );*/
 	$f = new FormComponent( );
 	for( $i = 0 ; $i < sizeof( $values ); $i++ ) {
-		$f->addField($values[$i]["campo"], $values[$i]["caption"], $values[$i]["tipo"], $values[$i]["val"] );
+		$f->addField(
+				$values[$i]["campo"],
+				$values[$i]["caption"],
+				$values[$i]["tipo"],
+				'<script>var converter = new Markdown.Converter();
+					document.write(converter.makeHtml("'  .
+							utf8_decode( 
+							str_replace("\"", "\\\"",
+								str_replace("\n", "<br>", $values[$i]["val"])
+							)
+						). '"));</script>'
+			);
 	}
 	$f->setEditable(false);
-	$f->setStyle("compact");
+	$f->setStyle("big");
 	$page->addComponent( $f );
 
 
@@ -45,7 +62,7 @@
 	$page->nextTab("Editar");
 	$f = new FormComponent( );
 	for( $i = 0 ; $i < sizeof( $values ); $i++ ) {
-		$f->addField($values[$i]["campo"], $values[$i]["caption"], $values[$i]["tipo"], $values[$i]["val"] );
+		$f->addField($values[$i]["campo"], $values[$i]["caption"], $values[$i]["tipo"], utf8_decode($values[$i]["val"]) );
 	}
 	$f->setEditable(true);
 	$f->setStyle("big");
