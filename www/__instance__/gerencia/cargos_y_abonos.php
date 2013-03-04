@@ -4,16 +4,13 @@
 
 	require_once("../../../server/bootstrap.php");
 
-
 	$page = new GerenciaTabPage( );
-	
+
+	$page->addComponent( new TitleComponent( "Cargos y abonos", 1 ));
+
 	$page->nextTab( "Overview" );
-
 	$rep = new ReporteComponent( );
-
-
 	$dataForReportTotal = array();
-
 	$ingresos = CargosYAbonosController::ListaIngreso( );
 	$listaIngresos = $ingresos["resultados"];
 
@@ -23,7 +20,6 @@
 				"fecha" => date( "Y-m-d" ,$d->fecha_del_ingreso),
 				"value" => $d->monto
 			));
-
 	}
 
 

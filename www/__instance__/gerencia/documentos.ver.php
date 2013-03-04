@@ -16,9 +16,8 @@
 
 	$page = new GerenciaTabPage();
 
-	$page->addComponent(new TitleComponent( "DEV-SPEC-1"));
-	$page->addComponent(new TitleComponent( $documentoBase->getNombre() , 3));
-
+	$page->addComponent(new TitleComponent( $documentoBase->getNombre( ) , 3 ) );
+	$page->addComponent(new TitleComponent( R::NombreDocumentoFromId( $_GET["d"] ) ) );
 
 	/** 
 	  *

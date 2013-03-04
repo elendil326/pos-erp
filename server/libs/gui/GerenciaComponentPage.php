@@ -55,80 +55,8 @@ class GerenciaComponentPage extends PosComponentPage{
 		            ]
 		        },
 		        {
-		            "title": "Consignaciones",
-		            "url": "consignaciones.php",
-		            "children": [
-		                {
-		                    "title": "Desactivar consignatario",
-		                    "url": "consignaciones.desactivar.consignatario.php"
-		                },
-		                {
-		                    "title": "Nuevo consignatario",
-		                    "url": "consignaciones.nuevo.consignatario.php"
-		                },
-		                {
-		                    "title": "Editar",
-		                    "url": "consignaciones.editar.consignatario.php"
-		                },
-		                {
-		                    "title": "Abonar a inspeccion",
-		                    "url": "consignaciones.abonar.inspeccion.php"
-		                },
-		                {
-		                    "title": "Cambiar fecha de inspeccion",
-		                    "url": "consignaciones.cambiar_fecha.inspeccion.php"
-		                },
-		                {
-		                    "title": "Cancelar inspeccion",
-		                    "url": "consignaciones.cancelar.inspeccion.php"
-		                },
-		                {
-		                    "title": "Nueva inspeccion",
-		                    "url": "consignaciones.nueva.inspeccion.php"
-		                },
-		                {
-		                    "title": "Registrar inspeccion",
-		                    "url": "consignaciones.registrar.inspeccion.php"
-		                },
-		                {
-		                    "title": "Lista",
-		                    "url": "consignaciones.lista.php"
-		                },
-		                {
-		                    "title": "Nueva",
-		                    "url": "consignaciones.nueva.php"
-		                },
-		                {
-		                    "title": "Terminar",
-		                    "url": "consignaciones.terminar.php"
-		                }
-		            ]
-		        },
-		        {
 		            "title": "Documentos",
-		            "url": "documentos.php",
-		            "children": [
-		                {
-		                        "title" : "documentos.lista.php",
-		                        "url"   : "documentos.lista.php"
-		                },
-		                {
-		                        "title" : "documentos.nuevo.instancia.php",
-		                        "url"   : "documentos.nuevo.instancia.php"
-		                },
-		                {
-		                        "title" : "documentos.nuevo.php",
-		                        "url"   : "documentos.nuevo.php"
-		                },
-		                {
-		                        "title" : "documentos.php",
-		                        "url"   : "documentos.php"
-		                },
-		                {
-		                        "title" : "documentos.ver.php",
-		                        "url"   : "documentos.ver.php"
-		                }
-		            ]
+		            "url": "documentos.php"
 		        },
 		        {
 		            "title": "Efectivo",

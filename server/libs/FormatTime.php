@@ -4,14 +4,17 @@
   * (C) 2012 Caffeina Software
   *
   * Description:
-  *
+  *      Renderers
   *
   * Author:
   *     Alan Gonzalez (alan)
   *
   ***/
-class R
-{
+class R {
+
+	public static function DescripcionRolFromId($id_rol) {
+		return RolDAO::getByPK($id_rol) ? RolDAO::getByPK($id_rol)->getNombre() : self::NonExistent() ;
+	}
 
 	private static function NonExistent( ) {
 		return "<font style='color:gray'>No existe</font>";
@@ -37,7 +40,6 @@ class R
 		return $v->getNombre();
 	}
 
-
 	public static function NombreDocumentoBaseFromId($id){
 		$v = DocumentoBaseDAO::getByPK($id);
 		if(is_null($v)) return R::NonExistent();
@@ -46,238 +48,160 @@ class R
 
 	public static function NombreDocumentoFromId( $id_documento ){
 		$v = DocumentoDAO::getDocumentWithValues( $id_documento );
-		//var_dump($v);
 		for ($i=0; $i < sizeof($v); $i++) { 
 			if( strtolower($v[$i]["campo"]) == "titulo"){
 				return $v[$i]["val"];
-
 			} else if( strtolower($v[$i]["campo"]) == "nombre"){
 				return $v[$i]["val"];
-
 			}
 		}
-		
-
 		return R::NonExistent();
 	}
 
-	static function UserFirstNameFromId( $user_id )
-	{
+	static function UserFirstNameFromId( $user_id ) {
 
 	}
 
-	static function FriendlyDateFromUnixTime( $unixtime )
-	{
+	static function FriendlyDateFromUnixTime( $unixtime ) {
 		return FormatTime( $unixtime );
 	}
 
-	static function MoneyFromDouble( $foo )
-	{
+	static function MoneyFromDouble( $foo ) {
 		return FormatMoney( $foo );
 	}
 
 
-	static function RazonSocialFromIdEmpresa( $id_empresa )
-	{
-		if ( is_null( $u = EmpresaDAO::getByPK( $id_empresa ) ) )
-		{
+	static function RazonSocialFromIdEmpresa( $id_empresa ) {
+		if ( is_null( $u = EmpresaDAO::getByPK( $id_empresa ) ) ) {
 			return self::NonExistent();
-		}
-		else
-		{
+		} else {
 			return $u->getRazonSocial( );
 		}
 	}
 
+}//class R
+
+
+function funcion_consignatario($consignatario) {
+	return ($consignatario ? "Consignatario" : "----" );
 }
 
+function funcion_clasificacion_proveedor($id_clasificacion_proveedor) {
+	return (ClasificacionProveedorDAO::getByPK($id_clasificacion_proveedor) ? ClasificacionProveedorDAO::getByPK($id_clasificacion_proveedor)->getNombre() : "----" );
+}
 
+function funcion_rol($id_rol) {
+	return R::DescripcionRolFromId( $id_rol );
+}
 
-
-
-
-
-
-
-
-
-
-
-
-        function funcion_consignatario($consignatario)
-        {
-            return ($consignatario ? "Consignatario" : "----" );
-        }
-        function funcion_clasificacion_proveedor($id_clasificacion_proveedor)
-        {
-            return (ClasificacionProveedorDAO::getByPK($id_clasificacion_proveedor) ? ClasificacionProveedorDAO::getByPK($id_clasificacion_proveedor)->getNombre() : "----" );
-        }
-	function funcion_rol($id_rol)
-	{
-	    return (RolDAO::getByPK($id_rol) ? RolDAO::getByPK($id_rol)->getNombre() : "sin rol");
+function funcion_id_categoria_padre( $id_categoria_padre ) {
+	if( ! is_numeric($id_categoria_padre) ){
+		return "";
 	}
 
-
-function funcion_id_categoria_padre( $id_categoria_padre )
-{
-if( ! is_numeric($id_categoria_padre) )
-return "";
-
-$cat = ClasificacionProductoDAO::getByPk($id_categoria_padre);
-return ($cat ==null)?"":$cat->getNombre();
+	$cat = ClasificacionProductoDAO::getByPk($id_categoria_padre);
+	return ($cat ==null)?"":$cat->getNombre();
 }
 
-
-
-function funcion_categoria_unidad_medida($id_categoria_unidad_medida)
-{
-$cat = CategoriaUnidadMedidaDAO::getByPK($id_categoria_unidad_medida);
-return $cat->getDescripcion();
-}    
-
-
-
-
-
-function funcion_cat_padre_desc( $id_categoria_padre )
-{
-$aux = ClasificacionProductoDAO::getByPK($id_categoria_padre);
-return ($aux == null)? "Sin Cat Padre" : $aux->getNombre() ;
-
+function funcion_categoria_unidad_medida($id_categoria_unidad_medida) {
+	$cat = CategoriaUnidadMedidaDAO::getByPK($id_categoria_unidad_medida);
+	return $cat->getDescripcion();
 }
 
-
-
-function getEmpresaNombre($eid){
-$e = EmpresaDAO::getByPK($eid);
-return $e->getRazonSocial();
+function funcion_cat_padre_desc( $id_categoria_padre ) {
+	$aux = ClasificacionProductoDAO::getByPK($id_categoria_padre);
+	return ($aux == null)? "Sin Cat Padre" : $aux->getNombre() ;
 }
 
+function getEmpresaNombre($eid) {
+	$e = EmpresaDAO::getByPK($eid);
+	return $e->getRazonSocial();
+}
 
-
-
-
-
-
-
-
-
-
-function funcion_empresa( $id_empresa )
-{
+function funcion_empresa( $id_empresa ) {
 	return EmpresaDAO::getByPK($id_empresa) ? EmpresaDAO::getByPK($id_empresa)->getRazonSocial() : "------";
 }
 
-function funcion_tipo_almacen( $id_tipo_almacen )
-{
+function funcion_tipo_almacen( $id_tipo_almacen ) {
 	return TipoAlmacenDAO::getByPK($id_tipo_almacen) ? TipoAlmacenDAO::getByPK($id_tipo_almacen)->getDescripcion() : "------";
 }
 
-function getUserName($id_usuario)
-{
-	if ( is_null( $u = UsuarioDAO::getByPK( $id_usuario ) ) )
-	{
+function getUserName($id_usuario) {
+	if ( is_null( $u = UsuarioDAO::getByPK( $id_usuario ) ) ) {
 		return "ERROR";
 	}
 	return $u->getNombre( );
 }
 
-function td( $inner, $repeat = 0 )
-{
+function td( $inner, $repeat = 0 ) {
 	$out = "";
-
-	while ( $repeat -- >= 0)
-	{
+	while ( $repeat -- >= 0) {
 		$out .= "<td>" . $inner . "</td>";
 	}
 	return $out;
 }
 
-function funcion_clasificacion_cliente($id_clasifiacion)
-{
+function funcion_clasificacion_cliente($id_clasifiacion) {
 	if(is_null($id_clasifiacion)) return "";
 	$c = ClasificacionClienteDAO::getByPK($id_clasifiacion);
 	if(is_null($c)) return "";
 	return $c->getNombre();
 }
 
-function funcion_gerente( $id_gerente )
-{
+function funcion_gerente( $id_gerente ) {
 	return UsuarioDAO::getByPK($id_gerente) ? UsuarioDAO::getByPK($id_gerente)->getNombre() : "------";
 }
 
-function funcion_sucursal( $id_sucursal )
-{
-return SucursalDAO::getByPK($id_sucursal) ? SucursalDAO::getByPK($id_sucursal)->getRazonSocial() : "------";
+function funcion_sucursal( $id_sucursal ) {
+	return SucursalDAO::getByPK($id_sucursal) ? SucursalDAO::getByPK($id_sucursal)->getRazonSocial() : "------";
 }
 
-function funcion_control_billetes( $control_billetes )
-{
-return $control_billetes ? "Con control" : "Sin control";
+function funcion_control_billetes( $control_billetes ) {
+	return $control_billetes ? "Con control" : "Sin control";
 }
 
-function funcion_abierta( $abierta )
-{
-return $abierta ? "Abierta" : "Cerrada";
+function funcion_abierta( $abierta ) {
+	return $abierta ? "Abierta" : "Cerrada";
 }
 
-function funcion_activo( $activo )
-{
-return ($activo) ? "Activo" : "Inactivo";
+function funcion_activo( $activo ) {
+	return ($activo) ? "Activo" : "Inactivo";
 }
-function funcion_servicio($servicio)
-{
-return ServicioDAO::getByPK($servicio) ? ServicioDAO::getByPK($servicio)->getNombreServicio() : "????";
+function funcion_servicio($servicio) {
+	return ServicioDAO::getByPK($servicio) ? ServicioDAO::getByPK($servicio)->getNombreServicio() : "????";
 }
 
-function funcion_usuario_venta($usuario_venta)
-{
-return UsuarioDAO::getByPK($usuario_venta) ? UsuarioDAO::getByPK($usuario_venta)->getNombre() : "
-<img src='../../media/iconos/user_delete.png'> Nadie esta asignado";
+function funcion_usuario_venta($usuario_venta) {
+	return UsuarioDAO::getByPK($usuario_venta) ? 
+			UsuarioDAO::getByPK($usuario_venta)->getNombre() :
+			"<img src='../../media/iconos/user_delete.png'> Nadie esta asignado";
 }
 
-function funcion_activa($activa)
-{
-return ($activa) ? "Activa" : "Inactiva";
+function funcion_activa($activa) {
+	return ($activa) ? "Activa" : "Inactiva";
 }
 
-function funcion_cancelada($cancelada)
-{
-return ($cancelada) ? "Cancelada" : "No Cancelada";
+function funcion_cancelada($cancelada) {
+	return ($cancelada) ? "Cancelada" : "No Cancelada";
 }
 
+function funcion_cancelado( $cancelado ) {
+	return $cancelado ? "Cancelado" : "Activo" ;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	function funcion_cancelado( $cancelado ){
-		return $cancelado ? "Cancelado" : "Activo" ;
-	}
-
-
-
-
-function FormatMoney($float)
-{
-	//return sprintf ( "<b>$</b>%.2f" , $float);
+function FormatMoney($float) {
 	return "$" . number_format( $float, 2, '.', ',');
-	//return money_format('%=*(#10.2n', $float);
 }
 
+function username($id_usuario) {
+	$u = UsuarioDAO::getBypK($id_usuario);
+	if(is_null($u)) return "ERROR";
+	return  $u->getNombre();
+}
+
+function ft($time) {
+	return FormatTime(($time));
+}
 
 function FormatTime($timestamp, $type = "FB")
 {
@@ -397,8 +321,6 @@ function FormatTime($timestamp, $type = "FB")
 			}
 		}
 	}
- 
- 	$text = "<span title='".date("F j, Y \a \l\a\s g:i a", $timestamp)."'> " . $text . "</span>";
 
-	return $text;
+	return "<span title='".date("F j, Y \a \l\a\s g:i a", $timestamp)."'> " . $text . "</span>";
 }
