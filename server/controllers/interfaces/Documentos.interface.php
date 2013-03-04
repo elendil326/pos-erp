@@ -10,6 +10,32 @@
   
 	/**
  	 *
+ 	 *Edita un documento base
+ 	 *
+ 	 * @param id_documento int Id del documento a editar.
+ 	 * @param activo bool 
+ 	 * @param foliado json 
+ 	 * @param id_empresa int 
+ 	 * @param id_sucursal int 
+ 	 * @param json_impresion string 
+ 	 * @param nombre string 
+ 	 **/
+  static function EditarBase
+	(
+		$id_documento, 
+		$activo = null, 
+		$foliado = null, 
+		$id_empresa = null, 
+		$id_sucursal = null, 
+		$json_impresion = null, 
+		$nombre = null
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
  	 *El documento base es de donde se crean instancias de documentos.
  	 *
  	 * @param json_impresion json El json que se utilizara para imprimir este documento.
@@ -59,25 +85,15 @@
   
 	/**
  	 *
- 	 *Update : Falta indicar en los argumentos el si el documeto esta activo y a que sucursal pertenece.
+ 	 *Editar un documento
  	 *
- 	 * @param id_documento int Id del documento a editar.
- 	 * @param activo bool 
- 	 * @param foliado json 
- 	 * @param id_empresa int 
- 	 * @param id_sucursal int 
- 	 * @param json_impresion string 
- 	 * @param nombre string 
+ 	 * @param extra_params json 
+ 	 * @param id_documento int 
  	 **/
   static function Editar
 	(
-		$id_documento, 
-		$activo = null, 
-		$foliado = null, 
-		$id_empresa = null, 
-		$id_sucursal = null, 
-		$json_impresion = null, 
-		$nombre = null
+		$extra_params, 
+		$id_documento
 	);  
   
   

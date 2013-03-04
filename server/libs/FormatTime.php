@@ -44,6 +44,22 @@ class R
 		return $v->getNombre();
 	}
 
+	public static function NombreDocumentoFromId( $id_documento ){
+		$v = DocumentoDAO::getDocumentWithValues( $id_documento );
+		//var_dump($v);
+		for ($i=0; $i < sizeof($v); $i++) { 
+			if( strtolower($v[$i]["campo"]) == "titulo"){
+				return $v[$i]["val"];
+
+			} else if( strtolower($v[$i]["campo"]) == "nombre"){
+				return $v[$i]["val"];
+
+			}
+		}
+		
+
+		return R::NonExistent();
+	}
 
 	static function UserFirstNameFromId( $user_id )
 	{

@@ -5,7 +5,7 @@
 	require_once("../../../server/bootstrap.php");
 
 	$page = new GerenciaComponentPage();
-
+	
 
 	// Validar parametro de base
 	$DocumentoBase = DocumentoBaseDAO::getByPK( $_GET["base"] );
@@ -33,14 +33,11 @@
 
 	$f = new FormComponent( );
 	$f->addApiCall( "api/documento/nuevo" );
-	for( $i = 0 ; $i < sizeof( $ExtraParamsStructs ); $i++ ) {
-		switch( $ExtraParamsStructs[$i]->tipo ){
 
-		}
-		Logger::debug( $ExtraParamsStructs[$i]->campo );
-			
+	for( $i = 0 ; $i < sizeof( $ExtraParamsStructs ); $i++ ) {
 		$f->addField( $ExtraParamsStructs[$i]->campo , $ExtraParamsStructs[$i]->caption,  $ExtraParamsStructs[$i]->tipo  );
 	}
+
 	$f->beforeSend("attachExtraParams");
 	$f->setStyle("big");
 	$page->addComponent( $f );

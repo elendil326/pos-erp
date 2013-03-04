@@ -9,35 +9,89 @@
 		exit;
 	}
 
-
-	$page = new GerenciaComponentPage();
-
-
-	$q = DocumentoBaseDAO::getByPK( $_GET["d"] );
-
-	//$q->setUltimaModificacion(FormatTime($q->getUltimaModificacion()));
-
-	$page->addComponent(new TitleComponent( $q->getNombre(),2));
+	$documento = DocumentoDAO::getByPK( $_GET["d"] );
+	$documentoBase = DocumentoBaseDAO::getByPK( $documento->getIdDocumentoBase( ) );
+	$values = DocumentoDAO::getDocumentWithValues( $_GET["d"] );
 
 
+	$page = new GerenciaTabPage();
 
-	$page->addComponent( "<div class='POS Boton' onClick='window.location=\"documentos.editar.php?d=". $_GET["d"] ."\"'>Editar</div> " );
-	$page->addComponent( "<div class='POS Boton' onClick='window.location=\"documentos.ver.php?preview=1&d=". $_GET["d"] ."\"'>Vista previa</div> " );
-
-	$tabla = new DAOFormComponent( $q );
-	$tabla->setEditable(false);
-	$tabla->hideField(array(
-			"id_documento_base",
-			"json_impresion"
-		));
-	$page->addComponent($tabla);
+	$page->addComponent(new TitleComponent( "DEV-SPEC-1"));
+	$page->addComponent(new TitleComponent( $documentoBase->getNombre() , 3));
 
 
+	/** 
+	  *
+	  *
+	  **/
+	$page->nextTab("Doc");
+/*	$page->addComponent( "<div class='POS Boton' onClick='window.location=\"documentos.editar.php?d=". $_GET["d"] ."\"'>Editar</div> " );
+	$page->addComponent( "<div class='POS Boton' onClick='window.location=\"documentos.ver.php?preview=1&d=". $_GET["d"] ."\"'>Vista previa</div> " );*/
+	$f = new FormComponent( );
+	for( $i = 0 ; $i < sizeof( $values ); $i++ ) {
+		$f->addField($values[$i]["campo"], $values[$i]["caption"], $values[$i]["tipo"], $values[$i]["val"] );
+	}
+	$f->setEditable(false);
+	$f->setStyle("compact");
+	$page->addComponent( $f );
 
 
 
 
 
+	/** 
+	  *
+	  *
+	  **/
+	$page->nextTab("Editar");
+	$f = new FormComponent( );
+	for( $i = 0 ; $i < sizeof( $values ); $i++ ) {
+		$f->addField($values[$i]["campo"], $values[$i]["caption"], $values[$i]["tipo"], $values[$i]["val"] );
+	}
+	$f->setEditable(true);
+	$f->setStyle("big");
+	$f->addApiCall("api/documento/editar", "POST");
+	$f->beforeSend("attachExtraParams");
+	
+	
+	$html = " <script>
+			function attachExtraParams( a ) {
+				a.id_documento = " . $documento->getIdDocumento( ). ";
+				a.extra_params = Ext.JSON.encode({ ";
+
+	for( $i = 0 ; $i < sizeof( $values ); $i++ ) {
+		$html .= $values[$i]["campo"] .  " : Ext.get(\"".  $f->getGuiComponentId() . $values[$i]["campo"]  ."\" ).getValue() , ";
+	}
+	
+	$html .= "});
+				return a;
+			}
+		</script>";
+
+	$page->addComponent($html);
+	$page->addComponent( $f );
+
+
+
+	/** 
+	  *
+	  *
+	  **/
+	$page->nextTab("Compartir");
+
+
+
+
+	/** 
+	  *
+	  *
+	  **/
+	$page->nextTab("VistaPrevia");
+
+
+
+
+	/*
 	$page->addComponent(new TitleComponent("Editar", 3));
 
 
@@ -69,26 +123,9 @@
 
 	$page->addComponent($tabla);
 
+	*/
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	$page->addComponent(new TitleComponent("Vista Previa", 3));
 	
 /*		$page->addComponent('<embed src="/file.pdf#toolbar=0&navpanes=0&scrollbar=0" width="500" height="375"></embed>');
 	$page->addComponent('<embed src="documentos.ver.php?dbid='. $_GET["dbid"] .'&preview=1#toolbar=0&navpanes=0&scrollbar=0" width="500" height="375"></embed>');

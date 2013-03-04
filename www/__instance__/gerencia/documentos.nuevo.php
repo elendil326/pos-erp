@@ -1,5 +1,5 @@
 <?php
-
+	/*
 	define("BYPASS_INSTANCE_CHECK", false);
 
 	require_once("../../../server/bootstrap.php");
@@ -12,7 +12,9 @@
 	$page->addComponent(new TitleComponent("Nueva instancia de documento"));
 
 	//buscar un documento
-	$documentos_base = DocumentoBaseDAO::getAll();
+	$documentos_base = DocumentoBaseDAO::getAll(
+			NULL, NULL, "fecha", 'ASC'
+		);
 
 	$header = array(
 			"id_empresa" => "id_empresa",

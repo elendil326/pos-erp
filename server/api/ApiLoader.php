@@ -6005,7 +6005,7 @@
   
   
 
-  class ApiDocumentoEditar extends ApiHandler {
+  class ApiDocumentoBaseEditar extends ApiHandler {
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
@@ -6024,7 +6024,7 @@
 
 	protected function GenerateResponse() {		
 		try{
- 		$this->response = DocumentosController::Editar( 
+ 		$this->response = DocumentosController::EditarBase( 
  			
 			
 			isset($_POST['id_documento'] ) ? $_POST['id_documento'] : null,
@@ -6162,6 +6162,36 @@
 			isset($_POST['foliado'] ) ? json_decode($_POST['foliado']) : null,
 			isset($_POST['id_empresa'] ) ? $_POST['id_empresa'] :  null,
 			isset($_POST['id_sucursal'] ) ? $_POST['id_sucursal'] :  null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiDocumentoEditar extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"extra_params" => new ApiExposedProperty("extra_params", true, POST, array( "json" )),
+			"id_documento" => new ApiExposedProperty("id_documento", true, POST, array( "int" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = DocumentosController::Editar( 
+ 			
+			
+			isset($_POST['extra_params'] ) ? json_decode($_POST['extra_params']) : null,
+			isset($_POST['id_documento'] ) ? $_POST['id_documento'] : null
 			
 			);
 		}catch(Exception $e){

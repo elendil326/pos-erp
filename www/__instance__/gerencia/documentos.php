@@ -9,17 +9,18 @@
 	$page->nextTab("Documentos");
 	$page->addComponent(new TitleComponent("Documentos", 3));
 	//buscar un documento
-	$documentos_base = DocumentoDAO::getAll();
+	$documentos_base = DocumentoDAO::getAll( NULL, NULL, "fecha", 'DESC' );
 
 	$header = array(
-			"id_documento"			=> "id_documento",
-			"id_documento_base" 	=> "id_documento_base",
-			"fecha"					=> "fecha"
+			"id_documento"			=> "Nombre",
+			"id_documento_base" 	=> "Tipo de documento",
+			"fecha"					=> "Modificacion"
 		);
 	
 	$tableDb = new TableComponent( $header, $documentos_base  );
 	$tableDb->addColRender("fecha", "R::FriendlyDateFromUnixTime");
 	$tableDb->addColRender("id_documento_base", "R::NombreDocumentoBaseFromId");
+	$tableDb->addColRender("id_documento", "R::NombreDocumentoFromId");
 	$tableDb->addOnClick( "id_documento", "(function(a){ window.location  = 'documentos.ver.php?d=' + a;  })"  );
 	$page->addComponent( $tableDb );
 
