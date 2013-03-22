@@ -1,11 +1,15 @@
 <?php
+/**
+  * 
+  * @author Alan Gonzalez
+  *
+  *
+  **/
 
-
-class TableComponent implements GuiComponent{
-
+class TableComponent implements GuiComponent {
 
 	private $header;
-	protected $rows;	
+	protected $rows;
 	private $actionFunction;
 	private $actionField;
 	
@@ -27,72 +31,46 @@ class TableComponent implements GuiComponent{
 		$this->simple_render = false;
 		$this->convertToExtjs = false;
 	}
-	
 
-
-	public function setRows($rows )
-	{
+	public function setRows( $rows ) {
 		$this->rows = $rows;
 	}
 
-
-
-	public function convertToExtJs($tof){
+	public function convertToExtJs( $tof ) {
 		$this->convertToExtjs = $tof;
 	}
 
-
-
-	public function renderRowId( $prefix )
-	{
+	public function renderRowId( $prefix ) {
 		$this->renderRowIds = $prefix;
 	}
-	
 
-
-
-	public function addNoData ( $msg )
-	{
+	public function addNoData( $msg ) {
 		$this->noDataText = $msg;
 	}
 
-
-
-
-	public function addRow( $row )
-	{
+	public function addRow( $row ) {
 		array_push($this->rows, $row);
 	}
-	
-	
 
-
-	public function addOnClick( $actionField , $actionFunction, $sendJSON = false, $sendId = false )
-	{
+	public function addOnClick( $actionField , $actionFunction, $sendJSON = false, $sendId = false ) {
 		$this->actionField 	  	= $actionField;
 		$this->actionFunction 	= $actionFunction;
 		$this->actionSendJSON 	= $sendJSON;
-		$this->actionSendID 	= $sendId;		
+		$this->actionSendID 	= $sendId;
 	}
-	
 
-	
-	public function addColRender( $id, $fn )
-	{
+	public function addColRender( $id, $fn ) {
 		array_push( $this->specialRender, array( $id => $fn ) );
 	}
-	
 
-
-	public function renderCmp(  ){
-		
+	public function renderCmp( ) {
 		//create some id;
 		$id = "tc" . md5( rand() );
 
 		//
 		// Si no hay datos, regresa el mensaje 
 		// 
-		if(sizeof($this->rows) == 0){
+		if(sizeof($this->rows) == 0) {
 			return $this->noDataText;
 		}
 		
@@ -130,7 +108,7 @@ class TableComponent implements GuiComponent{
 		
 		// Renderear los headers
 		foreach ( $this->header  as $key => $value){
-			$html .= '<th>' . $value . '</th>';			
+			$html .= '<th>' . $value . '</th>';
 		}
 
 		$html .= '</thead><tbody>';
@@ -145,7 +123,7 @@ class TableComponent implements GuiComponent{
 			}*/
 
 			//si el row no es un array intentar convertirlo
-			if( !is_array($this->rows[$a]) ){
+			if( !is_array($this->rows[$a]) ) {
 				$row = $this->rows[$a]->asArray();
 			}else{
 				$row = $this->rows[$a];
@@ -155,10 +133,10 @@ class TableComponent implements GuiComponent{
 			//
 			// Render action fields if necesary
 			// 
-			if( isset($this->actionField)){
+			if( isset( $this->actionField) ) {
 				//action field !
-				if($this->convertToExtjs){
-					$html .= '<tr  ';
+				if( $this->convertToExtjs ) {
+					$html .= '<tr ';
 
 					if($this->actionSendJSON){
 						//$html .= '<tr style=" cursor: pointer;" onClick="' . $this->actionFunction. '( \''. urlencode(json_encode($row)) . '\' )" ';
@@ -183,16 +161,13 @@ class TableComponent implements GuiComponent{
 
 					}else{
 						$html .= '<tr style=" cursor: pointer;" onClick="' . $this->actionFunction. '( ' . $row[ $this->actionField ] . ' )" ';		
-								
-					}					
+					}
 				}
 
-				
 			}else{
 				// or else just render the tr
 				$html .= '<tr ';
-				
-			}			
+			}
 
 			// Render id's or not
 			if($this->renderRowIds != null){
@@ -216,7 +191,7 @@ class TableComponent implements GuiComponent{
 				/**
 				  *
 				  *	Just print the damn rows
-				  **/				
+				  **/
 				foreach($this->rows[$a] as $column){
 
 					$html .=  "<td align='left' >" . $column . "</td>";
@@ -227,8 +202,8 @@ class TableComponent implements GuiComponent{
 				  *
 				  *	Render based on the header
 				  **/
-				foreach ( $this->header  as $key => $value){
-			
+				foreach ( $this->header  as $key => $value) {
+
 					if( array_key_exists( $key , $row )){
 
 						//ver si necesita rendereo especial
@@ -257,53 +232,33 @@ class TableComponent implements GuiComponent{
 
 			}//simple_render
 
-			
-			
 			$html .='</tr>';
-		}
-		
+		}//rows
 		$html .= "<tbody></table>";
-		
-
 		return $html;
-
-
 	}
 }
-
 
 
 
 
 class SimpleTableComponent extends TableComponent{
-	
-	function __construct(){
+	function __construct( ) {
 		parent::__construct();
 		$this->simple_render = true;
 	}
 
+	function addRow( $var_args ) {
+		$row = array( );
+		$n_args = func_num_args( );
 
-	function addRow( $var_args ){
-		$row = array();
-		
-		$n_args =  func_num_args();
-
-		for ($ai=0; $ai < $n_args; $ai++)
-		{ 
-			array_push( $row , func_get_arg( $ai ) );	
+		for ($ai=0; $ai < $n_args; $ai++) {
+			array_push( $row , func_get_arg( $ai ) );
 		}
-
 		parent::addRow( $row );
 	}
 
-
-	function setRows( $rows ){
+	function setRows( $rows ) {
 		$this->rows = $rows;
-	}	
-
+	}
 }
-
-
-
-
-

@@ -1586,9 +1586,8 @@ class ServiciosController extends ValidacionesController implements IServicios{
 	(
 		$id_orden
 	)
-	{  
-            Logger::log("Obtienendo detalles de orden");
-            
+	{
+
             //Se valida que exista la orden de servicio
             $orden = OrdenDeServicioDAO::getByPK($id_orden);
             if(is_null($orden))
@@ -1596,23 +1595,24 @@ class ServiciosController extends ValidacionesController implements IServicios{
                 Logger::error("La orden de servicio ".$id_orden." no existe");
                 throw new Exception("La orden de servicio ".$id_orden." no existe");
             }
-            
-            //Se crea el arreglo de detalle, donde el primer elemento sera la orden en si,
-            //el siguiente seran todos los seguimientos que se le han dado y
-            //el ultimo seran los gastos que ha generado
-            $detalle_orden = array();
-            array_push($detalle_orden,$orden);
-            
-            array_push($detalle_orden, SeguimientoDeServicioDAO::search( new SeguimientoDeServicio( array( "id_orden_de_servicio" => $id_orden ) ) ));
-            
-            array_push($detalle_orden, GastoDAO::search( new Gasto( array( "id_orden_de_servicio" => $id_orden ) ) ));
-            
-            Logger::log("Se obtuvo el detalle de la orden con ".count($detalle_orden[1])." seguimientos y ".count($detalle_orden[2])." gastos");
-            
-            return $detalle_orden;
-            
+
+            $detalle_orden = $orden->asArray();
+
+            $detalle_orden["segumientos"] =	SeguimientoDeServicioDAO::search( 
+						new SeguimientoDeServicio( array( "id_orden_de_servicio" => $id_orden ) )
+					);
+
+			$detalle_orden["gastos"] = GastoDAO::search(
+						new Gasto( array( "id_orden_de_servicio" => $id_orden ) ) 
+					);
+
+			return $detalle_orden;
+
 	}
-  
+
+
+
+
 	/**
  	 *
  	 *Una nueva orden de servicio a prestar. Este debe ser un servicio activo. Y prestable desde la sucursal desde donde se inicio la llamada. Los conceptos a llenar estan definidos por el concepto. Se guardara el id del agente que inicio la orden y el id del cliente. La fecha se tomara del servidor.

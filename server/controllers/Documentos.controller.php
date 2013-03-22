@@ -1,25 +1,23 @@
 <?php
+
 require_once("interfaces/Documentos.interface.php");
-
-
-
-
 
 /**
   *
   *
   *
   **/
-	
-  class DocumentosController implements IDocumentos{
-  
-  
-  	private static function GetUsuarioArray($id_usuario){
+class DocumentosController implements IDocumentos{
 
-
+	/**
+	  *
+	  *
+	  *
+	  **/
+	private static function GetUsuarioArray($id_usuario){
 		$result = UsuarioDAO::getByPK( $id_usuario )->asArray();
 
-		if(!is_null($result["id_direccion"])){
+		if( !is_null($result["id_direccion"]) ) {
 			$result["direccion"] = DireccionDAO::getByPK($result["id_direccion"])->asArray();
 			unset($result["direccion"]["id_direccion"]);
 
@@ -35,15 +33,12 @@ require_once("interfaces/Documentos.interface.php");
 			$result["direccion_alterna"] = DireccionDAO::getByPK($result["id_direccion_alterna"])->asArray();
 		}
 
-
 		if(!is_null($result["id_rol"])){
 			if(!is_null($r = RolDAO::getByPK($result["id_rol"]))){
 				$result["rol"] = $r->asArray();	
 			}
 			unset($result["id_rol"]);
 		}
-
-		
 
 		unset($result["password"]);
 		unset($result["id_direccion_alterna"]);
@@ -71,22 +66,7 @@ require_once("interfaces/Documentos.interface.php");
 
 		return $result;
 
-  	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	}
 
   	private static function GetCerrarVentaParams($id_venta){
 
@@ -145,26 +125,11 @@ require_once("interfaces/Documentos.interface.php");
   		return $multiLevelArray;
   	}
 
-
-
-
-  	public static function Cerrar($id_documento, $params){
-
-
-//		$params["hola1"] = array("hola2" => array( "hola3" => 333));
-  		
-  		var_dump($params);
-
-
-  		$params = self::flattenArray($params);
-
-		var_dump($params);
-
-  		exit;
-  		$params = self::GetCerrarVentaParams($params["id_venta"]);
-
-  		ImpresionesController::Documento($id_documento, FALSE , $params );
-  	}
+	private static function Cerrar($id_documento, $params) {
+		$params = self::flattenArray($params);
+		//$params = self::GetCerrarVentaParams($params["id_venta"]);
+		//ImpresionesController::Documento($id_documento, FALSE , $params );
+	}
 
 	/**
  	 *
@@ -182,23 +147,17 @@ require_once("interfaces/Documentos.interface.php");
 		$id_empresa = null, 
 		$nombre = null
 	){
-
 		$q = DocumentoBaseDAO::search( new DocumentoBase( array( "nombre" => $nombre ) ) );
 
 		return array(
 			"resultados" => $q,
-			"numero_de_resultados" => sizeof($q));
-
+			"numero_de_resultados" => sizeof($q)
+		);
 	}
 
-  	
-  
-  
-	
-  
 	/**
  	 *
- 	 *Update : Falta indicar en los argumentos el si el documeto esta activo y a que sucursal pertenece.
+ 	 *Edita un documento base
  	 *
  	 * @param id_documento int Id del documento a editar.
  	 * @param activo bool 
@@ -208,7 +167,7 @@ require_once("interfaces/Documentos.interface.php");
  	 * @param json_impresion string 
  	 * @param nombre string 
  	 **/
-  public static function Editar
+	static function EditarBase
 	(
 		$id_documento, 
 		$activo = null, 
@@ -218,8 +177,6 @@ require_once("interfaces/Documentos.interface.php");
 		$json_impresion = null, 
 		$nombre = null
 	){
-
-
 		$nDoc = DocumentoBaseDAO::getByPK($id_documento);
 
 		if( is_null($nDoc) ) throw new InvalidDataException("El documento a editar no existe.");
@@ -246,11 +203,7 @@ require_once("interfaces/Documentos.interface.php");
 			$nDoc->setIdSucursal($id_sucursal);
 		}
 
-
 		$nDoc->setUltimaModificacion(time());
-
-
-		
 
 		try{
 
@@ -259,23 +212,105 @@ require_once("interfaces/Documentos.interface.php");
 		}catch(Exception $e){
 			throw new InvalidDatabaseOperationException ($e);
 		}
-
-
-		
 	}
 
-  
-  
-  
-	
-  
+	/**
+ 	 *
+ 	 *Editar un documento
+ 	 *
+ 	 * @param extra_params json 
+ 	 * @param id_documento int 
+ 	 **/
+  public static function Editar
+	(
+		$extra_params,
+		$id_documento
+	){
+
+		$nDoc = DocumentoDAO::getByPK( $id_documento );
+
+		$nDoc->setFolio( 0 );
+		$nDoc->setFecha( time( ) );
+		$nDoc->setIdOperacion( 0 );
+
+		DAO::transBegin();
+
+		try{
+			DocumentoDAO::save($nDoc);
+
+		}catch(Exception $e){
+			DAO::transRollback();
+			throw InvalidDatabaseOperationException($e);
+
+		}
+
+		//test all extra params in base doc are present in $extra_params
+		$pindb = ExtraParamsEstructuraDao::search( new ExtraParamsEstructura(
+					array(
+						"tabla"	=> "documento_base-" . $nDoc->getIdDocumentoBase(),
+					) ) );
+
+
+
+		foreach ( $pindb as $campo ) {
+
+			$valores = ExtraParamsValoresDAO::search( 
+						new ExtraParamsValores(
+								array(
+									"id_extra_params_estructura"	=> $campo->getIdExtraParamsEstructura() ,
+									"id_pk_tabla"					=> $id_documento
+								)
+							)
+					 );
+
+			if(sizeof($valores) == 0) {
+				$valores = new ExtraParamsValores();
+			}else{
+				$valores = $valores[0];
+			}
+
+			if( !array_key_exists( $campo->getCampo(), $extra_params)) {
+				//no existe en extra params
+				//salir si este parametro es
+				//obligatorio
+				if($campo->getObligatorio()){
+					throw new InvalidDataException("El campo " . $campo->getObligatorio() . " es obligatorio");
+				}
+			}else{
+				$valueToStore = $extra_params->{$campo->getCampo()};
+				$valueToStore = is_null($valueToStore) ? "" : $valueToStore ;
+
+				/*$val = new ExtraParamsValores(array(
+						"id_extra_params_estructura"	=>  $campo->getIdExtraParamsEstructura(),// id_extra_params
+						"id_pk_tabla"					=>  $nDoc->getIdDocumento(),// id_documento
+						"val"							=>  $valueToStore
+					));*/
+
+				$valores->setVal( $valueToStore );
+
+				try{
+					ExtraParamsValoresDAO::save( $valores );
+
+				}catch(Exception $e){
+					DAO::transRollback();
+					throw new InvalidDatabaseOperationException($e);
+
+				}
+			}
+		}//foreach
+
+
+		DAO::transEnd();
+	}
+
+
 	/**
  	 *
  	 *Cancela una factura.
  	 *
  	 * @param id_folio int Id de la factura a eliminar
  	 **/
-  public static function CancelarFactura
+	public static function CancelarFactura
 	(
 		$id_folio
 	){
@@ -283,16 +318,9 @@ require_once("interfaces/Documentos.interface.php");
 
 	}
 
-  
-  
-  
-	
-  
 	/**
  	 *
  	 *Genera una factura seg?n la informaci?n de un cliente y la venta realizada.
-
-Update : Falta especificar si seria una factura detallada (cuando en los conceptos de la factura describe a cada articulo) o generica (un solo concepto que engloba a todos los productos).
  	 *
  	 * @param id_cliente int Id del cliente al cual se le va a facturar
  	 * @param id_venta int Id de la venta sobre la cual se facturara
@@ -304,17 +332,13 @@ Update : Falta especificar si seria una factura detallada (cuando en los concept
 		$id_venta
 	){
 
-
 	}
 
-  
-  
-  
-	
-  
+
+
 	/**
- 	 *
- 	 *Imprime una factura
+	 *
+	 *Imprime una factura
 Update : La respuesta solo deber?a de contener success :true | false, y en caso de error, su descripcion, no se necesita apra anda en el JSON de respuesta una propiedad factura.
  	 *
  	 * @param id_folio int Id de la factura que se desea imprimir.
@@ -328,39 +352,37 @@ Update : La respuesta solo deber?a de contener success :true | false, y en caso 
 
 	}
 
-  
-  
-  
-	
-  
+
 	/**
  	 *
- 	 *Crea un nuevo documento.
-
+ 	 *El documento base es de donde se crean instancias de documentos.
  	 *
  	 * @param json_impresion json El json que se utilizara para imprimir este documento.
- 	 * @param nombre string Nombre del documento
+ 	 * @param nombre string Nombre del documento base
  	 * @param activo bool Si esta activo o si no se puede realizar documentos de este tipo.
  	 * @param foliado json El json que describe como sera el foliado de este documento. Incluye en que folio va.
+ 	 * @param foliado json 
  	 * @param id_empresa int Si pertence a una empresa en especifico, o puede realizarse en cualquier empresa.
  	 * @param id_sucursal int Si pertenece a una sucursal en especifico o puede realizarse en cualquier sucursal.
- 	 * @return id_documento int Id del nuevo documento
+ 	 * @return id_documento_base int Id del nuevo documento
  	 **/
-  public static function Nuevo
+  static function NuevoBase
 	(
 		$json_impresion, 
 		$nombre, 
 		$activo =  1 , 
-		$foliado = null, 
+		$extra_params = null, 
+		$foliado = "", 
+		$foliado = "", 
 		$id_empresa = null, 
 		$id_sucursal = null
 	){
 
+		DAO::transBegin();
+
 		if(is_null($json_impresion)){
 			throw new InvalidDataException("El json de impresion no es valido.");
 		}
-
-
 
 		$q = DocumentoBaseDAO::search( new DocumentoBase( array( "nombre" => $nombre ) ) );
 
@@ -370,26 +392,132 @@ Update : La respuesta solo deber?a de contener success :true | false, y en caso 
 		$nDoc->setJsonImpresion( json_encode($json_impresion));
 		$nDoc->setNombre($nombre);
 		$nDoc->setActivo($activo);
-		/* @TODO $nDoc->setFoliado($foliado); */
 		$nDoc->setIdEmpresa($id_empresa);
 		$nDoc->setIdSucursal($id_sucursal);
 		$nDoc->setUltimaModificacion(time());
 
-
-		
-
 		try{
-
 			DocumentoBaseDAO::save( $nDoc );
 
 		}catch(Exception $e){
+			DAO::transRollback();
 			throw new InvalidDatabaseOperationException ($e);
+
 		}
 
+		if ( !is_null($extra_params) ) {
+			for ( $i = 0; $i < sizeof($extra_params); $i++ ) {
+
+				//test
+				if( !isset( $extra_params[$i]->obligatory ) ) {
+					 $extra_params[$i]->obligatory = FALSE;
+				}
+
+				$paramStruct = new ExtraParamsEstructura();
+				$paramStruct->setTabla("documento_base-" . $nDoc->getIdDocumentoBase( ) );
+				$paramStruct->setCampo( str_replace( " ", "_", $extra_params[$i]->desc ) );
+				$paramStruct->setTipo( $extra_params[$i]->type );
+				$paramStruct->setLongitud( 256 );
+				$paramStruct->setObligatorio($extra_params[$i]->obligatory );
+				$paramStruct->setCaption( $extra_params[$i]->desc );
+				$paramStruct->setDescripcion( $extra_params[$i]->desc  );
+
+				try{
+					ExtraParamsEstructuraDAO::save( $paramStruct  );
+
+				}catch(Exception $e){
+					Logger::error($e);
+					DAO::transRollback();
+					throw new Exception( $e );
+
+				}
+			}
+		}
+
+		DAO::transEnd();
 
 		return array("id_documento_base" => $nDoc->getIdDocumentoBase() );
+	}
+
+	/**
+ 	 *
+ 	 *Crea un nuevo documento.
+
+ 	 *
+ 	 * @param id_documento_base int el documento base del cual este documento es instancia
+ 	 * @param extra_params json 
+ 	 * @param id_empresa int Si pertence a una empresa en especifico, o puede realizarse en cualquier empresa.
+ 	 * @param id_sucursal int Si pertenece a una sucursal en especifico o puede realizarse en cualquier sucursal.
+ 	 * @return id_documento int Id del nuevo documento
+ 	 **/
+  public static function Nuevo
+	(
+		$id_documento_base, 
+		$extra_params = null, 
+		$id_empresa = null, 
+		$id_sucursal = null
+	){
+		$dbase = DocumentoBaseDAO::getByPK( $id_documento_base );
+
+		if( is_null( $dbase ) ) {
+			throw new InvalidDataException( "This base doc does not exist" );
+		}
+
+		$nDoc = new Documento();
+
+		$nDoc->setIdDocumentoBase( $id_documento_base );
+		$nDoc->setFolio( 0 );
+		$nDoc->setFecha( time( ) );
+		$nDoc->setIdOperacion( 0 );
+
+		DAO::transBegin();
+
+		try{
+			DocumentoDAO::save($nDoc);
+
+		}catch(Exception $e){
+			DAO::transRollback();
+			throw InvalidDatabaseOperationException($e);
+
+		}
+
+		//test all extra params in base doc are present in $extra_params
+		$pindb = ExtraParamsEstructuraDao::search( new ExtraParamsEstructura(
+					array(
+						"tabla" => "documento_base-" . $id_documento_base
+					) ) );
+
+		foreach ( $pindb as $campo ) {
+			if( !array_key_exists( $campo->getCampo(), $extra_params)) {
+				//no existe en extra params
+				//salir si este parametro es
+				//obligatorio
+				if($campo->getObligatorio()){
+					throw new InvalidDataException("El campo " . $campo->getObligatorio() . " es obligatorio");
+				}
+			}else{
+				$valueToStore = $extra_params->{$campo->getCampo()};
+				$valueToStore = is_null($valueToStore) ? "" : $valueToStore ;
+
+				$val = new ExtraParamsValores(array(
+						"id_extra_params_estructura"	=>  $campo->getIdExtraParamsEstructura(),// id_extra_params
+						"id_pk_tabla"					=>  $nDoc->getIdDocumento(),// id_documento
+						"val"							=>  $valueToStore
+					));
+				try{
+					ExtraParamsValoresDAO::save( $val );
+
+				}catch(Exception $e){
+					DAO::transRollback();
+					throw new InvalidDatabaseOperationException($e);
+
+				}
+			}
+		}//foreach
+
+
+		DAO::transEnd();
 
 	}
 
- 
-  }
+}

@@ -4,8 +4,6 @@ require_once("ApiHandler.php");
 
 	require_once("ApiHttpErrors.php");
 
-	require_once("ApiLoader.php");
-
 	require_once("ApiOutputFormatter.php");
 
 	require_once("CustomValidator.php");
@@ -2061,17 +2059,17 @@ require_once("ApiHandler.php");
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"fecha_gasto" => new ApiExposedProperty("fecha_gasto", true, GET, array( "string" )),
-			"id_empresa" => new ApiExposedProperty("id_empresa", true, GET, array( "int" )),
-			"billetes" => new ApiExposedProperty("billetes", false, GET, array( "json" )),
-			"descripcion" => new ApiExposedProperty("descripcion", false, GET, array( "string" )),
-			"folio" => new ApiExposedProperty("folio", false, GET, array( "string" )),
-			"id_caja" => new ApiExposedProperty("id_caja", false, GET, array( "int" )),
-			"id_concepto_gasto" => new ApiExposedProperty("id_concepto_gasto", false, GET, array( "int" )),
-			"id_orden_de_servicio" => new ApiExposedProperty("id_orden_de_servicio", false, GET, array( "int" )),
-			"id_sucursal" => new ApiExposedProperty("id_sucursal", false, GET, array( "int" )),
-			"monto" => new ApiExposedProperty("monto", false, GET, array( "float" )),
-			"nota" => new ApiExposedProperty("nota", false, GET, array( "string" )),
+			"fecha_gasto" => new ApiExposedProperty("fecha_gasto", true, POST, array( "string" )),
+			"id_empresa" => new ApiExposedProperty("id_empresa", true, POST, array( "int" )),
+			"billetes" => new ApiExposedProperty("billetes", false, POST, array( "json" )),
+			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "string" )),
+			"folio" => new ApiExposedProperty("folio", false, POST, array( "string" )),
+			"id_caja" => new ApiExposedProperty("id_caja", false, POST, array( "int" )),
+			"id_concepto_gasto" => new ApiExposedProperty("id_concepto_gasto", false, POST, array( "int" )),
+			"id_orden_de_servicio" => new ApiExposedProperty("id_orden_de_servicio", false, POST, array( "int" )),
+			"id_sucursal" => new ApiExposedProperty("id_sucursal", false, POST, array( "int" )),
+			"monto" => new ApiExposedProperty("monto", false, POST, array( "float" )),
+			"nota" => new ApiExposedProperty("nota", false, POST, array( "string" )),
 		);
 	}
 
@@ -2080,17 +2078,17 @@ require_once("ApiHandler.php");
  		$this->response = CargosYAbonosController::NuevoGasto( 
  			
 			
-			isset($_GET['fecha_gasto'] ) ? $_GET['fecha_gasto'] : null,
-			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] : null,
-			isset($_GET['billetes'] ) ? json_decode($_GET['billetes']) : null,
-			isset($_GET['descripcion'] ) ? $_GET['descripcion'] :  null,
-			isset($_GET['folio'] ) ? $_GET['folio'] :  null,
-			isset($_GET['id_caja'] ) ? $_GET['id_caja'] :  null,
-			isset($_GET['id_concepto_gasto'] ) ? $_GET['id_concepto_gasto'] :  null,
-			isset($_GET['id_orden_de_servicio'] ) ? $_GET['id_orden_de_servicio'] :  null,
-			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] :  null,
-			isset($_GET['monto'] ) ? $_GET['monto'] :  null,
-			isset($_GET['nota'] ) ? $_GET['nota'] :  null
+			isset($_POST['fecha_gasto'] ) ? $_POST['fecha_gasto'] : null,
+			isset($_POST['id_empresa'] ) ? $_POST['id_empresa'] : null,
+			isset($_POST['billetes'] ) ? json_decode($_POST['billetes']) : null,
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null,
+			isset($_POST['folio'] ) ? $_POST['folio'] :  null,
+			isset($_POST['id_caja'] ) ? $_POST['id_caja'] :  null,
+			isset($_POST['id_concepto_gasto'] ) ? $_POST['id_concepto_gasto'] :  null,
+			isset($_POST['id_orden_de_servicio'] ) ? $_POST['id_orden_de_servicio'] :  null,
+			isset($_POST['id_sucursal'] ) ? $_POST['id_sucursal'] :  null,
+			isset($_POST['monto'] ) ? $_POST['monto'] :  null,
+			isset($_POST['nota'] ) ? $_POST['nota'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -5940,14 +5938,14 @@ require_once("ApiHandler.php");
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
 	protected function GetRequest()
-	{                                                                  
+	{
 		$this->request = array(	
 			"id_instacia" => new ApiExposedProperty("id_instacia", true, POST, array( "int" )),
 			"time" => new ApiExposedProperty("time", true, POST, array( "int" )),
 		);
 	}
 
-	protected function GenerateResponse() {
+	protected function GenerateResponse() {		
 		try{
  		$this->response = POSController::RespaldoBorrarBd( 
  			
@@ -6004,10 +6002,8 @@ require_once("ApiHandler.php");
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"json_impresion" => new ApiExposedProperty("json_impresion", true, POST, array( "json" )),
-			"nombre" => new ApiExposedProperty("nombre", true, POST, array( "string" )),
-			"activo" => new ApiExposedProperty("activo", false, POST, array( "bool" )),
-			"foliado" => new ApiExposedProperty("foliado", false, POST, array( "json" )),
+			"id_documento_base" => new ApiExposedProperty("id_documento_base", true, POST, array( "int" )),
+			"extra_params" => new ApiExposedProperty("extra_params", false, POST, array( "json" )),
 			"id_empresa" => new ApiExposedProperty("id_empresa", false, POST, array( "int" )),
 			"id_sucursal" => new ApiExposedProperty("id_sucursal", false, POST, array( "int" )),
 		);
@@ -6018,10 +6014,8 @@ require_once("ApiHandler.php");
  		$this->response = DocumentosController::Nuevo( 
  			
 			
-			isset($_POST['json_impresion'] ) ? json_decode($_POST['json_impresion']) : null,
-			isset($_POST['nombre'] ) ? $_POST['nombre'] : null,
-			isset($_POST['activo'] ) ? $_POST['activo'] :  1 ,
-			isset($_POST['foliado'] ) ? json_decode($_POST['foliado']) : null,
+			isset($_POST['id_documento_base'] ) ? $_POST['id_documento_base'] : null,
+			isset($_POST['extra_params'] ) ? json_decode($_POST['extra_params']) : null,
 			isset($_POST['id_empresa'] ) ? $_POST['id_empresa'] :  null,
 			isset($_POST['id_sucursal'] ) ? $_POST['id_sucursal'] :  null
 			
@@ -6035,7 +6029,7 @@ require_once("ApiHandler.php");
   
   
 
-  class ApiDocumentoEditar extends ApiHandler {
+  class ApiDocumentoBaseEditar extends ApiHandler {
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
@@ -6054,7 +6048,7 @@ require_once("ApiHandler.php");
 
 	protected function GenerateResponse() {		
 		try{
- 		$this->response = DocumentosController::Editar( 
+ 		$this->response = DocumentosController::EditarBase( 
  			
 			
 			isset($_POST['id_documento'] ) ? $_POST['id_documento'] : null,
@@ -6150,6 +6144,78 @@ require_once("ApiHandler.php");
 			
 			isset($_GET['id_cliente'] ) ? $_GET['id_cliente'] : null,
 			isset($_GET['id_venta'] ) ? $_GET['id_venta'] : null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiDocumentoBaseNuevo extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"json_impresion" => new ApiExposedProperty("json_impresion", true, POST, array( "json" )),
+			"nombre" => new ApiExposedProperty("nombre", true, POST, array( "string" )),
+			"activo" => new ApiExposedProperty("activo", false, POST, array( "bool" )),
+			"extra_params" => new ApiExposedProperty("extra_params", false, POST, array( "json" )),
+			"foliado" => new ApiExposedProperty("foliado", false, POST, array( "json" )),
+			"foliado" => new ApiExposedProperty("foliado", false, POST, array( "json" )),
+			"id_empresa" => new ApiExposedProperty("id_empresa", false, POST, array( "int" )),
+			"id_sucursal" => new ApiExposedProperty("id_sucursal", false, POST, array( "int" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = DocumentosController::NuevoBase( 
+ 			
+			
+			isset($_POST['json_impresion'] ) ? json_decode($_POST['json_impresion']) : null,
+			isset($_POST['nombre'] ) ? $_POST['nombre'] : null,
+			isset($_POST['activo'] ) ? $_POST['activo'] :  1 ,
+			isset($_POST['extra_params'] ) ? json_decode($_POST['extra_params']) : null,
+			isset($_POST['foliado'] ) ? json_decode($_POST['foliado']) : null,
+			isset($_POST['foliado'] ) ? json_decode($_POST['foliado']) : null,
+			isset($_POST['id_empresa'] ) ? $_POST['id_empresa'] :  null,
+			isset($_POST['id_sucursal'] ) ? $_POST['id_sucursal'] :  null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiDocumentoEditar extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"extra_params" => new ApiExposedProperty("extra_params", true, POST, array( "json" )),
+			"id_documento" => new ApiExposedProperty("id_documento", true, POST, array( "int" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = DocumentosController::Editar( 
+ 			
+			
+			isset($_POST['extra_params'] ) ? json_decode($_POST['extra_params']) : null,
+			isset($_POST['id_documento'] ) ? $_POST['id_documento'] : null
 			
 			);
 		}catch(Exception $e){
@@ -6668,9 +6734,9 @@ require_once("ApiHandler.php");
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"nombre" => new ApiExposedProperty("nombre", true, GET, array( "string" )),
-			"descripcion" => new ApiExposedProperty("descripcion", false, GET, array( "string" )),
-			"id_categoria_padre" => new ApiExposedProperty("id_categoria_padre", false, GET, array( "int" )),
+			"nombre" => new ApiExposedProperty("nombre", true, POST, array( "string" )),
+			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "string" )),
+			"id_categoria_padre" => new ApiExposedProperty("id_categoria_padre", false, POST, array( "int" )),
 		);
 	}
 
@@ -6679,9 +6745,9 @@ require_once("ApiHandler.php");
  		$this->response = ProductosController::NuevaCategoria( 
  			
 			
-			isset($_GET['nombre'] ) ? $_GET['nombre'] : null,
-			isset($_GET['descripcion'] ) ? $_GET['descripcion'] :  null,
-			isset($_GET['id_categoria_padre'] ) ? $_GET['id_categoria_padre'] :  null
+			isset($_POST['nombre'] ) ? $_POST['nombre'] : null,
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null,
+			isset($_POST['id_categoria_padre'] ) ? $_POST['id_categoria_padre'] :  null
 			
 			);
 		}catch(Exception $e){

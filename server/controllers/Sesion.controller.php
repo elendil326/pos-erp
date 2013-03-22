@@ -3,12 +3,10 @@
 require_once("interfaces/Sesion.interface.php");
 
 
-class SesionController implements ISesion
-{
+class SesionController implements ISesion{
 
-  	private static $_is_logged_in;
+	private static $_is_logged_in;
 	private static $_current_user;
-
 
 	/**
  	 *
@@ -18,22 +16,16 @@ class SesionController implements ISesion
  	 * @return id_sucursal int El id_sucursal de la sucursal donde este usuario inico sesion en caso de haberlo hecho desde un mostraodr. Un gerente no tendra id_sucursal asociada a el dado que puede iniciar sesion desde cualquier lugar.
  	 * @return id_usuario int 
  	 **/
-	public static function Actual( )
-	{
-
-		if ( !is_null(self::$_is_logged_in) && self::$_is_logged_in )
-		{
-			if ( !is_null( self::$_current_user ) )
-			{
+	public static function Actual( ) {
+		if ( !is_null(self::$_is_logged_in) && self::$_is_logged_in ) {
+			if ( !is_null( self::$_current_user ) ) {
 				return array( "id_caja" => null, "id_sucursal" => null, "id_usuario" => self::$_current_user->getIdUsuario( ) );
 			}
-		
-			$foo = self::getCurrentUser( );
 
+			$foo = self::getCurrentUser( );
 			return array( "id_caja" => null, "id_sucursal" => null, "id_usuario" => $foo->getIdUsuario());
-		}
-		else
-		{
+
+		}else{
 			return array( "id_caja" => null, "id_sucursal" => null, "id_usuario" => null);
 		}
 	}
@@ -49,30 +41,49 @@ class SesionController implements ISesion
 	public static function Cerrar
 	(
 		$auth_token = null
-	)
-	{  
-		
-  		//Logger::log("Cerrando sesion para toek {$auth_token}...");
-		//Logger::warn("Falta borrar el token de la bd");
-	  	self::$_is_logged_in = null;
+	){
+		$s = SesionDAO::search( new Sesion( array( "auth_token" => $auth_token  )  ) );
+
+		if(sizeof($s) != 1){
+			//no existe este auth token
+		}
+	
+		try{
+			SesionDAO::delete( $s[0]  );
+		}catch(Exception $e){
+
+		}
+
+	
+		self::$_is_logged_in = null;
 		self::$_current_user = null;
 		$sm = SessionManager::getInstance();
 		$sm->SetCookie( 'at', 'deleted', 1, '/' );
-  		
 	}
-  
 
 	/**
 	 * Cerrar las sesiones que ya caducaron
 	 * 
 	 * 
 	 * */
-	public static function Limpiar(){
-	//	SesionDAO::clean();
+	public static function Limpiar( ){
+
+		$sesiones = SesionDAO::getAll();
+
+		foreach( $sesiones as $s ) {
+			if( $s->getFechaDeVencimiento( ) < time( ) ) {
+				try{
+					SesionDAO::delete( $s );
+				}catch(Exception $e){
+					throw new InvalidDatabaseOperationException($e);
+				}
+			}
+		}
+
 	}
 
 
-	public static function HeartBeat(){
+	public static function HeartBeat( ){
 		if(!self::isLoggedIn()) return;
 		
 		$s = self::Actual();
@@ -88,7 +99,9 @@ class SesionController implements ISesion
 			}catch(Exception $e){
 				throw InvalidDatabaseException();
 			}*/
-		}else Logger::log("JN?O");
+		}else{
+			//Logger::log("JN?O");
+		}
 	}
 
 	/**
@@ -115,14 +128,11 @@ class SesionController implements ISesion
 		$usuario, 
 		$request_token = null
 	)
-	{  
-
-		
+	{
 		//user is not logged in, look for him
 		$user = UsuarioDAO::findUser( $usuario, $password );
 
-
-		if( $user === NULL ) {
+		if( is_null($user) ) {
 			Logger::warn("===== Credenciales invalidas para usuario {$usuario} ====== ");
 			return array( "login_succesful" => false );
 		}
@@ -131,8 +141,6 @@ class SesionController implements ISesion
 		$sesiones_actuales  = SesionDAO::search( new Sesion( array( "id_usuario" => $user->getIdUsuario() ) ) );
 		
 		if(sizeof($sesiones_actuales) > 0){
-			////Logger::warn("Este usuario ya tiene sesiones actuales");
-			
 			foreach($sesiones_actuales	as $s ){
 				
 				try{
@@ -148,59 +156,42 @@ class SesionController implements ISesion
 		
 		//si tiene un token actualmente que es valido, regenerar el token actualizar la fecha y darle el nuevo token
 		$nueva_sesion = new Sesion();
-		$nueva_sesion->setIdUsuario			( $user->getIdUsuario() 				);
-		$nueva_sesion->setAuthToken			( self::GenerarAuthToken() 				);
-		$nueva_sesion->setFechaDeVencimiento( date( "Y-m-d H:i:s", time() + 3600 ) 	);
+		$nueva_sesion->setIdUsuario( $user->getIdUsuario( ) );
+		$nueva_sesion->setAuthToken( self::GenerarAuthToken( ) );
+		$nueva_sesion->setFechaDeVencimiento( time( ) + 3600 );
 		
 		if(isset($_SERVER["HTTP_USER_AGENT"])){
-			$nueva_sesion->setClientUserAgent	( $_SERVER["HTTP_USER_AGENT"] );
-			
+			$nueva_sesion->setClientUserAgent( $_SERVER["HTTP_USER_AGENT"] );
 		}else{
-			$nueva_sesion->setClientUserAgent	( "CLI" );
-			
-		}
-			
-		if(isset($_SERVER["REMOTE_ADDR"])){
-			$nueva_sesion->setIp				( $_SERVER["REMOTE_ADDR"] );
-			
-		}else{
-			$nueva_sesion->setIp				( "CLI" );			
-			
+			$nueva_sesion->setClientUserAgent( "CLI" );
 		}
 
-		
-		
+		if(isset($_SERVER["REMOTE_ADDR"])){
+			$nueva_sesion->setIp( $_SERVER["REMOTE_ADDR"] );
+		}else{
+			$nueva_sesion->setIp( "CLI" );
+		}
+
 		try{
 			SesionDAO::save( $nueva_sesion );
-			////Logger::log("Setting _is_logged_in");
-			
-			
+
 		}catch(Exception $e){
-			//Logger::error( "Imposible escribir la sesion en la bd " );
-			//Logger::error( $e->getMessage() );
-			
 			throw new InvalidDatabaseOperationException($e);
-			
+
 		}
-		
-		////Logger::log("Actual login...");
+
 		self::login( $nueva_sesion->getAuthToken(), $nueva_sesion->getIdUsuario(), $user->getIdRol()  );
-		
-		////Logger::log("Setting _current_user");
+
 		self::$_current_user = $user;
 		self::$_is_logged_in = true;
-		
-		
-		switch($user->getIdRol()){
+
+		switch($user->getIdRol()) {
 			case 0:
 			case 1:
 			case 2:						
 			case 3:			
 			case 4: $next_url = "g/"; break;
-			
 			case 5: $next_url = "c/"; break;
-
-			
 		}
 		
 		return array( 
@@ -208,9 +199,8 @@ class SesionController implements ISesion
 				"login_succesful" => true,
 				"siguiente_url" => $next_url
 			);
-
 	}
-  
+
 
 	private static function GenerarAuthToken
 	(
@@ -234,7 +224,7 @@ class SesionController implements ISesion
 	(
 		$id_grupo = null
 	)
-	{  
+	{
   		$out = array();
 		$sesiones = SesionDAO::getAll(  );
 		
@@ -246,7 +236,6 @@ class SesionController implements ISesion
 			"numero_de_resultados" => sizeof($out),
 			"resultados"			=> $out
 		);
-  		
 	}
 
 
@@ -345,33 +334,23 @@ class SesionController implements ISesion
 
 
 	private static function login( $auth_token, $user_id, $rol_id ){
-		
-		if(headers_sent()){
+		if(headers_sent( )){
 			return;
 		}
 		
 		$sm = SessionManager::getInstance( );
-
 		$sm->SetCookie( 'at',  $auth_token, 	time()+60*60*24, '/' );
 		$sm->SetCookie( 'rid', $rol_id, 		time()+60*60*24, '/' );
 		$sm->SetCookie( 'uid', $user_id, 		time()+60*60*24, '/' );
-
 	}
-	
-
-
-
 
 
 	public static function getCurrentUser(  ){
-
-		if( !is_null(self::$_current_user) ){
+		if( !is_null(self::$_current_user) ) {
 			return self::$_current_user;
-		}		
-
+		}
 
 		$auth_token = null;
-
 
 		if(isset($_GET["auth_token"]) ){
 			$auth_token =$_GET["auth_token"];
@@ -398,7 +377,7 @@ class SesionController implements ISesion
 			self::$_current_user = SesionDAO::getUserByAuthToken( $auth_token );	
 		}
 		
-/*
+		/*
 		//there is authtoken in the POST message
 		if( isset($_POST["at"]) && !is_null($_POST["at"]) ){
 			//Logger::log("post");
@@ -410,13 +389,7 @@ class SesionController implements ISesion
 			//Logger::log("get");
 			self::$_current_user = SesionDAO::getUserByAuthToken( $_GET["at"] );
 		}
-	
-*/	
+		*/
 		return self::$_current_user;
-
-			
-			
 	}
-
-
 }

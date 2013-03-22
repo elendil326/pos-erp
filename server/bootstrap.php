@@ -26,18 +26,13 @@
 		}
 	}
 
-	
 	# *******************************
 	# Buscar la ruta de /SERVER
 	# *******************************
 	define('POS_PATH_TO_SERVER_ROOT',  __DIR__ );
 	ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . POS_PATH_TO_SERVER_ROOT);
 
-
 	date_default_timezone_set ( "America/Mexico_City" );
-
-
-	
 
 	# *******************************
 	# Buscar la configuracion y cargarla
@@ -52,11 +47,6 @@
 		include(__DIR__ . "/config.php");
 		
 	}
-
-
-
-
-
 
 
 	# *******************************
@@ -77,14 +67,8 @@
 	define("POS_CONFIG_CORE_DB_DEBUG", 			$POS_CONFIG["CORE_DB_DEBUG"]);
 
 
-
-
-
-
-	if(is_file("config.php"))
-	{
+	if(is_file("config.php")) {
 		include 'config.php';
-		//Logger::warn("config.php no exitste. Usando config.defatult.php");
 	}
 
 
@@ -93,7 +77,6 @@
 	# *******************************
 	require_once('libs/adodb5/adodb.inc.php');
 	require_once('libs/adodb5/adodb-exceptions.inc.php');
-
 
 	require_once("libs/predis/lib/Predis/Autoloader.php");
 
@@ -167,11 +150,6 @@
 	require_once("libs/gui/ClienteSelectorComponent.php");
 	require_once("libs/gui/ClienteTabPage.php");
 
-
-
-	/*require_once("controllers/login.controller.php");*/
-	//require_once("controllers/instances.controller.php");
-    
 	require_once("libs/SessionManager.php");
     require_once("libs/FormatTime.php");
     require_once("libs/CNumeroaLetra.php");
@@ -219,9 +197,6 @@
 	require_once("controllers/Cheques.controller.php");
 	require_once("controllers/Consignaciones.controller.php");
 	require_once("controllers/Contabilidad.controller.php");
-	
-	
-
 	require_once("controllers/Paquetes.controller.php");
 	require_once("controllers/Reportes.controller.php");
 	require_once("controllers/TransportacionYFletes.controller.php");
@@ -253,11 +228,10 @@
 
 
 
-	if(class_exists("PHPUnit_Runner_Version")){
-		$_GET["_instance_"] = $POS_CONFIG["PHPUNIT_INSTANCE_TO_TEST"];		
+	if(class_exists("PHPUnit_Runner_Version")) {
+		$_GET["_instance_"] = $POS_CONFIG["PHPUNIT_INSTANCE_TO_TEST"];
 		define("BYPASS_INSTANCE_CHECK", false);
 	}
-
 
 
 
@@ -274,9 +248,6 @@
 
 
 
-	
-
-
 	# *******************************
 	# Cosas de la instancia
 	# *******************************
@@ -285,10 +256,8 @@
 		Logger::error("No hay instancia en el url !");
 		die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));
 	}
-	
 
 
-		
 	$sql = "SELECT * FROM instances WHERE ( instance_token = ? ) LIMIT 1;";
 
 	$params = array( $_GET["_instance_"] );
@@ -353,8 +322,8 @@
 	 * 
 	 * 
 	 * */
-	//SesionController::Limpiar(); 
-	//SesionController::HeartBeat();	
+	SesionController::Limpiar( );
+	//SesionController::HeartBeat();
 
 	//DAO::predis("db".$rs["instance_id"], "127.0.0.1");
 	

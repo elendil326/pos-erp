@@ -9,7 +9,6 @@ require_once("interfaces/CargosYAbonos.interface.php");
 class CargosYAbonosController extends ValidacionesController implements ICargosYAbonos
 {
 
-    
     /*
      * Valida los parametros de la tabla ingreso. Regresa un string con el error en caso
      * de haber uno, de lo contrario regresa verdadero.
@@ -426,11 +425,13 @@ class CargosYAbonosController extends ValidacionesController implements ICargosY
         
         //Se obtiene al usuario de la sesion
         $id_usuario = SesionController::getCurrentUser();
+        $id_usuario = $id_usuario->getIdUsuario();
+
         if (is_null($id_usuario)) {
             Logger::error("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
             throw new Exception("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
         }
-        
+
         //Se validan los parametros obtenidos
         $validar = self::validarParametrosIngreso(null, $id_empresa, $id_concepto_ingreso, $fecha_ingreso, $id_sucursal, $id_caja, $nota, $descripcion, $folio, $monto);
         if (is_string($validar)) {
@@ -478,7 +479,18 @@ class CargosYAbonosController extends ValidacionesController implements ICargosY
         $ingreso = new Ingreso();
         $ingreso->setCancelado(0);
         $ingreso->setDescripcion($descripcion);
-        $ingreso->setFechaDelIngreso($fecha_ingreso);
+        
+		// fecha_ingreso might be in the format : 2012-10-21T00:00:00
+        // if this is the case then act acordingly
+        if ( is_int( $fecha_ingreso ) )
+        {
+            $ingreso->setFechaDelIngreso( $fecha_ingreso );
+        }
+        else
+        {
+            $ingreso->setFechaDelIngreso( strtotime( $fecha_ingreso ) );
+        }
+
         $ingreso->setFolio($folio);
         $ingreso->setIdCaja($id_caja);
         $ingreso->setIdConceptoIngreso($id_concepto_ingreso);
@@ -487,7 +499,7 @@ class CargosYAbonosController extends ValidacionesController implements ICargosY
         $ingreso->setIdUsuario($id_usuario);
         $ingreso->setMonto($monto);
         $ingreso->setNota($nota);
-        $ingreso->setFechaDeRegistro( time() );
+        $ingreso->setFechaDeRegistro( time( ) );
         DAO::transBegin();
         try {
             IngresoDAO::save($ingreso);
@@ -1283,13 +1295,24 @@ class CargosYAbonosController extends ValidacionesController implements ICargosY
      * @param monto_minimo float Se listaran los gastos cuyo monto sea mayor a este valor
      * @param monto_maximo float Se listaran los gastos cuyo monto sea menor a este valor
      **/
-    public static function ListaGasto($cancelado = null, $fecha_actual = null, $fecha_final = null, $fecha_inicial = null, $id_caja = null, $id_concepto_gasto = null, $id_empresa = null, $id_orden_servicio = null, $id_sucursal = null, $id_usuario = null, $monto_maximo = null, $monto_minimo = null, $orden = null)
-    {
-        Logger::log("Listando Gastos");
-        
+    public static function ListaGasto(
+    	$cancelado = null,
+    	$fecha_actual = null,
+    	$fecha_final = null,
+    	$fecha_inicial = null,
+    	$id_caja = null,
+    	$id_concepto_gasto = null,
+    	$id_empresa = null,
+    	$id_orden_servicio = null,
+    	$id_sucursal = null,
+    	$id_usuario = null,
+    	$monto_maximo = null,
+    	$monto_minimo = null,
+    	$orden = null) {
+
         //valida la variable orden
         if (!is_null($orden)) {
-            if ($orden != "id_gasto" && $orden != "id_empresa" && $orden != "id_usuario" && $orden != "id_concepto_gasto" && $orden != "id_orden_de_servicio" && $orden != "id_caja" && $orden != "fecha_del_gasto" && $orden != "fecha_de_registro" && $orden != "id_sucursal" && $orden != "nota" && $orden != "descripcion" && $orden != "folio" && $orden != "monto" && $orden != "cancelado" && $orden != "motivo_cancelacion") {
+            if ( $orden != "id_gasto" && $orden != "id_empresa" && $orden != "id_usuario" && $orden != "id_concepto_gasto" && $orden != "id_orden_de_servicio" && $orden != "id_caja" && $orden != "fecha_del_gasto" && $orden != "fecha_de_registro" && $orden != "id_sucursal" && $orden != "nota" && $orden != "descripcion" && $orden != "folio" && $orden != "monto" && $orden != "cancelado" && $orden != "motivo_cancelacion") {
                 Logger::error("La variable orden (" . $orden . ") no es valida");
                 throw new Exception("La variable orden (" . $orden . ") no es valida");
             }
@@ -1297,8 +1320,10 @@ class CargosYAbonosController extends ValidacionesController implements ICargosY
         
         //verifica que se hayan recibido parametros
         $parametros = false;
-        if (!is_null($id_empresa) || !is_null($id_usuario) || !is_null($id_concepto_gasto) || !is_null($id_orden_servicio) || !is_null($id_caja) || !is_null($fecha_inicial) || !is_null($fecha_final) || !is_null($id_sucursal) || !is_null($cancelado) || !is_null($monto_minimo) || !is_null($monto_maximo) || !is_null($fecha_actual))
-            $parametros = true;
+        if (!is_null($id_empresa) || !is_null($id_usuario) || !is_null($id_concepto_gasto) || !is_null($id_orden_servicio) || !is_null($id_caja) || !is_null($fecha_inicial) || !is_null($fecha_final) || !is_null($id_sucursal) || !is_null($cancelado) || !is_null($monto_minimo) || !is_null($monto_maximo) || !is_null($fecha_actual)){
+			$parametros = true;
+        }
+
         $gastos = null;
         if ($parametros) {
             Logger::log("Se recibieron parametros, se listan los Gastos dentro del rango");
@@ -1380,7 +1405,11 @@ class CargosYAbonosController extends ValidacionesController implements ICargosY
             $gastos = GastoDAO::byRange($gasto_criterio_1, $gasto_criterio_2, $orden);
         } else {
             Logger::log("No se recibieron parametros, se listan todos los Gastos");
-            $gastos = GastoDAO::getAll(null, null, $orden);
+            $tipo_de_orden = "desc";
+            if( is_null( $orden ) ) {
+            	$orden = "fecha_de_registro";
+			}
+            $gastos = GastoDAO::getAll( null, null, $orden, $tipo_de_orden );
         }
         Logger::log("Se obtuvo la lista de gastos exitosamente");
 
@@ -1707,9 +1736,7 @@ class CargosYAbonosController extends ValidacionesController implements ICargosY
      * @param ordenar json Valor que contendr la manera en que se ordenar la lista.
      * @return conceptos_gasto json Arreglo que contendr� la informaci�n de conceptos de gasto.
      **/
-    public static function ListaConceptoGasto($activo = null, $orden = null)
-    {
-        Logger::log("Listando conceptos de gasto");
+    public static function ListaConceptoGasto($activo = null, $orden = null) {
         $conceptos_gasto         = null;
         $concepto_gasto_criterio = new ConceptoGasto();
         
@@ -1871,13 +1898,13 @@ class CargosYAbonosController extends ValidacionesController implements ICargosY
 
         // fecha_gasto might be in the format : 2012-10-21T00:00:00
         // if this is the case then act acordingly
-        if ( $fecha_gasto )
+        if( is_int($fecha_gasto) )
         {
-            $gasto->setFechaDelGasto( strtotime( $fecha_gasto ) );
+            $gasto->setFechaDelGasto( $fecha_gasto );
         }
         else
         {
-            $gasto->setFechaDelGasto( $fecha_gasto );
+            $gasto->setFechaDelGasto( strtotime( $fecha_gasto ) );
         }
         
         $gasto->setIdEmpresa( $id_empresa );
@@ -2412,8 +2439,11 @@ class CargosYAbonosController extends ValidacionesController implements ICargosY
             }
             $ingresos = IngresoDAO::byRange($ingreso_criterio_1, $ingreso_criterio_2, $orden);
         } else {
-            Logger::log("No se recibieron parametros, se listan todos los Ingresos");
-            $ingresos = IngresoDAO::getAll(null, null, $orden);
+
+            if(is_null($orden)){
+				$orden = "fecha_del_ingreso";
+            }
+            $ingresos = IngresoDAO::getAll( null, null, $orden, "desc" );
         }
         Logger::log("Se obtuvo la lista de ingresos exitosamente");
         return array("resultados" => $ingresos , "numero_de_resultados" => sizeof($ingresos) ) ;

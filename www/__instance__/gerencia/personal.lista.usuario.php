@@ -6,8 +6,10 @@
 
 	$page = new GerenciaTabPage();
 
+	$page->addComponent(new MessageComponent("Personal"));
+
 	$page->nextTab( "Activos" );
-	
+
 	$page->addComponent(new MessageComponent("Lista de usuarios"));
 
 	$lista = PersonalYAgentesController::ListaUsuario(1);

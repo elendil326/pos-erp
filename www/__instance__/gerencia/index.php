@@ -4,14 +4,10 @@
 		define("BYPASS_INSTANCE_CHECK", false);
 		require_once("../../../server/bootstrap.php");
 	}
-	
-	
-	
+
 	$page = new GerenciaComponentPage();
 	$page->partialRender();
 
-
-	/*
 	?>
 		<table>
 			<tr>
@@ -21,23 +17,18 @@
 
 		</table>
 	<?php
-	*/
-	
+
 
 	$banner = new BannerComponent("POS ERP", "Bienvenido a POS ERP <br>un sistema de gestion empresarial", "../../media/EAbydW1M_XR.png");
 	$page->addComponent( $banner );
-	
 
-	$page->addComponent("<hr>");
 
-	
 
 
 	/* *************************************************
 	 * Orden de Servicio Pendientes
 	 * ************************************************* */
-
-	$s = SesionController::Actual();
+	$s = SesionController::Actual( );
 
 	$ordenes_mias = OrdenDeServicioDAO::search(new OrdenDeServicio(array( 
 							"id_usuario_asignado" => $s["id_usuario"],
@@ -53,17 +44,7 @@
 
 		default:
 			$page->addComponent(new TitleComponent("Tienes " . sizeof($ordenes_mias) . " ordenes de servicio pendientes.", 3));
-			
 	}
-	
 
-	
-	
-	
-	
 	$page->render();
-
-
-
-
 

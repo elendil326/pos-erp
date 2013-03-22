@@ -43,19 +43,24 @@ abstract class ApiHandler
     
     // Holder of roles of each api
     protected $api_roles;
-     
-    public function __construct() 
-    {        
-        
+
+	protected abstract function DeclareAllowedRoles();
+
+    protected abstract function GetRequest();
+
+    protected abstract function GenerateResponse();
+
+    public function __construct() {
+
         // Get an error dispatcher
         $this->error_dispatcher = ApiHttpErrors::getInstance();
         
         // Declare response as an array
         $this->response = array();
-                
-                
+
     }
-                      
+
+
     
     protected function CheckAuthorization()
     {
@@ -97,23 +102,19 @@ abstract class ApiHandler
 		*/
     }
 
-    
-    protected function CheckPermissions()
-    {                
-        
+    protected function CheckPermissions() {
+
         if ($this->api_roles === BYPASS)
         { 
             return true;
         }
 
-		
         // Rol was not found
         throw new ApiException($this->error_dispatcher->forbiddenSite());
     }
 
 
-    protected function ValidateRequest()
-    {
+    protected function ValidateRequest() {
      
         // If we didn't get any request, asume everything is OK.
         if(is_null($this->request)) {
@@ -133,14 +134,7 @@ abstract class ApiHandler
             }
         }
     }
-    
-    protected abstract function DeclareAllowedRoles();    
-    
-    protected abstract function GetRequest();
-    
-    protected abstract function GenerateResponse();
-        
-    
+
     // This function should be called 
     public function ExecuteApi()
     {
@@ -179,22 +173,13 @@ abstract class ApiHandler
 
             if(LOG_FULL_API_CALLS){
 
-            
                 if($this->request !== null) {
                     foreach($this->request as $id => $obj ){
                         Logger::log("  " . $id . "  :  " . $obj->getValue());
-                    }    
+                    }
                 }
-
-                Logger::log("");
-                
-
             }
 
-
-           
-
-                    
             $this->ValidateRequest();
 
             // Generate output

@@ -6,6 +6,8 @@
 
 		$page = new GerenciaTabPage();
 
+		$page->addComponent( new TitleComponent( "Inventario" ) );
+
 		$page->nextTab("Estructura");
 
 		$page->nextTab("Fisico");

@@ -164,22 +164,15 @@ class Logger
 
 
   public static final function error ( $msg ){
-    
     $arr = explode("\n", $msg);
     foreach ($arr as $l) {
         self::log(  "ERROR: " . $l, true );    
     }
-    
   }
-
-
-
-
 
   public static final function warn ($msg ){
     self::log(  "WARN: " . $msg );
   }
-
 
   public static final function debug ($msg ){
     self::log(  "------->DEBUG: " . $msg );
@@ -190,9 +183,7 @@ class Logger
   }
 
   public static final function log( $msg, $toError = false ){
-	
 
-	
         if(!POS_CONFIG_LOG_TO_FILE)
             return;
         
@@ -207,7 +198,6 @@ class Logger
 			$err_log = null;
 		}
 
-
         if(!file_exists(POS_CONFIG_LOG_ACCESS_FILE)){
 			return;
         }
@@ -215,7 +205,6 @@ class Logger
         if(!is_writable(POS_CONFIG_LOG_ACCESS_FILE)){
 			return;
         }
-
 
         $log = fopen( POS_CONFIG_LOG_ACCESS_FILE, "a" );
 
