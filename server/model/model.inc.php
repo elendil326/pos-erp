@@ -131,6 +131,7 @@ require_once ('ubicacion.dao.php');
 
 require_once ('unidad_medida.dao.php');
 require_once ('usuario.dao.php');
+require_once ('usuario_seguimiento.dao.php');
 require_once ('venta.dao.php');
 require_once ('venta_arpilla.dao.php');
 require_once ('venta_aval.dao.php');

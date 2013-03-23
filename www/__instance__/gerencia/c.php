@@ -96,18 +96,7 @@ $header   = array(
 );
 $tabla    = new TableComponent($header, $sesiones["resultados"]);
 
-function username($id_usuario)
-{
-    $u = UsuarioDAO::getBypK($id_usuario);
-    if (is_null($u))
-        return "ERROR";
-    return $u->getNombre();
-}
 
-function ft($time)
-{
-    return FormatTime(strtotime($time));
-}
 
 $html = "";
 

@@ -1654,8 +1654,6 @@ require_once("interfaces/Clientes.interface.php");
 		$id_cliente, 
 		$texto
 	){
-		Logger::log("Nuevo seguimiento a cliente `$id_cliente` ....");
-		
 		$cliente = UsuarioDAO::getByPK( $id_cliente );
 		
 		if(is_null($cliente)){
@@ -1663,7 +1661,7 @@ require_once("interfaces/Clientes.interface.php");
 		}
 		
 		if( strlen( $texto ) == 0){
-			throw new InvalidDataException("El texto no puede ser vacio");			
+			throw new InvalidDataException("El texto no puede ser vacio");
 		}
 		
 		$usuario_actual = SesionController::Actual();

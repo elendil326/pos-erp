@@ -1849,9 +1849,8 @@ CREATE TABLE IF NOT EXISTS `usuario_seguimiento` (
   `id_usuario` int(11) NOT NULL,
   `fecha` int(11) NOT NULL,
   `texto` text NOT NULL,
-  PRIMARY KEY (`id_usuario_seguimiento`),
-  KEY `id_usuario`
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  PRIMARY KEY (`id_usuario_seguimiento`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 
 

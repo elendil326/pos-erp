@@ -2171,4 +2171,47 @@ require_once("interfaces/PersonalYAgentes.interface.php");
   ){
 
   }
-  }
+
+
+  	/**
+ 	 *
+ 	 *Crear un seguimiento de texto a este agente
+ 	 *
+ 	 * @param id_usuario int El id_usuario de a quien le haremos el seguimeinto
+ 	 * @param texto string El texto que ingresa el que realiza el seguimiento
+ 	 * @return id_usuario_seguimiento int 
+ 	 **/
+  static function NuevoSeguimientoUsuario
+	(
+		$id_usuario, 
+		$texto
+	){
+		$cliente = UsuarioDAO::getByPK( $id_usuario );
+		
+		if(is_null($cliente)) {
+			throw new InvalidDataException("Este usuario no existe");
+		}
+
+		if( strlen( $texto ) == 0 ){
+			throw new InvalidDataException("El texto no puede ser vacio");
+		}
+
+		$usuario_actual = SesionController::Actual();
+
+		$s = new UsuarioSeguimiento();
+		$s->setIdUsuario($id_usuario);
+		$s->setIdUsuarioRedacto($usuario_actual["id_usuario"]);
+		$s->setFecha(time());
+		$s->setTexto($texto);
+		
+		
+		try{
+			UsuarioSeguimientoDAO::save( $s );
+
+		}catch(Exception $e){
+			throw new InvalidDatabaseOperationException( $e );
+		}
+		return array( "id_usuario_seguimiento" => $s->getIdUsuarioSeguimiento() );
+	}
+
+}

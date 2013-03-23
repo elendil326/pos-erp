@@ -152,6 +152,7 @@
 
 	require_once("libs/SessionManager.php");
     require_once("libs/FormatTime.php");
+    require_once("libs/TextRender.php");
     require_once("libs/CNumeroaLetra.php");
 
 
