@@ -1,29 +1,4 @@
 <?php 
-/*
-require_once("ApiHandler.php");
-
-	require_once("ApiHttpErrors.php");
-
-	require_once("ApiOutputFormatter.php");
-
-	require_once("CustomValidator.php");
-
-	require_once("DateRangeValidator.php");
-
-	require_once("DateValidator.php");
-
-	require_once("EnumValidator.php");
-
-	require_once("HtmlValidator.php");
-
-	require_once("NumericRangeValidator.php");
-
-	require_once("NumericValidator.php");
-
-	require_once("StringValidator.php");
-
-	require_once("Validator.php");
-*/
 
   class ApiSesionIniciar extends ApiHandler {
   
@@ -1793,6 +1768,36 @@ require_once("ApiHandler.php");
 			
 			isset($_POST['clave'] ) ? $_POST['clave'] :  "",
 			isset($_POST['email'] ) ? $_POST['email'] :  ""
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiPersonalUsuarioSeguimientoNuevo extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"id_usuario" => new ApiExposedProperty("id_usuario", true, POST, array( "int" )),
+			"texto" => new ApiExposedProperty("texto", true, POST, array( "string" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = PersonalYAgentesController::NuevoSeguimientoUsuario( 
+ 			
+			
+			isset($_POST['id_usuario'] ) ? $_POST['id_usuario'] : null,
+			isset($_POST['texto'] ) ? $_POST['texto'] : null
 			
 			);
 		}catch(Exception $e){

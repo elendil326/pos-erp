@@ -100,8 +100,6 @@
  	 *Descarga un archivo .zip con los ultimos respaldos que se encuentren en el servidor de las instancias seleccionadas
  	 *
  	 * @param instance_ids json Lista de los id de las instancias a respaldar
- 	 * @return status string Respuesta enviada del servidor
- 	 * @return mensaje string Mensaje de respuesta del servidor
  	 **/
   static function BdInstanciasDescargarBd
 	(
