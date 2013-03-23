@@ -1,5 +1,5 @@
 <?php
-/** Value Object file for table cliente_seguimiento.
+/** Value Object file for table usuario_seguimiento.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
   * @author Anonymous
@@ -8,28 +8,28 @@
   * 
   */
 
-class ClienteSeguimiento extends VO
+class UsuarioSeguimiento extends VO
 {
 	/**
-	  * Constructor de ClienteSeguimiento
+	  * Constructor de UsuarioSeguimiento
 	  * 
-	  * Para construir un objeto de tipo ClienteSeguimiento debera llamarse a el constructor 
+	  * Para construir un objeto de tipo UsuarioSeguimiento debera llamarse a el constructor 
 	  * sin parametros. Es posible, construir un objeto pasando como parametro un arreglo asociativo 
 	  * cuyos campos son iguales a las variables que constituyen a este objeto.
-	  * @return ClienteSeguimiento
+	  * @return UsuarioSeguimiento
 	  */
 	function __construct( $data = NULL)
 	{ 
 		if(isset($data))
 		{
-			if( isset($data['id_cliente_seguimiento']) ){
-				$this->id_cliente_seguimiento = $data['id_cliente_seguimiento'];
+			if( isset($data['id_usuario_seguimiento']) ){
+				$this->id_usuario_seguimiento = $data['id_usuario_seguimiento'];
+			}
+			if( isset($data['id_usuario_redacto']) ){
+				$this->id_usuario_redacto = $data['id_usuario_redacto'];
 			}
 			if( isset($data['id_usuario']) ){
 				$this->id_usuario = $data['id_usuario'];
-			}
-			if( isset($data['id_cliente']) ){
-				$this->id_cliente = $data['id_cliente'];
 			}
 			if( isset($data['fecha']) ){
 				$this->fecha = $data['fecha'];
@@ -43,16 +43,16 @@ class ClienteSeguimiento extends VO
 	/**
 	  * Obtener una representacion en String
 	  * 
-	  * Este metodo permite tratar a un objeto ClienteSeguimiento en forma de cadena.
+	  * Este metodo permite tratar a un objeto UsuarioSeguimiento en forma de cadena.
 	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
 	  * @return String 
 	  */
 	public function __toString( )
 	{ 
 		$vec = array( 
-			"id_cliente_seguimiento" => $this->id_cliente_seguimiento,
+			"id_usuario_seguimiento" => $this->id_usuario_seguimiento,
+			"id_usuario_redacto" => $this->id_usuario_redacto,
 			"id_usuario" => $this->id_usuario,
-			"id_cliente" => $this->id_cliente,
 			"fecha" => $this->fecha,
 			"texto" => $this->texto
 		); 
@@ -60,7 +60,7 @@ class ClienteSeguimiento extends VO
 	}
 	
 	/**
-	  * id_cliente_seguimiento
+	  * id_usuario_seguimiento
 	  * 
 	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
@@ -68,7 +68,16 @@ class ClienteSeguimiento extends VO
 	  * @access public
 	  * @var int(11)
 	  */
-	public $id_cliente_seguimiento;
+	public $id_usuario_seguimiento;
+
+	/**
+	  * id_usuario_redacto
+	  * 
+	  *  [Campo no documentado]<br>
+	  * @access public
+	  * @var int(11)
+	  */
+	public $id_usuario_redacto;
 
 	/**
 	  * id_usuario
@@ -78,15 +87,6 @@ class ClienteSeguimiento extends VO
 	  * @var int(11)
 	  */
 	public $id_usuario;
-
-	/**
-	  * id_cliente
-	  * 
-	  *  [Campo no documentado]<br>
-	  * @access public
-	  * @var int(11)
-	  */
-	public $id_cliente;
 
 	/**
 	  * fecha
@@ -107,31 +107,55 @@ class ClienteSeguimiento extends VO
 	public $texto;
 
 	/**
-	  * getIdClienteSeguimiento
+	  * getIdUsuarioSeguimiento
 	  * 
-	  * Get the <i>id_cliente_seguimiento</i> property for this object. Donde <i>id_cliente_seguimiento</i> es  [Campo no documentado]
+	  * Get the <i>id_usuario_seguimiento</i> property for this object. Donde <i>id_usuario_seguimiento</i> es  [Campo no documentado]
 	  * @return int(11)
 	  */
-	final public function getIdClienteSeguimiento()
+	final public function getIdUsuarioSeguimiento()
 	{
-		return $this->id_cliente_seguimiento;
+		return $this->id_usuario_seguimiento;
 	}
 
 	/**
-	  * setIdClienteSeguimiento( $id_cliente_seguimiento )
+	  * setIdUsuarioSeguimiento( $id_usuario_seguimiento )
 	  * 
-	  * Set the <i>id_cliente_seguimiento</i> property for this object. Donde <i>id_cliente_seguimiento</i> es  [Campo no documentado].
-	  * Una validacion basica se hara aqui para comprobar que <i>id_cliente_seguimiento</i> es de tipo <i>int(11)</i>. 
+	  * Set the <i>id_usuario_seguimiento</i> property for this object. Donde <i>id_usuario_seguimiento</i> es  [Campo no documentado].
+	  * Una validacion basica se hara aqui para comprobar que <i>id_usuario_seguimiento</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * <br><br>Esta propiedad se mapea con un campo que es de <b>Auto Incremento</b> !<br>
-	  * No deberias usar setIdClienteSeguimiento( ) a menos que sepas exactamente lo que estas haciendo.<br>
+	  * No deberias usar setIdUsuarioSeguimiento( ) a menos que sepas exactamente lo que estas haciendo.<br>
 	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
-	  * No deberias usar setIdClienteSeguimiento( ) a menos que sepas exactamente lo que estas haciendo.<br>
+	  * No deberias usar setIdUsuarioSeguimiento( ) a menos que sepas exactamente lo que estas haciendo.<br>
 	  * @param int(11)
 	  */
-	final public function setIdClienteSeguimiento( $id_cliente_seguimiento )
+	final public function setIdUsuarioSeguimiento( $id_usuario_seguimiento )
 	{
-		$this->id_cliente_seguimiento = $id_cliente_seguimiento;
+		$this->id_usuario_seguimiento = $id_usuario_seguimiento;
+	}
+
+	/**
+	  * getIdUsuarioRedacto
+	  * 
+	  * Get the <i>id_usuario_redacto</i> property for this object. Donde <i>id_usuario_redacto</i> es  [Campo no documentado]
+	  * @return int(11)
+	  */
+	final public function getIdUsuarioRedacto()
+	{
+		return $this->id_usuario_redacto;
+	}
+
+	/**
+	  * setIdUsuarioRedacto( $id_usuario_redacto )
+	  * 
+	  * Set the <i>id_usuario_redacto</i> property for this object. Donde <i>id_usuario_redacto</i> es  [Campo no documentado].
+	  * Una validacion basica se hara aqui para comprobar que <i>id_usuario_redacto</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setIdUsuarioRedacto( $id_usuario_redacto )
+	{
+		$this->id_usuario_redacto = $id_usuario_redacto;
 	}
 
 	/**
@@ -156,30 +180,6 @@ class ClienteSeguimiento extends VO
 	final public function setIdUsuario( $id_usuario )
 	{
 		$this->id_usuario = $id_usuario;
-	}
-
-	/**
-	  * getIdCliente
-	  * 
-	  * Get the <i>id_cliente</i> property for this object. Donde <i>id_cliente</i> es  [Campo no documentado]
-	  * @return int(11)
-	  */
-	final public function getIdCliente()
-	{
-		return $this->id_cliente;
-	}
-
-	/**
-	  * setIdCliente( $id_cliente )
-	  * 
-	  * Set the <i>id_cliente</i> property for this object. Donde <i>id_cliente</i> es  [Campo no documentado].
-	  * Una validacion basica se hara aqui para comprobar que <i>id_cliente</i> es de tipo <i>int(11)</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param int(11)
-	  */
-	final public function setIdCliente( $id_cliente )
-	{
-		$this->id_cliente = $id_cliente;
 	}
 
 	/**

@@ -31,6 +31,9 @@ class LoteSalida extends VO
 			if( isset($data['id_usuario']) ){
 				$this->id_usuario = $data['id_usuario'];
 			}
+			if( isset($data['id_documento']) ){
+				$this->id_documento = $data['id_documento'];
+			}
 			if( isset($data['fecha_registro']) ){
 				$this->fecha_registro = $data['fecha_registro'];
 			}
@@ -53,6 +56,7 @@ class LoteSalida extends VO
 			"id_lote_salida" => $this->id_lote_salida,
 			"id_lote" => $this->id_lote,
 			"id_usuario" => $this->id_usuario,
+			"id_documento" => $this->id_documento,
 			"fecha_registro" => $this->fecha_registro,
 			"motivo" => $this->motivo
 		); 
@@ -87,6 +91,15 @@ class LoteSalida extends VO
 	  * @var int(11)
 	  */
 	public $id_usuario;
+
+	/**
+	  * id_documento
+	  * 
+	  * Id del documento que genero esta entrada<br>
+	  * @access public
+	  * @var int(11)
+	  */
+	public $id_documento;
 
 	/**
 	  * fecha_registro
@@ -180,6 +193,30 @@ class LoteSalida extends VO
 	final public function setIdUsuario( $id_usuario )
 	{
 		$this->id_usuario = $id_usuario;
+	}
+
+	/**
+	  * getIdDocumento
+	  * 
+	  * Get the <i>id_documento</i> property for this object. Donde <i>id_documento</i> es Id del documento que genero esta entrada
+	  * @return int(11)
+	  */
+	final public function getIdDocumento()
+	{
+		return $this->id_documento;
+	}
+
+	/**
+	  * setIdDocumento( $id_documento )
+	  * 
+	  * Set the <i>id_documento</i> property for this object. Donde <i>id_documento</i> es Id del documento que genero esta entrada.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_documento</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setIdDocumento( $id_documento )
+	{
+		$this->id_documento = $id_documento;
 	}
 
 	/**

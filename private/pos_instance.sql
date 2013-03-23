@@ -490,6 +490,7 @@ CREATE TABLE IF NOT EXISTS `cliente_seguimiento` (
   KEY `id_usuario` (`id_usuario`,`id_cliente`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+
 -- --------------------------------------------------------
 
 --
@@ -1836,6 +1837,24 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `token_recuperacion_pass` varchar(30) CHARACTER SET latin1 DEFAULT NULL COMMENT 'El token que se envia por correo para recuperar contrasena',
   PRIMARY KEY (`id_usuario`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='tabla de usuarios' AUTO_INCREMENT=8 ;
+
+
+--
+-- Table structure for table `usuario_seguimiento`
+--
+
+CREATE TABLE IF NOT EXISTS `usuario_seguimiento` (
+  `id_usuario_seguimiento` int(11) NOT NULL AUTO_INCREMENT,
+  `id_usuario_redacto` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `fecha` int(11) NOT NULL,
+  `texto` text NOT NULL,
+  PRIMARY KEY (`id_usuario_seguimiento`),
+  KEY `id_usuario`
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+
+
 
 -- --------------------------------------------------------
 
