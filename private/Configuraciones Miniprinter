@@ -1,0 +1,6 @@
+Main : 80*72
+Layout :
+    Paper Size :  definir un tamaño de ancho 210 y alto 2700 y ponerlo como predeterminado
+    Out Paper : 76mm
+    Adjust Print Position : Vertical -30 y Horizontal -24.7
+Halftone : Dispersed Ordered Dither
