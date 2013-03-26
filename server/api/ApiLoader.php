@@ -1,31 +1,31 @@
 <?php 
+/*
+require_once("ApiHandler.php");
 
-// require_once("ApiHandler.php");
+	require_once("ApiHttpErrors.php");
 
-// 	require_once("ApiHttpErrors.php");
+	require_once("ApiLoader.php");
 
-// 	require_once("ApiLoader.php");
+	require_once("ApiOutputFormatter.php");
 
-// 	require_once("ApiOutputFormatter.php");
+	require_once("CustomValidator.php");
 
-// 	require_once("CustomValidator.php");
+	require_once("DateRangeValidator.php");
 
-// 	require_once("DateRangeValidator.php");
+	require_once("DateValidator.php");
 
-// 	require_once("DateValidator.php");
+	require_once("EnumValidator.php");
 
-// 	require_once("EnumValidator.php");
+	require_once("HtmlValidator.php");
 
-// 	require_once("HtmlValidator.php");
+	require_once("NumericRangeValidator.php");
 
-// 	require_once("NumericRangeValidator.php");
+	require_once("NumericValidator.php");
 
-// 	require_once("NumericValidator.php");
+	require_once("StringValidator.php");
 
-// 	require_once("StringValidator.php");
-
-// 	require_once("Validator.php");
-
+	require_once("Validator.php");
+*/
 
   class ApiSesionIniciar extends ApiHandler {
   
@@ -8454,6 +8454,68 @@
  			
 			
 			isset($_POST['formato'] ) ? json_decode($_POST['formato']) : null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiFormasExcelGenerar extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"archivo_salida" => new ApiExposedProperty("archivo_salida", true, POST, array( "string" )),
+			"datos" => new ApiExposedProperty("datos", true, POST, array( "json" )),
+			"archivo_plantilla" => new ApiExposedProperty("archivo_plantilla", false, POST, array( "string" )),
+			"imagenes" => new ApiExposedProperty("imagenes", false, POST, array( "json" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = FormasPreimpresasController::GenerarExcel( 
+ 			
+			
+			isset($_POST['archivo_salida'] ) ? $_POST['archivo_salida'] : null,
+			isset($_POST['datos'] ) ? json_decode($_POST['datos']) : null,
+			isset($_POST['archivo_plantilla'] ) ? $_POST['archivo_plantilla'] :  "",
+			isset($_POST['imagenes'] ) ? json_decode($_POST['imagenes']) : null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiFormasExcelLeerpc extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"archivo_plantilla" => new ApiExposedProperty("archivo_plantilla", true, POST, array( "string" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = FormasPreimpresasController::LeerpcExcel( 
+ 			
+			
+			isset($_POST['archivo_plantilla'] ) ? $_POST['archivo_plantilla'] : null
 			
 			);
 		}catch(Exception $e){
