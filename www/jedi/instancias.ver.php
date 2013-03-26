@@ -45,6 +45,6 @@
 
 	$p->addComponent($t);
 	
-	$p->render( );
+	$p->render();
 	
 

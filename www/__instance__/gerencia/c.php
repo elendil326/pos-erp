@@ -73,7 +73,7 @@ $page->addComponent(new TitleComponent("Importar datos AdminPAQ automaticamente"
 
 $adminPF = new FormComponent();
 $adminPF->addField("url", "URL de AdminPAQ", "text", "https://192.168.0.14:16001/json/AdminPAQProxy/");
-$adminPF->addField("path", "Path de la emprsa", "text", "");
+$adminPF->addField("path", "Path de la empresa", "text", "");
 
 $html = "";
 

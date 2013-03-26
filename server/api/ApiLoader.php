@@ -1,5 +1,32 @@
 <?php 
 
+require_once("ApiHandler.php");
+
+	require_once("ApiHttpErrors.php");
+
+	require_once("ApiLoader.php");
+
+	require_once("ApiOutputFormatter.php");
+
+	require_once("CustomValidator.php");
+
+	require_once("DateRangeValidator.php");
+
+	require_once("DateValidator.php");
+
+	require_once("EnumValidator.php");
+
+	require_once("HtmlValidator.php");
+
+	require_once("NumericRangeValidator.php");
+
+	require_once("NumericValidator.php");
+
+	require_once("StringValidator.php");
+
+	require_once("Validator.php");
+
+
   class ApiSesionIniciar extends ApiHandler {
   
 
@@ -5957,6 +5984,36 @@
 			
 			isset($_POST['id_instacia'] ) ? $_POST['id_instacia'] : null,
 			isset($_POST['time'] ) ? $_POST['time'] : null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiPosConfiguracionProductosEnVc extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"mostrar" => new ApiExposedProperty("mostrar", true, POST, array( "bool" )),
+			"propiedades" => new ApiExposedProperty("propiedades", false, POST, array( "json" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = POSController::VcEnProductosConfiguracion( 
+ 			
+			
+			isset($_POST['mostrar'] ) ? $_POST['mostrar'] : null,
+			isset($_POST['propiedades'] ) ? json_decode($_POST['propiedades']) : null
 			
 			);
 		}catch(Exception $e){

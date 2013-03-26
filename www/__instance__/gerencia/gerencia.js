@@ -25,7 +25,7 @@ Ext.require([
 	  'Ext.panel.Panel',
 	  'Ext.button.Button',
 	  'Ext.window.Window',
-	 // 'Ext.ux.statusbar.StatusBar',
+	 'Ext.ux.statusbar.StatusBar',
 	  'Ext.toolbar.TextItem',
 	  'Ext.menu.Menu',
 	  'Ext.toolbar.Spacer',

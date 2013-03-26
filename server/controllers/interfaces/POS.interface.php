@@ -245,6 +245,23 @@
   
 	/**
  	 *
+ 	 *Permite establecer si habr? productos qu? mostrar al cliente y cu?les propiedades de ellos.
+ 	 *
+ 	 * @param mostrar bool Se mostrarn o no productos?
+ 	 * @param propiedades json Qu propiedades se mostrarn?
+ 	 * @return success bool Se pudo efectuar la peticin?
+ 	 **/
+  static function VcEnProductosConfiguracion
+	(
+		$mostrar, 
+		$propiedades = null
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
  	 *Gerenra y /o valida un hash
  	 *
  	 **/
