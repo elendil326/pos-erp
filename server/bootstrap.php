@@ -112,7 +112,7 @@
 	}
 
 
-
+	require_once("libs/PHPExcel.php");//Carga la libreria de PHPExcel
 	# *******************************
 	# Cargar las librerias de GUI
 	# *******************************
