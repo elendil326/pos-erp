@@ -619,14 +619,33 @@ class POSController implements IPOS {
 
     /**
      *
-     *Permite establecer si habr? productos qu? mostrar al cliente y cu?les propiedades de ellos.
+     *Permite establecer si habra productos que mostrar al cliente y cuales propiedades de ellos.
      *
-     * @param mostrar bool Se mostrarn o no productos?
-     * @param propiedades json Qu propiedades se mostrarn?
-     * @return success bool Se pudo efectuar la peticin?
+     * @param mostrar bool Si queremos que se muestren productos al cliente.
+     * @param propiedades json Arreglo de strings con los campos de los productos que se mostraran al cliente.
      **/
-  static function VcEnProductosConfiguracion($mostrar, $propiedades = null) {
-  }
+    static function ClientesVistasConfiguracion($mostrar, $propiedades = null) {
+        $descripcion = 'productos_visibles_en_vc';
+
+        $found_conf = ConfiguracionDAO::search(
+            new Configuracion(array('descripcion' => $descripcion))
+        );
+
+        if (empty($found_conf)) {
+            $sesion = SesionController::actual();
+            $valor = array(
+                'mostrar' => $mostrar,  
+            );
+
+            $conf = new Configuracion(array(
+                'descripcion' => $descripcion,
+                'usuario' => $sesion['id_usuario'],
+                'fecha' => time(),
+                'valor' => 'pendiente'
+            ));
+        }
+    }
+   
     
     /**
      *

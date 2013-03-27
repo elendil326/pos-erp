@@ -245,13 +245,12 @@
   
 	/**
  	 *
- 	 *Permite establecer si habr? productos qu? mostrar al cliente y cu?les propiedades de ellos.
+ 	 *Permite establecer si habra productos que mostrar al cliente y cuales propiedades de ellos.
  	 *
- 	 * @param mostrar bool Se mostrarn o no productos?
- 	 * @param propiedades json Qu propiedades se mostrarn?
- 	 * @return success bool Se pudo efectuar la peticin?
+ 	 * @param mostrar bool Si queremos que se muestren productos al cliente.
+ 	 * @param propiedades json Arreglo de strings con los campos de los productos que se mostraran al cliente.
  	 **/
-  static function VcEnProductosConfiguracion
+  static function ClientesVistasConfiguracion
 	(
 		$mostrar, 
 		$propiedades = null
