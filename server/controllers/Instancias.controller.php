@@ -272,6 +272,69 @@ class InstanciasController {
         return $a;
     }
 
+    /**
+     * Detalles($instance_id)
+     *
+     * Regresa un arreglo asociativo que contiene informacion sobre una instancia en especifico.
+     *
+     * @author Juan Manuel Garc&iacute;a Carmona <manuel@caffeina.mx>
+     * @param int instance_id identificador de la instancia que vamos a consultar
+     * @return array instance arreglo asociativo que contiene informacion sobre la instancia
+     **/
+    public static function Detalles($instance_id) 
+    {
+        global $POS_CONFIG;
+
+        if (!is_numeric($instance_id)) {
+            Logger::error("Detalles() el valor de instance_id debe ser numerico, se encontro (" . gettype($instance_id) . ") {$instance_id}");
+            return null;
+        }
+
+        $sql = "select * from instances where instance_id = ?;";
+
+        try {
+            $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql, array($instance_id));
+        } catch (ADODB_Exception $ado_e) {
+            Logger::error($ado_e);
+            return null;
+        } catch (Exception $e) {
+            Logger::error($e);
+            return null;
+        }
+
+        if (empty($res)){
+            return NULL;
+        }
+
+        $instance = array();
+
+        foreach ($res as $v) {
+            array_push($instance, $v);
+        }
+
+        $sql = "select * from instance_request where instance_id = ?;";
+
+        try {
+            $request = $POS_CONFIG["CORE_CONN"]->GetRow($sql, array($instance_id));
+        } catch (ADODB_Exception $ado_e) {
+            Logger::error($ado_e);
+            return null;
+        } catch (Exception $e) {
+            Logger::error($e);
+            return null;
+        }
+
+        $instance_request = array();
+
+        foreach ($request as $v) {
+            array_push($instance_request, $v);
+        }
+
+        $instance['request'] = $instance_request;
+
+        return $instance;
+    }
+
     public static function BuscarRespaldos($IDinstancia = null) {
         //Función que regresa en forma de arreglo todos los elementos en la carpeta de respaldo con un ID de instancia determinado (opcional)  CON SU FECHA COMO INDICE
         $CarpetaRespaldos = (POS_PATH_TO_SERVER_ROOT . "/../static_content/db_backups/");
