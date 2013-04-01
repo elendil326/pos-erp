@@ -1025,24 +1025,45 @@ class InstanciasController {
         }
     }
 
+
+    /**
+     * requesDemo($userEmail)
+     *
+     * Crear una nueva instancia(Instalacion de Caffeina POS) con vigencia de 30 dias
+     *
+     * @author Alan Gonzalez Hernandez<alan@caffeina.mx>, Juan Manuel Garc&iacute;a Carmona <manuel@caffeina.mx>
+     * @param string userEmail email del usuario que solicita la instalacion de una instancia demo
+     * @return object response response->success indica si termino con exito o fracaso (boolean), response->error en caso de que exista algun error aqui se indica la informaci&oacute;n
+     **/
     public static function requestDemo($userEmail) {
 
         global $POS_CONFIG;
 
         Logger::log("Somebody requested trial instance");
 
+        $response = new stdClass();
+
         //busquemos si ese email es valido
+        $userEmail = str_replace('&#95;', '_', $userEmail);
+
+        if (!filter_var($userEmail, FILTER_VALIDATE_EMAIL)) {
+            $response->success = false;
+            $response->error = "email invalido, verifique su informaci&oacute;n";
+            Logger::error($response->error);
+            return $response;
+        }
+
         //busquemos ese email en la bd
         $sql = "select id_request from instance_request where email = ? ";
         $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql, array($userEmail));
 
         if (!empty($res)) {
             //ya solicito la instancia
-            Logger::warn("Este usuario ya ha solicitado instancia antes");
-            return false;
+            $response->success = false;
+            $response->error = "Este usuario ya ha solicitado instancia antes";
+            Logger::warn($response->error);
+            return $response;
         }
-
-
 
         //generemos el token a enviar
         $time = time();
@@ -1052,18 +1073,20 @@ class InstanciasController {
         Logger::log("token will be " . $token);
 
         //insertemos nuevo request
-        $sql = "INSERT INTO `instance_request` (`id_request`, `email`, `fecha`, `ip`, `token`)
-			 			VALUES ( NULL, ?, ?, ?, ?);";
+        $sql = "INSERT INTO `instance_request` (`id_request`, `email`, `fecha`, `ip`, `token`) VALUES ( NULL, ?, ?, ?, ?);";
 
         $res = $POS_CONFIG["CORE_CONN"]->Execute($sql, array($userEmail, $time, $_SERVER["REMOTE_ADDR"], $token));
 
-        $cuerpo = "Bienvenido a su cuenta de POS ERP\n\n";
-        $cuerpo .= "Por favor siga el siguiente enlace para continuar con su inscripcion:";
-        $cuerpo .= "\n\nhttp://pos2.labs2.caffeina.mx/?t=by_email&key=" . $token;
+        $cuerpo = "Bienvenido a su cuenta de POS ERP\n\n"
+                . "Por favor siga el siguiente enlace para continuar con su inscripcion:"
+                . "\n\nhttp://pos2.labs2.caffeina.mx/?t=by_email&key=" . $token;
 
         //enviar el correo electronico
-        POSController::EnviarMail(
-                $cuerpo, $userEmail, "Bienvenido a POS ERP");
+        POSController::EnviarMail($cuerpo, $userEmail, "Bienvenido a POS ERP");
+
+        $response->success = true;
+
+        return $response;
     }
 
     public static function validateDemo($token) {
@@ -1075,6 +1098,7 @@ class InstanciasController {
 
         //busquemos ese token en la bd
         $sql = "select id_request, date_validated, email from instance_request where token = ? ";
+
         $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql, array($token));
 
         if (empty($res)) {
