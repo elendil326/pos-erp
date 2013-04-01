@@ -10,8 +10,6 @@
 
     $instancia = InstanciasController::Detalles( $_GET["id"]);
 
-    var_dump($instancia);
-
     $p->addComponent(new TitleComponent("Detalles de la instancia" ));
 
     $p->addComponent(new TitleComponent($instancia["instance_token"], 3));

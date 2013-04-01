@@ -306,12 +306,6 @@ class InstanciasController {
             return NULL;
         }
 
-        $instance = array();
-
-        foreach ($res as $v) {
-            array_push($instance, $v);
-        }
-
         $sql = "select * from instance_request where instance_id = ?;";
 
         try {
@@ -324,15 +318,9 @@ class InstanciasController {
             return null;
         }
 
-        $instance_request = array();
+        $res['request'] = $request;
 
-        foreach ($request as $v) {
-            array_push($instance_request, $v);
-        }
-
-        $instance['request'] = $instance_request;
-
-        return $instance;
+        return $res;
     }
 
     public static function BuscarRespaldos($IDinstancia = null) {
