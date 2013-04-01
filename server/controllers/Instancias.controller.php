@@ -3,12 +3,17 @@
 class InstanciasController {
 
     /**
-     * Crear una nueva instancia
-     * 
-     * 
-     * */
-    public static function Nueva($instance_token = null, $descripcion = null) {
-
+     * Nueva($instance_token, $descripcion)
+     *
+     * Crear una nueva instancia(Instalacion de Caffeina POS)
+     *
+     * @author Alan Gonzalez Hernandez<alan@caffeina.mx>, Juan Manuel Garc&iacute;a Carmona <manuel@caffeina.mx>
+     * @param string $instance_token 
+     * @param String $descripcion
+     * @return int(11) $I_ID
+     **/
+    public static function Nueva($instance_token = null, $descripcion = null)
+    {
         Logger::log("======== NUEVA INSTANCIA =============");
 
         if (is_null($instance_token)) {
@@ -24,7 +29,6 @@ class InstanciasController {
         //buscar que no exista esta instancia
         global $POS_CONFIG;
 
-
         //insertar registro en `instances` para que me asigne un id
         $sql = "INSERT INTO  `instances` ( `instance_id` ,`fecha_creacion`,`instance_token` ,`descripcion`  )VALUES ( NULL , " . time() . ",  ?,  ? );";
 
@@ -36,12 +40,11 @@ class InstanciasController {
             return null;
         }
 
-
-
         $DB_NAME = strtolower("POS_INSTANCE_" . $I_ID);
-
+        
         //crear la bd
-        $sql = "CREATE DATABASE  $DB_NAME DEFAULT CHARACTER SET utf8 COLLATE utf8_spanish_ci;";
+        $sql = "CREATE DATABASE  $DB_NAME DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;";
+
         try {
             $POS_CONFIG["CORE_CONN"]->Execute($sql);
         } catch (Exception $e) {
@@ -49,23 +52,27 @@ class InstanciasController {
             throw $e;
         }
 
+        //generamos el password del usuario
+        $pass = md5(str_replace("_", "-", $DB_NAME));
+
         try {
-            $POS_CONFIG["CORE_CONN"]->Execute("CREATE USER ?@'localhost' IDENTIFIED BY  ?;", array($DB_NAME, $DB_NAME));
+            $POS_CONFIG["CORE_CONN"]->Execute("CREATE USER ?@'localhost' IDENTIFIED BY  ?;", array($DB_NAME, $pass));
         } catch (Exception $e) {
             Logger::error($e);
             throw $e;
         }
 
-
         $sql = "GRANT USAGE ON * . * TO  ?@'localhost' IDENTIFIED BY  ? WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0 ;";
+
         try {
-            $POS_CONFIG["CORE_CONN"]->Execute($sql, array($DB_NAME, $DB_NAME));
+            $POS_CONFIG["CORE_CONN"]->Execute($sql, array($DB_NAME, $pass));
         } catch (Exception $e) {
             Logger::error($e);
             throw $e;
         }
 
         $HOST = $POS_CONFIG['CORE_DB_HOST'];
+
         $sql = "GRANT ALL PRIVILEGES ON  `$DB_NAME` . * TO  '$DB_NAME'@'$HOST';";
 
         try {
@@ -79,13 +86,11 @@ class InstanciasController {
         $i_conn = null;
 
         try {
-
             $i_conn = ADONewConnection($POS_CONFIG["CORE_DB_DRIVER"]);
-            $i_conn->debug = false;
-            $i_conn->PConnect($POS_CONFIG["CORE_DB_HOST"], $DB_NAME, $DB_NAME, $DB_NAME);
+            $i_conn->debug = false;            
+            $i_conn->PConnect($POS_CONFIG["CORE_DB_HOST"], $DB_NAME, $pass, $DB_NAME);
 
             if (!$i_conn) {
-
                 Logger::error("Imposible conectarme a la base de datos de la instancia recien creada.");
                 return null;
             }
@@ -97,16 +102,14 @@ class InstanciasController {
             return null;
         }
 
-
         //llenar los datos
         $instalation_script = file_get_contents(POS_PATH_TO_SERVER_ROOT . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "private" . DIRECTORY_SEPARATOR . "pos_instance.sql");
         $queries = explode(";", $instalation_script);
         try {
-            //$POS_CONFIG["CORE_CONN"]->BeginTrans();
-
             for ($i = 0; $i < sizeof($queries); $i++) {
-                if (strlen(trim($queries[$i])) == 0)
+                if (strlen(trim($queries[$i])) == 0){
                     continue;
+                }
                 $i_conn->Execute($queries[$i] . ";");
             }
         } catch (ADODB_Exception $e) {
@@ -116,13 +119,14 @@ class InstanciasController {
 
         //llenar los datos
         $instalation_script = file_get_contents(POS_PATH_TO_SERVER_ROOT . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "private" . DIRECTORY_SEPARATOR . "pos_instance_foundation.sql");
-        $queries = explode(";", $instalation_script);
-        try {
-            //$POS_CONFIG["CORE_CONN"]->BeginTrans();
 
+        $queries = explode(";", $instalation_script);
+
+        try {            
             for ($i = 0; $i < sizeof($queries); $i++) {
-                if (strlen(trim($queries[$i])) == 0)
+                if (strlen(trim($queries[$i])) == 0) {
                     continue;
+                }
                 $i_conn->Execute($queries[$i] . ";");
             }
         } catch (ADODB_Exception $e) {
@@ -130,16 +134,15 @@ class InstanciasController {
             return null;
         }
 
-        $sql = "UPDATE  `instances` SET  
-					`db_user` 		=  ?,
-					`db_password` 	=  ?,
-					`db_name` 		=  ?,
-					`db_driver` 	=  ?,
-					`db_host` 		=  ? WHERE  `instances`.`instance_id` = ?;";
+        $sql = "UPDATE  `instances` SET
+               `db_user`        =  ?,
+               `db_password`    =  ?,
+               `db_name`        =  ?,
+               `db_driver`      =  ?,
+               `db_host`        =  ? WHERE  `instances`.`instance_id` = ?;";
 
         try {
-
-            $POS_CONFIG["CORE_CONN"]->Execute($sql, array($DB_NAME, $DB_NAME, $DB_NAME, $POS_CONFIG["CORE_DB_DRIVER"], $POS_CONFIG["CORE_DB_HOST"], $I_ID));
+            $POS_CONFIG["CORE_CONN"]->Execute($sql, array($DB_NAME, $pass, $DB_NAME, $POS_CONFIG["CORE_DB_DRIVER"], $POS_CONFIG["CORE_DB_HOST"], $I_ID));
         } catch (ADODB_Exception $e) {
             Logger::error($e->msg);
             return null;
@@ -148,7 +151,6 @@ class InstanciasController {
         Logger::log("Instancia $I_ID creada correctamente... ");
 
         Logger::log("======== / NUEVA INSTANCIA =============");
-
 
         return (int) $I_ID;
     }
@@ -174,16 +176,24 @@ class InstanciasController {
         return $res;
     }
 
-    public static function BuscarPorToken($instance_token = null) {
-
+    /**
+     * BuscarPorToken($instance_token)
+     *
+     * Verifica si hay una instancia registrada en la Base de Datos con el mismo token especificado.
+     *
+     * @author Alan Gonzalez Hernandez<alan@caffeina.mx>
+     * @param string $instance_token 
+     * @return array $res
+     **/
+    public static function BuscarPorToken($instance_token = null)
+    {
         global $POS_CONFIG;
-
         $sql = "select * from instances where instance_token = ?";
-
         $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql, array($instance_token));
 
-        if (empty($res))
+        if (empty($res)){
             return NULL;
+        }
 
         return $res;
     }
@@ -972,6 +982,7 @@ class InstanciasController {
     }
 
     public static function validateDemo($token) {
+        
         global $POS_CONFIG;
 
         Logger::log("Somebody requested validate: token: " . $token);

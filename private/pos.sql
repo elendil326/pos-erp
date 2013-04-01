@@ -1,22 +1,29 @@
 -- phpMyAdmin SQL Dump
--- version 3.2.4
+-- version 3.4.11.1deb1
 -- http://www.phpmyadmin.net
 --
--- Host: localhost
--- Generation Time: Mar 07, 2012 at 08:30 PM
--- Server version: 5.1.44
--- PHP Version: 5.3.1
+-- Servidor: localhost
+-- Tiempo de generación: 01-04-2013 a las 11:46:21
+-- Versión del servidor: 5.5.29
+-- Versión de PHP: 5.4.6-1ubuntu1.2
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
 
 --
--- Database: `pos`
+-- Base de datos: `pos`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `instances`
+-- Estructura de tabla para la tabla `instances`
 --
 
 CREATE TABLE IF NOT EXISTS `instances` (
@@ -30,14 +37,34 @@ CREATE TABLE IF NOT EXISTS `instances` (
   `db_host` varchar(32) NOT NULL,
   `db_debug` tinyint(1) NOT NULL,
   `fecha_creacion` int(11) NOT NULL COMMENT 'fecha de creacion de esta instancia',
+  `activa` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`instance_id`),
   KEY `instance_token` (`instance_token`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=80 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=90 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Estructura de tabla para la tabla `instance_request`
+--
+
+CREATE TABLE IF NOT EXISTS `instance_request` (
+  `id_request` int(11) NOT NULL AUTO_INCREMENT,
+  `instance_id` int(11) DEFAULT NULL,
+  `email` varchar(32) NOT NULL,
+  `fecha` int(11) NOT NULL,
+  `ip` varchar(19) NOT NULL,
+  `token` varchar(32) NOT NULL,
+  `date_validated` int(11) DEFAULT NULL,
+  `date_installed` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id_request`),
+  KEY `email` (`email`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `users`
 --
 
 CREATE TABLE IF NOT EXISTS `users` (
@@ -49,16 +76,6 @@ CREATE TABLE IF NOT EXISTS `users` (
   KEY `email` (`email`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
-
-
-CREATE TABLE IF NOT EXISTS `instance_request` (
-  `id_request` int(11) NOT NULL AUTO_INCREMENT,
-  `email` varchar(32) NOT NULL,
-  `fecha` int(11) NOT NULL,
-  `ip` varchar(19) NOT NULL,
-  `token` varchar(32) NOT NULL,
-  `date_validated` int(11) DEFAULT NULL,
-  `date_installed` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id_request`),
-  KEY `email` (`email`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
