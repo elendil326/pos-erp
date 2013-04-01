@@ -191,43 +191,77 @@ class InstanciasController {
         $sql = "select * from instances where instance_token = ?";
         $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql, array($instance_token));
 
-        if (empty($res)){
+        if (empty($res)) {
             return NULL;
         }
 
         return $res;
     }
 
-    /*
-
-      public static function BuscarPorId($id = null){
-
-      global $POS_CONFIG;
-
-      $sql = "select * from instances where instance_id = ?";
-
-      $res = $POS_CONFIG["CORE_CONN"]->GetRow( $sql , array( $instance_token ) );
-
-      if(empty($res)) return NULL;
-
-      return $res;
-
-      }
-
-     */
-
-    public static function Buscar() {
-
+    /**
+     * Buscar($instance_token, $descripcion)
+     *
+     * Lista todas las instancias registradas, pero si se prefiere puede regresar una lista de Instancias 
+     * que cumplan con las especificaciones indicadas en <i>$query</i>, ademas se puede manejar paginaci&oacute;n
+     * haciendo uso de los parametros <i>$star y $limit</i>.
+     *
+     * @author Juan Manuel Garc&iacute;a Carmona <manuel@caffeina.mx>
+     * @param boolean $activa true para mostrar solo las instancias activas, false se mostraran las inactivas, NULL muestra todas.
+     * @param int $start Indica desde que registro se desea obtener a partir del conjunto de resultados productos de la búsqueda.
+     * @param int $limit Indica hasta que registro se desea obtener a partir del conjunto de resultados productos de la busqueda.
+     * @param string $query Valor que se buscará en la consulta, en caso de ser NULL, traera todos los registros, de lo contrario buscará coincidencias con la descripcion de query.
+     * @param string $order_by Indica por que campo se ordenan los resultados.
+     * @param string $order Indica si se ordenan los registros de manera Ascendente ASC, o descendente DESC.
+     * @return array con objetos que contien las especificaciones de las instancias encontradas.
+     **/
+    public static function Buscar($activa = NULL, $query = NULL, $order_by = NULL, $order = NULL, $start = NULL, $limit = NULL)
+    {
         global $POS_CONFIG;
 
-        $sql = "select * from instances order by fecha_creacion desc";
+        if ($activa !== NULL && is_bool($activa) === false) {
+            Logger::error("Buscar() verifique el valor especificado en activa, se esperaba boolean, se encontro : (" . gettype($activa) . ") {$activa}");
+            return null;
+        }
 
-        //($sql,$inputarr=false,$force_array=false,$first2cols=false)
+        if ($order !== NULL && !($order === "ASC" || $order === "DESC")) {
+            Logger::error("Buscar() verifique el valor especificado en order, se esperaba ASC || DESC, se encontro : (" . gettype($order) . ") {$order}");
+            return null;
+        }
+
+        if ($order_by === NULL) {
+            $order_by = "instance_id";
+        }
+
+        if ($limit !== NULL && !(is_numeric($limit) && $limit >= 0)) {
+            Logger::error("Buscar() verifique el valor especificado en limit, se esperaba un int >= 0, se encontro : (" . gettype($limit) . ") {$limit}");
+            return null;
+        }
+
+        if ($start !== NULL && !(is_numeric($start) && $start >= 0)) {
+            Logger::error("Buscar() verifique el valor especificado en start, se esperaba un int >= 0, se encontro : (" . gettype($start) . ") {$start}");
+            return null;
+        }
+
+        if ($start !== NULL && $limit === NULL) {
+            Logger::error("Buscar() esta especificando un valor de start, pero no especifica un limit, solo el valor limit se puede usar sin start.");
+            return null;
+        }
+
+        if (!($start === NULL && $limit === NULL) && ($start > $limit)) {
+            Logger::error("Buscar() el valor de start debe ser <= que el valor de limit, se encontro start = {$start}, limit = {$limit}");
+            return null;
+        }
+
+        $sql = "SELECT * FROM instances "
+             . ($activa !== NULL || $query !== NULL ? "WHERE " . ($activa !== NULL ? "activa = " . (int) $activa . " " . ($query !== NULL ? "AND " : "") : "") . ($query !== NULL ? " descripcion LIKE '%{$query}%' OR instance_token LIKE '%{$query}%' " : "") : "")
+             . "ORDER BY {$order_by} {$order} "
+             . ($limit === NULL ? "" : ($start !== NULL ? " LIMIT {$start}, {$limit}" : "LIMIT {$limit}"));
 
         $res = $POS_CONFIG["CORE_CONN"]->GetAssoc($sql, false, false, false);
 
-        if (empty($res))
+        if (empty($res)){
             return NULL;
+        }
 
         $a = array();
 
