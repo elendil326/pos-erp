@@ -20,5 +20,25 @@ require_once("base/configuracion.vo.base.php");
   */
 class ConfiguracionDAO extends ConfiguracionDAOBase
 {
+    public function GuardarConfigDeVC($mostrar, $propiedades, $id_usuario)
+    {
+        $configuracion = new Configuracion(array(
+            'descripcion' => 'productos_visibles_en_vc'
+        ));
 
+        $configuraciones = ConfiguracionDAO::search($configuracion);
+        if (count($configuraciones) > 0)
+        {
+            $configuracion = $configuraciones[0];
+        }
+
+        // construir el JSON para el valor
+        $json = '{"mostrar":'.$mostrar.'}';
+
+        $configuracion->setValor($json);
+        $configuracion->setIdUsuario($id_usuario);
+        $configuracion->setFecha(time());
+        
+        parent::save($configuracion);
+    }
 }

@@ -21,7 +21,7 @@
 
 	$tabla = new TableComponent(
 		$cols,
-		ProductosController::Buscar( )
+		ProductosController::Lista( )
 	);
 
 
