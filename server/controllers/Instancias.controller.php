@@ -1094,8 +1094,8 @@ class InstanciasController {
      * Crear una nueva instancia(Instalacion de Caffeina POS) con vigencia de 30 dias
      *
      * @author Alan Gonzalez Hernandez<alan@caffeina.mx>, Juan Manuel Garc&iacute;a Carmona <manuel@caffeina.mx>
-     * @param string token email del usuario que solicita la instalacion de una instancia demo
-     * @return object response response->success indica si termino con exito o fracaso (boolean), response->error en caso de que exista algun error aqui se indica la informaci&oacute;n
+     * @param string token token de la supuesta instancia que validaremos
+     * @return array arreglo sociativo que contiene informacion sobre la respeusta response->success indica si termino con exito o fracaso (boolean), response->reason en caso de que exista algun error aqui se indica la informaci&oacute;n
      **/
     public static function validateDemo($token) 
     {
@@ -1114,21 +1114,14 @@ class InstanciasController {
             return array("success" => false, "reason" => "No existe esta llave de solicitud.");
         }
 
-
         Logger::log("encontre el token para id=" . $res["id_request"]);
-
 
         if (!is_null($res["date_validated"])) {
             Logger::log("este ya fue validado");
-
-
             return array("success" => false, "reason" => "Esta llave de solicitud ya ha sido creada. Para acceder a ella haga click <a href=\"http://pos2.labs2.caffeina.mx/front_ends/" . $token . "/\">aqui</a>.");
         }
 
-
         $startTime = time();
-
-
 
         $iid = self::Nueva($token, $res["email"] . " requested this instance as a demo");
 
@@ -1139,21 +1132,93 @@ class InstanciasController {
         $cuerpo .= "\n\nhttp://pos2.labs2.caffeina.mx/front_ends/" . $token . "/";
         $cuerpo .= "\n\nHemos creado una cuenta de aministrador para usted, el usuario es: `1` y su contraseña es `123` sin las comillas.";
 
-
-
         //enviar el correo electronico
-        POSController::EnviarMail(
-                $cuerpo, $res["email"], "Su cuenta POS ERP esta lista");
-
+        POSController::EnviarMail($cuerpo, $res["email"], "Su cuenta POS ERP esta lista");
 
         $sql = "UPDATE  `instance_request`  SET  `date_validated` =  ?, `date_installed` = ?  WHERE `id_request` = ?;";
         $POS_CONFIG["CORE_CONN"]->Execute($sql, array($startTime, time(), $res["id_request"]));
 
         Logger::log("Done with installation.");
 
-
         return array("success" => true, "reason" => "Su instancia se ha creado con exito.");
     }
 
-//validateDemo
+    /**
+     * Editar($token)
+     *
+     * Crear una nueva instancia(Instalacion de Caffeina POS) con vigencia de 30 dias
+     *
+     * @author Juan Manuel Garc&iacute;a Carmona <manuel@caffeina.mx>
+     * @param string instance_id id de la instancia que vamos a modificar
+     * @param string activa bandera para especificar si la instancia esta activa o inactiva
+     * @param string descripcion nueva descripcion
+     * @param string token nuevo valor del token
+     * @return array arreglo sociativo que contiene informacion sobre la respuesta response->success indica si termino con exito o fracaso (boolean), response->reason en caso de que exista algun error aqui se indica la informaci&oacute;n
+     **/
+    public static function Editar($intance_id = NULL, $activa = NULL, $descripcion = NULL, $token = NULL)
+    {
+        global $POS_CONFIG;
+
+        $instance = self::BuscarPorId($intance_id);
+
+        //verificamos al existencia de la instancia
+        if (empty($instance)) {
+            Logger::warn("La instancia que desea modificar no existe!!");
+            return json_encode(array("success"=>"false", "reason"=>"La instancia que desea modificar no existe!!"));
+        }
+
+        //verificamos si la instancia esta desactivada, en caso de estarlo solo la podemos activar
+        if ($instance["activa"] === "0") {
+            if ($activa === "1") {
+                //busquemos ese email en la bd
+                $sql = "UPDATE instances SET activa = ? where instance_id = ? ";
+                $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql, array($activa, $intance_id));
+
+                if (!empty($res)) {
+                    Logger::warn("Error al reactivar la instancia");
+                    return json_encode(array("success"=>"false", "reason"=>"Error al reactivar la instancia"));
+                }
+                //la instancia se reactivo correctamente (quitar este return si se desea modificar otros parametros)
+                return json_encode(array("success"=>"true"));
+            }else{
+                //la instancia esta desactivada y no se piensa reactivar :s
+                return json_encode(array("success"=>"false", "reason"=>"La instancia esta desactivada, no puede modificar ningun valor hasta no ser activada"));
+            }
+        }
+
+        if(!empty($descripcion)) {
+            //actualizamos la descripcion
+            $sql = "UPDATE instances SET descripcion = ? WHERE instance_id = ?";
+
+            $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql, array($descripcion, $intance_id));
+            if (!empty($res)) {
+                Logger::warn("Error al modificar la descripcion");
+                return json_encode(array("success"=>"false", "reason"=>"Error al modificar la descripcion"));
+            }
+        }
+
+        if(!empty($token)) {
+            //actualizamos la descripcion
+            $sql = "UPDATE instances SET instance_token = ? WHERE instance_id = ?";
+
+            $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql, array($token, $intance_id));
+            if (!empty($res)) {
+                Logger::warn("Error al modificar el token");
+                return json_encode(array("success"=>"false", "reason"=>"Error al modificar el token"));
+            }
+        }
+
+        if($activa === "0") {
+            //actualizamos la descripcion
+            $sql = "UPDATE instances SET activa = ? WHERE instance_id = ?";
+            $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql, array($activa, $intance_id));
+            if (!empty($res)) {
+                Logger::warn("Error al desactivar la instancia");
+                return json_encode(array("success"=>"false", "reason"=>"Error al desactivar la instancia"));
+            }
+        }
+
+        return json_encode(array("success"=>"true"));
+    }
+
 }
