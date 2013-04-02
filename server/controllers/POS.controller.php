@@ -625,14 +625,8 @@ class POSController implements IPOS {
      * @param propiedades json Arreglo de strings con los campos de los productos que se mostraran al cliente.
      **/
     public static function ClientesVistasConfiguracion($mostrar, $propiedades = null) {
-        $configuracion = new Configuracion(array(
-            'descripcion' => 'productos_visibles_en_vc',
-            'valor' => '{mostrar: true}',
-            'usuario' => 1,
-            'fecha' => 923647
-        ));
-
-        ConfiguracionDAO::save($configuracion);
+        $sesion = SesionController::Actual();
+        ConfiguracionDAO::GuardarConfigDeVC($mostrar, null, $sesion['id_usuario']);
     }
    
     

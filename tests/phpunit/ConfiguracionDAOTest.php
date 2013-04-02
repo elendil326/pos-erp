@@ -50,10 +50,7 @@ class ConfiguracionDAOTest extends PHPUnit_Framework_TestCase
 
     protected function tearDown()
     {
-        $configuracion = new Configuracion(array(
-            'descripcion' => 'productos_visibles_en_vc'
-        ));
-        $configuraciones = ConfiguracionDAO::search($configuracion);
+        $configuraciones = ConfiguracionDAO::search($this->configuracion);
         $configuracion = $configuraciones[0];
         ConfiguracionDAO::delete($configuracion);
     }
