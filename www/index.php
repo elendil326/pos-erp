@@ -76,12 +76,12 @@
 					}
 					
 					
-					$response = InstanciasController::requestDemo( $_POST["email"] );
-					
-					if($response->success === false){
+					$response = InstanciasController::requestDemo($_POST["email"]);
+
+					if($response["success"] === false){
 						//
 						?><h1>Whoops</h1><br><br><?php
-						echo "<center><h2><i>" . $response->error . "</i></h2></center><br><br>";
+						echo "<center><h2><i>" . $response["error"] . "</i></h2></center><br><br>";
 						
 						break;
 					}

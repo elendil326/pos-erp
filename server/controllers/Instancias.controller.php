@@ -1025,7 +1025,6 @@ class InstanciasController {
         }
     }
 
-
     /**
      * requesDemo($userEmail)
      *
@@ -1035,21 +1034,21 @@ class InstanciasController {
      * @param string userEmail email del usuario que solicita la instalacion de una instancia demo
      * @return object response response->success indica si termino con exito o fracaso (boolean), response->error en caso de que exista algun error aqui se indica la informaci&oacute;n
      **/
-    public static function requestDemo($userEmail) {
-
+    public static function requestDemo($userEmail) 
+    {
         global $POS_CONFIG;
 
         Logger::log("Somebody requested trial instance");
 
-        $response = new stdClass();
+        $response = array();
 
         //busquemos si ese email es valido
         $userEmail = str_replace('&#95;', '_', $userEmail);
 
         if (!filter_var($userEmail, FILTER_VALIDATE_EMAIL)) {
-            $response->success = false;
-            $response->error = "email invalido, verifique su informaci&oacute;n";
-            Logger::error($response->error);
+            $response["success"]= false;
+            $response["error"] = "email invalido, verifique su informaci&oacute;n";
+            Logger::error($response["error"]);
             return $response;
         }
 
@@ -1059,9 +1058,9 @@ class InstanciasController {
 
         if (!empty($res)) {
             //ya solicito la instancia
-            $response->success = false;
-            $response->error = "Este usuario ya ha solicitado instancia antes";
-            Logger::warn($response->error);
+            $response["success"] = false;
+            $response["error"] = "Lo sentimos, usted ya ha solicitado una instancia previamente";
+            Logger::warn($response["error"]);
             return $response;
         }
 
@@ -1084,17 +1083,25 @@ class InstanciasController {
         //enviar el correo electronico
         POSController::EnviarMail($cuerpo, $userEmail, "Bienvenido a POS ERP");
 
-        $response->success = true;
+        $response["success"] = true;
 
         return $response;
     }
 
-    public static function validateDemo($token) {
-        
+    /**
+     * validateDemo($token)
+     *
+     * Crear una nueva instancia(Instalacion de Caffeina POS) con vigencia de 30 dias
+     *
+     * @author Alan Gonzalez Hernandez<alan@caffeina.mx>, Juan Manuel Garc&iacute;a Carmona <manuel@caffeina.mx>
+     * @param string token email del usuario que solicita la instalacion de una instancia demo
+     * @return object response response->success indica si termino con exito o fracaso (boolean), response->error en caso de que exista algun error aqui se indica la informaci&oacute;n
+     **/
+    public static function validateDemo($token) 
+    {
         global $POS_CONFIG;
 
         Logger::log("Somebody requested validate: token: " . $token);
-
 
         //busquemos ese token en la bd
         $sql = "select id_request, date_validated, email from instance_request where token = ? ";
