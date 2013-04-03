@@ -1210,7 +1210,6 @@ class InstanciasController {
             $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql, array($intance_id));
             if (!empty($res)) {
                 //si hay un request relacionado
-                $id_request = $res["id_request"];
                 $sql = "UPDATE instance_request SET token = ? WHERE instance_id = ?";
                 $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql, array($token,$intance_id));
                 if (!empty($res)) {
