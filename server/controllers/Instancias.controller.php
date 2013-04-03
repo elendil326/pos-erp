@@ -486,7 +486,7 @@ class InstanciasController {
 
         $rs = $POS_CONFIG["CORE_CONN"]->Execute($sql);
         $instancias = $rs->GetArray();
-        //var_dump($instancias);//hace var dump de los registros obtenidos
+
         foreach ($instancias as $ins) {
             $file_name = 'pos_instance_' . $ins['instance_id'] . '_' . date("d-m-Y H:i:s") . '.sql';
             $db_user = $ins['db_user'];
@@ -1144,9 +1144,9 @@ class InstanciasController {
     }
 
     /**
-     * Editar($token)
+     * Editar($intance_id, $activa, $descripcion, $token)
      *
-     * Crear una nueva instancia(Instalacion de Caffeina POS) con vigencia de 30 dias
+     * Permite la edicion de ciertos valores de la instancia como son el token, la descripcion yu alterna entre activa y desactiva.
      *
      * @author Juan Manuel Garc&iacute;a Carmona <manuel@caffeina.mx>
      * @param string instance_id id de la instancia que vamos a modificar
@@ -1189,7 +1189,6 @@ class InstanciasController {
         if(!empty($descripcion)) {
             //actualizamos la descripcion
             $sql = "UPDATE instances SET descripcion = ? WHERE instance_id = ?";
-
             $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql, array($descripcion, $intance_id));
             if (!empty($res)) {
                 Logger::warn("Error al modificar la descripcion");
@@ -1200,11 +1199,24 @@ class InstanciasController {
         if(!empty($token)) {
             //actualizamos la descripcion
             $sql = "UPDATE instances SET instance_token = ? WHERE instance_id = ?";
-
             $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql, array($token, $intance_id));
             if (!empty($res)) {
                 Logger::warn("Error al modificar el token");
                 return json_encode(array("success"=>"false", "reason"=>"Error al modificar el token"));
+            }
+
+            //buscamos si esta instancia se creo a partir de un instance_request, de ser asi modificamos el registro
+            $sql = "SELECT * FROM instance_request WHERE instance_id = ?";
+            $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql, array($intance_id));
+            if (!empty($res)) {
+                //si hay un request relacionado
+                $id_request = $res["id_request"];
+                $sql = "UPDATE instance_request SET token = ? WHERE instance_id = ?";
+                $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql, array($token,$intance_id));
+                if (!empty($res)) {
+                    Logger::warn("Error al modificar el token del request");
+                    return json_encode(array("success"=>"false", "reason"=>"Error al modificar el token del request"));
+                }
             }
         }
 
