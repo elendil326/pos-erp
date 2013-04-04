@@ -44,6 +44,32 @@ CREATE TABLE IF NOT EXISTS `corte_de_sucursal` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `cuenta_contable`
+--
+
+CREATE TABLE IF NOT EXISTS `cuenta_contable` (
+  `id_cuenta_contable` int(11) NOT NULL AUTO_INCREMENT,
+  `clave` varchar(45) COLLATE utf8_spanish_ci NOT NULL COMMENT 'La clave que se le dará a la nueva cuenta contable',
+  `nivel` int(11) NOT NULL COMMENT 'Nivel de profundidad que tendra la cuenta en el arbol de cuentas',
+  `consecutivo_en_nivel` int(11) NOT NULL COMMENT 'Dependiendo del nivel de profundidad de la cuenta contable, este valor indicara dentro de su nivel que numero consecutivo le corresponde con respecto a las mismas que estan en su mismo nivel',
+  `nombre_cuenta` varchar(100) COLLATE utf8_spanish_ci NOT NULL COMMENT 'El nombre de la cuenta',
+  `tipo_cuenta` enum('Balance','Estado de Resultados') COLLATE utf8_spanish_ci NOT NULL COMMENT 'Si la cuenta es de Balance o Estado de Resultados',
+  `naturaleza` enum('Acreedora','Deudora') COLLATE utf8_spanish_ci NOT NULL COMMENT 'Si es deudora o acreedora',
+  `clasificacion` enum('Activo Circulante','Activo Fijo','Activo Diferido','Pasivo Circulante','Pasivo Largo Plazo','Capital Contable','Ingresos','Egresos') COLLATE utf8_spanish_ci NOT NULL COMMENT 'Clasificacion a la que pertenecera la cuenta',
+  `cargos_aumentan` bit(1) NOT NULL COMMENT 'Si es igual 1 significa que en los movimientos cuando se cargue a esta cuenta los cargos aumentaran',
+  `abonos_aumentan` bit(1) NOT NULL COMMENT 'si abonos aumentan es igual a 1 significa que en los movimientos los abonos aumentantaran',
+  `es_cuenta_orden` bit(1) NOT NULL COMMENT 'si la cuenta no se contemplara en los estados financieros',
+  `es_cuenta_mayor` bit(1) NOT NULL COMMENT 'Indica si la cuenta es de mayor',
+  `afectale` bit(1) NOT NULL COMMENT 'indica si sobre esta cuenta ya se pueden realizar operaciones',
+  `id_cuenta_padre` int(11) DEFAULT NULL COMMENT 'id de la cuenta de la que depende',
+  `activa` bit(1) NOT NULL COMMENT 'Indica si la cuenta está disponible para su uso o no.',
+  PRIMARY KEY (`id_cuenta_contable`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=1 ;
+
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `abono_compra`
 --
 
