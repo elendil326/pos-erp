@@ -1,5 +1,7 @@
-<?php
-class ApiSesionIniciar extends ApiHandler {
+<?php 
+
+
+  class ApiSesionIniciar extends ApiHandler {
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
@@ -6284,6 +6286,174 @@ class ApiSesionIniciar extends ApiHandler {
 			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] :  null,
 			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] :  null,
 			isset($_GET['orden'] ) ? $_GET['orden'] :  null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiContabilidadCuentaNueva extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"abonos_aumentan" => new ApiExposedProperty("abonos_aumentan", true, POST, array( "bool" )),
+			"cargos_aumentan" => new ApiExposedProperty("cargos_aumentan", true, POST, array( "bool" )),
+			"clasificacion" => new ApiExposedProperty("clasificacion", true, POST, array( "enum" )),
+			"es_cuenta_mayor" => new ApiExposedProperty("es_cuenta_mayor", true, POST, array( "bool" )),
+			"es_cuenta_orden" => new ApiExposedProperty("es_cuenta_orden", true, POST, array( "bool" )),
+			"naturaleza" => new ApiExposedProperty("naturaleza", true, POST, array( "enum" )),
+			"nombre_cuenta" => new ApiExposedProperty("nombre_cuenta", true, POST, array( "string" )),
+			"tipo_cuenta" => new ApiExposedProperty("tipo_cuenta", true, POST, array( "enum" )),
+			"id_cuenta_padre" => new ApiExposedProperty("id_cuenta_padre", false, POST, array( "int" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = ContabilidadController::NuevaCuenta( 
+ 			
+			
+			isset($_POST['abonos_aumentan'] ) ? $_POST['abonos_aumentan'] : null,
+			isset($_POST['cargos_aumentan'] ) ? $_POST['cargos_aumentan'] : null,
+			isset($_POST['clasificacion'] ) ? $_POST['clasificacion'] : null,
+			isset($_POST['es_cuenta_mayor'] ) ? $_POST['es_cuenta_mayor'] : null,
+			isset($_POST['es_cuenta_orden'] ) ? $_POST['es_cuenta_orden'] : null,
+			isset($_POST['naturaleza'] ) ? $_POST['naturaleza'] : null,
+			isset($_POST['nombre_cuenta'] ) ? $_POST['nombre_cuenta'] : null,
+			isset($_POST['tipo_cuenta'] ) ? $_POST['tipo_cuenta'] : null,
+			isset($_POST['id_cuenta_padre'] ) ? $_POST['id_cuenta_padre'] :  ""
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiContabilidadCuentaEditar extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"id_cuenta_contable" => new ApiExposedProperty("id_cuenta_contable", true, POST, array( "int" )),
+			"abonos_aumentan" => new ApiExposedProperty("abonos_aumentan", false, POST, array( "bool" )),
+			"afectable" => new ApiExposedProperty("afectable", false, POST, array( "bool" )),
+			"cargos_aumentan" => new ApiExposedProperty("cargos_aumentan", false, POST, array( "bool" )),
+			"es_cuenta_mayor" => new ApiExposedProperty("es_cuenta_mayor", false, POST, array( "bool" )),
+			"es_cuenta_orden" => new ApiExposedProperty("es_cuenta_orden", false, POST, array( "bool" )),
+			"id_cuenta_padre" => new ApiExposedProperty("id_cuenta_padre", false, POST, array( "int" )),
+			"naturaleza" => new ApiExposedProperty("naturaleza", false, POST, array( "enum" )),
+			"nombre_cuenta" => new ApiExposedProperty("nombre_cuenta", false, POST, array( "string" )),
+			"tipo_cuenta" => new ApiExposedProperty("tipo_cuenta", false, POST, array( "enum" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = ContabilidadController::EditarCuenta( 
+ 			
+			
+			isset($_POST['id_cuenta_contable'] ) ? $_POST['id_cuenta_contable'] : null,
+			isset($_POST['abonos_aumentan'] ) ? $_POST['abonos_aumentan'] :  "",
+			isset($_POST['afectable'] ) ? $_POST['afectable'] :  "",
+			isset($_POST['cargos_aumentan'] ) ? $_POST['cargos_aumentan'] :  "",
+			isset($_POST['es_cuenta_mayor'] ) ? $_POST['es_cuenta_mayor'] :  "",
+			isset($_POST['es_cuenta_orden'] ) ? $_POST['es_cuenta_orden'] :  "",
+			isset($_POST['id_cuenta_padre'] ) ? $_POST['id_cuenta_padre'] :  "",
+			isset($_POST['naturaleza'] ) ? $_POST['naturaleza'] :  "",
+			isset($_POST['nombre_cuenta'] ) ? $_POST['nombre_cuenta'] :  "",
+			isset($_POST['tipo_cuenta'] ) ? $_POST['tipo_cuenta'] :  ""
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiContabilidadCuentaEliminar extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"id_cuenta_contable" => new ApiExposedProperty("id_cuenta_contable", true, POST, array( "int" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = ContabilidadController::EliminarCuenta( 
+ 			
+			
+			isset($_POST['id_cuenta_contable'] ) ? $_POST['id_cuenta_contable'] : null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiContabilidadCuentaBuscar extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"afectable" => new ApiExposedProperty("afectable", false, POST, array( "bool" )),
+			"clasificacion" => new ApiExposedProperty("clasificacion", false, POST, array( "enum" )),
+			"clave" => new ApiExposedProperty("clave", false, POST, array( "string" )),
+			"consecutivo_en_nivel" => new ApiExposedProperty("consecutivo_en_nivel", false, POST, array( "int" )),
+			"es_cuenta_mayor" => new ApiExposedProperty("es_cuenta_mayor", false, POST, array( "bool" )),
+			"es_cuenta_orden" => new ApiExposedProperty("es_cuenta_orden", false, POST, array( "bool" )),
+			"id_cuenta_contable" => new ApiExposedProperty("id_cuenta_contable", false, POST, array( "int" )),
+			"id_cuenta_padre" => new ApiExposedProperty("id_cuenta_padre", false, POST, array( "int" )),
+			"naturaleza" => new ApiExposedProperty("naturaleza", false, POST, array( "enum" )),
+			"nivel" => new ApiExposedProperty("nivel", false, POST, array( "int" )),
+			"nombre_cuenta" => new ApiExposedProperty("nombre_cuenta", false, POST, array( "string" )),
+			"tipo_cuenta" => new ApiExposedProperty("tipo_cuenta", false, POST, array( "enum" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = ContabilidadController::BuscarCuenta( 
+ 			
+			
+			isset($_POST['afectable'] ) ? $_POST['afectable'] :  "",
+			isset($_POST['clasificacion'] ) ? $_POST['clasificacion'] :  "",
+			isset($_POST['clave'] ) ? $_POST['clave'] :  "",
+			isset($_POST['consecutivo_en_nivel'] ) ? $_POST['consecutivo_en_nivel'] :  "",
+			isset($_POST['es_cuenta_mayor'] ) ? $_POST['es_cuenta_mayor'] :  "",
+			isset($_POST['es_cuenta_orden'] ) ? $_POST['es_cuenta_orden'] :  "",
+			isset($_POST['id_cuenta_contable'] ) ? $_POST['id_cuenta_contable'] :  "",
+			isset($_POST['id_cuenta_padre'] ) ? $_POST['id_cuenta_padre'] :  "",
+			isset($_POST['naturaleza'] ) ? $_POST['naturaleza'] :  "",
+			isset($_POST['nivel'] ) ? $_POST['nivel'] :  "",
+			isset($_POST['nombre_cuenta'] ) ? $_POST['nombre_cuenta'] :  "",
+			isset($_POST['tipo_cuenta'] ) ? $_POST['tipo_cuenta'] :  ""
 			
 			);
 		}catch(Exception $e){

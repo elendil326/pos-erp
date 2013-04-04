@@ -639,7 +639,51 @@ class POSController implements IPOS {
      * @return mensaje string Mensaje de respuesta del servidor
      **/
     public static function BdInstanciasDescargarBd($instance_ids){
-        //------------EMPEZAR AQUI HACER AJAXSAZO
+        if(!is_array($instance_ids))
+            return array(
+                    "status" => "failure",
+                    "mensaje" => "Los datos enviados no son en validos"
+                );
+        if(sizeof($instance_ids) < 1)
+            return array(
+                    "status" => "failure",
+                    "mensaje" => "No se envio ninguna instancia"
+                );
+
+
+        for($i = 0; $i < sizeof($instance_ids); $i++){
+            //validar que existan
+            $r = InstanciasController::BuscarPorId( $instance_ids[$i] );
+
+            if(is_null($r)){
+                return array(
+                    "status" => "failure",
+                    "mensaje" => "La instancia " . $instance_ids[$i] . " no existe"
+                );            
+            }
+        }
+        
+        //$path_to_download_script = "../../jedi/instancias.bd.dl.php"; /*str_replace("server", "www/jedi/instancias.bd.dl.php", POS_PATH_TO_SERVER_ROOT);*/
+        //Logger::log("---->Ruta dl: ".$path_to_download_script);
+        $json = "{ \"instance_ids\" : ".json_encode($instance_ids)." }";
+        $salida = InstanciasController::descargar_instancias($json);
+        //header("Location: ".$path_to_download_script."?&instance_ids=".$json);//hacer esta funcionalidad en un Instancias.Controller
+
+        if($salida != null){
+            Logger::log("********************************* Salida trae el archivo");
+            header("Content-type: application/zip");
+            header("Content-disposition: attachment; filename={$salida['nombre_folder']}");
+            echo $salida['archivo'];
+            /*return array(
+                "status" => "ok",
+                "mensaje" => "Archivo: "
+            );*/
+        }else
+            return array(
+                "status" => "failure",
+                "mensaje" => $salida
+            );
+
     }
     /**
      *
