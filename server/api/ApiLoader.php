@@ -1,7 +1,5 @@
 <?php 
-
-
-  class ApiSesionIniciar extends ApiHandler {
+class ApiSesionIniciar extends ApiHandler {
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
@@ -6764,6 +6762,7 @@
 			"id_unidad_compra" => new ApiExposedProperty("id_unidad_compra", true, POST, array( "string" )),
 			"metodo_costeo" => new ApiExposedProperty("metodo_costeo", true, POST, array( "string" )),
 			"nombre_producto" => new ApiExposedProperty("nombre_producto", true, POST, array( "string" )),
+			"visible_en_vc" => new ApiExposedProperty("visible_en_vc", true, POST, array( "bool" )),
 			"codigo_de_barras" => new ApiExposedProperty("codigo_de_barras", false, POST, array( "string" )),
 			"control_de_existencia" => new ApiExposedProperty("control_de_existencia", false, POST, array( "int" )),
 			"costo_estandar" => new ApiExposedProperty("costo_estandar", false, POST, array( "float" )),
@@ -6789,6 +6788,7 @@
 			isset($_POST['id_unidad_compra'] ) ? $_POST['id_unidad_compra'] : null,
 			isset($_POST['metodo_costeo'] ) ? $_POST['metodo_costeo'] : null,
 			isset($_POST['nombre_producto'] ) ? $_POST['nombre_producto'] : null,
+			isset($_POST['visible_en_vc'] ) ? $_POST['visible_en_vc'] : null,
 			isset($_POST['codigo_de_barras'] ) ? $_POST['codigo_de_barras'] :  null,
 			isset($_POST['control_de_existencia'] ) ? $_POST['control_de_existencia'] :  null,
 			isset($_POST['costo_estandar'] ) ? $_POST['costo_estandar'] :  null,

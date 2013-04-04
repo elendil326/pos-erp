@@ -193,6 +193,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos.
  	 * @param id_unidad_compra string Unidad de medida por defecto utilizada para los pedidos de compra. Debe estar en la misma categora que la unidad de medida por defecto.
  	 * @param metodo_costeo string `costo` el precio de coste es fijo y se recalcula periodicamente (normalmente al finalizar el anio).`precio` 
  	 * @param nombre_producto string Nombre del producto
+ 	 * @param visible_en_vc bool Si queremos que este productos sea visible a los clientes.
  	 * @param codigo_de_barras string El Codigo de barras para este producto
  	 * @param control_de_existencia int 00000001 = Unidades. 00000010 = Caractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = Lote
  	 * @param costo_estandar float Este valor sera tomado solo en caso de seleccionar `costo` como metodo de costeo
@@ -214,6 +215,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos.
 		$id_unidad_compra, 
 		$metodo_costeo, 
 		$nombre_producto, 
+		$visible_en_vc, 
 		$codigo_de_barras = null, 
 		$control_de_existencia = null, 
 		$costo_estandar = null, 

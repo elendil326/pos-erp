@@ -131,6 +131,11 @@ abstract class ProductoDAOBase extends DAO
 			array_push( $val, $producto->getCompraEnMostrador() );
 		}
 
+		if( ! is_null( $producto->getVisibleEnVc() ) ){
+			$sql .= " `visible_en_vc` = ? AND";
+			array_push( $val, $producto->getVisibleEnVc() );
+		}
+
 		if( ! is_null( $producto->getMetodoCosteo() ) ){
 			$sql .= " `metodo_costeo` = ? AND";
 			array_push( $val, $producto->getMetodoCosteo() );
@@ -228,7 +233,7 @@ abstract class ProductoDAOBase extends DAO
 	  *	
 	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
 	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
-	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
+	  * aqui, sin embargo. El valor de retorno indica cuÃ¡ntas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
@@ -236,9 +241,10 @@ abstract class ProductoDAOBase extends DAO
 	  **/
 	private static final function update( $producto )
 	{
-		$sql = "UPDATE producto SET  `compra_en_mostrador` = ?, `metodo_costeo` = ?, `activo` = ?, `codigo_producto` = ?, `nombre_producto` = ?, `garantia` = ?, `costo_estandar` = ?, `control_de_existencia` = ?, `descripcion` = ?, `foto_del_producto` = ?, `costo_extra_almacen` = ?, `codigo_de_barras` = ?, `peso_producto` = ?, `id_unidad` = ?, `precio` = ?, `id_unidad_compra` = ? WHERE  `id_producto` = ?;";
+		$sql = "UPDATE producto SET  `compra_en_mostrador` = ?, `visible_en_vc` = ?, `metodo_costeo` = ?, `activo` = ?, `codigo_producto` = ?, `nombre_producto` = ?, `garantia` = ?, `costo_estandar` = ?, `control_de_existencia` = ?, `descripcion` = ?, `foto_del_producto` = ?, `costo_extra_almacen` = ?, `codigo_de_barras` = ?, `peso_producto` = ?, `id_unidad` = ?, `precio` = ?, `id_unidad_compra` = ? WHERE  `id_producto` = ?;";
 		$params = array( 
 			$producto->getCompraEnMostrador(), 
+			$producto->getVisibleEnVc(), 
 			$producto->getMetodoCosteo(), 
 			$producto->getActivo(), 
 			$producto->getCodigoProducto(), 
@@ -277,10 +283,11 @@ abstract class ProductoDAOBase extends DAO
 	  **/
 	private static final function create( &$producto )
 	{
-		$sql = "INSERT INTO producto ( `id_producto`, `compra_en_mostrador`, `metodo_costeo`, `activo`, `codigo_producto`, `nombre_producto`, `garantia`, `costo_estandar`, `control_de_existencia`, `descripcion`, `foto_del_producto`, `costo_extra_almacen`, `codigo_de_barras`, `peso_producto`, `id_unidad`, `precio`, `id_unidad_compra` ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO producto ( `id_producto`, `compra_en_mostrador`, `visible_en_vc`, `metodo_costeo`, `activo`, `codigo_producto`, `nombre_producto`, `garantia`, `costo_estandar`, `control_de_existencia`, `descripcion`, `foto_del_producto`, `costo_extra_almacen`, `codigo_de_barras`, `peso_producto`, `id_unidad`, `precio`, `id_unidad_compra` ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$producto->getIdProducto(), 
 			$producto->getCompraEnMostrador(), 
+			$producto->getVisibleEnVc(), 
 			$producto->getMetodoCosteo(), 
 			$producto->getActivo(), 
 			$producto->getCodigoProducto(), 
@@ -361,6 +368,17 @@ abstract class ProductoDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " `compra_en_mostrador` = ? AND"; 
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( ( !is_null (($a = $productoA->getVisibleEnVc()) ) ) & ( ! is_null ( ($b = $productoB->getVisibleEnVc()) ) ) ){
+				$sql .= " `visible_en_vc` >= ? AND `visible_en_vc` <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " `visible_en_vc` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
