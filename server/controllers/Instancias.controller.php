@@ -1196,6 +1196,27 @@ class InstanciasController {
             }
         }
 
+        //quitamos espacios en blanco del token y verificamos su longitud, minimo 5 caracteres
+        {
+            $token = trim($token);
+            
+            if (strlen($token) < 5) {
+                Logger::warn("Error al modificar el token, el tamaño de la cadena debe de ser de almenos 5 caracteres alfanuméricos");
+                return json_encode(array("success"=>"false", "reason"=>"Error al modificar el token, el tamaño de la cadena debe de ser de almenos 5 caracteres alfanuméricos"));
+            }
+        }
+
+        //busquemos si ese token ya existe
+        {
+            $sql = "SELECT * FROM instances WHERE instance_token = ? AND instance_id NOT IN ( ? )";
+            $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql, array($token, $intance_id));
+
+            if (!empty($res)) {
+                Logger::warn("Error al modificar el token, otra instancia ya cuenta con ese token");
+                return json_encode(array("success"=>"false", "reason"=>"Error al modificar el token, otra instancia ya cuenta con ese token"));
+            }
+        }
+
         if(!empty($token)) {
             //actualizamos la descripcion
             $sql = "UPDATE instances SET instance_token = ? WHERE instance_id = ?";
@@ -1217,6 +1238,9 @@ class InstanciasController {
                     return json_encode(array("success"=>"false", "reason"=>"Error al modificar el token del request"));
                 }
             }
+        } else {
+            Logger::warn("Error al modificar el token del request, el token debe de contener almenos un carácter alfanuméricos");
+            return json_encode(array("success"=>"false", "reason"=>"Error al modificar el token del request, el token debe de contener almenos un carácter alfanumérico"));
         }
 
         if($activa === "0") {

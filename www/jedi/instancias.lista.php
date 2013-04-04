@@ -13,11 +13,27 @@
     $headers = array(
         "instance_id" => "instance_id",
         "instance_token" => "instance_token",
+        "activa" => "Activa",
         "fecha_creacion" => "Creada",
         "descripcion" => "Descripcion"
     );
 
-    $t = new TableComponent( $headers , InstanciasController::Buscar(/*$activa = true, $query = "P", $order_by = "instance_token", $order = "DESC", $start = 0, $limit = 100*/));
+    $t = new TableComponent($headers , InstanciasController::Buscar(/*$activa = true, $query = "P", $order_by = "instance_token", $order = "DESC", $start = 0, $limit = 100*/));
+
+    $t->addColRender( "activa", "FormatBoolean" );
+
+    function FormatBoolean($activa)
+    {
+        if($activa === "0"){
+            return "<font style = \"color:red;\">no</font>";
+        }
+
+        if($activa === "1"){
+            return "s&iacute;";
+        }
+
+        return "undefined";
+    }
 
     $t->addColRender( "fecha_creacion", "FormatTime");
 

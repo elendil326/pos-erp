@@ -34,7 +34,7 @@
     function FormatBoolean($activa)
     {
         if($activa === "0"){
-            return "no";
+            return "<font style = \"color:red;\">no</font>";
         }
 
         if($activa === "1"){
@@ -47,7 +47,6 @@
     $p->addComponent($t);
 
     if (!empty($instancia["request"])) {
-
         $p->addComponent(new TitleComponent("Request", 3));
 
         $tt = new TableComponent(array(
@@ -64,7 +63,6 @@
         $tt->addColRender("date_installed", "FormatTime");
 
         $p->addComponent($tt);
-
     }
 
     $p->render();
