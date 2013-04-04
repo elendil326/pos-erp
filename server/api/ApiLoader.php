@@ -6893,6 +6893,7 @@ class ApiSesionIniciar extends ApiHandler {
 			"nombre_producto" => new ApiExposedProperty("nombre_producto", false, POST, array( "string" )),
 			"peso_producto" => new ApiExposedProperty("peso_producto", false, POST, array( "float" )),
 			"precio" => new ApiExposedProperty("precio", false, POST, array( "int" )),
+			"visible_en_vc" => new ApiExposedProperty("visible_en_vc", false, POST, array( "bool" )),
 		);
 	}
 
@@ -6919,7 +6920,8 @@ class ApiSesionIniciar extends ApiHandler {
 			isset($_POST['metodo_costeo'] ) ? $_POST['metodo_costeo'] :  null,
 			isset($_POST['nombre_producto'] ) ? $_POST['nombre_producto'] :  null,
 			isset($_POST['peso_producto'] ) ? $_POST['peso_producto'] :  null,
-			isset($_POST['precio'] ) ? $_POST['precio'] :  null
+			isset($_POST['precio'] ) ? $_POST['precio'] :  null,
+			isset($_POST['visible_en_vc'] ) ? $_POST['visible_en_vc'] :  null
 			
 			);
 		}catch(Exception $e){

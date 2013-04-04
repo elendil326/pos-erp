@@ -139,6 +139,7 @@
  	 * @param nombre_producto string Nombre del producto
  	 * @param peso_producto float el peso de este producto en KG
  	 * @param precio int El precio de este producto
+ 	 * @param visible_en_vc bool Verdadero si este producto sera visible a los clientes.
  	 **/
   static function Editar
 	(
@@ -160,7 +161,8 @@
 		$metodo_costeo = null, 
 		$nombre_producto = null, 
 		$peso_producto = null, 
-		$precio = null
+		$precio = null, 
+		$visible_en_vc = null
 	);  
   
   

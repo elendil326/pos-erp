@@ -1034,50 +1034,52 @@ class ProductosController extends ValidacionesController implements IProductos
     
     /**
      *
-     *Edita la informaci?e un producto
+     *Edita la informaci?n de un producto
      *
      * @param id_producto int Id del producto a editar
-     * @param descuento float Descuento que tendra este producot
-     * @param metodo_costeo string Mtodo de costeo del producto: 1 = Costo Promedio en Base a Entradas.2 = Costo Promedio en Base a Entradas Almacn.3 = ltimo costo.4 = UEPS.5 = PEPS.6 = Costo especfico.7 = Costo Estndar
-     * @param descripcion_producto string Descripcion larga del producto
-     * @param id_unidad_no_convertible int Si este producto se relacionara con una unidad no convertible ( lotes, cajas, costales, etc.)
-     * @param impuestos json array de ids de impuestos que tiene este producto
-     * @param clasificaciones json Uno o varios id_clasificacion de este producto, esta clasificacion esta dada por el usuarioArray
-     * @param id_unidad_convertible int Si este producto se relacionara con una unidad convertible (kilos, libras, litros, etc.) 
-     * @param margen_de_utilidad float Un porcentage de 0 a 100 si queremos que este producto marque utilidad en especifico
-     * @param garant�a int Si este producto cuenta con un nmero de meses de garantia que no aplican a los demas productos de su categoria
-     * @param compra_en_mostrador bool Verdadero si este producto se puede comprar en mostrador, para aquello de compra-venta. Para poder hacer esto, el sistema debe poder hacer compras en mostrador
+     * @param clasificaciones json Uno o varios id_clasificacion de este producto, esta clasificacion esta dada por el usuario
      * @param codigo_de_barras string El Codigo de barras para este producto
-     * @param empresas json arreglo de empresas a las que pertenece este producto
-     * @param peso_producto float el peso de este producto en KG
-     * @param costo_estandar float Valor del costo estndar del producto.
-     * @param nombre_producto string Nombre del producto
-     * @param costo_extra_almacen float Si este producto produce un costo extra por tenerlo en almacen
-     * @param control_de_existencia int 00000001 = Unidades. 00000010 = Caractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = Lote
-     * @param foto_del_producto string url a una foto de este producto
      * @param codigo_producto string Codigo del producto
+     * @param compra_en_mostrador bool Verdadero si este producto se puede comprar en mostrador, para aquello de compra-venta
+     * @param control_de_existencia int 00000001 = Unidades. 00000010 = Caractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = Lote
+     * @param costo_estandar float Valor del costo estndar del producto.
+     * @param costo_extra_almacen float Si este producto produce un costo extra por tenerlo en almacen
+     * @param descripcion_producto string Descripcion larga del producto
+     * @param empresas json arreglo de ids de empresas a las que pertenece este producto
+     * @param foto_del_producto string url a una foto de este producto
+     * @param garantia int Numero de meses de garantia con los que cuenta esta categoria de producto
+     * @param id_unidad int La unidad preferente de este producto
+     * @param id_unidad_compra int El id de la unidad de medida en la que se adquiere el producto al comprarlo
+     * @param impuestos json array de ids de impuestos que tiene este producto
+     * @param metodo_costeo string Puede ser "precio" o "costo" e indican si el precio final sera tomado a partir del costo del producto o del precio del mismo
+     * @param nombre_producto string Nombre del producto
+     * @param peso_producto float el peso de este producto en KG
+     * @param precio int El precio de este producto
+     * @param visible_en_vc bool Verdadero si este producto sera visible a los clientes.
      **/
-    public static function Editar(
-		$id_producto, 
-		$clasificaciones = null, 
-		$codigo_de_barras = null, 
-		$codigo_producto = null, 
-		$compra_en_mostrador = null, 
-		$control_de_existencia = null, 
-		$costo_estandar = null, 
-		$costo_extra_almacen = null, 
-		$descripcion_producto = null, 
-		$empresas = null, 
-		$foto_del_producto = null, 
-		$garantia = null, 
-		$id_unidad = null, 
-		$id_unidad_compra = null, 
-		$impuestos = null, 
-		$metodo_costeo = null, 
-		$nombre_producto = null, 
-		$peso_producto = null, 
-		$precio = null
-	)
+    static function Editar
+    (
+        $id_producto, 
+        $clasificaciones = null, 
+        $codigo_de_barras = null, 
+        $codigo_producto = null, 
+        $compra_en_mostrador = null, 
+        $control_de_existencia = null, 
+        $costo_estandar = null, 
+        $costo_extra_almacen = null, 
+        $descripcion_producto = null, 
+        $empresas = null, 
+        $foto_del_producto = null, 
+        $garantia = null, 
+        $id_unidad = null, 
+        $id_unidad_compra = null, 
+        $impuestos = null, 
+        $metodo_costeo = null, 
+        $nombre_producto = null, 
+        $peso_producto = null, 
+        $precio = null, 
+        $visible_en_vc = null
+    )
     {
         Logger::log("== Editando producto " . $id_producto . " ==");
         
@@ -1155,6 +1157,10 @@ class ProductosController extends ValidacionesController implements IProductos
         if (!is_null($precio)) {
             $producto->setPrecio($precio);
         } //!is_null($precio)
+
+        if (!is_null($visible_en_vc)) {
+            $producto->setVisibleEnVc($visible_en_vc);
+        }
         
         if ($metodo_costeo == "precio" && is_null($producto->getPrecio())) {
             Logger::error("Se intenta registrar un producto con metodo de costeo precio sin especificar un precio");

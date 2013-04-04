@@ -50,6 +50,17 @@
 		$form->createComboBoxJoin( "compra_en_mostrador", "compra_en_mostrador", array( array( "id" => 1 , "caption" => "si" ), 
 		                            array( "id" => 0 , "caption" => "no" ) ), $este_producto->getCompraEnMostrador() );
 
+		$form->createComboBoxJoin("visible_en_vc", "visible_en_vc", array(
+	    array(
+	        "id" => 1,
+	        "caption" => "Si"
+	    ),
+	    array(
+	        "id" => 0,
+	        "caption" => "No"
+	    )
+	), 1);
+
 		$page->addComponent( $form );
                 
 		$page->render();
