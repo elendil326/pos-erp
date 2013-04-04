@@ -13,14 +13,17 @@
     $headers = array(
         "instance_id" => "instance_id",
         "instance_token" => "instance_token",
-        "activa" => "Activa",
-        "fecha_creacion" => "Creada",
-        "descripcion" => "Descripcion"
+        "activa" => "activa",
+        "fecha_creacion" => "areada",
+        "descripcion" => "descripcion",
+        "pos_instance" => "pos_instance"
     );
 
     $t = new TableComponent($headers , InstanciasController::Buscar(/*$activa = true, $query = "P", $order_by = "instance_token", $order = "DESC", $start = 0, $limit = 100*/));
 
     $t->addColRender( "activa", "FormatBoolean" );
+
+    $t->addColRender( "pos_instance", "FormatBoolean" );
 
     function FormatBoolean($activa)
     {

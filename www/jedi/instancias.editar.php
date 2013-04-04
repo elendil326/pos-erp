@@ -23,6 +23,7 @@
                         <script>
                          (function(){
                             alert("Cambios realizados correctamente");
+                            location.href="instancias.ver.php?id=<?php echo $_GET['id'];?>";
                          })();
                         </script>
                     <?php

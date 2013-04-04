@@ -266,8 +266,20 @@ class InstanciasController {
         $a = array();
 
         foreach ($res as $v) {
+
+            $sql = "SHOW DATABASES LIKE 'pos_instance_" . $v['instance_id'] . "'";
+            $r = $POS_CONFIG["CORE_CONN"]->GetRow($sql);
+
+            if (!empty($r)) {
+                $v["pos_instance"] = "1";
+            } else {
+                $v["pos_instance"] = "0";
+            }
+
             array_push($a, $v);
         }
+
+        //verificamos que exista una instalacion de pos_instance 
 
         return $a;
     }
@@ -405,10 +417,6 @@ class InstanciasController {
         }
 
         return $a;
-    }
-
-    public static function Eliminar($instance_token) {
-        
     }
 
     public static function Respaldar_Instancias($instance_ids) {
@@ -1146,31 +1154,49 @@ class InstanciasController {
     /**
      * Editar($intance_id, $activa, $descripcion, $token)
      *
-     * Permite la edicion de ciertos valores de la instancia como son el token, la descripcion yu alterna entre activa y desactiva.
+     * Permite la edicion de ciertos valores de la instancia como son el token, la descripcion y su activaci&oacute;n y desactivaci&oacute;n.
      *
      * @author Juan Manuel Garc&iacute;a Carmona <manuel@caffeina.mx>
      * @param string instance_id id de la instancia que vamos a modificar
      * @param string activa bandera para especificar si la instancia esta activa o inactiva
      * @param string descripcion nueva descripcion
      * @param string token nuevo valor del token
-     * @return array arreglo sociativo que contiene informacion sobre la respuesta response->success indica si termino con exito o fracaso (boolean), response->reason en caso de que exista algun error aqui se indica la informaci&oacute;n
+     * @return string cadena en formato de json que contiene  sociativo que contiene informacion sobre la respuesta response->success indica si termino con exito o fracaso (boolean), response->reason en caso de que exista algun error aqui se indica la informaci&oacute;n
      **/
     public static function Editar($intance_id = NULL, $activa = NULL, $descripcion = NULL, $token = NULL)
     {
         global $POS_CONFIG;
 
-        $instance = self::BuscarPorId($intance_id);
+        //validaciones de recepcion de parametros
+        {
+            //verificamos que al menos tenga un valor para editar
+            if($activa === NULL && $descripcion === NULL && $token === NULL){
+                Logger::warn("debe de especifical al menos un valor para editar");
+                return json_encode(array("success"=>"false", "reason"=>"debe de especifical al menos un valor para editar"));
+            }
 
-        //verificamos al existencia de la instancia
-        if (empty($instance)) {
-            Logger::warn("La instancia que desea modificar no existe!!");
-            return json_encode(array("success"=>"false", "reason"=>"La instancia que desea modificar no existe!!"));
+            //verificamos al existencia de la instancia
+            $instance = self::BuscarPorId($intance_id);
+
+            if (empty($instance)) {
+                Logger::warn("La instancia que desea modificar no existe!!");
+                return json_encode(array("success"=>"false", "reason"=>"La instancia que desea modificar no existe!!"));
+            }
         }
 
         //verificamos si la instancia esta desactivada, en caso de estarlo solo la podemos activar
         if ($instance["activa"] === "0") {
             if ($activa === "1") {
-                //busquemos ese email en la bd
+                //antes de activarla verificamos que exista una instalacion de pos_instance
+                $sql = "SHOW DATABASES LIKE pos_instance_?";
+                $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql, array($intance_id));
+
+                if (empty($res)) {
+                    Logger::warn("Error, no se puede reactivar la instancia ya que la instalacion de pos_instance ha sido eliminada");
+                    return json_encode(array("success"=>"false", "reason"=>"Error, no se puede reactivar la instancia ya que la instalacion de pos_instance ha sido eliminada"));
+                }
+
+                //activamos al instancia
                 $sql = "UPDATE instances SET activa = ? where instance_id = ? ";
                 $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql, array($activa, $intance_id));
 
@@ -1190,19 +1216,10 @@ class InstanciasController {
             //actualizamos la descripcion
             $sql = "UPDATE instances SET descripcion = ? WHERE instance_id = ?";
             $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql, array($descripcion, $intance_id));
+
             if (!empty($res)) {
                 Logger::warn("Error al modificar la descripcion");
                 return json_encode(array("success"=>"false", "reason"=>"Error al modificar la descripcion"));
-            }
-        }
-
-        //quitamos espacios en blanco del token y verificamos su longitud, minimo 5 caracteres
-        {
-            $token = trim($token);
-            
-            if (strlen($token) < 5) {
-                Logger::warn("Error al modificar el token, el tamaño de la cadena debe de ser de almenos 5 caracteres alfanuméricos");
-                return json_encode(array("success"=>"false", "reason"=>"Error al modificar el token, el tamaño de la cadena debe de ser de almenos 5 caracteres alfanuméricos"));
             }
         }
 
@@ -1218,9 +1235,19 @@ class InstanciasController {
         }
 
         if(!empty($token)) {
+
+            //quitamos espacios en blanco del token y verificamos su longitud, minimo 5 caracteres
+            $token = trim($token);
+
+            if (strlen($token) < 5) {
+                Logger::warn("Error al modificar el token, el tamaño de la cadena debe de ser de al menos 5 caracteres alfanuméricos");
+                return json_encode(array("success"=>"false", "reason"=>"Error al modificar el token, el tamaño de la cadena debe de ser de al menos 5 caracteres alfanuméricos"));
+            }
+
             //actualizamos la descripcion
             $sql = "UPDATE instances SET instance_token = ? WHERE instance_id = ?";
             $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql, array($token, $intance_id));
+
             if (!empty($res)) {
                 Logger::warn("Error al modificar el token");
                 return json_encode(array("success"=>"false", "reason"=>"Error al modificar el token"));
@@ -1229,24 +1256,100 @@ class InstanciasController {
             //buscamos si esta instancia se creo a partir de un instance_request, de ser asi modificamos el registro
             $sql = "SELECT * FROM instance_request WHERE instance_id = ?";
             $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql, array($intance_id));
+
             if (!empty($res)) {
                 //si hay un request relacionado
                 $sql = "UPDATE instance_request SET token = ? WHERE instance_id = ?";
                 $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql, array($token,$intance_id));
+
                 if (!empty($res)) {
                     Logger::warn("Error al modificar el token del request");
                     return json_encode(array("success"=>"false", "reason"=>"Error al modificar el token del request"));
                 }
             }
-        } else {
-            Logger::warn("Error al modificar el token del request, el token debe de contener almenos un carácter alfanuméricos");
-            return json_encode(array("success"=>"false", "reason"=>"Error al modificar el token del request, el token debe de contener almenos un carácter alfanumérico"));
         }
 
         if($activa === "0") {
             //actualizamos la descripcion
             $sql = "UPDATE instances SET activa = ? WHERE instance_id = ?";
             $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql, array($activa, $intance_id));
+
+            if (!empty($res)) {
+                Logger::warn("Error al desactivar la instancia");
+                return json_encode(array("success"=>"false", "reason"=>"Error al desactivar la instancia"));
+            }
+        }
+
+        return json_encode(array("success"=>"true"));
+    }
+
+    /**
+     * Eliminar($intance_id)
+     *
+     * Permite la eliminacion de la instalacion de la bd pos_instance
+     *
+     * @author Juan Manuel Garc&iacute;a Carmona <manuel@caffeina.mx>
+     * @param string instance_id id de la instancia que vamos a modificar
+     * @return string cadena en formato de json que contiene informacion sobre la respuesta response->success indica si termino con exito o fracaso (boolean), response->reason en caso de que exista algun error aqui se indica la informaci&oacute;n
+     **/
+    public static function Eliminar($instance_id = NULL)
+    {
+        global $POS_CONFIG;
+
+        if($instance_id === NULL){
+            Logger::warn("Error, debe especificar el id de una instancia a eliminar");
+            return json_encode(array("success"=>"false", "reason"=>"Error, debe especificar el id de una instancia a eliminar"));
+        }
+
+        $db_name = "pos_instance_" . $instance_id;
+
+        //antes de activarla verificamos que exista una instalacion de pos_instance
+        {
+            $sql = "SHOW DATABASES LIKE '$db_name'";
+            $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql);
+
+            if (empty($res)) {
+                Logger::warn("Error, no se puede eliminar la BD pos_instance asociada ya que la instalacion ha previamente sido eliminada o no se ha realizado ninguna instalaci&oacute;n");
+                return json_encode(array("success"=>"false", "reason"=>"Error, no se puede eliminar la BD pos_instance asociada ya que la instalacion ha previamente sido eliminada o no se ha realizado ninguna instalaci&oacute;n"));
+            }
+        }
+
+        //Eliminamos el usuario de la BD
+        {
+            $sql = "REVOKE ALL ON $db_name . * FROM $db_name@localhost";
+            try{
+                $POS_CONFIG["CORE_CONN"]->GetRow($sql);
+            }catch(Exception $e){
+                Logger::warn("Error al eliminar los permisos del usuario pos_instance_{$instance_id} de la BD");
+                //return json_encode(array("success"=>"false", "reason"=>"Error al eliminar los permisos del usuario pos_instance_{$instance_id} de la BD"));
+            }
+
+            $sql = "DROP USER $db_name@localhost";
+            try{
+                $POS_CONFIG["CORE_CONN"]->GetRow($sql);
+            }catch(Exception $e){
+                Logger::warn("Error al eliminar el usuario pos_instance_{$instance_id} de la BD");
+                //return json_encode(array("success"=>"false", "reason"=>"Error al eliminar el usuario pos_instance_{$instance_id} de la BD"));
+            }
+        }
+
+        //Eliminamos la BD pos_instance
+        {
+            $sql = "DROP DATABASE $db_name";
+            try{
+                $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql);
+            }catch(Exception $e){
+                Logger::error("Error al eliminar la base de datos pos_instance_{$instance_id}");
+                return json_encode(array("success"=>"false", "reason"=>"Error al eliminar la base de datos pos_instance_{$instance_id}"));
+            }
+        }
+
+        //desactivamos la instancia
+        {
+            //actualizamos la descripcion
+            $sql = "UPDATE instances SET activa = ? WHERE instance_id = ?";
+            $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql, array("0", $instance_id));
+
             if (!empty($res)) {
                 Logger::warn("Error al desactivar la instancia");
                 return json_encode(array("success"=>"false", "reason"=>"Error al desactivar la instancia"));
