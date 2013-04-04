@@ -449,7 +449,13 @@ $html .= "   });";
 
 $html .= "</script>";
 
+// Configuracion de productos en VC
+$form = new FormComponent();
+$form->addField('mostrar', 'Mostrar productos', 'bool', 'mostrar', 'mostrar');
+$form->addApiCall('api/pos/configuracion/vistas/clientes');
+
 $page->addComponent($html);
+$page->addComponent($form);
 
 //---------------------------------------------------------
 

@@ -12,17 +12,23 @@ class ConfiguracionDAOTest extends PHPUnit_Framework_TestCase
         $this->configuracion = new Configuracion(array(
             'descripcion' => 'productos_visibles_en_vc'
         ));
+    }
+
+    private function crearYBuscar()
+    {
         ConfiguracionDAO::GuardarConfigDeVC(true, array(), 1);
         $this->registros = ConfiguracionDAO::search($this->configuracion);
     }
 
     public function testCrearSiNoExiste()
     {
+        $this->crearYBuscar();
         $this->assertEquals(count($this->registros), 1);
     }
 
     public function testActualizarSiYaExiste()
     {
+        $this->crearYBuscar();
         $conf1 = $this->registros[0];
 
         ConfiguracionDAO::GuardarConfigDeVC(false, array(), 1);
@@ -35,6 +41,7 @@ class ConfiguracionDAOTest extends PHPUnit_Framework_TestCase
 
     public function testJsonValido()
     {
+        $this->crearYBuscar();
         $configuracion = $this->registros[0];
         $json = $configuracion->getValor();
         $this->assertNotNull(json_decode($json));
@@ -42,17 +49,31 @@ class ConfiguracionDAOTest extends PHPUnit_Framework_TestCase
 
     public function testPropiedadMostrarEnElJson()
     {
+        $this->crearYBuscar();
         $conf = $this->registros[0];
         $valor = json_decode($conf->getValor());
         $this->assertObjectHasAttribute('mostrar', $valor);
-        $this->assertInternalType('int', $valor->mostrar);
+        $this->assertInternalType('bool', $valor->mostrar);
+    }
+
+    public function testNoHayConfiguracion()
+    {
+        $this->assertFalse(ConfiguracionDAO::MostrarProductos());
+    }
+
+    public function testMostrarEsFalse()
+    {
+        ConfiguracionDAO::GuardarConfigDeVC(false, array(), 1);
+        $this->assertFalse(ConfiguracionDAO::MostrarProductos());
     }
 
     protected function tearDown()
     {
         $configuraciones = ConfiguracionDAO::search($this->configuracion);
-        $configuracion = $configuraciones[0];
-        ConfiguracionDAO::delete($configuracion);
+        if (count($configuraciones) > 0)
+        {
+            ConfiguracionDAO::delete($configuraciones[0]);
+        }
     }
 }
 ?>

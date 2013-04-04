@@ -20,19 +20,23 @@ require_once("base/configuracion.vo.base.php");
   */
 class ConfiguracionDAO extends ConfiguracionDAOBase
 {
-    public function GuardarConfigDeVC($mostrar, $propiedades, $id_usuario)
+    private static $descripcion = 'productos_visibles_en_vc';
+
+    public static function GuardarConfigDeVC($mostrar, $propiedades, $id_usuario)
     {
         $configuracion = new Configuracion(array(
-            'descripcion' => 'productos_visibles_en_vc'
+            'descripcion' => self::$descripcion
         ));
 
-        $configuraciones = ConfiguracionDAO::search($configuracion);
+        $configuraciones = parent::search($configuracion);
         if (count($configuraciones) > 0)
         {
             $configuracion = $configuraciones[0];
         }
 
         // construir el JSON para el valor
+        $mostrar = $mostrar ? 'true' : 'false';
+
         $json = '{"mostrar":'.$mostrar.'}';
 
         $configuracion->setValor($json);
@@ -40,5 +44,27 @@ class ConfiguracionDAO extends ConfiguracionDAOBase
         $configuracion->setFecha(time());
         
         parent::save($configuracion);
+    }
+
+    public static function MostrarProductos()
+    {
+        $configuracion = new Configuracion(array(
+            'descripcion' => self::$descripcion
+        ));
+
+        $configuraciones = parent::search($configuracion);
+
+        if (count($configuraciones) == 0)
+        {
+            return false;
+        }
+
+        $valor = json_decode($configuraciones[0]->getValor());
+        if ($valor->mostrar == 0)
+        {
+            return false;
+        }
+
+        return true;
     }
 }

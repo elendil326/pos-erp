@@ -5,8 +5,6 @@
 		require_once("../../../server/bootstrap.php");
 	}
 	
-	
-	
 	$page = new ClienteComponentPage("Bienvendio a POS ERP");
 	$banner = new BannerComponent("POS ERP", "Bienvenido a POS ERP <br>un sistema de gestion empresarial", "../../../media/EAbydW1M_XR.png");
 	$page->addComponent($banner);
