@@ -5,23 +5,36 @@
                         $W="";
                         if(sizeof($_FILES)>0)//Si se carga al menos 1 archivo
                         {
-                             $Do=1;
+                              $W.="<script>";
+                              $Do=1;
                               $rutaPlantillaTemp=$_FILES["Plantilla"]["tmp_name"];
                               $nombrePlantilla=$_FILES["Plantilla"]["name"];
                               
                               $nuevaRutaPlantilla= POS_PATH_TO_SERVER_ROOT . "/../static_content/" . IID . "/plantillas/excel/" . $nombrePlantilla;
-                              if ($_FILES["Plantilla"]["size"]<=(2*1024*1024))//Limite de tamaño
-                              { $Do*=1;}else{$Do*=0;}
+                              if ($_FILES["Plantilla"]["size"]<=(((int)$POS_CONFIG["TAM_MAX_PLANTILLAS"])*1024*1024))//Limite de tamaño
+                              { $Do*=1;}else{$Do*=0;
+                                    $W.="Ext.MessageBox.show({title:\"Error\",msg:\"Tamaño del archivo supera el límite\",buttons : Ext.MessageBox.OK});";
+                              }
                               if (substr($_FILES["Plantilla"]["name"],(strlen($_FILES["Plantilla"]["name"])-5),5)==".xlsx")//Tipo de archivo
-                              { $Do*=1;}else{$Do*=0;}
+                              { $Do*=1;}else{$Do*=0;
+                                    $W.="Ext.MessageBox.show({title:\"Error\",msg:\"Formato de plantilla inválido\",buttons : Ext.MessageBox.OK});";
+                              }
+                              if(file_exists(POS_PATH_TO_SERVER_ROOT . "/../static_content/" . IID . "/plantillas/excel/" ))
+                              { $Do*=1;}else{$Do*=0;
+                                    $W.="Ext.MessageBox.show({title:\"Error\",msg:\"No existe una carpeta para las plantillas\",buttons : Ext.MessageBox.OK});";
+                              }
+                              if(fileperms($nuevaRutaPlantilla)!=0777)
+                              { $Do*=1;}else{$Do*=0;
+                                    $W.="Ext.MessageBox.show({title:\"Error\",msg:\"Permisos en carpeta de plantillas inválidos\",buttons : Ext.MessageBox.OK});";
+                              }
                               
                               if($Do==1)
                               {
                                     move_uploaded_file($rutaPlantillaTemp, $nuevaRutaPlantilla);
+                                    chmod($nuevaRutaPlantilla,0777);//Se cambian los permisos del archivo
 
 
                                     $W.="
-                                     <script>                        
                                     POS.API.POST(\"api/formas/excel/leerpalabrasclave\",
                                     {
                                        \"archivo_plantilla\":\"". $nuevaRutaPlantilla . "\"
@@ -34,8 +47,9 @@
                                            document.getElementsByName(\"json_impresion\")[0].value=\"{}\";
                                        }
                                     })
-                                    </script>";
+                                    ";
                               }
+                              $W.="</script>";
                         }
                        
                                                 
@@ -108,7 +122,7 @@
 	$f->setType("json_impresion", "textarea");
 	$page->addComponent($f);
                         
-                        $page->addComponent(new TitleComponent("Cargar plantilla Excel (<2MB)", 4));
+                        $page->addComponent(new TitleComponent("Cargar plantilla Excel (<" . $POS_CONFIG["TAM_MAX_PLANTILLAS"] . "MB)", 4));
                         $CmdSubirArchivo="<p>\n";
                         $CmdSubirArchivo.="<form action=\"documentos.php#Base\" method=\"post\" enctype=\"multipart/form-data\">\n";
                         $CmdSubirArchivo.="<input type=\"file\" name=\"Plantilla\" size=\"50\"  class=\"POS Boton\" id=\"subArch\" accept=\"xlsx\"\n";
