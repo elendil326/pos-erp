@@ -14,7 +14,7 @@
         "instance_id" => "instance_id",
         "instance_token" => "instance_token",
         "activa" => "activa",
-        "fecha_creacion" => "areada",
+        "fecha_creacion" => "creada",
         "descripcion" => "descripcion",
         "pos_instance" => "pos_instance"
     );

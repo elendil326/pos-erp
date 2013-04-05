@@ -148,6 +148,34 @@ class InstanciasController {
             return null;
         }
 
+        //verificamos si hay un request relacionado con esta instancia y actualizamos el id de la instancia
+        $sql = "UPDATE instance_request SET instance_id = ? WHERE token = ?";
+
+        try {
+            $POS_CONFIG["CORE_CONN"]->GetRow($sql, array($I_ID, $instance_token));
+        } catch (ADODB_Exception $e) {
+            Logger::error($e->msg);
+            return null;
+        }
+
+        //creamos la estructura de carpetas necesaria para cada instancia
+        try{
+
+            $path = POS_PATH_TO_SERVER_ROOT . "/../static_content/" . $I_ID;
+
+            if (!is_dir($destination)) {
+                mkdir($path);
+                chmod($path, 0777);
+                mkdir($path . "/plantillas");
+                chmod($path . "/plantillas", 0777);
+                mkdir($path . "/plantillas/excel");
+                chmod($path . "/plantillas/excel", 0777);
+            }
+
+        }catch(Exception $e){
+            Logger::error("Error al crear las carpetas de la instancia" . $e->msg);
+        }
+
         Logger::log("Instancia $I_ID creada correctamente... ");
 
         Logger::log("======== / NUEVA INSTANCIA =============");
@@ -331,6 +359,16 @@ class InstanciasController {
         }
 
         $res['request'] = $request;
+
+        //varificamos si tiene una instalacion de pos_instance
+        $sql = "SHOW DATABASES LIKE 'pos_instance_" . $instance_id . "'";
+        $r = $POS_CONFIG["CORE_CONN"]->GetRow($sql);
+
+        if (!empty($r)) {
+            $res["pos_instance"] = "1";
+        } else {
+            $res["pos_instance"] = "0";
+        }
 
         return $res;
     }
@@ -1188,8 +1226,8 @@ class InstanciasController {
         if ($instance["activa"] === "0") {
             if ($activa === "1") {
                 //antes de activarla verificamos que exista una instalacion de pos_instance
-                $sql = "SHOW DATABASES LIKE pos_instance_?";
-                $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql, array($intance_id));
+                $sql = "SHOW DATABASES LIKE 'pos_instance_{$intance_id}'";
+                $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql);
 
                 if (empty($res)) {
                     Logger::warn("Error, no se puede reactivar la instancia ya que la instalacion de pos_instance ha sido eliminada");

@@ -44,9 +44,11 @@
 
     $p->addComponent("<a href='./instancias.editar.php?id=" . $_GET["id"]. "'><div class='POS Boton'>Editar Informaci&oacute;n</div></a>");
 
-    $p->addComponent("<div class='POS Boton' onClick = \"eliminarInstancia();\">Eliminar BD pos_instance</div>");
-
-    $p->addComponent("<div class='POS Boton' onClick = \"instalarInstancia();\">Instalar BD pos_instance</div>");
+    if ($instancia["pos_instance"] === "1") {
+        $p->addComponent("<div class='POS Boton' onClick = \"eliminarInstancia();\">Eliminar BD pos_instance</div>");
+    } else {
+        $p->addComponent("<div class='POS Boton' onClick = \"instalarInstancia();\">Instalar BD pos_instance</div>");
+    }
 
     $p->addComponent(new TitleComponent($instancia["instance_token"], 3));
 
@@ -55,13 +57,13 @@
              "activa" => "Activa",
              "instance_token" => "Token",
              "descripcion" => "Descripcion",
-             "db_name" => "db_name",
-             "db_host" => "db_host",
-             "fecha_creacion" => "Creaci&oacute;n"
+             "fecha_creacion" => "Creaci&oacute;n",
+             "pos_instance" => "pos_instance"
         ), array($instancia));
 
     $t->addColRender( "fecha_creacion", "FormatTime" );
     $t->addColRender( "activa", "FormatBoolean" );
+    $t->addColRender( "pos_instance", "FormatBoolean" );
 
     function FormatBoolean($activa)
     {
