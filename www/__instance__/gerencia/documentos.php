@@ -1,10 +1,47 @@
 <?php
 
-	require_once("../../../server/bootstrap.php");
+ require_once("../../../server/bootstrap.php");
 
-	$page = new GerenciaTabPage();
+                        $W="";
+                        if(sizeof($_FILES)>0)//Si se carga al menos 1 archivo
+                        {
+                             $Do=1;
+                              $rutaPlantillaTemp=$_FILES["Plantilla"]["tmp_name"];
+                              $nombrePlantilla=$_FILES["Plantilla"]["name"];
+                              
+                              $nuevaRutaPlantilla= POS_PATH_TO_SERVER_ROOT . "/../static_content/" . IID . "/plantillas/excel/" . $nombrePlantilla;
+                              if ($_FILES["Plantilla"]["size"]<=(2*1024*1024))//Limite de tamaño
+                              { $Do*=1;}else{$Do*=0;}
+                              if (substr($_FILES["Plantilla"]["name"],(strlen($_FILES["Plantilla"]["name"])-5),5)==".xlsx")//Tipo de archivo
+                              { $Do*=1;}else{$Do*=0;}
+                              
+                              if($Do==1)
+                              {
+                                    move_uploaded_file($rutaPlantillaTemp, $nuevaRutaPlantilla);
 
-	$page->addComponent(new TitleComponent("Documentos"));
+
+                                    $W.="
+                                     <script>                        
+                                    POS.API.POST(\"api/formas/excel/leerpalabrasclave\",
+                                    {
+                                       \"archivo_plantilla\":\"". $nuevaRutaPlantilla . "\"
+                                    },
+                                    {
+                                       callback:function(a)
+                                       {
+                                           InsertarFila(a[\"resultados\"]);
+                                           document.getElementsByName(\"nombre\")[0].value=\"" . substr($nombrePlantilla, 0, (strlen($nombrePlantilla)-5)) . "\";
+                                           document.getElementsByName(\"json_impresion\")[0].value=\"{}\";
+                                       }
+                                    })
+                                    </script>";
+                              }
+                        }
+                       
+                                                
+	 $page = new GerenciaTabPage();
+	
+                       $page->addComponent(new TitleComponent("Documentos"));
 
 	$page->nextTab("Documentos");
 	$page->addComponent(new TitleComponent("Documentos", 3));
@@ -12,9 +49,9 @@
 	$documentos_base = DocumentoDAO::getAll( NULL, NULL, "fecha", 'DESC' );
 
 	$header = array(
-			"id_documento"			=> "Nombre",
-			"id_documento_base" 	=> "Tipo de documento",
-			"fecha"					=> "Modificacion"
+			"id_documento"=> "Nombre",
+			"id_documento_base" => "Tipo de documento",
+			"fecha"=> "Modificacion"
 		);
 	
 	$tableDb = new TableComponent( $header, $documentos_base  );
@@ -70,132 +107,170 @@
 
 	$f->setType("json_impresion", "textarea");
 	$page->addComponent($f);
-
+                        
+                        $page->addComponent(new TitleComponent("Cargar plantilla Excel (<2MB)", 4));
+                        $CmdSubirArchivo="<p>\n";
+                        $CmdSubirArchivo.="<form action=\"documentos.php#Base\" method=\"post\" enctype=\"multipart/form-data\">\n";
+                        $CmdSubirArchivo.="<input type=\"file\" name=\"Plantilla\" size=\"50\"  class=\"POS Boton\" id=\"subArch\" accept=\"xlsx\"\n";
+                        $CmdSubirArchivo.="<br><br><p>\n";
+                        $CmdSubirArchivo.="<input type=\"submit\" value=\"Subir plantilla\"></p>\n";
+                        $CmdSubirArchivo.="</form>\n";
+                        $CmdSubirArchivo.="</p>\n";
+                        
+                        $page->addComponent($CmdSubirArchivo);
+                        
+                       
    $page->addComponent(new TitleComponent("Campos para el documento", 3));
 
-	$html = "<div id='editor-grid' style='margin-top: 5px'></div>
-    	<script type='text/javascript' charset='utf-8'>
-        var extraParamsStore;
-        function attachExtraParams(o){
-            o.extra_params = getParams();
-            return o;
-        }
-        function getParams(){
+    $html = "<div id='editor-grid' style='margin-top: 5px'></div>
+    <script type='text/javascript' charset='utf-8'>
+
+      var extraParamsStore;
+      var rowEditing;
+      
+      function attachExtraParams(o){
+          o.extra_params = getParams();
+          return o;
+          }
+                        
+      function getParams(){
             var c = extraParamsStore.getCount(),
             out = [];
             for (var i=0; i < c; i++) {
-                var o = extraParamsStore.getAt(i);
-                out.push({
-                    desc : o.get('desc'),
-                    type : o.get('type'),
-                    obligatory : o.get('obligatory')
-                });
+                  var o = extraParamsStore.getAt(i);
+                  out.push({
+                        desc : o.get('desc'),
+                        type : o.get('type'),
+                        obligatory : o.get('obligatory')
+                  });
             };
             return Ext.JSON.encode(out);
-        }
-        Ext.onReady(function(){
+      }
+                        
+      Ext.onReady(function(){
             Ext.define('ExtraParam', {
-                extend: 'Ext.data.Model',
-                fields: ['id','desc', { name: 'type', type: 'enum' }, { name: 'obligatory', type: 'bool' } ]
+                  extend: 'Ext.data.Model',
+                  fields: ['id','desc', { name: 'type', type: 'enum' }, { name: 'obligatory', type: 'bool' } ]
             });
             extraParamsStore = Ext.create('Ext.data.Store', {
-                autoDestroy: true,
-                model: 'ExtraParam',
-                proxy: {
-                    type: 'memory'
-                },
-                data: [],
-                sorters: [{
-                    property: 'start',
-                    direction: 'ASC'
-                }]
+                  autoDestroy: true,
+                  model: 'ExtraParam',
+                  proxy: {
+                        type: 'memory'
+                  },
+                  data: [],
+                  sorters: [{
+                        property: 'start',
+                        direction: 'ASC'
+                  }]
             });
-            var rowEditing = Ext.create('Ext.grid.plugin.RowEditing', { clicksToMoveEditor: 1, autoCancel: false });
-            var grid = Ext.create('Ext.grid.Panel', {
-                store: extraParamsStore,
-                bodyCls: 'foo',
-                id : 'extra-params-grid',
-                columns: [{
-                    header: 'Descripcion',
-                    dataIndex: 'desc',
-                    flex: 1,
-                    editor: { allowBlank: false }
-               },  {
-                    header: 'Tipo de dato',
-                    dataIndex: 'type',
-                    width: 130,
-                    field: {
-                        xtype: 'combobox',
-                        typeAhead: true,
-                        triggerAction: 'all',
-                        selectOnTab: true,
-                        store: [
-                            ['textarea',    'Area de texto'],
-                            ['text',        'Linea de texto'],
-                            ['date',        'Fecha'],
-							['bool',		'Desicion'],
-							['password',	'Contrasena']
-                        ],
+            
+            rowEditing = Ext.create('Ext.grid.plugin.RowEditing', { clicksToMoveEditor: 1, autoCancel: false });
+            grid = Ext.create('Ext.grid.Panel', {
+                  store: extraParamsStore,
+                  bodyCls: 'foo',
+                  id : 'extra-params-grid',
+                  columns: [{
+                        header: 'Descripcion',
+                        dataIndex: 'desc',
+                        flex: 1,
+                        editor: { allowBlank: false }
+                  },
+                  {
+                        header: 'Tipo de dato',
+                        dataIndex: 'type',
+                        width: 130,
+                        field: {
+                              xtype: 'combobox',
+                              typeAhead: true,
+                              triggerAction: 'all',
+                              selectOnTab: true,
+                              store: [
+                                    ['textarea',    'Area de texto'],
+                                    ['text',      'Linea de texto'],
+                                    ['date',    'Fecha'],
+                                    ['bool',    'Desicion'],
+                                    ['password',      'Contrasena']
+                              ],
                         lazyRender: true,
                         listClass: 'x-combo-list-small'
-                    }
-                },  {
+                        }
+                  },
+                  {
                         header: 'Obligatorio',
                         dataIndex: 'obligatory',
                         width: 130,
                         field: {
-                            xtype: 'combobox',
-                            typeAhead: true,
-                            triggerAction: 'all',
-                            selectOnTab: true,
-                            store: [
-                                [true,  'Si'],
-                                [false, 'No']
-                            ],
+                              xtype: 'combobox',
+                              typeAhead: true,
+                              triggerAction: 'all',
+                              selectOnTab: true,
+                              store: [
+                                    [true,  'Si'],
+                                    [false, 'No']
+                              ],
                             lazyRender: true,
                             listClass: 'x-combo-list-small'
                         }
-                    }],
-                renderTo: 'editor-grid',
-                width: '100%',
-                height: 400,
-                frame: false,
-                tbar: [{
-                    text: 'Nuevo parametro',
-                    iconCls: 'not-ok',
-                    handler : function() {
-						rowEditing.cancelEdit();
-                        var r = Ext.ModelManager.create({
-                            desc: 'nuevo',
-                            type: 'text',
-                            obligator: false
-                        }, 'ExtraParam');
-
+                  }],
+                    
+                  renderTo: 'editor-grid',
+                  width: '100%',
+                  height: 400,
+                  frame: false,
+                  tbar: [{
+                        text: 'Nuevo parametro',
+                        iconCls: 'not-ok',
+                        handler : function() {
+                              rowEditing.cancelEdit();
+                              var r = Ext.ModelManager.create({
+                                    desc: 'nuevo',
+                                    type: 'text',
+                                    obligator: false
+                              }, 'ExtraParam');
                         extraParamsStore.insert(0, r);
                         rowEditing.startEdit(0, 0);
-                    }
-                }, {
-                    itemId: 'removeEmployee',
-                    text: 'Remover parametro',
-                    iconCls: 'ok',
-                    handler: function() {
-                        var sm = grid.getSelectionModel();
-                        rowEditing.cancelEdit();
-                        extraParamsStore.remove(sm.getSelection());
-                        sm.select(0);
-                    },
-                    disabled: true
-                }],
-                plugins: [rowEditing],
-                listeners: {
-                    'selectionchange': function(view, records) {
+                        }
+                  }, 
+                  {
+                        itemId: 'removeEmployee',
+                        text: 'Remover parametro',
+                        iconCls: 'ok',
+                        handler: function() {
+                              var sm = grid.getSelectionModel();
+                              rowEditing.cancelEdit();
+                              extraParamsStore.remove(sm.getSelection());
+                              sm.select(0);
+                        },
+                        disabled: true
+                  }],
+                  plugins: [rowEditing],
+                  listeners: {
+                        'selectionchange': function(view, records) {
                         grid.down('#removeEmployee').setDisabled(!records.length);
                     }
                 }
             });
-        });</script>";
-	$page->addComponent( $html );
+        });
+      var grid;
+      function InsertarFila(Elemento)
+                 {
+                 rowEditing.cancelEdit();
+                        for(Elem in Elemento)
+                        {
+                              var r = Ext.ModelManager.create({
+                                    desc: Elemento[Elem],
+                                    type: 'text',
+                                    obligator: false
+                              }, 'ExtraParam');
+                        extraParamsStore.insert(Elem, r);
+                        }
+                 };        
 
+</script>";
+    
+    $page->addComponent( $html );
+    $page->addComponent($W);//Componente en caso de abrir algún archivo de plantilla
 	$page->render();
 
 	die;
@@ -257,6 +332,7 @@
 
 
 
-		
+
 
 		$page->render();
+                    ?>

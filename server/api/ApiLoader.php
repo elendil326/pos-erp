@@ -1,5 +1,33 @@
 <?php 
-class ApiSesionIniciar extends ApiHandler {
+/*
+require_once("ApiHandler.php");
+
+	require_once("ApiHttpErrors.php");
+
+	require_once("ApiLoader.php");
+
+	require_once("ApiOutputFormatter.php");
+
+	require_once("CustomValidator.php");
+
+	require_once("DateRangeValidator.php");
+
+	require_once("DateValidator.php");
+
+	require_once("EnumValidator.php");
+
+	require_once("HtmlValidator.php");
+
+	require_once("NumericRangeValidator.php");
+
+	require_once("NumericValidator.php");
+
+	require_once("StringValidator.php");
+
+	require_once("Validator.php");
+*/
+
+  class ApiSesionIniciar extends ApiHandler {
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
@@ -8643,7 +8671,7 @@ class ApiSesionIniciar extends ApiHandler {
   
   
 
-  class ApiFormasExcelLeerpc extends ApiHandler {
+  class ApiFormasExcelLeerpalabrasclave extends ApiHandler {
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
@@ -8656,7 +8684,7 @@ class ApiSesionIniciar extends ApiHandler {
 
 	protected function GenerateResponse() {		
 		try{
- 		$this->response = FormasPreimpresasController::LeerpcExcel( 
+ 		$this->response = FormasPreimpresasController::LeerpalabrasclaveExcel( 
  			
 			
 			isset($_POST['archivo_plantilla'] ) ? $_POST['archivo_plantilla'] : null

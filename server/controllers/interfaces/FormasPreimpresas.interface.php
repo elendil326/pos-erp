@@ -34,10 +34,10 @@
  	 *Esta funcionalidad permite leer las palabras clave de un archivo (Plantilla) y las devuelve en forma de arreglo
  	 *
  	 * @param archivo_plantilla string Indica el archivo que se va a leer
- 	 * @return estado string Devuelve el estado de la ejecución, 0 en caso de todo correcto
+ 	 * @return estado string Devuelve el estado de la ejecucin, 0 en caso de todo correcto
  	 * @return datos json Devuelve el arreglo asociativo de palabras clave encontradas con sus respectivas coordenadas
  	 **/
-  static function LeerpcExcel
+  static function LeerpalabrasclaveExcel
 	(
 		$archivo_plantilla
 	);  
