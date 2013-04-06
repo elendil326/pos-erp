@@ -24,8 +24,6 @@ using namespace mysqlpp;
 class HttpResponse{
 
 	public:
-		
-
 		static void error(int err_code){
 			switch(err_code){
 				case MISSING_INSTANCE :
@@ -58,7 +56,6 @@ class HttpResponse{
 				break;		
 
 			}
-			
 
 			exit(EXIT_SUCCESS);
 		}
@@ -200,22 +197,6 @@ string header( const string &headerName ){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 string _get(const string &p){
 	
 	string h = header( "QUERY_STRING" );
@@ -272,7 +253,7 @@ class DB{
 
 	static Connection getCoreConn(){
 		Connection coreConn(false);
-		coreConn.connect("pos", "127.0.0.1", "root", "anti4581549");
+		coreConn.connect("pos-nightly", "127.0.0.1", "root", "anti4581549");
 		return coreConn;
 	}
 
@@ -282,7 +263,7 @@ class DB{
 
 	static Connection getInstanceConn(string token){
 		Connection instanceConn(false);
-		instanceConn.connect("pos_instance_85", "127.0.0.1", "root", "anti4581549");
+		instanceConn.connect("pos_instance_90", "127.0.0.1", "root", "anti4581549");
 		return instanceConn;
 	}	
 
