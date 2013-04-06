@@ -44,21 +44,17 @@
 
     $p->addComponent("<a href='./instancias.editar.php?id=" . $_GET["id"]. "'><div class='POS Boton'>Editar Informaci&oacute;n</div></a>");
 
-    if ($instancia["pos_instance"] === "1") {
-        $p->addComponent("<div class='POS Boton' onClick = \"eliminarInstancia();\">Eliminar BD pos_instance</div>");
-    } else {
-        $p->addComponent("<div class='POS Boton' onClick = \"instalarInstancia();\">Instalar BD pos_instance</div>");
-    }
+    $p->addComponent("<div class='POS Boton' onClick = \"eliminarInstancia();\">Eliminar Instancia</div>");
 
     $p->addComponent(new TitleComponent($instancia["instance_token"], 3));
 
     $t = new TableComponent(array(
              "instance_id" => "Id",
-             "activa" => "Activa",
              "instance_token" => "Token",
              "descripcion" => "Descripcion",
              "fecha_creacion" => "Creaci&oacute;n",
-             "pos_instance" => "pos_instance"
+             "db_name" => "db_name",
+             "activa" => "Activa",
         ), array($instancia));
 
     $t->addColRender( "fecha_creacion", "FormatTime" );

@@ -13,10 +13,10 @@
     $headers = array(
         "instance_id" => "instance_id",
         "instance_token" => "instance_token",
-        "activa" => "activa",
         "fecha_creacion" => "creada",
         "descripcion" => "descripcion",
-        "pos_instance" => "pos_instance"
+        "db_name" => "db_name",
+        "activa" => "activa"
     );
 
     $t = new TableComponent($headers , InstanciasController::Buscar(/*$activa = true, $query = "P", $order_by = "instance_token", $order = "DESC", $start = 0, $limit = 100*/));

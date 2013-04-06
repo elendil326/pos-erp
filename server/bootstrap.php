@@ -283,6 +283,7 @@
 	define("IID", $rs["instance_id"]);
 	define("INSTANCE_ID", $rs["instance_id"]);
 	define("INSTANCE_TOKEN", $_GET["_instance_"]);
+	define("INSTANCE_ACCESS", $rs["activa"]);
 
 	try{
 

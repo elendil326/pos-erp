@@ -159,8 +159,7 @@ class InstanciasController {
         }
 
         //creamos la estructura de carpetas necesaria para cada instancia
-        try{
-
+        {
             $path = POS_PATH_TO_SERVER_ROOT . "/../static_content/" . $I_ID;
 
             if (!is_dir($destination)) {
@@ -171,9 +170,6 @@ class InstanciasController {
                 mkdir($path . "/plantillas/excel");
                 chmod($path . "/plantillas/excel", 0777);
             }
-
-        }catch(Exception $e){
-            Logger::error("Error al crear las carpetas de la instancia" . $e->msg);
         }
 
         Logger::log("Instancia $I_ID creada correctamente... ");
@@ -1382,16 +1378,26 @@ class InstanciasController {
             }
         }
 
-        //desactivamos la instancia
+        //eliminamos la instancia
         {
             //actualizamos la descripcion
-            $sql = "UPDATE instances SET activa = ? WHERE instance_id = ?";
-            $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql, array("0", $instance_id));
+            $sql = "DELETE FROM instances WHERE instance_id = ?";
+            $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql, array($instance_id));
 
             if (!empty($res)) {
                 Logger::warn("Error al desactivar la instancia");
                 return json_encode(array("success"=>"false", "reason"=>"Error al desactivar la instancia"));
             }
+        }
+
+        //verificamos si hay un request relacionado con esta instancia y actualizamos el id de la instancia
+        $sql = "UPDATE instance_request SET instance_id = ? WHERE instance_id = ?";
+
+        try {
+            $POS_CONFIG["CORE_CONN"]->GetRow($sql, array(NULL, $instance_id));
+        } catch (ADODB_Exception $e) {
+            Logger::error($e->msg);
+            return null;
         }
 
         return json_encode(array("success"=>"true"));
