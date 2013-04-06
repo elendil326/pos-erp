@@ -38,6 +38,7 @@ require_once ('concepto_ingreso.dao.php');
 require_once ('consignacion.dao.php');
 require_once ('consignacion_producto.dao.php');
 require_once ('corte_de_caja.dao.php');
+require_once ('cuenta_contable.dao.php');
 require_once ('devolucion_sobre_compra.dao.php');
 require_once ('devolucion_sobre_venta.dao.php');
 require_once ('direccion.dao.php');

@@ -69,6 +69,22 @@ Update : ?Es correcto como se esta manejando el argumento id_sucursal? Ya que en
   
 	/**
  	 *
+ 	 *
+Dado un id obtiene una cuenta contable en el sistema que corresponda con ese id.
+
+ 	 *
+ 	 * @param id_cuenta_contable int id de la cuenta contable
+ 	 **/
+  static function DetalleCuenta
+	(
+		$id_cuenta_contable
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
  	 *Edita una cuenta contable que exista en el sistema
  	 *
  	 * @param id_cuenta_contable int El id de la cuenta a editar

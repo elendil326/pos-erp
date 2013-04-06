@@ -192,7 +192,7 @@
 	require_once("controllers/Compras.controller.php");
 	require_once("controllers/Impuestos.controller.php");//
 	require_once("controllers/Documentos.controller.php");
-		
+	require_once("controllers/Contabilidad.controller.php");//Agregado 04/Apr/2013	rev 2986
 			
 	/*
 	require_once("controllers/Autorizaciones.controller.php");

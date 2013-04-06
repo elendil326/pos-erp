@@ -1,31 +1,4 @@
 <?php 
-/*
-require_once("ApiHandler.php");
-
-	require_once("ApiHttpErrors.php");
-
-	require_once("ApiLoader.php");
-
-	require_once("ApiOutputFormatter.php");
-
-	require_once("CustomValidator.php");
-
-	require_once("DateRangeValidator.php");
-
-	require_once("DateValidator.php");
-
-	require_once("EnumValidator.php");
-
-	require_once("HtmlValidator.php");
-
-	require_once("NumericRangeValidator.php");
-
-	require_once("NumericValidator.php");
-
-	require_once("StringValidator.php");
-
-	require_once("Validator.php");
-*/
 
   class ApiSesionIniciar extends ApiHandler {
   
@@ -6480,6 +6453,34 @@ require_once("ApiHandler.php");
 			isset($_POST['nivel'] ) ? $_POST['nivel'] :  "",
 			isset($_POST['nombre_cuenta'] ) ? $_POST['nombre_cuenta'] :  "",
 			isset($_POST['tipo_cuenta'] ) ? $_POST['tipo_cuenta'] :  ""
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiContabilidadCuentaDetalle extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"id_cuenta_contable" => new ApiExposedProperty("id_cuenta_contable", true, POST, array( "int" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = ContabilidadController::DetalleCuenta( 
+ 			
+			
+			isset($_POST['id_cuenta_contable'] ) ? $_POST['id_cuenta_contable'] : null
 			
 			);
 		}catch(Exception $e){
