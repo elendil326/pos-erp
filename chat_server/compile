@@ -1,4 +1,5 @@
 #!/bin/bash
 
-g++ -I /usr/include/mysql++/ -I /usr/include/mysql/ -I /usr/include/hiredis -L/usr/local/libhiredis -L/usr/lib/mysql -lmysqlclient -lmysqlpp -lhiredis -o ../www/__instance__/chat/chat.cgi src/chat.cpp 
-
+pushd src
+g++ -I /usr/include/mysql++/ -I /usr/include/mysql/ -I /usr/include/hiredis -L/usr/local/libhiredis -L/usr/lib/mysql -lmysqlclient -lmysqlpp -lhiredis -o ../../www/__instance__/chat/chat.cgi chat.cpp 
+popd

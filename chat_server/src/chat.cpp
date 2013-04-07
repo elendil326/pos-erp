@@ -3,7 +3,7 @@
 #include <hiredis.h>
 #include <ctime>
 #include <sstream>
-
+#include "utils.h"
 
 using namespace std;
 using namespace mysqlpp;
@@ -16,11 +16,14 @@ using namespace mysqlpp;
 #define MISSING_ARGUMENT 	5
 #define NOT_FOUND			6
 #define NO_REDIS			7
+#define INTERNAL_ERROR		8
 
 
 
-
-
+/**
+  *
+  *
+  **/
 class HttpResponse{
 
 	public:
@@ -54,11 +57,24 @@ class HttpResponse{
 				case NO_REDIS:
 					cout << "{ \"status\" : \"false\", \"reason\" : \"Could not connect to redis server.\" }";
 				break;		
+				
+				case INTERNAL_ERROR:
+					cout << "{ \"status\" : \"false\", \"reason\" : \"Internal error.\" }";
+				break;		
 
 			}
 
 			exit(EXIT_SUCCESS);
 		}
+
+
+		static void debug(char * s){
+
+			cout << "{ \"status\" : \"false\", \"reason\" : \"" << s <<"\" }";
+			exit(EXIT_SUCCESS);
+
+		}
+
 
 		static void bootstrap(){
 			printf("Content-type: application/json\n\n");
@@ -68,98 +84,8 @@ class HttpResponse{
 
 
 
-
-
-
-template <class T>
-inline std::string to_string (const T& t)
-{
-	std::stringstream ss;
-	ss << t;
-	return ss.str();
-}
-
-
-
-
-
 char **argss;
 int nargss;
-
-
-
-int split_ocurrences ( string s , char c)
-{
-	int found = 0;
-	for (int i = 0; i < s.length(); ++i)
-	{
-		if(s[i] == c)
-		{
-			found++;
-		}
-	}
-	return found + 1;
-}
-
-
-
-string *  split (string s, char c){
-
-	int found = split_ocurrences(s, c);
-
-	string * res  = new string[found];
-	int start = 0;
-	int current = 0;
-	int i;
-
-	for ( i = 0; i < s.length() ; ++i)
-	{
-		
-		if( s[i] == c )
-		{
-			if(i == 0) {
-				start++;
-				continue;	
-			}
-
-			res[current] = s.substr( start, i - start );
-			start = i + 1;
-			current++;
-		}
-	}
-
-	res[current] = s.substr( start, i - start );
-
-	return res;
-}
-
-
-
-
-
-
-
-bool startsWith(string s, string test){
-	//test size first
-
-	//test last character, which is less probable to
-	//match if startsWith is false
-
-	for( int i = 0 ; ; i++){
-		if( s[i] == '\0') return 0;
-		if( test[i] == '\0') return 1;
-		if( test[i] != s[i]) return 0;
-	}
-
-	return 1;
-}
-
-
-
-
-
-
-
 
 string header( const string &headerName ){
 	nargss = 30;
@@ -186,9 +112,7 @@ string header( const string &headerName ){
 					break;
 				}
 			}
-
 			return found ? & argss[i][j+1] : string();
-			
 		}
 	}
 
@@ -205,25 +129,15 @@ string _get(const string &p){
 
 	int oc = split_ocurrences( h, '&' );
 
-	
-
 	for (int j = 0; j < oc; ++j)
 	{
-
-
 		if( startsWith( parts[ j ], p )  )
 		{
-
 			size_t io = parts[j].find("=");
-			
 			return parts[ j].substr( io  + 1);
 		}
 	}
-	
 
-	
-	// string("")
-	// 
 	return string("__________NULL");
 }
 
@@ -234,8 +148,11 @@ string _get(const string &p){
 
 
 
+/**
+  *
+  *
+  **/
 class DB{
-
 
 	private:
 	static Connection coreConn;
@@ -243,12 +160,10 @@ class DB{
 	static string intanceToken;
 
 	DB(){
-
 	}
 
 	public:
 	void bootstrap(){
-		
 	}
 
 	static Connection getCoreConn(){
@@ -257,50 +172,60 @@ class DB{
 		return coreConn;
 	}
 
-
-
-
-
 	static Connection getInstanceConn(string token){
-		Connection instanceConn(false);
-		instanceConn.connect("pos_instance_90", "127.0.0.1", "root", "anti4581549");
-		return instanceConn;
-	}	
 
+		Connection instanceConn(false);
+
+		try{
+
+			Connection conn = DB::getCoreConn();
+
+			Query query = conn.query();
+
+			query << "select instance_id, db_user, db_password, db_name, db_driver, db_host  from instances where instance_token = \"" + token + "\";";
+
+			StoreQueryResult bres = query.store();
+
+			if ( bres.num_rows() != 1 )
+			{
+				HttpResponse::error(MISSING_INSTANCE);
+			}
+
+			instanceConn.connect( bres[0]["db_name"], bres[0]["db_host"], bres[0]["db_user"], bres[0]["db_password"] );
+
+			return instanceConn;
+
+		}catch(BadQuery er){
+
+			HttpResponse::error(INTERNAL_ERROR);
+			//cout << "Error:" << er.what() << endl ;
+			return instanceConn;
+		}catch(const BadConversion& er){
+			HttpResponse::error(INTERNAL_ERROR);
+			//cout << "Conversion error " << er.what() << endl;
+			return instanceConn; 
+		}catch(const Exception& er){
+			HttpResponse::error(INTERNAL_ERROR);
+			//cout << "Error" << er.what() << endl;
+			return instanceConn; 
+		}
+	}	
 
 	static Connection getInstanceConn(){
 		return instanceConn;
 	}	
 
-
-
 	static redisContext* getRedisConnection(){
-
 		redisContext *redis = redisConnect("127.0.0.1", 6379);
 
 		if (redis->err) {
-		    //printf("Error: %s\n", redis->errstr);
+			//printf("Error: %s\n", redis->errstr);
 			HttpResponse::error(NO_REDIS);
-		    
 		}
-		
+
 		return redis;
 	}
-
-
-	
-
 };
-
-
-
-
-
-
-
-
-
-
 
 
 class InstanceController{
@@ -315,18 +240,11 @@ public:
 			Query query = conn.query();
 
 			query << "select * from instances where instance_token = \"" + token + "\";";
-			
+
 			StoreQueryResult bres = query.store();
-			
-			
-			
+
 			return ( bres.num_rows() == 1 );
-			
-			/*for(size_t i = 0 ; i < bres.num_rows(); i++){
-				//cout << bres[i]["id_usuario"] << "<br>";
-				cout << bres[i]["id_usuario"] << " ";
-			}*/
-			
+
 		}catch(BadQuery er){
 			cout << "Error:" << er.what() << endl ;
 			return 0;
@@ -337,7 +255,7 @@ public:
 
 		}catch(const Exception& er){
 			cout << "Error" << er.what() << endl;
-			return 0;		
+			return 0;
 
 		}
 
@@ -377,7 +295,7 @@ public:
 
 		}catch(const Exception& er){
 			cout << "Error" << er.what() << endl;
-			return 0;		
+			return 0;
 
 		}
 
@@ -391,11 +309,9 @@ public:
 class SesionController{
 public:
 	static int isValidSesion(string at){
-
-		
 		try{
 
-			Connection conn = DB::getInstanceConn("laskdfj");
+			Connection conn = DB::getInstanceConn(_get("instance"));
 
 			Query query = conn.query();
 
@@ -432,7 +348,7 @@ public:
 
 		try{
 
-			Connection conn = DB::getInstanceConn("laskdfj");
+			Connection conn = DB::getInstanceConn(_get("instance"));
 
 			Query query = conn.query();
 
@@ -496,17 +412,18 @@ public:
 		
 		string key("");
 
-		key.append( to_string(instance_id));
-		key.append("-");
-		key.append( to_string(to_user_id));
-		key.append("-unread");
+		key.append( to_string(instance_id) );
+		key.append( "-" );
+		key.append( to_string(to_user_id) );
+		key.append( "-unread" );
 
-		string json("{\"from\":"); json.append( to_string(from_user_id) );
-		json.append( ",\"date\":" );	json.append( to_string(time(0)));
-		json.append( ",\"content\":\""); json.append( content );
-		json.append( "\"}");
-
-
+		string json( "{\"from\":" );
+		json.append( to_string(from_user_id) );
+		json.append( ",\"date\":" );
+		json.append( to_string(time(0)) );
+		json.append( ",\"content\":\"" );
+		json.append( content );
+		json.append( "\"}" );
 
 		//post to them
 		string redisCmd ("lpush ");
@@ -594,7 +511,7 @@ class ContactsController{
 		static void getOnlineContacts(){
 			try{
 
-				Connection conn = DB::getInstanceConn("laskdfj");
+				Connection conn = DB::getInstanceConn(_get("instance"));
 
 				Query query = conn.query();
 
@@ -649,33 +566,13 @@ class ContactsController{
 			}		
 			
 		}
-
-
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 class ApiHandler{
 
 	private:
 	int testInstance(){
-
-		
-
 		string instance = _get("instance");
 
 		if(instance == "__________NULL"){
@@ -683,7 +580,7 @@ class ApiHandler{
 		}
 
 		if(!InstanceController::instanceExists(instance)){
-			HttpResponse::error(WRONG_INSTANCE);	
+			HttpResponse::error(WRONG_INSTANCE);
 		}
 		
 		//test auth token
@@ -696,58 +593,33 @@ class ApiHandler{
 		if(!SesionController::isValidSesion(auth_token)){
 			HttpResponse::error(WRONG_AUTHTOKEN);
 		}
-
-
-
-
 	}
 
 	public:
-
 	void dispatch( string path ){
 
 		//look for global necesary params
 		testInstance();
 
-		
-
 		string * spath = split( path, '/' );
 		int spath_size = split_ocurrences(path, '/');
 
-		if(spath[0] == "getOnlineContacts"){
+		if(_get("cmd") == "getOnlineContacts"){
 			ContactsController::getOnlineContacts();
 			return;
 
-		}else if(spath[0] == "postMessage"){
+		}else if(_get("cmd") == "postMessage"){
 			ChatController::postMessage();
 			return;
 
-		}else if(spath[0] == "getMessages"){
+		}else if(_get("cmd") == "getMessages"){
 			ChatController::getMessages();
 			return;
 		}
 
-		
-
 		HttpResponse::error(NOT_FOUND);
-
-
 	}
-
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -755,7 +627,6 @@ int main( int nargs, char **args ){
 
 	argss = args;
 	nargss = nargs;
-
 
 	HttpResponse::bootstrap();
 	
@@ -772,13 +643,9 @@ int main( int nargs, char **args ){
 	*/
 	
 
-
 	ApiHandler ah ;
 
 	ah.dispatch( header("PATH_INFO")  );
-
-
-	
 
 	return EXIT_SUCCESS;
 
