@@ -1,7 +1,7 @@
 //for IE
 var console = console || { log: function(){}, group : function(){}, groupEnd : function(){} };
 
-//for IE even when cnsole is defined:
+//for IE even when console is defined:
 console.group =  console.group || function(){};
 console.groupEnd =  console.groupEnd || function(){};
 
@@ -10,8 +10,6 @@ Ext.Loader.setConfig({
 });
 
 Ext.Loader.setPath('Ext.ux', 'http://api.caffeina.mx/ext-4.0.0/examples/ux/');
-
-
 
 Ext.require([
 	'Ext.data.*',
@@ -36,25 +34,13 @@ Ext.require([
 	'Ext.layout.container.Accordion'
 ]);
 
-
-
-
 var main = function ()
 {
-	
 	if(!Ext.isIE) console.log("JS FRWK READY");
-
-
-	//window.onbeforeunload = function(){}
 
 	var els = Ext.select("input").elements;
 
-
-
-	if(!Ext.isIE) console.log("Ataching on before unload events...");
-	
-	
-	for (var i = els.length - 1; i >= 0; i--){
+	for (var i = els.length - 1; i >= 0; i--) {
 		Ext.get(els[i]).on(
 			"keydown",
 			function(){
@@ -63,41 +49,35 @@ var main = function ()
 					}
 			});
 	};
-	
+
 	if( window.store_component !== undefined ){
 		store_component.render();	
 	}
 
-	if(document.location.search.indexOf("previous_action=ok") > -1)
+	if(document.location.search.indexOf("previous_action=ok") > -1){
 		Ext.example.msg('Exito', '!!!');
-
+	}
 
 	if((window.TableComponent !== undefined) && (TableComponent.convertToExtJs !== undefined)){
 		for (var i = TableComponent.convertToExtJs.length - 1; i >= 0; i--) {
-
 			Ext.create('Ext.ux.grid.TransformGrid', TableComponent.convertToExtJs[i], {
-	            //stripeRows: true,
-	            bodyCls: 'overrideTHTD',
-	            listeners: {
-	            	'itemclick' : function(a,b,c ){
-	            		if(!Ext.isIE)  console.log("ITEM CLICK id=" + b.raw.id, i +1 );
-						
-						eval(TableComponent.ExtJsTables[i+1].actionFunction+"("+b.raw.id+")")
-	            		
-	            	}
-	            }
-	           
-	        }).render();	
+				//stripeRows: true,
+				bodyCls: 'overrideTHTD',
+					listeners: {
+					'itemclick' : function(a,b,c ){
+							if(!Ext.isIE)  console.log("ITEM CLICK id=" + b.raw.id, i +1 );
+
+							eval(TableComponent.ExtJsTables[i+1].actionFunction+"("+b.raw.id+")")
+						}
+					}
+
+			}).render();
 		};
-		
 	}
 
-
-
+	PosImClient.showContactWindow();
 
 	if(window.TabPage !== undefined){
-
-		
 
 		if(window.location.hash.length == 0){
 			//no hay tab seleccionado
@@ -112,9 +92,7 @@ var main = function ()
 			//Ext.get('tab_'+TabPage.currentTab).setStyle('display', 'block');
 
 			Ext.get('atab_'+TabPage.currentTab).toggleCls('selected');
-			
 		}
-
 
 		//hide the other ones
 		for (var t = TabPage.tabs.length - 1; t >= 0; t--) {
@@ -128,26 +106,17 @@ var main = function ()
 
 			Ext.get('tab_'+TabPage.tabs[t]).setHeight(0);
 			Ext.get('tab_'+TabPage.tabs[t]).hide();
-			
+
 		};
 
-		
-
-
 		if ( 'onhashchange' in window ) {
-			
-
 			window.onhashchange = function() {
 
 				if((TabPage.currentTab.length > 0) && (Ext.get('tab_'+TabPage.currentTab) != null)){
 					//ocultar la que ya esta
-					
-				
 					Ext.get('tab_'+TabPage.currentTab).hide();
 					Ext.get('tab_'+TabPage.currentTab).setHeight(0);
 					Ext.get('atab_'+TabPage.currentTab).toggleCls('selected');
-
-
 				}
 
 				//currentTab = window.location.hash.substr(1);
@@ -157,7 +126,6 @@ var main = function ()
 				for (var ti = 0; ti < TabPage.tabs.length; ti++) {
 					if( TabPage.tabs[ti] == TabPage.currentTab){
 						Ext.get('tab_'+TabPage.currentTab).setHeight('auto');
-					
 					}
 				};
 				Ext.get('atab_'+TabPage.currentTab).toggleCls('selected');
@@ -172,17 +140,13 @@ var main = function ()
 
 }
 
-
 Ext.onReady(main);
 
-
 var POS = {};
-
 
 Ext.Ajax.on('beforerequest', 	function (){ Ext.get("ajax_loader").show(); }, this);
 Ext.Ajax.on('requestcomplete', 	function (){ Ext.get("ajax_loader").hide(); }, this);
 Ext.Ajax.on('requestexception', function (){ Ext.get("ajax_loader").hide(); }, this);
-
 
 POS.API = 
 {
@@ -207,10 +171,7 @@ POS.API =
 		callback.call( null, o );
 	},
 
-	ajaxFailure 	: function ( callback, a,b,c )
-	{
-		
-
+	ajaxFailure : function ( callback, a,b,c ) {
 		var o;
 		try{
 			o = Ext.JSON.decode( a.responseText );
@@ -242,9 +203,9 @@ POS.API =
 	actualAjax 		: function (  method, url, params, callback  )
 	{
 		params.auth_token = Ext.util.Cookies.get("at");
-		
+
 		Ext.Ajax.request({
-                        timeout: 160000,
+			timeout: 160000,
 			method 	: method,
 			url 	: "../" + url,
 			success : function(a,b,c){ POS.API.ajaxCallBack( callback, a, b, c ); },
@@ -264,21 +225,6 @@ POS.API =
 	}
 
 }
-
-
-
-
-
-ChatClient = {
-
-
-
-	
-};
-
-
-
-
 
 Ext.define('MGW10005', {
     extend: 'Ext.data.Model',
@@ -753,21 +699,7 @@ var AdminPAQExplorer = function( id_botones ){
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
 var importarClientes = function(d){
-	
-
 	Ext.data.JsonP.request({
 		url : 'http://192.168.1.109:16001/',
 		params : {
@@ -780,16 +712,11 @@ var importarClientes = function(d){
 				return;
 			}
 			
-			
-			
-			
-	   	 	// create the data store
+			// create the data store
 		    var clientesAdminPAQ = Ext.create('Ext.data.ArrayStore', {
 		        model: 'MGW10002',
 		        data: response.datos
 		    });
-
-
 
 
 		    // create the Grid
@@ -847,7 +774,7 @@ var importarClientes = function(d){
 		                width    : 75,
 		                sortable : true,
 		                dataIndex: 'CREPLEGAL'
-		            }										
+		            }
 		        ],
 
 				modal: true,
@@ -897,11 +824,7 @@ var importarClientes = function(d){
 			    });
 		}//callback
 	});
-	
-
-
 }
-
 
 
 var nuevoClienteAval =  function( nombre, id_usuario, id_este_usuario ){  
@@ -915,10 +838,10 @@ var nuevoClienteAval =  function( nombre, id_usuario, id_este_usuario ){
                 "api/cliente/aval/nuevo", 
                 {"id_cliente" : id_este_usuario, "avales" : Ext.JSON.encode([{ "id_aval": id_usuario , "tipo_aval" : tipo_aval }])}, 
                 {callback : function(a){ window.location = "clientes.ver.php?cid="+id_este_usuario; }}
-            ); 
+            );
 
         }
-    }, this);  
+    }, this);
 };
 
 
@@ -948,12 +871,9 @@ var storeComponent = function(){
     });
   };
 
-};   
+};
 
 var store_component = new storeComponent();
-
-
-
 
 Ext.example = function(){
     var msgCt;
@@ -1150,10 +1070,11 @@ var Url = {
 
 
 
-
-
-
-// Set up a model to use in our Store
+/*
+ *
+ *
+ *
+ */
 Ext.define('PosImContact', {
 		extend: 'Ext.data.Model',
 		fields: [
@@ -1161,19 +1082,23 @@ Ext.define('PosImContact', {
 			{name: 'id_rol',				type: 'int'},
 			{name: 'nombre',				type: 'string'},
 			{name: 'correo_electronico',	type: 'string'},
-			{name: 'ip',					type: 'string'}
+			{name: 'ip',					type: 'string'},
+			{name: 'rol_descripcion',		type: 'string'}
 		]
 });
 
-
 var PosImClient = {
 	_contactWindow : null,
+
+	_conversations : [],
+
+	_MAXIMAS_CONVERSACIONES: 5,
 
 	_contactStore : Ext.create('Ext.data.TreeStore', {
 		model: 'PosImContact',
 		proxy: {
 			type: 'ajax',
-			url: 'http://127.0.0.1/pos/515fcfff/chat/chat.txt?instance=5160175b&auth_token=1d4c15d9f0b5b68ae2555089e20cdbf7&cmd=getOnlineContacts'
+			url: '../chat/chat.cgi?instance=5160175b&auth_token='+Ext.util.Cookies.get("at")+'&cmd=getOnlineContacts'
 		},
 		folderSort: true
 	}),
@@ -1186,40 +1111,77 @@ var PosImClient = {
 		PosImClient._contactWindow.show();
 	},
 
-
 	_startConversationWith : function ( userRecord){
-		//console.log(userRecord.get("id_usuario"))
 
-		//crete the converstion window
-		Ext.create('widget.window', {
-                title: userRecord.get("nombre"),
-                titleCollapse: true,
-                collapsible : true,
-                width: 200,
-                height: 200,
-                animCollapse: false,
-                bodyBorder: true,
-                border: false,
-                dragable: false,
-                closable: true,
-                frameHeader : false,
-                frame: false,
-                layout: 'vbox',
-                items: [
-                	{
-                		html : 'html',
-                		height: 150
-                	},
-					{
-                		xtype : 'textarea',
-                		height: 50
-                	}
-                ]
-            }).show();
+		if(PosImClient._conversations.length > PosImClient._MAXIMAS_CONVERSACIONES){
+			return;
+		}
+
+		//vamos a buscar la conversacion para ver si ya existe
+		var found = -1;
+		for(a = 0 ; a < PosImClient._conversations.length ; a++){
+			if(PosImClient._conversations[a].id_usuario == userRecord.get("id_usuario")){
+				found = a;
+				break;
+			}
+		}
+
+		if(found == -1){
+			//crear una nueva conversacion
+			PosImClient._contactWindow.add({
+								conversation_with : userRecord.get("id_usuario"),
+								xtype : "panel",
+								title : userRecord.get("nombre"),
+								autoscroll : true,
+								layout: 'vbox',
+								align : 'stretch',
+								pack  : 'start',
+								items : [{
+									id : "chatWindow-with-" + userRecord.get("id_usuario"),
+									xtype: 'textarea',
+									flex : 1,
+									width: 187,
+									border : true
+								},{
+									xtype: 'textarea',
+									emptyText: 'Escribe aqui',
+									width: 187,
+									enableKeyEvents : true,
+									listeners : {
+										keypress : function ( _this, e, eOpts){
+											if( e.button == 12
+												&& !e.shiftKey){
+													PosImClient._sendMessage(this.findParentByType("panel").conversation_with, this);
+											}
+										}
+									}
+								}]
+							});
+
+			PosImClient._conversations.push({
+				id_usuario : userRecord.get("id_usuario")
+			});
+		}
+
+		PosImClient._contactWindow.items.getAt(0).collapse();
+
 	},
 
 	_onContancClick : function (_this, record, item, index, e, eOpts){
+		//vamos a revisar que no este offline
 		PosImClient._startConversationWith(record);
+	},
+
+
+	_sendMessage : function(id_usuario, textarea){
+		//calculate time
+
+		//display locally, with gray color indicating 'sending state'
+		var el = Ext.ComponentManager.get("chatWindow-with-" + id_usuario );
+		el.setValue( el.getValue(  ) + textarea.getValue( ) + "\n" );
+		textarea.setRawValue();
+
+		//change color text to black on arrival
 	},
 
 	_createContactTree : function (){
@@ -1237,7 +1199,7 @@ var PosImClient = {
 							itemclick: PosImClient._onContancClick
 						},
 						columns: [{
-							xtype: 'treecolumn', //this is so we know which column will show the tree
+							xtype: 'treecolumn',
 							text: 'Nombre',
 							flex: 5,
 							sortable: true,
@@ -1245,7 +1207,7 @@ var PosImClient = {
 						},{
 							text: 'Assigned To',
 							flex: 1,
-							dataIndex: 'id_rol',
+							dataIndex: 'rol_descripcion',
 							sortable: true
 						}]
 					});
@@ -1253,43 +1215,26 @@ var PosImClient = {
 
 	_createContactWindow :  function (){
 			PosImClient._contactWindow  = Ext.create('widget.window', {
-                title: 'Accordion Window',
-                titleCollapse: true,
-                collapsible : true,
-                width: 200,
-                height: 400,
-                animCollapse: false,
-                bodyBorder: true,
-                layout: 'accordion',
-                border: false,
-                dragable: false,
-                closable: false,
-                x: 1200,
-                y : 100,
-                frameHeader : false,
-                frame: false,
-                items: [
-                	PosImClient._createContactTree(),
-                    {
-                        title: 'Settings',
-                        html:'<p>Something useful would be in here.</p>',
-                        autoScroll:true
-                    }
-                ]
-            });
-
+				title: 'Mensajero',
+				titleCollapse: true,
+				resizable:false,
+				collapsible : true,
+				width: 200,
+				height: 400,
+				animCollapse: false,
+				bodyBorder: true,
+				layout: 'accordion',
+				border: true,
+				dragable: false,
+				closable: false,
+				x : 1200,
+				y : 100,
+				frameHeader : false,
+				frame: false,
+				items: [
+					PosImClient._createContactTree()
+				]
+			});
 	}
-
-
-
-
 }
 
-
-
-
-
-
-
-
-setTimeout("PosImClient.showContactWindow();", 1000);
