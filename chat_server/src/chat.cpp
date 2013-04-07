@@ -515,31 +515,36 @@ class ContactsController{
 
 				Query query = conn.query();
 
-				query << "	select \
+				query << "select \
 								usuario.id_usuario,\
 								usuario.id_rol,\
 								usuario.nombre,\
 								usuario.correo_electronico,\
-								sesion.ip\
+								sesion.ip,\
+								rol.descripcion\
 							from \
 								usuario,\
-								sesion\
+								sesion, \
+								rol \
 							where\
 								sesion.id_usuario = usuario.id_usuario\
+								AND rol.id_rol = usuario.id_rol\
 								and sesion.fecha_de_vencimiento < NOW()\
 								and usuario.activo = 1;";
-				
+
 				StoreQueryResult bres = query.store();
 				
 
-				
-				cout << "{ \"status\" : \"ok\" , \"number_of_results\" : " << bres.num_rows() << ", \"results\" : [ ";
+				cout << "{ \"status\" : \"ok\" , \"number_of_results\" : " << bres.num_rows() << ", \"children\" : [ ";
+				cout << "{ \"nombre\" : \"online\", \"expanded\": true, \"children\": [";
 
 				for(size_t i = 0 ; i < bres.num_rows(); i++){
 					
 					cout << "{" ;
+					cout << "\"leaf\" : true, \"iconCls\": \"user-green\",";
 					cout << "\"id_usuario\" : " 		<< bres[i]["id_usuario"] << ",";
 					cout << "\"id_rol\" : " 			<< bres[i]["id_rol"] << ",";
+					cout << "\"rol_descripcion\" : \"" 	<< bres[i]["descripcion"] << "\",";
 					cout << "\"nombre\" : \"" 			<< bres[i]["nombre"] << "\",";
 					cout << "\"correo_electronico\" : \"" << bres[i]["correo_electronico"] << "\",";
 					cout << "\"ip\" : \"" 				<< bres[i]["ip"] << "\"";
@@ -549,6 +554,46 @@ class ContactsController{
 						cout << ",";
 				}
 
+				cout << "]},";
+
+
+				//Obtener los usuarios offline
+				query = conn.query();
+
+				query << "select \
+								usuario.id_usuario,\
+								usuario.id_rol,\
+								usuario.nombre,\
+								usuario.correo_electronico,\
+								rol.descripcion\
+							from \
+								rol, \
+								usuario LEFT JOIN sesion ON sesion.id_usuario = usuario.id_usuario \
+							where\
+								sesion.id_usuario IS NULL \
+								AND rol.id_rol = usuario.id_rol\
+								AND usuario.activo =1;"; 
+
+				bres = query.store();
+
+				cout << "{ \"nombre\" : \"offline\", \"expanded\": true, \"children\": [" ;
+
+				for(size_t i = 0 ; i < bres.num_rows(); i++){
+					
+					cout << "{" ;
+					cout << "\"leaf\" : true, \"iconCls\": \"user-red\",";
+					cout << "\"id_usuario\" : " 		<< bres[i]["id_usuario"] << ",";
+					cout << "\"id_rol\" : " 			<< bres[i]["id_rol"] << ",";
+					cout << "\"rol_descripcion\" : \"" 	<< bres[i]["descripcion"] << "\",";
+					cout << "\"nombre\" : \"" 			<< bres[i]["nombre"] << "\",";
+					cout << "\"correo_electronico\" : \"" << bres[i]["correo_electronico"] << "\"";
+					cout << "}";
+
+					if(i < bres.num_rows() - 1)
+						cout << ",";
+				}
+
+				cout << "]}";
 				cout << "]}";
 				
 			}catch(BadQuery er){
