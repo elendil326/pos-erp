@@ -143,7 +143,7 @@ class PosComponentPage extends StdComponentPage{
 												}
 												
 												if(b[0].get("tipo") == "producto"){
-													window.location = "productos.ver.php?pid=" + b[0].get("id");													
+													window.location = "productos.ver.php?pid=" + b[0].get("id");
 													console.log("fue producto"); return;
 												}
 
@@ -188,6 +188,7 @@ class PosComponentPage extends StdComponentPage{
 				</div>
 				<div class="body nav">
 					<div class="content">
+
 						<!-- ----------------------------------------------------------------------
 										MENU
 							 ---------------------------------------------------------------------- -->
@@ -285,6 +286,7 @@ class PosComponentPage extends StdComponentPage{
 					<div class="clear"></div>
 
 				</div>
+				
 			</div>
 			<div class="footer">
 				<div class="content">
@@ -331,6 +333,9 @@ class PosComponentPage extends StdComponentPage{
 
 		
 		?>
+
+			<div style="" id="PosImSpace"></div>
+
 		</body>
 		</html>
 	

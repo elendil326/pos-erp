@@ -14,23 +14,26 @@ Ext.Loader.setPath('Ext.ux', 'http://api.caffeina.mx/ext-4.0.0/examples/ux/');
 
 
 Ext.require([
-    'Ext.data.*',
-    'Ext.form.*',
-    'Ext.grid.*',
-    'Ext.util.*',
-    'Ext.state.*',
+	'Ext.data.*',
+	'Ext.form.*',
+	'Ext.grid.*',
+	'Ext.tree.*',
+	'Ext.util.*',
+	'Ext.state.*',
 	'Ext.ux.grid.TransformGrid',
-    'Ext.window.MessageBox',
+	'Ext.window.MessageBox',
 	'Ext.tab.*',
-	  'Ext.panel.Panel',
-	  'Ext.button.Button',
-	  'Ext.window.Window',
-	 'Ext.ux.statusbar.StatusBar',
-	  'Ext.toolbar.TextItem',
-	  'Ext.menu.Menu',
-	  'Ext.toolbar.Spacer',
-	  'Ext.button.Split',
-	  'Ext.form.field.TextArea'
+	'Ext.panel.Panel',
+	'Ext.button.Button',
+	'Ext.window.Window',
+	'Ext.ux.statusbar.StatusBar',
+	'Ext.toolbar.TextItem',
+	'Ext.menu.Menu',
+	'Ext.toolbar.Spacer',
+	'Ext.button.Split',
+	'Ext.form.field.TextArea',
+	'Ext.data.TreeStore',
+	'Ext.layout.container.Accordion'
 ]);
 
 
@@ -179,7 +182,6 @@ var POS = {};
 Ext.Ajax.on('beforerequest', 	function (){ Ext.get("ajax_loader").show(); }, this);
 Ext.Ajax.on('requestcomplete', 	function (){ Ext.get("ajax_loader").hide(); }, this);
 Ext.Ajax.on('requestexception', function (){ Ext.get("ajax_loader").hide(); }, this);
-
 
 
 POS.API = 
@@ -1144,3 +1146,150 @@ var Url = {
 	}
  
 }
+
+
+
+
+
+
+
+// Set up a model to use in our Store
+Ext.define('PosImContact', {
+		extend: 'Ext.data.Model',
+		fields: [
+			{name: 'id_usuario', 			type: 'int'},
+			{name: 'id_rol',				type: 'int'},
+			{name: 'nombre',				type: 'string'},
+			{name: 'correo_electronico',	type: 'string'},
+			{name: 'ip',					type: 'string'}
+		]
+});
+
+
+var PosImClient = {
+	_contactWindow : null,
+
+	_contactStore : Ext.create('Ext.data.TreeStore', {
+		model: 'PosImContact',
+		proxy: {
+			type: 'ajax',
+			url: 'http://127.0.0.1/pos/515fcfff/chat/chat.txt?instance=5160175b&auth_token=1d4c15d9f0b5b68ae2555089e20cdbf7&cmd=getOnlineContacts'
+		},
+		folderSort: true
+	}),
+
+	showContactWindow : function (){
+		if(PosImClient._contactWindow == null) {
+			PosImClient._createContactWindow();
+		}
+
+		PosImClient._contactWindow.show();
+	},
+
+
+	_startConversationWith : function ( userRecord){
+		//console.log(userRecord.get("id_usuario"))
+
+		//crete the converstion window
+		Ext.create('widget.window', {
+                title: userRecord.get("nombre"),
+                titleCollapse: true,
+                collapsible : true,
+                width: 200,
+                height: 200,
+                animCollapse: false,
+                bodyBorder: true,
+                border: false,
+                dragable: false,
+                closable: true,
+                frameHeader : false,
+                frame: false,
+                layout: 'vbox',
+                items: [
+                	{
+                		html : 'html',
+                		height: 150
+                	},
+					{
+                		xtype : 'textarea',
+                		height: 50
+                	}
+                ]
+            }).show();
+	},
+
+	_onContancClick : function (_this, record, item, index, e, eOpts){
+		PosImClient._startConversationWith(record);
+	},
+
+	_createContactTree : function (){
+			return Ext.create('Ext.tree.Panel', {
+						title: 'Contactos',
+						width: 500,
+						height: 300,
+						collapsible: true,
+						useArrows: true,
+						rootVisible: false,
+						store: PosImClient._contactStore,
+						multiSelect: true,
+						singleExpand: true,
+						listeners: {
+							itemclick: PosImClient._onContancClick
+						},
+						columns: [{
+							xtype: 'treecolumn', //this is so we know which column will show the tree
+							text: 'Nombre',
+							flex: 5,
+							sortable: true,
+							dataIndex: 'nombre'
+						},{
+							text: 'Assigned To',
+							flex: 1,
+							dataIndex: 'id_rol',
+							sortable: true
+						}]
+					});
+	},
+
+	_createContactWindow :  function (){
+			PosImClient._contactWindow  = Ext.create('widget.window', {
+                title: 'Accordion Window',
+                titleCollapse: true,
+                collapsible : true,
+                width: 200,
+                height: 400,
+                animCollapse: false,
+                bodyBorder: true,
+                layout: 'accordion',
+                border: false,
+                dragable: false,
+                closable: false,
+                x: 1200,
+                y : 100,
+                frameHeader : false,
+                frame: false,
+                items: [
+                	PosImClient._createContactTree(),
+                    {
+                        title: 'Settings',
+                        html:'<p>Something useful would be in here.</p>',
+                        autoScroll:true
+                    }
+                ]
+            });
+
+	}
+
+
+
+
+}
+
+
+
+
+
+
+
+
+setTimeout("PosImClient.showContactWindow();", 1000);
