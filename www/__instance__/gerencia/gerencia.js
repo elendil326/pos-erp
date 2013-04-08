@@ -74,7 +74,7 @@ var main = function () {
 		};
 	}
 
-	PosImClient.showContactWindow();
+	//PosImClient.showContactWindow();
 
 	if(window.TabPage !== undefined){
 
