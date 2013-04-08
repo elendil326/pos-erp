@@ -8,7 +8,6 @@
 using namespace std;
 using namespace mysqlpp;
 
-
 #define MISSING_INSTANCE 	1
 #define WRONG_INSTANCE 		2
 #define MISSING_AUTHTOKEN 	3
@@ -17,8 +16,6 @@ using namespace mysqlpp;
 #define NOT_FOUND			6
 #define NO_REDIS			7
 #define INTERNAL_ERROR		8
-
-
 
 /**
   *
@@ -49,63 +46,50 @@ class HttpResponse{
 					cout << "{ \"status\" : \"false\", \"reason\" : \"You are missing arguments to make this call.\" }";
 				break;
 
-				
 				case NOT_FOUND :
 					cout << "{ \"status\" : \"false\", \"reason\" : \"This method does not exist.\" }";
 				break;
 
 				case NO_REDIS:
 					cout << "{ \"status\" : \"false\", \"reason\" : \"Could not connect to redis server.\" }";
-				break;		
-				
+				break;
+
 				case INTERNAL_ERROR:
 					cout << "{ \"status\" : \"false\", \"reason\" : \"Internal error.\" }";
-				break;		
-
+				break;
 			}
 
 			exit(EXIT_SUCCESS);
 		}
 
-
 		static void debug(char * s){
-
 			cout << "{ \"status\" : \"false\", \"reason\" : \"" << s <<"\" }";
 			exit(EXIT_SUCCESS);
-
 		}
-
 
 		static void bootstrap(){
 			printf("Content-type: application/json\n\n");
 		}
-
 };
-
-
 
 char **argss;
 int nargss;
 
 string header( const string &headerName ){
 	nargss = 30;
-	
+
 	for(int i = 0 ; i < nargss; i++){
 
 		if(!argss[i]){
-	
-			continue;	
-		} 
-		
-		///cout << argss[i] << "\n";
+			continue;
+		}
 
 		if(startsWith(argss[i], headerName )) {
 
 			string s (argss[i]);
 
 			int j, found = 0;
-			for (j = 0; argss[i][j] != '\0'; ++j)
-			{
+			for (j = 0; argss[i][j] != '\0'; ++j){
 
 				if(argss[i][j] == '='){
 					found = 1;
@@ -119,20 +103,16 @@ string header( const string &headerName ){
 	return string();
 }
 
-
-
 string _get(const string &p){
-	
+
 	string h = header( "QUERY_STRING" );
 
 	string * parts = split( h , '&' );
 
 	int oc = split_ocurrences( h, '&' );
 
-	for (int j = 0; j < oc; ++j)
-	{
-		if( startsWith( parts[ j ], p )  )
-		{
+	for (int j = 0; j < oc; ++j){
+		if( startsWith( parts[ j ], p )){
 			size_t io = parts[j].find("=");
 			return parts[ j].substr( io  + 1);
 		}
@@ -141,20 +121,13 @@ string _get(const string &p){
 	return string("__________NULL");
 }
 
-
-
-
-
-
-
-
 /**
   *
   *
   **/
 class DB{
 
-	private:
+private:
 	static Connection coreConn;
 	static Connection instanceConn;
 	static string intanceToken;
@@ -162,7 +135,7 @@ class DB{
 	DB(){
 	}
 
-	public:
+public:
 	void bootstrap(){
 	}
 
@@ -186,8 +159,7 @@ class DB{
 
 			StoreQueryResult bres = query.store();
 
-			if ( bres.num_rows() != 1 )
-			{
+			if ( bres.num_rows() != 1 ){
 				HttpResponse::error(MISSING_INSTANCE);
 			}
 
@@ -200,20 +172,23 @@ class DB{
 			HttpResponse::error(INTERNAL_ERROR);
 			//cout << "Error:" << er.what() << endl ;
 			return instanceConn;
+
 		}catch(const BadConversion& er){
 			HttpResponse::error(INTERNAL_ERROR);
 			//cout << "Conversion error " << er.what() << endl;
 			return instanceConn; 
+
 		}catch(const Exception& er){
 			HttpResponse::error(INTERNAL_ERROR);
 			//cout << "Error" << er.what() << endl;
 			return instanceConn; 
+
 		}
-	}	
+	}
 
 	static Connection getInstanceConn(){
 		return instanceConn;
-	}	
+	}
 
 	static redisContext* getRedisConnection(){
 		redisContext *redis = redisConnect("127.0.0.1", 6379);
@@ -226,7 +201,6 @@ class DB{
 		return redis;
 	}
 };
-
 
 class InstanceController{
 
@@ -261,9 +235,6 @@ public:
 
 	}
 
-
-
-
 	static int getInstanceId(string token){
 
 		try{
@@ -273,18 +244,76 @@ public:
 			Query query = conn.query();
 
 			query << "select instance_id from instances where instance_token = \"" + token + "\";";
-			
+
 			StoreQueryResult bres = query.store();
-			
+
 			return bres[0]["instance_id"];
 
-			//return ( bres.num_rows() == 1 );
+		}catch(BadQuery er){
+			cout << "Error:" << er.what() << endl ;
+			return 0;
+
+		}catch(const BadConversion& er){
+			cout << "Conversion error " << er.what() << endl;
+			return 0; 
+
+		}catch(const Exception& er){
+			cout << "Error" << er.what() << endl;
+			return 0;
+
+		}
+	}
+};
+
+class SesionController{
+public:
+	static int isValidSesion(string at){
+		try{
+
+			Connection conn = DB::getInstanceConn(_get("instance"));
+
+			Query query = conn.query();
+
+			query << "select id_usuario from sesion where auth_token  = \"" + at + "\" limit 1;";
+
+			StoreQueryResult bres = query.store();
+
+			return ( bres.num_rows() == 1 );
+
+		}catch(BadQuery er){
+			cout << "Error:" << er.what() << endl ;
+			return 0;
+
+		}catch(const BadConversion& er){
+			cout << "Conversion error " << er.what() << endl;
+			return 0; 
+
+		}catch(const Exception& er){
+			cout << "Error" << er.what() << endl;
+			return 0;
+
+		}
+		return 1;
+	}
+
+	static int getUserIdFromAuthToken(string at){
+
+		try{
+
+			Connection conn = DB::getInstanceConn(_get("instance"));
+
+			Query query = conn.query();
+
+			query << "select id_usuario from sesion where auth_token  = \"" + at + "\" limit 1;";
 			
-			/*for(size_t i = 0 ; i < bres.num_rows(); i++){
-				//cout << bres[i]["id_usuario"] << "<br>";
-				cout << bres[i]["id_usuario"] << " ";
-			}*/
-			
+			StoreQueryResult bres = query.store();
+
+			if( bres.num_rows() != 1 ){
+				//do smething
+			}
+
+			return bres[0]["id_usuario"];
+
 		}catch(BadQuery er){
 			cout << "Error:" << er.what() << endl ;
 			return 0;
@@ -299,101 +328,14 @@ public:
 
 		}
 
-	}
-};
-
-
-
-
-
-class SesionController{
-public:
-	static int isValidSesion(string at){
-		try{
-
-			Connection conn = DB::getInstanceConn(_get("instance"));
-
-			Query query = conn.query();
-
-			query << "select id_usuario from sesion where auth_token  = \"" + at + "\" limit 1;";
-			
-			StoreQueryResult bres = query.store();
-			
-			return ( bres.num_rows() == 1 );
-			
-			/*for(size_t i = 0 ; i < bres.num_rows(); i++){
-				//cout << bres[i]["id_usuario"] << "<br>";
-				cout << bres[i]["id_usuario"] << " ";
-			}*/
-			
-		}catch(BadQuery er){
-			cout << "Error:" << er.what() << endl ;
-			return 0;
-
-		}catch(const BadConversion& er){
-			cout << "Conversion error " << er.what() << endl;
-			return 0; 
-
-		}catch(const Exception& er){
-			cout << "Error" << er.what() << endl;
-			return 0;		
-
-		}		
 		return 1;
 	}
-
-
-
-	static int getUserIdFromAuthToken(string at){
-
-		try{
-
-			Connection conn = DB::getInstanceConn(_get("instance"));
-
-			Query query = conn.query();
-
-			query << "select id_usuario from sesion where auth_token  = \"" + at + "\" limit 1;";
-			
-			StoreQueryResult bres = query.store();
-			
-			if( bres.num_rows() != 1 ){
-				//do smething
-			}
-			
-			return bres[0]["id_usuario"];
-
-			/*for(size_t i = 0 ; i < bres.num_rows(); i++){
-				//cout <<  << "<br>";
-				cout << bres[i]["id_usuario"] << " ";
-			}*/
-			
-		}catch(BadQuery er){
-			cout << "Error:" << er.what() << endl ;
-			return 0;
-
-		}catch(const BadConversion& er){
-			cout << "Conversion error " << er.what() << endl;
-			return 0; 
-
-		}catch(const Exception& er){
-			cout << "Error" << er.what() << endl;
-			return 0;		
-
-		}		
-		return 1;	
-	}
-
-
 };
-
-
-
 
 class ChatController{
 
 public:
 	static void postMessage(){
-		
 		//reciever
 		string to_user_id = _get("to");
 
@@ -406,10 +348,6 @@ public:
 		//content
 		string content = _get("content");
 
-		//date
-		
-
-		
 		string key("");
 
 		key.append( to_string(instance_id) );
@@ -431,16 +369,11 @@ public:
 		redisCmd.append( " " );
 		redisCmd.append( json );
 
-		
 		redisContext* redis = DB::getRedisConnection();
 		redisCommand(redis, redisCmd.c_str());
 
-
-
 		cout << "{ \"status\" : \"ok\" }";
 	}
-
-
 
 	static void getMessages(){
 
@@ -458,16 +391,11 @@ public:
 		rCmd.append( to_string(user_id) );
 		rCmd.append("-unread");
 
-
-
 		redisReply *res ;
 
 		res = (redisReply*)redisCommand(redis, rCmd.c_str());
-		
-		
-		int results = res->integer;
 
-		
+		int results = res->integer;
 
 		cout << "{ \"number_of_results\" : "<< results << ",\"results\" : [";
 		rCmd.clear();
@@ -477,40 +405,28 @@ public:
 		rCmd.append( to_string(user_id) );
 		rCmd.append("-unread");
 
-		for (int i = 0; i < results; ++i)
-		{
-
+		for (int i = 0; i < results; ++i){
 			res = (redisReply*)redisCommand(redis, rCmd.c_str());
 
 			cout << res->str ;
 
-			if(i < (results - 1))
+			if(i < (results - 1)){
 				cout << ", ";
+			}
 		}
 
 		cout << "]}";
-
 	}
 };
 
-
-
-
-
-
-
 class ContactsController{
-
 	private:
 		ContactsController(){
-
 		};
-
 
 	public:
 		static void getOnlineContacts(){
 			try{
-
 				Connection conn = DB::getInstanceConn(_get("instance"));
 
 				Query query = conn.query();
@@ -521,7 +437,8 @@ class ContactsController{
 								usuario.nombre,\
 								usuario.correo_electronico,\
 								sesion.ip,\
-								rol.descripcion\
+								rol.descripcion,\
+								rol.nombre as rol_nombre\
 							from \
 								usuario,\
 								sesion, \
@@ -530,32 +447,32 @@ class ContactsController{
 								sesion.id_usuario = usuario.id_usuario\
 								AND rol.id_rol = usuario.id_rol\
 								and sesion.fecha_de_vencimiento < NOW()\
-								and usuario.activo = 1;";
+								and usuario.activo = 1" \
+								" AND usuario.id_usuario != " << SesionController::getUserIdFromAuthToken(_get("auth_token")) << ";";
 
 				StoreQueryResult bres = query.store();
-				
 
 				cout << "{ \"status\" : \"ok\" , \"number_of_results\" : " << bres.num_rows() << ", \"children\" : [ ";
 				cout << "{ \"nombre\" : \"online\", \"expanded\": true, \"children\": [";
 
 				for(size_t i = 0 ; i < bres.num_rows(); i++){
-					
 					cout << "{" ;
-					cout << "\"leaf\" : true, \"iconCls\": \"user-green\",";
-					cout << "\"id_usuario\" : " 		<< bres[i]["id_usuario"] << ",";
-					cout << "\"id_rol\" : " 			<< bres[i]["id_rol"] << ",";
-					cout << "\"rol_descripcion\" : \"" 	<< bres[i]["descripcion"] << "\",";
-					cout << "\"nombre\" : \"" 			<< bres[i]["nombre"] << "\",";
-					cout << "\"correo_electronico\" : \"" << bres[i]["correo_electronico"] << "\",";
-					cout << "\"ip\" : \"" 				<< bres[i]["ip"] << "\"";
+					cout << "\"leaf\":true, \"iconCls\": \"user-green\",";
+					cout << "\"id_usuario\" : "						<< bres[i]["id_usuario"] << ",";
+					cout << "\"id_rol\":"							<< bres[i]["id_rol"] << ",";
+					cout << "\"rol_descripcion\" : \""				<< bres[i]["descripcion"] << "\",";
+					cout << "\"rol_nombre\" : \""					<< bres[i]["rol_nombre"] << "\",";
+					cout << "\"nombre\" : \"" 						<< bres[i]["nombre"] << "\",";
+					cout << "\"correo_electronico\" : \""			<< bres[i]["correo_electronico"] << "\",";
+					cout << "\"ip\" : \"" 							<< bres[i]["ip"] << "\"";
 					cout << "}";
 
-					if(i < bres.num_rows() - 1)
+					if(i < bres.num_rows() - 1){
 						cout << ",";
+					}
 				}
 
 				cout << "]},";
-
 
 				//Obtener los usuarios offline
 				query = conn.query();
@@ -565,7 +482,8 @@ class ContactsController{
 								usuario.id_rol,\
 								usuario.nombre,\
 								usuario.correo_electronico,\
-								rol.descripcion\
+								rol.descripcion,\
+								rol.nombre as rol_nombre\
 							from \
 								rol, \
 								usuario LEFT JOIN sesion ON sesion.id_usuario = usuario.id_usuario \
@@ -579,40 +497,36 @@ class ContactsController{
 				cout << "{ \"nombre\" : \"offline\", \"expanded\": true, \"children\": [" ;
 
 				for(size_t i = 0 ; i < bres.num_rows(); i++){
-					
 					cout << "{" ;
 					cout << "\"leaf\" : true, \"iconCls\": \"user-red\",";
-					cout << "\"id_usuario\" : " 		<< bres[i]["id_usuario"] << ",";
-					cout << "\"id_rol\" : " 			<< bres[i]["id_rol"] << ",";
-					cout << "\"rol_descripcion\" : \"" 	<< bres[i]["descripcion"] << "\",";
-					cout << "\"nombre\" : \"" 			<< bres[i]["nombre"] << "\",";
-					cout << "\"correo_electronico\" : \"" << bres[i]["correo_electronico"] << "\"";
+					cout << "\"id_usuario\" : " 				<< bres[i]["id_usuario"] << ",";
+					cout << "\"id_rol\" : " 					<< bres[i]["id_rol"] << ",";
+					cout << "\"rol_descripcion\":\""			<< bres[i]["descripcion"] << "\",";
+					cout << "\"rol_nombre\" : \""				<< bres[i]["rol_nombre"] << "\",";
+					cout << "\"nombre\" : \""					<< bres[i]["nombre"] << "\",";
+					cout << "\"correo_electronico\" : \""		<< bres[i]["correo_electronico"] << "\"";
 					cout << "}";
 
-					if(i < bres.num_rows() - 1)
+					if(i < bres.num_rows() - 1){
 						cout << ",";
+					}
 				}
 
 				cout << "]}";
 				cout << "]}";
-				
+
 			}catch(BadQuery er){
 				cout << "Error:" << er.what() << endl ;
-				//return 0;
 
 			}catch(const BadConversion& er){
 				cout << "Conversion error " << er.what() << endl;
-				//return 0; 
 
 			}catch(const Exception& er){
 				cout << "Error" << er.what() << endl;
-				//return 0;		
 
-			}		
-			
+			}
 		}
 };
-
 
 class ApiHandler{
 
@@ -627,7 +541,7 @@ class ApiHandler{
 		if(!InstanceController::instanceExists(instance)){
 			HttpResponse::error(WRONG_INSTANCE);
 		}
-		
+
 		//test auth token
 		string auth_token = _get("auth_token");
 
@@ -666,32 +580,22 @@ class ApiHandler{
 	}
 };
 
-
-
+/**
+  * Main entry point
+  *
+  **/
 int main( int nargs, char **args ){
 
+	// Set global variables
 	argss = args;
 	nargss = nargs;
 
 	HttpResponse::bootstrap();
-	
-
-	/*
-	redisContext *redis = redisConnect("127.0.0.1", 6379);
-
-	if (redis->err) {
-	    printf("Error: %s\n", redis->errstr);
-		
-	}
-
-	redisFree(redisContext *c);
-	*/
-	
 
 	ApiHandler ah ;
 
 	ah.dispatch( header("PATH_INFO")  );
 
 	return EXIT_SUCCESS;
-
 }
+

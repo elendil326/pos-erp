@@ -34,8 +34,7 @@ Ext.require([
 	'Ext.layout.container.Accordion'
 ]);
 
-var main = function ()
-{
+var main = function () {
 	if(!Ext.isIE) console.log("JS FRWK READY");
 
 	var els = Ext.select("input").elements;
@@ -51,7 +50,7 @@ var main = function ()
 	};
 
 	if( window.store_component !== undefined ){
-		store_component.render();	
+		store_component.render();
 	}
 
 	if(document.location.search.indexOf("previous_action=ok") > -1){
@@ -81,16 +80,11 @@ var main = function ()
 
 		if(window.location.hash.length == 0){
 			//no hay tab seleccionado
-			//Ext.get('tab_'+TabPage.tabs[0]).setStyle('display', 'block');
 			Ext.get('atab_'+TabPage.tabs[0]).toggleCls('selected');
 			TabPage.currentTab = TabPage.tabs[0];
 
 		}else{
-			//si hay
 			TabPage.currentTab = window.location.hash.substr(1);
-
-			//Ext.get('tab_'+TabPage.currentTab).setStyle('display', 'block');
-
 			Ext.get('atab_'+TabPage.currentTab).toggleCls('selected');
 		}
 
@@ -99,10 +93,9 @@ var main = function ()
 
 			Ext.get('tab_'+TabPage.tabs[t]).setVisibilityMode(Ext.Element.VISIBILITY);
 
-			//TabPage.tabsH[ TabPage.tabs.length - t - 1 ] = Ext.get('tab_'+TabPage.tabs[t]).getHeight()
-			//Ext.get('tab_'+TabPage.tabs[t]).setVisibilityMode(Ext.Element.DISPLAY);
-
-			if(TabPage.currentTab == TabPage.tabs[t]) {  continue; }
+			if(TabPage.currentTab == TabPage.tabs[t]) {
+				continue; 
+			}
 
 			Ext.get('tab_'+TabPage.tabs[t]).setHeight(0);
 			Ext.get('tab_'+TabPage.tabs[t]).hide();
@@ -561,31 +554,31 @@ var AdminPAQExplorer = function( id_botones ){
 	        store: productos, 
 			title : "productos",
 			frame : false,
-	        columns: [
-	            { text     : 'Código del Producto',
-	                width    : 75,
-	                sortable : true,
-	                dataIndex: 'CCODIGOP01'
-	            },
-	            {
-	                text     : 'Nombre del producto',
-	                width    : 75,
-	                sortable : true,
-	                dataIndex: 'CNOMBREP01'
-	            },
-	            {
-	                text     : 'Tipo del Producto',
-	                width    : 75,
-	                sortable : true,
-	                dataIndex: 'CTIPOPRO01'
-	            },
-	            {
-	                text     : 'Descripción detallada',
-	                width    : 75,
-	                sortable : true,
-	                dataIndex: 'CDESCRIP01'
-	            }										
-	        ],
+			columns: [
+				{ text	   : 'Código del Producto',
+					width	 : 75,
+					sortable : true,
+					dataIndex: 'CCODIGOP01'
+				},
+				{
+					text	 : 'Nombre del producto',
+					width	 : 75,
+					sortable : true,
+					dataIndex: 'CNOMBREP01'
+				},
+				{
+					text	 : 'Tipo del Producto',
+					width	 : 75,
+					sortable : true,
+					dataIndex: 'CTIPOPRO01'
+				},
+				{
+					text	 : 'Descripción detallada',
+					width	 : 75,
+					sortable : true,
+					dataIndex: 'CDESCRIP01'
+				}
+			],
 
 			modal: true,
 	        viewConfig: {
@@ -664,7 +657,7 @@ var AdminPAQExplorer = function( id_botones ){
 	                width    : 75,
 	                sortable : true,
 	                dataIndex: 'CREPLEGAL'
-	            }										
+	            }
 	        ],
 
 	        viewConfig: {
@@ -956,36 +949,23 @@ Ext.example = function(){
 
   };
 
-    function startMap( direccion ){
+function startMap( direccion ){
+	GeocoderRequest = {
+		address : direccion + ", Mexico"
+	};
 
-	    GeocoderRequest = {
-		    address : direccion + ", Mexico"
-	    };
-	    try{
+	try{
+		gc = new google.maps.Geocoder( );
+		gc.geocode(GeocoderRequest,  drawMap);
 
-		    gc = new google.maps.Geocoder( );
-
-		    gc.geocode(GeocoderRequest,  drawMap);
-		
-	    }catch(e){
-		    console.log(e)
-	    }
-
-
-    }
-
-
-
-
-
+	}catch(e){
+		console.log(e);
+	}
+}
 
 function FormatMoney(m){
 	return "$" + m;
 }
-
-
-
-
 
 
 /**
@@ -996,54 +976,49 @@ function FormatMoney(m){
 **/
  
 var Url = {
- 
 	// public method for url encoding
 	encode : function (string) {
 		return escape(this._utf8_encode(string));
 	},
- 
+
 	// public method for url decoding
 	decode : function (string) {
 		return this._utf8_decode(unescape(string));
 	},
- 
+
 	// private method for UTF-8 encoding
 	_utf8_encode : function (string) {
 		string = string.replace(/\r\n/g,"\n");
 		var utftext = "";
- 
+
 		for (var n = 0; n < string.length; n++) {
- 
+
 			var c = string.charCodeAt(n);
- 
+
 			if (c < 128) {
 				utftext += String.fromCharCode(c);
 			}
 			else if((c > 127) && (c < 2048)) {
 				utftext += String.fromCharCode((c >> 6) | 192);
 				utftext += String.fromCharCode((c & 63) | 128);
-			}
-			else {
+			}else{
 				utftext += String.fromCharCode((c >> 12) | 224);
 				utftext += String.fromCharCode(((c >> 6) & 63) | 128);
 				utftext += String.fromCharCode((c & 63) | 128);
 			}
- 
 		}
- 
 		return utftext;
 	},
- 
+
 	// private method for UTF-8 decoding
 	_utf8_decode : function (utftext) {
 		var string = "";
 		var i = 0;
 		var c = c1 = c2 = 0;
- 
+
 		while ( i < utftext.length ) {
- 
 			c = utftext.charCodeAt(i);
- 
+
 			if (c < 128) {
 				string += String.fromCharCode(c);
 				i++;
@@ -1059,16 +1034,11 @@ var Url = {
 				string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
 				i += 3;
 			}
- 
 		}
- 
+
 		return string;
 	}
- 
 }
-
-
-
 
 /*
  *
@@ -1083,7 +1053,7 @@ Ext.define('PosImContact', {
 			{name: 'nombre',				type: 'string'},
 			{name: 'correo_electronico',	type: 'string'},
 			{name: 'ip',					type: 'string'},
-			{name: 'rol_descripcion',		type: 'string'}
+			{name: 'rol_nombre',			type: 'string'}
 		]
 });
 
@@ -1108,7 +1078,55 @@ var PosImClient = {
 			PosImClient._createContactWindow();
 		}
 
+		setInterval( PosImClient._heartBeat, 2000);
 		PosImClient._contactWindow.show();
+	},
+
+	_dispatchHearBeat : function (response) {
+		var res = response.results;
+		for(c = 0; c < res.length; c++){
+			// buscar la conversacion
+			var found = false;
+			for (a = 0; a < PosImClient._conversations.length; a++) {
+				if(PosImClient._conversations[a].id_usuario == res[c].from){
+					//found conversation
+					found = true;
+					break;
+				}
+			}
+
+			var from = PosImClient._contactStore.getRootNode().findChild("id_usuario", res[c].from, true);
+
+			if(!found){
+				PosImClient._startConversationWith(from);
+				var el = Ext.ComponentManager.get("chatWindow-with-" + from.get("id_usuario") );
+				el.setValue( el.getValue(  ) + res[c].content + "\n" );
+
+			}else{
+				//update conversation
+				var el = Ext.ComponentManager.get("chatWindow-with-" + from.get("id_usuario") );
+				el.setValue( el.getValue( ) + res[c].content + "\n" );
+
+				//update mini-window title
+				var conversationWindows = PosImClient._contactWindow.items;
+				for( i = 0 ; i < conversationWindows.length ; i++ ){
+					if( conversationWindows.get(i).conversation_with == from.get("id_usuario") ){
+						conversationWindows.get(i).setTitle("(1) " + from.get("nombre"));
+						break;
+					}
+				}
+			}
+		}
+	},
+
+	_heartBeat : function (){
+			POS.API.GET( "chat/chat.cgi", { 
+						instance : "5160175b",
+						cmd : "getMessages"
+					},{ 
+						callback : PosImClient._dispatchHearBeat
+					}
+				);
 	},
 
 	_startConversationWith : function ( userRecord){
@@ -1148,7 +1166,7 @@ var PosImClient = {
 									width: 187,
 									enableKeyEvents : true,
 									listeners : {
-										keypress : function ( _this, e, eOpts){
+										keydown : function ( _this, e, eOpts){
 											if( e.button == 12
 												&& !e.shiftKey){
 													PosImClient._sendMessage(this.findParentByType("panel").conversation_with, this);
@@ -1164,7 +1182,6 @@ var PosImClient = {
 		}
 
 		PosImClient._contactWindow.items.getAt(0).collapse();
-
 	},
 
 	_onContancClick : function (_this, record, item, index, e, eOpts){
@@ -1172,9 +1189,21 @@ var PosImClient = {
 		PosImClient._startConversationWith(record);
 	},
 
-
 	_sendMessage : function(id_usuario, textarea){
 		//calculate time
+
+		//send the message
+		POS.API.GET( "chat/chat.cgi", { 
+					instance : "5160175b",
+					cmd : "postMessage",
+					to : id_usuario,
+					content : textarea.getValue()
+				},{ 
+					callback : function(){
+
+					}
+				}
+			);
 
 		//display locally, with gray color indicating 'sending state'
 		var el = Ext.ComponentManager.get("chatWindow-with-" + id_usuario );
@@ -1182,9 +1211,10 @@ var PosImClient = {
 		textarea.setRawValue();
 
 		//change color text to black on arrival
+		
 	},
 
-	_createContactTree : function (){
+	_createContactTree : function(){
 			return Ext.create('Ext.tree.Panel', {
 						title: 'Contactos',
 						width: 500,
@@ -1201,13 +1231,13 @@ var PosImClient = {
 						columns: [{
 							xtype: 'treecolumn',
 							text: 'Nombre',
-							flex: 5,
+							flex: 2,
 							sortable: true,
 							dataIndex: 'nombre'
 						},{
-							text: 'Assigned To',
+							text: 'Posicion',
 							flex: 1,
-							dataIndex: 'rol_descripcion',
+							dataIndex: 'rol_nombre',
 							sortable: true
 						}]
 					});
@@ -1216,12 +1246,12 @@ var PosImClient = {
 	_createContactWindow :  function (){
 			PosImClient._contactWindow  = Ext.create('widget.window', {
 				title: 'Mensajero',
-				titleCollapse: true,
+				headerPosition: 'bottom',
 				resizable:false,
 				collapsible : true,
 				width: 200,
 				height: 400,
-				animCollapse: false,
+				animCollapse: true,
 				bodyBorder: true,
 				layout: 'accordion',
 				border: true,
@@ -1229,8 +1259,6 @@ var PosImClient = {
 				closable: false,
 				x : 1200,
 				y : 100,
-				frameHeader : false,
-				frame: false,
 				items: [
 					PosImClient._createContactTree()
 				]
