@@ -56,13 +56,13 @@ CREATE TABLE IF NOT EXISTS `cuenta_contable` (
   `tipo_cuenta` enum('Balance','Estado de Resultados') COLLATE utf8_spanish_ci NOT NULL COMMENT 'Si la cuenta es de Balance o Estado de Resultados',
   `naturaleza` enum('Acreedora','Deudora') COLLATE utf8_spanish_ci NOT NULL COMMENT 'Si es deudora o acreedora',
   `clasificacion` enum('Activo Circulante','Activo Fijo','Activo Diferido','Pasivo Circulante','Pasivo Largo Plazo','Capital Contable','Ingresos','Egresos') COLLATE utf8_spanish_ci NOT NULL COMMENT 'Clasificacion a la que pertenecera la cuenta',
-  `cargos_aumentan` bit(1) NOT NULL COMMENT 'Si es igual 1 significa que en los movimientos cuando se cargue a esta cuenta los cargos aumentaran',
-  `abonos_aumentan` bit(1) NOT NULL COMMENT 'si abonos aumentan es igual a 1 significa que en los movimientos los abonos aumentantaran',
-  `es_cuenta_orden` bit(1) NOT NULL COMMENT 'si la cuenta no se contemplara en los estados financieros',
-  `es_cuenta_mayor` bit(1) NOT NULL COMMENT 'Indica si la cuenta es de mayor',
-  `afectable` bit(1) NOT NULL COMMENT 'indica si sobre esta cuenta ya se pueden realizar operaciones',
+  `cargos_aumentan` tinyint(1) NOT NULL COMMENT 'Si es igual 1 significa que en los movimientos cuando se cargue a esta cuenta los cargos aumentaran',
+  `abonos_aumentan` tinyint(1) NOT NULL COMMENT 'si abonos aumentan es igual a 1 significa que en los movimientos los abonos aumentantaran',
+  `es_cuenta_orden` tinyint(1) NOT NULL COMMENT 'si la cuenta no se contemplara en los estados financieros',
+  `es_cuenta_mayor` tinyint(1) NOT NULL COMMENT 'Indica si la cuenta es de mayor',
+  `afectable` tinyint(1) NOT NULL COMMENT 'indica si sobre esta cuenta ya se pueden realizar operaciones',
   `id_cuenta_padre` int(11) DEFAULT NULL COMMENT 'id de la cuenta de la que depende',
-  `activa` bit(1) NOT NULL COMMENT 'Indica si la cuenta está disponible para su uso o no.',
+  `activa` tinyint(1) NOT NULL COMMENT 'Indica si la cuenta está disponible para su uso o no.',
   PRIMARY KEY (`id_cuenta_contable`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=1 ;
 
