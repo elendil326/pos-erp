@@ -32,7 +32,7 @@ class ClienteComponentPage extends PosComponentPage{
 		$productos = '';
 		if (ConfiguracionDAO::MostrarProductos())
 		{
-			$productos = '{ "title": "Productos" }';
+			$productos = '{ "title": "Productos", "url": "productos.php" }';
 		}
 		$this->main_menu_json = '{
 		    "main_menu": ['.
