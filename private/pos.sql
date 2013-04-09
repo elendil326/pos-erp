@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS `instances` (
   `db_host` varchar(32) NOT NULL,
   `db_debug` tinyint(1) NOT NULL,
   `fecha_creacion` int(11) NOT NULL COMMENT 'fecha de creacion de esta instancia',
+  `status` enum('prueba','cliente','moroso','prospecto') CHARACTER SET utf8 NOT NULL DEFAULT 'prueba',
   `activa` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`instance_id`),
   KEY `instance_token` (`instance_token`)

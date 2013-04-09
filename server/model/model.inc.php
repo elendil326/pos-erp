@@ -148,3 +148,8 @@ require_once ('extra_params_estructura.dao.php');
 require_once ('extra_params_valores.dao.php');
 
 require_once ('configuracion.dao.php');
+
+require_once ('ejercicio.dao.php');
+require_once ('periodo.dao.php');
+require_once ('ejercicio_empresa.dao.php');
+require_once ('logo.dao.php');

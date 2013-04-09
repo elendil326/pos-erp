@@ -162,7 +162,7 @@ class InstanciasController {
         {
             $path = POS_PATH_TO_SERVER_ROOT . "/../static_content/" . $I_ID;
 
-            if (!is_dir($destination)) {
+            if (!is_dir($path)) {
                 mkdir($path);
                 chmod($path, 0777);
                 mkdir($path . "/plantillas");
