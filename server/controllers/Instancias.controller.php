@@ -1197,14 +1197,14 @@ class InstanciasController {
      * @param string token nuevo valor del token
      * @return string cadena en formato de json que contiene  sociativo que contiene informacion sobre la respuesta response->success indica si termino con exito o fracaso (boolean), response->reason en caso de que exista algun error aqui se indica la informaci&oacute;n
      **/
-    public static function Editar($intance_id = NULL, $activa = NULL, $descripcion = NULL, $token = NULL)
+    public static function Editar($intance_id = NULL, $activa = NULL, $descripcion = NULL, $token = NULL, $status)
     {
         global $POS_CONFIG;
 
         //validaciones de recepcion de parametros
         {
             //verificamos que al menos tenga un valor para editar
-            if($activa === NULL && $descripcion === NULL && $token === NULL){
+            if($activa === NULL && $descripcion === NULL && $token === NULL && $status = NULL){
                 Logger::warn("debe de especifical al menos un valor para editar");
                 return json_encode(array("success"=>"false", "reason"=>"debe de especifical al menos un valor para editar"));
             }
@@ -1243,6 +1243,17 @@ class InstanciasController {
             }else{
                 //la instancia esta desactivada y no se piensa reactivar :s
                 return json_encode(array("success"=>"false", "reason"=>"La instancia esta desactivada, no puede modificar ningun valor hasta no ser activada"));
+            }
+        }
+
+        if(!empty($status) && ($status === "prueba" || $status === "renta" || $status === "prospecto" || $status === "moroso")) {
+            //actualizamos la descripcion
+            $sql = "UPDATE instances SET status = ? WHERE instance_id = ?";
+            $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql, array($status, $intance_id));
+
+            if (!empty($res)) {
+                Logger::warn("Error al modificar el status");
+                return json_encode(array("success"=>"false", "reason"=>"Error al modificar el status"));
             }
         }
 

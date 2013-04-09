@@ -53,8 +53,8 @@
              "instance_token" => "Token",
              "descripcion" => "Descripcion",
              "fecha_creacion" => "Creaci&oacute;n",
-             "db_name" => "db_name",
              "activa" => "Activa",
+             "status" => "status"
         ), array($instancia));
 
     $t->addColRender( "fecha_creacion", "FormatTime" );

@@ -8,7 +8,7 @@
     {
         switch($_GET["action"]){
             case "mod":
-                $response = json_decode(InstanciasController::Editar($_GET["id"], $_GET["activa"], $_GET["descripcion"], $_GET["token"]));
+                $response = json_decode(InstanciasController::Editar($_GET["id"], $_GET["activa"], $_GET["descripcion"], $_GET["token"], $_GET["status"]));
 
                 if ($response->success === "false") {
                     ?>
@@ -61,6 +61,17 @@
             </tr>
             <tr>
                 <td>Activa</td><td colspan = "2"><input type="radio" name="activa" value="1" <?php echo $instancia["activa"] === "1" ? "checked" : "" ?> > s&iacute;<br/><br/><input type="radio" name="activa" value="0" <?php echo $instancia["activa"] === "0" ? "checked" : "" ?>>no</td>
+            </tr>
+            <tr>
+                <td>Status</td>
+                <td colspan = "2">
+                    <select name = "status">
+                        <option value="prueba" <?php echo $instancia["status"] == "prueba"? "selected=\"selected\"" : ""; ?>>Prueba</option>
+                        <option value="cliente" <?php echo $instancia["status"] == "cliente"? "selected=\"selected\"" : ""; ?>>Cliente</option>
+                        <option value="moroso" <?php echo $instancia["status"] == "moroso"? "selected=\"selected\"" : ""; ?>>Moroso</option>
+                        <option value="prospecto" <?php echo $instancia["status"] == "prospecto"? "selected=\"selected\"" : ""; ?>>Prospecto</option>
+                    </select>
+                </td>
             </tr>
             <tr>
                 <td colspan = "3"><input type = "submit" value = "Guardar" class="POS Boton OK"/><input type = "hidden" name = "action" value = "mod"/><input type = "hidden" name = "id" value = "<?php echo $_GET["id"];?>"/></td>

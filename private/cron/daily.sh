@@ -12,11 +12,11 @@
 #     ejecuten programas, comandos o scripts. 
 # 5.- Al ejecutar la orden crontab -e en la terminal se abre el editor nano: una vez añadida la/s linea(s), que queremos 
 #     programar como tarea(s), se pueden añadir tantas lineas como se quiera para ejecutar tantas tareas como se deseen.
-# 6.- La sintaxis del comando crontab es la siguiente : * * * * * daily.sh
+# 6.- La sintaxis del comando crontab es la siguiente : 0 1 * * * daily.sh Se ejecuta al minuto 1 de cada hora de todos los días
 
 # datos de conexion
 BDUSER="pos"
 BDPASS="pos"
 BDNAME="pos"
 
-echo "UPDATE instances SET activa = '0', status = 'prospecto' WHERE instance_id IN ( SELECT instance_id FROM instance_request WHERE ( date_installed  + ( 30 * 24 * 60 * 60 )  ) >= UNIX_TIMESTAMP( NOW( ) ) AND instance_id <> 'NULL' )" | mysql -h 127.0.0.1 -u $BDUSER -p$BDPASS $BDNAME
+echo "UPDATE instances SET activa = '0', status = 'prospecto' WHERE status = 'prueba' AND instance_id IN ( SELECT instance_id FROM instance_request WHERE ( date_installed  + ( 30 * 24 * 60 * 60 )  ) >= UNIX_TIMESTAMP( NOW( ) ) AND instance_id <> 'NULL' )" | mysql -h 127.0.0.1 -u $BDUSER -p$BDPASS $BDNAME

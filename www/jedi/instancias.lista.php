@@ -15,8 +15,8 @@
         "instance_token" => "instance_token",
         "fecha_creacion" => "creada",
         "descripcion" => "descripcion",
-        "db_name" => "db_name",
-        "activa" => "activa"
+        "activa" => "activa",
+        "status" => "status"
     );
 
     $t = new TableComponent($headers , InstanciasController::Buscar(/*$activa = true, $query = "P", $order_by = "instance_token", $order = "DESC", $start = 0, $limit = 100*/));
