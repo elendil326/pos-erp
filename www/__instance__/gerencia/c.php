@@ -268,7 +268,7 @@ $CadenaJSForm .= "<br>";
 if ($Contador>0)//Si hay respaldos agrega el boton
 {
       $CadenaJSForm .= "</form></div><br/><div class=\"POS Boton\" onclick=\"fn();\">Restaurar</div>";
-      $CadenaJSForm .= "<div class=\"POS Boton\" onclick=\"fnB();\">Borrar</div>";
+      $CadenaJSForm .= "<div class=\"POS Boton\" onclick=\"fnB();\">Borrar</div><hr>";
       $page->addComponent($CadenaJSForm);
 }
 else
@@ -276,6 +276,50 @@ else
       $page->addComponent(new TitleComponent("--- No hay respaldos disponibles ---", 3));
 }
 
+//Descargar Instancia
+$dwdInts ="<script>";
+$dwdInts .= " var descargarInstancia = function()\n";
+$dwdInts .= "      {\n";
+$dwdInts .= "      var descargar_instancia=function(btn)\n";
+$dwdInts .= "      {\n";
+$dwdInts .= "            if(btn=='yes')\n";
+$dwdInts .= "            {\n";
+$dwdInts .= "            POS.API.POST(\n";
+$dwdInts .= "                                          \"api/pos/bd/descargar_instancias_bd\", \n";
+$dwdInts .= "                                          {\n";
+$dwdInts .= "                                                \"instance_ids\" : Ext.JSON.encode(array_instances)";
+$dwdInts .= "                                          },\n";
+$dwdInts .= "                                          {\n";
+$dwdInts .= "                                                callback :function(b)\n";
+$dwdInts .= "                                                      {\n";
+$dwdInts .= "                                                            Ext.MessageBox.show\n";
+$dwdInts .= "                                                                ({\n";
+$dwdInts .= "                                                                        title:\"Descargar Instancia\",\n";
+$dwdInts .= "                                                                        msg:\"Descarga de BD terminada\",\n";
+$dwdInts .= "                                                                        buttons : Ext.MessageBox.OK\n";
+$dwdInts .= "                                                                });";
+//$dwdInts .= "                                                            document.location.reload();\n";//Actualiza la pagina
+$dwdInts .= "                                                            console.log(\"OBJ regresado: \",b);\n";//Actualiza la pagina
+$dwdInts .= "                                                      }\n";
+$dwdInts .= "                                          }\n";
+$dwdInts .= "                                    )\n";
+$dwdInts .= "                }\n";//Cierra IF
+$dwdInts .= "          }\n";//Cierra Resp
+$dwdInts .= "      Ext.MessageBox.show(\n";
+$dwdInts .= "      {\n";
+$dwdInts .= "                 title:\"Descargar BD de la instancia\",\n";
+$dwdInts .= "                 msg:\"¿Desea Descargar BD de la instancia?, el proceso puede demorar varios minutos\",\n";
+$dwdInts .= "                 buttons: Ext.MessageBox.YESNO,\n";
+$dwdInts .= "                 icon: Ext.MessageBox.QUESTION,\n";
+$dwdInts .= "                 fn:descargar_instancia\n";
+$dwdInts .= "       });\n";
+$dwdInts .= "      }\n";
+$dwdInts .= "</script>\n";
+$page->addComponent(new TitleComponent("Descargar BD", 2));
+$page->addComponent($dwdInts);
+$page->addComponent("<br><div class=\"POS Boton\" onclick=\"descargarInstancia();\">Descargar BD</div><hr>");//Agrega el boton de descargar la BD
+
+//Fin descargar Instancia
 //--------------------------------------------------------------------------------
 
 $page->nextTab("Personalizar");
