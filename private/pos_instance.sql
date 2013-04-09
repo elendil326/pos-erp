@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS `cuenta_contable` (
   `abonos_aumentan` bit(1) NOT NULL COMMENT 'si abonos aumentan es igual a 1 significa que en los movimientos los abonos aumentantaran',
   `es_cuenta_orden` bit(1) NOT NULL COMMENT 'si la cuenta no se contemplara en los estados financieros',
   `es_cuenta_mayor` bit(1) NOT NULL COMMENT 'Indica si la cuenta es de mayor',
-  `afectale` bit(1) NOT NULL COMMENT 'indica si sobre esta cuenta ya se pueden realizar operaciones',
+  `afectable` bit(1) NOT NULL COMMENT 'indica si sobre esta cuenta ya se pueden realizar operaciones',
   `id_cuenta_padre` int(11) DEFAULT NULL COMMENT 'id de la cuenta de la que depende',
   `activa` bit(1) NOT NULL COMMENT 'Indica si la cuenta está disponible para su uso o no.',
   PRIMARY KEY (`id_cuenta_contable`)
