@@ -88,7 +88,7 @@ Update : �Es correcto como se esta manejando el argumento id_sucursal? Ya que 
 				break;
 			}//switch
 
-			$cuentas_nivel_1 = BuscarCuenta("", $clasificacion ,
+			$cuentas_nivel_1 = self::BuscarCuenta("", $clasificacion ,
 											"", "",
 											"", "",
 											"", "",
@@ -96,14 +96,19 @@ Update : �Es correcto como se esta manejando el argumento id_sucursal? Ya que 
 											"", ""
 								);
 
-			if (count($cuentas_nivel_1)>0) {
-				$clave .= "-" . $cuentas_nivel_1[count($cuentas_nivel_1) - 1]->getConsecutivoEnNivel() +1;
+			if (count($cuentas_nivel_1["resultados"])>0) { 
+				
+				$salida = $cuentas_nivel_1["resultados"][count($cuentas_nivel_1) - 1];
+				$yy = $cuentas_nivel_1["resultados"][count($cuentas_nivel_1["resultados"]) - 1]->getConsecutivoEnNivel() ;
+				$xx = $cuentas_nivel_1["resultados"][count($cuentas_nivel_1["resultados"]) - 1]->getConsecutivoEnNivel() +1;
+				$clave .= "-" . $xx;
+
 			} else {
 				$clave .= "-1";
 			}
 
 		} else {
-			$subcuentas = BuscarCuenta("", "",
+			$subcuentas = self::BuscarCuenta("", "",
 										"", "",
 										"", "",
 										"", $id_cuenta_padre,
@@ -113,8 +118,8 @@ Update : �Es correcto como se esta manejando el argumento id_sucursal? Ya que 
 			$detalle_c = CuentaContableDAO::getByPK($clasificacion);
 			$clave_padre = $detalle_c->getClave();
 
-			if (count($subcuentas)>0) {
-				$clave .= $clave_padre. "-" . $subcuentas[count($subcuentas) - 1]->getConsecutivoEnNivel() +1;
+			if (count($subcuentas["resultados"])>0) {
+				$clave .= $clave_padre. "-" . $subcuentas["resultados"][count($subcuentas["resultados"]) - 1]->getConsecutivoEnNivel() +1;
 			} else {
 				$clave .= $clave_padre . "-1";
 			}
@@ -264,7 +269,7 @@ Update : �Es correcto como se esta manejando el argumento id_sucursal? Ya que 
 			&& $id_cuenta_padre!="") 
 		{//cambia de cuenta padre, debe de cambiar la clave, nivel y el consecutivo
 			
-			$clave = NuevaClaveCuentaContable($id_cuenta_padre,$editar_cuenta->getClasificacion());
+			$clave = self::NuevaClaveCuentaContable($id_cuenta_padre,$editar_cuenta->getClasificacion());
 			$nivel = 1;
 			$consecutivo = 1;
 
@@ -276,28 +281,28 @@ Update : �Es correcto como se esta manejando el argumento id_sucursal? Ya que 
 				}
 
 				$nivel = $detalle_c->getNivel() + 1;
-				$subcuentas = BuscarCuenta("", "",
+				$subcuentas = self::BuscarCuenta("", "",
 											"", "",
 											"", "",
 											"", $id_cuenta_padre,
 											"", "",
 											"", ""
 								);
-				if (count($subcuentas)>0) {
-					$consecutivo = $subcuentas[count($subcuentas)-1]['consecutivo_en_nivel'] + 1;
+				if (count($subcuentas["resultados"])>0) {
+					$consecutivo = $subcuentas["resultados"][count($subcuentas["resultados"])-1]->getConsecutivoEnNivel() + 1;
 				}
 
 			} else {
 
-				$cuentas_clasifi = BuscarCuenta("", $clasificacion,
+				$cuentas_clasifi = self::BuscarCuenta("", $clasificacion,
 											"", "",
 											"", "",
 											"", "",
 											"", $nivel=1,
 											"", ""
 								);
-				if (count($cuentas_clasifi)>0) {
-					$consecutivo = $cuentas_clasifi[count($cuentas_clasifi)-1]['consecutivo_en_nivel'] + 1;
+				if (count($cuentas_clasifi["resultados"])>0) {
+					$consecutivo = $cuentas_clasifi["resultados"][count($cuentas_clasifi["resultados"])-1]->getConsecutivoEnNivel() + 1;
 				}
 			}
 			$editar_cuenta->setClave($clave);
@@ -324,19 +329,19 @@ Update : �Es correcto como se esta manejando el argumento id_sucursal? Ya que 
 
 		if ($tipo_cuenta=="Estado de Resultados" && $naturaleza=="Acreedora") {
 			$editar_cuenta->setAbonosAumentan(1);
-			$editar_cuenta->setCarbosAumentan(0);
+			$editar_cuenta->setCargosAumentan(0);
 		}
 		if ($tipo_cuenta=="Estado de Resultados" && $naturaleza=="Deudora") {
 			$editar_cuenta->setAbonosAumentan(0);
-			$editar_cuenta->setCarbosAumentan(1);
+			$editar_cuenta->setCargosAumentan(1);
 		}
 		if ($tipo_cuenta=="Balance" && $naturaleza=="Acreedora") {
 			$editar_cuenta->setAbonosAumentan(1);
-			$editar_cuenta->setCarbosAumentan(0);
+			$editar_cuenta->setCargosAumentan(0);
 		}
 		if ($tipo_cuenta=="Balance" && $naturaleza=="Deudora") {
 			$editar_cuenta->setAbonosAumentan(0);
-			$editar_cuenta->setCarbosAumentan(1);
+			$editar_cuenta->setCargosAumentan(1);
 		}
 		$editar_cuenta->setEsCuentaOrden($es_cuenta_orden);
 		$editar_cuenta->setEsCuentaMayor($es_cuenta_mayor);
@@ -411,15 +416,15 @@ Update : �Es correcto como se esta manejando el argumento id_sucursal? Ya que 
 		$clasificacion, $es_cuenta_mayor, $es_cuenta_orden, $naturaleza, 
 		$nombre_cuenta, $tipo_cuenta, $id_cuenta_padre = ""
 	) {
-
+Logger::log("*+++++++************ Boleanos: AU: {$abonos_aumentan} , CU: {$cargos_aumentan} , CM: {$es_cuenta_mayor} , CO: {$es_cuenta_orden}");
 		if ($es_cuenta_orden == 1 && $es_cuenta_mayor == 1) {
 			throw new Exception("Una cuenta de Mayor no puede ser de Orden", 901);
 		}
 
 		if (($tipo_cuenta == "Balance" && $naturaleza == "Deudora") &&
 			($clasificacion != "Activo Circulante"
-			|| $clasificacion != "Activo Fijo"
-			|| $clasificacion != "Activo Diferido")) {
+			&& $clasificacion != "Activo Fijo"
+			&& $clasificacion != "Activo Diferido")) {
 			throw new Exception("Clasificacion incorrecta para la cuenta de tipo Balance y Naturaleza Deudora", 901);
 		}
 
@@ -440,11 +445,12 @@ Update : �Es correcto como se esta manejando el argumento id_sucursal? Ya que 
 
 		$cuenta_buscar = new CuentaContable();
 		$cuenta_buscar->setNombreCuenta($nombre_cuenta);
-		if (!is_null(CuentaContableDAO::search($cuenta_buscar))) {
-			throw new Exception("Ya existe una cuenta con el nombre " . $nombre_cuenta, 901);
+		$cc2 = CuentaContableDAO::search($cuenta_buscar);
+		if (count($cc2)>0) {
+			throw new Exception(" Ya existe una cuenta con el nombre " . $nombre_cuenta, 901);
 		}
 
-		$clave = NuevaClaveCuentaContable($id_cuenta_padre,$clasificacion);
+		$clave = self::NuevaClaveCuentaContable($id_cuenta_padre,$clasificacion);
 		$nivel = 1;
 		$consecutivo = 1;
 
@@ -456,28 +462,30 @@ Update : �Es correcto como se esta manejando el argumento id_sucursal? Ya que 
 			}
 
 			$nivel = $detalle_c->getNivel() + 1;
-			$subcuentas = BuscarCuenta("", "",
+			$subcuentas = self::BuscarCuenta("", "",
 										"", "",
 										"", "",
 										"", $id_cuenta_padre,
 										"", "",
 										"", ""
 							);
-			if (count($subcuentas)>0) {
-				$consecutivo = $subcuentas[count($subcuentas)-1]['consecutivo_en_nivel'] + 1;
+			if (count($subcuentas["resultados"])>0) {
+				$consecutivo = $subcuentas["resultados"][count($subcuentas["resultados"])-1]->getConsecutivoEnNivel() + 1;
 			}
 
 		} else {
 
-			$cuentas_clasifi = BuscarCuenta("", $clasificacion,
+			$cuentas_clasifi = self::BuscarCuenta("", $clasificacion,
 										"", "",
 										"", "",
 										"", "",
 										"", $nivel=1,
 										"", ""
 							);
-			if (count($cuentas_clasifi)>0) {
-				$consecutivo = $cuentas_clasifi[count($cuentas_clasifi)-1]['consecutivo_en_nivel'] + 1;
+
+			if (count($cuentas_clasifi["resultados"])>0) {
+				//Logger::log(" ::::: Cuentas clasificacion: ". print_r($cuentas_clasifi,true));
+				$consecutivo = $cuentas_clasifi["resultados"][count($cuentas_clasifi["resultados"])-1]->getConsecutivoEnNivel() + 1;
 			}
 		}
 
@@ -496,22 +504,22 @@ Update : �Es correcto como se esta manejando el argumento id_sucursal? Ya que 
 		$nueva_cuenta->setAfectable(1);
 		$nueva_cuenta->setActiva(1);
 		$nueva_cuenta->setAbonosAumentan($abonos_aumentan);
-		$nueva_cuenta->setCarbosAumentan($cargos_aumentan);
+		$nueva_cuenta->setCargosAumentan($cargos_aumentan);
 		if ($tipo_cuenta=="Estado de Resultados" && $naturaleza=="Acreedora") {
 			$nueva_cuenta->setAbonosAumentan(1);
-			$nueva_cuenta->setCarbosAumentan(0);
+			$nueva_cuenta->setCargosAumentan(0);
 		}
 		if ($tipo_cuenta=="Estado de Resultados" && $naturaleza=="Deudora") {
 			$nueva_cuenta->setAbonosAumentan(0);
-			$nueva_cuenta->setCarbosAumentan(1);
+			$nueva_cuenta->setCargosAumentan(1);
 		}
 		if ($tipo_cuenta=="Balance" && $naturaleza=="Acreedora") {
 			$nueva_cuenta->setAbonosAumentan(1);
-			$nueva_cuenta->setCarbosAumentan(0);
+			$nueva_cuenta->setCargosAumentan(0);
 		}
 		if ($tipo_cuenta=="Balance" && $naturaleza=="Deudora") {
 			$nueva_cuenta->setAbonosAumentan(0);
-			$nueva_cuenta->setCarbosAumentan(1);
+			$nueva_cuenta->setCargosAumentan(1);
 		}
 		$nueva_cuenta->setEsCuentaOrden($es_cuenta_orden);
 		$nueva_cuenta->setEsCuentaMayor($es_cuenta_mayor);

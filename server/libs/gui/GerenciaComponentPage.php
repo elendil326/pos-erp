@@ -27,6 +27,16 @@ class GerenciaComponentPage extends PosComponentPage{
 		    "main_menu": [
 
 		        {
+		        	"title":"Contabilidad",
+		        	"url": "cuentas_contables.php",
+		        	"children":[
+		        		{
+		        			"title" : "Cuentas",
+		        			"url" : "cuentas_contables.php"
+		        		}
+		        	]
+		        },
+		        {
 		            "title": "Cargos y abonos",
 		            "url": "cargos_y_abonos.php"
 		        },

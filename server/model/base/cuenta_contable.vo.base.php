@@ -58,8 +58,8 @@ class CuentaContable extends VO
 			if( isset($data['es_cuenta_mayor']) ){
 				$this->es_cuenta_mayor = $data['es_cuenta_mayor'];
 			}
-			if( isset($data['afectale']) ){
-				$this->afectale = $data['afectale'];
+			if( isset($data['afectable']) ){
+				$this->afectable = $data['afectable'];
 			}
 			if( isset($data['id_cuenta_padre']) ){
 				$this->id_cuenta_padre = $data['id_cuenta_padre'];
@@ -92,7 +92,7 @@ class CuentaContable extends VO
 			"abonos_aumentan" => $this->abonos_aumentan,
 			"es_cuenta_orden" => $this->es_cuenta_orden,
 			"es_cuenta_mayor" => $this->es_cuenta_mayor,
-			"afectale" => $this->afectale,
+			"afectable" => $this->afectable,
 			"id_cuenta_padre" => $this->id_cuenta_padre,
 			"activa" => $this->activa
 		); 
@@ -210,13 +210,13 @@ class CuentaContable extends VO
 	public $es_cuenta_mayor;
 
 	/**
-	  * afectale
+	  * afectable
 	  * 
 	  * indica si sobre esta cuenta ya se pueden realizar operaciones<br>
 	  * @access public
 	  * @var bit(1)
 	  */
-	public $afectale;
+	public $afectable;
 
 	/**
 	  * id_cuenta_padre
@@ -529,27 +529,27 @@ class CuentaContable extends VO
 	}
 
 	/**
-	  * getAfectale
+	  * getAfectable
 	  * 
-	  * Get the <i>afectale</i> property for this object. Donde <i>afectale</i> es indica si sobre esta cuenta ya se pueden realizar operaciones
+	  * Get the <i>afectable</i> property for this object. Donde <i>afectable</i> es indica si sobre esta cuenta ya se pueden realizar operaciones
 	  * @return bit(1)
 	  */
-	final public function getAfectale()
+	final public function getAfectable()
 	{
-		return $this->afectale;
+		return $this->afectable;
 	}
 
 	/**
-	  * setAfectale( $afectale )
+	  * setAfectable( $afectable )
 	  * 
-	  * Set the <i>afectale</i> property for this object. Donde <i>afectale</i> es indica si sobre esta cuenta ya se pueden realizar operaciones.
-	  * Una validacion basica se hara aqui para comprobar que <i>afectale</i> es de tipo <i>bit(1)</i>. 
+	  * Set the <i>afectable</i> property for this object. Donde <i>afectable</i> es indica si sobre esta cuenta ya se pueden realizar operaciones.
+	  * Una validacion basica se hara aqui para comprobar que <i>afectable</i> es de tipo <i>bit(1)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param bit(1)
 	  */
-	final public function setAfectale( $afectale )
+	final public function setAfectable( $afectable )
 	{
-		$this->afectale = $afectale;
+		$this->afectable = $afectable;
 	}
 
 	/**
