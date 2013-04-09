@@ -178,7 +178,7 @@ class CuentaContable extends VO
 	  * 
 	  * Si es igual 1 significa que en los movimientos cuando se cargue a esta cuenta los cargos aumentaran<br>
 	  * @access public
-	  * @var bit(1)
+	  * @var tinyint(1)
 	  */
 	public $cargos_aumentan;
 
@@ -187,7 +187,7 @@ class CuentaContable extends VO
 	  * 
 	  * si abonos aumentan es igual a 1 significa que en los movimientos los abonos aumentantaran<br>
 	  * @access public
-	  * @var bit(1)
+	  * @var tinyint(1)
 	  */
 	public $abonos_aumentan;
 
@@ -196,7 +196,7 @@ class CuentaContable extends VO
 	  * 
 	  * si la cuenta no se contemplara en los estados financieros<br>
 	  * @access public
-	  * @var bit(1)
+	  * @var tinyint(1)
 	  */
 	public $es_cuenta_orden;
 
@@ -205,7 +205,7 @@ class CuentaContable extends VO
 	  * 
 	  * Indica si la cuenta es de mayor<br>
 	  * @access public
-	  * @var bit(1)
+	  * @var tinyint(1)
 	  */
 	public $es_cuenta_mayor;
 
@@ -214,7 +214,7 @@ class CuentaContable extends VO
 	  * 
 	  * indica si sobre esta cuenta ya se pueden realizar operaciones<br>
 	  * @access public
-	  * @var bit(1)
+	  * @var tinyint(1)
 	  */
 	public $afectable;
 
@@ -232,7 +232,7 @@ class CuentaContable extends VO
 	  * 
 	  * Indica si la cuenta está disponible para su uso o no.<br>
 	  * @access public
-	  * @var bit(1)
+	  * @var tinyint(1)
 	  */
 	public $activa;
 
@@ -436,7 +436,7 @@ class CuentaContable extends VO
 	  * getCargosAumentan
 	  * 
 	  * Get the <i>cargos_aumentan</i> property for this object. Donde <i>cargos_aumentan</i> es Si es igual 1 significa que en los movimientos cuando se cargue a esta cuenta los cargos aumentaran
-	  * @return bit(1)
+	  * @return tinyint(1)
 	  */
 	final public function getCargosAumentan()
 	{
@@ -447,9 +447,9 @@ class CuentaContable extends VO
 	  * setCargosAumentan( $cargos_aumentan )
 	  * 
 	  * Set the <i>cargos_aumentan</i> property for this object. Donde <i>cargos_aumentan</i> es Si es igual 1 significa que en los movimientos cuando se cargue a esta cuenta los cargos aumentaran.
-	  * Una validacion basica se hara aqui para comprobar que <i>cargos_aumentan</i> es de tipo <i>bit(1)</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>cargos_aumentan</i> es de tipo <i>tinyint(1)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param bit(1)
+	  * @param tinyint(1)
 	  */
 	final public function setCargosAumentan( $cargos_aumentan )
 	{
@@ -460,7 +460,7 @@ class CuentaContable extends VO
 	  * getAbonosAumentan
 	  * 
 	  * Get the <i>abonos_aumentan</i> property for this object. Donde <i>abonos_aumentan</i> es si abonos aumentan es igual a 1 significa que en los movimientos los abonos aumentantaran
-	  * @return bit(1)
+	  * @return tinyint(1)
 	  */
 	final public function getAbonosAumentan()
 	{
@@ -471,9 +471,9 @@ class CuentaContable extends VO
 	  * setAbonosAumentan( $abonos_aumentan )
 	  * 
 	  * Set the <i>abonos_aumentan</i> property for this object. Donde <i>abonos_aumentan</i> es si abonos aumentan es igual a 1 significa que en los movimientos los abonos aumentantaran.
-	  * Una validacion basica se hara aqui para comprobar que <i>abonos_aumentan</i> es de tipo <i>bit(1)</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>abonos_aumentan</i> es de tipo <i>tinyint(1)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param bit(1)
+	  * @param tinyint(1)
 	  */
 	final public function setAbonosAumentan( $abonos_aumentan )
 	{
@@ -484,7 +484,7 @@ class CuentaContable extends VO
 	  * getEsCuentaOrden
 	  * 
 	  * Get the <i>es_cuenta_orden</i> property for this object. Donde <i>es_cuenta_orden</i> es si la cuenta no se contemplara en los estados financieros
-	  * @return bit(1)
+	  * @return tinyint(1)
 	  */
 	final public function getEsCuentaOrden()
 	{
@@ -495,9 +495,9 @@ class CuentaContable extends VO
 	  * setEsCuentaOrden( $es_cuenta_orden )
 	  * 
 	  * Set the <i>es_cuenta_orden</i> property for this object. Donde <i>es_cuenta_orden</i> es si la cuenta no se contemplara en los estados financieros.
-	  * Una validacion basica se hara aqui para comprobar que <i>es_cuenta_orden</i> es de tipo <i>bit(1)</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>es_cuenta_orden</i> es de tipo <i>tinyint(1)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param bit(1)
+	  * @param tinyint(1)
 	  */
 	final public function setEsCuentaOrden( $es_cuenta_orden )
 	{
@@ -508,7 +508,7 @@ class CuentaContable extends VO
 	  * getEsCuentaMayor
 	  * 
 	  * Get the <i>es_cuenta_mayor</i> property for this object. Donde <i>es_cuenta_mayor</i> es Indica si la cuenta es de mayor
-	  * @return bit(1)
+	  * @return tinyint(1)
 	  */
 	final public function getEsCuentaMayor()
 	{
@@ -519,9 +519,9 @@ class CuentaContable extends VO
 	  * setEsCuentaMayor( $es_cuenta_mayor )
 	  * 
 	  * Set the <i>es_cuenta_mayor</i> property for this object. Donde <i>es_cuenta_mayor</i> es Indica si la cuenta es de mayor.
-	  * Una validacion basica se hara aqui para comprobar que <i>es_cuenta_mayor</i> es de tipo <i>bit(1)</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>es_cuenta_mayor</i> es de tipo <i>tinyint(1)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param bit(1)
+	  * @param tinyint(1)
 	  */
 	final public function setEsCuentaMayor( $es_cuenta_mayor )
 	{
@@ -532,7 +532,7 @@ class CuentaContable extends VO
 	  * getAfectable
 	  * 
 	  * Get the <i>afectable</i> property for this object. Donde <i>afectable</i> es indica si sobre esta cuenta ya se pueden realizar operaciones
-	  * @return bit(1)
+	  * @return tinyint(1)
 	  */
 	final public function getAfectable()
 	{
@@ -543,9 +543,9 @@ class CuentaContable extends VO
 	  * setAfectable( $afectable )
 	  * 
 	  * Set the <i>afectable</i> property for this object. Donde <i>afectable</i> es indica si sobre esta cuenta ya se pueden realizar operaciones.
-	  * Una validacion basica se hara aqui para comprobar que <i>afectable</i> es de tipo <i>bit(1)</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>afectable</i> es de tipo <i>tinyint(1)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param bit(1)
+	  * @param tinyint(1)
 	  */
 	final public function setAfectable( $afectable )
 	{
@@ -580,7 +580,7 @@ class CuentaContable extends VO
 	  * getActiva
 	  * 
 	  * Get the <i>activa</i> property for this object. Donde <i>activa</i> es Indica si la cuenta está disponible para su uso o no.
-	  * @return bit(1)
+	  * @return tinyint(1)
 	  */
 	final public function getActiva()
 	{
@@ -591,9 +591,9 @@ class CuentaContable extends VO
 	  * setActiva( $activa )
 	  * 
 	  * Set the <i>activa</i> property for this object. Donde <i>activa</i> es Indica si la cuenta está disponible para su uso o no..
-	  * Una validacion basica se hara aqui para comprobar que <i>activa</i> es de tipo <i>bit(1)</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>activa</i> es de tipo <i>tinyint(1)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param bit(1)
+	  * @param tinyint(1)
 	  */
 	final public function setActiva( $activa )
 	{
