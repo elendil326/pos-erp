@@ -97,11 +97,9 @@ Update : �Es correcto como se esta manejando el argumento id_sucursal? Ya que 
 								);
 
 			if (count($cuentas_nivel_1["resultados"])>0) { 
-				
-				$salida = $cuentas_nivel_1["resultados"][count($cuentas_nivel_1) - 1];
-				$yy = $cuentas_nivel_1["resultados"][count($cuentas_nivel_1["resultados"]) - 1]->getConsecutivoEnNivel() ;
-				$xx = $cuentas_nivel_1["resultados"][count($cuentas_nivel_1["resultados"]) - 1]->getConsecutivoEnNivel() +1;
-				$clave .= "-" . $xx;
+
+				$pre_clave = $cuentas_nivel_1["resultados"][count($cuentas_nivel_1["resultados"]) - 1]->getConsecutivoEnNivel() +1;
+				$clave .= "-" . $pre_clave;
 
 			} else {
 				$clave .= "-1";
@@ -115,11 +113,12 @@ Update : �Es correcto como se esta manejando el argumento id_sucursal? Ya que 
 										"", "",
 										"", ""
 							);
-			$detalle_c = CuentaContableDAO::getByPK($clasificacion);
+			$detalle_c = CuentaContableDAO::getByPK($id_cuenta_padre);
 			$clave_padre = $detalle_c->getClave();
 
 			if (count($subcuentas["resultados"])>0) {
-				$clave .= $clave_padre. "-" . $subcuentas["resultados"][count($subcuentas["resultados"]) - 1]->getConsecutivoEnNivel() +1;
+				$pre_clave = $subcuentas["resultados"][count($subcuentas["resultados"]) - 1]->getConsecutivoEnNivel() +1;
+				$clave .= $clave_padre. "-" . $pre_clave;
 			} else {
 				$clave .= $clave_padre . "-1";
 			}
@@ -192,7 +191,7 @@ Update : �Es correcto como se esta manejando el argumento id_sucursal? Ya que 
 			$cuenta_buscar->setTipoCuenta($tipo_cuenta);
 		}
 
-		$cuentas = CuentaContableDAO::search($cuenta_buscar);
+		$cuentas = CuentaContableDAO::search($cuenta_buscar);//Logger::log("search() ---------------------->: ".print_r($cuentas,true));Logger::log(" <--------------------");
 		return array("resultados" => $cuentas);
 	}
 	
@@ -220,6 +219,18 @@ Update : �Es correcto como se esta manejando el argumento id_sucursal? Ya que 
 		if (is_null($editar_cuenta)) {
 			throw new Exception("La cuenta con id " . $id_cuenta_contable . " no existe", 901);
 		}
+		
+		$subctas = self::BuscarCuenta("", "",
+											"", "",
+											"", "",
+											"", $id_cuenta_contable,
+											"", "",
+											"", ""
+								);
+
+		if (count($subctas["resultados"])>0) {
+			throw new Exception("No se puede editar una cuenta que tiene subcuentas. ", 901);
+		}
 
 		if ($editar_cuenta->getNivel()==1) {
 			throw new Exception("Una cuenta de Mayor nivel 1 que es por default no se puede editar", 901);
@@ -229,41 +240,21 @@ Update : �Es correcto como se esta manejando el argumento id_sucursal? Ya que 
 			throw new Exception("Una cuenta de Mayor no puede ser de Orden", 901);
 		}
 
-		if (($tipo_cuenta == "Balance" && $naturaleza == "Deudora") &&
-			($clasificacion != "Activo Circulante"
-			|| $clasificacion != "Activo Fijo"
-			|| $clasificacion != "Activo Diferido")) {
-			throw new Exception("Clasificacion incorrecta para la cuenta de tipo Balance y Naturaleza Deudora", 901);
-		}
-
-		if (($tipo_cuenta == "Balance" && $naturaleza == "Acreedora") &&
-			($clasificacion != "Pasivo Circulante"
-			|| $clasificacion != "Pasivo Largo Plazo"
-			|| $clasificacion != "Capital Contable")) {
-			throw new Exception("Clasificacion incorrecta para la cuenta de tipo Balance y Naturaleza Acreedora", 901);
-		}
-
-		if ($tipo_cuenta == "Estado de Resultados" && $naturaleza == "Acreedora" && $clasificacion != "Ingresos") {
-			throw new Exception("Clasificacion incorrecta para la cuenta de tipo Estado de Resultados y Naturaleza Acreedora", 901);
-		}
-
-		if ($tipo_cuenta == "Estado de Resultados" && $naturaleza == "Deudora" && $clasificacion != "Egresos") {
-			throw new Exception("Clasificacion incorrecta para la cuenta de tipo Estado de Resultados y Naturaleza Deudora", 901);
-		}
+		
 
 		$cuenta_buscar = new CuentaContable();
 		$cuenta_buscar->setNombreCuenta($nombre_cuenta);
-		if (!is_null(CuentaContableDAO::search($cuenta_buscar))) {
+		if (count(CuentaContableDAO::search($cuenta_buscar))>0) {
 			throw new Exception("Ya existe una cuenta con el nombre " . $nombre_cuenta, 901);
 		}
 
 		$subcuenta = new CuentaContable();
 		$subcuenta->setIdCuentaPadre($id_cuenta_contable);
-		if (!is_null(CuentaContableDAO::search($subcuenta))) {
+		if (count(CuentaContableDAO::search($subcuenta))>0) {
 			throw new Exception("Ya existe subcuentas en esta cuenta con id " . $id_cuenta_contable . ", no se puede editar" , 901);
 		}
 
-
+		$nivel ="";
 		if ($editar_cuenta->getIdCuentaPadre()!=$id_cuenta_padre 
 			&& !is_null($editar_cuenta->getIdCuentaPadre())
 			&& $id_cuenta_padre!="") 
@@ -382,6 +373,18 @@ Update : �Es correcto como se esta manejando el argumento id_sucursal? Ya que 
 		if (is_null($cuenta)) {
 			throw new Exception("La cuenta con id " . $id_cuenta_contable . " no existe", 901);
 		}
+
+		$subcuentas = self::BuscarCuenta("", "",
+											"", "",
+											"", "",
+											"", $id_cuenta_contable,
+											"", "",
+											"", ""
+								);
+		if (count($subcuentas["resultados"])>0) {
+			throw new Exception("No se puede eliminar una cuenta que tiene subcuentas. ", 901);
+		}
+
 		$cuenta->setActiva(false);
 		DAO::transBegin();
         try {
@@ -416,7 +419,7 @@ Update : �Es correcto como se esta manejando el argumento id_sucursal? Ya que 
 		$clasificacion, $es_cuenta_mayor, $es_cuenta_orden, $naturaleza, 
 		$nombre_cuenta, $tipo_cuenta, $id_cuenta_padre = ""
 	) {
-Logger::log("*+++++++************ Boleanos: AU: {$abonos_aumentan} , CU: {$cargos_aumentan} , CM: {$es_cuenta_mayor} , CO: {$es_cuenta_orden}");
+
 		if ($es_cuenta_orden == 1 && $es_cuenta_mayor == 1) {
 			throw new Exception("Una cuenta de Mayor no puede ser de Orden", 901);
 		}
@@ -563,7 +566,7 @@ Logger::log("*+++++++************ Boleanos: AU: {$abonos_aumentan} , CU: {$cargo
 		if (is_null($cuenta)) {
 			throw new Exception("La cuenta con id " . $id_cuenta_contable . " no existe", 901);
 		}
-		return object_to_array($cuenta);;
+		return object_to_array($cuenta);
 	}
 
   }
