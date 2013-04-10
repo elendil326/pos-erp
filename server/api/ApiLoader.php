@@ -1,5 +1,6 @@
 <?php 
 
+
   class ApiSesionIniciar extends ApiHandler {
   
 
@@ -122,10 +123,12 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"activa" => new ApiExposedProperty("activa", false, GET, array( "bool" )),
-			"limit" => new ApiExposedProperty("limit", false, GET, array( "string" )),
-			"query" => new ApiExposedProperty("query", false, GET, array( "string" )),
-			"start" => new ApiExposedProperty("start", false, GET, array( "string" )),
+			"activa" => new ApiExposedProperty("activa", false, POST, array( "bool" )),
+			"limit" => new ApiExposedProperty("limit", false, POST, array( "string" )),
+			"order" => new ApiExposedProperty("order", false, POST, array( "string" )),
+			"order_by" => new ApiExposedProperty("order_by", false, POST, array( "string" )),
+			"query" => new ApiExposedProperty("query", false, POST, array( "string" )),
+			"start" => new ApiExposedProperty("start", false, POST, array( "string" )),
 		);
 	}
 
@@ -134,10 +137,12 @@
  		$this->response = EmpresasController::Buscar( 
  			
 			
-			isset($_GET['activa'] ) ? $_GET['activa'] :  false ,
-			isset($_GET['limit'] ) ? $_GET['limit'] :  null,
-			isset($_GET['query'] ) ? $_GET['query'] :  null,
-			isset($_GET['start'] ) ? $_GET['start'] :  null
+			isset($_POST['activa'] ) ? $_POST['activa'] :  false ,
+			isset($_POST['limit'] ) ? $_POST['limit'] :  null,
+			isset($_POST['order'] ) ? $_POST['order'] :  null,
+			isset($_POST['order_by'] ) ? $_POST['order_by'] :  null,
+			isset($_POST['query'] ) ? $_POST['query'] :  null,
+			isset($_POST['start'] ) ? $_POST['start'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -160,14 +165,15 @@
 			"id_moneda" => new ApiExposedProperty("id_moneda", true, POST, array( "int" )),
 			"razon_social" => new ApiExposedProperty("razon_social", true, POST, array( "string" )),
 			"rfc" => new ApiExposedProperty("rfc", true, POST, array( "string" )),
-			"cedula" => new ApiExposedProperty("cedula", false, POST, array( "string" )),
+			"cuentas_bancarias" => new ApiExposedProperty("cuentas_bancarias", false, POST, array( "json" )),
+			"direccion_web" => new ApiExposedProperty("direccion_web", false, POST, array( "string" )),
+			"duplicar" => new ApiExposedProperty("duplicar", false, POST, array( "bool" )),
 			"email" => new ApiExposedProperty("email", false, POST, array( "string" )),
 			"impuestos_compra" => new ApiExposedProperty("impuestos_compra", false, POST, array( "json" )),
 			"impuestos_venta" => new ApiExposedProperty("impuestos_venta", false, POST, array( "json" )),
-			"logo" => new ApiExposedProperty("logo", false, POST, array( "string" )),
+			"mensaje_morosos" => new ApiExposedProperty("mensaje_morosos", false, POST, array( "string" )),
 			"representante_legal" => new ApiExposedProperty("representante_legal", false, POST, array( "string" )),
-			"sucursales" => new ApiExposedProperty("sucursales", false, POST, array( "json" )),
-			"texto_extra" => new ApiExposedProperty("texto_extra", false, POST, array( "string" )),
+			"uri_logo" => new ApiExposedProperty("uri_logo", false, POST, array( "string" )),
 		);
 	}
 
@@ -180,14 +186,15 @@
 			isset($_POST['id_moneda'] ) ? $_POST['id_moneda'] : null,
 			isset($_POST['razon_social'] ) ? $_POST['razon_social'] : null,
 			isset($_POST['rfc'] ) ? $_POST['rfc'] : null,
-			isset($_POST['cedula'] ) ? $_POST['cedula'] :  null,
+			isset($_POST['cuentas_bancarias'] ) ? json_decode($_POST['cuentas_bancarias']) : null,
+			isset($_POST['direccion_web'] ) ? $_POST['direccion_web'] :  null,
+			isset($_POST['duplicar'] ) ? $_POST['duplicar'] :  false ,
 			isset($_POST['email'] ) ? $_POST['email'] :  null,
 			isset($_POST['impuestos_compra'] ) ? json_decode($_POST['impuestos_compra']) : null,
 			isset($_POST['impuestos_venta'] ) ? json_decode($_POST['impuestos_venta']) : null,
-			isset($_POST['logo'] ) ? $_POST['logo'] :  null,
+			isset($_POST['mensaje_morosos'] ) ? $_POST['mensaje_morosos'] :  null,
 			isset($_POST['representante_legal'] ) ? $_POST['representante_legal'] :  null,
-			isset($_POST['sucursales'] ) ? json_decode($_POST['sucursales']) : null,
-			isset($_POST['texto_extra'] ) ? $_POST['texto_extra'] :  null
+			isset($_POST['uri_logo'] ) ? $_POST['uri_logo'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -235,18 +242,18 @@
 	{
 		$this->request = array(	
 			"id_empresa" => new ApiExposedProperty("id_empresa", true, POST, array( "int" )),
-			"cedula" => new ApiExposedProperty("cedula", false, POST, array( "string" )),
+			"cuentas_bancarias" => new ApiExposedProperty("cuentas_bancarias", false, POST, array( "json" )),
 			"direccion" => new ApiExposedProperty("direccion", false, POST, array( "json" )),
 			"direccion_web" => new ApiExposedProperty("direccion_web", false, POST, array( "string" )),
 			"email" => new ApiExposedProperty("email", false, POST, array( "string" )),
 			"id_moneda" => new ApiExposedProperty("id_moneda", false, POST, array( "string" )),
+			"impuestos_compra" => new ApiExposedProperty("impuestos_compra", false, POST, array( "json" )),
 			"impuestos_venta" => new ApiExposedProperty("impuestos_venta", false, POST, array( "json" )),
-			"impuesto_compra" => new ApiExposedProperty("impuesto_compra", false, POST, array( "json" )),
-			"logo" => new ApiExposedProperty("logo", false, POST, array( "string" )),
+			"mensaje_morosos" => new ApiExposedProperty("mensaje_morosos", false, POST, array( "string" )),
 			"razon_social" => new ApiExposedProperty("razon_social", false, POST, array( "string" )),
 			"representante_legal" => new ApiExposedProperty("representante_legal", false, POST, array( "string" )),
 			"rfc" => new ApiExposedProperty("rfc", false, POST, array( "string" )),
-			"texto_extra" => new ApiExposedProperty("texto_extra", false, POST, array( "string" )),
+			"uri_logo" => new ApiExposedProperty("uri_logo", false, POST, array( "string" )),
 		);
 	}
 
@@ -256,18 +263,46 @@
  			
 			
 			isset($_POST['id_empresa'] ) ? $_POST['id_empresa'] : null,
-			isset($_POST['cedula'] ) ? $_POST['cedula'] :  null,
+			isset($_POST['cuentas_bancarias'] ) ? json_decode($_POST['cuentas_bancarias']) : null,
 			isset($_POST['direccion'] ) ? json_decode($_POST['direccion']) : null,
 			isset($_POST['direccion_web'] ) ? $_POST['direccion_web'] :  null,
 			isset($_POST['email'] ) ? $_POST['email'] :  null,
 			isset($_POST['id_moneda'] ) ? $_POST['id_moneda'] :  "0",
+			isset($_POST['impuestos_compra'] ) ? json_decode($_POST['impuestos_compra']) : null,
 			isset($_POST['impuestos_venta'] ) ? json_decode($_POST['impuestos_venta']) : null,
-			isset($_POST['impuesto_compra'] ) ? json_decode($_POST['impuesto_compra']) : null,
-			isset($_POST['logo'] ) ? $_POST['logo'] :  null,
+			isset($_POST['mensaje_morosos'] ) ? $_POST['mensaje_morosos'] :  null,
 			isset($_POST['razon_social'] ) ? $_POST['razon_social'] :  null,
 			isset($_POST['representante_legal'] ) ? $_POST['representante_legal'] :  null,
 			isset($_POST['rfc'] ) ? $_POST['rfc'] :  null,
-			isset($_POST['texto_extra'] ) ? $_POST['texto_extra'] :  null
+			isset($_POST['uri_logo'] ) ? $_POST['uri_logo'] :  null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiEmpresaDetalles extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"id_empresa" => new ApiExposedProperty("id_empresa", true, POST, array( "int" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = EmpresasController::Detalles( 
+ 			
+			
+			isset($_POST['id_empresa'] ) ? $_POST['id_empresa'] : null
 			
 			);
 		}catch(Exception $e){
