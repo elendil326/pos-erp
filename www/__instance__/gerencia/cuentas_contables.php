@@ -23,10 +23,19 @@
 				"naturaleza"					=> "Naturaleza",
 				"clasificacion"					=> "Clasificacion",
 				"es_cuenta_mayor"				=> "Cuenta Mayor",
-				"es_cuenta_orden"				=> "Cuenta de Orden"
+				"es_cuenta_orden"				=> "Cuenta de Orden",
+				"afectable"						=> "Afectable"
 			),
 			$lista["resultados"]
 		);
+
+		function funcion_bool_to_string($valor){
+			return ($valor===true || $valor==="1" || $valor===1) ? "Si" : "No";
+        }
+
+        $tabla->addColRender("es_cuenta_orden", "funcion_bool_to_string");
+        $tabla->addColRender("es_cuenta_mayor", "funcion_bool_to_string");
+        $tabla->addColRender("afectable", "funcion_bool_to_string");
 
 		$tabla->convertToExtJs(false);
  		$tabla->addOnClick( "id_cuenta_contable", "(function(a){ window.location = 'cuentas_contables.ver.php?cid=' + a; })" );

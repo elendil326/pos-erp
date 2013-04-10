@@ -25,7 +25,7 @@
 
 	
 	$form->addApiCall( "api/contabilidad/cuenta/nueva" );
-        $form->onApiCallSuccessRedirect("cuentas_contables.nueva.php");
+    $form->onApiCallSuccessRedirect("cuentas_contables.nueva.php");
 
     $form->createComboBoxJoin("naturaleza", "naturaleza", 
                         array(
@@ -88,10 +88,16 @@ $form->makeObligatory(array(
 		));
 
 	$ctas = ContabilidadController::BuscarCuenta();
-	$form->createComboBoxJoin( "id_cuenta_padre", "nombre_cuenta", $ctas["resultados"] );
+
+    $cuentas = array();
+    //para enviar el id de cuenta contable en el combo de id_cuenta_padre se debe hacer este foreach
+    foreach ($ctas["resultados"] as $cta) {
+        array_push($cuentas,array("id"=>$cta->getIdCuentaContable(),"caption"=>$cta->getNombreCuenta()));
+    }
+    //se llena el combo con los ids cambiados para que no se envien los id_cuenta_padre si no el id de la cuenta
+	$form->createComboBoxJoin( "id_cuenta_padre", "nombre_cuenta", $cuentas );
 	
 	$page->addComponent( $form );
 
-
 	//render the page
-		$page->render();
+	$page->render();
