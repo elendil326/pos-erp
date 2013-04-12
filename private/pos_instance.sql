@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 09-04-2013 a las 14:48:44
+-- Tiempo de generación: 11-04-2013 a las 22:38:53
 -- Versión del servidor: 5.5.29
 -- Versión de PHP: 5.4.6-1ubuntu1.2
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Base de datos: `pos_instance_114`
+-- Base de datos: `pos_instance_116`
 --
 
 -- --------------------------------------------------------
@@ -138,7 +138,7 @@ CREATE TABLE IF NOT EXISTS `almacen` (
   KEY `id_tipo_almacen` (`id_tipo_almacen`),
   KEY `almacen_ibfk_1` (`id_sucursal`),
   KEY `almacen_ibfk_2` (`id_empresa`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -508,7 +508,7 @@ CREATE TABLE IF NOT EXISTS `compra` (
   `tipo_de_pago` enum('cheque','tarjeta','efectivo') DEFAULT NULL COMMENT 'Si la compra fue pagada con tarjeta, cheque o efectivo',
   `retencion` float NOT NULL COMMENT 'Monto de retencion',
   PRIMARY KEY (`id_compra`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -594,6 +594,18 @@ CREATE TABLE IF NOT EXISTS `configuracion` (
   `fecha` int(11) NOT NULL COMMENT 'fecha de la ultima modificaciÃ³n, descrita en formato UNIX ',
   PRIMARY KEY (`id_configuracion`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Almacena las configuraciones bÃ¡sicas del sistema' AUTO_INCREMENT=2 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `configuracion_empresa`
+--
+
+CREATE TABLE IF NOT EXISTS `configuracion_empresa` (
+  `id_configuracion` int(11) NOT NULL,
+  `id_empresa` int(11) NOT NULL,
+  PRIMARY KEY (`id_configuracion`,`id_empresa`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -748,7 +760,7 @@ CREATE TABLE IF NOT EXISTS `direccion` (
   `id_usuario_ultima_modificacion` int(11) NOT NULL COMMENT 'quien fue el usuario que modifico este registro la ultima vez',
   PRIMARY KEY (`id_direccion`),
   KEY `id_ciudad` (`id_ciudad`,`id_usuario_ultima_modificacion`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
 
 -- --------------------------------------------------------
 
@@ -830,7 +842,7 @@ CREATE TABLE IF NOT EXISTS `empresa` (
   `cedula` varchar(100) CHARACTER SET armscii8 DEFAULT NULL,
   `id_logo` int(11) NOT NULL,
   PRIMARY KEY (`id_empresa`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='tabla de empresas' AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='tabla de empresas' AUTO_INCREMENT=7 ;
 
 -- --------------------------------------------------------
 
@@ -943,7 +955,7 @@ CREATE TABLE IF NOT EXISTS `impuesto` (
   `descripcion` varchar(255) DEFAULT NULL COMMENT 'Descripcion larga del impuesto',
   `activo` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Determina si estÃ¡ activo el impuesto',
   PRIMARY KEY (`id_impuesto`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1136,7 +1148,7 @@ CREATE TABLE IF NOT EXISTS `lote` (
   `id_usuario` int(11) NOT NULL COMMENT 'Id del usuario que creo el lote',
   `folio` varchar(32) DEFAULT NULL,
   PRIMARY KEY (`id_lote`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Manejo de lotes' AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Manejo de lotes' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1152,7 +1164,7 @@ CREATE TABLE IF NOT EXISTS `lote_entrada` (
   `fecha_registro` int(11) NOT NULL COMMENT 'Fecha en que se registra el movimiento',
   `motivo` varchar(255) DEFAULT NULL COMMENT 'motivo por le cual entra producto al almacen',
   PRIMARY KEY (`id_lote_entrada`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Registro de entradas de un lote' AUTO_INCREMENT=12 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Registro de entradas de un lote' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1180,7 +1192,7 @@ CREATE TABLE IF NOT EXISTS `lote_producto` (
   `cantidad` float NOT NULL COMMENT 'cantidad de producto',
   `id_unidad` int(11) NOT NULL,
   PRIMARY KEY (`id_lote`,`id_producto`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='relaciona un producto con un lote' AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='relaciona un producto con un lote' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1260,7 +1272,7 @@ CREATE TABLE IF NOT EXISTS `orden_de_servicio` (
   `precio` float NOT NULL COMMENT 'El precio de esta orden de servicio',
   `extra_params` text COMMENT 'Un json con valores extra que se necesitan llenar',
   PRIMARY KEY (`id_orden_de_servicio`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1411,7 +1423,7 @@ CREATE TABLE IF NOT EXISTS `producto` (
   `precio` float DEFAULT NULL COMMENT 'El precio fijo del producto',
   `id_unidad_compra` int(11) DEFAULT NULL COMMENT 'Id de la unidad de compra del producto',
   PRIMARY KEY (`id_producto`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1871 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1675,7 +1687,7 @@ CREATE TABLE IF NOT EXISTS `seguimiento_de_servicio` (
   `estado` varchar(255) DEFAULT NULL COMMENT 'Estado en la que se encuentra la orden',
   `fecha_seguimiento` int(11) NOT NULL COMMENT 'Fecha en la que se realizo el seguimiento',
   PRIMARY KEY (`id_seguimiento_de_servicio`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1698,7 +1710,7 @@ CREATE TABLE IF NOT EXISTS `servicio` (
   `precio` float DEFAULT NULL COMMENT 'El precio fijo del servicio',
   `extra_params` text COMMENT 'Un json con valores extra que se necesitan llenar',
   PRIMARY KEY (`id_servicio`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1752,7 +1764,7 @@ CREATE TABLE IF NOT EXISTS `sesion` (
   PRIMARY KEY (`id_sesion`),
   UNIQUE KEY `id_usuario` (`id_usuario`),
   KEY `auth_token` (`auth_token`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Mantiene un seguimiento de las sesiones activas en el sistem' AUTO_INCREMENT=34 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Mantiene un seguimiento de las sesiones activas en el sistem' AUTO_INCREMENT=4 ;
 
 -- --------------------------------------------------------
 
@@ -1772,7 +1784,7 @@ CREATE TABLE IF NOT EXISTS `sucursal` (
   `activa` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Si esta sucursal esta activa o no',
   `fecha_baja` int(11) DEFAULT NULL COMMENT 'Fecha en que se dio de baja esta sucursal',
   PRIMARY KEY (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='tabla de sucursales' AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='tabla de sucursales' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1942,7 +1954,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `tarifa_venta_obtenida` enum('rol','proveedor','cliente','usuario') NOT NULL COMMENT 'Indica de donde fue obtenida la tarifa de venta',
   `token_recuperacion_pass` varchar(30) CHARACTER SET latin1 DEFAULT NULL COMMENT 'El token que se envia por correo para recuperar contrasena',
   PRIMARY KEY (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='tabla de usuarios' AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='tabla de usuarios' AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
