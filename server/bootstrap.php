@@ -334,7 +334,7 @@
 	 * 
 	 * 
 	 * */
-	SesionController::Limpiar( );
+	// SesionController::Limpiar( );
 	//SesionController::HeartBeat();
 
 	//DAO::predis("db".$rs["instance_id"], "127.0.0.1");

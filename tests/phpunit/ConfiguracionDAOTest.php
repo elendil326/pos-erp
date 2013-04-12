@@ -5,6 +5,7 @@ class ConfiguracionDAOTest extends PHPUnit_Framework_TestCase
 {
     private $configuracion;
     private $registros;
+    private $json;
 
     protected function setUp()
     {
@@ -12,11 +13,12 @@ class ConfiguracionDAOTest extends PHPUnit_Framework_TestCase
         $this->configuracion = new Configuracion(array(
             'descripcion' => 'productos_visibles_en_vc'
         ));
+        $this->json = array("nombre_producto", "descripcion");
     }
 
     private function crearYBuscar()
     {
-        ConfiguracionDAO::GuardarConfigDeVC(true, array(), 1);
+        ConfiguracionDAO::GuardarConfigDeVC(true, 1, $this->json);
         $this->registros = ConfiguracionDAO::search($this->configuracion);
     }
 
@@ -31,7 +33,7 @@ class ConfiguracionDAOTest extends PHPUnit_Framework_TestCase
         $this->crearYBuscar();
         $conf1 = $this->registros[0];
 
-        ConfiguracionDAO::GuardarConfigDeVC(false, array(), 1);
+        ConfiguracionDAO::GuardarConfigDeVC(false, 1, $this->json);
         $this->registros = ConfiguracionDAO::search($this->configuracion);
         $conf2 = $this->registros[0];
 
@@ -47,11 +49,9 @@ class ConfiguracionDAOTest extends PHPUnit_Framework_TestCase
         $this->assertNotNull(json_decode($json));
     }
 
-    public function testPropiedadMostrarEnElJson()
+    public function testPropiedadesMostrarEnElJson()
     {
-        $this->crearYBuscar();
-        $conf = $this->registros[0];
-        $valor = json_decode($conf->getValor());
+        $valor = $this->valor();
         $this->assertObjectHasAttribute('mostrar', $valor);
         $this->assertInternalType('bool', $valor->mostrar);
     }
@@ -63,8 +63,31 @@ class ConfiguracionDAOTest extends PHPUnit_Framework_TestCase
 
     public function testMostrarEsFalse()
     {
-        ConfiguracionDAO::GuardarConfigDeVC(false, array(), 1);
+        ConfiguracionDAO::GuardarConfigDeVC(false, 1, $this->json);
         $this->assertFalse(ConfiguracionDAO::MostrarProductos());
+    }
+
+    /**
+    * @expectedException InvalidArgumentException
+    */
+    public function testCamposInvalidos()
+    {
+        $json = array("invalido");
+        ConfiguracionDAO::GuardarConfigDeVC(true, 1, $json);
+    }
+
+    public function testPropiedadPropiedadesEnElJSON()
+    {
+        $valor = $this->valor();
+        $this->assertObjectHasAttribute('propiedades', $valor);
+        $this->assertInternalType('array', $valor->propiedades);
+    }
+
+    private function valor()
+    {
+        $this->crearYBuscar();
+        $conf = $this->registros[0];
+        return json_decode($conf->getValor());
     }
 
     protected function tearDown()

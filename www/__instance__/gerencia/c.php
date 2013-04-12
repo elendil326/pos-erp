@@ -495,8 +495,39 @@ $html .= "</script>";
 
 // Configuracion de productos en VC
 $form = new FormComponent();
-$form->addField('mostrar', 'Mostrar productos', 'bool', 'mostrar', 'mostrar');
+$form->addField('mostrar', 'Mostrar productos', 'bool', 'mostrar');
+
+$campos = array_keys(get_class_vars('Producto'));
+foreach ($campos as $key => $campo)
+{
+    $caption = ucwords(str_replace("_", " ", $campo));
+    $campos[$key] = array("id" => $campo, "caption" => $caption);
+}
+$form->addField('propiedades', 'Propiedades', 'listbox', $campos, 'propiedades');
+$form->beforeSend('attachPropiedades');
+
 $form->addApiCall('api/pos/configuracion/vistas/clientes');
+
+$html .= <<<EOD
+    <script type='text/javascript' charset='utf-8'>
+        function attachPropiedades(o) {
+            o.propiedades = getParams();
+            console.log(o.propiedades);
+            return o;
+        }
+
+        function getParams() {
+            var options = Ext.DomQuery.jsSelect('select[name=propiedades] > option');
+            var params = new Array();
+            for (var i = 0; i < options.length; i++) {
+                if (options[i].selected) {
+                    params.push(options[i].value);
+                }
+            }
+            return Ext.JSON.encode(params);
+        }
+    </script>
+EOD;
 
 $page->addComponent($html);
 $page->addComponent($form);

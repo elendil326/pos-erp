@@ -22,7 +22,7 @@ class ConfiguracionDAO extends ConfiguracionDAOBase
 {
     private static $descripcion = 'productos_visibles_en_vc';
 
-    public static function GuardarConfigDeVC($mostrar, $propiedades, $id_usuario)
+    public static function GuardarConfigDeVC($mostrar, $id_usuario, $propiedades)
     {
         $configuracion = new Configuracion(array(
             'descripcion' => self::$descripcion
@@ -34,12 +34,17 @@ class ConfiguracionDAO extends ConfiguracionDAOBase
             $configuracion = $configuraciones[0];
         }
 
-        // construir el JSON para el valor
-        $mostrar = $mostrar ? 'true' : 'false';
+        $campos = array_keys(get_class_vars('Producto'));
 
-        $json = '{"mostrar":'.$mostrar.'}';
+        // if propiedades_array NO es subconjunto de campos
+        if (!array_intersect($propiedades, $campos) == $propiedades)
+        {
+            throw new InvalidArgumentException("Conjunto de propiedades inválido");
+        }
 
-        $configuracion->setValor($json);
+        $valor = array("mostrar" => $mostrar, "propiedades" => $propiedades);
+
+        $configuracion->setValor(json_encode($valor));
         $configuracion->setIdUsuario($id_usuario);
         $configuracion->setFecha(time());
         
@@ -66,5 +71,22 @@ class ConfiguracionDAO extends ConfiguracionDAOBase
         }
 
         return true;
+    }
+
+    public static function Propiedades()
+    {
+        $configuracion = new Configuracion(array(
+            'descripcion' => self::$descripcion
+        ));
+
+        $configuraciones = parent::search($configuracion);
+
+        if (count($configuraciones) > 0)
+        {
+            $valor = json_decode($configuraciones[0]->getValor());
+            return $valor->propiedades;
+        }
+
+        return null;
     }
 }

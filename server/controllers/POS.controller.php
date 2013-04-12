@@ -626,7 +626,7 @@ class POSController implements IPOS {
      **/
     public static function ClientesVistasConfiguracion($mostrar, $propiedades = null) {
         $sesion = SesionController::Actual();
-        ConfiguracionDAO::GuardarConfigDeVC($mostrar, null, $sesion['id_usuario']);
+        ConfiguracionDAO::GuardarConfigDeVC($mostrar, $sesion['id_usuario'], $propiedades);
     }
    
     
