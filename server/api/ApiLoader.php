@@ -8680,7 +8680,6 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"archivo_salida" => new ApiExposedProperty("archivo_salida", true, POST, array( "string" )),
 			"datos" => new ApiExposedProperty("datos", true, POST, array( "json" )),
 			"archivo_plantilla" => new ApiExposedProperty("archivo_plantilla", false, POST, array( "string" )),
 			"imagenes" => new ApiExposedProperty("imagenes", false, POST, array( "json" )),
@@ -8692,7 +8691,6 @@
  		$this->response = FormasPreimpresasController::GenerarExcel( 
  			
 			
-			isset($_POST['archivo_salida'] ) ? $_POST['archivo_salida'] : null,
 			isset($_POST['datos'] ) ? json_decode($_POST['datos']) : null,
 			isset($_POST['archivo_plantilla'] ) ? $_POST['archivo_plantilla'] :  "",
 			isset($_POST['imagenes'] ) ? json_decode($_POST['imagenes']) : null

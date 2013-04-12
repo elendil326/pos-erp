@@ -205,10 +205,10 @@
 	*/
 
 	require_once("libs/api/ApiHandler.php");
+                        
 
 
-
-
+                        
 	//convertir configuracion en globales para
 	//que no se pueda modificar
 	define("MAIL", 				$POS_CONFIG["MAIL"]);

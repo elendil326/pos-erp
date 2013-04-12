@@ -1,7 +1,6 @@
 <?php
 
  require_once("../../../server/bootstrap.php");
-
                         $W="";
                         if(sizeof($_FILES)>0)//Si se carga al menos 1 archivo
                         {

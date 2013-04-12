@@ -35,19 +35,15 @@ class FormasPreimpresasController extends ValidacionesController implements IFor
        * */
       public static function GenerarExcel
       (
-      $archivo_salida, $datos, $archivo_plantilla = "", $imagenes = ""
+      $datos, $archivo_plantilla = "", $imagenes = ""
       ) {
 
             try {
-                  if ($archivo_salida == null) {
-                        Logger::error("No se especifico una salida válida");
-                  } else {
-                        $CarpetaSalida = substr($archivo_salida, 0, strlen($archivo_salida) - strlen(strrchr($archivo_salida, "/")) + 1);
-                        if (substr(decoct(fileperms($CarpetaSalida)), 2) != 775) {
-                              chmod($CarpetaSalida, 0775); //Agrega los nuevos permisos
-                        }
-                        $ObjSalida = new PHPExcel(); //Crea el nuevo objeto de saĺida
+                  $CarpetaSalida = POS_PATH_TO_SERVER_ROOT."/../static_content/" . IID . "/temp/";//Carpeta temporal para los archivos de salida
+                  if (substr(decoct(fileperms($CarpetaSalida)), 2) != 775) {//Comprueba los permisos
+                        chmod($CarpetaSalida, 0775); //Agrega los nuevos permisos
                   }
+                  $ObjSalida = new PHPExcel(); //Crea el nuevo objeto de saĺida
                   if ($datos == null) {
                         Logger::error("No hay datos para trabajar"); //Termina la ejecución
                   } else {
@@ -165,7 +161,6 @@ class FormasPreimpresasController extends ValidacionesController implements IFor
                                                 }
                                           }
                                     }
-                                    unset($w);
                                     $ObjSalida->addExternalSheet($HojaPlantilla); //Carga la hoja de la plantilla al nuevo archivo
                                     $ObjSalida->removeSheetByIndex(0);
                               } else {
@@ -203,7 +198,11 @@ class FormasPreimpresasController extends ValidacionesController implements IFor
                         }
                   }
                   $objWriter = PHPExcel_IOFactory::createWriter($ObjSalida, 'Excel2007');
-                  $objWriter->save($archivo_salida); //Crea el objeto de salida
+                  $objWriter->save($CarpetaSalida."excel.xlsx"); //Crea el archivo de salida en la carpeta temporal
+                  $_SESSION["ArchivoDescarga"]="excel.xlsx";//Variable de session para el nombre del archivo
+                  $_SESSION["CabsDescarga"]=array("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                                                                                     "Content-Disposition: attachment;filename=\"Excel.xlsx\"",
+                                                                                     "Cache-Control: max-age=0");//Arreglo de cabeceras para excel
             } catch (Exception $e) {
                   Logger::error("Ha ocurrido un error: $e");
             }
@@ -244,7 +243,6 @@ class FormasPreimpresasController extends ValidacionesController implements IFor
             foreach ($Hoja->getRowIterator() as $Fila) {
                   foreach ($Fila->getCellIterator() as $Columna) {
                         $Valor = $Columna->getValue(); //Carga el valor de las celdas
-                        $Coordenadas = $Columna->getCoordinate(); //Obtiene las coordenadas
                         if (substr($Valor, 0, 1) == "#" && substr($Valor, (strlen($Valor) - 1) == "#", 1)) {//Determina si es una palabra clave
                               array_push($ArregloSalida, substr($Valor, 1,  (strlen($Valor)-2))); //Inserta el valor asociado a sus coordenadas en el arreglo de respuesta
                         }
