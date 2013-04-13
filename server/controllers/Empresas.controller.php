@@ -267,11 +267,39 @@ class EmpresasController implements IEmpresas
         Logger::log("Creando nueva empresa `$razon_social`...");
 
         //verificamos los datos de contabilidad
-        if (empty($contabilidad->id_moneda) || empty($contabilidad->ejercicio) || 
-            empty($contabilidad->periodo_actual) || empty($contabilidad->duracion_periodo)
-        ) {
-            Logger::error("Error : Verifique la información de contabilidad");
-            throw new InvalidDataException("Verifique la información de contabilidad");
+        {
+            //verificamos si se enviaron todos los parametros
+            if (empty($contabilidad->id_moneda) || empty($contabilidad->ejercicio) || 
+                empty($contabilidad->periodo_actual) || empty($contabilidad->duracion_periodo)
+            ) {
+                Logger::error("Error : Verifique la información de contabilidad este completa");
+                throw new InvalidDataException("Verifique la información de contabilidad este completa");
+            }
+
+            //verificamos si se enviaron valores correctos
+            if (!is_numeric($contabilidad->id_moneda) || 
+                !is_numeric($contabilidad->periodo_actual) || !is_numeric($contabilidad->duracion_periodo)
+            ) {
+                Logger::error("Error : Verifique la información de contabilidad sea correcta");
+                throw new InvalidDataException("Verifique la información de contabilidad sea correcta");
+            }
+
+            //validamos decimales
+            if ($contabilidad->id_moneda - ((int) $contabilidad->id_moneda) !== 0 ||
+                $contabilidad->periodo_actual - ((int) $contabilidad->periodo_actual) !== 0 ||
+                $contabilidad->duracion_periodo - ((int) $contabilidad->duracion_periodo) !== 0
+            ) {
+                Logger::error("Error : Verifique la información de contabilidad sea correcta, el id_moneda, periodo_actual y duracion_periodo deben ser valores enteros");
+                throw new InvalidDataException("Error : Verifique la información de contabilidad sea correcta, el id_moneda, periodo_actual y duracion_periodo deben ser valores enteros");
+            }
+
+            if ($contabilidad->duracion_periodo < 1 || 
+                $contabilidad->duracion_periodo === 5 || $contabilidad->duracion_periodo > 6
+            ) {
+                Logger::error("Error : Verifique la duracion de los perodos, solo pueden durar 1, 2, 3, 4 y 6 meses");
+                throw new InvalidDataException("Error : Verifique la duracion de los perodos, solo pueden durar 1, 2, 3, 4 y 6 meses");
+            }
+
         }
 
         //creamos la direccion
@@ -284,20 +312,18 @@ class EmpresasController implements IEmpresas
         } 
 
         $id_direccion = DireccionController::NuevaDireccion(
-            isset($direccion["calle"]) ? $direccion["calle"] : null, 
+            isset($direccion["calle"])           ? $direccion["calle"]           : null, 
             isset($direccion["numero_exterior"]) ? $direccion["numero_exterior"] : null, 
-            isset($d["colonia"]) ? $direccion["colonia"] : null, 
-            isset($direccion["id_ciudad"]) ? $direccion["id_ciudad"] : null, 
-            isset($d["codigo_postal"]) ? $direccion["codigo_postal"] : null, 
+            isset($direccion["colonia"])         ? $direccion["colonia"]         : null, 
+            isset($direccion["id_ciudad"])       ? $direccion["id_ciudad"]       : null, 
+            isset($direccion["codigo_postal"])   ? $direccion["codigo_postal"]   : null, 
             isset($direccion["numero_interior"]) ? $direccion["numero_interior"] : null, 
-            isset($direccion["referencia"]) ? $direccion["referencia"] : null, 
-            isset($direccion["telefono1"]) ? $direccion["telefono1"] : null, 
-            isset($direccion["telefono2"]) ? $direccion["telefono2"] : null
+            isset($direccion["referencia"])      ? $direccion["referencia"]      : null, 
+            isset($direccion["telefono1"])       ? $direccion["telefono1"]       : null, 
+            isset($direccion["telefono2"])       ? $direccion["telefono2"]       : null
         );
 
         DAO::transBegin();
-
-        //establecemos la moneda base
 
         $id_logo = "1";
 
@@ -319,56 +345,106 @@ class EmpresasController implements IEmpresas
             $id_logo = $logo->getIdLogo();
         }
 
-        //Se crea la empresa con los parametros obtenidos.
-        $empresa = new Empresa(array(
-            "id_direccion"        => $id_direccion,
-            "rfc"                 => $rfc,
-            "razon_social"        => trim($razon_social),
-            "representante_legal" => $representante_legal,
-            "fecha_alta"          => time(),
-            "fecha_baja"          => null,
-            "activo"              => true,
-            "direccion_web"       => $direccion_web,
-            "cedula"              => "",
-            "id_logo"             => $id_logo
-        ));
+        //creamos la empresa
+        {
+            //Se crea la empresa con los parametros obtenidos.
+            $empresa = new Empresa(array(
+                "id_direccion"        => $id_direccion,
+                "rfc"                 => $rfc,
+                "razon_social"        => trim($razon_social),
+                "representante_legal" => $representante_legal,
+                "fecha_alta"          => time(),
+                "fecha_baja"          => null,
+                "activo"              => true,
+                "direccion_web"       => $direccion_web,
+                "cedula"              => "",
+                "id_logo"             => $id_logo
+            ));
 
-        //Se busca el rfc en la base de datos. Si hay una empresa activa con el mismo rfc se lanza un error
-        $empresas = EmpresaDAO::search(new Empresa(array(
-            "rfc"    => $rfc,
-            "activo" => 1
-        )));
+            //Se busca el rfc en la base de datos. Si hay una empresa activa con el mismo rfc se lanza un error
+            $empresas = EmpresaDAO::search(new Empresa(array(
+                "rfc"    => $rfc,
+                "activo" => 1
+            )));
 
-        if (!empty($empresas)) {
-            Logger::error("Este rfc ya esta en uso por la empresa activa");
-            throw new InvalidDataException("El rfc: " . $rfc . " ya esta en uso", 901);
+            if (!empty($empresas)) {
+                Logger::error("Este rfc ya esta en uso por la empresa activa");
+                throw new InvalidDataException("El rfc: " . $rfc . " ya esta en uso", 901);
+            }
+
+            /*
+            * Se busca la razon social en la base de datos. 
+            * Si hay una empresa activa con la misma razon zocial se lanza un error. 
+            * Se usa trim para cubrir los casos "caffeina" y "    caffeina    ".
+            */
+            $empresas = EmpresaDAO::search(new Empresa(array(
+                "razon_social" => trim($razon_social),
+                "activo"       => 1
+            )));
+
+            if (!empty($empresas)) {
+                Logger::error("La razon social: " . $razon_social . " ya esta en uso por la empresa: " . $empresas[0]->getIdEmpresa());
+                throw new InvalidDataException("La razon social: " . $razon_social . " ya esta en uso", 901);
+            }
+
+            try {
+                EmpresaDAO::save($empresa);
+            }catch (Exception $e) {
+                DAO::transRollback();
+                Logger::error("No se pudo crear la empresa: " . $e->getMessage());
+                throw new Exception("No se pudo crear la empresa, consulte a su administrador de sistema", 901);
+            }
         }
 
-        //Se busca la razon social en la base de datos. Si hay una empresa activa con la misma razon zocial se lanza un error. Se usa trim para cubrir los casos "caffeina" y "    caffeina    ".
-        $empresas = EmpresaDAO::search(new Empresa(array(
-            "razon_social" => trim($razon_social),
-            "activo"       => 1
-        )));
+        //establecemos la moneda base
+        {
+            //verificamos si la moneda que se esta indicando exista
+            if (!$moneda = MonedaDAO::getByPK($contabilidad->id_moneda)) {
+                DAO::transRollback();
+                Logger::error("Error : No existe la moneda indicada.");
+                throw new InvalidDataException("Error : No existe la moneda indicada.", 901);
+            }
 
-        if (!empty($empresas)) {
-            Logger::error("La razon social: " . $razon_social . " ya esta en uso por la empresa: " . $empresas[0]->getIdEmpresa());
-            throw new InvalidDataException("La razon social: " . $razon_social . " ya esta en uso", 901);
+            //creamos la configuracion de la moneda para esta empresa
+            $moneda_base = new Configuracion(array(
+                "descripcion" => "id_moneda_base",
+                "valor"       => $contabilidad->id_moneda,
+                "id_usuario"  => "",
+                "fecha"       => time()
+            ));
+
+            try {
+                ConfiguracionDAO::save($moneda_base);
+            }catch (Exception $e) {
+                DAO::transRollback();
+                Logger::error("No se pudo crear la configuracion de la moneda base para la empresa: " . $e->getMessage());
+                throw new Exception("No se pudo crear la configuracion de la moneda base para la empresa", 901);
+            }
+
+            //relacionamos la configuracion con la empresa que estamos creando
+            $configuracion_empresa = new ConfiguracionEmpresa(array(
+                "id_configuracion" => $moneda_base->getIdConfiguracion(),
+                "id_empresa"       => $empresa->getIdEmpresa()
+            ));
+
+            try {
+                ConfiguracionEmpresaDAO::save($configuracion_empresa);
+            }catch (Exception $e) {
+                DAO::transRollback();
+                Logger::error("No se pudo crear la relacion entre la moneda base y la empresa: " . $e->getMessage());
+                throw new Exception("No se pudo crear la relacion entre la moneda base y la empresa", 901);
+            }
+
         }
 
-        try {
-            EmpresaDAO::save($empresa);
-        }catch (Exception $e) {
-            DAO::transRollback();
-            Logger::error("No se pudo crear la empresa: " . $e->getMessage());
-            throw new Exception("No se pudo crear la empresa, consulte a su administrador de sistema", 901);
+        //creamos los periodos, ejercicios y la relacion con la empresa
+        {
+            //creamos los periodos necesarios
+
+            //creamos el registro del ejericio
+
+            //relacionamos a la empresa con el ejercicio
         }
-
-        //creamos los periodos necesarios
-
-        //creamos el registro del ejericio
-
-        //relacionamos a la empresa con el ejercicio
-
 
         /*
         * Si se recibieron impuestos se genera un registro impuesto-empresa y 

@@ -1414,4 +1414,31 @@ class InstanciasController {
         return json_encode(array("success"=>"true"));
     }
 
+    /**
+     * desactivarInstanciasPrueba()
+     *
+     * Permite la desactivacion de las instancias que ya estan fuera de los 30 dias de prueba y pone las instancias en status "prospecto"
+     *
+     * @author Juan Manuel Garc&iacute;a Carmona <manuel@caffeina.mx>
+     *
+     **/
+    public static function desactivarInstanciasPrueba()
+    {
+        global $POS_CONFIG;
+        
+        //actualizamos la descripcion
+        $sql = "UPDATE instances SET activa = '0', status = 'prospecto' "
+             . "WHERE status = 'prueba' AND instance_id IN "
+             . "("
+             . "    SELECT instance_id FROM instance_request "
+             . "    WHERE ( date_installed  + ( 30 * 24 * 60 * 60 )  ) >= UNIX_TIMESTAMP( NOW( ) ) AND instance_id <> 'NULL' "
+             . ")";
+
+        try{
+            $POS_CONFIG["CORE_CONN"]->GetRow($sql);
+        } catch (ADODB_Exception $e) {
+            Logger::error("Error en desactivarInstanciasPrueba : " . $e->msg);
+        }
+    }
+
 }
