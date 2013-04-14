@@ -193,8 +193,8 @@ class SesionController implements ISesion{
 		switch($user->getIdRol()) {
 			case 0:
 			case 1:
-			case 2:						
-			case 3:			
+			case 2:
+			case 3:
 			case 4: $next_url = "g/"; break;
 			case 5: $next_url = "c/"; break;
 		}
@@ -202,6 +202,7 @@ class SesionController implements ISesion{
 		return array( 
 				"auth_token" => $nueva_sesion->getAuthToken(), 
 				"login_succesful" => true,
+				"usuario_grupo" => $user->getIdRol(),
 				"siguiente_url" => $next_url
 			);
 	}
