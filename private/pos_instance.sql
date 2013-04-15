@@ -1131,7 +1131,7 @@ CREATE TABLE IF NOT EXISTS `inspeccion_consignacion_producto` (
 
 CREATE TABLE IF NOT EXISTS `logo` (
   `id_logo` int(11) NOT NULL AUTO_INCREMENT,
-  `imagen` varchar(2048) NOT NULL,
+  `imagen` text NOT NULL,
   `tipo` varchar(5) NOT NULL,
   PRIMARY KEY (`id_logo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;

@@ -241,8 +241,10 @@ class EmpresasController implements IEmpresas
     
     /**
      *
-     *Crear una nueva empresa. Por default una nueva empresa no tiene sucursales.
-     *Varios RFC`s pueden repetirse siempre y cuando solo exista una empresa activa.
+     * Crear una nueva empresa. Por default una nueva empresa no tiene sucursales.
+     * Varios RFC`s pueden repetirse siempre y cuando solo exista una empresa activa.
+     *
+     * @author Juan Manuel Garc&iacute;a Carmona <manuel@caffeina.mx>
      *
      * @param contabilidad json JSON donde se describe la moneda que usara como base la empresa, indica la descripción del ejercicio, el periodo inicial y la duración de cada periodo
      * @param direccion json {    "calle": "Francisco I Madero",    "numero_exterior": "1009A",    "numero_interior": 12,     "colonia": "centro",    "codigo_postal": "38000",    "telefono1": "4611223312",    "telefono2": "",       "id_ciudad": 3,    "referencia": "El local naranja"}
@@ -260,11 +262,26 @@ class EmpresasController implements IEmpresas
      * @return id_empresa int El ID autogenerado de la nueva empresa.
      **/
     static function Nuevo($contabilidad, $direccion, $razon_social, $rfc, $cuentas_bancarias = null, 
-        $direccion_web = null, $duplicar =  false , $email = null, $impuestos_compra = "", 
+        $direccion_web = null, $duplicar =  false , $email = null, $impuestos_compra = null, 
         $impuestos_venta = null, $mensaje_morosos = null, $representante_legal = null, $uri_logo = null
     ) {
 
         Logger::log("Creando nueva empresa `$razon_social`...");
+
+        //validamos la estructura de los impuestos
+        {
+            //verificamos los impuestos de compra
+            if ($impuestos_compra !== NULL && !is_array($impuestos_compra)) {
+                Logger::error("Error : Verifique los datos especiicados en los impuestos de compra, debe ser una array no vacio");
+                throw new InvalidDataException("Error : Verifique los datos especiicados en los impuestos de compra, debe ser una array no vacio");
+            }
+
+            //verificamos los impuestos de venta
+            if ($impuestos_venta !== NULL && !is_array($impuestos_venta)) {
+                Logger::error("Error : Verifique los datos especiicados en los impuestos de venta, debe ser una array no vacio");
+                throw new InvalidDataException("Error : Verifique los datos especiicados en los impuestos de venta, debe ser una array no vacio");
+            }
+        }
 
         //verificamos los datos de contabilidad
         {
@@ -303,35 +320,37 @@ class EmpresasController implements IEmpresas
         }
 
         //creamos la direccion
-        if (is_null($direccion)) {
-            throw new InvalidDataException("Missing direccion");
+        {
+            if (is_null($direccion)) {
+                throw new InvalidDataException("Missing direccion");
+            }
+
+            if (!is_array($direccion)) {
+                $direccion = object_to_array($direccion);
+            } 
+
+            $id_direccion = DireccionController::NuevaDireccion(
+                isset($direccion["calle"])           ? $direccion["calle"]           : null, 
+                isset($direccion["numero_exterior"]) ? $direccion["numero_exterior"] : null, 
+                isset($direccion["colonia"])         ? $direccion["colonia"]         : null, 
+                isset($direccion["id_ciudad"])       ? $direccion["id_ciudad"]       : null, 
+                isset($direccion["codigo_postal"])   ? $direccion["codigo_postal"]   : null, 
+                isset($direccion["numero_interior"]) ? $direccion["numero_interior"] : null, 
+                isset($direccion["referencia"])      ? $direccion["referencia"]      : null, 
+                isset($direccion["telefono1"])       ? $direccion["telefono1"]       : null, 
+                isset($direccion["telefono2"])       ? $direccion["telefono2"]       : null
+            );
         }
-
-        if (!is_array($direccion)) {
-            $direccion = object_to_array($direccion);
-        } 
-
-        $id_direccion = DireccionController::NuevaDireccion(
-            isset($direccion["calle"])           ? $direccion["calle"]           : null, 
-            isset($direccion["numero_exterior"]) ? $direccion["numero_exterior"] : null, 
-            isset($direccion["colonia"])         ? $direccion["colonia"]         : null, 
-            isset($direccion["id_ciudad"])       ? $direccion["id_ciudad"]       : null, 
-            isset($direccion["codigo_postal"])   ? $direccion["codigo_postal"]   : null, 
-            isset($direccion["numero_interior"]) ? $direccion["numero_interior"] : null, 
-            isset($direccion["referencia"])      ? $direccion["referencia"]      : null, 
-            isset($direccion["telefono1"])       ? $direccion["telefono1"]       : null, 
-            isset($direccion["telefono2"])       ? $direccion["telefono2"]       : null
-        );
 
         DAO::transBegin();
 
-        $id_logo = "1";
+        $id_logo = "-1";
 
         //verificamos si se ha enviado informacion sobre un logo
         if (!empty($uri_logo)) {
 
             $logo = new Logo(array(
-                "imagen" => $uri_logo
+                "imagen" => urldecode($uri_logo)
             ));
 
             try {
@@ -342,7 +361,7 @@ class EmpresasController implements IEmpresas
                 throw new Exception("No se pudo crear la empresa, consulte a su administrador de sistema", 901);
             }
 
-            $id_logo = $logo->getIdLogo();
+                $id_logo = $logo->getIdLogo();
         }
 
         //creamos la empresa
@@ -440,37 +459,90 @@ class EmpresasController implements IEmpresas
         //creamos los periodos, ejercicios y la relacion con la empresa
         {
             //creamos los periodos necesarios
+            $_p = 1;
 
-            //creamos el registro del ejericio
+            $_periodo = NULL;
+            $_ejercicio = NULL;
+
+            $_mes_inicial = 1;
+            $_mes_final = 1;
+            $_anio = date("Y");
+
+            $_inicio = 0;
+            $_fin = 0;
+
+            for ($i = $contabilidad->duracion_periodo; $i <= 12; $i += $contabilidad->duracion_periodo) {
+                //obtenemos la fecha inicial
+                $_inicio = mktime(0, 0, 0, $_mes_inicial, 1, $_anio);
+
+                //obtenemos la fecha final
+                $_mes_final = $_mes_inicial * $_p;
+                $_fin = mktime(23, 59, 59, $_mes_final, getUltimoDiaDelMes( $_mes_final, $_anio ), $_anio);
+
+                //damos de alta los periodos
+                try {
+                    $_periodo = new Periodo(array(
+                        "periodo" => $_p, 
+                        "inicio" => $_inicio,
+                        "fin" => $_fin
+                    ));
+                    PeriodoDAO::save($_periodo);
+                }catch (Exception $e) {
+                    DAO::transRollback();
+                    Logger::error("Error al crear los periodos : " . $e->getMessage());
+                    throw new Exception("Error al crear los periodos", 901);
+                }
+
+                //damos de alta el ejercicio
+                if ($_p == $contabilidad->periodo_actual) {
+                    try {
+                        $_ejercicio = new Ejercicio(array(
+                            "anio" => $_anio,
+                            "id_periodo" => $_periodo->getIdPeriodo(), 
+                            "inicio" => $_inicio,
+                            "fin" => $_fin,
+                            "vigente" => 1
+                        ));
+                        EjercicioDAO::save($_ejercicio);
+                    }catch (Exception $e) {
+                        DAO::transRollback();
+                        Logger::error("Error al crear el ejercicio : " . $e->getMessage());
+                        throw new Exception("Error al crear el ejercicio", 901);
+                    }
+                }
+
+                $_mes_inicial = $_mes_final + 1;
+                $_p++;
+            }
 
             //relacionamos a la empresa con el ejercicio
-        }
-
-        /*
-        * Si se recibieron impuestos se genera un registro impuesto-empresa y 
-        * se inicializa con el id de esta empresa.
-        * Por cada uno de los impuestos como id impuesto, se verifica que el 
-        * impuesto exista, se asigna al registro y se guarda.
-        */
-        if (!is_null($impuestos_venta)) {
-
-            $impuestos = object_to_array($impuestos_venta);
-
-            if (!is_array($impuestos)) {
-                throw new Exception("El parametro impuestos es invalido", 901);
-            }
-
-            $impuesto_empresa = new ImpuestoEmpresa(array(
-                "id_empresa" => $e->getIdEmpresa()
-            ));
-
-            foreach ($impuestos as $id_impuesto) {
-
-                $impuesto_empresa->setIdImpuesto($id_impuesto);
-
-                ImpuestoEmpresaDAO::save($impuesto_empresa);
+            try {
+                EjercicioEmpresaDAO::save(new EjercicioEmpresa(array(
+                    "id_ejercicio" => $_ejercicio->getIdEjercicio(),
+                    "id_empresa" => $empresa->getIdEmpresa()
+                )));
+            }catch (Exception $e) {
+                DAO::transRollback();
+                Logger::error("Error al relacionar la empresa con el ejercicio: " . $e->getMessage());
+                throw new Exception("Error al relacionar la empresa con el ejercicio", 901);
             }
         }
+
+        //En caso de haber recibido un array de impuestos de compra o venta registramos los impuestos
+        {
+            if (!empty($impuestos_compra)) {
+                for ($i=0; $i < count($impuestos_compra); $i++) { 
+                    //creamos los registros de los impuestos
+                }
+            }
+
+            if (!empty($impuestos_venta)) {
+                for ($i=0; $i < count($impuestos_venta); $i++) { 
+                    //creamos los registros de los impuestos
+                }
+            }
+        }
+
 
         DAO::transEnd();
 
