@@ -5,10 +5,10 @@ $page = new ClienteTabPage();
 $page->addComponent(new TitleComponent("Productos"));
 $page->nextTab("Lista");
 
-// Filtrar las propiedades
 $campos = ConfiguracionDAO::Propiedades();
 $columns = array();
-foreach ($campos as $value) {
+foreach ($campos as $value)
+{
     $columns[$value] = ucwords(str_replace('_', ' ', $value));
 }
 $products = ProductosController::Lista();
@@ -19,6 +19,7 @@ function filter($product)
 }
 
 $table = new TableComponent($columns, array_filter($products, "filter"));
+
 $page->addComponent($table);
 
 $page->render();
