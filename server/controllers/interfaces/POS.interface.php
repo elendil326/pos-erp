@@ -273,6 +273,24 @@
   
 	/**
  	 *
+ 	 *Dada una direccion IP, el path de la empresa y el numero de la lista de precios, obtiene todos los datos de los clientes y los productos de AdminPAQ y los reproduce en el POS.
+ 	 *
+ 	 * @param ip string La direccion IP de su servidor de AdminPAQ.
+ 	 * @param path string El path donde se encuentra el folder de la empresa en el servidor.
+ 	 * @param num_precio int Indica que precio de la lista se usara para los productos en el POS.
+ 	 **/
+  static function AdminpaqImportar
+	(
+		$ip, 
+		$path, 
+		$num_precio =  1 
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
  	 *Este metodo se utiliza para poder enviar un correo electronico a un tercero. 
  	 *
  	 * @param cuerpo string El cuerpo del correo electronico.

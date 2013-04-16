@@ -6033,6 +6033,38 @@
   
   
 
+  class ApiPosImportarAdminpaq extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"ip" => new ApiExposedProperty("ip", true, POST, array( "string" )),
+			"path" => new ApiExposedProperty("path", true, POST, array( "string" )),
+			"num_precio" => new ApiExposedProperty("num_precio", false, POST, array( "int" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = POSController::AdminpaqImportar( 
+ 			
+			
+			isset($_POST['ip'] ) ? $_POST['ip'] : null,
+			isset($_POST['path'] ) ? $_POST['path'] : null,
+			isset($_POST['num_precio'] ) ? $_POST['num_precio'] :  1 
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
   class ApiDocumentoBuscar extends ApiHandler {
   
 

@@ -33,6 +33,18 @@ class POSController implements IPOS {
 
     /**
      *
+     *Dada una direccion IP, el path de la empresa y el numero de la lista de precios, obtiene todos los datos de los clientes y los productos de AdminPAQ y los reproduce en el POS.
+     *
+     * @param ip string La direccion IP de su servidor de AdminPAQ.
+     * @param path string El path donde se encuentra el folder de la empresa en el servidor.
+     * @param num_precio int Indica que precio de la lista se usara para los productos en el POS.
+     **/
+    static function AdminpaqImportar($ip, $path, $num_precio =  1)
+    {
+    }
+
+    /**
+     *
      * Busca en el erp
      *
      * @param query string 
