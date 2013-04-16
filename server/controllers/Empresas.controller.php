@@ -344,7 +344,7 @@ class EmpresasController implements IEmpresas
 
         DAO::transBegin();
 
-        $id_logo = "-1";
+        $id_logo = -1;
 
         //verificamos si se ha enviado informacion sobre un logo
         if (!empty($uri_logo)) {
@@ -542,7 +542,6 @@ class EmpresasController implements IEmpresas
                 }
             }
         }
-
 
         DAO::transEnd();
 

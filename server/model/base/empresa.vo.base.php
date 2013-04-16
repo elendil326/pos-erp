@@ -52,6 +52,9 @@ class Empresa extends VO
 			if( isset($data['cedula']) ){
 				$this->cedula = $data['cedula'];
 			}
+			if( isset($data['id_logo']) ){
+				$this->id_logo = $data['id_logo'];
+			}
 		}
 	}
 
@@ -74,7 +77,8 @@ class Empresa extends VO
 			"fecha_baja" => $this->fecha_baja,
 			"activo" => $this->activo,
 			"direccion_web" => $this->direccion_web,
-			"cedula" => $this->cedula
+			"cedula" => $this->cedula,
+			"id_logo" => $this->id_logo
 		); 
 	return json_encode($vec); 
 	}
@@ -170,6 +174,15 @@ class Empresa extends VO
 	  * @var varchar(100)
 	  */
 	public $cedula;
+
+	/**
+	  * id_logo
+	  * 
+	  *  [Campo no documentado]<br>
+	  * @access public
+	  * @var int(11)
+	  */
+	public $id_logo;
 
 	/**
 	  * getIdEmpresa
@@ -413,6 +426,30 @@ class Empresa extends VO
 	final public function setCedula( $cedula )
 	{
 		$this->cedula = $cedula;
+	}
+
+	/**
+	  * getIdLogo
+	  * 
+	  * Get the <i>id_logo</i> property for this object. Donde <i>id_logo</i> es  [Campo no documentado]
+	  * @return int(11)
+	  */
+	final public function getIdLogo()
+	{
+		return $this->id_logo;
+	}
+
+	/**
+	  * setIdLogo( $id_logo )
+	  * 
+	  * Set the <i>id_logo</i> property for this object. Donde <i>id_logo</i> es  [Campo no documentado].
+	  * Una validacion basica se hara aqui para comprobar que <i>id_logo</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setIdLogo( $id_logo )
+	{
+		$this->id_logo = $id_logo;
 	}
 
 }

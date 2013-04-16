@@ -171,6 +171,11 @@ abstract class EmpresaDAOBase extends DAO
 			array_push( $val, $empresa->getCedula() );
 		}
 
+		if( ! is_null( $empresa->getIdLogo() ) ){
+			$sql .= " `id_logo` = ? AND";
+			array_push( $val, $empresa->getIdLogo() );
+		}
+
 		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
@@ -193,7 +198,7 @@ abstract class EmpresaDAOBase extends DAO
 	  *	
 	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
 	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
-	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
+	  * aqui, sin embargo. El valor de retorno indica cuÃ¡ntas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
@@ -201,7 +206,7 @@ abstract class EmpresaDAOBase extends DAO
 	  **/
 	private static final function update( $empresa )
 	{
-		$sql = "UPDATE empresa SET  `id_direccion` = ?, `rfc` = ?, `razon_social` = ?, `representante_legal` = ?, `fecha_alta` = ?, `fecha_baja` = ?, `activo` = ?, `direccion_web` = ?, `cedula` = ? WHERE  `id_empresa` = ?;";
+		$sql = "UPDATE empresa SET  `id_direccion` = ?, `rfc` = ?, `razon_social` = ?, `representante_legal` = ?, `fecha_alta` = ?, `fecha_baja` = ?, `activo` = ?, `direccion_web` = ?, `cedula` = ?, `id_logo` = ? WHERE  `id_empresa` = ?;";
 		$params = array( 
 			$empresa->getIdDireccion(), 
 			$empresa->getRfc(), 
@@ -212,6 +217,7 @@ abstract class EmpresaDAOBase extends DAO
 			$empresa->getActivo(), 
 			$empresa->getDireccionWeb(), 
 			$empresa->getCedula(), 
+			$empresa->getIdLogo(), 
 			$empresa->getIdEmpresa(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -235,7 +241,7 @@ abstract class EmpresaDAOBase extends DAO
 	  **/
 	private static final function create( &$empresa )
 	{
-		$sql = "INSERT INTO empresa ( `id_empresa`, `id_direccion`, `rfc`, `razon_social`, `representante_legal`, `fecha_alta`, `fecha_baja`, `activo`, `direccion_web`, `cedula` ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO empresa ( `id_empresa`, `id_direccion`, `rfc`, `razon_social`, `representante_legal`, `fecha_alta`, `fecha_baja`, `activo`, `direccion_web`, `cedula`, `id_logo` ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$empresa->getIdEmpresa(), 
 			$empresa->getIdDireccion(), 
@@ -247,6 +253,7 @@ abstract class EmpresaDAOBase extends DAO
 			$empresa->getActivo(), 
 			$empresa->getDireccionWeb(), 
 			$empresa->getCedula(), 
+			$empresa->getIdLogo(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -400,6 +407,17 @@ abstract class EmpresaDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " `cedula` = ? AND"; 
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( ( !is_null (($a = $empresaA->getIdLogo()) ) ) & ( ! is_null ( ($b = $empresaB->getIdLogo()) ) ) ){
+				$sql .= " `id_logo` >= ? AND `id_logo` <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " `id_logo` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
