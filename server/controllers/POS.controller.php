@@ -39,8 +39,49 @@ class POSController implements IPOS {
      * @param path string El path donde se encuentra el folder de la empresa en el servidor.
      * @param num_precio int Indica que precio de la lista se usara para los productos en el POS.
      **/
-    static function AdminpaqImportar($ip, $path, $num_precio =  1)
+    static function AdminpaqImportar($ip, $path, $num_precio =  1) // Ya agregar productos falta filtrar los codigos y eso...
     {
+        $sql = "select * from MGW10005";
+        $url = 'https://'.$ip.':16001/json/AdminPAQProxy/';
+        $request = $url.'?path='.urlencode($path).'&sql='.urlencode($sql);
+
+        $curl = curl_init($request);
+        curl_setopt($curl, CURLOPT_FAILONERROR, true);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        $result = curl_exec($curl);
+        curl_close($curl);
+
+        $productos = json_decode($result, true);
+        foreach ($productos['datos'] as $producto)
+        {
+            try {
+                ProductosController::Nuevo(
+                    true,
+                    $producto['CCODIGOP01'],
+                    true,
+                    $producto['CIDUNIDA01'],
+                    'precio',
+                    $producto['CNOMBREP01'],
+                    false,
+                    null,
+                    $producto['CCONTROL01'],
+                    $producto['CCOSTOES01'],
+                    $producto['CDESCRIP01'],
+                    null,
+                    null,
+                    null,
+                    null,
+                    $producto['CIDUNIDA01'],
+                    null,
+                    $producto['CPRECIO'.$num_precio]
+                );
+            } catch (BusinessLogicException $e) {
+                continue;
+            }
+        }
     }
 
     /**
