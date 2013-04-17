@@ -1,0 +1,52 @@
+
+TABS en vez de espacios
+
+Nada de trailing spaces
+
+
+
+No mas de dos espacios juntos
+
+
+----------------- Estructuras de control/desicion -------------------
+LLave que abre en la misma linea
+Bien:
+	if (x) {
+		//codigo
+	}
+
+Mal:
+	if (x)
+	{
+		//codigo
+	}
+
+
+
+Un espacio despues de if,while, for, switch
+Bien:
+	for (;;) {
+		//loop infinito
+	}
+
+Mal:
+	for(;;){
+		//loop infinito
+	}
+
+
+
+----------------- Comentarios -------------------
+
+Comentarios en su propia linea
+Bien:
+	// Asignemos el numero de meses
+	$a = 4;
+
+Mal:
+	$a = 5; // Asignamos los meses
+
+
+
+
+
