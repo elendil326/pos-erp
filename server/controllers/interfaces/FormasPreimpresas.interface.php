@@ -29,6 +29,20 @@
   
 	/**
  	 *
+ 	 *Crea un archivo de Excel descargable a partir de un id de documento
+ 	 *
+ 	 * @param id_documento string 
+ 	 **/
+  static function Generar2Excel
+	(
+		$id_documento
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
  	 *Esta funcionalidad permite leer las palabras clave de un archivo (Plantilla) y las devuelve en forma de arreglo
  	 *
  	 * @param archivo_plantilla string Indica el archivo que se va a leer
