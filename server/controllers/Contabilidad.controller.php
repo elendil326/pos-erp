@@ -190,8 +190,9 @@ Update : �Es correcto como se esta manejando el argumento id_sucursal? Ya que 
 		if ($tipo_cuenta!="") {
 			$cuenta_buscar->setTipoCuenta($tipo_cuenta);
 		}
+		$cuenta_buscar->setActiva(1);
 
-		$cuentas = CuentaContableDAO::search($cuenta_buscar);//Logger::log("search() ---------------------->: ".print_r($cuentas,true));Logger::log(" <--------------------");
+		$cuentas = CuentaContableDAO::search($cuenta_buscar, "`clave`", "ASC");
 		return array("resultados" => $cuentas);
 	}
 	
@@ -232,7 +233,7 @@ Update : �Es correcto como se esta manejando el argumento id_sucursal? Ya que 
 			throw new Exception("No se puede editar una cuenta que tiene subcuentas. ", 901);
 		}
 
-		if ($editar_cuenta->getNivel()==1) {
+		if ($editar_cuenta->getNivel()==1 && count($subctas["resultados"])>0) {
 			throw new Exception("Una cuenta de Mayor nivel 1 que es por default no se puede editar", 901);
 		}
 
