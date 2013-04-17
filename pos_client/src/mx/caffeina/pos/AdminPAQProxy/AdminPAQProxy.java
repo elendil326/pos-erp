@@ -865,7 +865,7 @@ class WriteClientes {
                 fichero = new FileWriter("C:\\Caffeina\\Files\\CteProv.txt");
                 pw = new PrintWriter(fichero);
 
-                System.out.println("aux = " + aux);
+                //System.out.println("aux = " + aux);
 
                 while (aux != null) {
                     System.out.println("aux = " + aux);
