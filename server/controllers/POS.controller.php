@@ -33,30 +33,18 @@ class POSController implements IPOS {
 
     /**
      *
-     *Dada una direccion IP, el path de la empresa y el numero de la lista de precios, obtiene todos los datos de los clientes y los productos de AdminPAQ y los reproduce en el POS.
+     * Dada una direccion IP, el path de la empresa y el numero de la lista de precios, obtiene todos los datos de los clientes y los productos de AdminPAQ y los reproduce en el POS.
      *
      * @param ip string La direccion IP de su servidor de AdminPAQ.
      * @param path string El path donde se encuentra el folder de la empresa en el servidor.
      * @param num_precio int Indica que precio de la lista se usara para los productos en el POS.
      **/
-    static function AdminpaqImportar($ip, $path, $num_precio =  1) // Ya agregar productos falta filtrar los codigos y eso...
-    {
-        $sql = "select * from MGW10005";
+    static function AdminpaqImportar($ip, $path, $num_precio =  1) {
         $url = 'https://'.$ip.':16001/json/AdminPAQProxy/';
-        $request = $url.'?path='.urlencode($path).'&sql='.urlencode($sql);
+        $request = $url.'?path='.urlencode($path).'&sql=';
 
-        $curl = curl_init($request);
-        curl_setopt($curl, CURLOPT_FAILONERROR, true);
-        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        $result = curl_exec($curl);
-        curl_close($curl);
-
-        $productos = json_decode($result, true);
-        foreach ($productos['datos'] as $producto)
-        {
+        $productos = self::GetRegistros($request, 'MGW10005');
+        foreach ($productos['datos'] as $producto) {
             try {
                 ProductosController::Nuevo(
                     true,
@@ -82,6 +70,54 @@ class POSController implements IPOS {
                 continue;
             }
         }
+
+        $clientes = self::GetRegistros($request, 'MGW10002');
+        foreach ($clientes['datos'] as $cliente) {
+        	if ($cliente['CTIPOCLI01'] == 3)
+        		continue;
+        	try {
+        		ClientesController::Nuevo(
+	        		$cliente['CRAZONSO01'],
+	        		null,
+	        		$cliente['CCODIGOC01'],
+	        		null,
+	        		$cliente['CCURP'],
+	        		$cliente['CDENCOME01'],
+	        		"0",
+	        		null,
+	        		$cliente['CEMAIL1'],
+	        		null,
+	        		null,
+	        		1,
+	        		null,
+	        		null,
+	        		$cliente['CLIMITEC01'],
+	        		null,
+	        		$cliente['CREPLEGAL'],
+	        		$cliente['CRFC']
+        		);
+        	} catch (BusinessLogicException $e) {
+        		continue;
+        	}
+        }
+    }
+
+    /**
+     * Hace curl al url espcificado y devuelve un json con los resgistros
+     * recuperados de la tabla que se le pase.
+     **/
+    private static function GetRegistros($url, $tabla) {
+    	$sql = "select * from " . $tabla;
+    	$request = $url . urlencode($sql);
+    	$curl = curl_init($request);
+        curl_setopt($curl, CURLOPT_FAILONERROR, true);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        $result = curl_exec($curl);
+        curl_close($curl);
+        return json_decode($result, true);
     }
 
     /**
