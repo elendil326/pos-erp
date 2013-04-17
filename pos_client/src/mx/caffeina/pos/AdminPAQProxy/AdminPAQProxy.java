@@ -868,7 +868,7 @@ class WriteClientes {
                 //System.out.println("aux = " + aux);
 
                 while (aux != null) {
-                    System.out.println("aux = " + aux);
+                    //System.out.println("aux = " + aux);
                     pw.println(aux);
                     aux = br.readLine();
                 }                    
