@@ -250,4 +250,7 @@ class FormasPreimpresasController extends ValidacionesController implements IFor
             }
             return array("resultados" => $ArregloSalida); //Devuelve el arreglo procesado
       }
+      public static function Generar2Excel($id_documento) {
+            
+      }
 }
