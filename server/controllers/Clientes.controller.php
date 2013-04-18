@@ -345,19 +345,27 @@ require_once("interfaces/Clientes.interface.php");
         $telefono_personal2 = null
 	)
 	{
-            
-            
+
             //Se toma la sucursal actual para asignarsela al cliente
             $actual = SesionController::Actual();
-            
+
             if(is_null($clasificacion_cliente)){
                 $clasificacion_cliente = 1;
             }
-            
+
+			$res = UsuarioDAO::search(new Usuario( 
+									array(
+										"codigo_usuario" => $codigo_cliente
+								)));
+
+			if (sizeof($res) >= 1) {
+				throw new InvalidDataException("El codigo de cliente ya esta en uso");
+			}
+
             //se crea la cliente utilizando el metodo Nuevo usuario, este se encarga de la validacion
             //y se toma como rol de cliente el 5
 
-            if(strlen($rfc) == 0){
+			if(strlen($rfc) == 0){
 				$rfc = null;
 			}
 
@@ -421,10 +429,14 @@ require_once("interfaces/Clientes.interface.php");
 								null,
 								$telefono_personal1,
 								$telefono_personal2);
-                
 
 				ExtraParamsValoresDAO::setVals("clientes", $extra_params, $cliente["id_usuario"]);
+				
+				$clienteObj = UsuarioDAO::getByPK($cliente["id_usuario"]);
+				$clienteObj->setCodigoUsuario( $codigo_cliente );
+				UsuarioDAO::save($clienteObj);
 
+				//guardar el codigo cliente
 			} catch(Exception $e) {
 				Logger::error($e->getMessage());
 				throw new InvalidDataException($e->getMessage());
