@@ -16,7 +16,15 @@ class InstanciasController {
     {
         Logger::log("======== NUEVA INSTANCIA =============");
 
-        if (is_null($instance_token)) {
+        if (!empty($instance_token)) {
+            //quitamos espacios en los extremos y entre palabras
+            $instance_token = str_replace(" ", "_", trim($instance_token));
+
+            if (strlen($instance_token) === 0) {
+                Logger::warn("se mando crear una nueva instancia con un token vacio, se mandara crear nuevamente con un token aleatorio");
+                return self::Nueva(dechex(time()), $descripcion);
+            }
+        } else {
             return self::Nueva(dechex(time()), $descripcion);
         }
 

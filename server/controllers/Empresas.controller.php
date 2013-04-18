@@ -179,10 +179,7 @@ class EmpresasController implements IEmpresas
         $r = EmpresaDAO::search($e);
         //Logger::debug("--");
         
-        return array(
-            "resultados" => $r,
-            "numero_de_resultados" => sizeof($r)
-        );
+        return $r;
     }
     
     /**
