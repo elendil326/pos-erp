@@ -1,5 +1,14 @@
 <?php
 
+if (!function_exists('curl_init')) {
+  throw new Exception('SDK needs the CURL PHP extension.');
+}
+
+if (!function_exists('json_decode')) {
+  throw new Exception('SDK needs the JSON PHP extension.');
+}
+
+
 Class PosErp{
     private static $singleton_obj;
     private $waiting;
@@ -8,10 +17,24 @@ Class PosErp{
     private $incoming_login_results;
     private $at;
 
+  /**
+   *
+   *  Default options for curl.
+   *
+   *
+   */
+	public static $CURL_OPTS = array(
+			CURLOPT_CONNECTTIMEOUT => 10,
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_TIMEOUT        => 60,
+			CURLOPT_USERAGENT      => 'caffeina-sdk-php-0.1',
+		);
+
+
     private function __construct($i_token){
         $this->waiting = false;
         $this->instance_token = $i_token;
-        $this->url = "http://www.caffeina.mx/pos/";
+        $this->url = "http://pos-nightly.labs2.caffeina.mx/pos/";
         $this->incoming_login_results = false;
         $this->at = null;
     }
@@ -29,68 +52,7 @@ Class PosErp{
             }
             self::$singleton_obj = new PosErp($i_token);
         }
-        return self::$singleton_obj;  
-    }
-
-    private function postRequest($url, $data, $referer='') {
-        // Convert the data array into URL Parameters like a=b&foo=bar etc.
-        $data = http_build_query($data);
-
-        // parse the given URL
-        $url = parse_url($url);
-
-        if ($url['scheme'] != 'http') { 
-            die('Error: Only HTTP request are supported !');
-        }
-
-        // extract host and path:
-        $host = $url['host'];
-        $path = $url['path'];
-
-        // open a socket connection on port 80 - timeout: 30 sec
-        $fp = fsockopen($host, 80, $errno, $errstr, 30);
-
-        if ($fp){
-            // send the request headers:
-            fputs($fp, "POST $path HTTP/1.1\r\n");
-            fputs($fp, "Host: $host\r\n");
-
-            if ($referer != '')
-                fputs($fp, "Referer: $referer\r\n");
-
-            fputs($fp, "Content-type: application/x-www-form-urlencoded\r\n");
-            fputs($fp, "Content-length: ". strlen($data) ."\r\n");
-            fputs($fp, "Connection: close\r\n\r\n");
-            fputs($fp, $data);
-
-            $result = ''; 
-            while(!feof($fp)) {
-                // receive the results of the request
-                $result .= fgets($fp, 128);
-            }
-        }
-        else { 
-            return array(
-                'status' => 'err', 
-                'error' => "$errstr ($errno)"
-            );
-        }
-
-        // close the socket connection:
-        fclose($fp);
-
-        // split the result header from the content
-        $result = explode("\r\n\r\n", $result, 2);
-
-        $header = isset($result[0]) ? $result[0] : '';
-        $content = isset($result[1]) ? $result[1] : '';
-
-        // return as structured array:
-        return array(
-            'status' => 'ok',
-            'header' => $header,
-            'content' => $content
-        );
+        return self::$singleton_obj;
     }
 
     private function BeforeCall( $api_name, $toSendParams ){
@@ -114,44 +76,61 @@ Class PosErp{
         return $toSendParams;
     }
 
-    private function AfterCall( $result ){
-        //decode json
-        $response = json_decode($result);
+	private function AfterCall( $result ){
+		//decode json
+		$response = json_decode($result);
 
-        if($this->incoming_login_results){
-            if($response->login_succesful){
-                $this->at = $response->auth_token;
-            }
-        }
+		//login sucessful reponse may be missing if not all of the
+		//params were sent
+		if($this->incoming_login_results && isset($response->login_succesful)){
+			if(!is_null($response) && $response->login_succesful){
+				$this->at = $response->auth_token;
+			}
+		}
 
-        $this->incoming_login_results = false;
-        return $response;
+		$this->incoming_login_results = false;
+		return $response;
     }
 
-    private function ApiCall($method, $address, $params ){
-        $params = $this->BeforeCall($address, $params );
+	private function req($method, $url, $params, $ch = null){
+		if(!$ch){
+			$ch = curl_init();
+		}
 
-        if(is_null($this->instance_token)){
-            throw new Exception("You have not supplied any instance token", 1);
-        }
+		$opts = self::$CURL_OPTS;
+		if($method == "POST"){
+			$opts[CURLOPT_POST] = 1;
+			$opts[CURLOPT_POSTFIELDS] = http_build_query($params, null, '&');
+		} else {
+			$opts[CURLOPT_HTTPGET] = true;
+		}
+		$opts[CURLOPT_URL] = $url;
 
-        //$this->BeforeCall();
+		// disable the 'Expect: 100-continue' behaviour. This causes CURL to wait
+		// for 2 seconds if the server does not support this header.
+		if (isset($opts[CURLOPT_HTTPHEADER])) {
+			$existing_headers = $opts[CURLOPT_HTTPHEADER];
+			$existing_headers[] = 'Expect:';
+			$opts[CURLOPT_HTTPHEADER] = $existing_headers;
+		} else {
+			$opts[CURLOPT_HTTPHEADER] = array('Expect:');
+		}
 
-        if($method === "POST"){
-           $r = $this->postRequest($this->url .  $this->instance_token . "/" . $address , $params );
-            return $this->AfterCall( $r['content'] );
+		curl_setopt_array($ch, $opts);
+		$result = curl_exec($ch);
 
-        }else if($method === "GET"){
-            //convert params to ?x=y& format
-           $params = http_build_query($params);
-           $r = file_get_contents($this->url .  $this->instance_token . "/" . $address . "/?" . $params);
-           return $this->AfterCall( $r );
+		return $result;
+	}
 
+	private function ApiCall($method, $address, $params ){
+		$params = $this->BeforeCall($address, $params );
 
-        }else{
-            throw new Exception("Http methdos must be POST or GET", 1);
+		if(is_null($this->instance_token)){
+			throw new Exception("You have not supplied any instance token", 1);
+		}
 
-        }
+		$r = $this->req($method, $this->url .  $this->instance_token . "/" . $address, $params);
+		return $this->AfterCall( $r );
     }
 
     public function POST($api_name, $parameters){
