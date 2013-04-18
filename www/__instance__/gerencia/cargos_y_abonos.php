@@ -94,7 +94,7 @@
 	$form->makeObligatory( array( "fecha_del_gasto", "monto", "id_empresa", "id_concepto_gasto" ) );
 
 	//this should be post
-	$form->addApiCall("api/cargosyabonos/gasto/nuevo", "GET");
+	$form->addApiCall("api/cargosyabonos/gasto/nuevo", "POST");
 	$form->onApiCallSuccess("window.location.reload");
 
 	$form->setCaption("id_empresa", "Empresa");
