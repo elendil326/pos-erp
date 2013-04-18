@@ -423,19 +423,13 @@ require_once("interfaces/Clientes.interface.php");
 								$telefono_personal2);
                 
 
-                ExtraParamsValoresDAO::setVals("clientes", $extra_params, $cliente["id_usuario"]);
+				ExtraParamsValoresDAO::setVals("clientes", $extra_params, $cliente["id_usuario"]);
 
-            }
-            catch(Exception $e)
-            {
-                Logger::error($e->getMessage());
+			} catch(Exception $e) {
+				Logger::error($e->getMessage());
+				throw new InvalidDataException($e->getMessage());
+			}
 
-                throw new Exception("No se pudo crear al cliente, consulte a su administrador de sistema");
-            }
-            
-
-
-            
             /*
                 if(!is_null($email)){
 
