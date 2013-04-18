@@ -29,7 +29,7 @@
 					Logger::log("xxxxx algo salio mal con la instancia xxxxxxx");
 					break;
 				}
-				echo "<script>(alert('dd');)()</script>";
+
 				//todo salio bien...
 				header("Location: instancias.ver.php?id=" . $N_I_ID);
 			break;
