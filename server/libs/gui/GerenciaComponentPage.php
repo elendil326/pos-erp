@@ -32,7 +32,7 @@ class GerenciaComponentPage extends PosComponentPage{
 		        	"children":[
 		        		{
 		        			"title" : "Cuentas",
-		        			"url" : "cuentas_contables.php"
+		        			"url" : "contabilidad.cuentas.php"
 		        		}
 		        	]
 		        },
