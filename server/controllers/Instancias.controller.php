@@ -1413,12 +1413,13 @@ class InstanciasController {
         $sql = "UPDATE instance_request SET instance_id = ? WHERE instance_id = ?";
 
         try {
+            Logger::log("Actualizando tabla instance_request para elimnar relaciones con instances");
             $POS_CONFIG["CORE_CONN"]->GetRow($sql, array(NULL, $instance_id));
         } catch (ADODB_Exception $e) {
-            Logger::error($e->msg);
-            return null;
+            Logger::warn($e->msg);
         }
 
+        Logger::log("Se ha elimiando correctamente la instancia {$instance_id}");
         return json_encode(array("success"=>"true"));
     }
 
