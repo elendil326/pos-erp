@@ -4,31 +4,15 @@
 
     require_once("../../server/bootstrap.php");
 
+    $response = null;
+
     function dispatcher()
     {
-        switch($_GET["action"]){
+        global $response;
+
+        switch ($_GET["action"]) {
             case "mod":
                 $response = json_decode(InstanciasController::Editar($_GET["id"], $_GET["activa"], $_GET["descripcion"], $_GET["token"], $_GET["status"]));
-
-                if ($response->success === "false") {
-                    ?>
-                        <script>
-                         (function(){
-                            alert("<?php echo $response->reason;?>");
-                         })();
-                        </script>
-                    <?php
-                }else{
-?>
-                        <script>
-                         (function(){
-                            alert("Cambios realizados correctamente");
-                            location.href="instancias.ver.php?id=<?php echo $_GET['id'];?>";
-                         })();
-                        </script>
-                    <?php
-                }
-
                 break;
             default :
                 return;
@@ -94,5 +78,24 @@
     </script>
 
 <?php
+    //var_dump($response);
+    if (isset($response) && $response->success === "false") {
+?>
+        <script>
+            (function(){
+                alert("<?php echo $response->reason;?>");
+            })();
+        </script>
+<?php
+    } elseif (isset($response) && $response->success === "true") {
+?>
+        <script>
+            (function(){
+                alert("Cambios realizados correctamente");
+                location.href="instancias.ver.php?id=<?php echo $_GET['id'];?>";
+            })();
+        </script>
+<?php
+    }
 
     $p->render();
