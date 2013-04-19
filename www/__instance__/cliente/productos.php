@@ -1,18 +1,28 @@
 <?php
 require_once("../../../server/bootstrap.php");
 
-$page = new ClienteTabPage();
+$page = new ClienteComponentPage();
 $page->addComponent(new TitleComponent("Productos"));
-$page->nextTab("Lista");
 
+// sacar las propiedades indicadas
 $campos = ConfiguracionDAO::Propiedades();
 $columns = array();
-foreach ($campos as $value) {
-    $columns[$value] = ucwords(str_replace('_', ' ', $value));
+foreach ($campos as $key => $value) {
+	if ($value == "foto_del_producto") {
+		unset($campos[$key]);
+	} else {
+    	$columns[$value] = ucwords(str_replace('_', ' ', $value));
+    }
 }
 
+// sacar los productos correspondientes
+function filter($product)
+{
+    return $product->getVisibleEnVc();
+}
 $products = array_filter(ProductosController::Lista(), "filter");
 
+// dar formato a los campos como corresponda
 foreach ($products as $product) {
 	$product->setPrecio(FormatMoney($product->getPrecio()));
 	$product->setCostoEstandar(FormatMoney($product->getCostoEstandar()));
@@ -33,11 +43,6 @@ foreach ($products as $product) {
 	if (!is_null($unidad)) {
 		$product->setIdUnidad($unidad->getDescripcion());
 	}
-}
-
-function filter($product)
-{
-    return $product->getVisibleEnVc();
 }
 
 $table = new TableComponent($columns, $products);
