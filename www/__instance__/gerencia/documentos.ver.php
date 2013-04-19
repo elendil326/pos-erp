@@ -4,7 +4,7 @@
 
 	require_once("../../../server/bootstrap.php");
 
-	if( isset($_GET["preview"]) && isset($_GET["d"]) ) {
+        	if( isset($_GET["preview"]) && isset($_GET["d"]) ) {
 		ImpresionesController::Documento($_GET["d"], true);
 		exit;
 	}
@@ -103,8 +103,8 @@
 	  *
 	  **/
 	$page->nextTab("VistaPrevia");
-
-
+                        $DescargaExcel="<input type='button'  class='POS Boton' onclick=\"location.href='../api/formas/excel/generar2?id_documento=" .  $_GET["d"] . "'\" value='Descargar como excel'></input>";//Botón de descarga de excel
+                        $page->addComponent($DescargaExcel);
 
 
 	/*

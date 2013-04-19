@@ -39,25 +39,23 @@ class FormasPreimpresasController extends ValidacionesController implements IFor
       ) {
 
             try {
-                  $CarpetaSalida = POS_PATH_TO_SERVER_ROOT."/../static_content/" . IID . "/temp/";//Carpeta temporal para los archivos de salida
+                  /*$CarpetaSalida = POS_PATH_TO_SERVER_ROOT."/../static_content/" . IID . "/temp/";//Carpeta temporal para los archivos de salida
                   if (substr(decoct(fileperms($CarpetaSalida)), 2) != 775) {//Comprueba los permisos
                         chmod($CarpetaSalida, 0775); //Agrega los nuevos permisos
-                  }
+                  }*/
                   $ObjSalida = new PHPExcel(); //Crea el nuevo objeto de saĺida
                   if ($datos == null) {
                         Logger::error("No hay datos para trabajar"); //Termina la ejecución
                   } else {
                         $Datos = $datos; //Carga los datos con los que va a trabajar
-                        //$Datos=(array)$Datos;//Hace un cast de la variable para evitar errores
                   }
-
-                  if ($archivo_plantilla == null || $archivo_plantilla == "") {//Si no se especifica una plantilla
+                  if ($archivo_plantilla == null || $archivo_plantilla === "") {//Si no se especifica una plantilla
                         $itCol = 0;
                         $itFil = 0;
                         foreach ($Datos as $key => $value) {
                               if (substr($key, 0, 1) != "#" && substr($key, (strlen($key) - 1) != "#", 1)) {//Determina si NO es una palabra clave
                                     if (is_object($value) == true) {//Si el elemento que se obtiene es un objeto (incluye formato)
-                                          $Pos = SeparaColFil($key);
+                                          $Pos = FormasPreimpresasController::SeparaColFil($key);
                                           foreach ($value as $nKey => $Filas) {
                                                 if (is_array($Filas)) {//Si hay un arreglo con las columnas para esa fila
                                                       foreach ($Filas as $Columnas) {//Itera entre todas las columnas contenidas en el array
@@ -82,13 +80,13 @@ class FormasPreimpresasController extends ValidacionesController implements IFor
                                                 foreach ($value as $Valinter) {//itera entre todas las filas recibidas del arreglo
                                                       if (is_Array($Valinter)) {
                                                             foreach ($Valinter as $ValInterCol) {
-                                                                  $Pos = (SeparaColFil($key));
+                                                                  $Pos = (FormasPreimpresasController::SeparaColFil($key));
                                                                   $ObjSalida->getActiveSheet()->getCellByColumnAndRow(($Pos->Col + $ItCol), ($Pos->Fil + $ItFil))->setValue($ValInterCol);
                                                                   $ItCol++;
                                                             }
                                                             $ItCol = 0;
                                                       } else {
-                                                            $Pos = (SeparaColFil($key));
+                                                            $Pos = (FormasPreimpresasController::SeparaColFil($key));
                                                             $ObjSalida->getActiveSheet()->getCellByColumnAndRow($Pos->Col + $ItCol, $Pos->Fil)->setValue($Valinter);
                                                             $ItCol++;
                                                       }
@@ -198,11 +196,8 @@ class FormasPreimpresasController extends ValidacionesController implements IFor
                         }
                   }
                   $objWriter = PHPExcel_IOFactory::createWriter($ObjSalida, 'Excel2007');
-                  $objWriter->save($CarpetaSalida."excel.xlsx"); //Crea el archivo de salida en la carpeta temporal
-                  $_SESSION["ArchivoDescarga"]="excel.xlsx";//Variable de session para el nombre del archivo
-                  $_SESSION["CabsDescarga"]=array("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                                                                                     "Content-Disposition: attachment;filename=\"Excel.xlsx\"",
-                                                                                     "Cache-Control: max-age=0");//Arreglo de cabeceras para excel
+                  //$objWriter->save("/var/www/excel.xlsx"); //Crea el archivo de salida en la carpeta temporal
+                  return $objWriter;//Regresa el objeto de escritura
             } catch (Exception $e) {
                   Logger::error("Ha ocurrido un error: $e");
             }
@@ -251,6 +246,25 @@ class FormasPreimpresasController extends ValidacionesController implements IFor
             return array("resultados" => $ArregloSalida); //Devuelve el arreglo procesado
       }
       public static function Generar2Excel($id_documento) {
+            
+            $DescDoc = DocumentoDAO::getDocumentWithValues($id_documento);//Descarga de documento
+            $DescDoc=  array_reverse($DescDoc);
+            $Valores=array();
+            $i=0;
+            //FALTA AGREGAR COMPATIBILIDAD PARA LEER LAS PALABRAS CLAVE DEL FORMATO DE DOCUMENTO, PARA ESO SE HA DE AGREGAR UN NUEVO CAMPO QUE LO ASOCIE CON 
+            //LA PLANTILLA PARA, EN LUGAR DE OCUPAR LAS COORDENADAS Ax, QUE SE UTILICEN LAS PALABRAS CLAVE COMO REFERENCIA PARA PONER LOS VALORES
+            foreach($DescDoc as $parms)
+            {
+                  $i++;
+                  $Valores["A$i"]= array($parms["descripcion"]);
+                  $i++;
+                  $Valores["A$i"]= array($parms["val"]);
+            }
+            header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");//Cabeceras de salida
+            header("Content-Disposition: attachment;filename=\"Excel.xlsx\"");
+            header("Cache-Control: max-age=0");
+            $Salida = FormasPreimpresasController::GenerarExcel($Valores);
+            $Salida->save("php://output");
             
       }
 }
