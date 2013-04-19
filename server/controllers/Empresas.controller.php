@@ -151,9 +151,11 @@ class EmpresasController implements IEmpresas
     
     
     /**
+     * Buscar($activa, $limit, $order, $order_by, $query, $start)
      *
-     *Mostrar? todas la empresas en el sistema. Por default no se mostraran las empresas ni sucursales inactivas. 
+     * Mostrar todas la empresas en el sistema. Por default no se mostraran las empresas ni sucursales inactivas. 
      *
+     * @author Alan Gonzalez Hernandez<alan@caffeina.mx>, Juan Manuel Garc&iacute;a Carmona <manuel@caffeina.mx>
      * @param activa bool Verdadero para mostrar solo las empresas activas. En caso de false, se mostraran ambas.
      * @param limit string Indica hasta que registro se desea obtener a partir del conjunto de resultados productos de la bsqueda.
      * @param order string Indica si se ordenan los registros de manera Ascendente ASC, o descendente DESC.
@@ -166,20 +168,44 @@ class EmpresasController implements IEmpresas
     public static function Buscar($activa = false, $limit = null, $order = null, $order_by = null, $query = null, $start = null)
     {
         Logger::log("Listando empresas ...");
-        //Si activa no es obtenida, se regresan todas las empresas.
-        
-        //Se listan las empresas con el valor de activa obtenido
-        $e = new Empresa();
-        
-        if ($activa) {
-            $e->setActivo(true);
+
+        if ($activa !== NULL && is_bool($activa) === false) {
+            Logger::error("Buscar() verifique el valor especificado en activa, se esperaba boolean, se encontro : (" . gettype($activa) . ") {$activa}");
+            return array("success" => false, "reason" => "Buscar() verifique el valor especificado en activa, se esperaba boolean, se encontro : (" . gettype($activa) . ") {$activa}");
         }
-        
-        //Logger::debug("--");
-        $r = EmpresaDAO::search($e);
-        //Logger::debug("--");
-        
-        return $r;
+
+        if ($order !== NULL && !($order === "ASC" || $order === "DESC")) {
+            Logger::error("Buscar() verifique el valor especificado en order, se esperaba ASC || DESC, se encontro : (" . gettype($order) . ") {$order}");
+            return array("success" => false, "reason" => "Buscar() verifique el valor especificado en order, se esperaba ASC || DESC, se encontro : (" . gettype($order) . ") {$order}");
+        }
+
+        if ($order_by === NULL) {
+            $order_by = "razon_social";
+        }
+
+        if ($limit !== NULL && !(is_numeric($limit) && $limit >= 0)) {
+            Logger::error("Buscar() verifique el valor especificado en limit, se esperaba un int >= 0, se encontro : (" . gettype($limit) . ") {$limit}");
+            return array("success" => false, "reason" => "Buscar() verifique el valor especificado en limit, se esperaba un int >= 0, se encontro : (" . gettype($limit) . ") {$limit}");
+        }
+
+        if ($start !== NULL && !(is_numeric($start) && $start >= 0)) {
+            Logger::error("Buscar() verifique el valor especificado en start, se esperaba un int >= 0, se encontro : (" . gettype($start) . ") {$start}");
+            return array("success" => false, "reason" =>"Buscar() verifique el valor especificado en start, se esperaba un int >= 0, se encontro : (" . gettype($start) . ") {$start}");
+        }
+
+        if ($start !== NULL && $limit === NULL) {
+            Logger::error("Buscar() esta especificando un valor de start, pero no especifica un limit, solo el valor limit se puede usar sin start.");
+            return array("success" => false, "reason" => "Buscar() esta especificando un valor de start, pero no especifica un limit, solo el valor limit se puede usar sin start.");
+        }
+
+        if (!($start === NULL && $limit === NULL) && ($start > $limit)) {
+            Logger::error("Buscar() el valor de start debe ser <= que el valor de limit, se encontro start = {$start}, limit = {$limit}");
+            return array("success" => false, "reason" => "Buscar() el valor de start debe ser <= que el valor de limit, se encontro start = {$start}, limit = {$limit}");
+        }
+
+        $empresas = EmpresaDAO::buscar($activa, $limit, $order, $order_by, $query, $start);
+
+        return array("success" => true, "numero_de_resulatos" => count($empresas), "resultados" => $empresas);
     }
     
     /**

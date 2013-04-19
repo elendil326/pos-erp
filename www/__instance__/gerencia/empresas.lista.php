@@ -8,13 +8,15 @@
 
     $page->addComponent(new TitleComponent("Empresas"));
 
+    $lista_empresas = EmpresasController::Buscar();
+
     $tabla = new TableComponent(array(
         "razon_social"=> "Razon Social",
         "rfc"=> "RFC",
-        "representante_legal"=> "Representante Legal",
+        "fecha_alta" => "Fecha Alta",
         "activo"=> "Activa"
         ),
-        EmpresasController::Buscar()
+        $lista_empresas["resultados"]
     );
 
     $tabla->addColRender("activo", "funcion_activa");
