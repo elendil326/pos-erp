@@ -155,7 +155,7 @@ class EmpresasController implements IEmpresas
      *
      * Mostrar todas la empresas en el sistema. Por default no se mostraran las empresas ni sucursales inactivas. 
      *
-     * @author Alan Gonzalez Hernandez<alan@caffeina.mx>, Juan Manuel Garc&iacute;a Carmona <manuel@caffeina.mx>
+     * @author Juan Manuel Garc&iacute;a Carmona <manuel@caffeina.mx>
      * @param activa bool Verdadero para mostrar solo las empresas activas. En caso de false, se mostraran ambas.
      * @param limit string Indica hasta que registro se desea obtener a partir del conjunto de resultados productos de la bsqueda.
      * @param order string Indica si se ordenan los registros de manera Ascendente ASC, o descendente DESC.

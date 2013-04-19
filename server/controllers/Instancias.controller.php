@@ -1167,7 +1167,7 @@ class InstanciasController {
         Logger::log("encontre el token para id=" . $res["id_request"]);
 
         if (!is_null($res["date_validated"])) {
-            Logger::log("este ya fue validado");
+            Logger::warn("este ya fue validado");
             return array("success" => false, "reason" => "Esta llave de solicitud ya ha sido creada. Para acceder a ella haga click <a href=\"http://pos2.labs2.caffeina.mx/front_ends/" . $token . "/\">aqui</a>.");
         }
 
@@ -1221,7 +1221,7 @@ class InstanciasController {
             $instance = self::BuscarPorId($intance_id);
 
             if (empty($instance)) {
-                Logger::warn("La instancia que desea modificar no existe!!");
+                Logger::error("La instancia que desea modificar no existe!!");
                 return json_encode(array("success"=>"false", "reason"=>"La instancia que desea modificar no existe!!"));
             }
         }
@@ -1234,7 +1234,7 @@ class InstanciasController {
                 $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql);
 
                 if (empty($res)) {
-                    Logger::warn("Error, no se puede reactivar la instancia ya que la instalacion de pos_instance ha sido eliminada");
+                    Logger::error("Error, no se puede reactivar la instancia ya que la instalacion de pos_instance ha sido eliminada");
                     return json_encode(array("success"=>"false", "reason"=>"Error, no se puede reactivar la instancia ya que la instalacion de pos_instance ha sido eliminada"));
                 }
 
@@ -1243,7 +1243,7 @@ class InstanciasController {
                 $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql, array($activa, $intance_id));
 
                 if (!empty($res)) {
-                    Logger::warn("Error al reactivar la instancia");
+                    Logger::error("Error al reactivar la instancia");
                     return json_encode(array("success"=>"false", "reason"=>"Error al reactivar la instancia"));
                 }
                 //la instancia se reactivo correctamente (quitar este return si se desea modificar otros parametros)
@@ -1260,7 +1260,7 @@ class InstanciasController {
             $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql, array($status, $intance_id));
 
             if (!empty($res)) {
-                Logger::warn("Error al modificar el status");
+                Logger::error("Error al modificar el status");
                 return json_encode(array("success"=>"false", "reason"=>"Error al modificar el status"));
             }
         }
@@ -1271,7 +1271,7 @@ class InstanciasController {
             $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql, array($descripcion, $intance_id));
 
             if (!empty($res)) {
-                Logger::warn("Error al modificar la descripcion");
+                Logger::error("Error al modificar la descripcion");
                 return json_encode(array("success"=>"false", "reason"=>"Error al modificar la descripcion"));
             }
         }
@@ -1282,7 +1282,7 @@ class InstanciasController {
             $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql, array($token, $intance_id));
 
             if (!empty($res)) {
-                Logger::warn("Error al modificar el token, otra instancia ya cuenta con ese token");
+                Logger::error("Error al modificar el token, otra instancia ya cuenta con ese token");
                 return json_encode(array("success"=>"false", "reason"=>"Error al modificar el token, otra instancia ya cuenta con ese token"));
             }
         }
@@ -1293,7 +1293,7 @@ class InstanciasController {
             $token = trim($token);
 
             if (strlen($token) < 5) {
-                Logger::warn("Error al modificar el token, el tamaño de la cadena debe de ser de al menos 5 caracteres alfanuméricos");
+                Logger::error("Error al modificar el token, el tamaño de la cadena debe de ser de al menos 5 caracteres alfanuméricos");
                 return json_encode(array("success"=>"false", "reason"=>"Error al modificar el token, el tamaño de la cadena debe de ser de al menos 5 caracteres alfanuméricos"));
             }
 
@@ -1302,7 +1302,7 @@ class InstanciasController {
             $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql, array($token, $intance_id));
 
             if (!empty($res)) {
-                Logger::warn("Error al modificar el token");
+                Logger::error("Error al modificar el token");
                 return json_encode(array("success"=>"false", "reason"=>"Error al modificar el token"));
             }
 
@@ -1316,7 +1316,7 @@ class InstanciasController {
                 $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql, array($token,$intance_id));
 
                 if (!empty($res)) {
-                    Logger::warn("Error al modificar el token del request");
+                    Logger::error("Error al modificar el token del request");
                     return json_encode(array("success"=>"false", "reason"=>"Error al modificar el token del request"));
                 }
             }
@@ -1328,7 +1328,7 @@ class InstanciasController {
             $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql, array($activa, $intance_id));
 
             if (!empty($res)) {
-                Logger::warn("Error al desactivar la instancia");
+                Logger::error("Error al desactivar la instancia");
                 return json_encode(array("success"=>"false", "reason"=>"Error al desactivar la instancia"));
             }
         }
@@ -1350,7 +1350,7 @@ class InstanciasController {
         global $POS_CONFIG;
 
         if($instance_id === NULL){
-            Logger::warn("Error, debe especificar el id de una instancia a eliminar");
+            Logger::error("Error, debe especificar el id de una instancia a eliminar");
             return json_encode(array("success"=>"false", "reason"=>"Error, debe especificar el id de una instancia a eliminar"));
         }
 
@@ -1362,7 +1362,7 @@ class InstanciasController {
             $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql);
 
             if (empty($res)) {
-                Logger::warn("Error, no se puede eliminar la BD pos_instance asociada ya que la instalacion ha previamente sido eliminada o no se ha realizado ninguna instalaci&oacute;n");
+                Logger::error("No se puede eliminar la BD pos_instance asociada ya que la instalacion ha previamente sido eliminada o no se ha realizado ninguna instalaci&oacute;n");
                 return json_encode(array("success"=>"false", "reason"=>"Error, no se puede eliminar la BD pos_instance asociada ya que la instalacion ha previamente sido eliminada o no se ha realizado ninguna instalaci&oacute;n"));
             }
         }
@@ -1404,7 +1404,7 @@ class InstanciasController {
             $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql, array($instance_id));
 
             if (!empty($res)) {
-                Logger::warn("Error al desactivar la instancia");
+                Logger::error("Error al desactivar la instancia");
                 return json_encode(array("success"=>"false", "reason"=>"Error al desactivar la instancia"));
             }
         }
