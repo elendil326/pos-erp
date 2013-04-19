@@ -496,7 +496,7 @@ foreach ($campos as $key => $campo)
     $caption = ucwords(str_replace("_", " ", $campo));
     $campos[$key] = array("id" => $campo, "caption" => $caption);
 }
-$form->addField('propiedades', 'Propiedades', 'listbox', $campos, 'propiedades');
+$form->addField('propiedades', 'Propiedades *', 'listbox', $campos, 'propiedades');
 $form->beforeSend('attachPropiedades');
 
 $form->addApiCall('api/pos/configuracion/vistas/clientes');
@@ -524,6 +524,7 @@ EOD;
 
 $page->addComponent($html);
 $page->addComponent($form);
+$page->addComponent("* Limite su seleccion a un m&aacute;ximo de siete propiedades, por favor");
 
 //---------------------------------------------------------
 
