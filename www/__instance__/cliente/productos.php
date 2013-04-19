@@ -19,6 +19,7 @@ function filter($product)
 }
 
 $table = new TableComponent($columns, array_filter($products, "filter"));
+$table->addOnClick("id_producto", "(function(a) {window.location = 'productos.ver.php?pid=' + a;})");
 
 $page->addComponent($table);
 

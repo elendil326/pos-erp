@@ -96,7 +96,7 @@ class POSController implements IPOS {
 	        		$cliente['CREPLEGAL'],
 	        		$cliente['CRFC']
         		);
-        	} catch (BusinessLogicException $e) {
+        	} catch (Exception $e) {
         		continue;
         	}
         }
