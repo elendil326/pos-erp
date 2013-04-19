@@ -9,7 +9,7 @@
 		$page->addComponent(new TitleComponent("Catalogo de Cuentas", 2));
 
 
-		$page->addComponent( "<div class='POS Boton' onClick='window.location=\"cuentas_contables.nueva.php\"'>Nueva Cuenta</div> " );
+		$page->addComponent( "<div class='POS Boton' onClick='window.location=\"contabilidad.cuentas.nueva.php\"'>Nueva Cuenta</div> " );
 
 		$lista = ContabilidadController::BuscarCuenta();
 
@@ -38,7 +38,7 @@
         $tabla->addColRender("afectable", "funcion_bool_to_string");
 
 		$tabla->convertToExtJs(false);
- 		$tabla->addOnClick( "id_cuenta_contable", "(function(a){ window.location = 'cuentas_contables.ver.php?cid=' + a; })" );
+ 		$tabla->addOnClick( "id_cuenta_contable", "(function(a){ window.location = 'contabilidad.cuentas.ver.php?cid=' + a; })" );
 
 		$page->addComponent( $tabla );
 

@@ -25,7 +25,7 @@
 
 	
 	$form->addApiCall( "api/contabilidad/cuenta/nueva" );
-    $form->onApiCallSuccessRedirect("cuentas_contables.nueva.php");
+    $form->onApiCallSuccessRedirect("contabilidad.cuentas.nueva.php");
 
     $form->createComboBoxJoin("naturaleza", "naturaleza", 
                         array(

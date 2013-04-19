@@ -1,67 +1,24 @@
-<?php 
+<?php
 
 	define("BYPASS_INSTANCE_CHECK", false);
 
-	require_once("../../../server/bootstrap.php");
+	require_once("../../../server//bootstrap.php");
 
-	$page = new GerenciaComponentPage();
+	$page = new GerenciaTabPage();
 
-
-	
-	//
-	// Requerir parametros
-	//
+	// Parametros necesarios
+	// 
 	$controller = new ContabilidadController();
 	$page->requireParam(  "cid", "GET", "Esta empresa no existe." );
 	
 	$cuenta = $controller::DetalleCuenta( $_GET["cid"] );
 	$cuentas = $controller::BuscarCuenta();
-	// Titulo de la pagina
-	// 
-	$page->addComponent( new TitleComponent( "Detalles de la cuenta: " . $cuenta["nombre_cuenta"] , 2 ));
+
+	//titulos
+	$page->addComponent(new TitleComponent("Editando cuenta " . $cuenta["nombre_cuenta"], 2));
 
 
-	//
-	// Menu de opciones
-	// 
-	if($cuenta["activa"]=== true || $cuenta["activa"]=== 1 || $cuenta["activa"]=== "1"){
-		
-		$menu = new MenuComponent();
-
-		$menu->addItem("Editar", "cuentas_contables.editar.php?cid=" . $cuenta["id_cuenta_contable"]);
-
-		$btn_eliminar = new MenuItem("Eliminar esta cuenta", null);
-		$btn_eliminar->addApiCall("api/contabilidad/cuenta/eliminar", "POST");
-		$btn_eliminar->onApiCallSuccessRedirect("cuentas_contables.php");
-		$btn_eliminar->addName("eliminar");
-
-		$funcion_eliminar = " function eliminar_cuenta(btn){".
-		"if(btn == 'yes')".
-		"{".
-		"var p = {};".
-		"p.id_cuenta_contable = ".$_GET["cid"].";".
-		"sendToApi_eliminar(p);".
-		"}".
-		"}".
-		"      ".
-		"function confirmar(){".
-		" Ext.MessageBox.confirmar('Desactivar', 'Desea eliminar esta cuenta?', eliminar_cuenta );".
-		"}";
-
-		$btn_eliminar->addOnClick("confirmar", $funcion_eliminar);
-
-		$menu->addMenuItem($btn_eliminar);
-
-		$page->addComponent( $menu);
-	}
-		
-	//
-	// Forma de producto
-	// 
 	$form = new DAOFormComponent(CuentaContableDAO::getByPK( $_GET["cid"]));
-	
-
-	$form->setEditable(false);
 
 	$form->hideField( array( 
 						"id_cuenta_contable",
@@ -72,6 +29,7 @@
 						"activa",
 						"clasificacion"
 		 ));
+	$form->sendHidden("id_cuenta_contable");
 
 	$form->createComboBoxJoin("cargos_aumentan", "cargos_aumentan", 
                         array(
@@ -105,19 +63,6 @@
     //se llena el combo con los ids cambiados para que no se envien los id_cuenta_padre si no el id de la cuenta
 	$form->createComboBoxJoin( "id_cuenta_padre", "nombre_cuenta", $cuentas_p,$cuenta["id_cuenta_padre"] );
 
-	$form->createComboBoxJoin("clasificacion", "clasificacion", 
-                        array(
-                            array( "id" => "Activo Circulante", "caption" => "Activo Circulante" ),
-                            array( "id" => "Activo Fijo", "caption" => "Activo Fijo"  ),
-                            array( "id" => "Activo Diferido", "caption" => "Activo Diferido"  ),
-                            array( "id" => "Pasivo Circulante", "caption" => "Pasivo Circulante"  ),
-                            array( "id" => "Pasivo Largo Plazo", "caption" => "Pasivo Largo Plazo"  ),
-                            array( "id" => "Capital Contable", "caption" => "Capital Contable"  ),
-                            array( "id" => "Ingresos", "caption" => "Ingresos"  ),
-                            array( "id" => "Egresos", "caption" => "Egresos"  ),
-                            ), $cuenta["clasificacion"]
-                        );
-
 	$form->createComboBoxJoin("tipo_cuenta", "tipo_cuenta", 
                         array(
                             array( "id" => "Balance", "caption" => "Balance" ),
@@ -131,6 +76,9 @@
                             array( "id" => "Deudora", "caption" => "Deudora"  )
                             ),$cuenta["naturaleza"]
                         );
+
+	$form->addApiCall("api/contabilidad/cuenta/editar", "POST");
+	$form->onApiCallSuccessRedirect("contabilidad.cuentas.php");
 
 	$page->addComponent( $form );
 	$page->render();
