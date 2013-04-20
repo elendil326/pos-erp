@@ -141,6 +141,11 @@ abstract class ExtraParamsEstructuraDAOBase extends DAO
 			array_push( $val, $extra_params_estructura->getTipo() );
 		}
 
+		if( ! is_null( $extra_params_estructura->getEnum() ) ){
+			$sql .= " `enum` = ? AND";
+			array_push( $val, $extra_params_estructura->getEnum() );
+		}
+
 		if( ! is_null( $extra_params_estructura->getLongitud() ) ){
 			$sql .= " `longitud` = ? AND";
 			array_push( $val, $extra_params_estructura->getLongitud() );
@@ -191,11 +196,12 @@ abstract class ExtraParamsEstructuraDAOBase extends DAO
 	  **/
 	private static final function update( $extra_params_estructura )
 	{
-		$sql = "UPDATE extra_params_estructura SET  `tabla` = ?, `campo` = ?, `tipo` = ?, `longitud` = ?, `obligatorio` = ?, `caption` = ?, `descripcion` = ? WHERE  `id_extra_params_estructura` = ?;";
+		$sql = "UPDATE extra_params_estructura SET  `tabla` = ?, `campo` = ?, `tipo` = ?, `enum` = ?, `longitud` = ?, `obligatorio` = ?, `caption` = ?, `descripcion` = ? WHERE  `id_extra_params_estructura` = ?;";
 		$params = array( 
 			$extra_params_estructura->getTabla(), 
 			$extra_params_estructura->getCampo(), 
 			$extra_params_estructura->getTipo(), 
+			$extra_params_estructura->getEnum(), 
 			$extra_params_estructura->getLongitud(), 
 			$extra_params_estructura->getObligatorio(), 
 			$extra_params_estructura->getCaption(), 
@@ -223,12 +229,13 @@ abstract class ExtraParamsEstructuraDAOBase extends DAO
 	  **/
 	private static final function create( &$extra_params_estructura )
 	{
-		$sql = "INSERT INTO extra_params_estructura ( `id_extra_params_estructura`, `tabla`, `campo`, `tipo`, `longitud`, `obligatorio`, `caption`, `descripcion` ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO extra_params_estructura ( `id_extra_params_estructura`, `tabla`, `campo`, `tipo`, `enum`, `longitud`, `obligatorio`, `caption`, `descripcion` ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$extra_params_estructura->getIdExtraParamsEstructura(), 
 			$extra_params_estructura->getTabla(), 
 			$extra_params_estructura->getCampo(), 
 			$extra_params_estructura->getTipo(), 
+			$extra_params_estructura->getEnum(), 
 			$extra_params_estructura->getLongitud(), 
 			$extra_params_estructura->getObligatorio(), 
 			$extra_params_estructura->getCaption(), 
@@ -320,6 +327,17 @@ abstract class ExtraParamsEstructuraDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " `tipo` = ? AND"; 
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( ( !is_null (($a = $extra_params_estructuraA->getEnum()) ) ) & ( ! is_null ( ($b = $extra_params_estructuraB->getEnum()) ) ) ){
+				$sql .= " `enum` >= ? AND `enum` <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " `enum` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
