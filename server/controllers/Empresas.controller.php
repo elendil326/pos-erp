@@ -584,176 +584,65 @@ class EmpresasController implements IEmpresas
 	 **/
 	public static function Eliminar($id_empresa)
 	{
-
-		//------------------------------------------------------------------------------------------
-		//Se guarda el registro de la empresa y se verifica si esat activa
-		$empresa = EmpresaDAO::getByPK($id_empresa);
-		
-		if (is_null($empresa)) {
-			throw new Exception("Esta empresa no existe");
+		//verificamos si la sucursal existe
+		if (!$empresa = EmpresaDAO::getByPK($id_empresa)) {
+			Logger::error("No se tiene registro de la empresa {$id_empresa}");
+			throw new InvalidDataException("No se tiene registro de la empresa {$id_empresa}");
 		}
 
-		if ($empresa->getActivo() == "0") {
-			Logger::warn("La empresa $id_empresa ya esta desactivada");
-			//throw new Exception("La empresa ya esta desactivada",901);
-			return;
+		//verificamos si esta activa
+		if ($empresa->getActivo() === "0") {
+			Logger::error("La empresa $id_empresa ya esta desactivada");
+			throw new Exception("La empresa ya esta desactivada",901);
 		}
 
-		//Se cambia el campo activo a falso y se registra la fecha de baja como hoy
+		//Se buscan las sucursales pertenecientes a esta empresa
+		$sucursales_empresa = SucursalEmpresaDAO::search(new SucursalEmpresa(array(
+			"id_empresa" => $id_empresa
+		)));
+
+		//Verificamos si existen sucursales activas pertenecientes a la empresa
+		foreach ($sucursales_empresa as $sucursal) {
+			if ($sucursal->getActivo() === "0") {
+				Logger::error("La empresa $id_empresa ya esta desactivada");
+				throw new Exception("La empresa ya esta desactivada",901);
+			}
+		}
+
+		//verificamos si existen ejercicios vigentes relacionados con la empresa
+		$ejercicios_empresas = EjercicioEmpresaDAO::search(new EjercicioEmpresa(array(
+			"id_empresa" => $id_empresa
+		)));
+
+		foreach ($ejercicios_empresas as $ejercicio_empresa) {
+			$ejercicios = EjercicioDAO::search(new Ejercicio(array(
+				"id_ejercicio" => $ejercicio_empresa->getIdEjercicio()
+			)));
+			foreach ($ejercicios as $ejercicio) {
+				/*
+				* TODO : De momento esta validacion esta desactivada debido a que no hay manera de 
+				* terminar los ejercicios, en cuanto se programe esa funcionalidad esta validacion 
+				* debera de entrar en funcionamiento.
+				*
+				* if ($ejercicio->getVigente() === "1") {
+				* 	Logger::error("No se puede eliminar la empresa {$id_empresa}, ya que tiene un ejercicio vigente");
+				* 	throw new Exception("No se puede eliminar la empresa {$id_empresa}, ya que tiene un ejercicio vigente",901);
+				* }
+				*/
+			}
+		}
+
+		//Se cambia el campo activo a falso y se registra la fecha de baja
 		$empresa->setActivo(0);
 		$empresa->setFechaBaja(time());
 
-		//Se buscan los productos pertenecientes a esta empresa y se inicializa una variable temporal producto_empresa
-		$pr                = new ProductoEmpresa(array(
-			"id_empresa" => $id_empresa
-		));
-
-		$productos_empresa = ProductoEmpresaDAO::search($pr);
-		$producto_empresa  = new ProductoEmpresa();
-
-		//Se buscan los paquetes pertenecientes a esta empresa y se inicializa una variable temporal paquete_empresa
-		$pa               = new PaqueteEmpresa(array(
-			"id_empresa" => $id_empresa
-		));
-
-		$paquetes_empresa = PaqueteEmpresaDAO::search($pa);
-		$paquete_empresa  = new PaqueteEmpresa();
-
-		//Se buscan los servicios pertenecientes a esta empresa y se inicializa una variable temporal servicio_empresa
-		$se                = new ServicioEmpresa(array(
-			"id_empresa" => $id_empresa
-		));
-
-		$servicios_empresa = ServicioEmpresaDAO::search($se);
-		$servicio_empresa  = new ServicioEmpresa();
-
-		//Se buscan las sucursales pertenecientes a esta empresa y se inicializa una variable temporal sucursal_empresa
-		$su                 = new SucursalEmpresa(array(
-			"id_empresa" => $id_empresa
-		));
-
-		$sucursales_empresa = SucursalEmpresaDAO::search($su);
-		$sucursal_empresa   = new SucursalEmpresa();
-		
-		//Se buscan los almacenes de esta empresa distribuidos en las distintas sucursales
-		$almacen = new Almacen(array(
-			"id_empresa" => $id_empresa
-		));
-		
-		DAO::transBegin();
 		try {
-			//Se actualiza la empresa
 			EmpresaDAO::save($empresa);
-
-			/*
-			*Por cada uno de los productos en la empresa como producto,
-			* se le asigna el id del producto a la variable temporal producto_empresa para
-			* poder buscar las empresas en la que es ofrecido ese producto.
-			* Si la busqueda regresa menos de dos campos, significa que solo esta empresa ofrece este producto,
-			* por tanto, se tiene que desactivar el producto tambien.
-			* En cualquier caso, se eliminan tambien los registros de la tabla producto_empresa correspondiente
-			* a todos los productos de la empresa.
-			*/
-			foreach ($productos_empresa as $producto) {
-				$producto_empresa->setIdProducto($producto->getIdProducto());
-				$productos = ProductoEmpresaDAO::search($producto_empresa);
-				if (count($productos) < 2) {
-					ProductosController::Desactivar($producto->getIdProducto());
-				}
-				$pr->setIdProducto($producto->getIdProducto());
-				ProductoEmpresaDAO::delete($pr);
-			}
-
-			/*
-			* Por cada uno de los paquetes en la empresa como paquete,
-			* se le asigna el id del paquete a la variabe temporal paquete_empresa para
-			* poder buscar las empresas en la que es ofrecido ese paquete.
-			* Si la busqueda regresa menos de dos campos, significa que solo esta empresa ofrece este paquete,
-			* por lo tanto, se tiene que desactivar el paquete tambien.
-			*
-			* En cualquier caso, se eliminan tambien los registros de la tabla paquete_empresa correspondiente
-			* a todos los paquetes de la empresa
-			*/
-			foreach ($paquetes_empresa as $paquete) {
-				$paquete_empresa->setIdPaquete($paquete->getIdPaquete());
-				$paquetes = PaqueteEmpresaDAO::search($paquete_empresa);
-				if (count($paquetes) < 2) {
-					PaquetesController::Eliminar($paquete->getIdPaquete());
-				}
-				$pa->setIdPaquete($paquete->getIdPaquete());
-				PaqueteEmpresaDAO::delete($pa);
-			}
-
-			/*
-			* Por cada uno de los servicios en la empresa como paquete,
-			* se le asigna el id del servicio a la variable temporal servicio_empresa para
-			* poder buscar las empresas en la que es ofrecido ese servicio.
-			* Si la busqueda regresa menos de dos campos, significa que solo esta empresa ofrece este servicio,
-			* por lo tanto, se tiene que desactivar el servicio tambie.
-			*
-			* En cualquier caso, se eliminan tambien los registros de la tabla servicio_empresa correspondiente
-			* a todos los servicios de la empresa.
-			*/
-			foreach ($servicios_empresa as $servicio) {
-				$servicio_empresa->setIdServicio($servicio->getIdServicio());
-				$servicios = ServicioEmpresaDAO::search($servicio_empresa);
-				if (count($servicios) < 2) {
-					ServiciosController::Eliminar($servicio->getIdServicio());
-				}
-				$se->setIdServicio($servicio->getIdServicio());
-				ServicioEmpresaDAO::delete($se);
-			}
-
-			/*
-			* Por cada una de las sucursales en la empresa como sucursal,
-			* se le asigna el id de la sucursal a la variable temporal sucursal_empresa para
-			* poder buscar las empresas que existen en la sucursal.
-			* Si la busqueda regresa menos de dos campos, significa que solo existe esta empresa en esta sucursal,
-			* por lo tanto, se tiene que desactivar la sucursal tambien.
-			*
-			* Si no, se buscan los almacenes de esta empresa y se eliminan aquellos que esten activos. 
-			* Por ende, si un almacen de consignacion de esta empresa sigue activo significa
-			* que aun no se termina la consignacion y por tal motivo no se puede eliminar la empresa
-			*
-			* En cualquier caso, se eliminan tambien los registros de la tabla sucursal_empresa correspondiente
-			* a todas las sucursales de la empresa.
-			*/
-			foreach ($sucursales_empresa as $sucursal) {
-				$sucursal_empresa->setIdSucursal($sucursal->getIdSucursal());
-				$sucursales = SucursalEmpresaDAO::search($sucursal_empresa);
-				if (count($sucursales) < 2) {
-					SucursalesController::Eliminar($sucursal->getIdSucursal());
-				} else {
-					$almacen->setIdSucursal($sucursal->getIdSucursal());
-					$almacenes = AlmacenDAO::search($almacen);
-					foreach ($almacenes as $a) {
-						if ($a->getActivo()) {
-							$flag = false;
-							if ($a->getIdTipoAlmacen() == 2) {
-								$flag = true;
-								$a->setIdTipoAlmacen(1);
-								AlmacenDAO::save($a);
-							}
-							SucursalesController::EliminarAlmacen($a->getIdAlmacen());
-							if ($flag) {
-								$flag = false;
-								$a->setIdTipoAlmacen(2);
-								AlmacenDAO::save($a);
-							}
-						}
-					}
-				}
-				SucursalEmpresaDAO::delete($sucursal);
-			}
+		} catch(Exception $e) {
+			Logger::error("Error la modificar la empresa : " . $e->getMessage());
+			throw new Exception("Error al modificar la empresa.",901);
 		}
-		catch (Exception $e) {
-			DAO::transRollback();
-			Logger::error("No se pudo eliminar la empresa: " . $e);
-			if ($e->getCode() == 901)
-				throw new Exception("No se pudo eliminar la empresa: " . $e->getMessage(), 901);
-			throw new Exception("No se pudo eliminar la empresa, consulte a su administrador de sistema", 901);
-		}
-		DAO::transEnd();
+
 		Logger::log("Empresa desactivada exitosamente...");
 	}
 
