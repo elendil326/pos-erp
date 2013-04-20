@@ -272,7 +272,7 @@ CREATE TABLE IF NOT EXISTS `caja` (
 --
 
 CREATE TABLE IF NOT EXISTS `catalogo_cuentas` (
-  `id_catalogo_cuentas` int(11) NOT NULL AUTO_INCREMENT COMMENT 'El id del catalogo de cuentas',
+  `id_catalogo` int(11) NOT NULL AUTO_INCREMENT COMMENT 'El id del catalogo de cuentas',
   `descripcion` varchar(150) NOT NULL COMMENT 'La descripción del catalogo de cuentas.',
   `id_empresa` int(11) NOT NULL COMMENT 'El id de la empresa a la que va vinculada ésta cuenta',
   PRIMARY KEY (`id_catalogo`)
