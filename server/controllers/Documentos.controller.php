@@ -378,15 +378,15 @@ Update : La respuesta solo deber?a de contener success :true | false, y en caso 
 		$id_sucursal = null
 	){
 
-		DAO::transBegin();
-
-		if(is_null($json_impresion)){
+		if (is_null($json_impresion)) {
 			throw new InvalidDataException("El json de impresion no es valido.");
 		}
 
 		$q = DocumentoBaseDAO::search( new DocumentoBase( array( "nombre" => $nombre ) ) );
 
-		if(sizeof($q) > 0 ) throw new InvalidDataException("Ya existe un documento con este nombre.");
+		if (sizeof($q) > 0 ) {
+			throw new InvalidDataException("Ya existe un documento con este nombre.");
+		}
 
 		$nDoc = new DocumentoBase();
 		$nDoc->setJsonImpresion( json_encode($json_impresion));
@@ -400,15 +400,12 @@ Update : La respuesta solo deber?a de contener success :true | false, y en caso 
 			DocumentoBaseDAO::save( $nDoc );
 
 		}catch(Exception $e){
-			DAO::transRollback();
 			throw new InvalidDatabaseOperationException ($e);
 
 		}
 
 		if ( !is_null($extra_params) ) {
 			for ( $i = 0; $i < sizeof($extra_params); $i++ ) {
-
-				//test
 				if( !isset( $extra_params[$i]->obligatory ) ) {
 					 $extra_params[$i]->obligatory = FALSE;
 				}
@@ -427,14 +424,13 @@ Update : La respuesta solo deber?a de contener success :true | false, y en caso 
 
 				}catch(Exception $e){
 					Logger::error($e);
-					DAO::transRollback();
 					throw new Exception( $e );
 
 				}
 			}
 		}
 
-		DAO::transEnd();
+		Logger::error("Se ha creado el documento base id=" . $nDoc->getIdDocumentoBase() );
 
 		return array("id_documento_base" => $nDoc->getIdDocumentoBase() );
 	}
