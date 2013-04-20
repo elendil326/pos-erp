@@ -6,31 +6,21 @@
 
 	$page = new GerenciaComponentPage();
 
-
-	
-	//
 	// Requerir parametros
-	// 
 	$page->requireParam(  "eid", "GET", "Esta empresa no existe." );
-	
-	$esta_empresa = EmpresaDAO::getByPK( $_GET["eid"] );
-	
-	
-	
-	$esta_direccion = DireccionDAO::getByPK($esta_empresa->getIdDireccion());
-               
 
-	//
+	$empresa = EmpresasController::Detalles($_GET["eid"]);
+
+	$esta_empresa = $empresa["detalles"];
+
+	$esta_direccion = $esta_empresa->direccion;
+
 	// Titulo de la pagina
-	// 
 	$page->addComponent( new TitleComponent( "Detalles de " . $esta_empresa->getRazonSocial() , 2 ));
 
-
-	//
 	// Menu de opciones
-	// 
 	if($esta_empresa->getActivo()){
-		
+
 		$menu = new MenuComponent();
 
 		$menu->addItem("Editar esta empresa", "empresas.editar.php?eid=".$_GET["eid"]);
@@ -59,10 +49,8 @@
 
 		$page->addComponent( $menu);
 	}
-		
-	//
+
 	// Forma de producto
-	// 
 	$form = new DAOFormComponent( $esta_empresa );
 
 	$form->setEditable(false);
@@ -74,9 +62,9 @@
 	));
 
 	$page->addComponent( $form );
-                
-	if(!is_null($esta_empresa->getIdDireccion())){
-		
+
+	if(!is_null($esta_direccion)){
+
 		$page->addComponent( new TitleComponent("Direccion",3) );
 
 		$form = new DAOFormComponent($esta_direccion);
@@ -95,15 +83,13 @@
 		$page->addComponent($form);
 
 	}
-                
+
 	$page->addComponent( new TitleComponent("Sucursales",3));
-	
+
 	$suce = SucursalEmpresaDAO::search( new SucursalEmpresa( array( "id_empresa" => $_GET["eid"] ) ) );
-	
-	/*var_dump($suce);*/
-	
+
 	$page->addComponent( "<p>Agregar una sucursal </p>" );
-	
+
 	$ssel = new SucursalSelectorComponent();
 	$ssel->addJsCallback("(function(){})");
 	$page->addComponent( $ssel );
@@ -119,8 +105,7 @@
 
 
 	$r = new ReporteComponent();
-	
-	
+
 	$data = array(
 		array(
 			"fecha" => "2012-01-01",
@@ -129,13 +114,13 @@
 		array(
 			"fecha" => "2012-01-02",
 			"value" => "20"
-		),		
+		),
 		array(
 			"fecha" => "2012-01-03",
 			"value" => "25"
-		)		
+		)
 	);
-	
+
 	$data = EmpresasController::flujoEfectivo( (int)$_GET["eid"] );
 
 	$r->agregarMuestra	( "uno", $data, true );

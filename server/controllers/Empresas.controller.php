@@ -580,7 +580,6 @@ class EmpresasController implements IEmpresas
 	 *
 	 * @author Juan Manuel Garc&iacute;a Carmona <manuel@caffeina.mx>
 	 * @param id_empresa int id de la empresa a eliminar
-	 * @return numero_de_resultados int 
 	 **/
 	public static function Eliminar($id_empresa)
 	{
@@ -830,9 +829,81 @@ class EmpresasController implements IEmpresas
 		Logger::log("Empresa editada con exito");
 	}
 
+	/**
+	 *Detalles($id_empresa)
+	 *
+	 *Muestra los detalles de una empresa en especifico. 
+	 *
+	 * @author Juan Manuel Garc&iacute;a Carmona <manuel@caffeina.mx>
+	 * @param id_empresa int Id de la empresa
+	 **/
 	public static function Detalles($id_empresa)
 	{
+		//verificamos si la empresa a consular existe
+		if (!$empresa = EmpresaDAO::getByPK($id_empresa)) {
+			Logger::error("No se tiene registro de la empresa {$id_empresa}");
+			throw new InvalidDataException("No se tiene registro de la empresa {$id_empresa}");
+		}
 
+		//extraemos su domicilio fiscal
+		if (!$direccion = DireccionDAO::getByPK($empresa->getIdDireccion())) {
+			$direccion = new stdClass();
+		}
+
+		//relacionamos a la empresa con la direccion
+		$empresa->direccion = $direccion;
+
+		//extraemos sus sucursales
+		$sucursales = array();
+
+		$sucursales_empresa = SucursalEmpresaDAO::search(new SucursalEmpresa(array(
+			"id_empresa" => $id_empresa
+		)));
+
+		foreach ($sucursales_empresa as $sucursal_empresa) {
+			if ($sucursal = SucursalDAO::getByPK($sucursal_empresa->getIdSucursal())) {
+				array_push($sucursales, $sucursal);
+			}
+		}
+
+		//obtenemos todos los impuestos relacionados a la empresa
+		$impuestos_empresa = ImpuestoEmpresaDAO::search(new ImpuestoEmpresa(array(
+			"id_empresa" => $id_empresa
+		)));
+
+		//extraemos sus impuestos de compra
+		$impuestos_compra = array();
+
+		foreach ($impuestos_empresa as $impuesto_compra_empresa) {
+
+			if (!$impuesto = ImpuestoDAO::getByPK($impuesto_compra_empresa->getIdImpuesto())) {
+				Logger::warn("No se tiene registro de un impuesto con id = " . $impuesto_compra_empresa->getIdImpuesto());
+				throw new InvalidDataException("No se tiene registro de un impuesto con id = " . $impuesto_compra_empresa->getIdImpuesto());
+			}
+
+			if ($impuesto->getAplica() === "compra" || $impuesto->getAplica() === "ambos") {
+				array_push($impuestos_compra, $impuesto);
+			}
+		}
+
+		//extraemos sus impuestos de venta
+		$impuestos_venta = array();
+
+		foreach ($impuestos_empresa as $impuesto_venta_empresa) {
+
+			if (!$impuesto = ImpuestoDAO::getByPK($impuesto_venta_empresa->getIdImpuesto())) {
+				Logger::warn("No se tiene registro de un impuesto con id = " . $impuesto_venta_empresa->getIdImpuesto());
+				throw new InvalidDataException("No se tiene registro de un impuesto con id = " . $impuesto_venta_empresa->getIdImpuesto());
+			}
+
+			if ($impuesto->getAplica() === "venta" || $impuesto->getAplica() === "ambos") {
+				array_push($impuestos_venta, $impuesto);
+			}
+		}
+
+		return array("detalles" => $empresa, "sucursales" => $sucursales, "impuestos_compra" => $impuestos_compra, "impuestos_venta" => $impuestos_venta);
+
+		Logger::log("Detalles de la empresa enviados con exito");
 	}
 
 }
