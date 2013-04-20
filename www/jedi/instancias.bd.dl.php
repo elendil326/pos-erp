@@ -145,14 +145,17 @@ for($i = 0; $i < sizeof($ids); $i++){
 	}
 }
 
-InstanciasController::Respaldar_Instancias($ids);//Respaldar_Instancias recibe como params un array
+$result = InstanciasController::Respaldar_Instancias($ids);//Respaldar_Instancias recibe como params un array
+if (strlen($result) > 0){
+	die("<html><head><meta HTTP-EQUIV='REFRESH' content='3; url=instancias.bd.php'><title>Error al descargar, perimisos</title></head><body><h1><center>".$result."</center></h1></body></html>");
+}
 
 $f = new zipfile;
 
 for ($i=0; $i < sizeof($ids); $i++) { 
 	//$f->add_file(file_get_contents($files[$i]), $file_id[$i] . ".sql");
 	$final_path = str_replace("server","static_content/db_backups",POS_PATH_TO_SERVER_ROOT);
-	$dbs_instance = trim(shell_exec("ls -lat -m1 ".$final_path."| grep ".$ids[$i].".sql"));				
+	$dbs_instance = trim(shell_exec("ls -lat -m1 ".$final_path."| grep ".$ids[$i].".sql"));
 	Logger::log("Respaldos encontrados: ".$dbs_instance);
 
 	/*dbs_instance almacena una cadena con un listado donde se encuentran archivos que tengan la teminacion
@@ -164,7 +167,7 @@ for ($i=0; $i < sizeof($ids); $i++) {
 	$found = preg_split("/[\s,]+/", $dbs_instance,-1,PREG_SPLIT_NO_EMPTY);
 	//Logger::log("No archivos: ".count($found));
 	if(count($found) < 1){
-		Logger::log("Error al restaurar la instancia ".$ins['instance_id'].", no hay un respaldo existente");
+		Logger::log("Error al restaurar la instancias ".$ids[$i].", no hay un respaldo existente");
 		continue;
 	}
 	$contenido = file_get_contents($final_path."/".$found[0]);
