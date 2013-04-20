@@ -12,11 +12,15 @@
 	$page->requireParam(  "cid", "GET", "Esta empresa no existe." );
 	
 	$cuenta = $controller::DetalleCuenta( $_GET["cid"] );
-	$cuentas = $controller::BuscarCuenta();
+	$cuentas = $controller::BuscarCuenta($cuenta["id_catalogo_cuentas"]);
 
 	//titulos
 	$page->addComponent(new TitleComponent("Editando cuenta " . $cuenta["nombre_cuenta"], 2));
 
+	$menu = new MenuComponent();
+
+	$menu->addItem("<< Regresar", "contabilidad.cuentas.ver.php?cid=" . $_GET["cid"]);
+	$page->addComponent( $menu);
 
 	$form = new DAOFormComponent(CuentaContableDAO::getByPK( $_GET["cid"]));
 
@@ -27,7 +31,8 @@
 						"consecutivo_en_nivel",
 						"afectable",
 						"activa",
-						"clasificacion"
+						"clasificacion",
+						"id_catalogo_cuentas"
 		 ));
 	$form->sendHidden("id_cuenta_contable");
 
@@ -76,9 +81,19 @@
                             array( "id" => "Deudora", "caption" => "Deudora"  )
                             ),$cuenta["naturaleza"]
                         );
+	$form->makeObligatory(array( 
+			"nombre_cuenta",
+			"naturaleza",
+			"clasificacion",
+			"tipo_cuenta",
+			"es_cuenta_mayor",
+			"es_cuenta_orden",
+			"abonos_aumentan",
+			"cargos_aumentan"
+		));
 
 	$form->addApiCall("api/contabilidad/cuenta/editar", "POST");
-	$form->onApiCallSuccessRedirect("contabilidad.cuentas.php");
+	$form->onApiCallSuccessRedirect("contabilidad.cuentas.php?idcc=".$cuenta["id_catalogo_cuentas"]);
 
 	$page->addComponent( $form );
 	$page->render();

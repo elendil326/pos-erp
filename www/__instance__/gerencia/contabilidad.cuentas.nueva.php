@@ -7,12 +7,14 @@
 		require_once("../../../server/bootstrap.php");
 
 		$page = new GerenciaComponentPage();
-                
-                 //titulos
-	$page->addComponent( new TitleComponent( "Nueva Cuenta" ) );
 
+	$page->addComponent( new TitleComponent( "Nueva Cuenta" ) );
+    $page->requireParam(  "idcc", "GET", "Este catalogo de cuentas no existe." );
 	//forma de nueva caja
+    $page->addComponent( "<div class='POS Boton' onClick='window.location=\"contabilidad.cuentas.php?idcc={$_GET["idcc"]}\"'> << Regresar</div> " );
 	$form = new DAOFormComponent( array( new CuentaContable() ) );
+    $controller = new ContabilidadController();
+    $catalogo = $controller::DetalleCatalogoCuentas( $_GET["idcc"] );
 	
 	$form->hideField( array( 
 						"id_cuenta_contable",
@@ -23,10 +25,15 @@
 						"activa"
 		 ));
 
-	
 	$form->addApiCall( "api/contabilidad/cuenta/nueva" );
-    $form->onApiCallSuccessRedirect("contabilidad.cuentas.nueva.php");
+    $form->onApiCallSuccessRedirect("contabilidad.cuentas.nueva.php?idcc={$_GET['idcc']}");
 
+    $form->createComboBoxJoin("id_catalogo_cuentas", "id_catalogo_cuentas", 
+                        array(
+                                array( "id" => $_GET["idcc"], "caption" => $catalogo["descripcion"] )
+                            ),
+                        $_GET["idcc"]
+                        );
     $form->createComboBoxJoin("naturaleza", "naturaleza", 
                         array(
                             array( "id" => "Acreedora", "caption" => "Acreedora" ),
@@ -84,10 +91,11 @@ $form->makeObligatory(array(
 			"es_cuenta_mayor",
 			"es_cuenta_orden",
 			"abonos_aumentan",
-			"cargos_aumentan"
+			"cargos_aumentan",
+            "id_catalogo_cuentas"
 		));
 
-	$ctas = ContabilidadController::BuscarCuenta();
+	$ctas = ContabilidadController::BuscarCuenta($_GET["idcc"]);
 
     $cuentas = array();
     //para enviar el id de cuenta contable en el combo de id_cuenta_padre se debe hacer este foreach

@@ -12,10 +12,10 @@
 	// Requerir parametros
 	//
 	$controller = new ContabilidadController();
-	$page->requireParam(  "cid", "GET", "Esta empresa no existe." );
+	$page->requireParam(  "cid", "GET", "Esta cuenta no existe." );
 	
 	$cuenta = $controller::DetalleCuenta( $_GET["cid"] );
-	$cuentas = $controller::BuscarCuenta();
+	$cuentas = $controller::BuscarCuenta($cuenta["id_catalogo_cuentas"]);
 	// Titulo de la pagina
 	// 
 	$page->addComponent( new TitleComponent( "Detalles de la cuenta: " . $cuenta["nombre_cuenta"] , 2 ));
@@ -28,6 +28,7 @@
 		
 		$menu = new MenuComponent();
 
+		$menu->addItem("<< Regresar", "contabilidad.cuentas.php?idcc=" . $cuenta["id_catalogo_cuentas"]);
 		$menu->addItem("Editar", "contabilidad.cuentas.editar.php?cid=" . $cuenta["id_cuenta_contable"]);
 
 		$btn_eliminar = new MenuItem("Eliminar esta cuenta", null);

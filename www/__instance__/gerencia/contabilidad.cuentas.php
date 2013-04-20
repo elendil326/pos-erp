@@ -5,13 +5,17 @@
 		require_once("../../../server//bootstrap.php");
 
 		$page = new GerenciaTabPage();
+		$controller = new ContabilidadController();
+		$page->requireParam(  "idcc", "GET", "Este catalogo de cuentas no existe." );
+		$catalogo = $controller::DetalleCatalogoCuentas( $_GET["idcc"] );
 
-		$page->addComponent(new TitleComponent("Catalogo de Cuentas", 2));
+		$page->addComponent(new TitleComponent($catalogo["descripcion"], 2));
 
+		$page->addComponent( "<div class='POS Boton' onClick='window.location=\"contabilidad.cuentas.catalogo.php\"'> << Regresar</div> " );
 
-		$page->addComponent( "<div class='POS Boton' onClick='window.location=\"contabilidad.cuentas.nueva.php\"'>Nueva Cuenta</div> " );
+		$page->addComponent( "<div class='POS Boton' onClick='window.location=\"contabilidad.cuentas.nueva.php?idcc={$_GET["idcc"]}\"'>Nueva Cuenta</div> " );
 
-		$lista = ContabilidadController::BuscarCuenta();
+		$lista = ContabilidadController::BuscarCuenta($_GET["idcc"]);
 
 		$page->addComponent(sizeof($lista["resultados"]) ." cuentas.");
 		
