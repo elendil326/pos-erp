@@ -35,9 +35,10 @@ Update : ?Es correcto como se esta manejando el argumento id_sucursal? Ya que en
  	 *
  	 *Realiza una busqueda de las cuentas contables en base a los par?metros que se le pasen
  	 *
+ 	 * @param id_catalogo_cuentas int El id del catalogo de cuentas
  	 * @param afectable bool indica si sobre esta cuenta ya se pueden realizar operaciones
  	 * @param clasificacion enum `Activo Circulante`,`Activo Fijo`,`Activo Diferido`,`Pasivo Circulante`,`Pasivo Largo Plazo`,`Capital Contable`,`Ingresos`,`Egresos`
- 	 * @param clave string La clave que se le dará a la nueva cuenta contable
+ 	 * @param clave string La clave que se le dar a la nueva cuenta contable
  	 * @param consecutivo_en_nivel int Dependiendo del nivel de profundidad de la cuenta contable, este valor indicara dentro de su nivel que numero consecutivo le corresponde con respecto a las mismas que estan en su mismo nivel
  	 * @param es_cuenta_mayor bool Indica si la cuenta es de mayor
  	 * @param es_cuenta_orden bool si la cuenta no se contemplara en los estados financieros
@@ -50,6 +51,7 @@ Update : ?Es correcto como se esta manejando el argumento id_sucursal? Ya que en
  	 **/
   static function BuscarCuenta
 	(
+		$id_catalogo_cuentas, 
 		$afectable = "", 
 		$clasificacion = "", 
 		$clave = "", 
@@ -138,6 +140,7 @@ Dado un id obtiene una cuenta contable en el sistema que corresponda con ese id.
  	 * @param clasificacion enum `Activo Circulante`,`Activo Fijo`,`Activo Diferido`,`Pasivo Circulante`,`Pasivo Largo Plazo`,`Capital Contable`,`Ingresos`,`Egresos`
  	 * @param es_cuenta_mayor bool Indica si la cuenta es de mayor
  	 * @param es_cuenta_orden bool si la cuenta no se contemplara en los estados financieros
+ 	 * @param id_catalogo_cuentas int Id del catalogo de cuentas al que pertenecera la cuenta
  	 * @param naturaleza enum `Acreedora`,`Deudora`
  	 * @param nombre_cuenta string El nombre de la cuenta
  	 * @param tipo_cuenta enum `Balance`,`Estado de Resultados`
@@ -150,6 +153,7 @@ Dado un id obtiene una cuenta contable en el sistema que corresponda con ese id.
 		$clasificacion, 
 		$es_cuenta_mayor, 
 		$es_cuenta_orden, 
+		$id_catalogo_cuentas, 
 		$naturaleza, 
 		$nombre_cuenta, 
 		$tipo_cuenta, 

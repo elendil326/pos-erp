@@ -196,6 +196,11 @@ abstract class CuentaContableDAOBase extends DAO
 			array_push( $val, $cuenta_contable->getActiva() );
 		}
 
+		if( ! is_null( $cuenta_contable->getIdCatalogoCuentas() ) ){
+			$sql .= " `id_catalogo_cuentas` = ? AND";
+			array_push( $val, $cuenta_contable->getIdCatalogoCuentas() );
+		}
+
 		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
@@ -226,7 +231,7 @@ abstract class CuentaContableDAOBase extends DAO
 	  **/
 	private static final function update( $cuenta_contable )
 	{
-		$sql = "UPDATE cuenta_contable SET  `clave` = ?, `nivel` = ?, `consecutivo_en_nivel` = ?, `nombre_cuenta` = ?, `tipo_cuenta` = ?, `naturaleza` = ?, `clasificacion` = ?, `cargos_aumentan` = ?, `abonos_aumentan` = ?, `es_cuenta_orden` = ?, `es_cuenta_mayor` = ?, `afectable` = ?, `id_cuenta_padre` = ?, `activa` = ? WHERE  `id_cuenta_contable` = ?;";
+		$sql = "UPDATE cuenta_contable SET  `clave` = ?, `nivel` = ?, `consecutivo_en_nivel` = ?, `nombre_cuenta` = ?, `tipo_cuenta` = ?, `naturaleza` = ?, `clasificacion` = ?, `cargos_aumentan` = ?, `abonos_aumentan` = ?, `es_cuenta_orden` = ?, `es_cuenta_mayor` = ?, `afectable` = ?, `id_cuenta_padre` = ?, `activa` = ?, `id_catalogo_cuentas` = ? WHERE  `id_cuenta_contable` = ?;";
 		$params = array( 
 			$cuenta_contable->getClave(), 
 			$cuenta_contable->getNivel(), 
@@ -242,6 +247,7 @@ abstract class CuentaContableDAOBase extends DAO
 			$cuenta_contable->getAfectable(), 
 			$cuenta_contable->getIdCuentaPadre(), 
 			$cuenta_contable->getActiva(), 
+			$cuenta_contable->getIdCatalogoCuentas(), 
 			$cuenta_contable->getIdCuentaContable(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -265,7 +271,7 @@ abstract class CuentaContableDAOBase extends DAO
 	  **/
 	private static final function create( &$cuenta_contable )
 	{
-		$sql = "INSERT INTO cuenta_contable ( `id_cuenta_contable`, `clave`, `nivel`, `consecutivo_en_nivel`, `nombre_cuenta`, `tipo_cuenta`, `naturaleza`, `clasificacion`, `cargos_aumentan`, `abonos_aumentan`, `es_cuenta_orden`, `es_cuenta_mayor`, `afectable`, `id_cuenta_padre`, `activa` ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO cuenta_contable ( `id_cuenta_contable`, `clave`, `nivel`, `consecutivo_en_nivel`, `nombre_cuenta`, `tipo_cuenta`, `naturaleza`, `clasificacion`, `cargos_aumentan`, `abonos_aumentan`, `es_cuenta_orden`, `es_cuenta_mayor`, `afectable`, `id_cuenta_padre`, `activa`, `id_catalogo_cuentas` ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$cuenta_contable->getIdCuentaContable(), 
 			$cuenta_contable->getClave(), 
@@ -282,6 +288,7 @@ abstract class CuentaContableDAOBase extends DAO
 			$cuenta_contable->getAfectable(), 
 			$cuenta_contable->getIdCuentaPadre(), 
 			$cuenta_contable->getActiva(), 
+			$cuenta_contable->getIdCatalogoCuentas(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -490,6 +497,17 @@ abstract class CuentaContableDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " `activa` = ? AND"; 
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( ( !is_null (($a = $cuenta_contableA->getIdCatalogoCuentas()) ) ) & ( ! is_null ( ($b = $cuenta_contableB->getIdCatalogoCuentas()) ) ) ){
+				$sql .= " `id_catalogo_cuentas` >= ? AND `id_catalogo_cuentas` <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " `id_catalogo_cuentas` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

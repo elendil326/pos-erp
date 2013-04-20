@@ -16,6 +16,7 @@ require_once ('billete_caja.dao.php');
 require_once ('billete_cierre_caja.dao.php');
 require_once ('billete_corte_caja.dao.php');
 require_once ('caja.dao.php');
+require_once ('catalogo_cuentas.dao.php');
 require_once ('categoria_unidad_medida.dao.php');
 require_once ('cheque.dao.php');
 require_once ('cheque_abono_compra.dao.php');

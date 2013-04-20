@@ -38,7 +38,7 @@ require_once("interfaces/Contabilidad.interface.php");
  	 * @param id_cuenta_padre int El id de la cuenta de la que depende
  	 * @param clasificacion enum `Activo Circulante`,`Activo Fijo`,`Activo Diferido`,`Pasivo Circulante`,`Pasivo Largo Plazo`,`Capital Contable`,`Ingresos`,`Egresos` 	 
  	 **/
-	public static function NuevaClaveCuentaContable($id_cuenta_padre = "", $clasificacion = "")
+	public static function NuevaClaveCuentaContable($id_catalogo_cuentas, $id_cuenta_padre = "", $clasificacion = "")
 	{
 		if($id_cuenta_padre!=null) {
 			if (is_null(CuentaContableDAO::getByPK($id_cuenta_padre))) {
@@ -87,7 +87,7 @@ require_once("interfaces/Contabilidad.interface.php");
 				break;
 			}//switch
 
-			$cuentas_nivel_1 = self::BuscarCuenta("", $clasificacion ,
+			$cuentas_nivel_1 = self::BuscarCuenta($id_catalogo_cuentas,"", $clasificacion ,
 											"", "",
 											"", "",
 											"", "",
@@ -105,7 +105,7 @@ require_once("interfaces/Contabilidad.interface.php");
 			}
 
 		} else {
-			$subcuentas = self::BuscarCuenta("", "",
+			$subcuentas = self::BuscarCuenta($id_catalogo_cuentas,"", "",
 										"", "",
 										"", "",
 										"", $id_cuenta_padre,
@@ -123,7 +123,6 @@ require_once("interfaces/Contabilidad.interface.php");
 			}
 
 		}
-
 		return $clave;
 
 	}
@@ -145,13 +144,20 @@ require_once("interfaces/Contabilidad.interface.php");
  	 * @param nombre_cuenta string El nombre de la cuenta
  	 * @param tipo_cuenta enum `Balance`,`Estado de Resultados`
  	 **/
-	public static function BuscarCuenta($afectable = "", $clasificacion = "",
+	public static function BuscarCuenta($id_catalogo_cuentas, $afectable = "", $clasificacion = "",
 		$clave = "", $consecutivo_en_nivel = "", $es_cuenta_mayor = "",
 		$es_cuenta_orden = "", $id_cuenta_contable = "", $id_cuenta_padre = "",
 		$naturaleza = "", $nivel = "", $nombre_cuenta = "", $tipo_cuenta = ""
 	) {
 
 		$cuenta_buscar = new CuentaContable();
+
+		$cat_buscar = CatalogoCuentasDAO::getByPK($id_catalogo_cuentas);
+		if (is_null($cat_buscar)) {
+			throw new InvalidDatabaseOperationException("El catalogo de cuentas con id " . $id_catalogo_cuentas . " no existe");
+		}
+
+		$cuenta_buscar->setIdCatalogoCuentas($id_catalogo_cuentas);
 
 		if ($afectable!="") {
 			$cuenta_buscar->setAfectable($afectable);
@@ -194,7 +200,13 @@ require_once("interfaces/Contabilidad.interface.php");
 		$cuentas = CuentaContableDAO::search($cuenta_buscar, "`clave`", "ASC");
 		return array("resultados" => $cuentas);
 	}
-	
+
+	public function ListarCatalogosCuentas()
+	{
+		$catalogos = CatalogoCuentasDAO::getAll();
+		return array("resultados" => $catalogos);
+	}
+
 	/**
  	 *
  	 *Edita una cuenta contable que exista en el sistema
@@ -220,7 +232,7 @@ require_once("interfaces/Contabilidad.interface.php");
 			throw new InvalidDatabaseOperationException("La cuenta con id " . $id_cuenta_contable . " no existe");
 		}
 		
-		$subctas = self::BuscarCuenta("", "",
+		$subctas = self::BuscarCuenta($editar_cuenta->getIdCatalogoCuentas(),"", "",
 											"", "",
 											"", "",
 											"", $id_cuenta_contable,
@@ -259,7 +271,7 @@ require_once("interfaces/Contabilidad.interface.php");
 		{
 		//cambia de cuenta padre, debe de cambiar la clave, nivel y el consecutivo
 			
-			$clave = self::NuevaClaveCuentaContable($id_cuenta_padre,$editar_cuenta->getClasificacion());
+			$clave = self::NuevaClaveCuentaContable($editar_cuenta->getIdCatalogoCuentas(),$id_cuenta_padre,$editar_cuenta->getClasificacion());
 			$nivel = 1;
 			$consecutivo = 1;
 
@@ -271,7 +283,7 @@ require_once("interfaces/Contabilidad.interface.php");
 				}
 
 				$nivel = $detalle_c->getNivel() + 1;
-				$subcuentas = self::BuscarCuenta("", "",
+				$subcuentas = self::BuscarCuenta($editar_cuenta->getIdCatalogoCuentas(),"", "",
 											"", "",
 											"", "",
 											"", $id_cuenta_padre,
@@ -284,7 +296,7 @@ require_once("interfaces/Contabilidad.interface.php");
 
 			} else {
 
-				$cuentas_clasifi = self::BuscarCuenta("", $clasificacion,
+				$cuentas_clasifi = self::BuscarCuenta($editar_cuenta->getIdCatalogoCuentas(),"", $clasificacion,
 											"", "",
 											"", "",
 											"", "",
@@ -373,7 +385,7 @@ require_once("interfaces/Contabilidad.interface.php");
 			throw new InvalidDatabaseOperationException("La cuenta con id " . $id_cuenta_contable . " no existe");
 		}
 
-		$subcuentas = self::BuscarCuenta("", "",
+		$subcuentas = self::BuscarCuenta($cuenta->getIdCatalogo(),"", "",
 											"", "",
 											"", "",
 											"", $id_cuenta_contable,
@@ -399,7 +411,7 @@ require_once("interfaces/Contabilidad.interface.php");
 
         return array("status"=>"ok");
 	}
-	
+
 	/**
  	 *
  	 *Genera una nueva cuenta contable en el sistema
@@ -415,7 +427,7 @@ require_once("interfaces/Contabilidad.interface.php");
  	 * @param id_cuenta_padre int id de la cuenta de la que depende
  	 **/
 	public static function NuevaCuenta($abonos_aumentan, $cargos_aumentan,
-		$clasificacion, $es_cuenta_mayor, $es_cuenta_orden, $naturaleza, 
+		$clasificacion, $es_cuenta_mayor, $es_cuenta_orden, $id_catalogo_cuentas, $naturaleza, 
 		$nombre_cuenta, $tipo_cuenta, $id_cuenta_padre = ""
 	) {
 
@@ -432,8 +444,8 @@ require_once("interfaces/Contabilidad.interface.php");
 
 		if (($tipo_cuenta == "Balance" && $naturaleza == "Acreedora") &&
 			($clasificacion != "Pasivo Circulante"
-			|| $clasificacion != "Pasivo Largo Plazo"
-			|| $clasificacion != "Capital Contable")) {
+			&& $clasificacion != "Pasivo Largo Plazo"
+			&& $clasificacion != "Capital Contable")) {
 			throw new BusinessLogicException("Clasificacion incorrecta para la cuenta de tipo Balance y Naturaleza Acreedora");
 		}
 
@@ -447,12 +459,13 @@ require_once("interfaces/Contabilidad.interface.php");
 
 		$cuenta_buscar = new CuentaContable();
 		$cuenta_buscar->setNombreCuenta($nombre_cuenta);
+		$cuenta_buscar->setIdCatalogoCuentas($id_catalogo_cuentas);
 		$cc2 = CuentaContableDAO::search($cuenta_buscar);
 		if (count($cc2)>0) {
 			throw new BusinessLogicException(" Ya existe una cuenta con el nombre " . $nombre_cuenta);
 		}
 
-		$clave = self::NuevaClaveCuentaContable($id_cuenta_padre,$clasificacion);
+		$clave = self::NuevaClaveCuentaContable($id_catalogo_cuentas, $id_cuenta_padre,$clasificacion);
 		$nivel = 1;
 		$consecutivo = 1;
 
@@ -464,7 +477,7 @@ require_once("interfaces/Contabilidad.interface.php");
 			}
 
 			$nivel = $detalle_c->getNivel() + 1;
-			$subcuentas = self::BuscarCuenta("", "",
+			$subcuentas = self::BuscarCuenta($id_catalogo_cuentas,"", "",
 										"", "",
 										"", "",
 										"", $id_cuenta_padre,
@@ -477,7 +490,7 @@ require_once("interfaces/Contabilidad.interface.php");
 
 		} else {
 
-			$cuentas_clasifi = self::BuscarCuenta("", $clasificacion,
+			$cuentas_clasifi = self::BuscarCuenta($id_catalogo_cuentas,"", $clasificacion,
 										"", "",
 										"", "",
 										"", "",
@@ -528,6 +541,7 @@ require_once("interfaces/Contabilidad.interface.php");
 		if($id_cuenta_padre!=""){
 			$nueva_cuenta->setIdCuentaPadre($id_cuenta_padre);
 		}
+		$nueva_cuenta->setIdCatalogoCuentas($id_catalogo_cuentas);
 
 
 		DAO::transBegin();
@@ -542,7 +556,7 @@ require_once("interfaces/Contabilidad.interface.php");
 			}
         }catch (Exception $e) {
             DAO::transRollback();
-            Logger::error("No se ha podido guardar la nueva cuenta: " . $e);
+            Logger::error("Desde Controller) No se ha podido guardar la nueva cuenta: " . $e);
             if ($e->getCode() == 901)
                 throw new Exception("No se ha podido guardar la nueva cuenta|: " . $e->getMessage(), 901);
             throw new Exception("No se ha podido guardar la nueva cuenta", 901);
@@ -566,6 +580,241 @@ require_once("interfaces/Contabilidad.interface.php");
 			throw new InvalidDatabaseOperationException("La cuenta con id " . $id_cuenta_contable . " no existe");
 		}
 		return object_to_array($cuenta);
+	}
+
+	public function DetalleCatalogoCuentas($id_catalogo_cuentas)
+	{
+		$catalogo = CatalogoCuentasDAO::getByPK($id_catalogo_cuentas);
+		if (is_null($catalogo)) {
+			throw new InvalidDatabaseOperationException("El catalogo de cuentas con id " . $id_catalogo_cuentas . " no existe");
+		}
+		return object_to_array($catalogo);
+	}
+
+	public function NuevoCatalogoCuentasEmpresa($id_empresa)
+	{
+		$empresa = EmpresaDAO::getByPK($id_empresa);
+
+		if (is_null($empresa)) {
+			throw new InvalidDatabaseOperationException("La empresa con id " . $id_empresa . " no existe");
+		}
+
+		$nuevo_catalogo_cuentas = new CatalogoCuentas();
+		$nuevo_catalogo_cuentas->setIdEmpresa($id_empresa);
+		$nuevo_catalogo_cuentas->setDescripcion("Catalogo de cuentas ".$empresa->getRazonSocial());
+
+		DAO::transBegin();
+        try {
+            CatalogoCuentasDAO::save($nuevo_catalogo_cuentas);
+        }catch (Exception $e) {
+            DAO::transRollback();
+            Logger::error("No se ha podido guardar la nueva cuenta: " . $e);
+            throw new Exception("No se ha podido guardar el nuevo catalogo de cuentas|: " . $e->getMessage(), 901);
+            
+        }
+        DAO::transEnd();
+
+        self::InsertarCatalogoCuentasDefault($nuevo_catalogo_cuentas->getIdCatalogo());
+
+        return array("status"=>"ok","id_catalogo_cuentas"=>$nuevo_catalogo_cuentas->getIdCatalogo());
+
+	}
+
+	public function InsertarCatalogoCuentasDefault($id_catalogo_cuentas)
+	{
+		self::CuentasActivoCirculante($id_catalogo_cuentas);
+		self::CuentasActivoFijo($id_catalogo_cuentas);
+		self::CuentasActivoDiferido($id_catalogo_cuentas);
+		self::CuentasPasivoCirculante($id_catalogo_cuentas);
+		self::CuentasPasivoLargoPlazo($id_catalogo_cuentas);
+		self::CuentasCapitalContable($id_catalogo_cuentas);
+		self::CuentasIngresos($id_catalogo_cuentas);
+		self::CuentasEgresos($id_catalogo_cuentas);
+
+	}
+
+	public function CuentasActivoCirculante($id_catalogo_cuentas)
+	{
+		self::NuevaCuenta(0, 1,
+						'Activo Circulante', 1, 0, $id_catalogo_cuentas, 'Deudora', 
+						'Bancos', 'Balance', $id_cuenta_padre = ""
+						);
+		self::NuevaCuenta(0, 1,
+						'Activo Circulante', 1, 0, $id_catalogo_cuentas, 'Deudora', 
+						'Caja', 'Balance', $id_cuenta_padre = ""
+						);
+		self::NuevaCuenta(0, 1,
+						'Activo Circulante', 1, 0, $id_catalogo_cuentas, 'Deudora', 
+						'Inversiones', 'Balance', $id_cuenta_padre = ""
+						);
+		$inventarios = self::NuevaCuenta(0, 1,
+						'Activo Circulante', 1, 0, $id_catalogo_cuentas, 'Deudora', 
+						'Inventarios', 'Balance', $id_cuenta_padre = ""
+						);
+		self::NuevaCuenta(0, 1,
+						'Activo Circulante', 1, 0, $id_catalogo_cuentas,'Deudora', 
+						'Inventarios en Materia Prima', 'Balance', $inventarios['id_cuenta_contable']
+						);
+		self::NuevaCuenta(0, 1,
+						'Activo Circulante', 1, 0, $id_catalogo_cuentas, 'Deudora', 
+						'Inventarios en Producto Procesado', 'Balance', $inventarios['id_cuenta_contable']
+						);
+		self::NuevaCuenta(0, 1,
+						'Activo Circulante', 1, 0, $id_catalogo_cuentas, 'Deudora', 
+						'Inventarios en Producto Terminado', 'Balance', $inventarios['id_cuenta_contable']
+						);
+		self::NuevaCuenta(0, 1,
+						'Activo Circulante', 1, 0, $id_catalogo_cuentas, 'Deudora', 
+						'Cuentas por Cobrar', 'Balance', $id_cuenta_padre = ""
+						);
+		self::NuevaCuenta(0, 1,
+						'Activo Circulante', 1, 0, $id_catalogo_cuentas, 'Deudora', 
+						'Deudores Diversos', 'Balance', $id_cuenta_padre = ""
+						);
+		self::NuevaCuenta(0, 1,
+						'Activo Circulante', 1, 0, $id_catalogo_cuentas, 'Deudora', 
+						'Impuestos a Favor', 'Balance', $id_cuenta_padre = ""
+						);
+		self::NuevaCuenta(0, 1,
+						'Activo Circulante', 1, 0, $id_catalogo_cuentas, 'Deudora', 
+						'Documentos por Cobrar', 'Balance', $id_cuenta_padre = ""
+						);
+		self::NuevaCuenta(0, 1,
+						'Activo Circulante', 1, 0, $id_catalogo_cuentas, 'Deudora', 
+						'IVA Acreditable', 'Balance', $id_cuenta_padre = ""
+						);
+		self::NuevaCuenta(0, 1,
+						'Activo Circulante', 1, 0, $id_catalogo_cuentas, 'Deudora', 
+						'Anticipos de Impuestos', 'Balance', $id_cuenta_padre = ""
+						);
+	}
+
+	public function CuentasActivoFijo($id_catalogo_cuentas)
+	{
+		self::NuevaCuenta(0, 1,
+						'Activo Fijo', 1, 0, $id_catalogo_cuentas, 'Deudora', 
+						'Maquinaria y Equipos', 'Balance', $id_cuenta_padre = ""
+						);
+		self::NuevaCuenta(0, 1,
+						'Activo Fijo', 1, 0, $id_catalogo_cuentas,'Deudora', 
+						'Terrenos', 'Balance', $id_cuenta_padre = ""
+						);
+		self::NuevaCuenta(0, 1,
+						'Activo Fijo', 1, 0, $id_catalogo_cuentas, 'Deudora', 
+						'Construccion o Edificios', 'Balance', $id_cuenta_padre = ""
+						);
+		self::NuevaCuenta(0, 1,
+						'Activo Fijo', 1, 0, $id_catalogo_cuentas, 'Deudora', 
+						'Equipo de Computo', 'Balance', $id_cuenta_padre = ""
+						);
+		self::NuevaCuenta(0, 1,
+						'Activo Fijo', 1, 0, $id_catalogo_cuentas, 'Deudora', 
+						'Mobiliario Equipo de Oficina', 'Balance', $id_cuenta_padre = ""
+						);
+		self::NuevaCuenta(0, 1,
+						'Activo Fijo', 1, 0, $id_catalogo_cuentas, 'Deudora', 
+						'Equipo de Transporte', 'Balance', $id_cuenta_padre = ""
+						);
+	}
+
+	public function CuentasActivoDiferido($id_catalogo_cuentas)
+	{
+		self::NuevaCuenta(0, 1,
+						'Activo Diferido', 1, 0, $id_catalogo_cuentas, 'Deudora', 
+						'Primas de seguro', 'Balance', $id_cuenta_padre = ""
+						);
+		self::NuevaCuenta(0, 1,
+						'Activo Diferido', 1, 0, $id_catalogo_cuentas, 'Deudora', 
+						'Depositos en Garantía', 'Balance', $id_cuenta_padre = ""
+						);
+	}
+
+	public function CuentasPasivoCirculante($id_catalogo_cuentas)
+	{
+		self::NuevaCuenta(1, 0,
+						'Pasivo Circulante', 1, 0, $id_catalogo_cuentas, 'Acreedora', 
+						'Proveedores', 'Balance', $id_cuenta_padre = ""
+						);
+		self::NuevaCuenta(1, 0,
+						'Pasivo Circulante', 1, 0, $id_catalogo_cuentas, 'Acreedora', 
+						'Acreedores', 'Balance', $id_cuenta_padre = ""
+						);
+		self::NuevaCuenta(1, 0,
+						'Pasivo Circulante', 1, 0, $id_catalogo_cuentas, 'Acreedora', 
+						'Impuestos por Pagar', 'Balance', $id_cuenta_padre = ""
+						);
+		self::NuevaCuenta(1, 0,
+						'Pasivo Circulante', 1, 0, $id_catalogo_cuentas, 'Acreedora', 
+						'Anticipos a Clientes', 'Balance', $id_cuenta_padre = ""
+						);
+		self::NuevaCuenta(1, 0,
+						'Pasivo Circulante', 1, 0, $id_catalogo_cuentas, 'Acreedora', 
+						'Documentos a Pagar a Corto Plazo', 'Balance', $id_cuenta_padre = ""
+						);
+		self::NuevaCuenta(1, 0,
+						'Pasivo Circulante', 1, 0, $id_catalogo_cuentas, 'Acreedora', 
+						'IVA Causado', 'Balance', $id_cuenta_padre = ""
+						);
+	}
+
+	public function CuentasPasivoLargoPlazo($id_catalogo_cuentas)
+	{
+		self::NuevaCuenta(1, 0,
+						'Pasivo Largo Plazo', 1, 0, $id_catalogo_cuentas, 'Acreedora', 
+						'Documentos por pagar a largo plazo', 'Balance', $id_cuenta_padre = ""
+						);
+		self::NuevaCuenta(1, 0,
+						'Pasivo Largo Plazo', 1, 0, $id_catalogo_cuentas, 'Acreedora', 
+						'Hipotecas', 'Balance', $id_cuenta_padre = ""
+						);
+	}
+
+	public function CuentasCapitalContable($id_catalogo_cuentas)
+	{
+		$capital_social = self::NuevaCuenta(1, 0,
+						'Capital Contable', 1, 0, $id_catalogo_cuentas, 'Acreedora', 
+						'Capital Social', 'Balance', $id_cuenta_padre = ""
+						);
+		self::NuevaCuenta(1, 0,
+						'Capital Contable', 0, 0, $id_catalogo_cuentas, 'Acreedora', 
+						'Fijo', 'Balance', $capital_social['id_cuenta_contable']
+						);
+		self::NuevaCuenta(1, 0,
+						'Capital Contable', 0, 0, $id_catalogo_cuentas, 'Acreedora', 
+						'Variable', 'Balance', $capital_social['id_cuenta_contable']
+						);
+	}
+
+	public function CuentasIngresos($id_catalogo_cuentas)
+	{
+		self::NuevaCuenta(1, 0,
+						'Ingresos', 1, 0, $id_catalogo_cuentas, 'Acreedora', 
+						'Ventas', 'Estado de Resultados', $id_cuenta_padre = ""
+						);
+		self::NuevaCuenta(1, 0,
+						'Ingresos', 1, 0, $id_catalogo_cuentas, 'Acreedora', 
+						'Devoluciones Ventas', 'Estado de Resultados', $id_cuenta_padre = ""
+						);
+	}
+
+	public function CuentasEgresos($id_catalogo_cuentas)
+	{
+		self::NuevaCuenta(0, 1,
+						'Egresos', 1, 0, $id_catalogo_cuentas, 'Deudora', 
+						'Costos de Venta', 'Estado de Resultados', $id_cuenta_padre = ""
+						);
+		self::NuevaCuenta(0, 1,
+						'Egresos', 1, 0, $id_catalogo_cuentas, 'Deudora', 
+						'Compras', 'Estado de Resultados', $id_cuenta_padre = ""
+						);
+		self::NuevaCuenta(0, 1,
+						'Egresos', 1, 0, $id_catalogo_cuentas, 'Deudora', 
+						'Gastos', 'Estado de Resultados', $id_cuenta_padre = ""
+						);
+		self::NuevaCuenta(0, 1,
+						'Egresos', 1, 0, $id_catalogo_cuentas, 'Deudora', 
+						'Resultado Integral Financiero', 'Estado de Resultados', $id_cuenta_padre = ""
+						);
 	}
 
   }

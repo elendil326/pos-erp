@@ -67,6 +67,9 @@ class CuentaContable extends VO
 			if( isset($data['activa']) ){
 				$this->activa = $data['activa'];
 			}
+			if( isset($data['id_catalogo_cuentas']) ){
+				$this->id_catalogo_cuentas = $data['id_catalogo_cuentas'];
+			}
 		}
 	}
 
@@ -94,7 +97,8 @@ class CuentaContable extends VO
 			"es_cuenta_mayor" => $this->es_cuenta_mayor,
 			"afectable" => $this->afectable,
 			"id_cuenta_padre" => $this->id_cuenta_padre,
-			"activa" => $this->activa
+			"activa" => $this->activa,
+			"id_catalogo_cuentas" => $this->id_catalogo_cuentas
 		); 
 	return json_encode($vec); 
 	}
@@ -113,7 +117,7 @@ class CuentaContable extends VO
 	/**
 	  * clave
 	  * 
-	  * La clave que se le dará a la nueva cuenta contable<br>
+	  * La clave que se le darÃ¡ a la nueva cuenta contable<br>
 	  * @access public
 	  * @var varchar(45)
 	  */
@@ -230,11 +234,20 @@ class CuentaContable extends VO
 	/**
 	  * activa
 	  * 
-	  * Indica si la cuenta está disponible para su uso o no.<br>
+	  * Indica si la cuenta estÃ¡ disponible para su uso o no.<br>
 	  * @access public
 	  * @var tinyint(1)
 	  */
 	public $activa;
+
+	/**
+	  * id_catalogo_cuentas
+	  * 
+	  * Id del catalogo de cuentas al que pertenece esta cuenta<br>
+	  * @access public
+	  * @var int(11)
+	  */
+	public $id_catalogo_cuentas;
 
 	/**
 	  * getIdCuentaContable
@@ -267,7 +280,7 @@ class CuentaContable extends VO
 	/**
 	  * getClave
 	  * 
-	  * Get the <i>clave</i> property for this object. Donde <i>clave</i> es La clave que se le dará a la nueva cuenta contable
+	  * Get the <i>clave</i> property for this object. Donde <i>clave</i> es La clave que se le darÃ¡ a la nueva cuenta contable
 	  * @return varchar(45)
 	  */
 	final public function getClave()
@@ -278,7 +291,7 @@ class CuentaContable extends VO
 	/**
 	  * setClave( $clave )
 	  * 
-	  * Set the <i>clave</i> property for this object. Donde <i>clave</i> es La clave que se le dará a la nueva cuenta contable.
+	  * Set the <i>clave</i> property for this object. Donde <i>clave</i> es La clave que se le darÃ¡ a la nueva cuenta contable.
 	  * Una validacion basica se hara aqui para comprobar que <i>clave</i> es de tipo <i>varchar(45)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param varchar(45)
@@ -579,7 +592,7 @@ class CuentaContable extends VO
 	/**
 	  * getActiva
 	  * 
-	  * Get the <i>activa</i> property for this object. Donde <i>activa</i> es Indica si la cuenta está disponible para su uso o no.
+	  * Get the <i>activa</i> property for this object. Donde <i>activa</i> es Indica si la cuenta estÃ¡ disponible para su uso o no.
 	  * @return tinyint(1)
 	  */
 	final public function getActiva()
@@ -590,7 +603,7 @@ class CuentaContable extends VO
 	/**
 	  * setActiva( $activa )
 	  * 
-	  * Set the <i>activa</i> property for this object. Donde <i>activa</i> es Indica si la cuenta está disponible para su uso o no..
+	  * Set the <i>activa</i> property for this object. Donde <i>activa</i> es Indica si la cuenta estÃ¡ disponible para su uso o no..
 	  * Una validacion basica se hara aqui para comprobar que <i>activa</i> es de tipo <i>tinyint(1)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param tinyint(1)
@@ -598,6 +611,30 @@ class CuentaContable extends VO
 	final public function setActiva( $activa )
 	{
 		$this->activa = $activa;
+	}
+
+	/**
+	  * getIdCatalogoCuentas
+	  * 
+	  * Get the <i>id_catalogo_cuentas</i> property for this object. Donde <i>id_catalogo_cuentas</i> es Id del catalogo de cuentas al que pertenece esta cuenta
+	  * @return int(11)
+	  */
+	final public function getIdCatalogoCuentas()
+	{
+		return $this->id_catalogo_cuentas;
+	}
+
+	/**
+	  * setIdCatalogoCuentas( $id_catalogo_cuentas )
+	  * 
+	  * Set the <i>id_catalogo_cuentas</i> property for this object. Donde <i>id_catalogo_cuentas</i> es Id del catalogo de cuentas al que pertenece esta cuenta.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_catalogo_cuentas</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setIdCatalogoCuentas( $id_catalogo_cuentas )
+	{
+		$this->id_catalogo_cuentas = $id_catalogo_cuentas;
 	}
 
 }

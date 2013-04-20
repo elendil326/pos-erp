@@ -5825,120 +5825,6 @@
   
   
 
-  class ApiPosBdRestaurarBdEspecifica extends ApiHandler {
-  
-
-	protected function DeclareAllowedRoles(){  return BYPASS;  }
-	protected function GetRequest()
-	{
-		$this->request = array(	
-			"id_instancia" => new ApiExposedProperty("id_instancia", true, POST, array( "int" )),
-			"time" => new ApiExposedProperty("time", true, POST, array( "int" )),
-		);
-	}
-
-	protected function GenerateResponse() {		
-		try{
- 		$this->response = POSController::EspecificaBdRestaurarBd( 
- 			
-			
-			isset($_POST['id_instancia'] ) ? $_POST['id_instancia'] : null,
-			isset($_POST['time'] ) ? $_POST['time'] : null
-			
-			);
-		}catch(Exception $e){
- 			//Logger::error($e);
-			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
-		}
- 	}
-  }
-  
-  
-
-  class ApiPosBdRespaldarInstanciasBd extends ApiHandler {
-  
-
-	protected function DeclareAllowedRoles(){  return BYPASS;  }
-	protected function GetRequest()
-	{
-		$this->request = array(	
-			"instance_ids" => new ApiExposedProperty("instance_ids", true, POST, array( "json" )),
-		);
-	}
-
-	protected function GenerateResponse() {		
-		try{
- 		$this->response = POSController::BdInstanciasRespaldarBd( 
- 			
-			
-			isset($_POST['instance_ids'] ) ? json_decode($_POST['instance_ids']) : null
-			
-			);
-		}catch(Exception $e){
- 			//Logger::error($e);
-			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
-		}
- 	}
-  }
-  
-  
-
-  class ApiPosBdRestaurarInstanciasBd extends ApiHandler {
-  
-
-	protected function DeclareAllowedRoles(){  return BYPASS;  }
-	protected function GetRequest()
-	{
-		$this->request = array(	
-			"instance_ids" => new ApiExposedProperty("instance_ids", true, POST, array( "json" )),
-		);
-	}
-
-	protected function GenerateResponse() {		
-		try{
- 		$this->response = POSController::BdInstanciasRestaurarBd( 
- 			
-			
-			isset($_POST['instance_ids'] ) ? json_decode($_POST['instance_ids']) : null
-			
-			);
-		}catch(Exception $e){
- 			//Logger::error($e);
-			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
-		}
- 	}
-  }
-  
-  
-
-  class ApiPosBdDescargarInstanciasBd extends ApiHandler {
-  
-
-	protected function DeclareAllowedRoles(){  return BYPASS;  }
-	protected function GetRequest()
-	{
-		$this->request = array(	
-			"instance_ids" => new ApiExposedProperty("instance_ids", true, POST, array( "json" )),
-		);
-	}
-
-	protected function GenerateResponse() {		
-		try{
- 		$this->response = POSController::BdInstanciasDescargarBd( 
- 			
-			
-			isset($_POST['instance_ids'] ) ? json_decode($_POST['instance_ids']) : null
-			
-			);
-		}catch(Exception $e){
- 			//Logger::error($e);
-			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
-		}
- 	}
-  }
-  
-  
-
   class ApiPosConfiguracionDecimales extends ApiHandler {
   
 
@@ -6375,6 +6261,7 @@
 			"clasificacion" => new ApiExposedProperty("clasificacion", true, POST, array( "enum" )),
 			"es_cuenta_mayor" => new ApiExposedProperty("es_cuenta_mayor", true, POST, array( "bool" )),
 			"es_cuenta_orden" => new ApiExposedProperty("es_cuenta_orden", true, POST, array( "bool" )),
+			"id_catalogo_cuentas" => new ApiExposedProperty("id_catalogo_cuentas", true, POST, array( "int" )),
 			"naturaleza" => new ApiExposedProperty("naturaleza", true, POST, array( "enum" )),
 			"nombre_cuenta" => new ApiExposedProperty("nombre_cuenta", true, POST, array( "string" )),
 			"tipo_cuenta" => new ApiExposedProperty("tipo_cuenta", true, POST, array( "enum" )),
@@ -6392,6 +6279,7 @@
 			isset($_POST['clasificacion'] ) ? $_POST['clasificacion'] : null,
 			isset($_POST['es_cuenta_mayor'] ) ? $_POST['es_cuenta_mayor'] : null,
 			isset($_POST['es_cuenta_orden'] ) ? $_POST['es_cuenta_orden'] : null,
+			isset($_POST['id_catalogo_cuentas'] ) ? $_POST['id_catalogo_cuentas'] : null,
 			isset($_POST['naturaleza'] ) ? $_POST['naturaleza'] : null,
 			isset($_POST['nombre_cuenta'] ) ? $_POST['nombre_cuenta'] : null,
 			isset($_POST['tipo_cuenta'] ) ? $_POST['tipo_cuenta'] : null,
@@ -6488,6 +6376,7 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
+			"id_catalogo_cuentas" => new ApiExposedProperty("id_catalogo_cuentas", true, POST, array( "int" )),
 			"afectable" => new ApiExposedProperty("afectable", false, POST, array( "bool" )),
 			"clasificacion" => new ApiExposedProperty("clasificacion", false, POST, array( "enum" )),
 			"clave" => new ApiExposedProperty("clave", false, POST, array( "string" )),
@@ -6508,6 +6397,7 @@
  		$this->response = ContabilidadController::BuscarCuenta( 
  			
 			
+			isset($_POST['id_catalogo_cuentas'] ) ? $_POST['id_catalogo_cuentas'] : null,
 			isset($_POST['afectable'] ) ? $_POST['afectable'] :  "",
 			isset($_POST['clasificacion'] ) ? $_POST['clasificacion'] :  "",
 			isset($_POST['clave'] ) ? $_POST['clave'] :  "",

@@ -28,11 +28,11 @@ class GerenciaComponentPage extends PosComponentPage{
 
 		        {
 		        	"title":"Contabilidad",
-		        	"url": "cuentas_contables.php",
+		        	"url": "contabilidad.cuentas.catalogo.php",
 		        	"children":[
 		        		{
-		        			"title" : "Cuentas",
-		        			"url" : "contabilidad.cuentas.php"
+		        			"title" : "Catalogos Cuentas",
+		        			"url" : "contabilidad.cuentas.catalogo.php"
 		        		}
 		        	]
 		        },
