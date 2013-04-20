@@ -168,21 +168,24 @@ class InstanciasController {
 
 		//creamos la estructura de carpetas necesaria para cada instancia
 		{
-			$path = POS_PATH_TO_SERVER_ROOT . "/../static_content/" . $I_ID;
+			//verificamos los permisos de la carpeta statuc_content
+			if (is_writable(POS_PATH_TO_SERVER_ROOT . "/../static_content")) {
+				$path = POS_PATH_TO_SERVER_ROOT . "/../static_content/" . $I_ID;
 
-			if (!is_dir($path)) {
-				mkdir($path);
-				chmod($path, 0777);
-				mkdir($path . "/plantillas");
-				chmod($path . "/plantillas", 0777);
-				mkdir($path . "/plantillas/excel");
-				chmod($path . "/plantillas/excel", 0777);
+				if (!is_dir($path)) {
+					mkdir($path);
+					chmod($path, 0777);
+					mkdir($path . "/plantillas");
+					chmod($path . "/plantillas", 0777);
+					mkdir($path . "/plantillas/excel");
+					chmod($path . "/plantillas/excel", 0777);
+				}
+			} else {
+				Logger::error("Verifique los permisos de escritura de la carpeta static_content");
 			}
 		}
 
 		Logger::log("Instancia $I_ID creada correctamente... ");
-
-		Logger::log("======== / NUEVA INSTANCIA =============");
 
 		return (int) $I_ID;
 	}
