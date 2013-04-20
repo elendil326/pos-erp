@@ -568,6 +568,9 @@ class EmpresasController implements IEmpresas
 
 		DAO::transEnd();
 
+		//Creamos el catalogo de cuentas por default para esta nueva empresa
+		ContabilidadController::NuevoCatalogoCuentasEmpresa($empresa->getIdEmpresa());
+
 		Logger::log("Empresa creada exitosamente, id=" . $empresa->getIdEmpresa());
 
 		return array("id_empresa" => ((int) $empresa->getIdEmpresa()));
