@@ -580,8 +580,10 @@ class EmpresasController implements IEmpresas
 
 		//Editamos las cuentas bancarias
 		{
-			foreach ($cuentas_bancarias as $cuenta_bancarias) {
-				//Pendiente hasta que se haga el SPEC de cuentas bancarias
+			if (!empty($cuentas_bancarias)) {
+				foreach ($cuentas_bancarias as $cuenta_bancarias) {
+					//Pendiente hasta que se haga el SPEC de cuentas bancarias
+				}
 			}
 		}
 
@@ -770,7 +772,6 @@ class EmpresasController implements IEmpresas
 
 				//numero_exterior
 				if (isset($d->numero_exterior)) {
-					Logger::error("SE ESTA!!!");
 					$cambio_direccion = true;
 					$_direccion->setNumeroExterior($direccion['numero_exterior']);
 				}
