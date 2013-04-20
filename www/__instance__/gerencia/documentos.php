@@ -136,152 +136,209 @@
    $page->addComponent(new TitleComponent("Campos para el documento", 3));
 
     $html = "<div id='editor-grid' style='margin-top: 5px'></div>
-    <script type='text/javascript' charset='utf-8'>
 
-      var extraParamsStore;
-      var rowEditing;
-      
-      function attachExtraParams(o){
-          o.extra_params = getParams();
-          return o;
-          }
-                        
-      function getParams(){
-            var c = extraParamsStore.getCount(),
-            out = [];
-            for (var i=0; i < c; i++) {
-                  var o = extraParamsStore.getAt(i);
-                  out.push({
-                        desc : o.get('desc'),
-                        type : o.get('type'),
-                        obligatory : o.get('obligatory')
-                  });
-            };
-            return Ext.JSON.encode(out);
-      }
-                        
-      Ext.onReady(function(){
-            Ext.define('ExtraParam', {
-                  extend: 'Ext.data.Model',
-                  fields: ['id','desc', { name: 'type', type: 'enum' }, { name: 'obligatory', type: 'bool' } ]
-            });
-            extraParamsStore = Ext.create('Ext.data.Store', {
-                  autoDestroy: true,
-                  model: 'ExtraParam',
-                  proxy: {
-                        type: 'memory'
-                  },
-                  data: [],
-                  sorters: [{
-                        property: 'start',
-                        direction: 'ASC'
-                  }]
-            });
-            
-            rowEditing = Ext.create('Ext.grid.plugin.RowEditing', { clicksToMoveEditor: 1, autoCancel: false });
-            grid = Ext.create('Ext.grid.Panel', {
-                  store: extraParamsStore,
-                  bodyCls: 'foo',
-                  id : 'extra-params-grid',
-                  columns: [{
-                        header: 'Descripcion',
-                        dataIndex: 'desc',
-                        flex: 1,
-                        editor: { allowBlank: false }
-                  },
-                  {
-                        header: 'Tipo de dato',
-                        dataIndex: 'type',
-                        width: 130,
-                        field: {
-                              xtype: 'combobox',
-                              typeAhead: true,
-                              triggerAction: 'all',
-                              selectOnTab: true,
-                              store: [
-                                    ['textarea',    'Area de texto'],
-                                    ['text',      'Linea de texto'],
-                                    ['date',    'Fecha'],
-                                    ['bool',    'Desicion'],
-                                    ['password',      'Contrasena']
-                              ],
-                        lazyRender: true,
-                        listClass: 'x-combo-list-small'
-                        }
-                  },
-                  {
-                        header: 'Obligatorio',
-                        dataIndex: 'obligatory',
-                        width: 130,
-                        field: {
-                              xtype: 'combobox',
-                              typeAhead: true,
-                              triggerAction: 'all',
-                              selectOnTab: true,
-                              store: [
-                                    [true,  'Si'],
-                                    [false, 'No']
-                              ],
-                            lazyRender: true,
-                            listClass: 'x-combo-list-small'
-                        }
-                  }],
-                    
-                  renderTo: 'editor-grid',
-                  width: '100%',
-                  height: 400,
-                  frame: false,
-                  tbar: [{
-                        text: 'Nuevo parametro',
-                        iconCls: 'not-ok',
-                        handler : function() {
-                              rowEditing.cancelEdit();
-                              var r = Ext.ModelManager.create({
-                                    desc: 'nuevo',
-                                    type: 'text',
-                                    obligator: false
-                              }, 'ExtraParam');
-                        extraParamsStore.insert(0, r);
-                        rowEditing.startEdit(0, 0);
-                        }
-                  }, 
-                  {
-                        itemId: 'removeEmployee',
-                        text: 'Remover parametro',
-                        iconCls: 'ok',
-                        handler: function() {
-                              var sm = grid.getSelectionModel();
-                              rowEditing.cancelEdit();
-                              extraParamsStore.remove(sm.getSelection());
-                              sm.select(0);
-                        },
-                        disabled: true
-                  }],
-                  plugins: [rowEditing],
-                  listeners: {
-                        'selectionchange': function(view, records) {
-                        grid.down('#removeEmployee').setDisabled(!records.length);
-                    }
-                }
-            });
-        });
-      var grid;
-      function InsertarFila(Elemento)
-                 {
-                 rowEditing.cancelEdit();
-                        for(Elem in Elemento)
-                        {
-                              var r = Ext.ModelManager.create({
-                                    desc: Elemento[Elem],
-                                    type: 'text',
-                                    obligator: false
-                              }, 'ExtraParam');
-                        extraParamsStore.insert(Elem, r);
-                        }
-                 };        
+	<script type='text/javascript' charset='utf-8'>
+	var extraParamsStore;
+	var rowEditing;
+	var comboBoxEnums = [];
+
+	function attachExtraParams(o) {
+		o.extra_params = getParams();
+		return o;
+	}
+
+	function getParams() {
+		var c = extraParamsStore.getCount(),
+		out = [];
+		for (var i=0; i < c; i++) {
+			var o = extraParamsStore.getAt(i);
+			out.push({
+					desc : o.get('desc'),
+					type : o.get('type'),
+					obligatory : o.get('obligatory'),
+					enum : o.get('enum_list')
+			});
+		};
+		return Ext.JSON.encode(out);
+	}
+
+	var win;
+	var enumsWindow;
+
+	function showEnumWindow(event, record) {
+		enumsWindow = Ext.create('Ext.window.Window', {
+			title: 'Layout Window with title <em>after</em> tools',
+			closable: true,
+			closeAction: 'hide',
+			modal:  true,
+				padding : 5,
+			width: 300,
+			minWidth: 250,
+			items: [
+			{
+				xtype : 'panel',
+				items :[{
+					xtype : 'textarea',
+					fieldLabel: 'Enums',
+					id : 'enums_textarea',
+					padding : 5,
+					allowBlank: false,
+					value : record.get('enum_list')
+				},{
+					xtype : 'button',
+					padding : 5,
+					text : 'Guardar',
+					handler :  function(a,b,c){
+						record.set('enum_list',Ext.getCmp('enums_textarea').getValue() );
+						enumsWindow.destroy();
+					}
+				}]
+			}
+			]
+		}).show();
+	}
+
+	Ext.onReady(function(){
+		Ext.define('ExtraParam', {
+			extend: 'Ext.data.Model',
+			fields: [ 
+				'id',
+				'desc',
+				{ name: 'type', type: 'enum' },
+				{ name: 'enum_list', type: 'string' },
+				{ name: 'obligatory', type: 'bool' }
+			]});
+
+			extraParamsStore = Ext.create('Ext.data.Store', {
+				  autoDestroy: true,
+				  model: 'ExtraParam',
+				  proxy: {
+						type: 'memory'
+				  },
+				  data: [],
+				  sorters: [{
+						property: 'start',
+						direction: 'ASC'
+				  }],
+					listeners : {
+						'dataChanged' : function(context, eopts) {
+						},
+						'update' : function(event, record) {
+							var changes = record.getChanges();
+							if ((changes.type !== undefined) 
+								&& (changes.type == 'enum') ) {
+								showEnumWindow(event, record);
+							}
+						}
+					}
+			});
+
+			rowEditing = Ext.create('Ext.grid.plugin.RowEditing', { clicksToMoveEditor: 1, autoCancel: false });
+
+			grid = Ext.create('Ext.grid.Panel', {
+				  store: extraParamsStore,
+				  bodyCls: 'foo',
+				  id : 'extra-params-grid',
+				  columns: [{
+						header: 'Descripcion',
+						dataIndex: 'desc',
+						flex: 1,
+						editor: { allowBlank: false }
+				  },
+				  {
+						header: 'Tipo de dato',
+						dataIndex: 'type',
+						width: 130,
+						field: {
+							xtype: 'combobox',
+							typeAhead: true,
+							triggerAction: 'all',
+							selectOnTab: true,
+							store: [
+								['textarea',		'Area de texto'],
+								['text',			'Linea de texto'],
+								['date',			'Fecha'],
+								['bool',			'Desicion'],
+								['password',		'Contrasena'],
+								['enum',			'Opciones']
+							],
+						lazyRender: true,
+						listClass: 'x-combo-list-small'
+						}
+				  },
+				  {
+						header: 'Obligatorio',
+						dataIndex: 'obligatory',
+						width: 130,
+						field: {
+							  xtype: 'combobox',
+							  typeAhead: true,
+							  triggerAction: 'all',
+							  selectOnTab: true,
+							  store: [
+									[true,	'Si'],
+									[false, 'No']
+							  ],
+							lazyRender: true,
+							listClass: 'x-combo-list-small'
+						}
+				  }],
+				  renderTo: 'editor-grid',
+				  width: '100%',
+				  height: 400,
+				  frame: false,
+				  tbar: [{
+							text: 'Nuevo parametro',
+							iconCls: 'not-ok',
+							handler : function() {
+								rowEditing.cancelEdit();
+								var r = Ext.ModelManager.create({
+									desc: 'nuevo',
+									type: 'text',
+									obligator: false
+								}, 'ExtraParam');
+								extraParamsStore.insert(0, r);
+								rowEditing.startEdit(0, 0);
+							}
+						}, 
+						{
+							itemId: 'removeEmployee',
+							text: 'Remover parametro',
+							iconCls: 'ok',
+							handler: function() {
+								var sm = grid.getSelectionModel();
+								rowEditing.cancelEdit();
+								extraParamsStore.remove(sm.getSelection());
+								sm.select(0);
+							},
+							disabled: true
+						}],
+					plugins: [rowEditing],
+					listeners: {
+						'selectionchange': function(view, records) {
+						grid.down('#removeEmployee').setDisabled(!records.length);
+					}
+				}
+			});
+		});
+
+	var grid;
+	function InsertarFila(Elemento) {
+		rowEditing.cancelEdit();
+
+		for (Elem in Elemento) {
+			 var r = Ext.ModelManager.create({
+						desc: Elemento[Elem],
+						type: 'text',
+						obligator: false
+						}, 'ExtraParam');
+
+			extraParamsStore.insert(Elem, r);
+		}
+	};
 
 </script>";
-    
+	
     $page->addComponent( $html );
     $page->addComponent($W);//Componente en caso de abrir algún archivo de plantilla
 	$page->render();

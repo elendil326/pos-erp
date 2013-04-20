@@ -411,6 +411,19 @@ Update : La respuesta solo deber?a de contener success :true | false, y en caso 
 				}
 
 				$paramStruct = new ExtraParamsEstructura();
+
+				//
+				// Si el tipo de parametro extra es enum,
+				// se debio enviar tambien 'enum', validar 
+				// que sea un json
+				if ($extra_params[$i]->type == "enum") {
+					if (!isset($extra_params[$i]->enum)) {
+						throw new InvalidDataException("Falta enum");
+					}
+
+					$paramStruct->setEnum($extra_params[$i]->enum);
+				}
+
 				$paramStruct->setTabla("documento_base-" . $nDoc->getIdDocumentoBase( ) );
 				$paramStruct->setCampo( str_replace( " ", "_", $extra_params[$i]->desc ) );
 				$paramStruct->setTipo( $extra_params[$i]->type );
@@ -424,13 +437,13 @@ Update : La respuesta solo deber?a de contener success :true | false, y en caso 
 
 				}catch(Exception $e){
 					Logger::error($e);
-					throw new Exception( $e );
+					throw new InvalidDatabaseOperationException($e);
 
 				}
 			}
 		}
 
-		Logger::error("Se ha creado el documento base id=" . $nDoc->getIdDocumentoBase() );
+		Logger::log("Se ha creado el documento base id=" . $nDoc->getIdDocumentoBase() );
 
 		return array("id_documento_base" => $nDoc->getIdDocumentoBase() );
 	}
