@@ -882,7 +882,7 @@ CREATE TABLE IF NOT EXISTS `extra_params_estructura` (
   `tabla` varchar(32) COLLATE utf8_spanish_ci NOT NULL,
   `campo` varchar(32) COLLATE utf8_spanish_ci NOT NULL,
   `tipo` enum('text','textarea','enum','password','string','int','float','bool','date') COLLATE utf8_spanish_ci NOT NULL,
-  `enum` longtext NOT NULL,
+  `enum` longtext NULL,
   `longitud` int(11) NOT NULL,
   `obligatorio` tinyint(1) NOT NULL,
   `caption` varchar(32) COLLATE utf8_spanish_ci NOT NULL,
