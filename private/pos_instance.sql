@@ -855,6 +855,7 @@ CREATE TABLE IF NOT EXISTS `empresa` (
   `direccion_web` varchar(20) DEFAULT NULL COMMENT 'Direccion web de la empresa',
   `cedula` varchar(100) CHARACTER SET armscii8 DEFAULT NULL,
   `id_logo` int(11) NOT NULL,
+  `mensaje_morosos` text CHARACTER SET utf8 COMMENT 'Mensaje para clientes y proveedores morosos',
   PRIMARY KEY (`id_empresa`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='tabla de empresas' AUTO_INCREMENT=7 ;
 

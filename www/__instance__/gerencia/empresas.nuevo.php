@@ -61,7 +61,8 @@
 						\"ejercicio\" : \"2013\",
 						\"periodo_actual\" : 1,
 						\"duracion_periodo\" : 1
-					})
+					}),
+					mensaje_morosos : Ext.get(\"".$form->getGuiComponentId()."mensaje_morosos\").getValue()
 				},{ callback : function(a,b){
 					window.onbeforeunload = function(){ return;	};
 					window.location = \"empresas.ver.php?eid=\"+ a.id_empresa;

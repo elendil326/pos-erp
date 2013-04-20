@@ -176,6 +176,11 @@ abstract class EmpresaDAOBase extends DAO
 			array_push( $val, $empresa->getIdLogo() );
 		}
 
+		if( ! is_null( $empresa->getMensajeMorosos() ) ){
+			$sql .= " `mensaje_morosos` = ? AND";
+			array_push( $val, $empresa->getMensajeMorosos() );
+		}
+
 		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
@@ -206,7 +211,7 @@ abstract class EmpresaDAOBase extends DAO
 	  **/
 	private static final function update( $empresa )
 	{
-		$sql = "UPDATE empresa SET  `id_direccion` = ?, `rfc` = ?, `razon_social` = ?, `representante_legal` = ?, `fecha_alta` = ?, `fecha_baja` = ?, `activo` = ?, `direccion_web` = ?, `cedula` = ?, `id_logo` = ? WHERE  `id_empresa` = ?;";
+		$sql = "UPDATE empresa SET  `id_direccion` = ?, `rfc` = ?, `razon_social` = ?, `representante_legal` = ?, `fecha_alta` = ?, `fecha_baja` = ?, `activo` = ?, `direccion_web` = ?, `cedula` = ?, `id_logo` = ?, `mensaje_morosos` = ? WHERE  `id_empresa` = ?;";
 		$params = array( 
 			$empresa->getIdDireccion(), 
 			$empresa->getRfc(), 
@@ -218,6 +223,7 @@ abstract class EmpresaDAOBase extends DAO
 			$empresa->getDireccionWeb(), 
 			$empresa->getCedula(), 
 			$empresa->getIdLogo(), 
+			$empresa->getMensajeMorosos(), 
 			$empresa->getIdEmpresa(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -241,7 +247,7 @@ abstract class EmpresaDAOBase extends DAO
 	  **/
 	private static final function create( &$empresa )
 	{
-		$sql = "INSERT INTO empresa ( `id_empresa`, `id_direccion`, `rfc`, `razon_social`, `representante_legal`, `fecha_alta`, `fecha_baja`, `activo`, `direccion_web`, `cedula`, `id_logo` ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO empresa ( `id_empresa`, `id_direccion`, `rfc`, `razon_social`, `representante_legal`, `fecha_alta`, `fecha_baja`, `activo`, `direccion_web`, `cedula`, `id_logo`, `mensaje_morosos` ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$empresa->getIdEmpresa(), 
 			$empresa->getIdDireccion(), 
@@ -254,6 +260,7 @@ abstract class EmpresaDAOBase extends DAO
 			$empresa->getDireccionWeb(), 
 			$empresa->getCedula(), 
 			$empresa->getIdLogo(), 
+			$empresa->getMensajeMorosos(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -418,6 +425,17 @@ abstract class EmpresaDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " `id_logo` = ? AND"; 
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( ( !is_null (($a = $empresaA->getMensajeMorosos()) ) ) & ( ! is_null ( ($b = $empresaB->getMensajeMorosos()) ) ) ){
+				$sql .= " `mensaje_morosos` >= ? AND `mensaje_morosos` <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " `mensaje_morosos` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

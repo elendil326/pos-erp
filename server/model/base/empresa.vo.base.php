@@ -55,6 +55,9 @@ class Empresa extends VO
 			if( isset($data['id_logo']) ){
 				$this->id_logo = $data['id_logo'];
 			}
+			if( isset($data['mensaje_morosos']) ){
+				$this->mensaje_morosos = $data['mensaje_morosos'];
+			}
 		}
 	}
 
@@ -78,7 +81,8 @@ class Empresa extends VO
 			"activo" => $this->activo,
 			"direccion_web" => $this->direccion_web,
 			"cedula" => $this->cedula,
-			"id_logo" => $this->id_logo
+			"id_logo" => $this->id_logo,
+			"mensaje_morosos" => $this->mensaje_morosos
 		); 
 	return json_encode($vec); 
 	}
@@ -183,6 +187,15 @@ class Empresa extends VO
 	  * @var int(11)
 	  */
 	public $id_logo;
+
+	/**
+	  * mensaje_morosos
+	  * 
+	  * Mensaje para clientes y proveedores morosos<br>
+	  * @access public
+	  * @var text
+	  */
+	public $mensaje_morosos;
 
 	/**
 	  * getIdEmpresa
@@ -450,6 +463,30 @@ class Empresa extends VO
 	final public function setIdLogo( $id_logo )
 	{
 		$this->id_logo = $id_logo;
+	}
+
+	/**
+	  * getMensajeMorosos
+	  * 
+	  * Get the <i>mensaje_morosos</i> property for this object. Donde <i>mensaje_morosos</i> es Mensaje para clientes y proveedores morosos
+	  * @return text
+	  */
+	final public function getMensajeMorosos()
+	{
+		return $this->mensaje_morosos;
+	}
+
+	/**
+	  * setMensajeMorosos( $mensaje_morosos )
+	  * 
+	  * Set the <i>mensaje_morosos</i> property for this object. Donde <i>mensaje_morosos</i> es Mensaje para clientes y proveedores morosos.
+	  * Una validacion basica se hara aqui para comprobar que <i>mensaje_morosos</i> es de tipo <i>text</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param text
+	  */
+	final public function setMensajeMorosos( $mensaje_morosos )
+	{
+		$this->mensaje_morosos = $mensaje_morosos;
 	}
 
 }

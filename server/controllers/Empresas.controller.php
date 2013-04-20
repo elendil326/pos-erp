@@ -289,7 +289,7 @@ class EmpresasController implements IEmpresas
 		$impuestos_venta = null, $mensaje_morosos = null, $representante_legal = null, $uri_logo = null
 	) {
 
-		Logger::log("Creando nueva empresa `$razon_social`...");
+		Logger::error("Creando nueva empresa `$mensaje_morosos`...");
 
 		//validamos la estructura de los impuestos
 		{
@@ -400,7 +400,8 @@ class EmpresasController implements IEmpresas
 				"activo"              => true,
 				"direccion_web"       => $direccion_web,
 				"cedula"              => "",
-				"id_logo"             => $id_logo
+				"id_logo"             => $id_logo,
+				"mensaje_morosos"     => $mensaje_morosos
 			));
 
 			//Se busca el rfc en la base de datos. Si hay una empresa activa con el mismo rfc se lanza un error
