@@ -491,10 +491,13 @@ $form = new FormComponent();
 $form->addField('mostrar', 'Mostrar productos', 'bool', 'mostrar');
 
 $campos = array_keys(get_class_vars('Producto'));
-foreach ($campos as $key => $campo)
-{
-    $caption = ucwords(str_replace("_", " ", $campo));
-    $campos[$key] = array("id" => $campo, "caption" => $caption);
+foreach ($campos as $key => $campo) {
+    if ($campo == "visible_en_vc") {
+        unset($campos[$key]);
+    } else {
+        $caption = ucwords(str_replace("_", " ", $campo));
+        $campos[$key] = array("id" => $campo, "caption" => $caption);
+    }
 }
 $form->addField('propiedades', 'Propiedades *', 'listbox', $campos, 'propiedades');
 $form->beforeSend('attachPropiedades');
@@ -523,8 +526,10 @@ $html .= <<<EOD
 EOD;
 
 $page->addComponent($html);
+$page->addComponent(new TitleComponent("Mostrar productos a sus clientes", 2));
 $page->addComponent($form);
-$page->addComponent("* Limite su seleccion a un m&aacute;ximo de siete propiedades, por favor");
+$page->addComponent("* Puede hacer selecci&oacute;n m&uacute;ltiple presionando la tecla CTRL.<br>
+    * Limite su seleccion a un m&aacute;ximo de siete propiedades, por favor.");
 
 //---------------------------------------------------------
 

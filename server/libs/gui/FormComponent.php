@@ -462,7 +462,7 @@ class FormComponent implements GuiComponent {
 					break;
 				// List boxes
 				case "listbox":
-					$html .= "<select multiple='true' id='" . $this->guiComponentId . $f->id . "' name='" . $f->name . "'>";
+					$html .= "<select multiple='true' id='" . $this->guiComponentId . $f->id . "' name='" . $f->name . "' size='" . count($f->value)/2 . "'>";
 					foreach ($f->value as $o){
 						$html .= "<option value='" . $o["id"] . "'>" . $o["caption"] . "</option>";
 					}
