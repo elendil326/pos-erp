@@ -47,11 +47,8 @@ class EmpresasController implements IEmpresas
                 "tipo" => "gastos"
             ));
         }
-        
-        
-        
+
         return $out;
-        
     }
     
     /*
@@ -63,16 +60,18 @@ class EmpresasController implements IEmpresas
         //Se valida que la empresa exista en la base de datos
         if (!is_null($id_empresa)) {
             if (is_null(EmpresaDAO::getByPK($id_empresa))) {
+                Logger::warn("La empresa con id: " . $id_empresa . " no existe");
                 return "La empresa con id: " . $id_empresa . " no existe";
             }
         }
         //se valida que la direccion exista en la base de datos
         if (!is_null($id_direccion)) {
             if (is_null(DireccionDAO::getByPK($id_direccion))) {
+                Logger::log("La direccion con id: " . $id_direccion . " no existe");
                 return "La direccion con id: " . $id_direccion . " no existe";
             }
         }
-        
+
         //se valida que la curp tenga solo letras mayusculas y numeros
         if (!is_null($curp)) {
             $e = self::validarString($curp, 30, "curp");
@@ -81,46 +80,50 @@ class EmpresasController implements IEmpresas
             if (preg_match('/[^A-Z0-9]/', $curp))
                 return "El curp " . $curp . " contiene caracteres fuera del rango A-Z y 0-9";
         }
-        
+
         //se valida que el rfc tenga solo letras mayusculas y numeros.
         if (!is_null($rfc)) {
             $e = self::validarString($curp, 30, "rfc");
             if (is_string($e))
                 return $e;
-            if (preg_match('/[^A-Z0-9]/', $rfc))
+            if (preg_match('/[^A-Z0-9]/', $rfc)){
+                Logger::warn("El rfc " . $rfc . " contiene caracteres fuera del rango A-Z y 0-9");
                 return "El rfc " . $rfc . " contiene caracteres fuera del rango A-Z y 0-9";
+            }
         }
-        
+
         //se valida que la razon social este en le rango
         if (!is_null($razon_social)) {
             $e = self::validarString($razon_social, 100, "razon social");
             if (is_string($e))
                 return $e;
         }
-        
+
         //se valida que el representante legal este en el rango
         if (!is_null($representante_legal)) {
             $e = self::validarString($representante_legal, 100, "representante legal");
             if (is_string($e))
                 return $e;
         }
-        
+
         //se valida que el boleano activo este en el rango
         if (!is_null($activo)) {
             $e = self::validarNumero($activo, 1, "activo");
             if (is_string($e))
                 return $e;
         }
-        
+
         //se valida que la direccion web tenga un formato adecuado
         if (!is_null($direccion_web)) {
             $e = self::validarString($direccion_web, 20, "direccion web");
             if (is_string($e))
                 return $e;
-            if (!preg_match('/^(http|https|ftp):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,6}' . '((:[0-9]{1,5})?\/.*)?$/i', $direccion_web) && !preg_match('/^[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,6}' . '((:[0-9]{1,5})?\/.*)?$/i', $direccion_web))
+            if (!preg_match('/^(http|https|ftp):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,6}' . '((:[0-9]{1,5})?\/.*)?$/i', $direccion_web) && !preg_match('/^[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,6}' . '((:[0-9]{1,5})?\/.*)?$/i', $direccion_web)){
+                Logger::warn("La direccion web " . $direccion_web . " no cumple el formato esperado");
                 return "La direccion web " . $direccion_web . " no cumple el formato esperado";
+            }
         }
-        
+
         //No se encontro error
         return true;
     }
@@ -133,6 +136,7 @@ class EmpresasController implements IEmpresas
         //verifica que la sucursal exista en la base de datos
         if (!is_null($id_sucursal)) {
             if (is_null(SucursalDAO::getByPK($id_sucursal))) {
+                Logger::error("La sucursal con id: " . $id_sucursal . " no existe");
                 return "La sucursal con id: " . $id_sucursal . " no existe";
             }
         }
@@ -140,16 +144,14 @@ class EmpresasController implements IEmpresas
         //verifica que la empresa exista en la base de datos
         if (!is_null($id_empresa)) {
             if (is_null(EmpresaDAO::getByPK($id_empresa))) {
+                Logger::error("La empresa con id: " . $id_empresa . " no existe");
                 return "La empresa con id: " . $id_empresa . " no existe";
             }
         }
         
         return true;
     }
-    
-    
-    
-    
+
     /**
      * Buscar($activa, $limit, $order, $order_by, $query, $start)
      *
@@ -217,15 +219,13 @@ class EmpresasController implements IEmpresas
      **/
     public static function Agregar_sucursales($id_empresa, $sucursales)
     {
-        Logger::log("Agregando sucursales a la empresa");
-        
         //Se valida que la empresa exista en la base de datos
         $validar = self::validarParametrosEmpresa($id_empresa);
         if (is_string($validar)) {
             Logger::error($validar);
             throw new Exception($validar, 901);
         }
-        
+
         //Se valida el objeto sucursales
         $sucursales = object_to_array($sucursales);
         
@@ -233,16 +233,17 @@ class EmpresasController implements IEmpresas
             Logger::error("El parametro sucursales recibido es invalido");
             throw new Exception("El parametro sucursales recibido es invalido", 901);
         }
-        
+
         //Se crea un registro de sucursal-empresa y se le asigna como empresa la obtenida.
         $sucursal_empresa = new SucursalEmpresa();
         $sucursal_empresa->setIdEmpresa($id_empresa);
+
         DAO::transBegin();
+
         try {
             //Por cada una de las sucursales como sucursal, se validan los parametros que contiene
             //y si son v'alidos, se almacenan en el objeto sucursal-empresa para luego guardarlo.
             foreach ($sucursales as $sucursal) {
-                
                 $validar = self::validarParametrosSucursalEmpresa($sucursal);
                 if (is_string($validar)) {
                     throw new Exception($validar, 901);
@@ -250,8 +251,7 @@ class EmpresasController implements IEmpresas
                 $sucursal_empresa->setIdSucursal($sucursal);
                 SucursalEmpresaDAO::save($sucursal_empresa);
             }
-        }
-        catch (Exception $e) {
+        }catch (Exception $e) {
             DAO::transRollback();
             Logger::error("No se pudieron agregar las sucursales a la empresa: " . $e);
             if ($e->getCode() == 901)
@@ -261,7 +261,7 @@ class EmpresasController implements IEmpresas
         DAO::transEnd();
         Logger::log("Sucursales agregadas exitosamente");
     }
-    
+
     /**
      *
      * Crear una nueva empresa. Por default una nueva empresa no tiene sucursales.
@@ -581,55 +581,52 @@ class EmpresasController implements IEmpresas
      **/
     public static function Eliminar($id_empresa)
     {
-        Logger::log("Desactivando  empresa $id_empresa...");
-        
-        
         //Se guarda el registro de la empresa y se verifica si esat activa
         $empresa = EmpresaDAO::getByPK($id_empresa);
         
         if (is_null($empresa)) {
             throw new Exception("Esta empresa no existe");
         }
-        
+
         if ($empresa->getActivo() == "0") {
             Logger::warn("La empresa $id_empresa ya esta desactivada");
             //throw new Exception("La empresa ya esta desactivada",901);
             return;
         }
-        
+
         //Se cambia el campo activo a falso y se registra la fecha de baja como hoy
         $empresa->setActivo(0);
         $empresa->setFechaBaja(time());
-        
-        //Se buscan los productos pertenecientes a esta empresa y 
-        //se inicializa una variable temporal producto_empresa
+
+        //Se buscan los productos pertenecientes a esta empresa y se inicializa una variable temporal producto_empresa
         $pr                = new ProductoEmpresa(array(
             "id_empresa" => $id_empresa
         ));
+
         $productos_empresa = ProductoEmpresaDAO::search($pr);
         $producto_empresa  = new ProductoEmpresa();
-        
-        //Se buscan los paquetes pertenecientes a esta empresa y 
-        //se inicializa una variable temporal paquete_empresa
+
+        //Se buscan los paquetes pertenecientes a esta empresa y se inicializa una variable temporal paquete_empresa
         $pa               = new PaqueteEmpresa(array(
             "id_empresa" => $id_empresa
         ));
+
         $paquetes_empresa = PaqueteEmpresaDAO::search($pa);
         $paquete_empresa  = new PaqueteEmpresa();
-        
-        //Se buscan los servicios pertenecientes a esta empresa y 
-        //se inicializa una variable temporal servicio_empresa
+
+        //Se buscan los servicios pertenecientes a esta empresa y se inicializa una variable temporal servicio_empresa
         $se                = new ServicioEmpresa(array(
             "id_empresa" => $id_empresa
         ));
+
         $servicios_empresa = ServicioEmpresaDAO::search($se);
         $servicio_empresa  = new ServicioEmpresa();
-        
-        //Se buscan las sucursales pertenecientes a esta empresa y 
-        //se inicializa una variable temporal sucursal_empresa
+
+        //Se buscan las sucursales pertenecientes a esta empresa y se inicializa una variable temporal sucursal_empresa
         $su                 = new SucursalEmpresa(array(
             "id_empresa" => $id_empresa
         ));
+
         $sucursales_empresa = SucursalEmpresaDAO::search($su);
         $sucursal_empresa   = new SucursalEmpresa();
         
@@ -642,15 +639,16 @@ class EmpresasController implements IEmpresas
         try {
             //Se actualiza la empresa
             EmpresaDAO::save($empresa);
-            
-            //Por cada uno de los productos en la empresa como producto,
-            //se le asigna el id del producto a la variable temporal producto_empresa para
-            //poder buscar las empresas en la que es ofrecido ese producto.
-            //Si la busqueda regresa menos de dos campos, significa que solo esta empresa ofrece este producto,
-            //por tanto, se tiene que desactivar el producto tambien.
-            //
-            //En cualquier caso, se eliminan tambien los registros de la tabla producto_empresa correspondiente
-            //a todos los productos de la empresa.
+
+            /*
+            *Por cada uno de los productos en la empresa como producto,
+            * se le asigna el id del producto a la variable temporal producto_empresa para
+            * poder buscar las empresas en la que es ofrecido ese producto.
+            * Si la busqueda regresa menos de dos campos, significa que solo esta empresa ofrece este producto,
+            * por tanto, se tiene que desactivar el producto tambien.
+            * En cualquier caso, se eliminan tambien los registros de la tabla producto_empresa correspondiente
+            * a todos los productos de la empresa.
+            */
             foreach ($productos_empresa as $producto) {
                 $producto_empresa->setIdProducto($producto->getIdProducto());
                 $productos = ProductoEmpresaDAO::search($producto_empresa);
@@ -660,15 +658,17 @@ class EmpresasController implements IEmpresas
                 $pr->setIdProducto($producto->getIdProducto());
                 ProductoEmpresaDAO::delete($pr);
             }
-            
-            //Por cada uno de los paquetes en la empresa como paquete,
-            //se le asigna el id del paquete a la variabe temporal paquete_empresa para
-            //poder buscar las empresas en la que es ofrecido ese paquete.
-            //Si la busqueda regresa menos de dos campos, significa que solo esta empresa ofrece este paquete,
-            //por lo tanto, se tiene que desactivar el paquete tambien.
-            //
-            //En cualquier caso, se eliminan tambien los registros de la tabla paquete_empresa correspondiente
-            //a todos los paquetes de la empresa
+
+            /*
+            * Por cada uno de los paquetes en la empresa como paquete,
+            * se le asigna el id del paquete a la variabe temporal paquete_empresa para
+            * poder buscar las empresas en la que es ofrecido ese paquete.
+            * Si la busqueda regresa menos de dos campos, significa que solo esta empresa ofrece este paquete,
+            * por lo tanto, se tiene que desactivar el paquete tambien.
+            *
+            * En cualquier caso, se eliminan tambien los registros de la tabla paquete_empresa correspondiente
+            * a todos los paquetes de la empresa
+            */
             foreach ($paquetes_empresa as $paquete) {
                 $paquete_empresa->setIdPaquete($paquete->getIdPaquete());
                 $paquetes = PaqueteEmpresaDAO::search($paquete_empresa);
@@ -678,15 +678,17 @@ class EmpresasController implements IEmpresas
                 $pa->setIdPaquete($paquete->getIdPaquete());
                 PaqueteEmpresaDAO::delete($pa);
             }
-            
-            //Por cada uno de los servicios en la empresa como paquete,
-            //se le asigna el id del servicio a la variable temporal servicio_empresa para
-            //poder buscar las empresas en la que es ofrecido ese servicio.
-            //Si la busqueda regresa menos de dos campos, significa que solo esta empresa ofrece este servicio,
-            //por lo tanto, se tiene que desactivar el servicio tambie.
-            //
-            //En cualquier caso, se eliminan tambien los registros de la tabla servicio_empresa correspondiente
-            //a todos los servicios de la empresa.
+
+            /*
+            * Por cada uno de los servicios en la empresa como paquete,
+            * se le asigna el id del servicio a la variable temporal servicio_empresa para
+            * poder buscar las empresas en la que es ofrecido ese servicio.
+            * Si la busqueda regresa menos de dos campos, significa que solo esta empresa ofrece este servicio,
+            * por lo tanto, se tiene que desactivar el servicio tambie.
+            *
+            * En cualquier caso, se eliminan tambien los registros de la tabla servicio_empresa correspondiente
+            * a todos los servicios de la empresa.
+            */
             foreach ($servicios_empresa as $servicio) {
                 $servicio_empresa->setIdServicio($servicio->getIdServicio());
                 $servicios = ServicioEmpresaDAO::search($servicio_empresa);
@@ -696,19 +698,21 @@ class EmpresasController implements IEmpresas
                 $se->setIdServicio($servicio->getIdServicio());
                 ServicioEmpresaDAO::delete($se);
             }
-            
-            //Por cada una de las sucursales en la empresa como sucursal,
-            //se le asigna el id de la sucursal a la variable temporal sucursal_empresa para
-            //poder buscar las empresas que existen en la sucursal.
-            //Si la busqueda regresa menos de dos campos, significa que solo existe esta empresa en esta sucursal,
-            //por lo tanto, se tiene que desactivar la sucursal tambien.
-            //
-            //Si no, se buscan los almacenes de esta empresa y se eliminan aquellos que esten activos. 
-            //Por ende, si un almacen de consignacion de esta empresa sigue activo significa
-            //que aun no se termina la consignacion y por tal motivo no se puede eliminar la empresa
-            //
-            //En cualquier caso, se eliminan tambien los registros de la tabla sucursal_empresa correspondiente
-            //a todas las sucursales de la empresa.
+
+            /*
+            * Por cada una de las sucursales en la empresa como sucursal,
+            * se le asigna el id de la sucursal a la variable temporal sucursal_empresa para
+            * poder buscar las empresas que existen en la sucursal.
+            * Si la busqueda regresa menos de dos campos, significa que solo existe esta empresa en esta sucursal,
+            * por lo tanto, se tiene que desactivar la sucursal tambien.
+            *
+            * Si no, se buscan los almacenes de esta empresa y se eliminan aquellos que esten activos. 
+            * Por ende, si un almacen de consignacion de esta empresa sigue activo significa
+            * que aun no se termina la consignacion y por tal motivo no se puede eliminar la empresa
+            *
+            * En cualquier caso, se eliminan tambien los registros de la tabla sucursal_empresa correspondiente
+            * a todas las sucursales de la empresa.
+            */
             foreach ($sucursales_empresa as $sucursal) {
                 $sucursal_empresa->setIdSucursal($sucursal->getIdSucursal());
                 $sucursales = SucursalEmpresaDAO::search($sucursal_empresa);
@@ -747,11 +751,10 @@ class EmpresasController implements IEmpresas
         DAO::transEnd();
         Logger::log("Empresa desactivada exitosamente...");
     }
-    
-    
+
     /**
      *
-     *Un administrador puede editar una sucursal, incuso si hay puntos de venta con sesiones activas que pertenecen a esa empresa. 
+     * Un administrador puede editar una sucursal, incuso si hay puntos de venta con sesiones activas que pertenecen a esa empresa. 
      *
      * @param id_empresa int Id de la empresa a modificar
      * @param cuentas_bancarias json Arreglo que contiene los id de las cuentas bancarias
@@ -769,40 +772,32 @@ class EmpresasController implements IEmpresas
      **/
     public static function Editar($id_empresa, $cuentas_bancarias = null, $direccion = null, $direccion_web = null, $email = null, $id_moneda = "0", $impuestos_compra = null, $impuestos_venta = null, $mensaje_morosos = null, $razon_social = null, $representante_legal = null, $rfc = null, $uri_logo = null)
     {
-        
-        Logger::log("Editando la empresa $id_empresa ....");
-        
         //se guarda el registro de la empresa y se verifica que este activa
         $empresa = EmpresaDAO::getByPK($id_empresa);
-        
+
         Logger::log("validando empresa activa");
-        
+
         if (!$empresa->getActivo()) {
             Logger::error("La empresa no esta activa, no se puede editar una empresa desactivada");
             throw new Exception("La empresa no esta activa, no se puede editar una empresa desactivada", 901);
         }
-        
-        
-        //lógica para manejar la edicion o agregado de una direccion
-        //verificamos si se cambiaron las direcciones
+
+        //lógica para manejar la edicion o agregado de una direccion verificamos si se cambiaron las direcciones
         if (!is_null($direccion)) {
-            Logger::log(" Editando direccion ...");
-            
-            
+
             if (!is_array($direccion)) {
                 //Logger::error("Verifique el formato de los datos de las direcciones, se esperaba un array ");
                 //throw new Exception("Verifique el formato de los datos de las empresas, se esperaba un array ");
                 $direccion = object_to_array($direccion);
-                
             }
-            
+
             $_direccion = new Direccion($direccion);
-            
+
             $d = DireccionDAO::getByPK($empresa->getIdDireccion());
-            
+
             //verificamos si se va a editar una direccion o se va a crear una nueva
             if (isset($d->id_direccion)) {
-                
+
                 //se edita la direccion
                 if (!$_direccion = DireccionDAO::getByPK($d->id_direccion)) {
                     DAO::transRollback();
@@ -810,103 +805,105 @@ class EmpresasController implements IEmpresas
                     throw new InvalidDataException("No se tiene registro de la dirección con id : {$direccion->id_direccion}");
                 }
                 $_direccion->setIdDireccion($d->id_direccion);
-                
+
                 //bandera que indica si cambia algun parametro de la direccion
                 $cambio_direccion = false;
-                
+
                 //calle
                 if (isset($d->calle)) {
                     $cambio_direccion = true;
                     $_direccion->setCalle($direccion['calle']);
                 }
-                
+
                 //numero_exterior
                 if (isset($d->numero_exterior)) {
                     $cambio_direccion = true;
                     $_direccion->setNumeroExterior($direccion['numero_exterior']);
                 }
-                
+
                 //numero_interior
                 if (isset($d->numero_interior)) {
                     $cambio_direccion = true;
                     $_direccion->setNumeroInterior($direccion['numero_interior']);
                 }
-                
+
                 //referencia
                 if (isset($d->referencia)) {
                     $cambio_direccion = true;
                     $_direccion->setReferencia($direccion['referencia']);
                 }
-                
+
                 //colonia
                 if (isset($d->colonia)) {
                     $cambio_direccion = true;
                     $_direccion->setColonia($direccion['colonia']);
                 }
-                
+
                 //id_ciudad
                 if (isset($d->id_ciudad)) {
                     $cambio_direccion = true;
                     $_direccion->setIdCiudad($direccion['id_ciudad']);
                 }
-                
+
                 //codigo_postal
                 if (isset($d->codigo_postal)) {
                     $cambio_direccion = true;
                     $_direccion->setCodigoPostal($direccion['codigo_postal']);
                 }
-                
+
                 //telefono
                 if (isset($d->telefono)) {
                     $cambio_direccion = true;
                     $_direccion->setTelefono($direccion['telefono1']);
                 }
-                
+
                 //telefono2
                 if (isset($d->telefono2)) {
                     $cambio_direccion = true;
                     $_direccion->setTelefono2($direccion['telefono2']);
                 }
-                
+
                 //Si cambio algun parametro de direccion, se actualiza el usuario que modifica y la fecha
                 if ($cambio_direccion) {
                     DireccionController::EditarDireccion($_direccion);
                 } else {
-                    
                     DireccionController::NuevaDireccion($calle = isset($d->calle) ? $d->calle : "", $numero_exterior = isset($d->numero_exterior) ? $d->numero_exterior : "", $colonia = isset($d->colonia) ? $d->colonia : "", $id_ciudad = isset($d->id_ciudad) ? $d->id_ciudad : "", $codigo_postal = isset($d->codigo_postal) ? $d->codigo_postal : "", $numero_interior = isset($d->numero_interior) ? $d->numero_interior : "", $referencia = isset($d->referencia) ? $d->referencia : "", $telefono = isset($d->telefono) ? $d->telefono : "", $telefono2 = isset($d->telefono2) ? $d->telefono2 : "");
                 }
             }
-        } // !is_null
-        //fin logica editar o agregar una direccion
-        
+        }
+
         DAO::transBegin();
         try {
             //Se guardan los cambios hechos en la empresa
             EmpresaDAO::save($empresa);
-            
-            //Si se obtiene el parametro impuestos se buscan los impuestos actuales de la empresa.
-            //Por cada impuesto recibido, se verifica que el impuesto exista y se almacena en la tabla
-            //impuesto_empresa. Si esta relacion ya existe solo se actualizara.
-            //
-            //Despues, se recorren los impuestos actuales y se buscan en la lista de impuestos recibidos.
-            //Se eliminaran aquellos impuestos qe no esten en la lista recibida.
+
+            /*
+            * Si se obtiene el parametro impuestos se buscan los impuestos actuales de la empresa.
+            * Por cada impuesto recibido, se verifica que el impuesto exista y se almacena en la tabla
+            * impuesto_empresa. Si esta relacion ya existe solo se actualizara.
+            *
+            * Despues, se recorren los impuestos actuales y se buscan en la lista de impuestos recibidos.
+            * Se eliminaran aquellos impuestos qe no esten en la lista recibida.
+            */
             $impuestos = $impuestos_venta;
             if (!is_null($impuestos)) {
-                
+
                 $impuestos = object_to_array($impuestos);
-                
+
                 if (!is_array($impuestos)) {
                     throw new Exception("El parametro impuestos es invalido", 901);
                 }
-                
+
                 $impuesto_empresa  = new ImpuestoEmpresa(array(
                     "id_empresa" => $id_empresa
                 ));
+
                 $impuestos_empresa = ImpuestoEmpresaDAO::search($impuesto_empresa);
-                
+
                 $i_empresa = new ImpuestoEmpresa(array(
                     "id_empresa" => $id_empresa
                 ));
+
                 foreach ($impuestos as $id_impuesto) {
                     if (is_null(ImpuestoDAO::getByPK($id_impuesto))) {
                         throw new Exception("El impuesto con id: " . $id_impuesto . " no existe", 901);
@@ -914,6 +911,7 @@ class EmpresasController implements IEmpresas
                     $i_empresa->setIdImpuesto($id_impuesto);
                     ImpuestoEmpresaDAO::save($i_empresa);
                 }
+
                 foreach ($impuestos_empresa as $impuesto_empresa) {
                     $encontrado = false;
                     foreach ($impuestos as $id_impuesto) {
@@ -926,69 +924,21 @@ class EmpresasController implements IEmpresas
                     }
                 }
             }
-            
-            //Si se obtiene el parametro retneciones se buscan lretenciones actuales de la empresa.
-            //Por cada retencion recibida, se verifica que la retencion exista y se almacena en la tabla
-            //retencion_empresa. Si esta relacion ya existe solo se actualizara.
-            //
-            //Despues, se recorren las retenciones actuales y se buscan en la lista de retenciones recibidas.
-            //Se eliminaran aquellas retenciones que no esten en la lista recibida.
-            /*$retenciones = $impuestos_compra;
-            
-            if(!is_null($retenciones))
-            {
-            
-            $retenciones = object_to_array($retenciones);
-            
-            if(!is_array($retenciones))
-            {
-            throw new Exception("El parametro retenciones es invalido",901);
-            }
-            
-            $retencion_empresa=new RetencionEmpresa(array("id_empresa"=>$id_empresa));
-            $retenciones_empresa=RetencionEmpresaDAO::search($retencion_empresa);
-            
-            $r_empresa=new RetencionEmpresa(array("id_empresa"=>$id_empresa));
-            foreach($retenciones as $id_retencion)
-            {
-            if(is_null(ImpuestoDAO::getByPK($id_retencion)))
-            {
-            throw new Exception("La retencion con id: ".$id_retencion." no existe");
-            }
-            $r_empresa->setIdRetencion($id_retencion);
-            RetencionEmpresaDAO::save($r_empresa);
-            }
-            foreach($retenciones_empresa as $retencion_empresa)
-            {
-            $encontrado=false;
-            foreach($retenciones as $id_retencion)
-            {
-            if($id_retencion==$retencion_empresa->getIdRetencion())
-            {
-            $encontrado=true;
-            }
-            }
-            if(!$encontrado)
-            {
-            RetencionEmpresaDAO::delete($retencion_empresa);
-            }
-            }
-            }
-            */
+
         }
         catch (Exception $e) {
             DAO::transRollback();
             Logger::error("No se pudo modificar la empresa: " . $e);
             throw new Exception("No se pudo modificar la empresa");
         }
-        
+
         DAO::transEnd();
         Logger::log("Empresa editada con exito");
     }
-    
+
     public static function Detalles($id_empresa)
     {
-        
+
     }
-    
+
 }

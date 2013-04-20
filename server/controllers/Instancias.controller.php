@@ -604,7 +604,7 @@ class InstanciasController {
             self::Eliminar_Tablas_BD($ins['instance_id'], $db_host, $db_user, $usr_pass, $db_name);
             //se restaura el ultimo respaldo
             $out2 = self::restore_pos_instance($ins['instance_id'], $db_host, $db_user, $db_name, $usr_pass, $final_path . "/" . $found[0], $ins['db_driver'], $ins['db_debug']);
-            Logger::log("No registros en la BD ANTES de eliminar tablas: " . $num_regs_db);
+            Logger::warn("No registros en la BD ANTES de eliminar tablas: " . $num_regs_db);
             if (!is_null($out2))
                 $result.= $out2 . "\n";
         }//fin foreach que recorre las instancias
@@ -629,8 +629,6 @@ class InstanciasController {
             else
                 $ids_string .= " OR instance_id = " . $ids[$i];
         }
-
-        Logger::log("Updating Instances.....");
 
         $result = "";
         $out = "";
@@ -676,11 +674,9 @@ class InstanciasController {
     }
 
     public static function Eliminar_Tablas_BD($instance_id, $host, $user, $pass, $name) {
-        Logger::log("Deleting Tables from instance {$instance_id}");
         //conexion a la instancia
         $sql = "SELECT * FROM instances WHERE ( instance_id = {$instance_id} ) LIMIT 1;";
 
-        Logger::log("------ Finding db connection, query: {$sql}");
         global $POS_CONFIG;
         $rs = $POS_CONFIG["CORE_CONN"]->GetRow($sql);
 
@@ -728,6 +724,9 @@ class InstanciasController {
         while ($row = $result->FetchRow()) {//row = nombre de la tabla
             $rss = $instance_db_con->Execute("DROP TABLE IF EXISTS {$name}." . $row[0] . " CASCADE;");
         }
+
+        Logger::log("Exito al eliminar las tablas");
+
         return null;
     }
 
@@ -740,7 +739,7 @@ class InstanciasController {
         $rs = $POS_CONFIG["CORE_CONN"]->GetRow($sql);
 
         if (count($rs) === 0) {
-            Logger::warn("La instancia con el id {" . $instance_id . "} no exite !");
+            Logger::error("La instancia con el id {" . $instance_id . "} no exite !");
             die(header("HTTP/1.1 404 NOT FOUND"));
         }
 
@@ -774,7 +773,6 @@ class InstanciasController {
         $instance_db_con = $instance_con["INSTANCE_CONN"];
         //fin con
 
-        Logger::log("Inserting Tables to instance {$instance_id}");
         //insertar tablas
         $instalation_script = file_get_contents(POS_PATH_TO_SERVER_ROOT . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "private" . DIRECTORY_SEPARATOR . "pos_instance.sql");
         $queries = explode(";", $instalation_script);
@@ -787,7 +785,7 @@ class InstanciasController {
                 if ($rs)
                     ;
                 else {
-                    Logger::log("Error al ejecuar la consulta: {$queries[i]}");
+                    Logger::error("Error al ejecuar la consulta: {$queries[i]}");
                     $out.= "Error al ejecutar la consulta: {$queries[i]}" . "\n";
                 }
             }
@@ -803,7 +801,6 @@ class InstanciasController {
     }
 
     public static function Insertar_Datos_Desde_Respaldo($instance_id, $host, $user, $pass, $name, $source_file) {
-        Logger::log("Restoring data from file to Instance DB {$instance_id}");
 
         $out = "";
         //conexion a la instancia
@@ -858,7 +855,7 @@ class InstanciasController {
                 if ($rs)
                     ;
                 else {
-                    Logger::log("Consulta: {$queries[$i]} ; Error! ");
+                    Logger::error("Consulta: {$queries[$i]} ; Error! ");
                     $out.= "Consulta: {$queries[$i]} ; Error! " . "\n";
                 }
             }
@@ -882,11 +879,9 @@ class InstanciasController {
     }
 
     public static function restore_pos_instance($instance_id, $db_host, $db_user, $db_name, $usr_pass, $full_path, $driver, $debug) {
-        Logger::log("Restoring up Instance $instance_id");
         $cmd = "mysql --host=" . $db_host . " --user=" . $db_user . " --password=" . $usr_pass . " " . $db_name . " < " . $full_path;
-        Logger::log("Ejecutando comando: " . $cmd);
+
         $res = shell_exec($cmd);
-        Logger::log("Resuldado del comando: " . $res);
 
         //se redefinie la conexion ¬¬
         $instance_con["INSTANCE_CONN"] = null;
@@ -923,15 +918,10 @@ class InstanciasController {
             $num_regs_db_despues += $row[0];
         }
 
-        Logger::log("No registros en la BD despues de restaurar tablas: " . $num_regs_db_despues);
-
-
         return ( $num_regs_db_despues == 0) ? "Error al restaurar la instancia " . $instance_id . "Archivo: " . $full_path: NULL;
     }
   
     public static function backup_only_data($instance_id, $host, $user, $pass, $name, $tables = '*', $backup_values = true, $return_as_string = false, $destiny_file, $file_name) {
-
-        Logger::log("Backup  Instance {$instance_id}");
 
         //conexion a la instancia
         $sql = "SELECT * FROM instances WHERE ( instance_id = {$instance_id} ) LIMIT 1;";
@@ -940,7 +930,7 @@ class InstanciasController {
         $rs = $POS_CONFIG["CORE_CONN"]->GetRow($sql);
 
         if (count($rs) === 0) {
-            Logger::warn("La instancia con el id {" . $instance_id . "} no exite !");
+            Logger::error("La instancia con el id {" . $instance_id . "} no exite !");
             die(header("HTTP/1.1 404 NOT FOUND"));
         }
         $instance_con["INSTANCE_CONN"] = null;
@@ -1020,8 +1010,6 @@ class InstanciasController {
                                     $cmd = str_replace(", `" . $null_column . "` ", '', $cmd); //no se concatena ya que se hace la susuticion y se devuelve la cadena entera
                                 else
                                     $cmd = str_replace("`" . $null_column . "`, ", '', $cmd); //no se concatena ya que se hace la susuticion y se devuelve la cadena entera
-
-                                Logger::log("COLUMNA SIN VALOR, Se va a reeplazar {$null_column} por '' para que no salga en el Insert");
                             }
 
                             if ($j < ($num_fields - 1)) {
@@ -1049,7 +1037,7 @@ class InstanciasController {
             fwrite($handle, $return);
             fclose($handle);
         } catch (Exception $e) {
-            Logger::log($e->getMessage());
+            Logger::error($e->getMessage());
             return $e->getMessage();
         }
 
@@ -1163,8 +1151,6 @@ class InstanciasController {
             Logger::error("Este token no existe !");
             return array("success" => false, "reason" => "No existe esta llave de solicitud.");
         }
-
-        Logger::log("encontre el token para id=" . $res["id_request"]);
 
         if (!is_null($res["date_validated"])) {
             Logger::warn("este ya fue validado");
