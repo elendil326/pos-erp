@@ -130,7 +130,8 @@ set_time_limit(0);
 //
 
 
-$ids = json_decode($_GET["instance_ids"]); $ids = $ids->instance_ids;
+$ids = json_decode($_GET["instance_ids"]);
+$ids = $ids->instance_ids;
 //$ids = explode(",", $_GET["ids"]);
 //echo".............nada: "; var_dump($ids); echo":::::: sizeof: ".sizeof($ids);
 $prefix = time() . rand();
