@@ -278,7 +278,7 @@ class EmpresasController implements IEmpresas
 	 * @param duplicar bool Significa que se duplicara una empresa, solo es una bandera, en caso de que exista y sea = true ,  significa que duplicara todo lo referente a la empresa (direccion, impuestos asociados, cuentas bancarias, etc..)
 	 * @param email string Correo electronico de la empresa
 	 * @param impuestos_compra json Impuestos de compra por default que se heredan  a los productos
-	 * @param impuestos_venta json Impuestos de venta por default que se heredan  a los productos
+	 * @param impuestos_venta json Impuestos de venta por default que se heredan a los productos
 	 * @param mensaje_morosos string mensaje enviado a los clientes cuando un pago es demorado
 	 * @param representante_legal string El nombre del representante legal de la nueva empresa.
 	 * @param uri_logo string url del logo de la empresa
@@ -288,9 +288,6 @@ class EmpresasController implements IEmpresas
 		$direccion_web = null, $duplicar =  false , $email = null, $impuestos_compra = null, 
 		$impuestos_venta = null, $mensaje_morosos = null, $representante_legal = null, $uri_logo = null
 	) {
-
-		Logger::error("Creando nueva empresa `$mensaje_morosos`...");
-
 		//validamos la estructura de los impuestos
 		{
 			//verificamos los impuestos de compra
@@ -556,14 +553,35 @@ class EmpresasController implements IEmpresas
 		{
 			if (!empty($impuestos_compra)) {
 				for ($i=0; $i < count($impuestos_compra); $i++) { 
-					//creamos los registros de los impuestos
+					try {
+						ImpuestoEmpresaDAO::save(new ImpuestoEmpresa(array(
+							"id_empresa" => $empresa->getIdEmpresa(),
+							"id_impuesto" => $impuestos_compra[$i]
+						)));
+					} catch (Exception $e) {
+						Logger::warn("Error al guardar un impuesto venta : " . $e->getMessage());
+					}
 				}
 			}
 
 			if (!empty($impuestos_venta)) {
 				for ($i=0; $i < count($impuestos_venta); $i++) { 
-					//creamos los registros de los impuestos
+					try {
+						ImpuestoEmpresaDAO::save(new ImpuestoEmpresa(array(
+							"id_empresa" => $empresa->getIdEmpresa(),
+							"id_impuesto" => $impuestos_venta[$i]
+						)));
+					} catch (Exception $e) {
+						Logger::warn("Error al guardar un impuesto compra : " . $e->getMessage());
+					}
 				}
+			}
+		}
+
+		//Editamos las cuentas bancarias
+		{
+			foreach ($cuentas_bancarias as $cuenta_bancarias) {
+				//Pendiente hasta que se haga el SPEC de cuentas bancarias
 			}
 		}
 
@@ -653,6 +671,7 @@ class EmpresasController implements IEmpresas
 	 *
 	 * Un administrador puede editar una sucursal, incuso si hay puntos de venta con sesiones activas que pertenecen a esa empresa. 
 	 *
+	 * @author Juan Manuel Garc&iacute;a Carmona <manuel@caffeina.mx>
 	 * @param id_empresa int Id de la empresa a modificar
 	 * @param cuentas_bancarias json Arreglo que contiene los id de las cuentas bancarias
 	 * @param direccion json {    "tipo": "fiscal",    "calle": "Francisco I Madero",    "numero_exterior": "1009A",    "numero_interior": 12,    "colonia": "centro",    "codigo_postal": "38000",    "telefono1": "4611223312",    "telefono2": "",       "id_ciudad": 3,    "referencia": "El local naranja"}
@@ -667,16 +686,53 @@ class EmpresasController implements IEmpresas
 	 * @param rfc string RFC de la empresa
 	 * @param uri_logo string url del logo de la empresa
 	 **/
-	public static function Editar($id_empresa, $cuentas_bancarias = null, $direccion = null, $direccion_web = null, $email = null, $id_moneda = "0", $impuestos_compra = null, $impuestos_venta = null, $mensaje_morosos = null, $razon_social = null, $representante_legal = null, $rfc = null, $uri_logo = null)
-	{
+	public static function Editar($id_empresa, $cuentas_bancarias = null, $direccion = null, $direccion_web = null, 
+		$email = null, $id_moneda = "0", $impuestos_compra = null, $impuestos_venta = null, 
+		$mensaje_morosos = null, $razon_social = null, $representante_legal = null, $rfc = null, $uri_logo = null
+	) {
 		//se guarda el registro de la empresa y se verifica que este activa
 		$empresa = EmpresaDAO::getByPK($id_empresa);
-
-		Logger::log("validando empresa activa");
 
 		if (!$empresa->getActivo()) {
 			Logger::error("La empresa no esta activa, no se puede editar una empresa desactivada");
 			throw new Exception("La empresa no esta activa, no se puede editar una empresa desactivada", 901);
+		}
+
+		//editamos los campos referentes solo a la tabla empresa
+		{
+			$empresa->setDireccionWeb($direccion_web);
+
+			//TODO : Por que carajos no esta el campo email!!
+			//$empresa->setEmail($email);
+
+			//TODO : No se debe de editar
+			//$empresa->setIdMoneda($id_moneda);
+
+			$empresa->setMensajeMorosos($mensaje_morosos);
+			$empresa->setRazonSocial($razon_social);
+			$empresa->setRepresentanteLegal($representante_legal);
+			$empresa->setRfc($rfc);
+
+			//editamos el id del logo
+			if (!empty($uri_logo)) {
+
+				$logo = new Logo(array(
+					"imagen" => urldecode($uri_logo)
+				));
+
+				try {
+					LogoDAO::save($logo);
+				}catch (Exception $e) {
+					DAO::transRollback();
+					Logger::error("No se pudo crear la empresa, error al crear el logo: " . $e->getMessage());
+					throw new Exception("No se pudo crear la empresa, consulte a su administrador de sistema", 901);
+				}
+
+				$id_logo = $logo->getIdLogo();
+
+				$empresa->setIdLogo($id_logo);
+			}
+
 		}
 
 		//lógica para manejar la edicion o agregado de una direccion verificamos si se cambiaron las direcciones
@@ -714,6 +770,7 @@ class EmpresasController implements IEmpresas
 
 				//numero_exterior
 				if (isset($d->numero_exterior)) {
+					Logger::error("SE ESTA!!!");
 					$cambio_direccion = true;
 					$_direccion->setNumeroExterior($direccion['numero_exterior']);
 				}
@@ -773,60 +830,125 @@ class EmpresasController implements IEmpresas
 		try {
 			//Se guardan los cambios hechos en la empresa
 			EmpresaDAO::save($empresa);
-
-			/*
-			* Si se obtiene el parametro impuestos se buscan los impuestos actuales de la empresa.
-			* Por cada impuesto recibido, se verifica que el impuesto exista y se almacena en la tabla
-			* impuesto_empresa. Si esta relacion ya existe solo se actualizara.
-			*
-			* Despues, se recorren los impuestos actuales y se buscan en la lista de impuestos recibidos.
-			* Se eliminaran aquellos impuestos qe no esten en la lista recibida.
-			*/
-			$impuestos = $impuestos_venta;
-			if (!is_null($impuestos)) {
-
-				$impuestos = object_to_array($impuestos);
-
-				if (!is_array($impuestos)) {
-					throw new Exception("El parametro impuestos es invalido", 901);
-				}
-
-				$impuesto_empresa  = new ImpuestoEmpresa(array(
-					"id_empresa" => $id_empresa
-				));
-
-				$impuestos_empresa = ImpuestoEmpresaDAO::search($impuesto_empresa);
-
-				$i_empresa = new ImpuestoEmpresa(array(
-					"id_empresa" => $id_empresa
-				));
-
-				foreach ($impuestos as $id_impuesto) {
-					if (is_null(ImpuestoDAO::getByPK($id_impuesto))) {
-						throw new Exception("El impuesto con id: " . $id_impuesto . " no existe", 901);
-					}
-					$i_empresa->setIdImpuesto($id_impuesto);
-					ImpuestoEmpresaDAO::save($i_empresa);
-				}
-
-				foreach ($impuestos_empresa as $impuesto_empresa) {
-					$encontrado = false;
-					foreach ($impuestos as $id_impuesto) {
-						if ($id_impuesto == $impuesto_empresa->getIdImpuesto()) {
-							$encontrado = true;
-						}
-					}
-					if (!$encontrado) {
-						ImpuestoEmpresaDAO::delete($impuesto_empresa);
-					}
-				}
-			}
-
 		}
 		catch (Exception $e) {
 			DAO::transRollback();
 			Logger::error("No se pudo modificar la empresa: " . $e);
 			throw new Exception("No se pudo modificar la empresa");
+		}
+
+		/*
+		* Si se obtiene el parametro impuestos se buscan los impuestos actuales de la empresa.
+		* Por cada impuesto recibido, se verifica que el impuesto exista y se almacena en la tabla
+		* impuesto_empresa. Si esta relacion ya existe solo se actualizara.
+		*
+		* Despues, se recorren los impuestos actuales y se buscan en la lista de impuestos recibidos.
+		* Se eliminaran aquellos impuestos qe no esten en la lista recibida.
+		*/
+		{
+			$impuestos_empresa = ImpuestoEmpresaDAO::search(new ImpuestoEmpresa(array(
+				"id_empresa" => $empresa->getIdEmpresa()
+			)));
+
+			//quitamos los impuestos que no estan actualmente
+			foreach ($impuestos_empresa as $impuesto_empresa) {
+				$exist_ic = false;
+
+				foreach ($impuestos_compra as $impuesto_compra) {
+					if ($impuesto_compra->getIdImpuesto() == $impuesto_empresa->getIdImpuesto()) {
+						$exist_ic = true;
+					}
+				}
+
+				if (!$exist_ic) {
+					try {
+						ImpuestoEmpresaDAO::delete($impuesto_empresa);
+					} catch (Exception $e) {
+						Logger::warn("Error al eliminar impuesto : " . $e->getMessage());
+					}
+				}
+			}
+
+			$impuestos_empresa = ImpuestoEmpresaDAO::search(new ImpuestoEmpresa(array(
+				"id_empresa" => $empresa->getIdEmpresa()
+			)));
+
+			foreach ($impuestos_empresa as $impuesto_empresa) {
+				$exist_iv = false;
+
+				foreach ($impuestos_venta as $impuesto_venta) {
+					if ($impuesto_venta->getIdImpuesto() == $impuesto_venta->getIdImpuesto()) {
+						$exist_iv = true;
+					}
+				}
+
+				if (!$exist_iv) {
+					try {
+						ImpuestoEmpresaDAO::delete($impuesto_empresa);
+					} catch (Exception $e) {
+						Logger::warn("Error al eliminar impuesto : " . $e->getMessage());
+					}
+				}
+			}
+
+			//agregamos los impuestos de compra que no existen
+			$impuestos_empresa = ImpuestoEmpresaDAO::search(new ImpuestoEmpresa(array(
+				"id_empresa" => $empresa->getIdEmpresa()
+			)));
+
+			foreach ($impuestos_compra as $impuesto_compra) {
+				$exist_ic = false;
+				
+				foreach ($impuestos_empresa as $impuesto_empresa) {
+					if ($impuesto_compra->getIdImpuesto() == $impuesto_empresa->getIdImpuesto()) {
+						$exist_ic = true;
+					}
+				}
+				
+				if (!$exist_ic) {
+					try {
+						ImpuestoEmpresaDAO::save(new ImpuestoEmpresa(array(
+							"id_empresa" => $empresa->getIdEmpresa(),
+							"id_impuesto" => $impuesto_compra->getIdImpuesto()
+						)));
+					} catch (Exception $e) {
+						Logger::warn("Error al guardar un impuesto compra : " . $e->getMessage());
+					}
+				}
+			}
+
+			//agregamos los impuestos de venta que no existen
+			$impuestos_empresa = ImpuestoEmpresaDAO::search(new ImpuestoEmpresa(array(
+				"id_empresa" => $empresa->getIdEmpresa()
+			)));
+
+			foreach ($impuestos_venta as $impuesto_venta) {
+				$exist_iv = false;
+				
+				foreach ($impuestos_venta as $impuesto_venta) {
+					if ($impuesto_venta->getIdImpuesto() == $impuesto_venta->getIdImpuesto()) {
+						$exist_iv = true;
+					}
+				}
+				
+				if (!$exist_iv) {
+					try {
+						ImpuestoEmpresaDAO::save(new ImpuestoEmpresa(array(
+							"id_empresa" => $empresa->getIdEmpresa(),
+							"id_impuesto" => $impuesto_venta->getIdImpuesto()
+						)));
+					} catch (Exception $e) {
+						Logger::warn("Error al guardar un impuesto venta : " . $e->getMessage());
+					}
+				}
+			}
+		}
+
+		//Editamos las cuentas bancarias
+		{
+			foreach ($cuentas_bancarias as $cuenta_bancarias) {
+				//Pendiente hasta que se haga el SPEC de cuentas bancarias
+			}
 		}
 
 		DAO::transEnd();

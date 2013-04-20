@@ -70,7 +70,8 @@
 						    telefono2		: Ext.get(\"".$add_form->getGuiComponentId()."telefono2\").getValue(),
 						    id_ciudad		: Ext.get(\"".$add_form->getGuiComponentId()."ciudad\").getValue(),
 						    referencia		: Ext.get(\"".$add_form->getGuiComponentId()."referencia\").getValue()
-					})
+					}),
+					mensaje_morosos : Ext.get(\"".$form->getGuiComponentId()."mensaje_morosos\").getValue()
 				},{ callback : function(a,b){
 					window.onbeforeunload = function(){ return;	};
 					window.location = \"empresas.ver.php?eid=\"+ " .  $_GET['eid'] . ";
