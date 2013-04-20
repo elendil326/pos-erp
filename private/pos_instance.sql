@@ -268,6 +268,19 @@ CREATE TABLE IF NOT EXISTS `caja` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `catalogo_cuentas`
+--
+
+CREATE TABLE IF NOT EXISTS `catalogo_cuentas` (
+  `id_catalogo_cuentas` int(11) NOT NULL AUTO_INCREMENT COMMENT 'El id del catalogo de cuentas',
+  `descripcion` varchar(150) NOT NULL COMMENT 'La descripción del catalogo de cuentas.',
+  `id_empresa` int(11) NOT NULL COMMENT 'El id de la empresa a la que va vinculada ésta cuenta',
+  PRIMARY KEY (`id_catalogo`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `categoria_unidad_medida`
 --
 
@@ -706,6 +719,7 @@ CREATE TABLE IF NOT EXISTS `cuenta_contable` (
   `afectable` tinyint(1) NOT NULL COMMENT 'indica si sobre esta cuenta ya se pueden realizar operaciones',
   `id_cuenta_padre` int(11) DEFAULT NULL COMMENT 'id de la cuenta de la que depende',
   `activa` tinyint(1) NOT NULL COMMENT 'Indica si la cuenta estÃ¡ disponible para su uso o no.',
+  `id_catalogo_cuentas` int(11) NOT NULL COMMENT 'Id del catalogo de cuentas al que pertenece esta cuenta',
   PRIMARY KEY (`id_cuenta_contable`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=1 ;
 
