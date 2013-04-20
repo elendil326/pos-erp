@@ -106,10 +106,10 @@ function OutputFile($file, $name, $mime_type='')
 	}
  fclose($file);
  } else die('Error - can not open file.');
- 
+
 die();
-}	
- 
+}
+
 
 
 
@@ -119,7 +119,6 @@ $page = new JediComponentPage( );
 
 require_once("libs/zip.php");
 
- 
 /* 
 Make sure script execution doesn't time out.
 Set maximum execution time in seconds (0 means no limit).
@@ -127,13 +126,9 @@ Set maximum execution time in seconds (0 means no limit).
 
 set_time_limit(0);
 
-//
-
-
 $ids = json_decode($_GET["instance_ids"]);
 $ids = $ids->instance_ids;
-//$ids = explode(",", $_GET["ids"]);
-//echo".............nada: "; var_dump($ids); echo":::::: sizeof: ".sizeof($ids);
+
 $prefix = time() . rand();
 $files = array();
 $file_id = array();
@@ -150,26 +145,10 @@ for($i = 0; $i < sizeof($ids); $i++){
 	}
 }
 
-
-//for($i = 0; $i < sizeof($ids); $i++){
-//echo(" ------- Dentro de for id = ".$ids[$i]);
-	//validar que existan
-//	$r = InstanciasController::BuscarPorId( $ids[$i] );
-
-	$file_name = $prefix . 'ibddl'.$ids[$i] . ".sql";
-	$destiny_file = '../../static_content/db_backups/'; 
-
-	array_push($files, $destiny_file . $file_name );
-	array_push($file_id, $ids[$i]  );
-	InstanciasController::Respaldar_Instancias($ids);//Respaldar_Instancias recibe como params un array
-	//InstanciasController::backup_only_data(  $ids[$i], $r["db_host"], $r["db_user"], $r["db_password"], $r["db_name"], '*', true, false, $destiny_file, $file_name);
-//}
-
+InstanciasController::Respaldar_Instancias($ids);//Respaldar_Instancias recibe como params un array
 
 $f = new zipfile;
 
-
-//for ($i=0; $i < sizeof($files); $i++) {
 for ($i=0; $i < sizeof($ids); $i++) { 
 	//$f->add_file(file_get_contents($files[$i]), $file_id[$i] . ".sql");
 	$final_path = str_replace("server","static_content/db_backups",POS_PATH_TO_SERVER_ROOT);
@@ -186,7 +165,6 @@ for ($i=0; $i < sizeof($ids); $i++) {
 	//Logger::log("No archivos: ".count($found));
 	if(count($found) < 1){
 		Logger::log("Error al restaurar la instancia ".$ins['instance_id'].", no hay un respaldo existente");
-		$result .= "Error al restaurar la instancia ".$ins['instance_id'].", no hay un respaldo existente";
 		continue;
 	}
 	$contenido = file_get_contents($final_path."/".$found[0]);
@@ -199,8 +177,3 @@ Logger::log(":::::::ENVIANDO ARCHIVO A DESCARGAR");
 header("Content-type: application/octet-stream");
 header("Content-disposition: attachment; filename=$folder_name.zip");
 echo $f->file();
-
-
-for ($i=0; $i < sizeof($files); $i++) { 
-	unlink($files[$i]	);	
-}
