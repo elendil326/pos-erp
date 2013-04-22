@@ -134,6 +134,7 @@ class LoginComponent implements GuiComponent
 						
 						if(o.login_succesful === false){
 							//credenciales invalidas
+							Ext.get("LoginComponentResponse").update(o.reason);
 							Ext.get("LoginComponentResponse").show();
 							return;
 						}
@@ -254,7 +255,7 @@ class LoginComponent implements GuiComponent
 					</td>
 					<td colspan=2 >
 						<div style="margin-top: 30px; display: none;" id="LoginComponentResponse" class="Error" >
-							Credenciales invalidas
+							&nbsp;
 						</div>
 					</td>
 				</tr>

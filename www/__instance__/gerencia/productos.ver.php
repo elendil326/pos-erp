@@ -263,11 +263,6 @@
 		return $tipo . "<div style='color:gray; font-size:11px'>" . ucfirst($obj["motivo"]) . "</div>";
 	}
 
-	function username($idu){
-		$u = UsuarioDAO::getByPK($idu);
-		return $u->getNombre();
-	}
-
 	function idlote($v){
 		$loteO = LoteDAO::getByPK($v);
 		return $loteO->getFolio();

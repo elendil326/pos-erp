@@ -28,6 +28,9 @@ class Producto extends VO
 			if( isset($data['compra_en_mostrador']) ){
 				$this->compra_en_mostrador = $data['compra_en_mostrador'];
 			}
+			if( isset($data['visible_en_vc']) ){
+				$this->visible_en_vc = $data['visible_en_vc'];
+			}
 			if( isset($data['metodo_costeo']) ){
 				$this->metodo_costeo = $data['metodo_costeo'];
 			}
@@ -88,6 +91,7 @@ class Producto extends VO
 		$vec = array( 
 			"id_producto" => $this->id_producto,
 			"compra_en_mostrador" => $this->compra_en_mostrador,
+			"visible_en_vc" => $this->visible_en_vc,
 			"metodo_costeo" => $this->metodo_costeo,
 			"activo" => $this->activo,
 			"codigo_producto" => $this->codigo_producto,
@@ -126,6 +130,15 @@ class Producto extends VO
 	  * @var tinyint(1)
 	  */
 	public $compra_en_mostrador;
+
+	/**
+	  * visible_en_vc
+	  * 
+	  * 1 para mostrar el productos en VC.<br>
+	  * @access public
+	  * @var tinyint(1)
+	  */
+	public $visible_en_vc;
 
 	/**
 	  * metodo_costeo
@@ -312,6 +325,30 @@ class Producto extends VO
 	final public function setCompraEnMostrador( $compra_en_mostrador )
 	{
 		$this->compra_en_mostrador = $compra_en_mostrador;
+	}
+
+	/**
+	  * getVisibleEnVc
+	  * 
+	  * Get the <i>visible_en_vc</i> property for this object. Donde <i>visible_en_vc</i> es 1 para mostrar el productos en VC.
+	  * @return tinyint(1)
+	  */
+	final public function getVisibleEnVc()
+	{
+		return $this->visible_en_vc;
+	}
+
+	/**
+	  * setVisibleEnVc( $visible_en_vc )
+	  * 
+	  * Set the <i>visible_en_vc</i> property for this object. Donde <i>visible_en_vc</i> es 1 para mostrar el productos en VC..
+	  * Una validacion basica se hara aqui para comprobar que <i>visible_en_vc</i> es de tipo <i>tinyint(1)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param tinyint(1)
+	  */
+	final public function setVisibleEnVc( $visible_en_vc )
+	{
+		$this->visible_en_vc = $visible_en_vc;
 	}
 
 	/**

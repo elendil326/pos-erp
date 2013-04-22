@@ -1,7 +1,7 @@
 //for IE
 var console = console || { log: function(){}, group : function(){}, groupEnd : function(){} };
 
-//for IE even when cnsole is defined:
+//for IE even when console is defined:
 console.group =  console.group || function(){};
 console.groupEnd =  console.groupEnd || function(){};
 
@@ -11,12 +11,11 @@ Ext.Loader.setConfig({
 
 Ext.Loader.setPath('Ext.ux', 'http://api.caffeina.mx/ext-4.0.0/examples/ux/');
 
-
-
 Ext.require([
     'Ext.data.*',
     'Ext.form.*',
     'Ext.grid.*',
+	'Ext.tree.*',
     'Ext.util.*',
     'Ext.state.*',
 	'Ext.ux.grid.TransformGrid',
@@ -25,33 +24,22 @@ Ext.require([
 	  'Ext.panel.Panel',
 	  'Ext.button.Button',
 	  'Ext.window.Window',
-	 // 'Ext.ux.statusbar.StatusBar',
+	'Ext.ux.statusbar.StatusBar',
 	  'Ext.toolbar.TextItem',
 	  'Ext.menu.Menu',
 	  'Ext.toolbar.Spacer',
 	  'Ext.button.Split',
-	  'Ext.form.field.TextArea'
+	'Ext.form.field.TextArea',
+	'Ext.data.TreeStore',
+	'Ext.layout.container.Accordion'
 ]);
 
-
-
-
-var main = function ()
-{
-	
+var main = function () {
 	if(!Ext.isIE) console.log("JS FRWK READY");
-
-
-	//window.onbeforeunload = function(){}
 
 	var els = Ext.select("input").elements;
 
-
-
-	if(!Ext.isIE) console.log("Ataching on before unload events...");
-	
-	
-	for (var i = els.length - 1; i >= 0; i--){
+	for (var i = els.length - 1; i >= 0; i--) {
 		Ext.get(els[i]).on(
 			"keydown",
 			function(){
@@ -60,91 +48,68 @@ var main = function ()
 					}
 			});
 	};
-	
+
 	if( window.store_component !== undefined ){
-		store_component.render();	
+		store_component.render();
 	}
 
-	if(document.location.search.indexOf("previous_action=ok") > -1)
+	if(document.location.search.indexOf("previous_action=ok") > -1){
 		Ext.example.msg('Exito', '!!!');
-
+	}
 
 	if((window.TableComponent !== undefined) && (TableComponent.convertToExtJs !== undefined)){
 		for (var i = TableComponent.convertToExtJs.length - 1; i >= 0; i--) {
-
 			Ext.create('Ext.ux.grid.TransformGrid', TableComponent.convertToExtJs[i], {
 	            //stripeRows: true,
 	            bodyCls: 'overrideTHTD',
 	            listeners: {
 	            	'itemclick' : function(a,b,c ){
 	            		if(!Ext.isIE)  console.log("ITEM CLICK id=" + b.raw.id, i +1 );
-						
+
 						eval(TableComponent.ExtJsTables[i+1].actionFunction+"("+b.raw.id+")")
-	            		
 	            	}
 	            }
-	           
-	        }).render();	
+
+			}).render();
 		};
-		
 	}
 
-
-
+	//PosImClient.showContactWindow();
 
 	if(window.TabPage !== undefined){
 
-		
-
 		if(window.location.hash.length == 0){
 			//no hay tab seleccionado
-			//Ext.get('tab_'+TabPage.tabs[0]).setStyle('display', 'block');
 			Ext.get('atab_'+TabPage.tabs[0]).toggleCls('selected');
 			TabPage.currentTab = TabPage.tabs[0];
 
 		}else{
-			//si hay
 			TabPage.currentTab = window.location.hash.substr(1);
-
-			//Ext.get('tab_'+TabPage.currentTab).setStyle('display', 'block');
-
 			Ext.get('atab_'+TabPage.currentTab).toggleCls('selected');
-			
 		}
-
 
 		//hide the other ones
 		for (var t = TabPage.tabs.length - 1; t >= 0; t--) {
 
 			Ext.get('tab_'+TabPage.tabs[t]).setVisibilityMode(Ext.Element.VISIBILITY);
 
-			//TabPage.tabsH[ TabPage.tabs.length - t - 1 ] = Ext.get('tab_'+TabPage.tabs[t]).getHeight()
-			//Ext.get('tab_'+TabPage.tabs[t]).setVisibilityMode(Ext.Element.DISPLAY);
-
-			if(TabPage.currentTab == TabPage.tabs[t]) {  continue; }
+			if(TabPage.currentTab == TabPage.tabs[t]) {
+				continue; 
+			}
 
 			Ext.get('tab_'+TabPage.tabs[t]).setHeight(0);
 			Ext.get('tab_'+TabPage.tabs[t]).hide();
-			
+
 		};
 
-		
-
-
 		if ( 'onhashchange' in window ) {
-			
-
 			window.onhashchange = function() {
 
 				if((TabPage.currentTab.length > 0) && (Ext.get('tab_'+TabPage.currentTab) != null)){
 					//ocultar la que ya esta
-					
-				
 					Ext.get('tab_'+TabPage.currentTab).hide();
 					Ext.get('tab_'+TabPage.currentTab).setHeight(0);
 					Ext.get('atab_'+TabPage.currentTab).toggleCls('selected');
-
-
 				}
 
 				//currentTab = window.location.hash.substr(1);
@@ -154,7 +119,6 @@ var main = function ()
 				for (var ti = 0; ti < TabPage.tabs.length; ti++) {
 					if( TabPage.tabs[ti] == TabPage.currentTab){
 						Ext.get('tab_'+TabPage.currentTab).setHeight('auto');
-					
 					}
 				};
 				Ext.get('atab_'+TabPage.currentTab).toggleCls('selected');
@@ -169,18 +133,13 @@ var main = function ()
 
 }
 
-
 Ext.onReady(main);
 
-
 var POS = {};
-
 
 Ext.Ajax.on('beforerequest', 	function (){ Ext.get("ajax_loader").show(); }, this);
 Ext.Ajax.on('requestcomplete', 	function (){ Ext.get("ajax_loader").hide(); }, this);
 Ext.Ajax.on('requestexception', function (){ Ext.get("ajax_loader").hide(); }, this);
-
-
 
 POS.API = 
 {
@@ -205,10 +164,7 @@ POS.API =
 		callback.call( null, o );
 	},
 
-	ajaxFailure 	: function ( callback, a,b,c )
-	{
-		
-
+	ajaxFailure : function ( callback, a,b,c ) {
 		var o;
 		try{
 			o = Ext.JSON.decode( a.responseText );
@@ -240,7 +196,7 @@ POS.API =
 	actualAjax 		: function (  method, url, params, callback  )
 	{
 		params.auth_token = Ext.util.Cookies.get("at");
-		
+
 		Ext.Ajax.request({
                         timeout: 160000,
 			method 	: method,
@@ -262,21 +218,6 @@ POS.API =
 	}
 
 }
-
-
-
-
-
-ChatClient = {
-
-
-
-	
-};
-
-
-
-
 
 Ext.define('MGW10005', {
     extend: 'Ext.data.Model',
@@ -601,39 +542,38 @@ var AdminPAQExplorer = function( id_botones ) {
 	    store: productos, 
 			title : "productos",
 			frame : false,
-	    columns: [
-	      {
-	      	text     : 'Código del Producto',
+	        columns: [
+	        {
+        	text     : 'Código del Producto',
 	        width    : 75,
-	        sortable : true,
-	        dataIndex: 'CCODIGOP01'
-	      },
-	      {
-	        text     : 'Nombre del producto',
-	        width    : 75,
-	        sortable : true,
-	        dataIndex: 'CNOMBREP01'
-	      },
-	      {
-	        text     : 'Tipo del Producto',
-	        width    : 75,
-	        sortable : true,
-	        dataIndex: 'CTIPOPRO01'
-	      },
-	      {
-	        text     : 'Descripción detallada',
-	        width    : 75,
-	        sortable : true,
-	        dataIndex: 'CDESCRIP01'
-	      }										
-	    ],
+		        sortable : true,
+		        dataIndex: 'CCODIGOP01'
+	        },
+	        {
+		        text     : 'Nombre del producto',
+		        width    : 75,
+	    	    sortable : true,
+	        	dataIndex: 'CNOMBREP01'
+	        },
+	        {
+		        text     : 'Tipo del Producto',
+		        width    : 75,
+	    	    sortable : true,
+	        	dataIndex: 'CTIPOPRO01'
+			},
+			{
+		        text     : 'Descripción detallada',
+	    	    width    : 75,
+	        	sortable : true,
+		        dataIndex: 'CDESCRIP01'
+          }
+		],
 
 			modal: true,
-	    viewConfig: {
-	      stripeRows: true,
-	      enableTextSelection: true
-	    },
-
+			viewConfig: {
+				stripeRows: true,
+				enableTextSelection: true
+	   		},
 			bbar: Ext.create('Ext.ux.StatusBar', {
 			  text: 'Mostrando n registros',
 			  // any standard Toolbar items:
@@ -706,7 +646,7 @@ var AdminPAQExplorer = function( id_botones ) {
 	        width    : 75,
 	        sortable : true,
 	        dataIndex: 'CREPLEGAL'
-	      }										
+	            }
 	    ],
 
 	    viewConfig: {
@@ -740,21 +680,7 @@ var AdminPAQExplorer = function( id_botones ) {
 
 }// AdminPaqExplorer
 
-
-
-
-
-
-
-
-
-
-
-
-
 var importarClientes = function(d){
-	
-
 	Ext.data.JsonP.request({
 		url : 'http://192.168.1.109:16001/',
 		params : {
@@ -767,16 +693,11 @@ var importarClientes = function(d){
 				return;
 			}
 			
-			
-			
-			
 	   	 	// create the data store
 		    var clientesAdminPAQ = Ext.create('Ext.data.ArrayStore', {
 		        model: 'MGW10002',
 		        data: response.datos
 		    });
-
-
 
 
 		    // create the Grid
@@ -834,7 +755,7 @@ var importarClientes = function(d){
 		                width    : 75,
 		                sortable : true,
 		                dataIndex: 'CREPLEGAL'
-		            }										
+		            }
 		        ],
 
 				modal: true,
@@ -884,11 +805,7 @@ var importarClientes = function(d){
 			    });
 		}//callback
 	});
-	
-
-
 }
-
 
 
 var nuevoClienteAval =  function( nombre, id_usuario, id_este_usuario ){  
@@ -902,10 +819,10 @@ var nuevoClienteAval =  function( nombre, id_usuario, id_este_usuario ){
                 "api/cliente/aval/nuevo", 
                 {"id_cliente" : id_este_usuario, "avales" : Ext.JSON.encode([{ "id_aval": id_usuario , "tipo_aval" : tipo_aval }])}, 
                 {callback : function(a){ window.location = "clientes.ver.php?cid="+id_este_usuario; }}
-            ); 
+            );
 
         }
-    }, this);  
+    }, this);
 };
 
 
@@ -935,12 +852,9 @@ var storeComponent = function(){
     });
   };
 
-};   
+};
 
 var store_component = new storeComponent();
-
-
-
 
 Ext.example = function(){
     var msgCt;
@@ -1023,36 +937,23 @@ Ext.example = function(){
 
   };
 
-    function startMap( direccion ){
-
+function startMap( direccion ){
 	    GeocoderRequest = {
 		    address : direccion + ", Mexico"
 	    };
+
 	    try{
-
 		    gc = new google.maps.Geocoder( );
+		gc.geocode(GeocoderRequest,  drawMap);
 
-		    gc.geocode(GeocoderRequest,  drawMap);
-		
 	    }catch(e){
-		    console.log(e)
+		console.log(e);
 	    }
-
-
-    }
-
-
-
-
-
+}
 
 function FormatMoney(m){
 	return "$" + m;
 }
-
-
-
-
 
 
 /**
@@ -1063,54 +964,49 @@ function FormatMoney(m){
 **/
  
 var Url = {
- 
 	// public method for url encoding
 	encode : function (string) {
 		return escape(this._utf8_encode(string));
 	},
- 
+
 	// public method for url decoding
 	decode : function (string) {
 		return this._utf8_decode(unescape(string));
 	},
- 
+
 	// private method for UTF-8 encoding
 	_utf8_encode : function (string) {
 		string = string.replace(/\r\n/g,"\n");
 		var utftext = "";
- 
+
 		for (var n = 0; n < string.length; n++) {
- 
+
 			var c = string.charCodeAt(n);
- 
+
 			if (c < 128) {
 				utftext += String.fromCharCode(c);
 			}
 			else if((c > 127) && (c < 2048)) {
 				utftext += String.fromCharCode((c >> 6) | 192);
 				utftext += String.fromCharCode((c & 63) | 128);
-			}
-			else {
+			}else{
 				utftext += String.fromCharCode((c >> 12) | 224);
 				utftext += String.fromCharCode(((c >> 6) & 63) | 128);
 				utftext += String.fromCharCode((c & 63) | 128);
 			}
- 
 		}
- 
 		return utftext;
 	},
- 
+
 	// private method for UTF-8 decoding
 	_utf8_decode : function (utftext) {
 		var string = "";
 		var i = 0;
 		var c = c1 = c2 = 0;
- 
+
 		while ( i < utftext.length ) {
- 
 			c = utftext.charCodeAt(i);
- 
+
 			if (c < 128) {
 				string += String.fromCharCode(c);
 				i++;
@@ -1126,10 +1022,234 @@ var Url = {
 				string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
 				i += 3;
 			}
- 
 		}
- 
+
 		return string;
 	}
+}
+
+/*
+ *
+ *
+ *
+ */
+Ext.define('PosImContact', {
+		extend: 'Ext.data.Model',
+		fields: [
+			{name: 'id_usuario', 			type: 'int'},
+			{name: 'id_rol',				type: 'int'},
+			{name: 'nombre',				type: 'string'},
+			{name: 'correo_electronico',	type: 'string'},
+			{name: 'ip',					type: 'string'},
+			{name: 'rol_nombre',			type: 'string'}
+		]
+});
+
+var PosImClient = {
+	_contactWindow : null,
+
+	_conversations : [],
+
+	_MAXIMAS_CONVERSACIONES: 5,
+
+	_contactStore : Ext.create('Ext.data.TreeStore', {
+		model: 'PosImContact',
+		proxy: {
+			type: 'ajax',
+			url: '../chat/chat.cgi?instance=5160175b&auth_token='+Ext.util.Cookies.get("at")+'&cmd=getOnlineContacts'
+		},
+		folderSort: true
+	}),
+
+	showContactWindow : function (){
+		if(PosImClient._contactWindow == null) {
+			PosImClient._createContactWindow();
+		}
+
+		setInterval( PosImClient._heartBeat, 2000);
+		PosImClient._contactWindow.show();
+	},
+
+	_dispatchHearBeat : function (response) {
+		var res = response.results;
+		for(c = 0; c < res.length; c++){
+			// buscar la conversacion
+			var found = false;
+			for (a = 0; a < PosImClient._conversations.length; a++) {
+				if(PosImClient._conversations[a].id_usuario == res[c].from){
+					//found conversation
+					found = true;
+					break;
+				}
+			}
+
+			var from = PosImClient._contactStore.getRootNode().findChild("id_usuario", res[c].from, true);
+
+			if(!found){
+				PosImClient._startConversationWith(from);
+				var el = Ext.ComponentManager.get("chatWindow-with-" + from.get("id_usuario") );
+				el.setValue( el.getValue(  ) + res[c].content + "\n" );
+
+			}else{
+				//update conversation
+				var el = Ext.ComponentManager.get("chatWindow-with-" + from.get("id_usuario") );
+				el.setValue( el.getValue( ) + res[c].content + "\n" );
+
+				//update mini-window title
+				var conversationWindows = PosImClient._contactWindow.items;
+				for( i = 0 ; i < conversationWindows.length ; i++ ){
+					if( conversationWindows.get(i).conversation_with == from.get("id_usuario") ){
+						conversationWindows.get(i).setTitle("(1) " + from.get("nombre"));
+						break;
+					}
+				}
+			}
+		}
+	},
+
+	_heartBeat : function (){
+			POS.API.GET( "chat/chat.cgi", { 
+						instance : "5160175b",
+						cmd : "getMessages"
+					},{ 
+						callback : PosImClient._dispatchHearBeat
+					}
+				);
+	},
+
+	_startConversationWith : function ( userRecord){
+
+		if(PosImClient._conversations.length > PosImClient._MAXIMAS_CONVERSACIONES){
+			return;
+		}
+
+		//vamos a buscar la conversacion para ver si ya existe
+		var found = -1;
+		for(a = 0 ; a < PosImClient._conversations.length ; a++){
+			if(PosImClient._conversations[a].id_usuario == userRecord.get("id_usuario")){
+				found = a;
+				break;
+			}
+		}
+
+		if(found == -1){
+			//crear una nueva conversacion
+			PosImClient._contactWindow.add({
+								conversation_with : userRecord.get("id_usuario"),
+								xtype : "panel",
+								title : userRecord.get("nombre"),
+								autoscroll : true,
+								layout: 'vbox',
+								align : 'stretch',
+								pack  : 'start',
+								items : [{
+									id : "chatWindow-with-" + userRecord.get("id_usuario"),
+									xtype: 'textarea',
+									flex : 1,
+									width: 187,
+									border : true
+								},{
+									xtype: 'textarea',
+									emptyText: 'Escribe aqui',
+									width: 187,
+									enableKeyEvents : true,
+									listeners : {
+										keydown : function ( _this, e, eOpts){
+											if( e.button == 12
+												&& !e.shiftKey){
+													PosImClient._sendMessage(this.findParentByType("panel").conversation_with, this);
+											}
+										}
+									}
+								}]
+							});
+
+			PosImClient._conversations.push({
+				id_usuario : userRecord.get("id_usuario")
+			});
+		}
+
+		PosImClient._contactWindow.items.getAt(0).collapse();
+	},
+
+	_onContancClick : function (_this, record, item, index, e, eOpts){
+		//vamos a revisar que no este offline
+		PosImClient._startConversationWith(record);
+	},
+
+	_sendMessage : function(id_usuario, textarea){
+		//calculate time
+
+		//send the message
+		POS.API.GET( "chat/chat.cgi", { 
+					instance : "5160175b",
+					cmd : "postMessage",
+					to : id_usuario,
+					content : textarea.getValue()
+				},{ 
+					callback : function(){
+
+					}
+				}
+			);
+
+		//display locally, with gray color indicating 'sending state'
+		var el = Ext.ComponentManager.get("chatWindow-with-" + id_usuario );
+		el.setValue( el.getValue(  ) + textarea.getValue( ) + "\n" );
+		textarea.setRawValue();
+
+		//change color text to black on arrival
  
+	},
+
+	_createContactTree : function(){
+			return Ext.create('Ext.tree.Panel', {
+						title: 'Contactos',
+						width: 500,
+						height: 300,
+						collapsible: true,
+						useArrows: true,
+						rootVisible: false,
+						store: PosImClient._contactStore,
+						multiSelect: true,
+						singleExpand: true,
+						listeners: {
+							itemclick: PosImClient._onContancClick
+						},
+						columns: [{
+							xtype: 'treecolumn',
+							text: 'Nombre',
+							flex: 2,
+							sortable: true,
+							dataIndex: 'nombre'
+						},{
+							text: 'Posicion',
+							flex: 1,
+							dataIndex: 'rol_nombre',
+							sortable: true
+						}]
+					});
+	},
+
+	_createContactWindow :  function (){
+			PosImClient._contactWindow  = Ext.create('widget.window', {
+				title: 'Mensajero',
+				headerPosition: 'bottom',
+				resizable:false,
+				collapsible : true,
+				width: 200,
+				height: 400,
+				animCollapse: true,
+				bodyBorder: true,
+				layout: 'accordion',
+				border: true,
+				dragable: false,
+				closable: false,
+				x : 1200,
+				y : 100,
+				items: [
+					PosImClient._createContactTree()
+				]
+			});
+	}
 }

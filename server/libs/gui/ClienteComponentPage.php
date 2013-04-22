@@ -27,20 +27,20 @@ class ClienteComponentPage extends PosComponentPage{
 		
 	}
 
-	private function createMainMenu()	{
-		
+	private function createMainMenu()
+	{
+		$productos = '';
+		if (ConfiguracionDAO::MostrarProductos())
+		{
+			$productos = '{ "title": "Productos", "url": "productos.php" }';
+		}
 		$this->main_menu_json = '{
-		    "main_menu": [
-
-		        
+		    "main_menu": ['.
+		    	$productos.'
 		    ]
 		}';
 
-
-
 		return;
-		
-		
 	}
 
 	protected function _renderTopMenu()	{

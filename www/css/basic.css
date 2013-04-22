@@ -423,6 +423,134 @@ img.tracking_pixel{height:1px;position:absolute;visibility:hidden;width:1px}
 
 */
 
+
+
+
+
+.accept {
+    background-image: url(../media/iconos/accept.png) !important;
+}
+
+
+.add {
+    background-image: url(../media/iconos/add.png) !important;
+}
+
+.application_go {
+    background-image: url(../media/iconos/application_go.png) !important;
+}
+
+.application_view_list {
+    background-image: url(../media/iconos/application_view_list.png) !important;
+}
+
+.book {
+    background-image: url(../media/iconos/book.png) !important;
+}
+
+.cog {
+    background-image: url(../media/iconos/cog.png) !important;
+}
+
+.cog_edit {
+    background-image: url(../media/iconos/cog_edit.png) !important;
+}
+.connect {
+    background-image: url(../media/iconos/connect.png) !important;
+}
+.control_rewind {
+    background-image: url(../media/iconos/control_rewind.png) !important;
+}
+.error {
+    background-image: url(../media/iconos/error.png) !important;
+}
+.feed_add {
+    background-image: url(../media/iconos/feed_add.png) !important;
+}
+.feed_delete {
+    background-image: url(../media/iconos/feed_delete.png) !important;
+}
+.feed_error {
+    background-image: url(../media/iconos/feed_error.png) !important;
+}
+.folder_go {
+    background-image: url(../media/iconos/folder_go.png) !important;
+}
+.folder_wrench {
+    background-image: url(../media/iconos/folder_wrench.png) !important;
+}
+.grid {
+    background-image: url(../media/iconos/grid.png) !important;
+}
+.image_add {
+    background-image: url(../media/iconos/image_add.png) !important;
+}
+.information {
+    background-image: url(../media/iconos/information.png) !important;
+}
+.printer {
+    background-image: url(../media/iconos/printer.png) !important;
+}
+
+.connect {
+    background-image: url(../media/iconos/rss_go.png) !important;
+}
+
+.table_add {
+    background-image: url(../media/iconos/table_add.png) !important;
+}
+
+.table_refresh {
+    background-image: url(../media/iconos/table_refresh.png) !important;
+}
+
+.user {
+    background-image: url(../media/iconos/user.png) !important;
+}
+
+.user_add {
+    background-image: url(../media/iconos/user_add.png) !important;
+}
+
+.user_comment {
+    background-image: url(../media/iconos/user_comment.png) !important;
+}
+
+.user_delete {
+    background-image: url(../media/iconos/user_delete.png) !important;
+}
+
+.user_edit {
+    background-image: url(../media/iconos/user_edit.png) !important;
+}
+
+.user_female {
+    background-image: url(../media/iconos/user_female.png) !important;
+}
+
+.user_gray {
+    background-image: url(../media/iconos/user_gray.png) !important;
+}
+
+.user_green {
+    background-image: url(../media/iconos/user_green.png) !important;
+}
+
+.user_orange {
+    background-image: url(../media/iconos/user_orange.png) !important;
+}
+
+.user_red {
+    background-image: url(../media/iconos/user_red.png) !important;
+}
+
+.user_suit {
+    background-image: url(../media/iconos/user_suit.png) !important;
+}
+
+
+
+
 .POS.Boton {
 	-webkit-user-select: none;
 	background-color: whiteSmoke;

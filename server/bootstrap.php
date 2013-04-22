@@ -112,7 +112,7 @@
 	}
 
 
-
+	require_once("libs/PHPExcel.php");//Carga la libreria de PHPExcel
 	# *******************************
 	# Cargar las librerias de GUI
 	# *******************************
@@ -152,6 +152,7 @@
 
 	require_once("libs/SessionManager.php");
     require_once("libs/FormatTime.php");
+    require_once("libs/TextRender.php");
     require_once("libs/CNumeroaLetra.php");
 
 
@@ -172,6 +173,7 @@
 	require_once("controllers/PersonalYAgentes.controller.php");
 	//require_once("controllers/ImpuestosYRetenciones.controller.php");	//Agregado 18 10 2012
 	require_once("controllers/Empresas.controller.php");
+                       require_once("controllers/FormasPreimpresas.controller.php");
 	require_once("controllers/Direcciones.controller.php");
 	require_once("controllers/Sucursales.controller.php");		
 	require_once("controllers/Productos.controller.php");
@@ -190,7 +192,7 @@
 	require_once("controllers/Compras.controller.php");
 	require_once("controllers/Impuestos.controller.php");//
 	require_once("controllers/Documentos.controller.php");
-		
+	require_once("controllers/Contabilidad.controller.php");//Agregado 04/Apr/2013	rev 2986
 			
 	/*
 	require_once("controllers/Autorizaciones.controller.php");
@@ -203,10 +205,10 @@
 	*/
 
 	require_once("libs/api/ApiHandler.php");
+                        
 
 
-
-
+                        
 	//convertir configuracion en globales para
 	//que no se pueda modificar
 	define("MAIL", 				$POS_CONFIG["MAIL"]);
@@ -282,6 +284,16 @@
 	define("INSTANCE_ID", $rs["instance_id"]);
 	define("INSTANCE_TOKEN", $_GET["_instance_"]);
 
+	if(array_key_exists("activa", $rs))
+	{
+		define("INSTANCE_ACCESS", $rs["activa"]);
+	}
+	else
+	{
+		define("INSTANCE_ACCESS", 1);
+	}
+
+
 	try{
 
 	    $POS_CONFIG["INSTANCE_CONN"] = ADONewConnection($rs["db_driver"]);
@@ -322,7 +334,7 @@
 	 * 
 	 * 
 	 * */
-	SesionController::Limpiar( );
+	// SesionController::Limpiar( );
 	//SesionController::HeartBeat();
 
 	//DAO::predis("db".$rs["instance_id"], "127.0.0.1");

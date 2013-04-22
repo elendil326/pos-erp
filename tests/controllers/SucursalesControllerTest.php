@@ -23,6 +23,8 @@ class SucursalesControllerTest extends PHPUnit_Framework_TestCase
 	
 	protected function setUp( )
     {
+	
+	
 		Logger::log("-----------------------------");
 
 		$r = SesionController::Iniciar(123, 1, true);
@@ -172,7 +174,7 @@ class SucursalesControllerTest extends PHPUnit_Framework_TestCase
 
         $sucursal = SucursalesController::Nueva(array(
             "calle"                 => "Monte Balcanes",
-        	"numero_exterior"       => "107",
+            "numero_exterior"       => "107",
             "colonia"               => "Arboledas",
             "id_ciudad"             => 334,
        	    "codigo_postal"         => "38060",
@@ -217,8 +219,8 @@ class SucursalesControllerTest extends PHPUnit_Framework_TestCase
 		    $id_sucursal = $sucursal["id_sucursal"],
 		    $activo = 0,
 		    $descripcion = "_EDITADO_" . time(),
-			$direccion = Array(Array(
-								"calle"  			=> "Monte Balcanes",
+			$direccion = Array(
+							"calle"  			=> "Monte Balcanes",
 						        "numero_exterior"   => "107",
 						        "colonia"  			=> "Arboledas",
 						        "id_ciudad"  		=> 334,
@@ -226,8 +228,8 @@ class SucursalesControllerTest extends PHPUnit_Framework_TestCase
 						        "numero_interior"  	=> null,
 						        "texto_extra"  		=> "Calle cerrada",
 						        "telefono1"  		=> "4616149974",
-						        "telefono2"			=> "45*451*454"
-							)),
+						        "telefono2"			=> "45*451*454"                                                        
+							),
 		    $empresas = null,
 		    $id_gerente = 1,
 		    $id_moneda = $moneda->getIdMoneda(),

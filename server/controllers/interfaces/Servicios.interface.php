@@ -242,6 +242,19 @@
  	 *
  	 * @param id_orden int Id de la orden a revisar
  	 * @return seguimientos json Arreglo con objetos Seguimiento
+ 	 * @return id_orden_de_servicio int 
+ 	 * @return id_servicio int 
+ 	 * @return id_usuario_venta int 
+ 	 * @return id_usuario int 
+ 	 * @return id_usuario_asignado int 
+ 	 * @return fecha_orden int 
+ 	 * @return fecha_entrega int 
+ 	 * @return activa bool 
+ 	 * @return cancelada bool 
+ 	 * @return descripcion string 
+ 	 * @return precio float 
+ 	 * @return extra_params json 
+ 	 * @return gastos json 
  	 **/
   static function DetalleOrden
 	(

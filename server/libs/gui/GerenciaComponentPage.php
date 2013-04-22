@@ -27,6 +27,16 @@ class GerenciaComponentPage extends PosComponentPage{
 		    "main_menu": [
 
 		        {
+		        	"title":"Contabilidad",
+		        	"url": "contabilidad.cuentas.catalogo.php",
+		        	"children":[
+		        		{
+		        			"title" : "Catalogos Cuentas",
+		        			"url" : "contabilidad.cuentas.catalogo.php"
+		        		}
+		        	]
+		        },
+		        {
 		            "title": "Cargos y abonos",
 		            "url": "cargos_y_abonos.php"
 		        },
@@ -160,14 +170,6 @@ class GerenciaComponentPage extends PosComponentPage{
 		            "title": "Personal",
 		            "url": "personal.lista.usuario.php",
 		            "children": [
-		                {
-		                    "title": "Lista de roles",
-		                    "url": "personal.lista.rol.php"
-		                },
-		                {
-		                    "title": "Nuevo rol",
-		                    "url": "personal.nuevo.rol.php"
-		                },
 		                {
 		                    "title": "Lista de usuarios",
 		                    "url": "personal.lista.usuario.php"

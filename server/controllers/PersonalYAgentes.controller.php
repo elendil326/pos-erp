@@ -725,28 +725,28 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 
 
 
-            //se verifica que el correo electronico no se repita 
-            if(!is_null($correo_electronico))
-            {
+            //se verifica que el correo electronico no se repita y que sea valido
+			if (!is_null($correo_electronico)) {
 
-                //todo, validar un correo 
-                if ( !filter_var($correo_electronico, FILTER_VALIDATE_EMAIL) ) {           
-                  $correo_electronico = null ;
-                  Logger::error("El correo electronico ".$correo_electronico." es invalido");
+				if ( !filter_var($correo_electronico, FILTER_VALIDATE_EMAIL) ) {
+					$correo_electronico = null ;
+					Logger::error("El correo electronico ".$correo_electronico." es invalido");
+					throw new InvalidDatabaseOperationException("El correo electronico es invalido");
 
                 } else {
+					$usuariose = UsuarioDAO::search(
+									new Usuario( array( 
+										"correo_electronico" => $correo_electronico, 
+										"activo" => 1 ) ) );
 
-                  $usuariose = UsuarioDAO::search(new Usuario( array( "correo_electronico" => $correo_electronico, "activo" => 1 ) ));
+					if (sizeof($usuariose) > 0) {
+						throw new BusinessLogicException("El correo ".$correo_electronico." ya esta en uso");
+						$correo_electronico = null;
+					}
 
-                  if(sizeof($usuariose) > 0){
-                      //throw new BusinessLogicException("El correo electronico ".$correo_electronico." ya esta en uso");
-                    Logger::error("El correo electronico ".$correo_electronico." ya esta en uso");
-                    $correo_electronico = null;
-                  }
+				}
 
-                }
-
-            }
+			}
 
 
 
@@ -980,9 +980,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 		$activo = null, 
 		$ordenar = null
 	)
-	{  
-            Logger::log("Listando a los usuarios $activo");
-
+	{
             //valida el parametro activo.
             $validar=self::validarParametrosUsuario(null, null, null, null, null, null, null, $activo);
             if(is_string($validar))
@@ -1000,8 +998,6 @@ require_once("interfaces/PersonalYAgentes.interface.php");
             if(is_null($activo))  $activo = 1;
 
             $usuarios = UsuarioDAO::buscarEmpleados( null, 5000, $activo );
-
-            Logger::log("Se obtuvo la lista de usuarios exitosamente con ".count($usuarios)." elementos");
 
             return array("numero_de_resultados" => sizeof($usuarios),
 						"resultados" => $usuarios);
@@ -1532,33 +1528,29 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 		$orden = null
 	)
 	{
-                Logger::log("Listando roles con orden: ".$orden);
+		//Se valida si el orden es valido. Orden tiene que ser el nombre de un campo
+		//de la tabla rol
+		if (
+				$orden != "id_rol" &&
+				$orden != "nombre" &&
+				$orden != "descripcion" &&
+				$orden != "descuento" &&
+				$orden != "salario" &&
+				$orden != "id_tarifa_compra" &&
+				$orden != "id_tarifa_venta" &&
+				!is_null($orden)
+			){
+			Logger::log("La variable orden: ".$orden." no es una columna de la tabla rol");
+			throw new Exception("La variable orden no es valida",901);
+		}
 
-                //Se valida si el orden es valido. Orden tiene que ser el nombre de un campo
-                //de la tabla rol
-                if
-                (
-                        $orden != "id_rol" &&
-                        $orden != "nombre" &&
-                        $orden != "descripcion" &&
-                        $orden != "descuento" &&
-                        $orden != "salario" &&
-                        $orden != "id_tarifa_compra" &&
-                        $orden != "id_tarifa_venta" &&
-                        !is_null($orden)
-                )
-                {
-                    Logger::log("La variable orden: ".$orden." no es una columna de la tabla rol");
-                    throw new Exception("La variable orden no es valida",901);
-                }
-
-                //Se traen todos los roles d ela base de datos.
+		//Se traen todos los roles d ela base de datos.
 		$roles = RolDAO::getAll(null,null,$orden);
-                Logger::log("Lista de roles obtenida con ".count($roles)." elementos");
-  		return $roles;
+
+		return $roles;
 	}
-  
-	/**
+
+   /**
  	 *
  	 *Asigna uno o varios permisos especificos a un usuario. No se pueden asignar permisos que ya se tienen
  	 *
@@ -2171,4 +2163,47 @@ require_once("interfaces/PersonalYAgentes.interface.php");
   ){
 
   }
-  }
+
+
+  	/**
+ 	 *
+ 	 *Crear un seguimiento de texto a este agente
+ 	 *
+ 	 * @param id_usuario int El id_usuario de a quien le haremos el seguimeinto
+ 	 * @param texto string El texto que ingresa el que realiza el seguimiento
+ 	 * @return id_usuario_seguimiento int 
+ 	 **/
+  static function NuevoSeguimientoUsuario
+	(
+		$id_usuario, 
+		$texto
+	){
+		$cliente = UsuarioDAO::getByPK( $id_usuario );
+		
+		if(is_null($cliente)) {
+			throw new InvalidDataException("Este usuario no existe");
+		}
+
+		if( strlen( $texto ) == 0 ){
+			throw new InvalidDataException("El texto no puede ser vacio");
+		}
+
+		$usuario_actual = SesionController::Actual();
+
+		$s = new UsuarioSeguimiento();
+		$s->setIdUsuario($id_usuario);
+		$s->setIdUsuarioRedacto($usuario_actual["id_usuario"]);
+		$s->setFecha(time());
+		$s->setTexto($texto);
+		
+		
+		try{
+			UsuarioSeguimientoDAO::save( $s );
+
+		}catch(Exception $e){
+			throw new InvalidDatabaseOperationException( $e );
+		}
+		return array( "id_usuario_seguimiento" => $s->getIdUsuarioSeguimiento() );
+	}
+
+}

@@ -131,6 +131,11 @@ abstract class LoteEntradaDAOBase extends DAO
 			array_push( $val, $lote_entrada->getIdLote() );
 		}
 
+		if( ! is_null( $lote_entrada->getIdDocumento() ) ){
+			$sql .= " `id_documento` = ? AND";
+			array_push( $val, $lote_entrada->getIdDocumento() );
+		}
+
 		if( ! is_null( $lote_entrada->getIdUsuario() ) ){
 			$sql .= " `id_usuario` = ? AND";
 			array_push( $val, $lote_entrada->getIdUsuario() );
@@ -168,7 +173,7 @@ abstract class LoteEntradaDAOBase extends DAO
 	  *	
 	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
 	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
-	  * aqui, sin embargo. El valor de retorno indica cuÃ¡ntas filas se vieron afectadas.
+	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
@@ -176,9 +181,10 @@ abstract class LoteEntradaDAOBase extends DAO
 	  **/
 	private static final function update( $lote_entrada )
 	{
-		$sql = "UPDATE lote_entrada SET  `id_lote` = ?, `id_usuario` = ?, `fecha_registro` = ?, `motivo` = ? WHERE  `id_lote_entrada` = ?;";
+		$sql = "UPDATE lote_entrada SET  `id_lote` = ?, `id_documento` = ?, `id_usuario` = ?, `fecha_registro` = ?, `motivo` = ? WHERE  `id_lote_entrada` = ?;";
 		$params = array( 
 			$lote_entrada->getIdLote(), 
+			$lote_entrada->getIdDocumento(), 
 			$lote_entrada->getIdUsuario(), 
 			$lote_entrada->getFechaRegistro(), 
 			$lote_entrada->getMotivo(), 
@@ -205,10 +211,11 @@ abstract class LoteEntradaDAOBase extends DAO
 	  **/
 	private static final function create( &$lote_entrada )
 	{
-		$sql = "INSERT INTO lote_entrada ( `id_lote_entrada`, `id_lote`, `id_usuario`, `fecha_registro`, `motivo` ) VALUES ( ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO lote_entrada ( `id_lote_entrada`, `id_lote`, `id_documento`, `id_usuario`, `fecha_registro`, `motivo` ) VALUES ( ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$lote_entrada->getIdLoteEntrada(), 
 			$lote_entrada->getIdLote(), 
+			$lote_entrada->getIdDocumento(), 
 			$lote_entrada->getIdUsuario(), 
 			$lote_entrada->getFechaRegistro(), 
 			$lote_entrada->getMotivo(), 
@@ -277,6 +284,17 @@ abstract class LoteEntradaDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " `id_lote` = ? AND"; 
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( ( !is_null (($a = $lote_entradaA->getIdDocumento()) ) ) & ( ! is_null ( ($b = $lote_entradaB->getIdDocumento()) ) ) ){
+				$sql .= " `id_documento` >= ? AND `id_documento` <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " `id_documento` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			

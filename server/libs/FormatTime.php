@@ -1,87 +1,5 @@
 <?php
 
-/**
-  * (C) 2012 Caffeina Software
-  *
-  * Description:
-  *      Renderers
-  *
-  * Author:
-  *     Alan Gonzalez (alan)
-  *
-  ***/
-class R {
-
-	public static function DescripcionRolFromId($id_rol) {
-		return RolDAO::getByPK($id_rol) ? RolDAO::getByPK($id_rol)->getNombre() : self::NonExistent() ;
-	}
-
-	private static function NonExistent( ) {
-		return "<font style='color:gray'>No existe</font>";
-	}
-
-	static function UserFullNameFromId( $user_id ) {
-		if ( is_null( $u = UsuarioDAO::getByPK( $user_id ) ) ) {
-			return self::NonExistent();
-		}else{
-			return $u->getNombre( );
-		}
-	}
-
-	public static function ConceptoGastoFromId($id){
-		$v = ConceptoGastoDAO::getByPK($id);
-		if(is_null($v)) return R::NonExistent();
-		return $v->getNombre();
-	}
-
-	public static function ConceptoIngresoFromId($id){
-		$v = ConceptoIngresoDAO::getByPK($id);
-		if(is_null($v)) return R::NonExistent();
-		return $v->getNombre();
-	}
-
-	public static function NombreDocumentoBaseFromId($id){
-		$v = DocumentoBaseDAO::getByPK($id);
-		if(is_null($v)) return R::NonExistent();
-		return $v->getNombre();
-	}
-
-	public static function NombreDocumentoFromId( $id_documento ){
-		$v = DocumentoDAO::getDocumentWithValues( $id_documento );
-		for ($i=0; $i < sizeof($v); $i++) { 
-			if( strtolower($v[$i]["campo"]) == "titulo"){
-				return $v[$i]["val"];
-			} else if( strtolower($v[$i]["campo"]) == "nombre"){
-				return $v[$i]["val"];
-			}
-		}
-		return R::NonExistent();
-	}
-
-	static function UserFirstNameFromId( $user_id ) {
-
-	}
-
-	static function FriendlyDateFromUnixTime( $unixtime ) {
-		return FormatTime( $unixtime );
-	}
-
-	static function MoneyFromDouble( $foo ) {
-		return FormatMoney( $foo );
-	}
-
-
-	static function RazonSocialFromIdEmpresa( $id_empresa ) {
-		if ( is_null( $u = EmpresaDAO::getByPK( $id_empresa ) ) ) {
-			return self::NonExistent();
-		} else {
-			return $u->getRazonSocial( );
-		}
-	}
-
-}//class R
-
-
 function funcion_consignatario($consignatario) {
 	return ($consignatario ? "Consignatario" : "----" );
 }
@@ -298,7 +216,7 @@ function FormatTime($timestamp, $type = "FB")
 				case "September": 		$text = "Septiembre" 	. $text; break;	
 				case "October": 		$text = "Octubre" 	. $text; break;	
 				case "November": 		$text = "Noviembre" 	. $text; break;	
-				case "December": 		$text = "Diciembre" 	. $text; break;																				
+				case "December": 		$text = "Diciembre" 	. $text; break;
 			}
 		}
 		else // if over a year or the same month one year ago -- June 30, 2010 at 5:34pm
@@ -317,10 +235,42 @@ function FormatTime($timestamp, $type = "FB")
 				case "September": 		$text = "Septiembre" 	. $text; break;	
 				case "October": 		$text = "Octubre" 	. $text; break;	
 				case "November": 		$text = "Noviembre" 	. $text; break;	
-				case "December": 		$text = "Diciembre" 	. $text; break;																				
+				case "December": 		$text = "Diciembre" 	. $text; break;
 			}
 		}
 	}
 
 	return "<span title='".date("F j, Y \a \l\a\s g:i a", $timestamp)."'> " . $text . "</span>";
 }
+
+    /**
+     *
+     * Regresa el numero de dias de un mes y anio especificado
+     *
+     * @author Juan Manuel Garc&iacute;a Carmona <manuel@caffeina.mx>
+     *
+     * @param mes int 
+     * @param anio int 
+     * @return diasMes int numero de dias que tiene el mes indicadom, del anio indicado
+     **/
+function getUltimoDiaDelMes( $mes, $anio )
+{
+
+    /*
+        Los meses 1,3,5,7,8,10,12 siempre tienen 31 días
+        Los meses 4,6,9,11 siempre tienen 30 días
+        El único problema es el mes de febrero dependiendo del año puede tener 28 o 29 días
+    */
+    if( ($mes == 1) || ($mes == 3) || ($mes == 5) || ($mes == 7) || ($mes == 8) || ($mes == 10) || ($mes == 12) ) {
+        return 31;
+    }else if( ($mes == 4) || ($mes == 6) || ($mes == 9) || ($mes == 11) ){
+        return 30;
+    }else if( $mes == 2 ){
+        if( ($anio % 4 == 0) && ($anio % 100 != 0) || ($anio % 400 == 0) ){
+            return 29;
+        }else{
+            return 28;
+        }
+    }
+}
+

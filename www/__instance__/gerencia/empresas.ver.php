@@ -6,31 +6,21 @@
 
 	$page = new GerenciaComponentPage();
 
-
-	
-	//
 	// Requerir parametros
-	// 
 	$page->requireParam(  "eid", "GET", "Esta empresa no existe." );
-	
-	$esta_empresa = EmpresaDAO::getByPK( $_GET["eid"] );
-	
-	
-	
-	$esta_direccion = DireccionDAO::getByPK($esta_empresa->getIdDireccion());
-               
 
-	//
+	$empresa = EmpresasController::Detalles($_GET["eid"]);
+
+	$esta_empresa = $empresa["detalles"];
+
+	$esta_direccion = $esta_empresa->direccion;
+
 	// Titulo de la pagina
-	// 
 	$page->addComponent( new TitleComponent( "Detalles de " . $esta_empresa->getRazonSocial() , 2 ));
 
-
-	//
 	// Menu de opciones
-	// 
 	if($esta_empresa->getActivo()){
-		
+
 		$menu = new MenuComponent();
 
 		$menu->addItem("Editar esta empresa", "empresas.editar.php?eid=".$_GET["eid"]);
@@ -59,10 +49,8 @@
 
 		$page->addComponent( $menu);
 	}
-		
-	//
+
 	// Forma de producto
-	// 
 	$form = new DAOFormComponent( $esta_empresa );
 
 	$form->setEditable(false);
@@ -74,9 +62,9 @@
 	));
 
 	$page->addComponent( $form );
-                
-	if(!is_null($esta_empresa->getIdDireccion())){
-		
+
+	if(!is_null($esta_direccion)){
+
 		$page->addComponent( new TitleComponent("Direccion",3) );
 
 		$form = new DAOFormComponent($esta_direccion);
@@ -95,17 +83,44 @@
 		$page->addComponent($form);
 
 	}
-                
+
 	$page->addComponent( new TitleComponent("Sucursales",3));
-	
+
 	$suce = SucursalEmpresaDAO::search( new SucursalEmpresa( array( "id_empresa" => $_GET["eid"] ) ) );
+
+	$empresas_vinculadas = new TableComponent( array( "id_sucursal" => "Sucursales Vinculadas" ), $suce );
+
+	function funcion_sucursal_descripcion($valor){
+			return SucursalDAO::getByPK($valor)->getRazonSocial();
+	}
+
+	$empresas_vinculadas->addColRender( "id_sucursal", "funcion_sucursal_descripcion" );
 	
-	/*var_dump($suce);*/
-	
+	$page->addComponent( $empresas_vinculadas );
+
+
 	$page->addComponent( "<p>Agregar una sucursal </p>" );
-	
+
+	$js = "Ext.MessageBox.show({
+				title: 'Error',
+				msg: '&iquest; Seguro que desea vincular esta sucursal a la empresa '+_suc.get('razon_social')+' ?',
+				buttons: Ext.MessageBox.YESNO,
+				icon: 'error',
+				callback : function(a,b){
+					if(a=='yes'){
+						POS.API.GET('api/sucursal/editar', 
+						{ id_sucursal : _suc.get('id_sucursal'), empresas : Ext.JSON.encode([ ".$_GET["eid"]." ]) }, 
+						{callback: function(a){
+								window.location = 'empresas.ver.php?eid=".$_GET["eid"]."';
+						}}
+						)
+					}
+				}
+	       });";
+
 	$ssel = new SucursalSelectorComponent();
-	$ssel->addJsCallback("(function(){})");
+
+	$ssel->addJsCallback("(function(_suc){".$js."})");
 	$page->addComponent( $ssel );
 
 /*	$page->addComponent( new TitleComponent( "Ventas" ), 3 );
@@ -119,8 +134,7 @@
 
 
 	$r = new ReporteComponent();
-	
-	
+
 	$data = array(
 		array(
 			"fecha" => "2012-01-01",
@@ -129,13 +143,13 @@
 		array(
 			"fecha" => "2012-01-02",
 			"value" => "20"
-		),		
+		),
 		array(
 			"fecha" => "2012-01-03",
 			"value" => "25"
-		)		
+		)
 	);
-	
+
 	$data = EmpresasController::flujoEfectivo( (int)$_GET["eid"] );
 
 	$r->agregarMuestra	( "uno", $data, true );

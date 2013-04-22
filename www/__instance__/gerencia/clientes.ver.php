@@ -58,11 +58,8 @@ function orderByDate($eventObjA, $eventObjB) {
     return ($a < $b) ? 1 : -1;
 }
 
-//orderByDate
-//usort($eventos, cmp_function)
 
-
-function renderRow($unixTime, $fullArray) {   
+function renderRow($unixTime, $fullArray) {
     
     $out = "";
 
@@ -375,12 +372,6 @@ $page->addComponent($tabla_avales);
  * ******************************************************** */
 $page->nextTab("Seguimiento");
 
-
-
-
-//$page->addComponent(new TitleComponent("Nuevo seguimiento", 3));
-
-
 $segs = ClienteSeguimientoDAO::search(new ClienteSeguimiento(array(
                     "id_cliente" => $este_usuario->getIdUsuario()
                 )));
@@ -391,18 +382,9 @@ $header = array(
     "id_usuario" => "Agente"
 );
 
-function nagente($id) {
-    $a = UsuarioDAO::getByPK($id);
-    return $a->getNombre();
-}
-
-function funcion_transcurrido($a, $obj) {
-    return FormatTime(($a));
-}
-
 $lseguimientos = new TableComponent($header, $segs);
-$lseguimientos->addColRender("id_usuario", "nagente");
-$lseguimientos->addColRender("fecha", "funcion_transcurrido");
+$lseguimientos->addColRender("id_usuario", "R::UserFullNameFromId");
+$lseguimientos->addColRender("fecha", "R::FriendlyDateFromUnixTime");
 $page->addComponent($lseguimientos);
 
 

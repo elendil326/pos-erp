@@ -10,6 +10,24 @@
   
 	/**
  	 *
+ 	 *Borra en archivo especificado en el argumento a partir del id de instancia y del tiempo establecido
+
+ 	 *
+ 	 * @param id_instacia int Id de la instancia del archivo que se va a borrar
+ 	 * @param time int Tiempo del archivo que se va a borrar, en formato UNIX
+ 	 * @return status string Estado del proceso
+ 	 **/
+  static function RespaldoBorrarBd
+	(
+		$id_instacia, 
+		$time
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
  	 *editar una columna dado su campo y tabla
  	 *
  	 * @param campo string 
@@ -79,6 +97,20 @@
   
 	/**
  	 *
+ 	 *Descarga un archivo .zip con los ultimos respaldos que se encuentren en el servidor de las instancias seleccionadas
+ 	 *
+ 	 * @param instance_ids json Lista de los id de las instancias a respaldar
+ 	 **/
+  static function BdInstanciasDescargarBd
+	(
+		$instance_ids
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
  	 *Metodo que elimina todos los registros en la base de datos, especialmente util para hacer pruebas unitarias. Este metodo NO estara disponible al publico.
  	 *
  	 **/
@@ -96,6 +128,55 @@
  	 **/
   static function RespaldarBd
 	(
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Genera un scrip .sql en el servirdor de los id de instancia que reciba este metodo
+ 	 *
+ 	 * @param instance_ids json Lista de los id de las instancias a respaldar
+ 	 * @return status string Respuesta enviada del servidor
+ 	 * @return mensaje string Mensaje de respuesta del servidor
+ 	 **/
+  static function BdInstanciasRespaldarBd
+	(
+		$instance_ids
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Restaurar una BD especifica, a partir de un listado de archivos.
+ 	 *
+ 	 * @param id_instancia int Id de la instancia que se requiere restaurar
+ 	 * @param time int Fecha de creacin del archivo
+ 	 * @return status string Estado de la respuesta
+ 	 **/
+  static function EspecificaBdRestaurarBd
+	(
+		$id_instancia, 
+		$time
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Restaura las instancias seleccionadas de acuerdo a los scripts .sql mas recientes que haya en el servidor para cada instancia. La restauracion es un reemplazo total tanto de datos como esquema con respecto a los scripts encontrados.
+ 	 *
+ 	 * @param instance_ids json Lista de los id de las instancias a respaldar
+ 	 * @return status string Respuesta enviada del servidor
+ 	 * @return mensaje string Mensaje de respuesta del servidor
+ 	 **/
+  static function BdInstanciasRestaurarBd
+	(
+		$instance_ids
 	);  
   
   
@@ -143,11 +224,66 @@
   
 	/**
  	 *
+ 	 *Configura el numero de decimales que se usaran para ciertas operaciones del sistema, como precios de venta, costos, tipos de cambio, entre otros
+ 	 *
+ 	 * @param cambio int Tipos de Cambio
+ 	 * @param cantidades int Cantidades
+ 	 * @param costos int Costos y Precio de Compra
+ 	 * @param ventas int Precio de Venta
+ 	 * @return status string ok
+ 	 **/
+  static function DecimalesConfiguracion
+	(
+		$cambio, 
+		$cantidades, 
+		$costos, 
+		$ventas
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Permite establecer si habra productos que mostrar al cliente y cuales propiedades de ellos.
+ 	 *
+ 	 * @param mostrar bool Si queremos que se muestren productos al cliente.
+ 	 * @param propiedades json Arreglo de strings con los campos de los productos que se mostraran al cliente.
+ 	 **/
+  static function ClientesVistasConfiguracion
+	(
+		$mostrar, 
+		$propiedades = null
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
  	 *Gerenra y /o valida un hash
  	 *
  	 **/
   static function Hash
 	(
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Dada una direccion IP, el path de la empresa y el numero de la lista de precios, obtiene todos los datos de los clientes y los productos de AdminPAQ y los reproduce en el POS.
+ 	 *
+ 	 * @param ip string La direccion IP de su servidor de AdminPAQ.
+ 	 * @param path string El path donde se encuentra el folder de la empresa en el servidor.
+ 	 * @param num_precio int Indica que precio de la lista se usara para los productos en el POS.
+ 	 **/
+  static function AdminpaqImportar
+	(
+		$ip, 
+		$path, 
+		$num_precio =  1 
 	);  
   
   

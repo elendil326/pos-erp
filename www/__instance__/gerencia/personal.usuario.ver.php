@@ -1,7 +1,6 @@
 <?php
 
 
-
     define("BYPASS_INSTANCE_CHECK", false);
 
     require_once("../../../server/bootstrap.php");
@@ -27,7 +26,7 @@
    
     if (is_null($esta_direccion)){
         $esta_direccion = new Direccion();
-}
+	}
 
 
 	//
@@ -109,13 +108,9 @@
 
     $form->createComboBoxJoin("id_ciudad", "nombre", CiudadDAO::getAll(), $esta_direccion->getIdCiudad());
     $form->createComboBoxJoin("id_rol", "nombre", RolDAO::getAll(), $este_usuario->getIdRol());
-
     $form->createComboBoxJoin("id_moneda", "nombre", MonedaDAO::getAll(), $este_usuario->getIdMoneda());
-
     $form->createComboBoxJoin("id_clasificacion_cliente", "nombre", ClasificacionClienteDAO::getAll(), $este_usuario->getIdClasificacionCliente());
-
     $form->createComboBoxJoin("id_clasificacion_proveedor", "nombre", ClasificacionProveedorDAO::getAll(), $este_usuario->getIdClasificacionProveedor());
-	
 	$form->createComboBoxJoinDistintName("id_tarifa_venta", "id_tarifa" ,"nombre",TarifaDAO::search(new Tarifa(array("id_tarifa"=>$este_usuario->getIdTarifaVenta()))));
 
     //      $form->makeObligatory(array( 
@@ -174,10 +169,6 @@
 																. "\");</Script>"));
 	}
 
-	
-
-	
-	
 	if(!is_null($direccionObj)){
 		$usr_ultima = UsuarioDAO::getByPK($direccionObj->getIdUsuarioUltimaModificacion());	
 		
@@ -194,8 +185,6 @@
 		$dform->createComboBoxJoin("id_ciudad","nombre",CiudadDAO::getAll(), $direccionObj->getIdCiudad());
 		$page->addComponent( $dform );
 	}
-
-	
 
    /*     if (!is_null($este_usuario->getIdDireccion())) {
         $page->addComponent(new TitleComponent("Direccion"));
@@ -258,25 +247,64 @@
 																. $direccionObj->getCalle() 
 																. " "
 																. $direccionObj->getNumeroExterior() 
-																. ", "																
+																. ", "
 																. $direccionObj->getColonia() 
 																. ", "
 																. $ciudad->getNombre() 
 																. "\");</script>"));
 	}
+	*/
+
+	/* * *******************************************************
+	 * 	Seguimientos
+	 *
+	 * ******************************************************** */
+	$page->nextTab("Seguimiento");
+
+	$segs = UsuarioSeguimientoDAO::search(new UsuarioSeguimiento(array(
+	                    "id_usuario" => $este_usuario->getIdUsuario()
+	                )));
+
+	$header = array(
+	    "texto" => "Descripcion",
+	    "fecha" => "Fecha",
+	    "id_usuario" => "Agente"
+	);
+
+	$lseguimientos = new TableComponent($header, $segs);
+	$lseguimientos->addColRender("id_usuario", "R::UserFullNameFromId");
+	$lseguimientos->addColRender("fecha", "R::FriendlyDateFromUnixTime");
+	$page->addComponent($lseguimientos);
 
 
+	$page->addComponent("<script>
+				function newcommentDone(a,b,c){
+					console.log(a,b,c)
+				}
+			</script>");
+
+	$nseguimiento = new DAOFormComponent(new ClienteSeguimiento(array("id_usuario" => $este_usuario->getIdUsuario())));
+	$nseguimiento->onApiCallSuccess("newcommentDone");
+	$nseguimiento->addApiCall("api/personal/usuario/seguimiento/nuevo");
+	$nseguimiento->settype("texto", "textarea");
+	$nseguimiento->hideField(array(
+	    "id_usuario",
+	    "id_cliente",
+	    "id_cliente_seguimiento",
+	    "fecha"
+	));
+	$nseguimiento->sendHidden("id_usuario");
+	$page->addComponent($nseguimiento);
 
 
-	#fin
-
-*/
-	#mail...
-
+	/* * *******************************************************
+	 * 	Just created
+	 *
+	 * ******************************************************** */
 	if(	isset($_GET["just_created"]) 
 		&& ($_GET["just_created"] == 1)
 		&& ($este_usuario->getCorreoElectronico() !== null ) 
-		){
+	){
 		?>
 		<script type="text/javascript" charset="utf-8">
 			
@@ -358,6 +386,4 @@
 		<?php
 	}
 
-	
-
-    $page->render();
+	$page->render();

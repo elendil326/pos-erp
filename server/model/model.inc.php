@@ -16,6 +16,7 @@ require_once ('billete_caja.dao.php');
 require_once ('billete_cierre_caja.dao.php');
 require_once ('billete_corte_caja.dao.php');
 require_once ('caja.dao.php');
+require_once ('catalogo_cuentas.dao.php');
 require_once ('categoria_unidad_medida.dao.php');
 require_once ('cheque.dao.php');
 require_once ('cheque_abono_compra.dao.php');
@@ -38,6 +39,7 @@ require_once ('concepto_ingreso.dao.php');
 require_once ('consignacion.dao.php');
 require_once ('consignacion_producto.dao.php');
 require_once ('corte_de_caja.dao.php');
+require_once ('cuenta_contable.dao.php');
 require_once ('devolucion_sobre_compra.dao.php');
 require_once ('devolucion_sobre_venta.dao.php');
 require_once ('direccion.dao.php');
@@ -131,6 +133,7 @@ require_once ('ubicacion.dao.php');
 
 require_once ('unidad_medida.dao.php');
 require_once ('usuario.dao.php');
+require_once ('usuario_seguimiento.dao.php');
 require_once ('venta.dao.php');
 require_once ('venta_arpilla.dao.php');
 require_once ('venta_aval.dao.php');
@@ -144,3 +147,11 @@ require_once ('cliente_seguimiento.dao.php');
 
 require_once ('extra_params_estructura.dao.php');
 require_once ('extra_params_valores.dao.php');
+
+require_once ('configuracion.dao.php');
+
+require_once ('ejercicio.dao.php');
+require_once ('periodo.dao.php');
+require_once ('ejercicio_empresa.dao.php');
+require_once ('logo.dao.php');
+require_once ('configuracion_empresa.dao.php');

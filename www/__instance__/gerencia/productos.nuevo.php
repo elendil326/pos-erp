@@ -23,7 +23,6 @@
 	$form->renameField( array("descripcion" => "descripcion_producto"));
 
 
-
 	$form->makeObligatory(array(
 	    "compra_en_mostrador",
 	    "nombre_producto",
@@ -55,22 +54,33 @@
 	$form->createComboBoxJoin("compra_en_mostrador", "compra_en_mostrador", array(
 	    array(
 	        "id" => 1,
-	        "caption" => "si"
+	        "caption" => "Si"
 	    ),
 	    array(
 	        "id" => 0,
-	        "caption" => "no"
+	        "caption" => "No"
+	    )
+	), 1);
+
+	$form->createComboBoxJoin("visible_en_vc", "visible_en_vc", array(
+	    array(
+	        "id" => 1,
+	        "caption" => "Si"
+	    ),
+	    array(
+	        "id" => 0,
+	        "caption" => "No"
 	    )
 	), 1);
 	
 	$form->createComboBoxJoin("activo", "activo", array(
 	    array(
 	        "id" => 1,
-	        "caption" => "si"
+	        "caption" => "Si"
 	    ),
 	    array(
 	        "id" => 0,
-	        "caption" => "no"
+	        "caption" => "No"
 	    )
 	), 1);
 	

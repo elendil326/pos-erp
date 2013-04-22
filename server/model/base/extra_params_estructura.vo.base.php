@@ -34,6 +34,9 @@ class ExtraParamsEstructura extends VO
 			if( isset($data['tipo']) ){
 				$this->tipo = $data['tipo'];
 			}
+			if( isset($data['enum']) ){
+				$this->enum = $data['enum'];
+			}
 			if( isset($data['longitud']) ){
 				$this->longitud = $data['longitud'];
 			}
@@ -63,6 +66,7 @@ class ExtraParamsEstructura extends VO
 			"tabla" => $this->tabla,
 			"campo" => $this->campo,
 			"tipo" => $this->tipo,
+			"enum" => $this->enum,
 			"longitud" => $this->longitud,
 			"obligatorio" => $this->obligatorio,
 			"caption" => $this->caption,
@@ -87,7 +91,7 @@ class ExtraParamsEstructura extends VO
 	  * 
 	  *  [Campo no documentado]<br>
 	  * @access public
-	  * @var varchar(16)
+	  * @var varchar(32)
 	  */
 	public $tabla;
 
@@ -96,7 +100,7 @@ class ExtraParamsEstructura extends VO
 	  * 
 	  *  [Campo no documentado]<br>
 	  * @access public
-	  * @var varchar(16)
+	  * @var varchar(32)
 	  */
 	public $campo;
 
@@ -105,9 +109,18 @@ class ExtraParamsEstructura extends VO
 	  * 
 	  *  [Campo no documentado]<br>
 	  * @access public
-	  * @var enum('string','int','float','bool','date')
+	  * @var enum('text','textarea','enum','password','string','int','float','bool','date')
 	  */
 	public $tipo;
+
+	/**
+	  * enum
+	  * 
+	  *  [Campo no documentado]<br>
+	  * @access public
+	  * @var longtext
+	  */
+	public $enum;
 
 	/**
 	  * longitud
@@ -177,7 +190,7 @@ class ExtraParamsEstructura extends VO
 	  * getTabla
 	  * 
 	  * Get the <i>tabla</i> property for this object. Donde <i>tabla</i> es  [Campo no documentado]
-	  * @return varchar(16)
+	  * @return varchar(32)
 	  */
 	final public function getTabla()
 	{
@@ -188,9 +201,9 @@ class ExtraParamsEstructura extends VO
 	  * setTabla( $tabla )
 	  * 
 	  * Set the <i>tabla</i> property for this object. Donde <i>tabla</i> es  [Campo no documentado].
-	  * Una validacion basica se hara aqui para comprobar que <i>tabla</i> es de tipo <i>varchar(16)</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>tabla</i> es de tipo <i>varchar(32)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param varchar(16)
+	  * @param varchar(32)
 	  */
 	final public function setTabla( $tabla )
 	{
@@ -201,7 +214,7 @@ class ExtraParamsEstructura extends VO
 	  * getCampo
 	  * 
 	  * Get the <i>campo</i> property for this object. Donde <i>campo</i> es  [Campo no documentado]
-	  * @return varchar(16)
+	  * @return varchar(32)
 	  */
 	final public function getCampo()
 	{
@@ -212,9 +225,9 @@ class ExtraParamsEstructura extends VO
 	  * setCampo( $campo )
 	  * 
 	  * Set the <i>campo</i> property for this object. Donde <i>campo</i> es  [Campo no documentado].
-	  * Una validacion basica se hara aqui para comprobar que <i>campo</i> es de tipo <i>varchar(16)</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>campo</i> es de tipo <i>varchar(32)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param varchar(16)
+	  * @param varchar(32)
 	  */
 	final public function setCampo( $campo )
 	{
@@ -225,7 +238,7 @@ class ExtraParamsEstructura extends VO
 	  * getTipo
 	  * 
 	  * Get the <i>tipo</i> property for this object. Donde <i>tipo</i> es  [Campo no documentado]
-	  * @return enum('string','int','float','bool','date')
+	  * @return enum('text','textarea','enum','password','string','int','float','bool','date')
 	  */
 	final public function getTipo()
 	{
@@ -236,13 +249,37 @@ class ExtraParamsEstructura extends VO
 	  * setTipo( $tipo )
 	  * 
 	  * Set the <i>tipo</i> property for this object. Donde <i>tipo</i> es  [Campo no documentado].
-	  * Una validacion basica se hara aqui para comprobar que <i>tipo</i> es de tipo <i>enum('string','int','float','bool','date')</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>tipo</i> es de tipo <i>enum('text','textarea','enum','password','string','int','float','bool','date')</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param enum('string','int','float','bool','date')
+	  * @param enum('text','textarea','enum','password','string','int','float','bool','date')
 	  */
 	final public function setTipo( $tipo )
 	{
 		$this->tipo = $tipo;
+	}
+
+	/**
+	  * getEnum
+	  * 
+	  * Get the <i>enum</i> property for this object. Donde <i>enum</i> es  [Campo no documentado]
+	  * @return longtext
+	  */
+	final public function getEnum()
+	{
+		return $this->enum;
+	}
+
+	/**
+	  * setEnum( $enum )
+	  * 
+	  * Set the <i>enum</i> property for this object. Donde <i>enum</i> es  [Campo no documentado].
+	  * Una validacion basica se hara aqui para comprobar que <i>enum</i> es de tipo <i>longtext</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param longtext
+	  */
+	final public function setEnum( $enum )
+	{
+		$this->enum = $enum;
 	}
 
 	/**

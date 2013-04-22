@@ -479,6 +479,18 @@ public class AdminPAQProxy extends HttpResponder{
         r = "{\"success\" : " + test.success + ", \"code\" : " + test.code + ", \"reason\":\"" + reason + "\"}"; 
         System.out.println(r);
         
+        //-----------------
+        
+        params = URLDecoder.decode(path) + "\\Lista_Clientes_SDK\\InitListaClientes.EXE " + numEmpresa + " " + "1500"; 
+        
+        System.out.println("Llamando a WriteClientes con los parametros : " + params);
+        WriteClientes clientes = new WriteClientes(params);
+        
+        
+
+        //----------------
+
+
         return r;
 
     }
@@ -495,14 +507,17 @@ public class AdminPAQProxy extends HttpResponder{
         //String path = "C:/Documents and Settings/Manuel/Desktop/Compartida/CONNECTION_SDK/Lista_Clientes_SDK/InitListaClientes.EXE"/*searchInQuery("path")*/;
 
         String path = searchInQuery("path") + "/Lista_Clientes_SDK/InitListaClientes.EXE";
-        params = path + " " + numEmpresa;
+        params = path + " " + numEmpresa + " " + "1500";
+
+        System.out.println("Estoy en loadCteProv : se enviara como parametros : " + params);
 
         LoadClientes clientes = new LoadClientes(params);
 
 
         //String r = "{\"totalCount\":1, \"datos\":[{\"CRAZONSO01\":\"Juan Manuel Garcia\",\"CIDCLIEN01\":\"CLI0099\",\"CCODIGO01\":\"CLI0099\",\"CFECHAALTA\":\"12/12/2012\",\"CRFC\":\"GACJ121212123\",\"CCURP\":\"\",\"CDENCOME01\":\"PCSYSTEMS\",\"CREPLEGAL\":\"JUAN CARLOS\"}]}";
-        String r = "{\"totalCount\":" + clientes.totalCount + ", \"datos\":" + clientes.usuariosJSON + "}";
-        System.out.println(r); 
+        //String r = "{\"totalCount\":" + clientes.totalCount + ", \"datos\":" + clientes.usuariosJSON + "}";
+        String r = "{\"totalCount\":" + clientes.totalCount + ", \"finish\" : " + clientes.finish + ", \"datos\":" + clientes.usuariosJSON + "}";
+        //System.out.println(r); 
         return r;
 
     }
@@ -547,7 +562,7 @@ public class AdminPAQProxy extends HttpResponder{
 
         //String r = "{\"totalCount\":2, \"datos\":[{\"Codigo\":\"Prod001\",\"Nombre\":\"Pagina Web\", \"Precio1\": \"1200\"}, {\"Codigo\":\"Prod002\",\"Nombre\":\"Software a la medida\", \"Precio1\": \"5000\"}]}";
         String r = "{\"totalCount\":" + productos.totalCount + ", \"datos\":" + productos.productosJSON + "}";
-        System.out.println(r); 
+        //System.out.println(r); 
         return r;
 
     }
@@ -726,15 +741,99 @@ class LoadClientes {
     public ArrayList usuarios;
     public String usuariosJSON = "[]"; 
     public int totalCount = 0;
+    public Boolean finish = false;
 
     /**
      * Creates a new instance of PruebaRuntime
      */
     public LoadClientes(String params) {
 
-        
+        System.out.println("Estoy en LoadClientes");
 
-        //System.out.println("Se ejecutara : " + params);
+        int start = Integer.parseInt(searchInQuery("start"));
+        int limit = Integer.parseInt(searchInQuery("limit"));
+
+          File archivo = null;
+          FileReader fr = null;
+          BufferedReader br = null;
+
+          try {
+             // Apertura del fichero y creacion de BufferedReader para poder
+             // hacer una lectura comoda (disponer del metodo readLine()).
+
+            System.out.println("Abriendo archivo : C:\\Caffeina\\Files\\CteProv.txt");
+
+             archivo = new File ("C:\\Caffeina\\Files\\CteProv.txt");
+             fr = new FileReader (archivo);
+             br = new BufferedReader(fr);
+
+             // Lectura del fichero
+             String linea = "";
+
+             String buffer = "";
+
+             int pointer = 0;
+             int cont = 0;
+
+             while((linea=br.readLine())!=null){
+
+                if(pointer > limit){
+                    break;
+                }
+
+                if( pointer >= start && pointer <= limit){
+                    buffer += (linea + ", ");
+                    cont++;
+                }
+
+                pointer++;
+
+             }
+
+             if( linea == null ){
+                this.finish = true;
+             }
+
+             this.usuariosJSON = "[" + buffer.substring(0, (buffer.length() - 2) ) + "]";
+
+             this.totalCount = cont;
+                
+          }
+          catch(Exception e){
+             e.printStackTrace();
+          }finally{
+             // En el finally cerramos el fichero, para asegurarnos
+             // que se cierra tanto si todo va bien como si salta 
+             // una excepcion.
+             try{                    
+                if( null != fr ){   
+                   fr.close();     
+                }                  
+             }catch (Exception e2){ 
+                e2.printStackTrace();
+             }
+          }
+        
+    }
+
+    LoadClientes() {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+    
+}
+
+class WriteClientes {   
+
+    public String code = "";
+    public Boolean success = false;
+    public String reason = "";
+
+    /**
+     * Creates a new instance of PruebaRuntime
+     */
+    public WriteClientes(String params) {
+
+        System.out.println("En constructor de WriteClientes");        
 
         try {
             // Se lanza el ejecutable. 
@@ -749,53 +848,44 @@ class LoadClientes {
              */
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
-            //System.out.println("--- 6.1 ---");
+            System.out.println("--- 6.1 ---");
 
             // Se lee la primera linea 
             String aux = br.readLine();
-            this.usuarios = new ArrayList();
 
-            //System.out.println("--- 6.2 ---");
+            System.out.println("--- 6.2 ---");
 
             // Mientras se haya leido alguna linea 
-            while (aux != null) {
-                // Se escribe la linea en pantalla 
-                System.out.println(aux);
 
-                usuarios.add(new Usuario(aux));
+            FileWriter fichero = null;
+            PrintWriter pw = null;
+            try
+            {
+                System.out.println("Creando nuevo fichero C:\\Caffeina\\Files\\CteProv.txt");                
+                fichero = new FileWriter("C:\\Caffeina\\Files\\CteProv.txt");
+                pw = new PrintWriter(fichero);
 
-                // y se lee la siguiente. 
-                aux = br.readLine();
-            }
-           
-            String json = "[";
-            
-            boolean flag = false;
-            
-            for (int i = 0; i < usuarios.size(); i++) {
-                
-                flag = true;
-                
-                Usuario u = (Usuario)usuarios.get(i);
-                
-                json += "{";
-                
-                json += ("\"Codigo\":\"" + u.Codigo + "\",");
-                json += ("\"RazonSocial\":\"" + u.RazonSocial + "\",");
-                json += ("\"RFC\":\"" + u.RFC + "\",");
-                json += ("\"Direccion\":\"" + u.Direccion + "\"");
-                
-                json += "},";
-            }
-            if(flag){
-                json = json.substring(0, json.length() - 1);
-            }
+                //System.out.println("aux = " + aux);
+
+                while (aux != null) {
+                    //System.out.println("aux = " + aux);
+                    pw.println(aux);
+                    aux = br.readLine();
+                }                    
                         
-            json += "]";
 
-            this.usuariosJSON = json;
-
-            this.totalCount = usuarios.size();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                // Nuevamente aprovechamos el finally para 
+                // asegurarnos que se cierra el fichero.
+                if (null != fichero)
+                    fichero.close();
+                } catch (Exception e2) {
+                   e2.printStackTrace();
+                }
+            }                            
 
             //------------------------------------------
 
@@ -809,7 +899,7 @@ class LoadClientes {
         }
     }
 
-    LoadClientes() {
+    WriteClientes() {
         throw new UnsupportedOperationException("Not yet implemented");
     }
     
@@ -998,7 +1088,7 @@ class LoadProductos{
             // Mientras se haya leido alguna linea 
             while (aux != null) {
                 // Se escribe la linea en pantalla 
-                System.out.println(aux);
+                //System.out.println(aux);
 
                 productos.add(new Producto(aux));
 

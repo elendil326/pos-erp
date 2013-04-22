@@ -58,7 +58,7 @@
 			function forceValidate(){
 				Ext.Ajax.request({
 							method 	: "POST",
-							url 	: "../../index.php",
+							url 	: "../index.php",
 							success : function(a,b,c){ 
 								
 								try{

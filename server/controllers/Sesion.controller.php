@@ -134,7 +134,12 @@ class SesionController implements ISesion{
 
 		if( is_null($user) ) {
 			Logger::warn("===== Credenciales invalidas para usuario {$usuario} ====== ");
-			return array( "login_succesful" => false );
+			return array( "login_succesful" => false, "reason" => "Credenciales Invalidas" );
+		}
+
+		//verificamos si la instancia esta activa
+		if (INSTANCE_ACCESS === "0") {
+			return array( "login_succesful" => false, "reason" => "Acceso denegado, su instancia esta desactivada");
 		}
 
 		//ok user is ok, buscar su usuario en los tokens actuales
@@ -188,8 +193,8 @@ class SesionController implements ISesion{
 		switch($user->getIdRol()) {
 			case 0:
 			case 1:
-			case 2:						
-			case 3:			
+			case 2:
+			case 3:
 			case 4: $next_url = "g/"; break;
 			case 5: $next_url = "c/"; break;
 		}
@@ -197,6 +202,7 @@ class SesionController implements ISesion{
 		return array( 
 				"auth_token" => $nueva_sesion->getAuthToken(), 
 				"login_succesful" => true,
+				"usuario_grupo" => $user->getIdRol(),
 				"siguiente_url" => $next_url
 			);
 	}

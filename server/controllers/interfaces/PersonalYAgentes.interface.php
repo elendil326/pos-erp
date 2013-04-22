@@ -431,4 +431,21 @@
   
   
 	
+  
+	/**
+ 	 *
+ 	 *Crear un seguimiento de texto a este agente
+ 	 *
+ 	 * @param id_usuario int El id_usuario de a quien le haremos el seguimeinto
+ 	 * @param texto string El texto que ingresa el que realiza el seguimiento
+ 	 * @return id_usuario_seguimiento int 
+ 	 **/
+  static function NuevoSeguimientoUsuario
+	(
+		$id_usuario, 
+		$texto
+	);  
+  
+  
+	
   }

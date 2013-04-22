@@ -438,6 +438,7 @@ class FormComponent implements GuiComponent {
 			switch ($f->type){
 				// Combo boxes
 				case "combo":
+				case "enum" :
 					$html .= "<select id='" . $this->guiComponentId  . $f->id . "'";
 
 					if ($this->is_editable === false){
@@ -446,14 +447,11 @@ class FormComponent implements GuiComponent {
 
 					$html .= ">";
 					$html .= "<option value=''>------------</option>";
-					foreach ($f->value as $o)
-					{
-						{
-							if ($o["selected"])
-								$html .= "<option value='" . $o["id"] . "' selected>" . $o["caption"] . "</option>";
-							else
-								$html .= "<option value='" . $o["id"] . "'>" . $o["caption"] . "</option>";
-						}
+					foreach ($f->value as $o) {
+						if ($o["selected"])
+							$html .= "<option value='" . $o["id"] . "' selected>" . $o["caption"] . "</option>";
+						else
+							$html .= "<option value='" . $o["id"] . "'>" . $o["caption"] . "</option>";
 					}
 					
 					
@@ -462,7 +460,7 @@ class FormComponent implements GuiComponent {
 					break;
 				// List boxes
 				case "listbox":
-					$html .= "<select multiple='true' id='" . $this->guiComponentId . $f->id . "' name='" . $f->name . "'>";
+					$html .= "<select multiple='true' id='" . $this->guiComponentId . $f->id . "' name='" . $f->name . "' size='" . count($f->value)/2 . "'>";
 					foreach ($f->value as $o){
 						$html .= "<option value='" . $o["id"] . "'>" . $o["caption"] . "</option>";
 					}

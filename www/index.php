@@ -39,7 +39,7 @@
 	              <ul class="nav secondary-nav">
 	              	<li><a href="j/" id="">Staff</a></li>
 	                <li><a href="http://labs2.caffeina.mx/public/apis/?repname=pos" id="">API</a></li>
-	                <li><a href="mailto:contacto@caffeina.mx" id="">Contacto</a></li>	
+	                <li><a href="mailto:contacto@caffeina.mx" id="">Contacto</a></li>
 	              </ul>
 	            </div>
 	          </div>
@@ -76,13 +76,12 @@
 					}
 					
 					
-					$r = InstanciasController::requestDemo( $_POST["email"] );
-					
-					if($r === false){
+					$response = InstanciasController::requestDemo($_POST["email"]);
+
+					if($response["success"] === false){
 						//
 						?><h1>Whoops</h1><br><br><?php
-						
-						
+						echo "<center><h2><i>" . $response["error"] . "</i></h2></center><br><br>";
 						
 						break;
 					}

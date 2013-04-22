@@ -106,10 +106,10 @@ function OutputFile($file, $name, $mime_type='')
 	}
  fclose($file);
  } else die('Error - can not open file.');
- 
+
 die();
-}	
- 
+}
+
 
 
 
@@ -119,7 +119,6 @@ $page = new JediComponentPage( );
 
 require_once("libs/zip.php");
 
- 
 /* 
 Make sure script execution doesn't time out.
 Set maximum execution time in seconds (0 means no limit).
@@ -127,11 +126,8 @@ Set maximum execution time in seconds (0 means no limit).
 
 set_time_limit(0);
 
-//
-
-
 $ids = json_decode($_GET["instance_ids"]);
-//$ids = explode(",", $_GET["ids"]);
+$ids = $ids->instance_ids;
 
 $prefix = time() . rand();
 $files = array();
@@ -149,35 +145,38 @@ for($i = 0; $i < sizeof($ids); $i++){
 	}
 }
 
-
-for($i = 0; $i < sizeof($ids); $i++){
-
-	//validar que existan
-	$r = InstanciasController::BuscarPorId( $ids[$i] );
-
-	$file_name = $prefix . 'ibddl'.$ids[$i] . ".sql";
-	$destiny_file = '../../static_content/db_backups/'; 
-
-	array_push($files, $destiny_file . $file_name );
-	array_push($file_id, $ids[$i]  );
-
-	InstanciasController::backup_only_data(  $ids[$i], $r["db_host"], $r["db_user"], $r["db_password"], $r["db_name"], '*', true, false, $destiny_file, $file_name);
+$result = InstanciasController::Respaldar_Instancias($ids);//Respaldar_Instancias recibe como params un array
+if (strlen($result) > 0){
+	die("<html><head><meta HTTP-EQUIV='REFRESH' content='3; url=instancias.bd.php'><title>Error al descargar, perimisos</title></head><body><h1><center>".$result."</center></h1></body></html>");
 }
-
 
 $f = new zipfile;
 
+for ($i=0; $i < sizeof($ids); $i++) { 
+	//$f->add_file(file_get_contents($files[$i]), $file_id[$i] . ".sql");
+	$final_path = str_replace("server","static_content/db_backups",POS_PATH_TO_SERVER_ROOT);
+	$dbs_instance = trim(shell_exec("ls -lat -m1 ".$final_path."| grep ".$ids[$i].".sql"));
+	Logger::log("Respaldos encontrados: ".$dbs_instance);
 
-for ($i=0; $i < sizeof($files); $i++) { 
-	$f->add_file(file_get_contents($files[$i]), $file_id[$i] . ".sql");
-	
+	/*dbs_instance almacena una cadena con un listado donde se encuentran archivos que tengan la teminacion
+	con el id de la instancia y .sql, ademas de que la lista viene ordenada de mas reciente a antiguo
+	la lista seria como lo siguiente:
+	1353617611_pos_instance_82.sql 1353608687_pos_instance_82.sql 1353608206_pos_instance_82.sql 1353608191_pos_instance_82.sql
+	en found se coloca un array y en cada posicion el nombre de cada respaldo
+	*/
+	$found = preg_split("/[\s,]+/", $dbs_instance,-1,PREG_SPLIT_NO_EMPTY);
+	//Logger::log("No archivos: ".count($found));
+	if(count($found) < 1){
+		Logger::log("Error al restaurar la instancias ".$ids[$i].", no hay un respaldo existente");
+		continue;
+	}
+	$contenido = file_get_contents($final_path."/".$found[0]);
+	$f->add_file($contenido,$found[0]);
 }
+
+$folder_name = ( sizeof($ids) > 1 )? "instances_backup_".date("d-m-Y H:i:s") : "instance_".$ids[0]."_backup_".date("d-m-Y H:i:s");
+Logger::log(":::::::ENVIANDO ARCHIVO A DESCARGAR");
 
 header("Content-type: application/octet-stream");
-header("Content-disposition: attachment; filename=zipfile.zip");
+header("Content-disposition: attachment; filename=$folder_name.zip");
 echo $f->file();
-
-
-for ($i=0; $i < sizeof($files); $i++) { 
-	unlink($files[$i]	);	
-}
