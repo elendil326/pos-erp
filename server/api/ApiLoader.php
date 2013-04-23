@@ -8567,23 +8567,23 @@
   
   
 
-  class ApiFormasPdfGenerico extends ApiHandler {
+  class ApiFormasPdfGenerar extends ApiHandler {
   
 
 	protected function DeclareAllowedRoles(){  return BYPASS;  }
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"formato" => new ApiExposedProperty("formato", true, POST, array( "json" )),
+			"id_documento" => new ApiExposedProperty("id_documento", true, POST, array( "int" )),
 		);
 	}
 
 	protected function GenerateResponse() {		
 		try{
- 		$this->response = FormasPreimpresasController::GenericoPdf( 
+ 		$this->response = FormasPreimpresasController::GenerarPdf( 
  			
 			
-			isset($_POST['formato'] ) ? json_decode($_POST['formato']) : null
+			isset($_POST['id_documento'] ) ? $_POST['id_documento'] : null
 			
 			);
 		}catch(Exception $e){

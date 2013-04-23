@@ -9,19 +9,15 @@ require_once("interfaces/FormasPreimpresas.interface.php");
  * */
 class FormasPreimpresasController extends ValidacionesController implements IFormasPreimpresas {
 
-      /**
-       *
-       * Crea un PDF Gen?rico a partir de un JSON
-       *
-       * @param formato json Formato que describe el formato del documento
-       * @return status string ok
-       * */
-      public static function GenericoPdf
-      (
-      $formato
-      ) {
-            
-      }
+    /**
+    *
+    * Genera un documento en formato  PDF.
+    *
+    * @param id_documento int ID del documento que se desea imprimir.
+    **/
+    public static function GenerarPdf($id_documento) {
+        
+    }
 
       /**
        *

@@ -59,14 +59,13 @@
   
 	/**
  	 *
- 	 *Crea un PDF Gen?rico a partir de un JSON
+ 	 *Genera un documento en formato  PDF.
  	 *
- 	 * @param formato json Formato que describe el formato del documento
- 	 * @return status string ok
+ 	 * @param id_documento int ID del documento que se desea imprimir.
  	 **/
-  static function GenericoPdf
+  static function GenerarPdf
 	(
-		$formato
+		$id_documento
 	);  
   
   
