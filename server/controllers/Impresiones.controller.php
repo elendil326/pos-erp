@@ -3,8 +3,8 @@
 //require_once("librerias/CNumeroaLetra.php");
 define("DONT_USE_HTML", 1);
 
-require_once("libs/ezpdf/class.pdf.php");
-require_once("libs/ezpdf/class.ezpdf.php");
+//require_once("libs/ezpdf/class.pdf.php");
+//(require_once("libs/ezpdf/class.ezpdf.php");
 
 class ImpresionesController {
 

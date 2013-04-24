@@ -1,6 +1,7 @@
 <?php
 
  require_once("../../../server/bootstrap.php");
+ $plantilla=null;
                         $W="";
                         if(sizeof($_FILES)>0)//Si se carga al menos 1 archivo
                         {
@@ -8,8 +9,9 @@
                               $Do=1;
                               $rutaPlantillaTemp=$_FILES["Plantilla"]["tmp_name"];
                               $nombrePlantilla=$_FILES["Plantilla"]["name"];
-                              
                               $nuevaRutaPlantilla= POS_PATH_TO_SERVER_ROOT . "/../static_content/" . IID . "/plantillas/excel/" . $nombrePlantilla;
+
+
                               if ($_FILES["Plantilla"]["size"]<=(((int)$POS_CONFIG["TAM_MAX_PLANTILLAS"])*1024*1024))//Limite de tamaño
                               { $Do*=1;}else{$Do*=0;
                                     $W.="Ext.MessageBox.show({title:\"Error\",msg:\"Tamaño del archivo supera el límite\",buttons : Ext.MessageBox.OK});";
@@ -22,16 +24,11 @@
                               { $Do*=1;}else{$Do*=0;
                                     $W.="Ext.MessageBox.show({title:\"Error\",msg:\"No existe una carpeta para las plantillas\",buttons : Ext.MessageBox.OK});";
                               }
-                              if(fileperms($nuevaRutaPlantilla)!=0777)
-                              { $Do*=1;}else{$Do*=0;
-                                    $W.="Ext.MessageBox.show({title:\"Error\",msg:\"Permisos en carpeta de plantillas inválidos\",buttons : Ext.MessageBox.OK});";
-                              }
-                              
+
                               if($Do==1)
                               {
                                     move_uploaded_file($rutaPlantillaTemp, $nuevaRutaPlantilla);
                                     chmod($nuevaRutaPlantilla,0777);//Se cambian los permisos del archivo
-
 
                                     $W.="
                                     POS.API.POST(\"api/formas/excel/leerpalabrasclave\",
@@ -47,11 +44,11 @@
                                        }
                                     })
                                     ";
+                                    $plantilla=$nombrePlantilla;//Asigna el nombre de la plantilla a la variable de trabajo
                               }
                               $W.="</script>";
                         }
                        
-                                                
 	 $page = new GerenciaTabPage();
 	
                        $page->addComponent(new TitleComponent("Documentos"));
@@ -74,8 +71,6 @@
 	$tableDb->addOnClick( "id_documento", "(function(a){ window.location  = 'documentos.ver.php?d=' + a;  })"  );
 	$page->addComponent( $tableDb );
 
-
-
 	/**
 	  *
 	  *
@@ -87,7 +82,7 @@
 
 	//buscar un documento
 	$documentos_base = DocumentoBaseDAO::getAll();
-
+          
 	$header = array(
 			"nombre"				=> "Nombre",
 			"ultima_modificacion" => "Ultima modificacion"

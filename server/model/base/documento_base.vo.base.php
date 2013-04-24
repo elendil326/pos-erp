@@ -40,6 +40,9 @@ class DocumentoBase extends VO
 			if( isset($data['json_impresion']) ){
 				$this->json_impresion = $data['json_impresion'];
 			}
+                                                                      if( isset($data["nombre_plantilla"])){
+                                                                                              $this->nombre_plantilla=$data['nombre_plantilla'];
+                                                                      }
 			if( isset($data['ultima_modificacion']) ){
 				$this->ultima_modificacion = $data['ultima_modificacion'];
 			}
