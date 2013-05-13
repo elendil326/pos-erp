@@ -5,9 +5,7 @@ require_once 'pdf.php';
 class JSON2PDF {
 	public $pdf = null;
 	
-	public function __construct($json="{}") {
-		$document = json_decode($json);
-
+	public function __construct($document) {
 		$orientation = $this->validate_orientation($document);
 		$format = $this->validate_format($document);
 		$theme = $this->validate_theme($document);

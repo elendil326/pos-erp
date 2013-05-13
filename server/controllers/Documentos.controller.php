@@ -175,7 +175,8 @@ class DocumentosController implements IDocumentos{
 		$id_empresa = null, 
 		$id_sucursal = null, 
 		$json_impresion = null, 
-		$nombre = null
+		$nombre = null,
+		$nombre_plantilla = null
 	){
 		$nDoc = DocumentoBaseDAO::getByPK($id_documento);
 
@@ -375,7 +376,8 @@ Update : La respuesta solo deber?a de contener success :true | false, y en caso 
 		$foliado = "", 
 		$foliado = "", 
 		$id_empresa = null, 
-		$id_sucursal = null
+		$id_sucursal = null,
+		$nombre_plantilla = null
 	){
 
 		if (is_null($json_impresion)) {
@@ -529,4 +531,32 @@ Update : La respuesta solo deber?a de contener success :true | false, y en caso 
 
 	}
 
+
+
+	/**
+ 	 *
+ 	 *Convierte a PDF el documento especificado, junto a su JSON de impresion del documento base.
+ 	 *
+ 	 * @param id_documento int ID del documento a imprimir.
+ 	 **/
+  	public static function Imprimir($id_documento) {
+		$documento = DocumentoDAO::getByPK($id_documento);
+		$values = DocumentoDAO::getDocumentWithValues($id_documento);
+
+		$pagina = new stdClass();
+		$pagina->elementos = array();
+
+		foreach ($values as $key => $value) {
+			$elemento = new stdClass();
+			$elemento->tipo = 'marco';
+			$elemento->titulo = $value['caption'];
+			$elemento->texto = $value['val'];
+			$elemento->altura = 80;
+			array_push($pagina->elementos, $elemento);
+		}
+
+		$impresion = new stdClass();
+		$impresion->paginas = array($pagina);
+		$pdf = new JSON2PDF($impresion);
+	}
 }

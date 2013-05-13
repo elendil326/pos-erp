@@ -61,11 +61,11 @@
  	 *
  	 *Genera un documento en formato  PDF.
  	 *
- 	 * @param id_documento int ID del documento que se desea imprimir.
+ 	 * @param documento json Objeto que indica como sera visualmente el documento.
  	 **/
   static function GenerarPdf
 	(
-		$id_documento
+		$documento
 	);  
   
   

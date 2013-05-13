@@ -6031,6 +6031,7 @@
 			"id_sucursal" => new ApiExposedProperty("id_sucursal", false, POST, array( "int" )),
 			"json_impresion" => new ApiExposedProperty("json_impresion", false, POST, array( "string" )),
 			"nombre" => new ApiExposedProperty("nombre", false, POST, array( "string" )),
+			"nombre_plantilla" => new ApiExposedProperty("nombre_plantilla", false, POST, array( "string" )),
 		);
 	}
 
@@ -6045,7 +6046,8 @@
 			isset($_POST['id_empresa'] ) ? $_POST['id_empresa'] :  null,
 			isset($_POST['id_sucursal'] ) ? $_POST['id_sucursal'] :  null,
 			isset($_POST['json_impresion'] ) ? $_POST['json_impresion'] :  null,
-			isset($_POST['nombre'] ) ? $_POST['nombre'] :  null
+			isset($_POST['nombre'] ) ? $_POST['nombre'] :  null,
+			isset($_POST['nombre_plantilla'] ) ? $_POST['nombre_plantilla'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -6158,6 +6160,7 @@
 			"foliado" => new ApiExposedProperty("foliado", false, POST, array( "json" )),
 			"id_empresa" => new ApiExposedProperty("id_empresa", false, POST, array( "int" )),
 			"id_sucursal" => new ApiExposedProperty("id_sucursal", false, POST, array( "int" )),
+			"nombre_plantilla" => new ApiExposedProperty("nombre_plantilla", false, POST, array( "string" )),
 		);
 	}
 
@@ -6173,7 +6176,8 @@
 			isset($_POST['foliado'] ) ? json_decode($_POST['foliado']) : null,
 			isset($_POST['foliado'] ) ? json_decode($_POST['foliado']) : null,
 			isset($_POST['id_empresa'] ) ? $_POST['id_empresa'] :  null,
-			isset($_POST['id_sucursal'] ) ? $_POST['id_sucursal'] :  null
+			isset($_POST['id_sucursal'] ) ? $_POST['id_sucursal'] :  null,
+			isset($_POST['nombre_plantilla'] ) ? $_POST['nombre_plantilla'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -6204,6 +6208,34 @@
 			
 			isset($_POST['extra_params'] ) ? json_decode($_POST['extra_params']) : null,
 			isset($_POST['id_documento'] ) ? $_POST['id_documento'] : null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiDocumentoImprimir extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"id_documento" => new ApiExposedProperty("id_documento", true, GET, array( "int" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = DocumentosController::Imprimir( 
+ 			
+			
+			isset($_GET['id_documento'] ) ? $_GET['id_documento'] : null
 			
 			);
 		}catch(Exception $e){
@@ -8574,7 +8606,7 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"id_documento" => new ApiExposedProperty("id_documento", true, POST, array( "int" )),
+			"documento" => new ApiExposedProperty("documento", true, POST, array( "json" )),
 		);
 	}
 
@@ -8583,7 +8615,7 @@
  		$this->response = FormasPreimpresasController::GenerarPdf( 
  			
 			
-			isset($_POST['id_documento'] ) ? $_POST['id_documento'] : null
+			isset($_POST['documento'] ) ? json_decode($_POST['documento']) : null
 			
 			);
 		}catch(Exception $e){

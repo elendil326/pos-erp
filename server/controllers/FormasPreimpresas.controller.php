@@ -10,14 +10,15 @@ require_once("interfaces/FormasPreimpresas.interface.php");
 class FormasPreimpresasController extends ValidacionesController implements IFormasPreimpresas {
 
     /**
-    *
-    * Genera un documento en formato  PDF.
-    *
-    * @param id_documento int ID del documento que se desea imprimir.
-    **/
-    public static function GenerarPdf($id_documento) {
-        
-    }
+     *
+     * Genera un documento en formato  PDF.
+     *
+     * @param documento json Objeto que indica como sera visualmente el documento.
+     **/
+    public static function GenerarPdf($documento) {
+        $json = json_encode($documento);
+        $doc = new JSON2PDF($doc);
+    }  
 
       /**
        *
