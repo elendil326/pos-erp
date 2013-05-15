@@ -330,11 +330,16 @@ class EmpresasController implements IEmpresas
 				throw new InvalidDataException("Error : Verifique la información de contabilidad sea correcta, el id_moneda, periodo_actual y duracion_periodo deben ser valores enteros");
 			}
 
-			if ($contabilidad->duracion_periodo < 1 || 
-				$contabilidad->duracion_periodo === 5 || $contabilidad->duracion_periodo > 6
+			if ($contabilidad->duracion_periodo < "1" || 
+				$contabilidad->duracion_periodo === "5" || $contabilidad->duracion_periodo > "6"
 			) {
 				Logger::error("Error : Verifique la duracion de los perodos, solo pueden durar 1, 2, 3, 4 y 6 meses");
 				throw new InvalidDataException("Error : Verifique la duracion de los perodos, solo pueden durar 1, 2, 3, 4 y 6 meses");
+			}
+
+			if($contabilidad->periodo_actual > (12 / $contabilidad->duracion_periodo)){
+				Logger::error("Error : Verifique el valor del periodo actual, debe concordar con la relacion de la duracion de los periodos");
+				throw new InvalidDataException("Error : Verifique el valor del periodo actual, debe concordar con la relacion de la duracion de los periodos");	
 			}
 
 		}
@@ -370,7 +375,8 @@ class EmpresasController implements IEmpresas
 		if (!empty($uri_logo)) {
 
 			$logo = new Logo(array(
-				"imagen" => urldecode($uri_logo)
+				"imagen" => $uri_logo,
+				"tipo" => "-"
 			));
 
 			try {
@@ -559,7 +565,7 @@ class EmpresasController implements IEmpresas
 							"id_impuesto" => $impuestos_compra[$i]
 						)));
 					} catch (Exception $e) {
-						Logger::warn("Error al guardar un impuesto venta : " . $e->getMessage());
+						Logger::warn("Error al guardar un impuesto de compra : " . $e->getMessage());
 					}
 				}
 			}
@@ -572,7 +578,7 @@ class EmpresasController implements IEmpresas
 							"id_impuesto" => $impuestos_venta[$i]
 						)));
 					} catch (Exception $e) {
-						Logger::warn("Error al guardar un impuesto compra : " . $e->getMessage());
+						Logger::warn("Error al guardar un impuesto de venta : " . $e->getMessage());
 					}
 				}
 			}
@@ -626,9 +632,9 @@ class EmpresasController implements IEmpresas
 
 		//Verificamos si existen sucursales activas pertenecientes a la empresa
 		foreach ($sucursales_empresa as $sucursal) {
-			if ($sucursal->getActivo() === "0") {
-				Logger::error("La empresa $id_empresa ya esta desactivada");
-				throw new Exception("La empresa ya esta desactivada",901);
+			if ($sucursal->getActivo() === "1") {
+				Logger::error("Error : Hay una o mas sucursales activas, la empresa no se puede desactivar");
+				throw new Exception("Error : Hay una o mas sucursales activas, la empresa no se puede desactivar",901);
 			}
 		}
 
@@ -717,22 +723,29 @@ class EmpresasController implements IEmpresas
 
 			//editamos el id del logo
 			if (!empty($uri_logo)) {
+				//varificamos si cambio el logo
 
-				$logo = new Logo(array(
-					"imagen" => urldecode($uri_logo)
-				));
+				$_logo = LogoDAO::getByPK($empresa->getIdLogo());
 
-				try {
-					LogoDAO::save($logo);
-				}catch (Exception $e) {
-					DAO::transRollback();
-					Logger::error("No se pudo crear la empresa, error al crear el logo: " . $e->getMessage());
-					throw new Exception("No se pudo crear la empresa, consulte a su administrador de sistema", 901);
+				if($uri_logo !== $_logo->getImagen()){
+					$logo = new Logo(array(
+						"imagen" => $uri_logo,
+						"tipo" => "-"
+					));
+
+					try {
+						LogoDAO::save($logo);
+					}catch (Exception $e) {
+						DAO::transRollback();
+						Logger::error("No se pudo crear la empresa, error al crear el logo: " . $e->getMessage());
+						throw new Exception("No se pudo crear la empresa, consulte a su administrador de sistema", 901);
+					}
+
+					$id_logo = $logo->getIdLogo();
+
+					$empresa->setIdLogo($id_logo);
 				}
-
-				$id_logo = $logo->getIdLogo();
-
-				$empresa->setIdLogo($id_logo);
+				
 			}
 
 		}
@@ -980,6 +993,22 @@ class EmpresasController implements IEmpresas
 		//relacionamos a la empresa con la direccion
 		$empresa->direccion = $direccion;
 
+		//obtenemos el logo
+		$logo = LogoDAO::getByPK($empresa->getIdLogo());
+
+		if($logo === NULL) {
+			$logo = LogoDAO::getByPK(-1);
+		}
+
+		$empresa->logo = $logo->getImagen();
+
+		//obtenemos su contabilidad
+
+		$contabilidad = array();
+
+		$contabilidad["moneda_base"] = EmpresaDAO::getMonedaBase($empresa->getIdEmpresa());
+		$contabilidad["ejercicio"] = EmpresaDAO::getEjercicioActual($empresa->getIdEmpresa());
+
 		//extraemos sus sucursales
 		$sucursales = array();
 
@@ -1028,7 +1057,7 @@ class EmpresasController implements IEmpresas
 			}
 		}
 
-		return array("detalles" => $empresa, "sucursales" => $sucursales, "impuestos_compra" => $impuestos_compra, "impuestos_venta" => $impuestos_venta);
+		return array("detalles" => $empresa, "sucursales" => $sucursales, "impuestos_compra" => $impuestos_compra, "impuestos_venta" => $impuestos_venta, "contabilidad" => $contabilidad);
 
 		Logger::log("Detalles de la empresa enviados con exito");
 	}
