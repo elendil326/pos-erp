@@ -10,6 +10,18 @@
   
 	/**
  	 *
+ 	 *Mostrar? un comparativo de valores entre las diferentes monedas con respecto a la moneda base, esto para ver si estan diferentes los valores y hacer una actualizacion de tipos de cambio.
+ 	 *
+ 	 **/
+  static function MostrarEquivalenciasActualizar
+	(
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
  	 *Edita la informacion de un billete
  	 *
  	 * @param id_billete int Id del billete a editar
@@ -84,6 +96,24 @@
   
 	/**
  	 *
+ 	 *Actualizar? los tipo de cambio con respecto a la moneda base de la empresa.
+ 	 *
+ 	 * @param id_empresa int El id de la empresa
+ 	 * @param monedas json Los valores de las equivalencias de las monedas activas con respecto a la moneda base
+ 	 * @param moneda_base string El codigo de la moneda base, una cadena de tres caracteres: "MXN"
+ 	 **/
+  static function ActualizarTiposCambio
+	(
+		$id_empresa, 
+		$monedas, 
+		$moneda_base
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
  	 *Edita la informacion de una moneda
  	 *
  	 * @param id_moneda int Id de la moneda a editar
@@ -108,6 +138,22 @@
  	 **/
   static function EliminarMoneda
 	(
+		$id_moneda
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Regresar? la equivalencia de esa moneda con respecto a la moneda base de la empresa que se le indique.
+ 	 *
+ 	 * @param id_empresa int El id de la empresa
+ 	 * @param id_moneda int El id de la moneda a la que se le desea sacar la equivalencia
+ 	 **/
+  static function ObtenerEquivalenciaMoneda
+	(
+		$id_empresa, 
 		$id_moneda
 	);  
   
@@ -143,6 +189,20 @@
 	(
 		$nombre, 
 		$simbolo
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Realizar? una consulta a la BD ?pos? en la tabla tipos_cambio y regresar? las equivalencias de la moneda base con respecto a las monedas activas en esa instancia.
+ 	 *
+ 	 * @param id_moneda_base int El id de la moneda a la que se le desea sacar las equivalencias de tipo de cambio
+ 	 **/
+  static function ObtenerEquivalenciasServicio
+	(
+		$id_moneda_base
 	);  
   
   

@@ -473,7 +473,7 @@ class POSController implements IPOS {
      * @return status string Estado de la respuesta
      * */
     public static function EspecificaBdRestaurarBd($id_instancia, $time) {
-          //Codigo nuevo de restaurar bases de datos_________________________________________________________________________________________
+          //Codigo nuevo de restaurar bases de datos
           $CadenaSQL="SELECT * FROM instances WHERE instance_id = $id_instancia";
           $RutaBD=POS_PATH_TO_SERVER_ROOT."/../static_content/db_backups/";
           Logger::log("Restaurando instancia...");
@@ -562,7 +562,6 @@ class POSController implements IPOS {
     public static function BdInstanciasRespaldarBd($instance_ids) {
           //var_dump($instance_ids);
           //$x = json_decode($instance_ids);
-        
         $res = InstanciasController::Respaldar_Instancias($instance_ids);
         if (!is_null($res)) {
             return array(

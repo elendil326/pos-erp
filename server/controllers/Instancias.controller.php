@@ -484,13 +484,19 @@ class InstanciasController {
 		$out = "";
 		$destiny_file = str_replace("server", "static_content/db_backups", POS_PATH_TO_SERVER_ROOT);
 
+		$dir_writable = substr(sprintf('%o', fileperms($destiny_file)), -4) == "0775" ? true : false;
+
+		if ($dir_writable===false) {
+			Logger::log("Verifique que tenga los permisos necesarios para la carpeta de respaldos (0775)");
+			return "Verifique que tenga los permisos necesarios para la carpeta de respaldos (0775)";
+		} 
+
 		global $POS_CONFIG;
 
 		$sql = "SELECT * FROM instances $ids_string;";
 
-
 		$rs = $POS_CONFIG["CORE_CONN"]->Execute($sql);
-		//echo(":::::::::::::::::::::::::: Resultado: " . print_r($rs->fields));
+
 		$instancias = $rs->GetArray();
 
 		foreach ($instancias as $ins) {

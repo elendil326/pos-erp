@@ -933,6 +933,21 @@ CREATE TABLE IF NOT EXISTS `gasto` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `historial_tipo_cambio`
+--
+
+CREATE TABLE IF NOT EXISTS `historial_tipo_cambio` (
+  `id_historial_tipo_cambio` int(11) NOT NULL AUTO_INCREMENT COMMENT 'El id del registro en la tabla.',
+  `id_moneda_base` int(11) NOT NULL COMMENT 'El id de la moneda base del sistema',
+  `fecha` int(11) NOT NULL COMMENT 'La fecha en formato UNIX en que se registra el tipo de cambio con respecto a la moneda base',
+  `json_equivalencias` text NOT NULL COMMENT 'Un JSON que contenga la equivalencia de la moneda base en las demás monedas activadas en el sistema.',
+  `id_empresa` int(11) NOT NULL COMMENT 'El id de la empresa para la que aplica este tipo de cambio para su moneda base.',
+  PRIMARY KEY (`id_historial_tipo_cambio`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Llevará el histórico de los tipo de cambio con respecto a la moneda base' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `impresora`
 --
 

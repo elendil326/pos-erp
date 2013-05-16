@@ -7977,6 +7977,122 @@
   
   
 
+  class ApiEfectivoServicioEquivalenciasObtener extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"id_moneda_base" => new ApiExposedProperty("id_moneda_base", true, POST, array( "int" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = EfectivoController::ObtenerEquivalenciasServicio( 
+ 			
+			
+			isset($_POST['id_moneda_base'] ) ? $_POST['id_moneda_base'] : null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiEfectivoActualizarEquivalenciasMostrar extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = EfectivoController::MostrarEquivalenciasActualizar( 
+ 			
+		
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiEfectivoCambioTiposActualizar extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"id_empresa" => new ApiExposedProperty("id_empresa", true, POST, array( "int" )),
+			"monedas" => new ApiExposedProperty("monedas", true, POST, array( "json" )),
+			"moneda_base" => new ApiExposedProperty("moneda_base", true, POST, array( "string" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = EfectivoController::ActualizarTiposCambio( 
+ 			
+			
+			isset($_POST['id_empresa'] ) ? $_POST['id_empresa'] : null,
+			isset($_POST['monedas'] ) ? json_decode($_POST['monedas']) : null,
+			isset($_POST['moneda_base'] ) ? $_POST['moneda_base'] : null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiEfectivoMonedaEquivalenciaObtener extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"id_empresa" => new ApiExposedProperty("id_empresa", true, POST, array( "int" )),
+			"id_moneda" => new ApiExposedProperty("id_moneda", true, POST, array( "int" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = EfectivoController::ObtenerEquivalenciaMoneda( 
+ 			
+			
+			isset($_POST['id_empresa'] ) ? $_POST['id_empresa'] : null,
+			isset($_POST['id_moneda'] ) ? $_POST['id_moneda'] : null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
   class ApiProcesosNuevo extends ApiHandler {
   
 
