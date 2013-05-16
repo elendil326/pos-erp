@@ -316,20 +316,20 @@
  	 *Edita los datos de una sucursal
  	 *
  	 * @param id_sucursal int Id de la sucursal a modificar
- 	 * @param id_tarifa int Id de la tarifa por default de la sucursal
  	 * @param activo bool Indica si esta sucursal estar activa
  	 * @param descripcion string Descripcion de la sucursal
  	 * @param direccion json Objeto que contiene la informacin sobre al direccion
  	 * @param id_gerente int Id del gerente de la sucursal
+ 	 * @param id_tarifa int Id de la tarifa por default de la sucursal
  	 **/
   static function Editar
 	(
 		$id_sucursal, 
-		$id_tarifa, 
 		$activo = null, 
 		$descripcion = null, 
 		$direccion = null, 
-		$id_gerente = null
+		$id_gerente = null, 
+		$id_tarifa = null
 	);  
   
   
@@ -371,6 +371,7 @@
  	 *
  	 * @param descripcion string Descripcion de la sucursal
  	 * @param direccion json Objeto que contiene la informacin sobre al direccin 
+ 	 * @param id_tarifa int Id de la tarifa por default que tendra esa sucursal
  	 * @param activo bool Si esta sucursal estara activa inmediatamente despues de ser creada
  	 * @param id_gerente int ID del usuario que sera gerente de esta sucursal. Para que sea valido este usuario debe tener el nivel de acceso apropiado.
  	 * @return id_sucursal int Id autogenerado de la sucursal que se creo.
@@ -379,6 +380,7 @@
 	(
 		$descripcion, 
 		$direccion, 
+		$id_tarifa, 
 		$activo =  1 , 
 		$id_gerente = null
 	);  

@@ -125,8 +125,6 @@
 
 	$page->addComponent($configuracion_periodo_form);
 
-	$campos = array_keys(get_class_vars('Producto'));
-
 	$page->addComponent(new TitleComponent("Impuestos", 2));
 
 	$impuestos_compra_form = new FormComponent();
@@ -156,7 +154,7 @@
 
 	$mensaje_form = new FormComponent();
 
-	$mensaje_form->addField("mensaje", "Mensaje pagos vencidos", "textarea", utf8_decode($empresa["detalles"]->getMensajeMorosos()), "mensaje");
+	$mensaje_form->addField("mensaje", "Mensaje pagos vencidos", "textarea", $empresa["detalles"]->getMensajeMorosos(), "mensaje");
 
 	$mensaje_form->setEditable(false);
 

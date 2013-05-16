@@ -2819,6 +2819,7 @@
 		$this->request = array(	
 			"descripcion" => new ApiExposedProperty("descripcion", true, POST, array( "string" )),
 			"direccion" => new ApiExposedProperty("direccion", true, POST, array( "json" )),
+			"id_tarifa" => new ApiExposedProperty("id_tarifa", true, POST, array( "int" )),
 			"activo" => new ApiExposedProperty("activo", false, POST, array( "bool" )),
 			"id_gerente" => new ApiExposedProperty("id_gerente", false, POST, array( "int" )),
 		);
@@ -2831,6 +2832,7 @@
 			
 			isset($_POST['descripcion'] ) ? $_POST['descripcion'] : null,
 			isset($_POST['direccion'] ) ? json_decode($_POST['direccion']) : null,
+			isset($_POST['id_tarifa'] ) ? $_POST['id_tarifa'] : null,
 			isset($_POST['activo'] ) ? $_POST['activo'] :  1 ,
 			isset($_POST['id_gerente'] ) ? $_POST['id_gerente'] :  null
 			
@@ -2852,11 +2854,11 @@
 	{
 		$this->request = array(	
 			"id_sucursal" => new ApiExposedProperty("id_sucursal", true, POST, array( "int" )),
-			"id_tarifa" => new ApiExposedProperty("id_tarifa", true, POST, array( "int" )),
 			"activo" => new ApiExposedProperty("activo", false, POST, array( "bool" )),
 			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "string" )),
 			"direccion" => new ApiExposedProperty("direccion", false, POST, array( "json" )),
 			"id_gerente" => new ApiExposedProperty("id_gerente", false, POST, array( "int" )),
+			"id_tarifa" => new ApiExposedProperty("id_tarifa", false, POST, array( "int" )),
 		);
 	}
 
@@ -2866,11 +2868,11 @@
  			
 			
 			isset($_POST['id_sucursal'] ) ? $_POST['id_sucursal'] : null,
-			isset($_POST['id_tarifa'] ) ? $_POST['id_tarifa'] : null,
 			isset($_POST['activo'] ) ? $_POST['activo'] :  null,
 			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null,
 			isset($_POST['direccion'] ) ? json_decode($_POST['direccion']) : null,
-			isset($_POST['id_gerente'] ) ? $_POST['id_gerente'] :  null
+			isset($_POST['id_gerente'] ) ? $_POST['id_gerente'] :  null,
+			isset($_POST['id_tarifa'] ) ? $_POST['id_tarifa'] :  null
 			
 			);
 		}catch(Exception $e){

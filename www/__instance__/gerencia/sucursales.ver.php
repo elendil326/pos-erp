@@ -25,7 +25,7 @@
 	//
 	// Titulo de la pagina
 	// 
-	$page->addComponent( new TitleComponent( "Detalles de sucursal " . $esta_sucursal->getRazonSocial( ) , 2 ) );
+	$page->addComponent( new TitleComponent( "Detalles de sucursal " . $esta_sucursal->getDescripcion( ) , 2 ) );
 	$page->nextTab( "Detalles" );
 	
 
@@ -76,7 +76,6 @@
 	$form->hideField( array( 
 			"id_sucursal",
 			"id_direccion",
-			"rfc",
 			"id_gerente",
 			"activa"
 		));
@@ -139,7 +138,6 @@
 	$tabla = new TableComponent( 
 		array(
 			"descripcion"=> "Descripcion",
-			"saldo"=> "Saldo",
 			"abierta"=> "Abierta",
 			"activa"=>"Activa"
 		),
