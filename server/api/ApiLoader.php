@@ -2741,11 +2741,12 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"activo" => new ApiExposedProperty("activo", false, GET, array( "bool" )),
-			"id_empresa" => new ApiExposedProperty("id_empresa", false, GET, array( "int" )),
-			"limit" => new ApiExposedProperty("limit", false, GET, array( "int" )),
-			"query" => new ApiExposedProperty("query", false, GET, array( "string" )),
-			"start" => new ApiExposedProperty("start", false, GET, array( "int" )),
+			"activo" => new ApiExposedProperty("activo", false, POST, array( "bool" )),
+			"limit" => new ApiExposedProperty("limit", false, POST, array( "int" )),
+			"order" => new ApiExposedProperty("order", false, POST, array( "string" )),
+			"order_by" => new ApiExposedProperty("order_by", false, POST, array( "string" )),
+			"query" => new ApiExposedProperty("query", false, POST, array( "string" )),
+			"start" => new ApiExposedProperty("start", false, POST, array( "int" )),
 		);
 	}
 
@@ -2754,11 +2755,12 @@
  		$this->response = SucursalesController::Buscar( 
  			
 			
-			isset($_GET['activo'] ) ? $_GET['activo'] :  null,
-			isset($_GET['id_empresa'] ) ? $_GET['id_empresa'] :  null,
-			isset($_GET['limit'] ) ? $_GET['limit'] :  null,
-			isset($_GET['query'] ) ? $_GET['query'] :  null,
-			isset($_GET['start'] ) ? $_GET['start'] :  null
+			isset($_POST['activo'] ) ? $_POST['activo'] :  null,
+			isset($_POST['limit'] ) ? $_POST['limit'] :  null,
+			isset($_POST['order'] ) ? $_POST['order'] :  null,
+			isset($_POST['order_by'] ) ? $_POST['order_by'] :  null,
+			isset($_POST['query'] ) ? $_POST['query'] :  null,
+			isset($_POST['start'] ) ? $_POST['start'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -2815,13 +2817,10 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
+			"descripcion" => new ApiExposedProperty("descripcion", true, POST, array( "string" )),
 			"direccion" => new ApiExposedProperty("direccion", true, POST, array( "json" )),
-			"razon_social" => new ApiExposedProperty("razon_social", true, POST, array( "string" )),
 			"activo" => new ApiExposedProperty("activo", false, POST, array( "bool" )),
-			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "string" )),
-			"empresas" => new ApiExposedProperty("empresas", false, POST, array( "json" )),
 			"id_gerente" => new ApiExposedProperty("id_gerente", false, POST, array( "int" )),
-			"saldo_a_favor" => new ApiExposedProperty("saldo_a_favor", false, POST, array( "float" )),
 		);
 	}
 
@@ -2830,13 +2829,10 @@
  		$this->response = SucursalesController::Nueva( 
  			
 			
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] : null,
 			isset($_POST['direccion'] ) ? json_decode($_POST['direccion']) : null,
-			isset($_POST['razon_social'] ) ? $_POST['razon_social'] : null,
 			isset($_POST['activo'] ) ? $_POST['activo'] :  1 ,
-			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null,
-			isset($_POST['empresas'] ) ? json_decode($_POST['empresas']) : null,
-			isset($_POST['id_gerente'] ) ? $_POST['id_gerente'] :  null,
-			isset($_POST['saldo_a_favor'] ) ? $_POST['saldo_a_favor'] :  "0"
+			isset($_POST['id_gerente'] ) ? $_POST['id_gerente'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -2855,14 +2851,12 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"id_sucursal" => new ApiExposedProperty("id_sucursal", true, GET, array( "int" )),
-			"activo" => new ApiExposedProperty("activo", false, GET, array( "bool" )),
-			"descripcion" => new ApiExposedProperty("descripcion", false, GET, array( "string" )),
-			"direccion" => new ApiExposedProperty("direccion", false, GET, array( "json" )),
-			"empresas" => new ApiExposedProperty("empresas", false, GET, array( "json" )),
-			"id_gerente" => new ApiExposedProperty("id_gerente", false, GET, array( "int" )),
-			"razon_social" => new ApiExposedProperty("razon_social", false, GET, array( "string" )),
-			"saldo_a_favor" => new ApiExposedProperty("saldo_a_favor", false, GET, array( "float" )),
+			"id_sucursal" => new ApiExposedProperty("id_sucursal", true, POST, array( "int" )),
+			"id_tarifa" => new ApiExposedProperty("id_tarifa", true, POST, array( "int" )),
+			"activo" => new ApiExposedProperty("activo", false, POST, array( "bool" )),
+			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "string" )),
+			"direccion" => new ApiExposedProperty("direccion", false, POST, array( "json" )),
+			"id_gerente" => new ApiExposedProperty("id_gerente", false, POST, array( "int" )),
 		);
 	}
 
@@ -2871,14 +2865,12 @@
  		$this->response = SucursalesController::Editar( 
  			
 			
-			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null,
-			isset($_GET['activo'] ) ? $_GET['activo'] :  null,
-			isset($_GET['descripcion'] ) ? $_GET['descripcion'] :  null,
-			isset($_GET['direccion'] ) ? json_decode($_GET['direccion']) : null,
-			isset($_GET['empresas'] ) ? json_decode($_GET['empresas']) : null,
-			isset($_GET['id_gerente'] ) ? $_GET['id_gerente'] :  null,
-			isset($_GET['razon_social'] ) ? $_GET['razon_social'] :  null,
-			isset($_GET['saldo_a_favor'] ) ? $_GET['saldo_a_favor'] :  null
+			isset($_POST['id_sucursal'] ) ? $_POST['id_sucursal'] : null,
+			isset($_POST['id_tarifa'] ) ? $_POST['id_tarifa'] : null,
+			isset($_POST['activo'] ) ? $_POST['activo'] :  null,
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null,
+			isset($_POST['direccion'] ) ? json_decode($_POST['direccion']) : null,
+			isset($_POST['id_gerente'] ) ? $_POST['id_gerente'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -3101,7 +3093,7 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"id_sucursal" => new ApiExposedProperty("id_sucursal", true, GET, array( "int" )),
+			"id_sucursal" => new ApiExposedProperty("id_sucursal", true, POST, array( "int" )),
 		);
 	}
 
@@ -3110,7 +3102,7 @@
  		$this->response = SucursalesController::Eliminar( 
  			
 			
-			isset($_GET['id_sucursal'] ) ? $_GET['id_sucursal'] : null
+			isset($_POST['id_sucursal'] ) ? $_POST['id_sucursal'] : null
 			
 			);
 		}catch(Exception $e){
@@ -3173,6 +3165,34 @@
 			isset($_POST['fecha_final'] ) ? $_POST['fecha_final'] : null,
 			isset($_POST['id_sucursal'] ) ? $_POST['id_sucursal'] : null,
 			isset($_POST['total_efectivo'] ) ? $_POST['total_efectivo'] : null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiSucursalDetalles extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"id_sucursal" => new ApiExposedProperty("id_sucursal", true, POST, array( "int" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = SucursalesController::Detalles( 
+ 			
+			
+			isset($_POST['id_sucursal'] ) ? $_POST['id_sucursal'] : null
 			
 			);
 		}catch(Exception $e){

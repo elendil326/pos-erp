@@ -123,7 +123,7 @@
 		"activa"
 	));
 
-	$configuracion_moneda_form->createComboBoxJoin( "id_moneda", "simbolo", EfectivoController::ListaMoneda(true) );
+	$configuracion_moneda_form->createComboBoxJoin( "id_moneda", "simbolo", EfectivoController::ListaMoneda() );
 
 	$page->addComponent($configuracion_moneda_form);
 
@@ -145,20 +145,6 @@
 	$configuracion_periodo_form->addField("periodo_actual", "Periodo Actual", "number", "1", "periodo_actual");
 
 	$page->addComponent($configuracion_periodo_form);
-
-	$campos = array_keys(get_class_vars('Producto'));
-
-	/*
-	foreach ($campos as $key => $campo) {
-	    if ($campo == "visible_en_vc") {
-	        unset($campos[$key]);
-	    } else {
-	        $caption = ucwords(str_replace("_", " ", $campo));
-	        $campos[$key] = array("id" => $campo, "caption" => $caption);
-	    }
-	}
-	$form->addField('propiedades', 'Propiedades *', 'listbox', $campos, 'propiedades');
-	*/
 
 	$page->addComponent(new TitleComponent("Impuestos", 2));
 

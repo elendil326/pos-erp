@@ -97,20 +97,6 @@
   
 	/**
  	 *
- 	 *Descarga un archivo .zip con los ultimos respaldos que se encuentren en el servidor de las instancias seleccionadas
- 	 *
- 	 * @param instance_ids json Lista de los id de las instancias a respaldar
- 	 **/
-  static function BdInstanciasDescargarBd
-	(
-		$instance_ids
-	);  
-  
-  
-	
-  
-	/**
- 	 *
  	 *Metodo que elimina todos los registros en la base de datos, especialmente util para hacer pruebas unitarias. Este metodo NO estara disponible al publico.
  	 *
  	 **/
@@ -128,55 +114,6 @@
  	 **/
   static function RespaldarBd
 	(
-	);  
-  
-  
-	
-  
-	/**
- 	 *
- 	 *Genera un scrip .sql en el servirdor de los id de instancia que reciba este metodo
- 	 *
- 	 * @param instance_ids json Lista de los id de las instancias a respaldar
- 	 * @return status string Respuesta enviada del servidor
- 	 * @return mensaje string Mensaje de respuesta del servidor
- 	 **/
-  static function BdInstanciasRespaldarBd
-	(
-		$instance_ids
-	);  
-  
-  
-	
-  
-	/**
- 	 *
- 	 *Restaurar una BD especifica, a partir de un listado de archivos.
- 	 *
- 	 * @param id_instancia int Id de la instancia que se requiere restaurar
- 	 * @param time int Fecha de creacin del archivo
- 	 * @return status string Estado de la respuesta
- 	 **/
-  static function EspecificaBdRestaurarBd
-	(
-		$id_instancia, 
-		$time
-	);  
-  
-  
-	
-  
-	/**
- 	 *
- 	 *Restaura las instancias seleccionadas de acuerdo a los scripts .sql mas recientes que haya en el servidor para cada instancia. La restauracion es un reemplazo total tanto de datos como esquema con respecto a los scripts encontrados.
- 	 *
- 	 * @param instance_ids json Lista de los id de las instancias a respaldar
- 	 * @return status string Respuesta enviada del servidor
- 	 * @return mensaje string Mensaje de respuesta del servidor
- 	 **/
-  static function BdInstanciasRestaurarBd
-	(
-		$instance_ids
 	);  
   
   

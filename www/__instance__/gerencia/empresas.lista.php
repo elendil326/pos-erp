@@ -8,7 +8,7 @@
 
     $page->addComponent(new TitleComponent("Empresas"));
 
-    $lista_empresas = EmpresasController::Buscar();
+    $lista_empresas = EmpresasController::Buscar($activa = false, $limit = null, $order = "DESC", $order_by = "id_empresa", $query = null, $start = null);
 
     $tabla = new TableComponent(array(
     	"id_empresa" => "Id",

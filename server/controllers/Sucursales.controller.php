@@ -2134,25 +2134,24 @@ class SucursalesController extends ValidacionesController implements ISucursales
   
 	/**
  	 *
- 	 *Lista las sucursales relacionadas con esta instancia. Se puede filtrar por empresa,  saldo inferior o superior a, fecha de apertura, ordenar por fecha de apertura u ordenar por saldo. Se agregar?n link en cada una para poder acceder a su detalle.
+ 	 *Lista las sucursales relacionadas con esta instancia. 
  	 *
  	 * @param activo bool Si este valor no es pasado, se listaran sucursales tanto activas como inactivas, si su valor es true, solo se mostrarn las sucursales activas, si es false, solo se mostraran las sucursales inactivas.
- 	 * @param id_empresa int Id de la empresa de la cual se listaran sus sucursales.
- 	 * @param saldo_inferior_que float Si este valor es obtenido, se mostrar�n las sucursales que tengan un saldo inferior a este
- 	 * @param saldo_igual_que float Si este valor es obtenido, se mostrar�n las sucursales que tengan un saldo igual a este
- 	 * @param saldo_superior_que float Si este valor es obtenido, se mostrar�n las sucursales que tengan un saldo superior a este
- 	 * @param fecha_apertura_inferior_que string Si este valor es pasado, se mostraran las sucursales cuya fecha de apertura sea inferior a esta.
- 	 * @param fecha_apertura_igual_que string Si este valor es pasado, se mostraran las sucursales cuya fecha de apertura sea igual a esta.
- 	 * @param fecha_apertura_superior_que string Si este valor es pasado, se mostraran las sucursales cuya fecha de apertura sea superior a esta.
- 	 * @return sucursales json Objeto que contendra la lista de sucursales.
+ 	 * @param limit int Indica hasta que registro se desea obtener a partir del conjunto de resultados productos de la bsqueda.
+ 	 * @param order string Indica si se ordenan los registros de manera Ascendente ASC, o descendente DESC.
+ 	 * @param order_by string Indica por que campo se ordenan los resultados.
+ 	 * @param query string Valor que se buscara en la consulta
+ 	 * @param start int Indica desde que registro se desea obtener a partir del conjunto de resultados productos de la busqueda.
+ 	 * @return resultados json Objeto que contendra la lista de sucursales.
+ 	 * @return numero_de_resultados int 
  	 **/
-	public static function Buscar
+  static function Buscar
 	(
 		$activo = null, 
-		$id_empresa = null, 
 		$limit = null, 
+		$order = null, 
+		$order_by = null, 
 		$query = null, 
-		$sort = null, 
 		$start = null
 	)
 	{
@@ -2165,7 +2164,7 @@ class SucursalesController extends ValidacionesController implements ISucursales
         //y cuando solo es pasado alguno de ellos, el otro objeto almacena el mayor o menor posible
         //para conseguir la mejor comparacion.
 
-        if(!is_null($id_empresa))
+        /*if(!is_null($id_empresa))
         {
             $sucursales_empresa = SucursalEmpresaDAO::search( new SucursalEmpresa( array( "id_empresa" => $id_empresa ) ) );
             foreach ( $sucursales_empresa as $sucursal_empresa )
@@ -2174,9 +2173,9 @@ class SucursalesController extends ValidacionesController implements ISucursales
             }
         }
         else
-        {
+        {*/
             $sucursales=SucursalDAO::getAll( );
-        }
+        //}
 
         return array(
             "resultados" => $sucursales,
@@ -2296,18 +2295,21 @@ class SucursalesController extends ValidacionesController implements ISucursales
 
 	/**
  	 *
- 	 * Metodo que crea una nueva sucursal
+ 	 *M?todo que crea una nueva sucursal
  	 *
+ 	 * @param descripcion string Descripcion de la sucursal
+ 	 * @param direccion json Objeto que contiene la informacin sobre al direccin 
+ 	 * @param activo bool Si esta sucursal estara activa inmediatamente despues de ser creada
+ 	 * @param id_gerente int ID del usuario que sera gerente de esta sucursal. Para que sea valido este usuario debe tener el nivel de acceso apropiado.
+ 	 * @return id_sucursal int Id autogenerado de la sucursal que se creo.
  	 **/
-	public static function Nueva(
-        $direccion, 
-        $razon_social, 
-        $activo =  1 , 
-        $descripcion = null, 
-        $empresas = null, 
-        $id_gerente = null, 
-        $saldo_a_favor = null
-        )
+  static function Nueva
+	(
+		$descripcion, 
+		$direccion, 
+		$activo =  1 , 
+		$id_gerente = null
+	)
     {
 
         Logger::log("Creando nueva sucursal `$razon_social` ...");
@@ -2377,24 +2379,20 @@ class SucursalesController extends ValidacionesController implements ISucursales
  	 *Edita los datos de una sucursal
  	 *
  	 * @param id_sucursal int Id de la sucursal a modificar
+ 	 * @param id_tarifa int Id de la tarifa por default de la sucursal
  	 * @param activo bool Indica si esta sucursal estar activa
  	 * @param descripcion string Descripcion de la sucursal
- 	 * @param direccion json Arreglo de direcciones de la sucursal, pueden ser direcciones de tipo fiscal, postal, de envo, etc. En caso de no mandar el id_direccion dentro del objeto direccion, se debe de generar una nueva direccion
- 	 * @param empresas json (DE ESTO ES LO QUE VEREMOS EL MARTES CON IRATZIO) Objeto que contendra los ids de las empresas a las que esta sucursal pertenece, por lo menos tiene que haber una empresa. En este JSON, opcionalmente junto con el id de la empresa, aapreceran dos campos que seran margen_utilidad y descuento, que indicaran que todos los productos de esa empresa ofrecidos en esta sucursal tendran un margen de utilidad y/o un descuento con los valores en esos campos
+ 	 * @param direccion json Objeto que contiene la informacin sobre al direccion
  	 * @param id_gerente int Id del gerente de la sucursal
- 	 * @param razon_social string Razon social de la sucursal
- 	 * @param saldo_a_favor float Saldo a favor de la sucursal
  	 **/
-	public static function Editar
+  static function Editar
 	(
 		$id_sucursal, 
+		$id_tarifa, 
 		$activo = null, 
 		$descripcion = null, 
 		$direccion = null, 
-		$empresas = null, 
-		$id_gerente = null, 
-		$razon_social = null, 
-		$saldo_a_favor = null
+		$id_gerente = null
 	)
 	{
             Logger::log("Editando sucursal ".$id_sucursal . " ...");
@@ -4034,6 +4032,19 @@ class SucursalesController extends ValidacionesController implements ISucursales
 
         return array ( "id_corte_sucursal" => $corte->getIdCorteSucursal( ) );
     }
+	
+	/**
+ 	 *
+ 	 *Muestra los detalles de una sucursal en espec?fico.
+ 	 *
+ 	 * @param id_sucursal int Id de la sucursal
+ 	 **/
+	public static function Detalles
+		(
+			$id_sucursal
+		){
+
+	}
 
 
 
