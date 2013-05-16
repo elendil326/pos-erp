@@ -739,13 +739,13 @@ class EfectivoController implements IEfectivo{
         if($servicio=="Google"){
             foreach ($id_y_codigo_monedas_base_empresas as $moneda) {
                 $json_resp = self::ObtenerTiposCambioDesdeServicioGoogle($moneda["codigo"]);
-                array_push($jsons_respuestas,"id_moneda_base"=>$moneda["id_moneda_base"],"codigo_moneda_base"=>$moneda["codigo"],"JSON"=> $json_resp);
+                array_push($jsons_respuestas,array("id_moneda_base"=>$moneda["id_moneda_base"],"codigo_moneda_base"=>$moneda["codigo"],"JSON"=> $json_resp));
             }
         }
         else {
             foreach ($id_y_codigo_monedas_base_empresas as $moneda) {
                 $json_resp = self::ObtenerTiposCambioDesdeServicioYahoo($moneda["codigo"]);
-                array_push($jsons_respuestas,"id_moneda_base"=>$moneda["id_moneda_base"],"codigo_moneda_base"=>$moneda["codigo"],"JSON"=> $json_resp);
+                array_push($jsons_respuestas,array("id_moneda_base"=>$moneda["id_moneda_base"],"codigo_moneda_base"=>$moneda["codigo"],"JSON"=> $json_resp));
             }
         }
 
