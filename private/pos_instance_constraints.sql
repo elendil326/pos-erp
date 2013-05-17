@@ -95,6 +95,13 @@ ALTER TABLE `billete_corte_caja`
 ALTER TABLE `caja`
   ADD CONSTRAINT `caja_ibfk_1` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`);
 
+
+--
+-- Constraints for table `categoria_contacto`
+--
+ALTER TABLE  `categoria_contacto`
+  ADD FOREIGN KEY (  `id_padre` ) REFERENCES  `pos_instance_90`.`categoria_contacto` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT;
+
 --
 -- Constraints for table `cheque`
 --

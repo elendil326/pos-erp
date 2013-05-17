@@ -8852,3 +8852,131 @@
   }
   
   
+
+  class ApiContactosCategoriaNuevo extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"nombre" => new ApiExposedProperty("nombre", true, POST, array( "string" )),
+			"activa" => new ApiExposedProperty("activa", false, POST, array( "bool" )),
+			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "string" )),
+			"padre_id" => new ApiExposedProperty("padre_id", false, POST, array( "int" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = ContactosController::NuevoCategoria( 
+ 			
+			
+			isset($_POST['nombre'] ) ? $_POST['nombre'] : null,
+			isset($_POST['activa'] ) ? $_POST['activa'] :  true ,
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null,
+			isset($_POST['padre_id'] ) ? $_POST['padre_id'] :  null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiContactosCategoriaEditar extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"id" => new ApiExposedProperty("id", true, POST, array( "int" )),
+			"activa" => new ApiExposedProperty("activa", false, POST, array( "bool" )),
+			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "string" )),
+			"id_padre" => new ApiExposedProperty("id_padre", false, POST, array( "int" )),
+			"nombre" => new ApiExposedProperty("nombre", false, POST, array( "string" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = ContactosController::EditarCategoriaContactos( 
+ 			
+			
+			isset($_POST['id'] ) ? $_POST['id'] : null,
+			isset($_POST['activa'] ) ? $_POST['activa'] :  null,
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null,
+			isset($_POST['id_padre'] ) ? $_POST['id_padre'] :  null,
+			isset($_POST['nombre'] ) ? $_POST['nombre'] :  null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiContactosCategoriaBuscar extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"activa" => new ApiExposedProperty("activa", false, GET, array( "bool" )),
+			"query" => new ApiExposedProperty("query", false, GET, array( "string" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = ContactosController::BuscarCategoriaContactos( 
+ 			
+			
+			isset($_GET['activa'] ) ? $_GET['activa'] :  true ,
+			isset($_GET['query'] ) ? $_GET['query'] :  null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiContactosCategoriaDetalles extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"id_categoria" => new ApiExposedProperty("id_categoria", true, GET, array( "int" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = ContactosController::DetallesCategoriaContactos( 
+ 			
+			
+			isset($_GET['id_categoria'] ) ? $_GET['id_categoria'] : null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
