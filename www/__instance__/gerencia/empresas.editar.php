@@ -82,7 +82,7 @@
 		
 	));
 
-	$direccion_form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll(), 6 );
+	$direccion_form->createComboBoxJoin( "id_ciudad", "nombre", CiudadDAO::getAll(), $empresa["detalles"]->direccion->getIdCiudad() );
 	$direccion_form->renameField( array( 
 		"id_ciudad" => "ciudad",
 	));
