@@ -281,6 +281,22 @@ CREATE TABLE IF NOT EXISTS `catalogo_cuentas` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `categoria_contacto`
+--
+
+CREATE TABLE IF NOT EXISTS `categoria_contacto` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id_padre` int(10) unsigned DEFAULT NULL,
+  `nombre` varchar(255) NOT NULL,
+  `activa` tinyint(4) NOT NULL DEFAULT '1',
+  `descripcion` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_padre` (`id_padre`,`nombre`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `categoria_unidad_medida`
 --
 
