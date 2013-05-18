@@ -2426,6 +2426,18 @@ class SucursalesController extends ValidacionesController implements ISucursales
 			throw new InvalidDataException("La sucursal con id : {$id_sucursal} no existe");
 		}
 
+		//verificamos si la sucursal esta activa en caso de no estarlo solo permitira activarla
+		if ($activo !== NULL) {
+			$val = null;
+			if ($activo == 1){
+				$val = true;
+			} elseif ($activo == "") {
+				$val = false;
+			}
+			$sucursal->setActiva($val);
+		}
+
+		//editamos solo la direccion
 		if (!is_null($direccion)) {
 
 			if (!is_array($direccion)) {
@@ -3050,7 +3062,7 @@ class SucursalesController extends ValidacionesController implements ISucursales
   
 	/**
  	 *
- 	 *Desactiva una caja, para que la caja pueda ser desactivada, tieneq ue estar cerrada
+ 	 *Desactiva una caja, para que la caja pueda ser desactivada, tiene que estar cerrada
  	 *
  	 * @param id_caja int Id de la caja a eliminar
  	 **/
@@ -3107,6 +3119,7 @@ class SucursalesController extends ValidacionesController implements ISucursales
  	 *
  	 *Desactiva una sucursal. Para poder desactivar una sucursal su saldo a favor tiene que ser mayor a cero y sus almacenes tienen que estar vacios.
  	 *
+	 * @author Juan Manuel Garc&iacute;a Carmona <manuel@caffeina.mx>
  	 * @param id_sucursal int Id de la sucursal a desactivar
  	 **/
 	public static function Eliminar
@@ -3114,97 +3127,51 @@ class SucursalesController extends ValidacionesController implements ISucursales
 		$id_sucursal
 	)
 	{
-            Logger::log("Eliminando sucursal ".$id_sucursal);
-            
-            //verifica que la caja exista y este activa
-            $sucursal=SucursalDAO::getByPK($id_sucursal);
-            if(is_null($sucursal))
-            {
-                Logger::error("La sucursal con id :".$id_sucursal." no existe");
-                throw new Exception("La sucursal con id :".$id_sucursal." no existe");
-            }
-            if(!$sucursal->getActiva())
-            {
-                Logger::warn("La sucursal ya ha sido eliminada");
-                throw new Exception("La sucursal ya ha sido eliminada");
-            }
-            
-            //Si el saldo a favor de la sucursal no es cero, no se puede eliminar
-            if($sucursal->getSaldoAFavor()!=0)
-            {
-                Logger::error("La sucursal no tiene un saldo de 0 y no puede ser eliminada");
-                throw new Exception("La sucursal no tiene un saldo de 0 y no puede ser eliminada");
-            }
-            
-            $almacenes = AlmacenDAO::search( new Almacen( array( "id_sucursal" => $id_sucursal ) ) );
-            
-            $sucursal->setFechaBaja(time());
-            $sucursal->setActiva(0);
-            DAO::transBegin();
-            try
-            {
-                SucursalDAO::save($sucursal);
-                
-                //busca las cajas asociadas con esta sucursal y las cierra con el metodo EliminarCaja,
-                //si alguna presenta un error habra un rollback y no se eliminara la sucursal
-                $cajas=CajaDAO::search(new Caja(array( "id_sucursal" => $id_sucursal )));
-                foreach($cajas as $c)
-                {
-                    self::EliminarCaja($c->getIdCaja());
-                }
-                
-                //Elimina la relacion con los impuestos, paquetes, retenciones y servicios referidos a esta sucursal
-                $impuestos_sucursal=ImpuestoSucursalDAO::search(new ImpuestoSucursal(array( "id_sucursal" => $id_sucursal )));
-                foreach($impuestos_sucursal as $i_e)
-                {
-                    ImpuestoSucursalDAO::delete($i_e);
-                }
-                $paquetes_sucursal=PaqueteSucursalDAO::search(new PaqueteSucursal(array( "id_sucursal" => $id_sucursal )));
-                foreach($paquetes_sucursal as $p_s)
-                {
-                    PaqueteSucursalDAO::delete($p_s);
-                }
-                $retencion_sucursal=RetencionSucursalDAO::search(new RetencionSucursal(array( "id_sucursal" => $id_sucursal )));
-                foreach($retencion_sucursal as $r_s)
-                {
-                    RetencionSucursalDAO::delete($r_s);
-                }
-                $servicio_sucursal=ServicioSucursalDAO::search(new ServicioSucursal(array( "id_sucursal" => $id_sucursal )));
-                foreach($servicio_sucursal as $s_s)
-                {
-                    ServicioSucursalDAO::delete($s_s);
-                }
-                
-                //Se eliminan los almacenes de esta sucursal
-                foreach($almacenes as $almacen)
-                {
-                    if($almacen->getActivo())
-                    {
-                         $flag = false;
-                        if($almacen->getIdTipoAlmacen()==2)
-                        {
-                            $flag=true;
-                            $almacen->setIdTipoAlmacen(1);
-                            AlmacenDAO::save($almacen);
-                        }
-                        self::EliminarAlmacen($almacen->getIdAlmacen());
-                        if($flag)
-                        {
-                            $flag = false;
-                            $almacen->setIdTipoAlmacen(2);
-                            AlmacenDAO::save($almacen);
-                        }
-                    }
-                }
-            }
-            catch(Exception $e)
-            {
-                DAO::transRollback();
-                Logger::error("La sucursal no pudo ser eliminada ".$e);
-                throw new Exception("La sucursal no pudo ser eliminada");
-            }
-            DAO::transEnd();
-            Logger::log("Sucursal eliminada exitosamente");
+		//verifica que la caja exista y este activa
+		if (!$sucursal = SucursalDAO::getByPK($id_sucursal)) {
+			Logger::error("La sucursal con id :".$id_sucursal." no existe");
+			throw new Exception("La sucursal con id :".$id_sucursal." no existe");
+		}
+
+		if (!$sucursal->getActiva()) {
+			Logger::error("La sucursal actualmente esta desactivada");
+			throw new Exception("La sucursal actualmente esta desactivada");
+		}
+
+		//verificamos si los almacenes de la sucursal ya han sido previamente desactivados
+		$almacenes = AlmacenDAO::search(new Almacen(array("id_sucursal" => $id_sucursal)));
+
+		//Se eliminan los almacenes de esta sucursal
+		foreach ($almacenes as $almacen) {
+			if ($almacen->getActivo() == true) {
+				Logger::error("No se puede desactivar la sucursal dado que el almacen" . $almacen->getNombre() . " sigue activo");
+				throw new Exception("No se puede desactivar la sucursal dado que el almacen" . $almacen->getNombre() . " sigue activo");
+			}
+		}
+
+		//verificamos si hay cajas abiertas
+		$cajas = CajaDAO::search(new Caja(array("id_sucursal" => $id_sucursal)));
+
+		foreach ($cajas as $c) {
+			if ($c->getAbierta == true) {
+				Logger::error("No se puede desactivar la sucursal dado que la caja" . $c->getDescripcion() . " sigue abierta");
+				throw new Exception("No se puede desactivar la sucursal dado que la caja" . $c->getDescripcion() . " sigue abierta");
+			}
+		}
+
+		$sucursal->setFechaBaja(time());
+		$sucursal->setActiva(0);
+
+		DAO::transBegin();
+		try {
+			SucursalDAO::save($sucursal);
+		} catch(Exception $e) {
+			DAO::transRollback();
+			Logger::error("La sucursal no pudo ser desactivada: ".$e);
+			throw new Exception("La sucursal no pudo ser desactivada");
+		}
+		DAO::transEnd();
+		Logger::log("Sucursal desactivada exitosamente");
 	}
   
 	/**

@@ -160,8 +160,6 @@
 
 	$page->addComponent($configuracion_periodo_form);
 
-	$campos = array_keys(get_class_vars('Producto'));
-
 	$page->addComponent(new TitleComponent("Impuestos", 2));
 
 	$impuestos_compra_form = new FormComponent();

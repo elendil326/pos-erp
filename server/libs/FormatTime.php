@@ -123,6 +123,10 @@ function ft($time) {
 
 function FormatTime($timestamp, $type = "FB")
 {
+	if($timestamp === NULL){
+		return "<span>&nbsp;</span>";
+	}
+
 	if(!is_numeric($timestamp))
 	{
 		$timestamp = strtotime($timestamp);
