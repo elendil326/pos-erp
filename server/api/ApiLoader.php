@@ -7917,6 +7917,7 @@
 	{
 		$this->request = array(	
 			"id_moneda" => new ApiExposedProperty("id_moneda", true, GET, array( "int" )),
+			"activa" => new ApiExposedProperty("activa", false, GET, array( "bool" )),
 			"nombre" => new ApiExposedProperty("nombre", false, GET, array( "string" )),
 			"simbolo" => new ApiExposedProperty("simbolo", false, GET, array( "string" )),
 		);
@@ -7928,6 +7929,7 @@
  			
 			
 			isset($_GET['id_moneda'] ) ? $_GET['id_moneda'] : null,
+			isset($_GET['activa'] ) ? $_GET['activa'] :  null,
 			isset($_GET['nombre'] ) ? $_GET['nombre'] :  null,
 			isset($_GET['simbolo'] ) ? $_GET['simbolo'] :  null
 			

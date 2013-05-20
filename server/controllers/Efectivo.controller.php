@@ -146,8 +146,8 @@ class EfectivoController implements IEfectivo{
                 if(is_null($moneda))
                     return "La moneda ".$id_moneda." no existe";
                 
-                if(!$moneda->getActiva())
-                    return "La moneda ".$id_moneda." no esta activa";
+                /*if(!$moneda->getActiva())
+                    return "La moneda ".$id_moneda." no esta activa";*/
             }
             
             //valida que el nombre sea valido y que no se repita
@@ -457,19 +457,21 @@ class EfectivoController implements IEfectivo{
 	}
   
 	/**
- 	 *
- 	 *Edita la informacion de una moneda
- 	 *
- 	 * @param id_moneda int Id de la moneda a editar
- 	 * @param nombre string Nombre de la moneda
- 	 * @param simbolo string Simbolo de la moneda
- 	 **/
+     *
+     *Edita la informacion de una moneda
+     *
+     * @param id_moneda int Id de la moneda a editar
+     * @param activa bool Si se va a activar/desactivar
+     * @param nombre string Nombre de la moneda
+     * @param simbolo string Simbolo de la moneda
+     **/
 	public static function EditarMoneda
-	(
-		$id_moneda, 
-		$nombre = null, 
-		$simbolo = null
-	)
+    (
+        $id_moneda, 
+        $activa = null, 
+        $nombre = null, 
+        $simbolo = null
+    )
 	{  
             Logger::log("Editando la moneda ".$id_moneda);
             
@@ -490,6 +492,10 @@ class EfectivoController implements IEfectivo{
             if(!is_null($simbolo))
             {
                 $moneda->setSimbolo($simbolo);
+            }
+            if(!is_null($activa))
+            {
+                $moneda->setActiva($activa);
             }
             
             DAO::transBegin();
@@ -530,6 +536,13 @@ class EfectivoController implements IEfectivo{
                 throw new Exception($validar);
             }
             
+            $moneda_base= ConfiguracionDAO::search(new Configuracion( array("descripcion"=>"id_moneda_base","valor"=>$id_moneda) ));
+            if(count($moneda_base)>0)
+            {
+                Logger::log("La moneda es la moneda base de una empresa, no se puede desactivar ");
+                throw new BusinessLogicException("La moneda es la moneda base de una empresa, no se puede desactivar");
+            }
+
             //Si algun billete o usuario tiene asignada esta moneda, no se podra eliminar
             $billetes = BilleteDAO::search( new Billete( array( "id_moneda" => $id_moneda ) ) );
             foreach($billetes as $billete)
@@ -608,11 +621,21 @@ class EfectivoController implements IEfectivo{
             
             //Si se recibe el parametro activo, se usa el metodo search, de lo contrario se usa el get all
             if(!is_null($activo))
-                $monedas = MonedaDAO::search ( new Moneda( array( "activa" => $activo ) ), $orden );
+                $monedas = MonedaDAO::search ( new Moneda( array( "activa" => $activo ) ), $orden);
             else
                 $monedas = MonedaDAO::getAll(null,null,$orden);
             
             Logger::log("Se obtuvieron ".count($monedas)." monedas");
+            
+            // Obtener una lista de propiedades a ordenar, en este caso la prop activa
+            foreach ($monedas as $key => $row) {
+                $activas[$key]  = $row->activa;
+            }
+
+            // Ordenar los datos con activa en descendiente
+            // Agregar $datos como el último parámetro, para ordenar por la llave común
+            array_multisort($activas, SORT_DESC, $monedas);
+
             return $monedas;
             
 	}
@@ -716,35 +739,76 @@ class EfectivoController implements IEfectivo{
 
         global $POS_CONFIG;
 
-        $vals = false;
+        $sql = "SELECT * FROM `tipos_cambio` LIMIT 1";
 
-        $sql = "select * from tipos_cambio";
-
-        $res = $POS_CONFIG["CORE_CONN"]->GetArray();
+        $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql);
 
         $servicio="Google";//inicialmente se elige google
 
-        foreach ($res as $ins) {
-            $json = json_decode($ins['json_equivalencias']);
+        if (count($res)>0) {
+            $json = json_decode($res['json_equivalencias']);
+            //se toma unicamente el primer servicio ya que los demas habran obenido el ultimo tipo de cambio del mismo servicio
             $servicio = $json->servicio;
-            break;
         }
-        /*
-        VER COMO SACAR LOS ID:MONEDA BASE DE LAS DIFERENTES EMPRESAS DADO QUE MANE YA LO SEPARÓ EN DIFERENTES BD (instancias)
-        $id_y_codigo_monedas_base_empresas
-        */
-        $id_y_codigo_monedas_base_empresas;//las diferente monedas base en un array ya lleno
+
+        $sql = "SELECT * FROM instances WHERE instance_id > 85;";
+
+        $rs = $POS_CONFIG["CORE_CONN"]->GetArray($sql);
+        $id_y_codigo_monedas_base_empresas = array();
+
+        foreach ($rs as $ins) {
+
+            $instance_con["INSTANCE_CONN"] = null;
+
+            try {
+
+                $instance_con["INSTANCE_CONN"] = ADONewConnection($ins["db_driver"]);
+                $instance_con["INSTANCE_CONN"]->debug = $ins["db_debug"];
+                $instance_con["INSTANCE_CONN"]->PConnect($ins["db_host"], $ins["db_user"], $ins["db_password"], $ins["db_name"]);
+
+                if (!$instance_con["INSTANCE_CONN"]) {
+
+                    Logger::error("Imposible conectarme a la base de datos de la instancia ".$ins['descripcion']);
+                    die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));
+                }
+            } catch (ADODB_Exception $ado_e) {
+
+                Logger::error($ado_e);
+                die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));
+            } catch (Exception $e) {
+                Logger::error($e);
+                die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));
+            }
+
+            if ($instance_con["INSTANCE_CONN"] === NULL) {
+                Logger::error("Imposible conectarse con la base de datos de la instancia ".$ins['descripcion']);
+                die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));
+            }
+
+            $instance_db_con = $instance_con["INSTANCE_CONN"];
+
+            $diferentes_mon_base = $instance_db_con->GetArray("SELECT DISTINCT(`valor`) FROM `configuracion` WHERE `descripcion` = 'id_moneda_base';");
+            
+            foreach ($diferentes_mon_base as $mon) {
+                $cod_mon = $instance_db_con->GetRow("SELECT `simbolo` FROM `moneda` WHERE `id_moneda` = ".$mon['valor'].";");
+                array_push($id_y_codigo_monedas_base_empresas,array("id_moneda_base"=>$mon["valor"],"codigo"=>$cod_mon["simbolo"]));
+            }
+
+        }//fin foreach instancias
+
+        $id_y_codigo_monedas_base_empresas = array_map("unserialize", array_unique(array_map("serialize", $id_y_codigo_monedas_base_empresas)));//array_unique($id_y_codigo_monedas_base_empresas);
+
         $jsons_respuestas = array();
 
         if($servicio=="Google"){
             foreach ($id_y_codigo_monedas_base_empresas as $moneda) {
-                $json_resp = self::ObtenerTiposCambioDesdeServicioGoogle($moneda["codigo"]);
+                $json_resp = self::ObtenerTiposCambioDesdeServicioYahoo($moneda["codigo"]);
                 array_push($jsons_respuestas,array("id_moneda_base"=>$moneda["id_moneda_base"],"codigo_moneda_base"=>$moneda["codigo"],"JSON"=> $json_resp));
             }
         }
         else {
             foreach ($id_y_codigo_monedas_base_empresas as $moneda) {
-                $json_resp = self::ObtenerTiposCambioDesdeServicioYahoo($moneda["codigo"]);
+                $json_resp = self::ObtenerTiposCambioDesdeServicioGoogle($moneda["codigo"]);
                 array_push($jsons_respuestas,array("id_moneda_base"=>$moneda["id_moneda_base"],"codigo_moneda_base"=>$moneda["codigo"],"JSON"=> $json_resp));
             }
         }
@@ -755,10 +819,10 @@ class EfectivoController implements IEfectivo{
             $sql2="";
             if (count($res) === 0) 
             {
-                $sql2 = "INSERT INTO `tipos_cambio` (`json_equivalencias`) VALUES ( ? );";
-                $POS_CONFIG["CORE_CONN"]->Execute($sql2, array($resp["JSON"]));
+                $sql2 = "INSERT INTO `tipos_cambio` (`id_moneda_base`,`codigo_moneda_base`,`json_equivalencias`) VALUES ( ?,?,? );";
+                $POS_CONFIG["CORE_CONN"]->Execute($sql2, array($resp["id_moneda_base"],$resp["codigo_moneda_base"],$resp["JSON"]));
             } else {
-                $sql2 = "UPDATE  `tipos_cambio` SET  `json_equivalencias` =  ? Where `id_moneda_base` = ? AND `codigo_moneda_base` = ?;";
+                $sql2 = "UPDATE  `tipos_cambio` SET  `json_equivalencias` = ? Where `id_moneda_base` = ? AND `codigo_moneda_base` = ?;";
                 $POS_CONFIG["CORE_CONN"]->Execute($sql2, array($resp["JSON"], $res["id_moneda_base"], $res["codigo_moneda_base"]));
             }
         }
@@ -874,7 +938,7 @@ class EfectivoController implements IEfectivo{
 
         $res = new stdClass();
         $res->servicio ="Google";
-        $res->fecha= date("Y-m-d H:i:s");
+        $res->fecha= date();
         $res->moneda_origen=$moneda_origen;
         $res->tipos_cambio = array();
 
@@ -1009,20 +1073,20 @@ class EfectivoController implements IEfectivo{
         /*
         * @unset: Remove home currency from targets
         */
-        $target_currencies;
-        if( array_key_exists( $home_currency, $target_currencies ) ) {
-            unset( $target_currencies[$home_currency] );
+
+        if( array_key_exists( $home_currency, $default_targets ) ) {
+            unset( $default_targets[$home_currency] );
         }
 
         $res = new stdClass();
         $res->servicio ="Yahoo";
-        $res->fecha= date("Y-m-d H:i:s");
+        $res->fecha= date();
         $res->moneda_origen=$home_currency;
         $res->tipos_cambio = array();
         /*
         * @loop: Loop through the targets and perform lookup on Yahoo! Finance
         */
-        foreach( $target_currencies as $code => $name ) {
+        foreach( $default_targets as $code => $name ) {
             /*
             * @url: Get the URL for csv file at Yahoo API, based on 'convert_to' option
             */
@@ -1063,7 +1127,25 @@ class EfectivoController implements IEfectivo{
      **/
     public static function MostrarEquivalenciasActualizar()
     {
+        $id_mon = self::ObtenerMonedaBase();
+        $tc_servicio = self::ObtenerEquivalenciasServicio($id_mon["id_moneda_base"]);
+        $conf = new Configuracion();
+        $conf->setDescripcion("tipo_cambio");
+        $tc_sistema = ConfiguracionDAO::search($conf);
+        $res = array();
+        $res["servicios"] = array();
+        $res["sistema"] = array();
 
+        if (count($tc_sistema)>0) {
+            $obj = json_decode($tc_sistema[0]->getValor(),true);
+            array_push($res["sistema"],$obj);
+        }
+        if(count($tc_servicio["tipos_cambio"])>0)
+        {
+            array_push($res["servicios"],$tc_servicio);
+        }
+
+        return $res;
     }
 
 /**
@@ -1099,7 +1181,82 @@ class EfectivoController implements IEfectivo{
      **/
     public static function ObtenerEquivalenciasServicio($id_moneda_base)
     {
+        global $POS_CONFIG;
+
+        $sql = "SELECT * FROM `tipos_cambio` WHERE `id_moneda_base` = $id_moneda_base";
+
+        $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql);
+
+        if (count($res) === 0) {
+            Logger::warn("La instancia con el id {" . $instance_id . "} no exite !");
+            throw new InvalidDatabaseOperationException("No hay registros en la BD para los tipos de cambio de la moneda base: " . $id_moneda_base);
+        }
+
+        $json_decode = json_decode($res["json_equivalencias"]);
+        $monedas_activas = self::ListaMoneda($activa=1);
+        $simbolo_moneda_base = $res["codigo_moneda_base"];
+
+        if( array_key_exists( $res["codigo_moneda_base"], $monedas_activas ) ) {
+            unset( $monedas_activas,$res["codigo_moneda_base"]);
+        }
         
+        $resp = array();
+        $resp["servicio"] =$json_decode->servicio;
+        $resp["fecha"]= $json_decode->fecha;
+        $resp["moneda_origen"]=$json_decode->moneda_origen;
+        $resp["tipos_cambio"] = array();
+
+        foreach ($monedas_activas as $mon_act) {
+            foreach ($json_decode->tipos_cambio as $tc) {
+                if ($mon_act->simbolo===$tc->moneda) {
+                    $obj = array();
+                    $obj["moneda"] = $tc->moneda;
+                    $obj["equivalencia"] = $tc->equivalencia;
+                    $obj["conversion"] = "1 ".$simbolo_moneda_base." = ".$tc->equivalencia." ".$tc->moneda;
+                    array_push($resp["tipos_cambio"],$obj);
+                    break;
+                }
+            }
+        }
+        return $resp;
+    }
+
+    public static function ObtenerHistorialTipoCambio()
+    {
+        $tc_historico = HistorialTipoCambioDAO::getAll( $pagina = 1, $columnas_por_pagina = 10, $orden = "id_historial_tipo_cambio", $tipo_de_orden = 'DESC' );
+
+        $res = array();
+
+        foreach ($tc_historico as $tc) {
+
+            $tc_json = json_decode($tc->getJsonEquivalencias());
+
+            $obj["servicio"]=$tc_json->servicio;
+            $obj["fecha"] =$tc_json->fecha;
+            $obj["moneda_origen"]=$tc_json->moneda_origen;
+            $obj["tipos_cambio"]= array();
+
+            $tc_json_encode = json_encode($tc_json->tipos_cambio);
+
+            $tc_eq = json_decode($tc_json_encode,true);
+            array_push($obj["tipos_cambio"],$tc_eq);
+            array_push($res,$obj);
+
+        }
+        return $res;
+    }
+
+    public static function ObtenerMonedaBase()
+    {
+        $moneda_base= ConfiguracionDAO::search(new Configuracion( array("descripcion"=>"id_moneda_base") ));
+        if(count($moneda_base)<1)
+        {
+            Logger::warn("La empresa no tiene moneda base");
+            throw new BusinessLogicException("La empresa no tiene moneda base");
+        }
+
+        $moneda = MonedaDAO::getByPK($moneda_base[0]->getValor());
+        return array("id_moneda_base"=>$moneda_base[0]->getValor(),"simbolo"=>$moneda->getSimbolo());
     }
 }
 

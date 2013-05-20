@@ -117,12 +117,14 @@
  	 *Edita la informacion de una moneda
  	 *
  	 * @param id_moneda int Id de la moneda a editar
+ 	 * @param activa bool Si se va a activar/desactivar
  	 * @param nombre string Nombre de la moneda
  	 * @param simbolo string Simbolo de la moneda
  	 **/
   static function EditarMoneda
 	(
 		$id_moneda, 
+		$activa = null, 
 		$nombre = null, 
 		$simbolo = null
 	);  

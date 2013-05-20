@@ -85,8 +85,8 @@ class GerenciaComponentPage extends PosComponentPage{
 		                    "url": "efectivo.lista.moneda.php"
 		                },
 		                {
-		                    "title": "Nueva moneda",
-		                    "url": "efectivo.nueva.moneda.php"
+		                    "title": "Tipos Cambio",
+		                    "url": "efectivo.lista.tipo_cambio.php"
 		                }
 		            ]
 		        },
