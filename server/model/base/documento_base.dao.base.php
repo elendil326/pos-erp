@@ -150,7 +150,7 @@ abstract class DocumentoBaseDAOBase extends DAO
 			$sql .= " `json_impresion` = ? AND";
 			array_push( $val, $documento_base->getJsonImpresion() );
 		}
-                  
+
 		if( ! is_null( $documento_base->getUltimaModificacion() ) ){
 			$sql .= " `ultima_modificacion` = ? AND";
 			array_push( $val, $documento_base->getUltimaModificacion() );
@@ -178,7 +178,7 @@ abstract class DocumentoBaseDAOBase extends DAO
 	  *	
 	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
 	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
-	  * aqui, sin embargo. El valor de retorno indica cu�ntas filas se vieron afectadas.
+	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
@@ -194,8 +194,7 @@ abstract class DocumentoBaseDAOBase extends DAO
 			$documento_base->getActivo(), 
 			$documento_base->getJsonImpresion(), 
 			$documento_base->getUltimaModificacion(), 
-                                                                      $documento_base->getnombrePlantilla(),
-			$documento_base->getIdDocumentoBase());
+			$documento_base->getIdDocumentoBase(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
@@ -227,7 +226,6 @@ abstract class DocumentoBaseDAOBase extends DAO
 			$documento_base->getActivo(), 
 			$documento_base->getJsonImpresion(), 
 			$documento_base->getUltimaModificacion(), 
-                                                                      $documento_base->getnombrePlantilla()
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}

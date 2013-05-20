@@ -1,58 +1,58 @@
 <?php
-/** Autorizacion Data Access Object (DAO) Base.
+/** Perfil Data Access Object (DAO) Base.
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
-  * almacenar de forma permanente y recuperar instancias de objetos {@link Autorizacion }. 
+  * almacenar de forma permanente y recuperar instancias de objetos {@link Perfil }. 
   * @author Anonymous
   * @access private
   * @abstract
   * @package docs
   * 
   */
-abstract class AutorizacionDAOBase extends DAO
+abstract class PerfilDAOBase extends DAO
 {
 
 	/**
 	  *	Guardar registros. 
 	  *	
-	  *	Este metodo guarda el estado actual del objeto {@link Autorizacion} pasado en la base de datos. La llave 
+	  *	Este metodo guarda el estado actual del objeto {@link Perfil} pasado en la base de datos. La llave 
 	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara o combinacion de llaves
 	  *	primarias describen una fila que no se encuentra en la base de datos, entonces save() creara una nueva fila, insertando
 	  *	en ese objeto el ID recien creado.
 	  *	
 	  *	@static
 	  * @throws Exception si la operacion fallo.
-	  * @param Autorizacion [$autorizacion] El objeto de tipo Autorizacion
+	  * @param Perfil [$perfil] El objeto de tipo Perfil
 	  * @return Un entero mayor o igual a cero denotando las filas afectadas.
 	  **/
-	public static final function save( &$autorizacion )
+	public static final function save( &$perfil )
 	{
-		if( ! is_null ( self::getByPK(  $autorizacion->getIdAutorizacion() ) ) )
+		if( ! is_null ( self::getByPK(  $perfil->getIdPerfil() ) ) )
 		{
-			try{ return AutorizacionDAOBase::update( $autorizacion) ; } catch(Exception $e){ throw $e; }
+			try{ return PerfilDAOBase::update( $perfil) ; } catch(Exception $e){ throw $e; }
 		}else{
-			try{ return AutorizacionDAOBase::create( $autorizacion) ; } catch(Exception $e){ throw $e; }
+			try{ return PerfilDAOBase::create( $perfil) ; } catch(Exception $e){ throw $e; }
 		}
 	}
 
 
 	/**
-	  *	Obtener {@link Autorizacion} por llave primaria. 
+	  *	Obtener {@link Perfil} por llave primaria. 
 	  *	
-	  * Este metodo cargara un objeto {@link Autorizacion} de la base de datos 
+	  * Este metodo cargara un objeto {@link Perfil} de la base de datos 
 	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
-	  * @return @link Autorizacion Un objeto del tipo {@link Autorizacion}. NULL si no hay tal registro.
+	  * @return @link Perfil Un objeto del tipo {@link Perfil}. NULL si no hay tal registro.
 	  **/
-	public static final function getByPK(  $id_autorizacion )
+	public static final function getByPK(  $id_perfil )
 	{
-		$sql = "SELECT * FROM autorizacion WHERE (id_autorizacion = ? ) LIMIT 1;";
-		$params = array(  $id_autorizacion );
+		$sql = "SELECT * FROM perfil WHERE (id_perfil = ? ) LIMIT 1;";
+		$params = array(  $id_perfil );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
-			$foo = new Autorizacion( $rs );
+			$foo = new Perfil( $rs );
 			return $foo;
 	}
 
@@ -61,7 +61,7 @@ abstract class AutorizacionDAOBase extends DAO
 	  *	Obtener todas las filas.
 	  *	
 	  * Esta funcion leera todos los contenidos de la tabla en la base de datos y construira
-	  * un vector que contiene objetos de tipo {@link Autorizacion}. Tenga en cuenta que este metodo
+	  * un vector que contiene objetos de tipo {@link Perfil}. Tenga en cuenta que este metodo
 	  * consumen enormes cantidades de recursos si la tabla tiene muchas filas. 
 	  * Este metodo solo debe usarse cuando las tablas destino tienen solo pequenas cantidades de datos o se usan sus parametros para obtener un menor numero de filas.
 	  *	
@@ -70,11 +70,11 @@ abstract class AutorizacionDAOBase extends DAO
 	  * @param $columnas_por_pagina Columnas por pagina.
 	  * @param $orden Debe ser una cadena con el nombre de una columna en la base de datos.
 	  * @param $tipo_de_orden 'ASC' o 'DESC' el default es 'ASC'
-	  * @return Array Un arreglo que contiene objetos del tipo {@link Autorizacion}.
+	  * @return Array Un arreglo que contiene objetos del tipo {@link Perfil}.
 	  **/
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
-		$sql = "SELECT * from autorizacion";
+		$sql = "SELECT * from perfil";
 		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
 		if( ! is_null ( $pagina ) )
@@ -85,9 +85,9 @@ abstract class AutorizacionDAOBase extends DAO
 		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
-			$bar = new Autorizacion($foo);
+			$bar = new Perfil($foo);
     		array_push( $allData, $bar);
-			//id_autorizacion
+			//id_perfil
 		}
 		return $allData;
 	}
@@ -96,7 +96,7 @@ abstract class AutorizacionDAOBase extends DAO
 	/**
 	  *	Buscar registros.
 	  *	
-	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link Autorizacion} de la base de datos. 
+	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link Perfil} de la base de datos. 
 	  * Consiste en buscar todos los objetos que coinciden con las variables permanentes instanciadas de objeto pasado como argumento. 
 	  * Aquellas variables que tienen valores NULL seran excluidos en busca de criterios.
 	  *	
@@ -113,17 +113,37 @@ abstract class AutorizacionDAOBase extends DAO
 	  *	  }
 	  * </code>
 	  *	@static
-	  * @param Autorizacion [$autorizacion] El objeto de tipo Autorizacion
+	  * @param Perfil [$perfil] El objeto de tipo Perfil
 	  * @param $orderBy Debe ser una cadena con el nombre de una columna en la base de datos.
 	  * @param $orden 'ASC' o 'DESC' el default es 'ASC'
 	  **/
-	public static final function search( $autorizacion , $orderBy = null, $orden = 'ASC')
+	public static final function search( $perfil , $orderBy = null, $orden = 'ASC')
 	{
-		$sql = "SELECT * from autorizacion WHERE ("; 
+		$sql = "SELECT * from perfil WHERE ("; 
 		$val = array();
-		if( ! is_null( $autorizacion->getIdAutorizacion() ) ){
-			$sql .= " `id_autorizacion` = ? AND";
-			array_push( $val, $autorizacion->getIdAutorizacion() );
+		if( ! is_null( $perfil->getIdPerfil() ) ){
+			$sql .= " `id_perfil` = ? AND";
+			array_push( $val, $perfil->getIdPerfil() );
+		}
+
+		if( ! is_null( $perfil->getDescripcion() ) ){
+			$sql .= " `descripcion` = ? AND";
+			array_push( $val, $perfil->getDescripcion() );
+		}
+
+		if( ! is_null( $perfil->getConfiguracion() ) ){
+			$sql .= " `configuracion` = ? AND";
+			array_push( $val, $perfil->getConfiguracion() );
+		}
+
+		if( ! is_null( $perfil->getFechaCreacion() ) ){
+			$sql .= " `fecha_creacion` = ? AND";
+			array_push( $val, $perfil->getFechaCreacion() );
+		}
+
+		if( ! is_null( $perfil->getFechaModificacion() ) ){
+			$sql .= " `fecha_modificacion` = ? AND";
+			array_push( $val, $perfil->getFechaModificacion() );
 		}
 
 		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
@@ -136,7 +156,7 @@ abstract class AutorizacionDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-			$bar =  new Autorizacion($foo);
+			$bar =  new Perfil($foo);
     		array_push( $ar,$bar);
 		}
 		return $ar;
@@ -152,10 +172,21 @@ abstract class AutorizacionDAOBase extends DAO
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
-	  * @param Autorizacion [$autorizacion] El objeto de tipo Autorizacion a actualizar.
+	  * @param Perfil [$perfil] El objeto de tipo Perfil a actualizar.
 	  **/
-	private static final function update( $autorizacion )
+	private static final function update( $perfil )
 	{
+		$sql = "UPDATE perfil SET  `descripcion` = ?, `configuracion` = ?, `fecha_creacion` = ?, `fecha_modificacion` = ? WHERE  `id_perfil` = ?;";
+		$params = array( 
+			$perfil->getDescripcion(), 
+			$perfil->getConfiguracion(), 
+			$perfil->getFechaCreacion(), 
+			$perfil->getFechaModificacion(), 
+			$perfil->getIdPerfil(), );
+		global $conn;
+		try{$conn->Execute($sql, $params);}
+		catch(Exception $e){ throw new Exception ($e->getMessage()); }
+		return $conn->Affected_Rows();
 	}
 
 
@@ -163,27 +194,31 @@ abstract class AutorizacionDAOBase extends DAO
 	  *	Crear registros.
 	  *	
 	  * Este metodo creara una nueva fila en la base de datos de acuerdo con los 
-	  * contenidos del objeto Autorizacion suministrado. Asegurese
+	  * contenidos del objeto Perfil suministrado. Asegurese
 	  * de que los valores para todas las columnas NOT NULL se ha especificado 
 	  * correctamente. Despues del comando INSERT, este metodo asignara la clave 
-	  * primaria generada en el objeto Autorizacion dentro de la misma transaccion.
+	  * primaria generada en el objeto Perfil dentro de la misma transaccion.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error
-	  * @param Autorizacion [$autorizacion] El objeto de tipo Autorizacion a crear.
+	  * @param Perfil [$perfil] El objeto de tipo Perfil a crear.
 	  **/
-	private static final function create( &$autorizacion )
+	private static final function create( &$perfil )
 	{
-		$sql = "INSERT INTO autorizacion ( `id_autorizacion` ) VALUES ( ?);";
+		$sql = "INSERT INTO perfil ( `id_perfil`, `descripcion`, `configuracion`, `fecha_creacion`, `fecha_modificacion` ) VALUES ( ?, ?, ?, ?, ?);";
 		$params = array( 
-			$autorizacion->getIdAutorizacion(), 
+			$perfil->getIdPerfil(), 
+			$perfil->getDescripcion(), 
+			$perfil->getConfiguracion(), 
+			$perfil->getFechaCreacion(), 
+			$perfil->getFechaModificacion(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
 		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
-		/* save autoincremented value on obj */  $autorizacion->setIdAutorizacion( $conn->Insert_ID() ); /*  */ 
+		/* save autoincremented value on obj */   /*  */ 
 		return $ar;
 	}
 
@@ -191,8 +226,8 @@ abstract class AutorizacionDAOBase extends DAO
 	/**
 	  *	Buscar por rango.
 	  *	
-	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link Autorizacion} de la base de datos siempre y cuando 
-	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link Autorizacion}.
+	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link Perfil} de la base de datos siempre y cuando 
+	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link Perfil}.
 	  * 
 	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda (los valores 0 y false no son tomados como NULL) .
 	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.
@@ -216,21 +251,65 @@ abstract class AutorizacionDAOBase extends DAO
 	  *	  }
 	  * </code>
 	  *	@static
-	  * @param Autorizacion [$autorizacion] El objeto de tipo Autorizacion
-	  * @param Autorizacion [$autorizacion] El objeto de tipo Autorizacion
+	  * @param Perfil [$perfil] El objeto de tipo Perfil
+	  * @param Perfil [$perfil] El objeto de tipo Perfil
 	  * @param $orderBy Debe ser una cadena con el nombre de una columna en la base de datos.
 	  * @param $orden 'ASC' o 'DESC' el default es 'ASC'
 	  **/
-	public static final function byRange( $autorizacionA , $autorizacionB , $orderBy = null, $orden = 'ASC')
+	public static final function byRange( $perfilA , $perfilB , $orderBy = null, $orden = 'ASC')
 	{
-		$sql = "SELECT * from autorizacion WHERE ("; 
+		$sql = "SELECT * from perfil WHERE ("; 
 		$val = array();
-		if( ( !is_null (($a = $autorizacionA->getIdAutorizacion()) ) ) & ( ! is_null ( ($b = $autorizacionB->getIdAutorizacion()) ) ) ){
-				$sql .= " `id_autorizacion` >= ? AND `id_autorizacion` <= ? AND";
+		if( ( !is_null (($a = $perfilA->getIdPerfil()) ) ) & ( ! is_null ( ($b = $perfilB->getIdPerfil()) ) ) ){
+				$sql .= " `id_perfil` >= ? AND `id_perfil` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " `id_autorizacion` = ? AND"; 
+			$sql .= " `id_perfil` = ? AND"; 
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( ( !is_null (($a = $perfilA->getDescripcion()) ) ) & ( ! is_null ( ($b = $perfilB->getDescripcion()) ) ) ){
+				$sql .= " `descripcion` >= ? AND `descripcion` <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " `descripcion` = ? AND"; 
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( ( !is_null (($a = $perfilA->getConfiguracion()) ) ) & ( ! is_null ( ($b = $perfilB->getConfiguracion()) ) ) ){
+				$sql .= " `configuracion` >= ? AND `configuracion` <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " `configuracion` = ? AND"; 
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( ( !is_null (($a = $perfilA->getFechaCreacion()) ) ) & ( ! is_null ( ($b = $perfilB->getFechaCreacion()) ) ) ){
+				$sql .= " `fecha_creacion` >= ? AND `fecha_creacion` <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " `fecha_creacion` = ? AND"; 
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( ( !is_null (($a = $perfilA->getFechaModificacion()) ) ) & ( ! is_null ( ($b = $perfilB->getFechaModificacion()) ) ) ){
+				$sql .= " `fecha_modificacion` >= ? AND `fecha_modificacion` <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " `fecha_modificacion` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
@@ -245,7 +324,7 @@ abstract class AutorizacionDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new Autorizacion($foo));
+    		array_push( $ar, new Perfil($foo));
 		}
 		return $ar;
 	}
@@ -255,20 +334,20 @@ abstract class AutorizacionDAOBase extends DAO
 	  *	Eliminar registros.
 	  *	
 	  * Este metodo eliminara la informacion de base de datos identificados por la clave primaria
-	  * en el objeto Autorizacion suministrado. Una vez que se ha suprimido un objeto, este no 
+	  * en el objeto Perfil suministrado. Una vez que se ha suprimido un objeto, este no 
 	  * puede ser restaurado llamando a save(). save() al ver que este es un objeto vacio, creara una nueva fila 
 	  * pero el objeto resultante tendra una clave primaria diferente de la que estaba en el objeto eliminado. 
 	  * Si no puede encontrar eliminar fila coincidente a eliminar, Exception sera lanzada.
 	  *	
 	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
 	  *	@return int El numero de filas afectadas.
-	  * @param Autorizacion [$autorizacion] El objeto de tipo Autorizacion a eliminar
+	  * @param Perfil [$perfil] El objeto de tipo Perfil a eliminar
 	  **/
-	public static final function delete( &$autorizacion )
+	public static final function delete( &$perfil )
 	{
-		if( is_null( self::getByPK($autorizacion->getIdAutorizacion()) ) ) throw new Exception('Campo no encontrado.');
-		$sql = "DELETE FROM autorizacion WHERE  id_autorizacion = ?;";
-		$params = array( $autorizacion->getIdAutorizacion() );
+		if( is_null( self::getByPK($perfil->getIdPerfil()) ) ) throw new Exception('Campo no encontrado.');
+		$sql = "DELETE FROM perfil WHERE  id_perfil = ?;";
+		$params = array( $perfil->getIdPerfil() );
 		global $conn;
 
 		$conn->Execute($sql, $params);

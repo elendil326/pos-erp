@@ -157,3 +157,5 @@ require_once ('periodo.dao.php');
 require_once ('ejercicio_empresa.dao.php');
 require_once ('logo.dao.php');
 require_once ('configuracion_empresa.dao.php');
+
+require_once ('perfil.dao.php');

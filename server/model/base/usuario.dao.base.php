@@ -351,6 +351,11 @@ abstract class UsuarioDAOBase extends DAO
 			array_push( $val, $usuario->getTokenRecuperacionPass() );
 		}
 
+		if( ! is_null( $usuario->getIdPerfil() ) ){
+			$sql .= " `id_perfil` = ? AND";
+			array_push( $val, $usuario->getIdPerfil() );
+		}
+
 		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}
 		$sql = substr($sql, 0, -3) . " )";
 		if( ! is_null ( $orderBy ) ){
@@ -373,7 +378,7 @@ abstract class UsuarioDAOBase extends DAO
 	  *	
 	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
 	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
-	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
+	  * aqui, sin embargo. El valor de retorno indica cuÃ¡ntas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
@@ -381,7 +386,7 @@ abstract class UsuarioDAOBase extends DAO
 	  **/
 	private static final function update( $usuario )
 	{
-		$sql = "UPDATE usuario SET  `id_direccion` = ?, `id_direccion_alterna` = ?, `id_sucursal` = ?, `id_rol` = ?, `id_clasificacion_cliente` = ?, `id_clasificacion_proveedor` = ?, `id_moneda` = ?, `fecha_asignacion_rol` = ?, `nombre` = ?, `rfc` = ?, `curp` = ?, `comision_ventas` = ?, `telefono_personal1` = ?, `telefono_personal2` = ?, `fecha_alta` = ?, `fecha_baja` = ?, `activo` = ?, `limite_credito` = ?, `descuento` = ?, `password` = ?, `last_login` = ?, `consignatario` = ?, `salario` = ?, `correo_electronico` = ?, `pagina_web` = ?, `saldo_del_ejercicio` = ?, `ventas_a_credito` = ?, `representante_legal` = ?, `facturar_a_terceros` = ?, `dia_de_pago` = ?, `mensajeria` = ?, `intereses_moratorios` = ?, `denominacion_comercial` = ?, `dias_de_credito` = ?, `cuenta_de_mensajeria` = ?, `dia_de_revision` = ?, `codigo_usuario` = ?, `dias_de_embarque` = ?, `tiempo_entrega` = ?, `cuenta_bancaria` = ?, `id_tarifa_compra` = ?, `tarifa_compra_obtenida` = ?, `id_tarifa_venta` = ?, `tarifa_venta_obtenida` = ?, `token_recuperacion_pass` = ? WHERE  `id_usuario` = ?;";
+		$sql = "UPDATE usuario SET  `id_direccion` = ?, `id_direccion_alterna` = ?, `id_sucursal` = ?, `id_rol` = ?, `id_clasificacion_cliente` = ?, `id_clasificacion_proveedor` = ?, `id_moneda` = ?, `fecha_asignacion_rol` = ?, `nombre` = ?, `rfc` = ?, `curp` = ?, `comision_ventas` = ?, `telefono_personal1` = ?, `telefono_personal2` = ?, `fecha_alta` = ?, `fecha_baja` = ?, `activo` = ?, `limite_credito` = ?, `descuento` = ?, `password` = ?, `last_login` = ?, `consignatario` = ?, `salario` = ?, `correo_electronico` = ?, `pagina_web` = ?, `saldo_del_ejercicio` = ?, `ventas_a_credito` = ?, `representante_legal` = ?, `facturar_a_terceros` = ?, `dia_de_pago` = ?, `mensajeria` = ?, `intereses_moratorios` = ?, `denominacion_comercial` = ?, `dias_de_credito` = ?, `cuenta_de_mensajeria` = ?, `dia_de_revision` = ?, `codigo_usuario` = ?, `dias_de_embarque` = ?, `tiempo_entrega` = ?, `cuenta_bancaria` = ?, `id_tarifa_compra` = ?, `tarifa_compra_obtenida` = ?, `id_tarifa_venta` = ?, `tarifa_venta_obtenida` = ?, `token_recuperacion_pass` = ?, `id_perfil` = ? WHERE  `id_usuario` = ?;";
 		$params = array( 
 			$usuario->getIdDireccion(), 
 			$usuario->getIdDireccionAlterna(), 
@@ -428,6 +433,7 @@ abstract class UsuarioDAOBase extends DAO
 			$usuario->getIdTarifaVenta(), 
 			$usuario->getTarifaVentaObtenida(), 
 			$usuario->getTokenRecuperacionPass(), 
+			$usuario->getIdPerfil(), 
 			$usuario->getIdUsuario(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -451,7 +457,7 @@ abstract class UsuarioDAOBase extends DAO
 	  **/
 	private static final function create( &$usuario )
 	{
-		$sql = "INSERT INTO usuario ( `id_usuario`, `id_direccion`, `id_direccion_alterna`, `id_sucursal`, `id_rol`, `id_clasificacion_cliente`, `id_clasificacion_proveedor`, `id_moneda`, `fecha_asignacion_rol`, `nombre`, `rfc`, `curp`, `comision_ventas`, `telefono_personal1`, `telefono_personal2`, `fecha_alta`, `fecha_baja`, `activo`, `limite_credito`, `descuento`, `password`, `last_login`, `consignatario`, `salario`, `correo_electronico`, `pagina_web`, `saldo_del_ejercicio`, `ventas_a_credito`, `representante_legal`, `facturar_a_terceros`, `dia_de_pago`, `mensajeria`, `intereses_moratorios`, `denominacion_comercial`, `dias_de_credito`, `cuenta_de_mensajeria`, `dia_de_revision`, `codigo_usuario`, `dias_de_embarque`, `tiempo_entrega`, `cuenta_bancaria`, `id_tarifa_compra`, `tarifa_compra_obtenida`, `id_tarifa_venta`, `tarifa_venta_obtenida`, `token_recuperacion_pass` ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO usuario ( `id_usuario`, `id_direccion`, `id_direccion_alterna`, `id_sucursal`, `id_rol`, `id_clasificacion_cliente`, `id_clasificacion_proveedor`, `id_moneda`, `fecha_asignacion_rol`, `nombre`, `rfc`, `curp`, `comision_ventas`, `telefono_personal1`, `telefono_personal2`, `fecha_alta`, `fecha_baja`, `activo`, `limite_credito`, `descuento`, `password`, `last_login`, `consignatario`, `salario`, `correo_electronico`, `pagina_web`, `saldo_del_ejercicio`, `ventas_a_credito`, `representante_legal`, `facturar_a_terceros`, `dia_de_pago`, `mensajeria`, `intereses_moratorios`, `denominacion_comercial`, `dias_de_credito`, `cuenta_de_mensajeria`, `dia_de_revision`, `codigo_usuario`, `dias_de_embarque`, `tiempo_entrega`, `cuenta_bancaria`, `id_tarifa_compra`, `tarifa_compra_obtenida`, `id_tarifa_venta`, `tarifa_venta_obtenida`, `token_recuperacion_pass`, `id_perfil` ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$usuario->getIdUsuario(), 
 			$usuario->getIdDireccion(), 
@@ -499,6 +505,7 @@ abstract class UsuarioDAOBase extends DAO
 			$usuario->getIdTarifaVenta(), 
 			$usuario->getTarifaVentaObtenida(), 
 			$usuario->getTokenRecuperacionPass(), 
+			$usuario->getIdPerfil(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -1048,6 +1055,17 @@ abstract class UsuarioDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " `token_recuperacion_pass` = ? AND"; 
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( ( !is_null (($a = $usuarioA->getIdPerfil()) ) ) & ( ! is_null ( ($b = $usuarioB->getIdPerfil()) ) ) ){
+				$sql .= " `id_perfil` >= ? AND `id_perfil` <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " `id_perfil` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
