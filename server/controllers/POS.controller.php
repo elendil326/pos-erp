@@ -782,21 +782,111 @@ class POSController implements IPOS {
      * @param time int Tiempo del archivo que se va a borrar, en formato UNIX
      * @return status string Estado del proceso
      **/
-  public static function RespaldoBorrarBd($id_instacia, $time)
-        {
-            $CarpetaRespaldos=(POS_PATH_TO_SERVER_ROOT . "/../static_content/db_backups/");
-            $Arcihvo=$CarpetaRespaldos. $time . "_pos_instance_" . $id_instacia . ".sql";
-            unlink($Arcihvo);//Borra el archivo
-            if (!file_exists($Arcihvo))//Si ya no existe el archivo
-            {
-                $res=array("Status"=>"Ok");    
-            }
-            else
-            {
-                  $res=array("Status"=>"Ok"); 
-            }
-            return $res;
-        }  
+	public static function RespaldoBorrarBd($id_instacia, $time)
+	{
+		$CarpetaRespaldos=(POS_PATH_TO_SERVER_ROOT . "/../static_content/db_backups/");
+		$Arcihvo=$CarpetaRespaldos. $time . "_pos_instance_" . $id_instacia . ".sql";
+		unlink($Arcihvo);//Borra el archivo
+		if (!file_exists($Arcihvo))//Si ya no existe el archivo
+		{
+			$res=array("Status"=>"Ok");    
+		}
+		else
+		{
+			$res=array("Status"=>"Ok"); 
+		}
+		return $res;
+	}  
 
+	/**
+ 	 *
+ 	 *Detalles de un perfil espec?fico
+ 	 *
+ 	 * @param id_perfil int Id del perfil
+ 	 * @return detalles json Objeto con la descripci�n de los detalles del perfil
+ 	 **/
+	public static function DetallesPerfilConfiguracion
+	(
+		$id_perfil
+	)
+	{
+		
+	}
+	
+	/**
+ 	 *
+ 	 *Edita un perfil de usuario.
+ 	 *
+ 	 * @param id_perfil int Id del perfil que se desea modificar
+ 	 * @param configuracion json configuraci�n del perfil
+ 	 * @param descripcion string descripci�n del perfil
+ 	 **/
+	public static function EditarPerfilConfiguracion
+	(
+		$id_perfil, 
+		$configuracion = "", 
+		$descripcion = ""
+	)
+	{
+		
+	}
+	
+	/**
+ 	 *
+ 	 *Elimina u perfil
+ 	 *
+ 	 * @param id_perfil int Id del perfil a eliminar
+ 	 **/
+	public static function EliminarPerfilConfiguracion
+	(
+		$id_perfil
+	)
+	{
+		
+	}
+	
+	/**
+ 	 *
+ 	 *Lista los perfiles relacionadas con esta  empresa. Se puede filtrar por empresa, descripci?n, fecha de creaci?n, ordenar ascendente o descendentemente.
+ 	 *
+ 	 * @param activo bool True para mostrar solo los perfiles activos, false para mostrar todos.
+ 	 * @param limit string Indica hasta que registro se desea obtener a partir del conjunto de resultados productos de la busqueda.
+ 	 * @param order string Indica si se ordenan los registros de manera Ascendente ASC, o descendente DESC.
+ 	 * @param order_by string Indica por que campo se ordenan los resultados.
+ 	 * @param query string Valor que se buscara en la consulta
+ 	 * @param start string Indica desde que registro se desea obtener a partir del conjunto de resultados productos de la bsqueda.
+ 	 * @return resultados json Array que contiene objetos con los detalles de los perfiles
+ 	 * @return numero_de_resultados int Numero de resultados encontrados
+ 	 **/
+	static function ListaPerfilConfiguracion
+	(
+		$activo =  false , 
+		$limit = null, 
+		$order = null, 
+		$order_by = null, 
+		$query = null, 
+		$start = null
+	)
+	{
+		
+	}
+	
+	/**
+ 	 *
+ 	 *Crea un nuevo perfil de usuario.
+ 	 *
+ 	 * @param configuracion json Configuraci�n del Perfil tomando como base la plantilla de de configuraci�n
+ 	 * @param descripcion string Descripci�n del perfil
+ 	 * @return id_perfil int Id del perfil creado
+ 	 **/
+	public static function NuevoPerfilConfiguracion
+	(
+		$configuracion, 
+		$descripcion
+	)
+	{
+		
+	}
+	
 }
 

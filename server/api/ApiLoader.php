@@ -1453,8 +1453,10 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
+			"id_perfil" => new ApiExposedProperty("id_perfil", true, POST, array( "int" )),
 			"nombre" => new ApiExposedProperty("nombre", true, POST, array( "string" )),
 			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "string" )),
+			"id_rol_padre" => new ApiExposedProperty("id_rol_padre", false, POST, array( "int" )),
 			"id_tarifa_compra" => new ApiExposedProperty("id_tarifa_compra", false, POST, array( "int" )),
 			"id_tarifa_venta" => new ApiExposedProperty("id_tarifa_venta", false, POST, array( "int" )),
 			"salario" => new ApiExposedProperty("salario", false, POST, array( "float" )),
@@ -1466,8 +1468,10 @@
  		$this->response = PersonalYAgentesController::NuevoRol( 
  			
 			
+			isset($_POST['id_perfil'] ) ? $_POST['id_perfil'] : null,
 			isset($_POST['nombre'] ) ? $_POST['nombre'] : null,
 			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null,
+			isset($_POST['id_rol_padre'] ) ? $_POST['id_rol_padre'] :  null,
 			isset($_POST['id_tarifa_compra'] ) ? $_POST['id_tarifa_compra'] :  null,
 			isset($_POST['id_tarifa_venta'] ) ? $_POST['id_tarifa_venta'] :  null,
 			isset($_POST['salario'] ) ? $_POST['salario'] :  "0"
@@ -1491,6 +1495,8 @@
 		$this->request = array(	
 			"id_rol" => new ApiExposedProperty("id_rol", true, POST, array( "int" )),
 			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "string" )),
+			"id_perfil" => new ApiExposedProperty("id_perfil", false, POST, array( "int" )),
+			"id_rol_padre" => new ApiExposedProperty("id_rol_padre", false, POST, array( "int" )),
 			"id_tarifa_compra" => new ApiExposedProperty("id_tarifa_compra", false, POST, array( "int" )),
 			"id_tarifa_venta" => new ApiExposedProperty("id_tarifa_venta", false, POST, array( "int" )),
 			"nombre" => new ApiExposedProperty("nombre", false, POST, array( "string" )),
@@ -1505,6 +1511,8 @@
 			
 			isset($_POST['id_rol'] ) ? $_POST['id_rol'] : null,
 			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null,
+			isset($_POST['id_perfil'] ) ? $_POST['id_perfil'] :  null,
+			isset($_POST['id_rol_padre'] ) ? $_POST['id_rol_padre'] :  null,
 			isset($_POST['id_tarifa_compra'] ) ? $_POST['id_tarifa_compra'] :  null,
 			isset($_POST['id_tarifa_venta'] ) ? $_POST['id_tarifa_venta'] :  null,
 			isset($_POST['nombre'] ) ? $_POST['nombre'] :  null,
@@ -1583,7 +1591,12 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"orden" => new ApiExposedProperty("orden", false, GET, array( "string" )),
+			"activa" => new ApiExposedProperty("activa", false, POST, array( "bool" )),
+			"limit" => new ApiExposedProperty("limit", false, POST, array( "string" )),
+			"order" => new ApiExposedProperty("order", false, POST, array( "string" )),
+			"order_by" => new ApiExposedProperty("order_by", false, POST, array( "string" )),
+			"query" => new ApiExposedProperty("query", false, POST, array( "string" )),
+			"start" => new ApiExposedProperty("start", false, POST, array( "string" )),
 		);
 	}
 
@@ -1592,7 +1605,12 @@
  		$this->response = PersonalYAgentesController::ListaRol( 
  			
 			
-			isset($_GET['orden'] ) ? $_GET['orden'] :  null
+			isset($_POST['activa'] ) ? $_POST['activa'] :  false ,
+			isset($_POST['limit'] ) ? $_POST['limit'] :  null,
+			isset($_POST['order'] ) ? $_POST['order'] :  null,
+			isset($_POST['order_by'] ) ? $_POST['order_by'] :  null,
+			isset($_POST['query'] ) ? $_POST['query'] :  null,
+			isset($_POST['start'] ) ? $_POST['start'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -1833,6 +1851,34 @@
 			
 			isset($_POST['id_usuario'] ) ? $_POST['id_usuario'] : null,
 			isset($_POST['texto'] ) ? $_POST['texto'] : null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiPersonalRolDetalles extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"id_rol" => new ApiExposedProperty("id_rol", true, POST, array( "int" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = PersonalYAgentesController::DetallesRol( 
+ 			
+			
+			isset($_POST['id_rol'] ) ? $_POST['id_rol'] : null
 			
 			);
 		}catch(Exception $e){
@@ -5962,6 +6008,162 @@
 			isset($_POST['ip'] ) ? $_POST['ip'] : null,
 			isset($_POST['path'] ) ? $_POST['path'] : null,
 			isset($_POST['num_precio'] ) ? $_POST['num_precio'] :  1 
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiPosConfiguracionPerfilNuevo extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"configuracion" => new ApiExposedProperty("configuracion", true, POST, array( "json" )),
+			"descripcion" => new ApiExposedProperty("descripcion", true, POST, array( "string" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = POSController::NuevoPerfilConfiguracion( 
+ 			
+			
+			isset($_POST['configuracion'] ) ? json_decode($_POST['configuracion']) : null,
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] : null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiPosConfiguracionPerfilEditar extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"id_perfil" => new ApiExposedProperty("id_perfil", true, POST, array( "int" )),
+			"configuracion" => new ApiExposedProperty("configuracion", false, POST, array( "json" )),
+			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "string" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = POSController::EditarPerfilConfiguracion( 
+ 			
+			
+			isset($_POST['id_perfil'] ) ? $_POST['id_perfil'] : null,
+			isset($_POST['configuracion'] ) ? json_decode($_POST['configuracion']) : null,
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  ""
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiPosConfiguracionPerfilLista extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"activo" => new ApiExposedProperty("activo", false, POST, array( "bool" )),
+			"limit" => new ApiExposedProperty("limit", false, POST, array( "string" )),
+			"order" => new ApiExposedProperty("order", false, POST, array( "string" )),
+			"order_by" => new ApiExposedProperty("order_by", false, POST, array( "string" )),
+			"query" => new ApiExposedProperty("query", false, POST, array( "string" )),
+			"start" => new ApiExposedProperty("start", false, POST, array( "string" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = POSController::ListaPerfilConfiguracion( 
+ 			
+			
+			isset($_POST['activo'] ) ? $_POST['activo'] :  false ,
+			isset($_POST['limit'] ) ? $_POST['limit'] :  null,
+			isset($_POST['order'] ) ? $_POST['order'] :  null,
+			isset($_POST['order_by'] ) ? $_POST['order_by'] :  null,
+			isset($_POST['query'] ) ? $_POST['query'] :  null,
+			isset($_POST['start'] ) ? $_POST['start'] :  null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiPosConfiguracionPerfilEliminar extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"id_perfil" => new ApiExposedProperty("id_perfil", true, POST, array( "int" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = POSController::EliminarPerfilConfiguracion( 
+ 			
+			
+			isset($_POST['id_perfil'] ) ? $_POST['id_perfil'] : null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiPosConfiguracionPerfilDetalles extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"id_perfil" => new ApiExposedProperty("id_perfil", true, POST, array( "int" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = POSController::DetallesPerfilConfiguracion( 
+ 			
+			
+			isset($_POST['id_perfil'] ) ? $_POST['id_perfil'] : null
 			
 			);
 		}catch(Exception $e){
