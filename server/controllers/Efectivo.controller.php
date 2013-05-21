@@ -938,7 +938,7 @@ class EfectivoController implements IEfectivo{
 
         $res = new stdClass();
         $res->servicio ="Google";
-        $res->fecha= date();
+        $res->fecha= time();
         $res->moneda_origen=$moneda_origen;
         $res->tipos_cambio = array();
 
@@ -958,9 +958,10 @@ class EfectivoController implements IEfectivo{
             $var = $data['0'];
 
             $obj = new stdClass();
-        $obj->moneda = $code;
-        $obj->equivalencia = round($var,3);
-        array_push($res->tipos_cambio,$obj);
+            $obj->moneda = $code;
+            $obj->equivalencia = round($var,3);
+            $obj->conversion = "1 ".$moneda_origen." = ".round($var,3)." ".$code;
+            array_push($res->tipos_cambio,$obj);
         }
 
         $json2 = json_encode($res);
@@ -1080,7 +1081,7 @@ class EfectivoController implements IEfectivo{
 
         $res = new stdClass();
         $res->servicio ="Yahoo";
-        $res->fecha= date();
+        $res->fecha= time();
         $res->moneda_origen=$home_currency;
         $res->tipos_cambio = array();
         /*
@@ -1114,6 +1115,7 @@ class EfectivoController implements IEfectivo{
             $obj = new stdClass();
             $obj->moneda = $code;
             $obj->equivalencia = $res_explode[1];
+            $obj->conversion = "1 ".$home_currency." = ".$res_explode[1]." ".$code;
             array_push($res->tipos_cambio,$obj);
         }
 
@@ -1188,7 +1190,7 @@ class EfectivoController implements IEfectivo{
         $res = $POS_CONFIG["CORE_CONN"]->GetRow($sql);
 
         if (count($res) === 0) {
-            Logger::warn("La instancia con el id {" . $instance_id . "} no exite !");
+            Logger::log("La instancia con el id {" . $instance_id . "} no exite !");
             throw new InvalidDatabaseOperationException("No hay registros en la BD para los tipos de cambio de la moneda base: " . $id_moneda_base);
         }
 
@@ -1212,7 +1214,7 @@ class EfectivoController implements IEfectivo{
                     $obj = array();
                     $obj["moneda"] = $tc->moneda;
                     $obj["equivalencia"] = $tc->equivalencia;
-                    $obj["conversion"] = "1 ".$simbolo_moneda_base." = ".$tc->equivalencia." ".$tc->moneda;
+                    $obj["conversion"] = $tc->conversion;
                     array_push($resp["tipos_cambio"],$obj);
                     break;
                 }
@@ -1251,7 +1253,7 @@ class EfectivoController implements IEfectivo{
         $moneda_base= ConfiguracionDAO::search(new Configuracion( array("descripcion"=>"id_moneda_base") ));
         if(count($moneda_base)<1)
         {
-            Logger::warn("La empresa no tiene moneda base");
+            Logger::Log("La empresa no tiene moneda base");
             throw new BusinessLogicException("La empresa no tiene moneda base");
         }
 
