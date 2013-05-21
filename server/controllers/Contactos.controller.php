@@ -34,7 +34,7 @@ require_once("interfaces/Contactos.interface.php");
 			throw new Exception("Error al crear categoria, verifique sus datos.", 901);
 		}
 
-  		return array("id_categoria" => (int)$categoria->getId());
+  		return array("id_categoria" => ((int) $categoria->getId()));
 	}
 	
 	/**
@@ -47,7 +47,7 @@ require_once("interfaces/Contactos.interface.php");
  	 * @param id_padre int El ID del nuevo padre de la categoria especificada.
  	 * @param nombre string El nuevo nombre de la categoria especificada.
  	 **/
-	public static function EditarCategoriaContactos($id, $activa = null, $descripcion = null, $id_padre = null, $nombre = null)	{
+	public static function EditarCategoria($id, $activa = null, $descripcion = null, $id_padre = null, $nombre = null)	{
 		$categoria = CategoriaContactoDAO::getByPK($id);
 
 		if (!is_null($activa)) {
@@ -82,7 +82,7 @@ require_once("interfaces/Contactos.interface.php");
  	 * @param query string Argumento para buscar por nombre completo o descripcion. Si es null, devuelve todas las categorias.
  	 * @return categorias json Lista de categorias obtenidas, o vacía si no se obtiene nada.
  	 **/
-	public static function BuscarCategoriaContactos($activa=true, $query=null) {
+	public static function BuscarCategoria($activa=true, $query=null) {
 		$categoria = new CategoriaContacto();
 
 		if (!is_null($activa)) {
@@ -98,10 +98,10 @@ require_once("interfaces/Contactos.interface.php");
 		foreach ($categorias as $key => $categoria) {
 			$id_categoria = $categoria->getId();
 			$nombre_completo = CategoriaContactoDAO::NombreCompleto($id_categoria);
-			$categorias[$key]->nombreCompleto = $nombre_completo;
+			$categorias[$key]->nombre_completo = $nombre_completo;
 		}
 
-		return $categorias;
+		return array('categorias' => $categorias);
 	}
 	
 	/**
@@ -111,15 +111,14 @@ require_once("interfaces/Contactos.interface.php");
  	 * @param id_categoria int El ID de la categoria a obtener.
  	 * @return categoria json Detalles de la categoria.
  	 **/
-	public static function DetallesCategoriaContactos ($id_categoria) {
-		try {
-			$categoria = CategoriaContactoDAO::getByPK($id_categoria);
-		} catch (Exception $e) {
-			throw new Exception("Esa categoria no existe.", 901);
+	public static function DetallesCategoria($id_categoria) {
+		$categoria = CategoriaContactoDAO::getByPK($id_categoria);
+		$alert = '';
+
+		if (!is_null($categoria)) {
+			$categoria->nombre_completo = CategoriaContactoDAO::NombreCompleto($categoria->getId());
 		}
 
-		$categoria->nombreCompleto = CategoriaContactoDAO::NombreCompleto($categoria->getId());
-
-		return $categoria;
+		return array('categoria' => $categoria);
 	}
 }

@@ -14,9 +14,9 @@
  	 *
  	 * @param activa bool Si es null obtener categorias tanto activas como inactivas.
  	 * @param query string Argumento para buscar por nombre completo o descripcion. Si es null, devuelve todas las categorias.
- 	 * @return categorias json Lista de categorias obtenidas, o vacía si no se obtiene nada.
+ 	 * @return categorias json Lista de categorias obtenidas, o vaca si no se obtiene nada.
  	 **/
-  static function BuscarCategoriaContactos
+  static function BuscarCategoria
 	(
 		$activa =  true , 
 		$query = null
@@ -32,7 +32,7 @@
  	 * @param id_categoria int El ID de la categoria a obtener.
  	 * @return categoria json Detalles de la categoria.
  	 **/
-  static function DetallesCategoriaContactos
+  static function DetallesCategoria
 	(
 		$id_categoria
 	);  
@@ -50,7 +50,7 @@
  	 * @param id_padre int El ID del nuevo padre de la categoria especificada.
  	 * @param nombre string El nuevo nombre de la categoria especificada.
  	 **/
-  static function EditarCategoriaContactos
+  static function EditarCategoria
 	(
 		$id, 
 		$activa = null, 

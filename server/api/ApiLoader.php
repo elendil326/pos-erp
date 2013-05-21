@@ -9108,7 +9108,7 @@
 
 	protected function GenerateResponse() {		
 		try{
- 		$this->response = ContactosController::EditarCategoriaContactos( 
+ 		$this->response = ContactosController::EditarCategoria( 
  			
 			
 			isset($_POST['id'] ) ? $_POST['id'] : null,
@@ -9141,7 +9141,7 @@
 
 	protected function GenerateResponse() {		
 		try{
- 		$this->response = ContactosController::BuscarCategoriaContactos( 
+ 		$this->response = ContactosController::BuscarCategoria( 
  			
 			
 			isset($_GET['activa'] ) ? $_GET['activa'] :  true ,
@@ -9170,7 +9170,7 @@
 
 	protected function GenerateResponse() {		
 		try{
- 		$this->response = ContactosController::DetallesCategoriaContactos( 
+ 		$this->response = ContactosController::DetallesCategoria( 
  			
 			
 			isset($_GET['id_categoria'] ) ? $_GET['id_categoria'] : null

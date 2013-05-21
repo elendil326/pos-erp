@@ -170,6 +170,7 @@
     require_once("controllers/Validaciones.controllers.php");
     require_once("controllers/Instancias.controller.php");
 	require_once("controllers/Clientes.controller.php");
+	require_once("controllers/Contactos.controller.php");
 	require_once("controllers/Sesion.controller.php");
 	require_once("controllers/PersonalYAgentes.controller.php");
 	//require_once("controllers/ImpuestosYRetenciones.controller.php");	//Agregado 18 10 2012
