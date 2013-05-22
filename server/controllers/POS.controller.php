@@ -868,7 +868,7 @@ class POSController implements IPOS {
 		$start = null
 	)
 	{
-		
+		return PerfilDAO::getAll();
 	}
 	
 	/**

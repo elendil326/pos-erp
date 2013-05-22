@@ -1453,9 +1453,9 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"id_perfil" => new ApiExposedProperty("id_perfil", true, POST, array( "int" )),
 			"nombre" => new ApiExposedProperty("nombre", true, POST, array( "string" )),
 			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "string" )),
+			"id_perfil" => new ApiExposedProperty("id_perfil", false, POST, array( "int" )),
 			"id_rol_padre" => new ApiExposedProperty("id_rol_padre", false, POST, array( "int" )),
 			"id_tarifa_compra" => new ApiExposedProperty("id_tarifa_compra", false, POST, array( "int" )),
 			"id_tarifa_venta" => new ApiExposedProperty("id_tarifa_venta", false, POST, array( "int" )),
@@ -1468,9 +1468,9 @@
  		$this->response = PersonalYAgentesController::NuevoRol( 
  			
 			
-			isset($_POST['id_perfil'] ) ? $_POST['id_perfil'] : null,
 			isset($_POST['nombre'] ) ? $_POST['nombre'] : null,
 			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null,
+			isset($_POST['id_perfil'] ) ? $_POST['id_perfil'] :  null,
 			isset($_POST['id_rol_padre'] ) ? $_POST['id_rol_padre'] :  null,
 			isset($_POST['id_tarifa_compra'] ) ? $_POST['id_tarifa_compra'] :  null,
 			isset($_POST['id_tarifa_venta'] ) ? $_POST['id_tarifa_venta'] :  null,

@@ -1378,6 +1378,21 @@ CREATE TABLE IF NOT EXISTS `paquete_sucursal` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `perfil`
+--
+
+CREATE TABLE IF NOT EXISTS `perfil` (
+  `id_perfil` int(11) NOT NULL AUTO_INCREMENT,
+  `descripcion` varchar(64) NOT NULL,
+  `configuracion` longtext NOT NULL,
+  `fecha_creacion` int(11) NOT NULL,
+  `fecha_modificacion` int(11) NOT NULL,
+  PRIMARY KEY (`id_perfil`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `periodo`
 --
 
@@ -1711,11 +1726,13 @@ CREATE TABLE IF NOT EXISTS `retencion_usuario` (
 
 CREATE TABLE IF NOT EXISTS `rol` (
   `id_rol` int(11) NOT NULL AUTO_INCREMENT,
+  `id_rol_padre` int(11) DEFAULT NULL COMMENT 'Id del padre de este rol',
   `nombre` varchar(30) NOT NULL COMMENT 'Nombre del rol',
   `descripcion` varchar(255) DEFAULT NULL COMMENT 'descripcion larga de este rol',
   `salario` float DEFAULT NULL COMMENT 'Si los usuarios con dicho rol contaran con un salario',
-  `id_tarifa_compra` int(11) NOT NULL COMMENT 'Id de la tarifa de compra por default para los usuarios de este rol',
-  `id_tarifa_venta` int(11) NOT NULL COMMENT 'Id de la tarifa de venta por default para los usuarios de este rol',
+  `id_tarifa_compra` int(11) DEFAULT NULL COMMENT 'Id de la tarifa de compra por default para los usuarios de este rol',
+  `id_tarifa_venta` int(11) DEFAULT NULL COMMENT 'Id de la tarifa de venta por default para los usuarios de este rol',
+  `id_perfil` int(11) DEFAULT NULL COMMENT 'Id del perfil que tiene por default cada usuario de este rol, posteriormente se peude personalizar el perfil de cada usuario',
   PRIMARY KEY (`id_rol`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 

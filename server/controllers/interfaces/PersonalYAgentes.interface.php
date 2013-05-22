@@ -96,9 +96,9 @@
  	 *
  	 *Crea un nuevo grupo de usuarios. Se asignaran los permisos de este grupo al momento de su creacion.
  	 *
- 	 * @param id_perfil int Id del perfil de usuario en el sistema
  	 * @param nombre string Nombre del grupo. Este no puede existir en el sistema, no puede ser una cadena vacia y no puede ser mayor a 30 caracteres.
  	 * @param descripcion string Descripcion larga del grupo. La descripcion no puede ser una cadena vacia ni mayor a 256 caracteres.
+ 	 * @param id_perfil int Id del perfil de usuario en el sistema
  	 * @param id_rol_padre int Id del rol padre
  	 * @param id_tarifa_compra int Id de la tarifa de compra por default que aplicara a los usuario de este rol
  	 * @param id_tarifa_venta int Id de la tarifa de venta por default que aplicara a los suarios de este rol
@@ -107,9 +107,9 @@
  	 **/
   static function NuevoRol
 	(
-		$id_perfil, 
 		$nombre, 
 		$descripcion = null, 
+		$id_perfil = null, 
 		$id_rol_padre = null, 
 		$id_tarifa_compra = null, 
 		$id_tarifa_venta = null, 

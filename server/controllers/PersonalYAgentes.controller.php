@@ -7,99 +7,6 @@ require_once("interfaces/PersonalYAgentes.interface.php");
   **/
 	
   class PersonalYAgentesController implements IPersonalYAgentes{
-  
-  	/*
-         *Se valida que un string tenga longitud en un rango de un maximo inclusivo y un minimo exclusvio.
-         *Regresa true cuando es valido, y un string cuando no lo es.
-         */
-    
-
-
-        /*
-         * Valida los parametros de la tabla rol haciendo uso de las validaciones basicas de string y num,
-         * el maximo y el minimo se toman de la tabla y se aplican otras validaciones de acuerdo al uso
-         * Regresa true cuando son validos, un string con el error cuando no lo es
-         */
-      private static function ValidarParametrosRol
-      (
-                $id_rol=null,
-                $descripcion=null,
-                $nombre = null,
-		$salario = null,
-                $id_tarifa_compra = null,
-                $id_tarifa_venta = null
-      )
-      {
-          //Valida si el rol existe en la base de datos
-          if(!is_null($id_rol))
-          {
-              if(is_null(RolDAO::getByPK($id_rol)))
-              {
-                  return "El rol con id: ".$id_rol." no existe";
-              }
-          }
-          //valida la descripcion
-          if(!is_null($descripcion))
-          {
-              $e=ValidacionesController::validarLongitudDeCadena($descripcion, 0, 255);
-              if(!$e)
-                return "El numero de caracteres de la descripcion (".$descripcion.") no esta entre 0 y 255";
-          }
-          //valida el nombre
-          if(!is_null($nombre))
-          {
-              $e=ValidacionesController::validarLongitudDeCadena($nombre, 1, 30);
-              if(!$e)
-                  return "El numero de caracteres del nombre  (".$nombre.") no esta entre 1 y 30";
-          }
-          //valida e salario
-          if(!is_null($salario))
-          {
-              $e=ValidacionesController::validarNumero($salario, 0, 1.8e200);
-              if(!$e)
-                return "El salario (".$salario.") no esta entre 0 y 1.8e200";
-          }
-          
-          if(!is_null($id_tarifa_compra))
-          {
-              $tarifa = TarifaDAO::getByPK($id_tarifa_compra);
-              if(is_null($tarifa))
-              {
-                  return "La tarifa ".$id_tarifa_compra." no existe";
-              }
-              
-              if(!$tarifa->getActiva())
-              {
-                  return "La tarifa ".$id_tarifa_compra." no esta activa";
-              }
-              
-              if($tarifa->getTipoTarifa()!="compra")
-              {
-                  return "La tarifa ".$id_tarifa_compra." no es una tarifa de compra";
-              }
-          }
-          
-          if(!is_null($id_tarifa_venta))
-          {
-              $tarifa = TarifaDAO::getByPK($id_tarifa_venta);
-              if(is_null($tarifa))
-              {
-                  return "La tarifa ".$id_tarifa_venta." no existe";
-              }
-              
-              if(!$tarifa->getActiva())
-              {
-                  return "La tarifa ".$id_tarifa_venta." no esta activa";
-              }
-              
-              if($tarifa->getTipoTarifa()!="venta")
-              {
-                  return "La tarifa ".$id_tarifa_venta." no esuna tarifa de venta";
-              }
-          }
-          
-          return true;
-      }
 
       /*
        * Valida los parametros de la tabla usuario haciendo uso de las valdiaciones basicas de strng y num,
@@ -804,6 +711,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
                             (
                                 "id_sucursal"               => $id_sucursal,
                                 "id_rol"                    => $id_rol,
+								"id_perfil"                    => 1,
                                 "id_clasificacion_cliente"  => $id_clasificacion_cliente,
                                 "id_clasificacion_proveedor"=> $id_clasificacion_proveedor,
                                 "id_moneda"                 => $id_moneda,
@@ -1539,24 +1447,9 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 		$start = null
 	)
 	{
-		//Se valida si el orden es valido. Orden tiene que ser el nombre de un campo
-		//de la tabla rol
-		if (
-				$orden != "id_rol" &&
-				$orden != "nombre" &&
-				$orden != "descripcion" &&
-				$orden != "descuento" &&
-				$orden != "salario" &&
-				$orden != "id_tarifa_compra" &&
-				$orden != "id_tarifa_venta" &&
-				!is_null($orden)
-			){
-			Logger::log("La variable orden: ".$orden." no es una columna de la tabla rol");
-			throw new Exception("La variable orden no es valida",901);
-		}
-
+		
 		//Se traen todos los roles d ela base de datos.
-		$roles = RolDAO::getAll(null,null,$orden);
+		$roles = RolDAO::getAll();
 
 		return $roles;
 	}
@@ -1784,72 +1677,84 @@ require_once("interfaces/PersonalYAgentes.interface.php");
  	 **/
 	public static function NuevoRol
 	(
-		$id_perfil, 
 		$nombre, 
 		$descripcion = null, 
+		$id_perfil = null, 
 		$id_rol_padre = null, 
 		$id_tarifa_compra = null, 
 		$id_tarifa_venta = null, 
 		$salario = "0"
 	)
-	{  
-            Logger::log("Creando nuevo rol");
+	{
+		//verificamos si ya hay un Roll con el mismo nombre
+		$nombre = trim($nombre);
+		$roles = RolDAO::search(new Rol(array("nombre" => $nombre)));
+		if (!empty($roles)) {
+			Logger::error("Ya existe un Rol con el mismo nombre");
+			throw new Exception("Ya existe un Rol con el mismo nombre",901);
+		}
 
-            //Se validan lso parametros del rol
-            //$validar=self::ValidarParametrosRol(null, $descripcion, $nombre, $salario,$id_tarifa_compra,$id_tarifa_venta);
-//            if(is_string($validar))
-//            {
-//                Logger::error($validar);
-//                throw new Exception($validar,901);
-//            }
-            
-            //Si no se recibe una tarifa de venta, se toma la default
-            if(is_null($id_tarifa_venta))
-            {
-                $id_tarifa_venta=1;
-            }
-            
-            //Si no se recibe una tarifa de compra, se toma la default
-            if(is_null($id_tarifa_compra))
-            {
-                $id_tarifa_compra=2;
-            }
-            
-            //Se inicializa el nuevo rol con los parametros obtenidos
-            $rol=new Rol(
-                    array(
-                        "nombre"            => trim($nombre),
-                        "descripcion"       => $descripcion,
-                        "salario"           => $salario,
-                        "id_tarifa_compra"  => $id_tarifa_compra,
-                        "id_tarifa_venta"   => $id_tarifa_venta
-                    )
-                    );
+		//validamos si el salario es numerico
+		if (!is_numeric($salario)) {
+			Logger::error("El salario debe ser un valor numerico");
+			throw new Exception("El salario debe ser un valor numerico",901);
+		}
 
-            //Se busca el nombre obtenido en la base de datos. Si existe
-            //se manda un error pues los nombres no se pueden repetir.
-            //Se usa trim para validar casos como "gerente" y "  gerente ".
-            $roles=RolDAO::search(new Rol(array( "nombre" => trim($nombre) )));
-            if(!empty($roles))
-            {
-                Logger::error("No se puede crear un rol con el mismo nombre que uno ya existente: ".$roles[0]->getNombre());
-                throw new Exception("No se puede crear un rol con el mismo nombre que uno ya existente: ".$roles[0]->getNombre(),901);
-            }
-            DAO::transBegin();
-            try
-            {
-                //Se guarda el rol.
-                RolDAO::save($rol);
-            }
-            catch(Exception $e)
-            {
-                DAO::transRollback();
-                Logger::error("Error al crear el nuevo rol: ".$e);
-                throw new Exception("Error al crear el nuevo rol, consulte a su administrador de sistema",901);
-            }
-            DAO::transEnd();
-            Logger::log("Rol creado exitosamente con id: ".$rol->getIdRol());
-            return array( "id_rol" => $rol->getIdRol());
+		//validamos si el perfil existe y es valido
+		if ($id_perfil !== null && $id_perfil !== "" && !PerfilDAO::getByPK($id_perfil)) {
+			Logger::error("No se tiene registro del Perfil indicado");
+			throw new Exception("No se tiene registro del Perfil indicado",901);
+		} elseif ( $id_perfil === "") {
+			$id_perfil = null;
+		}
+
+		//validamos si se envio un rol Padre y existe
+		if ($id_rol_padre !== null && $id_rol_padre !== "" && !RolDAO::getByPK($id_rol_padre)) {
+			Logger::error("No se tiene registro del Rol Padre indicado");
+			throw new Exception("No se tiene registro del Rol Padre indicado",901);
+		} elseif ( $id_rol_padre === "") {
+			$id_rol_padre = null;
+		}
+
+		//validamos si se envio una tarifa de compra
+		if ($id_tarifa_compra !== null && $id_tarifa_compra !== "" && !TarifaDAO::getByPK($id_tarifa_compra)) {
+			Logger::error("No se tiene registro de la Tarifa de Compra indicada");
+			throw new Exception("No se tiene registro de la Tarifa de Compra indicada",901);
+		} elseif ( $id_tarifa_compra === "") {
+			$id_tarifa_compra = null;
+		}
+
+		//validamos si se envio una tarifa de venta
+		if ($id_tarifa_venta !== null && $id_tarifa_venta !== "" && !TarifaDAO::getByPK($id_tarifa_venta)) {
+			Logger::error("No se tiene registro de la Tarifa de Venta indicada");
+			throw new Exception("No se tiene registro de la Tarifa de Venta indicada",901);
+		} elseif ( $id_tarifa_venta === "") {
+			$id_tarifa_venta = null;
+		}
+
+		//Se inicializa el nuevo rol con los parametros obtenidos
+		$rol = new Rol(array(
+			"id_rol_padre"		=> $id_rol_padre,
+			"nombre"			=> $nombre,
+			"descripcion"		=> trim($descripcion),
+			"salario"			=> $salario,
+			"id_tarifa_compra"	=> $id_tarifa_compra,
+			"id_tarifa_venta"	=> $id_tarifa_venta,
+			"id_perfil"			=> $id_perfil
+		));
+
+		DAO::transBegin();
+		try {
+			RolDAO::save($rol);
+		} catch (Exception $e) {
+			DAO::transRollback();
+			Logger::error("Error al crear el nuevo rol: ".$e);
+			throw new Exception("Error al crear el nuevo rol, consulte a su administrador de sistema",901);
+		}
+
+		DAO::transEnd();
+		Logger::log("Rol creado exitosamente con id: " . $rol->getIdRol());
+		return array( "id_rol" => $rol->getIdRol());
 	}
   
 	/**
@@ -1875,99 +1780,97 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 		$id_tarifa_venta = null, 
 		$nombre = null, 
 		$salario = "0"
-	){  
-            Logger::log("Editando rol ".$id_rol);
+	){
+		//verificamos si el rol qeu se quiere editar existe
+		if (!$rol = RolDAO::getByPK($id_rol)) {
+			Logger::error("No se tiene registro del rol que desea editar");
+			throw new Exception("No se tiene registro del rol que desea editar",901);
+		}
+		
+		//verificamos si ya hay un Roll con el mismo nombre
+		
+		if ($nombre !== null && $nombre !== "") {
+			$nombre = trim($nombre);
+			if ($rol->getNombre() !== $nombre) {
+				$roles = RolDAO::search(new Rol(array("nombre" => $nombre)));
+				if (!empty($roles)) {
+					Logger::error("Ya existe un rol con ese nombre");
+					throw new Exception("Ya existe un rol con ese nombre",901);
+				} else {
+					$rol->setNombre($nombre);
+				}
+			}
+		}
 
-            //Se validan los parametros obtenidos.
-            $validar = self::ValidarParametrosRol($id_rol, $descripcion, $nombre, $salario,$id_tarifa_compra,$id_tarifa_venta);
-            if(is_string($validar))
-            {
-                Logger::error($validar);
-                throw new Exception($validar,901);
-            }
-            
-            //Se busca el nombre obtenido en la base de datos quitando este mismo. Si existe
-            //se manda un error pues los nombres no se pueden repetir.
-            //Se usa trim para validar casos como "gerente" y "  gerente ".
-            $roles=array_diff(RolDAO::search(new Rol(array( "nombre" => trim($nombre) ))), array(RolDAO::getByPK($id_rol)));
-            if(!empty($roles))
-            {
-                Logger::error("No se puede crear un rol con el mismo nombre que uno ya existente: ".$roles[0]->getNombre());
-                throw new Exception("No se puede crear un rol con el mismo nombre que uno ya existente: ".$roles[0]->getNombre(),901);
-            }
+		//validamos si el salario es numerico
+		if ($salario !== "0") {
+			if (!is_numeric($salario)) {
+				Logger::error("El salario debe ser un valor numerico");
+				throw new Exception("El salario debe ser un valor numerico",901);
+			} else {
+				if ($rol->getSalario() !== $salario) {
+					$rol->setSalario($salario);
+				}
+			}
+		}
 
-            //Se obtiene el rol de la base de datos.
-            $rol = RolDAO::getByPK($id_rol);
+		//validamos si el perfil existe y es valido
+		if ($id_perfil !== null && $id_perfil !== "" && !PerfilDAO::getByPK($id_perfil)) {
+			Logger::error("No se tiene registro del Perfil indicado");
+			throw new Exception("No se tiene registro del Perfil indicado",901);
+		} elseif ($id_perfil !== "") {
+			$rol->setIdPerfil($id_perfil);
+		} elseif ($id_perfil === "") {
+			$rol->setIdPerfil(null);
+		}
+		
+		//validamos si se envio un rol Padre y existe
+		if ($id_rol_padre !== null && $id_rol_padre !== "" && !RolDAO::getByPK($id_rol_padre)) {
+			Logger::error("No se tiene registro del Rol Padre indicado");
+			throw new Exception("No se tiene registro del Rol Padre indicado",901);
+		} elseif ( $id_rol_padre !== "") {
+			$rol->setIdRolPadre($id_rol_padre);
+		} elseif ( $id_rol_padre === "") {
+			$rol->setIdRolPadre(null);
+		}
 
-            //Se verifican los parametros. Los que no son nulos se actualizan.
-            if(!is_null($salario))
-            {
-                $rol->setSalario($salario);
-            }
-            if(!is_null($nombre))
-            {
-                $rol->setNombre($nombre);
-            }
-            if(!is_null($descripcion))
-            {
-                $rol->setDescripcion($descripcion);
-            }
-            
-            $cambio_tarifa_compra = false;
-            $cambio_tarifa_venta = false;
-            
-            
-            
-            if(!is_null($id_tarifa_compra))
-            {
-                $rol->setIdTarifaCompra($id_tarifa_compra);
-                $cambio_tarifa_compra = true;
-            }
-            if(!is_null($id_tarifa_venta))
-            {
-                $cambio_tarifa_venta = true;
-                $rol->setIdTarifaVenta($id_tarifa_venta);
-            }
-            DAO::transBegin();
-            try
-            {
-                //Se actualiza el rol.
-                RolDAO::save($rol);
-                
-                //Si se cambia la tarifa de compra o venta del rol, se cambian las tarifas de los usuarios
-                //con este rol. Si un usuario tiene una tarifa diferente a la que tenia el rol anteriormente
-                //quiere decir que se le asigno manualmente una tarifa y no se cambia.
-                if($cambio_tarifa_compra || $cambio_tarifa_venta)
-                {
-                    $usuarios = UsuarioDAO::search( new Usuario( array( "id_rol" => $id_rol ) ) );
-                    foreach($usuarios as $usuario)
-                    {
-                        if($cambio_tarifa_compra)
-                        {
-                            if($usuario->getTarifaCompraObtenida()=="rol")
-                            {
-                                $usuario->setIdTarifaCompra($id_tarifa_compra);
-                            }
-                        }
-                        if($cambio_tarifa_venta)
-                        {
-                            if($usuario->getTarifaVentaObtenida()=="rol")
-                            {
-                                $usuario->setIdTarifaVenta($id_tarifa_venta);
-                            }
-                        }
-                        UsuarioDAO::save($usuario);
-                    }
-                }
-            }
-            catch(Exception $e)
-            {
-                DAO::transRollback();
-                Logger::error("No se pudo editar el rol: ".$e);
-                throw new Exception("No se pudo editar el rol, consulte a su administrador de sistema",901);
-            }
-            DAO::transEnd();
-            Logger::log("Rol editado exitosamente");
+		//validamos si se envio una tarifa de compra
+		if ($id_tarifa_compra !== null && $id_tarifa_compra !== "" && !TarifaDAO::getByPK($id_tarifa_compra)) {
+			Logger::error("No se tiene registro de la Tarifa de Compra indicada");
+			throw new Exception("No se tiene registro de la Tarifa de Compra indicada",901);
+		} elseif ( $id_tarifa_compra !== "") {
+			$rol->setIdTarifaCompra($id_tarifa_compra);
+		} elseif ( $id_tarifa_compra === "") {
+			$rol->setIdTarifaCompra(null);
+		}
+
+		//validamos si se envio una tarifa de venta
+		if ($id_tarifa_venta !== null && $id_tarifa_venta !== "" && !TarifaDAO::getByPK($id_tarifa_venta)) {
+			Logger::error("No se tiene registro de la Tarifa de Venta indicada");
+			throw new Exception("No se tiene registro de la Tarifa de Venta indicada",901);
+		} elseif ( $id_tarifa_venta !== "") {
+			$rol->setIdTarifaVenta($id_tarifa_venta);
+		} elseif ( $id_tarifa_venta === "") {
+			$rol->setIdTarifaVenta(null);
+		}
+
+		$descripcion = trim($descripcion);
+		//Editamos los valores
+		if ($descripcion !== null && $descripcion !== "") {
+			$rol->setDescripcion($descripcion);
+		}
+
+		DAO::transBegin();
+		try {
+			RolDAO::save($rol);
+		} catch (Exception $e) {
+			DAO::transRollback();
+			Logger::error("Error al modificar el rol: ".$e);
+			throw new Exception("Error al crear modificar el rol, consulte a su administrador de sistema",901);
+		}
+
+		DAO::transEnd();
+		Logger::log("Rol editado exitosamente");
 	}
   
 	/**
@@ -2061,62 +1964,43 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	(
 		$id_rol
 	)
-	{  
+	{
+		//TODO: Este bloque se tiene que eliminar cuando se arregle perfectamente lo de los perfiles
+		{
+			//Los roles de administrador (1), gerente (2), cajero(3), cliente (5) y proveedor(6) no pueden ser eliminados
+			if(($id_rol>=1&&$id_rol<=3)||$id_rol>=5&&$id_rol<=6)
+			{
+				Logger::error("El rol predeterminado ".$id_rol." no puede ser eliminado");
+				throw new Exception("Los roles predeterminados no pueden ser eliminado",901);
+			}
+		}
 
-            Logger::log("Eliminando rol: ".$id_rol);
+		/*
+		 * Se obtiene la lista de usuarios con este rol. 
+		 * Si almenos uno aun sigue activo, entonces no se puede eliminar el rol
+		 */
+		$usuarios = UsuarioDAO::search(new Usuario(array( "id_rol" => $id_rol )));
 
-            //valida que el rol exista en la base de datos.
-            $validar = self::ValidarParametrosRol($id_rol);
-            
-            if(is_string($validar))
-            {
-                Logger::error($validar);
-                throw new Exception($validar,901);
-            }
-            
-            //Los roles de administrador (1), gerente (2), cajero(3), cliente (5) y proveedor(6) no pueden ser eliminados
-            if(($id_rol>=1&&$id_rol<=3)||$id_rol>=5&&$id_rol<=6)
-            {
-                Logger::error("El rol predeterminado ".$id_rol." no puede ser eliminado");
-                throw new Exception("Los roles predeterminados no pueden ser eliminado",901);
-            }
+		if(!empty($usuarios))
+		{
+			Logger::error("No se puede eliminar este rol pues el usuario ".$usuarios[0]->getNombre()." lo tiene asignado");
+			throw new Exception("No se puede eliminar este rol pues hay almenos un usuario asignado a el",901);
+		}
 
-            //Se obtiene la lista de usuarios con este rol. Si almenos uno aun sigue activo,
-            //entonces no se puede eliminar el rol.
-            $usuarios = UsuarioDAO::search(new Usuario(array( "id_rol" => $id_rol )));
-            
-            foreach($usuarios as $usuario)
-            {
-                if($usuario->getActivo())
-                {
-                    Logger::error("No se puede eliminar este rol pues el usuario ".$usuario->getIdUsuario()." lo tiene asignado");
-                    throw new Exception("No se puede eliminar este rol pues hay almenos un usuario asignado a el",901);
-                }
-            }
+		DAO::transBegin();
 
-            DAO::transBegin();
+		try {
+			//Se elimina el rol
+			$to_delete = RolDAO::getByPK( $id_rol );
+			RolDAO::delete( $to_delete );
+		} catch (Exception $e) {
+			DAO::transRollback();
+			Logger::error("Error al eliminar el rol: ".$e);
+			throw new Exception("Error al eliminar el rol, consulte a su administrador de sistema",901);
+		}
 
-            try{
-            	//Se elimina el rol
-            	$to_delete = RolDAO::getByPK( $id_rol );
-                RolDAO::delete( $to_delete );
-
-                //Se eliminan todos los registros de la tabla permiso_rol que contengan este rol
-                $permisos_rol = PermisoRolDAO::search(new PermisoRol( array( "id_rol" => $id_rol ) ));
-                foreach($permisos_rol as $permiso_rol)
-                {
-                    PermisoRolDAO::delete($permiso_rol);
-                }
-
-            }catch(Exception $e){
-                DAO::transRollback();
-                Logger::error("Error al eliminar el rol: ".$e);
-                throw new Exception("Error al eliminar el rol, consulte a su administrador de sistema",901);
-
-            }
-
-            DAO::transEnd();
-            Logger::log("Rol eliminado correctamente");
+		DAO::transEnd();
+		Logger::log("Rol eliminado correctamente");
 	}
   
 	/**

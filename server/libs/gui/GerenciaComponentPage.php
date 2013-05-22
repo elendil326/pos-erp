@@ -171,12 +171,16 @@ class GerenciaComponentPage extends PosComponentPage{
 		            "url": "personal.lista.usuario.php",
 		            "children": [
 		                {
-		                    "title": "Lista de usuarios",
+		                    "title": "Usuarios",
 		                    "url": "personal.lista.usuario.php"
 		                },
 		                {
 		                    "title": "Nuevo usuario",
 		                    "url": "personal.nuevo.usuario.php"
+		                },
+						{
+		                    "title": "Roles",
+		                    "url": "personal.rol.lista.php"
 		                }
 		            ]
 		        },
