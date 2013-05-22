@@ -13,7 +13,7 @@
 
         $page->addComponent( new TitleComponent( "Tipos de Cambio" ) );
 
-		$page->addComponent("<div class=\"POS Boton OK\" onclick=\"editarEmpresa();\">Guardar Cambios</div> &oacute; <a href=\"efectivo.lista.tipo_cambio.php\" style = \"margin-left:12px;\">Descartar</a>");
+		$page->addComponent("<div class=\"POS Boton OK\" onclick=\"actualizarTiposCambio();\">Guardar Cambios</div> &oacute; <a href=\"efectivo.lista.tipo_cambio.php\" style = \"margin-left:12px;\">Descartar</a>");
 
         if (count($mostrar_act["sistema"][0]["tipos_cambio"])>0) {
 			$tabla2 = new TableComponent( 
@@ -49,5 +49,55 @@
         }else {
         	$page->addComponent( new TitleComponent( "No hay registros de los tipos de cambio en el servidor, contactar a Caffeina para notificar", 3 ));
         }
+
+$html_json = "";
+
+	foreach ($mostrar_act["servicios"][0]["tipos_cambio"] as $tc) {
+		$html_json .= "{";
+		$html_json .= "\"codigo\": \"" . $tc["moneda"] . "\",";
+		$html_json .= "\"equivalencia\": Ext.get(\"" . $tc["moneda"] . "\").getValue() ";
+		$html_json .= "},";
+	}
+
+	$html_json = substr($html_json, 0, strlen($html_json)-1);
+
+	$js ="";
+	foreach ($mostrar_act["servicios"][0]["tipos_cambio"] as $tc) {
+		$js .= "if( Ext.get(\"" . $tc["moneda"] . "\").getValue() != ".$tc["equivalencia"].") {";
+		$js .= "	servicio = 'Editado por Usuario';";
+		$js .= "}";
+	}
+
+$html = "<script>"
+		  . "	function obtenerServicio(){"
+		  . "		var servicio='';"
+		  . "		servicio = '". $mostrar_act["servicios"][0]["servicio"] ."';"
+		  . "		$js"
+		  . "		return servicio;"
+		  . "	}"
+		  . "	var actualizarTiposCambio = function(){"
+		  . "		POS.API.POST("
+		  . "			\"api/efectivo/cambio/tipos/actualizar\","
+		  . "			{"
+		  . "				\"id_empresa\" : \"1\","
+		  . "				\"moneda_base\": \"" . $mostrar_act["servicios"][0]["moneda_origen"] . "\","
+		  . "				\"servicios\": obtenerServicio(),"
+		  . "				\"monedas\": Ext.JSON.encode([ "
+		  . "		$html_json	])"
+		  . "			},"
+		  . "			{"
+		  . "				callback:function(a){"
+		  . "					if(a.status === \"ok\"){"
+		  . "						location.href=\"efectivo.lista.tipo_cambio.php\";"
+		  . "					}else{"
+		  . "						Ext.Msg.alert(\"Editar Tipos Cambio\",\"a.error\");"
+		  . "					}"
+		  . "				}"
+		  . "			}"
+		  . "		);"
+		  . "	}"
+		  . "</script>";
+
+	$page->addComponent($html);
 
 	$page->render();

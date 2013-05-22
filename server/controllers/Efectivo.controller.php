@@ -1158,9 +1158,81 @@ class EfectivoController implements IEfectivo{
      * @param monedas json Los valores de las equivalencias de las monedas activas con respecto a la moneda base
      * @param moneda_base string El codigo de la moneda base, una cadena de tres caracteres: "MXN"
      **/
-    public static function ActualizarTiposCambio($id_empresa, $monedas, $moneda_base)
+    public static function ActualizarTiposCambio($id_empresa, $monedas, $moneda_base, $servicios)
     {
+        $json_guardar = array();
+        $json_guardar["servicio"] = $servicios;
+        $json_guardar["fecha"] = time();
+        $json_guardar["moneda_origen"] = $moneda_base;
+        $json_guardar["tipos_cambio"] = array();
 
+        foreach ($monedas as $moneda) {
+            if(! is_numeric($moneda->equivalencia)) {
+                Logger::Log("La moneda $moneda no tiene un valor numerico asignado");
+                throw new BusinessLogicException("La moneda $moneda no tiene un valor numerico asignado");
+            }else{
+                $obj = new stdClass();
+                $obj->moneda = $moneda->codigo;
+                $obj->equivalencia = $moneda->equivalencia;
+                $obj->conversion = "1 $moneda_base = ".$moneda->equivalencia." ".$moneda->codigo;
+                array_push($json_guardar["tipos_cambio"],$obj);
+            }
+        }
+
+        $json_almacenar = json_encode($json_guardar);
+
+        $c = new Configuracion();
+        $s = SesionController::getCurrentUser();
+        $c->setDescripcion("tipo_cambio");
+        $conf = ConfiguracionDAO::search($c);
+
+        //se crea el registro de configuracion tipo_cambio
+        if (count($conf)<1) {
+
+            $c->setValor($json_almacenar);
+            $c->setFecha(time());
+            $c->setIdUsuario($s->getIdUsuario());
+
+            try {
+                ConfiguracionDAO::save($c);
+            }catch (Exception $e) {
+                Logger::error("No se pudo crear la configuracion de monedas: " . $e->getMessage());
+                throw new InvalidDatabaseOperationException("No se pudo crear la configuracion de monedas " . $e->getMessage());
+            }
+
+        } else {
+
+            $editar = $conf[0];
+            $editar->setValor($json_almacenar);
+            $editar->setFecha(time());
+            $editar->setIdUsuario($s->getIdUsuario());
+
+            try {
+                ConfiguracionDAO::save($editar);
+            }catch (Exception $e) {
+                Logger::error("No se pudo crear la configuracion de monedas: " . $e->getMessage());
+                throw new InvalidDatabaseOperationException("No se pudo crear la configuracion de monedas " . $e->getMessage());
+            }
+
+        }
+
+        $monedabase = new Moneda();
+        $monedabase->setSimbolo($moneda_base);
+        $mb = MonedaDAO::search($monedabase);
+
+        $historial_tc = new HistorialTipoCambio();
+        $historial_tc->setFecha(time());
+        $historial_tc->setJsonEquivalencias($json_almacenar);
+        $historial_tc->setIdEmpresa($id_empresa);
+        $historial_tc->setIdMonedaBase($mb[0]->getIdMoneda());
+
+        try {
+                HistorialTipoCambioDAO::save($historial_tc);
+        }catch (Exception $e) {
+                Logger::error("No se pudo guardar el historial tipo cambio: " . $e->getMessage());
+                throw new InvalidDatabaseOperationException("No se pudo guardar el historial tipo cambio: " . $e->getMessage());
+        }
+        return array("status"=>"ok");
     }
 
     /**
@@ -1172,6 +1244,54 @@ class EfectivoController implements IEfectivo{
      **/
     public static function ObtenerEquivalenciaMoneda($id_empresa, $id_moneda)
     {
+        $moneda_base= ConfiguracionDAO::search(new Configuracion( array("descripcion"=>"id_moneda_base") ));
+        if(count($moneda_base)<1)
+        {
+            Logger::Log("La empresa no tiene moneda base");
+            throw new BusinessLogicException("La empresa no tiene moneda base");
+        }
+
+        if (!$moneda = MonedaDAO::getByPK($moneda_base[0]->getValor())) {
+            Logger::error("No se tiene registro de la moneda ".$moneda_base[0]->getValor());
+            throw new InvalidDataException("No se tiene registro de la moneda ".$moneda_base[0]->getValor());
+        }
+
+        if (!$moneda_eq = MonedaDAO::getByPK($id_moneda)) {
+            Logger::error("No se tiene registro de la moneda {$id_moneda}");
+            throw new InvalidDataException("No se tiene registro de la moneda {$id_moneda}");
+        }
+
+        $c = new Configuracion();
+        $c->setDescripcion("tipo_cambio");
+        $conf = ConfiguracionDAO::search($c);
+
+        if (count($conf)<1) {
+
+            Logger::error("No existe la configuracion de monedas, contactar a personal de Caffeina");
+            throw new BusinessLogicException("No existe la configuracion de monedas, contactar a personal de Caffeina");
+
+        } else {
+
+            $tc = $conf[0];
+            $json = $tc->getValor();
+            $obj = json_decode($json);
+
+            foreach ($obj->tipos_cambio as $eq) {
+
+                if($eq->moneda == $moneda_eq->getSimbolo()) {
+
+                    $res = array("moneda_base"=>$moneda->getSimbolo(),
+                                "moneda_equivalente"=>$moneda_eq->getSimbolo(),
+                                "equivalencia"=>$eq->equivalencia,
+                                "conversion"=>$eq->conversion);
+                    return $res;
+                }
+            }
+        }
+
+        //en este punto no se encontraron registros
+        Logger::log("No existe el tipo de cambio para esta moneda, actualice sus tipos de cambio del sistema");
+        return array("status"=>"failure");
 
     }
 

@@ -8267,6 +8267,7 @@
 			"id_empresa" => new ApiExposedProperty("id_empresa", true, POST, array( "int" )),
 			"monedas" => new ApiExposedProperty("monedas", true, POST, array( "json" )),
 			"moneda_base" => new ApiExposedProperty("moneda_base", true, POST, array( "string" )),
+			"servicios" => new ApiExposedProperty("servicios", true, POST, array( "string" )),
 		);
 	}
 
@@ -8277,7 +8278,8 @@
 			
 			isset($_POST['id_empresa'] ) ? $_POST['id_empresa'] : null,
 			isset($_POST['monedas'] ) ? json_decode($_POST['monedas']) : null,
-			isset($_POST['moneda_base'] ) ? $_POST['moneda_base'] : null
+			isset($_POST['moneda_base'] ) ? $_POST['moneda_base'] : null,
+			isset($_POST['servicios'] ) ? $_POST['servicios'] : null
 			
 			);
 		}catch(Exception $e){

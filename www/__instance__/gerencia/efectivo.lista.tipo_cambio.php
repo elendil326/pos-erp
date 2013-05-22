@@ -11,7 +11,6 @@
 		$historial = EfectivoController::ObtenerHistorialTipoCambio();
 		$mostrar_act = EfectivoController::MostrarEquivalenciasActualizar();
 
-
         $page->addComponent( new TitleComponent( "Tipos de Cambio" ) );
 
 		$page->addComponent("<div class=\"POS Boton\" onclick=\"window.location = 'efectivo.editar.tipo_cambio.php'\">Actualizar Tipos Cambio</div>");
@@ -20,7 +19,7 @@
 
         	$tabla = new TableComponent( 
 				array(
-					"conversion"               => "Tipo Cambio al ".date("d-m-Y", $mostrar_act["servicios"][0]["fecha"])
+					"conversion"               => "Tipo Cambio al ".date("d-m-Y", $mostrar_act["servicios"][0]["fecha"])." (".$mostrar_act["servicios"][0]["servicio"].")"
 				),
 				$mostrar_act["servicios"][0]["tipos_cambio"]
 			);
@@ -34,7 +33,7 @@
 		if (count($mostrar_act)>0) {
 			$tabla2 = new TableComponent( 
 				array(
-					"conversion"               => "Sistema actualizado al ".date("d-m-Y",$mostrar_act["sistema"][0]["fecha"])
+					"conversion" => "Sistema actualizado al ".date("d-m-Y",$mostrar_act["sistema"][0]["fecha"])
 				),
 				$mostrar_act["sistema"][0]["tipos_cambio"]
 			);
@@ -52,7 +51,7 @@
 			$datos_concentrados = array();
 			foreach ($historial as $h) {
 				$servicio = $h["servicio"];
-				$fecha = $h["fecha"];
+				$fecha = date("d-m-Y h:i:s", $h["fecha"]);
 				$moneda_origen = $h["moneda_origen"];
 
 				foreach ($h["tipos_cambio"] as $tc) {

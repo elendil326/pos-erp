@@ -101,12 +101,14 @@
  	 * @param id_empresa int El id de la empresa
  	 * @param monedas json Los valores de las equivalencias de las monedas activas con respecto a la moneda base
  	 * @param moneda_base string El codigo de la moneda base, una cadena de tres caracteres: "MXN"
+ 	 * @param servicios string El servicio de donde se van a actualizar los valores que el usuario introdujo
  	 **/
   static function ActualizarTiposCambio
 	(
 		$id_empresa, 
 		$monedas, 
-		$moneda_base
+		$moneda_base, 
+		$servicios
 	);  
   
   
