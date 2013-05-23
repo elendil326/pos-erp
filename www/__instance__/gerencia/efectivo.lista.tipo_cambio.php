@@ -13,10 +13,9 @@
 
         $page->addComponent( new TitleComponent( "Tipos de Cambio" ) );
 
-		$page->addComponent("<div class=\"POS Boton\" onclick=\"window.location = 'efectivo.editar.tipo_cambio.php'\">Actualizar Tipos Cambio</div>");
 
-        if(count($mostrar_act["servicios"][0]["tipos_cambio"])>0) {
-
+        if(count($mostrar_act["servicios"])>0) {
+			$page->addComponent("<div class=\"POS Boton\" onclick=\"window.location = 'efectivo.editar.tipo_cambio.php'\">Actualizar Tipos Cambio</div>");
         	$tabla = new TableComponent( 
 				array(
 					"conversion"               => "Tipo Cambio al ".date("d-m-Y", $mostrar_act["servicios"][0]["fecha"])." (".$mostrar_act["servicios"][0]["servicio"].")"
@@ -27,10 +26,10 @@
 			$page->addComponent( $tabla );
 
         }else {
-        	$page->addComponent( new TitleComponent( "No hay registros de los tipos de cambio en el servidor, contactar a Caffeina para notificar", 3 ));
+        	$page->addComponent( new TitleComponent( "No hay registros de los tipos de cambio en el servidor o PUEDE SER QUE SOLO TENGA UNA MONEDA ACTIVA", 3 ));
         }
 
-		if (count($mostrar_act)>0) {
+		if (count($mostrar_act["sistema"])>0) {
 			$tabla2 = new TableComponent( 
 				array(
 					"conversion" => "Sistema actualizado al ".date("d-m-Y",$mostrar_act["sistema"][0]["fecha"])

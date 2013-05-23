@@ -15,7 +15,7 @@
 
 		$page->addComponent("<div class=\"POS Boton OK\" onclick=\"actualizarTiposCambio();\">Guardar Cambios</div> &oacute; <a href=\"efectivo.lista.tipo_cambio.php\" style = \"margin-left:12px;\">Descartar</a>");
 
-        if (count($mostrar_act["sistema"][0]["tipos_cambio"])>0) {
+        if (count($mostrar_act["sistema"])>0) {
 			$tabla2 = new TableComponent( 
 				array(
 					"conversion"               => "Sistema actualizado al ".date("d-m-Y",$mostrar_act["sistema"][0]["fecha"])
@@ -25,10 +25,10 @@
 
 			$page->addComponent( $tabla2 );
 		} else {
-			$page->addComponent( new TitleComponent( "No hay registros de los tipos de cambio en el sistema, agregar los tipo de cambio desde aqui", 3 ));
+			$page->addComponent( new TitleComponent( "No hay historial de los tipos de cambio en el sistema, agregar los tipo de cambio desde aqui", 3 ));
 		}
 
-        if(count($mostrar_act["servicios"][0]["tipos_cambio"])>0) {
+        if(count($mostrar_act["servicios"])>0) {
 
         	/*$tabla = new TableComponent( 
 				array(
