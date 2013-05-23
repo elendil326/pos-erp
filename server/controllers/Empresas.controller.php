@@ -169,8 +169,6 @@ class EmpresasController implements IEmpresas
 	 **/
 	public static function Buscar($activa = false, $limit = null, $order = null, $order_by = null, $query = null, $start = null)
 	{
-		Logger::log("Listando empresas ...");
-
 		if ($activa !== NULL && is_bool($activa) === false) {
 			Logger::error("Buscar() verifique el valor especificado en activa, se esperaba boolean, se encontro : (" . gettype($activa) . ") {$activa}");
 			return array("success" => false, "reason" => "Buscar() verifique el valor especificado en activa, se esperaba boolean, se encontro : (" . gettype($activa) . ") {$activa}");

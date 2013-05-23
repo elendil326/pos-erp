@@ -1428,6 +1428,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
  	 *
  	 *Lista los roles, se puede filtrar y ordenar por sus atributos
  	 *
+	 * @author Juan Manuel Garc&iacute;a Carmona <manuel@caffeina.mx>
  	 * @param activa bool Verdadero para mostrar solo los roles activos. En caso de false, se mostraran ambas.
  	 * @param limit string Indica hasta que registro se desea obtener a partir del conjunto de resultados productos de la busqueda.
  	 * @param order string Indica si se ordenan los registros de manera Ascendente ASC, o descendente DESC.
@@ -1447,11 +1448,38 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 		$start = null
 	)
 	{
-		
-		//Se traen todos los roles d ela base de datos.
-		$roles = RolDAO::getAll();
+		if ($order !== NULL && !($order === "ASC" || $order === "DESC")) {
+			Logger::error("Buscar() verifique el valor especificado en order, se esperaba ASC || DESC, se encontro : (" . gettype($order) . ") {$order}");
+			return array("success" => false, "reason" => "Buscar() verifique el valor especificado en order, se esperaba ASC || DESC, se encontro : (" . gettype($order) . ") {$order}");
+		}
 
-		return $roles;
+		if ($order_by === NULL) {
+			$order_by = "nombre";
+		}
+
+		if ($limit !== NULL && !(is_numeric($limit) && $limit >= 0)) {
+			Logger::error("Buscar() verifique el valor especificado en limit, se esperaba un int >= 0, se encontro : (" . gettype($limit) . ") {$limit}");
+			return array("success" => false, "reason" => "Buscar() verifique el valor especificado en limit, se esperaba un int >= 0, se encontro : (" . gettype($limit) . ") {$limit}");
+		}
+
+		if ($start !== NULL && !(is_numeric($start) && $start >= 0)) {
+			Logger::error("Buscar() verifique el valor especificado en start, se esperaba un int >= 0, se encontro : (" . gettype($start) . ") {$start}");
+			return array("success" => false, "reason" =>"Buscar() verifique el valor especificado en start, se esperaba un int >= 0, se encontro : (" . gettype($start) . ") {$start}");
+		}
+
+		if ($start !== NULL && $limit === NULL) {
+			Logger::error("Buscar() esta especificando un valor de start, pero no especifica un limit, solo el valor limit se puede usar sin start.");
+			return array("success" => false, "reason" => "Buscar() esta especificando un valor de start, pero no especifica un limit, solo el valor limit se puede usar sin start.");
+		}
+
+		if (!($start === NULL && $limit === NULL) && ($start > $limit)) {
+			Logger::error("Buscar() el valor de start debe ser <= que el valor de limit, se encontro start = {$start}, limit = {$limit}");
+			return array("success" => false, "reason" => "Buscar() el valor de start debe ser <= que el valor de limit, se encontro start = {$start}, limit = {$limit}");
+		}
+
+		$roles = RolDAO::buscar($limit, $order, $order_by, $query, $start);
+
+		return array("success" => true, "numero_de_resulatos" => count($roles), "resultados" => $roles);
 	}
 
    /**
@@ -1666,6 +1694,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
  	 *
  	 *Crea un nuevo grupo de usuarios. Se asignaran los permisos de este grupo al momento de su creacion.
  	 *
+	 * @author Juan Manuel Garc&iacute;a Carmona <manuel@caffeina.mx>
  	 * @param id_perfil int Id del perfil de usuario en el sistema
  	 * @param nombre string Nombre del grupo. Este no puede existir en el sistema, no puede ser una cadena vacia y no puede ser mayor a 30 caracteres.
  	 * @param descripcion string Descripcion larga del grupo. La descripcion no puede ser una cadena vacia ni mayor a 256 caracteres.
@@ -1761,6 +1790,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
  	 *
  	 *Edita la informacion de un grupo, puede usarse para editar los permisos del mismo
  	 *
+	 * @author Juan Manuel Garc&iacute;a Carmona <manuel@caffeina.mx>
  	 * @param id_rol int Id del rol a editar
  	 * @param descripcion string Descripcion larga del grupo
  	 * @param id_perfil int Id del perfil de usuario en el sistema
@@ -1958,6 +1988,8 @@ require_once("interfaces/PersonalYAgentes.interface.php");
  	 *
  	 *Este metodo desactiva un grupo, solo se podra desactivar un grupo si no hay ningun usuario que pertenezca a el.
  	 *
+	 * 
+	 * @author Juan Manuel Garc&iacute;a Carmona <manuel@caffeina.mx>
  	 * @param id_rol int Id del grupo a eliminar
  	 **/
 	public static function EliminarRol
@@ -2114,6 +2146,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
  	 *
  	 *Muestra los detalles de un Rol especifico
  	 *
+	 * @author Juan Manuel Garc&iacute;a Carmona <manuel@caffeina.mx>
  	 * @param id_rol int Id del rol
  	 * @return detalles json objeto con los detalles del rol
  	 * @return perfil json objeto con la descripcion del perfil
@@ -2123,6 +2156,36 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 		$id_rol
 	)
 	{
+		//vewrificamos si el rol existe
+		if (!$rol = RolDAO::getByPK($id_rol)) {
+			Logger::error("No se tiene registro del rol especificado");
+			throw new Exception("No se tiene registro del rol especificado",901);
+		}
+		
+		//detalles del rol
+		$array_detalles = array(
+			"id_rol" => $rol->getIdRol(),
+			"nombre" => $rol->getNombre(),
+			"descripcion" => $rol->getDescripcion(),
+			"salario" => $rol->getSalario(),
+			"id_rol_padre" => $rol->getIdRolPadre(),
+			"id_tarifa_compra" => $rol->getIdTarifaCompra(),
+			"id_tarifa_venta" => $rol->getIdTarifaVenta(),
+			"id_perfil" => $rol->getIdPerfil()
+		);
+		
+		//detalles del perfil asociado		
+		if ($rol->getIdPerfil() !== null && $rol->getIdPerfil() !== "" && is_numeric($rol->getIdPerfil()) && $perfil = PerfilDAO::getByPK($rol->getIdPerfil())) {
+			$array_perfil = array(
+				"id_perfil" => $perfil->getIdPerfil(),
+				"descripcion" => $perfil->getDescripcion(),
+				"configuracion" => $perfil->getConfiguracion()
+			);
+		} else {
+			$array_perfil = array();
+		}
+		
+		return array("detalles" => $array_detalles, "perfil" => $array_perfil);
 		
 	}
 

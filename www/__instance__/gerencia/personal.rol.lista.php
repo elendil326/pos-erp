@@ -13,13 +13,15 @@
     $page->addComponent( new TitleComponent( "Roles" ) );
 	$page->addComponent( new MessageComponent( "Lista de roles de usuario" ) );
 
+	$roles = PersonalYAgentesController::ListaRol();
+
 	$tabla = new TableComponent( 
 		array(
 		"nombre" => "Nombre",
 		"descripcion"	=> "Descripcion",
 		"salario" 			=> "Salario"
 		),
-		PersonalYAgentesController::ListaRol()
+		$roles["resultados"]
 	);
 
 	$tabla->addOnClick( "id_rol", "(function(a){window.location = 'personal.rol.ver.php?rid=' + a;})" );

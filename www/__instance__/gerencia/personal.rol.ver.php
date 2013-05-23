@@ -8,7 +8,9 @@
 
 	$page->requireParam("rid", "GET", "Este rol no existe.");
 	
-	$este_rol = RolDAO::getByPK($_GET["rid"]);
+	//$este_rol = RolDAO::getByPK($_GET["rid"]);
+	$este_rol = PersonalYAgentesController::DetallesRol($_GET["rid"]);
+	$este_rol = $este_rol["detalles"];
 
 	$menu = new MenuComponent();
 	$menu->addItem("Editar este rol", "personal.editar.rol.php?rid=".$_GET["rid"]);
@@ -42,19 +44,19 @@
 
 	$page->addComponent($menu);
 
-	$page->addComponent(new TitleComponent("Detalles de " . $este_rol->getNombre() , 2));
+	$page->addComponent(new TitleComponent("Detalles de " . $este_rol["nombre"] , 2));
 
 	// Forma de producto
-	$form = new DAOFormComponent($este_rol);
+	$form = new DAOFormComponent(RolDAO::getByPK($este_rol["id_rol"]));
 	$form->setEditable(false);
 	$form->hideField(array( 
 		"id_rol",
 	));
 	
-	$form->createComboBoxJoinDistintName("id_tarifa_venta", "id_tarifa" ,"nombre", TarifaDAO::search(new Tarifa(array("tipo_tarifa"=>"venta"))), $este_rol->getIdTarifaVenta());
-	$form->createComboBoxJoinDistintName("id_tarifa_compra", "id_tarifa" ,"nombre", TarifaDAO::search(new Tarifa(array("tipo_tarifa"=>"venta"))), $este_rol->getIdTarifaCompra());
-	$form->createComboBoxJoinDistintName("id_rol_padre", "id_rol", "nombre", PersonalYAgentesController::ListaRol(), $este_rol->getIdRolPadre());
-	$form->createComboBoxJoin("id_perfil", "descripcion", POSController::ListaPerfilConfiguracion(), $este_rol->getIdPerfil());
+	$form->createComboBoxJoinDistintName("id_tarifa_venta", "id_tarifa" ,"nombre", TarifaDAO::search(new Tarifa(array("tipo_tarifa"=>"venta"))), $este_rol["id_tarifa_venta"]);
+	$form->createComboBoxJoinDistintName("id_tarifa_compra", "id_tarifa" ,"nombre", TarifaDAO::search(new Tarifa(array("tipo_tarifa"=>"venta"))), $este_rol["id_tarifa_compra"]);
+	$form->createComboBoxJoinDistintName("id_rol_padre", "id_rol", "nombre", PersonalYAgentesController::ListaRol(), $este_rol["id_rol_padre"]);
+	$form->createComboBoxJoin("id_perfil", "descripcion", POSController::ListaPerfilConfiguracion(), $este_rol["id_perfil"]);
 	$form->setType("descripcion", "textarea");
 
 	$page->addComponent( $form );
