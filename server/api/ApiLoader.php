@@ -7183,6 +7183,7 @@
 	{
 		$this->request = array(	
 			"nombre" => new ApiExposedProperty("nombre", true, POST, array( "string" )),
+			"activa" => new ApiExposedProperty("activa", false, POST, array( "bool" )),
 			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "string" )),
 			"id_categoria_padre" => new ApiExposedProperty("id_categoria_padre", false, POST, array( "int" )),
 		);
@@ -7194,6 +7195,7 @@
  			
 			
 			isset($_POST['nombre'] ) ? $_POST['nombre'] : null,
+			isset($_POST['activa'] ) ? $_POST['activa'] :  true ,
 			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null,
 			isset($_POST['id_categoria_padre'] ) ? $_POST['id_categoria_padre'] :  null
 			
@@ -7215,6 +7217,7 @@
 	{
 		$this->request = array(	
 			"id_categoria" => new ApiExposedProperty("id_categoria", true, POST, array( "int" )),
+			"activa" => new ApiExposedProperty("activa", false, POST, array( "bool" )),
 			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "string" )),
 			"id_categoria_padre" => new ApiExposedProperty("id_categoria_padre", false, POST, array( "int" )),
 			"nombre" => new ApiExposedProperty("nombre", false, POST, array( "string" )),
@@ -7227,37 +7230,10 @@
  			
 			
 			isset($_POST['id_categoria'] ) ? $_POST['id_categoria'] : null,
+			isset($_POST['activa'] ) ? $_POST['activa'] :  null,
 			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null,
 			isset($_POST['id_categoria_padre'] ) ? $_POST['id_categoria_padre'] :  null,
 			isset($_POST['nombre'] ) ? $_POST['nombre'] :  null
-			
-			);
-		}catch(Exception $e){
- 			//Logger::error($e);
-			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
-		}
- 	}
-  }
-  
-  
-
-  class ApiProductoCategoriaDesactivar extends ApiHandler {
-  
-
-	protected function DeclareAllowedRoles(){  return BYPASS;  }
-	protected function GetRequest()
-	{
-		$this->request = array(	
-			"id_categoria" => new ApiExposedProperty("id_categoria", true, GET, array( "int" )),
-		);
-	}
-
-	protected function GenerateResponse() {		
-		try{
- 		$this->response = ProductosController::DesactivarCategoria( 
- 			
-			
-			isset($_GET['id_categoria'] ) ? $_GET['id_categoria'] : null
 			
 			);
 		}catch(Exception $e){
@@ -7516,8 +7492,7 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"id_categoria" => new ApiExposedProperty("id_categoria", false, GET, array( "int" )),
-			"id_categoria_padre" => new ApiExposedProperty("id_categoria_padre", false, GET, array( "int" )),
+			"activa" => new ApiExposedProperty("activa", false, GET, array( "bool" )),
 			"query" => new ApiExposedProperty("query", false, GET, array( "string" )),
 		);
 	}
@@ -7527,8 +7502,7 @@
  		$this->response = ProductosController::BuscarCategoria( 
  			
 			
-			isset($_GET['id_categoria'] ) ? $_GET['id_categoria'] :  null,
-			isset($_GET['id_categoria_padre'] ) ? $_GET['id_categoria_padre'] :  null,
+			isset($_GET['activa'] ) ? $_GET['activa'] :  true ,
 			isset($_GET['query'] ) ? $_GET['query'] :  null
 			
 			);
@@ -7558,6 +7532,34 @@
  			
 			
 			isset($_POST['raw_content'] ) ? $_POST['raw_content'] : null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiProductoCategoriaDetalles extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"id_categoria" => new ApiExposedProperty("id_categoria", true, GET, array( "int" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = ProductosController::DetallesCategoria( 
+ 			
+			
+			isset($_GET['id_categoria'] ) ? $_GET['id_categoria'] : null
 			
 			);
 		}catch(Exception $e){
@@ -9069,7 +9071,7 @@
 			"nombre" => new ApiExposedProperty("nombre", true, POST, array( "string" )),
 			"activa" => new ApiExposedProperty("activa", false, POST, array( "bool" )),
 			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "string" )),
-			"padre_id" => new ApiExposedProperty("padre_id", false, POST, array( "int" )),
+			"id_padre" => new ApiExposedProperty("id_padre", false, POST, array( "int" )),
 		);
 	}
 
@@ -9081,7 +9083,7 @@
 			isset($_POST['nombre'] ) ? $_POST['nombre'] : null,
 			isset($_POST['activa'] ) ? $_POST['activa'] :  true ,
 			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null,
-			isset($_POST['padre_id'] ) ? $_POST['padre_id'] :  null
+			isset($_POST['id_padre'] ) ? $_POST['id_padre'] :  null
 			
 			);
 		}catch(Exception $e){

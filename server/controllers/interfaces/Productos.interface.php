@@ -33,16 +33,13 @@
  	 *
  	 *Busca las categorias de los productos
  	 *
- 	 * @param id_categoria int Se busca una categoria dado su id_categoria
- 	 * @param id_categoria_padre int Se buscan las categorias pertenecientes a una categoria padre dado su id_categoria_padre. 
- 	 * @param query string Buscar categoria por nombre_producto, codigo_producto, codigo_de_barras
- 	 * @return numero_de_resultados int El numero de resultados obtenido de la busqueda
+ 	 * @param activa bool Se buscan categorias por el estado de estas.
+ 	 * @param query string Buscar categoria por nombre y/o descripcion.
  	 * @return resultados json json con los resultados de la busqueda
  	 **/
   static function BuscarCategoria
 	(
-		$id_categoria = null, 
-		$id_categoria_padre = null, 
+		$activa =  true , 
 		$query = null
 	);  
   
@@ -51,11 +48,12 @@
   
 	/**
  	 *
- 	 *Este metodo desactiva una categoria de tal forma que ya no se vuelva a usar como categoria sobre un producto.
+ 	 *Obtiene una categoria y sus propiedades.
  	 *
- 	 * @param id_categoria int Id de la categoria a desactivar
+ 	 * @param id_categoria int El ID de la categoria a obtener.
+ 	 * @return categoria json El objeto categoria obtenido.
  	 **/
-  static function DesactivarCategoria
+  static function DetallesCategoria
 	(
 		$id_categoria
 	);  
@@ -68,6 +66,7 @@
  	 *Este metodo cambia la informacion de una categoria de producto
  	 *
  	 * @param id_categoria int Id de la categoria del producto
+ 	 * @param activa bool Estado de la categoria.
  	 * @param descripcion string Descripcion larga de la categoria
  	 * @param id_categoria_padre int Id de la categora padre en caso de tenerla
  	 * @param nombre string Nombre de la categoria del producto
@@ -75,6 +74,7 @@
   static function EditarCategoria
 	(
 		$id_categoria, 
+		$activa = null, 
 		$descripcion = null, 
 		$id_categoria_padre = null, 
 		$nombre = null
@@ -88,6 +88,7 @@
  	 *Crea una nueva categoria de producto, la categoria de un producto se relaciona con los meses de garantia del mismo, las unidades en las que se almacena entre, si se es suceptible a devoluciones, entre otros.
  	 *
  	 * @param nombre string Nombre de la categoria
+ 	 * @param activa bool Estado de la nueva categoria.
  	 * @param descripcion string Descripcion larga de la categoria
  	 * @param id_categoria_padre int Id de la categora padre, en caso de que tuviera un padre
  	 * @return id_categoria int Id atogenerado por la insercion de la categoria
@@ -95,6 +96,7 @@
   static function NuevaCategoria
 	(
 		$nombre, 
+		$activa =  true , 
 		$descripcion = null, 
 		$id_categoria_padre = null
 	);  

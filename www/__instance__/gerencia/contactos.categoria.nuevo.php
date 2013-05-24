@@ -14,14 +14,20 @@ $form->makeObligatory(array(
 ));
 $form->setType('descripcion', 'textarea');
 $form->setType('activa', 'bool');
-$categorias = ContactosController::BuscarCategoriaContactos();
+$form->setCaption('id_padre', 'Categoria padre');
+
+$categorias = ContactosController::BuscarCategoria();
+$categorias = $categorias['categorias'];
+foreach ($categorias as $key => $categoria) {
+	$categoria->caption = $categoria->nombre_completo;
+	$categorias[$key] = $categoria->asArray();
+}
 $form->createComboBoxJoin(
 	'id_padre',
 	'nombre_completo',
-	$categorias['categorias']
+	$categorias
 );
 
-$form->setCaption('id_padre', 'categoria_padre');
 $form->addApiCall('api/contactos/categoria/nuevo', 'POST');
 $form->onApiCallSuccessRedirect("contactos.categorias.php");
 $page->addComponent($form);

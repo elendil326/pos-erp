@@ -1,43 +1,43 @@
 <?php 
 
 
+require_once('../../../server/bootstrap.php');
 
-		define("BYPASS_INSTANCE_CHECK", false);
+$page = new GerenciaComponentPage();
+$page->requireParam("id", "GET", "Esta categor&iacute;a no existe.");
 
-		require_once("../../../server/bootstrap.php");
+// si no existe la categoria
+$response = ProductosController::DetallesCategoria($_GET['id']);
+if (is_null($response['categoria'])) {
+	print("XD"); // temp
+}
+$categoria = $response['categoria'];
 
-		$page = new GerenciaComponentPage();
+// detalles
+$form = new DAOFormComponent($categoria);
+$form->hideField(array(
+	'id_clasificacion_producto'
+));
+$form->sendHidden('id_clasificacion_producto');
+$form->setValueField('nombre', $categoria->getNombre());
+$form->setValueField('descripcion', $categoria->getDescripcion());
+// $response = ProductosController::DetallesCategoria($categoria->getIdPadre());
+// if (!is_null($response['categoria'])){
+// 	$form->setValueField('id_categoria_padre', $response['categoria']->getNombre());
+// }
+$form->setType('descripcion', 'textarea');
+$form->setType('activa', 'bool');
+$form->setCaption('id_categoria_padre', 'Categor&iacute;a Padre');
+$categorias = ProductosController::BuscarCategoria();
+$form->createComboBoxJoin(
+	'id_categoria_padre',
+	'nombre_completo',
+	$categorias['categorias']
+);
+$form->addApiCall('api/productos/categoria/editar', 'POST');
+$form->onApiCallSuccessRedirect("productos.categorias.php");
 
-                //
-		// Parametros necesarios
-		// 
-		$page->requireParam(  "cid", "GET", "Esta categoria de producto no existe." );
-		$esta_categoria = ClasificacionProductoDAO::getByPK( $_GET["cid"] );
-		//
-		// Titulo de la pagina
-		// 
-		$page->addComponent( new TitleComponent( "Editar clasificacion de producto " . $esta_categoria->getNombre()  , 2 ));
-
-		//
-		// Forma de usuario
-		// 
-		$form = new DAOFormComponent( $esta_categoria );
-		$form->hideField( array( 
-                                "id_clasificacion_producto",
-                                "activa",
-                                
-			 ));
-                
-               $form->renameField(array( "id_clasificacion_producto" => "id_categoria" ));
-                
-                $form->sendHidden("id_categoria");
-                
-                $form->addApiCall( "api/producto/categoria/editar", "POST" );
-                
-                $form->onApiCallSuccessRedirect("productos.lista.categoria.php");
-         
-		$form->createComboBoxJoinDistintName( "id_categoria_padre","id_clasificacion_producto", "nombre", ClasificacionProductoDAO::getAll() ) ;
-		
-		$page->addComponent( $form );
-                
-		$page->render();
+$page->addComponent(new TitleComponent($categoria->nombre_completo));
+$page->addComponent($form);
+$page->addComponent('<div><a href="productos.categoria.lista.php">Descartar</a></div>');
+$page->render();

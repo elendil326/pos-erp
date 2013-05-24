@@ -6,8 +6,121 @@ require_once("interfaces/Productos.interface.php");
  *
  **/
 
-class ProductosController extends ValidacionesController implements IProductos
-{
+class ProductosController extends ValidacionesController implements IProductos {
+
+    /**
+     *
+     *Crea una nueva categoria de producto, la categoria de un producto se relaciona con los meses de garantia del mismo, las unidades en las que se almacena entre, si se es suceptible a devoluciones, entre otros.
+     *
+     * @param nombre string Nombre de la categoria
+     * @param activa bool Estado de la nueva categoria.
+     * @param descripcion string Descripcion larga de la categoria
+     * @param id_categoria_padre int Id de la categora padre, en caso de que tuviera un padre
+     * @return id_categoria int Id atogenerado por la insercion de la categoria
+     **/
+    static function NuevaCategoria($nombre, $activa=true , $descripcion=null, $id_categoria_padre=null) {
+        $categoria = new ClasificacionProducto(array(
+            'nombre' => $nombre,
+            'activa' => $activa,
+            'descripcion' => $descripcion,
+            'id_categoria_padre' => $id_categoria_padre
+        ));
+
+        try {
+            ClasificacionProductoDAO::save($categoria);
+        } catch (Exception $e) {
+            throw new Exception("Error al crear categoria, verifique sus datos.", 901);
+        }
+
+        return array("id_categoria" => ((int) $categoria->getIdClasificacionProducto()));
+    }
+    
+    /**
+     *
+     *Este metodo cambia la informacion de una categoria de producto
+     *
+     * @param id_categoria int Id de la categoria del producto
+     * @param activa bool Estado de la categoria.
+     * @param descripcion string Descripcion larga de la categoria
+     * @param id_categoria_padre int Id de la categora padre en caso de tenerla
+     * @param nombre string Nombre de la categoria del producto
+     **/
+  static function EditarCategoria($id_categoria, $activa = null, $descripcion = null, $id_categoria_padre = null, $nombre = null) {
+        $categoria = ClasificacionProductoDAO::getByPK($id);
+
+        if (!is_null($activa)) {
+            $categoria->setActiva($activa);
+        }
+        if (!is_null($descripcion)) {
+            $categoria->setDescripcion($descripcion);
+        }
+        if (!is_null($id_padre)) {
+            $categoria->setIdCategoriaPadre($id_padre);
+        }
+        if (!is_null($nombre)) {
+            $categoria->setNombre($nombre);
+        }
+
+        if (ClasificacionProductoDAO::ChecarRecursion($categoria->getId(), $categoria->getIdCategoriaPadre())) {
+            try {
+                ClasificacionProductoDAO::save($categoria);
+            } catch (Exception $e) {
+                throw new Exception("Error al modificar categoria, verifique sus datos.", 901);
+            }
+        } else {
+            throw new Exception("Una categoria no puede ser hija de otra categoria descendiente, verifique sus datos.", 901);   
+        }
+    }
+
+    /**
+     *
+     *Busca las categorias de los productos
+     *
+     * @param activa bool Se buscan categorias por el estado de estas.
+     * @param query string Buscar categoria por nombre y/o descripcion.
+     * @return resultados json json con los resultados de la busqueda
+     **/
+    static function BuscarCategoria($activa=true, $query=null) {
+        $categoria = new ClasificacionProducto();
+
+        if (!is_null($activa)) {
+            $categoria->setActiva($activa);
+        }
+        if (!is_null($query)) {
+            $categoria->setNombre($query);
+            $categoria->setDescripcion($query);
+        }
+
+        $categorias = ClasificacionProductoDAO::search($categoria);
+
+        foreach ($categorias as $key => $categoria) {
+            $id_categoria = $categoria->getIdClasificacionProducto();
+            $nombre_completo = ClasificacionProductoDAO::NombreCompleto($id_categoria);
+            $categorias[$key]->nombre_completo = $nombre_completo;
+        }
+
+        return array('categorias' => $categorias);
+    }
+
+    /**
+     *
+     *Obtiene una categoria y sus propiedades.
+     *
+     * @param id_categoria int El ID de la categoria a obtener.
+     * @return categoria json El objeto categoria obtenido.
+     **/
+    static function DetallesCategoria($id_categoria) {
+        $categoria = ClasificacionProductoDAO::getByPK($id_categoria);
+        $alert = '';
+
+        if (!is_null($categoria)) {
+            $categoria->nombre_completo = ClasificacionProductoDAO::NombreCompleto($categoria->getIdClasificacionProducto());
+        }
+
+        return array('categoria' => $categoria);
+    }
+
+
     /*
      * Valida los parametros de la tabla unidad. Regresa un string con el error en caso de
      * encontrarse alguno, en caso contrario regresa true.
@@ -1297,197 +1410,6 @@ class ProductosController extends ValidacionesController implements IProductos
     
     /**
      *
-     *Crea una nueva categoria de producto, la categoria de un producto se relaciona con los meses de garantia del mismo, las unidades en las que se almacena entre, si se es suceptible a devoluciones, entre otros.
-     *
-     * @param nombre string Nombre de la categoria
-     * @param descripcion string Descripcion larga de la categoria
-     * @param garant�a int Numero de meses de garantia con los que cuenta esta categoria de producto
-     * @param margen_utilidad float Margen de utilidad que tendran los productos de esta categoria
-     * @param descuento float Descuento que tendran los productos de esta categoria
-     * @param impuestos json Ids de impuestos que afectan a esta categoria de producto
-     * @param retenciones json Ids de retenciones que afectan esta clasificacion de productos
-     * @return id_categoria int Id atogenerado por la insercion de la categoria
-     **/
-    public static function NuevaCategoria($nombre, $descripcion = null, $id_categoria_padre = null) {
-
-		if( sizeof( $r = ClasificacionProductoDAO::search(new ClasificacionProducto(array( "nombre" => $nombre )))) > 0){
-			throw new BusinessLogicException("El nombre $nombre esta repetido");
-		}
-
-		$clasificacion_padre_producto = NULL;
-
-		if( !is_null( $id_categoria_padre ) && ( strlen( $id_categoria_padre ) > 0 ) ) {
-			$clasificacion_padre_producto = ClasificacionProductoDAO::getByPK( $id_categoria_padre );
-			if(is_null($clasificacion_padre_producto)) {
-				throw new Exception("La clasificacion de producto (categoria padre) con id " . $id_categoria_padre . " no existe", 1);
-			}
-
-		}
-
-        //se validan los parametros obtenidos
-        //$validar = self::validarParametrosClasificacionProducto(null, $nombre, $descripcion, $garantia);
-        /*if (is_string($validar)) {
-            Logger::error($validar);
-            throw new Exception($validar);
-        } //is_string($validar)
-        */
-
-        //Se inicializa el registro
-        $clasificacion_producto = new ClasificacionProducto(array(
-            "nombre" => trim($nombre),
-            "descripcion" => $descripcion,
-            "id_categoria_padre" => $clasificacion_padre_producto,
-            "activa" => 1
-        ));
-
-        //Se guarda la nueva clasificacion. Si se reciben impuesto y/o retenciones, se crean los registros correspondientes
-        DAO::transBegin();
-        try {
-            ClasificacionProductoDAO::save($clasificacion_producto);
-
-        }catch (Exception $e) {
-            DAO::transRollback();
-            Logger::error("No se ha podido guardar la nueva clasificacion: " . $e);
-            if ($e->getCode() == 901)
-                throw new Exception("No se ha podido guardar la nueva clasificacion: " . $e->getMessage(), 901);
-            throw new Exception("No se ha podido guardar la nueva clasificacion", 901);
-        }
-        DAO::transEnd();
-        Logger::log("Clasificacion guardada exitosamente, id_categoria=");
-        return array(
-            "id_categoria" => (int)$clasificacion_producto->getIdClasificacionProducto()
-        );
-    }
-    
-    /**
-     *
-     *Este metodo cambia la informacion de una categoria de producto
-     *
-     * @param id_categoria int Id de la categoria del producto
-     * @param nombre string Nombre de la categoria del producto
-     * @param garantia int Numero de meses de garantia con los que cuentan los productos de esta clasificacion
-     * @param descuento float Descuento que tendran los productos de esta categoria
-     * @param margen_utilidad float Margen de utilidad de los productos que formen parte de esta categoria
-     * @param descripcion string Descripcion larga de la categoria
-     * @param impuestos json Ids de impuestos que afectan a esta clasificacion de producto
-     * @param retenciones json Ids de retenciones que afectan a esta clasificacion de producto
-     **/
-    public static function EditarCategoria($id_categoria, $descripcion = null, $id_categoria_padre = null, $nombre = "")
-    {
-        Logger::log("Editando la clasificacion de producto " . $id_categoria);
-        
-		if(!is_null($id_categoria_padre))
-		{	
-			$clasificacion_producto = ClasificacionProductoDAO::getByPK($id_categoria_padre);
-		   	if (is_null($clasificacion_producto))
-		   		return "La clasificacion de producto (categoria padre) con id " . $id_categoria_padre . " no existe";
-		}
-
-        //Se validan los parametros recibidos
-        $validar = self::validarParametrosClasificacionProducto($id_categoria, $nombre, $descripcion);
-        if (is_string($validar)) {
-            Logger::error($validar);
-            throw new Exception($validar);
-        } //is_string($validar)
-        
-        //Los parametros que no sean nulos seran tomados como actualizacion
-        $clasificacion_producto = ClasificacionProductoDAO::getByPK($id_categoria);
-        
-        if (!is_null($nombre)) {
-            $clasificacion_producto->setNombre(trim($nombre));
-        } //!is_null($nombre)
-                
-        if (!is_null($descripcion)) {
-            $clasificacion_producto->setDescripcion(trim($descripcion));
-        } //is_null($descripcion)
-
-		if (!is_null($id_categoria_padre)) {
-            $clasificacion_producto->setIdCategoriaPadre($id_categoria_padre);
-        } //is_null($descripcion)
-        
-        //Se actualiza la clasificacion de producto. Si se reciben impuestos y/o retenciones
-        //se recorre la lista recibida y se guardan o actualizan. Despues se recorre la lista
-        //de los impuestos y retenciones actuales y se buscan en la lista recibida. Si no son encontrados
-        //se eliminan
-        DAO::transBegin();
-        try {
-            ClasificacionProductoDAO::save($clasificacion_producto);
-            
-        }
-        catch (Exception $e) {
-            DAO::transRollback();
-            Logger::error("No se pudo editar la clasificacion de producto: " . $e);
-            if ($e->getCode() == 901)
-                throw new Exception("No se pudo editar la clasificacion de producto: " . $e->getMessage(), 901);
-            throw new Exception("No se pudo editar la clasificacion de producto", 901);
-        }
-        DAO::transEnd();
-        Logger::log("Clasificacion de producto editada exitosamente");
-    }
-    
-    /**
-     *
-     *Este metodo desactiva una categoria de tal forma que ya no se vuelva a usar como categoria sobre un producto.
-     *
-     * @param id_categoria int Id de la categoria a desactivar
-     **/
-    public static function DesactivarCategoria($id_categoria)
-    {
-        Logger::log("Desactivando clasificacion de producto " . $id_categoria);
-        
-        //Se valida el parametro obtenido
-        $validar = self::validarParametrosClasificacionProducto($id_categoria);
-        if (is_string($validar)) {
-            Logger::error($validar);
-            throw new Exception($validar);
-        } //is_string($validar)
-        
-        //Se verifica que ningun producto este relacionado con esta categoria
-        $productos_clasificacion = ProductoClasificacionDAO::search(new ProductoClasificacion(array(
-            "id_clasificacion_producto" => $id_categoria
-        )));
-        
-        foreach ($productos_clasificacion as $producto_clasificacion) {
-            $producto = ProductoDAO::getByPK($producto_clasificacion->getIdProducto());
-            if ($producto->getActivo()) {
-                Logger::error("No se puede eliminar la clasificacion de producto pues el producto " . $producto->getIdProducto() . " aun lo contiene");
-                throw new Exception("No se puede eliminar la clasificacion de producto pues el producto " . $producto->getIdProducto() . " aun lo contiene");
-            } //$producto->getActivo()
-        } //$productos_clasificacion as $producto_clasificacion
-        
-        $clasificacion_producto = ClasificacionProductoDAO::getByPK($id_categoria);
-        $clasificacion_producto->setActiva(0);
-        
-        //Se eliminaran todos los registro de impuesto_clasificacion_producto y retencion_clasificacion_producto
-        //que contenagn a esta clasificacion
-        $impuestos_clasificacion_producto   = ImpuestoClasificacionProductoDAO::search(new ImpuestoClasificacionProducto(array(
-            "id_clasificacion_producto" => $id_categoria
-        )));
-        $retenciones_clasificacion_producto = RetencionClasificacionProductoDAO::search(new RetencionClasificacionProducto(array(
-            "id_clasificacion_producto" => $id_categoria
-        )));
-        DAO::transBegin();
-        try {
-            ClasificacionProductoDAO::save($clasificacion_producto);
-            foreach ($impuestos_clasificacion_producto as $impuesto_clasificacion_producto) {
-                ImpuestoClasificacionProductoDAO::delete($impuesto_clasificacion_producto);
-            } //$impuestos_clasificacion_producto as $impuesto_clasificacion_producto
-            foreach ($retenciones_clasificacion_producto as $retencion_clasificacion_producto) {
-                RetencionClasificacionProductoDAO::delete($retencion_clasificacion_producto);
-            } //$retenciones_clasificacion_producto as $retencion_clasificacion_producto
-        }
-        catch (Exception $e) {
-            DAO::transRollback();
-            Logger::error("No se pudo eliminar la clasificacion de producto " . $id_categoria . ": " . $e);
-            throw new Exception("No se pudo eliminar la clasificacion de producto");
-        }
-        DAO::transEnd();
-        Logger::log("clasificacion eliminada exitosamente");
-        
-    }
-    
-    /**
-     *
      *Elimina una equivalencia entre dos unidades.
      Ejemplo: 1 kg = 2.204 lb
      *
@@ -2104,48 +2026,7 @@ class ProductosController extends ValidacionesController implements IProductos
     }
     
     
-    /**
-     *
-     *Busca las categorias de los productos
-     *
-     * @param id_categoria int Se busca una categoria dado su id_categoria
-     * @param id_categoria_padre int Se buscan las categorias pertenecientes a una categoria padre dado su id_categoria_padre. 
-     * @param query string Buscar categoria por nombre_producto, codigo_producto, codigo_de_barras
-     * @return numero_de_resultados int El numero de resultados obtenido de la busqueda
-     * @return resultados json json con los resultados de la busqueda
-     **/
-    static function BuscarCategoria($id_categoria = null, $id_categoria_padre = null, $query = null)
-    {
-		
-		
-		if(!is_null($id_categoria)){
-			$r = ClasificacionProductoDAO::search(new ClasificacionProducto(array("id_clasificacion_producto" => $id_categoria )));
-			
-		}else if(!is_null($id_categoria_padre)){
-			$r = ClasificacionProductoDAO::search(new ClasificacionProducto(array("id_clasificacion_producto" => $id_categoria )));
-			
-		}else if(!is_null($query)){
-			$r = ClasificacionProductoDAO::buscarQuery( $query );
-			
-		}else{
-			$r = ClasificacionProductoDAO::getAll();
-			
-		}
-		
-		$f_res = array();
-		
-		foreach ($r as $_r) {
-			$foo = $_r->asArray();
-			$foo["id_categoria"] = $foo["id_clasificacion_producto"];
-			unset($foo["id_clasificacion_producto"]);
-			array_push( $f_res,  $foo);
-		}
-		
-		return array(
-			"resultados" => $f_res,
-			"numero_de_resultados" => sizeof($r)
-		);
-    }
+    
 
 
 

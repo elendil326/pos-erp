@@ -20,12 +20,12 @@ require_once("interfaces/Contactos.interface.php");
  	 * @param padre_id int El ID del padre de la categoria a crear.
  	 * @return id_categoria int El ID de la categoria recien creada.
  	 **/
-	public static function NuevoCategoria($nombre, $activa=true, $descripcion=null, $padre_id = null) {
+	public static function NuevoCategoria($nombre, $activa=true, $descripcion=null, $id_padre=null) {
   		$categoria = new CategoriaContacto(array(
   			'nombre' => $nombre,
   			'activa' => $activa,
   			'descripcion' => $descripcion,
-  			'padre_id' => $padre_id
+  			'id_padre' => $id_padre
   		));
 
   		try {
