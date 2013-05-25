@@ -2795,7 +2795,7 @@ class SucursalesController extends ValidacionesController implements ISucursales
             $caja->setDescripcion($descripcion);
             $caja->setIdSucursal($id_sucursal);
             $caja->setSaldo(0);
-            $caja->setToken($token);
+            $caja->setToken($token);//-----------------------------CREAR LA CUENTA CONTABLE AQUI OBTENER EL ID DE LA CUENTA CAJAS Y ASIGNARLO COMO PADRE A LA NUEVA
             DAO::transBegin();
             try
             {
@@ -3030,7 +3030,7 @@ class SucursalesController extends ValidacionesController implements ISucursales
                 Logger::error("La caja no esta activa, no se puede editar");
                 throw new Exception("La caja no esta activa, no se puede editar");
             }
-            
+            //---------------------EDITAR EL NOMBRE DE LA CUENTA CONTABLE DE LA CAJA TB
             //Si un parametro no es nulo, se toma como actualizacion
             if(!is_null($descripcion))
             {

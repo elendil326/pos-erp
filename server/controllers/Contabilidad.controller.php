@@ -207,6 +207,44 @@ require_once("interfaces/Contabilidad.interface.php");
 		return array("resultados" => $catalogos);
 	}
 
+	public function ListarCuentasConceptosGastos(){
+
+		$ctas = self::BuscarCuenta(1, $afectable = 1, $clasificacion = "Egresos",
+								$clave = "", $consecutivo_en_nivel = "", $es_cuenta_mayor = "",
+								$es_cuenta_orden = "", $id_cuenta_contable = "", $id_cuenta_padre = "",
+								$naturaleza = "", $nivel = "", $nombre_cuenta = "", $tipo_cuenta = ""
+								);
+		//$x = self::ObtenerTodasSubcuentasCuentaContable(37);
+		//Logger::log("::::::::::::::::::::: Recur x= ".print_r($x,true));
+		return $ctas;
+	}
+
+	public function ObtenerTodasSubcuentasCuentaContable($id){
+
+		$hijos = self::BuscarCuenta(1, $afectable = "", $clasificacion = "Egresos",
+								$clave = "", $consecutivo_en_nivel = "", $es_cuenta_mayor = "",
+								$es_cuenta_orden = "", $id_cuenta_contable = "", $id_cuenta_padre = $id,
+								$naturaleza = "", $nivel = "", $nombre_cuenta = "", $tipo_cuenta = ""
+								);
+		$res = $hijos["resultados"];
+		//Logger::log("----------------------- ObtenerCuentasConceptosGastos, hijos['resultados']: ".count($hijos["resultados"]));
+		//Logger::log("::::::::::::::::::::::: ObtenerCuentasConceptosGastos, Res: ".count($res));
+		foreach ($hijos["resultados"] as $h) {//Logger::log("----------------------- Dentro de foreach= ".$h->nombre_cuenta);
+			$nietos = self::ObtenerCuentasConceptosGastos($h->getIdCuentaContable());
+			$hijos = array_merge_recursive($hijos["resultados"],$nietos);//Logger::log("----------------------- Array hijos= ".print_r($hijos,true));
+		}
+		return $hijos["resultados"];
+	}
+
+	public function ListarCuentasConceptosIngresos(){
+
+		return self::BuscarCuenta(1, $afectable = 1, $clasificacion = "Ingresos",
+								$clave = "", $consecutivo_en_nivel = "", $es_cuenta_mayor = "",
+								$es_cuenta_orden = "", $id_cuenta_contable = "", $id_cuenta_padre = "",
+								$naturaleza = "", $nivel = "", $nombre_cuenta = "", $tipo_cuenta = ""
+								);
+	}
+
 	/**
  	 *
  	 *Edita una cuenta contable que exista en el sistema
@@ -807,9 +845,21 @@ require_once("interfaces/Contabilidad.interface.php");
 						'Egresos', 1, 0, $id_catalogo_cuentas, 'Deudora', 
 						'Compras', 'Estado de Resultados', $id_cuenta_padre = ""
 						);
-		self::NuevaCuenta(0, 1,
+		$eg = self::NuevaCuenta(0, 1,
 						'Egresos', 1, 0, $id_catalogo_cuentas, 'Deudora', 
 						'Gastos', 'Estado de Resultados', $id_cuenta_padre = ""
+						);
+		self::NuevaCuenta(0, 1,
+						'Egresos', 0, 0, $id_catalogo_cuentas, 'Deudora', 
+						'Gastos de Administracion', 'Estado de Resultados', $eg['id_cuenta_contable']
+						);
+		self::NuevaCuenta(0, 1,
+						'Egresos', 0, 0, $id_catalogo_cuentas, 'Deudora', 
+						'Gastos de Venta', 'Estado de Resultados', $eg['id_cuenta_contable']
+						);
+		self::NuevaCuenta(0, 1,
+						'Egresos', 0, 0, $id_catalogo_cuentas, 'Deudora', 
+						'Gastos de Produccion', 'Estado de Resultados', $eg['id_cuenta_contable']
 						);
 		self::NuevaCuenta(0, 1,
 						'Egresos', 1, 0, $id_catalogo_cuentas, 'Deudora', 

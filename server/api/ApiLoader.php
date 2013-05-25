@@ -1897,9 +1897,9 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
+			"id_cuenta_contable" => new ApiExposedProperty("id_cuenta_contable", true, POST, array( "int" )),
 			"nombre" => new ApiExposedProperty("nombre", true, POST, array( "string" )),
 			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "string" )),
-			"monto" => new ApiExposedProperty("monto", false, POST, array( "float" )),
 		);
 	}
 
@@ -1908,9 +1908,9 @@
  		$this->response = CargosYAbonosController::NuevoConceptoGasto( 
  			
 			
+			isset($_POST['id_cuenta_contable'] ) ? $_POST['id_cuenta_contable'] : null,
 			isset($_POST['nombre'] ) ? $_POST['nombre'] : null,
-			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null,
-			isset($_POST['monto'] ) ? $_POST['monto'] :  null
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -1930,8 +1930,8 @@
 	{
 		$this->request = array(	
 			"id_concepto_gasto" => new ApiExposedProperty("id_concepto_gasto", true, GET, array( "int" )),
+			"id_cuenta_contable" => new ApiExposedProperty("id_cuenta_contable", true, GET, array( "int" )),
 			"descripcion" => new ApiExposedProperty("descripcion", false, GET, array( "string" )),
-			"monto" => new ApiExposedProperty("monto", false, GET, array( "float" )),
 			"nombre" => new ApiExposedProperty("nombre", false, GET, array( "string" )),
 		);
 	}
@@ -1942,8 +1942,8 @@
  			
 			
 			isset($_GET['id_concepto_gasto'] ) ? $_GET['id_concepto_gasto'] : null,
+			isset($_GET['id_cuenta_contable'] ) ? $_GET['id_cuenta_contable'] : null,
 			isset($_GET['descripcion'] ) ? $_GET['descripcion'] :  null,
-			isset($_GET['monto'] ) ? $_GET['monto'] :  null,
 			isset($_GET['nombre'] ) ? $_GET['nombre'] :  null
 			
 			);
@@ -1991,9 +1991,9 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
+			"id_cuenta_contable" => new ApiExposedProperty("id_cuenta_contable", true, POST, array( "int" )),
 			"nombre" => new ApiExposedProperty("nombre", true, POST, array( "string" )),
 			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "string" )),
-			"monto" => new ApiExposedProperty("monto", false, POST, array( "float" )),
 		);
 	}
 
@@ -2002,9 +2002,9 @@
  		$this->response = CargosYAbonosController::NuevoConceptoIngreso( 
  			
 			
+			isset($_POST['id_cuenta_contable'] ) ? $_POST['id_cuenta_contable'] : null,
 			isset($_POST['nombre'] ) ? $_POST['nombre'] : null,
-			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null,
-			isset($_POST['monto'] ) ? $_POST['monto'] :  null
+			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -2024,8 +2024,8 @@
 	{
 		$this->request = array(	
 			"id_concepto_ingreso" => new ApiExposedProperty("id_concepto_ingreso", true, POST, array( "int" )),
+			"id_cuenta_contable" => new ApiExposedProperty("id_cuenta_contable", true, POST, array( "int" )),
 			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "string" )),
-			"monto" => new ApiExposedProperty("monto", false, POST, array( "float" )),
 			"nombre" => new ApiExposedProperty("nombre", false, POST, array( "string" )),
 		);
 	}
@@ -2036,8 +2036,8 @@
  			
 			
 			isset($_POST['id_concepto_ingreso'] ) ? $_POST['id_concepto_ingreso'] : null,
+			isset($_POST['id_cuenta_contable'] ) ? $_POST['id_cuenta_contable'] : null,
 			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null,
-			isset($_POST['monto'] ) ? $_POST['monto'] :  null,
 			isset($_POST['nombre'] ) ? $_POST['nombre'] :  null
 			
 			);
@@ -9158,7 +9158,7 @@
 		}
  	}
   }
-  
+  /home/nolla/Descargas/full_api (12)/controller/interfaces/CargosYAbonos.interface.php
   
 
   class ApiContactosCategoriaDetalles extends ApiHandler {
