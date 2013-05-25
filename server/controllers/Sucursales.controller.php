@@ -3059,7 +3059,7 @@ class SucursalesController extends ValidacionesController implements ISucursales
                 $caja->setDescripcion($descripcion);
                 $cc = CuentaContableDAO::getByPK($caja->getIdCuentaContable());
                 if(count($cc)>0){
-                    $cc->setDescripcion($descripcion);
+                    $cc->setNombreCuenta($descripcion);
                     DAO::transBegin();
                     try
                     {
