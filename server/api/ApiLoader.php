@@ -9158,7 +9158,6 @@
 		}
  	}
   }
-  /home/nolla/Descargas/full_api (12)/controller/interfaces/CargosYAbonos.interface.php
   
 
   class ApiContactosCategoriaDetalles extends ApiHandler {
