@@ -20,7 +20,7 @@
 
 	$form->createComboBoxJoinDistintName("id_tarifa_venta", "id_tarifa" ,"nombre", TarifaDAO::search(new Tarifa(array("tipo_tarifa"=>"venta"))), $este_rol->getIdTarifaVenta());
 	$form->createComboBoxJoinDistintName("id_tarifa_compra", "id_tarifa" ,"nombre", TarifaDAO::search(new Tarifa(array("tipo_tarifa"=>"venta"))), $este_rol->getIdTarifaCompra());
-	$form->createComboBoxJoinDistintName("id_rol_padre", "id_rol", "nombre", PersonalYAgentesController::ListaRol(), $este_rol->getIdRolPadre());
+	$form->createComboBoxJoinDistintName("id_rol_padre", "id_rol", "nombre", RolDAO::getAll(), $este_rol->getIdRolPadre());
 	$form->createComboBoxJoin("id_perfil", "descripcion", POSController::ListaPerfilConfiguracion(), $este_rol->getIdPerfil());
 
 	$form->addApiCall( "api/personal/rol/editar/" );

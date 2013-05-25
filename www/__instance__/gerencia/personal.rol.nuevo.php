@@ -24,7 +24,7 @@
 
 	$form->createComboBoxJoinDistintName("id_tarifa_venta", "id_tarifa" ,"nombre", TarifaDAO::search(new Tarifa(array("tipo_tarifa"=>"venta"))));
 	$form->createComboBoxJoinDistintName("id_tarifa_compra", "id_tarifa" ,"nombre", TarifaDAO::search(new Tarifa(array("tipo_tarifa"=>"venta"))));
-	$form->createComboBoxJoinDistintName("id_rol_padre", "id_rol", "nombre", PersonalYAgentesController::ListaRol());
+	$form->createComboBoxJoinDistintName("id_rol_padre", "id_rol", "nombre", RolDAO::getAll());
 	$form->createComboBoxJoin("id_perfil", "descripcion", POSController::ListaPerfilConfiguracion());
 	$form->setType("descripcion", "textarea");
 	$page->addComponent( $form );
