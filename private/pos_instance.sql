@@ -261,10 +261,10 @@ CREATE TABLE IF NOT EXISTS `caja` (
   `saldo` float NOT NULL DEFAULT '0' COMMENT 'Saldo actual de la caja',
   `control_billetes` tinyint(1) NOT NULL COMMENT 'Si esta caja esta llevando control de billetes o no',
   `activa` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Si la caja esta activa o ha sido eliminada',
+  `id_cuenta_contable` int(11) NOT NULL COMMENT 'El id de la cuenta contable a la que apunta esta caja',
   PRIMARY KEY (`id_caja`),
   KEY `id_sucursal` (`id_sucursal`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
 -- --------------------------------------------------------
 
 --
@@ -276,7 +276,7 @@ CREATE TABLE IF NOT EXISTS `catalogo_cuentas` (
   `descripcion` varchar(150) NOT NULL COMMENT 'La descripción del catalogo de cuentas.',
   `id_empresa` int(11) NOT NULL COMMENT 'El id de la empresa a la que va vinculada ésta cuenta',
   PRIMARY KEY (`id_catalogo`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -573,8 +573,8 @@ CREATE TABLE IF NOT EXISTS `concepto_gasto` (
   `id_concepto_gasto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Id de la tabla concepto gasto',
   `nombre` varchar(50) NOT NULL COMMENT 'Nombre del concepto',
   `descripcion` varchar(255) DEFAULT NULL COMMENT 'Descripcion detallada del concepto',
-  `monto` float DEFAULT NULL COMMENT 'monto del concepto si este es fijo siempre',
   `activo` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Si este concepto de gasto esta activo',
+  `id_cuenta_contable` int(11) NOT NULL COMMENT 'El id de la cuenta contable a la que apunta este concepto',
   PRIMARY KEY (`id_concepto_gasto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Conceptos de gasto' AUTO_INCREMENT=1 ;
 
@@ -588,8 +588,8 @@ CREATE TABLE IF NOT EXISTS `concepto_ingreso` (
   `id_concepto_ingreso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Id del concepto de ingreso',
   `nombre` varchar(50) NOT NULL COMMENT 'nombre del concepto',
   `descripcion` varchar(255) DEFAULT NULL COMMENT 'Descripcion del concepto',
-  `monto` float DEFAULT NULL COMMENT 'Si el concepto tienen un monto fijo',
   `activo` tinyint(1) NOT NULL COMMENT 'Si este concepto de ingreso esta activo',
+  `id_cuenta_contable` int(11) NOT NULL COMMENT 'El id de la cuenta contable a la que apunta este concepto',
   PRIMARY KEY (`id_concepto_ingreso`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Concepto de ingreso' AUTO_INCREMENT=1 ;
 
@@ -857,7 +857,7 @@ CREATE TABLE IF NOT EXISTS `empresa` (
   `id_logo` int(11) NOT NULL,
   `mensaje_morosos` text CHARACTER SET utf8 COMMENT 'Mensaje para clientes y proveedores morosos',
   PRIMARY KEY (`id_empresa`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='tabla de empresas' AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='tabla de empresas' AUTO_INCREMENT=1;
 
 -- --------------------------------------------------------
 
