@@ -1511,7 +1511,7 @@ class CargosYAbonosController extends ValidacionesController implements ICargosY
         ContabilidadController::NuevaCuenta($cuenta_padre->getAbonosAumentan(), $cuenta_padre->getCargosAumentan(),
                                             $cuenta_padre->getClasificacion(), $cuenta_padre->getEsCuentaMayor(),
                                             $cuenta_padre->getEsCuentaOrden(), $cuenta_padre->getIdCatalogoCuentas(),
-                                            $cuenta_padre->getNaturaleza(),$naturaleza, $nombre,
+                                            $cuenta_padre->getNaturaleza(), $nombre,
                                             $cuenta_padre->getTipoCuenta(), $id_cuenta_contable
                                             );
 
@@ -1654,7 +1654,7 @@ class CargosYAbonosController extends ValidacionesController implements ICargosY
         ContabilidadController::NuevaCuenta($cuenta_padre->getAbonosAumentan(), $cuenta_padre->getCargosAumentan(),
                                             $cuenta_padre->getClasificacion(), $cuenta_padre->getEsCuentaMayor(),
                                             $cuenta_padre->getEsCuentaOrden(), $cuenta_padre->getIdCatalogoCuentas(),
-                                            $cuenta_padre->getNaturaleza(),$naturaleza, $nombre,
+                                            $cuenta_padre->getNaturaleza(), $nombre,
                                             $cuenta_padre->getTipoCuenta(), $id_cuenta_contable
                                             );
 

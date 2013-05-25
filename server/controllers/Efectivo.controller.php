@@ -1195,6 +1195,12 @@ class EfectivoController implements IEfectivo{
 
             try {
                 ConfiguracionDAO::save($c);
+
+                $c_e = new ConfiguracionEmpresa();
+                $c_e->setIdConfiguracionEmpresa($c->getIdConfiguracion());
+                $c_e->setIdEmpresa($id_empresa);
+                ConfiguracionEmpresaDAO::save($c_e);
+
             }catch (Exception $e) {
                 Logger::error("No se pudo crear la configuracion de monedas: " . $e->getMessage());
                 throw new InvalidDatabaseOperationException("No se pudo crear la configuracion de monedas " . $e->getMessage());

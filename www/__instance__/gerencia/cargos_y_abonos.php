@@ -215,12 +215,11 @@
 	$page->addComponent( new TitleComponent( "Nuevo concepto de ingreso" , 3 ) );
 	$form = new DAOFormComponent( new ConceptoIngreso() );
 	$form->addApiCall( "api/cargosyabonos/ingreso/concepto/nuevo", "POST" );
+	$form->onApiCallSuccessRedirect("cargos_y_abonos.php");
 	$form->hideField( array( "id_concepto_ingreso" ) );
 	$form->hideField( array( "activo" ) );
 	$form->createComboBoxJoin( "id_cuenta_contable", "nombre_cuenta", $ingresos["resultados"]);
-	$form->renameField( array( 
-		"id_cuenta_contable" => "Cuenta Contable",
-	));
+
 	$form->makeObligatory( array( "nombre" ) );
 	$page->addComponent( $form );
 
@@ -230,13 +229,13 @@
 	$form = new DAOFormComponent( new ConceptoGasto() );
 	$page->addComponent( new TitleComponent( "Nuevo concepto de gasto" , 3 ) );
 	$form->addApiCall( "api/cargosyabonos/gasto/concepto/nuevo", "POST" );
+	$form->onApiCallSuccessRedirect("cargos_y_abonos.php");
 	$form->hideField( array( "id_concepto_gasto" ) );
 	$form->hideField( array( "activo" ) );
 	$form->createComboBoxJoin( "id_cuenta_contable", "nombre_cuenta", $gastos["resultados"]);
-	$form->renameField( array( 
-		"id_cuenta_contable" => "Cuenta Contable",
-	));
+
 	$form->makeObligatory( array( "nombre" ) );
+	$form->makeObligatory( array( "id_cuenta_contable" ) );
 	$page->addComponent( $form );
 
 	$page->render( );

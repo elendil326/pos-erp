@@ -2786,6 +2786,25 @@ class SucursalesController extends ValidacionesController implements ISucursales
                 $control_billetes = 0;
             }
             
+            $caja = ContabilidadController::BuscarCuenta(1, $afectable = "", $clasificacion = "Activo Circulante",
+                                                    $clave = "", $consecutivo_en_nivel = "", $es_cuenta_mayor = "",
+                                                    $es_cuenta_orden = "", $id_cuenta_contable = "", $id_cuenta_padre = "",
+                                                    $naturaleza = "Deudora", $nivel = "", $nombre_cuenta = "Caja", $tipo_cuenta = "Balance"
+                                                );
+            if(count($caja["resultados"])<1)
+            {
+                Logger::Log("Debe de existir la cuenta contable 'Caja' para dar de alta una caja");
+                throw new BusinessLogicException("Debe de existir la cuenta contable 'Caja' para dar de alta una caja");
+            }
+
+            //se inserta la cuenta contable
+            $res = ContabilidadController::NuevaCuenta($caja["resultados"][0]->getAbonosAumentan(), $caja["resultados"][0]->getCargosAumentan(),
+                                            $caja["resultados"][0]->getClasificacion(), $caja["resultados"][0]->getEsCuentaMayor(),
+                                            $caja["resultados"][0]->getEsCuentaOrden(), $caja["resultados"][0]->getIdCatalogoCuentas(),
+                                            $caja["resultados"][0]->getNaturaleza(), $descripcion,
+                                            $caja["resultados"][0]->getTipoCuenta(), $caja["resultados"][0]->getIdCuentaContable()
+                                            );
+
             //Se inicializa el registro de caja
             $caja = new Caja();
             $caja->setIdSucursal($id_sucursal);
@@ -2795,13 +2814,16 @@ class SucursalesController extends ValidacionesController implements ISucursales
             $caja->setDescripcion($descripcion);
             $caja->setIdSucursal($id_sucursal);
             $caja->setSaldo(0);
-            $caja->setToken($token);//-----------------------------CREAR LA CUENTA CONTABLE AQUI OBTENER EL ID DE LA CUENTA CAJAS Y ASIGNARLO COMO PADRE A LA NUEVA
+            $caja->setToken($token);
+            $caja->setIdCuentaContable($res["id_cuenta_contable"]);
+
             DAO::transBegin();
             try
             {
                 //Se guarda el registro de caja y si se recibieron impresoras se registran con la caja
                 //en la tabla impresora_caja.
                 CajaDAO::save($caja);
+
                 if(!is_null($impresoras))
                 {
                     $impresoras = object_to_array($impresoras);
@@ -3030,12 +3052,29 @@ class SucursalesController extends ValidacionesController implements ISucursales
                 Logger::error("La caja no esta activa, no se puede editar");
                 throw new Exception("La caja no esta activa, no se puede editar");
             }
-            //---------------------EDITAR EL NOMBRE DE LA CUENTA CONTABLE DE LA CAJA TB
+            
             //Si un parametro no es nulo, se toma como actualizacion
             if(!is_null($descripcion))
             {
                 $caja->setDescripcion($descripcion);
-            }
+                $cc = CuentaContableDAO::getByPK($caja->getIdCuentaContable());
+                if(count($cc)>0){
+                    $cc->setDescripcion($descripcion);
+                    DAO::transBegin();
+                    try
+                    {
+                        CuentaContableDAO::save($cc);
+                    }
+                    catch(Exception $e)
+                    {
+                        DAO::transRollback();
+                        Logger::error("No se pudo editar la cuenta contable de la caja $descripcion: ".$e);
+                        throw new Exception("No se pudo editar la cuenta contable de la caja $descripcion");
+                    }
+                    DAO::transEnd();
+                    Logger::log("Cuenta contable de la caja: $descripcion editada correctamente");
+                }
+            }//fin if $descripcion
             if(!is_null($token))
             {
                 $caja->setToken($token);
