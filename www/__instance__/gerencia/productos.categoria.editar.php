@@ -1,6 +1,5 @@
 <?php 
 
-
 require_once('../../../server/bootstrap.php');
 
 $page = new GerenciaComponentPage();
@@ -19,20 +18,30 @@ $form->hideField(array(
 	'id_clasificacion_producto'
 ));
 $form->sendHidden('id_clasificacion_producto');
+
+
 $form->setValueField('nombre', $categoria->getNombre());
 $form->setValueField('descripcion', $categoria->getDescripcion());
 // $response = ProductosController::DetallesCategoria($categoria->getIdPadre());
 // if (!is_null($response['categoria'])){
 // 	$form->setValueField('id_categoria_padre', $response['categoria']->getNombre());
 // }
+
 $form->setType('descripcion', 'textarea');
 $form->setType('activa', 'bool');
 $form->setCaption('id_categoria_padre', 'Categor&iacute;a Padre');
+
 $categorias = ProductosController::BuscarCategoria();
+$categorias = $categorias['categorias'];
+foreach ($categorias as $key => $cat) {
+	$cat->caption = $cat->nombre_completo;
+	$cat->id = $cat->id_clasificacion_producto;
+	$categorias[$key] = $cat->asArray();
+}
 $form->createComboBoxJoin(
 	'id_categoria_padre',
 	'nombre_completo',
-	$categorias['categorias']
+	$categorias
 );
 $form->addApiCall('api/productos/categoria/editar', 'POST');
 $form->onApiCallSuccessRedirect("productos.categorias.php");

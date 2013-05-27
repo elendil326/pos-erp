@@ -45,8 +45,8 @@ class ProductosController extends ValidacionesController implements IProductos {
      * @param id_categoria_padre int Id de la categora padre en caso de tenerla
      * @param nombre string Nombre de la categoria del producto
      **/
-  static function EditarCategoria($id_categoria, $activa = null, $descripcion = null, $id_categoria_padre = null, $nombre = null) {
-        $categoria = ClasificacionProductoDAO::getByPK($id);
+    public static function EditarCategoria($id_categoria, $activa = null, $descripcion = null, $id_categoria_padre = null, $nombre = null) {
+        $categoria = ClasificacionProductoDAO::getByPK($id_categoria);
 
         if (!is_null($activa)) {
             $categoria->setActiva($activa);
@@ -61,7 +61,7 @@ class ProductosController extends ValidacionesController implements IProductos {
             $categoria->setNombre($nombre);
         }
 
-        if (ClasificacionProductoDAO::ChecarRecursion($categoria->getId(), $categoria->getIdCategoriaPadre())) {
+        if (ClasificacionProductoDAO::ChecarRecursion($categoria->getIdClasificacionProducto(), $categoria->getIdCategoriaPadre())) {
             try {
                 ClasificacionProductoDAO::save($categoria);
             } catch (Exception $e) {

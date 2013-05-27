@@ -29,7 +29,7 @@ if (!is_null($response['categoria'])){
 }
 
 $page->addComponent(new TitleComponent($categoria->nombre_completo));
-$page->addComponent("<div class='POS Boton' onClick='window.location=\"productos.editar.categoria.php?id=".$categoria->getIdClasificacionProducto()."\"'>Editar</div>");
+$page->addComponent("<div class='POS Boton' onClick='window.location=\"productos.categoria.editar.php?id=".$categoria->getIdClasificacionProducto()."\"'>Editar</div>");
 $page->addComponent("<div class='POS Boton' onClick='window.location=\"productos.categoria.nueva.php\"'>Crear</div>");
 $page->addComponent($form);
 $page->render();
