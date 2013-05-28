@@ -45,8 +45,8 @@ class GerenciaComponentPage extends PosComponentPage{
 		            "url": "clientes.php",
 		            "children": [
 		                {
-		                    "title": "Clasificaciones",
-		                    "url": "clientes.lista.clasificacion.php"
+		                    "title": "Categorias",
+		                    "url": "contactos.categorias.php"
 		                }
 		            ]
 		        },
