@@ -210,7 +210,7 @@
 	$gastos = ContabilidadController::ListarCuentasConceptosGastos();
 
 	$ingresos = ContabilidadController::ListarCuentasConceptosIngresos();
-
+Logger::log("----------------Ingresos: ".print_r($ingresos,true));
 	$page->nextTab( "Conceptos" );
 	$page->addComponent( new TitleComponent( "Nuevo concepto de ingreso" , 3 ) );
 	$form = new DAOFormComponent( new ConceptoIngreso() );
@@ -221,6 +221,7 @@
 	$form->createComboBoxJoin( "id_cuenta_contable", "nombre_cuenta", $ingresos["resultados"]);
 
 	$form->makeObligatory( array( "nombre" ) );
+	$form->makeObligatory( array( "id_cuenta_contable" ) );
 	$page->addComponent( $form );
 
 	/*

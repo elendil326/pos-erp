@@ -209,40 +209,80 @@ require_once("interfaces/Contabilidad.interface.php");
 
 	public function ListarCuentasConceptosGastos(){
 
-		$ctas = self::BuscarCuenta(1, $afectable = 1, $clasificacion = "Egresos",
+		$ctas = self::BuscarCuenta(1, $afectable = "", $clasificacion = "Egresos",
 								$clave = "", $consecutivo_en_nivel = "", $es_cuenta_mayor = "",
 								$es_cuenta_orden = "", $id_cuenta_contable = "", $id_cuenta_padre = "",
-								$naturaleza = "", $nivel = "", $nombre_cuenta = "", $tipo_cuenta = ""
+								$naturaleza = "Deudora", $nivel = 1, $nombre_cuenta = "Gastos", $tipo_cuenta = "Estado de Resultados"
 								);
-		//$x = self::ObtenerTodasSubcuentasCuentaContable(37);
-		//Logger::log("::::::::::::::::::::: Recur x= ".print_r($x,true));
-		return $ctas;
+
+		if (count($ctas["resultados"])<1) {
+			Logger::log("Debe de existir la cuenta contable 'Gastos' para poder ingresar conceptos de gastos");
+			return array("resultados"=>array());
+		}
+
+		$x = self::ObtenerTodasSubcuentasCuentaContable($ctas["resultados"][0]->getIdCuentaContable());
+		
+		if(count($ctas["resultados"])>0)
+			array_push($x["resultados"],$ctas["resultados"][0]);
+
+		return $x;
 	}
 
 	public function ObtenerTodasSubcuentasCuentaContable($id){
 
-		$hijos = self::BuscarCuenta(1, $afectable = "", $clasificacion = "Egresos",
+		$hijos = self::BuscarCuenta(1, $afectable = "", $clasificacion = "",
 								$clave = "", $consecutivo_en_nivel = "", $es_cuenta_mayor = "",
 								$es_cuenta_orden = "", $id_cuenta_contable = "", $id_cuenta_padre = $id,
 								$naturaleza = "", $nivel = "", $nombre_cuenta = "", $tipo_cuenta = ""
 								);
-		$res = $hijos["resultados"];
-		//Logger::log("----------------------- ObtenerCuentasConceptosGastos, hijos['resultados']: ".count($hijos["resultados"]));
-		//Logger::log("::::::::::::::::::::::: ObtenerCuentasConceptosGastos, Res: ".count($res));
-		foreach ($hijos["resultados"] as $h) {//Logger::log("----------------------- Dentro de foreach= ".$h->nombre_cuenta);
-			$nietos = self::ObtenerCuentasConceptosGastos($h->getIdCuentaContable());
-			$hijos = array_merge_recursive($hijos["resultados"],$nietos);//Logger::log("----------------------- Array hijos= ".print_r($hijos,true));
+		$res["resultados"] = $hijos["resultados"];
+		
+		foreach ($hijos["resultados"] as $h) {
+			$nietos = self::ObtenerTodasSubcuentasCuentaContable($h->getIdCuentaContable());
+			if(count($nietos["resultados"])>0){
+				$hijos = array_merge_recursive($hijos,$nietos);
+			}
 		}
-		return $hijos["resultados"];
+		return $hijos;
 	}
 
 	public function ListarCuentasConceptosIngresos(){
 
-		return self::BuscarCuenta(1, $afectable = 1, $clasificacion = "Ingresos",
+		$cc = self::BuscarCuenta(1, $afectable = "", $clasificacion = "Capital Contable",
 								$clave = "", $consecutivo_en_nivel = "", $es_cuenta_mayor = "",
 								$es_cuenta_orden = "", $id_cuenta_contable = "", $id_cuenta_padre = "",
-								$naturaleza = "", $nivel = "", $nombre_cuenta = "", $tipo_cuenta = ""
+								$naturaleza = "Acreedora", $nivel = 1, $nombre_cuenta = "Capital Social", $tipo_cuenta = "Balance"
 								);
+		$res = array();
+		$res["resultados"] = array();
+
+		if (count($cc["resultados"])<1) {
+			Logger::log("Debe de existir la cuenta contable 'Capital Social' para poder ingresar conceptos de ingresos");
+		}else{
+			array_push($res["resultados"], $cc["resultados"][0]);
+			$x = self::ObtenerTodasSubcuentasCuentaContable($cc["resultados"][0]->getIdCuentaContable());
+			foreach ($x["resultados"] as $c) {
+				array_push($res["resultados"],$c);
+			}
+		}
+
+		$dd = self::BuscarCuenta(1, $afectable = "", $clasificacion = "Activo Circulante",
+								$clave = "", $consecutivo_en_nivel = "", $es_cuenta_mayor = "",
+								$es_cuenta_orden = "", $id_cuenta_contable = "", $id_cuenta_padre = "",
+								$naturaleza = "Deudora", $nivel = 1, $nombre_cuenta = "Deudores Diversos", $tipo_cuenta = "Balance"
+								);
+
+		if (count($dd["resultados"])<1) {
+			Logger::log("Debe de existir la cuenta contable 'Deudores Diversos' para poder ingresar conceptos de ingresos");
+		}else{
+			array_push($res["resultados"], $dd["resultados"][0]);
+			$x = self::ObtenerTodasSubcuentasCuentaContable($dd["resultados"][0]->getIdCuentaContable());
+			foreach ($x["resultados"] as $c) {
+				array_push($res["resultados"],$c);
+			}
+		}
+
+		return $res;
 	}
 
 	/**
