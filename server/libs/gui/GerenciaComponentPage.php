@@ -153,8 +153,8 @@ class GerenciaComponentPage extends PosComponentPage{
 		                    "url": "productos.php#Lista"
 		                },
 		                {
-		                    "title": "Categoria",
-		                    "url": "productos.php#Categorias"
+		                    "title": "Categorias",
+		                    "url": "productos.categoria.lista.php"
 		                },
 		                {
 		                    "title": "Nuevo producto",
