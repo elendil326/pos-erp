@@ -1129,14 +1129,18 @@ class EfectivoController implements IEfectivo{
      **/
     public static function MostrarEquivalenciasActualizar()
     {
+        $res = array();
+        $res["servicios"] = array();
+        $res["sistema"] = array();
+
         $id_mon = self::ObtenerMonedaBase();
+        if($id_mon===NULL)
+            return $res;
+
         $tc_servicio = self::ObtenerEquivalenciasServicio($id_mon["id_moneda_base"]);
         $conf = new Configuracion();
         $conf->setDescripcion("tipo_cambio");
         $tc_sistema = ConfiguracionDAO::search($conf);
-        $res = array();
-        $res["servicios"] = array();
-        $res["sistema"] = array();
 
         if (count($tc_sistema)>0) {
             $obj = json_decode($tc_sistema[0]->getValor(),true);
@@ -1380,7 +1384,8 @@ class EfectivoController implements IEfectivo{
         if(count($moneda_base)<1)
         {
             Logger::Log("La empresa no tiene moneda base");
-            throw new BusinessLogicException("La empresa no tiene moneda base");
+            //throw new BusinessLogicException("La empresa no tiene moneda base");
+            return NULL;
         }
 
         $moneda = MonedaDAO::getByPK($moneda_base[0]->getValor());

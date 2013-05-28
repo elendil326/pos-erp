@@ -26,7 +26,10 @@
 			$page->addComponent( $tabla );
 
         }else {
-        	$page->addComponent( new TitleComponent( "No hay registros de los tipos de cambio en el servidor o PUEDE SER QUE SOLO TENGA UNA MONEDA ACTIVA", 3 ));
+        	$page->addComponent( new TitleComponent( "Si usted requiere tipos de cambio, verifique lo siguiente:", 2 ));
+        	$page->addComponent( new TitleComponent( "- Que tenga configurada la moneda base de la <a href=\"empresas.lista.php\">Empresa</a>", 3 ));
+        	$page->addComponent( new TitleComponent( "- Que tenga activa mas de una <a href=\"efectivo.lista.moneda.php\">moneda</a> en el sistema", 3 ));
+        	$page->addComponent( new TitleComponent( "- Si tiene estos parametros de configuracion y no aparecen los tipos de cambio, contacte a personal de Caffeina", 3 ));
         }
 
 		if (count($mostrar_act["sistema"])>0) {
@@ -40,11 +43,11 @@
 			$page->addComponent( $tabla2 );
 		}
 
-		$page->addComponent( new TitleComponent( "Historial de Tipos Cambio en el Sistema", 3 ));
+		$page->addComponent( new TitleComponent( "Historial de Tipos Cambio en el Sistema", 2 ));
 
 		if(count($historial)<1)
 		{
-			$page->addComponent( new TitleComponent( "No hay registros", 2 ));
+			$page->addComponent( new TitleComponent( "No hay registros", 3 ));
 		} else {
 
 			$datos_concentrados = array();
