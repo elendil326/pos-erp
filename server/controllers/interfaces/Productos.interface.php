@@ -65,7 +65,7 @@
  	 *
  	 *Este metodo cambia la informacion de una categoria de producto
  	 *
- 	 * @param id_categoria int Id de la categoria del producto
+ 	 * @param id_clasificacion_producto int Id de la categoria del producto
  	 * @param activa bool Estado de la categoria.
  	 * @param descripcion string Descripcion larga de la categoria
  	 * @param id_categoria_padre int Id de la categora padre en caso de tenerla
@@ -73,7 +73,7 @@
  	 **/
   static function EditarCategoria
 	(
-		$id_categoria, 
+		$id_clasificacion_producto, 
 		$activa = null, 
 		$descripcion = null, 
 		$id_categoria_padre = null, 

@@ -35,16 +35,17 @@ $categorias = ProductosController::BuscarCategoria();
 $categorias = $categorias['categorias'];
 foreach ($categorias as $key => $cat) {
 	$cat->caption = $cat->nombre_completo;
-	$cat->id = $cat->id_clasificacion_producto;
+	$cat->id = $cat->getIdClasificacionProducto();
 	$categorias[$key] = $cat->asArray();
 }
 $form->createComboBoxJoin(
 	'id_categoria_padre',
 	'nombre_completo',
-	$categorias
+	$categorias,
+	$categoria->getIdCategoriaPadre()
 );
-$form->addApiCall('api/productos/categoria/editar', 'POST');
-$form->onApiCallSuccessRedirect("productos.categorias.php");
+$form->addApiCall('api/producto/categoria/editar', 'POST');
+$form->onApiCallSuccessRedirect("productos.categoria.lista.php");
 
 $page->addComponent(new TitleComponent($categoria->nombre_completo));
 $page->addComponent($form);

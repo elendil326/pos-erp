@@ -7216,7 +7216,7 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"id_categoria" => new ApiExposedProperty("id_categoria", true, POST, array( "int" )),
+			"id_clasificacion_producto" => new ApiExposedProperty("id_clasificacion_producto", true, POST, array( "int" )),
 			"activa" => new ApiExposedProperty("activa", false, POST, array( "bool" )),
 			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "string" )),
 			"id_categoria_padre" => new ApiExposedProperty("id_categoria_padre", false, POST, array( "int" )),
@@ -7229,7 +7229,7 @@
  		$this->response = ProductosController::EditarCategoria( 
  			
 			
-			isset($_POST['id_categoria'] ) ? $_POST['id_categoria'] : null,
+			isset($_POST['id_clasificacion_producto'] ) ? $_POST['id_clasificacion_producto'] : null,
 			isset($_POST['activa'] ) ? $_POST['activa'] :  null,
 			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null,
 			isset($_POST['id_categoria_padre'] ) ? $_POST['id_categoria_padre'] :  null,

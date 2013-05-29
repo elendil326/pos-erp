@@ -39,14 +39,14 @@ class ProductosController extends ValidacionesController implements IProductos {
      *
      *Este metodo cambia la informacion de una categoria de producto
      *
-     * @param id_categoria int Id de la categoria del producto
+     * @param id_clasificacion_producto int Id de la categoria del producto
      * @param activa bool Estado de la categoria.
      * @param descripcion string Descripcion larga de la categoria
      * @param id_categoria_padre int Id de la categora padre en caso de tenerla
      * @param nombre string Nombre de la categoria del producto
      **/
-    public static function EditarCategoria($id_categoria, $activa = null, $descripcion = null, $id_categoria_padre = null, $nombre = null) {
-        $categoria = ClasificacionProductoDAO::getByPK($id_categoria);
+    public static function EditarCategoria($id_clasificacion_producto, $activa = null, $descripcion = null, $id_categoria_padre = null, $nombre = null) {
+        $categoria = ClasificacionProductoDAO::getByPK($id_clasificacion_producto);
 
         if (!is_null($activa)) {
             $categoria->setActiva($activa);
@@ -54,8 +54,8 @@ class ProductosController extends ValidacionesController implements IProductos {
         if (!is_null($descripcion)) {
             $categoria->setDescripcion($descripcion);
         }
-        if (!is_null($id_padre)) {
-            $categoria->setIdCategoriaPadre($id_padre);
+        if (!is_null($id_categoria_padre)) {
+            $categoria->setIdCategoriaPadre($id_categoria_padre);
         }
         if (!is_null($nombre)) {
             $categoria->setNombre($nombre);
