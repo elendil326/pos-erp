@@ -285,6 +285,179 @@ require_once("interfaces/Contabilidad.interface.php");
 		return $res;
 	}
 
+	public function InsertarCuentasCategoriaContactos($nombre_cuenta,$id_categoria_contacto_padre){
+		$catalogo = CatalogoCuentasDAO::getAll();
+
+		if(count($catalogo)<1){
+			Logger::log("No se va a crear ninguna cuenta contable '{$nombre_cuenta}' de la Categoria Contactos, no existe ningun catalogo de cuentas");
+			return;
+		}
+
+		$cat_contac = CategoriaContactoDAO::getByPK($id_categoria_contacto_padre);
+
+		if (is_null($cat_contac)) {
+
+			$cc = self::BuscarCuenta(1, $afectable = "", $clasificacion = "Activo Circulante",
+								$clave = "", $consecutivo_en_nivel = "", $es_cuenta_mayor = "",
+								$es_cuenta_orden = "", $id_cuenta_contable = "", $id_cuenta_padre = "",
+								$naturaleza = "Deudora", $nivel = 1, $nombre_cta = "Cuentas por Cobrar", $tipo_cuenta = "Balance"
+								);
+			$prov = self::BuscarCuenta(1, $afectable = "", $clasificacion = "Pasivo Circulante",
+								$clave = "", $consecutivo_en_nivel = "", $es_cuenta_mayor = "",
+								$es_cuenta_orden = "", $id_cuenta_contable = "", $id_cuenta_padre = "",
+								$naturaleza = "Acreedora", $nivel = 1, $nombre_cta = "Proveedores", $tipo_cuenta = "Balance"
+								);
+
+			if(count($cc["resultados"])<1)
+				Logger::log("No se va a crear la cuenta contable CXC {$nombre_cuenta}");
+			else{
+				$obj = $cc["resultados"][0];
+				Logger::log("- Se creara la cuenta contable CXC {$nombre_cuenta}");
+				self::NuevaCuenta($obj->abonos_aumentan, $obj->cargos_aumentan,
+							$obj->clasificacion, $es_cuenta_mayor=0, $obj->es_cuenta_orden, $obj->id_catalogo_cuentas,
+							$obj->naturaleza, "CXC ".$nombre_cuenta, $obj->tipo_cuenta, $obj->id_cuenta_contable
+							);
+				Logger::log("- Se creo la cuenta contable CXC {$nombre_cuenta}");
+			}
+
+			if(count($prov["resultados"])<1)
+				Logger::log("No se va a crear la cuenta contable CXP {$nombre_cuenta}");
+			else{
+				$obj = $prov["resultados"][0];
+				Logger::log("- Se creara la cuenta contable CXP {$nombre_cuenta}");
+				self::NuevaCuenta($obj->abonos_aumentan, $obj->cargos_aumentan,
+							$obj->clasificacion, $es_cuenta_mayor=0, $obj->es_cuenta_orden, $obj->id_catalogo_cuentas,
+							$obj->naturaleza, "CXP ".$nombre_cuenta, $obj->tipo_cuenta, $obj->id_cuenta_contable
+							);
+				Logger::log("- Se creo la cuenta contable CXP {$nombre_cuenta}");
+			}
+
+		}else{
+
+			$cc = self::BuscarCuenta(1, $afectable = "", $clasificacion = "Activo Circulante",
+								$clave = "", $consecutivo_en_nivel = "", $es_cuenta_mayor = "",
+								$es_cuenta_orden = "", $id_cuenta_contable = "", $id_cuenta_padre = "",
+								$naturaleza = "Deudora", $nivel = "", $nombre_cta = "CXC ".$cat_contac->nombre, $tipo_cuenta = "Balance"
+								);
+			$prov = self::BuscarCuenta(1, $afectable = "", $clasificacion = "Pasivo Circulante",
+								$clave = "", $consecutivo_en_nivel = "", $es_cuenta_mayor = "",
+								$es_cuenta_orden = "", $id_cuenta_contable = "", $id_cuenta_padre = "",
+								$naturaleza = "Acreedora", $nivel = "", $nombre_cta = "CXP ".$cat_contac->nombre, $tipo_cuenta = "Balance"
+								);
+
+			if(count($cc["resultados"])<1)
+				Logger::log("No se va a crear la cuenta contable CXC {$nombre_cuenta}");
+			else{
+				$obj = $cc["resultados"][0];
+				Logger::log("- Se creara la cuenta contable CXC {$nombre_cuenta}");
+				self::NuevaCuenta($obj->abonos_aumentan, $obj->cargos_aumentan,
+							$obj->clasificacion, $es_cuenta_mayor=0, $obj->es_cuenta_orden, $obj->id_catalogo_cuentas,
+							$obj->naturaleza, "CXC ".$nombre_cuenta, $obj->tipo_cuenta, $obj->id_cuenta_contable
+							);
+				Logger::log("- Se creo la cuenta contable CXC {$nombre_cuenta}");
+			}
+
+			if(count($prov["resultados"])<1)
+				Logger::log("No se va a crear la cuenta contable CXP {$nombre_cuenta}");
+			else{
+				$obj = $prov["resultados"][0];
+				Logger::log("- Se creara la cuenta contable CXP {$nombre_cuenta}");
+				self::NuevaCuenta($obj->abonos_aumentan, $obj->cargos_aumentan,
+							$obj->clasificacion, $es_cuenta_mayor=0, $obj->es_cuenta_orden, $obj->id_catalogo_cuentas,
+							$obj->naturaleza, "CXP ".$nombre_cuenta, $obj->tipo_cuenta, $obj->id_cuenta_contable
+							);
+				Logger::log("- Se creo la cuenta contable CXP {$nombre_cuenta}");
+			}
+
+		}
+
+	}
+
+	public function EditarNombreCuentasCategoriaContactos($id_categoria_contacto, $nombre_nuevo, $id_cat_padre_nueva){
+
+		$cat_contac = CategoriaContactoDAO::getByPK($id_categoria_contacto);
+
+		if (is_null($cat_contac)) {
+			Logger::log("La categoria de contacto con id={$id_categoria_contacto} no existe");
+
+		}else{
+
+			$cc = self::BuscarCuenta(1, $afectable = "", $clasificacion = "Activo Circulante",
+								$clave = "", $consecutivo_en_nivel = "", $es_cuenta_mayor = "",
+								$es_cuenta_orden = "", $id_cuenta_contable = "", $id_cuenta_padre = "",
+								$naturaleza = "Deudora", $nivel = "", $nombre_cta = "CXC ".$cat_contac->nombre, $tipo_cuenta = "Balance"
+								);
+			$prov = self::BuscarCuenta(1, $afectable = "", $clasificacion = "Pasivo Circulante",
+								$clave = "", $consecutivo_en_nivel = "", $es_cuenta_mayor = "",
+								$es_cuenta_orden = "", $id_cuenta_contable = "", $id_cuenta_padre = "",
+								$naturaleza = "Acreedora", $nivel = "", $nombre_cta = "CXP ".$cat_contac->nombre, $tipo_cuenta = "Balance"
+								);
+
+			$id_padre= ($cat_contac->id_padre != $id_cat_padre_nueva) ? $id_cat_padre_nueva : "";
+			$id_cta_padre_cxc = "";
+			$id_cta_padre_cxp = "";
+
+			if($id_padre !=""){
+				Logger::log("- La cuenta $nombre_nuevo cambiara de id_categoria_padre a: $id_padre");
+				$nueva_cat_contac = CategoriaContactoDAO::getByPK($id_cat_padre_nueva);
+
+				$cta_padre_cxc = self::BuscarCuenta(1, $afectable = "", $clasificacion = "Activo Circulante",
+								$clave = "", $consecutivo_en_nivel = "", $es_cuenta_mayor = "",
+								$es_cuenta_orden = "", $id_cuenta_contable = "", $id_cuenta_padre = "",
+								$naturaleza = "Deudora", $nivel = "", $nombre_cta = "CXC ".$nueva_cat_contac->nombre, $tipo_cuenta = "Balance"
+								);
+				if(count($cta_padre_cxc["resultados"])<1)
+					$cta_padre_cxc = self::BuscarCuenta(1, $afectable = "", $clasificacion = "Activo Circulante",
+								$clave = "", $consecutivo_en_nivel = "", $es_cuenta_mayor = "",
+								$es_cuenta_orden = "", $id_cuenta_contable = "", $id_cuenta_padre = "",
+								$naturaleza = "Deudora", $nivel = "", $nombre_cta = $nueva_cat_contac->nombre, $tipo_cuenta = "Balance"
+								);
+				$id_cta_padre_cxc = $cta_padre_cxc["resultados"][0]->id_cuenta_contable;
+
+				$cta_padre_cxp = self::BuscarCuenta(1, $afectable = "", $clasificacion = "Pasivo Circulante",
+								$clave = "", $consecutivo_en_nivel = "", $es_cuenta_mayor = "",
+								$es_cuenta_orden = "", $id_cuenta_contable = "", $id_cuenta_padre = "",
+								$naturaleza = "Acreedora", $nivel = "", $nombre_cta = "CXP ".$nueva_cat_contac->nombre, $tipo_cuenta = "Balance"
+								);
+				if(count($cta_padre_cxp["resultados"])<1)
+					$cta_padre_cxp = self::BuscarCuenta(1, $afectable = "", $clasificacion = "Pasivo Circulante",
+								$clave = "", $consecutivo_en_nivel = "", $es_cuenta_mayor = "",
+								$es_cuenta_orden = "", $id_cuenta_contable = "", $id_cuenta_padre = "",
+								$naturaleza = "Acreedora", $nivel = "", $nombre_cta = $nueva_cat_contac->nombre, $tipo_cuenta = "Balance"
+								);
+				$id_cta_padre_cxp = $cta_padre_cxp["resultados"][0]->id_cuenta_contable;
+
+			}
+
+			if(count($cc["resultados"])<1)
+				Logger::log("No se va a ditar la cuenta contable CXC {$nombre_nuevo} por que no existe");
+			else{
+				$obj = $cc["resultados"][0];
+				Logger::log("- Se editara la cuenta contable ".$obj->nombre_cuenta);
+				self::EditarCuenta($obj->id_cuenta_contable, $abonos_aumentan = "", 
+									$afectable = "", $cargos_aumentan = "", $es_cuenta_mayor = "", $es_cuenta_orden = "", 
+									$id_cuenta_padre = $id_cta_padre_cxc, 
+									$naturaleza = "", $nombre_cuenta = "CXC ".$nombre_nuevo, $tipo_cuenta = ""
+								);
+				Logger::log("- Se edito la cuenta contable a CXC {$nombre_nuevo}");
+			}
+
+			if(count($prov["resultados"])<1)
+				Logger::log("No se va a editar la cuenta contable CXP {$nombre_cuenta} por que no existe");
+			else{
+				$obj = $prov["resultados"][0];
+				Logger::log("- Se editara la cuenta contable ".$obj->nombre_cuenta);
+				self::EditarCuenta($obj->id_cuenta_contable, $abonos_aumentan = "", 
+									$afectable = "", $cargos_aumentan = "", $es_cuenta_mayor = "", $es_cuenta_orden = "", 
+									$id_cuenta_padre = $id_cta_padre_cxp, $naturaleza = "", $nombre_cuenta = "CXP ".$nombre_nuevo, $tipo_cuenta = ""
+								);
+				Logger::log("- Se edito la cuenta contable a CXP {$nombre_nuevo}");
+			}
+
+		}
+
+	}
+
 	/**
  	 *
  	 *Edita una cuenta contable que exista en el sistema
@@ -307,6 +480,7 @@ require_once("interfaces/Contabilidad.interface.php");
 
 		$editar_cuenta = CuentaContableDAO::getByPK($id_cuenta_contable);
 		if (is_null($editar_cuenta)) {
+			Logger::log("La cuenta con id " . $id_cuenta_contable . " no existe");
 			throw new InvalidDatabaseOperationException("La cuenta con id " . $id_cuenta_contable . " no existe");
 		}
 		
@@ -319,26 +493,35 @@ require_once("interfaces/Contabilidad.interface.php");
 								);
 
 		if (count($subctas["resultados"])>0) {
-			throw new BusinessLogicException("No se puede editar una cuenta que tiene subcuentas. ");
+			Logger::log("No se puede editar una cuenta cotable que tiene subcuentas. ");
+			throw new BusinessLogicException("No se puede editar una cuenta cotable que tiene subcuentas. ");
 		}
 
 		if ($editar_cuenta->getNivel()==1 && count($subctas["resultados"])>0) {
+			Logger::log("Una cuenta de Mayor nivel 1 que es por default no se puede editar");
 			throw new BusinessLogicException("Una cuenta de Mayor nivel 1 que es por default no se puede editar");
 		}
 
 		if ($es_cuenta_orden == 1 && $es_cuenta_mayor == 1) {
+			Logger::log("Una cuenta de Mayor no puede ser de Orden");
 			throw new BusinessLogicException("Una cuenta de Mayor no puede ser de Orden");
 		}
 
 		$cuenta_buscar = new CuentaContable();
 		$cuenta_buscar->setNombreCuenta($nombre_cuenta);
-		if (count(CuentaContableDAO::search($cuenta_buscar))>0) {
-			throw new BusinessLogicException("Ya existe una cuenta con el nombre " . $nombre_cuenta);
+		$res_buscar_nombre_rep = CuentaContableDAO::search($cuenta_buscar);
+		if (count($res_buscar_nombre_rep)>0) {
+			//se intenta renombrar a otra cuenta con el mismo nombre del q existe
+			if($res_buscar_nombre_rep[0]->id_cuenta_contable != $id_cuenta_contable){
+				Logger::log("Ya existe una cuenta con el nombre " . $nombre_cuenta);
+				throw new BusinessLogicException("Ya existe una cuenta con el nombre " . $nombre_cuenta);
+			}
 		}
 
 		$subcuenta = new CuentaContable();
 		$subcuenta->setIdCuentaPadre($id_cuenta_contable);
 		if (count(CuentaContableDAO::search($subcuenta))>0) {
+			Logger::log("Ya existe subcuentas en esta cuenta con id " . $id_cuenta_contable . ", no se puede editar" );
 			throw new BusinessLogicException("Ya existe subcuentas en esta cuenta con id " . $id_cuenta_contable . ", no se puede editar" );
 		}
 
@@ -357,6 +540,7 @@ require_once("interfaces/Contabilidad.interface.php");
 
 				$detalle_c = CuentaContableDAO::getByPK($id_cuenta_padre);
 				if (is_null($detalle_c)) {
+					Logger::log("La cuenta con id " . $id_cuenta_padre . " no existe");
 					throw new InvalidDatabaseOperationException("La cuenta con id " . $id_cuenta_padre . " no existe");
 				}
 
@@ -392,6 +576,7 @@ require_once("interfaces/Contabilidad.interface.php");
 		}
 
 		if ($nivel == 1 && $id_cuenta_padre != "") {
+			Logger::log("Las cuentas de Nivel 1 no deben tener cuentas padre");
 			throw new BusinessLogicException("Las cuentas de Nivel 1 no deben tener cuentas padre");
 		}
 		if ($nombre_cuenta!="") {
@@ -540,6 +725,7 @@ require_once("interfaces/Contabilidad.interface.php");
 		$cuenta_buscar->setIdCatalogoCuentas($id_catalogo_cuentas);
 		$cc2 = CuentaContableDAO::search($cuenta_buscar);
 		if (count($cc2)>0) {
+			Logger::log("!!!!!!Ya existe una cuenta con el nombre " . $nombre_cuenta);
 			throw new BusinessLogicException(" Ya existe una cuenta con el nombre " . $nombre_cuenta);
 		}
 

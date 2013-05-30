@@ -30,6 +30,7 @@ require_once("interfaces/Contactos.interface.php");
 
   		try {
 			CategoriaContactoDAO::save($categoria);
+			ContabilidadController::InsertarCuentasCategoriaContactos($nombre,$id_padre);
 		} catch (Exception $e) {
 			throw new Exception("Error al crear categoria, verifique sus datos.", 901);
 		}
@@ -65,6 +66,7 @@ require_once("interfaces/Contactos.interface.php");
 
 		if (CategoriaContactoDAO::ChecarRecursion($categoria->getId(), $categoria->getIdPadre())) {
 			try {
+				ContabilidadController::EditarNombreCuentasCategoriaContactos($id, $categoria->nombre,$categoria->id_padre);
 				CategoriaContactoDAO::save($categoria);
 			} catch (Exception $e) {
 				throw new Exception("Error al modificar categoria, verifique sus datos.", 901);
