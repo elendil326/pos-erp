@@ -479,6 +479,36 @@ class EmpresasController implements IEmpresas
 				throw new Exception("No se pudo crear la relacion entre la moneda base y la empresa", 901);
 			}
 
+			//creamos la configuracion del tipo de cambio para esta empresa
+			$tc = new Configuracion(array(
+				"descripcion" => "tipo_cambio",
+				"valor"       => "",
+				"id_usuario"  => "",
+				"fecha"       => time()
+			));
+
+			try {
+				ConfiguracionDAO::save($tc);
+			}catch (Exception $e) {
+				DAO::transRollback();
+				Logger::error("No se pudo crear la configuracion del tipo de cambio para la empresa: " . $e->getMessage());
+				throw new Exception("No se pudo crear la configuracion del tipo de cambio para la empresa", 901);
+			}
+
+			//relacionamos la configuracion con la empresa que estamos creando
+			$conf_empresa = new ConfiguracionEmpresa(array(
+				"id_configuracion" => $tc->getIdConfiguracion(),
+				"id_empresa"       => $empresa->getIdEmpresa()
+			));
+
+			try {
+				ConfiguracionEmpresaDAO::save($conf_empresa);
+			}catch (Exception $e) {
+				DAO::transRollback();
+				Logger::error("No se pudo crear la relacion entre el tipo de cambio y la empresa: " . $e->getMessage());
+				throw new Exception("No se pudo crear la relacion entre el tipo de cambio y la empresa", 901);
+			}
+
 		}
 
 		//creamos los periodos, ejercicios y la relacion con la empresa
