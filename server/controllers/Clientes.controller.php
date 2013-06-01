@@ -429,7 +429,7 @@ require_once("interfaces/Clientes.interface.php");
 								null,
 								$telefono_personal1,
 								$telefono_personal2);
-
+				
 				ExtraParamsValoresDAO::setVals("clientes", $extra_params, $cliente["id_usuario"]);
 				
 				$clienteObj = UsuarioDAO::getByPK($cliente["id_usuario"]);
@@ -1180,7 +1180,7 @@ require_once("interfaces/Clientes.interface.php");
 
 
 
-    private static function ImportarCSV($raw_contents){
+    public static function ImportarCSV($raw_contents){
 
         Logger::log("----- importando como csv ------- ");
 
@@ -1298,7 +1298,7 @@ require_once("interfaces/Clientes.interface.php");
                     }
                     
                     
-
+					
                     $nc = self::Nuevo(
                         $indices["razon_social"] !== FALSE ?            $data[ ($i * $soh) + $indices["razon_social"] ] : NULL,
                         $indices["clasificacion_cliente"] !== FALSE ?   $data[ ($i * $soh) + $indices["clasificacion_cliente"] ] : NULL,
@@ -1560,7 +1560,8 @@ require_once("interfaces/Clientes.interface.php");
 				        "telefono1"  		=> $foo["CTELEFONO1"],
 				        "telefono2"			=> $foo["CTELEFONO2"]
 					)), 
-					$email 					= $foo["CEMAIL"], 
+					$email 					= $foo["CEMAIL"],
+					$extra_params			= null,
 					$id_cliente_padre 		= null, 
 					$id_moneda 				=  1 , 
 					$id_tarifa_compra 		= null, 

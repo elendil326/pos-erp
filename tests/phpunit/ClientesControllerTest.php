@@ -25,7 +25,7 @@ class ClientesControllerTests extends PHPUnit_Framework_TestCase {
 
 	}
 	
-	public function testNuevaClasificacionCliente(){
+	/*public function testNuevaClasificacionCliente(){
 		$c = ClasificacionClienteDAO::getByPK(1);
 		
 		if(!is_null($c)){
@@ -40,7 +40,7 @@ class ClientesControllerTests extends PHPUnit_Framework_TestCase {
 		$n_c->setIdTarifaCompra(1);			
 		
 		ClasificacionClienteDAO::save( $n_c );
-	}
+	}*/
 	
 public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 {
@@ -68,7 +68,7 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 		
        	$c = ClientesController::nuevo($nombre, 
 													$clasificacion_cliente = null, 
-													$codigo_cliente = null, 
+													$codigo_cliente = time(), 
 													$cuenta_de_mensajeria = null, 
 													$curp = null, 
 													$denominacion_comercial = null, 
@@ -106,7 +106,7 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 	
 
 
-	public function testDetalleCliente(){
+	/*public function testDetalleCliente(){
 		//se crea un nuevo cliente 
 		$nombre = self::RandomString(15,FALSE,FALSE,FALSE)." - ". time();
        	$nuevo_cliente = ClientesController::nuevo($nombre);			
@@ -251,9 +251,8 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 		$this->assertInternalType('int',$nueva['id_categoria_cliente'],"---- 'testNuevaClasificacion' 'id_categoria_cliente' NO ES UN ENTERO");
 	}
 
-	/**
-    	* @expectedException BusinessLogicException
-    	*/
+
+	// @expectedException BusinessLogicException
 	public function testNuevaClasificacionConMismoNombre(){
 		//se inserta una clasificacion
 		$nombre_clasificacion = self::RandomString(5,FALSE,FALSE,FALSE)." - ";			
@@ -315,7 +314,7 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 	}
 	
 	
-	/*public function testNuevoClienteDesdeAdminPAQ(){
+	public function testNuevoClienteDesdeAdminPAQ(){
 		
 		POSController::DropBd();
 		
@@ -324,5 +323,15 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 		ClientesController::Importar( $raw_exportation );
 		
 	}*/
+	
+	public function testNuevoClienteDesdeCSV(){
+		
+		POSController::DropBd();
+		
+		$raw_exportation = file_get_contents( "bdcanacintra06.csv" );
+
+		ClientesController::ImportarCSV( $raw_exportation );
+		
+	}
 }
 
