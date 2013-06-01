@@ -39,7 +39,7 @@
                                        callback:function(a)
                                        {
                                            InsertarFila(a[\"resultados\"]);
-                                           document.getElementsByName(\"nombre\")[0].value=\"" . substr($nombrePlantilla, 0, (strlen($nombrePlantilla)-5)) . "\";
+                                           document.getElementsByName(\"nombre_plantilla\")[0].value=\"" . $nombrePlantilla . "\";
                                            document.getElementsByName(\"json_impresion\")[0].value=\"{}\";
                                        }
                                     })
@@ -112,10 +112,9 @@
 			"id_empresa",
 			"activo"
 		));
-
+       
 	$f->setType("json_impresion", "textarea");
 	$page->addComponent($f);
-                        
                         $page->addComponent(new TitleComponent("Cargar plantilla Excel (<" . $POS_CONFIG["TAM_MAX_PLANTILLAS"] . "MB)", 4));
                         $CmdSubirArchivo="<p>\n";
                         $CmdSubirArchivo.="<form action=\"documentos.php#Base\" method=\"post\" enctype=\"multipart/form-data\">\n";
@@ -331,6 +330,7 @@
 			extraParamsStore.insert(Elem, r);
 		}
 	};
+          document.getElementsByName(\"nombre_plantilla\")[0].setAttribute(\"disabled\",\"disabled\");
 
 </script>";
 	

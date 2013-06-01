@@ -102,7 +102,7 @@ class FormasPreimpresasController extends ValidacionesController implements IFor
                   } else {//Si se especifica una plantilla
                         if (file_exists($archivo_plantilla) == 1) {//Comprueba si existe el archivo de plantilla indicado
                               $Extension = strrchr($archivo_plantilla, ".");
-                              if ($Extension == ".xlsx" || $Extension == ".xls") {//Comprueba la extensión de la plantilla
+                              if ($Extension == ".xlsx") {//Comprueba la extensión de la plantilla
                                     $objReader = new PHPExcel_Reader_Excel2007; //Crea el objeto lector
                                     $ObjetoPlantilla = $objReader->load($archivo_plantilla); //Carga el archivo al objeto plantilla
                                     $HojaPlantilla = $ObjetoPlantilla->getActiveSheet();
@@ -149,7 +149,7 @@ class FormasPreimpresasController extends ValidacionesController implements IFor
                                                                   unset($Fini);
                                                                   unset($Cini);
                                                                   unset($Val);
-                                                            } else {
+                                                            } else {                                                                  
                                                                   $Celda->setValue($Datos[$Celda->getValue()]); //Cambia el valoren el archivo de plantilla de una sola celda
                                                             }
                                                       }
@@ -192,7 +192,7 @@ class FormasPreimpresasController extends ValidacionesController implements IFor
                               }
                         }
                   }
-                  $objWriter = PHPExcel_IOFactory::createWriter($ObjSalida, 'Excel2007');
+                  $objWriter = PHPExcel_IOFactory::createWriter($ObjSalida, 'Excel2007');//Devuelve un objeto de escritura
                   //$objWriter->save("/var/www/excel.xlsx"); //Crea el archivo de salida en la carpeta temporal
                   return $objWriter;//Regresa el objeto de escritura
             } catch (Exception $e) {
@@ -244,24 +244,66 @@ class FormasPreimpresasController extends ValidacionesController implements IFor
       }
       public static function Generar2Excel($id_documento) {
             
-            $DescDoc = DocumentoDAO::getDocumentWithValues($id_documento);//Descarga de documento
-            $DescDoc=  array_reverse($DescDoc);
+            $TEMP = DocumentoDAOBase::getByPK($id_documento);
+            $DocBase= DocumentoBaseDAO::getByPK($TEMP->getIdDocumentoBase());
+            $DescDoc=DocumentoDAO::getDocumentWithValues($id_documento);//Descarga de documento
+            $DescDoc=array_reverse($DescDoc);
             $Valores=array();
             $i=0;
-            //FALTA AGREGAR COMPATIBILIDAD PARA LEER LAS PALABRAS CLAVE DEL FORMATO DE DOCUMENTO, PARA ESO SE HA DE AGREGAR UN NUEVO CAMPO QUE LO ASOCIE CON 
-            //LA PLANTILLA PARA, EN LUGAR DE OCUPAR LAS COORDENADAS Ax, QUE SE UTILICEN LAS PALABRAS CLAVE COMO REFERENCIA PARA PONER LOS VALORES
-            foreach($DescDoc as $parms)
-            {
-                  $i++;
-                  $Valores["A$i"]= array($parms["descripcion"]);
-                  $i++;
-                  $Valores["A$i"]= array($parms["val"]);
+                      
+            if($DocBase->getNombrePlantilla()!=null){//Si Se especifica una plantilla
+                  $arrLlaves=array();
+                  $arrValores=array();
+                  foreach($DescDoc as $Item){
+                        $Llave="#".$Item["campo"]."#";
+                        $Valor=$Item["val"];
+                        array_push($arrLlaves, $Llave);
+                        array_push($arrValores, $Valor);
+                  }
+                  $datos=  array_combine($arrLlaves, $arrValores);
+                  $Salida = FormasPreimpresasController::GenerarExcel($datos, POS_PATH_TO_SERVER_ROOT."/../static_content/" . IID . "/plantillas/excel/" . $DocBase->getNombrePlantilla());
+            }else{//Si no se especifica una plantilla
+                  foreach($DescDoc as $parms)
+                  {
+                        if (FormasPreimpresasController::EsCoord($parms["descripcion"])){//Determina si son coordenadas
+                              //FALTA
+                        }else{//Si no son coordenadas las inserta desde la fila 1 hasta la fila n, en la columna A el nombre del campo y en la B el valor
+                              $i++;
+                              $Valores["A$i"]= array($parms["descripcion"]);
+                              $Valores["B$i"]= array($parms["val"]);
+                        }
+                  }
+                  //var_dump($Valores);
+                  $Salida = FormasPreimpresasController::GenerarExcel($Valores);
             }
+            
             header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");//Cabeceras de salida
             header("Content-Disposition: attachment;filename=\"Excel.xlsx\"");
             header("Cache-Control: max-age=0");
-            $Salida = FormasPreimpresasController::GenerarExcel($Valores);
-            $Salida->save("php://output");
+            $Salida->save("php://output");//Imprime el archivo de salida
+      }
+      
+      /*
+      * Esta función permite determinar si el argumento obtenido es una coordenada de MSExcel
+      *
+      *       
+      */
+      static function EsCoord($Dato)
+      {
+            $i=0;
+            $j=0;
+            for($i=0;$i<strlen($Dato);$i++){//Comprueba hasta donde inicia el primer caracter numerico
+                  if(is_int(substr($Dato,$i,1))){//Donde encuentra el primer caracter númerico sale del ciclo
+                        $j=$i;
+                        break;
+                  }
+            }
+            if(strlen($Dato)==$i){return false;};//Si ese caracter es el ultimo caracter, no es valida
             
+            for($i=$j;$i<strlen($Dato);$i++){//Comprueba dede el caracter hasta el ultimo
+                  if(is_string(substr($Dato,$i,1))){//Si estipo texto, es invalido, solo se esperan numeros ahi
+                        break;
+                  }
+            }
       }
 }

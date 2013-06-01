@@ -176,7 +176,7 @@ class DocumentosController implements IDocumentos{
 		$id_sucursal = null, 
 		$json_impresion = null, 
 		$nombre = null,
-		$nombre_plantilla = null
+                                              $nombre_plantilla=null
 	){
 		$nDoc = DocumentoBaseDAO::getByPK($id_documento);
 
@@ -205,6 +205,7 @@ class DocumentosController implements IDocumentos{
 		}
 
 		$nDoc->setUltimaModificacion(time());
+                                               $nDoc->setNombrePlantilla($nombre_plantilla);
 
 		try{
 
@@ -377,7 +378,7 @@ Update : La respuesta solo deber?a de contener success :true | false, y en caso 
 		$foliado = "", 
 		$id_empresa = null, 
 		$id_sucursal = null,
-		$nombre_plantilla = null
+                                              $nombre_plantilla=null
 	){
 
 		if (is_null($json_impresion)) {
@@ -397,7 +398,8 @@ Update : La respuesta solo deber?a de contener success :true | false, y en caso 
 		$nDoc->setIdEmpresa($id_empresa);
 		$nDoc->setIdSucursal($id_sucursal);
 		$nDoc->setUltimaModificacion(time());
-
+                                               $nDoc->setNombrePlantilla($nombre_plantilla);
+//Es aconsejable agregar un token al nombre de la plantilla y modificar el nombre del archivo con este nuevo token para evitar sobreescribirlo
 		try{
 			DocumentoBaseDAO::save( $nDoc );
 

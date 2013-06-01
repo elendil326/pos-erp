@@ -820,6 +820,7 @@ CREATE TABLE IF NOT EXISTS `documento_base` (
   `nombre` varchar(32) NOT NULL,
   `activo` tinyint(1) NOT NULL,
   `json_impresion` longtext NOT NULL,
+  `nombre_plantilla` text NULL,
   `ultima_modificacion` int(11) NOT NULL,
   PRIMARY KEY (`id_documento_base`),
   UNIQUE KEY `nombre` (`nombre`)
