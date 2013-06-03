@@ -515,11 +515,276 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 			}
 		}
 
+		$json_agenda = '{
+"hora_llegada": "",
+"items": [
+{
+"id_cita": "1",
+"inicia": "1373896800",
+"termina": "1373898000",
+"id_empresa": "",
+"razon_social": "",
+"status": "0",
+"descripcion_status": "Libre",
+"confirmacion": "0",
+"cancelacion": "0",
+"concretada": "0",
+"satisfaccion": "0"
+},
+{
+"id_cita": "2",
+"inicia": "1373898300",
+"termina": "1373899500",
+"id_empresa": "",
+"razon_social": "",
+"status": "0",
+"descripcion_status": "Libre",
+"confirmacion": "0",
+"cancelacion": "0",
+"concretada": "0",
+"satisfaccion": "0"
+},
+{
+"id_cita": "3",
+"inicia": "1373899800",
+"termina": "1373901000",
+"id_empresa": "",
+"razon_social": "",
+"status": "0",
+"descripcion_status": "Libre",
+"confirmacion": "0",
+"cancelacion": "0",
+"concretada": "0",
+"satisfaccion": "0"
+},
+{
+"id_cita": "4",
+"inicia": "1373901300",
+"termina": "1373902500",
+"id_empresa": "",
+"razon_social": "",
+"status": "0",
+"descripcion_status": "Libre",
+"confirmacion": "0",
+"cancelacion": "0",
+"concretada": "0",
+"satisfaccion": "0"
+},
+{
+"id_cita": "5",
+"inicia": "1373902800",
+"termina": "1373904000",
+"id_empresa": "",
+"razon_social": "",
+"status": "0",
+"descripcion_status": "Libre",
+"confirmacion": "0",
+"cancelacion": "0",
+"concretada": "0",
+"satisfaccion": "0"
+},
+{
+"id_cita": "6",
+"inicia": "1373904300",
+"termina": "1373905500",
+"id_empresa": "",
+"razon_social": "",
+"status": "0",
+"descripcion_status": "Libre",
+"confirmacion": "0",
+"cancelacion": "0",
+"concretada": "0",
+"satisfaccion": "0"
+},
+{
+"id_cita": "7",
+"inicia": "1373905800",
+"termina": "1373907000",
+"id_empresa": "",
+"razon_social": "",
+"status": "0",
+"descripcion_status": "Libre",
+"confirmacion": "0",
+"cancelacion": "0",
+"concretada": "0",
+"satisfaccion": "0"
+},
+{
+"id_cita": "8",
+"inicia": "1373907300",
+"termina": "1373908500",
+"id_empresa": "",
+"razon_social": "",
+"status": "0",
+"descripcion_status": "Libre",
+"confirmacion": "0",
+"cancelacion": "0",
+"concretada": "0",
+"satisfaccion": "0"
+},
+{
+"id_cita": "9",
+"inicia": "1373908800",
+"termina": "1373910000",
+"id_empresa": "",
+"razon_social": "",
+"status": "0",
+"descripcion_status": "Libre",
+"confirmacion": "0",
+"cancelacion": "0",
+"concretada": "0",
+"satisfaccion": "0"
+},
+{
+"id_cita": "10",
+"inicia": "1373910300",
+"termina": "1373911500",
+"id_empresa": "",
+"razon_social": "",
+"status": "0",
+"descripcion_status": "Libre",
+"confirmacion": "0",
+"cancelacion": "0",
+"concretada": "0",
+"satisfaccion": "0"
+},
+{
+"id_cita": "11",
+"inicia": "1373911800",
+"termina": "1373913000",
+"id_empresa": "",
+"razon_social": "",
+"status": "0",
+"descripcion_status": "Libre",
+"confirmacion": "0",
+"cancelacion": "0",
+"concretada": "0",
+"satisfaccion": "0"
+},
+{
+"id_cita": "12",
+"inicia": "1373916600",
+"termina": "1373917800",
+"id_empresa": "",
+"razon_social": "",
+"status": "0",
+"descripcion_status": "Libre",
+"confirmacion": "0",
+"cancelacion": "0",
+"concretada": "0",
+"satisfaccion": "0"
+},
+{
+"id_cita": "13",
+"inicia": "1373918100",
+"termina": "1373919300",
+"id_empresa": "",
+"razon_social": "",
+"status": "0",
+"descripcion_status": "Libre",
+"confirmacion": "0",
+"cancelacion": "0",
+"concretada": "0",
+"satisfaccion": "0"
+},
+{
+"id_cita": "14",
+"inicia": "1373919600",
+"termina": "1373920800",
+"id_empresa": "",
+"razon_social": "",
+"status": "0",
+"descripcion_status": "Libre",
+"confirmacion": "0",
+"cancelacion": "0",
+"concretada": "0",
+"satisfaccion": "0"
+},
+{
+"id_cita": "15",
+"inicia": "1373921100",
+"termina": "1373922300",
+"id_empresa": "",
+"razon_social": "",
+"status": "0",
+"descripcion_status": "Libre",
+"confirmacion": "0",
+"cancelacion": "0",
+"concretada": "0",
+"satisfaccion": "0"
+},
+{
+"id_cita": "16",
+"inicia": "1373922600",
+"termina": "1373923800",
+"id_empresa": "",
+"razon_social": "",
+"status": "0",
+"descripcion_status": "Libre",
+"confirmacion": "0",
+"cancelacion": "0",
+"concretada": "0",
+"satisfaccion": "0"
+},
+{
+"id_cita": "17",
+"inicia": "1373924100",
+"termina": "1373925300",
+"id_empresa": "",
+"razon_social": "",
+"status": "0",
+"descripcion_status": "Libre",
+"confirmacion": "0",
+"cancelacion": "0",
+"concretada": "0",
+"satisfaccion": "0"
+},
+{
+"id_cita": "18",
+"inicia": "1373925600",
+"termina": "1373926800",
+"id_empresa": "",
+"razon_social": "",
+"status": "0",
+"descripcion_status": "Libre",
+"confirmacion": "0",
+"cancelacion": "0",
+"concretada": "0",
+"satisfaccion": "0"
+},
+{
+"id_cita": "19",
+"inicia": "1373927100",
+"termina": "1373928300",
+"id_empresa": "",
+"razon_social": "",
+"status": "0",
+"descripcion_status": "Libre",
+"confirmacion": "0",
+"cancelacion": "0",
+"concretada": "0",
+"satisfaccion": "0"
+},
+{
+"id_cita": "20",
+"inicia": "1373928600",
+"termina": "1373929800",
+"id_empresa": "",
+"razon_social": "",
+"status": "0",
+"descripcion_status": "Libre",
+"confirmacion": "0",
+"cancelacion": "0",
+"concretada": "0",
+"satisfaccion": "0"
+}
+]
+}';
 		foreach ($nuevos_user as $u) {
 			$para = array();
 			foreach ($Contenido as $c) {
 				if ($c["R.F.C"]==$u->rfc) {
-					$para["Agenda"] ="";
+					$para["Agenda"] = $json_agenda;
 					foreach ($params as $p) {
 						$index = $p->campo;
 						$prop ="";
