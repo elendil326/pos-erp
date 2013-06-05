@@ -34,7 +34,7 @@ class RolDAO extends RolDAOBase
      * @param start string Indica desde que registro se desea obtener a partir del conjunto de resultados productos de la bsqueda.
      * @return array numero de resultados
      **/
-    public function buscar($limit, $order, $order_by, $query, $start)
+    public static function buscar($limit, $order, $order_by, $query, $start)
     {
         global $conn;
 

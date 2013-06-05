@@ -199,12 +199,18 @@ class SesionController implements ISesion{
 			case 5: $next_url = "c/"; break;
 		}
 		
-		return array( 
+		$r = array( 
 				"auth_token" => $nueva_sesion->getAuthToken(), 
 				"login_succesful" => true,
-				"usuario_grupo" => $user->getIdRol(),
-				"siguiente_url" => $next_url
+				"usuario_grupo" => $user->getIdRol(),				
+				"siguiente_url" => $next_url,				
 			);
+                
+               if ($user->getIdRol() == 5) {
+                   $r["detalles_usuario"] = ClientesController::Detalle($user->getIdUsuario());
+               } 
+                
+                return $r;
 	}
 
 

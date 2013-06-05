@@ -401,7 +401,7 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 			{
 
 				$extra = new ExtraParamsEstructura();
-				$extra->setTabla("clientes");
+				$extra->setTabla("usuarios");
 				$extra->setTipo("string");
 				$extra->setObligatorio(0);
 				if(strlen($c)>32){
@@ -428,7 +428,7 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 		}
 
 		$extra = new ExtraParamsEstructura();
-		$extra->setTabla("clientes");
+		$extra->setTabla("usuarios");
 		$extra->setTipo("string");
 		$extra->setObligatorio(0);
 		$extra->setCaption("Agenda");

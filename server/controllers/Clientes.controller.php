@@ -430,7 +430,7 @@ require_once("interfaces/Clientes.interface.php");
 								$telefono_personal1,
 								$telefono_personal2);
 				
-				ExtraParamsValoresDAO::setVals("clientes", $extra_params, $cliente["id_usuario"]);
+				ExtraParamsValoresDAO::setVals("usuarios", $extra_params, $cliente["id_usuario"]);
 				
 				$clienteObj = UsuarioDAO::getByPK($cliente["id_usuario"]);
 				$clienteObj->setCodigoUsuario( $codigo_cliente );
@@ -677,7 +677,7 @@ require_once("interfaces/Clientes.interface.php");
 						$telefono_personal2);
 
 
-                ExtraParamsValoresDAO::setVals("clientes", $extra_params, $id_cliente);
+                ExtraParamsValoresDAO::setVals("usuarios", $extra_params, $id_cliente);
 
             }
             catch( Exception $e)
@@ -734,6 +734,8 @@ require_once("interfaces/Clientes.interface.php");
             array_push($cliente, ClasificacionClienteDAO::getByPK($c->getIdClasificacionCliente()));
             
             array_push($cliente, MonedaDAO::getByPK($c->getIdMoneda()));
+            
+            array_push($cliente, ExtraParamsValoresDAO::getVals("usuarios", $id_cliente));
             
             return $cliente;
 	}
@@ -1118,6 +1120,7 @@ require_once("interfaces/Clientes.interface.php");
 
 			$resultados[$i]["direccion"] = $resultados[$i]["direccion"]->asArray();
 
+            $resultados[$i]["params_extra"] = ExtraParamsValoresDAO::getVals("usuarios", $resultados[$i]["id_usuario"]);
 				
 			unset($resultados[$i]["password"]);
 	        unset($resultados[$i]["id_direccion"]);
