@@ -1468,6 +1468,7 @@ CREATE TABLE IF NOT EXISTS `prestamo` (
 
 CREATE TABLE IF NOT EXISTS `producto` (
   `id_producto` int(11) NOT NULL AUTO_INCREMENT,
+  `id_clasificacion_producto` int(11) DEFAULT NULL COMMENT 'Id de la clasificacion del producto',
   `compra_en_mostrador` tinyint(1) NOT NULL COMMENT 'Verdadero si el producto se puede comprar en mostrador',
   `visible_en_vc` tinyint(1) NOT NULL COMMENT '1 para mostrar el productos en VC.',
   `metodo_costeo` enum('precio','costo','variable') NOT NULL COMMENT 'Si el precio se toma del precio base o del costo del producto',
@@ -1975,8 +1976,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `id_direccion_alterna` int(11) DEFAULT NULL COMMENT 'Id de la direccion alterna del usuario',
   `id_sucursal` int(11) DEFAULT NULL COMMENT 'Id sucursal en la que labora este usuario o dodne se dio de alta',
   `id_rol` int(11) NOT NULL COMMENT 'Id del rol que desempeÃƒÆ’Ã‚Â±ara el usuario en la instancia',
-  `id_clasificacion_cliente` int(11) DEFAULT NULL COMMENT 'Id de la clasificaiocn del cliente',
-  `id_clasificacion_proveedor` int(11) DEFAULT NULL COMMENT 'Id de la clasificacion del proveedor',
+  `id_categoria_contacto` int(11) DEFAULT NULL COMMENT 'Id de la categoria del cliente/proveedor',
   `id_moneda` int(11) DEFAULT NULL COMMENT 'Id moneda de preferencia del usuario',
   `fecha_asignacion_rol` int(11) NOT NULL COMMENT 'Fecha en que se asigno o modifico el rol de este usuario',
   `nombre` varchar(100) CHARACTER SET latin1 NOT NULL COMMENT 'Nombre del agente',

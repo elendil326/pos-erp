@@ -151,7 +151,20 @@ ALTER TABLE `cierre_caja`
   ADD CONSTRAINT `cierre_caja_ibfk_2` FOREIGN KEY (`id_cajero`) REFERENCES `usuario` (`id_usuario`);
 
 --
+-- Constraints for table `producto`
+--
+ALTER TABLE `producto`
+  ADD CONSTRAINT `producto_ibfk_1` FOREIGN KEY (`id_clasificacion_producto`) REFERENCES `clasificacion_producto` (`id_clasificacion_producto`);
+
+--
 -- Constraints for table `unidad_medida`
 --
 ALTER TABLE `unidad_medida`
   ADD CONSTRAINT `unidad_medida_ibfk_1` FOREIGN KEY (`id_categoria_unidad_medida`) REFERENCES `categoria_unidad_medida` (`id_categoria_unidad_medida`);
+
+
+--
+-- Constraints for table `usuario`
+--
+ALTER TABLE `usuario`
+  ADD CONSTRAINT `usuario_ibfk_1` FOREIGN KEY (`id_categoria_contacto`) REFERENCES `categoria_contacto` (`id`);
