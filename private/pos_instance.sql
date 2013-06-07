@@ -1977,6 +1977,8 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `id_sucursal` int(11) DEFAULT NULL COMMENT 'Id sucursal en la que labora este usuario o dodne se dio de alta',
   `id_rol` int(11) NOT NULL COMMENT 'Id del rol que desempeÃƒÆ’Ã‚Â±ara el usuario en la instancia',
   `id_categoria_contacto` int(11) DEFAULT NULL COMMENT 'Id de la categoria del cliente/proveedor',
+  `id_clasificacion_proveedor` int(11) DEFAULT NULL,
+  `id_clasificacion_cliente` int(11) DEFAULT NULL,
   `id_moneda` int(11) DEFAULT NULL COMMENT 'Id moneda de preferencia del usuario',
   `fecha_asignacion_rol` int(11) NOT NULL COMMENT 'Fecha en que se asigno o modifico el rol de este usuario',
   `nombre` varchar(100) CHARACTER SET latin1 NOT NULL COMMENT 'Nombre del agente',
