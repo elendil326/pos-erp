@@ -24,10 +24,10 @@
                               { $Do*=1;}else{$Do*=0;
                                     $W.="Ext.MessageBox.show({title:\"Error\",msg:\"No existe una carpeta para las plantillas\",buttons : Ext.MessageBox.OK});";
                               }
-
+                              
                               if($Do==1)
                               {
-                                    move_uploaded_file($rutaPlantillaTemp, $nuevaRutaPlantilla);
+                                    if(move_uploaded_file($rutaPlantillaTemp, $nuevaRutaPlantilla)){
                                     chmod($nuevaRutaPlantilla,0777);//Se cambian los permisos del archivo
 
                                     $W.="
@@ -45,7 +45,7 @@
                                     })
                                     ";
                                     $plantilla=$nombrePlantilla;//Asigna el nombre de la plantilla a la variable de trabajo
-                              }
+                              }}
                               $W.="</script>";
                         }
                        

@@ -69,7 +69,7 @@
  	 * @param nombre string El nombre de la categoria a crear.
  	 * @param activa bool El estado de la categoria a crear,
  	 * @param descripcion string Descripcion de la categoria a crear.
- 	 * @param padre_id int El ID del padre de la categoria a crear.
+ 	 * @param id_padre int El ID del padre de la categoria a crear.
  	 * @return id_categoria int El ID de la categoria recien creada.
  	 **/
   static function NuevoCategoria
@@ -77,7 +77,7 @@
 		$nombre, 
 		$activa =  true , 
 		$descripcion = null, 
-		$padre_id = null
+		$id_padre = null
 	);  
   
   

@@ -8980,9 +8980,9 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"datos" => new ApiExposedProperty("datos", true, POST, array( "json" )),
-			"archivo_plantilla" => new ApiExposedProperty("archivo_plantilla", false, POST, array( "string" )),
-			"imagenes" => new ApiExposedProperty("imagenes", false, POST, array( "json" )),
+			"datos" => new ApiExposedProperty("datos", true, GET, array( "json" )),
+			"archivo_plantilla" => new ApiExposedProperty("archivo_plantilla", false, GET, array( "string" )),
+			"imagenes" => new ApiExposedProperty("imagenes", false, GET, array( "json" )),
 		);
 	}
 
@@ -8991,9 +8991,9 @@
  		$this->response = FormasPreimpresasController::GenerarExcel( 
  			
 			
-			isset($_POST['datos'] ) ? json_decode($_POST['datos']) : null,
-			isset($_POST['archivo_plantilla'] ) ? $_POST['archivo_plantilla'] :  "",
-			isset($_POST['imagenes'] ) ? json_decode($_POST['imagenes']) : null
+			isset($_GET['datos'] ) ? json_decode($_GET['datos']) : null,
+			isset($_GET['archivo_plantilla'] ) ? $_GET['archivo_plantilla'] :  "",
+			isset($_GET['imagenes'] ) ? json_decode($_GET['imagenes']) : null
 			
 			);
 		}catch(Exception $e){
