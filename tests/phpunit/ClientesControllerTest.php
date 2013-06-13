@@ -426,11 +426,15 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 				$extra->setTipo("string");
 				$extra->setObligatorio(0);
 				if(strlen($c)>32){
-					$extra->setCampo(str_replace(" ","_",substr($c,0,31)));
+					$aux = str_replace(" ","_",substr($c,0,31));
+					$extra->setCampo(str_replace(".","_",$aux));
+
 					$extra->setCaption(substr($c,0,28)."...");
 				}else{
 					$extra->setCaption($c);
-					$extra->setCampo(str_replace(" ","_",$c));
+
+					$aux = str_replace(" ","_",$c);
+					$extra->setCampo(str_replace(".","_",$aux));
 				}
 				$extra->setDescripcion($c);
 				$extra->setLongitud(999999999);
@@ -801,10 +805,13 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 }
 ]
 }';
+$json_agenda = str_replace(chr(10), " ", $json_agenda);//salto linea
+$json_agenda = str_replace(chr(13), " ", $json_agenda);//retorno
 		foreach ($nuevos_user as $u) {
 			$para = array();
 			foreach ($Contenido as $c) {
 				if ($c["r.f.c"]==$u->rfc) {
+
 					$para["Agenda"] = $json_agenda;
 					foreach ($params as $p) {
 						$index = $p->campo;
@@ -819,7 +826,14 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 							if(strlen($c[$index])<1 || $c[$index]==NULL)
 								$para[$prop] = "";
 							else
-								$para[$prop] = $c[$index];
+							{
+								$aux = str_replace($a, $b,$c[$index] );
+								$aux = str_replace(chr(10), " ", $aux);//salto linea
+								$aux = str_replace(chr(13), " ", $aux);//retorno
+								$aux = str_replace(chr(34), "", $aux);//comilla doble
+								$aux = str_replace(chr(39), "", $aux);//comilla simple
+								$para[$prop] = $aux;
+							}
 						}
 					}
 				}
