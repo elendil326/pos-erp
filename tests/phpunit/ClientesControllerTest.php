@@ -347,16 +347,37 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 		$ObjExcel = $Lector->load($NombreArchivo);
 		$Hoja=$ObjExcel->getActiveSheet();//Obtiene la hoja activa
 
+		$a = array('À','Á','Â','Ã','Ä','Å','Æ','Ç','È','É','Ê','Ë','Ì','Í','Î','Ï','Ð','Ñ','Ò','Ó','Ô','Õ','Ö','Ø','Ù','Ú','Û','Ü','Ý','ß',
+					'à','á','â','ã','ä','å','æ','ç','è','é','ê','ë','ì','í','î','ï','ñ','ò','ó','ô','õ','ö','ø','ù','ú','�»','ü','ý','ÿ',
+					'Ā','ā','Ă','ă','Ą','ą','Ć','ć','Ĉ','ĉ','Ċ','ċ','Č','č','Ď','ď','Đ','đ','Ē','ē','Ĕ','ĕ','Ė','ė','Ę','ę','Ě','ě','Ĝ','ĝ',
+					'Ğ','ğ','Ġ','ġ','Ģ','ģ','Ĥ','ĥ','Ħ','ħ','Ĩ','ĩ','Ī','ī','Ĭ','ĭ','Į','į','İ','ı','Ĳ','ĳ','Ĵ','ĵ','Ķ','ķ','Ĺ','ĺ','�»','ļ',
+					'Ľ','ľ','Ŀ','ŀ','Ł','ł','Ń','ń','Ņ','ņ','Ň','ň','ŉ','Ō','ō','Ŏ','ŏ','Ő','ő','Œ','œ','Ŕ','ŕ','Ŗ','ŗ','Ř','ř','Ś','ś','Ŝ','ŝ',
+					'Ş','ş','Š','š','Ţ','ţ','Ť','ť','Ŧ','ŧ','Ũ','ũ','Ū','ū','Ŭ','ŭ','Ů','ů','Ű','ű','Ų','ų','Ŵ','ŵ','Ŷ','ŷ','Ÿ','Ź','ź','�»','ż',
+					'Ž','ž','ſ','ƒ','Ơ','ơ','Ư','ư','Ǻ','�»','Ǽ','ǽ','Ǿ','ǿ');
+		$b = array('A','A','A','A','A','A','AE','C','E','E','E','E','I','I','I','I','D','N','O','O','O','O','O','O','U','U','U','U','Y','s','a',
+					'a','a','a','a','a','ae','c','e','e','e','e','i','i','i','i','n','o','o','o','o','o','o','u','u','u','u','y','y','A','a','A','a','A',
+					'a','C','c','C','c','C','c','C','c','D','d','D','d','E','e','E','e','E','e','E','e','E','e','G','g','G','g','G','g','G','g','H','h',
+					'H','h','I','i','I','i','I','i','I','i','I','i','IJ','ij','J','j','K','k','L','l','L','l','L','l','L','l','l','l','N','n','N','n','N',
+					'n','n','O','o','O','o','O','o','OE','oe','R','r','R','r','R','r','S','s','S','s','S','s','S','s','T','t','T','t','T','t','U','u','U',
+					'u','U','u','U','u','U','u','U','u','W','w','Y','y','Y','Z','z','Z','z','Z','z','s','f','O','o','U','u','A','a','I','i','O','o','U','u',
+					'A','a','AE','ae','O','o');
+
 		foreach($Hoja->getRowIterator() as $IteradorFilas){
 			foreach($IteradorFilas->getCellIterator() as $IteradorColumnas){
 				if($ItFils==$FilaInicio){//Carga las cabeceras
 					if($ColFin>-1){
 						if(($ItCols>$ColInicio)&&($ItCols<$ColFin)){//Comprueba que esté dentro de los límites de columnas
-							array_push($Cabeceras,$IteradorColumnas->getValue());
+
+							$nueva = strtolower(str_replace($a, $b, $IteradorColumnas->getValue()));
+
+							array_push($Cabeceras,$nueva);
 						}
 					}else{
 							if($ItCols>$ColInicio){//Comprueba que esté dentro de los límites de columnas
-								array_push($Cabeceras,$IteradorColumnas->getValue());
+
+								$nueva = strtolower(str_replace($a, $b, $IteradorColumnas->getValue()));
+
+								array_push($Cabeceras,$nueva);
 							}
 					}
 				}
@@ -470,39 +491,39 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 				}
 			}
 
-			if(array_key_exists("NOMBRE O RAZÓN SOCIAL", $c) || array_key_exists("nombre o razón social", $c)){
-				if(array_key_exists('NOMBRE O RAZÓN SOCIAL', $c)){
-					$nuevo->setNombre($c["NOMBRE O RAZÓN SOCIAL"]);
+			if(array_key_exists("NOMBRE O RAZON SOCIAL", $c) || array_key_exists("nombre o razon social", $c)){
+				if(array_key_exists('NOMBRE O RAZON SOCIAL', $c)){
+					$nuevo->setNombre($c["NOMBRE O RAZON SOCIAL"]);
 				}
-				if (array_key_exists("nombre o razón social", $c)) {
-					$nuevo->setNombre($c["nombre o razón social"]);
-				}
-			}
-
-			if(array_key_exists("TELÉFONO", $c) || array_key_exists("teléfono", $c)){
-				if(array_key_exists('TELÉFONO', $c)){
-					$nuevo->setTelefonoPersonal1($c["TELÉFONO"]);
-				}
-				if (array_key_exists("teléfono", $c)) {
-					$nuevo->setTelefonoPersonal1($c["teléfono"]);
+				if (array_key_exists("nombre o razon social", $c)) {
+					$nuevo->setNombre($c["nombre o razon social"]);
 				}
 			}
 
-			if(array_key_exists("CORREO ELECTRÓNICO", $c) || array_key_exists("correo electrónico", $c)){
-				if(array_key_exists('CORREO ELECTRÓNICO', $c)){
-					$nuevo->setCorreoElectronico($c["CORREO ELECTRÓNICO"]);
+			if(array_key_exists("TELEFONO", $c) || array_key_exists("telefono", $c)){
+				if(array_key_exists('TELEFONO', $c)){
+					$nuevo->setTelefonoPersonal1($c["TELEFONO"]);
 				}
-				if (array_key_exists("correo electrónico", $c)) {
-					$nuevo->setCorreoElectronico($c["correo electrónico"]);
+				if (array_key_exists("telefono", $c)) {
+					$nuevo->setTelefonoPersonal1($c["telefono"]);
 				}
 			}
 
-			if(array_key_exists("PÁGINA WEB", $c) || array_key_exists("página web", $c)){
-				if(array_key_exists('PÁGINA WEB', $c)){
-					$nuevo->setPaginaWeb($c["PÁGINA WEB"]);
+			if(array_key_exists("CORREO ELECTRONICO", $c) || array_key_exists("correo electronico", $c)){
+				if(array_key_exists('CORREO ELECTRONICO', $c)){
+					$nuevo->setCorreoElectronico($c["CORREO ELECTRONICO"]);
 				}
-				if (array_key_exists("página web", $c)) {
-					$nuevo->setPaginaWeb($c["página web"]);
+				if (array_key_exists("correo electronico", $c)) {
+					$nuevo->setCorreoElectronico($c["correo electronico"]);
+				}
+			}
+
+			if(array_key_exists("PAGINA WEB", $c) || array_key_exists("pagina web", $c)){
+				if(array_key_exists('PAGINA WEB', $c)){
+					$nuevo->setPaginaWeb($c["PAGINA WEB"]);
+				}
+				if (array_key_exists("pagina web", $c)) {
+					$nuevo->setPaginaWeb($c["pagina web"]);
 				}
 			}
 
@@ -783,7 +804,7 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 		foreach ($nuevos_user as $u) {
 			$para = array();
 			foreach ($Contenido as $c) {
-				if ($c["R.F.C"]==$u->rfc) {
+				if ($c["r.f.c"]==$u->rfc) {
 					$para["Agenda"] = $json_agenda;
 					foreach ($params as $p) {
 						$index = $p->campo;
