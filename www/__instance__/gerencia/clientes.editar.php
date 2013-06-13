@@ -120,7 +120,7 @@
 
 
 	//buscar los parametros extra
-	$out = ExtraParamsValoresDAO::getVals("clientes", $este_cliente->getIdUsuario());
+	$out = ExtraParamsValoresDAO::getVals("usuarios", $este_cliente->getIdUsuario());
 
 	$epform = new FormComponent();
 	$epform->setEditable(true);

@@ -234,7 +234,7 @@ $page->addComponent($form);
 
 
 //buscar los parametros extra
-$out = ExtraParamsValoresDAO::getVals("clientes", $este_usuario->getIdUsuario());
+$out = ExtraParamsValoresDAO::getVals("usuarios", $este_usuario->getIdUsuario());
 
 $epform = new FormComponent();
 $epform->setEditable(false);
