@@ -461,7 +461,7 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"id_cliente" => new ApiExposedProperty("id_cliente", true, GET, array( "int" )),
+			"id_cliente" => new ApiExposedProperty("id_cliente", true, POST, array( "int" )),
 		);
 	}
 
@@ -470,7 +470,7 @@
  		$this->response = ClientesController::Detalle( 
  			
 			
-			isset($_GET['id_cliente'] ) ? $_GET['id_cliente'] : null
+			isset($_POST['id_cliente'] ) ? $_POST['id_cliente'] : null
 			
 			);
 		}catch(Exception $e){
@@ -7362,7 +7362,7 @@
 			"descripcion" => new ApiExposedProperty("descripcion", true, POST, array( "string" )),
 			"factor_conversion" => new ApiExposedProperty("factor_conversion", true, POST, array( "float" )),
 			"id_categoria_unidad_medida" => new ApiExposedProperty("id_categoria_unidad_medida", true, POST, array( "int" )),
-			"tipo_unidad_medida" => new ApiExposedProperty("tipo_unidad_medida", true, POST, array( "string" )),
+			"tipo_unidad_medida" => new ApiExposedProperty("tipo_unidad_medida", true, POST, array( "enum" )),
 			"activa" => new ApiExposedProperty("activa", false, POST, array( "string" )),
 		);
 	}
