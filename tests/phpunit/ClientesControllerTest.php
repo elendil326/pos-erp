@@ -331,7 +331,7 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 */
 	public function testInsertarUsuariosSapuraiya() {
 
-		$NombreArchivo = "registro.xls";
+		$NombreArchivo = "registro_2.xls";
 		$this->assertTrue(file_exists ($NombreArchivo));
 		if(! file_exists ($NombreArchivo))
 			return;
@@ -489,9 +489,11 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 			if(array_key_exists('R.F.C', $c) || array_key_exists("r.f.c", $c)){
 				if(array_key_exists('R.F.C', $c)){
 					$nuevo->setRfc($c["R.F.C"]);
+					$nuevo->setCodigoUsuario($c["R.F.C"]);
 				}
 				if (array_key_exists("r.f.c", $c)) {
 					$nuevo->setRfc($c["r.f.c"]);
+					$nuevo->setCodigoUsuario($c["r.f.c"]);
 				}
 			}
 
@@ -528,6 +530,17 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 				}
 				if (array_key_exists("pagina web", $c)) {
 					$nuevo->setPaginaWeb($c["pagina web"]);
+				}
+			}
+
+			if(array_key_exists("PASSWORD PARA SISTEMA DE AGENDA", $c) || array_key_exists("password para sistema de agenda", $c)){
+				if(array_key_exists('PASSWORD PARA SISTEMA DE AGENDA', $c)){
+					if(strlen($c["PASSWORD PARA SISTEMA DE AGENDA"])>0)
+						$nuevo->setPassword(hash("md5",$c["PASSWORD PARA SISTEMA DE AGENDA"]));
+				}
+				if (array_key_exists("password para sistema de agenda", $c)) {
+					if(strlen($c["password para sistema de agenda"])>0)
+						$nuevo->setPassword(hash("md5",$c["password para sistema de agenda"]));
 				}
 			}
 
@@ -817,9 +830,9 @@ $json_agenda = str_replace(chr(13), " ", $json_agenda);//retorno
 						$index = $p->campo;
 						$prop ="";
 						if(strlen($index)>32){
-							$prop = (str_replace(" ","_",substr($index,0,31)));
+							$prop = str_replace(".","_",(str_replace(" ","_",substr($index,0,31))));
 						}else{
-							$prop = (str_replace(" ","_",$index));
+							$prop = str_replace(".","_",(str_replace(" ","_",$index)));
 						}
 
 						if($index!="Agenda"){
