@@ -331,7 +331,7 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 */
 	public function testInsertarUsuariosSapuraiya() {
 
-		$NombreArchivo = "registro.xls";
+		$NombreArchivo = "cargar_usuarios.xls";
 		$this->assertTrue(file_exists ($NombreArchivo));
 		if(! file_exists ($NombreArchivo))
 			return;
