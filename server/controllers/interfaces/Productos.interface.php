@@ -253,21 +253,16 @@ NOTA: Se crea un producto tipo = 1 que es para productos.
   
 	/**
  	 *
- 	 *Lista las categor?as de unidades
+ 	 *Lista las categor?as de unidades.
  	 *
- 	 * @param limit int Indica el registro final del conjunto de datos que se desea mostrar
- 	 * @param page int Indica en que pagina se encuentra dentro del conjunto de resultados que coincidieron en la bsqueda
- 	 * @param query string El texto a buscar
- 	 * @param start int Indica el registro inicial del conjunto de datos que se desea mostrar
- 	 * @return numero_de_resultados int 
- 	 * @return resultados json Objeto que contendr la lista de categoras de unidades
+ 	 * @param activa bool Status de las categorías a buscar.Si es null busca tanto activas como inactivas.
+ 	 * @param query string Cadena de texto a buscar en descripción.Si es null, las devuelve todas.
+ 	 * @return resultados json Lista de categoras obtenidas.
  	 **/
   static function BuscarCategoriaUdm
 	(
-		$limit =  50 , 
-		$page = null, 
-		$query = null, 
-		$start =  0 
+		$activa =  true , 
+		$query = null
 	);  
   
   
@@ -275,11 +270,30 @@ NOTA: Se crea un producto tipo = 1 que es para productos.
   
 	/**
  	 *
- 	 *Edita una categor?a de unidades
+ 	 *Obtener las propiedades de una categor?a.
  	 *
- 	 * @param id_categoria_unidad_medida int Id de la categora que se desea editar
- 	 * @param activo int Indica si la categora esta activa
- 	 * @param descripcion string Descripcin de la categora
+ 	 * @param id_categoria_unidad_medida int ID de la categoría a mostrar.
+ 	 * @return categoria json Objeto con las propiedades de la categoría.
+ 	 **/
+  static function DetallesCategoriaUdm
+	(
+		$id_categoria_unidad_medida
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Edita una categor?a de unidades.
+ 	 *
+ 	 * @param id_categoria_unidad_medida int ID de la categoría a editar.
+ 	 * @param activo int Nuevo status de la categoría.
+
+Si es null no se editará.
+ 	 * @param descripcion string Nueva descripción de la categoría.
+
+Si es null no se editará.
  	 **/
   static function EditarCategoriaUdm
 	(
@@ -293,16 +307,16 @@ NOTA: Se crea un producto tipo = 1 que es para productos.
   
 	/**
  	 *
- 	 *Crea una nueva categor?a para unidades
+ 	 *Crea una nueva categor?a para unidades.
  	 *
- 	 * @param descripcion string Descripcin de la categora
- 	 * @param activo int Indica si la categora esta activa, en caso de no indicarlo se tomara como activo
- 	 * @return id_categoria int Id de la categoria
+ 	 * @param descripcion string Descripción de la nueva categoría.
+ 	 * @param activo bool Status de la nueva categoría.
+ 	 * @return id_categoria int ID de la nueva categoria.
  	 **/
   static function NuevaCategoriaUdm
 	(
 		$descripcion, 
-		$activo = ""
+		$activo =  true 
 	);  
   
   

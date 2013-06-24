@@ -45,7 +45,7 @@ class ProductosController extends ValidacionesController implements IProductos {
      * @param id_categoria_padre int Id de la categora padre en caso de tenerla
      * @param nombre string Nombre de la categoria del producto
      **/
-    public static function EditarCategoria($id_clasificacion_producto, $activa = null, $descripcion = null, $id_categoria_padre = null, $nombre = null) {
+    public static function EditarCategoria($id_clasificacion_producto, $activa=null, $descripcion=null, $id_categoria_padre=null, $nombre=null) {
         $categoria = ClasificacionProductoDAO::getByPK($id_clasificacion_producto);
 
         if (!is_null($activa)) {
@@ -54,21 +54,23 @@ class ProductosController extends ValidacionesController implements IProductos {
         if (!is_null($descripcion)) {
             $categoria->setDescripcion($descripcion);
         }
-        if (!is_null($id_categoria_padre)) {
-            $categoria->setIdCategoriaPadre($id_categoria_padre);
-        }
         if (!is_null($nombre)) {
             $categoria->setNombre($nombre);
         }
 
-        if (ClasificacionProductoDAO::ChecarRecursion($categoria->getIdClasificacionProducto(), $categoria->getIdCategoriaPadre())) {
-            try {
-                ClasificacionProductoDAO::save($categoria);
-            } catch (Exception $e) {
-                throw new Exception("Error al modificar categoria, verifique sus datos.", 901);
+        if (!is_null($id_categoria_padre)) {
+            echo "......".$id_categoria_padre;
+            $categoria->setIdCategoriaPadre($id_categoria_padre);
+
+            if (ClasificacionProductoDAO::ChecarRecursion($categoria->getIdClasificacionProducto(), $categoria->getIdCategoriaPadre())) {
+                try {
+                    ClasificacionProductoDAO::save($categoria);
+                } catch (Exception $e) {
+                    throw new Exception("Error al modificar categoria, verifique sus datos.", 901);
+                }
+            } else {
+                throw new Exception("Una categoria no puede ser hija de otra categoria descendiente, verifique sus datos.", 901);   
             }
-        } else {
-            throw new Exception("Una categoria no puede ser hija de otra categoria descendiente, verifique sus datos.", 901);   
         }
     }
 
@@ -1732,26 +1734,100 @@ class ProductosController extends ValidacionesController implements IProductos {
     {
     }
     
-    
-    
-    
-    static function BuscarCategoriaUdm($limit = 50, $page = null, $query = null, $start = 0)
-    {
+    // - - CATEGORIAS DE UDM - - //
+
+    /**
+     *
+     * Lista las categorias de unidades.
+     *
+     * @param activa bool Status de las categorias a buscar. Si es null busca tanto activas como inactivas.
+     * @param query string Cadena de texto a buscar en descripcion. Si es null, las devuelve todas.
+     * @return resultados json Lista de categorias obtenidas.
+     **/
+    public static function BuscarCategoriaUdm($activa=true, $query=null) {
+        if (is_null($activa) && is_null($query)) {
+            $resultado = CategoriaUnidadMedidaDAO::getAll();
+        }
+        else {
+            $resultado = CategoriaUnidadMedidaDAO::buscar($activa, $query);
+        }
+
+        return array("resultados" => $resultado);
     }
-    
-    
-    
+
+    /**
+     *
+     * Crea una nueva categoria para unidades.
+     *
+     * @param descripcion string Descripcion de la nueva categoria.
+     * @param activo bool Status de la nueva categoria.
+     * @return id_categoria int ID de la nueva categoria.
+     **/
+    public static function NuevaCategoriaUdm($descripcion, $activo=true) {
+        Logger::log("Creando una nueva categoria unidad de medida....");
+        
+        //validar el string de descripcion
+        $e = self::validarString($descripcion, 100, "descripcion");
+
+        if (is_string($e)){
+            Logger::error($e);
+            throw new Exception($e);
+        }
+        
+        //buscar esa descripcion de unidad
+        $cat_udm = new CategoriaUnidadMedida(array(
+            "descripcion" => $descripcion
+        ));
+
+
+        $n = CategoriaUnidadMedidaDAO::search( $cat_udm );
+        
+        if(sizeof($n) > 0){
+            throw new BusinessLogicException("Ya existe esta descripcion");
+        }
+        
+        if(is_null($activo)) $activo = true;
+        
+        $cat_udm->setActiva( $activo );
+
+        DAO::transBegin();
+        try {
+            CategoriaUnidadMedidaDAO::save($cat_udm);
+
+        }catch (Exception $e) {
+            DAO::transRollback();
+            Logger::error("No se pudo crear la categoria unidad de medida: " . $e);
+            throw new Exception("No se pudo crear la categoria unidad de medida");
+
+        }
+
+        DAO::transEnd();
+        Logger::log("Categoria Unidad de Medida creada exitosamente");
+
+        return array(
+            "id_categoria_unidad_medida" => (int)$cat_udm->getIdCategoriaUnidadMedida()
+        );
+    }
     
     /**
      *
-     *Edita una categor?a de unidades
+     * Obtener las propiedades de una categoria.
      *
-     * @param activo int Indica si la categoría esta activa
-     * @param descripcion string Descripcin de la categora
-     * @param id_categoria int Id de la categora que se desea editar
+     * @param id_categoria_unidad_medida int ID de la categoria a mostrar.
+     * @return categoria json Objeto con las propiedades de la categoria.
      **/
-    static function EditarCategoriaUdm($id_categoria, $activo = null, $descripcion = null)
-    {
+    public static function DetallesCategoriaUdm($id_categoria_unidad_medida) {
+    }
+    
+    /**
+     *
+     * Edita una categoria de unidades.
+     *
+     * @param id_categoria_unidad_medida int ID de la categoria a editar.
+     * @param activo int Nuevo status de la categoria. Si es null no se editara.
+     * @param descripcion string Nueva descripcion de la categoria. Si es null no se editara.
+     **/
+    public static function EditarCategoriaUdm($id_categoria_unidad_medida, $activo = null, $descripcion = null) {
 		Logger::log("Editando categoria unidad de medida " . $id_categoria);
         
         //validar el string de descripcion
@@ -1782,67 +1858,8 @@ class ProductosController extends ValidacionesController implements IProductos {
         DAO::transEnd();
         Logger::log("Categoria Unidad de Medida editada exitosamente");
     }
-    
-    
-    
-    
-    /**
-     *
-     *Crea una nueva categor?a para unidades
-     *
-     * @param descripcion string Descripcin de la categora
-     * @param activo int Indica si la categoría esta activa, en caso de no indicarlo se tomara como activo
-     * @return id_categoria int Id de la categoria
-     **/
-    static function NuevaCategoriaUdm($descripcion, $activo = "")
-    {
-		Logger::log("Creando una nueva categoria unidad de medida....");
-        
-        //validar el string de descripcion
-        $e = self::validarString($descripcion, 100, "descripcion");
 
-        if (is_string($e)){
-			Logger::error($e);
-		    throw new Exception($e);
-		}
-        
-        //buscar esa descripcion de unidad
-        $cat_udm = new CategoriaUnidadMedida(array(
-            "descripcion" => $descripcion
-        ));
-
-
-		$n = CategoriaUnidadMedidaDAO::search( $cat_udm );
-		
-		if(sizeof($n) > 0){
-			throw new BusinessLogicException("Ya existe esta descripcion");
-		}
-		
-		if(is_null($activo)) $activo = true;
-		
-		$cat_udm->setActiva( $activo );
-
-        DAO::transBegin();
-        try {
-            CategoriaUnidadMedidaDAO::save($cat_udm);
-
-        }catch (Exception $e) {
-            DAO::transRollback();
-            Logger::error("No se pudo crear la categoria unidad de medida: " . $e);
-            throw new Exception("No se pudo crear la categoria unidad de medida");
-
-        }
-
-        DAO::transEnd();
-        Logger::log("Categoria Unidad de Medida creada exitosamente");
-
-        return array(
-            "id_categoria_unidad_medida" => (int)$cat_udm->getIdCategoriaUnidadMedida()
-        );
-    }
-    
-    
-    
+    // - - Unidades de Medida -- //
     
     /**
      *

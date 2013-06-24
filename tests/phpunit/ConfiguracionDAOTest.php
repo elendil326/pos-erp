@@ -1,4 +1,5 @@
 <?php
+echo "XDXD";
 require_once("../../server/bootstrap.php");
 
 class ConfiguracionDAOTest extends PHPUnit_Framework_TestCase

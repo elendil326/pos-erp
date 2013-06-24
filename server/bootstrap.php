@@ -270,7 +270,7 @@
 
 	if(count($rs) === 0)
 	{
-		Logger::warn("La instancia para el token {". $_GET["_instance_"] ."} no exite !");
+		Logger::warn("La instancia para el token {". $_GET["_instance_"] ."} no existe !");
 		die(header("HTTP/1.1 404 NOT FOUND"));
 	}
 

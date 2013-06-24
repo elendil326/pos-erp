@@ -7397,7 +7397,7 @@
 	{
 		$this->request = array(	
 			"descripcion" => new ApiExposedProperty("descripcion", true, POST, array( "string" )),
-			"activo" => new ApiExposedProperty("activo", false, POST, array( "int" )),
+			"activo" => new ApiExposedProperty("activo", false, POST, array( "bool" )),
 		);
 	}
 
@@ -7407,7 +7407,7 @@
  			
 			
 			isset($_POST['descripcion'] ) ? $_POST['descripcion'] : null,
-			isset($_POST['activo'] ) ? $_POST['activo'] :  ""
+			isset($_POST['activo'] ) ? $_POST['activo'] :  true 
 			
 			);
 		}catch(Exception $e){
@@ -7458,10 +7458,8 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"limit" => new ApiExposedProperty("limit", false, GET, array( "int" )),
-			"page" => new ApiExposedProperty("page", false, GET, array( "int" )),
+			"activa" => new ApiExposedProperty("activa", false, GET, array( "bool" )),
 			"query" => new ApiExposedProperty("query", false, GET, array( "string" )),
-			"start" => new ApiExposedProperty("start", false, GET, array( "int" )),
 		);
 	}
 
@@ -7470,10 +7468,8 @@
  		$this->response = ProductosController::BuscarCategoriaUdm( 
  			
 			
-			isset($_GET['limit'] ) ? $_GET['limit'] :  50 ,
-			isset($_GET['page'] ) ? $_GET['page'] :  null,
-			isset($_GET['query'] ) ? $_GET['query'] :  null,
-			isset($_GET['start'] ) ? $_GET['start'] :  0 
+			isset($_GET['activa'] ) ? $_GET['activa'] :  true ,
+			isset($_GET['query'] ) ? $_GET['query'] :  null
 			
 			);
 		}catch(Exception $e){
@@ -7560,6 +7556,34 @@
  			
 			
 			isset($_GET['id_categoria'] ) ? $_GET['id_categoria'] : null
+			
+			);
+		}catch(Exception $e){
+ 			//Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );
+		}
+ 	}
+  }
+  
+  
+
+  class ApiProductoUdmCategoriaDetalles extends ApiHandler {
+  
+
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
+	protected function GetRequest()
+	{
+		$this->request = array(	
+			"id_categoria_unidad_medida" => new ApiExposedProperty("id_categoria_unidad_medida", true, GET, array( "int" )),
+		);
+	}
+
+	protected function GenerateResponse() {		
+		try{
+ 		$this->response = ProductosController::DetallesCategoriaUdm( 
+ 			
+			
+			isset($_GET['id_categoria_unidad_medida'] ) ? $_GET['id_categoria_unidad_medida'] : null
 			
 			);
 		}catch(Exception $e){

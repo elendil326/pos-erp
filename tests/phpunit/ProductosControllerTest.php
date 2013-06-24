@@ -356,18 +356,21 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 			//se crea un nueva categoria
 			$nombre_cat = self::RandomString(15,true,FALSE,FALSE); 
 			$desc = self::RandomString(25,FALSE,FALSE,FALSE); 
-			$c = ProductosController::NuevaCategoria($nombre = $nombre_cat, 
-											$descripcion = $desc, 
-											$id_categoria_padre = null
-											);
+
+			$c = ProductosController::NuevaCategoria(
+				$nombre=$nombre_cat,
+				$descripcion=$desc,
+				$id_categoria_padre=null
+			);
+
 			$this->assertInternalType("int" , $c["id_categoria"],"---- 'testEditarCategoria' 'id_categoria' NO ES UN ENTERO");
 
 			//se edita la categoria recien ingresada
-			ProductosController::EditarCategoria($id_categoria = $c["id_categoria"],
-										$descripcion = "", //cambia a cadena vacia
-										$id_categoria_padre = null, 
-										$nombre = $nombre_cat."-edit"
-										);			
+			ProductosController::EditarCategoria(
+				$id_clasificacion_producto=$c["id_categoria"],
+				$descripcion="", //cambia a cadena vacia
+				$nombre=$nombre_cat."-edit"
+			);
 		}
 		
 		public function testBuscarCategoriaPorID_Categoria(){
@@ -435,23 +438,6 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 			}		
 		}
 		*/
-		
-		
-		public function testDesactivarCategoria(){
-			//se genera una categoria para despues darla de baja
-			$nombre_cat = self::RandomString(15,FALSE,FALSE,FALSE); 
-			$desc = self::RandomString(25,FALSE,FALSE,FALSE); 
-			$c = ProductosController::NuevaCategoria($nombre = $nombre_cat, 
-											$descripcion = $desc, 
-											$id_categoria_padre = null
-											);
-			$this->assertInternalType("int" , $c["id_categoria"],"---- 'testNuevaCategoria' 'id_categoria' NO ES UN ENTERO");
-			
-			ProductosController::DesactivarCategoria($c["id_categoria"]);
-			//se busca el prod recien insertado para ver si esta activo = 0
-			$res = ClasificacionProductoDAO::getByPK($c['id_categoria']);
-			$this->assertEquals(0,$res->getActiva(),"---- 'testDesactivarCategoria' LA CATEGORIA NO SE DESACTIVÓ  id_categoria= ". $c["id_categoria"]);		
-		}
 
 		/*
 		public function testVolumenEnNuevo(){
