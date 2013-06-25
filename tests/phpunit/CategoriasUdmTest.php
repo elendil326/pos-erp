@@ -2,14 +2,16 @@
 require_once("../../server/bootstrap.php");
 
 class CategoriasUdmTest extends PHPUnit_Framework_TestCase {
-	protected function setUp()
-    {
+    public static $categoria_peso;
+
+	public static function setUpBeforeClass() {
         SesionController::Iniciar(123, 1, true);
+        self::$categoria_peso = new CategoriaUnidadMedida(array(
+            'descripcion' => 'Peso',
+            'activa' => true
+        ));
         CategoriaUnidadMedidaDAOBase::save(
-            new CategoriaUnidadMedida(array(
-                'descripcion' => 'Peso',
-                'activa' => true
-            ))
+            self::$categoria_peso
         );
         CategoriaUnidadMedidaDAOBase::save(
             new CategoriaUnidadMedida(array(
@@ -86,8 +88,89 @@ class CategoriasUdmTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(count($categorias), $qty);
     }
 
-    protected function tearDown()
-    {
+    // - - Crear - - //
+    /**
+    * @expectedException InvalidArgumentException
+    */
+    public function testNuevaDescripcionVacia() {
+        ProductosController::NuevaCategoriaUdm('');
+    }
+
+    public function testNueva() {
+        $resultado = ProductosController::NuevaCategoriaUdm('Nueva');
+        $categoria = CategoriaUnidadMedidaDAO::getByPK($resultado['id_categoria_unidad_medida']);
+        $this->assertNotNull($categoria);
+    }
+
+    /**
+    * @expectedException BusinessLogicException
+    */
+    public function testNuevaDescripcionExisteActiva() {
+        ProductosController::NuevaCategoriaUdm('Peso');
+    }
+
+    /**
+    * @expectedException BusinessLogicException
+    */
+    public function testNuevaDescripcionExisteInactiva() {
+        ProductosController::NuevaCategoriaUdm('Tiempo');
+    }
+
+    // - - Mostrar - - //
+    public function testDetalles() {
+        $categoria = self::$categoria_peso;
+        $resultado = ProductosController::DetallesCategoriaUdm($categoria->getIdCategoriaUnidadMedida());
+        $this->assertNotNull($resultado['categoria_unidad_medida']);
+    }
+
+    /**
+    * @expectedException InvalidDatabaseOperationException
+    */
+    public function testDetallesNoExiste() {
+        $resultado = ProductosController::DetallesCategoriaUdm(90);
+    }
+
+    // - - Editar - - //
+    /**
+    * @expectedException InvalidDatabaseOperationException
+    */
+    public function testEditarNoExiste() {
+        ProductosController::EditarCategoriaUdm(90);
+    }
+
+    public function testEditarStatus() {
+        $categoria = self::$categoria_peso;
+        $descripcion = $categoria->getDescripcion();
+
+        $activa = false;
+        do {
+            ProductosController::EditarCategoriaUdm($categoria->getIdCategoriaUnidadMedida(), $activa);
+            $categoria = CategoriaUnidadMedidaDAO::getByPK($categoria->getIdCategoriaUnidadMedida());
+            $this->assertEquals($categoria->getActiva(), (int) $activa);
+            $this->assertEquals($categoria->getDescripcion(), $descripcion);
+            $activa = !$activa;
+        } while ($activa);
+    }
+
+    public function testEditarDescripcion() {
+        $categoria = self::$categoria_peso;
+        $status = $categoria->getActiva();
+
+        ProductosController::EditarCategoriaUdm($categoria->getIdCategoriaUnidadMedida(), null, 'Masa');
+        $categoria = CategoriaUnidadMedidaDAO::getByPK($categoria->getIdCategoriaUnidadMedida());
+        $this->assertEquals($categoria->getDescripcion(), 'Masa');
+        $this->assertEquals($categoria->getActiva(), (int) $status);
+    }
+
+    public function testEditarTodo() {
+        $categoria = self::$categoria_peso;
+        ProductosController::EditarCategoriaUdm($categoria->getIdCategoriaUnidadMedida(), false, 'Peso');
+        $categoria = CategoriaUnidadMedidaDAO::getByPK($categoria->getIdCategoriaUnidadMedida());
+        $this->assertEquals($categoria->getDescripcion(), 'Peso');
+        $this->assertEquals($categoria->getActiva(), 0);
+    }
+
+    public static function tearDownAfterClass() {
         $categorias = CategoriaUnidadMedidaDAO::getAll();
         foreach ($categorias as $categoria) {
             CategoriaUnidadMedidaDAO::delete($categoria);

@@ -1761,17 +1761,14 @@ class ProductosController extends ValidacionesController implements IProductos {
      *
      * @param descripcion string Descripcion de la nueva categoria.
      * @param activo bool Status de la nueva categoria.
-     * @return id_categoria int ID de la nueva categoria.
+     * @throws BusinessLogicException si ya existe otra categoria con la misma descripcion.
+     * @return id_categoria_unidad_medida int ID de la nueva categoria.
      **/
     public static function NuevaCategoriaUdm($descripcion, $activo=true) {
         Logger::log("Creando una nueva categoria unidad de medida....");
         
-        //validar el string de descripcion
-        $e = self::validarString($descripcion, 100, "descripcion");
-
-        if (is_string($e)){
-            Logger::error($e);
-            throw new Exception($e);
+        if (empty($descripcion)) {
+            throw new InvalidArgumentException("Descripcion vacía", 1);
         }
         
         //buscar esa descripcion de unidad
@@ -1814,9 +1811,19 @@ class ProductosController extends ValidacionesController implements IProductos {
      * Obtener las propiedades de una categoria.
      *
      * @param id_categoria_unidad_medida int ID de la categoria a mostrar.
-     * @return categoria json Objeto con las propiedades de la categoria.
+     * @throws InvalidDatabaseOperationException si la categoria no existe.
+     * @return categoria_unidad_medida json Objeto con las propiedades de la categoria.
      **/
     public static function DetallesCategoriaUdm($id_categoria_unidad_medida) {
+        $categoria = CategoriaUnidadMedidaDAO::getByPK($id_categoria_unidad_medida);
+
+        if (is_null($categoria)) {
+            throw new InvalidDatabaseOperationException("La categoria no existe", 1);
+        }
+
+        return array(
+            'categoria_unidad_medida' => $categoria
+        );
     }
     
     /**
@@ -1826,24 +1833,22 @@ class ProductosController extends ValidacionesController implements IProductos {
      * @param id_categoria_unidad_medida int ID de la categoria a editar.
      * @param activo int Nuevo status de la categoria. Si es null no se editara.
      * @param descripcion string Nueva descripcion de la categoria. Si es null no se editara.
+     * @throws InvalidDatabaseOperationException si la categoria no existe.
      **/
     public static function EditarCategoriaUdm($id_categoria_unidad_medida, $activo = null, $descripcion = null) {
-		Logger::log("Editando categoria unidad de medida " . $id_categoria);
-        
-        //validar el string de descripcion
-        $e = self::validarString($descripcion, 100, "descripcion");
+		Logger::log("Editando categoria unidad de medida " . $id_categoria_unidad_medida);
 
-        if (is_string($e)){
-			Logger::error($e);
-		    throw new Exception($e);
-		}
-        
-        //Los parametros que no sean nulos se tomaran como actualizacion
-        $cat_unidad = CategoriaUnidadMedidaDAO::getByPK($id_categoria);
+        $cat_unidad = CategoriaUnidadMedidaDAO::getByPK($id_categoria_unidad_medida);
+        if (is_null($cat_unidad)) {
+            throw new InvalidDatabaseOperationException("La categoria no existe", 1);
+        }
+
+        if (!is_null($activo)) {
+            $cat_unidad->setActiva($activo);
+        }
         if (!is_null($descripcion)) {
-
             $cat_unidad->setDescripcion($descripcion);
-        } //!is_null($descripcion)
+        }
         
         //se guardan los cambios
         DAO::transBegin();
