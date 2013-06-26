@@ -1868,53 +1868,149 @@ class ProductosController extends ValidacionesController implements IProductos {
     
     /**
      *
-     *Lista las equivalencias existentes. Se puede ordenar por sus atributos
+     * Lista las equivalencias existentes. Se puede ordenar por sus atributos
      *
-     * @param limit int Indica el registro final del conjunto de datos que se desea mostrar
-     * @param page int Indica en que pagina se encuentra dentro del conjunto de resultados que coincidieron en la bsqueda
-     * @param query string El texto a buscar
-     * @param start int Indica el registro inicial del conjunto de datos que se desea mostrar
-     * @return numero_de_resultados int Lista de unidades
-     * @return resultados json Objeto que contendra la lista de udm
+     * @param query string Cadena de texto a buscar en abreviación  y descripción. Si es null, las devuelve todas.
+     * @return resultados json Objeto que contendra la lista de udm.
      **/
-    static function BuscarUnidadUdm($limit = 50, $page = null, $query = null, $start = 0)
-    {
-	
+    public static function BuscarUnidadUdm($query = null) {
 		$r = UnidadMedidaDAO::getAll();
 	
 		return array(
-			"resultados" => $r,
-			"numero_de_resultados" => sizeof($r)
+			"resultados" => $r
 		);
-	
-	
     }
     
-    
-    
+    /**
+     *
+     * Crea una nueva unidad de medida.
+     *
+     * @param abreviacion string Abreviacion de la unidad.
+     * @param descripcion string Nombre de la unidad.
+     * @param factor_conversion float Equivalencia de esta unidad con respecto a la unidad de medida base obtenida de la
+     *        categoria a la cual pertenece esta unidad. En caso de que se seleccione el valor de tipo_unidad_medida =
+     *        "Referencia UdM para esta categoría" este valor sera igual a uno automáticamente sin posibilidad de ingresar
+     *        otro valor diferente.
+     * @param id_categoria_unidad_medida int Id de la categoria a la cual pertenece la unidad.
+     * @param tipo_unidad_medida enum Tipo de unidad cuyo valores son los siguientes: "Referencia UdM para esta categoria"
+     *        (define a esta unidad como la unidad base de referencia de esta categora, en caso de seleccionar esta opción
+     *        automticamente el factor de conversin sera igual a uno sin posibilidad de ingresar otro valor diferente), "Mayor
+     *        que la UdM de referencia" (indica que esta unidad de medida sera mayor que la unidad de medida base d la
+     *        categoria que se indique) y "Menor que la UdM de referencia" (indica que esta unidad de medida sera menor que la
+     *        unidad de medida base de la categora que se indique). Cuando se defina una nueva unidad de referencia las demás
+     *        unidades de esta categoría se modificarán para establecer los nuevos factores de conversión.
+     * @return id_unidad_medida int ID de la unidad de medida recién creada.
+     * @throws BusinessLogicException si abreviacion y/o descripcion ya existen en la categoria o si factor_conversion no es
+     *         mayor que cero.
+     * @throws InvalidArgumentException si abreviacion y/o descripcion son cadenas vacias.
+     **/
+    public static function NuevaUnidadUdm(
+        $abreviacion, 
+        $descripcion, 
+        $factor_conversion, 
+        $id_categoria_unidad_medida, 
+        $tipo_unidad_medida
+    ) {
+        Logger::log("Creando una nueva unidad de medida");
+        
+        //valida los parametros recibidos
+        $validar = self::validarParametrosUdM(null, $abreviatura, $descripcion, $factor_conversion, $id_categoria_unidad_medida, $tipo_unidad_medida, $activa = "");
+        if (is_string($validar)) {
+            Logger::error($validar);
+            throw new BusinessLogicException($validar);
+        } //is_string($validar)
+        
+        
+        if($tipo_unidad_medida == "Referencia UdM para esta categoria"){
+            $factor_conversion = 1;
+            $unidad_ref = UnidadMedidaDAO::search(new UnidadMedida(array("tipo_unidad_medida"=>"Referencia UdM para esta categoria","id_categoria_unidad_medida"=>$id_categoria_unidad_medida)) );
+
+            foreach($unidad_ref as $udm_r){//Las udm q esten como ref pasan a ser Mayor q UdM
+                $udm_r->setTipoUnidadMedida('Mayor que la UdM de referencia');
+                try {
+                    UnidadMedidaDAO::save($udm_r);
+                }
+                catch (Exception $e) {              
+                    Logger::error("No se pudo crear la unidad de medida: " . $e);
+                    throw new Exception("No se pudo crear la unidad de medida, error al modificar UdM Referencia");
+                }   
+            }
+        }
+
+        if($tipo_unidad_medida == "Mayor que la UdM de referencia" && $factor_conversion <= 1)
+            throw new Exception("El Factor de Conversion debe rebasar el valor de 1 ya que seleccionó 'Mayor que UdM'");
+            
+        if($tipo_unidad_medida == "Menor que la UdM de referencia" && $factor_conversion >= 1)
+            throw new Exception("El Factor de Conversion NO debe rebasar el valor de 1 ya que seleccionó 'Menor que UdM'");
+
+
+        $udm = new UnidadMedida(array(
+            "abreviacion" => trim($abreviatura),            
+            "descripcion" => $descripcion,
+            "factor_conversion" => $factor_conversion,
+            "id_categoria_unidad_medida" => $id_categoria_unidad_medida,
+            "tipo_unidad_medida" => $tipo_unidad_medida,
+            "activa" => 1
+        ));
+        DAO::transBegin();
+        try {
+            UnidadMedidaDAO::save($udm);
+        }
+        catch (Exception $e) {
+            DAO::transRollback();
+            Logger::error("No se pudo crear la unidad de medida: " . $e);
+            throw new Exception("No se pudo crear la unidad de medida");
+        }
+        DAO::transEnd();
+        Logger::log("Unidad de Medida creada exitosamente");
+        return array(
+            "id_unidad_medida" => (int)$udm->getIdUnidadMedida()
+        );
+    }
+
+    /**
+     *
+     * Obtener un objeto con las propiedades de una unidad.
+     *
+     * @param id_unidad_medida int ID de la unidad a mostrar.
+     * @return unidad_medida json Un objeto con las propiedades de la unidad.
+     * @throws InvalidDatabaseOperationException si la unidad no existe.
+     **/
+    public static function DetallesUnidadUdm($id_unidad_medida) {
+    }
     
 	/**
- 	 *
- 	 *Este metodo modifica la informacion de una unidad
- 	 *
- 	 * @param id_categoria_unidad_medida int Id de la categora a la cual pertenece la unidad
- 	 * @param id_unidad_medida int Id de la unidad de medida que se desea editar
- 	 * @param abreviatura string Descripcin corta de la unidad, normalmente sera empelada en ticket de venta
- 	 * @param activa int Indica si la unidad esta activa
- 	 * @param descripcion string Descripcin de la unidad de medida
- 	 * @param factor_conversion float  Equivalencia de esta unidad con respecto a la unidad de medida base obtenida de la categora a la cual pertenece esta unidad. En caso de que se seleccione el valor de tipo_unidad_medida = "Referencia UdM para esta categoria" este valor sera igual a uno automticamente sin posibilidad de ingresar otro valor diferente
- 	 * @param tipo_unidad_medida string  Tipo enum cuyo valores son los siguientes : "Referencia UdM para esta categoria" (define a esta unidad como la unidad base de referencia de esta categora, en caso de seleccionar esta opcin automticamente el factor de conversin sera igual a uno sin posibilidad de ingresar otro valor diferente), "Mayor que la UdM de referencia" (indica que esta unidad de medida sera mayor que la unidad de medida base d la categora que se indique) y "Menor que la UdM de referencia" (indica que esta unidad de medida sera menor que la unidad de medida base de la categora que se indique)
- 	 **/
-    static function EditarUnidadUdm(
-		$id_categoria_unidad_medida, 
-		$id_unidad_medida, 
-		$abreviatura = null, 
-		$activa = null, 
-		$descripcion = null, 
-		$factor_conversion = null, 
-		$tipo_unidad_medida = ""
-	)
-    {
+     *
+     * Este metodo modifica la informacion de una unidad.
+     *
+     * @param id_unidad_medida int ID de la unidad de medida que se desea editar.
+     * @param abreviacion string Abreviacion de la unidad.
+     * @param descripcion string Nombre de la unidad.
+     * @param factor_conversion float Equivalencia de esta unidad con respecto a la unidad de medida base obtenida de la
+     *        categoria a la cual pertenece esta unidad. En caso de que se seleccione el valor de tipo_unidad_medida =
+     *        "Referencia UdM para esta categoría" este valor sera igual a uno automáticamente sin posibilidad de ingresar
+     *        otro valor diferente.
+     * @param id_categoria_unidad_medida int Id de la categoria a la cual pertenece la unidad.
+     * @param tipo_unidad_medida enum Tipo de unidad cuyo valores son los siguientes: "Referencia UdM para esta categoria"
+     *        (define a esta unidad como la unidad base de referencia de esta categora, en caso de seleccionar esta opción
+     *        automticamente el factor de conversin sera igual a uno sin posibilidad de ingresar otro valor diferente), "Mayor
+     *        que la UdM de referencia" (indica que esta unidad de medida sera mayor que la unidad de medida base d la
+     *        categoria que se indique) y "Menor que la UdM de referencia" (indica que esta unidad de medida sera menor que la
+     *        unidad de medida base de la categora que se indique). Cuando se defina una nueva unidad de referencia las demás
+     *        unidades de esta categoría se modificarán para establecer los nuevos factores de conversión.
+     * @return id_unidad_medida int ID de la unidad de medida recién creada.
+     * @throws BusinessLogicException si abreviacion y/o descripcion ya existen en la categoria o si factor_conversion no es
+     *         mayor que cero.
+     * @throws InvalidArgumentException si abreviacion y/o descripcion son cadenas vacias.
+     **/
+    public static function EditarUnidadUdm(
+        $id_categoria_unidad_medida, 
+        $id_unidad_medida, 
+        $abreviacion = null, 
+        $descripcion = null, 
+        $factor_conversion = null, 
+        $tipo_unidad_medida = ""
+    ) {
 		Logger::log("Editando unidad de medida " . $id_unidad_medida);
         
         //Se validan los parametros
@@ -1971,89 +2067,16 @@ class ProductosController extends ValidacionesController implements IProductos {
         DAO::transEnd();
         Logger::log("Unidad de Medida editada exitosamente");
     }
-    
-    
-    
-    
+
     /**
      *
-     *Crea una nueva unidad de medida
+     * Desactivar una unidad de medida
      *
-     * @param abreviatura string Descripcin corta de la unidad, normalmente sera empelada en ticket de venta
-     * @param descripcion string Descripcin de la unidad de medida
-     * @param factor_conversion float Equivalencia de esta unidad con respecto a la unidad de medida base obtenida de la categora a la cual pertenece esta unidad. En caso de que se seleccione el valor de tipo_unidad_medida = "Referencia UdM para esta categoria"  este valor sera igual a uno automticamente sin posibilidad de ingresar otro valor diferente
-     * @param id_categoria_unidad_medida int Id de la categora a la cual pertenece la unidad
-     * @param tipo_unidad_medida string Tipo enum cuyo valores son los siguientes : "Referencia UdM para esta categoria" (define a esta unidad como la unidad base de referencia de esta categora, en caso de seleccionar esta opcin automticamente el factor de conversin sera igual a uno sin posibilidad de ingresar otro valor diferente), "Mayor que la UdM de referencia" (indica que esta unidad de medida sera mayor que la unidad de medida base d la categora que se indique) y "Menor que la UdM de referencia" (indica que esta unidad de medida sera menor que la unidad de medida base de la categora que se indique)
-     * @param activa string Indica si la unidad esta activa, en caso de no indicarse este valor se considera como que si esta activa la unidad
-     * @return id_unidad_medida int 
+     * @param id_unidad_medida int ID de la unidad a desactivar.
+     * @throws InvalidDatabaseOperationException si la unidad no existe.
      **/
-    static function NuevaUnidadUdm($abreviatura, $descripcion, $factor_conversion, $id_categoria_unidad_medida, $tipo_unidad_medida, $activa = "")
-    {
-	
-		Logger::log("Creando una nueva unidad de medida");
-        
-        //valida los parametros recibidos
-        $validar = self::validarParametrosUdM(null, $abreviatura, $descripcion, $factor_conversion, $id_categoria_unidad_medida, $tipo_unidad_medida, $activa = "");
-        if (is_string($validar)) {
-            Logger::error($validar);
-            throw new BusinessLogicException($validar);
-        } //is_string($validar)
-        
-		
-		if($tipo_unidad_medida == "Referencia UdM para esta categoria"){
-			$factor_conversion = 1;
-			$unidad_ref = UnidadMedidaDAO::search(new UnidadMedida(array("tipo_unidad_medida"=>"Referencia UdM para esta categoria","id_categoria_unidad_medida"=>$id_categoria_unidad_medida)) );
-
-			foreach($unidad_ref as $udm_r){//Las udm q esten como ref pasan a ser Mayor q UdM
-				$udm_r->setTipoUnidadMedida('Mayor que la UdM de referencia');
-				try {
-		        	UnidadMedidaDAO::save($udm_r);
-				}
-				catch (Exception $e) {		        
-				    Logger::error("No se pudo crear la unidad de medida: " . $e);
-				    throw new Exception("No se pudo crear la unidad de medida, error al modificar UdM Referencia");
-				}	
-			}
-		}
-
-		if($tipo_unidad_medida == "Mayor que la UdM de referencia" && $factor_conversion <= 1)
-			throw new Exception("El Factor de Conversion debe rebasar el valor de 1 ya que seleccionó 'Mayor que UdM'");
-			
-		if($tipo_unidad_medida == "Menor que la UdM de referencia" && $factor_conversion >= 1)
-			throw new Exception("El Factor de Conversion NO debe rebasar el valor de 1 ya que seleccionó 'Menor que UdM'");
-
-
-        $udm = new UnidadMedida(array(
-            "abreviacion" => trim($abreviatura),            
-            "descripcion" => $descripcion,
-			"factor_conversion" => $factor_conversion,
-			"id_categoria_unidad_medida" => $id_categoria_unidad_medida,
-			"tipo_unidad_medida" => $tipo_unidad_medida,
-            "activa" => 1
-        ));
-        DAO::transBegin();
-        try {
-            UnidadMedidaDAO::save($udm);
-        }
-        catch (Exception $e) {
-            DAO::transRollback();
-            Logger::error("No se pudo crear la unidad de medida: " . $e);
-            throw new Exception("No se pudo crear la unidad de medida");
-        }
-        DAO::transEnd();
-        Logger::log("Unidad de Medida creada exitosamente");
-        return array(
-            "id_unidad_medida" => (int)$udm->getIdUnidadMedida()
-        );
+    public static function DesactivarUnidadUdm($id_unidad_medida) {
     }
-    
-    
-    
-
-
-
-
-
 
     private static function importarCSV( $raw_contents ){
         Logger::log("Importando como CSV");
