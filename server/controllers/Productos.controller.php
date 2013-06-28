@@ -1773,54 +1773,9 @@ class ProductosController extends ValidacionesController implements IProductos {
     ) {
         Logger::log("Creando una nueva unidad de medida");
 
-        if (empty($abreviacion)) {
-            throw new InvalidArgumentException("Abreviación vacía", 1);
-        }
-        if (empty($descripcion)) {
-            throw new InvalidArgumentException("Descripción vacía", 1);
-        }
-        
-        $unidades = UnidadMedidaDAO::search(new UnidadMedida(array(
-            'id_categoria_unidad_medida' => $id_categoria_unidad_medida,
-            'abreviacion' => $abreviacion,
-            'activa' => 1
-        )));
-        if (!empty($unidades)) {
-            throw new BusinessLogicException("Abreviación ya existe.", 1);
-        }
-
-        $unidades = UnidadMedidaDAO::search(new UnidadMedida(array(
-            'id_categoria_unidad_medida' => $id_categoria_unidad_medida,
-            'descripcion' => $descripcion,
-            'activa' => 1
-        )));
-        if (!empty($unidades)) {
-            throw new BusinessLogicException("Descripción ya existe.", 1);
-        }
-        
-        if (is_null(CategoriaUnidadMedidaDAO::getByPK($id_categoria_unidad_medida))) {
-            throw new InvalidDatabaseOperationException("Categoria no existe.", 1);
-        }
-
-        if ($factor_conversion <= 0) {
-            throw new BusinessLogicException("Factor menor o igual a cero.", 1);
-        }
-
-        $tipos = array(
-            "Referencia UdM para esta categoria",
-            "Menor que la UdM de referencia",
-            "Mayor que la UdM de referencia"
+        $factor_conversion = self::validarParametrosUnidad(
+            $abreviacion, $descripcion, $id_categoria_unidad_medida, $tipo_unidad_medida, $factor_conversion
         );
-        if (!in_array($tipo_unidad_medida, $tipos)) {
-            throw new BusinessLogicException("Tipo inválido", 1);
-        }
-
-        if($tipo_unidad_medida == $tipos[0]){
-            $factor_conversion = 1;
-        }
-        elseif ($tipo_unidad_medida == $tipos[1]) {
-            $factor_conversion = 1.0 / $factor_conversion;
-        }
 
         $udm = new UnidadMedida(array(
             "abreviacion" => trim($abreviacion),            
@@ -1902,23 +1857,39 @@ class ProductosController extends ValidacionesController implements IProductos {
             throw new InvalidDatabaseOperationException("Unidad no existe.", 1);
         }
 
-        if (is_null($id_categoria_unidad_medida)) {
-            $id_categoria_unidad_medida = $unidad->getIdCategoriaUnidadMedida();
-        }
         if (is_null($abreviacion)) {
             $abreviacion = $unidad->getAbreviacion();
+        } else {
+            $unidad->setAbreviacion($abreviacion);
         }
+
         if (is_null($descripcion)) {
             $descripcion = $unidad->getDescripcion();
+        } else {
+            $unidad->setDescripcion($descripcion);
         }
-        if (is_null($factor_conversion)) {
-            $factor_conversion = $unidad->getFactorConversion();
+
+        if (is_null($id_categoria_unidad_medida)) {
+            $id_categoria_unidad_medida = $unidad->getIdCategoriaUnidadMedida();
+        } else {
+            $unidad->setIdCategoriaUnidadMedida($id_categoria_unidad_medida);
         }
+
         if (empty($tipo_unidad_medida)) {
             $tipo_unidad_medida = $unidad->getTipoUnidadMedida();
+        } else {
+            $unidad->setTipoUnidadMedida($tipo_unidad_medida);
         }
 
+        if (is_null($factor_conversion)) {
+            $factor_conversion = $unidad->getFactorConversion();
+        } else {
+            $unidad->setFactorConversion(self::validarParametrosUnidad(
+                $abreviacion, $descripcion, $id_categoria_unidad_medida, $tipo_unidad_medida, $factor_conversion
+            ));
+        }
 
+        UnidadMedidaDAO::save($unidad);
     }
 
     /**
@@ -1935,6 +1906,63 @@ class ProductosController extends ValidacionesController implements IProductos {
         }
 
         $unidad->setActiva(0);
+        UnidadMedidaDAO::save($unidad);
+    }
+
+    private static function validarParametrosUnidad(
+        $abreviacion, $descripcion, $id_categoria_unidad_medida, $tipo_unidad_medida, $factor_conversion
+    ) {
+        if (empty($abreviacion)) {
+            throw new InvalidArgumentException("Abreviación vacía", 1);
+        }
+        if (empty($descripcion)) {
+            throw new InvalidArgumentException("Descripción vacía", 1);
+        }
+
+
+        if (is_null(CategoriaUnidadMedidaDAO::getByPK($id_categoria_unidad_medida))) {
+            throw new InvalidDatabaseOperationException("Categoria no existe.", 1);
+        }
+
+        $unidades = UnidadMedidaDAO::search(new UnidadMedida(array(
+            'id_categoria_unidad_medida' => $id_categoria_unidad_medida,
+            'abreviacion' => $abreviacion,
+            'activa' => 1
+        )));
+        if (!empty($unidades)) {
+            throw new BusinessLogicException("Abreviación ya existe.", 1);
+        }
+
+        $unidades = UnidadMedidaDAO::search(new UnidadMedida(array(
+            'id_categoria_unidad_medida' => $id_categoria_unidad_medida,
+            'descripcion' => $descripcion,
+            'activa' => 1
+        )));
+        if (!empty($unidades)) {
+            throw new BusinessLogicException("Descripción ya existe.", 1);
+        }
+
+        if ($factor_conversion <= 0) {
+            throw new BusinessLogicException("Factor menor o igual a cero.", 1);
+        }
+
+        $tipos = array(
+            "Referencia UdM para esta categoria",
+            "Menor que la UdM de referencia",
+            "Mayor que la UdM de referencia"
+        );
+        if (!in_array($tipo_unidad_medida, $tipos)) {
+            throw new BusinessLogicException("Tipo inválido", 1);
+        }
+
+        if($tipo_unidad_medida == $tipos[0]){
+            $factor_conversion = 1;
+        }
+        elseif ($tipo_unidad_medida == $tipos[1] && $factor_conversion > 1) {
+            $factor_conversion = 1.0 / $factor_conversion;
+        }
+
+        return $factor_conversion;
     }
 
     private static function importarCSV( $raw_contents ){

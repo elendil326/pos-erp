@@ -95,4 +95,17 @@ class CategoriasUdmTest extends PHPUnit_Framework_TestCase {
         $resultado = ProductosController::DetallesUnidadUdm(1);
         $this->assertNotNull($resultado['unidad_medida']);
     }
+
+    public function testDesactivar() {
+        ProductosController::DesactivarUnidadUdm(1);
+        $unidad = UnidadMedidaDAO::getByPK(1);
+        $this->assertEquals($unidad->getActiva(), 0);
+        $unidad->setActiva(1);
+        UnidadMedidaDAO::save($unidad);
+    }
+
+    public function testEditar() {
+        ProductosController::EditarUnidadUdm(1, null, null, 'Metro');
+        ProductosController::EditarUnidadUdm(1, null, null, 'METRO');
+    }
 }
