@@ -375,8 +375,8 @@ NOTA: Se crea un producto tipo = 1 que es para productos.
  	 **/
   static function EditarUnidadUdm
 	(
-		$id_categoria_unidad_medida, 
 		$id_unidad_medida, 
+		$id_categoria_unidad_medida = null,
 		$abreviacion = null, 
 		$descripcion = null, 
 		$factor_conversion = null, 

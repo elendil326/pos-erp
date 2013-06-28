@@ -121,152 +121,6 @@ class ProductosController extends ValidacionesController implements IProductos {
 
         return array('categoria' => $categoria);
     }
-
-
-    /*
-     * Valida los parametros de la tabla unidad. Regresa un string con el error en caso de
-     * encontrarse alguno, en caso contrario regresa true.
-     */
-    private static function validarParametrosUnidad($id_unidad = null, $nombre = null, $descripcion = null, $es_entero = null, $activa = null)
-    {
-        //valida que la unidad exista y que este activa
-        /*if (!is_null($id_unidad)) {
-            $unidad = UnidadDAO::getByPK($id_unidad);
-            if (is_null($unidad))
-                return "La unidad con id " . $id_unidad . " no existe";
-            
-            if (!$unidad->getActiva())
-                return "La unidad esta desactivada";
-        } //!is_null($id_unidad)*/
-        
-        //valida que el nombre este en el rango y que no se repita
-        if (!is_null($nombre)) {
-            $e = self::validarString($nombre, 100, "nombre");
-            if (is_string($e))
-                return $e;
-            if (!is_null($id_unidad)) {
-                $unidades = array_diff(UnidadDAO::search(new Unidad(array(
-                    "nombre" => trim($nombre)
-                ))), array(
-                    UnidadDAO::getByPK($id_unidad)
-                ));
-            } //!is_null($id_unidad)
-            else {
-                $unidades = UnidadDAO::search(new Unidad(array(
-                    "nombre" => trim($nombre)
-                )));
-            }
-            foreach ($unidades as $unidad) {
-                if ($unidad->getActiva())
-                    return "El nombre (" . $nombre . ") ya esta siendo usado por la unidad " . $unidad->getIdUnidad();
-            } //$unidades as $unidad
-        } //!is_null($nombre)
-        
-        //valida que la descripcion este en rango
-        if (!is_null($descripcion)) {
-            $e = self::validarString($descripcion, 255, "descripcion");
-            if (is_string($e))
-                return $e;
-        } //!is_null($descripcion)
-        
-        //valida el boleano es_entero
-        if (!is_null($es_entero)) {
-            $e = self::validarNumero($es_entero, 1, "es entero");
-            if (is_string($e))
-                return $e;
-        } //!is_null($es_entero)
-        
-        //valida el boleano activa
-        if (!is_null($activa)) {
-            $e = self::validarNumero($activa, 1, "activa");
-            if (is_string($e))
-                return $e;
-        } //!is_null($activa)
-        
-        //No se encontro error, regresa true
-        return true;
-    }
-    
-    /*
-     * Valida los parametros de la tabla unidad. Regresa un string con el error en caso de
-     * encontrarse alguno, en caso contrario regresa true.
-     */
-    private static function validarParametrosUdM($id_unidad_medida, $abreviacion, $descripcion, $factor_conversion, $id_categoria_unidad_medida, $tipo_unidad_medida, $activa = "")
-    {
-		//valida que la unidad medida exista y que este activa
-        if (!is_null($id_unidad_medida)) {
-            $unidad_medida = UnidadMedidaDAO::getByPK($id_unidad_medida);
-            if (is_null($unidad_medida))
-                return "La unidad medida con id " . $id_unidad_medida . " no existe";
-            
-            if (!$unidad_medida->getActiva())
-                return "La unidad medida esta desactivada";
-        } //!is_null
-
-        //valida que la categoria de udm exista y que este activa 
-        if (!is_null($id_categoria_unidad_medida)) { 
-            $categoria_udm = CategoriaUnidadMedidaDAO::getByPK($id_categoria_unidad_medida);
-            if (is_null($categoria_udm))
-                return "La categoria unidad de medida con id " . $id_categoria_unidad_medida . " no existe";
-            
-            if (!$categoria_udm->getActiva())
-                return "La categoria '{$categoria_udm->getDescripcion()}' esta desactivada";
-        } //!is_null
-        
-        //valida que la abreviatura este en el rango y que no se repita
-        if (!is_null($abreviacion)) {
-            $e = self::validarString($abreviacion, 100, "abreviacion");
-            if (is_string($e))
-                return $e;
-            if (!is_null($id_unidad_medida)) {
-                $unidades_medida = array_diff(UnidadMedidaDAO::search(new UnidadMedida(array(
-                    "abreviacion" => trim($abreviacion)
-                ))), array(
-                    UnidadMedidaDAO::getByPK($id_unidad_medida)
-                ));
-            } //!is_null($id_unidad)
-            else {
-                $unidades_medida = UnidadMedidaDAO::search(new UnidadMedida(array(
-                    "abreviacion" => trim($abreviacion)
-                )));
-            }
-            foreach ($unidades_medida as $udm) {
-                if ($udm->getActiva())
-                    return "La abreviacion (" . $abreviacion . ") ya esta siendo usada por la unidad " . $udm->getIdUnidadMedida();
-            } 
-        } //!is_null($abreviatura)
-        
-        //valida que la descripcion este en rango
-        if (!is_null($descripcion)) {
-            $e = self::validarString($descripcion, 255, "descripcion");
-            if (is_string($e))
-                return $e;
-        } //!is_null($descripcion)
-        
-        //valida el factor de conversion que sea un float 
-        if (!is_null($factor_conversion)) {
-            $e = self::validarNumero($factor_conversion, 1.8e200, "factor conversion");
-            if (is_string($e))
-                return $e;
-        } //
-        
-        //valida el tipo unidad medida (enum)
-        if ($tipo_unidad_medida != "Referencia UdM para esta categoria" && $tipo_unidad_medida !=  "Mayor que la UdM de referencia" && $tipo_unidad_medida != "Menor que la UdM de referencia") {
-  			return "Tipo de UdM inválido, debe ser entre los siguientes valores: Referencia UdM para esta categoria, Mayor que la UdM de referencia, Menor que la UdM de referencia";
-        } //
-		
-
-        //valida el boleano activa
-        if (!is_null($activa)) {
-            $e = self::validarNumero($activa, 1, "activa");
-            if (is_string($e))
-                return $e;
-        } //!is_null($activa)
-
-        //No se encontro error, regresa true
-        return true;
-    }
-    
     
     /*
      * Valida los parametros de la tabla producto. Regresa un string con el error
@@ -1873,8 +1727,13 @@ class ProductosController extends ValidacionesController implements IProductos {
      * @param query string Cadena de texto a buscar en abreviación  y descripción. Si es null, las devuelve todas.
      * @return resultados json Objeto que contendra la lista de udm.
      **/
-    public static function BuscarUnidadUdm($query = null) {
-		$r = UnidadMedidaDAO::getAll();
+    public static function BuscarUnidadUdm($query=null) {
+        if (is_null($query)) {
+            $r = UnidadMedidaDAO::getAll();
+        }
+        else {
+            $r = UnidadMedidaDAO::buscar($query);
+        }
 	
 		return array(
 			"resultados" => $r
@@ -1893,59 +1752,78 @@ class ProductosController extends ValidacionesController implements IProductos {
      *        otro valor diferente.
      * @param id_categoria_unidad_medida int Id de la categoria a la cual pertenece la unidad.
      * @param tipo_unidad_medida enum Tipo de unidad cuyo valores son los siguientes: "Referencia UdM para esta categoria"
-     *        (define a esta unidad como la unidad base de referencia de esta categora, en caso de seleccionar esta opción
-     *        automticamente el factor de conversin sera igual a uno sin posibilidad de ingresar otro valor diferente), "Mayor
+     *        (define a esta unidad como la unidad base de referencia de esta categoria, en caso de seleccionar esta opción
+     *        automticamente el factor de conversion sera igual a uno sin posibilidad de ingresar otro valor diferente), "Mayor
      *        que la UdM de referencia" (indica que esta unidad de medida sera mayor que la unidad de medida base d la
      *        categoria que se indique) y "Menor que la UdM de referencia" (indica que esta unidad de medida sera menor que la
      *        unidad de medida base de la categora que se indique). Cuando se defina una nueva unidad de referencia las demás
      *        unidades de esta categoría se modificarán para establecer los nuevos factores de conversión.
      * @return id_unidad_medida int ID de la unidad de medida recién creada.
-     * @throws BusinessLogicException si abreviacion y/o descripcion ya existen en la categoria o si factor_conversion no es
-     *         mayor que cero.
+     * @throws BusinessLogicException si abreviacion y/o descripcion ya existen en la categoria, si factor_conversion no es
+     *         mayor que cero o si tipo_unidad_medida no es valido.
      * @throws InvalidArgumentException si abreviacion y/o descripcion son cadenas vacias.
+     * @throws InvalidDatabaseOperationException si la categoria no existe.
      **/
     public static function NuevaUnidadUdm(
-        $abreviacion, 
-        $descripcion, 
-        $factor_conversion, 
-        $id_categoria_unidad_medida, 
+        $abreviacion,
+        $descripcion,
+        $factor_conversion,
+        $id_categoria_unidad_medida,
         $tipo_unidad_medida
     ) {
         Logger::log("Creando una nueva unidad de medida");
-        
-        //valida los parametros recibidos
-        $validar = self::validarParametrosUdM(null, $abreviatura, $descripcion, $factor_conversion, $id_categoria_unidad_medida, $tipo_unidad_medida, $activa = "");
-        if (is_string($validar)) {
-            Logger::error($validar);
-            throw new BusinessLogicException($validar);
-        } //is_string($validar)
-        
-        
-        if($tipo_unidad_medida == "Referencia UdM para esta categoria"){
-            $factor_conversion = 1;
-            $unidad_ref = UnidadMedidaDAO::search(new UnidadMedida(array("tipo_unidad_medida"=>"Referencia UdM para esta categoria","id_categoria_unidad_medida"=>$id_categoria_unidad_medida)) );
 
-            foreach($unidad_ref as $udm_r){//Las udm q esten como ref pasan a ser Mayor q UdM
-                $udm_r->setTipoUnidadMedida('Mayor que la UdM de referencia');
-                try {
-                    UnidadMedidaDAO::save($udm_r);
-                }
-                catch (Exception $e) {              
-                    Logger::error("No se pudo crear la unidad de medida: " . $e);
-                    throw new Exception("No se pudo crear la unidad de medida, error al modificar UdM Referencia");
-                }   
-            }
+        if (empty($abreviacion)) {
+            throw new InvalidArgumentException("Abreviación vacía", 1);
+        }
+        if (empty($descripcion)) {
+            throw new InvalidArgumentException("Descripción vacía", 1);
+        }
+        
+        $unidades = UnidadMedidaDAO::search(new UnidadMedida(array(
+            'id_categoria_unidad_medida' => $id_categoria_unidad_medida,
+            'abreviacion' => $abreviacion,
+            'activa' => 1
+        )));
+        if (!empty($unidades)) {
+            throw new BusinessLogicException("Abreviación ya existe.", 1);
         }
 
-        if($tipo_unidad_medida == "Mayor que la UdM de referencia" && $factor_conversion <= 1)
-            throw new Exception("El Factor de Conversion debe rebasar el valor de 1 ya que seleccionó 'Mayor que UdM'");
-            
-        if($tipo_unidad_medida == "Menor que la UdM de referencia" && $factor_conversion >= 1)
-            throw new Exception("El Factor de Conversion NO debe rebasar el valor de 1 ya que seleccionó 'Menor que UdM'");
+        $unidades = UnidadMedidaDAO::search(new UnidadMedida(array(
+            'id_categoria_unidad_medida' => $id_categoria_unidad_medida,
+            'descripcion' => $descripcion,
+            'activa' => 1
+        )));
+        if (!empty($unidades)) {
+            throw new BusinessLogicException("Descripción ya existe.", 1);
+        }
+        
+        if (is_null(CategoriaUnidadMedidaDAO::getByPK($id_categoria_unidad_medida))) {
+            throw new InvalidDatabaseOperationException("Categoria no existe.", 1);
+        }
 
+        if ($factor_conversion <= 0) {
+            throw new BusinessLogicException("Factor menor o igual a cero.", 1);
+        }
+
+        $tipos = array(
+            "Referencia UdM para esta categoria",
+            "Menor que la UdM de referencia",
+            "Mayor que la UdM de referencia"
+        );
+        if (!in_array($tipo_unidad_medida, $tipos)) {
+            throw new BusinessLogicException("Tipo inválido", 1);
+        }
+
+        if($tipo_unidad_medida == $tipos[0]){
+            $factor_conversion = 1;
+        }
+        elseif ($tipo_unidad_medida == $tipos[1]) {
+            $factor_conversion = 1.0 / $factor_conversion;
+        }
 
         $udm = new UnidadMedida(array(
-            "abreviacion" => trim($abreviatura),            
+            "abreviacion" => trim($abreviacion),            
             "descripcion" => $descripcion,
             "factor_conversion" => $factor_conversion,
             "id_categoria_unidad_medida" => $id_categoria_unidad_medida,
@@ -1977,6 +1855,14 @@ class ProductosController extends ValidacionesController implements IProductos {
      * @throws InvalidDatabaseOperationException si la unidad no existe.
      **/
     public static function DetallesUnidadUdm($id_unidad_medida) {
+        $unidad = UnidadMedidaDAO::getByPK($id_unidad_medida);
+        if (is_null($unidad)) {
+            throw new InvalidDatabaseOperationException("Unidad no existe.", 1);
+        }
+
+        return array(
+            "unidad_medida" => $unidad
+        );
     }
     
 	/**
@@ -2004,68 +1890,35 @@ class ProductosController extends ValidacionesController implements IProductos {
      * @throws InvalidArgumentException si abreviacion y/o descripcion son cadenas vacias.
      **/
     public static function EditarUnidadUdm(
-        $id_categoria_unidad_medida, 
-        $id_unidad_medida, 
-        $abreviacion = null, 
-        $descripcion = null, 
-        $factor_conversion = null, 
+        $id_unidad_medida,
+        $id_categoria_unidad_medida = null,
+        $abreviacion = null,
+        $descripcion = null,
+        $factor_conversion = null,
         $tipo_unidad_medida = ""
     ) {
-		Logger::log("Editando unidad de medida " . $id_unidad_medida);
-        
-        //Se validan los parametros
-        $validar = self::validarParametrosUdM($id_unidad_medida, $abreviatura, $descripcion, $factor_conversion, $id_categoria_unidad_medida, $tipo_unidad_medida, $activa);
-        if (is_string($validar)) {
-            Logger::error($validar);
-            throw new Exception($validar);
-        } //is_string($validar)
-        
-        //Los parametros que no sean nulos se tomaran como actualizacion
-        $unidad = UnidadMedidaDAO::getByPK($id_unidad_medida);		
+		$unidad = UnidadMedidaDAO::getByPK($id_unidad_medida);
+        if (is_null($unidad)) {
+            throw new InvalidDatabaseOperationException("Unidad no existe.", 1);
+        }
 
-        if (!is_null($descripcion)) {
-            $unidad->setDescripcion($descripcion);
-        } //!is_null($descripcion)
-        if (!is_null($abreviatura)) {
-            $unidad->setAbreviacion(trim($abreviatura));
-        } //!is_null($abreviacion)
-        if (!is_null($factor_conversion)) {
-            $unidad->setFactorConversion($factor_conversion);
-        } //!is_null($factor_conversion)
-		if (!is_null($id_categoria_unidad_medida)) {
-            $unidad->setIdCategoriaUnidadMedida($id_categoria_unidad_medida);
-        } //!is_null($factor_conversion)
-		if (!is_null($tipo_unidad_medida)) {
-            $unidad->setTipoUnidadMedida($tipo_unidad_medida);
-        } //!is_null($factor_conversion)
-        
-		if($tipo_unidad_medida == "Referencia UdM para esta categoria"){
-			//$unidad_ref = UnidadMedidaDAO::search(new UnidadMedida(array("tipo_unidad_medida"=>"Referencia UdM para esta categoria","id_categoria_unidad_medida"=>$unidad_medida->getCategoriaUnidadMedida())) );
-            $unidad_ref = array();
-			foreach($unidad_ref as $udm_r){//Las udm q esten como ref pasan a ser Mayor q UdM
-				$udm_r->setTipoUnidadMedida('Mayor que la UdM de referencia');
-				try {
-		        	UnidadMedidaDAO::save($udm_r);
-				}
-				catch (Exception $e) {		        
-				    Logger::error("No se pudo crear la unidad de medida: " . $e);
-				    throw new Exception("No se pudo crear la unidad de medida, error al modificar UdM Referencia");
-				}	
-			}
-			$unidad->setFactorConversion(1);
-		}
-        //se guardan los cambios
-        DAO::transBegin();
-        try {
-            UnidadMedidaDAO::save($unidad);
+        if (is_null($id_categoria_unidad_medida)) {
+            $id_categoria_unidad_medida = $unidad->getIdCategoriaUnidadMedida();
         }
-        catch (Exception $e) {
-            DAO::transRollback();
-            Logger::error("No se pudo editar la unidad de medida" . $id_unidad_medida . ": " . $e);
-            throw new Exception("No se pudo editar la unidad de medida");
+        if (is_null($abreviacion)) {
+            $abreviacion = $unidad->getAbreviacion();
         }
-        DAO::transEnd();
-        Logger::log("Unidad de Medida editada exitosamente");
+        if (is_null($descripcion)) {
+            $descripcion = $unidad->getDescripcion();
+        }
+        if (is_null($factor_conversion)) {
+            $factor_conversion = $unidad->getFactorConversion();
+        }
+        if (empty($tipo_unidad_medida)) {
+            $tipo_unidad_medida = $unidad->getTipoUnidadMedida();
+        }
+
+
     }
 
     /**
@@ -2076,6 +1929,12 @@ class ProductosController extends ValidacionesController implements IProductos {
      * @throws InvalidDatabaseOperationException si la unidad no existe.
      **/
     public static function DesactivarUnidadUdm($id_unidad_medida) {
+        $unidad = UnidadMedidaDAO::getByPK($id_unidad_medida);
+        if (is_null($unidad)) {
+            throw new InvalidDatabaseOperationException("Unidad no existe.", 1);
+        }
+
+        $unidad->setActiva(0);
     }
 
     private static function importarCSV( $raw_contents ){

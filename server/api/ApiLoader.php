@@ -7252,11 +7252,11 @@
 	protected function GetRequest()
 	{
 		$this->request = array(	
-			"id_categoria_unidad_medida" => new ApiExposedProperty("id_categoria_unidad_medida", true, POST, array( "string" )),
 			"id_unidad_medida" => new ApiExposedProperty("id_unidad_medida", true, POST, array( "int" )),
 			"abreviacion" => new ApiExposedProperty("abreviacion", false, POST, array( "string" )),
 			"descripcion" => new ApiExposedProperty("descripcion", false, POST, array( "string" )),
 			"factor_conversion" => new ApiExposedProperty("factor_conversion", false, POST, array( "float" )),
+			"id_categoria_unidad_medida" => new ApiExposedProperty("id_categoria_unidad_medida", false, POST, array( "string" )),
 			"tipo_unidad_medida" => new ApiExposedProperty("tipo_unidad_medida", false, POST, array( "string" )),
 		);
 	}
@@ -7266,11 +7266,11 @@
  		$this->response = ProductosController::EditarUnidadUdm( 
  			
 			
-			isset($_POST['id_categoria_unidad_medida'] ) ? $_POST['id_categoria_unidad_medida'] : null,
 			isset($_POST['id_unidad_medida'] ) ? $_POST['id_unidad_medida'] : null,
 			isset($_POST['abreviacion'] ) ? $_POST['abreviacion'] :  null,
 			isset($_POST['descripcion'] ) ? $_POST['descripcion'] :  null,
 			isset($_POST['factor_conversion'] ) ? $_POST['factor_conversion'] :  null,
+			isset($_POST['id_categoria_unidad_medida'] ) ? $_POST['id_categoria_unidad_medida'] :  null,
 			isset($_POST['tipo_unidad_medida'] ) ? $_POST['tipo_unidad_medida'] :  ""
 			
 			);

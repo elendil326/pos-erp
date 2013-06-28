@@ -20,6 +20,30 @@ require_once("base/unidad_medida.vo.base.php");
   */
 class UnidadMedidaDAO extends UnidadMedidaDAOBase
 {
+    /**
+     * Busca unidades de medida cuya descripcion o abreviacion coincida con query.
+     * @author Mauricio Nunez <mauricio@caffeina.mx>
+     * @param activa Status de las categorias a obtener.
+     * @param query Cadena a buscar en la descripcion de las categorias.
+     * @return array Resultados coincidentes.
+     **/
+    public static function buscar($query) {
+        global $conn;
+
+        $sql = "SELECT * FROM unidad_medida"
+        . ($query !== NULL ? " WHERE descripcion LIKE '%{$query}%' OR abreviacion LIKE '%{$query}%'" : "");
+
+        $res = $conn->GetAssoc($sql, false, false, false);
+
+        $a = array();
+
+        foreach ($res as $v) {
+            array_push($a, $v);
+        }
+
+        return $a;
+    }
+
 public static function convertir( $id_unidad_desde,  $id_unidad_destino,  $cantidad_desde )
   {     
     
