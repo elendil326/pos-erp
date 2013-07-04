@@ -331,7 +331,7 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 */
 	public function testInsertarUsuariosSapuraiya() {
 
-		$NombreArchivo = "cargar_usuarios.xls";
+		$NombreArchivo = "sapuraiya_testing_durango.xls";
 		$this->assertTrue(file_exists ($NombreArchivo));
 		if(! file_exists ($NombreArchivo))
 			return;
@@ -451,7 +451,7 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 
 			}
 		}
-
+//PARAMETROS EXTRA QUE SE DAN DE ALTA QUE NO VIENEN EN EL EXCEL
 		$extra = new ExtraParamsEstructura();
 		$extra->setTabla("usuarios");
 		$extra->setTipo("string");
@@ -467,6 +467,152 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 		}catch(Exception $e){
 			Logger::log("--------> Error al insertar Parametro extra desde ClientesControllerTest, Error:".$e);
 		}
+
+		$extra = new ExtraParamsEstructura();
+		$extra->setTabla("usuarios");
+		$extra->setTipo("string");
+		$extra->setObligatorio(0);
+		$extra->setCaption("num_credenciales");
+		$extra->setCampo("num_credenciales");
+		$extra->setDescripcion("Numero de credenciales");
+		$extra->setLongitud(999999999);
+		try{
+			Logger::log("---($i) AGREGANDO NUEVO PARAM EXTRA: ".$extra->campo);
+			ExtraParamsEstructuraDAO::save( $extra );
+			array_push($params,$extra);
+		}catch(Exception $e){
+			Logger::log("--------> Error al insertar Parametro extra desde ClientesControllerTest, Error:".$e);
+		}
+
+		$extra = new ExtraParamsEstructura();
+		$extra->setTabla("usuarios");
+		$extra->setTipo("string");
+		$extra->setObligatorio(0);
+		$extra->setCaption("credenciales_restantes");
+		$extra->setCampo("credenciales_restantes");
+		$extra->setDescripcion("Las credenciales restantes");
+		$extra->setLongitud(999999999);
+		try{
+			Logger::log("---($i) AGREGANDO NUEVO PARAM EXTRA: ".$extra->campo);
+			ExtraParamsEstructuraDAO::save( $extra );
+			array_push($params,$extra);
+		}catch(Exception $e){
+			Logger::log("--------> Error al insertar Parametro extra desde ClientesControllerTest, Error:".$e);
+		}
+
+		$extra = new ExtraParamsEstructura();
+		$extra->setTabla("usuarios");
+		$extra->setTipo("string");
+		$extra->setObligatorio(0);
+		$extra->setCaption("hora_llegada");
+		$extra->setCampo("hora_llegada");
+		$extra->setDescripcion("Las hora de llegada");
+		$extra->setLongitud(999999999);
+		try{
+			Logger::log("---($i) AGREGANDO NUEVO PARAM EXTRA: ".$extra->campo);
+			ExtraParamsEstructuraDAO::save( $extra );
+			array_push($params,$extra);
+		}catch(Exception $e){
+			Logger::log("--------> Error al insertar Parametro extra desde ClientesControllerTest, Error:".$e);
+		}
+
+		$extra = new ExtraParamsEstructura();
+		$extra->setTabla("usuarios");
+		$extra->setTipo("string");
+		$extra->setObligatorio(0);
+		$extra->setCaption("tipo_empresa");
+		$extra->setCampo("tipo_empresa");
+		$extra->setDescripcion("El tipo de empresa");
+		$extra->setLongitud(999999999);
+		try{
+			Logger::log("---($i) AGREGANDO NUEVO PARAM EXTRA: ".$extra->campo);
+			ExtraParamsEstructuraDAO::save( $extra );
+			array_push($params,$extra);
+		}catch(Exception $e){
+			Logger::log("--------> Error al insertar Parametro extra desde ClientesControllerTest, Error:".$e);
+		}
+
+		$extra = new ExtraParamsEstructura();
+		$extra->setTabla("usuarios");
+		$extra->setTipo("string");
+		$extra->setObligatorio(0);
+		$extra->setCaption("parametro_extra1");
+		$extra->setCampo("parametro_extra1");
+		$extra->setDescripcion("Parametro comodin extra1 para lo que se ocupe");
+		$extra->setLongitud(999999999);
+		try{
+			Logger::log("---($i) AGREGANDO NUEVO PARAM EXTRA: ".$extra->campo);
+			ExtraParamsEstructuraDAO::save( $extra );
+			array_push($params,$extra);
+		}catch(Exception $e){
+			Logger::log("--------> Error al insertar Parametro extra desde ClientesControllerTest, Error:".$e);
+		}
+
+		$extra = new ExtraParamsEstructura();
+		$extra->setTabla("usuarios");
+		$extra->setTipo("string");
+		$extra->setObligatorio(0);
+		$extra->setCaption("parametro_extra2");
+		$extra->setCampo("parametro_extra2");
+		$extra->setDescripcion("Parametro comodin extra2 para lo que se ocupe");
+		$extra->setLongitud(999999999);
+		try{
+			Logger::log("---($i) AGREGANDO NUEVO PARAM EXTRA: ".$extra->campo);
+			ExtraParamsEstructuraDAO::save( $extra );
+			array_push($params,$extra);
+		}catch(Exception $e){
+			Logger::log("--------> Error al insertar Parametro extra desde ClientesControllerTest, Error:".$e);
+		}
+
+		$extra = new ExtraParamsEstructura();
+		$extra->setTabla("usuarios");
+		$extra->setTipo("string");
+		$extra->setObligatorio(0);
+		$extra->setCaption("parametro_extra3");
+		$extra->setCampo("parametro_extra3");
+		$extra->setDescripcion("Parametro comodin extra3 para lo que se ocupe");
+		$extra->setLongitud(999999999);
+		try{
+			Logger::log("---($i) AGREGANDO NUEVO PARAM EXTRA: ".$extra->campo);
+			ExtraParamsEstructuraDAO::save( $extra );
+			array_push($params,$extra);
+		}catch(Exception $e){
+			Logger::log("--------> Error al insertar Parametro extra desde ClientesControllerTest, Error:".$e);
+		}
+
+		$extra = new ExtraParamsEstructura();
+		$extra->setTabla("usuarios");
+		$extra->setTipo("string");
+		$extra->setObligatorio(0);
+		$extra->setCaption("parametro_extra4");
+		$extra->setCampo("parametro_extra4");
+		$extra->setDescripcion("Parametro comodin extra4 para lo que se ocupe");
+		$extra->setLongitud(999999999);
+		try{
+			Logger::log("---($i) AGREGANDO NUEVO PARAM EXTRA: ".$extra->campo);
+			ExtraParamsEstructuraDAO::save( $extra );
+			array_push($params,$extra);
+		}catch(Exception $e){
+			Logger::log("--------> Error al insertar Parametro extra desde ClientesControllerTest, Error:".$e);
+		}
+
+		$extra = new ExtraParamsEstructura();
+		$extra->setTabla("usuarios");
+		$extra->setTipo("string");
+		$extra->setObligatorio(0);
+		$extra->setCaption("parametro_extra5");
+		$extra->setCampo("parametro_extra5");
+		$extra->setDescripcion("Parametro comodin extra5 para lo que se ocupe");
+		$extra->setLongitud(999999999);
+		try{
+			Logger::log("---($i) AGREGANDO NUEVO PARAM EXTRA: ".$extra->campo);
+			ExtraParamsEstructuraDAO::save( $extra );
+			array_push($params,$extra);
+		}catch(Exception $e){
+			Logger::log("--------> Error al insertar Parametro extra desde ClientesControllerTest, Error:".$e);
+		}
+
+//FIN PARAMETROS EXTRA QUE SE DAN A PINCEL
 
 		$i=1;
 		$nuevos_user = array();
@@ -489,11 +635,9 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 			if(array_key_exists('R.F.C', $c) || array_key_exists("r.f.c", $c)){
 				if(array_key_exists('R.F.C', $c)){
 					$nuevo->setRfc($c["R.F.C"]);
-					$nuevo->setCodigoUsuario($c["R.F.C"]);
 				}
 				if (array_key_exists("r.f.c", $c)) {
 					$nuevo->setRfc($c["r.f.c"]);
-					$nuevo->setCodigoUsuario($c["r.f.c"]);
 				}
 			}
 
@@ -518,9 +662,11 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 			if(array_key_exists("CORREO ELECTRONICO", $c) || array_key_exists("correo electronico", $c)){
 				if(array_key_exists('CORREO ELECTRONICO', $c)){
 					$nuevo->setCorreoElectronico($c["CORREO ELECTRONICO"]);
+					$nuevo->setCodigoUsuario($c["CORREO ELECTRONICO"]);
 				}
 				if (array_key_exists("correo electronico", $c)) {
 					$nuevo->setCorreoElectronico($c["correo electronico"]);
+					$nuevo->setCodigoUsuario($c["correo electronico"]);
 				}
 			}
 
@@ -554,7 +700,6 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 		}
 
 		$json_agenda = '{
-"hora_llegada": "",
 "items": [
 {
 "id_cita": "1",
@@ -567,7 +712,9 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 "confirmacion": "0",
 "cancelacion": "0",
 "concretada": "0",
-"satisfaccion": "0"
+"satisfaccion": "0",
+"token": "",
+"hora_solicitud" : "0"
 },
 {
 "id_cita": "2",
@@ -580,7 +727,9 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 "confirmacion": "0",
 "cancelacion": "0",
 "concretada": "0",
-"satisfaccion": "0"
+"satisfaccion": "0",
+"token": "",
+"hora_solicitud" : "0"
 },
 {
 "id_cita": "3",
@@ -593,7 +742,9 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 "confirmacion": "0",
 "cancelacion": "0",
 "concretada": "0",
-"satisfaccion": "0"
+"satisfaccion": "0",
+"token": "",
+"hora_solicitud" : "0"
 },
 {
 "id_cita": "4",
@@ -606,7 +757,9 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 "confirmacion": "0",
 "cancelacion": "0",
 "concretada": "0",
-"satisfaccion": "0"
+"satisfaccion": "0",
+"token": "",
+"hora_solicitud" : "0"
 },
 {
 "id_cita": "5",
@@ -619,7 +772,9 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 "confirmacion": "0",
 "cancelacion": "0",
 "concretada": "0",
-"satisfaccion": "0"
+"satisfaccion": "0",
+"token": "",
+"hora_solicitud" : "0"
 },
 {
 "id_cita": "6",
@@ -632,7 +787,9 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 "confirmacion": "0",
 "cancelacion": "0",
 "concretada": "0",
-"satisfaccion": "0"
+"satisfaccion": "0",
+"token": "",
+"hora_solicitud" : "0"
 },
 {
 "id_cita": "7",
@@ -645,7 +802,9 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 "confirmacion": "0",
 "cancelacion": "0",
 "concretada": "0",
-"satisfaccion": "0"
+"satisfaccion": "0",
+"token": "",
+"hora_solicitud" : "0"
 },
 {
 "id_cita": "8",
@@ -658,7 +817,9 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 "confirmacion": "0",
 "cancelacion": "0",
 "concretada": "0",
-"satisfaccion": "0"
+"satisfaccion": "0",
+"token": "",
+"hora_solicitud" : "0"
 },
 {
 "id_cita": "9",
@@ -671,7 +832,9 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 "confirmacion": "0",
 "cancelacion": "0",
 "concretada": "0",
-"satisfaccion": "0"
+"satisfaccion": "0",
+"token": "",
+"hora_solicitud" : "0"
 },
 {
 "id_cita": "10",
@@ -684,7 +847,9 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 "confirmacion": "0",
 "cancelacion": "0",
 "concretada": "0",
-"satisfaccion": "0"
+"satisfaccion": "0",
+"token": "",
+"hora_solicitud" : "0"
 },
 {
 "id_cita": "11",
@@ -697,7 +862,9 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 "confirmacion": "0",
 "cancelacion": "0",
 "concretada": "0",
-"satisfaccion": "0"
+"satisfaccion": "0",
+"token": "",
+"hora_solicitud" : "0"
 },
 {
 "id_cita": "12",
@@ -710,7 +877,9 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 "confirmacion": "0",
 "cancelacion": "0",
 "concretada": "0",
-"satisfaccion": "0"
+"satisfaccion": "0",
+"token": "",
+"hora_solicitud" : "0"
 },
 {
 "id_cita": "13",
@@ -723,7 +892,9 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 "confirmacion": "0",
 "cancelacion": "0",
 "concretada": "0",
-"satisfaccion": "0"
+"satisfaccion": "0",
+"token": "",
+"hora_solicitud" : "0"
 },
 {
 "id_cita": "14",
@@ -736,7 +907,9 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 "confirmacion": "0",
 "cancelacion": "0",
 "concretada": "0",
-"satisfaccion": "0"
+"satisfaccion": "0",
+"token": "",
+"hora_solicitud" : "0"
 },
 {
 "id_cita": "15",
@@ -749,7 +922,9 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 "confirmacion": "0",
 "cancelacion": "0",
 "concretada": "0",
-"satisfaccion": "0"
+"satisfaccion": "0",
+"token": "",
+"hora_solicitud" : "0"
 },
 {
 "id_cita": "16",
@@ -762,7 +937,9 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 "confirmacion": "0",
 "cancelacion": "0",
 "concretada": "0",
-"satisfaccion": "0"
+"satisfaccion": "0",
+"token": "",
+"hora_solicitud" : "0"
 },
 {
 "id_cita": "17",
@@ -775,7 +952,9 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 "confirmacion": "0",
 "cancelacion": "0",
 "concretada": "0",
-"satisfaccion": "0"
+"satisfaccion": "0",
+"token": "",
+"hora_solicitud" : "0"
 },
 {
 "id_cita": "18",
@@ -788,7 +967,9 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 "confirmacion": "0",
 "cancelacion": "0",
 "concretada": "0",
-"satisfaccion": "0"
+"satisfaccion": "0",
+"token": "",
+"hora_solicitud" : "0"
 },
 {
 "id_cita": "19",
@@ -801,7 +982,9 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 "confirmacion": "0",
 "cancelacion": "0",
 "concretada": "0",
-"satisfaccion": "0"
+"satisfaccion": "0",
+"token": "",
+"hora_solicitud" : "0"
 },
 {
 "id_cita": "20",
@@ -814,7 +997,9 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 "confirmacion": "0",
 "cancelacion": "0",
 "concretada": "0",
-"satisfaccion": "0"
+"satisfaccion": "0",
+"token": "",
+"hora_solicitud" : "0"
 }
 ]
 }';
@@ -826,6 +1011,9 @@ $json_agenda = str_replace(chr(13), " ", $json_agenda);//retorno
 				if ($c["r.f.c"]==$u->rfc) {
 
 					$para["Agenda"] = $json_agenda;
+					$para["hora_llegada"] = "0";
+					$para["tipo_empresa"]= "0";
+
 					foreach ($params as $p) {
 						$index = $p->campo;
 						$prop ="";
@@ -835,9 +1023,16 @@ $json_agenda = str_replace(chr(13), " ", $json_agenda);//retorno
 							$prop = str_replace(".","_",(str_replace(" ","_",$index)));
 						}
 
-						if($index!="Agenda"){
+						if($index!="Agenda" && $index!="hora_llegada" && $index!="tipo_empresa" 
+							&& $index!="num_credenciales" && $index!="credenciales_restantes"
+							&& $index!="parametro_extra1" && $index!="parametro_extra2"
+							&& $index!="parametro_extra3" && $index!="parametro_extra4"
+							&& $index!="parametro_extra5"){
+
 							if(strlen($c[$index])<1 || $c[$index]==NULL)
+							{
 								$para[$prop] = "";
+							}
 							else
 							{
 								$aux = str_replace($a, $b,$c[$index] );
@@ -847,10 +1042,33 @@ $json_agenda = str_replace(chr(13), " ", $json_agenda);//retorno
 								$aux = str_replace(chr(39), "", $aux);//comilla simple
 								$para[$prop] = $aux;
 							}
+
 						}
 					}
 				}
 			}
+
+			//Se colocan los valores por default de los parametros extra que se dan a pincel
+			$para["num_credenciales"] = "2";
+			$para["credenciales_restantes"] = "2";
+
+			$num_creden = explode(",",$para["quiero_participar_en_sapuraiya_"]);
+			Logger::log("------------------------> quiero_participar_en_sapuraiya_:".print_r($num_creden,true));
+
+			for ($i=0; $i < count($num_creden); $i++) { 
+				if(trim($num_creden[$i])=="AREA DE EXPOSICION CON STAND")
+				{
+					$para["num_credenciales"] = "4";
+				}
+			}
+
+			$para["parametro_extra1"] = "";
+			$para["parametro_extra2"] = "";
+			$para["parametro_extra3"] = "";
+			$para["parametro_extra4"] = "";
+			$para["parametro_extra5"] = "";
+			//fin valores por default de los params extra dados a pincel
+
 			ClientesController::Editar(
 										$id_cliente= $u->id_usuario, 
 										$clasificacion_cliente = null, 
@@ -876,6 +1094,7 @@ $json_agenda = str_replace(chr(13), " ", $json_agenda);//retorno
 										$telefono_personal1 = null, 
 										$telefono_personal2 = null
 									);
+
 		}
 	}
 
