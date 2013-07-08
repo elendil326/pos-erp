@@ -1104,7 +1104,6 @@ $json_maquinaria = '{%d}';
 				if($num_creden[$i] =="AREA DE EXPOSICION CON STAND")
 				{
 					$para["num_credenciales"] = "4";
-					$para["credenciales_restantes"] = "4";
 				}
 			}
 
@@ -1134,6 +1133,8 @@ $json_maquinaria = '{%d}';
 			if(count($num_creden)==3){
 				$para["num_credenciales"] .= "c";
 			}
+
+			$para["credenciales_restantes"] = substr($para["num_credenciales"], 0,1);
 
 			$maquinaria = '"m1" : {"descripcion" : "'.str_replace(chr(34), "", $para["descripcion_1"]).'" , "marca" : "'.str_replace(chr(34), "", $para["marca_1"]).'" , "edad" : "'.str_replace(chr(34), "", $para["edad_1"]).'" , "unidades" : "'.str_replace(chr(34), "", $para["unidades_1"]).'" },';
 			$maquinaria .= '"m2" : {"descripcion" : "'.str_replace(chr(34), "", $para["descripcion_2"]).'" , "marca" : "'.str_replace(chr(34), "", $para["marca_2"]).'" , "edad" : "'.str_replace(chr(34), "", $para["edad_2"]).'" , "unidades" : "'.str_replace(chr(34), "", $para["unidades_2"]).'" },';
