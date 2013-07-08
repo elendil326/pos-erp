@@ -331,6 +331,315 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 */
 	public function testInsertarUsuariosSapuraiya() {
 
+				$json_agenda = '{
+"items": [
+{
+"id_cita": "1",
+"inicia": "1373896800",
+"termina": "1373898000",
+"id_empresa": "",
+"razon_social": "",
+"status": "0",
+"descripcion_status": "Libre",
+"confirmacion": "0",
+"cancelacion": "0",
+"concretada": "0",
+"satisfaccion": "0",
+"token": "",
+"hora_solicitud" : "0",
+"hora_llegada" : "0"
+},
+{
+"id_cita": "2",
+"inicia": "1373898300",
+"termina": "1373899500",
+"id_empresa": "",
+"razon_social": "",
+"status": "0",
+"descripcion_status": "Libre",
+"confirmacion": "0",
+"cancelacion": "0",
+"concretada": "0",
+"satisfaccion": "0",
+"token": "",
+"hora_solicitud" : "0",
+"hora_llegada" : "0"
+},
+{
+"id_cita": "3",
+"inicia": "1373899800",
+"termina": "1373901000",
+"id_empresa": "",
+"razon_social": "",
+"status": "0",
+"descripcion_status": "Libre",
+"confirmacion": "0",
+"cancelacion": "0",
+"concretada": "0",
+"satisfaccion": "0",
+"token": "",
+"hora_solicitud" : "0",
+"hora_llegada" : "0"
+},
+{
+"id_cita": "4",
+"inicia": "1373901300",
+"termina": "1373902500",
+"id_empresa": "",
+"razon_social": "",
+"status": "0",
+"descripcion_status": "Libre",
+"confirmacion": "0",
+"cancelacion": "0",
+"concretada": "0",
+"satisfaccion": "0",
+"token": "",
+"hora_solicitud" : "0",
+"hora_llegada" : "0"
+},
+{
+"id_cita": "5",
+"inicia": "1373902800",
+"termina": "1373904000",
+"id_empresa": "",
+"razon_social": "",
+"status": "0",
+"descripcion_status": "Libre",
+"confirmacion": "0",
+"cancelacion": "0",
+"concretada": "0",
+"satisfaccion": "0",
+"token": "",
+"hora_solicitud" : "0",
+"hora_llegada" : "0"
+},
+{
+"id_cita": "6",
+"inicia": "1373904300",
+"termina": "1373905500",
+"id_empresa": "",
+"razon_social": "",
+"status": "0",
+"descripcion_status": "Libre",
+"confirmacion": "0",
+"cancelacion": "0",
+"concretada": "0",
+"satisfaccion": "0",
+"token": "",
+"hora_solicitud" : "0",
+"hora_llegada" : "0"
+},
+{
+"id_cita": "7",
+"inicia": "1373905800",
+"termina": "1373907000",
+"id_empresa": "",
+"razon_social": "",
+"status": "0",
+"descripcion_status": "Libre",
+"confirmacion": "0",
+"cancelacion": "0",
+"concretada": "0",
+"satisfaccion": "0",
+"token": "",
+"hora_solicitud" : "0",
+"hora_llegada" : "0"
+},
+{
+"id_cita": "8",
+"inicia": "1373907300",
+"termina": "1373908500",
+"id_empresa": "",
+"razon_social": "",
+"status": "0",
+"descripcion_status": "Libre",
+"confirmacion": "0",
+"cancelacion": "0",
+"concretada": "0",
+"satisfaccion": "0",
+"token": "",
+"hora_solicitud" : "0",
+"hora_llegada" : "0"
+},
+{
+"id_cita": "9",
+"inicia": "1373908800",
+"termina": "1373910000",
+"id_empresa": "",
+"razon_social": "",
+"status": "0",
+"descripcion_status": "Libre",
+"confirmacion": "0",
+"cancelacion": "0",
+"concretada": "0",
+"satisfaccion": "0",
+"token": "",
+"hora_solicitud" : "0",
+"hora_llegada" : "0"
+},
+{
+"id_cita": "10",
+"inicia": "1373910300",
+"termina": "1373911500",
+"id_empresa": "",
+"razon_social": "",
+"status": "0",
+"descripcion_status": "Libre",
+"confirmacion": "0",
+"cancelacion": "0",
+"concretada": "0",
+"satisfaccion": "0",
+"token": "",
+"hora_solicitud" : "0",
+"hora_llegada" : "0"
+},
+{
+"id_cita": "11",
+"inicia": "1373916600",
+"termina": "1373917800",
+"id_empresa": "",
+"razon_social": "",
+"status": "0",
+"descripcion_status": "Libre",
+"confirmacion": "0",
+"cancelacion": "0",
+"concretada": "0",
+"satisfaccion": "0",
+"token": "",
+"hora_solicitud" : "0",
+"hora_llegada" : "0"
+},
+{
+"id_cita": "12",
+"inicia": "1373918100",
+"termina": "1373919300",
+"id_empresa": "",
+"razon_social": "",
+"status": "0",
+"descripcion_status": "Libre",
+"confirmacion": "0",
+"cancelacion": "0",
+"concretada": "0",
+"satisfaccion": "0",
+"token": "",
+"hora_solicitud" : "0",
+"hora_llegada" : "0"
+},
+{
+"id_cita": "13",
+"inicia": "1373919600",
+"termina": "1373920800",
+"id_empresa": "",
+"razon_social": "",
+"status": "0",
+"descripcion_status": "Libre",
+"confirmacion": "0",
+"cancelacion": "0",
+"concretada": "0",
+"satisfaccion": "0",
+"token": "",
+"hora_solicitud" : "0",
+"hora_llegada" : "0"
+},
+{
+"id_cita": "14",
+"inicia": "1373921100",
+"termina": "1373922300",
+"id_empresa": "",
+"razon_social": "",
+"status": "0",
+"descripcion_status": "Libre",
+"confirmacion": "0",
+"cancelacion": "0",
+"concretada": "0",
+"satisfaccion": "0",
+"token": "",
+"hora_solicitud" : "0",
+"hora_llegada" : "0"
+},
+{
+"id_cita": "15",
+"inicia": "1373922600",
+"termina": "1373923800",
+"id_empresa": "",
+"razon_social": "",
+"status": "0",
+"descripcion_status": "Libre",
+"confirmacion": "0",
+"cancelacion": "0",
+"concretada": "0",
+"satisfaccion": "0",
+"token": "",
+"hora_solicitud" : "0",
+"hora_llegada" : "0"
+},
+{
+"id_cita": "16",
+"inicia": "1373924100",
+"termina": "1373925300",
+"id_empresa": "",
+"razon_social": "",
+"status": "0",
+"descripcion_status": "Libre",
+"confirmacion": "0",
+"cancelacion": "0",
+"concretada": "0",
+"satisfaccion": "0",
+"token": "",
+"hora_solicitud" : "0",
+"hora_llegada" : "0"
+},
+{
+"id_cita": "17",
+"inicia": "1373925600",
+"termina": "1373926800",
+"id_empresa": "",
+"razon_social": "",
+"status": "0",
+"descripcion_status": "Libre",
+"confirmacion": "0",
+"cancelacion": "0",
+"concretada": "0",
+"satisfaccion": "0",
+"token": "",
+"hora_solicitud" : "0",
+"hora_llegada" : "0"
+},
+{
+"id_cita": "18",
+"inicia": "1373927100",
+"termina": "1373928300",
+"id_empresa": "",
+"razon_social": "",
+"status": "0",
+"descripcion_status": "Libre",
+"confirmacion": "0",
+"cancelacion": "0",
+"concretada": "0",
+"satisfaccion": "0",
+"token": "",
+"hora_solicitud" : "0",
+"hora_llegada" : "0"
+},
+{
+"id_cita": "19",
+"inicia": "1373928600",
+"termina": "1373929800",
+"id_empresa": "",
+"razon_social": "",
+"status": "0",
+"descripcion_status": "Libre",
+"confirmacion": "0",
+"cancelacion": "0",
+"concretada": "0",
+"satisfaccion": "0",
+"token": "",
+"hora_solicitud" : "0",
+"hora_llegada" : "0"
+}
+]
+}';
+
 		$NombreArchivo = "sapuraiya_testing_durango.xls";
 		$this->assertTrue(file_exists ($NombreArchivo));
 		if(! file_exists ($NombreArchivo))
@@ -536,9 +845,9 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 		$extra->setTabla("usuarios");
 		$extra->setTipo("string");
 		$extra->setObligatorio(0);
-		$extra->setCaption("parametro_extra1");
-		$extra->setCampo("parametro_extra1");
-		$extra->setDescripcion("Parametro comodin extra1 para lo que se ocupe");
+		$extra->setCaption("nro_empleados");
+		$extra->setCampo("nro_empleados");
+		$extra->setDescripcion("El numero de empleados con los que cuenta la empresa");
 		$extra->setLongitud(999999999);
 		try{
 			Logger::log("---($i) AGREGANDO NUEVO PARAM EXTRA: ".$extra->campo);
@@ -552,9 +861,9 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 		$extra->setTabla("usuarios");
 		$extra->setTipo("string");
 		$extra->setObligatorio(0);
-		$extra->setCaption("parametro_extra2");
-		$extra->setCampo("parametro_extra2");
-		$extra->setDescripcion("Parametro comodin extra2 para lo que se ocupe");
+		$extra->setCaption("ubicacion");
+		$extra->setCampo("ubicacion");
+		$extra->setDescripcion("La ubicacion de la empresa");
 		$extra->setLongitud(999999999);
 		try{
 			Logger::log("---($i) AGREGANDO NUEVO PARAM EXTRA: ".$extra->campo);
@@ -568,9 +877,9 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 		$extra->setTabla("usuarios");
 		$extra->setTipo("string");
 		$extra->setObligatorio(0);
-		$extra->setCaption("parametro_extra3");
-		$extra->setCampo("parametro_extra3");
-		$extra->setDescripcion("Parametro comodin extra3 para lo que se ocupe");
+		$extra->setCaption("maquinaria_equipo");
+		$extra->setCampo("maquinaria_equipo");
+		$extra->setDescripcion("La ubicacion de la empresa");
 		$extra->setLongitud(999999999);
 		try{
 			Logger::log("---($i) AGREGANDO NUEVO PARAM EXTRA: ".$extra->campo);
@@ -580,37 +889,61 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 			Logger::log("--------> Error al insertar Parametro extra desde ClientesControllerTest, Error:".$e);
 		}
 
-		$extra = new ExtraParamsEstructura();
-		$extra->setTabla("usuarios");
-		$extra->setTipo("string");
-		$extra->setObligatorio(0);
-		$extra->setCaption("parametro_extra4");
-		$extra->setCampo("parametro_extra4");
-		$extra->setDescripcion("Parametro comodin extra4 para lo que se ocupe");
-		$extra->setLongitud(999999999);
-		try{
-			Logger::log("---($i) AGREGANDO NUEVO PARAM EXTRA: ".$extra->campo);
-			ExtraParamsEstructuraDAO::save( $extra );
-			array_push($params,$extra);
-		}catch(Exception $e){
-			Logger::log("--------> Error al insertar Parametro extra desde ClientesControllerTest, Error:".$e);
-		}
+//usuarios a pincel
 
-		$extra = new ExtraParamsEstructura();
-		$extra->setTabla("usuarios");
-		$extra->setTipo("string");
-		$extra->setObligatorio(0);
-		$extra->setCaption("parametro_extra5");
-		$extra->setCampo("parametro_extra5");
-		$extra->setDescripcion("Parametro comodin extra5 para lo que se ocupe");
-		$extra->setLongitud(999999999);
-		try{
-			Logger::log("---($i) AGREGANDO NUEVO PARAM EXTRA: ".$extra->campo);
-			ExtraParamsEstructuraDAO::save( $extra );
-			array_push($params,$extra);
-		}catch(Exception $e){
-			Logger::log("--------> Error al insertar Parametro extra desde ClientesControllerTest, Error:".$e);
-		}
+		$nuevo = new Usuario();
+		$nuevo->setFechaAsignacionRol(time());
+		$nuevo->setFechaAlta(time());
+		$nuevo->setPassword(hash("md5","password"));
+		$nuevo->setTarifaCompraObtenida('cliente');
+		$nuevo->setTarifaVentaObtenida('cliente');
+		$nuevo->setIdRol(0);
+		$nuevo->setActivo(1);
+		$nuevo->setIdPerfil(1);
+		$nuevo->setConsignatario(0);
+		$nuevo->setIdTarifaCompra(2);
+		$nuevo->setIdTarifaVenta(1);
+		$nuevo->setLimiteCredito(0);
+		$nuevo->setSaldoDelEjercicio(0);
+		$nuevo->setNombre("usr1");
+		$nuevo->setCodigoUsuario("usr1");
+		UsuarioDAO::save($nuevo);
+
+		$nuevo = new Usuario();
+		$nuevo->setFechaAsignacionRol(time());
+		$nuevo->setFechaAlta(time());
+		$nuevo->setPassword(hash("md5","password"));
+		$nuevo->setTarifaCompraObtenida('cliente');
+		$nuevo->setTarifaVentaObtenida('cliente');
+		$nuevo->setIdRol(0);
+		$nuevo->setActivo(1);
+		$nuevo->setIdPerfil(1);
+		$nuevo->setConsignatario(0);
+		$nuevo->setIdTarifaCompra(2);
+		$nuevo->setIdTarifaVenta(1);
+		$nuevo->setLimiteCredito(0);
+		$nuevo->setSaldoDelEjercicio(0);
+		$nuevo->setNombre("usr2");
+		$nuevo->setCodigoUsuario("usr2");
+		UsuarioDAO::save($nuevo);
+
+		$nuevo = new Usuario();
+		$nuevo->setFechaAsignacionRol(time());
+		$nuevo->setFechaAlta(time());
+		$nuevo->setPassword(hash("md5","password"));
+		$nuevo->setTarifaCompraObtenida('cliente');
+		$nuevo->setTarifaVentaObtenida('cliente');
+		$nuevo->setIdRol(0);
+		$nuevo->setActivo(1);
+		$nuevo->setIdPerfil(1);
+		$nuevo->setConsignatario(0);
+		$nuevo->setIdTarifaCompra(2);
+		$nuevo->setIdTarifaVenta(1);
+		$nuevo->setLimiteCredito(0);
+		$nuevo->setSaldoDelEjercicio(0);
+		$nuevo->setNombre("usr3");
+		$nuevo->setCodigoUsuario("usr3");
+		UsuarioDAO::save($nuevo);
 
 //FIN PARAMETROS EXTRA QUE SE DAN A PINCEL
 
@@ -620,7 +953,7 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 			$nuevo = new Usuario();
 			$nuevo->setFechaAsignacionRol(time());
 			$nuevo->setFechaAlta(time());
-			$nuevo->setPassword(hash("md5","123"));
+			$nuevo->setPassword(hash("md5","54pR7@21"));
 			$nuevo->setTarifaCompraObtenida('cliente');
 			$nuevo->setTarifaVentaObtenida('cliente');
 			$nuevo->setIdRol(5);
@@ -699,320 +1032,20 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 			}
 		}
 
-		$json_agenda = '{
-"items": [
-{
-"id_cita": "1",
-"inicia": "1373896800",
-"termina": "1373898000",
-"id_empresa": "",
-"razon_social": "",
-"status": "0",
-"descripcion_status": "Libre",
-"confirmacion": "0",
-"cancelacion": "0",
-"concretada": "0",
-"satisfaccion": "0",
-"token": "",
-"hora_solicitud" : "0"
-},
-{
-"id_cita": "2",
-"inicia": "1373898300",
-"termina": "1373899500",
-"id_empresa": "",
-"razon_social": "",
-"status": "0",
-"descripcion_status": "Libre",
-"confirmacion": "0",
-"cancelacion": "0",
-"concretada": "0",
-"satisfaccion": "0",
-"token": "",
-"hora_solicitud" : "0"
-},
-{
-"id_cita": "3",
-"inicia": "1373899800",
-"termina": "1373901000",
-"id_empresa": "",
-"razon_social": "",
-"status": "0",
-"descripcion_status": "Libre",
-"confirmacion": "0",
-"cancelacion": "0",
-"concretada": "0",
-"satisfaccion": "0",
-"token": "",
-"hora_solicitud" : "0"
-},
-{
-"id_cita": "4",
-"inicia": "1373901300",
-"termina": "1373902500",
-"id_empresa": "",
-"razon_social": "",
-"status": "0",
-"descripcion_status": "Libre",
-"confirmacion": "0",
-"cancelacion": "0",
-"concretada": "0",
-"satisfaccion": "0",
-"token": "",
-"hora_solicitud" : "0"
-},
-{
-"id_cita": "5",
-"inicia": "1373902800",
-"termina": "1373904000",
-"id_empresa": "",
-"razon_social": "",
-"status": "0",
-"descripcion_status": "Libre",
-"confirmacion": "0",
-"cancelacion": "0",
-"concretada": "0",
-"satisfaccion": "0",
-"token": "",
-"hora_solicitud" : "0"
-},
-{
-"id_cita": "6",
-"inicia": "1373904300",
-"termina": "1373905500",
-"id_empresa": "",
-"razon_social": "",
-"status": "0",
-"descripcion_status": "Libre",
-"confirmacion": "0",
-"cancelacion": "0",
-"concretada": "0",
-"satisfaccion": "0",
-"token": "",
-"hora_solicitud" : "0"
-},
-{
-"id_cita": "7",
-"inicia": "1373905800",
-"termina": "1373907000",
-"id_empresa": "",
-"razon_social": "",
-"status": "0",
-"descripcion_status": "Libre",
-"confirmacion": "0",
-"cancelacion": "0",
-"concretada": "0",
-"satisfaccion": "0",
-"token": "",
-"hora_solicitud" : "0"
-},
-{
-"id_cita": "8",
-"inicia": "1373907300",
-"termina": "1373908500",
-"id_empresa": "",
-"razon_social": "",
-"status": "0",
-"descripcion_status": "Libre",
-"confirmacion": "0",
-"cancelacion": "0",
-"concretada": "0",
-"satisfaccion": "0",
-"token": "",
-"hora_solicitud" : "0"
-},
-{
-"id_cita": "9",
-"inicia": "1373908800",
-"termina": "1373910000",
-"id_empresa": "",
-"razon_social": "",
-"status": "0",
-"descripcion_status": "Libre",
-"confirmacion": "0",
-"cancelacion": "0",
-"concretada": "0",
-"satisfaccion": "0",
-"token": "",
-"hora_solicitud" : "0"
-},
-{
-"id_cita": "10",
-"inicia": "1373910300",
-"termina": "1373911500",
-"id_empresa": "",
-"razon_social": "",
-"status": "0",
-"descripcion_status": "Libre",
-"confirmacion": "0",
-"cancelacion": "0",
-"concretada": "0",
-"satisfaccion": "0",
-"token": "",
-"hora_solicitud" : "0"
-},
-{
-"id_cita": "11",
-"inicia": "1373911800",
-"termina": "1373913000",
-"id_empresa": "",
-"razon_social": "",
-"status": "0",
-"descripcion_status": "Libre",
-"confirmacion": "0",
-"cancelacion": "0",
-"concretada": "0",
-"satisfaccion": "0",
-"token": "",
-"hora_solicitud" : "0"
-},
-{
-"id_cita": "12",
-"inicia": "1373916600",
-"termina": "1373917800",
-"id_empresa": "",
-"razon_social": "",
-"status": "0",
-"descripcion_status": "Libre",
-"confirmacion": "0",
-"cancelacion": "0",
-"concretada": "0",
-"satisfaccion": "0",
-"token": "",
-"hora_solicitud" : "0"
-},
-{
-"id_cita": "13",
-"inicia": "1373918100",
-"termina": "1373919300",
-"id_empresa": "",
-"razon_social": "",
-"status": "0",
-"descripcion_status": "Libre",
-"confirmacion": "0",
-"cancelacion": "0",
-"concretada": "0",
-"satisfaccion": "0",
-"token": "",
-"hora_solicitud" : "0"
-},
-{
-"id_cita": "14",
-"inicia": "1373919600",
-"termina": "1373920800",
-"id_empresa": "",
-"razon_social": "",
-"status": "0",
-"descripcion_status": "Libre",
-"confirmacion": "0",
-"cancelacion": "0",
-"concretada": "0",
-"satisfaccion": "0",
-"token": "",
-"hora_solicitud" : "0"
-},
-{
-"id_cita": "15",
-"inicia": "1373921100",
-"termina": "1373922300",
-"id_empresa": "",
-"razon_social": "",
-"status": "0",
-"descripcion_status": "Libre",
-"confirmacion": "0",
-"cancelacion": "0",
-"concretada": "0",
-"satisfaccion": "0",
-"token": "",
-"hora_solicitud" : "0"
-},
-{
-"id_cita": "16",
-"inicia": "1373922600",
-"termina": "1373923800",
-"id_empresa": "",
-"razon_social": "",
-"status": "0",
-"descripcion_status": "Libre",
-"confirmacion": "0",
-"cancelacion": "0",
-"concretada": "0",
-"satisfaccion": "0",
-"token": "",
-"hora_solicitud" : "0"
-},
-{
-"id_cita": "17",
-"inicia": "1373924100",
-"termina": "1373925300",
-"id_empresa": "",
-"razon_social": "",
-"status": "0",
-"descripcion_status": "Libre",
-"confirmacion": "0",
-"cancelacion": "0",
-"concretada": "0",
-"satisfaccion": "0",
-"token": "",
-"hora_solicitud" : "0"
-},
-{
-"id_cita": "18",
-"inicia": "1373925600",
-"termina": "1373926800",
-"id_empresa": "",
-"razon_social": "",
-"status": "0",
-"descripcion_status": "Libre",
-"confirmacion": "0",
-"cancelacion": "0",
-"concretada": "0",
-"satisfaccion": "0",
-"token": "",
-"hora_solicitud" : "0"
-},
-{
-"id_cita": "19",
-"inicia": "1373927100",
-"termina": "1373928300",
-"id_empresa": "",
-"razon_social": "",
-"status": "0",
-"descripcion_status": "Libre",
-"confirmacion": "0",
-"cancelacion": "0",
-"concretada": "0",
-"satisfaccion": "0",
-"token": "",
-"hora_solicitud" : "0"
-},
-{
-"id_cita": "20",
-"inicia": "1373928600",
-"termina": "1373929800",
-"id_empresa": "",
-"razon_social": "",
-"status": "0",
-"descripcion_status": "Libre",
-"confirmacion": "0",
-"cancelacion": "0",
-"concretada": "0",
-"satisfaccion": "0",
-"token": "",
-"hora_solicitud" : "0"
-}
-]
-}';
+
 $json_agenda = str_replace(chr(10), " ", $json_agenda);//salto linea
 $json_agenda = str_replace(chr(13), " ", $json_agenda);//retorno
+
+$json_maquinaria = '{%d}';
+
 		foreach ($nuevos_user as $u) {
 			$para = array();
 			foreach ($Contenido as $c) {
 				if ($c["r.f.c"]==$u->rfc) {
 
-					$para["Agenda"] = $json_agenda;
+					/*$para["Agenda"] = $json_agenda;
 					$para["hora_llegada"] = "0";
-					$para["tipo_empresa"]= "0";
+					$para["tipo_empresa"]= "0";*/
 
 					foreach ($params as $p) {
 						$index = $p->campo;
@@ -1025,23 +1058,28 @@ $json_agenda = str_replace(chr(13), " ", $json_agenda);//retorno
 
 						if($index!="Agenda" && $index!="hora_llegada" && $index!="tipo_empresa" 
 							&& $index!="num_credenciales" && $index!="credenciales_restantes"
-							&& $index!="parametro_extra1" && $index!="parametro_extra2"
+							&& $index!="pagina_web" && $index!="correo_electronico"
+							&& $index!= "nombre_o_razon_social" && $index != "password_para_sistema_de_agenda"
+							&& $index!= "nro_empleados" && $index != "ubicacion"
+							&& $index!= "maquinaria_equipo"
+							/*&& $index!="parametro_extra1" && $index!="parametro_extra2"
 							&& $index!="parametro_extra3" && $index!="parametro_extra4"
-							&& $index!="parametro_extra5"){
+							&& $index!="parametro_extra5"*/){
 
-							if(strlen($c[$index])<1 || $c[$index]==NULL)
-							{
-								$para[$prop] = "";
-							}
-							else
-							{
+							//if(strlen($c[$index])<1 || $c[$index]==NULL)
+							//{
+							//	$para[$prop] = "";
+								//Logger::log("----------------------- LA PROPIEDAD : ".$prop." NO TIENE VALOR");
+							//}
+							//else
+							//{
 								$aux = str_replace($a, $b,$c[$index] );
 								$aux = str_replace(chr(10), " ", $aux);//salto linea
 								$aux = str_replace(chr(13), " ", $aux);//retorno
 								$aux = str_replace(chr(34), "", $aux);//comilla doble
 								$aux = str_replace(chr(39), "", $aux);//comilla simple
 								$para[$prop] = $aux;
-							}
+							//}
 
 						}
 					}
@@ -1049,24 +1087,88 @@ $json_agenda = str_replace(chr(13), " ", $json_agenda);//retorno
 			}
 
 			//Se colocan los valores por default de los parametros extra que se dan a pincel
+			$para["Agenda"] = $json_agenda;
+			$para["hora_llegada"] = "0";
+			$para["tipo_empresa"]= "0";
+
 			$para["num_credenciales"] = "2";
 			$para["credenciales_restantes"] = "2";
 
 			$num_creden = explode(",",$para["quiero_participar_en_sapuraiya_"]);
-			Logger::log("------------------------> quiero_participar_en_sapuraiya_:".print_r($num_creden,true));
 
 			for ($i=0; $i < count($num_creden); $i++) { 
-				if(trim($num_creden[$i])=="AREA DE EXPOSICION CON STAND")
+				$num_creden[$i] = trim($num_creden[$i]);
+				if($num_creden[$i] =="AREA DE EXPOSICION CON STAND")
 				{
 					$para["num_credenciales"] = "4";
+					$para["credenciales_restantes"] = "4";
 				}
 			}
 
-			$para["parametro_extra1"] = "";
-			$para["parametro_extra2"] = "";
-			$para["parametro_extra3"] = "";
-			$para["parametro_extra4"] = "";
-			$para["parametro_extra5"] = "";
+			if(count($num_creden)==1){
+				if(strlen($num_creden[0])>1)
+				{
+					if($num_creden[0]=="AREA DE EXPOSICION CON STAND")
+						$para["num_credenciales"] .= "b";
+					else
+						$para["num_credenciales"] .= "a";
+				}
+				else
+				{
+					$para["num_credenciales"] = "0";//registros 2012 no tienen ningun valor
+					$para["credenciales_restantes"] = "0";//registros 2012 no tienen ningun valor
+				}
+			}
+
+			if(count($num_creden)==2){
+				if(in_array("ENCUENTRO DE NEGOCIOS CON TRACTORAS DEL SECTOR AUTOMOTRIZ",$num_creden)
+					&& in_array("ENCUENTRO DE NEGOCIOS CON OTROS COMPRADORES",$num_creden))
+					$para["num_credenciales"] .= "a";
+				else
+					$para["num_credenciales"] .= "c";
+			}
+
+			if(count($num_creden)==3){
+				$para["num_credenciales"] .= "c";
+			}
+
+			$maquinaria = '"m1" : {"descripcion" : "'.str_replace(chr(34), "", $para["descripcion_1"]).'" , "marca" : "'.str_replace(chr(34), "", $para["marca_1"]).'" , "edad" : "'.str_replace(chr(34), "", $para["edad_1"]).'" , "unidades" : "'.str_replace(chr(34), "", $para["unidades_1"]).'" },';
+			$maquinaria .= '"m2" : {"descripcion" : "'.str_replace(chr(34), "", $para["descripcion_2"]).'" , "marca" : "'.str_replace(chr(34), "", $para["marca_2"]).'" , "edad" : "'.str_replace(chr(34), "", $para["edad_2"]).'" , "unidades" : "'.str_replace(chr(34), "", $para["unidades_2"]).'" },';
+			$maquinaria .= '"m3" : {"descripcion" : "'.str_replace(chr(34), "", $para["descripcion_3"]).'" , "marca" : "'.str_replace(chr(34), "", $para["marca_3"]).'" , "edad" : "'.str_replace(chr(34), "", $para["edad_3"]).'" , "unidades" : "'.str_replace(chr(34), "", $para["unidades_3"]).'" },';
+			$maquinaria .= (trim($para["cuenta_con_certificaciones"])=="SI")?' "c" : "1"' : ' "c" : "0"';
+
+			$para["maquinaria_equipo"] = str_replace("%d", $maquinaria, $json_maquinaria);//retorno
+			$para["nro_empleados"] = $para["num__administrativos"] + $para["num__operadores"];
+			$para["ubicacion"] = $para["delegacion_o_municipio"].", ".$para["estado"].", ".$para["pais"];
+
+			//Logger::log(" ::::::::::::::::::::::::::::::::::::::::: Ubicación-> Municipio: '".print_r($para["delegacion_o_municipio"],true)."', estado: '".print_r($para["estado"],true)."' pais: '".print_r($para["pais"],true)."'");
+
+
+			unset($para['quiero_participar_en_sapuraiya_']);//quitar ese param extra dado que solo se usaron los valores pero ya no se necesitan en la BD
+			unset($para['pagina_web']);
+			unset($para['correo_electronico']);
+			unset($para['nombre_o_razon_social']);
+			unset($para['password_para_sistema_de_agenda']);
+			unset($para['estado']);
+			unset($para['pais']);
+			unset($para['delegacion_o_municipio']);
+			unset($para['num__administrativos']);
+			unset($para['num__operadores']);
+			unset($para['cuenta_con_certificaciones']);
+			unset($para['descripcion_1']);
+			unset($para['marca_1']);
+			unset($para['edad_1']);
+			unset($para['unidades_1']);
+			unset($para['descripcion_2']);
+			unset($para['marca_2']);
+			unset($para['edad_2']);
+			unset($para['unidades_2']);
+			unset($para['descripcion_3']);
+			unset($para['marca_3']);
+			unset($para['edad_3']);
+			unset($para['unidades_3']);
+
+
 			//fin valores por default de los params extra dados a pincel
 
 			ClientesController::Editar(
@@ -1096,6 +1198,122 @@ $json_agenda = str_replace(chr(13), " ", $json_agenda);//retorno
 									);
 
 		}
+
+		$pe = new ExtraParamsEstructura();//borar params extra estructura
+		$pe->setCampo("quiero_participar_en_sapuraiya_");
+		$r = ExtraParamsEstructuraDAO::search($pe);
+		ExtraParamsEstructuraDAO::delete($r[0]);
+
+		$pe = new ExtraParamsEstructura();//borar params extra estructura
+		$pe->setCampo("pagina_web");
+		$r = ExtraParamsEstructuraDAO::search($pe);
+		ExtraParamsEstructuraDAO::delete($r[0]);
+
+		$pe = new ExtraParamsEstructura();//borar params extra estructura
+		$pe->setCampo("correo_electronico");
+		$r = ExtraParamsEstructuraDAO::search($pe);
+		ExtraParamsEstructuraDAO::delete($r[0]);
+
+		$pe = new ExtraParamsEstructura();//borar params extra estructura
+		$pe->setCampo("nombre_o_razon_social");
+		$r = ExtraParamsEstructuraDAO::search($pe);
+		ExtraParamsEstructuraDAO::delete($r[0]);
+
+		$pe = new ExtraParamsEstructura();//borar params extra estructura
+		$pe->setCampo("password_para_sistema_de_agenda");
+		$r = ExtraParamsEstructuraDAO::search($pe);
+		ExtraParamsEstructuraDAO::delete($r[0]);
+
+		$pe = new ExtraParamsEstructura();//borar params extra estructura
+		$pe->setCampo("estado");
+		$r = ExtraParamsEstructuraDAO::search($pe);
+		ExtraParamsEstructuraDAO::delete($r[0]);
+
+		$pe = new ExtraParamsEstructura();//borar params extra estructura
+		$pe->setCampo("pais");
+		$r = ExtraParamsEstructuraDAO::search($pe);
+		ExtraParamsEstructuraDAO::delete($r[0]);
+
+		$pe = new ExtraParamsEstructura();//borar params extra estructura
+		$pe->setCampo("delegacion_o_municipio");
+		$r = ExtraParamsEstructuraDAO::search($pe);
+		ExtraParamsEstructuraDAO::delete($r[0]);
+
+		$pe = new ExtraParamsEstructura();//borar params extra estructura
+		$pe->setCampo("num__operadores");
+		$r = ExtraParamsEstructuraDAO::search($pe);
+		ExtraParamsEstructuraDAO::delete($r[0]);
+
+		$pe = new ExtraParamsEstructura();//borar params extra estructura
+		$pe->setCampo("num__administrativos");
+		$r = ExtraParamsEstructuraDAO::search($pe);
+		ExtraParamsEstructuraDAO::delete($r[0]);
+
+		$pe = new ExtraParamsEstructura();//borar params extra estructura
+		$pe->setCampo("cuenta_con_certificaciones");
+		$r = ExtraParamsEstructuraDAO::search($pe);
+		ExtraParamsEstructuraDAO::delete($r[0]);
+
+		$pe = new ExtraParamsEstructura();//borar params extra estructura
+		$pe->setCampo("marca_1");
+		$r = ExtraParamsEstructuraDAO::search($pe);
+		ExtraParamsEstructuraDAO::delete($r[0]);
+
+		$pe = new ExtraParamsEstructura();//borar params extra estructura
+		$pe->setCampo("edad_1");
+		$r = ExtraParamsEstructuraDAO::search($pe);
+		ExtraParamsEstructuraDAO::delete($r[0]);
+
+		$pe = new ExtraParamsEstructura();//borar params extra estructura
+		$pe->setCampo("unidades_1");
+		$r = ExtraParamsEstructuraDAO::search($pe);
+		ExtraParamsEstructuraDAO::delete($r[0]);
+
+		$pe = new ExtraParamsEstructura();//borar params extra estructura
+		$pe->setCampo("descripcion_1");
+		$r = ExtraParamsEstructuraDAO::search($pe);
+		ExtraParamsEstructuraDAO::delete($r[0]);
+
+		$pe = new ExtraParamsEstructura();//borar params extra estructura
+		$pe->setCampo("marca_2");
+		$r = ExtraParamsEstructuraDAO::search($pe);
+		ExtraParamsEstructuraDAO::delete($r[0]);
+
+		$pe = new ExtraParamsEstructura();//borar params extra estructura
+		$pe->setCampo("edad_2");
+		$r = ExtraParamsEstructuraDAO::search($pe);
+		ExtraParamsEstructuraDAO::delete($r[0]);
+
+		$pe = new ExtraParamsEstructura();//borar params extra estructura
+		$pe->setCampo("unidades_2");
+		$r = ExtraParamsEstructuraDAO::search($pe);
+		ExtraParamsEstructuraDAO::delete($r[0]);
+
+		$pe = new ExtraParamsEstructura();//borar params extra estructura
+		$pe->setCampo("descripcion_2");
+		$r = ExtraParamsEstructuraDAO::search($pe);
+		ExtraParamsEstructuraDAO::delete($r[0]);
+
+		$pe = new ExtraParamsEstructura();//borar params extra estructura
+		$pe->setCampo("marca_3");
+		$r = ExtraParamsEstructuraDAO::search($pe);
+		ExtraParamsEstructuraDAO::delete($r[0]);
+
+		$pe = new ExtraParamsEstructura();//borar params extra estructura
+		$pe->setCampo("edad_3");
+		$r = ExtraParamsEstructuraDAO::search($pe);
+		ExtraParamsEstructuraDAO::delete($r[0]);
+
+		$pe = new ExtraParamsEstructura();//borar params extra estructura
+		$pe->setCampo("unidades_3");
+		$r = ExtraParamsEstructuraDAO::search($pe);
+		ExtraParamsEstructuraDAO::delete($r[0]);
+
+		$pe = new ExtraParamsEstructura();//borar params extra estructura
+		$pe->setCampo("descripcion_3");
+		$r = ExtraParamsEstructuraDAO::search($pe);
+		ExtraParamsEstructuraDAO::delete($r[0]);
+
 	}
 
 }
