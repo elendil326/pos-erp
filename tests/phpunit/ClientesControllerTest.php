@@ -1038,10 +1038,13 @@ $json_agenda = str_replace(chr(13), " ", $json_agenda);//retorno
 
 $json_maquinaria = '{%d}';
 
+		//Logger::log("------------------------------------------------------------- Contenido: ".print_r($Contenido,true));
+		//Logger::log("------------------------------------------------------------- Contenido: ".print_r($nuevos_user,true));
+
 		foreach ($nuevos_user as $u) {
 			$para = array();
 			foreach ($Contenido as $c) {
-				if ($c["r.f.c"]==$u->rfc) {
+				if ($c["correo electronico"]==$u->correo_electronico) {
 
 					/*$para["Agenda"] = $json_agenda;
 					$para["hora_llegada"] = "0";
