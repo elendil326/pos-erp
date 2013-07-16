@@ -16,8 +16,7 @@ class FormasPreimpresasController extends ValidacionesController implements IFor
      * @param documento json Objeto que indica como sera visualmente el documento.
      **/
     public static function GenerarPdf($documento) {
-        $json = json_decode($documento);
-        $doc = new JSON2PDF($doc);
+        $pdf = new JSON2PDF(json_decode($documento));
     }  
 
       /**
