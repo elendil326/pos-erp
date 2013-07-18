@@ -59,11 +59,30 @@ function td( $inner, $repeat = 0 ) {
 	return $out;
 }
 
+//cache results
+$g_ClasificacionesClienteArray = null;
+
+function cacheClasificaciones() {
+	global $g_ClasificacionesClienteArray;
+	$g_ClasificacionesCliente = ClasificacionClienteDAO::getAll();
+
+	for ($a = 0 ; $a < sizeof($g_ClasificacionesCliente); $a++) {
+		$g_ClasificacionesClienteArray[$g_ClasificacionesCliente[$a]->getIdClasificacionCliente()] = $g_ClasificacionesCliente[$a]->getNombre();
+	}
+}
+
 function funcion_clasificacion_cliente($id_clasifiacion) {
-	if(is_null($id_clasifiacion)) return "";
-	$c = ClasificacionClienteDAO::getByPK($id_clasifiacion);
-	if(is_null($c)) return "";
-	return $c->getNombre();
+		global $g_ClasificacionesClienteArray ;
+
+		if (is_null($g_ClasificacionesClienteArray)) {
+				cacheClasificaciones();
+		}
+
+		if (array_key_exists($id_clasifiacion, $g_ClasificacionesClienteArray)) {
+			return $g_ClasificacionesClienteArray[$id_clasifiacion];
+		}
+
+		return "";
 }
 
 function funcion_gerente( $id_gerente ) {

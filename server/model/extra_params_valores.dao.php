@@ -123,69 +123,30 @@ class ExtraParamsValoresDAO extends ExtraParamsValoresDAOBase
   }
 
 
+	public static function getVals($tabla, $id_pk_tabla) {
+		global $conn;
+		$sql = "select
+					epe.campo,
+					epe.tipo,
+					epe.enum,
+					epe.longitud,
+					epe.obligatorio,
+					epe.caption, 
+					epe.descripcion,
+					epv.val
+				from 
+					extra_params_valores epv,
+					extra_params_estructura epe
+				where
+					epv.id_pk_tabla = ?
+					and epv.id_extra_params_estructura in (select id_extra_params_estructura from extra_params_estructura where tabla = ?)
+					and epv.id_extra_params_estructura = epe.id_extra_params_estructura;";
 
-
-
-
-  public static function getVals($tabla, $id_pk_tabla){
-    //ver si esta tabla existe
-
-    //buscar esa madre
-    try{
-      $es = new ExtraParamsEstructura(array(
-            "tabla" => $tabla
-        ));  
-    }catch(Exception $e){
-      Logger::error($e);
-      return array();
-    }
-    
-
-    
-    try{
-      $ncols = ExtraParamsEstructuraDAO::search( $es );
-
-    }catch(ADODB_Exception $e){
-      Logger::error($e);
-      return array();
-    }
-
-
-    if(sizeof($ncols) == 0){
-      //no hay nuevas columnas de esta tabla
-      return array();
-    }
-
-    $nvals = new ExtraParamsValores(array( 
-        "tabla" => $tabla,
-        "id_pk_tabla" => $id_pk_tabla
-      ));
-
-
-    $out = array();
-
-    for ($nc=0; $nc < sizeof($ncols); $nc++) { 
-
-      $out[$nc] = $ncols[$nc]->asArray();
-      $out[$nc]["val"] = null;
-
-      $nvals->setIdExtraParamsEstructura($out[$nc]["id_extra_params_estructura"]);
-
-      $actualvals = ExtraParamsValoresDAO::search( $nvals );
-
-      if(sizeof($actualvals) == 1){
-        $out[$nc]["val"] = $actualvals[0]->getVal();
-      }
-
-      unset($out[$nc]["id_extra_params_estructura"]);
-      unset($out[$nc]["tabla"]);
-    }
-
-    
-
-    return $out;
-
-  }
+		$val = array($id_pk_tabla, $tabla);
+		$conn->SetFetchMode(ADODB_FETCH_ASSOC);
+		$rs = $conn->Execute($sql, $val);
+		return $rs->GetRows();
+	}
 
 
 

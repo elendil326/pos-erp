@@ -1093,47 +1093,42 @@ require_once("interfaces/Clientes.interface.php");
 			$start = 0
         )
 	{
-	
-		if(!is_null($id_usuario)){
-			Logger::log("Buscando cliente por id, id = $id_usuario");
-			
-			return array(
-				"resultados" => array( UsuarioDAO::getByPK(  $id_usuario )->asArray() ),
-				"numero_de_resultados" => 1
-				
-			);
+		if (!is_null($id_usuario)) {
+				return array(
+					"resultados" => array( UsuarioDAO::getByPK(  $id_usuario )->asArray() ),
+					"numero_de_resultados" => 1 );
 		}
-		
+
 		$resultados = UsuarioDAO::buscarClientes( $query );
-		
-		for($i = 0; $i < sizeof($resultados); $i++){
-			
-			$resultados[$i] = $resultados[$i]->asArray();
-			
-			if(!is_null($resultados[$i]["id_direccion"]))
-				$resultados[$i]["direccion"] = DireccionDAO::getByPK($resultados[$i]["id_direccion"]);
-			else
-				$resultados[$i]["direccion"] = new Direccion();
-			
 
-			$resultados[$i]["direccion"] = $resultados[$i]["direccion"]->asArray();
+		for ($i = 0; $i < sizeof($resultados); $i++) {
+				$resultados[$i]["direccion"] = array( 
+												"id_direccion" => $resultados[$i]["id_direccion"],
+												"calle" => $resultados[$i]["calle"],
+												"numero_exterior" => $resultados[$i]["numero_exterior"],
+												"numero_interior" =>  $resultados[$i]["numero_interior"],
+												"referencia" => $resultados[$i]["referencia"],
+												"colonia" => $resultados[$i]["colonia"],
+												"id_ciudad" => $resultados[$i]["id_ciudad"],
+												"codigo_postal" =>  $resultados[$i]["codigo_postal"],
+												"telefono" =>  $resultados[$i]["telefono"],
+												"telefono2" =>  $resultados[$i]["telefono2"],
+												"ultima_modificaion" =>  $resultados[$i]["ultima_modificacion"],
+												"id_usuario_ultima_modificacion" =>  $resultados[$i]["id_usuario_ultima_modificacion"]
+										);
+			$resultados[$i]["params_extra"] = ExtraParamsValoresDAO::getVals("usuarios", $resultados[$i]["id_usuario"]);
 
-            $resultados[$i]["params_extra"] = ExtraParamsValoresDAO::getVals("usuarios", $resultados[$i]["id_usuario"]);
-				
 			unset($resultados[$i]["password"]);
-	        unset($resultados[$i]["id_direccion"]);
-	        unset($resultados[$i]["id_direccion_alterna"]);
-	
-			
+			unset($resultados[$i]["id_direccion"]);
+			unset($resultados[$i]["id_direccion_alterna"]);
 		}
-		
+
 		return array( 
 			"resultados" => $resultados ,
-			"numero_de_resultados" => sizeof($resultados)
-			);
-		
+			"numero_de_resultados" => sizeof($resultados));
 	}
-        
+
+
         /**
  	 *
  	 *Busca una clasificaci?n por clave, nombre o descripci?n
