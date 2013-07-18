@@ -1130,17 +1130,16 @@ require_once("interfaces/PersonalYAgentes.interface.php");
           if(!is_null($nombre))
           {
               $usuario->setNombre($nombre);
-          }
-          if(!is_null($rfc))
-          {
-              //Verifica que el rfc no sea repetido
-              $usuarios = array_diff(UsuarioDAO::search( new Usuario(array( "rfc" => $rfc ) ) ), array(UsuarioDAO::getByPK($id_usuario)));
-              foreach($usuarios as $u)
-                {
-                    if($u->getActivo())
-                    {
-                        Logger::error("El codigo de usuario ".$codigo_usuario." ya esta en uso");
-                        throw new Exception("El codigo de usuario ".$codigo_usuario." ya esta en uso",901);
+		  }
+
+			if (!is_null($rfc)) {
+
+				$usuarios = array_diff(UsuarioDAO::search( new Usuario(array( "rfc" => $rfc ) ) ), array(UsuarioDAO::getByPK($id_usuario)));
+
+				foreach($usuarios as $u) {
+					if($u->getActivo()) {
+                        Logger::error("El rfc de usuario ".$codigo_usuario." ya esta en uso");
+                        throw new Exception("El rfc de usuario ".$codigo_usuario." ya esta en uso",901);
                     }
                 }
               $usuario->setRfc($rfc);

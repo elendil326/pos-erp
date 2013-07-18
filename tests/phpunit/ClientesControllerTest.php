@@ -250,7 +250,9 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 	}
 
 
-	// @expectedException BusinessLogicException
+	/**
+	 * @expectedException BusinessLogicException
+	 */
 	public function testNuevaClasificacionConMismoNombre(){
 		//se inserta una clasificacion
 		$nombre_clasificacion = self::RandomString(5,FALSE,FALSE,FALSE)." - ";

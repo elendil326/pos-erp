@@ -353,13 +353,15 @@ require_once("interfaces/Clientes.interface.php");
                 $clasificacion_cliente = 1;
             }
 
-			$res = UsuarioDAO::search(new Usuario( 
+			if (!is_null($codigo_cliente)) {
+				$res = UsuarioDAO::search(new Usuario( 
 									array(
 										"codigo_usuario" => $codigo_cliente
 								)));
 
-			if (sizeof($res) >= 1) {
-				throw new InvalidDataException("El codigo de cliente ya esta en uso");
+				if (sizeof($res) >= 1) {
+					throw new InvalidDataException("El codigo de cliente ya esta en uso");
+				}
 			}
 
             //se crea la cliente utilizando el metodo Nuevo usuario, este se encarga de la validacion
@@ -624,24 +626,22 @@ require_once("interfaces/Clientes.interface.php");
                     Logger::error($validar);
                     throw new Exception($validar);
                 }
-                
-                $cliente = UsuarioDAO::getByPK($id_cliente);
-                if(!is_null($cliente->getPassword()))
-                {
-                    if(hash("md5", $password_anterior)!=$cliente->getPassword())
-                    {
-                        Logger::error("El password anterior es incorrecto, no se puede eidtar el password sin confirmarlo antes");
-                        throw new Exception("El password anterior es incorrecto, no se puede eidtar el password sin confirmarlo antes");
-                    }
-                }
+                // No podemos fiarnos de que el hash es md5 
+                // $cliente = UsuarioDAO::getByPK($id_cliente);
+                // if(!is_null($cliente->getPassword()))
+                // {
+                //     if(hash("md5", $password_anterior)!=$cliente->getPassword())
+                //     {
+                //         Logger::error("El password anterior es incorrecto, no se puede eidtar el password sin confirmarlo antes");
+                //         throw new Exception("El password anterior es incorrecto, no se puede eidtar el password sin confirmarlo antes");
+                //     }
+                // }
                 
             }
             
             //Se llama al metodo Editar usuario
-            try
-            {
-		
-                PersonalYAgentesController::EditarUsuario(
+			try {
+				PersonalYAgentesController::EditarUsuario(
 						$id_cliente,
 						$codigo_cliente,
 						null,
@@ -676,16 +676,14 @@ require_once("interfaces/Clientes.interface.php");
 						$telefono_personal1,
 						$telefono_personal2);
 
-
                 ExtraParamsValoresDAO::setVals("usuarios", $extra_params, $id_cliente);
 
             }
             catch( Exception $e)
             {
                 Logger::error("El cliente no pudo ser modificado: ".$e);
-                if($e->getCode()==901)
-                    throw new Exception("El cliente no pudo ser modificado: ".$e->getMessage());
-                throw new Exception("El cliente no pudo ser modificado, consulte a su administrador de sistema");
+
+				throw $e;
             }
 
             
