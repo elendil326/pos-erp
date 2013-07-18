@@ -152,7 +152,8 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 									$denominacion_comercial = $denominacion."-123", //se modifica este campo
 									$descuento_general = 0, //se cambia a 0
 									$direcciones = null, 
-									$email = null, 
+									$email = null,
+									$extra_params = null,
 									$id_cliente_padre = null, 
 									$id_moneda =  null , 
 									$id_tarifa_compra = null, 
@@ -325,7 +326,7 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 		
 		POSController::DropBd();
 		
-		$raw_exportation = file_get_contents( "test.csv" );
+		$raw_exportation = file_get_contents( "adminpaq.catalogo.clientes.csv" );
 
 		ClientesController::ImportarCSV( $raw_exportation );
 		

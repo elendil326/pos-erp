@@ -1138,8 +1138,8 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 
 				foreach($usuarios as $u) {
 					if($u->getActivo()) {
-                        Logger::error("El rfc de usuario ".$codigo_usuario." ya esta en uso");
-                        throw new Exception("El rfc de usuario ".$codigo_usuario." ya esta en uso",901);
+                        Logger::error("El rfc de usuario ".$rfc." ya esta en uso");
+                        throw new Exception("El rfc de usuario ".$rfc ." ya esta en uso",901);
                     }
                 }
               $usuario->setRfc($rfc);
