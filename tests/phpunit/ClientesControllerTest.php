@@ -6,7 +6,7 @@ require_once("../../server/bootstrap.php");
 
 
 class ClientesControllerTests extends PHPUnit_Framework_TestCase {
-/*
+
 	protected function setUp(){
 		Logger::log("-----------------------------");
 
@@ -328,7 +328,7 @@ public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
 		ClientesController::ImportarCSV( $raw_exportation );
 		
 	}
-*/
+
 	public function testInsertarUsuariosSapuraiya() {
 
 				$json_agenda = '{

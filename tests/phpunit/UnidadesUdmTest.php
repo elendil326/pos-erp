@@ -1,7 +1,7 @@
 <?php
 require_once("../../server/bootstrap.php");
 
-class CategoriasUdmTest extends PHPUnit_Framework_TestCase {
+class UnidadesUdmTest extends PHPUnit_Framework_TestCase {
 	public static function setUpBeforeClass() {
         SesionController::Iniciar(123, 1, true);
     }

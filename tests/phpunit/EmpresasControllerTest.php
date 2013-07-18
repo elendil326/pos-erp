@@ -193,7 +193,7 @@ class EmpresasControllerTest extends PHPUnit_Framework_TestCase {
 			$busqueda = EmpresasController::Buscar();			
 			
 		}catch(Exception $e){
-			Logger::testLog($e);
+			Logger::error($e);
 			
 		}
 

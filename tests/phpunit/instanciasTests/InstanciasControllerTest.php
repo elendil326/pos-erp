@@ -2,7 +2,7 @@
 
 date_default_timezone_set ( "America/Mexico_City" );
 
-require_once("../../../server/bootstrap.php");
+require_once("../../server/bootstrap.php");
 if(!defined("BYPASS_INSTANCE_CHECK")){
 	define("BYPASS_INSTANCE_CHECK", true);}
 
