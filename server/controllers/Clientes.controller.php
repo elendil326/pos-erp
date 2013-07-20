@@ -444,6 +444,7 @@ require_once("interfaces/Clientes.interface.php");
                 throw new InvalidDataException($e->getMessage());
             }
 
+            ExtraParamsValoresDAO::actualizarRegistros("usuarios");
             return array( "id_cliente" => (int)$cliente["id_usuario"]);
     }
   
@@ -1110,7 +1111,7 @@ require_once("interfaces/Clientes.interface.php");
             unset($resultados[$i]["id_direccion_alterna"]);
         }
 
-        ExtraParamsValoresDAO::actualizarRegistros("usuarios");
+
         return array( 
             "resultados" => $resultados ,
             "numero_de_resultados" => sizeof($resultados));
