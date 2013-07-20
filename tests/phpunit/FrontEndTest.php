@@ -24,9 +24,23 @@ class FrontEndTest extends PHPUnit_Framework_TestCase {
 
 	public function testFrontEnd(){
 		ob_start();
-		
+
+		set_include_path(get_include_path() . PATH_SEPARATOR . dirname(__FILE__) . "\..\..\www\__instance__\gerencia");
+
 		require_once("../../www/index.php");
-		include '../../www/front_ends/__instance__/gerencia/index.php';	
+		include '../../www/__instance__/gerencia/index.php';
+
+		try{
+			include '../../www/__instance__/gerencia/cargos_y_abonos.php';
+
+		}catch(PHPUnit_Framework_Error_Notice $errorNotice){
+
+			if( $errorNotice->getMessage() != "Constant BYPASS_INSTANCE_CHECK already defined" ){
+				throw $e;
+			}
+			
+			
+		}
 		ob_get_contents();
 		ob_end_clean();
 	}

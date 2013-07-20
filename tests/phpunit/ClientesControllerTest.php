@@ -17,14 +17,66 @@ class ClientesControllerTests extends PHPUnit_Framework_TestCase {
 			$POS_CONFIG["INSTANCE_CONN"]->Execute("INSERT INTO `usuario` (`id_usuario`, `id_direccion`, `id_direccion_alterna`, `id_sucursal`, `id_rol`, `id_clasificacion_cliente`, `id_clasificacion_proveedor`, `id_moneda`, `fecha_asignacion_rol`, `nombre`, `rfc`, `curp`, `comision_ventas`, `telefono_personal1`, `telefono_personal2`, `fecha_alta`, `fecha_baja`, `activo`, `limite_credito`, `descuento`, `password`, `last_login`, `consignatario`, `salario`, `correo_electronico`, `pagina_web`, `saldo_del_ejercicio`, `ventas_a_credito`, `representante_legal`, `facturar_a_terceros`, `dia_de_pago`, `mensajeria`, `intereses_moratorios`, `denominacion_comercial`, `dias_de_credito`, `cuenta_de_mensajeria`, `dia_de_revision`, `codigo_usuario`, `dias_de_embarque`, `tiempo_entrega`, `cuenta_bancaria`, `id_tarifa_compra`, `tarifa_compra_obtenida`, `id_tarifa_venta`, `tarifa_venta_obtenida`) VALUES
 				(1, NULL, NULL, NULL, 0, NULL, NULL, NULL, '2011-10-24 18:28:24', 'Administrador', NULL, NULL, NULL, NULL, NULL, '2011-10-24 18:28:34', NULL, 1, 0, NULL, '202cb962ac59075b964b07152d234b70', NULL, 0, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, NULL, NULL, 0, 'rol', 0, 'rol');");
 			
-			$r = SesionController::Iniciar(123, 1, true);				
+			$r = SesionController::Iniciar(123, 1, true);
 		}
+	}
 
+	public function testExtraParamsOutOfSync() {
 
 		
+		//create user A
+		$userA = ClientesController::Nuevo("userA".time());
+		$userA = UsuarioDAO::getByPK( $userA["id_cliente"] );
+		Logger::log("Create client A  [userid=". $userA->getIdUsuario()."]");
 
+		//create extra param
+		$extraParamStruct = new ExtraParamsEstructura();
+		$extraParamStruct->setTabla("usuarios");
+		$extraParamStruct->setCampo("campo" . time());
+		$extraParamStruct->setTipo("string");
+		$extraParamStruct->setEnum(NULL);
+		$extraParamStruct->setLongitud(128);
+		$extraParamStruct->setObligatorio(FALSE);
+		$extraParamStruct->setCaption("caption" . time());
+		$extraParamStruct->setDescripcion("description".time());
+
+		ExtraParamsEstructuraDAO::save( $extraParamStruct );
+		Logger::log("Extra params " . $extraParamStruct->getIdExtraParamsEstructura() . " created");
+
+		//create user B
+		$userB = ClientesController::Nuevo("userB".time());
+		$userB = UsuarioDAO::getByPK( $userB["id_cliente"] );
+		Logger::log("Create client B  [userid=". $userB->getIdUsuario()."]");
+
+		//user B should have extra param
+		Logger::log("Looking for extra params in clientB");
+		$userBExtraParams = ExtraParamsValoresDAO::getVals("usuarios", $userB->getIdUsuario());
+
+		$found = false;
+		for ($i = 0 ; $i < sizeof($userBExtraParams) ; $i++) {
+				if ( $userBExtraParams[$i]["campo"] == $extraParamStruct->getCampo() ) {
+				$found = true;
+			}
+		}
+
+		$this->assertTrue($found, "ClientB should have the new extra param campo=" . $extraParamStruct->getCampo());
+
+		ExtraParamsValoresDAO::actualizarRegistros("usuarios");
+
+		//user A should have extra param
+		$userAExtraParams = ExtraParamsValoresDAO::getVals("usuarios", $userA->getIdUsuario());
+
+		$found = false;
+		for ($i = 0 ; $i < sizeof($userAExtraParams) ; $i++) {
+				if ( $userAExtraParams[$i]["campo"] == $extraParamStruct->getCampo() ) {
+				$found = true;
+			}
+		}
+
+		$this->assertTrue($found, "When adding new extraparams old users should get updated" . $extraParamStruct->getCampo());
 	}
-	
+
+
 	public function testNuevaClasificacionCliente(){
 		$c = ClasificacionClienteDAO::getByPK(1);
 		
