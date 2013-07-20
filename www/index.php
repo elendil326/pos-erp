@@ -1,6 +1,6 @@
 <?php
-    //test
-	if(!class_exists("PHPUnit_Runner_Version")){
+
+if(!class_exists("PHPUnit_Runner_Version")){
 		define("BYPASS_INSTANCE_CHECK", true);
 		require_once("../server/bootstrap.php");
 	}
@@ -276,11 +276,5 @@
 		}
 		?>
 	</body>
-	</html>
-//foo 
-//foo  
-//foo  
-//foo  
-//foo  
-//foo  
-//foo  
+    </html>
+
