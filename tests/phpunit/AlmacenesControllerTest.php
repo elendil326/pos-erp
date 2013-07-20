@@ -2,6 +2,7 @@
 
 
 
+
 require_once("../../server/bootstrap.php");
 
 
@@ -122,32 +123,34 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
     public function testNuevoAlmacen(){
 
         $tipo_almacen = AlmacenesController::NuevoTipo("Nuevo_Tipo_Almacen_" . time());	
-
-        DireccionDAO::save( $direccion = new Direccion(array(
+        $direccion = new Direccion(array(
             "calle" => "Una Calle",
             "numero_exterior" => "322",
             "id_ciudad" => "12",
             "codigo_postal" => "38000",
             "ultima_modificacion" => "2012-02-21 22:10:45",
             "id_usuario_ultima_modificacion" => "2"
-        )));
+		));
+		DireccionDAO::save( $direccion );
 
-        EmpresaDAO::save( $empresa = new Empresa ( array(
+		$empresa = new Empresa ( array(
             "id_direccion" => $direccion->getIdDireccion(),
             "rfc" => "RFC_" . time(),
             "razon_social" => "Empresa_Razon_Social____" . time(),
             "fecha_alta" => "2012-02-21 22:10:45",
             "activo" => 1,
             "direccion_web" => "Dir_" . time()
-        )));
+        ));
+        EmpresaDAO::save($empresa);
 
-        SucursalDAO::save($sucursal = new Sucursal(array(
+		$sucursal = new Sucursal(array(
             "id_direccion" => $direccion->getIdDireccion(),
             "razon_social" => "Sucursal_Razon_Social____" . time(),
             "saldo_a_favor" => 2000,
             "fecha_apertura" => "2012-02-21 22:10:45",
             "activa" => 1
-        )));
+        ));
+        SucursalDAO::save($sucursal);
 
         $almacen = AlmacenesController::Nuevo(
 		    $id_empresa = $empresa->getIdEmpresa(), 
@@ -155,10 +158,8 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
 		    $id_tipo_almacen = $tipo_almacen["id_tipo_almacen"], 
 		    $nombre = "Almacen_" . time(), 
 		    $descripcion = "Almacen de prueba " . time()
-	    );
-
+		);
         $this->assertInternalType("int", $almacen["id_almacen"]);
-
     }
 
     /**
@@ -166,7 +167,7 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
      */
     public function testEditarAlmacen(){
 
-        DireccionDAO::save( $direccion = new Direccion(array(
+        @DireccionDAO::save( $direccion = new Direccion(array(
             "calle" => "Una Calle",
             "numero_exterior" => "322",
             "id_ciudad" => "12",
@@ -175,7 +176,7 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
             "id_usuario_ultima_modificacion" => "2"
         )));
 
-        EmpresaDAO::save( $empresa = new Empresa ( array(
+        @EmpresaDAO::save( $empresa = new Empresa ( array(
             "id_direccion" => $direccion->getIdDireccion(),
             "rfc" => "RFC_" . time(),
             "razon_social" => "Empresa_Razon_Social_" . time(),
@@ -184,15 +185,15 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
             "direccion_web" => "Dir_" . time()
         )));
 
-        SucursalDAO::save($sucursal = new Sucursal(array(
+        @SucursalDAO::save($sucursal = new Sucursal(array(
             "id_direccion" => $direccion->getIdDireccion(),
             "razon_social" => "Sucursal_Razon_Social_" . time(),
             "saldo_a_favor" => 2000,
             "fecha_apertura" => "2012-02-21 22:10:45",
             "activa" => 1
         )));
-        
-        $tipo_almacen = AlmacenesController::NuevoTipo("Nuevo_Tipo_Almacen__" . time());	        
+
+        $tipo_almacen = AlmacenesController::NuevoTipo("Nuevo_Tipo_Almacen__" . time());
 
         $almacen = AlmacenesController::Nuevo(
 		    $id_empresa = $empresa->getIdEmpresa(), 
@@ -205,7 +206,6 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
         $tipo_almacen_mod = AlmacenesController::NuevoTipo("Nuevo_Tipo_Almacen__mod_" . time());	        
 
         // Probamos editar el tipo de almacen
-
         $almacen_editado = AlmacenesController::Editar(
             $id_almacen = $almacen["id_almacen"], 
 		    $descripcion = null, 
@@ -262,7 +262,7 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
 
         $id_usuario = $usuario[0]->getIdUsuario();
 
-        DireccionDAO::save( $direccion = new Direccion(array(
+        @DireccionDAO::save( $direccion = new Direccion(array(
             "calle" => "Una Calle",
             "numero_exterior" => "322",
             "id_ciudad" => "12",
@@ -271,7 +271,7 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
             "id_usuario_ultima_modificacion" => "2"
         )));
 
-        EmpresaDAO::save( $empresa = new Empresa ( array(
+        @EmpresaDAO::save( $empresa = new Empresa ( array(
             "id_direccion" => $direccion->getIdDireccion(),
             "rfc" => "RFC_" . time(),
             "razon_social" => "Empresa_Razon_Social__" . time(),
@@ -280,7 +280,7 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
             "direccion_web" => "Dir_" . time()
         )));
 
-        SucursalDAO::save($sucursal = new Sucursal(array(
+        @SucursalDAO::save($sucursal = new Sucursal(array(
             "id_direccion" => $direccion->getIdDireccion(),
             "razon_social" => "Sucursal_Razon_Social__" . time(),
             "saldo_a_favor" => 2000,
@@ -290,6 +290,7 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
         
         $tipo_almacen = AlmacenesController::NuevoTipo("Nuevo_Tipo_Almacen___" . time());	        
 
+		Logger::log("Nuevo almacen");
         $almacen = AlmacenesController::Nuevo(
 		    $id_empresa = $empresa->getIdEmpresa(), 
 		    $id_sucursal = $sucursal->getIdSucursal(), 
@@ -299,7 +300,7 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
 	    );
 
         // Desactivamos el Almacen
-
+		Logger::log("A desactivar almacen recien creado");
         $almacen_desactivado = AlmacenesController::Desactivar(
             $id_almacen = $almacen["id_almacen"]
         );
@@ -489,65 +490,66 @@ class AlmacenControllerTest extends PHPUnit_Framework_TestCase {
 	*
 	**/
 	public function testLotes(){
-        //Buscar algun almacen
 
         $almacenes = AlmacenesController::Buscar( true );
 
         $almacenId = $almacenes["resultados"][0]->getIdAlmacen();
 
-
         //nuevo lote
         $nLote = AlmacenesController::NuevoLote( $almacenId );
         $this->assertNotNull( $l = LoteDAO::getByPK( $nLote["id_lote"] ) );
 
-
-        ProductoDAO::save( $producto = new Producto( array(
+		$producto = new Producto( array(
             "compra_en_mostrador" => false,
             "metodo_costeo" => "precio",
             "precio" => 123.123,
             "activo" => true,
             "codigo_producto" => time() . "tp",
             "nombre_producto" => time() . "np",
-            "costo_estandar" => 12.3123
-        )));
+			"costo_estandar" => 12.3123,
+			"id_unidad" => 1
+        ));
+        ProductoDAO::save($producto);
 
-        //metele productos
         $r = AlmacenesController::EntradaLote( $nLote["id_lote"], array(
                 array( "id_producto" => $producto->getIdProducto(),
-                        "cantidad" => 123 )
+                       "cantidad" => 23 )
             ));
 
         //Vamos a validar estas tablas
-        //LoteEntradaDAO::
         $this->assertNotNull(LoteEntradaDAO::getByPK($r["id_entrada_lote"]));
 
-        //LoteProductoDAO::
         $this->assertNotNull( LoteProductoDAO::getByPK( $nLote["id_lote"], $producto->getIdProducto() ));        
 
-        //LoteEntradaProductoDAO::
         $this->assertNotNull( LoteEntradaProductoDAO::getByPK( $r["id_entrada_lote"], $producto->getIdProducto(), 1 ));
 
-
         //sacar de ese lote, uno por uno hasta llegar a retirar todo
-        for ($i=0; $i < 123; $i++) { 
+        for ($i=0; $i < 23; $i++) {
             AlmacenesController::SalidaLote( $nLote["id_lote"], array(
-                array( "id_producto" => $producto->getIdProducto(),
-                        "cantidad" => 1 )
-            )) ;
-        }
-        
-        //la siguiente vez que retire algo, debe de arrojar una exception
-        try{
-            AlmacenesController::SalidaLote( $nLote["id_lote"], array(
-                array( "id_producto" => $producto->getIdProducto(),
-                        "cantidad" => 1 )
-            )) ;
-        }catch(InvalidDataException $ivde){
-
+				array( "id_producto" => $producto->getIdProducto(),
+						"cantidad" => 1,
+						"id_unidad" => 1
+				)));
         }
 
-        $this->assertNotNull($ivde);
+		Logger::log("la siguiente vez que retire algo, debe de arrojar una exception");
 
+		try{
+			AlmacenesController::SalidaLote(
+								$nLote["id_lote"],
+								array(
+									array( "id_producto" => $producto->getIdProducto(),
+										   "cantidad" => 1 ,
+										   "id_unidad" => 1
+									)
+								)
+						);
+			//esto nunca se deberia de ejecutar
+			$this->assertTrue(false);
+
+		} catch (InvalidDataException $ivde) {
+			$this->assertNotNull($ivde);
+		}
 	}
 
 

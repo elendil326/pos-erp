@@ -45,8 +45,6 @@ class UnidadMedidaDAO extends UnidadMedidaDAOBase
     }
 
     public static function convertir( $id_unidad_desde, $id_unidad_destino, $cantidad_desde) {
-        //Logger::log("<<<<<<<<<< se recibieron  ( {$id_unidad_desde}, {$id_unidad_destino}, {$cantidad_desde} ) >>>>>>>>>>>>>");
-    
         //buscar esas unidades
         $x = self::getByPK( $id_unidad_desde );
         $y = self::getByPK( $id_unidad_destino );
@@ -62,9 +60,7 @@ class UnidadMedidaDAO extends UnidadMedidaDAOBase
             throw new BusinessLogicException("No se pueden convertir entre diferentes categorias");
         }
 
-        //regresar
         $r = ($x->getFactorConversion() * $c / $y->getFactorConversion());
-        Logger::log("<<<<<<<<<< se transformaron {$cantidad_desde} " . UnidadMedidaDAO::getByPK($id_unidad_desde)->getAbreviacion() .  " a {$r}  " . UnidadMedidaDAO::getByPK($id_unidad_destino)->getAbreviacion() .  " >>>>>>>>>>>>>");
         return $r;
     }
 }

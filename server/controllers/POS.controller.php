@@ -244,6 +244,10 @@ class POSController implements IPOS {
 
         $conn->Execute("TRUNCATE TABLE `almacen`; ");
 
+		$conn->Execute("TRUNCATE TABLE `lote`; ");
+
+		$conn->Execute("TRUNCATE TABLE `lote_producto`; ");
+
         $conn->Execute("TRUNCATE TABLE `empresa`; ");
 
         $conn->Execute("TRUNCATE TABLE `clasificacion_cliente`; ");

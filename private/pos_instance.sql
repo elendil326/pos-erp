@@ -869,7 +869,7 @@ CREATE TABLE IF NOT EXISTS `empresa` (
   `activo` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Si esta empresa esta activa o no',
   `direccion_web` varchar(20) DEFAULT NULL COMMENT 'Direccion web de la empresa',
   `cedula` varchar(100) CHARACTER SET armscii8 DEFAULT NULL,
-  `id_logo` int(11) NOT NULL,
+  `id_logo` int(11) NULL,
   `mensaje_morosos` text CHARACTER SET utf8 COMMENT 'Mensaje para clientes y proveedores morosos',
   PRIMARY KEY (`id_empresa`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='tabla de empresas' AUTO_INCREMENT=1 ;
@@ -1470,7 +1470,7 @@ CREATE TABLE IF NOT EXISTS `producto` (
   `id_producto` int(11) NOT NULL AUTO_INCREMENT,
   `id_clasificacion_producto` int(11) DEFAULT NULL COMMENT 'Id de la clasificacion del producto',
   `compra_en_mostrador` tinyint(1) NOT NULL COMMENT 'Verdadero si el producto se puede comprar en mostrador',
-  `visible_en_vc` tinyint(1) NOT NULL COMMENT '1 para mostrar el productos en VC.',
+  `visible_en_vc` tinyint(1)  NULL COMMENT '1 para mostrar el productos en VC.',
   `metodo_costeo` enum('precio','costo','variable') NOT NULL COMMENT 'Si el precio se toma del precio base o del costo del producto',
   `activo` tinyint(1) NOT NULL COMMENT 'Si el producto esta activo o no',
   `codigo_producto` varchar(128) NOT NULL COMMENT 'Codigo interno del producto',
@@ -1841,7 +1841,7 @@ CREATE TABLE IF NOT EXISTS `sesion` (
 CREATE TABLE IF NOT EXISTS `sucursal` (
   `id_sucursal` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Id de la tabla sucursal',
   `id_direccion` int(11) NOT NULL COMMENT 'Id de la direccion de la sucursal',
-  `id_tarifa` int(11) NOT NULL COMMENT 'Id de la tarifa por default',
+  `id_tarifa` int(11) NULL COMMENT 'Id de la tarifa por default',
   `descripcion` varchar(255) DEFAULT NULL COMMENT 'Descrpicion de la sucursal',
   `id_gerente` int(11) DEFAULT NULL COMMENT 'Id del usuario que funje como gerente general de la sucursal',
   `fecha_apertura` int(11) NOT NULL COMMENT 'Fecha en que se creo la sucursal',
