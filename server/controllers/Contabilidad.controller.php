@@ -201,13 +201,13 @@ require_once("interfaces/Contabilidad.interface.php");
 		return array("resultados" => $cuentas);
 	}
 
-	public function ListarCatalogosCuentas()
+	public static function ListarCatalogosCuentas()
 	{
 		$catalogos = CatalogoCuentasDAO::getAll();
 		return array("resultados" => $catalogos);
 	}
 
-	public function ListarCuentasConceptosGastos(){
+	public static function ListarCuentasConceptosGastos(){
 
 		$ctas = self::BuscarCuenta(1, $afectable = "", $clasificacion = "Egresos",
 								$clave = "", $consecutivo_en_nivel = "", $es_cuenta_mayor = "",
@@ -228,7 +228,7 @@ require_once("interfaces/Contabilidad.interface.php");
 		return $x;
 	}
 
-	public function ObtenerTodasSubcuentasCuentaContable($id){
+	public static function ObtenerTodasSubcuentasCuentaContable($id){
 
 		$hijos = self::BuscarCuenta(1, $afectable = "", $clasificacion = "",
 								$clave = "", $consecutivo_en_nivel = "", $es_cuenta_mayor = "",
@@ -246,7 +246,7 @@ require_once("interfaces/Contabilidad.interface.php");
 		return $hijos;
 	}
 
-	public function ListarCuentasConceptosIngresos(){
+	public static function ListarCuentasConceptosIngresos(){
 
 		$cc = self::BuscarCuenta(1, $afectable = "", $clasificacion = "Capital Contable",
 								$clave = "", $consecutivo_en_nivel = "", $es_cuenta_mayor = "",
@@ -285,7 +285,7 @@ require_once("interfaces/Contabilidad.interface.php");
 		return $res;
 	}
 
-	public function InsertarCuentasCategoriaContactos($nombre_cuenta,$id_categoria_contacto_padre){
+	public static function InsertarCuentasCategoriaContactos($nombre_cuenta,$id_categoria_contacto_padre){
 		$catalogo = CatalogoCuentasDAO::getAll();
 
 		if(count($catalogo)<1){
@@ -373,7 +373,7 @@ require_once("interfaces/Contabilidad.interface.php");
 
 	}
 
-	public function EditarNombreCuentasCategoriaContactos($id_categoria_contacto, $nombre_nuevo, $id_cat_padre_nueva){
+	public static function EditarNombreCuentasCategoriaContactos($id_categoria_contacto, $nombre_nuevo, $id_cat_padre_nueva){
 
 		$cat_contac = CategoriaContactoDAO::getByPK($id_categoria_contacto);
 
@@ -846,7 +846,7 @@ require_once("interfaces/Contabilidad.interface.php");
 		return object_to_array($cuenta);
 	}
 
-	public function DetalleCatalogoCuentas($id_catalogo_cuentas)
+	public static function DetalleCatalogoCuentas($id_catalogo_cuentas)
 	{
 		$catalogo = CatalogoCuentasDAO::getByPK($id_catalogo_cuentas);
 		if (is_null($catalogo)) {
@@ -855,7 +855,7 @@ require_once("interfaces/Contabilidad.interface.php");
 		return object_to_array($catalogo);
 	}
 
-	public function NuevoCatalogoCuentasEmpresa($id_empresa)
+	public static function NuevoCatalogoCuentasEmpresa($id_empresa)
 	{
 		$empresa = EmpresaDAO::getByPK($id_empresa);
 
@@ -884,7 +884,7 @@ require_once("interfaces/Contabilidad.interface.php");
 
 	}
 
-	public function InsertarCatalogoCuentasDefault($id_catalogo_cuentas)
+	public static function InsertarCatalogoCuentasDefault($id_catalogo_cuentas)
 	{
 		self::CuentasActivoCirculante($id_catalogo_cuentas);
 		self::CuentasActivoFijo($id_catalogo_cuentas);
@@ -897,7 +897,7 @@ require_once("interfaces/Contabilidad.interface.php");
 
 	}
 
-	public function CuentasActivoCirculante($id_catalogo_cuentas)
+	public static function CuentasActivoCirculante($id_catalogo_cuentas)
 	{
 		self::NuevaCuenta(0, 1,
 						'Activo Circulante', 1, 0, $id_catalogo_cuentas, 'Deudora', 
@@ -953,7 +953,7 @@ require_once("interfaces/Contabilidad.interface.php");
 						);
 	}
 
-	public function CuentasActivoFijo($id_catalogo_cuentas)
+	public static function CuentasActivoFijo($id_catalogo_cuentas)
 	{
 		self::NuevaCuenta(0, 1,
 						'Activo Fijo', 1, 0, $id_catalogo_cuentas, 'Deudora', 
@@ -981,7 +981,7 @@ require_once("interfaces/Contabilidad.interface.php");
 						);
 	}
 
-	public function CuentasActivoDiferido($id_catalogo_cuentas)
+	public static function CuentasActivoDiferido($id_catalogo_cuentas)
 	{
 		self::NuevaCuenta(0, 1,
 						'Activo Diferido', 1, 0, $id_catalogo_cuentas, 'Deudora', 
@@ -993,7 +993,7 @@ require_once("interfaces/Contabilidad.interface.php");
 						);
 	}
 
-	public function CuentasPasivoCirculante($id_catalogo_cuentas)
+	public static function CuentasPasivoCirculante($id_catalogo_cuentas)
 	{
 		self::NuevaCuenta(1, 0,
 						'Pasivo Circulante', 1, 0, $id_catalogo_cuentas, 'Acreedora', 
@@ -1021,7 +1021,7 @@ require_once("interfaces/Contabilidad.interface.php");
 						);
 	}
 
-	public function CuentasPasivoLargoPlazo($id_catalogo_cuentas)
+	public static function CuentasPasivoLargoPlazo($id_catalogo_cuentas)
 	{
 		self::NuevaCuenta(1, 0,
 						'Pasivo Largo Plazo', 1, 0, $id_catalogo_cuentas, 'Acreedora', 
@@ -1033,7 +1033,7 @@ require_once("interfaces/Contabilidad.interface.php");
 						);
 	}
 
-	public function CuentasCapitalContable($id_catalogo_cuentas)
+	public static function CuentasCapitalContable($id_catalogo_cuentas)
 	{
 		$capital_social = self::NuevaCuenta(1, 0,
 						'Capital Contable', 1, 0, $id_catalogo_cuentas, 'Acreedora', 
@@ -1049,7 +1049,7 @@ require_once("interfaces/Contabilidad.interface.php");
 						);
 	}
 
-	public function CuentasIngresos($id_catalogo_cuentas)
+	public static function CuentasIngresos($id_catalogo_cuentas)
 	{
 		self::NuevaCuenta(1, 0,
 						'Ingresos', 1, 0, $id_catalogo_cuentas, 'Acreedora', 
@@ -1061,7 +1061,7 @@ require_once("interfaces/Contabilidad.interface.php");
 						);
 	}
 
-	public function CuentasEgresos($id_catalogo_cuentas)
+	public static function CuentasEgresos($id_catalogo_cuentas)
 	{
 		self::NuevaCuenta(0, 1,
 						'Egresos', 1, 0, $id_catalogo_cuentas, 'Deudora', 

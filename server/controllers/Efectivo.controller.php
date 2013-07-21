@@ -727,10 +727,9 @@ class EfectivoController implements IEfectivo{
 	public static function NuevoCorteSucursal( $end_date = 0, $id_sucursal )
     {
 
-       
 	}
-    
-    /**
+
+	/**
     *
     * Obtendrá los tipos de cambio desde Yahoo o Google según sea el caso
     **/

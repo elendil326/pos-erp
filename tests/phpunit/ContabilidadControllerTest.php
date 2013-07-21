@@ -9,8 +9,8 @@ class ContabilidadControllerTest extends PHPUnit_Framework_TestCase
     {
         $dir = new Direccion();
         $dir->setIdUsuarioUltimaModificacion(1);
-        $dir->setUltimaModificacion(mktime());
-        $dir->setCalle("Calle: ".mktime());
+        $dir->setUltimaModificacion(time());
+        $dir->setCalle("Calle: ".time());
 
         DAO::transBegin();
         try {
@@ -28,7 +28,7 @@ class ContabilidadControllerTest extends PHPUnit_Framework_TestCase
         $empresa->setRazonSocial("Razon Social - ".time());
         $empresa->setRfc(time());
         $empresa->setIdDireccion($dir->getIdDireccion());
-        $empresa->setFechaAlta(mktime());
+        $empresa->setFechaAlta(time());
         $empresa->setIdLogo(1);
         $empresa->setActivo(1);
 
@@ -67,8 +67,8 @@ class ContabilidadControllerTest extends PHPUnit_Framework_TestCase
 
         $dir = new Direccion();
         $dir->setIdUsuarioUltimaModificacion(1);
-        $dir->setUltimaModificacion(mktime());
-        $dir->setCalle("Calle: ".mktime());
+        $dir->setUltimaModificacion(time());
+        $dir->setCalle("Calle: ".time());
 
         DAO::transBegin();
         try {
@@ -86,7 +86,7 @@ class ContabilidadControllerTest extends PHPUnit_Framework_TestCase
         $empresa->setRazonSocial("Razon Social - ".time());
         $empresa->setRfc(time());
         $empresa->setIdDireccion($dir->getIdDireccion());
-        $empresa->setFechaAlta(mktime());
+        $empresa->setFechaAlta(time());
         $empresa->setIdLogo(1);
         $empresa->setActivo(1);
 

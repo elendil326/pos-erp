@@ -84,8 +84,7 @@ class CategoriasUdmTest extends PHPUnit_Framework_TestCase {
 
     private function buscar($activa, $query, $qty) {
         $resultado = ProductosController::BuscarCategoriaUdm($activa=$activa, $descripcion=$query);
-        $categorias = $resultado['resultados'];
-        $this->assertEquals(count($categorias), $qty);
+        $this->assertEquals($qty, count($resultado['resultados']));
     }
 
     // - - Crear - - //
