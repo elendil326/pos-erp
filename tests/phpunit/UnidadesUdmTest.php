@@ -34,14 +34,14 @@ class UnidadesUdmTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-    * @expectedException BusinessLogicException
+    * @expectedException InvalidDatabaseOperationException
     */
     public function testNuevaAbreviacionYaExiste() {
         ProductosController::NuevaUnidadUdm('m', 'd', 1, 1, "Referencia UdM para esta categoria");
     }
 
     /**
-    * @expectedException BusinessLogicException
+    * @expectedException InvalidDatabaseOperationException
     */
     public function testNuevaDescripcionYaExiste() {
         ProductosController::NuevaUnidadUdm('z', 'Metro', 1, 1, "Referencia UdM para esta categoria");
@@ -55,26 +55,29 @@ class UnidadesUdmTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-    * @expectedException BusinessLogicException
+    * @expectedException InvalidDatabaseOperationException
     */
     public function testNuevaFactorCero() {
         ProductosController::NuevaUnidadUdm('a', 'd', 0, 1, "Referencia UdM para esta categoria");
     }
 
     /**
-    * @expectedException BusinessLogicException
+    * @expectedException InvalidDatabaseOperationException
     */
     public function testNuevaFactorNegativo() {
         ProductosController::NuevaUnidadUdm('a', 'd', -1, 1, "Referencia UdM para esta categoria");
     }
 
     /**
-    * @expectedException BusinessLogicException
+    * @expectedException InvalidDatabaseOperationException
     */
     public function testNuevaTipoInvalido() {
         ProductosController::NuevaUnidadUdm('a', 'd', 1, 1, "XD");
     }
-
+    
+    /**
+    * @expectedException InvalidDatabaseOperationException
+    */
     public function testNuevaReferencia() {
         $resultado = ProductosController::NuevaUnidadUdm('a', 'd', 90, 1, "Referencia UdM para esta categoria");
         $id_unidad = $resultado['id_unidad_medida'];
@@ -83,6 +86,9 @@ class UnidadesUdmTest extends PHPUnit_Framework_TestCase {
         UnidadMedidaDAO::delete($unidad);
     }
 
+    /**
+    * @expectedException InvalidDatabaseOperationException
+    */
     public function testNuevaMenor() {
         $resultado = ProductosController::NuevaUnidadUdm('a', 'd', 10, 1, "Menor que la UdM de referencia");
         $id_unidad = $resultado['id_unidad_medida'];
