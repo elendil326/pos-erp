@@ -9,13 +9,16 @@ class UnidadesUdmTest extends PHPUnit_Framework_TestCase {
     // - - Buscar - - //
     public function testBuscarTodas() {
     	$resultado = ProductosController::BuscarUnidadUdm();
-    	$this->assertEquals(count($resultado['resultados']), 7);
+        $this->assertEquals("ok",$resultado['status']);
+        $this->assertGreaterThan(0,count($resultado["resultados"]));
+    	$this->assertInternalType("array",$resultado['resultados']);
     }
 
     public function testBuscarConQuery() {
     	$resultado = ProductosController::BuscarUnidadUdm('m');
-        $unidades = $resultado['resultados'];
-        $this->assertEquals(count($unidades), 6);
+        $this->assertEquals("ok",$resultado['status']);
+        $this->assertGreaterThan(0,count($resultado["resultados"]));
+        $this->assertInternalType("array",$resultado['resultados']);
     }
 
     // - - Nueva - - //
