@@ -8,9 +8,9 @@ require_once("../../server/bootstrap.php");
 
 
 class ServiciosControllerTest extends PHPUnit_Framework_TestCase {
-	
+
 	private $cservicio ;
-	
+
 	protected function setUp(){
 		Logger::log("-----------------------------");
 
@@ -25,32 +25,32 @@ class ServiciosControllerTest extends PHPUnit_Framework_TestCase {
 		}
 
 
-		
+
 
 	}
-	
-	
-	
+
+
+
 	public function testBuscarEliminarYNuevo(){
-		
+
 		//buscar el servicio que se llama prestamo
 
 		$servs = ServiciosController::Buscar();
-		
+
 		$this->assertEquals( $servs["numero_de_resultados"], sizeof($servs["resultados"]) );
-		
+
 		$old_size = sizeof($servs["resultados"]);
-		
+
 		for ($i=0; $i < $servs["numero_de_resultados"]; $i++) { 
 			$s = $servs["resultados"][$i]->asArray();
 			if(($s["nombre_servicio"] == "prestamo") && ($s["activo"] == 1) ){
 				ServiciosController::Eliminar( $s["id_servicio"] );
 			}
 		}
-		
+
 
 		$this->cservicio = "CA91" . time();
-		
+
 		$s = ServiciosController::Nuevo(
 			$codigo_servicio = $this->cservicio,  
 			$compra_en_mostrador=false, 
@@ -58,17 +58,17 @@ class ServiciosControllerTest extends PHPUnit_Framework_TestCase {
 			$metodo_costeo = "variable", 
 			$nombre_servicio = $this->cservicio
 		);
-		
+
 		$servs = ServiciosController::Buscar();
-		
+
 		$this->assertGreaterThan($old_size, $servs["numero_de_resultados"]);
 	}
 
 
 
 	/**
-     * @expectedException BusinessLogicException
-     */
+	 * @expectedException BusinessLogicException
+	 */
 	public function testInsertarCodigoRepetido(){
 		$s = ServiciosController::Nuevo(
 			$codigo_servicio = $this->cservicio,  
@@ -78,7 +78,7 @@ class ServiciosControllerTest extends PHPUnit_Framework_TestCase {
 			$nombre_servicio = $this->cservicio
 		);
 	}
-	
+
 	/*
 	public function testBuscarSoloActivos(){
 		$servs_todos = ServiciosController::Buscar();
@@ -87,24 +87,21 @@ class ServiciosControllerTest extends PHPUnit_Framework_TestCase {
 		$this->assertGreaterThan($servs_activos["numero_de_resultados"] , $servs_todos["numero_de_resultados"] );
 	}
 	*/
-	
+
 	public function testBuscarEliminarYNuevaCategoria(){
 		//buscar la categoria
-		
+
 		//eliminarla si existe
-		
+
 		//insertarla de nuevo
-		
+
 		//buscar la categoria
 	}
-	
 
-	
-	/**
-     * @expectedException BusinessLogicException
-     */
+
+
 	public function testNuevaOrdenSinCreditoSuficiente(){
-		
+
 		$s = ServiciosController::Nuevo(
 			$codigo_servicio 		= "testNuevoServicio-2db94458" . time(), 
 			$compra_en_mostrador	= false, 
@@ -123,10 +120,10 @@ class ServiciosControllerTest extends PHPUnit_Framework_TestCase {
 			$precio 				= 1542.15, 
 			$retenciones			= null, 
 			$sucursales 			= null
-		
+
 		);
-	
-		
+
+
 
 		$c = ClientesController::nuevo( "testNuevaOrdenCliente -2db94458" . time() );
 
@@ -134,16 +131,17 @@ class ServiciosControllerTest extends PHPUnit_Framework_TestCase {
 				$c["id_cliente"], 
 				$s["id_servicio"]  
 		);
-		
+
+
 
 	}
-	
-	
-	
-	
+
+
+
+
 
 	public function testNuevaOrden(){
-		
+
 		$s = ServiciosController::Nuevo(
 			$codigo_servicio 		= "testNuevoServicio-2db94458_2" . time(), 
 			$compra_en_mostrador	= false, 
@@ -163,8 +161,8 @@ class ServiciosControllerTest extends PHPUnit_Framework_TestCase {
 			$retenciones			= null, 
 			$sucursales 			= null
 		);
-	
-		
+
+
 
 		$c = ClientesController::Nuevo(
 				$razon_social =  "testNuevaOrden-2db9445f" . time() , 
@@ -187,42 +185,40 @@ class ServiciosControllerTest extends PHPUnit_Framework_TestCase {
 				$sitio_web = null, 
 				$telefono_personal1 = null, 
 				$telefono_personal2 = null);
-		
-		
+
+
 		Logger::testerLog("Nueva orde de servicio (" . $c["id_cliente"] .", ". $s["id_servicio"] ." )");
-		
+
 		$o = ServiciosController::NuevaOrden(
 				$c["id_cliente"], 
 				$s["id_servicio"]  
 		);
-		
-	    $this->assertInternalType("int", $o["id_orden"]);
-		$this->assertInternalType("int", $o["id_venta"]);
 
-		define("_pos_phpunit_servicios_id_cliente", $c["id_cliente"]);	
+		$this->assertInternalType("int", $o["id_orden"]);
+
+		define("_pos_phpunit_servicios_id_cliente", $c["id_cliente"]);
 		define("_pos_phpunit_servicios_id_servicio", $s["id_servicio"]);
-		
-		
+
+
 		//ok ya que se hizo el servicio, ver que se halla creado
 		//una venta a credito a este cliente
+		/*
+		El metodo de ServiciosController::NuevaOrden no genera una venta a credito, por lo tanto no se valida esta parte
 		$lista_de_ventas = VentasController::Lista();
-		
+
 		$found = false;
-		
+
 		for ($i=0; $i < $lista_de_ventas["numero_de_resultados"]; $i++) { 
 			if($lista_de_ventas["resultados"][$i]["cliente"]["id_cliente"] == $c["id_cliente"]){
 				$found = true;
 			}
 		}
-		
+
 		$this->assertTrue($found);
-
-
 		//vamos a buscar que ese cliente ya no tenga limite de credito
 		$u = UsuarioDAO::getByPK($c["id_cliente"]);
-		
+
 		$this->assertEquals( 0, $u->getLimiteCredito() );
-		
 		//hacerle un abono
 		CargosYAbonosController::NuevoAbono( 
 			$c["id_cliente"], 
@@ -232,60 +228,63 @@ class ServiciosControllerTest extends PHPUnit_Framework_TestCase {
 			null, 
 			null, 
 			null, 
-			$o["id_venta"] );
-			
+			null,
+			null );
+		*/
+
+
 
 	}
-	
-	
+
+
 	/**
-     * @expectedException BusinessLogicException
-     */
+	 * @expectedException BusinessLogicException
+	 */
 	public function testElimnarServicioConOrdenes(){
 		//no se debe poder eliminar un id_servicio ya que hay una orden activa en ese servicio
-        ServiciosController::Eliminar(_pos_phpunit_servicios_id_servicio);
+		ServiciosController::Eliminar(_pos_phpunit_servicios_id_servicio);
 
-		
+
 	}
-	
-	
-	
+
+
+
 	public function testListaYNuevoSeguimiento(){
-		
-		
+
+
 		//buscar la ultima orden de servicio
 		$ordns = ServiciosController::ListaOrden();
 		
 		$this->assertInternalType("int", $ordns["numero_de_resultados"]);
 		$orden_de_servicio_id = null;
-		
+
 		for ($i=0; $i < $ordns["numero_de_resultados"]; $i++) { 
-			
+
 			$o = $ordns["resultados"][$i]->asArray();
-			
+
 			//Logger::log($o["id_usuario_venta"] ."=======". $cliente["id_usuario"]);
-			
+
 			if($o["id_usuario_venta"] == _pos_phpunit_servicios_id_cliente){
 
 				$orden_de_servicio_id = $o["id_orden_de_servicio"];
 			}
 		}
 		define("_pos_phpunit_servicios_orden_de_servicio" , $o["id_orden_de_servicio"]);
-		
+
 		$this->assertFalse( is_null($orden_de_servicio_id) );
-		
+
 		ServiciosController::SeguimientoOrden($orden_de_servicio_id, null, null, "nota para la orden");
-		
-		
+
+
 	}
-	
-	
-	
+
+
+
 	public function testBuscarSeguimientosDeOrden(){
 		$lista = ServiciosController::ListaOrden(  );
-		
+
 		$this->assertInternalType('int', $lista["numero_de_resultados"]);
-		
+
 		//debe haber por lo menos un resultado
 		$this->assertGreaterThan( 0, $lista["numero_de_resultados"] );
 
@@ -293,14 +292,14 @@ class ServiciosControllerTest extends PHPUnit_Framework_TestCase {
 
 		//insertar un seguimiento...
 		ServiciosController::SeguimientoOrden(_pos_phpunit_servicios_orden_de_servicio, null, null, "nota para la orden 2");
-		
-		
+
+
 		//$lista = ServiciosController::ListaOrden(  );
-		
+
 		//$this->assertEquals( $lista["numero_de_resultados"], $old + 1);
 	}
-	
-	
+
+
 	public function testEditarServicio(){
 
 		//Crear un nuevo servicio
@@ -324,8 +323,8 @@ class ServiciosControllerTest extends PHPUnit_Framework_TestCase {
 			$sucursales = null
 
 			);
-		
-		
+
+
 		//Editar el servicio, (descripcion)
 		ServiciosController::Editar(
 			$id_servicio = $s["id_servicio"], 
@@ -346,9 +345,9 @@ class ServiciosControllerTest extends PHPUnit_Framework_TestCase {
 			$sucursales = null
 		);
 
-		
-	}
-	
 
-	
+	}
+
+
+
 }
