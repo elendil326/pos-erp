@@ -2,120 +2,92 @@
 
 	require_once("../../server/bootstrap.php");
 
-	if(!defined("BYPASS_INSTANCE_CHECK")) {
-			define("BYPASS_INSTANCE_CHECK", true);
+	if (!defined("BYPASS_INSTANCE_CHECK")) {
+		define("BYPASS_INSTANCE_CHECK", true);
 	}
 
 class InstanciasControllerTest extends PHPUnit_Framework_TestCase {
-	private static $instance_id;
-	private static $TokenInstancia;
 
-	public function testNuevaInstancia( ) {
-			self::$instance_id = InstanciasController::Nueva(null, "Instacia para unit testing" );
-			Logger::log("creada instancia " . self::$instance_id);
-			if (is_null(self::$instance_id)) {
-				$this->assertTrue(false);
-			} else {
-			}
+	private $id_instancia;
+	private $token;
+
+	public function testNuevaInstancia() {
+		global $id_instancia;
+		$id_instancia = InstanciasController::Nueva(null, "Instacia para unit testing" );
+		$this->assertInternalType('int', $id_instancia);
 	}
 
-	public function testBuscarInstanciaID( ) {
-		Logger::log(self::$instance_id);
-		if (is_null($i=InstanciasController::BuscarPorId(self::$instance_id))) {
-			$this->assertTrue(false);
+	public function testBuscarInstanciaID() {
+		global $id_instancia, $token;
 
-		} else{
-			self::$TokenInstancia=$i["instance_token"];
+		$instancia = InstanciasController::BuscarPorId($id_instancia);
+		$response = is_array($instancia);
+
+		$this->assertTrue($response);
+
+		if ($response == true) {
+			$token = $instancia["instance_token"];
+		} else {
+			$token = INSTANCE_TOKEN;
 		}
 	}
 
 	public function testBuscarInstanciaToken() {
-		if (is_null(InstanciasController::BuscarPorToken(self::$TokenInstancia))) {
-			$this->assertTrue(false);
-		}
+		global $token;
+		$this->assertTrue(is_array(InstanciasController::BuscarPorToken($token)));
 	}
 
 	public function testEliminarInstancia() {
-
-		if (!is_null(InstanciasController::Eliminar(self::$TokenInstancia))) {
-                        //echo "\tInstancia eliminada con exito\n";
-		} else {
-                        //echo "\tError al eliminar la instancia\n";
-			$this->assertTrue(false);
-		}
-	}
-
-	public function testRespaldarBD() {
-
-		if (is_null(InstanciasController::Respaldar_Instancias(json_encode(array(self::$instance_id))))) {
-                        //echo "\tRespaldo exitoso\n";
-		} else{
-                        //echo "\tSe ha producido un error al realizar el respaldo\n";
-			$this->assertTrue(false);
-		}
-	}
-
-	public function testRestarurarBD() {
-		//echo " >> Intentando restaurar la base de datos\n";
-		if (!is_null(InstanciasController::Restaurar_Instancias(json_encode(array(self::$instance_id))))) {
-			//echo "\tRestauración exitosa\n";
-		} else {
-			//echo "\tSe ha producido un error al realizar la restauración\n";
-			$this->assertTrue(false);
-		}
+		global $id_instancia;
+		$this->assertNull(InstanciasController::Eliminar($id_instancia));
+		$this->assertNull(InstanciasController::BuscarPorId($id_instancia));
 	}
 
 	public function testComprobarPermisos() {
-		$CarpetaRespaldos=(POS_PATH_TO_SERVER_ROOT . "/../static_content/db_backups/");
-		//echo " >> Comprobando permisos totales de: $CarpetaRespaldos\n";
-		//Comprueba los permisos de la carpeta
-		if (strcmp(0777,(substr(decoct(fileperms($CarpetaRespaldos)),2)))) {
-			//echo "\tOk: Permisos correctos: 0777\n";
-		} else {
-			//echo " \tError, los permisos no son los correctos: " . (substr(decoct(fileperms($CarpetaRespaldos)),2)) . "\n";
-			$this->assertTrue(false);
-		}
+		$this->assertTrue(is_writable(POS_PATH_TO_SERVER_ROOT . "/../static_content/db_backups/"));
+	}
+
+	public function testRespaldarBD() {
+		$numero_respaldos_original = count(glob(POS_PATH_TO_SERVER_ROOT . "/../static_content/db_backups/{*}",GLOB_BRACE));
+		$this->assertNull(InstanciasController::Respaldar_Instancias(array(IID)));
+		$numero_respaldos_modificado = count(glob(POS_PATH_TO_SERVER_ROOT . "/../static_content/db_backups/{*}",GLOB_BRACE));
+		$this->assertGreaterThan($numero_respaldos_original, $numero_respaldos_modificado);
+	}
+
+	public function testRestarurarBD() {
+		$this->assertNull(InstanciasController::Restaurar_Instancias(array(IID)));
 	}
 
 	public function testComprobarArchivos() {
-		$CarpetaRespaldos=(POS_PATH_TO_SERVER_ROOT . "/../static_content/db_backups/");
-		$nArchivos=0;
-		$directorio=dir($CarpetaRespaldos);
-		$d1=date("d",time());$d2;//Dia Actual
-		$m1=date("m",time());$m2;//Mes actual
-		$a1=date("y",time());$a2;//Año actual
-		//echo " >> Comprobando archivos:\n";
+		$CarpetaRespaldos = (POS_PATH_TO_SERVER_ROOT . "/../static_content/db_backups/");
+		$nArchivos = 0;
+		$directorio = dir($CarpetaRespaldos);
+		$d1 = date("d",time());
+		//Dia Actual
+		$d2 = null;
+		$m1 = date("m",time());
+		//Mes actual
+		$m2 = null;
+		$a1 = date("y",time());
+		//Año actual
+		$a2 = null;
+
 		while ($archivo = $directorio->read()) {
 			//Cada nombre de archivo debe medir 30 caracteres
 			if (strlen($archivo)>2) {
-				$d2=date("d",fileatime($CarpetaRespaldos.$archivo));
-				$m2=date("m",fileatime($CarpetaRespaldos.$archivo));
-				$a2=date("y",fileatime($CarpetaRespaldos.$archivo));
-				if ((substr($archivo, 10,14)=="_pos_instance_")&&(substr($archivo, strlen($archivo)-4,4)==".sql")) {
-					//echo "\tOk >> Archivo encontrado: ".$archivo." (" . date("d/m/y",fileatime($CarpetaRespaldos.$archivo)) . ")\n"; 
+				$d2 = date("d",fileatime($CarpetaRespaldos.$archivo));
+				$m2 = date("m",fileatime($CarpetaRespaldos.$archivo));
+				$a2 = date("y",fileatime($CarpetaRespaldos.$archivo));
+				if ((substr($archivo, 10,14) == "_pos_instance_") && (substr($archivo, strlen($archivo)-4,4) == ".sql")) {
 					$nArchivos++;
 				}
 
-				if ($d1>($d2+7)||$m1>$m2||$a1>$a2&&((substr($archivo, 10,14)=="_pos_instance_")&&(substr($archivo, strlen($archivo)-3,3)=="sql"))) {
-					//echo "\tBorrando respaldo archivo Antiguo: ' " . $archivo . " ' \n";
+				if ($d1>($d2+7) || $m1 > $m2 || $a1 > $a2 && ((substr($archivo, 10,14) == "_pos_instance_") && (substr($archivo, strlen($archivo)-3,3) == "sql"))) {
 					//Comprueba que se borró correctamente el archivo viejo
-					if (unlink($CarpetaRespaldos.$archivo)) {
-						//echo "\t!!Archivo borrado correctamente¡¡\n";
-						$this->assertTrue(true);
-					} else {
-						//echo "\t¡¡Error al borrar el archivo\n";
-						$this->assertTrue(false);
-					}
+					$this->assertTrue(unlink($CarpetaRespaldos.$archivo));
 				}
 			}
 		}
 		$directorio->close();
-		//echo "\tComprobando si existen al menos 7 respaldos\n";
-		if ($nArchivos>6) {
-			//echo "\tOk: Hay al menos 7 respaldos válidos\n";
-		} else {
-			//echo "\tError, no hay por lo menos 7 respaldos válidos\n";
-			$this->assertEquals(7,$nArchivos);//Comprueba que existen al menos 7 respaldos
-		}
 	}
 }
