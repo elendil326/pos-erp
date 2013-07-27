@@ -47,8 +47,7 @@ class EmpresasControllerTest extends PHPUnit_Framework_TestCase {
 			"telefono1"  		=> "4616149974",
 			"telefono2"			=> "45*451*454"
 		);
-
-		$id_moneda = 1;
+		
 		$razon_social = "Caffeina Software".time();
 		$rfc  = "GOHA".time();
 
@@ -58,20 +57,27 @@ class EmpresasControllerTest extends PHPUnit_Framework_TestCase {
 			EmpresasController::Eliminar( $empObj->getIdEmpresa() );
 		}
 
+		$c = new stdClass();
+		$c->id_moneda			= 1;
+		$c->ejercicio			= "2013";
+		$c->periodo_actual		= 1;
+		$c->duracion_periodo	= 1;
+
 		$this->_empresa = EmpresasController::Nuevo(
-				$direccion 			= array( $direccion ), 
-				$id_moneda			= 1, 
-				$razon_social		= time()	."a",
-				$rfc				= time()	."b",
-				$cedula 			= time()	."c", 
-				$email				= time()	."d", 
-				$impuestos_compra 	= null, 
-				$impuestos_venta 	= null, 
-				$logo 				= time()	."e",
-				$representante_legal = time()	."f", 
-				$sucursales 		= null, 
-				$texto_extra 		= time()	."g"
-			);
+			$contabilidad		= $c,
+			$direccion 			= array( $direccion ), 				
+			$razon_social,
+			$rfc,
+			$cuentas_bancarias	= null,
+			$direccion_web		= null,
+			$duplicar			= false,
+			$email				= time()	."d", 
+			$impuestos_compra 	= null, 
+			$impuestos_venta 	= null,
+			$mensajes_morosos	= null,
+			$representante_legal= null,				
+			$uri_logo			= null
+		);
 
 		$this->assertInternalType('int', $this->_empresa["id_empresa"] );
 
@@ -87,17 +93,17 @@ class EmpresasControllerTest extends PHPUnit_Framework_TestCase {
     */
 	public function testNuevoEmpresaMismoNombre(){
 		$direccion = Array(
-			"calle"  			=> "Calle ".time(),
-	        "numero_exterior"   => "107",
-	        "colonia"  			=> "Colonia ".time(),
-	        "id_ciudad"  		=> 334,
-	        "codigo_postal"  	=> "38060",
-	        "numero_interior"  	=> null,
-	        "texto_extra"  		=> null,
-	        "telefono1"  		=> "4616149974",
-	        "telefono2"			=> "45*451*454"
+			"calle"				=> "Calle ".time(),
+			"numero_exterior"	=> "107",
+			"colonia"			=> "Colonia ".time(),
+			"id_ciudad"			=> 334,
+			"codigo_postal"		=> "38060",
+			"numero_interior"	=> null,
+			"texto_extra"		=> null,
+			"telefono1"			=> "4616149974",
+			"telefono2"			=> "45*451*454"
 		);
-		
+
 		$id_moneda = 1;
 		$razon_social = "Caffeina Software".time();
 		$rfc  = "GOHA".time();
@@ -108,21 +114,45 @@ class EmpresasControllerTest extends PHPUnit_Framework_TestCase {
 			EmpresasController::Eliminar( $empObj->getIdEmpresa() );
 		}
 
+		$contabilidad = new stdClass();
+		$contabilidad->id_moneda			= 1;
+		$contabilidad->ejercicio			= "2013";
+		$contabilidad->periodo_actual		= 1;
+		$contabilidad->duracion_periodo	= 1;
+		
 		$this->_empresa = EmpresasController::Nuevo(
-				array($direccion), 
-				$id_moneda, 
-				$razon_social, 
-				$rfc
-			);
+			$contabilidad,
+			array($direccion), 
+			$razon_social, 
+			$rfc,
+			$cuentas_bancarias	= null,
+			$direccion_web		= null,
+			$duplicar			= false,
+			$email				= time()	."d", 
+			$impuestos_compra 	= null, 
+			$impuestos_venta 	= null,
+			$mensajes_morosos	= null,
+			$representante_legal= null,				
+			$uri_logo			= null
+		);
 
 		$this->assertInternalType('int', $this->_empresa["id_empresa"] );
 		//se trata de ingresar una empresa con los mismos datos
 		$this->_empresa = EmpresasController::Nuevo(
-				array($direccion), 
-				$id_moneda, 
-				$razon_social, 
-				$rfc
-			);
+			$contabilidad,
+			array($direccion), 
+			$razon_social, 
+			$rfc,
+			$cuentas_bancarias	= null,
+			$direccion_web		= null,
+			$duplicar			= false,
+			$email				= time()	."d", 
+			$impuestos_compra 	= null, 
+			$impuestos_venta 	= null,
+			$mensajes_morosos	= null,
+			$representante_legal= null,				
+			$uri_logo			= null
+		);
 	}
 
 	public function testEditarEmpresa(){
@@ -137,52 +167,67 @@ class EmpresasControllerTest extends PHPUnit_Framework_TestCase {
 	        "telefono1"  		=> "4616149974",
 	        "telefono2"			=> "45*451*454"
 		);
-		
-		$id_moneda = 1;
-		$razon_social = "Caffeina Software-".time();
-		$rfc  = "GOHA-".time();
+				
+		$razon_social = "Caffeina Software-3".time();
+		$rfc  = "GOHA-3".time();
+
+		$contabilidad = new stdClass();
+		$contabilidad->id_moneda			= 1;
+		$contabilidad->ejercicio			= "2013";
+		$contabilidad->periodo_actual		= 1;
+		$contabilidad->duracion_periodo	= 1;
 
 		$nueva_empresa = EmpresasController::Nuevo(
-				array($direccion), 
-				$id_moneda, 
-				$razon_social, 
-				$rfc
-			);
+			$contabilidad,
+			array($direccion), 
+			$razon_social, 
+			$rfc,
+			$cuentas_bancarias	= null,
+			$direccion_web		= null,
+			$duplicar			= false,
+			$email				= time()	."d", 
+			$impuestos_compra 	= null, 
+			$impuestos_venta 	= null,
+			$mensajes_morosos	= null,
+			$representante_legal= null,				
+			$uri_logo			= null
+		);
 
 		$this->assertInternalType('int', $nueva_empresa["id_empresa"] );
 
 		$original = EmpresaDAO::getByPK( $nueva_empresa['id_empresa'] );
 		//se edita la empresa con los mismos datos
-		EmpresasController::Editar($id_empresa = $nueva_empresa['id_empresa'], 
-									$cedula = "cedula_".time(), //se cambia
-									$direccion = null, 
-									$email = null, 
-									$id_moneda = null, 
-									$impuestos_venta = null, 
-									$impuesto_compra = null, 
-									$logo = null, 
-									$razon_social = null, 
-									$representante_legal = null, 
-									$texto_extra = "Texto_".time());//se cambia
+
+		EmpresasController::Editar(
+			$id_empresa = $nueva_empresa['id_empresa'], 
+			$cuentas_bancarias = null,
+			$direccion = null,
+			$direccion_web = null,
+			$email = null,
+			$id_moneda = "1",
+			$impuestos_compra = null,
+			$impuestos_venta = null,
+			$mensaje_morosos = "Nuevo mensaje",
+			$razon_social = $razon_social . time() . time(),
+			$representante_legal = null,
+			$rfc = $rfc . time() . time(),
+			$uri_logo = null
+		);//se cambia
 
 		$editada = EmpresaDAO::getByPK( $nueva_empresa['id_empresa'] );
 		
-		//$this->assertNotEquals($editada->getCedula() , $original->getCedula(),"---- 'testEditarEmpresa' LA CEDULA NO SE ACTUALIZÓ");
-		//$this->assertNotEquals($editada->getTextoExtra() , $original->getTextExtra(),"---- 'testEditarEmpresa' LA TEXTO EXTRA NO SE ACTUALIZÓ");
+		$this->assertNotEquals($editada->getRfc() , $original->getRfc(),"---- 'testEditarEmpresa' El RFC no se actualizo");
+		$this->assertNotEquals($editada->getRazonSocial() , $original->getRazonSocial(),"---- 'testEditarEmpresa' LA razon social no se actualizo");
 	}
 
 	
 	public function testBuscar(){
 		try{
-			$busqueda = EmpresasController::Buscar();			
-			
+			$busqueda = EmpresasController::Buscar();
 		}catch(Exception $e){
 			Logger::error($e);
 			
 		}
-
-
-		
 		//debe haber por lo menos un resultado
 		if( $busqueda["numero_de_resultados"] == 0 ){
 			echo "REVISAR BUG EN DAOS. serch() debe regresar getAll() cuando no se envian parametros";
@@ -191,6 +236,4 @@ class EmpresasControllerTest extends PHPUnit_Framework_TestCase {
 		$this->assertInternalType('int', $busqueda["numero_de_resultados"]);
 		$this->assertEquals( $busqueda["numero_de_resultados"], sizeof( $busqueda["resultados"]));
 	}
-	
-
 }
