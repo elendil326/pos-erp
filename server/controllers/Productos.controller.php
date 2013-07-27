@@ -29,7 +29,7 @@ class ProductosController extends ValidacionesController implements IProductos {
         try {
             ClasificacionProductoDAO::save($categoria);
         } catch (Exception $e) {
-            throw new Exception("Error al crear categoria, verifique sus datos.", 901);
+            throw new BusinessLogicException("Error al crear categoria, verifique sus datos.", 901);
         }
 
         return array("id_categoria" => ((int) $categoria->getIdClasificacionProducto()));
@@ -1470,10 +1470,6 @@ class ProductosController extends ValidacionesController implements IProductos {
 		$id_sucursal = null
 	)
     {
-	
-	
-
-	
         if (!is_null($id_producto)) {
 		    Logger::log("Buscando producto por id_producto = $id_producto.... " );
 		
@@ -1492,8 +1488,6 @@ class ProductosController extends ValidacionesController implements IProductos {
 	        );
         } //!is_null($id_producto)
         
-
-
 		if (!is_null($id_sucursal)) {
 			Logger::log("Buscando producto por id_sucursal = $id_sucursal.... " );
 
@@ -1631,7 +1625,7 @@ class ProductosController extends ValidacionesController implements IProductos {
         ));
 
 
-        $n = CategoriaUnidadMedidaDAO::search( $cat_udm );
+        $n = CategoriaUnidadMedidaDAO::search($cat_udm);
         
         if(sizeof($n) > 0){
             throw new BusinessLogicException("Ya existe esta descripcion");

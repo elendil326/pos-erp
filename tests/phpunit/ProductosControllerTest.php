@@ -1,17 +1,7 @@
 <?php
-
-
-
 require_once("../../server/bootstrap.php");
 
-
-
-
-
 class ProductosControllerTest extends PHPUnit_Framework_TestCase {
-
-
-
 	protected function setUp(){
 		Logger::log("-----------------------------");
 
@@ -24,10 +14,6 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 			
 			$r = SesionController::Iniciar(123, 1, true);
 		}
-
-
-		
-		
 	}
 
 	public function RandomString($length=10,$uc=FALSE,$n=FALSE,$sc=FALSE)
@@ -50,37 +36,28 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 	    return $rstr;
 	}
 
-
-
-	public function testImportarProductos(){
-		
-
-
-		$p = ProductosController::Importar( file_get_contents("adminpaq.catalogo.productos.csv") );
-		
-		
-		
-		//$this->assertEquals(1,2);
-
+	public function testImportarProductos() {
+		$p = ProductosController::Importar( file_get_contents("adminpaq.catalogo.productos.csv"));
 	}
 
 
 /*	EN EL PROCESAMIENTO DEL Productos.controller.php SE REQUIRE QUE SE MANDE UN JSON DE CLASIFICACIONES, MISMO QUE NO ESTÁ EN LOS PARAMS DE LA INTERFAZ NI EN EL API*/
 
-	public function testNuevoProducto(){
+	public function testNuevoProducto() {
 			$codigo_p = self::RandomString(5,FALSE,FALSE,FALSE);
 			$nombre_p = self::RandomString(15,FALSE,FALSE,FALSE); 
 
 			$p = ProductosController::Nuevo(
-				$activo 			= true, 
-				$codigo_producto	= $codigo_p, 
-				$compra_en_mostrador = true, 
-				$id_unidad_compra	= 1, 
-				$metodo_costeo 		="costo", 
-				$nombre_producto 	= $nombre_p, 
-				$codigo_de_barras 	= null, 
+				$activo = true,
+				$codigo_producto = $codigo_p,
+				$compra_en_mostrador = true,
+				$id_unidad_compra = 1,
+				$metodo_costeo = "costo",
+				$nombre_producto = $nombre_p,
+				$visible_en_vc = true,
+				$codigo_de_barras = null, 
 				$control_de_existencia = null, 
-				$costo_estandar = 123, 
+				$costo_estandar = 10, 
 				$descripcion_producto = null, 
 				$foto_del_producto = null, 
 				$garantia = null, 
@@ -88,7 +65,8 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 				$id_empresas = null, 
 				$id_unidad = null, 
 				$impuestos = null, 
-				$precio_de_venta = 12 );
+				$precio_de_venta = null
+			);
 
 			$this->assertInternalType("int" , $p["id_producto"],"---- 'testNuevoProducto' 'id_producto' NO ES UN ENTERO");
 	}
@@ -97,47 +75,52 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
      * @expectedException BusinessLogicException
      */
 	public function testNuevoProductoConMismoNombre(){
-			//se crea un nuevo producto
-			$codigo_p = self::RandomString(5,FALSE,FALSE,FALSE);
-			$nombre_p = self::RandomString(15,FALSE,FALSE,FALSE); 
+		//se crea un nuevo producto
+		$codigo_p = self::RandomString(5,FALSE,FALSE,FALSE);
+		$nombre_p = self::RandomString(15,FALSE,FALSE,FALSE); 
 
-        	$p = ProductosController::Nuevo($activo= true, 
-											$codigo_producto = $codigo_p, 
-											$compra_en_mostrador = true, 
-											$costo_estandar=10, 
-											$id_unidad_compra = 1, 
-											$metodo_costeo="costo", 
-											$nombre_producto = $nombre_p, 
-											$codigo_de_barras = null, 
-											$control_de_existencia = null, 
-											$descripcion_producto = null, 
-											$foto_del_producto = null, 
-											$garantia = null, 
-											$id_categoria = null, 
-											$id_empresas = null, 
-											$id_unidad = null, 
-											$impuestos = null, 
-											$precio_de_venta = 12
-											);
-			$this->assertInternalType("int" , $p["id_producto"],"---- 'testNuevoProducto' 'id_producto' NO ES UN ENTERO");
-			//se trata de insertar otro producto con el mismo nombre y codigo
-			$p2 = ProductosController::Nuevo($activo= true, 
-											$codigo_producto = $codigo_p, 
-											$compra_en_mostrador = true, 
-											$costo_estandar=10, 
-											$id_unidad_compra = 1,
-											$metodo_costeo="costo",
-											$nombre_producto = $nombre_p, 
-											$codigo_de_barras = null, 
-											$control_de_existencia = null, 
-											$descripcion_producto = null, 
-											$foto_del_producto = null, 
-											$garantia = null, 
-											$id_categoria = null, 
-											$id_empresas = null, 
-											$id_unidad = null, 
-											$impuestos = null, 
-											$precio_de_venta = 12);			
+       	$p = ProductosController::Nuevo(
+       		$activo = true, 
+			$codigo_producto = $codigo_p, 
+			$compra_en_mostrador = true, 
+			$costo_estandar = 10, 
+			$id_unidad_compra = 1, 
+			$metodo_costeo = "costo", 
+			$nombre_producto = $nombre_p, 
+			$codigo_de_barras = null, 
+			$control_de_existencia = null, 
+			$descripcion_producto = null, 
+			$foto_del_producto = null, 
+			$garantia = null, 
+			$id_categoria = null, 
+			$id_empresas = null, 
+			$id_unidad = null, 
+			$impuestos = null, 
+			$precio_de_venta = 12
+		);
+
+		$this->assertInternalType("int" , $p["id_producto"],"---- 'testNuevoProducto' 'id_producto' NO ES UN ENTERO");
+			
+		//se trata de insertar otro producto con el mismo nombre y codigo
+		$p2 = ProductosController::Nuevo(
+			$activo= true, 
+			$codigo_producto = $codigo_p, 
+			$compra_en_mostrador = true, 
+			$costo_estandar=10, 
+			$id_unidad_compra = 1,
+			$metodo_costeo="costo",
+			$nombre_producto = $nombre_p, 
+			$codigo_de_barras = null, 
+			$control_de_existencia = null, 
+			$descripcion_producto = null, 
+			$foto_del_producto = null, 
+			$garantia = null, 
+			$id_categoria = null, 
+			$id_empresas = null, 
+			$id_unidad = null, 
+			$impuestos = null, 
+			$precio_de_venta = 12
+		);
 	}
 
 	public function testEditarProducto(){
@@ -145,24 +128,27 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 			$codigo_p = self::RandomString(5,FALSE,FALSE,FALSE);
 			$nombre_p = self::RandomString(15,FALSE,FALSE,FALSE); 
 			
-        	$p = ProductosController::Nuevo( $activo = true, 
-											$codigo_producto = $codigo_p, 
-											$compra_en_mostrador = true, 
-											$id_unidad_compra = 1 , 
-											$metodo_costeo = "costo", 
-											$nombre_producto = $nombre_p, 
-											$codigo_de_barras = null, 
-											$control_de_existencia = null, 
-											$costo_estandar = 10, 
-											$descripcion_producto = null, 
-											$foto_del_producto = null, 
-											$garantia = null, 
-											$id_categoria = null, 
-											$id_empresas = null, 
-											$id_unidad = null, 
-											$impuestos = null, 
-											$precio_de_venta = 12
-											);
+        	$p = ProductosController::Nuevo(
+        		$activo = true,
+				$codigo_producto = $codigo_p,
+				$compra_en_mostrador = true,
+				$id_unidad_compra = 1,
+				$metodo_costeo = "costo",
+				$nombre_producto = $nombre_p,
+				$visible_en_vc = true,
+				$codigo_de_barras = null,
+				$control_de_existencia = null,
+				$costo_estandar = 10,
+				$descripcion_producto = null,
+				$foto_del_producto = null,
+				$garantia = null,
+				$id_categoria = null,
+				$id_empresas = null,
+				$id_unidad = null,
+				$impuestos = null,
+				$precio_de_venta = 12
+			);
+
 			$this->assertInternalType("int" , $p["id_producto"],"---- 'testEditarProducto' 'id_producto' NO ES UN ENTERO");
 
 			//se edita el cliente recien ingresado
@@ -189,41 +175,41 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 										
 		}
 		
-		
 		public function testBuscarProductosPorID_Sucursal(){
-			
 			$dir_suc = self::RandomString(25,FALSE,FALSE,FALSE);
-			$suc_razon = self::RandomString(10,FALSE,FALSE,FALSE); 
+			$desc = self::RandomString(10,FALSE,FALSE,FALSE); 
 			
-			$sucursal = SucursalesController::Nueva($direccion = $dir_suc, $razon_social = $suc_razon);
+			$sucursal = SucursalesController::Nueva(
+				$descripcion = $desc,
+				$direccion = $dir_suc,
+				$id_tarifa = 1
+			);
 			$this->assertInternalType("int" , $sucursal['id_sucursal'],"---- 'testBuscarProductosPorID_Sucursal' 'id_sucursal' NO ES UN ENTERO");
 
 			$empresa_rfc = self::RandomString(13,FALSE,FALSE,FALSE);
 			$empresa_razon = self::RandomString(10,FALSE,FALSE,FALSE); 
+
+			$contabilidad['id_moneda'] = 1;
+			$contabilidad['ejercicio'] = "2013";
+			$contabilidad['periodo_actual'] = 1;
+			$contabilidad['duracion_periodo'] = 1;
 			
-			$empresa = EmpresasController::Nuevo($direccion = array(array(
-														"calle"                 => "Monte Balcanes",
-														"numero_exterior"       => "107",
-														"colonia"               => "Arboledas",
-														"id_ciudad"             => 334,
-												   	    "codigo_postal"         => "38060",
-														"numero_interior"       => null,
-														"referencia"            => "Calle cerrada",
-												   	    "telefono1"             => "4616149974",
-														"telefono2"             => "45*451*454"
-														)),
-													$id_moneda = 1,
-													$razon_social = $empresa_razon,
-													$rfc = $empresa_rfc,
-													$cedula = null, 
-													$email = null, 
-													$impuestos_compra = "", 
-													$impuestos_venta = null, 
-													$logo = null, 
-													$representante_legal = null, 
-													$sucursales = array($sucursal['id_sucursal']), 
-													$texto_extra = null
-												);
+			$empresa = EmpresasController::Nuevo(
+				(object) $contabilidad,
+				$direccion = array(array(
+					"calle"                 => "Monte Balcanes",
+					"numero_exterior"       => "107",
+					"colonia"               => "Arboledas",
+					"id_ciudad"             => 334,
+					"codigo_postal"         => "38060",
+					"numero_interior"       => null,
+					"referencia"            => "Calle cerrada",
+					"telefono1"             => "4616149974",
+					"telefono2"             => "45*451*454"
+				)),
+				$razon_social = $empresa_razon,
+				$rfc = $empresa_rfc
+			);
 
 			$this->assertInternalType("int" , $empresa['id_empresa'],"---- 'testBuscarProductosPorID_Sucursal' 'id_empresa' NO ES UN ENTERO");
 			
@@ -231,28 +217,30 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 			$codigo_p = self::RandomString(5,FALSE,FALSE,FALSE);
 			$nombre_p = self::RandomString(15,FALSE,FALSE,FALSE); 
 
-        	$p = ProductosController::Nuevo($activo= true, 
-											$codigo_producto = $codigo_p, 
-											$compra_en_mostrador = true, 
-											$costo_estandar=10, 
-											$id_unidad_compra = 1, 
-											$metodo_costeo="costo", 
-											$nombre_producto = $nombre_p, 
-											$codigo_de_barras = null, 
-											$control_de_existencia = null, 
-											$descripcion_producto = null, 
-											$foto_del_producto = null, 
-											$garantia = null, 
-											$id_categoria = null, 
-											$id_empresas = array($empresa['id_empresa']), 
-											$id_unidad = null, 
-											$impuestos = null, 
-											$precio_de_venta = 12
-											);						
+        	$p = ProductosController::Nuevo(
+        		$activo= true, 
+				$codigo_producto = $codigo_p,
+				$compra_en_mostrador = true,
+				$id_unidad_compra = 1,
+				$metodo_costeo="costo",
+				$nombre_producto = $nombre_p,
+				$visible_en_vc = true,
+				$codigo_de_barras = null,
+				$control_de_existencia = null,
+				$costo_estandar = 10,
+				$descripcion_producto = null,
+				$foto_del_producto = null,
+				$garantia = null,
+				$id_categoria = null,
+				$id_empresas = array($empresa['id_empresa']),
+				$id_unidad = null,
+				$impuestos = null,
+				$precio_de_venta = 12
+			);
 
 			$res = ProductosController::Buscar( $query =null, $id_producto = null, $id_sucursal = $sucursal['id_sucursal'] );
 			$this->assertInternalType("int" , $res["numero_de_resultados"],"---- 'testBuscarProductosPorID_Sucursal' 'numero_de_resultados' NO ES UN ENTERO");
-			$this->assertGreaterThan(0, $res['numero_de_resultados'] ,"---- 'testBuscarProductosPorID_Sucursal' SE DEBIÓ DE ENCONTRAR ALMENOS 1 RESULTADO CON NOMBRE PRODUCTO: ".$nombre_p);				
+			$this->assertGreaterThan(0, $res['numero_de_resultados'],"---- 'testBuscarProductosPorID_Sucursal' SE DEBIÓ DE ENCONTRAR ALMENOS 1 RESULTADO CON NOMBRE PRODUCTO: ".$nombre_p);				
 		}
 
 		public function testBuscarProductosPorID_Producto(){
@@ -260,24 +248,26 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 			$codigo_p = self::RandomString(5,FALSE,FALSE,FALSE);
 			$nombre_p = self::RandomString(15,FALSE,FALSE,FALSE); 
 
-        	$p = ProductosController::Nuevo($activo= true, 
-											$codigo_producto = $codigo_p, 
-											$compra_en_mostrador = true, 
-											$costo_estandar=10, 
-											$id_unidad_compra = 1, 
-											$metodo_costeo="costo", 
-											$nombre_producto = $nombre_p, 
-											$codigo_de_barras = null, 
-											$control_de_existencia = null, 
-											$descripcion_producto = null, 
-											$foto_del_producto = null, 
-											$garantia = null, 
-											$id_categoria = null, 
-											$id_empresas = null, 
-											$id_unidad = null, 
-											$impuestos = null, 
-											$precio_de_venta = 12
-											);
+        	$p = ProductosController::Nuevo(
+        		$activo= true, 
+				$codigo_producto = $codigo_p,
+				$compra_en_mostrador = true,
+				$id_unidad_compra = 1,
+				$metodo_costeo="costo",
+				$nombre_producto = $nombre_p,
+				$visible_en_vc = true,
+				$codigo_de_barras = null,
+				$control_de_existencia = null,
+				$costo_estandar = 10,
+				$descripcion_producto = null,
+				$foto_del_producto = null,
+				$garantia = null,
+				$id_categoria = null,
+				$id_empresas = null,
+				$id_unidad = null,
+				$impuestos = null,
+				$precio_de_venta = 12
+			);
 			$this->assertInternalType("int" , $p["id_producto"],"---- 'testNuevoProducto' 'id_producto' NO ES UN ENTERO");
 			
 			$res = ProductosController::Buscar($query =null, $id_producto = $p['id_producto'], $id_sucursal = null );
@@ -297,18 +287,32 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 			$codigo = self::RandomString(5,FALSE,FALSE,FALSE);
 			
         	$nuevo_prod = ProductosController::Nuevo(
-									$activo			 = true ,
-									$codigo_producto	= $codigo, 
-									$compra_en_mostrador	= false, 
-									$id_unidad_compra		= null, 
-									$metodo_costeo			= "variable", 
-									$nombre_producto		= $nombre
-								);
+        		$activo= true, 
+				$codigo_producto = $codigo,
+				$compra_en_mostrador = true,
+				$id_unidad_compra = 1,
+				$metodo_costeo="costo",
+				$nombre_producto = $nombre,
+				$visible_en_vc = true,
+				$codigo_de_barras = null,
+				$control_de_existencia = null,
+				$costo_estandar = 10,
+				$descripcion_producto = null,
+				$foto_del_producto = null,
+				$garantia = null,
+				$id_categoria = null,
+				$id_empresas = null,
+				$id_unidad = null,
+				$impuestos = null,
+				$precio_de_venta = 12
+			);
 										
 
-			$res = ProductosController::Buscar( $query = $nombre,
-												$id_producto = null,
-												$id_sucursal = null);//se busca el prod recien insertado
+			$res = ProductosController::Buscar(
+				$query = $nombre,
+				$id_producto = null,
+				$id_sucursal = null
+			); //se busca el prod recien insertado
 			
 			$this->assertInternalType("int" , $res["numero_de_resultados"],"---- 'testBuscarProductosPorQuery' 'numero_de_resultados' NO ES UN ENTERO");	
 
@@ -331,10 +335,7 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 		public function testNuevaCategoria(){
 			$nombre_cat = self::RandomString(15,true,FALSE,FALSE); 
 			
-			$c = ProductosController::NuevaCategoria($nombre = $nombre_cat, 
-											$descripcion = null, 
-											$id_categoria_padre = null
-											);
+			$c = ProductosController::NuevaCategoria($nombre_cat);
 			$this->assertInternalType("int" , $c["id_categoria"],"---- 'testNuevaCategoria' 'id_categoria' NO ES UN ENTERO");
 		}
 
@@ -373,24 +374,15 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 			);
 		}
 		
-		public function testBuscarCategoriaPorID_Categoria(){
+		public function testDetallesCategoria(){
 			//se genera una categoria para despues buscarla por su id
-			$nombre_cat = self::RandomString(15,FALSE,FALSE,FALSE); 
-			$desc = self::RandomString(25,FALSE,FALSE,FALSE); 
-			$c = ProductosController::NuevaCategoria($nombre = $nombre_cat, 
-											$descripcion = $desc, 
-											$id_categoria_padre = null
-											);
+			$nombre_cat = self::RandomString(15,FALSE,FALSE,FALSE);
+			$c = ProductosController::NuevaCategoria($nombre_cat);
 			$this->assertInternalType("int" , $c["id_categoria"],"---- 'testNuevaCategoria' 'id_categoria' NO ES UN ENTERO");
 
-			$res = ProductosController::BuscarCategoria($id_categoria = $c['id_categoria'], $id_categoria_padre =null, $query = null );
-			$this->assertInternalType("int" , $res["numero_de_resultados"],"---- 'testBuscarProductosPorID_Categoria' 'numero_de_resultados' NO ES UN ENTERO");
-			$this->assertEquals(1, $res['numero_de_resultados'],"---- 'testBuscarProductosPorID_Categoria' SE DEBIÓ DE ENCONTRAR UNICAMENTE 1 RESULTADO CON id_categoria = ".$c['id_categoria']);
-			foreach($res["resultados"] as $row){
-				if($row['id_categoria'] != $c['id_categoria']|| is_null($row['id_categoria']))
-					$this->assertEquals($row['id_categoria'],$c['id_categoria'],"---- 'testBuscarProductosPorID_Categoria' LOS IDS NO COINCIDEN SE ENVIÓ EL id_categoria = ".$c['id_categoria']." Y LA CONSULTA DEVOLVIÓ id_categoria = ".$row['id_categoria']);
-			}		
-		}		
+			$res = ProductosController::DetallesCategoria($id_categoria = $c['id_categoria']);
+			$this->assertEquals(1, count($res),"---- 'testBuscarProductosPorID_Categoria' SE DEBIÓ DE ENCONTRAR UNICAMENTE 1 RESULTADO CON id_categoria = ".$c['id_categoria']);
+		}
 
 		public function testBuscarCategoriaPorQuery(){
 			//se genera una categoria para despues buscarla por su nombre
@@ -403,8 +395,7 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 			$this->assertInternalType("int" , $c["id_categoria"],"---- 'testNuevaCategoria' 'id_categoria' NO ES UN ENTERO");
 
 			$res = ProductosController::BuscarCategoria($id_categoria = null,$id_categoria_padre = null, $query = $nombre_cat );
-			$this->assertInternalType("int" , $res["numero_de_resultados"],"---- 'testBuscarProductosPorID_Categoria' 'numero_de_resultados' NO ES UN ENTERO");
-			$this->assertGreaterThanOrEqual(1, $res['numero_de_resultados'],"---- 'testBuscarProductosPorID_Categoria' SE DEBIÓ DE ENCONTRAR ALMENOS 1 RESULTADO CON nombre = ".$nombre_cat);			
+			$this->assertGreaterThanOrEqual(1, count($res['categorias']),"---- 'testBuscarProductosPorID_Categoria' SE DEBIÓ DE ENCONTRAR ALMENOS 1 RESULTADO CON nombre = ".$nombre_cat);			
 				
 		}
 
@@ -493,17 +484,13 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
      	* @expectedException BusinessLogicException
      	*/
 		public function testNuevaCategoriaUdmMismoNombre(){
-			$descripcion_catUdm = self::RandomString(15,true,FALSE,FALSE); 
-			
-			$c = ProductosController::NuevaCategoriaUdm($descripcion = $descripcion_catUdm, $activo = null);
+			$c = ProductosController::NuevaCategoriaUdm("s");
 
-			$this->assertInternalType("int" , $c["id_categoria_unidad_medida"],"---- 'testNuevaCategoriaUdm' 'id_categoria' NO ES UN ENTERO");
+			// $this->assertInternalType("int" , $c["id_categoria_unidad_medida"],"---- 'testNuevaCategoriaUdm' 'id_categoria' NO ES UN ENTERO");
 
 			//se intenta insertar otra cat con mismo nombre
-			$cat2 = ProductosController::NuevaCategoriaUdm($descripcion = $descripcion_catUdm, $activo = null);				
+			$cat2 = ProductosController::NuevaCategoriaUdm("s");
 		}
-		
-		
 		
 		/*
 		 *
@@ -606,38 +593,32 @@ class ProductosControllerTest extends PHPUnit_Framework_TestCase {
 			$descripcion_Udm = self::RandomString(15,true,FALSE,FALSE); 
 			$descripcion_catUdm = self::RandomString(15,true,FALSE,FALSE); 
 			
-			$cat = ProductosController::NuevaCategoriaUdm($descripcion = $descripcion_catUdm, $activo = null);
+			$cat = ProductosController::NuevaCategoriaUdm($descripcion_catUdm);
 
 			$udm = ProductosController::NuevaUnidadUdm(
-														$abreviatura = $abreviatura_Udm, 
-														$descripcion = $descripcion_Udm, 
-														$factor_conversion = 1, 
-														$id_categoria_unidad_medida = $cat['id_categoria_unidad_medida'], 
-														$tipo_unidad_medida = "Referencia UdM para esta categoria", 
-														$activa = null
-													);
+				$abreviatura = $abreviatura_Udm,
+				$descripcion = $descripcion_Udm,
+				$factor_conversion = 1,
+				$id_categoria_unidad_medida = $cat['id_categoria_unidad_medida'],
+				$tipo_unidad_medida = "Referencia UdM para esta categoria"
+			);
 			$this->assertInternalType("int" , $udm["id_unidad_medida"],"---- 'testEditarUnidadUdm' 'id_unidad_medida' NO ES UN ENTERO");
 
 			$udmObj = UnidadMedidaDAO::getByPK($udm['id_unidad_medida']);
 			
 			//se edita la Udm recien ingresada
 			ProductosController::EditarUnidadUdm(
-												$id_categoria_unidad_medida	 = $udmObj->getIdCategoriaUnidadMedida(), 
-												$id_unidad_medida	= $udmObj->getIdUnidadMedida(), 
-												$abreviatura = $abreviatura_Udm_editada,
-												$activa =  $udmObj->getActiva(), 
-												$descripcion = $udmObj->getDescripcion(), 
-												$factor_conversion = $udmObj->getFactorConversion(), 
-												$tipo_unidad_medida = $udmObj->getTipoUnidadMedida()
-												
-												
-											);			
+				$id_unidad_medida	= $udmObj->getIdUnidadMedida(),
+				$id_categoria_unidad_medida	 = $udmObj->getIdCategoriaUnidadMedida(),
+				$abreviacion = $abreviatura_Udm_editada,
+				$descripcion = "descripcion",
+				$factor_conversion = $udmObj->getFactorConversion(), 
+				$tipo_unidad_medida = $udmObj->getTipoUnidadMedida()
+			);
 			//se redefine el obj para comparar valores
 			$udmObj2 = UnidadMedidaDAO::getByPK($udmObj->getIdUnidadMedida());
 			
 			$this->assertEquals($udmObj2->getAbreviacion(), $abreviatura_Udm_editada, "NO SE EDITÓ LA CategoriaUdm");
-			
-			
 		}
 
 
