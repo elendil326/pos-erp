@@ -43,17 +43,17 @@ class SucursalesControllerTest extends PHPUnit_Framework_TestCase
 
     public function testNuevaSucursal( )
     {
-		$sucursal = SucursalesController::Nueva(array(
-            "calle"                 => "Monte Balcanes",
-        	"numero_exterior"       => "107",
-            "colonia"               => "Arboledas",
-            "id_ciudad"             => 334,
-       	    "codigo_postal"         => "38060",
-            "numero_interior"       => null,
-            "referencia"            => "Calle cerrada",
-       	    "telefono1"             => "4616149974",
-            "telefono2"             => "45*451*454"
-        ), "Sucursal_" . time() );
+        $direccion=array(   "calle"=>"Monte Balcanes",
+                            "numero_exterior"=>"107",
+                            "numero_interior"=>null,
+                            "colonia"=>"Arboledas",
+                            "codigo_postal"=>"38060",
+                            "id_ciudad"=>334,
+                            "referencia"=>"Calle cerrada",
+                            "telefono1"=>"4616149974",
+                            "telefono2"=>"45*451*454");
+
+		$sucursal = SucursalesController::Nueva("Sucursal de phpunit nueva " . time(),$direccion,1,1,null);
 
         $this->assertInternalType( "int" , $sucursal["id_sucursal"] );
     }
@@ -77,31 +77,31 @@ class SucursalesControllerTest extends PHPUnit_Framework_TestCase
 
         try
         {
-            SucursalesController::Nueva( $direccion, "Sucursal_Repetida" );
+            SucursalesController::Nueva("Sucursal_Repetida",$direccion,1 );
         }
         catch(Exception $e)
         {
 
         }
 
-        SucursalesController::Nueva( $direccion, "Sucursal_Repetida" );
+        SucursalesController::Nueva("Sucursal_Repetida",$direccion,1 );
 
     }
 
     public function testBuscar()
+
     {
+        $direccion=array(   "calle"=>"Monte Balcanes",
+                            "numero_exterior"=>"107",
+                            "numero_interior"=>null,
+                            "colonia"=>"Arboledas",
+                            "codigo_postal"=>"38060",
+                            "id_ciudad"=>334,
+                            "referencia"=>"Calle cerrada",
+                            "telefono1"=>"4616149974",
+                            "telefono2"=>"45*451*454");
         //creamos una sucursal para fines del experimento
-        $sucursal = SucursalesController::Nueva( array(
-            "calle"                 => "Monte Balcanes",
-        	"numero_exterior"       => "107",
-            "colonia"               => "Arboledas",
-            "id_ciudad"             => 334,
-       	    "codigo_postal"         => "38060",
-            "numero_interior"       => null,
-            "referencia"            => "Calle cerrada",
-       	    "telefono1"             => "4616149974",
-            "telefono2"             => "45*451*454"
-        ), "Sucursal" . time( ) );
+$sucursal = SucursalesController::Nueva("Sucursal de phpunit buscar " . time(),$direccion,1,1,null);
 
         
         //realizamos una busqueda general y verificamso que contenga los parametros de respuesta
@@ -145,18 +145,16 @@ class SucursalesControllerTest extends PHPUnit_Framework_TestCase
 	public function testEliminar(){
 
         //creamos una sucursal para fines del experimento
-
-        $sucursal = SucursalesController::Nueva(array(
-            "calle"                 => "Monte Balcanes",
-        	"numero_exterior"       => "107",
-            "colonia"               => "Arboledas",
-            "id_ciudad"             => 334,
-       	    "codigo_postal"         => "38060",
-            "numero_interior"       => null,
-            "referencia"            => "Calle cerrada",
-       	    "telefono1"             => "4616149974",
-            "telefono2"             => "45*451*454"
-        ), "Eliminar_Sucursal_" . time(), 1);
+        $direccion=array(   "calle"=>"Monte Balcanes",
+                            "numero_exterior"=>"107",
+                            "numero_interior"=>null,
+                            "colonia"=>"Arboledas",
+                            "codigo_postal"=>"38060",
+                            "id_ciudad"=>334,
+                            "referencia"=>"Calle cerrada",
+                            "telefono1"=>"4616149974",
+                            "telefono2"=>"45*451*454");
+        $sucursal = SucursalesController::Nueva("Sucursal de phpunit eliminar " . time(),$direccion,1,1,null);
 
         //eliminamos la sucursal (desactivamos)
         
@@ -171,18 +169,16 @@ class SucursalesControllerTest extends PHPUnit_Framework_TestCase
 	public function testEditar(){
 
         //creamos una sucursal para fines del experimento
-
-        $sucursal = SucursalesController::Nueva(array(
-            "calle"                 => "Monte Balcanes",
-            "numero_exterior"       => "107",
-            "colonia"               => "Arboledas",
-            "id_ciudad"             => 334,
-       	    "codigo_postal"         => "38060",
-            "numero_interior"       => null,
-            "referencia"            => "Calle cerrada",
-       	    "telefono1"             => "4616149974",
-            "telefono2"             => "45*451*454"
-        ), "Editar_Sucursal_" . time());
+        $direccion=array(   "calle"=>"Monte Balcanes",
+                            "numero_exterior"=>"107",
+                            "numero_interior"=>null,
+                            "colonia"=>"Arboledas",
+                            "codigo_postal"=>"38060",
+                            "id_ciudad"=>334,
+                            "referencia"=>"Calle cerrada",
+                            "telefono1"=>"4616149974",
+                            "telefono2"=>"45*451*454");
+        $sucursal = SucursalesController::Nueva("Sucursal de phpunit editar " . time(),$direccion,1,1,null);
 
         //para cambiar la moneda
         try{

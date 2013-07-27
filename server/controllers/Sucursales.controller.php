@@ -2481,12 +2481,14 @@ class SucursalesController extends ValidacionesController implements ISucursales
 		}
 
 		//verificamos si cambio el gerente
-		if (!is_null($id_gerente) && !$usuario_gerente = UsuarioDAO::getByPK($id_gerente)) {
-			Logger::error("No se tiene registro del gerente con id : {$id_gerente}");
-			throw new Exception("No se tiene registro del gerente con id : {$id_gerente}");
-		} else {
+		if (!is_null($id_gerente)){
+            $usuario_gerente = UsuarioDAO::getByPK($id_gerente);
+            if(!$usuario_gerente){
+                Logger::error("No se tiene registro del gerente con id : {$id_gerente}");
+                throw new Exception("No se tiene registro del gerente con id : {$id_gerente}");
+            } else {
 			$sucursal->setIdGerente($usuario_gerente->getIdUsuario());
-		}
+		}}
 
 		//
 		if (!is_null($id_tarifa) && !$tarifa = TarifaDAO::getByPK($id_tarifa)) {

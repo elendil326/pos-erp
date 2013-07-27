@@ -33,18 +33,16 @@ class FormasPreimpresasController extends ValidacionesController implements IFor
       (
       $datos, $archivo_plantilla = "", $imagenes = ""
       ) {
-
+$Debug=1;
             try {
-                  /*$CarpetaSalida = POS_PATH_TO_SERVER_ROOT."/../static_content/" . IID . "/temp/";//Carpeta temporal para los archivos de salida
-                  if (substr(decoct(fileperms($CarpetaSalida)), 2) != 775) {//Comprueba los permisos
-                        chmod($CarpetaSalida, 0775); //Agrega los nuevos permisos
-                  }*/
-                  $ObjSalida = new PHPExcel(); //Crea el nuevo objeto de saĺida
+                  $Temp = PHPExcel_Reader_Excel2007; //Crea el nuevo objeto de saĺida
+	        $ObjSalida=$Temp->Load(POS_PATH_TO_SERVER_ROOT . "../static_content/Default.xlsx");
                   if ($datos == null) {
                         Logger::error("No hay datos para trabajar"); //Termina la ejecución
                   } else {
+	  if($Debug!=0){echo "Datos de entrada: \n\n"; var_dump($datos);echo "\nPlantilla:\n\n";var_dump($archivo_plantilla);echo "\n\n\n";}
 	  $datos=  json_decode($datos);
-	  $Datos=$datos->datos;
+	  $Datos=$datos;
                   }
                   if ($archivo_plantilla == null || $archivo_plantilla === "") {//Si no se especifica una plantilla
                         $itCol = 0;
@@ -99,8 +97,9 @@ class FormasPreimpresasController extends ValidacionesController implements IFor
                               $Extension = strrchr($archivo_plantilla, ".");
                               if ($Extension == ".xlsx") {//Comprueba la extensión de la plantilla
                                     $objReader = new PHPExcel_Reader_Excel2007; //Crea el objeto lector
-                                    $ObjetoPlantilla = $objReader->load($archivo_plantilla); //Carga el archivo al objeto plantilla
-                                    $HojaPlantilla = $ObjetoPlantilla->getActiveSheet();
+;
+                                    $ObjetoSalida = $objReader->load($archivo_plantilla); //Carga el archivo al objeto plantilla
+                                    $HojaPlantilla = $ObjetoSalida->getActiveSheet();
 
                                     $itCol = 0;
                                     $itFil = 0;
@@ -152,7 +151,7 @@ class FormasPreimpresasController extends ValidacionesController implements IFor
                                           }
                                     }
                                     $ObjSalida->addExternalSheet($HojaPlantilla); //Carga la hoja de la plantilla al nuevo archivo
-                                    $ObjSalida->removeSheetByIndex(0);
+                                    //$ObjSalida->removeSheetByIndex(0);
                               } else {
                                     Logger::error("La extensión de la plantilla no es compatible (" . $Extension . ") con esta función (.xlsx)");
                               }
@@ -187,10 +186,11 @@ class FormasPreimpresasController extends ValidacionesController implements IFor
                               }
                         }
                   }
-                  $objWriter = PHPExcel_IOFactory::createWriter($ObjSalida, 'Excel2007');//Devuelve un objeto de escritura
-                 header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");//Cabeceras de salida
+	        $objWriter = new PHPExcel_Writer_Excel2007($ObjSalida);//Devuelve un objeto de escritura
+	        if($Debug==0){
+                  header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");//Cabeceras de salida
             header("Content-Disposition: attachment;filename=\"Excel.xlsx\"");
-            header("Cache-Control: max-age=0");
+            header("Cache-Control: max-age=0");}
             $objWriter->save("php://output");//Imprime el archivo de salida
             } catch (Exception $e) {
                   Logger::error("Ha ocurrido un error: $e");
@@ -240,7 +240,7 @@ class FormasPreimpresasController extends ValidacionesController implements IFor
             return array("resultados" => $ArregloSalida); //Devuelve el arreglo procesado
       }
       public static function Generar2Excel($id_documento) {
-            
+            $Debug=0;
             $TEMP = DocumentoDAOBase::getByPK($id_documento);
             $DocBase= DocumentoBaseDAO::getByPK($TEMP->getIdDocumentoBase());
             $DescDoc=DocumentoDAO::getDocumentWithValues($id_documento);//Descarga de documento
@@ -279,13 +279,13 @@ class FormasPreimpresasController extends ValidacionesController implements IFor
             }
             
             try {
-                  $ObjSalida = new PHPExcel(); //Crea el nuevo objeto de saĺida
                   if ($datos == null) {
                         Logger::error("No hay datos para trabajar"); //Termina la ejecución
                   } else {
                         $Datos = $datos; //Carga los datos con los que va a trabajar
                   }
                   if ($archivo_plantilla == null || $archivo_plantilla === "") {//Si no se especifica una plantilla
+	  $ObjSalida = new PHPExcel(); //Crea el nuevo objeto de saĺida
                         $itCol = 0;
                         $itFil = 0;
                         foreach ($Datos as $key => $value) {
@@ -337,10 +337,9 @@ class FormasPreimpresasController extends ValidacionesController implements IFor
                         if (file_exists($archivo_plantilla) == 1) {//Comprueba si existe el archivo de plantilla indicado
                               $Extension = strrchr($archivo_plantilla, ".");
                               if ($Extension == ".xlsx") {//Comprueba la extensión de la plantilla
-                                    $objReader = new PHPExcel_Reader_Excel2007; //Crea el objeto lector
-                                    $ObjetoPlantilla = $objReader->load($archivo_plantilla); //Carga el archivo al objeto plantilla
-                                    $HojaPlantilla = $ObjetoPlantilla->getActiveSheet();
-
+		      $ObjSalida = PHPExcel_IOFactory::load($archivo_plantilla);
+		      $HojaPlantilla=$ObjSalida->getActiveSheet(); //Carga la hoja de la plantilla al nuevo archivo
+			
                                     $itCol = 0;
                                     $itFil = 0;
                                     foreach ($HojaPlantilla->getRowIterator() as $Fila) {//Iterador de Filas
@@ -390,8 +389,6 @@ class FormasPreimpresasController extends ValidacionesController implements IFor
                                                 }
                                           }
                                     }
-                                    $ObjSalida->addExternalSheet($HojaPlantilla); //Carga la hoja de la plantilla al nuevo archivo
-                                    $ObjSalida->removeSheetByIndex(0);
                               } else {
                                     Logger::error("La extensión de la plantilla no es compatible (" . $Extension . ") con esta función (.xlsx)");
                               }
@@ -401,38 +398,16 @@ class FormasPreimpresasController extends ValidacionesController implements IFor
                               return;
                         }
                   }
-                  if ($imagenes != NULL) {
-                        foreach ($imagenes as $Img) {//Itera entre todas las imagenes recibidas
-                              if ($Img->Nombre == "" || $Img->Ruta == "" || $Img->Celda == "") {
-                                    Logger::error("No se pueden procesar las imagenes, faltan argumentos");
-                              } else {
-                                    if (file_exists($Img->Ruta) == 1) {//Comprueba que exista la imagen
-                                          $Extension = strrchr($Img->Ruta, ".");
-                                          if ($Extension == ".jpeg" || $Extension == ".jpg" || $Extension == ".gif" || $Extension == ".png" || $Extension == ".bmp") {//Extensiones admitidas
-                                                $Imagen = new PHPExcel_Worksheet_Drawing();
-                                                $Imagen->setName($Img->Nombre);
-                                                $Imagen->setDescription($Img->Descripcion);
-                                                $Imagen->setPath($Img->Ruta);
-                                                $Imagen->setHeight($Img->Altura);
-                                                $Imagen->setCoordinates($Img->Celda);
-                                                $Imagen->setWorksheet($ObjSalida->getActiveSheet());
-                                          } else {
-                                                Logger::error("Extension de archivo de imagen invalida.");
-                                          }
-                                    } else {
-                                          Logger::error("El archivo de imagen indicado no existe.");
-                                    }
-                                    unset($Extension); //Libera la variable
-                              }
-                        }
-                  }
                   $objWriter = PHPExcel_IOFactory::createWriter($ObjSalida, 'Excel2007');//Devuelve un objeto de escritura
+
             } catch (Exception $e) {
                   Logger::error("Ha ocurrido un error: $e");
             }
+      if($Debug===1){
             header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");//Cabeceras de salida
             header("Content-Disposition: attachment;filename=\"Excel.xlsx\"");
             header("Cache-Control: max-age=0");
+      }
             $objWriter->save("php://output");//Imprime el archivo de salida
       }
       
