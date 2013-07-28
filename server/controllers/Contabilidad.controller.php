@@ -153,8 +153,9 @@ require_once("interfaces/Contabilidad.interface.php");
 		$cuenta_buscar = new CuentaContable();
 
 		$cat_buscar = CatalogoCuentasDAO::getByPK($id_catalogo_cuentas);
+
 		if (is_null($cat_buscar)) {
-			throw new InvalidDatabaseOperationException("El catalogo de cuentas con id " . $id_catalogo_cuentas . " no existe");
+			return array("resultados" => array());
 		}
 
 		$cuenta_buscar->setIdCatalogoCuentas($id_catalogo_cuentas);
