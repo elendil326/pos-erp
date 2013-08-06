@@ -481,66 +481,66 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	 **/
 	public static function NuevoUsuario
 	(
-		$codigo_usuario, 
-		$id_rol, 
-		$nombre, 
-		$password, 
-		$comision_ventas = 0, 
-		$correo_electronico = null, 
-		$cuenta_bancaria = null, 
-		$cuenta_mensajeria = null, 
-		$curp = null, 
-		$denominacion_comercial = null, 
-		$descuento = null, 
-		$dias_de_credito = null, 
-		$dias_de_embarque = null, 
-		$dia_de_pago = null, 
-		$dia_de_revision = null, 
-		$direcciones = null, 
-		$facturar_a_terceros = null, 
-		$id_clasificacion_cliente = null, 
-		$id_clasificacion_proveedor = null, 
-		$id_moneda = null, 
-		$id_sucursal = null, 
-		$id_tarifa_compra = null, 
-		$id_tarifa_venta = null, 
-		$id_usuario_padre = null, 
-		$impuestos = null, 
-		$intereses_moratorios = null, 
-		$limite_credito = 0, 
-		$mensajeria = null, 
-		$pagina_web = null, 
-		$representante_legal = null, 
-		$retenciones = null, 
-		$rfc = null, 
-		$salario = null, 
-		$saldo_del_ejercicio = null, 
-		$telefono_personal1 = null, 
-		$telefono_personal2 = null, 
-		$tiempo_entrega = null, 
+		$codigo_usuario,
+		$id_rol,
+		$nombre,
+		$password,
+		$comision_ventas = 0,
+		$correo_electronico = null,
+		$cuenta_bancaria = null,
+		$cuenta_mensajeria = null,
+		$curp = null,
+		$denominacion_comercial = null,
+		$descuento = null,
+		$dias_de_credito = null,
+		$dias_de_embarque = null,
+		$dia_de_pago = null,
+		$dia_de_revision = null,
+		$direcciones = null,
+		$facturar_a_terceros = null,
+		$id_clasificacion_cliente = null,
+		$id_clasificacion_proveedor = null,
+		$id_moneda = null,
+		$id_sucursal = null,
+		$id_tarifa_compra = null,
+		$id_tarifa_venta = null,
+		$id_usuario_padre = null,
+		$impuestos = null,
+		$intereses_moratorios = null,
+		$limite_credito = 0,
+		$mensajeria = null,
+		$pagina_web = null,
+		$representante_legal = null,
+		$retenciones = null,
+		$rfc = null,
+		$salario = null,
+		$saldo_del_ejercicio = null,
+		$telefono_personal1 = null,
+		$telefono_personal2 = null,
+		$tiempo_entrega = null,
 		$ventas_a_credito = null
 	)
-	{  
+	{
 						Logger::log("Creando nuevo usuario `$nombre` ...");
 			/*
-						$validar = self::validarParametrosUsuario( 
-					null, 
-					null, 
-					$id_sucursal, 
+						$validar = self::validarParametrosUsuario(
+					null,
+					null,
+					$id_sucursal,
 					$id_rol,
-										$id_clasificacion_cliente, 
-					$id_clasificacion_proveedor, 
+										$id_clasificacion_cliente,
+					$id_clasificacion_proveedor,
 					$id_moneda,
-										null, 
-					$nombre, 
-					$rfc, 
-					$curp, 
-					$comision_ventas, 
+										null,
+					$nombre,
+					$rfc,
+					$curp,
+					$comision_ventas,
 					$telefono_personal1,
-										$telefono_personal2, 
-					$limite_credito, 
-					$descuento, 
-					$password, 
+										$telefono_personal2,
+					$limite_credito,
+					$descuento,
+					$password,
 					$salario,
 										$correo_electronico,
 					$pagina_web,
@@ -642,8 +642,8 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 
 								} else {
 					$usuariose = UsuarioDAO::search(
-									new Usuario( array( 
-										"correo_electronico" => $correo_electronico, 
+									new Usuario( array(
+										"correo_electronico" => $correo_electronico,
 										"activo" => 1 ) ) );
 
 					if (sizeof($usuariose) > 0) {
@@ -705,52 +705,57 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 								$id_tarifa_compra = 2;
 						}
 
+						if (is_null($id_clasificacion_cliente)) {
+							$id_categoria_contacto = $id_clasificacion_proveedor;
+						} else {
+							$id_categoria_contacto = $id_clasificacion_cliente;
+						}
 						//se crea el objeto usuario con todos los parametros
 						$usuario = new Usuario(
-												array
-														(
-																"id_sucursal"               => $id_sucursal,
-																"id_rol"                    => $id_rol,
+							array(
+								"id_sucursal"               => $id_sucursal,
+								"id_rol"                    => $id_rol,
 								"id_perfil"                    => 1,
-																"id_clasificacion_cliente"  => $id_clasificacion_cliente,
-																"id_clasificacion_proveedor"=> $id_clasificacion_proveedor,
-																"id_moneda"                 => $id_moneda,
-																"fecha_asignacion_rol"      => time(),
-																"nombre"                    => $nombre,
-																"rfc"                       => $rfc,
-																"curp"                      => $curp,
-																"comision_ventas"           => $comision_ventas,
-																"telefono_personal1"        => $telefono_personal1,
-																"telefono_personal2"        => $telefono_personal2,
-																"fecha_alta"                => time(),
-																"activo"                    => 1,
-																"limite_credito"            => $limite_credito,
-																"descuento"                 => $descuento,
-																"password"                  => hash("md5",$password),
-																"salario"                   => $salario,
-																"correo_electronico"        => $correo_electronico,
-																"pagina_web"                => $pagina_web,
-																"saldo_del_ejercicio"       => $saldo_del_ejercicio,
-																"ventas_a_credito"          => $ventas_a_credito,
-																"representante_legal"       => $representante_legal,
-																"facturar_a_terceros"       => $facturar_a_terceros,
-																"mensajeria"                => $mensajeria,
-																"intereses_moratorios"      => $intereses_moratorios,
-																"denominacion_comercial"    => $denominacion_comercial,
-																"dias_de_credito"           => $dias_de_credito,
-																"cuenta_de_mensajeria"      => $cuenta_mensajeria,
-																"codigo_usuario"            => $codigo_usuario,
-																"dias_de_embarque"          => $dias_de_embarque,
-																"tiempo_entrega"            => $tiempo_entrega,
-																"cuenta_bancaria"           => $cuenta_bancaria,
-																"consignatario"             => 0,
-																"id_tarifa_compra"          => $id_tarifa_compra,
-																"id_tarifa_venta"           => $id_tarifa_venta,
-																"tarifa_compra_obtenida"    => $origen_compra,
-																"tarifa_venta_obtenida"     => $origen_venta,
-																"id_usuario_padre"          => $id_usuario_padre
-														)
-												);
+								"id_clasificacion_cliente"  => $id_clasificacion_cliente,
+								"id_clasificacion_proveedor"=> $id_clasificacion_proveedor,
+								"id_categoria_contacto"     => $id_categoria_contacto,
+								"id_moneda"                 => $id_moneda,
+								"fecha_asignacion_rol"      => time(),
+								"nombre"                    => $nombre,
+								"rfc"                       => $rfc,
+								"curp"                      => $curp,
+								"comision_ventas"           => $comision_ventas,
+								"telefono_personal1"        => $telefono_personal1,
+								"telefono_personal2"        => $telefono_personal2,
+								"fecha_alta"                => time(),
+								"activo"                    => 1,
+								"limite_credito"            => $limite_credito,
+								"descuento"                 => $descuento,
+								"password"                  => hash("md5",$password),
+								"salario"                   => $salario,
+								"correo_electronico"        => $correo_electronico,
+								"pagina_web"                => $pagina_web,
+								"saldo_del_ejercicio"       => $saldo_del_ejercicio,
+								"ventas_a_credito"          => $ventas_a_credito,
+								"representante_legal"       => $representante_legal,
+								"facturar_a_terceros"       => $facturar_a_terceros,
+								"mensajeria"                => $mensajeria,
+								"intereses_moratorios"      => $intereses_moratorios,
+								"denominacion_comercial"    => $denominacion_comercial,
+								"dias_de_credito"           => $dias_de_credito,
+								"cuenta_de_mensajeria"      => $cuenta_mensajeria,
+								"codigo_usuario"            => $codigo_usuario,
+								"dias_de_embarque"          => $dias_de_embarque,
+								"tiempo_entrega"            => $tiempo_entrega,
+								"cuenta_bancaria"           => $cuenta_bancaria,
+								"consignatario"             => 0,
+								"id_tarifa_compra"          => $id_tarifa_compra,
+								"id_tarifa_venta"           => $id_tarifa_venta,
+								"tarifa_compra_obtenida"    => $origen_compra,
+								"tarifa_venta_obtenida"     => $origen_venta,
+								"id_usuario_padre"          => $id_usuario_padre
+							)
+						);
 
 
 
@@ -794,7 +799,6 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 								//Se guarda el usuario creado.
 								UsuarioDAO::save($usuario);
 
-
 								//si se pasaron impuestos, se validan y se agregan a la tabla impuesto_usuario
 								if(!is_null($impuestos))
 								{
@@ -820,7 +824,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 								{
 
 										$retenciones = object_to_array($retenciones);
-										
+
 										if(!is_array($retenciones))
 										{
 												throw new Exception("Las retenciones no fueron recibidas correctamente",901);
@@ -885,7 +889,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	 **/
 	public static function ListaUsuario
 	(
-		$activo = null, 
+		$activo = null,
 		$ordenar = null
 	)
 	{
@@ -979,45 +983,45 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	 **/
 	public static function EditarUsuario
 	(
-		$id_usuario, 
-		$codigo_usuario = null, 
-		$comision_ventas = null, 
-		$correo_electronico = null, 
-		$cuenta_bancaria = null, 
-		$cuenta_mensajeria = null, 
-		$curp = null, 
-		$denominacion_comercial = null, 
-		$descuento = null, 
-		$descuento_es_porcentaje = null, 
-		$dias_de_credito = null, 
-		$dias_de_embarque = null, 
-		$dia_de_pago = null, 
-		$dia_de_revision = null, 
-		$direcciones = null, 
-		$facturar_a_terceros = null, 
-		$id_clasificacion_cliente = null, 
-		$id_clasificacion_proveedor = null, 
-		$id_moneda = null, 
-		$id_rol = null, 
-		$id_sucursal = null, 
-		$id_tarifa_compra = null, 
-		$id_tarifa_venta = null, 
-		$id_usuario_padre = null, 
-		$impuestos = null, 
-		$intereses_moratorios = null, 
-		$limite_de_credito = null, 
-		$mensajeria = null, 
-		$nombre = null, 
-		$pagina_web = null, 
-		$password = null, 
-		$representante_legal = null, 
-		$retenciones = null, 
-		$rfc = null, 
-		$salario = null, 
-		$saldo_del_ejercicio = null, 
-		$telefono_personal_1 = null, 
-		$telefono_personal_2 = null, 
-		$tiempo_entrega = null, 
+		$id_usuario,
+		$codigo_usuario = null,
+		$comision_ventas = null,
+		$correo_electronico = null,
+		$cuenta_bancaria = null,
+		$cuenta_mensajeria = null,
+		$curp = null,
+		$denominacion_comercial = null,
+		$descuento = null,
+		$descuento_es_porcentaje = null,
+		$dias_de_credito = null,
+		$dias_de_embarque = null,
+		$dia_de_pago = null,
+		$dia_de_revision = null,
+		$direcciones = null,
+		$facturar_a_terceros = null,
+		$id_clasificacion_cliente = null,
+		$id_clasificacion_proveedor = null,
+		$id_moneda = null,
+		$id_rol = null,
+		$id_sucursal = null,
+		$id_tarifa_compra = null,
+		$id_tarifa_venta = null,
+		$id_usuario_padre = null,
+		$impuestos = null,
+		$intereses_moratorios = null,
+		$limite_de_credito = null,
+		$mensajeria = null,
+		$nombre = null,
+		$pagina_web = null,
+		$password = null,
+		$representante_legal = null,
+		$retenciones = null,
+		$rfc = null,
+		$salario = null,
+		$saldo_del_ejercicio = null,
+		$telefono_personal_1 = null,
+		$telefono_personal_2 = null,
+		$tiempo_entrega = null,
 		$ventas_a_credito = null
 	)
 	{
@@ -1080,19 +1084,19 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 
 					if(!is_null($id_clasificacion_cliente))
 					{
-							$usuario->setIdClasificacionCliente($id_clasificacion_cliente);
+							$usuario->setIdCategoriaContacto($id_clasificacion_cliente);
 
 							//Si el usuario obtuvo su tarifa de compra o de venta de la clasificacion de cliente, de proveedor o de rol,
 							//entonces se tiene que actualizar
 							if( $usuario->getTarifaCompraObtenida()!="usuario" )
 							{
-								$clasificacion_cliente = ClasificacionClienteDAO::getByPK($id_clasificacion_cliente);
+								$clasificacion_cliente = CategoriaContactoDAO::getByPK($id_clasificacion_cliente);
 								$usuario->setIdTarifaCompra($clasificacion_cliente->getIdTarifaCompra());
 								$usuario->setTarifaCompraObtenida("cliente");
 							}
 							if( $usuario->getTarifaVentaObtenida()!="usuario" )
 							{
-								$clasificacion_cliente = ClasificacionClienteDAO::getByPK($id_clasificacion_cliente);
+								$clasificacion_cliente = CategoriaContactoDAO::getByPK($id_clasificacion_cliente);
 								$usuario->setIdTarifaVenta($clasificacion_cliente->getIdTarifaVenta());
 								$usuario->setTarifaVentaObtenida("cliente");
 							}
@@ -1104,19 +1108,19 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 
 					if(!is_null($id_clasificacion_proveedor))
 					{
-							$usuario->setIdClasificacionProveedor($id_clasificacion_proveedor);
+							$usuario->setIdCategoriaContacto($id_clasificacion_proveedor);
 
 							//Si el usuario obtuvo su tarifa de compra o venta de la clasificacion de proveedor o del rol,
 							//entonces se tiene que actualizar
-							if( $usuario->getTarifaCompraObtenida()=="rol" || $usuario->getTarifaCompraObtenida()=="proveedor" )
+							if($usuario->getTarifaCompraObtenida() == "rol" || $usuario->getTarifaCompraObtenida() == "proveedor")
 							{
-								$clasificacion_proveedor = ClasificacionProveedorDAO::getByPK($id_clasificacion_proveedor);
+								$clasificacion_proveedor = CategoriaContactoDAO::getByPK($id_clasificacion_proveedor);
 								$usuario->setIdTarifaCompra($clasificacion_proveedor->getIdTarifaCompra());
 								$usuario->setTarifaCompraObtenida("proveedor");
 							}
-							if( $usuario->getTarifaVentaObtenida()=="rol"  ||  $usuario->getTarifaVentaObtenida()=="proveedor" )
+							if($usuario->getTarifaVentaObtenida() == "rol" || $usuario->getTarifaVentaObtenida() == "proveedor")
 							{
-								$clasificacion_proveedor = ClasificacionProveedorDAO::getByPK($id_clasificacion_proveedor);
+								$clasificacion_proveedor = CategoriaContactoDAO::getByPK($id_clasificacion_proveedor);
 								$usuario->setIdTarifaVenta($clasificacion_proveedor->getIdTarifaVenta());
 								$usuario->setTarifaVentaObtenida("proveedor");
 							}
@@ -1303,7 +1307,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 
 								//guarda los cambios en el usuario
 								UsuarioDAO::save($usuario);
-								
+
 								//Si se reciben direcciones, se borran todas las direcciones de este usuario y se agregan las recibidas.
 								if(!is_null($direcciones))
 								{
@@ -1329,13 +1333,13 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 								if(!is_null($impuestos))
 								{
 										 $impuestos = object_to_array($impuestos);
-										
+
 										if(!is_array($impuestos))
 										{
 												throw new Exception("Los impuestos no fueron recibidos correctamente",901);
 										}
-										
-										
+
+
 										foreach($impuestos as $id_impuesto)
 										{
 												ImpuestoUsuarioDAO::save(new ImpuestoUsuario( array( "id_impuesto" => $id_impuesto , "id_usuario" => $id_usuario ) ));
@@ -1365,14 +1369,14 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 								//las ya existentes y almacene las nuevas
 								if(!is_null($retenciones))
 								{
-										
+
 										$retenciones = object_to_array($retenciones);
-										
+
 										if(!is_array($retenciones))
 										{
 												throw new Exception("Las retenciones no fueron recibidas correctamente",901);
 										}
-										
+
 										foreach($retenciones as $id_retencion)
 										{
 												RetencionUsuarioDAO::save(new RetencionUsuario( array( "id_retencion" => $id_retencion , "id_usuario" => $id_usuario ) ));
@@ -1439,11 +1443,11 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	 **/
 	public static function ListaRol
 	(
-		$activa =  false , 
-		$limit = null, 
-		$order = null, 
-		$order_by = null, 
-		$query = null, 
+		$activa =  false ,
+		$limit = null,
+		$order = null,
+		$order_by = null,
+		$query = null,
 		$start = null
 	)
 	{
@@ -1490,7 +1494,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	 **/
 	public static function AsignarPermisoUsuario
 	(
-		$id_permiso, 
+		$id_permiso,
 		$id_usuario
 	)
 	{
@@ -1542,7 +1546,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	 **/
 	public static function AsignarPermisoRol
 	(
-		$id_permiso, 
+		$id_permiso,
 		$id_rol
 	)
 	{
@@ -1590,14 +1594,14 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 
 	/**
 	 *
-	 *Este metodo quita un permiso de un rol. Al remover este permiso de un rol, los permisos que un usuario especifico tiene gracias a una asignacion especial se mantienen. 
+	 *Este metodo quita un permiso de un rol. Al remover este permiso de un rol, los permisos que un usuario especifico tiene gracias a una asignacion especial se mantienen.
 	 *
 	 * @param id_permiso int Id del permiso a remover
 	 * @param id_rol int Id del rol al que se le quitaran los permisos
 	 **/
 	public static function RemoverPermisoRol
 	(
-		$id_permiso, 
+		$id_permiso,
 		$id_rol
 	)
 	{
@@ -1645,7 +1649,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	 **/
 	public static function RemoverPermisoUsuario
 	(
-		$id_permiso, 
+		$id_permiso,
 		$id_usuario
 	)
 	{
@@ -1705,12 +1709,12 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	 **/
 	public static function NuevoRol
 	(
-		$nombre, 
-		$descripcion = null, 
-		$id_perfil = null, 
-		$id_rol_padre = null, 
-		$id_tarifa_compra = null, 
-		$id_tarifa_venta = null, 
+		$nombre,
+		$descripcion = null,
+		$id_perfil = null,
+		$id_rol_padre = null,
+		$id_tarifa_compra = null,
+		$id_tarifa_venta = null,
 		$salario = "0"
 	)
 	{
@@ -1784,7 +1788,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 		Logger::log("Rol creado exitosamente con id: " . $rol->getIdRol());
 		return array( "id_rol" => $rol->getIdRol());
 	}
-	
+
 	/**
 	 *
 	 *Edita la informacion de un grupo, puede usarse para editar los permisos del mismo
@@ -1801,13 +1805,13 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	 **/
 	public static function EditarRol
 	(
-		$id_rol, 
-		$descripcion = null, 
-		$id_perfil = null, 
-		$id_rol_padre = null, 
-		$id_tarifa_compra = null, 
-		$id_tarifa_venta = null, 
-		$nombre = null, 
+		$id_rol,
+		$descripcion = null,
+		$id_perfil = null,
+		$id_rol_padre = null,
+		$id_tarifa_compra = null,
+		$id_tarifa_venta = null,
+		$nombre = null,
 		$salario = "0"
 	){
 		//verificamos si el rol qeu se quiere editar existe
@@ -1815,9 +1819,9 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 			Logger::error("No se tiene registro del rol que desea editar");
 			throw new Exception("No se tiene registro del rol que desea editar",901);
 		}
-		
+
 		//verificamos si ya hay un Roll con el mismo nombre
-		
+
 		if ($nombre !== null && $nombre !== "") {
 			$nombre = trim($nombre);
 			if ($rol->getNombre() !== $nombre) {
@@ -1987,7 +1991,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	 *
 	 *Este metodo desactiva un grupo, solo se podra desactivar un grupo si no hay ningun usuario que pertenezca a el.
 	 *
-	 * 
+	 *
 	 * @author Juan Manuel Garc&iacute;a Carmona <manuel@caffeina.mx>
 	 * @param id_rol int Id del grupo a eliminar
 	 **/
@@ -2007,7 +2011,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 		}
 
 		/*
-		 * Se obtiene la lista de usuarios con este rol. 
+		 * Se obtiene la lista de usuarios con este rol.
 		 * Si almenos uno aun sigue activo, entonces no se puede eliminar el rol
 		 */
 		$usuarios = UsuarioDAO::search(new Usuario(array( "id_rol" => $id_rol )));
@@ -2033,7 +2037,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 		DAO::transEnd();
 		Logger::log("Rol eliminado correctamente");
 	}
-	
+
 	/**
 	 *
 	 *Regresa un alista de permisos, nombres y ids de los permisos del sistema.
@@ -2041,7 +2045,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	 **/
 	public static function ListaPermisoRol
 	(
-		$id_permiso = null, 
+		$id_permiso = null,
 		$id_rol = null
 	)
 	{
@@ -2088,12 +2092,12 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	 *
 	 *eviar un mail a esa persona para resetear su pass
 	 *
-	 * @param clave string 
-	 * @param email string 
+	 * @param clave string
+	 * @param email string
 	 **/
 	public static function PasswordRecordarUsuario
 	(
-		$clave = "", 
+		$clave = "",
 		$email = ""
 	){
 
@@ -2106,15 +2110,15 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	 *
 	 * @param id_usuario int El id_usuario de a quien le haremos el seguimeinto
 	 * @param texto string El texto que ingresa el que realiza el seguimiento
-	 * @return id_usuario_seguimiento int 
+	 * @return id_usuario_seguimiento int
 	 **/
 	static function NuevoSeguimientoUsuario
 	(
-		$id_usuario, 
+		$id_usuario,
 		$texto
 	){
 		$cliente = UsuarioDAO::getByPK( $id_usuario );
-		
+
 		if(is_null($cliente)) {
 			throw new InvalidDataException("Este usuario no existe");
 		}
@@ -2140,7 +2144,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 		}
 		return array( "id_usuario_seguimiento" => $s->getIdUsuarioSeguimiento() );
 	}
-	
+
 	/**
 	 *
 	 *Muestra los detalles de un Rol especifico
