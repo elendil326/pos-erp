@@ -881,7 +881,7 @@ require_once("interfaces/Contabilidad.interface.php");
 
         self::InsertarCatalogoCuentasDefault($nuevo_catalogo_cuentas->getIdCatalogo());
 
-        return array("status"=>"ok","id_catalogo_cuentas"=>$nuevo_catalogo_cuentas->getIdCatalogo());
+        return array("status"=>"ok","id_catalogo_cuentas"=>(int)$nuevo_catalogo_cuentas->getIdCatalogo());
 
 	}
 
