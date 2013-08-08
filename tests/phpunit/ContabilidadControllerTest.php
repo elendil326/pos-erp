@@ -3,23 +3,55 @@ require_once("../../server/bootstrap.php");
 
 class ContabilidadControllerTest extends PHPUnit_Framework_TestCase {
 
+	protected function setUp() {
+		Logger::log("-----------------------------");
+
+		$r = SesionController::Iniciar(123, 1, true);
+
+		if($r["login_succesful"] == false) {
+			global $POS_CONFIG;
+			$POS_CONFIG["INSTANCE_CONN"]->Execute("INSERT INTO `usuario` (`id_usuario`, `id_direccion`, `id_direccion_alterna`, `id_sucursal`, `id_rol`, `id_clasificacion_cliente`, `id_clasificacion_proveedor`, `id_moneda`, `fecha_asignacion_rol`, `nombre`, `rfc`, `curp`, `comision_ventas`, `telefono_personal1`, `telefono_personal2`, `fecha_alta`, `fecha_baja`, `activo`, `limite_credito`, `descuento`, `password`, `last_login`, `consignatario`, `salario`, `correo_electronico`, `pagina_web`, `saldo_del_ejercicio`, `ventas_a_credito`, `representante_legal`, `facturar_a_terceros`, `dia_de_pago`, `mensajeria`, `intereses_moratorios`, `denominacion_comercial`, `dias_de_credito`, `cuenta_de_mensajeria`, `dia_de_revision`, `codigo_usuario`, `dias_de_embarque`, `tiempo_entrega`, `cuenta_bancaria`, `id_tarifa_compra`, `tarifa_compra_obtenida`, `id_tarifa_venta`, `tarifa_venta_obtenida`) VALUES
+				(1, NULL, NULL, NULL, 0, NULL, NULL, NULL, '2011-10-24 18:28:24', 'Administrador', NULL, NULL, NULL, NULL, NULL, '2011-10-24 18:28:34', NULL, 1, 0, NULL, '202cb962ac59075b964b07152d234b70', NULL, 0, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, NULL, NULL, 0, 'rol', 0, 'rol');");
+
+			$r = SesionController::Iniciar(123, 1, true);
+		}
+	}
+
+	public function RandomString($length = 10, $uc = FALSE, $n = FALSE, $sc = FALSE) {
+		$source = 'abcdefghijklmnopqrstuvwxyz';
+		if ($uc == 1) { $source .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; }
+		if ($n == 1) { $source .= '1234567890'; }
+		if ($sc == 1) { $source .= '|@#~$%()=^*+[]{}-_'; }
+
+		if($length > 0) {
+			$rstr = "";
+			$source = str_split($source, 1);
+
+			for($i = 1; $i <= $length; $i++) {
+				mt_srand((double)microtime() * 1000000);
+				$num = mt_rand(1, count($source));
+				$rstr .= $source[$num-1];
+			}
+		}
+		return $rstr;
+	}
 
 	public function NuevoCatalogoCuentas() {
 
-		$direccion = Array(
-			"calle"				=> "Dir-".time(),
-			"numero_exterior"	=> "".time(),
-			"colonia"			=> "Col-".time(),
-			"id_ciudad"			=> 334,
-			"codigo_postal"		=> "".time(),
+		$dir = array(
+			"calle"				=> self::RandomString(15, FALSE, FALSE, FALSE) . " - " . time(),
+			"numero_exterior"	=> "" . time(),
+			"colonia"			=> "Colonia " . time(),
+			"id_ciudad"			=> 1,
+			"codigo_postal"		=> "" . time(),
 			"numero_interior"	=> null,
-			"texto_extra"		=> "Calle cerrada",
-			"telefono1"			=> "4616149974",
-			"telefono2"			=> "45*451*454"
+			"texto_extra"		=> "Calle cerrada" . time(),
+			"telefono1"			=> time(),
+			"telefono2"			=> time()
 		);
 
-		$razon_social = "Caffeina Software".time();
-		$rfc  = "RFC".time();
+		$razon_social = self::RandomString(15, FALSE, FALSE, FALSE) . " - " . time();
+		$rfc  = self::RandomString(10, FALSE, FALSE, FALSE) . "-" . time();
 
 		$c = new stdClass();
 		$c->id_moneda			= 1;
@@ -29,7 +61,7 @@ class ContabilidadControllerTest extends PHPUnit_Framework_TestCase {
 
 		$empresa = EmpresasController::Nuevo(
 			$contabilidad		= $c,
-			$direccion			= array($direccion),
+			$direccion			= $dir,
 			$razon_social,
 			$rfc,
 			$cuentas_bancarias	= null,
@@ -47,24 +79,26 @@ class ContabilidadControllerTest extends PHPUnit_Framework_TestCase {
 
 		$catalogo = ContabilidadController::NuevoCatalogoCuentasEmpresa($empresa["id_empresa"]);
 		$this->assertInternalType('int', $catalogo["id_catalogo_cuentas"]);
+
+		return $catalogo["id_catalogo_cuentas"];
 	}
 
 	public function testCatalogoCuentasEmpresa() {
 
-		$direccion = Array(
-			"calle"				=> "Dir-".time(),
-			"numero_exterior"	=> "".time(),
-			"colonia"			=> "Col-".time(),
-			"id_ciudad"			=> 334,
-			"codigo_postal"		=> "".time(),
+		$dir = array(
+			"calle"				=> self::RandomString(15, FALSE, FALSE, FALSE) . " - " . time(),
+			"numero_exterior"	=> "" . time(),
+			"colonia"			=> "Col-" . time(),
+			"id_ciudad"			=> 1,
+			"codigo_postal"		=> "" . time(),
 			"numero_interior"	=> null,
-			"texto_extra"		=> "Calle cerrada",
-			"telefono1"			=> "4616149974",
-			"telefono2"			=> "45*451*454"
+			"texto_extra"		=> time(),
+			"telefono1"			=> time(),
+			"telefono2"			=> time()
 		);
 
-		$razon_social = "Caffeina Software".time();
-		$rfc  = "RFC".time();
+		$razon_social = self::RandomString(15, FALSE, FALSE, FALSE) . " - " . time();
+		$rfc  = self::RandomString(10, FALSE, FALSE, FALSE) . "-" . time();
 
 		$c = new stdClass();
 		$c->id_moneda			= 1;
@@ -74,7 +108,7 @@ class ContabilidadControllerTest extends PHPUnit_Framework_TestCase {
 
 		$empresa = EmpresasController::Nuevo(
 			$contabilidad		= $c,
-			$direccion			= array($direccion),
+			$direccion			= array($dir),
 			$razon_social,
 			$rfc,
 			$cuentas_bancarias	= null,
@@ -118,34 +152,34 @@ class ContabilidadControllerTest extends PHPUnit_Framework_TestCase {
 
 	public function testNuevaCuentaSeaAfectable() {
 		$id_catalogo_cuentas = self::NuevoCatalogoCuentas();
-		$randmon_str = "Cuenta X ".time();
+		$randmon_str = self::RandomString(15, FALSE, FALSE, FALSE) . " - " . time();
 		$id_nueva_cuenta = ContabilidadController::NuevaCuenta(0, 1, 'Activo Circulante', 1, 0, $id_catalogo_cuentas, "Deudora",
 											$randmon_str, "Balance", $id_cuenta_padre = "");
 
-		$nueva = CuentaContableDAO::getByPK($id_nueva_cuenta['id_cuenta_contable']);
+		$nueva = ContabilidadController::DetalleCuenta($id_nueva_cuenta['id_cuenta_contable']);
 
-		$this->assertEquals($nueva->getAfectable(), 1);
+		$this->assertEquals($nueva["afectable"], 1);
 	}
 
 	public function testNuevaCuentaSeaAfectablePadreNoAfectable() {
 		$id_catalogo_cuentas = self::NuevoCatalogoCuentas();
-		$randmon_str = "Cuenta Padre ".time();
+		$randmon_str = self::RandomString(15, FALSE, FALSE, FALSE) . " Padre " . time();
 		$id_nueva_cuenta = ContabilidadController::NuevaCuenta(0, 1, 'Activo Circulante', 1, 0, $id_catalogo_cuentas, "Deudora",
 											$randmon_str, "Balance", $id_cuenta_padre = "");
 
-		$padre = CuentaContableDAO::getByPK($id_nueva_cuenta['id_cuenta_contable']);
+		$padre = ContabilidadController::DetalleCuenta($id_nueva_cuenta['id_cuenta_contable']);
 
-		$this->assertEquals($padre->getAfectable(), 1);
+		$this->assertEquals($padre["afectable"], 1);
 
-		$randmon_str = "Cuenta Hija ".time();
+		$randmon_str = self::RandomString(15, FALSE, FALSE, FALSE) ." Hija " . time();
 		$id_nueva_cuenta2 = ContabilidadController::NuevaCuenta(0, 1, 'Activo Circulante', 1, 0, $id_catalogo_cuentas, "Deudora",
 											$randmon_str, "Balance", $id_nueva_cuenta['id_cuenta_contable']);
-		$hija = CuentaContableDAO::getByPK($id_nueva_cuenta2['id_cuenta_contable']);
+		$hija = ContabilidadController::DetalleCuenta($id_nueva_cuenta2['id_cuenta_contable']);
 		//se vuelve a trar a cuenta padre para obtener el valor actualzado
-		$padre = CuentaContableDAO::getByPK($id_nueva_cuenta['id_cuenta_contable']);
+		$padre = ContabilidadController::DetalleCuenta($id_nueva_cuenta['id_cuenta_contable']);
 
-		$this->assertEquals($hija->getAfectable(), 1);
-		$this->assertEquals($padre->getAfectable(), 0);
+		$this->assertEquals($hija["afectable"], 1);
+		$this->assertEquals($padre["afectable"], 0);
 	}
 
 	/**
