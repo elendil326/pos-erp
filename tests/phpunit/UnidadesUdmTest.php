@@ -6,20 +6,18 @@ class UnidadesUdmTest extends PHPUnit_Framework_TestCase {
         SesionController::Iniciar(123, 1, true);
     }
 
-    // - - Buscar - - //
-    public function testBuscarTodas() {
-    	$resultado = ProductosController::BuscarUnidadUdm();
-        $this->assertEquals("ok",$resultado['status']);
-        $this->assertGreaterThan(0,count($resultado["resultados"]));
-    	$this->assertInternalType("array",$resultado['resultados']);
-    }
+	// - - Buscar - - //
+	public function testBuscarTodas() {
+		$resultado = ProductosController::BuscarUnidadUdm();
+		$this->assertGreaterThan(0, count($resultado["resultados"]));
+		$this->assertInternalType("array", $resultado['resultados']);
+	}
 
-    public function testBuscarConQuery() {
-    	$resultado = ProductosController::BuscarUnidadUdm('m');
-        $this->assertEquals("ok",$resultado['status']);
-        $this->assertGreaterThan(0,count($resultado["resultados"]));
-        $this->assertInternalType("array",$resultado['resultados']);
-    }
+	public function testBuscarConQuery() {
+		$resultado = ProductosController::BuscarUnidadUdm('m');
+		$this->assertGreaterThan(0, count($resultado["resultados"]));
+		$this->assertInternalType("array", $resultado['resultados']);
+	}
 
     // - - Nueva - - //
     /**
@@ -77,7 +75,7 @@ class UnidadesUdmTest extends PHPUnit_Framework_TestCase {
     public function testNuevaTipoInvalido() {
         ProductosController::NuevaUnidadUdm('a', 'd', 1, 1, "XD");
     }
-    
+
     /**
     * @expectedException InvalidDatabaseOperationException
     */
