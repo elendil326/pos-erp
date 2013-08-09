@@ -202,7 +202,7 @@ class POSController implements IPOS {
      *
      * */
     public static function RespaldarBd() {
-        
+        return "{\"sucess\":true}";
     }
 
     /**

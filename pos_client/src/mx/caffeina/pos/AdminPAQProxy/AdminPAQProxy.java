@@ -460,14 +460,21 @@ public class AdminPAQProxy extends HttpResponder{
 
         TestRuntime test = new TestRuntime(params);     
         
-        reason = test.reason;
+        //reason = test.reason;
 
+        System.out.println("===========================================");
+        System.out.println("LA EMPRESA ES: " + test.reason);
+        System.out.println("===========================================");
         //-------------------------
         if (test.success == true){
 
-            String[] arrayResponse = test.reason.split(" ");
+            //String[] arrayResponse = test.reason.split(" ");
             try{
-                reason = arrayResponse[1];
+                //reason = arrayResponse[1];
+                /*for (int i = 1; i < arrayResponse.length; i++) {
+                    reason += arrayResponse[i];
+                }*/
+                reason = test.reason.substring(4);
             }catch(Exception e){
                 r = "{\"success\" : false, \"reason\":\"Respuesta inesperada -> " + e.getMessage().replace("\"", "'") + "\"}";
                 System.out.println(r);
