@@ -632,8 +632,19 @@ public class AdminPAQProxy extends HttpResponder{
         //String path = "C:/Documents and Settings/Administrador/Escritorio/CONNECTION_SDK/Lista_Proveedores_SDK/InitListaClientes.EXE"/*searchInQuery("path")*/;
         String path = searchInQuery("path") + "/Nueva_Compra_Venta_SDK/InitCompraVenta.EXE";
 
-        params = path + " " + searchInQuery("numEmpresa") + " " + searchInQuery("serie_documento") + " " + fechaActual + " " + searchInQuery("codigo_cliente_proveedor") + " " + searchInQuery("codigo_producto_servicio") + " " + searchInQuery("codigo_almacen") + " " + searchInQuery("numero_unidades") + " " + searchInQuery("precio_unitario") + " " + searchInQuery("codigo_concepto");
-
+        params = path + " " + searchInQuery("numEmpresa") + " " + searchInQuery("folio_documento") + " " + fechaActual + " " + searchInQuery("codigo_cliente_proveedor") + " " + searchInQuery("codigo_producto_servicio") + " " + searchInQuery("codigo_almacen") + " " + searchInQuery("numero_unidades") + " " + searchInQuery("precio_unitario") + " " + searchInQuery("codigo_concepto") + " " + searchInQuery("serie_documento");
+        /*
+         * 1) Numero de empresa
+         * 2) Folio del documento
+         * 3) Fecha actual
+         * 4) Codigo cliente-proveedor
+         * 5) Codigo de producto-servicio
+         * 6) Codigo de almacen
+         * 7) Numero de unidades
+         * 8) Precio unitario
+         * 9) Codigo del concepto
+         *10) Serie del documento
+        */
         System.out.println("ENVIANDO : " + params);
 
         TestRuntime CompraVenta = new TestRuntime(params);
