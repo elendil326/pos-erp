@@ -225,7 +225,7 @@ class ProductosController extends ValidacionesController implements IProductos
         //valida que el nombre del producto este en rango y que no se repita
         if (!is_null($nombre_producto)) {
             if (FALSE === self::validarLongitudDeCadena($nombre_producto, 2, 150)) {
-                return "El nombre de producto de producto es muy corto";
+                return "El nombre de producto es muy corto";
             } //FALSE === self::validarLongitudDeCadena($nombre_producto, 2, 150)
             
             if (!is_null($id_producto)) {
