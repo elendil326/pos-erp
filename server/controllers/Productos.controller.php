@@ -873,7 +873,7 @@ class ProductosController extends ValidacionesController implements IProductos {
 		//var_dump($productos);
 
 		if (!is_array($productos)) {
-			Logger::error("Los productos recibidos son invalidossss");
+			Logger::error("Los productos recibidos son invalidos");
 			throw new Exception("Los productos recibidos son invalidos", 901);
 		} //!is_array($productos)
 
